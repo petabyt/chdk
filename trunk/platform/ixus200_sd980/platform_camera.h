@@ -38,6 +38,9 @@
     #define CAM_UNCACHED_BIT                0x40000000
     #define CAM_HAS_ND_FILTER               1
 
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
+
     #define CAM_DNG_LENS_INFO               { 43,10, 215,10, 28,10, 59,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue

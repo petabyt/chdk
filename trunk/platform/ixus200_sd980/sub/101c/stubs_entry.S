@@ -23,33 +23,7 @@ NHSTUB(kbd_pwr_off                            ,0xff85ae98) //  2 64%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffaab250 -> ffbda9ac
-// Mode 32774 in firmware but not in current modemap
-// Mode 33288 in firmware but not in current modemap
-// Mode 33307 in firmware but not in current modemap
-// Mode 33308 in firmware but not in current modemap
-// Mode 32797 in firmware but not in current modemap
-// Mode 32786 in firmware but not in current modemap
-// Mode 32788 in firmware but not in current modemap
-// Mode 32789 in firmware but not in current modemap
-// Mode 32785 in firmware but not in current modemap
-// Mode 33295 in firmware but not in current modemap
-// Mode 32784 in firmware but not in current modemap
-// Mode  2601 in firmware but not in current modemap
-// Mode  2602 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP      16924
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT    16923
-// Current modemap entry not found in firmware - MODE_SCN_ISO_3200        16413
-// Current modemap entry not found in firmware - MODE_SCN_BEACH           16405
-// Current modemap entry not found in firmware - MODE_SCN_SNOW            16404
-// Current modemap entry not found in firmware - MODE_SCN_SUNSET          16402
-// Current modemap entry not found in firmware - MODE_SCN_INDOOR          16401
-// Current modemap entry not found in firmware - MODE_SCN_NIGHT_SCENE     16398
-// Current modemap entry not found in firmware - MODE_SPORTS              33287
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            3622
-// Current modemap entry not found in firmware - MODE_LANDSCAPE           32780
-// Current modemap entry not found in firmware - MODE_M                   32769
-// Current modemap entry not found in firmware - MODE_AV                  32770
-// Current modemap entry not found in firmware - MODE_TV                  32771
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00044558) // Found @0xff8335a8

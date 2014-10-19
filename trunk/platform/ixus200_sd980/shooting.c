@@ -81,34 +81,30 @@ const ISOTable iso_table[] = {
 	{  7, 3200, "3200", -1},
 };
 
-struct {
-	int hackmode;
-	int canonmode;
-} modemap[] = {
-	{ MODE_AUTO,               32768  },
-	{ MODE_P,                  32772  },
-	{ MODE_TV,                 32771  },
-	{ MODE_AV,                 32770  },
-	{ MODE_M,                  32769  },
-	{ MODE_PORTRAIT,           32781  },
-	{ MODE_NIGHT_SNAPSHOT,     32779  },
-	{ MODE_LANDSCAPE,          32780  },
-	{ MODE_VIDEO_STD,          2603   }, // video standby
-	{ MODE_VIDEO_STD,          3622   }, // video in progress
-	{ MODE_STITCH,             33290  },
-	{ MODE_SPORTS,             33287  },
+const CapturemodeMap modemap[] = {
+    { MODE_VIDEO_COLOR_ACCENT,  2601 },
+    { MODE_VIDEO_COLOR_SWAP,    2602 },
+    { MODE_VIDEO_STD,           2603 },
+    { MODE_AUTO,               32768 },
+    { MODE_P,                  32772 },
+    { MODE_LONG_SHUTTER,       32774 },
+    { MODE_NIGHT_SNAPSHOT,     32779 },
+    { MODE_PORTRAIT,           32781 },
+    { MODE_SCN_KIDS_PETS,      32784 },
+    { MODE_INDOOR,             32785 },
+    { MODE_SCN_SUNSET,         32786 },
+    { MODE_SCN_FOLIAGE,        32787 },
+    { MODE_SCN_SNOW,           32788 },
+    { MODE_SCN_BEACH,          32789 },
+    { MODE_STITCH,             33290 },
+    { MODE_SCN_FIREWORK,       32790 },
+    { MODE_SCN_AQUARIUM,       32792 },
+    { MODE_SCN_CREATIVE_EFFECT,33295 },
+    { MODE_SCN_ISO_3200,       32797 },
+    { MODE_SCN_DIGITAL_MACRO,  33288 },    
+    { MODE_SCN_COLOR_ACCENT,   33307 },
+    { MODE_SCN_COLOR_SWAP,     33308 },
 
-	{ MODE_SCN_NIGHT_SCENE,    16398  },
-	{ MODE_SCN_INDOOR,         16401  },
-	{ MODE_SCN_SUNSET,         16402  },
-	{ MODE_SCN_FOLIAGE,        32787  },
-	{ MODE_SCN_SNOW,           16404  },
-	{ MODE_SCN_BEACH,          16405  },
-	{ MODE_SCN_FIREWORK,       32790  },
-	{ MODE_SCN_AQUARIUM,       32792  },
-	{ MODE_SCN_ISO_3200,       16413  },
-	{ MODE_SCN_COLOR_ACCENT,   16923  },
-  { MODE_SCN_COLOR_SWAP,     16924  }
 };
 
 #include "../generic/shooting.c"

@@ -23,33 +23,7 @@ NHSTUB(kbd_pwr_off                            ,0xff85ae98) //  2 64%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffaab240 -> ffbda99c
-// Mode 32774 in firmware but not in current modemap
-// Mode 33288 in firmware but not in current modemap
-// Mode 33307 in firmware but not in current modemap
-// Mode 33308 in firmware but not in current modemap
-// Mode 32797 in firmware but not in current modemap
-// Mode 32786 in firmware but not in current modemap
-// Mode 32788 in firmware but not in current modemap
-// Mode 32789 in firmware but not in current modemap
-// Mode 32785 in firmware but not in current modemap
-// Mode 33295 in firmware but not in current modemap
-// Mode 32784 in firmware but not in current modemap
-// Mode  2601 in firmware but not in current modemap
-// Mode  2602 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_SWAP      16924
-// Current modemap entry not found in firmware - MODE_SCN_COLOR_ACCENT    16923
-// Current modemap entry not found in firmware - MODE_SCN_ISO_3200        16413
-// Current modemap entry not found in firmware - MODE_SCN_BEACH           16405
-// Current modemap entry not found in firmware - MODE_SCN_SNOW            16404
-// Current modemap entry not found in firmware - MODE_SCN_SUNSET          16402
-// Current modemap entry not found in firmware - MODE_SCN_INDOOR          16401
-// Current modemap entry not found in firmware - MODE_SCN_NIGHT_SCENE     16398
-// Current modemap entry not found in firmware - MODE_SPORTS              33287
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            3622
-// Current modemap entry not found in firmware - MODE_LANDSCAPE           32780
-// Current modemap entry not found in firmware - MODE_M                   32769
-// Current modemap entry not found in firmware - MODE_AV                  32770
-// Current modemap entry not found in firmware - MODE_TV                  32771
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00044558) // Found @0xff8335a8
@@ -57,7 +31,7 @@ DEF(physw_run                               ,0x00001c44) // Found @0xff833200
 DEF(physw_sleep_delay                       ,0x00001c42) // Found @0xff833200
 DEF(levent_table                            ,0xffb7a290) // Found @0xffb7a290
 DEF(FlashParamsTable                        ,0xffbdab84) // Found @0xffbdab84
-//DEF(movie_status                            ,0x000067e0) // Found @0xff94ac20,          stubs_min = 0x000067e0 (0x000067e0)
+DEF(movie_status                            ,0x000067e0) // Found @0xff94ac20
 DEF(video_compression_rate                  ,0x0000680c) // Found @0xff94ae8c
 DEF(full_screen_refresh                     ,0x0001b2dc) // Found @0xff9f751c
 DEF(canon_menu_active                       ,0x00002ec8) // Found @0xff889704
@@ -71,7 +45,7 @@ DEF(some_flag_for_af_scan                   ,0x00006cd4) // Found @0xff94dc3c
 DEF(focus_len_table                         ,0xfffe2ac8) // Found @0xfffe2ac8
 DEF(zoom_busy                               ,0x0000670c) // Found @0xff946e00
 DEF(focus_busy                              ,0x00006608) // Found @0xff941f28
-//DEF(recreview_hold                          ,0x00003818) // Found @0xff89a778,          stubs_min = 0x00003818 (0x00003818)
+DEF(recreview_hold                          ,0x00003818) // Found @0xff89a778
 // Palette colour tables  found @ 0xffb93e74
 DEF(active_palette_buffer                   ,0x0001b2e4) // Found @0xff9f7458
 DEF(palette_buffer_ptr                      ,0x0001b2f0) // Found @0xff9f712c
@@ -215,7 +189,7 @@ NHSTUB(SetFileTimeStamp                       ,0xff835694) //  3
 NHSTUB(SetLogicalEventActive                  ,0xff8906fc) //120
 NHSTUB(SetParameterData                       ,0xff979a8c) //101
 NHSTUB(SetPropertyCase                        ,0xff888a44) //102
-//NHSTUB(SetScriptMode                        ,0xff89074c) //120            == 0xff89074c
+NHSTUB(SetScriptMode                          ,0xff89074c) //120
 NHSTUB(SleepTask                              ,0xff83865c) //120
 NHSTUB(TakeSemaphore                          ,0xff838324) //120
 NHSTUB(TurnOffBackLight                       ,0xff89e2b8) //104
