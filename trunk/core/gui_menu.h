@@ -88,9 +88,7 @@ extern gui_handler menuGuiHandler;
 //-------------------------------------------------------------------
 extern  CMenu   root_menu;									// defined in gui.c
 
-enum { FLAG_FIND_RECURSIVE = 0x01 };
-extern CMenuItem* find_mnu(CMenu *curr_menu, int itemid );  // defined in gui_user_menu.c
-
+extern CMenuItem* find_menu_item(CMenu *curr_menu, int itemid );
 
 //-------------------------------------------------------------------
 #endif

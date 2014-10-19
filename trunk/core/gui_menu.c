@@ -39,6 +39,33 @@ static int          int_incr = 1;
 static unsigned char *item_color;
 
 //-------------------------------------------------------------------
+CMenuItem* find_menu_item(CMenu *curr_menu, int itemid )
+{
+    int gui_menu_curr_item;
+    CMenuItem* rv=0;
+
+    if ( itemid==0 )
+        return 0;
+
+    gui_menu_curr_item = 0;
+    while(curr_menu->menu[gui_menu_curr_item].text) {
+        if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
+            return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
+        }
+        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
+
+                if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+                    rv = find_menu_item((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
+                    if ( rv )
+                        return rv;
+                }
+        }
+        gui_menu_curr_item++;
+    }
+    return 0;
+}
+
+//-------------------------------------------------------------------
 // Functions to access increment factor from other code
 // Used for quick SD override in ALT mode without entering menu
 
@@ -58,11 +85,11 @@ char *menu_increment_factor_string()
     static char buf[8];
     buf[0] = 0;
     if (int_incr >= 1000000)
-        sprintf(buf, "±%dM",int_incr/1000000);
+        sprintf(buf, "\xb1%dM",int_incr/1000000);
     else if (int_incr >= 1000)
-        sprintf(buf, "±%dK",int_incr/1000);
+        sprintf(buf, "\xb1%dK",int_incr/1000);
     else
-        sprintf(buf, "±%d",int_incr);
+        sprintf(buf, "\xb1%d",int_incr);
     return buf;
 }
 

@@ -1604,7 +1604,7 @@ static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, operatio
 
 void set_tv_override_menu(CMenu *menu)
 {
-    CMenuItem *mi = find_mnu(menu,LANG_MENU_OVERRIDE_TV_VALUE);
+    CMenuItem *mi = find_menu_item(menu,LANG_MENU_OVERRIDE_TV_VALUE);
     if (mi)
     {
         switch (conf.tv_enum_type)
