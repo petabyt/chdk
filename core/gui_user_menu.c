@@ -141,38 +141,6 @@ void gui_load_user_menu_script(const char *fn)
 }
 
 //-------------------------------------------------------------------
-static CMenuItem* find_mnu_adv(CMenu *curr_menu, int flags, int itemid )
-{
-	int gui_menu_curr_item;
-	CMenuItem* rv=0;
-
-	if ( itemid==0 )
-		return 0;		
-
-	gui_menu_curr_item = 0;
-	while(curr_menu->menu[gui_menu_curr_item].text) {
-		if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
-			return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
-		}
-		if ((flags & FLAG_FIND_RECURSIVE) &&
-		  (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
-
-				if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-					rv = find_mnu((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
-					if ( rv )
-						return rv;
-				}
-		}
-		gui_menu_curr_item++;
-	}
-	return 0;
-}
-
-CMenuItem* find_mnu(CMenu *curr_menu, int itemid )
-{
-	return find_mnu_adv(curr_menu, FLAG_FIND_RECURSIVE, itemid );
-}
-
 void user_menu_save() {
     int x;
     for (x=0; x<USER_MENU_ITEMS; x++) {
@@ -246,7 +214,7 @@ void user_menu_restore()
         else
         { 
             if (conf.user_menu_vars.items[x].var > 0 )  // look up the menu text
-                 item = find_mnu(&root_menu, conf.user_menu_vars.items[x].var);
+                 item = find_menu_item(&root_menu, conf.user_menu_vars.items[x].var);
             else item = NULL ;
             
             if ( item )                                 // add back in if found
