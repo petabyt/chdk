@@ -141,5 +141,3 @@ long get_target_dir_num() {
     n = (n>>18)&0x3FF;
     return n;
 }
-
-int circle_of_confusion = 5;

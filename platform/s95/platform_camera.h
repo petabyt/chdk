@@ -26,6 +26,10 @@
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_RAW_ROWPIX                  3744
     #define CAM_RAW_ROWS                    2784
+
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         7   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
     #undef  CAM_MENU_BORDERWIDTH

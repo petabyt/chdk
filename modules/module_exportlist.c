@@ -57,8 +57,6 @@
             &camera_screen
             &camera_sensor
             &conf
-            &dof_values
-            &circle_of_confusion
             &zoom_points
             &movie_status
             &recreview_hold

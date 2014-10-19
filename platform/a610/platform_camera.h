@@ -25,6 +25,9 @@
     #define CAM_RAW_ROWPIX                  2672    // for 5 MP
     #define CAM_RAW_ROWS                    1968    // for 5 MP
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         6   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #define CAM_SWIVEL_SCREEN               1
     #define CAM_MULTIPART                   1
     #undef  CAM_HAS_IS

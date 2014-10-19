@@ -165,9 +165,6 @@ long get_target_dir_num() {
 }
 #endif
 
-
-int circle_of_confusion = 5;
-
 // not used ? -> CAM_DRAW_EXPOSITION
 /*
 char* shooting_get_tv_str()

@@ -23,6 +23,10 @@
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
+
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         7   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #define CAM_RAW_ROWPIX                  4160 // Found @0xff190f44
     #define CAM_RAW_ROWS                    3124 // Found @0xff190f4c
     #undef  CAM_UNCACHED_BIT

@@ -164,8 +164,3 @@ long get_target_file_num() {
         return n;
     }
 #endif
-
-// ToDo
-// Required for correct DOF calculation
-// http://www.dofmaster.com/digital_coc.html#coccalculator
-int circle_of_confusion = 5;

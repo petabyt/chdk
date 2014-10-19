@@ -11,6 +11,23 @@
 #include "stdlib.h"
 
 //==========================================================
+
+// For Depth of Field, and Hyperfocal calculations
+typedef struct {
+    short hyperfocal_valid;
+    short distance_valid;
+    int   hyperfocal_distance_1e3;
+    int   aperture_value;
+    int   focal_length;
+    int   subject_distance;
+    int   near_limit;
+    int   far_limit;
+    int   hyperfocal_distance;
+    int   depth_of_field;
+    int   min_stack_distance;
+} DOF_TYPE;
+
+//==========================================================
 // Data Structure to store camera specific information
 // Used by modules to ensure module code is platform independent
 
@@ -141,6 +158,7 @@ typedef struct
     int cam_remote_sync_status_led;
     int cam_key_press_delay, cam_key_release_delay;
     int cam_af_led;
+    int circle_of_confusion;
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct
@@ -183,6 +201,9 @@ typedef struct
         unsigned int    md_af_on_delay;     // How long after MD triggers to wait before turning on AF led
         unsigned int    md_af_on_time;      // How long to leave AF led on for
     } perf;
+
+    // Depth of Field, Hyperfocal distance, etc
+    DOF_TYPE dof_values;
 } _cam_info;
 
 extern _cam_info camera_info;

@@ -24,6 +24,9 @@
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION             7   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
 
     #undef  CAM_AF_LED

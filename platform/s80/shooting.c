@@ -124,5 +124,3 @@ long get_target_dir_num() {
     if (get_target_file_num()%100 == 1) ++n;
     return n;
 }
-
-int circle_of_confusion = 6;

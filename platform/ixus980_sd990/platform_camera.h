@@ -26,6 +26,9 @@
     #define CAM_RAW_ROWPIX                  4480    // 14.7 MP 12bpp
     #define CAM_RAW_ROWS                    3348
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         6   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_MULTIPART                   1

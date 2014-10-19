@@ -25,6 +25,9 @@
     #define CAM_RAW_ROWPIX                  3736    // for 10 MP
     #define CAM_RAW_ROWS                    2772    // for 10 MP
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         6   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Print", "FE" }

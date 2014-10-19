@@ -133,5 +133,3 @@ long get_target_dir_num()
 */
 return 100;
 }
-
-int circle_of_confusion = 5;

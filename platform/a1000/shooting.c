@@ -155,5 +155,3 @@ char* shooting_get_av_str()
     }
     return (char*) "?";
 }
-
-int circle_of_confusion = 5;

@@ -246,25 +246,25 @@ varfactor(void)
 static int shooting_get_near_limit_of_acceptable_sharpness()
 {
   shooting_update_dof_values();
-  return dof_values.near_limit;
+  return camera_info.dof_values.near_limit;
 }
 
 static int shooting_get_far_limit_of_acceptable_sharpness()
 {
   shooting_update_dof_values();
-  return dof_values.far_limit;
+  return camera_info.dof_values.far_limit;
 }
 
 static int shooting_get_depth_of_field()
 {
   shooting_update_dof_values();
-  return dof_values.depth_of_field;
+  return camera_info.dof_values.depth_of_field;
 }
 
 static int shooting_get_min_stack_distance()
 {
   shooting_update_dof_values();
-  return dof_values.min_stack_distance;
+  return camera_info.dof_values.min_stack_distance;
 }
 
 static int factor(void)

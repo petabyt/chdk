@@ -25,6 +25,9 @@
     #define CAM_RAW_ROWPIX                  2664   // for 5 MP 1/3" sensor size
     #define CAM_RAW_ROWS                    1968   // for 5 MP 1/3" sensor size
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         4   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_ZOOM_LEVER
     #define CAM_DRAW_EXPOSITION             1
