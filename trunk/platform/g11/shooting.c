@@ -154,8 +154,6 @@ long get_target_dir_num() {
 }
 #endif
 
-int circle_of_confusion = 7;
-
 // swivel screen state.
 #ifdef CAM_SWIVEL_SCREEN
 // 0 not open, non-zero open

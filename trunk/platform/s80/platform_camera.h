@@ -27,6 +27,9 @@
     #define CAM_RAW_ROWPIX                      3344   // @FF8B49E0 (100g)
     #define CAM_RAW_ROWS                        2484   // @FF8B49E0 (100g)
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION             6   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_HAS_MANUAL_FOCUS                  // needed, SD override is misbehaving in MF
 
     #undef  CAM_HAS_IS

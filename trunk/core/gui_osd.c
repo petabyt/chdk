@@ -115,27 +115,27 @@ void gui_osd_draw_dof(int is_osd_edit)
         int i = 8, j;
         short f_ex = (conf.show_dof==DOF_SHOW_IN_DOF_EX);
         draw_osd_string(conf.dof_pos, 0, 0, "S/NL/FL:", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, dof_values.subject_distance);
+        sprintf_dist(osd_buf, camera_info.dof_values.subject_distance);
         j = strlen(osd_buf);
-        draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, osd_buf, (f_ex && (dof_values.distance_valid || shooting_get_focus_mode()))?valid_col:conf.osd_color, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, osd_buf, (f_ex && (camera_info.dof_values.distance_valid || shooting_get_focus_mode()))?valid_col:conf.osd_color, conf.dof_scale);
         i = i+j;
         draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, dof_values.near_limit);
+        sprintf_dist(osd_buf, camera_info.dof_values.near_limit);
         j = strlen(osd_buf);
-        draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
         i = i+j;
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, dof_values.far_limit);
-	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
+        sprintf_dist(osd_buf, camera_info.dof_values.far_limit);
+	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
         i = 8;
 	    draw_osd_string(conf.dof_pos, 0, FONT_HEIGHT, "DOF/HYP:", conf.osd_color, conf.dof_scale);
-        sprintf_dist(osd_buf, dof_values.depth_of_field);
+        sprintf_dist(osd_buf, camera_info.dof_values.depth_of_field);
         j = strlen(osd_buf);
-	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
+	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:conf.osd_color, conf.dof_scale);
         i = i+j;
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, "/", conf.osd_color, conf.dof_scale);
-        sprintf_dist_hyp(osd_buf, dof_values.hyperfocal_distance);
-	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && dof_values.hyperfocal_valid)?valid_col:conf.osd_color, conf.dof_scale);
+        sprintf_dist_hyp(osd_buf, camera_info.dof_values.hyperfocal_distance);
+	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.hyperfocal_valid)?valid_col:conf.osd_color, conf.dof_scale);
     }
 }
 
@@ -390,15 +390,15 @@ static void gui_osd_draw_values(int is_osd_edit, int is_zebra)
         if (((conf.show_dof==DOF_SHOW_IN_MISC) || f_ex) && showtype && !is_osd_edit)
         {
           if (conf.dof_subj_dist_in_misc)
-              gui_print_osd_dof_string_dist("SD :", dof_values.subject_distance, f_ex && (dof_values.distance_valid || shooting_get_focus_mode()), 0);
+              gui_print_osd_dof_string_dist("SD :", camera_info.dof_values.subject_distance, f_ex && (camera_info.dof_values.distance_valid || shooting_get_focus_mode()), 0);
           if (conf.dof_near_limit_in_misc)
-              gui_print_osd_dof_string_dist("NL :", dof_values.near_limit, f_ex && dof_values.distance_valid, 0);
+              gui_print_osd_dof_string_dist("NL :", camera_info.dof_values.near_limit, f_ex && camera_info.dof_values.distance_valid, 0);
           if (conf.dof_far_limit_in_misc)
-              gui_print_osd_dof_string_dist("FL :", dof_values.far_limit, f_ex && dof_values.distance_valid, 0);
+              gui_print_osd_dof_string_dist("FL :", camera_info.dof_values.far_limit, f_ex && camera_info.dof_values.distance_valid, 0);
           if (conf.dof_depth_in_misc)
-              gui_print_osd_dof_string_dist("DOF:", dof_values.depth_of_field, f_ex && dof_values.distance_valid, 0);
+              gui_print_osd_dof_string_dist("DOF:", camera_info.dof_values.depth_of_field, f_ex && camera_info.dof_values.distance_valid, 0);
           if (conf.dof_hyperfocal_in_misc)
-              gui_print_osd_dof_string_dist("HYP:", dof_values.hyperfocal_distance, f_ex && dof_values.hyperfocal_valid, 1);
+              gui_print_osd_dof_string_dist("HYP:", camera_info.dof_values.hyperfocal_distance, f_ex && camera_info.dof_values.hyperfocal_valid, 1);
         }
 
         if ((showtype == 1) || is_osd_edit)
@@ -642,7 +642,7 @@ static void draw_temp(char *lbl, int val, int yofst)
 {
     if (conf.temperature_unit != 0)
         val = (val*18+320)/10;
-    sprintf(osd_buf,"%s: %i°",lbl, val);
+    sprintf(osd_buf,"%s: %iï¿½",lbl, val);
     draw_osd_string(conf.temp_pos, 0, yofst*FONT_HEIGHT, osd_buf, conf.osd_color, conf.temp_scale);
 }
 

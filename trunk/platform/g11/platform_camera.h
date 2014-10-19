@@ -27,6 +27,9 @@
     #define CAM_RAW_ROWPIX                  3744   // See g11 lib.c
     #define CAM_RAW_ROWS                    2784   // See g11 lib.c
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         7   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
 

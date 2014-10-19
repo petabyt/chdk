@@ -26,6 +26,9 @@
     #define CAM_RAW_ROWPIX                  4104    // for 12 MP
     #define CAM_RAW_ROWS                    3048    // for 12 MP
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION         6   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1

@@ -30,6 +30,8 @@
     #undef  CAM_DRYOS_2_3_R39                   // Define for cameras with DryOS release R39 or greater
     #undef  CAM_DRYOS_2_3_R47                   // Define for cameras with DryOS release R47 or greater -> Cameras can boot from FAT32
 
+    #define CAM_CIRCLE_OF_CONFUSION         5   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
     #undef  CAM_HAS_CMOS                        // Camera has CMOS sensor
     #undef  CAM_SWIVEL_SCREEN                   // Camera has rotated LCD screen
     #define CAM_USE_ZOOM_FOR_MF             1   // Zoom lever can be used for manual focus adjustments

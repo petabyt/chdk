@@ -35,8 +35,6 @@ extern const unsigned int MODESCNT;
 
 static short *min_av96_zoom_point_tbl = NULL;
 
-DOF_TYPE dof_values;
-
 // Storage for delayed shooting overrides
 #define PHOTO_PARAM_TV_NONE 32767 // ~ 1/(2^341) seconds, safe marker for "no value"
 
@@ -898,8 +896,8 @@ int shooting_get_lens_to_focal_plane_width()
 
 int shooting_get_hyperfocal_distance_1e3_f(int av, int fl)
 {
-  if ((av>0) && (fl>0) && (circle_of_confusion>0)) 
-    return (int)(((((double)fl*fl)/(av*circle_of_confusion)*1000)+fl)+0.5);
+  if ((av>0) && (fl>0) && (camera_info.circle_of_confusion>0))
+    return (int)(((((double)fl*fl)/(av*camera_info.circle_of_confusion)*1000)+fl)+0.5);
   else return (-1);
 }
 
@@ -977,69 +975,69 @@ void shooting_update_dof_values()
   else av96 = (abs(curr_av96-prop_av96)<2)?prop_av96:curr_av96;
 
   av_1e3 = shooting_get_aperture_from_av96(av96);
-  hyp_1e3 = dof_values.hyperfocal_distance_1e3;
-  hyp = dof_values.hyperfocal_distance;
+  hyp_1e3 = camera_info.dof_values.hyperfocal_distance_1e3;
+  hyp = camera_info.dof_values.hyperfocal_distance;
   
-  if (dof_values.aperture_value!=av_1e3 || dof_values.focal_length!=fl || (hyp_1e3<0)) { 
+  if (camera_info.dof_values.aperture_value!=av_1e3 || camera_info.dof_values.focal_length!=fl || (hyp_1e3<0)) {
     //calc new hyperfocal distance and min stack distance
     f_hyp_calc = 1;
     hyp_1e3 = -1;
     hyp = -1;
-    dof_values.aperture_value = av_1e3;
-    dof_values.focal_length = fl;
+    camera_info.dof_values.aperture_value = av_1e3;
+    camera_info.dof_values.focal_length = fl;
     hyp_1e3 = shooting_get_hyperfocal_distance_1e3_f(av_1e3, fl);
     if (hyp_1e3>0) {
       hyp = (hyp_1e3+500)/1000;
-      dof_values.min_stack_distance = MAX_DIST;
+      camera_info.dof_values.min_stack_distance = MAX_DIST;
       v = ((hyp_1e3 - fl)/250 + 2 + 1)/2;
       if (v>0) {
         int m = ((fl*((fl - hyp_1e3)/1000 - 1)/500)/v + 1)/2;
         int m2 = (int)((((double)hyp*(2*fl - hyp_1e3)/1000))/v + 0.5);
-        dof_values.min_stack_distance = sqrt(m*m - m2) - m;
+        camera_info.dof_values.min_stack_distance = sqrt(m*m - m2) - m;
       }  
     }
   }
 
-  if ((dof_values.subject_distance!=dist || (dof_values.hyperfocal_distance_1e3!=hyp_1e3)) && (hyp_1e3>0)) {
+  if ((camera_info.dof_values.subject_distance!=dist || (camera_info.dof_values.hyperfocal_distance_1e3!=hyp_1e3)) && (hyp_1e3>0)) {
     //calc new NEAR, FAR, DOF values
     f_dist_calc = 1;
-    dof_values.subject_distance = dist;
-    dof_values.near_limit = -1;
-    dof_values.far_limit = -1;
-    dof_values.depth_of_field = -1;
+    camera_info.dof_values.subject_distance = dist;
+    camera_info.dof_values.near_limit = -1;
+    camera_info.dof_values.far_limit = -1;
+    camera_info.dof_values.depth_of_field = -1;
     if ((av_1e3>0) && (fl>0) && (dist>0) && (shooting_is_infinity_distance()==0) && (hyp_1e3>0)) {
       double m = ((double)(hyp_1e3 - fl)/1000 * dist) + 0.5;
       if (conf.dof_subj_dist_as_near_limit) { 
-         dof_values.near_limit = dist;
+          camera_info.dof_values.near_limit = dist;
       } else {
         int v = ((((hyp_1e3 - 2*fl + 1000*dist)/500) + 1)/2);
-   	    if (v>0) dof_values.near_limit = (int)(m/v);
+   	    if (v>0) camera_info.dof_values.near_limit = (int)(m/v);
    	  }
       int v = ((((hyp_1e3 - 1000*dist)/500) + 1)/2);
-      if (v>0) dof_values.far_limit = (int)(m/v);
-      if ((dof_values.near_limit>0) && (dof_values.far_limit>0)) {
-        dof_values.depth_of_field = dof_values.far_limit - dof_values.near_limit;
+      if (v>0) camera_info.dof_values.far_limit = (int)(m/v);
+      if ((camera_info.dof_values.near_limit>0) && (camera_info.dof_values.far_limit>0)) {
+          camera_info.dof_values.depth_of_field = camera_info.dof_values.far_limit - camera_info.dof_values.near_limit;
       }
     }
   }
-  dof_values.hyperfocal_distance_1e3 = hyp_1e3;
-  dof_values.hyperfocal_distance = hyp; 
+  camera_info.dof_values.hyperfocal_distance_1e3 = hyp_1e3;
+  camera_info.dof_values.hyperfocal_distance = hyp;
   f_focus_ok = (f_focus_ok && shooting_get_focus_ok());
-  dof_values.hyperfocal_valid = (f_focus_ok || (dof_values.hyperfocal_valid && !f_hyp_calc));
-  dof_values.distance_valid = (f_focus_ok || (dof_values.distance_valid && !f_dist_calc)||(dof_values.hyperfocal_valid && shooting_get_focus_mode()));
+  camera_info.dof_values.hyperfocal_valid = (f_focus_ok || (camera_info.dof_values.hyperfocal_valid && !f_hyp_calc));
+  camera_info.dof_values.distance_valid = (f_focus_ok || (camera_info.dof_values.distance_valid && !f_dist_calc)||(camera_info.dof_values.hyperfocal_valid && shooting_get_focus_mode()));
   return;
 }
 
 int shooting_get_subject_distance()
 {
   shooting_update_dof_values();
-  return dof_values.subject_distance;
+  return camera_info.dof_values.subject_distance;
 }
 
 int shooting_get_hyperfocal_distance()
 {
   shooting_update_dof_values();
-  return dof_values.hyperfocal_distance;
+  return camera_info.dof_values.hyperfocal_distance;
 }
 
 short shooting_can_focus()

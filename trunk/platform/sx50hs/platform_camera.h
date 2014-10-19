@@ -21,8 +21,6 @@
 // don't override them again in here.
 // Values below go in 'platform_camera.h':
 
-
-
     #define CAM_PROPSET                         5
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1

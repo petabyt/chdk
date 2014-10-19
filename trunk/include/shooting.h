@@ -56,22 +56,6 @@ typedef struct {
     short shoot_counter;
 } EXPO_BRACKETING_VALUES;
 
-typedef struct {
-    short hyperfocal_valid;
-    short distance_valid;
-    int   hyperfocal_distance_1e3;
-    int   aperture_value;
-    int   focal_length;
-    int   subject_distance;
-    int   near_limit;
-    int   far_limit;
-    int   hyperfocal_distance;
-    int   depth_of_field;
-    int   min_stack_distance;
-} DOF_TYPE;
-
-extern DOF_TYPE dof_values;
-
 /******************************************************************/
 
 extern int shooting_in_progress();
@@ -248,7 +232,6 @@ extern void shooting_video_bitrate_change(int v);
 extern int movie_status;
 extern int zoom_status;
 extern const int zoom_points;
-extern int circle_of_confusion;
 extern int recreview_hold;
 
 /******************************************************************/

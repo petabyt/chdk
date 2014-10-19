@@ -136,8 +136,6 @@ long get_target_dir_num() {
     return n;
 }
 
-int circle_of_confusion = 5;
-
 int get_IS_mode(void){
  char v;
  _GetPropertyCase(229,&v,sizeof(v));

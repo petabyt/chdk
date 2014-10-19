@@ -541,18 +541,18 @@ static int luaCB_get_dofinfo( lua_State* L )
 {
   shooting_update_dof_values();
   lua_createtable(L, 0, 12);
-  SET_BOOL_FIELD("hyp_valid", (dof_values.hyperfocal_valid!=0));
-  SET_BOOL_FIELD("focus_valid", (dof_values.distance_valid!=0));
-  SET_INT_FIELD("aperture", dof_values.aperture_value);
-  SET_INT_FIELD("coc", circle_of_confusion);
-  SET_INT_FIELD("focal_length", dof_values.focal_length);
+  SET_BOOL_FIELD("hyp_valid", (camera_info.dof_values.hyperfocal_valid!=0));
+  SET_BOOL_FIELD("focus_valid", (camera_info.dof_values.distance_valid!=0));
+  SET_INT_FIELD("aperture", camera_info.dof_values.aperture_value);
+  SET_INT_FIELD("coc", camera_info.circle_of_confusion);
+  SET_INT_FIELD("focal_length", camera_info.dof_values.focal_length);
   SET_INT_FIELD("eff_focal_length", get_effective_focal_length(lens_get_zoom_point()));
-  SET_INT_FIELD("focus", dof_values.subject_distance);
-  SET_INT_FIELD("near", dof_values.near_limit);
-  SET_INT_FIELD("far", dof_values.far_limit);
-  SET_INT_FIELD("hyp_dist", dof_values.hyperfocal_distance);
-  SET_INT_FIELD("dof", dof_values.depth_of_field);
-  SET_INT_FIELD("min_stack_dist", dof_values.min_stack_distance);
+  SET_INT_FIELD("focus", camera_info.dof_values.subject_distance);
+  SET_INT_FIELD("near", camera_info.dof_values.near_limit);
+  SET_INT_FIELD("far", camera_info.dof_values.far_limit);
+  SET_INT_FIELD("hyp_dist", camera_info.dof_values.hyperfocal_distance);
+  SET_INT_FIELD("dof", camera_info.dof_values.depth_of_field);
+  SET_INT_FIELD("min_stack_dist", camera_info.dof_values.min_stack_distance);
   return 1;
 }
 
