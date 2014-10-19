@@ -59,7 +59,8 @@ static KeyMap keymap[] = {
 	{ 2, KEY_ZOOM_OUT	, 0x00000008 },
 	{ 2, KEY_MENU		, 0x00000001 },
 	{ 2, KEY_DISPLAY	, 0x00000040 },
-	{ 2, KEY_PRINT		, 0x00000800 },/*
+    { 2, KEY_PLAYBACK   , 0x00000800 },
+	/*
 	{ 1, KEY_ERASE		, 0x00000080 },
         { 1, KEY_EXPO_CORR      , 0x00000040 },
         { 1, KEY_FLASH          , 0x00100000 },
