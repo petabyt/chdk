@@ -35,7 +35,6 @@ int get_flash_params_count(void){
 }
 
 // PTP display stuff
-// TODO type may not be correct
 int vid_get_palette_type() { return 1; }
 int vid_get_palette_size() { return 16*4; }
 
