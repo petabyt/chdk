@@ -1,23 +1,20 @@
 #31f4
 PLATFORMID=12788
 
-##override OPT_EXMEM_MALLOC=1
-##override OPT_CHDK_IN_EXMEM=1
-
 PLATFORMOS=dryos
 PLATFORMOSVER=43
 
-#EXMEM_HEAP_SKIP=0x2DB400	#(0x44000000-0x43D2C000) from sub_FF88798A4 = size of video buffers in EXMEM area 
-#EXMEM_BUFFER_SIZE=0x80000	# Amount of EXMEM memory to allocate for CHDK; 40000=256KB, 80000=512KB, A0000=640kb, C0000=768KB, 100000=1MB
+# Set up size variables for AgentRAM
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=1
+ARAM_HEAP_START=0x34e000
+ARAM_HEAP_SIZE=0x32000
 
-# points to the start of the memory pool used by the firmware
-#ifdef OPT_CHDK_IN_EXMEM
-#MEMISOSTART=0x
-#MEMISOSIZE=0x40000
-#else
+ifdef OPT_CHDK_IN_ARAM
+MEMISOSTART=$(ARAM_HEAP_START)
+else
 MEMISOSTART=0x12e9fc
-MEMISOSIZE=0x40000
-#endif
+endif
 
 # start of firmware
 ROMBASEADDR=0xFFC00000
