@@ -642,7 +642,7 @@ static void draw_temp(char *lbl, int val, int yofst)
 {
     if (conf.temperature_unit != 0)
         val = (val*18+320)/10;
-    sprintf(osd_buf,"%s: %i�",lbl, val);
+    sprintf(osd_buf,"%s: %i\xb0",lbl, val);
     draw_osd_string(conf.temp_pos, 0, yofst*FONT_HEIGHT, osd_buf, conf.osd_color, conf.temp_scale);
 }
 
