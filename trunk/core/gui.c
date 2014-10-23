@@ -2558,7 +2558,7 @@ static void gui_draw_alt_helper()
             lang_str(LANG_HELP_ALT_SHORTCUTS),
             (conf.user_menu_enable && conf.user_menu_as_root)?lang_str(LANG_HELP_USER_MENU):lang_str(LANG_HELP_CHDK_MENU)); 
     buf[35] = 0;
-    draw_string(x, y, buf, MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+    draw_string(x, y, buf, conf.menu_title_color);
     y += FONT_HEIGHT;
 
     if (conf.user_menu_enable)
@@ -2567,69 +2567,69 @@ static void gui_draw_alt_helper()
                 lang_str(LANG_HELP_HALF_PRESS),
                 (conf.user_menu_enable && conf.user_menu_as_root)?lang_str(LANG_HELP_CHDK_MENU):lang_str(LANG_HELP_USER_MENU)); 
         buf[35] = 0;
-        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        draw_string(x, y, buf, conf.menu_color);
         y += FONT_HEIGHT;
     }
 
-    draw_string(x, y, lang_str(LANG_HELP_SCRIPTS), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    draw_string(x, y, lang_str(LANG_HELP_SCRIPTS), conf.menu_color);
     y += FONT_HEIGHT;
 
 #if !defined(CAM_HAS_MANUAL_FOCUS) && defined(SHORTCUT_MF_TOGGLE)
-    y = shortcut_text(x, y, SHORTCUT_MF_TOGGLE,LANG_HELP_MANUAL_FOCUS,gui_on_off_enum(0,&conf.subj_dist_override_koef), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+    y = shortcut_text(x, y, SHORTCUT_MF_TOGGLE,LANG_HELP_MANUAL_FOCUS,gui_on_off_enum(0,&conf.subj_dist_override_koef), conf.menu_color);
 #endif
 
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
         sprintf(buf,lang_str(LANG_HELP_FOCUS),gui_shortcut_text(SHORTCUT_SET_INFINITY),gui_shortcut_text(SHORTCUT_SET_HYPERFOCAL));
-        draw_string(x, y, buf, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        draw_string(x, y, buf, conf.menu_color);
         y += FONT_HEIGHT;
     }
 
 #if !CAM_HAS_ERASE_BUTTON
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], conf.menu_color);
     else
 #endif
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
 #if CAM_HAS_ZOOM_LEVER
         if (SHORTCUT_TOGGLE_RAW != SHORTCUT_SET_INFINITY)
-            y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_INF_FOCUS, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+            y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_INF_FOCUS, 0, conf.menu_color);
 #else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_CHG_FOCUS_FACTOR, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_CHG_FOCUS_FACTOR, 0, conf.menu_color);
 #endif
     }
     else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), conf.menu_color);
 #else
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], conf.menu_color);
     else
 #endif
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), conf.menu_color);
 #endif
 
-    y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, MAKE_COLOR(COLOR_FG, COLOR_ALT_BG));
+    y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, conf.menu_title_color);
 
     if ( conf.enable_shortcuts)
     {
-        y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd), MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable], conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo], conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw), conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd), conf.menu_color);
     }
     else
     {
-        y = shortcut_text(x, y, 0,LANG_HELP_SHORTCUTS_DISABLED, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, 0,LANG_HELP_SHORTCUTS_DISABLED, 0, conf.menu_color);
     }
 
     if (conf.hide_osd == 0)
-        y = shortcut_text(x, y, KEY_DISPLAY, LANG_HELP_HIDE_OSD, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, KEY_DISPLAY, LANG_HELP_HIDE_OSD, 0, conf.menu_color);
 
     if (is_menu_shortcut)
-        y = shortcut_text(x, y, 0 ,LANG_HELP_NOT_ALT, 0, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+        y = shortcut_text(x, y, 0 ,LANG_HELP_NOT_ALT, 0, conf.menu_color);
 }
 
 #endif
@@ -2655,7 +2655,7 @@ void gui_chdk_draw()
 
         if (camera_info.state.mode_rec || camera_info.state.mode_play)
         {
-            draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH, 14, script_title, MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+            draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH, 14, script_title, conf.menu_color);
         }
         clear_for_title = 1;   
     }

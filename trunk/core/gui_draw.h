@@ -38,7 +38,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0xD4
     #define COLOR_SPLASH_RED            0x2E
     #define COLOR_SPLASH_PINK           0x21
     #define COLOR_SPLASH_GREY           0x1F
@@ -103,7 +102,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0x22
     #define COLOR_SPLASH_RED            0x58
     #define COLOR_SPLASH_PINK           0x4C
     #define COLOR_SPLASH_GREY           0x16
@@ -169,7 +167,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                COLOR_GREY
     #define COLOR_SPLASH_RED            0x29
     #define COLOR_SPLASH_PINK           0x1E
     #define COLOR_SPLASH_GREY           0x16
@@ -233,7 +230,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                COLOR_GREY
     #define COLOR_SPLASH_RED            0x29
     #define COLOR_SPLASH_PINK           0x1E
     #define COLOR_SPLASH_GREY           0x16
@@ -296,7 +292,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0x22
     #define COLOR_SPLASH_RED            0x72
     #define COLOR_SPLASH_PINK           0x5C
     #define COLOR_SPLASH_GREY           0x16
@@ -330,7 +325,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                COLOR_BG
     #define COLOR_SPLASH_RED            COLOR_RED
     #define COLOR_SPLASH_PINK           0xEA
     #define COLOR_SPLASH_GREY           0x16
@@ -391,7 +385,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           0x0e
     #define COLOR_SELECTED_FG           COLOR_BLACK
-    #define COLOR_ALT_BG                COLOR_BG
     #define COLOR_SPLASH_RED            COLOR_RED
     #define COLOR_SPLASH_PINK           0x1e        // Orange
     #define COLOR_SPLASH_GREY           0x16
@@ -456,7 +449,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0x20
     #define COLOR_SPLASH_RED            0x22
     #define COLOR_SPLASH_PINK           0x24
     #define COLOR_SPLASH_GREY           0x1F
@@ -488,7 +480,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0x20
     #define COLOR_SPLASH_RED            COLOR_RED
     #define COLOR_SPLASH_PINK           COLOR_GREY
     #define COLOR_SPLASH_GREY           0xDE
@@ -522,7 +513,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           0x0e
     #define COLOR_SELECTED_FG           COLOR_BLACK
-    #define COLOR_ALT_BG                COLOR_BG
     #define COLOR_SPLASH_RED            COLOR_RED
     #define COLOR_SPLASH_PINK           0x1e    // Orange
     #define COLOR_SPLASH_GREY           0x16
@@ -587,7 +577,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED    // always the same, light grey
     #define COLOR_SELECTED_FG           COLOR_BLACK
-    #define COLOR_ALT_BG                COLOR_BG
     #define COLOR_SPLASH_RED            COLOR_RED
     #define COLOR_SPLASH_PINK           COLOR_BLUE
     #define COLOR_SPLASH_GREY           0x16    // darker grey
@@ -620,7 +609,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0x87
     #define COLOR_SPLASH_RED            0x60
     #define COLOR_SPLASH_PINK           0xBD
     #define COLOR_SPLASH_GREY           0x16
@@ -672,7 +660,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_GREY_LT
     #define COLOR_SELECTED_FG           COLOR_BLACK
-    #define COLOR_ALT_BG                COLOR_BG
     #define COLOR_SPLASH_RED            COLOR_RED_DK
     #define COLOR_SPLASH_PINK           COLOR_RED_LT
     #define COLOR_SPLASH_GREY           COLOR_GREY_LT
@@ -709,8 +696,6 @@
 #if defined (CAMERA_sx200is)
     #undef COLOR_BG
     #define COLOR_BG                    (CHDK_COLOR_BASE+13) // Transparent Grey
-    #undef COLOR_ALT_BG
-    #define COLOR_ALT_BG                COLOR_BG
 #endif
 
 #elif CAM_BITMAP_PALETTE==14
@@ -728,7 +713,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_GREY
-    #define COLOR_ALT_BG                0xf0
     #define COLOR_SPLASH_RED            COLOR_RED
     #define COLOR_SPLASH_PINK           0x4E
     #define COLOR_SPLASH_GREY           0x6F
@@ -791,7 +775,6 @@
 #define COLOR_FG            COLOR_WHITE
 #define COLOR_SELECTED_BG   COLOR_GREY_DK
 #define COLOR_SELECTED_FG   COLOR_WHITE
-#define COLOR_ALT_BG        COLOR_BG
 
 #define COLOR_SPLASH_RED    COLOR_RED
 #define COLOR_SPLASH_PINK   COLOR_RED
@@ -858,7 +841,6 @@
 #define COLOR_FG            COLOR_WHITE
 #define COLOR_SELECTED_BG   COLOR_BLUE_DK  
 #define COLOR_SELECTED_FG   COLOR_YELLOW
-#define COLOR_ALT_BG        COLOR_BG
 #define COLOR_SPLASH_RED    COLOR_RED
 #define COLOR_SPLASH_PINK   COLOR_RED_LT
 #define COLOR_SPLASH_GREY   COLOR_GREY
@@ -903,7 +885,6 @@
     #define COLOR_FG                    COLOR_WHITE
     #define COLOR_SELECTED_BG           COLOR_RED
     #define COLOR_SELECTED_FG           COLOR_WHITE
-    #define COLOR_ALT_BG                0xD4
 
     #define COLOR_HISTO_R              0x02
     #define COLOR_HISTO_G              0x0c
@@ -986,22 +967,21 @@ extern  const unsigned char const module_colors[];
 #define COLOR_FG            (module_colors[9])
 #define COLOR_SELECTED_BG   (module_colors[10])
 #define COLOR_SELECTED_FG   (module_colors[11])
-#define COLOR_ALT_BG        (module_colors[12])
-#define COLOR_SPLASH_RED    (module_colors[13])
-#define COLOR_SPLASH_PINK   (module_colors[14])
-#define COLOR_SPLASH_GREY   (module_colors[15])
-#define COLOR_HISTO_R       (module_colors[16])
-#define COLOR_HISTO_R_PLAY  (module_colors[17])
-#define COLOR_HISTO_B       (module_colors[18])
-#define COLOR_HISTO_G       (module_colors[19])
-#define COLOR_HISTO_G_PLAY  (module_colors[20])
-#define COLOR_HISTO_BG      (module_colors[21])
-#define COLOR_HISTO_RG      (module_colors[22])
-#define COLOR_HISTO_RB      (module_colors[23])
-#define COLOR_HISTO_RB_PLAY (module_colors[24])
-#define COLOR_HISTO_B_PLAY  (module_colors[25])
-#define COLOR_HISTO_BG_PLAY (module_colors[26])
-#define COLOR_HISTO_RG_PLAY (module_colors[27])
+#define COLOR_SPLASH_RED    (module_colors[12])
+#define COLOR_SPLASH_PINK   (module_colors[13])
+#define COLOR_SPLASH_GREY   (module_colors[14])
+#define COLOR_HISTO_R       (module_colors[15])
+#define COLOR_HISTO_R_PLAY  (module_colors[16])
+#define COLOR_HISTO_B       (module_colors[17])
+#define COLOR_HISTO_G       (module_colors[18])
+#define COLOR_HISTO_G_PLAY  (module_colors[19])
+#define COLOR_HISTO_BG      (module_colors[20])
+#define COLOR_HISTO_RG      (module_colors[21])
+#define COLOR_HISTO_RB      (module_colors[22])
+#define COLOR_HISTO_RB_PLAY (module_colors[23])
+#define COLOR_HISTO_B_PLAY  (module_colors[24])
+#define COLOR_HISTO_BG_PLAY (module_colors[25])
+#define COLOR_HISTO_RG_PLAY (module_colors[26])
 
 #endif  // CHDK_MODULE_CODE
 

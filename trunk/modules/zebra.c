@@ -8,6 +8,7 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "gui_osd.h"
+#include "gui_mbox.h"
 #include "gui_batt.h"
 #include "gui_space.h"
 #include "histogram.h"
@@ -142,7 +143,7 @@ static int gui_osd_zebra_init(int show)
             if (camera_screen.zebra_nobuf == 0)
             {
                 buf = malloc(buffer_size);
-                //if (!buf) draw_txt_string(0, 14, "Warn: No space to allocate zebra buffer: restart camera", MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
+                //gui_mbox_init(LANG_WARNING, (int)"No space to allocate zebra buffer: restart camera", MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
             }
             if (!buf)
             {
