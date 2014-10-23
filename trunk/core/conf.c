@@ -165,7 +165,7 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO( 54, conf.osd_color_override,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_RED)),
     CONF_INFO( 55, conf.menu_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
     CONF_INFO( 56, conf.menu_title_color,                       CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_WHITE, COLOR_BLACK)),
-    CONF_INFO( 57, conf.menu_cursor_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_SELECTED_BG, COLOR_SELECTED_FG)),
+    CONF_INFO( 57, conf.menu_cursor_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BLUE, COLOR_YELLOW)),
     CONF_INFO( 58, conf.menu_symbol_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
     CONF_INFO( 59, conf.reader_color,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE)),
     CONF_INFO( 60, conf.grid_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BG, COLOR_FG)),
