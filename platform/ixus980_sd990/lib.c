@@ -63,4 +63,19 @@ void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
 }
 
+// PTP display stuff
+int vid_get_palette_type() { return 3; }
+int vid_get_palette_size() { return 256*4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x7d98+0x14)); //"Add: %p Width : %ld Hight : %ld", sub_ff8ea82c
+}
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char** palette_buffer_ptr;
+    return palette_buffer_ptr[active_palette_buffer]+16;
+}
 
