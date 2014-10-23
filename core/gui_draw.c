@@ -654,8 +654,6 @@ const unsigned char const module_colors[] = {
     COLOR_YELLOW        ,
     COLOR_BG            ,
     COLOR_FG            ,
-    COLOR_SELECTED_BG   ,
-    COLOR_SELECTED_FG   ,
     COLOR_SPLASH_RED    ,
     COLOR_SPLASH_PINK   ,
     COLOR_SPLASH_GREY   ,
