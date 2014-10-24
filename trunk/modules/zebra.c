@@ -450,12 +450,12 @@ int gui_osd_draw_zebra(int show)
 
     color cls[] = {
         COLOR_TRANSPARENT,
-        (camera_info.state.mode_rec)?COLOR_HISTO_B:COLOR_HISTO_B_PLAY,
-        (camera_info.state.mode_rec)?COLOR_HISTO_G:COLOR_HISTO_G_PLAY,
-        (camera_info.state.mode_rec)?COLOR_HISTO_BG:COLOR_HISTO_BG_PLAY,
-        (camera_info.state.mode_rec)?COLOR_HISTO_R:COLOR_HISTO_R_PLAY,
-        (camera_info.state.mode_rec)?COLOR_HISTO_RB:COLOR_HISTO_RB_PLAY,
-        (camera_info.state.mode_rec)?COLOR_HISTO_RG:COLOR_HISTO_RG_PLAY,
+        (camera_info.state.mode_rec)?COLOR_REC_BLUE:COLOR_PLY_BLUE,
+        (camera_info.state.mode_rec)?COLOR_REC_GREEN:COLOR_PLY_GREEN,
+        (camera_info.state.mode_rec)?COLOR_REC_CYAN:COLOR_PLY_CYAN,
+        (camera_info.state.mode_rec)?COLOR_REC_RED:COLOR_PLY_RED,
+        (camera_info.state.mode_rec)?COLOR_REC_MAGENTA:COLOR_PLY_MAGENTA,
+        (camera_info.state.mode_rec)?COLOR_REC_YELLOW:COLOR_PLY_YELLOW,
         COLOR_BLACK
     };
 

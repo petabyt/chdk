@@ -36,7 +36,7 @@ static int running = 0;
 
 //-------------------------------------------------------------------
 #define SUDOKU_BG_COLOR		MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)
-#define MARKER_COLOR		COLOR_HISTO_G_PLAY // green for all cameras in play mode
+#define MARKER_COLOR		COLOR_PLY_GREEN // green for all cameras in play mode
 #define TEXT_COLOR			MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK)
 #define MARKER_TEXT_COLOR 	MAKE_COLOR(MARKER_COLOR, COLOR_WHITE)
 

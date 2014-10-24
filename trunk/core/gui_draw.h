@@ -38,18 +38,12 @@
     #define COLOR_RED_DK                0x2E
     #define COLOR_RED_LT                0x21
     #define COLOR_GREY_LT               0x1F
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x66
-    #define COLOR_HISTO_RB_PLAY         0xE2
-    #define COLOR_HISTO_B_PLAY          0xCC
-    #define COLOR_HISTO_BG_PLAY         0x99
-    #define COLOR_HISTO_RG_PLAY         0x66
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           0x66
+    #define COLOR_PLY_MAGENTA           0xE2
+    #define COLOR_PLY_BLUE              0xCC
+    #define COLOR_PLY_CYAN              0x99
+    #define COLOR_PLY_YELLOW            0x66
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
@@ -99,19 +93,14 @@
     #define COLOR_RED_DK                0x58
     #define COLOR_RED_LT                0x4C
     #define COLOR_GREY_LT               0x16
+    // Override histogram colors if needed (defaults set below)
     // many of these probably wrong on this cam
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x66
-    #define COLOR_HISTO_RB_PLAY         0xE2
-    #define COLOR_HISTO_B_PLAY          0xCC
-    #define COLOR_HISTO_BG_PLAY         0x99
-    #define COLOR_HISTO_RG_PLAY         0x66
+    #define COLOR_REC_MAGENTA           0x66
+    #define COLOR_PLY_MAGENTA           0xE2
+    #define COLOR_PLY_BLUE              0xCC
+    #define COLOR_PLY_CYAN              0x99
+    #define COLOR_PLY_YELLOW            0x66
+
     #undef SCREEN_COLOR
     #define SCREEN_COLOR                0x15    // try for a dark color in both record and play mode
 
@@ -130,18 +119,9 @@
     #define COLOR_RED_DK                0x29
     #define COLOR_RED_LT                0x1E
     #define COLOR_GREY_LT               0x16
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_HISTO_R
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_HISTO_G
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_BLACK // there isn't purplish on this cam I guess
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           COLOR_BLACK // there isn't purplish on this cam I guess
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
@@ -189,18 +169,10 @@
     #define COLOR_RED_DK                0x72
     #define COLOR_RED_LT                0x5C
     #define COLOR_GREY_LT               0x16
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x72
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           0x72
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
+
     #undef SCREEN_COLOR
     #define SCREEN_COLOR                0x1D
 
@@ -219,18 +191,9 @@
     #define COLOR_RED_DK                COLOR_RED
     #define COLOR_RED_LT                0xEA
     #define COLOR_GREY_LT               0x16
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_RED
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           COLOR_RED
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
@@ -276,18 +239,17 @@
     #define COLOR_RED_DK                COLOR_RED
     #define COLOR_RED_LT                0x1e        // Orange
     #define COLOR_GREY_LT               0x16
-    #define COLOR_HISTO_R               0x66
-    #define COLOR_HISTO_R_PLAY          0xA0
-    #define COLOR_HISTO_B               0x61
-    #define COLOR_HISTO_B_PLAY          0xA2
-    #define COLOR_HISTO_G               0x5F
-    #define COLOR_HISTO_G_PLAY          0xA1
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_RED
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         0x80
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_RED               0x66
+    #define COLOR_PLY_RED               0xA0
+    #define COLOR_REC_BLUE              0x61
+    #define COLOR_PLY_BLUE              0xA2
+    #define COLOR_REC_GREEN             0x5F
+    #define COLOR_PLY_GREEN             0xA1
+    #define COLOR_REC_MAGENTA           COLOR_RED
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
+    #define COLOR_PLY_YELLOW            0x80
+
     #undef SCREEN_COLOR
     #define SCREEN_COLOR                0x1D
 
@@ -337,18 +299,12 @@
     #define COLOR_RED_DK                0x22
     #define COLOR_RED_LT                0x24
     #define COLOR_GREY_LT               0x1F
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x66
-    #define COLOR_HISTO_RB_PLAY         0xE2
-    #define COLOR_HISTO_B_PLAY          0xCC
-    #define COLOR_HISTO_BG_PLAY         0x99
-    #define COLOR_HISTO_RG_PLAY         0x66
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           0x66
+    #define COLOR_PLY_MAGENTA           0xE2
+    #define COLOR_PLY_BLUE              0xCC
+    #define COLOR_PLY_CYAN              0x99
+    #define COLOR_PLY_YELLOW            0x66
 
 #elif CAM_BITMAP_PALETTE==9
 
@@ -365,18 +321,9 @@
     #define COLOR_RED_DK                COLOR_RED
     #define COLOR_RED_LT                COLOR_GREY
     #define COLOR_GREY_LT               0xDE
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_RED
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           COLOR_RED
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
 
 #elif CAM_BITMAP_PALETTE==10
 
@@ -395,18 +342,15 @@
     #define COLOR_RED_DK                COLOR_RED
     #define COLOR_RED_LT                0x1e    // Orange
     #define COLOR_GREY_LT               0x16
-    #define COLOR_HISTO_R               0x6C
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               0x6D
-    #define COLOR_HISTO_B_PLAY          COLOR_BLUE
-    #define COLOR_HISTO_G               0x90
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              0x52    //COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              0x51    //COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x3D    //COLOR_RED
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_RED               0x6C
+    #define COLOR_REC_BLUE              0x6D
+    #define COLOR_REC_GREEN             0x90
+    #define COLOR_REC_CYAN              0x52    //COLOR_BLUE_LT
+    #define COLOR_REC_YELLOW            0x51    //COLOR_YELLOW
+    #define COLOR_REC_MAGENTA           0x3D    //COLOR_RED
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
+
     #undef SCREEN_COLOR
     #define SCREEN_COLOR                0x1D
 
@@ -456,19 +400,13 @@
     #define COLOR_RED_DK                COLOR_RED
     #define COLOR_RED_LT                COLOR_BLUE
     #define COLOR_GREY_LT               0x16    // darker grey
-    // colors for blended histo
-    #define COLOR_HISTO_R               0x66    // record only, without menu
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               0x3C
-    #define COLOR_HISTO_B_PLAY          0x50    // playback without menu dont have blue at all, bright Orange
-    #define COLOR_HISTO_G               0x6B
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_RED
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_RED               0x66    // record only, without menu
+    #define COLOR_REC_BLUE              0x3C
+    #define COLOR_PLY_BLUE              0x50    // playback without menu dont have blue at all, bright Orange
+    #define COLOR_REC_GREEN             0x6B
+    #define COLOR_REC_MAGENTA           COLOR_RED
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
 
 #elif CAM_BITMAP_PALETTE==12
 
@@ -485,19 +423,13 @@
     #define COLOR_RED_DK                0x60
     #define COLOR_RED_LT                0xBD
     #define COLOR_GREY_LT               0x16
-    // colors for blended histo
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              0x66
-    #define COLOR_HISTO_RB_PLAY         0xE2
-    #define COLOR_HISTO_B_PLAY          0xCC
-    #define COLOR_HISTO_BG_PLAY         0x99
-    #define COLOR_HISTO_RG_PLAY         0x66
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           0x66
+    #define COLOR_PLY_MAGENTA           0xE2
+    #define COLOR_PLY_BLUE              0xCC
+    #define COLOR_PLY_CYAN              0x99
+    #define COLOR_PLY_YELLOW            0x66
+
     #undef SCREEN_COLOR
     #define SCREEN_COLOR                0x1D
 
@@ -528,36 +460,6 @@
     #define COLOR_YELLOW_DK             (CHDK_COLOR_BASE+11)
     #define COLOR_YELLOW_LT             (CHDK_COLOR_BASE+12)
 
-    #define COLOR_CYAN                  COLOR_BLUE_LT
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_B_PLAY          COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_CYAN
-    #define COLOR_HISTO_BG_PLAY         COLOR_CYAN
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_MAGENTA
-    #define COLOR_HISTO_RB_PLAY         COLOR_MAGENTA
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-    #define COLOR_ICON_REC_RED          COLOR_RED
-    #define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
-    #define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
-    #define COLOR_ICON_REC_GREEN        COLOR_GREEN
-    #define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN_DK
-    #define COLOR_ICON_REC_GREEN_LT     COLOR_GREEN_LT
-    #define COLOR_ICON_REC_YELLOW       COLOR_YELLOW
-    #define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW_DK
-    #define COLOR_ICON_REC_YELLOW_LT    COLOR_YELLOW_LT
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
-    #define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
 
 #elif CAM_BITMAP_PALETTE==14
 
@@ -574,18 +476,9 @@
     #define COLOR_RED_DK                COLOR_RED
     #define COLOR_RED_LT                0x4E
     #define COLOR_GREY_LT               0x6F
-    #define COLOR_HISTO_R               COLOR_RED
-    #define COLOR_HISTO_R_PLAY          COLOR_RED
-    #define COLOR_HISTO_B               COLOR_BLUE
-    #define COLOR_HISTO_G               COLOR_GREEN
-    #define COLOR_HISTO_G_PLAY          COLOR_GREEN
-    #define COLOR_HISTO_BG              COLOR_BLUE_LT
-    #define COLOR_HISTO_RG              COLOR_YELLOW
-    #define COLOR_HISTO_RB              COLOR_RED
-    #define COLOR_HISTO_RB_PLAY         COLOR_HISTO_RB
-    #define COLOR_HISTO_B_PLAY          COLOR_HISTO_B
-    #define COLOR_HISTO_BG_PLAY         COLOR_BLUE_LT
-    #define COLOR_HISTO_RG_PLAY         COLOR_YELLOW
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_MAGENTA           COLOR_RED
+    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
 
 #elif CAM_BITMAP_PALETTE==15
 
@@ -599,7 +492,6 @@
 #undef SCREEN_COLOR
 #define SCREEN_COLOR        0x1C
 
-#ifdef CHDK_COLOR_BASE
     // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
     #define COLOR_RED           0x1E  // use Canon's red else get white behind startup spalsh
     #define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
@@ -614,20 +506,6 @@
     #define COLOR_YELLOW        (CHDK_COLOR_BASE+10)
     #define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
     #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
-#else
-    #define COLOR_RED_LT        0x1E
-    #define COLOR_RED           0x1E
-    #define COLOR_RED_DK        0x1E
-    #define COLOR_GREEN_LT      0x0E
-    #define COLOR_GREEN         0x0E
-    #define COLOR_GREEN_DK      0x0E
-    #define COLOR_BLUE_LT       0x14
-    #define COLOR_BLUE          0x14
-    #define COLOR_BLUE_DK       0x14
-    #define COLOR_YELLOW_LT     0x08
-    #define COLOR_YELLOW        0x08
-    #define COLOR_YELLOW_DK     0x08
-#endif  // CHDK_COLOR_BASE
 
 #define COLOR_HISTO_R       COLOR_RED
 #define COLOR_HISTO_R_PLAY  COLOR_RED
@@ -658,7 +536,6 @@
 #define COLOR_ICON_REC_GREY         COLOR_GREY
 #define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
 #define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
-//
 
 #elif CAM_BITMAP_PALETTE==16
 
@@ -686,19 +563,6 @@
 #define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
 #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
 
-#define COLOR_HISTO_R       COLOR_RED
-#define COLOR_HISTO_R_PLAY  COLOR_RED
-#define COLOR_HISTO_B       COLOR_BLUE
-#define COLOR_HISTO_B_PLAY  COLOR_BLUE
-#define COLOR_HISTO_G       COLOR_GREEN
-#define COLOR_HISTO_G_PLAY  COLOR_GREEN
-#define COLOR_HISTO_BG      COLOR_BLUE
-#define COLOR_HISTO_BG_PLAY COLOR_BLUE
-#define COLOR_HISTO_RG      COLOR_YELLOW
-#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#define COLOR_HISTO_RB      COLOR_RED
-#define COLOR_HISTO_RB_PLAY COLOR_RED
-
 #define COLOR_ICON_REC_RED          COLOR_RED
 #define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
 #define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
@@ -725,26 +589,27 @@
     #define COLOR_GREY_LT               0x66
     #define COLOR_GREY_DK               0x37
 
-    #define COLOR_HISTO_R              0x02
-    #define COLOR_HISTO_G              0x0c
-    #define COLOR_HISTO_B              0xe3
-    #define COLOR_HISTO_R_PLAY         0x02
-    #define COLOR_HISTO_G_PLAY         0x0c
-    #define COLOR_HISTO_B_PLAY         0x00
-    #define COLOR_HISTO_RB             0xf0 //32
-    #define COLOR_HISTO_RG             0xf0 //0b
-    #define COLOR_HISTO_RG_PLAY        0xf0 //09
-    #define COLOR_HISTO_RB_PLAY        0xf0 //09
-    #define COLOR_HISTO_BG_PLAY        0xf0 //00
-    #define COLOR_HISTO_BG             0xf0 //0e
+    // Override histogram colors if needed (defaults set below)
+    #define COLOR_REC_RED               0x02
+    #define COLOR_REC_GREEN             0x0c
+    #define COLOR_REC_BLUE              0xe3
+    #define COLOR_PLY_RED               0x02
+    #define COLOR_PLY_GREEN             0x0c
+    #define COLOR_PLY_BLUE              0x00
+    #define COLOR_REC_MAGENTA           0xf0 //32
+    #define COLOR_REC_YELLOW            0xf0 //0b
+    #define COLOR_PLY_YELLOW            0xf0 //09
+    #define COLOR_PLY_MAGENTA           0xf0 //09
+    #define COLOR_PLY_CYAN              0xf0 //00
+    #define COLOR_REC_CYAN              0xf0 //0e
 
-    #define COLOR_ICON_REC_RED         0x62
-    #define COLOR_ICON_REC_RED_DK      0x72
-    #define COLOR_ICON_REC_RED_LT      0x52
-    #define COLOR_ICON_REC_GREEN       0xc6
-    #define COLOR_ICON_REC_GREEN_DK    0xc7
-    #define COLOR_ICON_REC_GREEN_LT    0xc5
-    #define COLOR_ICON_REC_YELLOW      0x9d
+    #define COLOR_ICON_REC_RED          0x62
+    #define COLOR_ICON_REC_RED_DK       0x72
+    #define COLOR_ICON_REC_RED_LT       0x52
+    #define COLOR_ICON_REC_GREEN        0xc6
+    #define COLOR_ICON_REC_GREEN_DK     0xc7
+    #define COLOR_ICON_REC_GREEN_LT     0xc5
+    #define COLOR_ICON_REC_YELLOW       0x9d
     #define COLOR_ICON_REC_YELLOW_DK    0x9c
     #define COLOR_ICON_REC_YELLOW_LT    0x8d
     #define COLOR_ICON_REC_GREY         COLOR_GREY
@@ -755,23 +620,76 @@
     #error CAM_BITMAP_PALETTE not defined
 #endif  // CAM_BITMAP_PALETTE
 
+// Define histogram colors if not already defined above
+#if !defined(COLOR_REC_RED)
+    #define COLOR_REC_RED               COLOR_RED
+#endif
+#if !defined(COLOR_PLY_RED)
+    #define COLOR_PLY_RED               COLOR_RED
+#endif
+#if !defined(COLOR_REC_BLUE)
+    #define COLOR_REC_BLUE              COLOR_BLUE
+#endif
+#if !defined(COLOR_PLY_BLUE)
+    #define COLOR_PLY_BLUE              COLOR_BLUE
+#endif
+#if !defined(COLOR_REC_GREEN)
+    #define COLOR_REC_GREEN             COLOR_GREEN
+#endif
+#if !defined(COLOR_PLY_GREEN)
+    #define COLOR_PLY_GREEN             COLOR_GREEN
+#endif
+#if !defined(COLOR_REC_CYAN)
+    #define COLOR_REC_CYAN              COLOR_BLUE_LT
+#endif
+#if !defined(COLOR_PLY_CYAN)
+    #define COLOR_PLY_CYAN              COLOR_BLUE_LT
+#endif
+#if !defined(COLOR_REC_YELLOW)
+    #define COLOR_REC_YELLOW            COLOR_YELLOW
+#endif
+#if !defined(COLOR_PLY_YELLOW)
+    #define COLOR_PLY_YELLOW            COLOR_YELLOW
+#endif
+#if !defined(COLOR_REC_MAGENTA)
+    #define COLOR_REC_MAGENTA           COLOR_MAGENTA
+#endif
+#if !defined(COLOR_PLY_MAGENTA)
+    #define COLOR_PLY_MAGENTA           COLOR_MAGENTA
+#endif
+
 // Define default icon colors if not already defined above
 // 3 shades of Red, Green, Yellow and Grey
 // Separate definitions for record and playback mode
 // to cater for cameras with variable palettes
 #if !defined(COLOR_ICON_REC_RED)        // Record mode colors
-    #define COLOR_ICON_REC_RED          0x22
-    #define COLOR_ICON_REC_RED_DK       0x2F
-    #define COLOR_ICON_REC_RED_LT       0x26
-    #define COLOR_ICON_REC_GREEN        0x5F
-    #define COLOR_ICON_REC_GREEN_DK     0x25
-    #define COLOR_ICON_REC_GREEN_LT     0x51
-    #define COLOR_ICON_REC_YELLOW       0x6F
-    #define COLOR_ICON_REC_YELLOW_DK    0x6F
-    #define COLOR_ICON_REC_YELLOW_LT    0x66
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x33
-    #define COLOR_ICON_REC_GREY_LT      0x13
+    #if defined(CHDK_COLOR_BASE)
+        #define COLOR_ICON_REC_RED          COLOR_RED
+        #define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
+        #define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
+        #define COLOR_ICON_REC_GREEN        COLOR_GREEN
+        #define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN_DK
+        #define COLOR_ICON_REC_GREEN_LT     COLOR_GREEN_LT
+        #define COLOR_ICON_REC_YELLOW       COLOR_YELLOW
+        #define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW_DK
+        #define COLOR_ICON_REC_YELLOW_LT    COLOR_YELLOW_LT
+        #define COLOR_ICON_REC_GREY         COLOR_GREY
+        #define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
+        #define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
+    #else
+        #define COLOR_ICON_REC_RED          0x22
+        #define COLOR_ICON_REC_RED_DK       0x2F
+        #define COLOR_ICON_REC_RED_LT       0x26
+        #define COLOR_ICON_REC_GREEN        0x5F
+        #define COLOR_ICON_REC_GREEN_DK     0x25
+        #define COLOR_ICON_REC_GREEN_LT     0x51
+        #define COLOR_ICON_REC_YELLOW       0x6F
+        #define COLOR_ICON_REC_YELLOW_DK    0x6F
+        #define COLOR_ICON_REC_YELLOW_LT    0x66
+        #define COLOR_ICON_REC_GREY         COLOR_GREY
+        #define COLOR_ICON_REC_GREY_DK      0x33
+        #define COLOR_ICON_REC_GREY_LT      0x13
+    #endif
 #endif
 #if !defined(COLOR_ICON_PLY_RED)        // Playback mode colors
     #define COLOR_ICON_PLY_RED          COLOR_ICON_REC_RED
@@ -806,18 +724,19 @@ extern  const unsigned char const module_colors[];
 #define COLOR_RED_DK        (module_colors[9])
 #define COLOR_RED_LT        (module_colors[10])
 #define COLOR_GREY_LT       (module_colors[11])
-#define COLOR_HISTO_R       (module_colors[12])
-#define COLOR_HISTO_R_PLAY  (module_colors[13])
-#define COLOR_HISTO_B       (module_colors[14])
-#define COLOR_HISTO_G       (module_colors[15])
-#define COLOR_HISTO_G_PLAY  (module_colors[16])
-#define COLOR_HISTO_BG      (module_colors[17])
-#define COLOR_HISTO_RG      (module_colors[18])
-#define COLOR_HISTO_RB      (module_colors[19])
-#define COLOR_HISTO_RB_PLAY (module_colors[20])
-#define COLOR_HISTO_B_PLAY  (module_colors[21])
-#define COLOR_HISTO_BG_PLAY (module_colors[22])
-#define COLOR_HISTO_RG_PLAY (module_colors[23])
+// Histogram colors (defined for both record and playback mode)
+#define COLOR_REC_RED       (module_colors[12])
+#define COLOR_PLY_RED       (module_colors[13])
+#define COLOR_REC_GREEN     (module_colors[14])
+#define COLOR_PLY_GREEN     (module_colors[15])
+#define COLOR_REC_BLUE      (module_colors[16])
+#define COLOR_PLY_BLUE      (module_colors[17])
+#define COLOR_REC_CYAN      (module_colors[18])
+#define COLOR_PLY_CYAN      (module_colors[19])
+#define COLOR_REC_MAGENTA   (module_colors[20])
+#define COLOR_PLY_MAGENTA   (module_colors[21])
+#define COLOR_REC_YELLOW    (module_colors[22])
+#define COLOR_PLY_YELLOW    (module_colors[23])
 
 #endif  // CHDK_MODULE_CODE
 

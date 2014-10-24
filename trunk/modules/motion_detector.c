@@ -681,7 +681,7 @@ void md_draw_grid()
             {
                 int diff = motion_detector.diff[i];
 
-                color c = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_HISTO_G);
+                color c = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_REC_GREEN);
                 if (diff > motion_detector.threshold)
                 {
                     c = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED);
