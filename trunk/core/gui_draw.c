@@ -630,9 +630,9 @@ const unsigned char const script_colors[NUM_SCRIPT_COLORS][2]  = {
     {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
     {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
     {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
-    {COLOR_PLY_BLUE,            COLOR_REC_BLUE},            //  10  blue
-    {COLOR_PLY_BLUE,            COLOR_REC_BLUE},            //  11  blue_dark   - placeholder
-    {COLOR_PLY_BLUE,            COLOR_REC_BLUE},            //  12  blue_light  - placeholder
+    {COLOR_ICON_PLY_BLUE,       COLOR_ICON_REC_BLUE},       //  10  blue
+    {COLOR_ICON_PLY_BLUE_DK,    COLOR_ICON_REC_BLUE_DK},    //  11  blue_dark
+    {COLOR_ICON_PLY_BLUE_LT,    COLOR_ICON_REC_BLUE_LT},    //  12  blue_light
 
     {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
     {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark

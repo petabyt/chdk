@@ -552,6 +552,16 @@
         #define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
         #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
     #endif
+    #if !defined(COLOR_ICON_REC_BLUE)
+        #define COLOR_ICON_REC_BLUE     COLOR_BLUE
+        #define COLOR_ICON_REC_BLUE_DK  COLOR_BLUE_DK
+        #define COLOR_ICON_REC_BLUE_LT  COLOR_BLUE_LT
+    #endif
+    #if !defined(COLOR_ICON_PLY_BLUE)
+        #define COLOR_ICON_PLY_BLUE     COLOR_BLUE
+        #define COLOR_ICON_PLY_BLUE_DK  COLOR_BLUE_DK
+        #define COLOR_ICON_PLY_BLUE_LT  COLOR_BLUE_LT
+    #endif
 #endif
 
 // Define histogram colors if not already defined above
@@ -638,6 +648,18 @@
     #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
     #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
     #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
+#endif
+// Special case for light & dark blue
+// Currently only defined for cameras with custom colors, others will use same shade for all three
+#if !defined(COLOR_ICON_REC_BLUE)
+    #define COLOR_ICON_REC_BLUE         COLOR_REC_BLUE
+    #define COLOR_ICON_REC_BLUE_DK      COLOR_REC_BLUE
+    #define COLOR_ICON_REC_BLUE_LT      COLOR_REC_BLUE
+#endif
+#if !defined(COLOR_ICON_PLY_BLUE)
+    #define COLOR_ICON_PLY_BLUE         COLOR_PLY_BLUE
+    #define COLOR_ICON_PLY_BLUE_DK      COLOR_PLY_BLUE
+    #define COLOR_ICON_PLY_BLUE_LT      COLOR_PLY_BLUE
 #endif
 
 //-----------------------------------------------------------------------------------------
