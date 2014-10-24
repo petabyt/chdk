@@ -26,9 +26,6 @@ NHSTUB(kbd_pwr_on                             ,0xffc30b94) //  2 82%
 // Firmware modemap table found @ffdff8dc -> ffebdc2c
 // Mode 16390 in firmware but not in current modemap
 // Mode  2598 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_COMPACT        2602
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2600
-// Current modemap entry not found in firmware - MODE_LONG_SHUTTER        32774
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0000c664) // Found @0xffc11a0c

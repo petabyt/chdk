@@ -20,8 +20,12 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
+    #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R31               1  
+
+    #define CAM_RAW_ROWPIX                  4104    // Found @0xffcc7c70
+    #define CAM_RAW_ROWS                    3048    // Found @0xffcc7c78
 
 // left as test
 
@@ -36,15 +40,14 @@
 
     //#undef  CAM_SHOW_OSD_IN_SHOOT_MENU              // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode
 
-    #define  CAM_CAN_MUTE_MICROPHONE        0       // Camera has function to mute microphone
-
     #undef CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10      // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
                                                     // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
                                                     // scroll bar on the right.
 
-    #define  CAM_AF_SCAN_DURING_VIDEO_RECORD 0      // CHDK can make single AF scan during video record
-    #define  CAM_EV_IN_VIDEO                0       // CHDK can change exposure in video mode
+    #define CAM_MULTIPART                   1
+    #undef  CAM_VIDEO_CONTROL
+    #define CAM_VIDEO_QUALITY_ONLY          1
 
     #define  CAM_REAR_CURTAIN               1       // Camera do not have front/rear curtain flash sync in menu
     //#undef  CAM_BRACKETING                        // Cameras that have bracketing (focus & ev) in original firmware already, most likely s- & g-series (propcase for digic III not found yet!)
@@ -117,12 +120,8 @@
                                                     // defined then enable this use the better icons (from CHDK-DE). See gui_batt.c
                                                     // and gui_space.c.
 
-    //#define CAM_USB_EVENTID         0x902           // Levent ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
 
-    #define CAM_DRYOS                       1
-    #define CAM_PROPSET                     2
-    #define CAM_RAW_ROWPIX                  4104    // Found @0xffcc7c70
-    #define CAM_RAW_ROWS                    3048    // Found @0xffcc7c78
+    #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
 
     #define REMOTE_SYNC_STATUS_LED          0xC022000C  // specifies an LED that turns on while camera waits for USB remote to sync
 

@@ -1,18 +1,27 @@
-#PLATFORMID=0x31BF
-#//   PLATFORMID = 12734 (0x31be) // Found @ 0xfffe0130
-#//   MAXRAMADDR = 0x03ffffff
-#//   KEYSYS = d4                 // Found @ 0xffff1d14
-#//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff1d24
-
+#PLATFORMID=0x31BE
 PLATFORMID=12734
-PLATFORMOS=dryos
 
-RESTARTSTART=0x50000
+PLATFORMOS=dryos
+PLATFORMOSVER=31
+
+# Force ARAM on, and load CHDK in ARAM
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=1
+
+# Set up size variables for AgentRAM
+ARAM_HEAP_START=0x34e000
+ARAM_HEAP_SIZE=0x32000
+
+ifdef OPT_CHDK_IN_ARAM
+MEMISOSTART=$(ARAM_HEAP_START)
+else
 MEMISOSTART=0x12EDB4
+endif
+
 ROMBASEADDR=0xFFC00000
 
 NEED_ENCODED_DISKBOOT=2
-#suppress FI2 since it doesn't work
-override OPT_FI2=
+
 KEYSYS=d4
+
 

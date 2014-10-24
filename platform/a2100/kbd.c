@@ -170,7 +170,6 @@ static KeyMap keymap[] = {
 long __attribute__((naked)) wrap_kbd_p1_f() ;
 
 static void __attribute__((noinline)) mykbd_task_proceed() {
-int counter;
 	while (physw_run){
 		_SleepTask(10) ;  //	*((int*)(0x1c30+0x14)));
 /*
@@ -220,7 +219,6 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 	return 0; // shut up the compiler
 }
 
-volatile int jogdial_stopped=0;
 
 void kbd_fetch_data(long *dst){
     volatile long *mmio0 = (void*)0xc0220200;
@@ -263,7 +261,6 @@ void my_kbd_read_keys() {
           physw_status[1] = kbd_new_state[1];
           physw_status[2] = kbd_new_state[2];
         
-	//	 jogdial_stopped=0;
 
 	} else {
 		// override keys .. don't let them get to the camera or override them as on to trick the camera
@@ -272,12 +269,6 @@ void my_kbd_read_keys() {
 		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
 		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
 
-		// if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run)
-		// {
-			// jogdial_stopped=1;
-			// get_jogdial_direction();
-		// }
-		// else if (jogdial_stopped && camera_info.state.state_kbd_script_run) jogdial_stopped=0;
 	}
 	
 //	_kbd_pwr_off();
@@ -379,17 +370,3 @@ long kbd_get_clicked_key()
 	return 0;
 }
 
-
-// static int new_jogdial=0, old_jogdial=0;
-
-// int Get_JogDial(void){
- // return (*(int*)0xC0240104)>>16;		// G10 okay
-// }
-
-// long get_jogdial_direction(void) {
- // old_jogdial=new_jogdial;
- // new_jogdial=Get_JogDial();
- // if (old_jogdial>new_jogdial) return JOGDIAL_LEFT;
- // else if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
- // else return 0;
-// }

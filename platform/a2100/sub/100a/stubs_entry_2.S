@@ -9,6 +9,9 @@ NHSTUB(SetZoomActuatorSpeedPercent,     0xFFDECE54)
 // Additional
 NHSTUB(ScreenLock,                      0xFFD6BDDC)
 NHSTUB(ScreenUnlock,                    0xFFD6BE30)
+NHSTUB(TurnOnMic,                       0xFFC31220)
+NHSTUB(TurnOffMic,                      0xFFC3124C)
+
 
 
 

@@ -82,3 +82,21 @@ long vid_get_viewport_height()
 // int vid_get_viewport_yscale() {
 	// return 2;               // G10 viewport is 480 pixels high
 // }
+
+//1024 entry palette based on 100a ffcad26c
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x49a8+0x28)); //100a: sub_ffcad26c, via sub_ffd672b4 two refs to "Palette Class."
+}
+
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern char* palette_buffer_ptr[];
+    return (palette_buffer_ptr[active_palette_buffer]+12);
+}
+
