@@ -2280,11 +2280,11 @@ static const char *text[] =
 static const color logo_colors[8] = 
 {
     COLOR_BLACK,
-    COLOR_SPLASH_RED,
+    COLOR_RED_DK,
     COLOR_RED,
     COLOR_GREY,
-    COLOR_SPLASH_GREY,
-    COLOR_SPLASH_PINK,
+    COLOR_GREY_LT,
+    COLOR_RED_LT,
     COLOR_TRANSPARENT,
     COLOR_WHITE
 };

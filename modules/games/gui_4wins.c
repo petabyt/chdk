@@ -30,9 +30,9 @@ gui_handler GUI_MODE_4WINS =
 #define P1_COLOR	 MAKE_COLOR(COLOR_HISTO_B_PLAY,COLOR_HISTO_B_PLAY)
 #define P2_COLOR	 MAKE_COLOR(COLOR_HISTO_G_PLAY,COLOR_HISTO_G_PLAY)
 #define BK_COLOR	 MAKE_COLOR(COLOR_GREY,COLOR_GREY)
-#define FIELD_COLOR	 MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)//(füllfarbe,rand)
+#define FIELD_COLOR	 MAKE_COLOR(COLOR_GREY_LT,COLOR_GREY_LT)//(füllfarbe,rand)
 #define TEXT_COLOR   MAKE_COLOR(COLOR_GREY, COLOR_WHITE)
-#define INFO_COLOR   MAKE_COLOR(COLOR_SPLASH_GREY, COLOR_SPLASH_GREY)
+#define INFO_COLOR   MAKE_COLOR(COLOR_GREY_LT, COLOR_GREY_LT)
 #define INFO_TEXT_COLOR   MAKE_COLOR(INFO_COLOR, COLOR_WHITE)
 
 char cursor_position,cur_player=1;
@@ -313,7 +313,7 @@ int gui_4wins_init()
 	draw_filled_rect(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR);
 	draw_filled_round_rect(camera_screen.ts_button_border+240, 90, camera_screen.ts_button_border+360-BORDER, 240-10, INFO_COLOR);
     draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+12, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
-    draw_line(camera_screen.ts_button_border,15,camera_screen.ts_button_border+360,15,COLOR_SPLASH_GREY);
+    draw_line(camera_screen.ts_button_border,15,camera_screen.ts_button_border+360,15,COLOR_GREY_LT);
 
 	for(i=0;i<7;i++)
 	{
