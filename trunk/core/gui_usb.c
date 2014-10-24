@@ -11,7 +11,7 @@ void gui_usb_draw_icon() {
     xx = conf.usb_info_pos.x;
     yy = conf.usb_info_pos.y;
 
-    color cl1 = COLOR_BG;
+    color cl1 = COLOR_GREY_DK;
     color cl2 = COLOR_GREY;
     color cl3 = COLOR_YELLOW;
 
