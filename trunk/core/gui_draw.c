@@ -34,7 +34,7 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
 
 //-------------------------------------------------------------------
 
-#define GUARD_VAL   SCREEN_COLOR
+#define GUARD_VAL   COLOR_GREY_DK
 
 void draw_set_guard()
 {
@@ -644,7 +644,6 @@ const unsigned char const script_colors[NUM_SCRIPT_COLORS][2]  = {
 };
 
 const unsigned char const module_colors[] = {
-    SCREEN_COLOR		,
     COLOR_WHITE         ,
     COLOR_RED           ,
     COLOR_GREY          ,

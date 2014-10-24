@@ -203,19 +203,19 @@ static void DrawCell(uchar x, uchar y) {
 static void DrawMainWindow() {
     uchar x, y;
 
-    draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
+    draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
     for (y=0; y<8; ++y) {
         for (x=0; x<8; ++x) {
             DrawCell(x, y);
         }
     }
     for (x=0; x<8; ++x) {
-        draw_char(field_x+cell_size*x+((cell_size-FONT_WIDTH)>>1)+1,  field_y-FONT_HEIGHT-1, '1'+x,  MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-        draw_char(field_x+cell_size*x+((cell_size-FONT_WIDTH)>>1)+1,  field_y+field_size+3,  '1'+x,  MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_char(field_x+cell_size*x+((cell_size-FONT_WIDTH)>>1)+1,  field_y-FONT_HEIGHT-1, '1'+x,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_char(field_x+cell_size*x+((cell_size-FONT_WIDTH)>>1)+1,  field_y+field_size+3,  '1'+x,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
     for (y=0; y<8; ++y) {
-        draw_char(field_x-FONT_WIDTH-4,  field_y+cell_size*y+((cell_size-FONT_HEIGHT)>>1)+1, 'A'+y,  MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-        draw_char(field_x+field_size+3,  field_y+cell_size*y+((cell_size-FONT_HEIGHT)>>1)+1, 'A'+y,  MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_char(field_x-FONT_WIDTH-4,  field_y+cell_size*y+((cell_size-FONT_HEIGHT)>>1)+1, 'A'+y,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_char(field_x+field_size+3,  field_y+cell_size*y+((cell_size-FONT_HEIGHT)>>1)+1, 'A'+y,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
 }
 
@@ -331,18 +331,18 @@ static void redrawstatus() {
     int x=camera_screen.ts_button_border+field_size+FONT_WIDTH*2+23, y = 25;
     if (InGame) { 
         if (CurrPlayer==FIELD_PLAYER1) { 
-            draw_string(x+1, y, lang_str(LANG_REVERSI_MOVE_WHITE), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE)); 
+            draw_string(x+1, y, lang_str(LANG_REVERSI_MOVE_WHITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
         } else { 
-            draw_string(x+1, y, lang_str(LANG_REVERSI_MOVE_BLACK), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE)); 
+            draw_string(x+1, y, lang_str(LANG_REVERSI_MOVE_BLACK), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
         }
     } else { 
-        draw_string(x, y, lang_str(LANG_REVERSI_GAME_OVER), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE)); 
+        draw_string(x, y, lang_str(LANG_REVERSI_GAME_OVER), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
-    draw_string(x, y+FONT_HEIGHT+8, lang_str(LANG_REVERSI_WHITE_BLACK), MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_string(x, y+FONT_HEIGHT+8, lang_str(LANG_REVERSI_WHITE_BLACK), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     sprintf(buf, " %d ", NumPl1);
-    draw_string(x+FONT_WIDTH*(7-strlen(buf))/2, y+FONT_HEIGHT*2+8, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_string(x+FONT_WIDTH*(7-strlen(buf))/2, y+FONT_HEIGHT*2+8, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     sprintf(buf, " %d ", NumPl2);
-    draw_string(x+FONT_WIDTH*7+FONT_WIDTH*(7-strlen(buf))/2, y+FONT_HEIGHT*2+8, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_string(x+FONT_WIDTH*7+FONT_WIDTH*(7-strlen(buf))/2, y+FONT_HEIGHT*2+8, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     draw_rect(x-4, y-4, x+FONT_WIDTH*14+4, y+FONT_HEIGHT*3+8+4, COLOR_WHITE);
     draw_rect(x-2, y-2, x+FONT_WIDTH*14+2, y+FONT_HEIGHT*3+8+2, COLOR_WHITE);
     draw_line(x-2, y+FONT_HEIGHT+4, x+FONT_WIDTH*14+2, y+FONT_HEIGHT+4, COLOR_WHITE);
@@ -410,7 +410,7 @@ void gui_reversi_draw() {
     }
 
     sprintf(buf, "Batt:%3d%%", get_batt_perc());
-    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-9, camera_screen.height/FONT_HEIGHT-1, buf, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-9, camera_screen.height/FONT_HEIGHT-1, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
     Timer();
 }
