@@ -126,11 +126,11 @@ static void gui_mem_info(char *typ, cam_meminfo *meminfo, int showidx)
 {
     char txt[50];
     sprintf(txt,"%-5s: %08x-%08x: %d",typ,meminfo->start_address, meminfo->end_address, meminfo->total_size);
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 5+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 5+showidx,  txt,       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 	sprintf(txt,"alloc: now=%d(%d) max=%d", meminfo->allocated_size, meminfo->allocated_count, meminfo->allocated_peak);
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 6+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 6+showidx,  txt,       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 	sprintf(txt,"free:  now=%d(%d) max=%d", meminfo->free_size, meminfo->free_block_count, meminfo->free_block_max_size);
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 7+showidx,  txt,       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 7+showidx,  txt,       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 void gui_module_draw()
@@ -139,9 +139,9 @@ void gui_module_draw()
 
     if (modinspect_redraw) {
 
-    	draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(SCREEN_COLOR, SCREEN_COLOR));
-        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+5, 0,  "*** Module Inspector ***", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
-        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 2,  "Idx Name         Addr       Size", MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+    	draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+5, 0,  "*** Module Inspector ***", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 2,  "Idx Name         Addr       Size", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
 		showidx=0;
 		for ( idx=0; idx<MAX_NUM_LOADED_MODULES; idx++)
@@ -151,11 +151,11 @@ void gui_module_draw()
 
 			char txt[50];
 		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, mod->modulename, (unsigned)mod->hdr, mod->hdr->reloc_start);
-        	draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 3+showidx, txt, MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        	draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 3+showidx, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 			showidx++;
 		}
 
-        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(SCREEN_COLOR, COLOR_WHITE));
+        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
     	cam_meminfo meminfo;
 

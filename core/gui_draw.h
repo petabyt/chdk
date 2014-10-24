@@ -15,10 +15,6 @@
 // For module and platform independent code use the module_colors[X] version (see below)
 #ifndef CHDK_MODULE_CODE
 
-// Moved from gui_bench.c, gui_debug.c, gui_calendar.c, gui_reversi.c & gui_sokoban.c so it can be overridden
-// Default value is white in SX30 & G12 palette making white text hard to read
-#define SCREEN_COLOR                    0xF7
-
 #include "camera.h"     // ensure the camera definition is loaded
 
 //-------------------------------------------------------------------
@@ -101,9 +97,6 @@
     #define COLOR_PLY_CYAN              0x99
     #define COLOR_PLY_YELLOW            0x66
 
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x15    // try for a dark color in both record and play mode
-
 #elif CAM_BITMAP_PALETTE==4
 
 // Used by :- G11, S90, SX120IS
@@ -172,9 +165,6 @@
     // Override histogram colors if needed (defaults set below)
     #define COLOR_REC_MAGENTA           0x72
     #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x1D
 
 #elif CAM_BITMAP_PALETTE==6
 
@@ -249,9 +239,6 @@
     #define COLOR_REC_MAGENTA           COLOR_RED
     #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
     #define COLOR_PLY_YELLOW            0x80
-
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x1D
 
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
@@ -351,9 +338,6 @@
     #define COLOR_REC_MAGENTA           0x3D    //COLOR_RED
     #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
 
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x1D
-
 // Icon colors
 // 3 shades of Red, Green, Yellow and Grey
 // Separate definitions for record and playback mode
@@ -430,9 +414,6 @@
     #define COLOR_PLY_CYAN              0x99
     #define COLOR_PLY_YELLOW            0x66
 
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x1D
-
 #elif CAM_BITMAP_PALETTE==13
 
 // Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, SX220HS, SX230HS, SX240HS, SX260HS,
@@ -442,8 +423,6 @@
     #define COLOR_GREY_DK               0x1a
     #define COLOR_GREY                  0x16
     #define COLOR_GREY_LT               0x0E
-    #undef SCREEN_COLOR
-    #define SCREEN_COLOR                0x1D
 
     // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
     #define COLOR_RED                   (CHDK_COLOR_BASE+0)
@@ -489,8 +468,6 @@
 #define COLOR_GREY_DK       0x1C  
 #define COLOR_GREY          0x10
 #define COLOR_GREY_LT       0x08
-#undef SCREEN_COLOR
-#define SCREEN_COLOR        0x1C
 
     // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
     #define COLOR_RED           0x1E  // use Canon's red else get white behind startup spalsh
@@ -546,8 +523,6 @@
 #define COLOR_GREY_DK       0x1C  
 #define COLOR_GREY          0x1A
 #define COLOR_GREY_LT       0x16
-#undef SCREEN_COLOR
-#define SCREEN_COLOR        0x1D
 
 #define COLOR_RED           (CHDK_COLOR_BASE+0)  
 #define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
@@ -712,31 +687,30 @@
 
 extern  const unsigned char const module_colors[];
 
-#define SCREEN_COLOR        (module_colors[0])
-#define COLOR_WHITE         (module_colors[1])
-#define COLOR_RED           (module_colors[2])
-#define COLOR_GREY          (module_colors[3])
-#define COLOR_GREY_DK       (module_colors[4])
-#define COLOR_GREEN         (module_colors[5])
-#define COLOR_BLUE_LT       (module_colors[6])
-#define COLOR_BLUE          (module_colors[7])
-#define COLOR_YELLOW        (module_colors[8])
-#define COLOR_RED_DK        (module_colors[9])
-#define COLOR_RED_LT        (module_colors[10])
-#define COLOR_GREY_LT       (module_colors[11])
+#define COLOR_WHITE         (module_colors[0])
+#define COLOR_RED           (module_colors[1])
+#define COLOR_GREY          (module_colors[2])
+#define COLOR_GREY_DK       (module_colors[3])
+#define COLOR_GREEN         (module_colors[4])
+#define COLOR_BLUE_LT       (module_colors[5])
+#define COLOR_BLUE          (module_colors[6])
+#define COLOR_YELLOW        (module_colors[7])
+#define COLOR_RED_DK        (module_colors[8])
+#define COLOR_RED_LT        (module_colors[9])
+#define COLOR_GREY_LT       (module_colors[10])
 // Histogram colors (defined for both record and playback mode)
-#define COLOR_REC_RED       (module_colors[12])
-#define COLOR_PLY_RED       (module_colors[13])
-#define COLOR_REC_GREEN     (module_colors[14])
-#define COLOR_PLY_GREEN     (module_colors[15])
-#define COLOR_REC_BLUE      (module_colors[16])
-#define COLOR_PLY_BLUE      (module_colors[17])
-#define COLOR_REC_CYAN      (module_colors[18])
-#define COLOR_PLY_CYAN      (module_colors[19])
-#define COLOR_REC_MAGENTA   (module_colors[20])
-#define COLOR_PLY_MAGENTA   (module_colors[21])
-#define COLOR_REC_YELLOW    (module_colors[22])
-#define COLOR_PLY_YELLOW    (module_colors[23])
+#define COLOR_REC_RED       (module_colors[11])
+#define COLOR_PLY_RED       (module_colors[12])
+#define COLOR_REC_GREEN     (module_colors[13])
+#define COLOR_PLY_GREEN     (module_colors[14])
+#define COLOR_REC_BLUE      (module_colors[15])
+#define COLOR_PLY_BLUE      (module_colors[16])
+#define COLOR_REC_CYAN      (module_colors[17])
+#define COLOR_PLY_CYAN      (module_colors[18])
+#define COLOR_REC_MAGENTA   (module_colors[19])
+#define COLOR_PLY_MAGENTA   (module_colors[20])
+#define COLOR_REC_YELLOW    (module_colors[21])
+#define COLOR_PLY_YELLOW    (module_colors[22])
 
 #endif  // CHDK_MODULE_CODE
 
