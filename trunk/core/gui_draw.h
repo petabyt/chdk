@@ -18,6 +18,7 @@
 #include "camera.h"     // ensure the camera definition is loaded
 
 //-------------------------------------------------------------------
+// Custom color definitions for each 'palette'
 
 #if CAM_BITMAP_PALETTE==1
 
@@ -419,26 +420,12 @@
 // Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, SX220HS, SX230HS, SX240HS, SX260HS,
 //            A810, A1300, A2300, A3400, A4000, S100, Powershot N
 
-    #define COLOR_WHITE                 0x01
+    // Default Canon colors that are the same in record and play modes
     #define COLOR_GREY_DK               0x1a
     #define COLOR_GREY                  0x16
     #define COLOR_GREY_LT               0x0E
 
-    // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
-    #define COLOR_RED                   (CHDK_COLOR_BASE+0)
-    #define COLOR_RED_DK                (CHDK_COLOR_BASE+1)
-    #define COLOR_RED_LT                (CHDK_COLOR_BASE+2)
-    #define COLOR_GREEN                 (CHDK_COLOR_BASE+3)
-    #define COLOR_GREEN_DK              (CHDK_COLOR_BASE+4)
-    #define COLOR_GREEN_LT              (CHDK_COLOR_BASE+5)
-    #define COLOR_BLUE                  (CHDK_COLOR_BASE+6)
-    #define COLOR_BLUE_DK               (CHDK_COLOR_BASE+7)
-    #define COLOR_BLUE_LT               (CHDK_COLOR_BASE+8)
-    #define COLOR_MAGENTA               (CHDK_COLOR_BASE+9)
-    #define COLOR_YELLOW                (CHDK_COLOR_BASE+10)
-    #define COLOR_YELLOW_DK             (CHDK_COLOR_BASE+11)
-    #define COLOR_YELLOW_LT             (CHDK_COLOR_BASE+12)
-
+    // Cameras use custom colors (CHDK_COLOR_BASE) - CHDK colors set below
 
 #elif CAM_BITMAP_PALETTE==14
 
@@ -463,14 +450,13 @@
 
 // Used by :- A3300IS
 
-// Default Canon colors that are the same in record and play modes
-#define COLOR_WHITE         0x01
-#define COLOR_GREY_DK       0x1C  
-#define COLOR_GREY          0x10
-#define COLOR_GREY_LT       0x08
+    // Default Canon colors that are the same in record and play modes
+    #define COLOR_GREY_DK       0x1C
+    #define COLOR_GREY          0x10
+    #define COLOR_GREY_LT       0x08
 
     // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
-    #define COLOR_RED           0x1E  // use Canon's red else get white behind startup spalsh
+    #define COLOR_RED           0x1E  // use Canon's red else get white behind startup splash (*** is this still needed? ***)
     #define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
     #define COLOR_RED_LT        (CHDK_COLOR_BASE+2)
     #define COLOR_GREEN         (CHDK_COLOR_BASE+3)
@@ -484,74 +470,21 @@
     #define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
     #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
 
-#define COLOR_HISTO_R       COLOR_RED
-#define COLOR_HISTO_R_PLAY  COLOR_RED
-#define COLOR_HISTO_B       COLOR_BLUE
-#define COLOR_HISTO_B_PLAY  COLOR_BLUE
-#define COLOR_HISTO_G       COLOR_GREEN
-#define COLOR_HISTO_G_PLAY  COLOR_GREEN
-#define COLOR_HISTO_BG      COLOR_BLUE
-#define COLOR_HISTO_BG_PLAY COLOR_BLUE
-#define COLOR_HISTO_RG      COLOR_YELLOW
-#define COLOR_HISTO_RG_PLAY COLOR_YELLOW
-#define COLOR_HISTO_RB      COLOR_RED
-#define COLOR_HISTO_RB_PLAY COLOR_RED
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-#define COLOR_ICON_REC_RED          COLOR_RED
-#define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
-#define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
-#define COLOR_ICON_REC_GREEN        COLOR_GREEN
-#define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN_DK
-#define COLOR_ICON_REC_GREEN_LT     COLOR_GREEN_LT
-#define COLOR_ICON_REC_YELLOW       COLOR_YELLOW
-#define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW_DK
-#define COLOR_ICON_REC_YELLOW_LT    COLOR_YELLOW_LT
-#define COLOR_ICON_REC_GREY         COLOR_GREY
-#define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
-#define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
-
 #elif CAM_BITMAP_PALETTE==16
 
 // Used by :- A1200, G10, IXUS120_SD940
 
-// Default Canon colors that are the same in record and play modes
-#define COLOR_WHITE         0x01
-#define COLOR_GREY_DK       0x1C  
-#define COLOR_GREY          0x1A
-#define COLOR_GREY_LT       0x16
+    // Default Canon colors that are the same in record and play modes
+    #define COLOR_GREY_DK       0x1C
+    #define COLOR_GREY          0x1A
+    #define COLOR_GREY_LT       0x16
 
-#define COLOR_RED           (CHDK_COLOR_BASE+0)  
-#define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
-#define COLOR_RED_LT        (CHDK_COLOR_BASE+2)
-#define COLOR_GREEN         (CHDK_COLOR_BASE+3)
-#define COLOR_GREEN_DK      (CHDK_COLOR_BASE+4)
-#define COLOR_GREEN_LT      (CHDK_COLOR_BASE+5)
-#define COLOR_BLUE          (CHDK_COLOR_BASE+6)
-#define COLOR_BLUE_DK       (CHDK_COLOR_BASE+7)
-#define COLOR_BLUE_LT       (CHDK_COLOR_BASE+8)
-#define COLOR_MAGENTA       (CHDK_COLOR_BASE+9)
-#define COLOR_YELLOW        (CHDK_COLOR_BASE+10)
-#define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
-#define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
+    // Cameras use custom colors (CHDK_COLOR_BASE) - CHDK colors set below
 
-#define COLOR_ICON_REC_RED          COLOR_RED
-#define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
-#define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
-#define COLOR_ICON_REC_GREEN        COLOR_GREEN
-#define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN_DK
-#define COLOR_ICON_REC_GREEN_LT     COLOR_GREEN_LT
-#define COLOR_ICON_REC_YELLOW       COLOR_YELLOW
-#define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW_DK
-#define COLOR_ICON_REC_YELLOW_LT    COLOR_YELLOW_LT
-#define COLOR_ICON_REC_GREY         COLOR_GREY
-#define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
-#define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
+#elif CAM_BITMAP_PALETTE==17
 
-#elif CAM_BITMAP_PALETTE==17 // used in A3100 + A3150^M
+// Used by :- A3100 + A3150
+
     #define COLOR_WHITE                 0x11
     #define COLOR_RED                   0x22
     #define COLOR_BLUE                  0x00
@@ -594,6 +527,32 @@
 #else
     #error CAM_BITMAP_PALETTE not defined
 #endif  // CAM_BITMAP_PALETTE
+
+//-----------------------------------------------------------------------------------------
+// Setup default colors not already defined above
+
+// Define colors for cameras using custom colors (CHDK_COLOR_BASE)
+#if defined(CHDK_COLOR_BASE)
+    #if !defined(COLOR_WHITE)
+        #define COLOR_WHITE         0x01
+    #endif
+    #if !defined(COLOR_RED)
+        // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
+        #define COLOR_RED           (CHDK_COLOR_BASE+0)
+        #define COLOR_RED_DK        (CHDK_COLOR_BASE+1)
+        #define COLOR_RED_LT        (CHDK_COLOR_BASE+2)
+        #define COLOR_GREEN         (CHDK_COLOR_BASE+3)
+        #define COLOR_GREEN_DK      (CHDK_COLOR_BASE+4)
+        #define COLOR_GREEN_LT      (CHDK_COLOR_BASE+5)
+        #define COLOR_BLUE          (CHDK_COLOR_BASE+6)
+        #define COLOR_BLUE_DK       (CHDK_COLOR_BASE+7)
+        #define COLOR_BLUE_LT       (CHDK_COLOR_BASE+8)
+        #define COLOR_MAGENTA       (CHDK_COLOR_BASE+9)
+        #define COLOR_YELLOW        (CHDK_COLOR_BASE+10)
+        #define COLOR_YELLOW_DK     (CHDK_COLOR_BASE+11)
+        #define COLOR_YELLOW_LT     (CHDK_COLOR_BASE+12)
+    #endif
+#endif
 
 // Define histogram colors if not already defined above
 #if !defined(COLOR_REC_RED)
@@ -680,6 +639,8 @@
     #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
     #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
 #endif
+
+//-----------------------------------------------------------------------------------------
 
 #else
 
