@@ -47,4 +47,18 @@ void debug_led(int state)
     * (int *) DEBUG_LED = state ? 0x46 : 0x44;
 }
 
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }  //Found @ 0xffcadeb0 fw 100b
 
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x49d4+0x14)); // "Add: %p Width : %ld Hight : %ld", sub_ffcadf5c
+}
+
+
+void *vid_get_bitmap_active_palette()
+{
+    extern int active_palette_buffer;
+    extern int** palette_buffer_ptr;
+    return (palette_buffer_ptr[active_palette_buffer]+16);
+}
