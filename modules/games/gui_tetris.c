@@ -60,17 +60,18 @@ gui_handler GUI_MODE_TETRIS =
 #define TETROMINO_J     (5)
 #define TETROMINO_L     (6)
 /* Tetromino colors */
-#define TETRIS_COLOR_CYAN      COLOR_RED_LT
-#define TETRIS_COLOR_RED       COLOR_RED
-#define TETRIS_COLOR_BLUE      COLOR_BLUE
+#define TETRIS_COLOR_CYAN      COLOR_PLY_CYAN
+#define TETRIS_COLOR_RED       COLOR_PLY_RED
+#define TETRIS_COLOR_BLUE      COLOR_PLY_BLUE
 #define TETRIS_COLOR_ORANGE    COLOR_WHITE
-#define TETRIS_COLOR_GREEN     COLOR_GREEN
-#define TETRIS_COLOR_YELLOW    COLOR_YELLOW
-#define TETRIS_COLOR_PURPLE    COLOR_BLACK
+#define TETRIS_COLOR_GREEN     COLOR_PLY_GREEN
+#define TETRIS_COLOR_YELLOW    COLOR_PLY_YELLOW
+#define TETRIS_COLOR_PURPLE    COLOR_PLY_MAGENTA
 #define EMPTY_CELL  (-1)
 /* screen colors */
-#define TETRIS_COLOR_BG        MAKE_COLOR(COLOR_GREY,COLOR_GREY)
-#define TETRIS_COLOR_BOARD     MAKE_COLOR(COLOR_GREY_LT,COLOR_GREY_LT)
+#define TETRIS_COLOR_BG        MAKE_COLOR(COLOR_GREY_DK,COLOR_GREY_DK)
+#define TETRIS_COLOR_BOARD     MAKE_COLOR(COLOR_GREY,COLOR_GREY)
+#define TETRIS_COLOR_TEXT      COLOR_WHITE
 
 typedef struct StcTetramino {
     int cells[4][4];
@@ -217,22 +218,22 @@ void platformRenderGame(StcGame *gameInstance){
     char str_buf[100];
     static struct tm *ttm;
     sprintf(str_buf,"High:    %5d",game->stats.high);
-    draw_string(camera_screen.ts_button_border+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     sprintf(str_buf,"Points:  %5d",game->stats.score);
-    draw_string(camera_screen.ts_button_border+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     sprintf(str_buf,"Lines:   %5d",game->stats.lines);
-    draw_string(camera_screen.ts_button_border+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     sprintf(str_buf,"Level:   %5d",game->stats.level);
-    draw_string(camera_screen.ts_button_border+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     sprintf(str_buf,"UP  -> Pause");
-    draw_string(camera_screen.ts_button_border+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     sprintf(str_buf,"SET -> Rotate");
-    draw_string(camera_screen.ts_button_border+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     ttm = get_localtime();
     sprintf(str_buf,"Time:    %2u:%02u", ttm->tm_hour, ttm->tm_min);
-    draw_string(camera_screen.ts_button_border+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
     sprintf(str_buf,"Batt:     %3d%%", get_batt_perc());
-    draw_string(camera_screen.ts_button_border+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, COLOR_BLACK));
+    draw_string(camera_screen.ts_button_border+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
 }
 
 /* Return the current system time in milliseconds */
@@ -663,7 +664,7 @@ void gameUpdate(StcGame *game) {
 
 void gui_tetris_init(){
     draw_filled_rect(camera_screen.ts_button_border+0,0,camera_screen.width-camera_screen.ts_button_border,camera_screen.height, TETRIS_COLOR_BG);
-    draw_rect(camera_screen.ts_button_border+BOARD_X-1,BOARD_Y-1,camera_screen.ts_button_border+BOARD_WIDTH*TILE_SIZE+10,BOARD_HEIGHT*TILE_SIZE+10, COLOR_BLACK);
+    draw_rect(camera_screen.ts_button_border+BOARD_X-1,BOARD_Y-1,camera_screen.ts_button_border+BOARD_WIDTH*TILE_SIZE+10,BOARD_HEIGHT*TILE_SIZE+10, TETRIS_COLOR_TEXT);
     game = createGame();
     gameInit(game);
   

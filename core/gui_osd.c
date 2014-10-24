@@ -111,7 +111,7 @@ void gui_osd_draw_dof(int is_osd_edit)
            (camera_info.state.mode_photo || camera_info.state.mode_shooting==MODE_STITCH)) ||
           ((camera_info.state.mode_video || is_video_recording()) && conf.show_values_in_video))))
     {
-        color valid_col = (conf.osd_color & 0xff00) | COLOR_HISTO_G;
+        color valid_col = (conf.osd_color & 0xff00) | COLOR_REC_GREEN;
         int i = 8, j;
         short f_ex = (conf.show_dof==DOF_SHOW_IN_DOF_EX);
         draw_osd_string(conf.dof_pos, 0, 0, "S/NL/FL:", conf.osd_color, conf.dof_scale);
@@ -207,7 +207,7 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
     }
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
-    draw_osd_string(conf.values_pos, i*FONT_WIDTH, m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_HISTO_G):conf.osd_color, conf.values_scale);
+    draw_osd_string(conf.values_pos, i*FONT_WIDTH, m, osd_buf, use_good_color?((conf.osd_color & 0xff00) | COLOR_REC_GREEN):conf.osd_color, conf.values_scale);
   } else {
     osd_buf[9]=0;
     draw_osd_string(conf.values_pos, 0, m, osd_buf, conf.osd_color,conf.values_scale);

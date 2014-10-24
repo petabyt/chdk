@@ -630,9 +630,9 @@ const unsigned char const script_colors[NUM_SCRIPT_COLORS][2]  = {
     {COLOR_ICON_PLY_GREEN,      COLOR_ICON_REC_GREEN},      //  7   green
     {COLOR_ICON_PLY_GREEN_DK,   COLOR_ICON_REC_GREEN_DK},   //  8   green_dark
     {COLOR_ICON_PLY_GREEN_LT,   COLOR_ICON_REC_GREEN_LT},   //  9   green_light
-    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  10  blue
-    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  11  blue_dark   - placeholder
-    {COLOR_HISTO_B_PLAY,        COLOR_HISTO_B},             //  12  blue_light  - placeholder
+    {COLOR_PLY_BLUE,            COLOR_REC_BLUE},            //  10  blue
+    {COLOR_PLY_BLUE,            COLOR_REC_BLUE},            //  11  blue_dark   - placeholder
+    {COLOR_PLY_BLUE,            COLOR_REC_BLUE},            //  12  blue_light  - placeholder
 
     {COLOR_ICON_PLY_GREY,       COLOR_ICON_REC_GREY},       //  13  grey
     {COLOR_ICON_PLY_GREY_DK,    COLOR_ICON_REC_GREY_DK},    //  14  grey_dark
@@ -656,18 +656,18 @@ const unsigned char const module_colors[] = {
     COLOR_RED_DK        ,
     COLOR_RED_LT        ,
     COLOR_GREY_LT       ,
-    COLOR_HISTO_R       ,
-    COLOR_HISTO_R_PLAY  ,
-    COLOR_HISTO_B       ,
-    COLOR_HISTO_G       ,
-    COLOR_HISTO_G_PLAY  ,
-    COLOR_HISTO_BG      ,
-    COLOR_HISTO_RG      ,
-    COLOR_HISTO_RB      ,
-    COLOR_HISTO_RB_PLAY ,
-    COLOR_HISTO_B_PLAY  ,
-    COLOR_HISTO_BG_PLAY ,
-    COLOR_HISTO_RG_PLAY ,
+    COLOR_REC_RED       ,
+    COLOR_PLY_RED       ,
+    COLOR_REC_GREEN     ,
+    COLOR_PLY_GREEN     ,
+    COLOR_REC_BLUE      ,
+    COLOR_PLY_BLUE      ,
+    COLOR_REC_CYAN      ,
+    COLOR_PLY_CYAN      ,
+    COLOR_REC_MAGENTA   ,
+    COLOR_PLY_MAGENTA   ,
+    COLOR_REC_YELLOW    ,
+    COLOR_PLY_YELLOW    ,
 };
 
 //-------------------------------------------------------------------

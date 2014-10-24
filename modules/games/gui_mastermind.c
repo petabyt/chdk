@@ -239,9 +239,9 @@ void gui_mastermind_draw() {
 
 
 int basic_module_init() {
-	colors[0] = COLOR_HISTO_R_PLAY;
-	colors[1] = COLOR_HISTO_G_PLAY;
-	colors[2] = COLOR_HISTO_B_PLAY;
+	colors[0] = COLOR_PLY_RED;
+	colors[1] = COLOR_PLY_GREEN;
+	colors[2] = COLOR_PLY_BLUE;
 	colors[3] = COLOR_YELLOW;
 	colors[4] = COLOR_WHITE;
 	colors[5] = COLOR_BLACK;
