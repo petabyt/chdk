@@ -60,7 +60,7 @@ gui_handler GUI_MODE_TETRIS =
 #define TETROMINO_J     (5)
 #define TETROMINO_L     (6)
 /* Tetromino colors */
-#define TETRIS_COLOR_CYAN      COLOR_SPLASH_PINK
+#define TETRIS_COLOR_CYAN      COLOR_RED_LT
 #define TETRIS_COLOR_RED       COLOR_RED
 #define TETRIS_COLOR_BLUE      COLOR_BLUE
 #define TETRIS_COLOR_ORANGE    COLOR_WHITE
@@ -70,7 +70,7 @@ gui_handler GUI_MODE_TETRIS =
 #define EMPTY_CELL  (-1)
 /* screen colors */
 #define TETRIS_COLOR_BG        MAKE_COLOR(COLOR_GREY,COLOR_GREY)
-#define TETRIS_COLOR_BOARD     MAKE_COLOR(COLOR_SPLASH_GREY,COLOR_SPLASH_GREY)
+#define TETRIS_COLOR_BOARD     MAKE_COLOR(COLOR_GREY_LT,COLOR_GREY_LT)
 
 typedef struct StcTetramino {
     int cells[4][4];
