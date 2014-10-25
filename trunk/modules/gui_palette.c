@@ -23,6 +23,7 @@ static color cl;
 static int palette_mode;
 static void (*palette_on_select)(color clr);
 static int gui_palette_redraw;
+static int test_page;
 
 //-------------------------------------------------------------------
 void gui_palette_init(int mode, color st_color, void (*on_select)(color clr))
@@ -32,27 +33,49 @@ void gui_palette_init(int mode, color st_color, void (*on_select)(color clr))
     palette_mode = mode;
     palette_on_select = on_select;
     gui_palette_redraw = 1;
+    test_page = 0;
     gui_set_mode(&GUI_MODE_PALETTE_MODULE);
 }
 
 //-------------------------------------------------------------------
-int gui_palette_kbd_process() {
+int gui_palette_kbd_process()
+{
     switch (kbd_get_autoclicked_key())
     {
         case KEY_DOWN:
-            cl = (((cl+16)&0xf0)|(cl&0x0f));
-            gui_palette_redraw = 1;
+            if (palette_mode != PALETTE_MODE_TEST)
+            {
+                cl = (((cl+16)&0xf0)|(cl&0x0f));
+                gui_palette_redraw = 1;
+            }
             break;
         case KEY_UP:
-            cl = (((cl-16)&0xf0)|(cl&0x0f));
-            gui_palette_redraw = 1;
+            if (palette_mode != PALETTE_MODE_TEST)
+            {
+                cl = (((cl-16)&0xf0)|(cl&0x0f));
+                gui_palette_redraw = 1;
+            }
             break;
         case KEY_LEFT:
-            cl = ((cl&0xf0)|((cl-1)&0x0f));
+            if (palette_mode != PALETTE_MODE_TEST)
+            {
+                cl = ((cl&0xf0)|((cl-1)&0x0f));
+            }
+            else
+            {
+                if (--test_page < 0) test_page = 2;
+            }
             gui_palette_redraw = 1;
             break;
         case KEY_RIGHT:
-            cl = ((cl&0xf0)|((cl+1)&0x0f));
+            if (palette_mode != PALETTE_MODE_TEST)
+            {
+                cl = ((cl&0xf0)|((cl+1)&0x0f));
+            }
+            else
+            {
+                if (++test_page > 2) test_page = 0;
+            }
             gui_palette_redraw = 1;
             break;
         case KEY_SET:
@@ -68,6 +91,111 @@ int gui_palette_kbd_process() {
 }
 
 //-------------------------------------------------------------------
+static void palette_test()
+{
+    unsigned int x, y, xl, xr, xt, w, h;
+    color c, co;
+    static char buf[64];
+
+    xl = camera_screen.ts_button_border;
+    xr = camera_screen.width - camera_screen.ts_button_border;
+
+    if (gui_palette_redraw)
+    {
+        // Draw top text line - current color + instructions
+        draw_filled_rect(xl, 0, xr-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+        draw_string(xr-22*FONT_WIDTH, 0, "Use \x1b\x1a to change page", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+
+        unsigned char cols[3][15] = {
+                {
+                        COLOR_WHITE         ,COLOR_RED           ,COLOR_RED_DK        ,COLOR_RED_LT        ,
+                        COLOR_GREEN         ,COLOR_BLUE          ,COLOR_BLUE_LT       ,COLOR_YELLOW        ,
+                        COLOR_GREY          ,COLOR_GREY_DK       ,COLOR_GREY_LT       ,COLOR_TRANSPARENT
+                },
+                {
+                        COLOR_REC_RED       ,COLOR_REC_GREEN     ,
+                        COLOR_REC_BLUE      ,COLOR_REC_CYAN      ,
+                        COLOR_REC_MAGENTA   ,COLOR_REC_YELLOW    ,
+                        COLOR_PLY_RED       ,COLOR_PLY_GREEN     ,
+                        COLOR_PLY_BLUE      ,COLOR_PLY_CYAN      ,
+                        COLOR_PLY_MAGENTA   ,COLOR_PLY_YELLOW    ,
+                },
+                {
+                        3   ,6  ,9  ,12 ,15,
+                        4   ,7  ,10 ,13 ,16,
+                        5   ,8  ,11 ,14 ,17,
+                }
+        };
+
+        char *nams[3][15] = {
+                {
+                        "white", "red", "dark red", "light red",
+                        "green", "blue", "light blue", "yellow",
+                        "grey", "dark grey", "light grey", "transparent"
+                },
+                {
+                        "red", "green", "blue", "cyan", "magenta", "yellow",
+                },
+                {
+                        "red", "green", "blue", "grey", "yellow",
+                        "dk red", "dk green", "dk blue", "dk grey", "dk yellow",
+                        "lt red", "lt green", "lt blue", "lt grey", "lt yellow",
+                }
+        };
+
+        if (test_page == 0)
+        {
+            draw_string(xl, 0, "System Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            c = 0;
+            w = (xr - xl) / 4;
+            h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
+            for (y=0; y<3; y++)
+            {
+                for (x=0; x<4; x++, c++)
+                {
+                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c],cols[test_page][c]));
+                    draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+                }
+            }
+        }
+        else if (test_page == 1)
+        {
+            draw_string(xl, 0, "Histogram Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            c = 0;
+            co = (camera_info.state.mode_rec) ? 0 : 6;
+            w = (xr - xl) / 2;
+            h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
+            for (y=0; y<3; y++)
+            {
+                for (x=0; x<2; x++, c++)
+                {
+                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c+co],cols[test_page][c+co]));
+                    draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+                }
+            }
+        }
+        else if (test_page == 2)
+        {
+            draw_string(xl, 0, "Script/Icon Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            c = 0;
+            co = (camera_info.state.mode_rec) ? 0 : 1;
+            w = (xr - xl) / 5;
+            h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
+            for (y=0; y<3; y++)
+            {
+                for (x=0; x<5; x++, c++)
+                {
+                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(script_colors[cols[test_page][c]][co],script_colors[cols[test_page][c]][co]));
+                    draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+                }
+            }
+        }
+
+        gui_palette_redraw = 0;
+    }
+}
+
+//-------------------------------------------------------------------
 #define CELL_SIZE           13
 #define BORDER_SIZE         8
 #define CELL_ZOOM           6
@@ -76,7 +204,8 @@ int gui_palette_kbd_process() {
 #define DISP_TOP            (FONT_HEIGHT + BORDER_SIZE)
 #define DISP_BOTTOM         (FONT_HEIGHT + BORDER_SIZE + CELL_SIZE * 16)
 
-void gui_palette_draw() {
+static void palette_draw()
+{
     unsigned int x, y, xl, xr;
     color c;
     static char buf[64];
@@ -118,6 +247,16 @@ void gui_palette_draw() {
 
         gui_palette_redraw = 0;
     }
+}
+
+//-------------------------------------------------------------------
+
+void gui_palette_draw()
+{
+    if (palette_mode == PALETTE_MODE_TEST)
+        palette_test();
+    else
+        palette_draw();
 }
 
 void gui_module_menu_kbd_process()
