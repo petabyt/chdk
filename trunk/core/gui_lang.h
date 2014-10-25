@@ -764,7 +764,9 @@
 #define LANG_MENU_HOTSHOE_EMPTY                 628
 #define LANG_MENU_HOTSHOE_OVERRIDE_OFF          629
 
-#define GUI_LANG_ITEMS                          629
+#define LANG_MENU_COLOR_TEST                    630
+
+#define GUI_LANG_ITEMS                          630
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
