@@ -1705,7 +1705,7 @@ static void gui_menu_test_palette(int arg)
 
 static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,      gui_menu_run_palette, 0 ),
-    MENU_ITEM(0x65,(int)"CHDK Color Test",            MENUITEM_PROC,      gui_menu_test_palette, 0 ),
+    MENU_ITEM(0x65,LANG_MENU_COLOR_TEST,              MENUITEM_PROC,      gui_menu_test_palette, 0 ),
     MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,               MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_TEXT,            MENUITEM_COLOR_FG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_BKG,             MENUITEM_COLOR_BG,  &conf.osd_color, 0 ),
