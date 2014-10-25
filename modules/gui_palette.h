@@ -7,6 +7,7 @@
 
 #define PALETTE_MODE_DEFAULT    0
 #define PALETTE_MODE_SELECT     1
+#define PALETTE_MODE_TEST       2
 
 //-------------------------------------------------------------------
 
