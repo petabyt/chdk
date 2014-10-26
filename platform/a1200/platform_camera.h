@@ -91,10 +91,10 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does now work with raw define this
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              16
+    #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0x9F    // Start color index for CHDK colors loaded into camera palette
-                                                    // Note: overloads Canon RED for proper logo display
+    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1

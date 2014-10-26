@@ -90,13 +90,13 @@ void console_draw()
             if (i < 0) i = MAX_CONSOLE_HISTORY-1;
             strncpy(buf,console_buf[i],console_line_length);
             buf[console_line_length] = 0;
-            draw_string(x, y - c * FONT_HEIGHT, buf, conf.menu_color);
+            draw_string(x, y - c * FONT_HEIGHT, buf, conf.osd_color);
 
             int l = strlen(buf);
             if (l < console_line_length)
                 draw_filled_rect(x + l * FONT_WIDTH, y - c * FONT_HEIGHT,
                                  x + console_line_length * FONT_WIDTH - 1, y - c * FONT_HEIGHT + FONT_HEIGHT - 1,
-                                 MAKE_COLOR(BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color)));
+                                 MAKE_COLOR(BG_COLOR(conf.osd_color), BG_COLOR(conf.osd_color)));
 
             console_displayed = 1;
         }

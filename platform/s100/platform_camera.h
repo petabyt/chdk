@@ -67,6 +67,7 @@
     #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory
     #define CHDK_COLOR_BASE                 0xA8// Start color index for CHDK colors loaded into camera palette.
+    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    2

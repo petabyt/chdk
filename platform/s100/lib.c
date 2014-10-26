@@ -220,6 +220,7 @@ void load_chdk_palette()
             pal[CHDK_COLOR_BASE+10] = 0x3A9A917;  // Yellow
             pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
             pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
+            pal[CHDK_COLOR_BASE+13] = 0x0090000;  // Transparent dark grey
 
             extern char palette_control;
             palette_control = 1;

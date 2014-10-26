@@ -1703,9 +1703,23 @@ static void gui_menu_test_palette(int arg)
     libpalette->show_palette(PALETTE_MODE_TEST, 0, NULL);
 }
 
+static void gui_menu_reset_colors_selected(unsigned int btn)
+{
+    if (btn==MBOX_BTN_YES)
+        resetColors();
+}
+
+static void gui_menu_reset_colors(int arg)
+{
+    gui_mbox_init(LANG_MSG_RESET_COLORS_TITLE,
+                  LANG_MSG_RESET_COLORS_TEXT,
+                  MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, gui_menu_reset_colors_selected);
+}
+
 static CMenuItem visual_submenu_items[] = {
     MENU_ITEM(0x65,LANG_MENU_MISC_PALETTE,            MENUITEM_PROC,      gui_menu_run_palette, 0 ),
     MENU_ITEM(0x65,LANG_MENU_COLOR_TEST,              MENUITEM_PROC,      gui_menu_test_palette, 0 ),
+    MENU_ITEM(0x65,LANG_MSG_RESET_COLORS_TITLE,       MENUITEM_PROC,      gui_menu_reset_colors, 0 ),
     MENU_ITEM(0x0,LANG_MENU_VIS_COLORS,               MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_TEXT,            MENUITEM_COLOR_FG,  &conf.osd_color, 0 ),
     MENU_ITEM(0x65,LANG_MENU_VIS_OSD_BKG,             MENUITEM_COLOR_BG,  &conf.osd_color, 0 ),

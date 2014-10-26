@@ -131,6 +131,11 @@ void user_menu_conf_info_func(unsigned short id)
     }
 }
 
+// Range of entry IDs for user adjustable colors.
+// Used to reset colors. Adjust these if color entries changes
+#define COLOR_FIRST_OVERRIDE    50
+#define COLOR_LAST_OVERRIDE     63
+
 static ConfInfo osd_conf_info[] = {
 /* !!! Do NOT change ID for items defined already! Append a new one at the end! !!! */
 
@@ -158,18 +163,19 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO2( 35, conf.ev_video_pos,                          CONF_OSD_POS,   18,80),
     CONF_INFO2( 36, conf.usb_info_pos,                          CONF_OSD_POS,   95,0),
 
+    // Keep these together
     CONF_INFO( 50, conf.histo_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
     CONF_INFO( 51, conf.histo_color2,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_WHITE)),
-    CONF_INFO( 52, conf.osd_color,                              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
-    CONF_INFO( 53, conf.osd_color_warn,                         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_RED)),
-    CONF_INFO( 54, conf.osd_color_override,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_RED)),
+    CONF_INFO( 52, conf.osd_color,                              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE)),
+    CONF_INFO( 53, conf.osd_color_warn,                         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED)),
+    CONF_INFO( 54, conf.osd_color_override,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED)),
     CONF_INFO( 55, conf.menu_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
     CONF_INFO( 56, conf.menu_title_color,                       CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_WHITE, COLOR_BLACK)),
     CONF_INFO( 57, conf.menu_cursor_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_BLUE, COLOR_YELLOW)),
     CONF_INFO( 58, conf.menu_symbol_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
     CONF_INFO( 59, conf.reader_color,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE)),
     CONF_INFO( 60, conf.grid_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
-    CONF_INFO( 61, conf.space_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
+    CONF_INFO( 61, conf.space_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE)),
     CONF_INFO( 62, conf.zebra_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED)),
     CONF_INFO( 63, conf.edge_overlay_color,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED)),
 
@@ -1317,13 +1323,39 @@ int load_config_file(int config_base, const char *filename)
 }
 
 //-------------------------------------------------------------------
+// Find ConfInfo entry index for given ID
+static int findConfInfo(ConfInfo *ci, unsigned short id)
+{
+    int i;
+    for( i=0; ci[i].id > 0; ++i )
+        if( ci[i].id==id )
+            return i;
+    return -1;
+}
+
+// Reset all user adjustable color settings to default values
+void resetColors()
+{
+    int i, n;
+    // Iterate over color override ID's
+    for (n=COLOR_FIRST_OVERRIDE; n<=COLOR_LAST_OVERRIDE; n++)
+    {
+        i = findConfInfo(osd_conf_info, n);
+        if (i != -1)
+        {
+            *((color*)osd_conf_info[i].var) = osd_conf_info[i].cl;
+        }
+    }
+}
+
+//-------------------------------------------------------------------
 static int getValue(ConfInfo *ci, unsigned short id, tConfigVal* configVal)
 {
-    unsigned short i;
+    int i;
     int ret = CONF_EMPTY;
     OSD_pos* pos;
     
-    if( id==0 )
+    if (id == 0)
     {
         configVal->numb = 0;
         for ( i=0; ci[i].id > 0; ++i )
@@ -1333,45 +1365,46 @@ static int getValue(ConfInfo *ci, unsigned short id, tConfigVal* configVal)
     }
     else
     {
-        for( i=0; ci[i].id > 0; ++i ) {
-            if( ci[i].id==id ) {
-                switch( ci[i].type ) {
-                    case CONF_VALUE:
-                    case CONF_FUNC_PTR:
-                        switch( ci[i].size ) {
-                            case sizeof(int):
-                                configVal->numb = *(int*)ci[i].var;
-                                ret = CONF_VALUE;
+        i = findConfInfo(ci, id);
+        if (i != -1)
+        {
+            switch( ci[i].type )
+            {
+                case CONF_VALUE:
+                case CONF_FUNC_PTR:
+                    switch( ci[i].size )
+                    {
+                        case sizeof(int):
+                            configVal->numb = *(int*)ci[i].var;
+                            ret = CONF_VALUE;
                             break;
-                            case sizeof(short):
-                                configVal->numb = *(short*)ci[i].var;
-                                ret = CONF_VALUE;
+                        case sizeof(short):
+                            configVal->numb = *(short*)ci[i].var;
+                            ret = CONF_VALUE;
                             break;
-                            case sizeof(char):
-                                configVal->numb = *(char*)ci[i].var;
-                                ret = CONF_VALUE;
+                        case sizeof(char):
+                            configVal->numb = *(char*)ci[i].var;
+                            ret = CONF_VALUE;
                             break;
-                        }
-                        configVal->pInt = (int*)ci[i].var;
+                    }
+                    configVal->pInt = (int*)ci[i].var;
                     break;
-                    case CONF_INT_PTR:
-                        configVal->numb = ci[i].size/sizeof(int);
-                        configVal->pInt = (int*)ci[i].var;
-                        ret = CONF_INT_PTR;
+                case CONF_INT_PTR:
+                    configVal->numb = ci[i].size/sizeof(int);
+                    configVal->pInt = (int*)ci[i].var;
+                    ret = CONF_INT_PTR;
                     break;
-                    case CONF_CHAR_PTR:
-                        configVal->str = ci[i].var;
-                        ret = CONF_CHAR_PTR;
+                case CONF_CHAR_PTR:
+                    configVal->str = ci[i].var;
+                    ret = CONF_CHAR_PTR;
                     break;
-                    case CONF_OSD_POS:
-                        pos = (OSD_pos*)ci[i].var;
-                        configVal->pos.x = pos->x;
-                        configVal->pos.y = pos->y;
-                        ret = CONF_OSD_POS;
-                        configVal->pInt = (int*)ci[i].var;
+                case CONF_OSD_POS:
+                    pos = (OSD_pos*)ci[i].var;
+                    configVal->pos.x = pos->x;
+                    configVal->pos.y = pos->y;
+                    ret = CONF_OSD_POS;
+                    configVal->pInt = (int*)ci[i].var;
                     break;
-                }
-                break;
             }
         }
     }
@@ -1397,65 +1430,69 @@ static int config_autosave = 1;
 
 static int setValue(ConfInfo *ci, unsigned short id, tConfigVal configVal)
 {
-    unsigned short i;
+    int i;
     int ret = CONF_EMPTY, len, len2;
     OSD_pos* pos;
     
     // Don't allow scripts to enable Lua native calls.
     if (id == 999) return ret;
 
-    for ( i=0; ci[i].id > 0; ++i )
+    i = findConfInfo(ci, id);
+    if (i != -1)
     {
-        if( ci[i].id==id )
+        switch( ci[i].type )
         {
-            switch( ci[i].type ) {
-                case CONF_VALUE:
-                case CONF_FUNC_PTR:
-                    if( configVal.isNumb ) {
-                        switch( ci[i].size ) {
-                            case sizeof(int):
-                                *(int*)ci[i].var = (int)configVal.numb;
-                                ret = CONF_VALUE;
+            case CONF_VALUE:
+            case CONF_FUNC_PTR:
+                if( configVal.isNumb )
+                {
+                    switch( ci[i].size )
+                    {
+                        case sizeof(int):
+                            *(int*)ci[i].var = (int)configVal.numb;
+                            ret = CONF_VALUE;
                             break;
-                            case sizeof(short):
-                                *(short*)ci[i].var = (short)configVal.numb;
-                                ret = CONF_VALUE;
+                        case sizeof(short):
+                            *(short*)ci[i].var = (short)configVal.numb;
+                            ret = CONF_VALUE;
                             break;
-                            case sizeof(char):
-                                *(char*)ci[i].var = (char)configVal.numb;
-                                ret = CONF_VALUE;
+                        case sizeof(char):
+                            *(char*)ci[i].var = (char)configVal.numb;
+                            ret = CONF_VALUE;
                             break;
-                        }
                     }
+                }
                 break;
-                case CONF_INT_PTR:
-                    if( configVal.isPInt ) {
-                        len = ci[i].size;
-                        len2 = configVal.numb*sizeof(int);
-                        if( len2<len ) len = len2;
-                        memcpy(ci[i].var, configVal.pInt, len);
-                        ret = CONF_INT_PTR;
+            case CONF_INT_PTR:
+                if( configVal.isPInt )
+                {
+                    len = ci[i].size;
+                    len2 = configVal.numb*sizeof(int);
+                    if( len2<len ) len = len2;
+                    memcpy(ci[i].var, configVal.pInt, len);
+                    ret = CONF_INT_PTR;
+                }
+                break;
+            case CONF_CHAR_PTR:
+                if( configVal.isStr )
+                {
+                    len = strlen(configVal.str);
+                    if( len>0 && len<CONF_STR_LEN)
+                    {
+                        strncpy(ci[i].var, configVal.str ,len+1);
                     }
+                    ret = CONF_CHAR_PTR;
+                }
                 break;
-                case CONF_CHAR_PTR:
-                    if( configVal.isStr ) {
-                        len = strlen(configVal.str);
-                        if( len>0 && len<CONF_STR_LEN) {
-                            strncpy(ci[i].var, configVal.str ,len+1);
-                        }
-                        ret = CONF_CHAR_PTR;
-                    }
+            case CONF_OSD_POS:
+                if( configVal.isPos )
+                {
+                    pos = (OSD_pos*)ci[i].var;
+                    pos->x = configVal.pos.x;
+                    pos->y = configVal.pos.y;
+                    ret = CONF_OSD_POS;
+                }
                 break;
-                case CONF_OSD_POS:
-                    if( configVal.isPos ) {
-                        pos = (OSD_pos*)ci[i].var;
-                        pos->x = configVal.pos.x;
-                        pos->y = configVal.pos.y;
-                        ret = CONF_OSD_POS;
-                    }
-                break;
-            }
-            break;
         }
     }
 

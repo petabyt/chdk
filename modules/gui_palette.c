@@ -10,6 +10,8 @@
 #include "gui_palette.h"
 #include "module_def.h"
 
+#include "viewport.h"
+
 void gui_module_menu_kbd_process();
 int gui_palette_kbd_process();
 void gui_palette_draw();
@@ -106,7 +108,7 @@ static void palette_test()
         draw_filled_rect(xl, 0, xr-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
         draw_string(xr-22*FONT_WIDTH, 0, "Use \x1b\x1a to change page", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-        unsigned char cols[3][15] = {
+        unsigned char cols[3][20] = {
                 {
                         COLOR_WHITE         ,COLOR_RED           ,COLOR_RED_DK        ,COLOR_RED_LT        ,
                         COLOR_GREEN         ,COLOR_BLUE          ,COLOR_BLUE_LT       ,COLOR_YELLOW        ,
@@ -124,10 +126,11 @@ static void palette_test()
                         3   ,6  ,9  ,12 ,15,
                         4   ,7  ,10 ,13 ,16,
                         5   ,8  ,11 ,14 ,17,
+                        1   ,1  ,1  ,18 ,1
                 }
         };
 
-        char *nams[3][15] = {
+        char *nams[3][20] = {
                 {
                         "white", "red", "dark red", "light red",
                         "green", "blue", "light blue", "yellow",
@@ -140,6 +143,7 @@ static void palette_test()
                         "red", "green", "blue", "grey", "yellow",
                         "dk red", "dk green", "dk blue", "dk grey", "dk yellow",
                         "lt red", "lt green", "lt blue", "lt grey", "lt yellow",
+                        "", "", "", "trns grey", ""
                 }
         };
 
@@ -180,8 +184,8 @@ static void palette_test()
             c = 0;
             co = (camera_info.state.mode_rec) ? 0 : 1;
             w = (xr - xl) / 5;
-            h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
-            for (y=0; y<3; y++)
+            h = (camera_screen.height - (2 * FONT_HEIGHT)) / 4;
+            for (y=0; y<4; y++)
             {
                 for (x=0; x<5; x++, c++)
                 {
@@ -212,13 +216,17 @@ static void palette_draw()
 
     xl = camera_screen.ts_button_border;
     xr = camera_screen.width - camera_screen.ts_button_border;
+    int *pal = (int*)vid_get_bitmap_active_palette();
 
     if (gui_palette_redraw)
     {
         // Draw top text line - current color + instructions
         draw_filled_rect(xl, 0, xr, FONT_HEIGHT-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
         draw_string(xr-29*FONT_WIDTH, 0, "    Use \x18\x19\x1b\x1a to change color ", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        sprintf(buf, " %s: 0x%02hX", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl);
+        if ( pal )
+            sprintf(buf, " %s: 0x%02hX 0x%08X", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl, pal[cl]);
+        else
+            sprintf(buf, " %s: 0x%02hX", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl );
         draw_string(xl, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         // Draw Palette color boxes

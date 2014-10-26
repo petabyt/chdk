@@ -418,7 +418,8 @@
 #elif CAM_BITMAP_PALETTE==13
 
 // Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, SX220HS, SX230HS, SX240HS, SX260HS,
-//            A810, A1300, A2300, A3400, A4000, S100, Powershot N
+//            A810, A1300, A2300, A3400, A4000, S100, Powershot N, A3300IS, A1200, G10, IXUS120_SD940
+//            IXUS100_SD780, A3200, SX160IS, SX50HS, SX500IS
 
     // Default Canon colors that are the same in record and play modes
     #define COLOR_GREY_DK               0x1a
@@ -445,28 +446,6 @@
     // Override histogram colors if needed (defaults set below)
     #define COLOR_REC_MAGENTA           COLOR_RED
     #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-#elif CAM_BITMAP_PALETTE==15
-
-// Used by :- A3300IS
-
-    // Default Canon colors that are the same in record and play modes
-    #define COLOR_GREY_DK       0x1C
-    #define COLOR_GREY          0x10
-    #define COLOR_GREY_LT       0x08
-
-    // CHDK colors loaded into these locations in the camera palette by load_chdk_palette()
-
-#elif CAM_BITMAP_PALETTE==16
-
-// Used by :- A1200, G10, IXUS120_SD940
-
-    // Default Canon colors that are the same in record and play modes
-    #define COLOR_GREY_DK       0x1C
-    #define COLOR_GREY          0x1A
-    #define COLOR_GREY_LT       0x16
-
-    // Cameras use custom colors (CHDK_COLOR_BASE) - CHDK colors set below
 
 #elif CAM_BITMAP_PALETTE==17
 
@@ -517,6 +496,10 @@
 
 //-----------------------------------------------------------------------------------------
 // Setup default colors not already defined above
+
+#if !defined(COLOR_GREY_DK_TRANS)
+    #define COLOR_GREY_DK_TRANS     COLOR_GREY_DK
+#endif
 
 // Define colors for cameras using custom colors (CHDK_COLOR_BASE)
 #if defined(CHDK_COLOR_BASE)
@@ -648,6 +631,13 @@
     #define COLOR_ICON_PLY_BLUE_DK      COLOR_PLY_BLUE
     #define COLOR_ICON_PLY_BLUE_LT      COLOR_PLY_BLUE
 #endif
+// Transparent grey
+#if !defined(COLOR_ICON_REC_GREY_DK_TRANS)
+    #define COLOR_ICON_REC_GREY_DK_TRANS    COLOR_GREY_DK_TRANS
+#endif
+#if !defined(COLOR_ICON_PLY_GREY_DK_TRANS)
+    #define COLOR_ICON_PLY_GREY_DK_TRANS    COLOR_GREY_DK_TRANS
+#endif
 
 //-----------------------------------------------------------------------------------------
 
@@ -741,7 +731,7 @@ extern color icon_green[3], icon_red[3], icon_yellow[3], icon_grey[3];
 
 //-------------------------------------------------------------------
 
-#define NUM_SCRIPT_COLORS   18
+#define NUM_SCRIPT_COLORS   19
 extern const unsigned char const script_colors[NUM_SCRIPT_COLORS][2];
 
 //-------------------------------------------------------------------

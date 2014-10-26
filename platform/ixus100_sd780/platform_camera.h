@@ -49,7 +49,7 @@
     #define CAM_UNCACHED_BIT                0x40000000
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              16
+    #define CAM_BITMAP_PALETTE              13
 
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                 0xE2   // Start color index for CHDK colors loaded into camera palette.

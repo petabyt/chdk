@@ -640,7 +640,9 @@ const unsigned char const script_colors[NUM_SCRIPT_COLORS][2]  = {
 
     {COLOR_ICON_PLY_YELLOW,     COLOR_ICON_REC_YELLOW},     //  16  yellow
     {COLOR_ICON_PLY_YELLOW_DK,  COLOR_ICON_REC_YELLOW_DK},  //  17  yellow_dark
-    {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT}   //  18  yellow_light
+    {COLOR_ICON_PLY_YELLOW_LT,  COLOR_ICON_REC_YELLOW_LT},  //  18  yellow_light
+
+    {COLOR_ICON_PLY_GREY_DK_TRANS,COLOR_ICON_REC_GREY_DK_TRANS} // 19  transparent dark grey
 };
 
 const unsigned char const module_colors[] = {
