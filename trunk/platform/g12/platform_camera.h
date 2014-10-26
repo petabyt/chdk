@@ -141,6 +141,7 @@
 
     #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                     0xB3// Start color index for CHDK colors loaded into camera palette.
+    #define COLOR_GREY_DK_TRANS                 (CHDK_COLOR_BASE+13)
 
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 

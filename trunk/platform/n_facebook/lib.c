@@ -159,8 +159,8 @@ void load_chdk_palette()
                 pal[CHDK_COLOR_BASE+10] = 0x3FA9A917;  // Yellow
                 pal[CHDK_COLOR_BASE+11] = 0x3F819137;  // Dark Yellow
                 pal[CHDK_COLOR_BASE+12] = 0x3FDED115;  // Light Yellow
-                pal[CHDK_COLOR_BASE+13] = 0x1F190000;   // Transparent Light Grey
-                
+                pal[CHDK_COLOR_BASE+13] = 0x1F0A0000;  // Transparent dark grey
+
                 palette_control = 1; // note appears to be a bitmask, 2nd bit is also used for something ?
                 
                 vid_bitmap_refresh();

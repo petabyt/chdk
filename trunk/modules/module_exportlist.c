@@ -176,6 +176,7 @@
 
             vid_get_bitmap_fb
             vid_bitmap_refresh
+            vid_get_bitmap_active_palette
             vid_get_viewport_height
             vid_get_viewport_width
             vid_get_viewport_byte_width

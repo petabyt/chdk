@@ -557,6 +557,8 @@ extern void config_restore(ConfInfo *confinfo, const char *filename, void (*info
 extern int save_config_file(int config_base, const char *filename);
 extern int load_config_file(int config_base, const char *filename);
 
+extern void resetColors();
+
 //-------------------------------------------------------------------
 
 #endif

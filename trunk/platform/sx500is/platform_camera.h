@@ -85,7 +85,7 @@
     #define PARAM_CAMERA_NAME                           4 // parameter number for GetParameterData
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                         16 // palette number reserved in core/gui_draw.h
+    #define CAM_BITMAP_PALETTE                         13 // palette number in core/gui_draw.h
     #define CAM_LOAD_CUSTOM_COLORS                      1   // Enable loading CHDK colors into the camera palette memory/hardware
     #define CHDK_COLOR_BASE                          0xD0   // Start color index for CHDK colors loaded into camera palette
 

@@ -184,6 +184,7 @@ draw.make_color = function(c)
     if (c=="yellow")        then c=255+16 end
     if (c=="yellow_dark")   then c=255+17 end
     if (c=="yellow_light")  then c=255+18 end
+    if (c=="grey_trans")    then c=255+19 end
     return c
     end
 
