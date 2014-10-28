@@ -6,3 +6,4 @@ Camera depending notes:
 - A560 does NOT have a real IRIS Diaphragm, it only has an ND Filter! 
 Mind this.
 - cam supports multipartitioning
+- switching from record to play using the CHDK PTP extension crashes
