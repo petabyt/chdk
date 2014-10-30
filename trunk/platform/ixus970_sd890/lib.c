@@ -42,3 +42,19 @@ void JogDial_CCW(void)
 {
 	_PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
 }
+
+// PTP display stuff
+// TODO type may not be correct
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() 
+{
+    return (void *)0x3ef90;        //100b Found @ 0xff8eaa40 - Two refs to "BmpDDev"
+}
+
+void *vid_get_bitmap_active_buffer() 
+{
+    return (void*)(*(int*)0x7EC4); //100b Found @ 0xff8eaa40 - Two refs to "BmpDDev"
+}
+
