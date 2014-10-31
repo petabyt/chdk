@@ -48,7 +48,6 @@ static KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
 
 	{ 2, KEY_PLAYBACK	, 0x00000800 },
-	{ 2, KEY_PRINT		, 0x00000800 }, // set default <ALT> key to playback
 	{ 2, KEY_SHOOT_FULL	, 0x00000300 },
 	{ 2, KEY_SHOOT_FULL_ONLY, 0x00000200 },
 	{ 2, KEY_SHOOT_HALF	, 0x00000100 },

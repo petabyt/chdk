@@ -1,20 +1,5 @@
 #include "platform.h"
 		
-int vid_get_viewport_width()
-{
-	return 360 ;					// SD940 103c ?
-}
-
-long vid_get_viewport_height()		
-{		
-	return 240;					// SD940 103c
-}		
-		
-char *camera_jpeg_count_str()		
-{		
-	return (char*) 0x700B0;		// SD940 103C search on "9999"
-}	
-
 char *hook_raw_image_addr()		
 {		
     return (char*)0x4219D120;	// SD940 103c FFAD6FF8 from matching subroutine in S90 101a FFB0254C
@@ -57,6 +42,3 @@ void *vid_get_viewport_fb_d()
 {		
 	return (void*)(*(int*)(0x2790+0x58));  //  @FF869E3C  @FF869E74 
 }		
-			
-	
-		

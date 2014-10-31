@@ -5,6 +5,12 @@
 #define LED_ORANGE 0xC0220134
 #define LED_AF     0xC0223030
 
+char *camera_jpeg_count_str()
+{
+    extern char jpeg_count_str[];
+	return jpeg_count_str;
+}
+
 extern int enabled_refresh_physical_screen;
 
 void vid_bitmap_refresh()
@@ -62,6 +68,16 @@ void vid_turn_on_updates()
   _RefreshPhysicalScreen(1);
 }
 
+int vid_get_viewport_width()
+{
+	return 360;
+}
+
+long vid_get_viewport_height()		
+{		
+	return 240;
+}		
+
 // Functions for PTP Live View system
 int vid_get_palette_type()                      { return 3 ; }          // 1,2,3,4,or 5
 int vid_get_palette_size()                      { return 256 * 4 ; }    // 16*4 or 256*4
@@ -75,7 +91,6 @@ void *vid_get_bitmap_active_palette()
 
 void load_chdk_palette()
 {
-    int i ;
     extern char** palette_buffer_ptr;
     extern int active_palette_buffer;
 

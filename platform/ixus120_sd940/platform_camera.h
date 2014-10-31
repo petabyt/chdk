@@ -40,8 +40,8 @@
     #undef CAM_HAS_ERASE_BUTTON    // Camera does not have a dedicated erase button
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Display" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY }
 
     #define CAM_DNG_LENS_INFO               { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
     // pattern
@@ -101,6 +101,8 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync
     #define CAM_REMOTE_AtoD_CHANNEL         5      // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
