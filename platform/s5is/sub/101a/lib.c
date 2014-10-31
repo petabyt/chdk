@@ -4,16 +4,6 @@
 // need it, or wait until someone feels like updating the documentation for this
 // particular model.
 
-void *hook_raw_fptr()
-{
-	return (void*)0; // What does this do? Doesn't seem to be called
-}
-
-void *hook_raw_ret_addr()
-{
-	return (void*)0; // What does this do? Doesn't seem to be called
-}
-
 char *hook_raw_image_addr()
 {
 	return (char*)0x1163B8E0;

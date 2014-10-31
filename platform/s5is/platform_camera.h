@@ -26,6 +26,7 @@
     #define CAM_RAW_ROWPIX                  3336    // for new 8 MP
     #define CAM_RAW_ROWS                    2480    // for new 8 MP
 
+    #define CAM_MULTIPART                   1
     #define CAM_SWIVEL_SCREEN               1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Shrtcut", "Flash", "Timer", "ISO", "Video" }
@@ -56,6 +57,8 @@
     #define CAM_BRACKETING                  1
     #define DNG_EXT_FROM                    ".DPS"
     #define CAM_HOTSHOE_OVERRIDE            1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
