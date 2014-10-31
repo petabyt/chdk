@@ -89,6 +89,16 @@ void *vid_get_bitmap_active_palette()
     return palette_buffer_ptr[active_palette_buffer]+8;
 }
 
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x53dc+0x18)); //"Add: %p Width : %ld Hight : %ld", 
+                                          //       100e: sub_ff8f290c
+                                          // 101a, 102c: sub_ff8f2928
+                                          //      103b : sub_ff8f2934
+                                          //      103c : sub_ff8f2984
+}
+
+
 void load_chdk_palette()
 {
     extern char** palette_buffer_ptr;
@@ -114,8 +124,6 @@ void load_chdk_palette()
             pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
             pal[CHDK_COLOR_BASE+13] = 0x0090000;  // Transparent dark grey
 
-            // extern char palette_control;
-            // palette_control = 1;
             vid_bitmap_refresh();
         }
     }
