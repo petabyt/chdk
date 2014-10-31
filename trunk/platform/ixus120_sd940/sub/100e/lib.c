@@ -1,21 +1,6 @@
 // IXUS120-SD940 fw 1.00e
 
 #include "platform.h"
-		
-int vid_get_viewport_width()
-{
-	return 360 ;					// SD940 103c ?
-}
-
-long vid_get_viewport_height()		
-{		
-	return 240;					// SD940 103c 103b:  seems to use same number.
-}		
-		
-char *camera_jpeg_count_str()		
-{		
-	return (char*) 0x700B0;		// SD940 103C search on "9999" 103b:  seems to use same number.
-}	
 
 char *hook_raw_image_addr()		
 {		
