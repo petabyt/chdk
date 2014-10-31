@@ -80,3 +80,6 @@
     #define PARAMETER_DATA_FLAG                 0       // For calls to _GetParameterData & _SetParameterData
 
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

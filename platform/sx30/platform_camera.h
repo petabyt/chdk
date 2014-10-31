@@ -98,9 +98,6 @@
     #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  13
-
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        2
 
@@ -120,7 +117,6 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does now work with raw define this
 
     #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                     0xB3// Start color index for CHDK colors loaded into camera palette.
 
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 

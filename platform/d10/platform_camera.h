@@ -51,9 +51,7 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000
 
-    #undef  CAM_BITMAP_PALETTE
     // OK looks similar to ixus100 based on forum posts
-    #define CAM_BITMAP_PALETTE              5
 
     #define CAM_QUALITY_OVERRIDE            1
     #undef CAM_SENSOR_BITS_PER_PIXEL

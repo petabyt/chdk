@@ -57,7 +57,6 @@
        -498, 10000,    1957, 10000,    4116, 10000
     #define cam_CalibrationIlluminant1      21      // D65
 
-
     // no separate erase button
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_DISP_BUTTON
@@ -96,12 +95,8 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1   // Draw pixels on active bitmap buffer only.
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
-
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
     // doesn't seem to conflict badly with anything
-    #define CHDK_COLOR_BASE                 0x73 // Start color index for CHDK colors loaded into camera palette.
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                     // Used to enabled bracketing in custom timer, required on many recent cameras

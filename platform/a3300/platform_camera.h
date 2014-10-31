@@ -97,10 +97,6 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_VIDEO_CONTROL
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13      // palette number for A3300 in core/gui_draw.h
-
-    #define CHDK_COLOR_BASE                 0xE2    // Start color index for CHDK colors loaded into camera palette. Kosy chose a place Canon doesn't seem to use.
     #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware	
 
     // Define shortcut overrides where defaults are not suitable

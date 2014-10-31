@@ -20,7 +20,6 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-
     ////////////////////////////////
     // Sure values
     ////////////////////////////////
@@ -83,9 +82,6 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
-
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              17
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1

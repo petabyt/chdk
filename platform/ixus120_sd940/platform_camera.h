@@ -48,12 +48,7 @@
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
     // color
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
-
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xB3   // Start color index for CHDK colors loaded into camera palette.
-    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10

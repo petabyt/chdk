@@ -26,10 +26,6 @@
 
     #define CAM_HAS_CMOS                    1
 
-    #undef  CAM_BITMAP_PALETTE                      // shut up compiler
-    //#define CAM_BITMAP_PALETTE              8       // canon palette does not contain all colors anymore like on vxworks and palette is different in playback/record modus
-    #define CAM_BITMAP_PALETTE              11      // ToDo
-
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000   // ROM:FF88A248 via ExMem.FreeCacheable()
 

@@ -68,8 +68,6 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              10
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 

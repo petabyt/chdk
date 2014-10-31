@@ -59,13 +59,13 @@
 
     #define DNG_EXT_FROM                    ".DPS"
 
-
-
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
-
 
     #define CAM_USB_EVENTID_VXWORKS         0x10a5 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
 
     // Warning : no know SD override for this camera
 
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

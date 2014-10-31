@@ -65,3 +65,6 @@
     #define CAM_SD_OVER_IN_MF               1
 
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

@@ -65,3 +65,6 @@
 
     #define CAM_USB_EVENTID_VXWORKS         0x10A5 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

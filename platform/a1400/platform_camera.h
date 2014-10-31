@@ -30,7 +30,6 @@
     #define CAM_RAW_ROWPIX                  4704    // Found @0xff943780
     #define CAM_RAW_ROWS                    3504    // Found @0xff94378c
 
-
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff831d9c
 
@@ -82,10 +81,7 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_USE_ZOOM_FOR_MF
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13   // palette number reserved in core/gui_draw.h
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xD0   // Start color index for CHDK colors loaded into camera palette
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1

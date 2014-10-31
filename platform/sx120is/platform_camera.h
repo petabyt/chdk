@@ -62,8 +62,6 @@
     #define cam_CalibrationIlluminant1      1       // Daylight
     #define CAM_JPEG_WIDTH                  3648
     #define CAM_JPEG_HEIGHT                 2736
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              4
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1

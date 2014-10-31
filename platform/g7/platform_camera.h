@@ -69,7 +69,9 @@
     #define CAM_USB_EVENTID_VXWORKS         0x1085 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
                                                    // NOTE switching back to play reportedly does not work on this camera
 
-
     // Warning : no usable SD override mode found for G7 .. bummer !
 
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

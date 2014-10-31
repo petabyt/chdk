@@ -40,11 +40,7 @@
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1
-    #define CHDK_COLOR_BASE                 0xE0
-    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #define CAM_HAS_JOGDIAL                 1
 //  #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

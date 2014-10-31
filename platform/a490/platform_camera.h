@@ -48,9 +48,6 @@
     #undef CAM_DEFAULT_ALT_BUTTON
     #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
 
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              8
-
     #define CAM_DNG_LENS_INFO               { 66,10, 216,10, 30,10, 58,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue

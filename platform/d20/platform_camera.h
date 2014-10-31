@@ -92,10 +92,7 @@
 
     #define CAM_HAS_MOVIE_DIGEST_MODE       1
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13   // palette number reserved in core/gui_draw.h
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xD0   // Start color index for CHDK colors loaded into camera palette
 
     #define  CAM_ADJUSTABLE_ALT_BUTTON      1   // ALT-button can be set from menu
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "VIDEO" }

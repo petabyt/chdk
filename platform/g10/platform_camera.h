@@ -71,13 +71,7 @@
     #define PARAM_DISPLAY_MODE1             57      // param number for LCD display mode when camera in playback
     #define PARAM_DISPLAY_MODE2             58      // param number for LCD display mode when camera in record view hold mode
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
-
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xB3   // Start color index for CHDK colors loaded into camera palette.
-    #define COLOR_GREY_DK_TRANS            (CHDK_COLOR_BASE+13)
-
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12

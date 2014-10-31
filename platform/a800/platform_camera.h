@@ -47,9 +47,6 @@
     #define CAM_EV_IN_VIDEO                 1
     #define CAM_QUALITY_OVERRIDE            1
 
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              8
-
     #define CAM_DNG_LENS_INFO               { 66,10, 216,10, 30,10, 58,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x01000201 // Green Blue Red Green

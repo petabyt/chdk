@@ -29,7 +29,6 @@
     #define CAM_BRACKETING                              1
     #define CAM_HAS_JOGDIAL                             1
 
-
     #define CAM_ADJUSTABLE_ALT_BUTTON                   1
     #define CAM_ALT_BUTTON_NAMES                        { "Playback", "Video", "Display" }
     #define CAM_ALT_BUTTON_OPTIONS                      { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
@@ -83,10 +82,7 @@
 
     #define PARAM_CAMERA_NAME                           4 // parameter number for GetParameterData
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                         13 // palette number in core/gui_draw.h
     #define CAM_LOAD_CUSTOM_COLORS                      1 // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                          0xD0 // Start color index for CHDK colors loaded into camera palette
 
     #define CAM_DATE_FOLDER_NAMING                  0x400
 
@@ -102,10 +98,8 @@
     #define CAM_USE_ALT_SET_ZOOM_POINT                  1 // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt            1 // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
 
-
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
-
 
 //  define REMOTE_SYNC_STATUS_LED              0xC0220120 // specifies an LED that turns on while camera waits for USB remote to sync
 
