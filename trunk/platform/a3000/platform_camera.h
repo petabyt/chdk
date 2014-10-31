@@ -53,9 +53,6 @@
     #define CAM_ACTIVE_AREA_X2              3700
     #define CAM_ACTIVE_AREA_Y2              2772
 
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              14
-
     #undef  CAM_HAS_MANUAL_FOCUS
 
     #define CAM_QUALITY_OVERRIDE            1

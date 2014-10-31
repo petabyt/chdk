@@ -94,8 +94,6 @@
     #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  13
   
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN 2
@@ -121,9 +119,6 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE           1       // Changes the values in the 'movie_status' variable if the camera has this mode
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                     0xC0    // Start color index for CHDK colors loaded into camera palette.
-    #define COLOR_GREY_DK_TRANS                 (CHDK_COLOR_BASE+13)
-
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.

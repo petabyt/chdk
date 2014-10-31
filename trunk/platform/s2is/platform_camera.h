@@ -55,7 +55,6 @@
     #define CAM_BRACKETING                  1
     #define DNG_EXT_FROM                    ".DPS"
 
-
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
     // "real" to "market" conversion definitions
@@ -74,3 +73,6 @@
     // Warning : no know SD override method for this camera
 
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

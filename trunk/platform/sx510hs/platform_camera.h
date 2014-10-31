@@ -76,7 +76,6 @@
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  // unlocked in canon firmware by default
 
-
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS
 
@@ -88,10 +87,7 @@
     #undef  CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows (240 or 270)
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1     // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xB0  // Start color index for CHDK colors loaded into camera palette.
 
     #define CAM_HAS_JOGDIAL                 1
     #define CAM_ADJUSTABLE_ALT_BUTTON       1

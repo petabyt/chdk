@@ -85,10 +85,7 @@
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1
-    #define CHDK_COLOR_BASE                 0xE1
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
@@ -108,7 +105,6 @@
     #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220130   // specifies an LED that turns on while camera waits for USB remote to sync
-
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras

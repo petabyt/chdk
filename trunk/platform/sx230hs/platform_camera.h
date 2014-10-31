@@ -81,11 +81,7 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1           // Enable loading CHDK colors into the camera palette memory
-    #define CHDK_COLOR_BASE                 0xA8        // Start color index for CHDK colors loaded into camera palette.
-    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
@@ -101,7 +97,6 @@
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    10
-
 
     #define CAM_ZEBRA_NOBUF                 1
 

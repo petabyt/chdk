@@ -38,7 +38,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Display", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_DISPLAY, KEY_PLAYBACK }
 
-
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
@@ -48,11 +47,7 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
-
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xE2   // Start color index for CHDK colors loaded into camera palette.
 
     #define CAM_QUALITY_OVERRIDE            1
     #undef  CAM_SENSOR_BITS_PER_PIXEL

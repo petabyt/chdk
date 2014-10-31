@@ -17,482 +17,8 @@
 
 #include "camera.h"     // ensure the camera definition is loaded
 
-//-------------------------------------------------------------------
-// Custom color definitions for each 'palette'
-
-#if CAM_BITMAP_PALETTE==1
-
-// Default palette used unless overridden - see list of cameras using each palette below
-
-    #define COLOR_WHITE                 0x11
-    #define COLOR_RED                   0x22
-    #define COLOR_GREY                  0x3F
-    #define COLOR_GREEN                 0x55
-    #define COLOR_BLUE_LT               0xDD
-    #define COLOR_BLUE                  0xDF
-    #define COLOR_YELLOW                0xEE
-    #define COLOR_GREY_DK               0x44
-    #define COLOR_RED_DK                0x2E
-    #define COLOR_RED_LT                0x21
-    #define COLOR_GREY_LT               0x1F
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           0x66
-    #define COLOR_PLY_MAGENTA           0xE2
-    #define COLOR_PLY_BLUE              0xCC
-    #define COLOR_PLY_CYAN              0x99
-    #define COLOR_PLY_YELLOW            0x66
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-#if defined(CAMERA_ixus70_sd1000) || defined(CAMERA_ixus75_sd750)
-    #define COLOR_ICON_REC_RED          0x88
-    #define COLOR_ICON_REC_RED_DK       0x83
-    #define COLOR_ICON_REC_RED_LT       0x81
-    #define COLOR_ICON_REC_GREEN        0x55
-    #define COLOR_ICON_REC_GREEN_DK     0x53
-    #define COLOR_ICON_REC_GREEN_LT     0x51
-    #define COLOR_ICON_REC_YELLOW       0x66
-    #define COLOR_ICON_REC_YELLOW_DK    0x36
-    #define COLOR_ICON_REC_YELLOW_LT    0x61
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x33
-    #define COLOR_ICON_REC_GREY_LT      0x11
-#endif
-#if defined (CAMERA_a610)
-    #define COLOR_ICON_REC_RED          0x22
-    #define COLOR_ICON_REC_RED_DK       0x2F
-    #define COLOR_ICON_REC_RED_LT       0x26
-    #define COLOR_ICON_REC_GREEN        0x5F
-    #define COLOR_ICON_REC_GREEN_DK     0x25
-    #define COLOR_ICON_REC_GREEN_LT     0x51
-    #define COLOR_ICON_REC_YELLOW       0x9F
-    #define COLOR_ICON_REC_YELLOW_DK    0x9F
-    #define COLOR_ICON_REC_YELLOW_LT    0x99
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x33
-    #define COLOR_ICON_REC_GREY_LT      0x13
-#endif
-
-#elif CAM_BITMAP_PALETTE==2
-
-// Used by :- IXUS95_SD1200, IXUS980_SD990
-
-    #define COLOR_WHITE                 0xD3
-    #define COLOR_RED                   0x64
-    #define COLOR_GREY                  0x12
-    #define COLOR_GREEN                 0xC4
-    #define COLOR_BLUE_LT               0x6A
-    #define COLOR_BLUE                  0x87
-    #define COLOR_YELLOW                0x44
-    #define COLOR_GREY_DK               0x22
-    #define COLOR_RED_DK                0x58
-    #define COLOR_RED_LT                0x4C
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    // many of these probably wrong on this cam
-    #define COLOR_REC_MAGENTA           0x66
-    #define COLOR_PLY_MAGENTA           0xE2
-    #define COLOR_PLY_BLUE              0xCC
-    #define COLOR_PLY_CYAN              0x99
-    #define COLOR_PLY_YELLOW            0x66
-
-#elif CAM_BITMAP_PALETTE==4
-
-// Used by :- G11, S90, SX120IS
-
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x2B
-    #define COLOR_GREY                  0x17
-    #define COLOR_GREEN                 0x99
-    #define COLOR_BLUE_LT               0xA9
-    #define COLOR_BLUE                  0xA1
-    #define COLOR_YELLOW                0x9A
-    #define COLOR_GREY_DK               0x61
-    #define COLOR_RED_DK                0x29
-    #define COLOR_RED_LT                0x1E
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           COLOR_BLACK // there isn't purplish on this cam I guess
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-#if defined (CAMERA_sx120is)
-    #define COLOR_ICON_REC_RED          0x1E
-    #define COLOR_ICON_REC_RED_DK       0xA0
-    #define COLOR_ICON_REC_RED_LT       0x26
-    #define COLOR_ICON_REC_GREEN        0x47
-    #define COLOR_ICON_REC_GREEN_DK     0x4A
-    #define COLOR_ICON_REC_GREEN_LT     0x44
-    #define COLOR_ICON_REC_YELLOW       0x69
-    #define COLOR_ICON_REC_YELLOW_DK    0x9A
-    #define COLOR_ICON_REC_YELLOW_LT    0x78
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x10
-    #define COLOR_ICON_REC_GREY_LT      0x19
-    #define COLOR_ICON_PLY_RED          0x27
-    #define COLOR_ICON_PLY_RED_DK       0x2C
-    #define COLOR_ICON_PLY_RED_LT       0x20
-    #define COLOR_ICON_PLY_GREEN        0xCB
-    #define COLOR_ICON_PLY_GREEN_DK     0xCB
-    #define COLOR_ICON_PLY_GREEN_LT     0xCB
-    #define COLOR_ICON_PLY_YELLOW       0xBE
-    #define COLOR_ICON_PLY_YELLOW_DK    0x76
-    #define COLOR_ICON_PLY_YELLOW_LT    0x5A
-    #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
-    #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
-    #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
-#endif
-
-#elif CAM_BITMAP_PALETTE==5
-
-// Used by :- D10, IXUS100_SD780
-
-    #define COLOR_WHITE                 0xD3
-    #define COLOR_RED                   0x6A
-    #define COLOR_GREY                  0x12
-    #define COLOR_GREEN                 0xBF
-    #define COLOR_BLUE_LT               0x7C
-    #define COLOR_BLUE                  0x90
-    #define COLOR_YELLOW                0x53
-    #define COLOR_GREY_DK               0x22
-    #define COLOR_RED_DK                0x72
-    #define COLOR_RED_LT                0x5C
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           0x72
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-#elif CAM_BITMAP_PALETTE==6
-
-// Used by :- SX20
-
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x2B
-    #define COLOR_GREY                  0x0F
-    #define COLOR_GREEN                 0xA9
-    #define COLOR_BLUE_LT               0x2D
-    #define COLOR_BLUE                  0x3B
-    #define COLOR_YELLOW                0x8B
-    #define COLOR_GREY_DK               0xFE
-    #define COLOR_RED_DK                COLOR_RED
-    #define COLOR_RED_LT                0xEA
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           COLOR_RED
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-    #define COLOR_ICON_REC_RED          0x2C
-    #define COLOR_ICON_REC_RED_DK       0x91
-    #define COLOR_ICON_REC_RED_LT       0x26
-    #define COLOR_ICON_REC_GREEN        0xB0
-    #define COLOR_ICON_REC_GREEN_DK     0xB7
-    #define COLOR_ICON_REC_GREEN_LT     0xA9
-    #define COLOR_ICON_REC_YELLOW       0xDB
-    #define COLOR_ICON_REC_YELLOW_DK    0xD9
-    #define COLOR_ICON_REC_YELLOW_LT    0xDD
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x11
-    #define COLOR_ICON_REC_GREY_LT      0x10
-    #define COLOR_ICON_PLY_RED          0x25
-    #define COLOR_ICON_PLY_RED_DK       0x2C
-    #define COLOR_ICON_PLY_RED_LT       0x1E
-    #define COLOR_ICON_PLY_GREEN        0xA5
-    #define COLOR_ICON_PLY_GREEN_DK     0xAC
-    #define COLOR_ICON_PLY_GREEN_LT     0x9E
-    #define COLOR_ICON_PLY_YELLOW       0x75
-    #define COLOR_ICON_PLY_YELLOW_DK    0x7A
-    #define COLOR_ICON_PLY_YELLOW_LT    0x71
-    #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
-    #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
-    #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
-
-#elif CAM_BITMAP_PALETTE==7
-
-// Used by :- SX130IS
-
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x1e
-    #define COLOR_GREY                  0x1a
-    #define COLOR_GREEN                 0x17
-    #define COLOR_BLUE_LT               0x10
-    #define COLOR_BLUE                  0x14
-    #define COLOR_YELLOW                0x60
-    #define COLOR_GREY_DK               0x62
-    #define COLOR_RED_DK                COLOR_RED
-    #define COLOR_RED_LT                0x1e        // Orange
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_RED               0x66
-    #define COLOR_PLY_RED               0xA0
-    #define COLOR_REC_BLUE              0x61
-    #define COLOR_PLY_BLUE              0xA2
-    #define COLOR_REC_GREEN             0x5F
-    #define COLOR_PLY_GREEN             0xA1
-    #define COLOR_REC_MAGENTA           COLOR_RED
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-    #define COLOR_PLY_YELLOW            0x80
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-#if defined(CAMERA_sx130is)
-    #define COLOR_ICON_REC_RED          0x66
-    #define COLOR_ICON_REC_RED_DK       0x66
-    #define COLOR_ICON_REC_RED_LT       0x66
-    #define COLOR_ICON_REC_GREEN        0x6B
-    #define COLOR_ICON_REC_GREEN_DK     0x6B
-    #define COLOR_ICON_REC_GREEN_LT     0x69
-    #define COLOR_ICON_REC_YELLOW       0x60
-    #define COLOR_ICON_REC_YELLOW_DK    0x45
-    #define COLOR_ICON_REC_YELLOW_LT    0x6C
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x19
-    #define COLOR_ICON_REC_GREY_LT      0x10
-    #define COLOR_ICON_PLY_RED          0xA0
-    #define COLOR_ICON_PLY_RED_DK       0xA0
-    #define COLOR_ICON_PLY_RED_LT       0xA0
-    #define COLOR_ICON_PLY_GREEN        0xA1
-    #define COLOR_ICON_PLY_GREEN_DK     0xA1
-    #define COLOR_ICON_PLY_GREEN_LT     0xA1
-    #define COLOR_ICON_PLY_YELLOW       0x6A
-    #define COLOR_ICON_PLY_YELLOW_DK    0x6F
-    #define COLOR_ICON_PLY_YELLOW_LT    0x63
-    #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
-    #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
-    #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
-#endif
-
-#elif CAM_BITMAP_PALETTE==8
-
-// Used by :- A490, A495
-
-    #define COLOR_WHITE                 0x11
-    #define COLOR_RED                   0x2F
-    #define COLOR_GREY                  0x1F
-    #define COLOR_GREEN                 0xFC
-    #define COLOR_BLUE_LT               0xEE
-    #define COLOR_BLUE                  0xEF
-    #define COLOR_YELLOW                0xDD
-    #define COLOR_GREY_DK               0x0F
-    #define COLOR_RED_DK                0x22
-    #define COLOR_RED_LT                0x24
-    #define COLOR_GREY_LT               0x1F
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           0x66
-    #define COLOR_PLY_MAGENTA           0xE2
-    #define COLOR_PLY_BLUE              0xCC
-    #define COLOR_PLY_CYAN              0x99
-    #define COLOR_PLY_YELLOW            0x66
-
-#elif CAM_BITMAP_PALETTE==9
-
-// Used by :- S95
-
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x66
-    #define COLOR_GREY                  0x6D
-    #define COLOR_GREEN                 0x69
-    #define COLOR_BLUE_LT               0x68
-    #define COLOR_BLUE                  0x67
-    #define COLOR_YELLOW                0x60
-    #define COLOR_GREY_DK               0x20
-    #define COLOR_RED_DK                COLOR_RED
-    #define COLOR_RED_LT                COLOR_GREY
-    #define COLOR_GREY_LT               0xDE
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           COLOR_RED
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-#elif CAM_BITMAP_PALETTE==10
-
-// Used by :- IXUS220_ELPH300HS, IXUS230_ELPH310HS
-
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x9f
-    #define COLOR_GREY                  0x1a
-    #define COLOR_GREY_LIGHT            0x0B
-    #define COLOR_GREY_DARK             0x19
-    #define COLOR_GREEN                 0xa0
-    #define COLOR_BLUE_LT               0x96
-    #define COLOR_BLUE                  0xa1
-    #define COLOR_YELLOW                0x92
-    #define COLOR_GREY_DK               0x4B
-    #define COLOR_RED_DK                COLOR_RED
-    #define COLOR_RED_LT                0x1e    // Orange
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_RED               0x6C
-    #define COLOR_REC_BLUE              0x6D
-    #define COLOR_REC_GREEN             0x90
-    #define COLOR_REC_CYAN              0x52    //COLOR_BLUE_LT
-    #define COLOR_REC_YELLOW            0x51    //COLOR_YELLOW
-    #define COLOR_REC_MAGENTA           0x3D    //COLOR_RED
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-// Icon colors
-// 3 shades of Red, Green, Yellow and Grey
-// Separate definitions for record and playback mode
-// to cater for cameras with variable palettes
-    #define COLOR_ICON_REC_RED          0x3D
-    #define COLOR_ICON_REC_RED_DK       0x6C
-    #define COLOR_ICON_REC_RED_LT       0x1E
-    #define COLOR_ICON_REC_GREEN        0x90
-    #define COLOR_ICON_REC_GREEN_DK     0x5A
-    #define COLOR_ICON_REC_GREEN_LT     0x59
-    #define COLOR_ICON_REC_YELLOW       0x2D
-    #define COLOR_ICON_REC_YELLOW_DK    0x1E
-    #define COLOR_ICON_REC_YELLOW_LT    0x20
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x1A
-    #define COLOR_ICON_REC_GREY_LT      0x11
-    #define COLOR_ICON_PLY_RED          0x9F
-    #define COLOR_ICON_PLY_RED_DK       0x9F
-    #define COLOR_ICON_PLY_RED_LT       0x1E
-    #define COLOR_ICON_PLY_GREEN        0xA0
-    #define COLOR_ICON_PLY_GREEN_DK     0xA0
-    #define COLOR_ICON_PLY_GREEN_LT     0x9E
-    #define COLOR_ICON_PLY_YELLOW       0x55
-    #define COLOR_ICON_PLY_YELLOW_DK    0x55
-    #define COLOR_ICON_PLY_YELLOW_LT    0x4C
-    #define COLOR_ICON_PLY_GREY         COLOR_ICON_REC_GREY
-    #define COLOR_ICON_PLY_GREY_DK      COLOR_ICON_REC_GREY_DK
-    #define COLOR_ICON_PLY_GREY_LT      COLOR_ICON_REC_GREY_LT
-
-#elif CAM_BITMAP_PALETTE==11
-
-// Used by :- IXUS300_SD4000
-
-    // pallete changes almost completely depenting on mode and if canon menu is active or not
-    // playback, playback with menu, photo record mode, photo record mode with menu, ...
-    #define COLOR_WHITE                 0x01    // always the same
-    #define COLOR_RED                   0x1E    // always the same, bright orange (red is only available in record more without menu)
-    #define COLOR_GREY                  0x16    // always the same
-    #define COLOR_GREEN                 0x9F    // playback only, without menu
-    #define COLOR_BLUE_LT               0x0C    // playback: light brown
-    #define COLOR_BLUE                  0x12    // playback: dark brown (almost like sh.t)
-    #define COLOR_YELLOW                0x90    // playback only, without menu
-    #define COLOR_GREY_DK               0x1D    // greyisch
-    #define COLOR_RED_DK                COLOR_RED
-    #define COLOR_RED_LT                COLOR_BLUE
-    #define COLOR_GREY_LT               0x16    // darker grey
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_RED               0x66    // record only, without menu
-    #define COLOR_REC_BLUE              0x3C
-    #define COLOR_PLY_BLUE              0x50    // playback without menu dont have blue at all, bright Orange
-    #define COLOR_REC_GREEN             0x6B
-    #define COLOR_REC_MAGENTA           COLOR_RED
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-#elif CAM_BITMAP_PALETTE==12
-
-// Used by :- A1100
-
-    #define COLOR_WHITE                 0x0A
-    #define COLOR_RED                   0x6B
-    #define COLOR_GREY                  0x17
-    #define COLOR_GREEN                 0x96
-    #define COLOR_BLUE_LT               0x79
-    #define COLOR_BLUE                  0x8A
-    #define COLOR_YELLOW                0x54
-    #define COLOR_GREY_DK               0x1F
-    #define COLOR_RED_DK                0x60
-    #define COLOR_RED_LT                0xBD
-    #define COLOR_GREY_LT               0x16
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           0x66
-    #define COLOR_PLY_MAGENTA           0xE2
-    #define COLOR_PLY_BLUE              0xCC
-    #define COLOR_PLY_CYAN              0x99
-    #define COLOR_PLY_YELLOW            0x66
-
-#elif CAM_BITMAP_PALETTE==13
-
-// Used by :- G12, IXUS310_ELPH500HS, SX30, SX40HS, SX200IS, SX220HS, SX230HS, SX240HS, SX260HS,
-//            A810, A1300, A2300, A3400, A4000, S100, Powershot N, A3300IS, A1200, G10, IXUS120_SD940
-//            IXUS100_SD780, A3200, SX160IS, SX50HS, SX500IS
-
-    // Default Canon colors that are the same in record and play modes
-    #define COLOR_GREY_DK               0x1a
-    #define COLOR_GREY                  0x16
-    #define COLOR_GREY_LT               0x0E
-
-    // Cameras use custom colors (CHDK_COLOR_BASE) - CHDK colors set below
-
-#elif CAM_BITMAP_PALETTE==14
-
-// Used by :- A3000IS
-
-    #define COLOR_WHITE                 0x01
-    #define COLOR_RED                   0x22
-    #define COLOR_GREY                  0xF3
-    #define COLOR_GREEN                 0xcF
-    #define COLOR_BLUE_LT               0x61
-    #define COLOR_BLUE                  0xE7
-    #define COLOR_YELLOW                0xDD
-    #define COLOR_GREY_DK               0x0F
-    #define COLOR_RED_DK                COLOR_RED
-    #define COLOR_RED_LT                0x4E
-    #define COLOR_GREY_LT               0x6F
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_MAGENTA           COLOR_RED
-    #define COLOR_PLY_MAGENTA           COLOR_REC_MAGENTA
-
-#elif CAM_BITMAP_PALETTE==17
-
-// Used by :- A3100 + A3150
-
-    #define COLOR_WHITE                 0x11
-    #define COLOR_RED                   0x22
-    #define COLOR_BLUE                  0x00
-    #define COLOR_GREY                  0x66
-    #define COLOR_GREEN                 0xcc
-    #define COLOR_BLUE_LT               0x4e
-    #define COLOR_YELLOW                0x2d
-    #define COLOR_RED_DK                0x22
-    #define COLOR_RED_LT                0x24
-    #define COLOR_GREY_LT               0x66
-    #define COLOR_GREY_DK               0x37
-
-    // Override histogram colors if needed (defaults set below)
-    #define COLOR_REC_RED               0x02
-    #define COLOR_REC_GREEN             0x0c
-    #define COLOR_REC_BLUE              0xe3
-    #define COLOR_PLY_RED               0x02
-    #define COLOR_PLY_GREEN             0x0c
-    #define COLOR_PLY_BLUE              0x00
-    #define COLOR_REC_MAGENTA           0xf0 //32
-    #define COLOR_REC_YELLOW            0xf0 //0b
-    #define COLOR_PLY_YELLOW            0xf0 //09
-    #define COLOR_PLY_MAGENTA           0xf0 //09
-    #define COLOR_PLY_CYAN              0xf0 //00
-    #define COLOR_REC_CYAN              0xf0 //0e
-
-    #define COLOR_ICON_REC_RED          0x62
-    #define COLOR_ICON_REC_RED_DK       0x72
-    #define COLOR_ICON_REC_RED_LT       0x52
-    #define COLOR_ICON_REC_GREEN        0xc6
-    #define COLOR_ICON_REC_GREEN_DK     0xc7
-    #define COLOR_ICON_REC_GREEN_LT     0xc5
-    #define COLOR_ICON_REC_YELLOW       0x9d
-    #define COLOR_ICON_REC_YELLOW_DK    0x9c
-    #define COLOR_ICON_REC_YELLOW_LT    0x8d
-    #define COLOR_ICON_REC_GREY         COLOR_GREY
-    #define COLOR_ICON_REC_GREY_DK      0x77
-    #define COLOR_ICON_REC_GREY_LT      0x55
-
-#else
-    #error CAM_BITMAP_PALETTE not defined
-#endif  // CAM_BITMAP_PALETTE
+// Include the palette file for the camera model currently being compiled.
+#include "platform_palette.h"
 
 //-----------------------------------------------------------------------------------------
 // Setup default colors not already defined above
@@ -502,7 +28,17 @@
 #endif
 
 // Define colors for cameras using custom colors (CHDK_COLOR_BASE)
-#if defined(CHDK_COLOR_BASE)
+#if defined(CAM_LOAD_CUSTOM_COLORS)
+    // Default Canon colors that are the same in record and play modes
+    #if !defined(COLOR_GREY_DK)
+        #define COLOR_GREY_DK       0x1a
+    #endif
+    #if !defined(COLOR_GREY)
+        #define COLOR_GREY          0x16
+    #endif
+    #if !defined(COLOR_GREY_LT)
+        #define COLOR_GREY_LT       0x0E
+    #endif
     #if !defined(COLOR_WHITE)
         #define COLOR_WHITE         0x01
     #endif
@@ -532,6 +68,21 @@
         #define COLOR_ICON_PLY_BLUE_DK  COLOR_BLUE_DK
         #define COLOR_ICON_PLY_BLUE_LT  COLOR_BLUE_LT
     #endif
+    // Define default icon colors
+    // 3 shades of Red, Green, Yellow and Grey
+    // Playback colors are the same (set later)
+    #define COLOR_ICON_REC_RED          COLOR_RED
+    #define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
+    #define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
+    #define COLOR_ICON_REC_GREEN        COLOR_GREEN
+    #define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN_DK
+    #define COLOR_ICON_REC_GREEN_LT     COLOR_GREEN_LT
+    #define COLOR_ICON_REC_YELLOW       COLOR_YELLOW
+    #define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW_DK
+    #define COLOR_ICON_REC_YELLOW_LT    COLOR_YELLOW_LT
+    #define COLOR_ICON_REC_GREY         COLOR_GREY
+    #define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
+    #define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
 #endif
 
 // Define histogram colors if not already defined above
@@ -577,33 +128,18 @@
 // Separate definitions for record and playback mode
 // to cater for cameras with variable palettes
 #if !defined(COLOR_ICON_REC_RED)        // Record mode colors
-    #if defined(CHDK_COLOR_BASE)
-        #define COLOR_ICON_REC_RED          COLOR_RED
-        #define COLOR_ICON_REC_RED_DK       COLOR_RED_DK
-        #define COLOR_ICON_REC_RED_LT       COLOR_RED_LT
-        #define COLOR_ICON_REC_GREEN        COLOR_GREEN
-        #define COLOR_ICON_REC_GREEN_DK     COLOR_GREEN_DK
-        #define COLOR_ICON_REC_GREEN_LT     COLOR_GREEN_LT
-        #define COLOR_ICON_REC_YELLOW       COLOR_YELLOW
-        #define COLOR_ICON_REC_YELLOW_DK    COLOR_YELLOW_DK
-        #define COLOR_ICON_REC_YELLOW_LT    COLOR_YELLOW_LT
-        #define COLOR_ICON_REC_GREY         COLOR_GREY
-        #define COLOR_ICON_REC_GREY_DK      COLOR_GREY_DK
-        #define COLOR_ICON_REC_GREY_LT      COLOR_GREY_LT
-    #else
-        #define COLOR_ICON_REC_RED          0x22
-        #define COLOR_ICON_REC_RED_DK       0x2F
-        #define COLOR_ICON_REC_RED_LT       0x26
-        #define COLOR_ICON_REC_GREEN        0x5F
-        #define COLOR_ICON_REC_GREEN_DK     0x25
-        #define COLOR_ICON_REC_GREEN_LT     0x51
-        #define COLOR_ICON_REC_YELLOW       0x6F
-        #define COLOR_ICON_REC_YELLOW_DK    0x6F
-        #define COLOR_ICON_REC_YELLOW_LT    0x66
-        #define COLOR_ICON_REC_GREY         COLOR_GREY
-        #define COLOR_ICON_REC_GREY_DK      0x33
-        #define COLOR_ICON_REC_GREY_LT      0x13
-    #endif
+    #define COLOR_ICON_REC_RED          0x22
+    #define COLOR_ICON_REC_RED_DK       0x2F
+    #define COLOR_ICON_REC_RED_LT       0x26
+    #define COLOR_ICON_REC_GREEN        0x5F
+    #define COLOR_ICON_REC_GREEN_DK     0x25
+    #define COLOR_ICON_REC_GREEN_LT     0x51
+    #define COLOR_ICON_REC_YELLOW       0x6F
+    #define COLOR_ICON_REC_YELLOW_DK    0x6F
+    #define COLOR_ICON_REC_YELLOW_LT    0x66
+    #define COLOR_ICON_REC_GREY         COLOR_GREY
+    #define COLOR_ICON_REC_GREY_DK      0x33
+    #define COLOR_ICON_REC_GREY_LT      0x13
 #endif
 #if !defined(COLOR_ICON_PLY_RED)        // Playback mode colors
     #define COLOR_ICON_PLY_RED          COLOR_ICON_REC_RED

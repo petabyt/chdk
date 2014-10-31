@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "platform_palette.h"
 #include "lolevel.h"
 
 //from ixus870_sd880

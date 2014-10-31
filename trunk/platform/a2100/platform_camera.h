@@ -57,8 +57,6 @@
 
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12          // Bits per pixel. 10 is standard, 12 is supported except for curves
-    #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              10      // which color set is used for this camera
 
     // Older cameras had a screen/bitmap buffer that was 360 pixels wide (or 480 for wide screen models)
     // CHDK was built around this 360 pixel wide display model
@@ -119,7 +117,6 @@
     //#undef CAM_USE_COLORED_ICONS                    // If the color palette contains enough shades of red, green, yellow and grey
                                                     // defined then enable this use the better icons (from CHDK-DE). See gui_batt.c
                                                     // and gui_space.c.
-
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1       // file write hook for remote capture etc
 

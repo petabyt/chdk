@@ -92,10 +92,6 @@
     #undef  CAM_HAS_MANUAL_FOCUS
     #undef  CAM_VIDEO_CONTROL
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
-
-    #define CHDK_COLOR_BASE                 0xE0    // Start color index for CHDK colors loaded into camera palette.
     #define CAM_LOAD_CUSTOM_COLORS
 
     #define CAM_NEED_SET_ZOOM_DELAY         300  // Define to add a delay after setting the zoom position

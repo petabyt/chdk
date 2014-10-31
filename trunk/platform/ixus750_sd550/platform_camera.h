@@ -63,7 +63,9 @@
 
 //    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
 
-
     // Warning : no know SD override for this camera
 
 //--------------------------------------------------
+
+    #undef  CAM_DEFAULT_MENU_CURSOR
+    #define CAM_DEFAULT_MENU_CURSOR     MAKE_COLOR(COLOR_RED,COLOR_WHITE)  // Override menu cursor colors

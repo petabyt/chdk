@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "platform_palette.h"
 #include "lolevel.h"
 
 void vid_bitmap_refresh()    // G10 : ixus980_sd990 version seems to work well

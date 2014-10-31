@@ -74,9 +74,6 @@
 
     #define CAM_ZEBRA_NOBUF                             1
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                          7
-
     //#undef EDGE_HMARGIN
     //#define EDGE_HMARGIN                              28
 

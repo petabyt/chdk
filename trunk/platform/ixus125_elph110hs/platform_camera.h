@@ -79,10 +79,7 @@
     #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  13
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                     0xD0    // Start color index for CHDK colors loaded into camera palette
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10

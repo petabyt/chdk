@@ -76,8 +76,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  13
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
@@ -112,7 +110,6 @@
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #define CAM_LOAD_CUSTOM_COLORS              1           // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                     0xA8        // Start color index for CHDK colors loaded into camera palette.
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.

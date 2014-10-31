@@ -118,10 +118,7 @@
     #define CAM_DISABLE_RAW_IN_AUTO         1   // For cameras that don't have valid raw in AUTO mode
     #define CAM_HAS_MOVIE_DIGEST_MODE       1   // Changes the values in the 'movie_status' variable if the camera has this mode
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              13
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware
-    #define CHDK_COLOR_BASE                 0xA2   // Start color index for CHDK colors loaded into camera palette.
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.

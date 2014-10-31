@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "platform_palette.h"
 #include "lolevel.h"
 
 #define LED_PR 0xC0220120

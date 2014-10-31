@@ -45,9 +45,6 @@
 
     #define CAM_MAKE                        "Canon"
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              5
-
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
 
