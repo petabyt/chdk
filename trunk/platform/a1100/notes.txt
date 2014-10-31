@@ -12,5 +12,3 @@ version -> [func.set]+[down]
 Battery temperature is not available on this camera, always returns -99
 
 Optical zoom in video does not work
-
-Extra long exposures (>64 seconds) not implemented

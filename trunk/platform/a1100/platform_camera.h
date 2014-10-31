@@ -47,7 +47,10 @@
 
     // color
     #undef CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              12
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1
+    #define CHDK_COLOR_BASE                 0xE0
+    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #define CAM_DNG_LENS_INFO               { 62,10, 248,10, 27,10, 56,10 } // See comments in camera.h
 
