@@ -46,7 +46,10 @@
     #define CAM_UNCACHED_BIT                0x40000000
 
     #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE              2
+    #define CAM_BITMAP_PALETTE              13
+    #define CAM_LOAD_CUSTOM_COLORS          1
+    #define CHDK_COLOR_BASE                 0xE0
+    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #define CAM_QUALITY_OVERRIDE            1
     #undef   CAM_SENSOR_BITS_PER_PIXEL
