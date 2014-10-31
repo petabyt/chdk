@@ -1,15 +1,5 @@
 #include "platform.h"
 
-void *hook_raw_fptr()
-{
-	return (void*)0; // What does this do? Doesn't seem to be called
-}
-
-void *hook_raw_ret_addr()
-{
-	return (void*)0; // What does this do? Doesn't seem to be called
-}
-
 char *hook_raw_image_addr()
 {
 	// Found at ROM:FFA11E84
