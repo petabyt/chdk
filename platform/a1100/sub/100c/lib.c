@@ -43,3 +43,14 @@ char *camera_jpeg_count_str()
 {
 	return (char*)0x2F4A8;  // "9999"-----fixed
 }
+
+/*
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x4988+0x28);  // sub_FFCAD2C0, via sub_FFD669A8 two refs to "Palette Class."
+}
+*/
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x4988+0x14)); //SaveBmpVRAMData "Add: %p Width : %ld Hight : %ld", sub_FFCAD36C
+}
