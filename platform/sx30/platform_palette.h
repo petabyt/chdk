@@ -6,4 +6,5 @@
 
     // Cameras use custom colors (CAM_LOAD_CUSTOM_COLORS) - CHDK colors set in core/gui_draw.h
 
-    #define CHDK_COLOR_BASE                     0xB3// Start color index for CHDK colors loaded into camera palette.
+    #define CHDK_COLOR_BASE                 0xB3// Start color index for CHDK colors loaded into camera palette.
+    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)

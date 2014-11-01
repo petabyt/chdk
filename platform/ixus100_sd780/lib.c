@@ -74,8 +74,6 @@ void *vid_get_bitmap_active_palette()
 
 void load_chdk_palette()
 {
-    int i ;
-    extern char** palette_buffer_ptr;
     extern int active_palette_buffer;
 
     if ((active_palette_buffer == 0) || (active_palette_buffer == 1) || (active_palette_buffer == 5) || (active_palette_buffer == 7))
@@ -96,9 +94,8 @@ void load_chdk_palette()
             pal[CHDK_COLOR_BASE+10] = 0x3A9A917;  // Yellow
             pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
             pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
+            pal[CHDK_COLOR_BASE+13] = 0x0090000;  // Transparent dark grey
 
-            // extern char palette_control;
-            // palette_control = 1;
             vid_bitmap_refresh();
         }
     }
