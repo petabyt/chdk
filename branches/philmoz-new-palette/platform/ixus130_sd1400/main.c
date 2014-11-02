@@ -53,22 +53,6 @@ int get_zoom_x(int zp) {
     else return fl_tbl[zp]*10/fl_tbl[0];
 }
 
-/*
-// physw_ bit OK
-int mode_get2() {
-    int mode, i, t=0xFF;
-    mode  = (physw_status[1] & 0x00000001)?MODE_REC:MODE_PLAY;
-
-    _GetPropertyCase(PROPCASE_SHOOTING_MODE, &t, 4);
-    //draw_txt_string(20, 11, osd_buf, conf.osd_color);
-    for (i=0; i<MODESCNT; ++i) {
-	if (modemap[i].canonmode == t) {
-	    return (mode | (modemap[i].hackmode & MODE_SHOOTING_MASK));
-	}
-    }
-    return (mode);
-}
-*/
 //TODO: VBatt min/max
 long get_vbatt_min()
 {

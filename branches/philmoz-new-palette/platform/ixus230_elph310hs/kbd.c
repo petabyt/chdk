@@ -143,19 +143,6 @@ void my_kbd_read_keys()
 		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
 		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |(kbd_mod_state[2] & KEYS_MASK2);
 	}
-	
-	// useful for further debugging: print keypress values on display
-		// char osd_buf[64];
-        // extern long physw_status[3];
-        // sprintf(osd_buf, "1:%8x  ", physw_status[0]);
-        // draw_txt_string(8, 10, osd_buf, conf.osd_color);
-
-        // sprintf(osd_buf, "2:%8x  ", physw_status[1]);
-        // draw_txt_string(8, 11, osd_buf, conf.osd_color);
-
-        // sprintf(osd_buf, "3:%8x  ", physw_status[2]);
-        // draw_txt_string(8, 12, osd_buf, conf.osd_color);
-		
 		
 	if (conf.remote_enable) {
 		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);

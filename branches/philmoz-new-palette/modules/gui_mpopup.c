@@ -77,7 +77,7 @@ unsigned int gui_mpopup_result() {
 static void gui_mpopup_draw_actions() {
     int i;
     coord y = mpopup_actions_y;
-    color cl;
+    twoColors cl;
 
     for (i=0; i<mpopup_actions_num; ++i) {
         cl = MAKE_COLOR((mpopup_actions_active==i)?COLOR_RED:COLOR_GREY, (mpopup_actions_active==i)?COLOR_RED:COLOR_GREY);

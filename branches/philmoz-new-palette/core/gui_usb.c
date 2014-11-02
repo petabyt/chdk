@@ -41,7 +41,7 @@ void gui_usb_draw_icon() {
 }
 //-------------------------------------------------------------------
 static void gui_usb_draw_text(){
-    color cl = conf.osd_color;
+    twoColors cl = user_color(conf.osd_color);
     draw_string(conf.usb_info_pos.x, conf.usb_info_pos.y, "<USB>", cl);
 }
 //--------------------------------------------------------------------

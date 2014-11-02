@@ -293,7 +293,7 @@ static void snake_start(){
 
 
 static void game_over(){
-    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, COLOR_WHITE);
+    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
     sprintf(str_buf,"Points: %d",points);
     draw_string(0,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     msleep(3000);
@@ -405,7 +405,7 @@ void gui_snake_draw() {
         draw_filled_rect(snake[snake_tail][0] * SNAKE_ELEMENT_SIZE,
                          snake[snake_tail][1] * SNAKE_ELEMENT_SIZE,
                          snake[snake_tail][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                         snake[snake_tail][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, COLOR_WHITE);
+                         snake[snake_tail][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
     }
     snake_head = new_head;
     snake_tail = new_tail;
@@ -422,7 +422,7 @@ void gui_snake_draw() {
 }
 
 int gui_snake_init() {
-    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, COLOR_WHITE);
+    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
     snake_start();
 	gui_set_mode(&GUI_MODE_SNAKE);
     return 1;

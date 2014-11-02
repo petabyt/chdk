@@ -456,8 +456,8 @@ void virtual_buttons()
 
         //c1 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_BLACK, COLOR_WHITE);
         //c2 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_RED, (camMode&MODE_VID)?COLOR_RED:COLOR_WHITE);
-        color c1 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE);
-        color c2 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_GREEN);
+        twoColors c1 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE);
+        twoColors c2 = MAKE_COLOR(COLOR_TRANSPARENT, COLOR_GREEN);
 
         for (i=0; keymap[i].hackkey; i++)
         {
@@ -468,7 +468,7 @@ void virtual_buttons()
                 y1 = ((keymap[i].y1 - 90) * 240) / 900;
                 y2 = ((keymap[i].y2 - 90) * 240) / 900 - 1;
 
-                color cl = c1;
+                twoColors cl = c1;
                 if (camera_info.state.gui_mode && (keymap[i].hackkey == KEY_PRINT)) cl = c2;
                 if (keymap[i].conf_val && *keymap[i].conf_val) cl = c2;
 

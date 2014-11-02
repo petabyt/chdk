@@ -7,7 +7,7 @@ CFLAGS+=-DLOW_LEVEL
 
 all: all-recursive libplatform.a
 
-OBJS=main.o lib.o wrappers.o kbd.o shooting.o
+OBJS=main.o lib.o wrappers.o kbd.o shooting.o platform_palette.o
 # stubs_init.o
 
 kbd.o: kbd.c
@@ -21,3 +21,4 @@ libplatform.a: $(OBJS)
 clean: clean-recursive
 	rm -f $(OBJS) libplatform.a
 
+palette_platform.o: palette_platform.c palette_platform.h

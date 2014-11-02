@@ -78,6 +78,8 @@ void console_draw()
 
     console_ensure_inited();
 
+    twoColors col = user_color(conf.osd_color);
+
     long t = get_tick_count();
     if (t <= console_last_modified + (conf.console_timeout*1000))
     {
@@ -90,13 +92,13 @@ void console_draw()
             if (i < 0) i = MAX_CONSOLE_HISTORY-1;
             strncpy(buf,console_buf[i],console_line_length);
             buf[console_line_length] = 0;
-            draw_string(x, y - c * FONT_HEIGHT, buf, conf.osd_color);
+            draw_string(x, y - c * FONT_HEIGHT, buf, col);
 
             int l = strlen(buf);
             if (l < console_line_length)
                 draw_filled_rect(x + l * FONT_WIDTH, y - c * FONT_HEIGHT,
                                  x + console_line_length * FONT_WIDTH - 1, y - c * FONT_HEIGHT + FONT_HEIGHT - 1,
-                                 MAKE_COLOR(BG_COLOR(conf.osd_color), BG_COLOR(conf.osd_color)));
+                                 MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
 
             console_displayed = 1;
         }
@@ -216,18 +218,20 @@ static void gui_console_draw()
         coord x=0, y=0;
         int w, h, l;
 
+        twoColors col = user_color(conf.menu_color);
+
         w = MAX_CONSOLE_LINE_LENGTH;
         h = MAX_CONSOLE_DISP_LINES;
 
         x = (camera_screen.width - w * FONT_WIDTH) >> 1;
         y = (camera_screen.height - (h+1) * FONT_HEIGHT) >> 1;
 
-        draw_filled_rect_thick(x-3, y-3, x+w*FONT_WIDTH+3, y+(h+1)*FONT_HEIGHT+2, conf.menu_color, 1); // main box
-        draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+1, conf.menu_color); //title
+        draw_filled_rect_thick(x-3, y-3, x+w*FONT_WIDTH+3, y+(h+1)*FONT_HEIGHT+2, col, 1); // main box
+        draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+1, col); //title
 
         char *t = "Console - press SET to close";
         l = strlen(t);
-        draw_string(x+((w-l)>>1)*FONT_WIDTH, y, t, conf.menu_color); //title text
+        draw_string(x+((w-l)>>1)*FONT_WIDTH, y, t, col); //title text
         y += FONT_HEIGHT + 2;
 
         int c, i;
@@ -235,13 +239,13 @@ static void gui_console_draw()
         {
             if (i < 0) i += MAX_CONSOLE_HISTORY;
 
-            draw_string(x-1, y + c * FONT_HEIGHT, console_buf[i], conf.menu_color);
+            draw_string(x-1, y + c * FONT_HEIGHT, console_buf[i], col);
 
             int l = strlen(console_buf[i]);
             if (l < w)
                 draw_filled_rect(x + l * FONT_WIDTH, y + c * FONT_HEIGHT,
                                  x + w * FONT_WIDTH - 1, y + c * FONT_HEIGHT + FONT_HEIGHT - 1,
-                                 MAKE_COLOR(BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color)));
+                                 MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
         }
 
         draw_filled_rect(x+w*FONT_WIDTH, y+((MAX_CONSOLE_HISTORY-console_scroll-h)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY, 

@@ -15,7 +15,7 @@ unsigned long get_space_perc() {
 }
 
 // Local variables used by various space display functions, setup in space_color
-static color cl;
+static twoColors cl;
 static coord xx, yy;
 static int perc, width, height;
 
@@ -23,11 +23,11 @@ static int perc, width, height;
 static void space_color()
 {
     perc = get_space_perc();
-    cl = conf.space_color;
+    cl = user_color(conf.space_color);
     if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
         ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
     {
-        cl = conf.osd_color_warn;
+        cl = user_color(conf.osd_color_warn);
     }
 }
 
@@ -54,10 +54,11 @@ static void spacebar_outer(OSD_pos pos, int w, int h)
     }
 
     draw_rect(xx, yy, xx+width+3, yy+height+3, COLOR_BLACK);     // Outer black rectangle
-    draw_rect(xx+1, yy+1, xx+width+2, yy+height+2, cl);          // Inner white/red rectangle
+    draw_rect(xx+1, yy+1, xx+width+2, yy+height+2, FG_COLOR(cl));          // Inner white/red rectangle
 }
 
-static void gui_space_draw_spacebar_horizontal() {
+static void gui_space_draw_spacebar_horizontal()
+{
     coord x;
 
     // Setup and draw outer shape
@@ -67,7 +68,7 @@ static void gui_space_draw_spacebar_horizontal() {
     x = width - ((perc*width)/100);
     if (x < 1) x = 1;
     if (x >= width) x = width;
-    else draw_filled_rect(xx+x+2, yy+2, xx+width+1, yy+height+1, MAKE_COLOR(cl, cl));               // If not empty fill 'free' space area
+    else draw_filled_rect(xx+x+2, yy+2, xx+width+1, yy+height+1, MAKE_COLOR(FG_COLOR(cl), FG_COLOR(cl)));               // If not empty fill 'free' space area
     draw_filled_rect(xx+2, yy+2, xx+x+1, yy+height+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));  // fill 'used' space area
 }
 
@@ -81,7 +82,7 @@ static void gui_space_draw_spacebar_vertical() {
     y = height - ((perc*height)/100);
     if (y < 1) y = 1;
     if (y >= height) y = height;
-    else draw_filled_rect(xx+2, yy+y+2, xx+width+1, yy+height+1, MAKE_COLOR(cl, cl));               // If not empty fill 'free' space area
+    else draw_filled_rect(xx+2, yy+y+2, xx+width+1, yy+height+1, MAKE_COLOR(FG_COLOR(cl), FG_COLOR(cl)));               // If not empty fill 'free' space area
     draw_filled_rect(xx+2, yy+2, xx+width+1, yy+y+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));   // fill 'used' space area
 }
 
@@ -93,33 +94,31 @@ static void gui_space_draw_icon() {
 
     space_color();
 
-    draw_get_icon_colors();
-
-    color cl1 = icon_green[0];
-    color cl2 = icon_green[1];
+    color cl1 = COLOR_GREEN_DK;
+    color cl2 = COLOR_GREEN;
     if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
         ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
     {
-    cl1 = icon_red[0];
-    cl2 = icon_red[1];
+        cl1 = COLOR_RED_DK;
+        cl2 = COLOR_RED;
     } 
   
     //icon
-    draw_hline(xx,    yy,    30,  icon_grey[2]);
-    draw_vline(xx,    yy,    13,  icon_grey[2]);
-    draw_vline(xx+31, yy,    19,  icon_grey[1]);
-    draw_line(xx+1,   yy+13, xx+5, yy+17, icon_grey[1]);
-    draw_hline(xx+6,  yy+18, 24,  icon_grey[1]);
+    draw_hline(xx,    yy,    30,  COLOR_GREY_LT);
+    draw_vline(xx,    yy,    13,  COLOR_GREY_LT);
+    draw_vline(xx+31, yy,    19,  COLOR_GREY);
+    draw_line(xx+1,   yy+13, xx+5, yy+17, COLOR_GREY);
+    draw_hline(xx+6,  yy+18, 24,  COLOR_GREY);
            
-    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(icon_grey[0], icon_grey[0]));
-    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(icon_grey[0], icon_grey[0]));
-    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(icon_grey[0], icon_grey[0]));
+    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(COLOR_GREY_DK, COLOR_GREY_DK));
+    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(COLOR_GREY_DK, COLOR_GREY_DK));
+    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(COLOR_GREY_DK, COLOR_GREY_DK));
     
-    draw_filled_rect(xx+2,  yy+2,   xx+6,    yy+4,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
-    draw_filled_rect(xx+2,  yy+6,   xx+6,    yy+7,   MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
-    draw_filled_rect(xx+2,  yy+9,   xx+6,    yy+10,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
-    draw_filled_rect(xx+2,  yy+12,  xx+6,    yy+13,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
-    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(icon_yellow[0], icon_yellow[0]));
+    draw_filled_rect(xx+2,  yy+2,   xx+6,    yy+4,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+2,  yy+6,   xx+6,    yy+7,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+2,  yy+9,   xx+6,    yy+10,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+2,  yy+12,  xx+6,    yy+13,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
+    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
     
     draw_hline(xx+8,  yy,    2, COLOR_TRANSPARENT);
     draw_hline(xx+11, yy,    3, COLOR_WHITE);

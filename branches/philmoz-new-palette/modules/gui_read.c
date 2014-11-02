@@ -65,6 +65,8 @@ int gui_read_init(const char* file)
 {
     running = 1;
 
+    twoColors col = user_color(conf.reader_color);
+
     static struct stat   st;
     read_file = open(file, O_RDONLY, 0777);
     if (strcmp(file, conf.reader_file)!=0) {
@@ -88,7 +90,7 @@ int gui_read_init(const char* file)
     old_mode = gui_set_mode(&GUI_MODE_READ);
 
     draw_filled_rect(0, 0, camera_screen.width-1, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-    draw_filled_rect(0, y, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(BG_COLOR(conf.reader_color), BG_COLOR(conf.reader_color)));
+    draw_filled_rect(0, y, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
 
     gui_read_draw_scroll_indicator();
     gui_read_draw_batt();
@@ -98,7 +100,8 @@ int gui_read_init(const char* file)
 
 //-------------------------------------------------------------------
 static void read_goto_next_line() {
-    draw_filled_rect(xx, yy, x+w-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(conf.reader_color), BG_COLOR(conf.reader_color)));
+    twoColors col = user_color(conf.reader_color);
+    draw_filled_rect(xx, yy, x+w-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
     xx  = x;
     yy += rbf_font_height();
 }
@@ -116,7 +119,9 @@ void gui_read_draw() {
     }
     if (read_to_draw) {
         int n, i, ii, ll, new_word=1;
-        
+
+        twoColors col = user_color(conf.reader_color);
+
         xx=x; yy=y;
 
         lseek(read_file, conf.reader_pos, SEEK_SET);
@@ -127,7 +132,7 @@ void gui_read_draw() {
             if (n==0) {
                  read_goto_next_line();
                  if (yy < y+h)
-                     draw_filled_rect(x, yy, x+w-1, y+h-1, MAKE_COLOR(BG_COLOR(conf.reader_color), BG_COLOR(conf.reader_color)));
+                     draw_filled_rect(x, yy, x+w-1, y+h-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
                  break;
             }
             i=0;
@@ -174,7 +179,7 @@ void gui_read_draw() {
                             read_goto_next_line();
                             continue;
                         }
-                        xx+=rbf_draw_char(xx, yy, buffer[i], conf.reader_color);
+                        xx+=rbf_draw_char(xx, yy, buffer[i], col);
                         break;
                 }
                 ++i;

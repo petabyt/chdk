@@ -35,7 +35,8 @@ static char buf[128];
 
 static void guess_box(int pos, color col)
 {
-	draw_filled_rect(camera_screen.ts_button_border+100+(pos*10), BORDER+(2*curr_y*10)+2+2*curr_y, camera_screen.ts_button_border+100+(pos*10)+6, BORDER+(2*curr_y*10)+8+2*curr_y , MAKE_COLOR(col,col));
+	draw_filled_rect(camera_screen.ts_button_border+100+(pos*10), BORDER+(2*curr_y*10)+2+2*curr_y,
+	                 camera_screen.ts_button_border+100+(pos*10)+6, BORDER+(2*curr_y*10)+8+2*curr_y, MAKE_COLOR(col,col));
 }
 
 char WinQuary(){
@@ -148,7 +149,8 @@ int gui_mastermind_init() {
 static void draw_box(color border)
 {
     if (curr_color[curr_x] == 99) curr_color[curr_x] = 0;
-    draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*curr_x*10), BORDER+(2*curr_y*10)+2*curr_y, camera_screen.ts_button_border+BORDER+(2*curr_x*10)+10, BORDER+(2*curr_y*10)+2*curr_y+10 , MAKE_COLOR(colors[curr_color[curr_x]],border));
+    draw_filled_rect(camera_screen.ts_button_border+BORDER+(2*curr_x*10), BORDER+(2*curr_y*10)+2*curr_y,
+                     camera_screen.ts_button_border+BORDER+(2*curr_x*10)+10, BORDER+(2*curr_y*10)+2*curr_y+10, MAKE_COLOR(colors[curr_color[curr_x]],border));
 }
 
 static void end_game(int msg)
@@ -239,9 +241,9 @@ void gui_mastermind_draw() {
 
 
 int basic_module_init() {
-	colors[0] = COLOR_PLY_RED;
-	colors[1] = COLOR_PLY_GREEN;
-	colors[2] = COLOR_PLY_BLUE;
+	colors[0] = COLOR_RED;
+	colors[1] = COLOR_GREEN;
+	colors[2] = COLOR_BLUE;
 	colors[3] = COLOR_YELLOW;
 	colors[4] = COLOR_WHITE;
 	colors[5] = COLOR_BLACK;

@@ -199,6 +199,9 @@ void core_spytask()
         // Set up camera mode & state variables
         mode_get();
 
+        extern void set_palette();
+        set_palette();
+
         if ( memdmptick && (get_tick_count() >= memdmptick) )
         {
             memdmptick = 0;
@@ -255,7 +258,7 @@ void core_spytask()
 
 #ifdef DEBUG_PRINT_TO_LCD
         sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
-        draw_txt_string(1, i++, osd_buf, conf.osd_color);
+        draw_txt_string(1, i++, osd_buf, user_color(conf.osd_color));
 #endif
 
         if (camera_info.perf.md_af_tuning)
@@ -263,7 +266,7 @@ void core_spytask()
             sprintf(osd_buf, "MD last %-4d min %-4d max %-4d avg %-4d", 
                 camera_info.perf.af_led.last, camera_info.perf.af_led.min, camera_info.perf.af_led.max, 
                 (camera_info.perf.af_led.count>0)?camera_info.perf.af_led.sum/camera_info.perf.af_led.count:0);
-            draw_txt_string(1, i++, osd_buf, conf.osd_color);
+            draw_txt_string(1, i++, osd_buf, user_color(conf.osd_color));
         }
 
         // Process async module unload requests
