@@ -1,0 +1,23 @@
+************************************
+IXUS135 / ELPH120IS Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options
+
+This camera does not have an adjustable aperture. It does have an ND filter
+
+This is an early alpha port, use at your own risk!
+
+
+For Developers
+- Liveview has not been tested
+- movie_rec.c is missing
+
+*** IMPORTANT DEVELOPMENT INFORMATION ***
+The 100b firmware of ixus135_elph120 is identical to ixus132_elph115 100b.
+Differences are:
+- PLATFORMID in makefile.inc
+- The ixus135_elph120 has built-in Wi-Fi (not currently used by CHDK)
+- platform_camera.h (name in header only)
+- notes.txt
+Any code changes made to one camera should probably be applied to the other.
