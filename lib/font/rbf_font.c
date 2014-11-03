@@ -180,9 +180,10 @@ int font_read(int fd, unsigned char *dest, int len)
 int rbf_font_load(char *file, font* f, int maxchar)
 {
     int i;
+    int rv = 0; // return value
 
-    // make sure the font has been allocated
-    if (f == 0) return 0;
+    // make sure the font has been allocated, and a valid filename is given
+    if ((f == 0) || (*file == 0)) return 0;
 
     // turn of default font if it was being used
     f->usingFont8x16 = 0;
@@ -210,17 +211,17 @@ int rbf_font_load(char *file, font* f, int maxchar)
             lseek(fd, f->hdr._cmapAddr, SEEK_SET);
             font_read(fd, (unsigned char*)f->cTable, f->charCount*f->hdr.charSize);
 
-            close(fd);
-
             // Reset symbol display if symbol font too tall
             if (conf.menu_symbol_enable && rbf_font && rbf_symbol_font)
                 conf.menu_symbol_enable=(rbf_font->hdr.height>=rbf_symbol_font->hdr.height);
 
-            return 1;
+            rv = 1;
         }
+
+        close(fd);
     }
 
-    return 0;
+    return rv;
 }
 
 //-------------------------------------------------------------------
