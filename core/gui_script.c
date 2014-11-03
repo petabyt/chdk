@@ -521,23 +521,22 @@ int load_params_values(const char *fn, int paramset)
 static void do_save_param_file(char* fn)
 {
     int n;
-    FILE *fd;
+    int fd;
     char buf[250];
 
-    fd = fopen(fn, "w");
-    if (fd)
+    fd = open(fn, O_WRONLY|O_CREAT, 0777);
+    if (fd >= 0)
     {
-        for(n = 0; n < SCRIPT_NUM_PARAMS; ++n)
+        for (n = 0; n < SCRIPT_NUM_PARAMS; ++n)
         {
             if (script_params[n][0] != 0)
             {
                 // Only need to save @param & @default info - @range & @values are only loaded from script header
                 sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
-                fwrite(buf, strlen(buf), 1, fd);
+                write(fd, buf, strlen(buf));
             }
         }
-        
-        fclose(fd);
+        close(fd);
     }
 }
 
