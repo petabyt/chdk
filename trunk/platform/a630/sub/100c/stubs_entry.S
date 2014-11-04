@@ -36,6 +36,7 @@ NHSTUB(MakeAFScan                             ,0xffd54358) //  2 79%
 // Values below can be overridden in 'stubs_min.S':
 //DEF(levent_table                            ,0xffd60ce4) // Found @0xffd60ce4,          stubs_min = 0xffd60ce4 (0xFFD60CE4)
 //DEF(FlashParamsTable                        ,0xffd6aa78) // Found @0xffd6aa78,          stubs_min = 0xffd6aa78 (0xFFD6AA78)
+DEF(fileio_semaphore                        ,0x0000273c) // Found @0xffc5ebb4
 DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xffd6c6b4
 
 // Values below go in 'lib.c':
