@@ -71,6 +71,7 @@ NHSTUB(localtime                              ,0xffaeecd4) //  1 93%
 // Values below can be overridden in 'stubs_min.S':
 DEF(levent_table                            ,0xff97d904) // Found @0xff97d904
 DEF(FlashParamsTable                        ,0xff985878) // Found @0xff985878
+DEF(fileio_semaphore                        ,0x00003418) // Found @0xff874694
 DEF_CONST(uiprop_count                      ,0x0000004f) // Found @0xff987570
 
 // Values below go in 'lib.c':

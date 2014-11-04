@@ -59,6 +59,7 @@ NHSTUB(Mount_FileSystem                       ,0xff86e940) //  1 90%
 // Values below can be overridden in 'stubs_min.S':
 //DEF(levent_table                            ,0xff96bff4) // Found @0xff96bff4,          stubs_min = 0xff96bff4 (0xFF96BFF4)
 //DEF(FlashParamsTable                        ,0xff9754e8) // Found @0xff9754e8,          stubs_min = 0xff9754e8 (0xFF9754E8)
+DEF(fileio_semaphore                        ,0x000027b0) // Found @0xff86cd64
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff976f48
 
 // Values below go in 'lib.c':

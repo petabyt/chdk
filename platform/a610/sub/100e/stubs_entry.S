@@ -27,6 +27,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe66d90) //  3 52%
 // Values below can be overridden in 'stubs_min.S':
 DEF(levent_table                            ,0xffd42290) // Found @0xffd42290
 DEF(FlashParamsTable                        ,0xffd4b62c) // Found @0xffd4b62c
+DEF(fileio_semaphore                        ,0x00002814) // Found @0xffc59de4
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd4d30c
 
 // Values below go in 'lib.c':
