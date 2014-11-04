@@ -365,9 +365,13 @@ static void module_writeline(char *buf)
 {
     if (conf.module_logging)
     {
-        FILE *fp = fopen("A/MODULES.LOG","a");
-        fwrite(buf,strlen(buf),1,fp);
-        fclose(fp);
+        int fd = open("A/MODULES.LOG", O_WRONLY|O_CREAT|O_APPEND, 0777);
+        if (fd >= 0)
+        {
+            lseek(fd, 0, SEEK_END);
+            write(fd, buf, strlen(buf));
+            close(fd);
+        }
     }
 }
 

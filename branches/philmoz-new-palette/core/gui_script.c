@@ -111,6 +111,7 @@ char script_title[36];                                      // Title of current 
 #define MAX_PARAM_NAME_LEN  27
 #define DEFAULT_PARAM_SET   10                              // Value of conf.script_param_set for 'Default' rather than saved parameters
 
+static int last_script_param_set = -1;                      // used to test if script_param_set has changed
 char script_params[SCRIPT_NUM_PARAMS][MAX_PARAM_NAME_LEN+1];// Parameter title
 static char script_param_order[SCRIPT_NUM_PARAMS];          // Ordered as_in_script list of variables ( [idx] = id_of_var )
                                                             // to display in same order in script
@@ -427,16 +428,23 @@ void make_param_filename( enum FilenameMakeModeEnum mode, const char* fn, int pa
 //-------------------------------------------------------------------
 // read last paramset num of script "fn" to conf.script_param_set
 //-------------------------------------------------------------------
-void get_last_paramset_num(const char *fn)
+static void get_last_paramset_num(const char *fn)
 {
     // skip if internal script used
     if (fn == NULL || fn[0] == 0) return;
 
     make_param_filename( MAKE_PARAMSETNUM_FILENAME, fn, 0);
     if ( !load_int_value_file( cfg_name, &conf.script_param_set ) )
-       conf.script_param_set = 0;
+    {
+        conf.script_param_set = 0;
+        last_script_param_set = -1;      // failed to load so force next save
+    }
+    else
+    {
+        last_script_param_set = conf.script_param_set;  // save last value loaded from file
+    }
     if ((conf.script_param_set < 0) || (conf.script_param_set > 10))
-       conf.script_param_set = 0;
+        conf.script_param_set = 0;
     make_param_filename( MAKE_PARAM_FILENAME, fn, conf.script_param_set);
 }
 
@@ -513,23 +521,22 @@ int load_params_values(const char *fn, int paramset)
 static void do_save_param_file(char* fn)
 {
     int n;
-    FILE *fd;
+    int fd;
     char buf[250];
 
-    fd = fopen(fn, "w");
-    if (fd)
+    fd = open(fn, O_WRONLY|O_CREAT, 0777);
+    if (fd >= 0)
     {
-        for(n = 0; n < SCRIPT_NUM_PARAMS; ++n)
+        for (n = 0; n < SCRIPT_NUM_PARAMS; ++n)
         {
             if (script_params[n][0] != 0)
             {
                 // Only need to save @param & @default info - @range & @values are only loaded from script header
                 sprintf(buf,"@param %c %s\n@default %c %d\n",'a'+n,script_params[n],'a'+n,conf.script_vars[n]);
-                fwrite(buf, strlen(buf), 1, fd);
+                write(fd, buf, strlen(buf));
             }
         }
-        
-        fclose(fd);
+        close(fd);
     }
 }
 
@@ -550,8 +557,12 @@ void save_params_values( int enforce )
     if (conf.script_param_save && (conf.script_param_set != DEFAULT_PARAM_SET))
     {
         // Write paramsetnum file
-        make_param_filename( MAKE_PARAMSETNUM_FILENAME, conf.script_file, 0);
-        save_int_value_file( cfg_name, conf.script_param_set );
+        if (conf.script_param_set != last_script_param_set)
+        {
+            make_param_filename( MAKE_PARAMSETNUM_FILENAME, conf.script_file, 0);
+            save_int_value_file( cfg_name, conf.script_param_set );
+            last_script_param_set = conf.script_param_set;
+        }
 
         int i, changed=0;
 

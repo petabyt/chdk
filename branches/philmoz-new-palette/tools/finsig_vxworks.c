@@ -2842,6 +2842,24 @@ void find_modemap(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
+int find_FileAccessSem(firmware *fw)
+{
+    void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t atadr);
+    int s1 = find_str(fw, "FileSem.c");
+    if (s1 < 0)
+        return 0;
+    s1 = find_inst(fw, isLDR_PC, s1+2, 16);
+    if (s1 < 0)
+        return 0;
+    uint32_t u1 = LDR2val(fw, s1);
+    if (u1 > fw->memisostart)
+        return 0;
+    print_stubs_min(fw,"fileio_semaphore",u1,idx2adr(fw,s1));
+    return 1;
+}
+
+//------------------------------------------------------------------------------------------------------------
+
 /*
 int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
 {
@@ -3870,6 +3888,8 @@ void find_stubs_min(firmware *fw)
     // Find 'FlashParamsTable'
     if (FlashParamsTable_address != 0)
         print_stubs_min(fw,"FlashParamsTable",FlashParamsTable_address,FlashParamsTable_address);
+
+    find_FileAccessSem(fw);
 /*
     // Find 'physw_status'
     search_saved_sig(fw, "kbd_read_keys", match_physw_status, 0, 0, 5);

@@ -582,6 +582,7 @@ int isASCIIstring(firmware *fw, uint32_t adr)
 
 // Find the index of a string in the firmware
 // Assumes the string starts on a 32bit boundary.
+// String + terminating zero byte should be at least 4 bytes long
 int find_str(firmware *fw, char *str)
 {
     int nlen = strlen(str);
@@ -594,7 +595,7 @@ int find_str(firmware *fw, char *str)
     {
         for (p = br->p, j = 0; j < br->len - nlen/4; j++, p++)
         {
-            if ((nm0 == *p) && (memcmp(p+1,str+4,nlen-4) == 0))
+            if ((nm0 == *p) && ((nlen<=4) || (memcmp(p+1,str+4,nlen-4) == 0)) )
             {
                 return j+br->off;
             }
