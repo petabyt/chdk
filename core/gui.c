@@ -661,7 +661,7 @@ static CMenuItem games_submenu_items[] = {
     MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,          MENUITEM_PROC,  module_run, "4wins.flt" ),
     MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,        MENUITEM_PROC,  module_run, "mastmind.flt" ),
     MENU_ITEM(0x38,"Snake" ,                          MENUITEM_PROC,  module_run, "snake.flt" ),
-    MENU_ITEM(0x38,"Tetris",                          MENUITEM_PROC,  module_run, "tetris.flt" ),
+    MENU_ITEM(0x38,LANG_MENU_GAMES_TETRIS,            MENUITEM_PROC,  module_run, "tetris.flt" ),
 	MENU_ITEM(0x38,"Sudoku",						  MENUITEM_PROC,  module_run, "sudoku.flt" ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
     {0}
