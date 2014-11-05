@@ -108,6 +108,6 @@ void *vid_get_bitmap_active_buffer()
 void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
-    extern int** palette_buffer_ptr;
+    extern char** palette_buffer_ptr;
     return (palette_buffer_ptr[active_palette_buffer]+16);
 }
