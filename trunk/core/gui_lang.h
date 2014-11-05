@@ -593,7 +593,7 @@
 
 //CHDK-DE
 #define LANG_MENU_CURVE_CURRENT                 482
-#define LANG_MENU_GAMES_TETRIS                  482
+#define LANG_MENU_GAMES_TETRIS                  483
 #define LANG_MENU_SHOW_PARTITION_NR             484
 #define LANG_MENU_VIDEO_EXT_TIME                485
 #define LANG_WARN_VIDEO_EXT_TIME                486

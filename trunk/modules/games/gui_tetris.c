@@ -740,7 +740,7 @@ struct ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"Tetris",			// Module name
+    -LANG_MENU_GAMES_TETRIS,	// Module name
     (int32_t)"Game",
 
     &_librun.base,
