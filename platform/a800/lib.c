@@ -61,25 +61,24 @@ void *vid_get_viewport_live_fb()
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    return viewport_buffers[(active_viewport_buffer-1)&3];
+    return viewport_buffers[(active_viewport_buffer)&3];
 }
 
 // Near "PropertyTableManagerCore.c" ROM:FFD2ED94
 int get_flash_params_count(void) {
  return 0xa0; 
- }              // Found @0xffd3af20 de stub_entry.S
+ }
 
-/*void vid_turn_off_updates()
-{
-    extern void _LockAndRefresh();   // wrapper function for screen lock
 
-    _LockAndRefresh();
+// PTP display stuff
+// 64 entry palette based on 100b 0xffcd86d4
+int vid_get_palette_type() { return 4; }
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x49e8+0x20);  // sub_ffcd86d4, via sub_ffe51bf0 two refs to "Palette Class."
 }
-
-void vid_turn_on_updates()
+void *vid_get_bitmap_active_buffer()
 {
-    extern void _UnlockAndRefresh();   // wrapper function for screen unlock
-
-    //_RefreshPhysicalScreen(1);
-    _UnlockAndRefresh();
-}*/
+    return (void*)(*(int*)(0x49e8+0x0c)); //sub_ffcd8790, via sub_ffe70e04 "Add: %p Width : %ld Hight : %ld", 
+}

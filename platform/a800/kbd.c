@@ -15,8 +15,8 @@ typedef struct {
 
 #define KEYS_MASK0 (0x00020000)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x2E0003f0)
-#define KEYS_INV2  (0x2E000000) //higher  1=pressed (MENU,UP,DOWN,LEFT) =>INTRODUCED
+#define KEYS_MASK2 (0x3E0003f0)
+#define KEYS_INV2  (0x3E000000) //higher  1=pressed (MENU,UP,DOWN,LEFT) =>INTRODUCED
 /*
 the 4 button states residing in the upper half of physw_status[2] seem to be inverted
 to handle these correctly, their value needs to be inverted:
@@ -55,7 +55,7 @@ int get_usb_bit()
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 static KeyMap keymap[] = {
-    { 0, KEY_PRINT           ,0x00020000 }, // Playback => ALT Mode
+    { 0, KEY_PLAYBACK        ,0x00020000 }, // Playback => ALT Mode
     { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xffe9db40, levent 0x03
     { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffe9db48, levent 0x02
     { 2, KEY_SET             ,0x00000100 }, // Found @0xffe9db50, levent 0x08
@@ -67,7 +67,7 @@ static KeyMap keymap[] = {
     { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xffe9db38, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xffe9db38, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xffe9db30, levent 0x00
-//    { 2, KEY_MODE            ,0x10000000 }, // OSD
+    { 2, KEY_MODE            ,0x10000000 }, // OSD
     { 0, 0, 0 }
 };
 
