@@ -424,7 +424,7 @@ void gui_snake_draw() {
 int gui_snake_init() {
     draw_filled_rect(0,0,camera_screen.width,camera_screen.height, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
     snake_start();
-	gui_set_mode(&GUI_MODE_SNAKE);
+    gui_set_mode(&GUI_MODE_SNAKE);
     return 1;
 }
 
@@ -440,12 +440,12 @@ struct ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(struct ModuleInfo),
-    SIMPLE_MODULE_VERSION,		// Module version
+    SIMPLE_MODULE_VERSION,      // Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"Snake",			// Module name
+    (int32_t)"Snake",           // Module name
     (int32_t)"Game",
 
     &_librun.base,
