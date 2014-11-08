@@ -405,7 +405,6 @@ ASM
 FW 7
 PATCHSUB name=fwt_close
 ->FW
-//FW $
 ENDASM
 ENDFUNC
 
