@@ -28,7 +28,6 @@
 // 12 "<- Back"
 12 "Takaisin"
 
-
 13 "RAW-asetukset"
 
 14 "Tallenna RAW-muodossa"
@@ -36,7 +35,6 @@
 17 "RAW ja JPEG samaan kansioon"
 18 "RAW-tiedoston etuliite"
 19 "RAW-tiedoston tunniste"
-
 
 20 "Kuvaruutunäytön asetukset"
 
@@ -50,7 +48,6 @@
 // 28 "Battery ->"
 28 "Akun tietojen näyttö"
 
-
 29 "Histogrammin asetukset"
 
 30 "Elävä histogrammi"
@@ -59,7 +56,6 @@
 33 "Näytä ali-/ylivalotus"
 34 "Ohita rajojen ylitykset"
 35 "Automaattinen suurennus"
-
 
 36 "Seepran asetukset"
 
@@ -71,14 +67,12 @@
 42 "Palauta kuvaruutunäyttö"
 43 "Näytä seepran päällä"
 
-
 44 "Skripti asetukset"
 
 45 "Avaa skripti tiedosto..."
 46 "Skriptin jatkoviive (.1s)"
 47 "Nykyinen skripti"
 48 "Skriptin asetukset"
-
 
 49 "Näyttöasetukset"
 
@@ -100,7 +94,6 @@
 65 "Tekstilukijan teksti"
 66 "Tekstilukijan tausta"
 
-
 67 "Sekalaiset toiminnot"
 
 68 "Tiedostohallinta"
@@ -117,7 +110,6 @@
 77 "Näytä buildin tiedot"
 78 "Näytä muistin tiedot"
 
-
 79 "Debug-asetukset"
 
 // 80 "Show PropCases"
@@ -129,7 +121,6 @@
 84 "ALT +/- debuggaus"
 85 "Tee kortista boottaava..."
 
-
 86 "Akun tietojen asetukset"
 
 87 "Jännite MAX (mV)"
@@ -137,7 +128,6 @@
 90 "Näytä prosentit"
 91 "Näytä voltit"
 92 "Näytä akun kuvake"
-
 
 93 "Tekstilukija"
 
@@ -149,12 +139,10 @@
 99 "Automaattinen vieritys"
 100 " Vierityksen viive (sek)"
 
-
 101 "Pelit"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Palauta asetukset ***"
 105 "Haluatko varmasti\npalauttaa asetukset?"
@@ -308,7 +296,6 @@
 217 "Näytä hyperfokaal.etäis.sekal.arvoissa"
 218 "Näytä terävyysal.sekal.arvoissa"
 
-
 219 "Sekalaisia näytettäviä arvoja"
 //220 "Miscellaneous Values ->"
 220 "Sekalaisia arvoja"
@@ -332,7 +319,6 @@
 236 "Videon bittinopeus"
 237 "Videolaatu"
 
-
 238 "Kuvausasetukset"
 //239 "Extra Photo Operations ->"
 239 "Kuvausasetukset"
@@ -350,9 +336,7 @@
 249 "TV Haarukointi"
 250 "AV Haarukointi"
 251 "ISO Haarukointi"
-252 " Arvon kerroin"
 253 "Etäisyyden haarukointi (MF)"
-254 " Arvon muutos(mm)"
 255 "Haarukointi muoto"
 
 256 "Automaatti käynnistys"
@@ -380,8 +364,6 @@
 272 "Kuvaruutunäyttö esikatselussa"
 //273 "Show Parameter Data"
 273 "Tehtävälistan aloitus"
-
-274 "Kohteen etäisyys"
 
 275 "Tyhjennä arvot käynnistyksessä"
 
@@ -551,7 +533,6 @@
 417 "Lataa reunan näyttö"
 418 "Tallenna reunan näyttö"
 419 "Käytä toistettaessa"
-420 "Vapaa sisäinen muisti"
 421 "Lataa ja aseta zoomaus"
 422 "Lukitse reunan näyttö"
 423 "Takaverho-salaman tahdistus"

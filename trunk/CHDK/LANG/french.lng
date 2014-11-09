@@ -317,9 +317,7 @@
 249 "Valeur bracketing TV"
 250 "Valeur bracketing AV"
 251 "Valeur bracketing ISO"
-252 "    Facteur de valeur"
 253 "Valeur bracketing dist. sujet (MF)"
-254 "    Facteur de valeur (mm)"
 255 "Type de bracketing"
 
 256 "Auto démarrage"
@@ -346,8 +344,6 @@
 
 272 "Aff. OSD en mode visualisation"
 273 "Aff. Données paramètres"
-
-274 "Distance sujet-objectif"
 
 275 "Effacer valeur bracketing au démarrage"
 
@@ -512,7 +508,6 @@
 417 "Load Edge Overlay"
 418 "Save Edge Overlay"
 419 "Enable in Play"
-420 "Mémoire interne libre"
 421 "Load+Set Zoom"
 422 "Lock Edge Overlay"
 423 "Rear curtain flash sync"

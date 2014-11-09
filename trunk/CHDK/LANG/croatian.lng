@@ -135,12 +135,10 @@
  99 "Omoguæi automatsko pomicanje"
 100 "Kašnjenje auto.pomicanja (sec)"
 
-
 101 "Igre"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Resetiranje opcija ***"
 105 "Želite li resetirati\nsve opcije?"
@@ -292,7 +290,6 @@
 217 "Prikaži Hyperfocal Dist.U Razno."
 218 "Prikaži DOF U Razno."
 
-
 219 "Razne vrijednosti"
 220 "Razne vrijednosti"
 221 "Prikaži kod pregledavanja"	
@@ -314,7 +311,6 @@
 236 "Video bitrate"
 237 "Video quality"
 
-
 238 "Dodatne foto operacije"
 239 "Dodatne foto operacije"
 240 "EV korak"
@@ -330,9 +326,7 @@
 249 "TV stupnjevanje"
 250 "AV stupnjevanje"
 251 "ISO stupnjevanje"
-252 "    Koeficijent"
 253 "Stupnj.udaljenosti(MF)"
-254 "    Koeficijent (mm)"
 255 "Vrsta stupnjevanja"
 
 256 "Autostart"
@@ -358,8 +352,6 @@
 
 272 "Prikaži OSD kod pregledavanja"
 273 "Popis zadataka-Start"
-
-274 "Udaljenost objekta od leæe"
 
 275 "Obriši stupnjevanje na startu"
 

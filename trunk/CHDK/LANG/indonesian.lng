@@ -27,7 +27,6 @@
  18 "File RAW Prefix"
  19 "File RAW Ekstensi"
 
-
  20 "OSD/Tampilan Layar"
 
  21 "Tampilkan OSD/Tampilan Layar"
@@ -39,7 +38,6 @@
  27 "Editor Tata Letak OSD/Tampilan Layar"
  28 "Baterai"
 
-
  29 "Histogram"
 
  30 "Tampilkan Live Histogram"
@@ -48,7 +46,6 @@
  33 "Tampilkan Histogram Lebih/Kurang EKSP"
  34 "Abaikan Batasan Atas"
  35 "Pembesaran Auto"
-
 
  36 "Zebra"
 
@@ -60,14 +57,12 @@
  42 "Kembalikan OSD"
  43 "Draw Over Zebra"
 
-
  44 "Script"
 
  45 "Load Script dari File..."
  46 "Script Shoot Delay (.1s)"
  47 "Script Saat ini"
  48 "Parameter Script"
-
 
  49 "Pengaturan Warna"
 
@@ -89,7 +84,6 @@
  65 "Teks Pembaca Teks"
  66 "Latar Pembaca Teks"
 
-
  67 "Serbaneka"
 
  68 "File Browser"
@@ -104,7 +98,6 @@
  77 "Tampilkan Info Build"
  78 "Tampilkan Info Memory"
 
-
  79 "Debug"
 
  80 "Debug data display"
@@ -114,7 +107,6 @@
  84 "ALT +/- aksi debug"
  85 "Membuat Kartu Memory Bootable..."
 
-
  86 "Pengaturan Penampilan Baterai"
 
  87 "Baterai MAX Voltase (mV)"
@@ -122,7 +114,6 @@
  90 "Tampilkan Persen Baterai"
  91 "Tampilkan Baterai Voltase"
  92 "Tampilkan Baterai Icon"
-
 
  93 "Teks Pembaca File"
 
@@ -134,12 +125,10 @@
  99 "Aktifkan Autoscroll"
 100 "Autoscroll Delay (sec)"
 
-
 101 "Permainan"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Opsi Reset ***"
 105 "Anda YAKIN akan Reset\nopsi ke default?"
@@ -291,7 +280,6 @@
 217 "Tampilkan Hyperfocal Jarak dalam Serbaneka"
 218 "Tampilkan Depth of Field dalam Serbaneka"
 
-
 219 "Nilai Serbaneka"
 220 "Nilai Serbaneka"
 221 "Tampilkan dalam Mode Review"	
@@ -312,7 +300,6 @@
 235 "Mode Video"
 236 "KecepatanBit Video"
 237 "Kualitas Video"
-
 
 238 "Peningkatan Photo Operations"
 239 "Peningkatan Photo Operations"
@@ -353,8 +340,6 @@
 
 272 "Tampilkan OSD pada Mode Review"
 273 "Daftar Tugas start"
-
-274 "Jarak Subjek dari lensa"
 
 275 "Non-aktifkan Bracketing saat Startup"
 
