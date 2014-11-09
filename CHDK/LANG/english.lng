@@ -27,7 +27,6 @@
  18 "RAW File Prefix"
  19 "RAW File Extension"
 
-
  20 "OSD"
 
  21 "Show OSD"
@@ -39,7 +38,6 @@
  27 "OSD Layout Editor"
  28 "Battery"
 
-
  29 "Histogram"
 
  30 "Show Live Histogram"
@@ -48,7 +46,6 @@
  33 "Show Histogram Over/Under EXP"
  34 "Ignore Boundary Peaks"
  35 "Auto Magnify"
-
 
  36 "Zebra"
 
@@ -60,14 +57,12 @@
  42 "Restore OSD"
  43 "Draw Over Zebra"
 
-
  44 "Script"
 
  45 "Load Script from File..."
  46 "Script Shoot Delay (.1s)"
  47 "Current Script"
  48 "Script Parameters"
-
 
  49 "Color Settings"
 
@@ -89,7 +84,6 @@
  65 "Text Reader Text"
  66 "Text Reader Background"
 
-
  67 "Miscellaneous"
 
  68 "File Browser"
@@ -104,7 +98,6 @@
  77 "Show Build Info"
  78 "Show Memory Info"
 
-
  79 "Debug"
 
  80 "Debug data display"
@@ -114,7 +107,6 @@
  84 "ALT +/- debug action"
  85 "Make Card Bootable..."
 
-
  86 "Battery showing settings"
 
  87 "Battery MAX Voltage (mV)"
@@ -122,7 +114,6 @@
  90 "Show Battery Percent"
  91 "Show Battery Voltage"
  92 "Show Battery Icon"
-
 
  93 "Text File Reader"
 
@@ -134,12 +125,10 @@
  99 "Enable Autoscroll"
 100 "Autoscroll Delay (sec)"
 
-
 101 "Games"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Reset Options ***"
 105 "Are you SURE to reset\noptions to default?"
@@ -291,7 +280,6 @@
 217 "Show Hyperfocal Dist. in Misc."
 218 "Show Depth of Field in Misc."
 
-
 219 "Miscellaneous Values"
 220 "Miscellaneous Values"
 221 "Show in Review Mode"	
@@ -312,7 +300,6 @@
 235 "Video Mode"
 236 "Video Bitrate"
 237 "Video Quality"
-
 
 238 "Enhanced Photo Operations"
 239 "Enhanced Photo Operations"
@@ -353,8 +340,6 @@
 
 272 "Show OSD in Review Mode"
 273 "Task List start"
-
-274 "Subject distance from lens"
 
 275 "Disable Bracketing on Startup"
 

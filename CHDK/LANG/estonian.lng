@@ -28,7 +28,6 @@
 // 12 "<- Back"
  12 "Tagasi"
 
-
  13 "RAW"
 
  14 "Salvesta RAW"
@@ -36,7 +35,6 @@
  17 "RAW ja JPEG samas kaustas"
  18 "RAW faili eesliide"
  19 "RAW faili laiend"
-
 
  20 "OSD"
 
@@ -50,7 +48,6 @@
 // 28 "Battery ->"
  28 "Aku"
 
-
  29 "Histogramm"
 
  30 "Näita histogrammi"
@@ -59,7 +56,6 @@
  33 "Näita histogrammi üle/alasäri"
  34 "Peida piiride ületamine"
  35 "Automaatne suurendus"
-
 
  36 "Zebra"
 
@@ -71,14 +67,12 @@
  42 "Taasta OSD"
  43 "Joonista üle Zebra"
 
-
  44 "Skriptid"
 
  45 "Lae skript failist..."
  46 "Skripti viivitus (.1s)"
  47 "Praegune skript"
  48 "Skripti parameetrid"
-
 
  49 "Kuvaseaded"
 
@@ -100,7 +94,6 @@
  65 "Tekstilugeja tekst"
  66 "Tekstilugeja taust"
 
-
  67 "Muud seaded"
 
  68 "Failisirvija"
@@ -117,7 +110,6 @@
  77 "Näita versiooniinfot"
  78 "Näita mäluinfot"
 
-
  79 "Debug"
 
 // 80 "Show PropCases"
@@ -129,7 +121,6 @@
  84 "ALT +/- debuggimine"
  85 "Muuda kaart buuditavaks..."
 
-
 86 "Akunäidiku seaded"
 
  87 "Aku MAX pinge (mV)"
@@ -137,7 +128,6 @@
  90 "Näita aku protsenti"
  91 "Näita aku pinget"
  92 "Näita aku ikooni"
-
 
  93 "Tekstifaili lugeja"
 
@@ -149,12 +139,10 @@
  99 "Luba isekerimine"
 100 "Isekerimise viivitus (s)"
 
-
 101 "Mängud"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Taasta algeaded ***"
 105 "Oled sa KINDEL\nalgseadete taastamises?"
@@ -308,7 +296,6 @@
 217 "Hüperfokaali dist. muudes v."
 218 "Näita DOFi muudes väärtustes"
 
-
 219 "Muud seaded"
 //220 "Miscellaneous Values ->"
 220 "Muud seaded"
@@ -332,7 +319,6 @@
 236 "Video bitikiirus"
 237 "Video kvaliteet"
 
-
 238 "Pildistamise lisavalikud"
 //239 "Extra Photo Operations ->"
 239 "Pildistamise lisavalikud"
@@ -350,9 +336,7 @@
 249 "TV kahvelduse väärtus"
 250 "AV kahvelduse väärtus"
 251 "ISO kahvelduse väärtus"
-252 "    Arvväärtus"
 253 "Obj. dist. kahv. väärtus(MF)"
-254 "    Arvväärtus (mm)"
 255 "Kahvelduse tüüp"
 
 256 "Autostart"
@@ -380,8 +364,6 @@
 272 "Näita OSD taasesitusrezhiimis"
 //273 "Show Parameter Data"
 273 "Näita param. andmeid"
-
-274 "Objekti kaugus läätsest"
 
 275 "Tühista kahveldus käivitusel"
 
@@ -551,7 +533,6 @@
 417 "Lae ääris"
 418 "Salvesta ääris"
 419 "Kasuta taasesituses"
-420 "Vaba sisemälu"
 421 "Lae ja aseta suum"
 422 "Panoraamrezhiim"
 423 "Tagakardina välgu sünk."

@@ -27,7 +27,6 @@
  18 "Pøedpona souboru RAW"
  19 "Pøípona souboru RAW"
 
-
  20 "OSD"
 
  21 "Zobrazit OSD"
@@ -39,7 +38,6 @@
  27 "Editor rozvržení prvkù OSD"
  28 "Baterie"
 
-
  29 "Histogram"
 
  30 "Zobr. živý histogram"
@@ -48,7 +46,6 @@
  33 "Zobr. v histogr. pøe/pod EXP"
  34 "Ignorovat hranièní špièky"
  35 "Automatická velikost"
-
 
  36 "Zebra"
 
@@ -60,14 +57,12 @@
  42 "Obnovit OSD"
  43 "Kreslit pøes zebru"
 
-
  44 "Skript"
 
  45 "Naèíst skript ze souboru..."
  46 "Prodleva zahájení skriptu (.1s)"
  47 "Aktuální skript"
  48 "Parametry skriptu"
-
 
  49 "Nastavení barev"
 
@@ -89,7 +84,6 @@
  65 "Prohlížeè textù - text"
  66 "Prohlížeè textù - pozadí"
 
-
  67 "Rùzné"
 
  68 "Prohlížeè souborù"
@@ -104,7 +98,6 @@
  77 "Zobrazit Informace o sestavení"
  78 "Zobrazit Informace o pamìti"
 
-
  79 "Ladìní"
 
  80 "Zobrazit data ladìní"
@@ -114,7 +107,6 @@
  84 "Akce ladìní ALT +/-"
  85 "Vytvoøit bootovací kartu..."
 
-
  86 "Nastavení zobrazení baterie"
 
  87 "MAX napìtí baterie (mV)"
@@ -122,7 +114,6 @@
  90 "Zobr. procenta baterie"
  91 "Zobr. napìtí baterie"
  92 "Zobr. ikonu baterie"
-
 
  93 "Prohlížeè textových souborù"
 
@@ -134,12 +125,10 @@
  99 "Povolit aut. posouvání"
 100 "Prodleva aut. posouvání (s)"
 
-
 101 "Hry"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Obnovit nastavení ***"
 105 "OPRAVDU obnovit nastavení\nna výchozí hodnoty?"
@@ -291,7 +280,6 @@
 217 "Zobr. hyperf. vzdál. v Rùzné"
 218 "Zobr. hloubku ostr. v Rùzné"
 
-
 219 "Rùzné hodnoty"
 220 "Rùzné hodnoty"
 221 "Zobrazit v režimu náhledu"
@@ -312,7 +300,6 @@
 235 "Režim videa"
 236 "Datový tok videa"
 237 "Kvalita videa"
-
 
 238 "Rozšíøené možnosti focení"
 239 "Rozšíøené možnosti focení"
@@ -353,8 +340,6 @@
 
 272 "Zobrazit OSD v režimu náhledu"
 273 "Spuštìní seznamu úkolu"
-
-274 "Subj. vzdál od èoèek"
 
 275 "Zakázat bracketing @ spušt."
 

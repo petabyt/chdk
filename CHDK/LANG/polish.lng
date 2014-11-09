@@ -22,7 +22,6 @@
 
  12 "Wstecz"
 
-
  13 "RAW - obraz w formacie surowym"
 
  14 "Zapisuj w RAW"
@@ -30,7 +29,6 @@
  17 "Pliki RAW w katalogu z JPEG"
  18 "Prefiks pliku RAW"
  19 "Rozszerzenie pliku RAW"
-
 
  20 "OSD - wyswietlanie funkcji menu na ekranie"
 
@@ -43,7 +41,6 @@
  27 "Edycja ukladu OSD na ekranie LCD->SET"
  28 "Bateria"
 
-
  29 "Histogram - wykres punktów o róznej jasnosci"
 
  30 "Pokaz histogram 'Na zywo'"
@@ -52,7 +49,6 @@
  33 "Pokazuj Niedo/Przeswietlenie"
  34 "Ignoruj skrajne wartosci"
  35 "Automatyczne powiekszanie"
-
 
  36 "ZEBRA - wizualizacja przeswietlen"
 
@@ -64,14 +60,12 @@
  42 "Przywróc OSD"
  43 "Rysuj na Zebrze"
 
-
  44 "Skrypt - automatyzacja dzialania aparatu"
 
  45 "Wczytaj skrypt z pliku..."
  46 "Opóznienie wykonania skryptu (.1s)"
  47 "Aktualny skrypt"
  48 "Parametry skryptu"
-
 
  49 "Ustawienia wyswietlania"
 
@@ -93,7 +87,6 @@
  65 "Tekst przegladarki tekstów
  66 "Tlo przegladarki tekstów"
 
-
  67 "Rózne inne ustawienia i funkcje"
 
  68 "Przegladarka plików"
@@ -108,7 +101,6 @@
  77 "Pokaz informacje o wersji"
  78 "Pokaz informacje o pamieci"
 
-
  79 "Konsola - debugowanie"
 
  80 "Wyswietlaj dane debugowania"
@@ -118,7 +110,6 @@
  84 "ALT +/- dzialanie debugowania"
  85 "Ustaw karte pamieci jako bootowalna..."
 
-
  86 "Ustawianie wyswietlania inf. o baterii"
 
  87 "Napiecie MAX baterii (mV)"
@@ -126,7 +117,6 @@
  90 "Pokaz stan baterii jako % pelnej"
  91 "Pokaz stan baterii jako napiecie"
  92 "Pokaz ikone baterii"
-
 
  93 "Przegladarka plików tekstowych"
 
@@ -138,12 +128,10 @@
  99 "Wlacz automatyczne przewijanie"
 100 "Opóznienie auto.przewijania (sek.)"
 
-
 101 "Gry"
 
 102 "Reversi (Othello)"
 103 "Sokoban"
-
 
 104 "*** Opcje resetowania ***"
 105 "Czy NA PEWNO przywrócic\nustawienia domyslne?"
@@ -295,7 +283,6 @@
 217 "Pokaz odl. hyperfokalna w ‘Innych’"
 218 "Pokaz glebie ostrosci (DoF) w ‘Innych’"
 
-
 219 "Ustawienia dodatkowe"
 220 "Parametry 'Inne'"
 221 "Pokaz w trybie podgladu"	
@@ -317,7 +304,6 @@
 236 "Strumien (Bitrate) wideo"
 237 "Jakosc wideo"
 
-
 238 "Dodatkowe opcje fotograficzne"
 239 "Wymuszone opcje naswietlania"
 //240 "Wymuszony czas ekspozycji"
@@ -333,9 +319,7 @@
 249 "Bracketing migawki (TV)"
 250 "Bracketing przyslony (AV)"
 251 "Bracketing ISO"
-252 "    Mnoznik ISO"
 253 "Bracketing ostrosci (Tryb M)"
-254 "    Mnoznik (mm)"
 255 "Kolejnosc Bracketingu"
 
 256 "Automatyczny start"
@@ -363,7 +347,6 @@
 //273 "Pokaz parametry"
 273 "Lista zadan na starcie"
 
-274 "Odleg. wzgledna od soczewki"
 	
 275 "Wyczysc ustaw. Bracketingu przy starcie"
 
@@ -529,7 +512,6 @@
 417 "Laduj pokrywanie krawedzi"
 418 "Zapisz pokrywanie krawedzi"
 419 "Wlacz w trybie przegladarki"
-420 "Dostepna pamiec wewnetrzna"
 421 "Laduj+ustaw powiekszenie (Load+Set Zoom)"
 422 "Blokuj pokrywanie krawedzi"
 423 "Synchronizacja blysku na zamkniecie migawki"

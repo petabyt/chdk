@@ -8,8 +8,6 @@
 // version 1.2 update by srsa
 // version 1.3 - codepage Win1252 for font compatibility
 
-
-
   
   1 "Fömenü"
 
@@ -34,7 +32,6 @@
  18 "RAW fájl elötag"
  19 "RAW fájl kiterjesztés"
 
-
  20 "OSD"
 
  21 "OSD megjelenítése"
@@ -46,7 +43,6 @@
  27 "OSD szerkesztése"
  28 "Akku beállítások"
 
-
  29 "Hisztogram"
 
  30 "Élö hisztogram mutatása"
@@ -55,7 +51,6 @@
  33 "Alul/túlexp. a hisztogramon"
  34 "Csúcsok figyelmen kívül hagyása"
  35 "Automatikus nagyítás"
-
 
  36 "Zebra"
 
@@ -67,14 +62,12 @@
  42 "OSD visszaállítás"
  43 "Zebra felülrajzolása"
 
-
  44 "Szkript menü"
 
  45 "Szkript betöltése..."
  46 "Szkript késleltetés (.1s)"
  47 "Jelenlegi szkript"
  48 "Szkript beállítások"
-
 
  49 "Színek beállítása"
 
@@ -96,7 +89,6 @@
  65 "Szövegolvasó szöveg"
  66 "Szövegolvasó háttére"
 
-
  67 "Egyebek"
 
  68 "Fájlkezelö"
@@ -111,7 +103,6 @@
  77 "CHDK verzióinfó"
  78 "Memória infó"
 
-
  79 "Hibakeresés (debug)"
 
  80 "Lista megjelenítése"
@@ -121,16 +112,13 @@
  84 "ALT +/- debug müvelet"
  85 "SD kártya bootolhatóvá tétele..."
 
-
  86 "Akku"
 
  87 "Akku MAX feszültség (mV)"
  88 "Akku MIN feszültség (mV)"
- 89 "Lépésköz (ON= 25, OFF= 1 mV)"
  90 "Százalékos megjelenítés"
  91 "Feszültség megjelenítése"
  92 "Ikon megjelenítése"
-
 
  93 "Szövegfájl olvasó"
 
@@ -142,12 +130,10 @@
  99 "Auto görgetés"
 100 "Görgetés késleltetés (s)"
 
-
 101 "Játékok"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Beállítások alaphelyzetbe ***"
 105 "Biztos visszaállítod\naz alaphelyzetet?"
@@ -362,8 +348,6 @@
  272 "OSD kijelzése ellenörzés módban"
  273 "Task lista kezdete"
 
- 274 "Tárgy táv. objektívtöl"
-
  275 "Induláskor értékek alaphelyzetbe"
 
  276 "Kártya 2 particióra osztása"
@@ -489,7 +473,6 @@
  378 "Szinkronizálás engedélyezése"
  379 "Szinkr. késleltetés engedélyezése"
  380 "Szinkr. késleltetés 0.1ms"
- 381 "Szinkr. késleltetés 0.1s"
 
  382 "AF gomb"
  383 "Paraméterek visszaállítása"
@@ -511,8 +494,6 @@
  396 "Hömérséklet"
  397 "Hömérséklet kijelzés"
  398 "Minöség állítás gyorsgombbal"
- 399 "Távvez. zoom engedélyezés"
- 400 "Zoom idötúllépés 0.1s"
  401 "Indulási hang"
  402 "RAW müvelet elötag"
  403 "RAW müvelet kiterjesztés"
@@ -524,9 +505,6 @@
  409 "Kivonás a jelöltböl"
  410 "Beállítások mentése"
  411 "Video Ev kijelzö"
- 412 " Zoom értéke" 
- 413 "Zoom felülbírálás" 
- 414 " Törlés induláskor" 
 415 "RAW kiterjesztés hozzáadása"
 416 " Fahrenheitben"
 417 "Elmentett él betöltése fájlból"

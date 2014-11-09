@@ -27,7 +27,6 @@
   18 "Prefijo Archivo RAW"
   19 "Extensión Archivo RAW"
 
-
   20 "OSD"
 
   21 "Ver OSD"
@@ -39,7 +38,6 @@
   27 "Editar Posición de OSD"
   28 "Batería"
 
-
   29 "Histograma"
 
   30 "Ver Histograma en vivo"
@@ -48,7 +46,6 @@
   33 "Ver en Histo. Sobre/Bajo EXP"
   34 "Ignorar máximos en Bordes"
   35 "Ampliar Automático"
-
 
   36 "Zebra"
 
@@ -60,14 +57,12 @@
   42 "Restaurar OSD"
   43 "Ver Histo/OSD con Zebra"
 
-
   44 "Secuencia de Comandos"
 
   45 "Carga Sec. de Comandos ..."
   46 "Retardo Disp. Sec.(.1 s)"
   47 "Título de Secuencia"
   48 "Opc. de Sec. de Comandos"
-
 
   49 "Opciones de Visualización"
 
@@ -89,7 +84,6 @@
   65 "Texto en Lector de Archivo"
   66 "Fondo en Lector de Archivo"
 
-
   67 "Varios"
 
   68 "Explorador de archivos"
@@ -104,7 +98,6 @@
   77 "Ver Datos de Versión"
   78 "Ver Información de memoria"
 
-
   79 "Opciones de Depuración"
 
 // 80 "Ver PropCases"
@@ -116,7 +109,6 @@
   84 "Función de Depuración ALT +/-"
   85 "Crear Tarjeta de Arranque ..."
 
-
   86 "Opciones de Batería"
 
   87 "Volt. Max. Batería (mV)"
@@ -124,7 +116,6 @@
   90 "Ver Porcentaje de Batería"
   91 "Ver Voltaje de Batería"
   92 "Ver Icono de Batería"
-
 
   93 "Lector de Archivo de Texto"
 
@@ -136,12 +127,10 @@
   99 "Desplazamiento Automático"
  100 "Retardo Desplaz. (seg.)"
 
-
 101 "Juegos"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Valores Predeterminados ***"
 105 "¿Está seguro de volver a \nlos valores predeterminados?"
@@ -295,7 +284,6 @@
 217 "Ver Dist. Hiperfocal en Misc."
 218 "Ver Prof. Campo en Misc."
 
-
 219 "Valores Misceláneos"
 // 220 "Varios Valores ->"
 220 "Valores Misceláneos"
@@ -319,7 +307,6 @@
 236 "Bitrate de Video"
 237 "Calidad de vídeo"
 
-
 238 "Opciones Extra de Fotografía"
 // 239 "Extra Operaciones de fotos ->"
 239 "Opciones Extra de Fotografía"
@@ -337,9 +324,7 @@
 249 "Valor Bracketing Tv"
 250 "Valor Bracketing Av"
 251 "Valor Bracketing ISO"
-252 "   Factor Multip."
 253 "Valor Brack. Dist. Suj. (MF)"
-254 "   Factor Multip. (mm)"
 255 "Tipo de Bracketing"
 
 256 "Autoinicio"
@@ -367,8 +352,6 @@
 272 "Ver OSD en el modo de revisión"
 // 273 "Ver datos de parámetros"
 273 "Comienzo Lista de Tareas"
-
-274 "Dist. Sujeto de la Lente"
 
 275 "Borrar Bracketing en Inicio"
 

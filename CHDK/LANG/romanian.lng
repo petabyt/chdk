@@ -32,7 +32,6 @@
 // 12 "<- Inapoi"
  12 "Inapoi"
 
-
  13 "RAW"
 
  14 "Salvare RAW"
@@ -40,7 +39,6 @@
  17 "Fisier RAW in folder cu JPEG"
  18 "Prefix fisier RAW"
  19 "Extensie fisier RAW"
-
 
  20 "OSD"
 
@@ -54,7 +52,6 @@
 // 28 "Baterie ->"
  28 "Baterie"
 
-
  29 "Histograma"
 
  30 "Arata histograma"
@@ -63,7 +60,6 @@
  33 "Arata SUPRA/SUB expunere histograma"
  34 "Ignora varfuri margini"
  35 "Auto marire"
-
 
  36 "Zebra"
 
@@ -75,14 +71,12 @@
  42 "Restaureaza OSD"
  43 "Deseneaza peste Zebra"
 
-
  44 "Script"
 
  45 "Incarca script din fisier..."
  46 "Script intarziere poza (.1s)"
  47 "Script curent"
  48 "Parametrii script"
-
 
  49 "Optiuni vizuale"
 
@@ -104,7 +98,6 @@
  65 "Text vizualizare text"
  66 "Fundal vizualizare text"
 
-
  67 "Diverse"
 
  68 "Manager fisiere"
@@ -121,7 +114,6 @@
  77 "Arata informatii versiune"
  78 "Arata informatii memorie"
 
-
  79 "Diagnostic"
 
 // 80 "Afiseaza PropCases"
@@ -133,7 +125,6 @@
  84 "Actiune diagn. ALT +/-"
  85 "Creeaza card bootabil..."
 
-
 86 "Optiuni afisare baterie"
 
  87 "Voltaj MAXim (mV)"
@@ -141,7 +132,6 @@
  90 "Arata procent"
  91 "Arata voltaj"
  92 "Arata simbol"
-
 
  93 "Vizualizare text"
 
@@ -153,12 +143,10 @@
  99 "Activeaza scroll automat"
 100 "Intarz. scroll aut. (sec)"
 
-
 101 "Jocuri"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Resetare optiuni ***"
 105 "Esti SIGUR ca doresti revenirea\noptiunilor la valorile implicite?"
@@ -317,7 +305,6 @@
 217 "Dist. hiperf. in Diverse"
 218 "Profunzime camp in Diverse"
 
-
 219 "Valori diverse"
 //220 "Valori diverse ->"
 220 "Valori diverse"
@@ -341,7 +328,6 @@
 236 "Rata transfer"
 237 "Calitate"
 
-
 238 "Operatiuni foto suplimentare"
 239 "Operatiuni foto suplimentare"
 //240 "Forteaza viteza shutter"
@@ -357,9 +343,7 @@
 249 "Valoare Bracketing TV"
 250 "Valoare Bracketing AV"
 251 "Valoare Bracketing ISO"
-252 " Factorul valorii"
 253 "Val. Bracket. dist. sub. (MF)"
-254 " Factorul valorii (mm)"
 255 "Tip Bracketing"
 
 256 "Start auto"
@@ -386,8 +370,6 @@
 272 "Arata OSD in mod Review"
 //273 "Arata datele parametrilor"
 273 "Porneste lista comenzi"
-
-274 "Dist. subiectiva de la lentila"
 
 275 "Anul. valori Bracket la start"
 
@@ -558,7 +540,6 @@
 417 "Incarca suprap. margini"
 418 "Salveaza suprap. margini"
 419 "Activeaza in mod Play"
-420 "Memorie interna libera"
 421 "Incarca si activeaza Zoom"
 422 "Blocheaza suprap. margini"
 // no translation for rear courtain, even in Romanian Canon manuals is written like this.

@@ -19,7 +19,6 @@
  
  12 "Spä"
 
-
  13 "RAW"
 
  14 "RAW"
@@ -27,7 +26,6 @@
  17 "RAW v adresári s JPG"
  18 "RAW súbor - predpona"
  19 "RAW súbor - prípona"
-
 
  20 "OSD"
 
@@ -40,7 +38,6 @@
  27 "Editor OSD"
  28 "Batéria"
 
-
  29 "Histogram"
 
  30 "ivı histogram"
@@ -49,7 +46,6 @@
  33 "Pre/podexpozícia"
  34 "Ignorova hranièné špièky"
  35 "Automatická mierka"
-
 
  36 "Zebra"
 
@@ -61,14 +57,12 @@
  42 "Obnovi OSD"
  43 "Prekresli zebru"
 
-
  44 "Skript"
 
  45 "Vloi zo súboru"
  46 "Oneskorenie (.1s)"
  47 "Aktuálny skript"
  48 "Parametre"
-
 
  49 "Zobrazenie"
 
@@ -90,7 +84,6 @@
  65 "Èítaèka textu - text"
  66 "Èítaèka textu - pozadie"
 
-
  67 "Rôzne"
 
  68 "Prehliadaè súborov"
@@ -105,7 +98,6 @@
  77 "Verzia programu"
  78 "Vo¾ná pamä"
 
-
  79 "Ladenie"
 
  80 "Zobrazi dáta"
@@ -115,7 +107,6 @@
  84 "ALT +/- èinnos pri ladení"
  85 "Vytvori bootovaciu kartu"
 
-
  86 "Batéria"
 
  87 "Napätie MAX (mV)"
@@ -123,7 +114,6 @@
  90 "Batéria - %"
  91 "Batéria - mV"
  92 "Batéria - ikona"
-
 
  93 "Èítaèka textov"
 
@@ -135,12 +125,10 @@
  99 "Autoposun"
 100 "Oneskori posun o (s)"
 
-
 101 "Hry"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Prvotné nastavenie ***"
 
@@ -293,7 +281,6 @@
 217 "Hyperfokálna vzdialenos..."
 218 "Håbka ostrosti v príd.hod."
 
-
 219 "Prídavné hodnoty"
 220 "Prídavné hodnoty"
 221 "Zobrazi pri náh¾ade"	
@@ -315,7 +302,6 @@
 236 "Video - bit. rıchlos"
 237 "Video - kvalita"
 
-
 238 "Extra fotooperácie"
 239 "Extra fotooperácie"
 //240 "Extra èas uzávierky"
@@ -331,9 +317,7 @@
 249 "Stupeò èasu"
 250 "Stupeò clony"
 251 "Stupeò ISO"
-252 "    Násobok"
 253 "Stupeò vzdialenosti (MF)"
-254 "    Násobok (mm)"
 255 "Smer stupòovania"
 
 256 "Autoštart"
@@ -359,8 +343,6 @@
 
 272 "OSD pri náh¾ade"
 273 "Štart zoznamu úloh"
-
-274 "Vzdialenos od šošoviek"
 
 275 "Zruši stupòovanie pri štarte"
 
@@ -525,7 +507,6 @@
 417 "Vloi prekrytie okrajov"
 418 "Ulozi prekrytie okrajov"
 419 "Povoli pri prehliadaní"
-420 "Vo¾ná vnútorná pamä"
 421 "Vloi+nastavi zoom"
 422 "Zamknú prekrytie okrajov"
 423 "Blesk pri zatváraní uzávierky"

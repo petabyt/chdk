@@ -35,7 +35,6 @@
 
  12 "Geri"
 
-
  13 "RAW"
 
  14 "RAW Kaydet"
@@ -43,7 +42,6 @@
  17 "RAW Dosyasý JPEG Klasöründe"
  18 "RAW Dosya Ön Adý"
  19 "RAW Dosya Uzantýsý"
-
 
  20 "Ekran Göstergeleri"
 
@@ -56,7 +54,6 @@
  27 "Göstergeler'in Yerleþimi"
  28 "Pil"
 
-
  29 "Histogram"
 
  30 "Canlý Histogram Göster"
@@ -65,7 +62,6 @@
  33 "Histog. Az/Aþýrý POZL Göster"
  34 "Sýnýr Tepelerini Önmseme"
  35 "Otomatik Büyüt"
-
 
  36 "Zebra"
 
@@ -77,14 +73,12 @@
  42 "Göstergeler'i Sýfýrla"
  43 "Üzerine Zebra Çiz"
 
-
  44 "Betik"
 
  45 "Dosyadan Betik Yükle..."
  46 "Betik Çekim Geckm. (.1s)"
  47 "Geçerli Betik"
  48 "Betik Deðiþkenleri"
-
 
  49 "Görsel Ayarlar"
 
@@ -106,7 +100,6 @@
  65 "Metin Dosyasý Okuyucu Metin"
  66 "Metin Dosyasý Okuyucu Arkapln"
 
-
  67 "Çeþitli Araçlar"
 
  68 "Dosya Yöneticisi"
@@ -121,7 +114,6 @@
  77 "Mimari Bilgisi Göster"
  78 "Bellek Bilgisi Göster"
 
-
  79 "Hata Düzeltme"
 
  80 "Düzeltme Verisi Göster"
@@ -131,7 +123,6 @@
  84 "ALT +/- Basn. RAMi Sil"
  85 "Kartý Çalýþtýrýlabilir Yap..."
 
-
  86 "Pil Gösterim Ayarlarý"
 
  87 "Pil MAK Voltaj (mV)"
@@ -139,7 +130,6 @@
  90 "Doluluðu, Yüzdeyle Göster"
  91 "Doluluðu, mV  ile  Göster"
  92 "Doluluk Simgesi'ni Göster"
-
 
  93 "Metin Dosyasý Okuyucu"
 
@@ -151,12 +141,10 @@
  99 "Oto. Kaydýrma'yý Etkinleþtir"
 100 "Oto.Kayd Gecikmesi (san)"
 
-
 101 "Oyunlar"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Tercihleri Sýfýrla ***"
 105 "Tercihleri varsayýlan\ndeðerlerine getirmek\nistediðinizden emin misiniz?"
@@ -309,7 +297,6 @@
 217 "Hiperodak Uz. Çeþtli'de Gstr"
 218 "AD Bilgisi'ni Çeþtli'de Gstr"
 
-
 219 "Çeþitli Deðerler Tablosu"
 
 220 "Çeþitli Deðerler Tablosu"
@@ -326,14 +313,12 @@
 231 "AþýrýPOZL Deð.(Flaþsýz)' dE'"
 232 "Iþýk Ölçümü'nü Göster  ' B '"
 
-
 233 "Video Deðiþkenleri"
 
 234 "Video Deðiþkenleri"
 235 "Video Modu"
 236 "Video Bit Oraný"
 237 "Video Kalitesi"
-
 
 238 "Ek Fotoðraf Ýþlemleri"
 
@@ -346,18 +331,14 @@
 245 "Baskýn Nesne  Uzaklýðý"
 246 "    Deðer Çarpaný (mm)"
 
-
 247 "Sürekli Modu'nda Kademeli Çekim"
 
 248 "Sürekli Modu'nda Kademeli Çkm"
 249 "Perde Önc. Kademe Deð."
 250 "Diyaf.Önc. Kademe Deð."
 251 "ISO Kademe Deðeri"
-252 "    Deðer Çarpaný"
 253 "Nes.Uzk Kademe Deð. (EN)"
-254 "    Deðer Çarpaný (mm)"
 255 "Kademeli Çekim Tipi"
-
 
 256 "Otomatik Baþlat"
 257 "Kumanda'yý Etkinleþtir"
@@ -373,7 +354,6 @@
 
 265 "Canon AþýrýPOZL Deðeri 'dEc'"
 
-
 266 "RAW Geliþtirimi"
 
 267 "Kamerayý Çekim Modu'na\nalýp bir fotoðraf çekin."
@@ -382,15 +362,11 @@
 270 "RAW Ortalama"
 271 "Kartýnýzda yeterli alan yok!\nGereken: %dM / Boþ Alan: %dM"
 
-
 272 "Göstrgler'i Ýnceleme Mod.Gös"
 
 273 "Deðiþken Verisi Göster"
 
-274 "Nesnenin Lense Uzaklýðý"
-
 275 "Kademe Deð. Baþlangýçta Sil"
-
 
 276 "Kartý 2 Bölüm Yap"
 
@@ -401,7 +377,6 @@
 281 "UYARI !!"
 282 "Bilgi.."
 283 "RGB Zebra (Sadece AþýrýPOZL)"
-
 
 284 "ND Filtre Durumu"
 
@@ -450,7 +425,6 @@
 319 "Hafýza Kartý Ayarlarý"
 320 "Hafýza Kartý"
 
-
 321 "Özel Oto ISO"
 
 322 "Özel Oto ISO"
@@ -462,7 +436,6 @@
 328 "Mak ISO OTO      "
 329 "Min ISO          "
 
-
 330 "Menü Baþlýðý Metin"
 331 "Menü Baþlýðý Arkaplan"
 332 "Ýmleç Metin"
@@ -470,13 +443,11 @@
 334 "Ana Menü'yü Ortala"
 335 "Zum Süresince Ses Kaydý Yok"
 
-
 336 "Kötü Piksel Giderme"
 
 337 "Kapalý"
 338 "Ortlama"
 339 "RAWdönþ"
-
 
 340 "Baskýn Deðerler Metin"
 341 "Baskýn Deðerler Arkaplan"
@@ -510,14 +481,12 @@
 363 "Sembol Metin"
 364 "Sembol Arkaplan"
 
-
 365 "Özel Eðriler"
 
 366 "Özel Eðriler"
 367 "Eðri Profili Yükle..."
 368 "Eðriler'i Etkinleþtir"
 369 "Eðri Dosyasý Seç"
-
 
 370 "Keskin Yüzey"
 
@@ -526,7 +495,6 @@
 373 "Keskin Yüzey Eþiði"
 374 "Keskin Yüzey Rengi"
 
-
 375 "Kumanda Deðiþkenleri"
 
 376 "Kumanda Deðiþkenleri"
@@ -534,7 +502,6 @@
 378 "Senkron'u  Etkinleþtir"
 379 "Senkron Gecikmesi'ni Etknlþ."
 380 "Senkron Gecikmesi 0.1ms"
-
 
 382 "Basýnca AF Iþýðý'ný Aç"
 
@@ -582,15 +549,12 @@
 
 416 "  Fahrenhayt"
 
-
 417 "Keskin Yüzey Yükle"
 
 418 "Keskin Yüzey Kaydet"
 419 "Gösterim Modu'nda Etknleþtir"
-420 "Boþ Dahili Bellek"
 421 "Zum    Yükle+Ayarla"
 422 "Keskin Yüzey Kilitle"
-
 
 423 "2. Perde Flaþ Senkronu"
 

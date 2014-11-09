@@ -27,7 +27,6 @@
  18 "Prefisso file RAW"
  19 "Estensione file RAW"
 
-
  20 "OSD"
 
  21 "Visualizza OSD"
@@ -39,7 +38,6 @@
  27 "Editor layout OSD"
  28 "Batteria"
 
-
  29 "Istogramma"
 
  30 "Visualizza istogramma"
@@ -48,7 +46,6 @@
  33 "Visualizza istogramma sopra/sotto EXP"
  34 "Ignora picchi sui bordi"
  35 "ingrandimento automatico"
-
 
  36 "Zebra"
 
@@ -60,14 +57,12 @@
  42 "Ripristina OSD"
  43 "Disegna sopra Zebra"
 
-
  44 "Script"
 
  45 "Carica script da file..."
  46 "Ritardo script scatto (.1s)"
  47 "Script attuale"
  48 "Parametri script"
-
 
  49 "Visualizza"
 
@@ -89,7 +84,6 @@
  65 "Testo lettore testo"
  66 "Sfondo lettore testo"
 
-
  67 "Varie"
 
  68 "File browser"
@@ -104,7 +98,6 @@
  77 "Visualizza versione"
  78 "Visualizza info memoria"
 
-
  79 "Debug"
 
  80 "Visualizza dati debug"
@@ -114,7 +107,6 @@
  84 "Azioni debug ALT+/-"
  85 "Rendidi scheda avviabile..."
 
-
  86 "Visualizza impostazioni batteria"
 
  87 "Voltaggio MAX batteria (mV)"
@@ -122,7 +114,6 @@
  90 "Visualizza percentuale batteria"
  91 "Visualizza voltaggio batteria"
  92 "Visualizza icona batteria"
-
 
  93 "Lettore file testo"
 
@@ -134,12 +125,10 @@
  99 "Abilita auto scorrimento"
 100 "Ritardo autoscorrimento(sec)"
 
-
 101 "Giochi
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Ripristino Opzioni ***"
 105 "Sei SICURO di voler ripristinare\nalle opzioni predefinite?"
@@ -291,7 +280,6 @@
 217 "Visualizza distanza iperfocale"
 218 "Visualizza profondità di campo"
 
-
 219 "Parametri vari"
 220 "Parametri vari"
 221 "Visualizza in modalità review"
@@ -312,7 +300,6 @@
 235 "Modalità video"
 236 "Bitrate video"
 237 "Qualità video"
-
 
 238 "Funzioni extra foto"
 239 "Funzioni extra foto"
@@ -353,8 +340,6 @@
 
 272 "Visualizza OSD in modo review"
 273 "Elenco attività all'avvio"
-
-274 "Dist. sogg. dall'obbiettivo"
 
 275 "Disabilita bracketing all'avvio"
 

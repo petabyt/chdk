@@ -19,7 +19,6 @@
 
  12 "Terug"
 
-
  13 "RAW"
 
  14 "Sla RAW op"
@@ -27,7 +26,6 @@
  17 "RAW-bestand in map met JPEG"
  18 "RAW-bestandsprefix"
  19 "RAW-bestandsextensie"
-
 
  20 "OSD"
 
@@ -40,7 +38,6 @@
  27 "OSD layouteditor"
  28 "Batterij"
 
-
  29 "Histogram"
 
  30 "Toon histogram"
@@ -49,7 +46,6 @@
  33 "Toon histogr. over/onder EXP"
  34 "Negeer grenspieken"
  35 "Schaal automatisch"
-
 
  36 "Zebra"
 
@@ -61,14 +57,12 @@
  42 "Herstel OSD"
  43 "Overschrijf zebra met..."
 
-
  44 "Script"
 
  45 "Laad script..."
  46 "Scriptvertraging (.1s)"
  47 "Huidig script"
  48 "Scriptinstellingen"
-
 
  49 "Beeldinstellingen"
 
@@ -90,7 +84,6 @@
  65 "Kladblok lettertype"
  66 "Kladblok achtergrond"
 
-
  67 "Overige"
 
  68 "Bestandsbeheer"
@@ -105,7 +98,6 @@
  77 "Toon versieinfo"
  78 "Toon geheugenstatus"
 
-
  79 "Debug"
 
  80 "Toon debugdata"
@@ -115,7 +107,6 @@
  84 "Alt +/- debug-actie"
  85 "Maak geheugenkaart opstartbaar"
 
-
  86 "Batterij"
 
  87 "MAX Voltage (mV)"
@@ -123,7 +114,6 @@
  90 "Toon percentage"
  91 "Toon voltage"
  92 "Toon pictogram"
-
 
  93 "Kladblok"
 
@@ -135,12 +125,10 @@
  99 "Autoscroll activeren"
 100 "  Scrollvertraging (sec)"
 
-
 101 "Spelletjes"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Basisinstellingen ***"
 105 "Ben je ZEKER om te herstellen?"
@@ -284,7 +272,6 @@
 208 "Lijnkleur"
 209 "Opvulkleur"
 
-
 210 "DOF-Calculator"
 
 211 "DOF-Calculator"
@@ -295,7 +282,6 @@
 216 "Toon verre limiet in Div."
 217 "Toon hyperfocale afst. in Div."
 218 "Toon DOF in Diversen"
-
 
 219 "Diverse Waarden"
 
@@ -313,14 +299,12 @@
 231 "Toon overbel. (Geen flits!)"
 232 "Toon luminantie"
 
-
 233 "Video-instellingen"
 
 234 "Video-instellingen"
 235 "Videomode"
 236 "Video-bitrate"
 237 "Videokwaliteit"
-
 
 238 "Extra Foto-instellingen"
 
@@ -333,21 +317,17 @@
 245 "Overschrijf onderw.afstand"
 246 "    Waardefactor (mm)"
 
-
 247 "Bracketing in Continu-mode"
 
 248 "Bracketing in Continu-mode"
 249 "TV-bracketing-waarde"
 250 "AV-bracketing-waarde"
 251 "ISO-bracketing-waarde"
-252 "    Waardefactor"
 253 "Onderw.afst. bracketwrd (MF)"
-254 "    Waardefactor (mm)"
 255 "Bracketing-type"
 
 256 "Autostart"
 257 "Afstandsbediening aan"
-
 
 //258 "Belichting (Geen flits)"
 //259 "Belichting (Geen flits)"
@@ -369,8 +349,6 @@
 
 272 "Toon OSD in Bekijk-mode"
 273 "Taaklijst start"
-
-274 "Afstand onderwerp tot lens"
 
 275 "Leeg bracket-wrd bij starten"
 
@@ -417,7 +395,6 @@
 309 "  Waarschuwingsgrens"
 310 "Schakel optische zoom in"
 
-
 311 "Klok"
 312 "Klok-instellingen"
 313 "Klok-soort"
@@ -430,7 +407,6 @@
 
 319 "Ruimte-bekijkinstellingen"
 320 "Ruimte"
-
 
 321 "Aangepaste Auto ISO"
 
@@ -539,7 +515,6 @@
 417 "Laad randbedekking"
 418 "Sla randbedekking op"
 419 "Aan in afspelen"
-420 "Vrij intern geheugen"
 421 "Laden+Instellen Zoom"
 422 "Vergrendel randbedekking"
 423 "Achter gordijn flitssynch"
