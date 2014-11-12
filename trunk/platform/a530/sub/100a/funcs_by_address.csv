@@ -214,6 +214,7 @@
 0xffc57974,Feof_Fut
 0xffc579ac,Fflush_Fut
 0xffc58260,task_ReadAsyncTask
+0xffc5bb74,filesem_init
 0xffc5d86c,Unmount_FileSystem
 0xffc5d9c0,UpdateMBROnFlash
 0xffc5dc88,GetDrive_ClusterSize

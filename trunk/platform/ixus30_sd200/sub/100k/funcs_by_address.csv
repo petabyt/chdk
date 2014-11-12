@@ -87,7 +87,7 @@
 0xff822738,PostMessageQueue
 0xff822960,TryPostMessageQueue
 0xff822a8c,GetNumberOfPostedMessages
-0xff822c30,CreateBinarySemaphore
+0xff822b58,CreateBinarySemaphore
 0xff822c40,CreateCountingSemaphore
 0xff822c40,CreateCountingSemaphore_FW
 0xff822d4c,DeleteSemaphore
@@ -157,6 +157,7 @@
 0xff869d40,Fflush_Fut
 0xff86a668,task_ReadAsyncTask
 0xff86cb58,File_RegistDebugEventProc_FW
+0xff86e880,filesem_init
 0xff870344,Unmount_FileSystem
 0xff8707ec,GetDrive_ClusterSize
 0xff87082c,GetDrive_TotalClusters

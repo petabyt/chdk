@@ -256,6 +256,7 @@
 0xff86967c,Feof_Fut
 0xff8696b4,Fflush_Fut
 0xff8695ec,Fgets_Fut
+0xff86d6dc,filesem_init
 0xff974000,FillRectangleToDialog_FW
 0xffabbca4,FixAEWithCompensation_FW
 0xff951454,FixProgramShift_FW

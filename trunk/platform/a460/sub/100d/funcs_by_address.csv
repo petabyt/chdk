@@ -807,6 +807,7 @@
 0xffe1d8b8,Lseek
 0xffe1d8b8,Lseek_FW
 0xffe1de34,task_FsIoNotifyTask
+0xffe1fe68,filesem_init
 0xffe31ab8,task_SD1stInit
 0xffe3285c,task_FilYuvMaker
 0xffe3cd30,task_ImgPlayDrv

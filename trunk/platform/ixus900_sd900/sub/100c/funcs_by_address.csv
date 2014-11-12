@@ -221,6 +221,7 @@
 0xff8747f0,Fflush_Fut
 0xff874838,Fut.Save_FW
 0xff8750c8,task_ReadAsyncTask
+0xff878c4c,filesem_init
 0xff87a950,Unmount_FileSystem
 0xff87aaa4,UpdateMBROnFlash
 0xff87ad70,GetDrive_ClusterSize

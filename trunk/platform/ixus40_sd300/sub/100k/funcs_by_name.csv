@@ -179,7 +179,7 @@
 0xff81aa88,CPutChar_FW
 0xffac2eec,creat_FW
 0xffa64e44,CreateAdjustmentTableMirror_FW
-0xff822c30,CreateBinarySemaphore
+0xff822b58,CreateBinarySemaphore
 0xff814ffc,CreateBinarySemaphoreStrictly
 0xff951050,CreateController_FW
 0xff822c40,CreateCountingSemaphore
@@ -362,6 +362,7 @@
 0xff869d40,Fflush_Fut
 0xff869c78,Fgets_Fut
 0xff86cb58,File_RegistDebugEventProc_FW
+0xff86e880,filesem_init
 0xff95e5c0,FillRectangleToDialog_FW
 0xffa6d688,FixAEWithCompensation_FW
 0xff93e380,FixProgramShift_FW

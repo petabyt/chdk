@@ -492,6 +492,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "malloc_alt", UNUSED|DONT_EXPORT },       // should be the same as malloc when found
     { "WaitForEventFlag", UNUSED|DONT_EXPORT }, // helper to find other eventflag functions
 
+    { "filesem_init", OPTIONAL|UNUSED }, // file semaphore init function, needed for verification
+
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
 
@@ -924,6 +926,22 @@ int find_set_control_event(firmware *fw)
     return 0;
 }
 
+// see also find_FileAccessSem()
+int find_filesem_init(firmware *fw)
+{
+    int s1 = find_str(fw, "FileSem.c");
+    if (s1 < 0)
+        return 0;
+    s1 = find_inst(fw, isLDR_PC, s1+2, 16);
+    if (s1 < 0)
+        return 0;
+    s1 = find_inst_rev(fw, isSTMFD_LR, s1-1, 16);
+    if (s1 < 0)
+        return 0;
+    fwAddMatch(fw,idx2adr(fw,s1),32,0,122);
+    return 1;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -1261,6 +1279,8 @@ string_sig string_sigs[] =
     //{ 15, "OpenFastDir", "OpenFastDir_ERROR\n", 0x01000001 },
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
+    { 15, "CreateBinarySemaphore", "DoWBForEVFOnce CreateBinarySemaphore Error\r\n", 0x01000001 }, // old Vx
+    { 15, "CreateBinarySemaphore", "DoWBForEVFOnce CreateBinarySemaphore Error\n", 0x01000001 }, // old Vx
     //                                                                           Vx
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0008 },
     { 15, "wrapped_malloc", "\n malloc error \n", 0x01000001,                    0x0010 },
@@ -1346,12 +1366,12 @@ string_sig string_sigs[] =
     { 22, "RegisterEventProcedure_FW", (char*)find_RegisterEventProcedure, 0 },
 
     { 22, "set_control_event", (char*)find_set_control_event, 0 }, // vx
+    { 22, "filesem_init", (char*)find_filesem_init, 0 }, // vx
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
     { 100, "DebugAssert", "\aAssert: File %s,  Expression %s,  Line %d\n", 0,                   14 }, // ixus30,40
     { 100, "CreateMessageQueue", "CreateMessageQueue : call from interrupt handler", 0,         8 },
-    { 100, "CreateBinarySemaphore", "CreateBinarySemaphore : call from interrupt handler", 0,   9 }, // old vx
     { 100, "DeleteMessageQueue", "DeleteMessageQueue : call from interrupt handler", 0,         8 },
     { 100, "PostMessageQueue", "PostMessageQueue : call from interrupt handler", 0,             12 },
     { 100, "ReceiveMessageQueue", "ReceiveMessageQueue : NULL buffer address", 0,               11 },

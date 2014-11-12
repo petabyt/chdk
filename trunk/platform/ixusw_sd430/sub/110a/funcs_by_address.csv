@@ -212,6 +212,7 @@
 0xff86c6e8,Feof_Fut
 0xff86c720,Fflush_Fut
 0xff86cfd0,task_ReadAsyncTask
+0xff870848,filesem_init
 0xff8724d0,Mount_FileSystem,(stubs_entry_2.s)
 0xff872574,Unmount_FileSystem
 0xff8726c8,UpdateMBROnFlash
