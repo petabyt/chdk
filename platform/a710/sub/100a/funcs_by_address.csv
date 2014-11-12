@@ -211,6 +211,7 @@
 0xffc5a200,Fflush_Fut
 0xffc5a27c,Fut.Save_FW
 0xffc5ab08,task_ReadAsyncTask
+0xffc5e68c,filesem_init
 0xffc602ec,Mount_FileSystem
 0xffc60390,Unmount_FileSystem
 0xffc604e4,UpdateMBROnFlash

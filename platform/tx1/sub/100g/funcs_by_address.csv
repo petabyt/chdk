@@ -915,6 +915,7 @@
 0xffaaed54,Lseek_FW
 0xffaaee44,SetFileAttributes
 0xffaaf2e8,task_FsIoNotifyTask
+0xffab131c,filesem_init
 0xffac0ff8,WriteSDCard
 0xffac2f90,task_SD1stInit
 0xffac4618,task_FilYuvMaker

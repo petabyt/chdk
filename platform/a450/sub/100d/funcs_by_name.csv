@@ -244,6 +244,7 @@
 0xffe1912c,Feof_Fut
 0xffe19168,Fflush_Fut
 0xffe19094,Fgets_Fut
+0xffe1fe7c,filesem_init
 0xffcaefd0,FillRectangleToDialog_FW
 0xffde1a2c,FixAEWithCompensation_FW
 0xffc6f67c,FmtMenu_ExecuteQuickFormat_FW
