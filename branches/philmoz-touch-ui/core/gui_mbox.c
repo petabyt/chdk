@@ -11,8 +11,9 @@
 //-------------------------------------------------------------------
 void gui_mbox_draw();
 int gui_mbox_kbd_process();
+int gui_mbox_touch_handler(int,int);
 
-static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
+static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_mbox_draw, gui_mbox_kbd_process, 0, gui_mbox_touch_handler, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
 static gui_handler      *gui_mbox_mode_old;
 static const char*      mbox_title;
@@ -187,6 +188,30 @@ int gui_mbox_kbd_process()
         if (mbox_on_select) 
             mbox_on_select(buttons[mbox_buttons[mbox_button_active]].flag);
         break;
+    }
+    return 0;
+}
+
+int gui_mbox_touch_handler(int sx, int sy)
+{
+    int i;
+    coord x = mbox_buttons_x;
+
+    if ((sy >= mbox_buttons_y-2) && (sy <= mbox_buttons_y+FONT_HEIGHT+2))
+    {
+        for (i=0; i<mbox_buttons_num; ++i)
+        {
+            if ((sx >= x) && (sx <= x+BUTTON_SIZE*FONT_WIDTH+3))
+            {
+                if (mbox_button_active != i)
+                {
+                    mbox_to_draw = 2;
+                    mbox_button_active = i;
+                }
+                return KEY_SET;
+            }
+            x += BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP;
+        }
     }
     return 0;
 }

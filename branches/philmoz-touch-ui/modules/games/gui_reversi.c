@@ -17,7 +17,7 @@ int gui_reversi_kbd_process();
 void gui_reversi_draw();
 
 gui_handler GUI_MODE_REVERSI = 
-    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE, gui_reversi_draw, gui_reversi_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE, gui_reversi_draw, gui_reversi_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define FIELD_EMPTY             0

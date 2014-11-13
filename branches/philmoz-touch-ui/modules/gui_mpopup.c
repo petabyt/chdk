@@ -19,7 +19,7 @@ void gui_mpopup_kbd_process_menu_btn();
 void gui_mpopup_draw();
 
 gui_handler GUI_MODE_MPOPUP_MODULE = 
-    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
+    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, 0, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
 // Simple popup menu. No title, no separators, only processing items
 

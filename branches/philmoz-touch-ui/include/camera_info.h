@@ -86,7 +86,8 @@ typedef struct
     int     width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
     int     physical_width;                             // Actual width of bitmap screen in pixels
     int     buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
-    int     edge_hmargin, ts_button_border;             // margin and touch-screen adjustment values
+    int     edge_hmargin;                               // margin and touch-screen adjustment values
+    int     ts_button_border, ts_menu_border;           // margin and touch-screen adjustment values
     int     zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
     int     has_variable_aspect;                        // zebra feature settings
     int     menu_border_width;                          // Width of border on each side of CHDK menu
