@@ -1,5 +1,4 @@
 /*	TODO:
-	- draw_menu: put those Strings in an array!
 	- somehow use the screenbuffer after a messagebox, so that nothing flickers?
 	- draw_marker as a new draw function ->don't redraw entire field each time you move
 	- adjustable Difficulty, maybe after optimization, because other START_NUMBERS are slower
@@ -59,7 +58,7 @@ static int running = 0;
 //There are 3 functions: get_dec_num(int), one_plus_nums(int), is_one_num(int)
 int flag[10]={0x0, 0x1,0x2,0x4,0x8,0x10,0x20,0x40,0x80,0x100};
 			// 0    1   2   3   4    5    6    7    8     9
-int xPos, yPos;
+int xPos, yPos, xMenuPos;
 int xPosOld, yPosOld;
 int fieldLineDistance;
 int fieldLineLength;
@@ -186,20 +185,20 @@ void set_pad_num(int number)
 void draw_menu()
 {
 	int i;
-	static char str[16];
+	static char *str[] = {
+	    " Check sudoku ",
+	    " Solve sudoku ",
+	    " New sudoku ",
+	    " Enter sudoku ",
+	    " Info ",
+        " Exit ",
+	    " Save and Exit ",
+	    " Del save game "
+	};
+
 	for (i=0; i<MENU_ELEMENTS; i++)
 	{
-		if (i==0) sprintf(str, " Check sudoku ");
-		if (i==1) sprintf(str, " Solve sudoku ");
-		if (i==2) sprintf(str, " New sudoku ");
-		if (i==3) sprintf(str, " Enter sudoku ");
-		if (i==5) sprintf(str, " Exit ");
-		if (i==4) sprintf(str, " Info ");
-		if (i==6) sprintf(str, " Save and Exit ");
-		if (i==7) sprintf(str, " Del save game ");
-
-		if (menuPos==i && mode==MODE_MENU) draw_string(camera_screen.width-(FONT_WIDTH*15), FONT_HEIGHT*(i+1)+i*3, str, MARKER_TEXT_COLOR);
-		else draw_string(camera_screen.width-(FONT_WIDTH*15), FONT_HEIGHT*(i+1)+i*3, str, TEXT_COLOR);
+	    draw_string(xMenuPos, FONT_HEIGHT*i+4, str[i], (menuPos==i && mode==MODE_MENU) ? MARKER_TEXT_COLOR : TEXT_COLOR);
 	}
 }
 
@@ -263,7 +262,7 @@ void draw_field()
 //how to redraw without flickering?
 void redraw()
 {
-	draw_filled_rect(0, 0, camera_screen.width, camera_screen.height, SUDOKU_BG_COLOR);
+	draw_filled_rect(camera_screen.ts_button_border, 0, camera_screen.width-camera_screen.ts_button_border-1, camera_screen.height-1, SUDOKU_BG_COLOR);
 	draw_menu();
 	draw_field();
 	if (mode==MODE_EDIT)draw_numpad();
@@ -989,8 +988,9 @@ int gui_sudoku_kbd_process()
 int gui_sudoku_init()
 {
 	int x, y;
-	xFieldBorder=12;
-	yFieldBorder=12;
+	xFieldBorder = 12 + camera_screen.ts_button_border;
+	yFieldBorder = 12;
+    xMenuPos = camera_screen.width - camera_screen.ts_button_border - FONT_WIDTH*15;
 	xPos=4;
 	yPos=4;
 	fieldLineDistance=(camera_screen.height-yFieldBorder*2)/9;
@@ -998,10 +998,8 @@ int gui_sudoku_init()
 	mode=MODE_VIEW;
 	menuPos=0;
 	padLineDistance=fieldLineDistance;
-	//xPadStart=camera_screen.width*2/3+10;
-	//xPadStart=camera_screen.width/2+10;
-	xPadStart=xFieldBorder*3+fieldLineLength;
-	yPadStart=xFieldBorder+padLineDistance*6;
+	xPadStart = xMenuPos;
+	yPadStart = padLineDistance*6 + 20;
 	xPosPad=1;
 	yPosPad=1;
 	for (x = 0; x < 9; x++) for (y = 0; y < 9; y++)
