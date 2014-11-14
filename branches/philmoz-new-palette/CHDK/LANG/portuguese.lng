@@ -23,16 +23,13 @@
 
  12 "Voltar"
 
-
  13 "RAW"
 
  14 "Salva RAW"
- 15 "Subtracão de quadro negro"
  16 "RAW somente na primeira foto"
  17 "Pasta do arquivo RAW"
  18 "Prefixo do arquivo RAW"
  19 "Extensão do arquivo RAW"
-
 
  20 "OSD"
 
@@ -45,7 +42,6 @@
  27 "Editor de disposicao OSD"
  28 "Parametros de bateria"
 
-
  29 "Histograma"
 
  30 "Exibe histograma ao vivo"
@@ -54,7 +50,6 @@
  33 "Exibe sobre/subexp. histograma"
  34 "Ignora picos de limite"
  35 "Ajuste automatico de escala"
-
 
  36 "Zebra"
 
@@ -66,14 +61,12 @@
  42 "Restaura OSD"
  43 "Exibe sobre zebra"
 
-
  44 "Script"
 
  45 "Carregar script de arquivo..."
  46 "Intervalo script de disparo (.1s)"
  47 "Script atual"
  48 "Parametros de script"
-
 
  49 "Definicões de Visual"
 
@@ -95,7 +88,6 @@
  65 "Texto - leitor de textos"
  66 "Cor de fundo leitor de textos"
 
-
  67 "Miscelanea"
 
  68 "Navegador de arquivos"
@@ -110,7 +102,6 @@
  77 "Exibe info. compilacao"
  78 "Exibe info. memoria"
 
-
  79 "Depuracão"
 
  80 "Exibe PropCases"
@@ -120,7 +111,6 @@
  84 "Descarregar RAM ao apertar ALT +/-"
  85 "Fazer cartao inicializavel..."
 
-
  86 "Bateria"
 
  87 "Voltagem MAX"
@@ -128,7 +118,6 @@
  90 "Exibe percentual"
  91 "Exibe voltagem"
  92 "Exibe icone"
-
 
  93 "Leitor de textos"
 
@@ -140,12 +129,10 @@
  99 "Habilita rolagem automatica"
 100 "Intervalo rol. auto. (sec)"
 
-
 101 "Jogos"
 
 102 "Reversi"
 103 "Sokoban"
-
 
 104 "*** Reinicia opcões ***"
 105 "Tem certeza que deseja\nreiniciar as opcões?"
@@ -297,7 +284,6 @@
 217 "Exibe dist. hiperfocal em miscelanea" 
 218 "Exibe prof. de campo em miscelanea"
 
-
 219 "Valores - Miscelanea"
 220 "Valores - Miscelanea"
 221 "Exibe em modo de revisao"	
@@ -318,7 +304,6 @@
 235 "Modo de video"
 236 "Bitrate do video"
 237 "Qualidade do video"
-
 
 238 "Operacoes extra foto"
 239 "Operacoes extra foto"
@@ -363,8 +348,6 @@
 
 272 "Exibe OSD - modo de revisão"
 273 "Inicia lista de tarefas"
-
-274 "Distancia do objeto da lente"
 
 275 "Limpa bracket ao ligar"
 
@@ -529,7 +512,6 @@
 417 "Le superposicao de borda"
 418 "Salva superposicao de borda"
 419 "Liga em Play"
-420 "Memoria interna livre"
 421 "Le e liga zoom"
 422 "Trava superposicao de borda"
 423 "Sinc. flash com cortina de tras"

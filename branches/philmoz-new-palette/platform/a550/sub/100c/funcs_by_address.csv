@@ -820,6 +820,7 @@
 0xffe22298,Lseek_FW
 0xffe22388,SetFileAttributes
 0xffe2282c,task_FsIoNotifyTask
+0xffe24860,filesem_init
 0xffe34524,WriteSDCard,(stubs_entry_2.s)
 0xffe364ac,task_SD1stInit
 0xffe37250,task_FilYuvMaker

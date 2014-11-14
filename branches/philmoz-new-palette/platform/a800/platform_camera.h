@@ -47,6 +47,9 @@
     #define CAM_EV_IN_VIDEO                 1
     #define CAM_QUALITY_OVERRIDE            1
 
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
+
     #define CAM_DNG_LENS_INFO               { 66,10, 216,10, 30,10, 58,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern                  0x01000201 // Green Blue Red Green
@@ -86,6 +89,9 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
  
     #define CAM_MISSING_RAND                1    // srand()/rand() functions not found in firmware. If defined, CHDK use functions implemented in C
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_MULTIPASS     1
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1

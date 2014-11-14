@@ -897,6 +897,7 @@
 0xffaa30b4,Lseek_FW
 0xffaa31a4,SetFileAttributes
 0xffaa3648,task_FsIoNotifyTask
+0xffaa567c,filesem_init
 0xffab7384,task_SD1stInit
 0xffab8a08,task_FilYuvMaker
 0xffabbf88,task_DecJpgRd

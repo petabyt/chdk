@@ -157,7 +157,7 @@
 0xff81b5bc,CPrintf_FW
 0xff81b620,CPutChar_FW
 0xffa6a480,CreateAdjustmentTableMirror_FW
-0xff820eb8,CreateBinarySemaphore
+0xff820de0,CreateBinarySemaphore
 0xff823070,CreateBinarySemaphoreStrictly
 0xff962144,CreateController_FW
 0xff820ec8,CreateCountingSemaphore
@@ -317,6 +317,7 @@
 0xff86397c,Fflush_Fut
 0xff8638b4,Fgets_Fut
 0xff866370,File_RegistDebugEventProc_FW
+0xff868100,filesem_init
 0xff9711e0,FillRectangleToDialog_FW
 0xff92f13c,FindingWhiteDefect_FW
 0xffa73b54,FixAEWithCompensation_FW

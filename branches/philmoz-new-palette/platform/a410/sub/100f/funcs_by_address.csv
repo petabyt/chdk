@@ -202,6 +202,7 @@
 0xffc53850,Feof_Fut
 0xffc53888,Fflush_Fut
 0xffc54110,task_ReadAsyncTask
+0xffc57cec,filesem_init
 0xffc599d4,Unmount_FileSystem
 0xffc59df4,GetDrive_ClusterSize
 0xffc59e30,GetDrive_TotalClusters

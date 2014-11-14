@@ -99,7 +99,6 @@
  77 "Versions-Info"
  78 "Speicher-Info"
 
-
  79 "Debugging-Einstellungen"
 
  80 "Debug-Daten-Anzeige"
@@ -109,7 +108,6 @@
  84 "Debug-Funktionstaste"
  85 "Mache SD-Karte bootfähig..."
 
-
  86 "Batterie"
 
  87 "Spannung MAX (mV)"
@@ -117,7 +115,6 @@
  90 "Prozentanzeige"
  91 "Voltanzeige"
  92 "Symbolanzeige"
-
 
  93 "Textbetrachter"
 
@@ -334,8 +331,6 @@
 
 272 "OSD bei Rückschau an/aus"
 273 "Task-List-Start"
-
-274 "Motiventfernung von Objektiv"
 
 275 "Lösche Beträge bei Neustart"
 

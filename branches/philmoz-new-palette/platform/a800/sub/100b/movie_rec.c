@@ -115,7 +115,7 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_FFD17E98_my @ 0xFFD17E98 - 0xFFD18098, length=129
+//** sub_FFD17E98_my @ 0xFFD17E98 - 0xFFD18094, length=128
 void __attribute__((naked,noinline)) sub_FFD17E98_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R8,LR} \n"
@@ -272,7 +272,6 @@ asm volatile (
 "loc_FFD18090:\n"
 "    STR     R6, [R5, #0x2C] \n"
 "    B       loc_FFD17F70 \n"
-"    BX      LR \n"
 );
 }
 
