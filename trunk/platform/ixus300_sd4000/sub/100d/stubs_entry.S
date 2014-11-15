@@ -77,7 +77,6 @@ DEF(viewport_fb_d                           ,0x00002aa8) // Found 0x2a50 (@0xff8
 //void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2a50+0x58)); } // Found @0xff873694 & 0xff8736cc
 DEF(jpeg_count_str                          ,0x000a15b8) // Found @0xffa04f80
 //char *camera_jpeg_count_str()    { return (char*)0x000a15b8; }             // Found @0xffa04f80
-//long hook_raw_size()             { return 0x00f32880; }                    // Found @0xffb292d0
 //int get_flash_params_count(void) { return 0x94; }                          // Found @0xff997634
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
