@@ -540,7 +540,7 @@ void create_dng_header(int ver1_1, int minimal)
             crop_size[0] = camera_sensor.raw_rowpix;
             crop_size[1] = camera_sensor.raw_rows;
             // Re-set active area (in case user has changed setting)
-            active_area[0] = 0;
+            active_area[0] = (camera_sensor.active_area.y1 & 1);    // In case active area top is an odd value, otherwise CFA pattern will be wrong
             active_area[1] = 0;
             active_area[2] = camera_sensor.raw_rows;
             active_area[3] = camera_sensor.raw_rowpix;
