@@ -37,11 +37,6 @@ char *hook_raw_image_addr()
     return (char*)(0x10F3DA00);	// 0x10F3C000 + 0x1A00
 }
 
-long hook_raw_size()
-{
-    return 0x9DCCE0;		// 0x9D0000 + 0xCC00 + 0xE0
-}
-
 void *vid_get_viewport_live_fb() // live picture buffer (shoot not pressed)
 {
 //	return ((void **)0x8C58)[*((unsigned char*)0x8C74)];

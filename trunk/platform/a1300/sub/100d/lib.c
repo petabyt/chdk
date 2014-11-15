@@ -31,5 +31,4 @@ void *vid_get_bitmap_fb()        { return (void*)0x40411000; }             // Fo
 void *vid_get_viewport_fb()      { return (void*)0x40566b80; }             // Found @0xffade168
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2950+0x54)); } // Found @0xff867ad4 & 0xff867b0c
 char *camera_jpeg_count_str()    { return (char*)0x000b3b6c; }             // Found @0xff9c9264
-long hook_raw_size()             { return 0x01794300; }                    // Found @0xffae0f9c
 int get_flash_params_count(void) { return 0xa6; }                          // Found @0xff985670

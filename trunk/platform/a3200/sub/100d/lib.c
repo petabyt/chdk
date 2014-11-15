@@ -10,11 +10,6 @@ char *hook_alt_raw_image_addr()
 		return (char*) 0x421316C0;		//Found at FFB210A4 a3200is
 }
 
-long hook_raw_size()
-{
-	return 0x014d2400; // Found @0xffb2101c  a3200is
-}
-
 char *camera_jpeg_count_str()
 {
 	 return (void*)0x000b44d4;   // Found @0xff9fd22c   a3200is

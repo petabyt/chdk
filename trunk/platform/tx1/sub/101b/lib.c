@@ -15,12 +15,6 @@ char *hook_raw_image_addr()
     return (char*)0x115FC320; 
 }                   
 
-long hook_raw_size()
-{
- //   return 0x8D0A68; 
-      return 0x8CAE10;
-}
-
 void *vid_get_bitmap_fb()
 {
     return (void*)0x10361000; // (found on aBmpddev_c, 0xFFA3871C)

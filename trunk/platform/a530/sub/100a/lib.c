@@ -18,17 +18,6 @@ char *hook_raw_image_addr()//
     //return (char*) (0x10D45400);
 }
 
-long hook_raw_size()//
-{
-//	2592x1944 image - compatible with dng4ps2
-//	return 0x644c40;
-//	2672x1968 image - like most other 5m sensors
-	return 0x644C40;
-//	2672x1992 image - real sensor size
-//	return 0x658560;
-        //return 0xA26F00;
-}
-
 void *vid_get_viewport_live_fb()
 {   //Found at 0xffc902d4 - similar to a530
     void **fb=(void **)0x5288;

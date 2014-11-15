@@ -7,7 +7,6 @@ char *hook_raw_image_addr()
 }
 
 // OSD buffer
-long hook_raw_size()             { return 0x00ec04f0; }                    // Found @0xffe72ff4
 void *vid_get_bitmap_fb()        { return (void*)0x10361000; }             // Found @0xffc3fafc
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2588+0x54)); } // Found @0xffc543b8 & 0xffc543f0
 long vid_get_viewport_height() { return 240; }

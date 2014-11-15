@@ -32,17 +32,6 @@ char *hook_raw_image_addr()   //ASM1989 08.20.2010
 
 }
 
-long hook_raw_size() //ASM1989 08.20.2010
-{
-	//found at FFB2FC6C
-			//ROM:FFB2FC6C dword_FFB2FC6C  DCD 0x14D2400           ; DATA XREF: sub_FFB2FAD8+B0r
-			//ROM:FFB2FC70 aCrawBuffSizeP  DCB "CRAW BUFF SIZE  %p",0 ; DATA XREF: sub_FFB2FAD8+B4o
-
-	return 0x14D2400;
-}
-
-
-
 // Live picture buffer (shoot not pressed) //ASM1989 08.20.2010
 void *vid_get_viewport_live_fb()
 {

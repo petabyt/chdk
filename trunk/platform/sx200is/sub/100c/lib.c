@@ -25,16 +25,6 @@ char *hook_raw_image_addr()
 	return (char*)(0x424B41C0);
 }
 
-long hook_raw_size()
-{
-	//found at FFAC8D6C
-	//ROM:FFAC8D6C                 LDR     R1, =0x11CA240
-	//ROM:FFAC8D70                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-	//ROM:FFAC8D74                 BL      sub_FF9037E8
-
-	return 0x11CA240;
-}
-
 // Live picture buffer (shoot not pressed)
 void *vid_get_viewport_live_fb()
 {

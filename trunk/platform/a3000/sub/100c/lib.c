@@ -3,10 +3,6 @@ char *hook_raw_image_addr()
 {
 	return (char*) 0x10E59860;
 }
-long hook_raw_size()
-{
-	return 0xEC04F0;
-}
 
 // Live picture buffer (shoot not pressed)
 void *vid_get_viewport_live_fb()

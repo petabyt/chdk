@@ -1,28 +1,5 @@
 #include "platform.h"
 
-// SD780/SD1200 - Search for "CRAW BUFF SIZE" and "CrwAddress %lx"
-long hook_raw_size()
-{
-/*
-loc_FFCC787C                            ; CODE XREF: sub_FFCC7834+3Cj
-ROM:FFCC787C                 LDR     R2, =0xE88
-ROM:FFCC7880                 LDR     R1, =0x40F30D7C
-ROM:FFCC7884                 SUB     R3, R2, #0x3B4
-ROM:FFCC7888                 ADR     R0, aCrwaddressLxCr ;
-    " CrwAddress %lx, CrwSize H %ld V %ld\r"
-... much later ...
-ROM:FFE3A79C                 BL      sub_FFCC8B88
-ROM:FFE3A7A0                 LDR     R1, =0xEC04F0
-ROM:FFE3A7A4                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-*/
-    // Look at R2 and R3 before the BL.
-    // R2 = 0xE88, R3 = 0xE88 - 0x3B4 == 0xAD4
-    // And CRAW BUFF SIZE, 0xEC04F0
-    // (0xEC04F0 * 8 bits) / 0xE88 / 0xAD4 == 12 bit RAW
-    // 3720 x 948
-    return 0xEC04F0;
-}
-
 //VERIFY_SD780 - - Search for "A/%08x.CRW" and find nearby the hex value found for hook_raw_size.
 //VERIFY_SD780 - - Above this is the second value...only value????
 //VERIFY_SD1200

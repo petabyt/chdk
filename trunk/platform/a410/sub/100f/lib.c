@@ -16,11 +16,6 @@ char *hook_raw_image_addr()
     return (char*)0x10570FF0;  // @ffca81cc, 0x10400000+0x17000+0xff0
 }
 
-long hook_raw_size()
-{
-    return 0x3FCB40;   //@ffca81d8, 0x3fc000+0xb40
-}
-
 /*
 YUV buffer created in jpeg processing for < full size jpeg
 not currently used, kept for future reference

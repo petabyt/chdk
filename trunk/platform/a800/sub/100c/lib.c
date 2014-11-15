@@ -6,11 +6,6 @@ char *hook_raw_image_addr()
 	return (char*) 0x10e59860; // (a800=ffe72f80 x ixus=ffb61594) 0x10E52420; // at ffe73088 
 }
 
-long hook_raw_size()
-{
-	{ return 0x00ec04f0; }        // Found @0xffe73000 de stub_entry.S return 0xEC04F0;           // "CRAW BUFF SIZE"
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {

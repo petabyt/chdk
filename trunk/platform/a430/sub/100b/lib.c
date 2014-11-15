@@ -16,11 +16,6 @@ char *hook_raw_image_addr()
     return (char*)0x10577E28;  // ok
 }
 
-long hook_raw_size()
-{
-    return 0x4FEED0;       // ?? "CRAW BUF","WBIntegPrm.c" -  1/3" 4 MPix -  (2272*1704*10/8=0x49D7C0)
-}
-
 void *vid_get_viewport_live_fb() // from a540
 {
        void **fb=(void **)0x5264; // 0xFFC8F1EC
