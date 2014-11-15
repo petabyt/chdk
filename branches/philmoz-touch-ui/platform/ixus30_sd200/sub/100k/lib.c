@@ -5,11 +5,6 @@ char *hook_raw_image_addr()
 return (char*)0x10A87B58; //ixus40 value seems ok
 }
 
-long hook_raw_size()
-{
-    return 0x3ff520; //@ff915f30, ixus40 value is ok
-}
-
 // buffer of live picture when shoot button is not pressed
 void *vid_get_viewport_live_fb()
 {

@@ -8,11 +8,6 @@ char *hook_raw_image_addr()
  return (char*) (*(int*)(0x5854+0x18) ? 0x11F8F740 : 0x108297C0);
 }
 
-long hook_raw_size()
-{
-    return 0xEE9710;//OK
-}
-
 void *vid_get_viewport_live_fb()
 {
     return (void*)0;

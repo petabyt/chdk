@@ -31,12 +31,6 @@ char *hook_alt_raw_image_addr()
 		return (char*) 0x413391A0;
 }
 
-long hook_raw_size()
-{
-	//FF36849C
-	return 0x0123eaf0;	
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {	

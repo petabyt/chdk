@@ -17,12 +17,6 @@ char *hook_raw_image_addr()
     return (char*)0x10E706A0; 
 }
 
-// Found at 0xFFA6499C, same as 101a
-long hook_raw_size()
-{
-    return 0x8CAE10; 
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x709C; // from sub_FF9CE798

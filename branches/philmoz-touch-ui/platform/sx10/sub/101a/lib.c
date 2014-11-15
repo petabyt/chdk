@@ -5,11 +5,6 @@ char *hook_raw_image_addr()
 	return (char*) (*(int*)(0x55CC+0x18) ? 0x424F1948 : 0x40F65B18);
 }
 
-long hook_raw_size()
-{
-	return 0xEC04F0;
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x227C;
