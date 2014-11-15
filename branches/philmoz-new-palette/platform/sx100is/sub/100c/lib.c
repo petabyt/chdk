@@ -25,16 +25,6 @@ char *hook_raw_image_addr()
     return (char*)0x10F6C860;		// Same as A720
 }
 
-long hook_raw_size()
-{
-//	Found at ROM:FFDC5DBC
-//	ROM:FFDC5DBC                 LDR     R1, =0x9DCCE0
-//	ROM:FFDC5DC0                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-//	ROM:FFDC5DC4                 BL      sub_FFDC7578
-
-	return 0x9DCCE0;
-}
-
 void *vid_get_viewport_live_fb()
 {
 //	return (void*)0;//0x10670ee0;

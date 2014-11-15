@@ -8,11 +8,6 @@ char *hook_raw_image_addr()
     
 }
 
-long hook_raw_size()
-{
-    return 0x75A8F0; // OK (find on ".crw")
-}
-
 /*
 YUV buffer created in jpeg processing for < full size jpeg
 not currently used, kept for future reference

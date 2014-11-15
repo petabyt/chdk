@@ -1,19 +1,5 @@
 #include "platform.h"
 
-//SD780 - Search for "CRAW BUFF SIZE"
-long hook_raw_size()
-{
-//	RealRom:FF8E6224                 LDR     R1, =0x424AD900
-//	RealRom:FF8E6228                 MOV     R2, #0xFF0
-//	RealRom:FF8E622C                 LDR     R3, =0xBE8
-//	RealRom:FF8E6230                 STMFA   SP, {R1,R2}
-//	RealRom:FF8E6234                 ADR     R0, aCrwaddressLxCr ; " CrwAddress %lx, CrwSize H %ld V %ld\r"
-
-	//( 0x11CA240 * 8bits ) / 0xFF0 / 0xBE8 == C bits == 12 bit RAW
-//4080x3048
-    return 0x11CA240;
-}
-
 //VERIFY_SD780 - - Search for "A/%08x.CRW" and find nearby the hex value found for hook_raw_size.
 //VERIFY_SD780 - - Above this is the second value...only value????
 char *hook_raw_image_addr()

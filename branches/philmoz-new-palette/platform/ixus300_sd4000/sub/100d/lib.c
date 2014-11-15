@@ -57,14 +57,6 @@ char *hook_raw_image_addr() {
     //return (char*) (*(int*)0x2CCC ? 0x46000000 : 0x4132C0A0);
 }
 
-/*** RAW buffer size
-ROM:FFB292D0    LDR     R1, =0xF32880   <---
-ROM:FFB292D4    ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-***/
-long hook_raw_size() {
-    return 0xF32880;    // 15935616
-}
-
 // vid_* stuff is related to BmpDDev() stuff (ROM:FF919A78 and other) and LiveImage.c
 
 // ToDo: ?!?

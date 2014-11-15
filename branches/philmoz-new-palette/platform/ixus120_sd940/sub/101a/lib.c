@@ -8,11 +8,6 @@ char *hook_raw_image_addr()
 								// ... search for aCrawBuffP      DCB "CRAW BUFF       %p",0
 }		
 		
-long hook_raw_size()		
-{		
-	return 0x11CA240;			// SD940 103c Search for "aCrawBuffSizeP"  103b:  seems to use same number.
-
-}		
 		
 void *vid_get_bitmap_fb()		
 {		

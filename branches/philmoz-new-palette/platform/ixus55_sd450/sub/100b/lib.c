@@ -15,11 +15,6 @@ char *hook_raw_image_addr()
     return (char*)0x1058EBD4; // ( found on aA08x_crw)
 }
 
-long hook_raw_size()
-{
-    return 0x644C40; // 0x644C00 + 0x40 (found on aA08x_crw)
-}
-
 /**
  * OSD screen
  */

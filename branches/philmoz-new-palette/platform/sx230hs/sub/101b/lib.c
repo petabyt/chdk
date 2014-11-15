@@ -21,11 +21,6 @@ char *hook_alt_raw_image_addr()
         return (char*) 0x413591F0;
 }
 
-long hook_raw_size()
-{
-    return 0x123EAF0;
-}
-
 void *vid_get_viewport_live_fb()
 {
     return (void*)(void*)(*(int*)(0x225C));

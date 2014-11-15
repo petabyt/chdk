@@ -51,26 +51,6 @@ char *hook_raw_image_addr() {
     return (char*)(*(int*)0x6BC4 ? 0x11BE3880 : 0x1082C320);    // looks like SD900 has volatile RAW buffer like G7 / G9 / A650
 }
 
-/*********** hook_raw_size()
-look near string "A/%08x.CRW"
-
-ROM:FF8E41CC                 MOVL    R7, 0x1082C000
-ROM:FF8E41D4                 MOV     R3, #0xC50000     ; <---
-ROM:FF8E41D8                 ADD     R7, R7, #0x320
-ROM:FF8E41DC                 ADD     R3, R3, #0x8700   ; <---
-
-ROM:FF8E41EC                 MOV     R2, R7
-ROM:FF8E41F0                 ADD     R3, R3, #0x58     ; <---
-
-or
-
-ROM:FFB15300                 MOV     R1, 0xC58758
-ROM:FFB1530C                 LDR     R0, =aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-***********/
-long hook_raw_size() {
-    return 0xC58758;   // 0xC50000 + 0x8700 + 0x58
-}
-
 /*********** vid_get_bitmap_fb()
 look near string "BmpDDev.c"
 

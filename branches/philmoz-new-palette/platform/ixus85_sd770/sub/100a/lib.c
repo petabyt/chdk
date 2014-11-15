@@ -12,13 +12,6 @@ char *hook_raw_image_addr()
 	return (char*) (*(int*)(0x54E4) ? 0x11B97B60 : 0x107D68C0);
 }
 
-long hook_raw_size()
-{
-	// (3720 x 2772 * 12bit) / 8bit
-	// @ FFA8AD80
-	return 0xEC04F0;
-}
-
 // Live picture buffer (shoot not pressed)
 void *vid_get_viewport_live_fb()
 {

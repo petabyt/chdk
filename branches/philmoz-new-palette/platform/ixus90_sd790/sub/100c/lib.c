@@ -15,11 +15,6 @@ char *hook_raw_image_addr()
 	return (char*) (*(int*)(0x550C) ? 0x11B97B60 : 0x107D68C0);
 }
 
-long hook_raw_size()
-{
-    return 0xEC04F0; // (3720 x 2772 * 12bit) / 8bit // ixus90 from 0xFFA812AC
-}
-
 void *vid_get_viewport_live_fb()
 {
 	void **fb=(void **)0x7424;

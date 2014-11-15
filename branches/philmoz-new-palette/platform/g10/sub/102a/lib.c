@@ -36,11 +36,6 @@ char *hook_alt_raw_image_addr()
 }
 
 
-long hook_raw_size()
-{ 
-	return 0x01574d00;         				// G10 autofound @0xffad712c - search CRAW BUF SIZE
-}
-
 char *camera_jpeg_count_str()
 {
 	return (char*)0x0004c95c; 				// G10 autofound @0xff9cccdc

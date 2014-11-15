@@ -8,11 +8,6 @@ char *hook_raw_image_addr()
     return (char*)(0x1058edd4); //Found @ 0xff92480c
 }
 
-long hook_raw_size()
-{
-    return 0x644C40; //TODO: 2672*1968*1.25 ??
-}
-
 void *vid_get_viewport_live_fb() //from ixus65
 {
     void **fb=(void **)0x5564; // ixusw @ 0xff8aa7f8

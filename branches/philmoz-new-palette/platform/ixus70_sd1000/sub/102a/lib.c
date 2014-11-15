@@ -16,11 +16,6 @@ char *hook_raw_image_addr()
     return (char*)0x10E706A0; //(0x10E70000 + 0x6A0) (find on "A/%08x.CRW")
 }
 
-long hook_raw_size()
-{
-    return 0x8CAE10; //7mpx (0x8C0000 + 0xAE00 + 0x10)(find on "A/%08x.CRW")
-}
-
 void *vid_get_viewport_live_fb()
 {
 //    return (void*)0; // 0x1065BA50 + 0x7E900 (find on "VRAM Address  : %p")

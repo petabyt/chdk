@@ -24,4 +24,3 @@ void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Fo
 void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff430de4
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x3530+0x54)); } // Found @0xff0760cc & 0xff076104
 char *camera_jpeg_count_str()    { return (char*)0x000e7034; }             // Found @0xff2830a8
-long hook_raw_size()             { return 0x01297380; }                    // Found @0xff432780

@@ -6,11 +6,6 @@ char *hook_raw_image_addr()
 	return (char*) 0x10e59860; // (a800=ffe72f80 x ixus=ffb61594) 0x10E52420; // at ffe73088 
 }
 
-long hook_raw_size()
-{
-	{ return 0x00ec04f0; }        // Found @0xffe73000 de stub_entry.S return 0xEC04F0;           // "CRAW BUFF SIZE"
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {
@@ -22,13 +17,7 @@ void *vid_get_viewport_fb_d()
 	return (void*)(*(int*)(0x2588+0x54)); // ffc54ff8 comparando com FFc53554 de A495; // sub_FFC528C0 / sub_FFC53554?
 }
 
-long vid_get_bitmap_screen_width() { return 360; }
-long vid_get_bitmap_screen_height() { return 240; }
-
 long vid_get_viewport_height() { return 240; }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-long vid_get_bitmap_buffer_height() { return 240; }
 
 char *camera_jpeg_count_str()
 {

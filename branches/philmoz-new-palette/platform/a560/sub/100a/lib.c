@@ -16,11 +16,6 @@ char *hook_raw_image_addr()
     return (char*)0x10E6C640; 
 }
 
-long hook_raw_size()
-{
-    return 0x8CAE10; 
-}
-
 // from http://chdk.setepontos.com/index.php/topic,405.225.html
 void *vid_get_viewport_live_fb()
 {
@@ -52,16 +47,6 @@ void *vid_get_viewport_fb_d()
 //    return (void*)(*(int*)0x7BBF0); 
 }
 
-long vid_get_bitmap_screen_width()
-{
-    return 360;
-}
-
-long vid_get_bitmap_screen_height()
-{
-    return 240;
-}
-
 long vid_get_viewport_height()
 {
     return 240;//((mode_get()&MODE_MASK) == MODE_PLAY)?240:230;
@@ -71,8 +56,4 @@ char *camera_jpeg_count_str()
 {
     return (char*)0x10B80;
 }
-
-long vid_get_bitmap_buffer_width() { return 360; }
-
-long vid_get_bitmap_buffer_height() { return 240; }
 

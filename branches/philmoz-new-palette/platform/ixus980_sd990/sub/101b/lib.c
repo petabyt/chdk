@@ -7,11 +7,6 @@ char *hook_raw_image_addr()
 	// similar to a560, searched for first raw address in a table with others, get variable from functions that use table
 }
 
-long hook_raw_size()
-{
-    return 0x1574D00; // CRAW BUF SIZE
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x2254;

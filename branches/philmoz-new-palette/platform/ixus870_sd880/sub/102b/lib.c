@@ -13,13 +13,6 @@ char *hook_raw_image_addr()
 	return (char*) (*(int*)(0x5324+0x18) ? 0x429AAA2C : 0x412007FC);
 }
 
-long hook_raw_size()
-{
-  // just before aEscapeOriginal (" Escape Original Raw to CRAW2 BUFFER. ")
-  // 0xFF84D024: 0xEC04F0
-	return 0xEC04F0;
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x725C;

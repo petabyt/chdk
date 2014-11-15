@@ -18,11 +18,6 @@ char *hook_raw_image_addr()
     return (char*)0x10f3f400;
 }
 
-long hook_raw_size()
-{
-    return 0x9dcce0;
-}
-
 void *vid_get_viewport_live_fb() // live picture buffer (shoot not pressed)
 {
     // 00007040 found at ff8c4c70 "LiveImage.c"

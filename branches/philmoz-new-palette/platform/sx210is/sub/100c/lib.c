@@ -32,17 +32,6 @@ char *hook_raw_image_addr()   //ASM1989 08.20.2010
 
 }
 
-long hook_raw_size() //ASM1989 08.20.2010
-{
-	//found at FFB2FC6C
-			//ROM:FFB2FC6C dword_FFB2FC6C  DCD 0x14D2400           ; DATA XREF: sub_FFB2FAD8+B0r
-			//ROM:FFB2FC70 aCrawBuffSizeP  DCB "CRAW BUFF SIZE  %p",0 ; DATA XREF: sub_FFB2FAD8+B4o
-
-	return 0x14D2400;
-}
-
-
-
 // Live picture buffer (shoot not pressed) //ASM1989 08.20.2010
 void *vid_get_viewport_live_fb()
 {
@@ -89,27 +78,6 @@ void *vid_get_viewport_fb_d()
 //try to solve screen sizes using sx30 code
 
 /*
-
-long vid_get_bitmap_screen_width()
-{
-//    return SCREENX;  // -------------------------------------yes, the buffer is greater, and de
-//	return 320;
-
-
-	//return ((mode_get()&MODE_MASK) == MODE_VIDEO_STD ||(mode_get()&MODE_MASK) == MODE_PLAY)?480:320;
-	return 480; // as in sd980
-
-
-}
-
-long vid_get_bitmap_screen_height()
-{
-//    return SCREENY;  // ---- yes, the buffer is also greater,
-                     //   seems a 16/9 buffer (i.e. 480x270) but duplicating pixels at x : (480x2)x270
-	return 240;
-}
-
-
 int vid_get_viewport_width()
 {
     //return ((mode_get()&MODE_MASK) == MODE_VIDEO_STD ||(mode_get()&MODE_MASK) == MODE_PLAY)?480:320;
@@ -121,14 +89,6 @@ long vid_get_viewport_height()
 {
     return 240;
 }
-
-
-
-
-long vid_get_bitmap_buffer_width() { return 960; }
-
-long vid_get_bitmap_buffer_height() { return 270; }
-
 */
 
 

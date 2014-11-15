@@ -23,13 +23,6 @@ char *hook_alt_raw_image_addr()
 
 }
 
-long hook_raw_size()
-{
-	//FFB59920 dword_FFB59920  DCD 0x123EAF0
-	return 0x123EAF0;
-
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {

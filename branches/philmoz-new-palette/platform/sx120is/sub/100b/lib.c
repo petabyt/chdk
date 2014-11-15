@@ -24,15 +24,6 @@ char *hook_raw_image_addr()
 	return (char*)(0x414EF7E0);	
 }
 
-long hook_raw_size()
-{
-//ROM:FFE68804         LDR     R1, =0xED09F0
-//ROM:FFE68808         ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-//ROM:FFE6880C         BL      sub_FFCE4CB4
-    return 0xED09F0;
-}
-
-
 void *vid_get_viewport_live_fb()
 {
    void **fb=(void **)0x217C; //FFC27234, look also at FFC26C8C

@@ -16,11 +16,6 @@ char *hook_raw_image_addr()
     return (char*)(0x10800000+0x41000+0x260);      
 }
 
-long hook_raw_size()
-{
-    return 0x63FF60;       // "CRAW BUF","WBIntegPrm.c" -  1/3" 5 MPix -  (2664*1968*10/8=0x63FF60)  
-}
-
 void *vid_get_viewport_live_fb()//found via the a560 port; a560 0xffd74784 equals to a460 0xffd630ec
 /*
 the value of [0x6028] is located at 0xFFEF3A98 in ROM

@@ -15,13 +15,6 @@ char *hook_raw_image_addr()
     return (char*)0x10F63920; //found at 0xFFD987A8
 }
 
-long hook_raw_size()
-{
-//3264*2448 jpg file
-	return 0x9DCCE0; //for draw compatibility
-	//return 0x9E6FC4; //OK!!!! //3336*2490 greater area respect to jpg
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x2168;
