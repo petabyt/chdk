@@ -16,11 +16,6 @@ char *hook_raw_image_addr()
     return (char*)0x10563530;	//sync with a630
 }
 
-long hook_raw_size()	//sync with a560 (on wiki page)
-{
-    return 0x8CAE10;
-}
-
 void *vid_get_viewport_live_fb() // 0x105F0000 + 0xF20 + 0x7E000 + 0x900 (find on "VRAM Address  : %p")
 {
     return (void*)0x1066F820;

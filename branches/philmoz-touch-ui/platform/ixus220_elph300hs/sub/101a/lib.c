@@ -27,13 +27,6 @@ char *hook_alt_raw_image_addr()
 
 }
 
-long hook_raw_size()
-{
-	//FF375484 dword_FF375484  DCD 0x123EAF0
-	return 0x0123eaf0;
-	
-}
-
 void *vid_get_viewport_live_fb()
 {
 	return (void*)(void*)(*(int*)(0x2258));

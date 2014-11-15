@@ -7,11 +7,6 @@ char *hook_raw_image_addr()
 // (0x2AEC + 0x8) ??? sub_FF86274C__SsImgProcBuf_c__0 and table FFAD6A24
 }
 
-long hook_raw_size()
-{
-    return 0x11E4EE0; // CRAW BUF SIZE 4104*3048, like g9, ixus960
-}
-
 void *vid_get_viewport_live_fb()
 {
 	// from sub_FF837020 (similar to sd990 sub_FF839850), via sub_FF8EC2DC ref to table at FFAE28FC

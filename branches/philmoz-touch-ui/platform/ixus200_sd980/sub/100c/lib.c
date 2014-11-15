@@ -5,11 +5,6 @@ char *hook_raw_image_addr()
 	return (char*)0x421E1120;
 }
 
-long hook_raw_size()
-{
-	return 0x11CA240;
-}
-
 void *vid_get_viewport_live_fb()//found in sub_FF8E0788
 {
     void **fb=(void **)0x5014;
@@ -38,12 +33,6 @@ void *vid_get_viewport_fb_d()
 {
 	return (void*)(*(int*)(0x28F0+0x58));
 }
-
-
-long vid_get_bitmap_screen_width()   { return 480; }
-long vid_get_bitmap_screen_height()  { return 240; }
-long vid_get_bitmap_buffer_width()   { return 960; }
-long vid_get_bitmap_buffer_height()  { return 270; }
 
 
 long vid_get_viewport_height()       { return 240; }

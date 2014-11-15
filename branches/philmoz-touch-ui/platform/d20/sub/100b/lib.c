@@ -27,6 +27,5 @@ char * camera_jpeg_current_height() {       //it is camera_jpeg_current_filename
 //Found by finsig d20 100b
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2c80+0x54)); } // Found @0xff05f434 & 0xff05f46c
 char *camera_jpeg_count_str()    { return (char*)0x000c0a08; }             // Found @0xff21bf70
-long hook_raw_size()             { return 0x0123eaf0; }                    // Found @0xff363368
 
 

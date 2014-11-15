@@ -7,11 +7,6 @@ char *hook_raw_image_addr()
  	return (char*)0x4219D120;									// @FFAD6E84
 }
 
-long hook_raw_size()
-{
-    return 0x11CA240; 									// @FFAD6EE0
-}
-
 void *vid_get_viewport_live_fb()
 {													// Matched IXUS100-SD780 100c code at 0xFF8B02F4 with IXUS120-SD940 at address 0xFF8D9014
 													// Matched IXUS200-SD980 101c code at 0xFF8E0788 with IXUS120-SD940 at address 0xFF8D9014 

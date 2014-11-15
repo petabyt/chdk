@@ -6,12 +6,6 @@ char *hook_raw_image_addr()
     return (char*)0x105B8AC0;   // same as sd630, found at 0xFF8CA0AC
 }
 
-long hook_raw_size()
-{
-    // 0x644C00 + 0x40 (found on aA08x_crw)
-    return 0x75A8F0;    // same as sd630, found at 0xFF8CA0B4
-}
-
 /**
  * OSD screen
  */

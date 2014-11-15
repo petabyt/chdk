@@ -43,10 +43,6 @@ char *hook_raw_image_addr()
 {
     return (char*)(0x10F00600);   // 0x10F00000 + 0x600 (find on "A/%08.CRW")
 }
-long hook_raw_size()
-{
-    return 0x8CAE10;   //7mpx (0x8C0000 + 0xAE00 + 0x10)(find on "A/%08x.CRW")
-}
 
 /***************
 ROM:FFB19720 loc_FFB19720                            ; CODE XREF: sub_FFB196D4+34
