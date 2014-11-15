@@ -3446,16 +3446,16 @@ void find_lib_vals(firmware *fw)
         }
     }
 
-    // find 'hook_raw_size'
-    k = find_str_ref(fw, "CRAW BUFF SIZE  %p");
-    if (k >= 0)
-    {
-        if (isLDR(fw,k-1))
-        {
-            uint32_t craw_bufsize = LDR2val(fw,k-1);
-            bprintf("//long hook_raw_size()             { return 0x%08x; }                    // Found @0x%08x\n",craw_bufsize,idx2adr(fw,k-1));
-        }
-    }
+//    // find 'hook_raw_size'
+//    k = find_str_ref(fw, "CRAW BUFF SIZE  %p");
+//    if (k >= 0)
+//    {
+//        if (isLDR(fw,k-1))
+//        {
+//            uint32_t craw_bufsize = LDR2val(fw,k-1);
+//            bprintf("//long hook_raw_size()             { return 0x%08x; }                    // Found @0x%08x\n",craw_bufsize,idx2adr(fw,k-1));
+//        }
+//    }
 
     // Find value for 'get_flash_params_count'
     search_saved_sig(fw, "GetParameterData", match_get_flash_params_count, 0, 0, 30);
