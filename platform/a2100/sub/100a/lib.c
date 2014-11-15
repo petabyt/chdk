@@ -21,7 +21,6 @@ G10 sensor size from code at sub_FFACDE4C = (4480*3348)*(12/8) = 0x1574D00 = 224
 void *vid_get_bitmap_fb()        { return (void*)0x403f1000; } // Found @0xffc2c5cc
 void *vid_get_viewport_fb()      { return (void*)0x4076fcc0; } // Found @0xffe441f8
 char *camera_jpeg_count_str()    { return (char*)0x0002f55c; } // Found @0xffd60580
-long hook_raw_size()             { return 0x011e4ee0; }        // Found @0xffe46760
 int get_flash_params_count(void) { return 0x7a; }              // Found @0xffd1cfec
 
 // fixed!

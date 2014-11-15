@@ -19,10 +19,6 @@ char *hook_alt_raw_image_addr() {
         return (char*) 0x44000000;
 }
 
-long hook_raw_size() {
-    return 0x1247A60;                       //asm1989 @FF3E64AC   Finsing confirmed Diferent than the sx230 !! was 123EAF0
-}
-
 void *vid_get_viewport_fb_d() {
     return (void*)(*(int*)(0x2ec0+0x54));   //Found @0xff062d0c & 0xff062d44
 }

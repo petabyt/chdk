@@ -8,11 +8,6 @@ char *hook_raw_image_addr()
 	return (char*) 0x10E52420; // Ok, ROM:FFCE9A44
 }
 
-long hook_raw_size()
-{
-	return 0xEC04F0;           // "CRAW BUFF SIZE"
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {

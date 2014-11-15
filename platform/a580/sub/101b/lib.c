@@ -15,11 +15,6 @@ char *hook_raw_image_addr()
     return (char*)0x10F341C0; //found at 0xFFC77400, OK
 }
 
-long hook_raw_size()
-{
-    return 0x009e6fc4;		// Corrected! from 0x009dcce0 (from stubs_entry.S)
-}
-
 void *vid_get_viewport_live_fb()
 {
 //    return (void*)0;//0x10670ee0;

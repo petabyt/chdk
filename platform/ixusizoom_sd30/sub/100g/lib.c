@@ -15,11 +15,6 @@ char *hook_raw_image_addr()
     return (char*)0x10584DF4; //OK	=aA08x_crw  Found @  0xff91e35c
 }
 
-long hook_raw_size()
-{
-    return 0x658560; //OK	=aA08x_crw
-}
-
 // buffer of live picture when shoot button is not pressed
 void *vid_get_viewport_live_fb()
 {

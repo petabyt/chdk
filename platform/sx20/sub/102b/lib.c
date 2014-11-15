@@ -5,11 +5,6 @@ char *hook_raw_image_addr()
 	return (char*) 0x41F723E0; // found at (0xFF8B8514) near sub_FF8B8510EvfCaptureSystem.c
 }
 
-long hook_raw_size()
-{
-	return 0x11CA240; // FF867B38
-}
-
 void *vid_get_bitmap_fb()
 {
 	return (void*)0x403F1000; // sub_FF90A344 

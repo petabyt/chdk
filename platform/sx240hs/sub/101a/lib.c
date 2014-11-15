@@ -28,7 +28,6 @@ char *camera_jpeg_current_filename() {
 //void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff3e3784
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2ec0+0x54)); } // Found @0xff062d0c & 0xff062d44
 char *camera_jpeg_count_str()    { return (char*)0x000dd3b4; }             // Found @0xff26fe7c
-long hook_raw_size()             { return 0x01247a60; }                    // Found @0xff3e659c
 //int get_flash_params_count(void) { return 0xa6; }                          // Found @0xff1f401c
 
 #ifdef CAM_HAS_GPS

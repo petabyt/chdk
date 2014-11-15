@@ -7,13 +7,6 @@ char *hook_raw_image_addr()
 	return (char*) (*(int*)(0x53A4+0x18) ? 0x11A34C40 : 0x10805040);	
 }
 
-long hook_raw_size()
-{
-   //      ROM:FFE60BB4                 LDR     R1, =0xEC04F0
-   return 0xEC04F0;
-}
-
-
 void *vid_get_viewport_live_fb()
 {
    void **fb=(void **)0x21a0; //ROM:FFC285D0 dword_FFC285D0  DCD 0x21A0, look also at ROM:FFC27FF0

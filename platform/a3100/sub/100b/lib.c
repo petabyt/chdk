@@ -15,12 +15,6 @@ sss
 
 
 
-// Found @0xffaadd50
-long hook_raw_size()
-{
-	return 0x011ca240;
-}
-
 // OSD buffer
 void *vid_get_bitmap_fb()
 {

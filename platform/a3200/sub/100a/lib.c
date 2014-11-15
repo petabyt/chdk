@@ -14,7 +14,6 @@ char *hook_alt_raw_image_addr()
 void *vid_get_bitmap_fb()        { return (void*)0x403f1000; }             // Found @0xff85b834
 void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x29a0+0x58)); } // Found @0xff871340 & 0xff871378
 char *camera_jpeg_count_str()    { return (char*)0x000b44d4; }             // Found @0xff9fd22c
-long hook_raw_size()             { return 0x014d2400; }                    // Found @0xffb21010
 
 void *vid_get_bitmap_active_buffer()
 {

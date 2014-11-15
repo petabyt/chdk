@@ -29,16 +29,6 @@ ROM:FFB5004C                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
 	return (char*)(0x41D65F00);
 }
 
-/*
-ROM:FFB50048                 LDR     R1, =0x14EB7E0  <<<<<<<<<<<<<<<
-ROM:FFB5004C                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-*/
-long hook_raw_size()
-{
-		return 0x014eb7e0;
-}
-
-
 
 // Live picture buffer (shoot not pressed)
 void *vid_get_viewport_live_fb()

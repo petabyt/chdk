@@ -11,11 +11,6 @@ char *hook_alt_raw_image_addr()
 		return (char*) 0x4207DB20;		//Found at FFB217F0
 }
 
-long hook_raw_size()
-{
-	return 0x01794300; // Found @0xffb21768  a3300is
-}
-
 char *camera_jpeg_count_str()
 {
 	 return (void*)0xb40d4;   // Found @0xff9fd850   a3300is                                 

@@ -17,14 +17,6 @@ sss
 	return (char*) 0x10E59860; // A3000 @FFE659E0
 }
 
-long hook_raw_size()
-{
-	//found at FFAADD50
-	//Near to "CRAW BUFF SIZE  %p"
-	//return 0x11CA240;
-	return 0xEC04F0; // @FFE65A3C
-}
-
 // Live picture buffer (shoot not pressed)
 void *vid_get_viewport_live_fb()
 {

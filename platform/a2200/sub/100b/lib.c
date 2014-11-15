@@ -30,11 +30,6 @@ char *hook_alt_raw_image_addr()	{
 	return (char*)0x421316C0;	// Found @0xFFB1A77C
 }
 
-long hook_raw_size() {
-	
-	return 0x014d2400;			// Found @0xFFB1A7D4
-}			
-
 void *vid_get_bitmap_fb() {
 	
 	return (void*)0x403F1000;	// Found @0xFF85B81C

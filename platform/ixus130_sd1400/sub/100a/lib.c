@@ -17,12 +17,6 @@ char *hook_raw_image_addr() {
 //    return (char*) (*(int*)(0x2bec + 0xC)? 0x???????? : 0x41db3b80);
 //}
 
-// search String "CRAW BUFF SIZE"
-long hook_raw_size() {
-    return 0x14d2400;
-}
-
-
 // OSD buffer
 // search dispcon* functions and BmpDDev.c
 // ff90ce04: 	e92d41f0 	push	{r4, r5, r6, r7, r8, lr}

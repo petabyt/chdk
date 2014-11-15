@@ -21,12 +21,6 @@ char *hook_raw_image_addr()
 }
 
 
-long hook_raw_size()
-{
-	return 0xEE9200;							// @FFB64E84
-}
-
-
 void *vid_get_viewport_live_fb()
 {
 	    return (void*) 0;

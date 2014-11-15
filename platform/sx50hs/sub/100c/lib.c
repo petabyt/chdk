@@ -18,10 +18,6 @@ char *hook_alt_raw_image_addr()
         return (char*) 0x44000000;
 }
 
-long hook_raw_size() {
-    return 0x124AB50;                       //SX50 @FF43302C
-}
-
 void *vid_get_viewport_fb_d() {
     return (void*)(*(int*)(0x3650+0x54));   //SX50 @FF074F14 & FF074F4C
 }

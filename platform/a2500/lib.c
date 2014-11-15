@@ -37,7 +37,6 @@ void camera_set_led(int led, int state, int bright) {
 
 int get_flash_params_count(void) { return 0x91; }
 char *hook_raw_image_addr()      {return (char*) 0x420e5c30;}   //Found @0xffb16a34 a2500 100a
-long hook_raw_size()             { return 0x01794300; }         //Found @0xffb18970 a2500 100a
 
 int vid_get_viewport_width()     { return 360;  }
 long vid_get_viewport_height()   { return 240;  }

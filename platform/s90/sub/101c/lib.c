@@ -43,11 +43,6 @@ char *hook_raw_image_addr()
 							   // or for aCrawBuffP      DCB "CRAW BUFF       %p",0
 }
 
-long hook_raw_size()
-{
-	return 0xEE9200;// Search for "aCrawBuffSizeP" 0xEE9200
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x2240; //100c, 101a, 101c @ff84e0b4; sub_ff84d748

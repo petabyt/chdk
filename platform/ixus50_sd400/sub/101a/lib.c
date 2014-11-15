@@ -18,11 +18,6 @@ char *hook_raw_image_addr()
 	return (char*)0x10595D54; // function below aWaitgetaeinteg
 }
 
-long hook_raw_size()
-{
-    return 0x644C40; // 0x644C00 + 0x40 
-}
-
 // buffer of live picture when shoot button is not pressed
 void *vid_get_viewport_live_fb()
 {

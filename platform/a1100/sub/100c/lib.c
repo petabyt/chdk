@@ -5,11 +5,6 @@ char *hook_raw_image_addr()
 	return (char*) 0x4139E56C; // "CRAW BUFF"---fixed
 }
 
-long hook_raw_size()
-{
-	return 0x11E4EE0;           // "CRAW BUFF SIZE"---fixed
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x4094;//-----> fixed

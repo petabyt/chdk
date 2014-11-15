@@ -13,17 +13,6 @@ char *hook_raw_image_addr()
 	return (char*)0x1163B8E0;
 }
 
-long hook_raw_size()
-{
-	// Found at ROM:FFA11EE0
-	// Search for aCrawBuffSizeP, take value from second printf argument
-	// ROM:FFA11EE0   LDR     R1, =0x9DCCE0
-	// ROM:FFA11EE4   ADR     R0, aCrawBuffSizeP @ "CRAW BUFF SIZE  %p"
-	// ROM:FFA11EE8   BL      sub_FFA13590
-	
-	return 0x9DCCE0;
-}
-
 void *vid_get_viewport_live_fb()
 {
 	// Deprecated, still exists for historical reasons.

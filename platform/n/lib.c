@@ -8,7 +8,6 @@ extern  int     active_raw_buffer;
 extern  char*   raw_buffers[];
 
 char *camera_jpeg_count_str()    { return (char*)0x00220c20; }             // Found @0xff2c1778
-long hook_raw_size()             { return 0x0124ab50; }                    // Found @0xff4b9540
 int get_flash_params_count(void) { return 0x91; }                          // Found @0xff25006c
 
 char *hook_raw_image_addr()

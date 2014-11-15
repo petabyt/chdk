@@ -83,18 +83,6 @@ char *hook_alt_raw_image_addr()
 }
 */
 
-long hook_raw_size() //ASM1989 ixus1000
-{
-	//found at FFB4FFF4
-			//ROM:FFB4FFF4                 LDR     R1, =0xF32880
-			//ROM:FFB4FFF8                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
-
-
-	return 0xF32880;
-}
-
-
-
 // Live picture buffer (shoot not pressed) //ASM1989  keept like sx210
 void *vid_get_viewport_live_fb()
 {

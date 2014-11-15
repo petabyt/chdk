@@ -7,11 +7,6 @@ char *hook_raw_image_addr()
     return (char*)0x1056B960;       // aA08x_crw, followed sd30
 }
 
-long hook_raw_size()
-{
-    return 0x9E6F10;                // aA08x_crw, followed sd30
-}
-
 void *vid_get_viewport_live_fb()
 {
 /*

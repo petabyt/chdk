@@ -31,47 +31,6 @@ ROM:FFB10354                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
 	return (char*)(0x41F3B020);
 }
 
-/*
-ROM:FFB0FF90 ; ---------------------------------------------------------------------------
-ROM:FFB0FF90
-ROM:FFB0FF90 loc_FFB0FF90                            ; CODE XREF: sub_FFB0FF50+10j
-ROM:FFB0FF90                 MOV     R0, #0xFF0    	// raw sensor size X - 4080
-ROM:FFB0FF94                 STR     R0, [R1]
-ROM:FFB0FF98                 LDR     R0, =0xBE8	    // raw sensor size Y - 3048
-ROM:FFB0FF9C                 STR     R0, [R1,#4]
-ROM:FFB0FFA0                 MOV     R0, #0xFA0	    // cropped size X - 4000
-ROM:FFB0FFA4                 STR     R0, [R1,#8]
-ROM:FFB0FFA8                 SUB     R0, R0, #0x3E8 // cropped size Y - (4000 - 1000) = 3000
-ROM:FFB0FFAC
-ROM:FFB0FFAC loc_FFB0FFAC                            ; CODE XREF: sub_FFB0FF50+3Cj
-ROM:FFB0FFAC                 STR     R0, [R1,#0xC]
-ROM:FFB0FFB0                 MOV     R0, #0
-ROM:FFB0FFB4                 BX      LR
-ROM:FFB0FFB4 ; End of function sub_FFB0FF50
-
-*/
-
-/*
-Raw buffer size 0x11CA240 / 12 * 8 = 0xBDC180 pixels  ( RAW 12 bit per pixel)
-4080  *  3048  = 12435840 pixels
-0xFF0 *  0xBE8 = 0xBDC180 pixels
-same senzor as SX200, SX20 ( probably?)
-
-ROM:FF9397C8 loc_FF9397C8                            ; CODE XREF: sub_FF939780+3Cj
-ROM:FF9397C8                 LDR     R1, =0x41F3B020
-ROM:FF9397CC                 MOV     R2, #0xFF0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-ROM:FF9397D0                 LDR     R3, =0xBE8 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-ROM:FF9397D4                 STMFA   SP, {R1,R2}
-ROM:FF9397D8                 ADR     R0, aCrwaddressLxCr ; " CrwAddress %lx, CrwSize H %ld V %ld\r"
-
-
-*/
-long hook_raw_size() 
-{
-		return 0x11CA240;
-}
-
-
 
 // Live picture buffer (shoot not pressed) 
 void *vid_get_viewport_live_fb()

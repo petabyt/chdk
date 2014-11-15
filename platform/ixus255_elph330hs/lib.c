@@ -77,8 +77,6 @@ char *hook_alt_raw_image_addr()
         return (char*)0x44000000;
 }
 
-long hook_raw_size()             { return 0x0124ab50; }                    // Found @0xff49dd48
-
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
 	return 2;

@@ -8,12 +8,6 @@ char *hook_raw_image_addr()
 	return (char*) (*(int*)(0x51A0+0x18) ? 0x11B96B80 : 0x107D58E0);
 }
 
-long hook_raw_size()
-{
-	// Found at: FFE46CBC
-	return 0xEC04F0;
-}
-
 void *vid_get_viewport_live_fb()
 {
     void **fb=(void **)0x6A68;  // at: ROM:FFC9FB74

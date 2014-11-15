@@ -7,11 +7,6 @@ char *hook_raw_image_addr() {
     // table at 0xffb40208, no second buffer
 }
 
-// search String "CRAW BUFF SIZE"
-long hook_raw_size() {
-    return 0x14d2400;
-}
-
 // search for String "VRAM Address" (like SX10)
 // or search for String "MaxY %ld MinY %ld" and look below
 //void *vid_get_viewport_fb() {
