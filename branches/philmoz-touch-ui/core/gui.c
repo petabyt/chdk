@@ -3035,7 +3035,7 @@ int gui_kbd_process()
 // Handle touch screen presses
 int gui_touch_process(int x, int y)
 {
-    if (gui_mode->touch_handler)
+    if (gui_mode && gui_mode->touch_handler)
         return gui_mode->touch_handler(x, y);
     return 0;
 }
