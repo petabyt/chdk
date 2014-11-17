@@ -13,10 +13,9 @@
 #define  FONT_CP_WIN_1250       0
 #define  FONT_CP_WIN_1251       1
 #define  FONT_CP_WIN_1252       2
-#define  FONT_CP_WIN_1254       3
-#define  FONT_CP_WIN_1257       4
-/* 1253 (Greek) */
-#define  FONT_CP_WIN_1253       5
+#define  FONT_CP_WIN_1253       3   /* 1253 (Greek) */
+#define  FONT_CP_WIN_1254       4
+#define  FONT_CP_WIN_1257       5
 
 //-------------------------------------------------------------------
 // Format of header block for each character in the 'font_data' array
@@ -28,9 +27,8 @@ typedef struct {
 } FontData;
 
 //-------------------------------------------------------------------
-extern void font_init();
 extern void font_set(int codepage);
-extern unsigned char *get_current_font_data(char ch);
+extern unsigned char *get_current_font_data(unsigned char ch);
 
 extern int rbf_load_symbol(char *file);
 extern void rbf_load_from_file(char *file, int codepage);
