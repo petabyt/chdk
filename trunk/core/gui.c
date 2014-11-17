@@ -1996,9 +1996,10 @@ static void gui_draw_load_lang(int arg)
 
 static const char* gui_font_enum(int change, int arg)
 {
-    static const char* fonts[]={ "Win1250", "Win1251", "Win1252", "Win1253", "Win1254", "Win1257"};
+    extern int num_codepages;
+    extern char* codepage_names[];
 
-    gui_enum_value_change(&conf.font_cp,change,sizeof(fonts)/sizeof(fonts[0]));
+    gui_enum_value_change(&conf.font_cp,change,num_codepages);
 
     if (change != 0) {
         font_set(conf.font_cp);
@@ -2006,7 +2007,7 @@ static const char* gui_font_enum(int change, int arg)
         gui_menu_init(NULL);
     }
 
-    return fonts[conf.font_cp];
+    return codepage_names[conf.font_cp];
 }
 
 static void gui_draw_menu_rbf_selected(const char *fn)
