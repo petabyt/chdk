@@ -6,9 +6,9 @@
 typedef struct {
     int charcode;
     char data[16];
-} FontData;
+} origFontData;
 
-static const FontData font_data[] = {
+static const origFontData orig_font_data[] = {
     /* 0x0000 (0)  -  char0 */
     { 0x0000, {
         0x00,    /* 00000000 */
