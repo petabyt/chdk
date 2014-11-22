@@ -610,6 +610,46 @@ void draw_filled_ellipse(coord CX, coord CY, unsigned int XRadius, unsigned int 
 
 //-------------------------------------------------------------------
 
+// Draw an OSD icon from an array of actions
+void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
+{
+    while (1)
+    {
+        color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
+        color cb = chdk_colors[cmds->cb];
+        switch (cmds->action)
+        {
+        default:
+        case IA_END:
+            return;
+        case IA_HLINE:
+            draw_hline(x+cmds->x1, y+cmds->y1, cmds->x2, cb);
+            break;
+        case IA_VLINE:
+            draw_vline(x+cmds->x1, y+cmds->y1, cmds->y2, cb);
+            break;
+        case IA_LINE:
+            draw_line(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, cb);
+            break;
+        case IA_RECT:
+            draw_rect(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, cb);
+            break;
+        case IA_FILLED_RECT:
+            draw_filled_rect(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, MAKE_COLOR(cb,cf));
+            break;
+        case IA_ROUND_RECT:
+            draw_round_rect(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, cb);
+            break;
+        case IA_FILLED_ROUND_RECT:
+            draw_filled_round_rect(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, MAKE_COLOR(cb,cf));
+            break;
+        }
+        cmds++;
+    }
+}
+
+//-------------------------------------------------------------------
+
 extern unsigned char ply_colors[];
 extern unsigned char rec_colors[];
 

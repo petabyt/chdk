@@ -86,47 +86,49 @@ static void gui_space_draw_spacebar_vertical() {
     draw_filled_rect(xx+2, yy+2, xx+width+1, yy+y+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));   // fill 'used' space area
 }
 
-static void gui_space_draw_icon() {
-    register coord xx, yy;
+static icon_cmd space_icon[] =
+{
+        { IA_HLINE,        0,  0, 30,  0, IDX_COLOR_GREY_LT,     IDX_COLOR_GREY_LT     },
+        { IA_VLINE,        0,  0,  0, 13, IDX_COLOR_GREY_LT,     IDX_COLOR_GREY_LT     },
+        { IA_VLINE,       31,  0,  0, 19, IDX_COLOR_GREY,        IDX_COLOR_GREY        },
+        { IA_LINE,         1, 13,  5, 17, IDX_COLOR_GREY,        IDX_COLOR_GREY        },
+        { IA_HLINE,        6, 18, 24,  0, IDX_COLOR_GREY,        IDX_COLOR_GREY        },
+        { IA_FILLED_RECT,  1,  1, 30, 13, IDX_COLOR_GREY_DK,     IDX_COLOR_GREY_DK     },
+        { IA_FILLED_RECT,  5, 14, 30, 17, IDX_COLOR_GREY_DK,     IDX_COLOR_GREY_DK     },
+        { IA_FILLED_RECT,  3, 14,  6, 15, IDX_COLOR_GREY_DK,     IDX_COLOR_GREY_DK     },
+        { IA_FILLED_RECT,  2,  2,  6,  4, IDX_COLOR_YELLOW_DK,   IDX_COLOR_YELLOW_DK   },
+        { IA_FILLED_RECT,  2,  6,  6,  7, IDX_COLOR_YELLOW_DK,   IDX_COLOR_YELLOW_DK   },
+        { IA_FILLED_RECT,  2,  9,  6, 10, IDX_COLOR_YELLOW_DK,   IDX_COLOR_YELLOW_DK   },
+        { IA_FILLED_RECT,  2, 12,  6, 13, IDX_COLOR_YELLOW_DK,   IDX_COLOR_YELLOW_DK   },
+        { IA_FILLED_RECT,  5, 15,  9, 13, IDX_COLOR_YELLOW_DK,   IDX_COLOR_YELLOW_DK   },
+        { IA_HLINE,        8,  0,  2,  0, IDX_COLOR_TRANSPARENT, IDX_COLOR_TRANSPARENT },
+        { IA_HLINE,       11,  0,  3,  0, IDX_COLOR_WHITE,       IDX_COLOR_WHITE       },
+        { IA_HLINE,       11, 18,  2,  0, IDX_COLOR_TRANSPARENT, IDX_COLOR_TRANSPARENT },
+        { IA_RECT,         9,  5, 28, 13, 0,                     0                     },
+        { IA_FILLED_RECT, 27,  6, 27, 12, 0,                     0                     },
+        { IA_END }
+};
 
-    xx = conf.space_icon_pos.x;
-    yy = conf.space_icon_pos.y;
-
+static void gui_space_draw_icon()
+{
     space_color();
 
-    color cl1 = COLOR_GREEN_DK;
-    color cl2 = COLOR_GREEN;
+    color cl1 = IDX_COLOR_GREEN_DK;
+    color cl2 = IDX_COLOR_GREEN;
     if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
         ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
     {
-        cl1 = COLOR_RED_DK;
-        cl2 = COLOR_RED;
+        cl1 = IDX_COLOR_RED_DK;
+        cl2 = IDX_COLOR_RED;
     } 
   
-    //icon
-    draw_hline(xx,    yy,    30,  COLOR_GREY_LT);
-    draw_vline(xx,    yy,    13,  COLOR_GREY_LT);
-    draw_vline(xx+31, yy,    19,  COLOR_GREY);
-    draw_line(xx+1,   yy+13, xx+5, yy+17, COLOR_GREY);
-    draw_hline(xx+6,  yy+18, 24,  COLOR_GREY);
-           
-    draw_filled_rect(xx+1,  yy+1,   xx+30,   yy+13,  MAKE_COLOR(COLOR_GREY_DK, COLOR_GREY_DK));
-    draw_filled_rect(xx+5,  yy+14,  xx+30,   yy+17,  MAKE_COLOR(COLOR_GREY_DK, COLOR_GREY_DK));
-    draw_filled_rect(xx+3,  yy+14,  xx+6,    yy+15,  MAKE_COLOR(COLOR_GREY_DK, COLOR_GREY_DK));
-    
-    draw_filled_rect(xx+2,  yy+2,   xx+6,    yy+4,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
-    draw_filled_rect(xx+2,  yy+6,   xx+6,    yy+7,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
-    draw_filled_rect(xx+2,  yy+9,   xx+6,    yy+10,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
-    draw_filled_rect(xx+2,  yy+12,  xx+6,    yy+13,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
-    draw_filled_rect(xx+5,  yy+15,  xx+9,    yy+16,  MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
-    
-    draw_hline(xx+8,  yy,    2, COLOR_TRANSPARENT);
-    draw_hline(xx+11, yy,    3, COLOR_WHITE);
-    draw_hline(xx+11, yy+18, 2, COLOR_TRANSPARENT);
+    // Set dynamic properties for space left
+    space_icon[16].cb = cl1;
+    space_icon[17].x1 = 27 - (17 * perc / 100);
+    space_icon[17].cf = space_icon[17].cb = cl2;
 
-    //fill icon
-    draw_rect(xx+9,         yy+5,   xx+28,   yy+13,  cl1);
-    draw_filled_rect(xx+27-(17*perc/100),    yy+6,   xx+27,   yy+12,   MAKE_COLOR(cl2, cl2));
+    // Draw icon
+    draw_icon_cmds(conf.space_icon_pos.x, conf.space_icon_pos.y, space_icon);
 }
 
 //-------------------------------------------------------------------

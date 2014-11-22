@@ -8,6 +8,7 @@
 
 extern  unsigned char   *chdk_colors;
 
+#define IDX_COLOR_TRANSPARENT       0
 #define IDX_COLOR_BLACK             1
 #define IDX_COLOR_WHITE             2
 #define IDX_COLOR_RED               3
@@ -106,6 +107,34 @@ extern color get_script_color(int cl);
 
 extern color chdkColorToCanonColor(chdkColor c);
 extern twoColors user_color(confColor c);
+
+//-------------------------------------------------------------------
+// Icon rendering using an array of drawing actions
+
+// Allowed drawing actions for icons
+enum icon_actions
+{
+    IA_END,
+    IA_HLINE,
+    IA_VLINE,
+    IA_LINE,
+    IA_RECT,
+    IA_FILLED_RECT,
+    IA_ROUND_RECT,
+    IA_FILLED_ROUND_RECT
+};
+
+// Structure for a drawing action
+typedef struct
+{
+    unsigned char   action;
+    unsigned char   x1, y1;
+    unsigned char   x2, y2;
+    color           cb, cf;     // Note these should be IDX_COLOR_xxx values, converted to actual colors at runtime
+} icon_cmd;
+
+// Draw an icon from a list of actions
+extern void draw_icon_cmds(coord x, coord y, icon_cmd *cmds);
 
 //-------------------------------------------------------------------
 #endif

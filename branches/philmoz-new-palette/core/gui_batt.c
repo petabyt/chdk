@@ -35,29 +35,36 @@ unsigned long get_batt_perc() {
 }
 
 //-------------------------------------------------------------------
-static void gui_batt_draw_icon () {
-    register coord xx, yy;
-    
-    xx = conf.batt_icon_pos.x;
-    yy = conf.batt_icon_pos.y;
+static icon_cmd batt_icon[] =
+{
+        { IA_ROUND_RECT,   0,  3,  3,  9, IDX_COLOR_GREY,        IDX_COLOR_GREY        },
+        { IA_RECT,         3,  0, 31, 12, IDX_COLOR_GREY,        IDX_COLOR_GREY        },
+        { IA_FILLED_RECT,  1,  4,  2,  8, IDX_COLOR_YELLOW_DK,   IDX_COLOR_YELLOW_DK   },
+        { IA_FILLED_RECT,  4,  6, 30, 11, IDX_COLOR_GREY_DK,     IDX_COLOR_GREY_DK     },
+        { IA_FILLED_RECT,  4,  1, 30,  5, IDX_COLOR_GREY_LT,     IDX_COLOR_GREY_LT     },
+        { IA_RECT,         4,  2, 30, 10, 0,                     0                     },
+        { IA_FILLED_RECT, 29,  6, 29,  9, 0,                     0                     },
+        { IA_FILLED_RECT, 29,  3, 29,  5, 0,                     0                     },
+        { IA_END }
+};
 
+static void gui_batt_draw_icon ()
+{
     int perc = get_batt_perc();
 
     // set bar color depending percent
-    color cl1 = (perc>50) ? COLOR_GREEN_DK :(perc<=20) ? COLOR_RED_DK : COLOR_YELLOW_DK;
-    color cl2 = (perc>50) ? COLOR_GREEN    :(perc<=20) ? COLOR_RED    : COLOR_YELLOW;
-    color cl3 = (perc>50) ? COLOR_GREEN_LT :(perc<=20) ? COLOR_RED_LT : COLOR_YELLOW_LT;
+    color cl1 = (perc>50) ? IDX_COLOR_GREEN_DK :(perc<=20) ? IDX_COLOR_RED_DK : IDX_COLOR_YELLOW_DK;
+    color cl2 = (perc>50) ? IDX_COLOR_GREEN    :(perc<=20) ? IDX_COLOR_RED    : IDX_COLOR_YELLOW;
+    color cl3 = (perc>50) ? IDX_COLOR_GREEN_LT :(perc<=20) ? IDX_COLOR_RED_LT : IDX_COLOR_YELLOW_LT;
 
-    // icon
-    draw_round_rect(xx,     yy+3,   xx+3,   yy+9,   COLOR_GREY);
-    draw_rect(xx+3,         yy,     xx+31,  yy+12,  COLOR_GREY);
-    draw_filled_rect(xx+1,  yy+4,   xx+2,   yy+8,   MAKE_COLOR(COLOR_YELLOW_DK, COLOR_YELLOW_DK));
-    draw_filled_rect(xx+4,  yy+6,   xx+30,  yy+11,  MAKE_COLOR(COLOR_GREY_DK,   COLOR_GREY_DK));
-    draw_filled_rect(xx+4,  yy+1,   xx+30,  yy+5,   MAKE_COLOR(COLOR_GREY_LT,   COLOR_GREY_LT));
-    // fill icon
-    draw_rect(xx+4,         yy+2,   xx+30,  yy+10,  cl1);
-    draw_filled_rect(xx+29-(25*perc/100),   yy+6,  xx+29,   yy+9,  MAKE_COLOR(cl2, cl2));
-    draw_filled_rect(xx+29-(25*perc/100),   yy+3,  xx+29,   yy+5,  MAKE_COLOR(cl3, cl3));
+    // Set dynamic properties for battery level
+    batt_icon[5].cb = cl1;
+    batt_icon[6].x1 = batt_icon[7].x1 = 29 - (25 * perc / 100);
+    batt_icon[6].cb = batt_icon[6].cf = cl2;
+    batt_icon[7].cb = batt_icon[7].cf = cl3;
+
+    // Draw icon
+    draw_icon_cmds(conf.batt_icon_pos.x, conf.batt_icon_pos.y, batt_icon);
 }
 
 //-------------------------------------------------------------------
