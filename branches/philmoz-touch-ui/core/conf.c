@@ -323,7 +323,6 @@ void osd_conf_info_func(unsigned short id)
         gui_lang_init(); 
         break;
     case 136:
-        font_init();
         font_set(conf.font_cp);
         break;
 #if CAM_OPTIONAL_EXTRA_BUTTON
