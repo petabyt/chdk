@@ -742,29 +742,29 @@ module_handler_t h_eyefi =
     MODULE_NAME_EYEFI
 };
 
-static int default_eyefi_init()
+static void default_wlanOnOff(int on_off)
 {
-    if (module_load(&h_eyefi) && libeyefi->init)
-    	return libeyefi->init();
-    return 0;
+    if (module_load(&h_eyefi))
+        libeyefi->wlanOnOff(on_off);
+}
+static void default_availableNetworks()
+{
+    if (module_load(&h_eyefi))
+        libeyefi->availableNetworks();
+}
+static void default_configuredNetworks()
+{
+    if (module_load(&h_eyefi))
+        libeyefi->configuredNetworks();
 }
 
 // Default library - module unloaded
 libeyefi_sym default_libeyefi=
 {
 	{ 0,0,0,0,0 },
-	default_eyefi_init,
-	dummy_void,         //eyefi_close
-	dummy_int,          //eyefi_getAvailableNetworks
-	dummy_int,          //eyefi_getConfiguredNetworks
-	dummy_int,          //eyefi_getNetworkStatus
-	dummy_int,          //eyefi_deleteNetwork
-	dummy_int,          //eyefi_testNetwork
-	dummy_int,          //eyefi_addNetwork
-	dummy_int,          //eyefi_enableWlan
-	dummy_int,          //eyefi_wlanEnabled
-	dummy_puchar,       //eyefi_getBuf
-	dummy_pchar         //eyefi_statusName
+	default_wlanOnOff,          //Turn eyefi wlan on/off
+	default_availableNetworks,  //Select or add network
+    default_configuredNetworks, //Select or delete network
 };
 
 // Library pointer
