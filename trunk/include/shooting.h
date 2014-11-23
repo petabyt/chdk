@@ -20,21 +20,21 @@ extern void shooting_init(); // startup initialization
 typedef struct {
     short id;       // hacks id
     short prop_id;  // Canons id
-    char name[8];
-    short shutter_dfs_value; // shutter speed to use dark frame substraction
+    char *name;
+    short shutter_dfs_value; // shutter speed to use dark frame subtraction
 } ISOTable;
 
 typedef struct {
     short id;       // hacks id
     short prop_id;  // Canons id
-    char name[8];
+    char *name;
     long usec;
 } ShutterSpeed;
 
 typedef struct {
     short id;       // hacks id
     short prop_id;  // Canons id
-    char name[8];
+    char *name;
 } ApertureSize;
 
 typedef struct {
