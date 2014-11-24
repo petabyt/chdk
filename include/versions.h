@@ -28,6 +28,7 @@
 #define EDGEOVERLAY_VERSION     {2,0}
 #define DNG_VERSION             {3,1}
 #define CURVES_VERSION          {2,0}
+#define EYEFI_VERSION           {1,0}
 
 //-------------------------------------------------------------------
 
