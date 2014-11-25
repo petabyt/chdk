@@ -153,12 +153,12 @@ static void clear_eyefi_buf()
 
 static u8 atoh(char c)
 {
-	char lc = tolower(c);
-	if ((c >= '0') && (c <= '9'))
-		return c - '0';
-	else if ((lc >= 'a') && (lc <= 'z'))
-		return (lc - 'a') + 10;
-	return 0;
+    char lc = tolower(c);
+    if ((c >= '0') && (c <= '9'))
+        return c - '0';
+    else if ((lc >= 'a') && (lc <= 'z'))
+        return (lc - 'a') + 10;
+    return 0;
 }
 
 /*
@@ -169,64 +169,65 @@ static u8 atoh(char c)
  */
 static u8 *convert_ascii_to_hex(char *ascii)
 {
-	int i;
-	static u8 hex[32];
-	int len = strlen(ascii);
+    int i;
+    static u8 hex[32];
+    int len = strlen(ascii);
 
     memset(hex, 0, 32);
-	
-	for (i = 0; i < len; i += 2)
-	{
-		u8 high = atoh(ascii[i]);
-		u8 low  = atoh(ascii[i+1]);
-		hex[i/2] = (high<<4) | low;
-	}
 
-	return hex;
+    for (i = 0; i < len; i += 2)
+    {
+        u8 high = atoh(ascii[i]);
+        u8 low  = atoh(ascii[i+1]);
+        hex[i/2] = (high<<4) | low;
+    }
+
+    return hex;
 }
 
 static int hex_only(char *str)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < strlen(str); i++) {
-		if (((str[i] >= 'a') && str[i] <= 'f') ||
-		    ((str[i] >= 'A') && str[i] <= 'F') ||
-		    ((str[i] >= '0') && str[i] <= '9')) {
-			continue;
-		}
-		return 0;
-	}
-	return 1;
+    for (i = 0; i < strlen(str); i++) {
+        if (((str[i] >= 'a') && str[i] <= 'f') ||
+            ((str[i] >= 'A') && str[i] <= 'F') ||
+            ((str[i] >= '0') && str[i] <= '9')) {
+            continue;
+        }
+        return 0;
+    }
+    return 1;
 }
 
 // Convert user input to a network key - tries to guess key type based on length of input
 // ToDo: should probably look at the network type returned from the list of available networks instead
 static int make_network_key(struct network_key *key, char *essid, char *pass)
 {
-	u8 *hex_pass;
-	int pass_len = strlen(pass);
-	memset(key, 0, sizeof(*key));
+    u8 *hex_pass;
+    int pass_len = strlen(pass);
+    memset(key, 0, sizeof(*key));
 
-	switch (pass_len) {
-		case WPA_KEY_BYTES*2:
-		case WEP_KEY_BYTES*2:
-		case WEP_40_KEY_BYTES*2:
-			if (hex_only(pass))
-			{
-				hex_pass = convert_ascii_to_hex(pass);
-				if (!hex_pass)
-					return -EINVAL;
-				key->len = pass_len/2;
-				memcpy(&key->key[0], hex_pass, key->len);
-				break;
-			}
-		default:
-			key->len = WPA_KEY_BYTES;
+    switch (pass_len) {
+        case WPA_KEY_BYTES*2:
+        case WEP_KEY_BYTES*2:
+        case WEP_40_KEY_BYTES*2:
+            if (hex_only(pass))
+            {
+                hex_pass = convert_ascii_to_hex(pass);
+                if (!hex_pass)
+                    return -EINVAL;
+                key->len = pass_len/2;
+                memcpy(&key->key[0], hex_pass, key->len);
+                break;
+            }
+        // Fall through to default case
+        default:
+            key->len = WPA_KEY_BYTES;
             pbkdf2_sha1(pass, essid, strlen(essid), 4096, &key->key[0], WPA_KEY_BYTES);
-			break;
-	}
-	return 0;
+            break;
+    }
+    return 0;
 }
 
 // Full path to EyeFi command/control file
@@ -244,32 +245,32 @@ static char *eyefi_filename(const char *nm)
 // Returns true (1) is successful, false (0) otherwise
 static int eyefi_writeFile(const char *filename)
 {
-	int fd = open(eyefi_filename(filename), O_RDWR|O_CREAT, 0600);
+    int fd = open(eyefi_filename(filename), O_RDWR|O_CREAT, 0600);
 
-	if (fd < 0)
-		return 0;
+    if (fd < 0)
+        return 0;
 
-	int bytesWritten = write(fd, eyefi_buf.buf, EYEFI_BUF_SIZE);
-	close(fd);
+    int bytesWritten = write(fd, eyefi_buf.buf, EYEFI_BUF_SIZE);
+    close(fd);
 
-	return bytesWritten == EYEFI_BUF_SIZE;
+    return bytesWritten == EYEFI_BUF_SIZE;
 }
 
 // Read a 16K command/control file to the card. Data is placed in eyefi_buf array.
 // Returns true (1) is successful, false (0) otherwise
 static int eyefi_readFile(const char *filename)
 {
-	clear_eyefi_buf();
+    clear_eyefi_buf();
 
-	int fd = open(eyefi_filename(filename), O_RDONLY, 0777);
+    int fd = open(eyefi_filename(filename), O_RDONLY, 0777);
 
-	if (fd < 0)
-		return 0;
+    if (fd < 0)
+        return 0;
 
-	int bytesRead = read(fd, eyefi_buf.buf, EYEFI_BUF_SIZE);
-	close(fd);
+    int bytesRead = read(fd, eyefi_buf.buf, EYEFI_BUF_SIZE);
+    close(fd);
 
-	return bytesRead == EYEFI_BUF_SIZE;
+    return bytesRead == EYEFI_BUF_SIZE;
 }
 
 // Send a command with optional parameters to the card
@@ -281,35 +282,35 @@ static int eyefi_readFile(const char *filename)
 //      - read command results from RSPM file
 static int eyefi_sendCommandParam(unsigned char cmd, eyefi_param *param)
 {
-	int i;
+    int i;
 
-	if (!eyefi_readFile("RSPC")) return 0;
-	unsigned int cur_seq = eyefi_buf.seq;
+    if (!eyefi_readFile("RSPC")) return 0;
+    unsigned int cur_seq = eyefi_buf.seq;
 
     clear_eyefi_buf();
-	eyefi_buf.ec.cmd = cmd;
+    eyefi_buf.ec.cmd = cmd;
 
-	if (param)
-		memcpy(&eyefi_buf.ec.param, param, sizeof(eyefi_param));
+    if (param)
+        memcpy(&eyefi_buf.ec.param, param, sizeof(eyefi_param));
 
-	if (!eyefi_writeFile("REQM")) return -1;
-	
+    if (!eyefi_writeFile("REQM")) return -1;
+
     clear_eyefi_buf();
-	eyefi_buf.seq = ++cur_seq;
-	if (!eyefi_writeFile("REQC")) return -2;
+    eyefi_buf.seq = ++cur_seq;
+    if (!eyefi_writeFile("REQC")) return -2;
 
-	for (i=0; i<20; i++)
-	{
-		if (!eyefi_readFile("RSPC")) return -3;
-		if (eyefi_buf.seq == cur_seq)
-		{
-		    if (!eyefi_readFile("RSPM")) return -5;
-		    return 1;
-		}
-		msleep(250);
-	}
-	
-	return -4;
+    for (i=0; i<20; i++)
+    {
+        if (!eyefi_readFile("RSPC")) return -3;
+        if (eyefi_buf.seq == cur_seq)
+        {
+            if (!eyefi_readFile("RSPM")) return -5;
+            return 1;
+        }
+        msleep(250);
+    }
+
+    return -4;
 }
 
 #define eyefi_sendCommand(cmd)          eyefi_sendCommandParam(cmd, NULL)
@@ -349,22 +350,22 @@ int eyefi_addNetwork(char *SSID,char *pwd)
 // Turn WiFi on or off.
 int eyefi_enableWlan(int enable)
 {
-	eyefi_param param;
+    eyefi_param param;
     memset(&param, 0, sizeof(eyefi_param));
-	param.config.subcommand = EYEFI_WLAN_DISABLE;
-	param.config.bytes = 1;
-	param.config.args[0] = (unsigned char)enable;
-	return eyefi_sendCommandParam('O', &param);
+    param.config.subcommand = EYEFI_WLAN_DISABLE;
+    param.config.bytes = 1;
+    param.config.args[0] = (unsigned char)enable;
+    return eyefi_sendCommandParam('O', &param);
 }
 
 //int eyefi_wlanEnabled(int *pEnabled) {
-//	eyefi_param param;
+//  eyefi_param param;
 //    memset(&param,0,sizeof(param));
-//	param.config.subcommand=EYEFI_WLAN_DISABLE;
-//	param.config.bytes=0;
-//	eyefi_sendCommandParam('o',&param);
-//	*pEnabled=eyefi_buf.buf[1];
-//	return 1;
+//  param.config.subcommand=EYEFI_WLAN_DISABLE;
+//  param.config.bytes=0;
+//  eyefi_sendCommandParam('o',&param);
+//  *pEnabled=eyefi_buf.buf[1];
+//  return 1;
 //}
 
 // Test mode status strings
@@ -380,17 +381,17 @@ char *eyefi_statusName(int n)
         "success"
     };
 
-	if (n<0 || n>=sizeof(eyefi_status)/sizeof(*eyefi_status))
-		return "?";
+    if (n<0 || n>=sizeof(eyefi_status)/sizeof(*eyefi_status))
+        return "?";
 
-	return eyefi_status[n];
+    return eyefi_status[n];
 }
 
 //-----------------------------------------------------------------------------
 // GUI.c interface
 
-#define MAX_NETWORK 9                                   // Limit of popup menu
-#define PWD_LEN     32                                  // Max password length
+#define MAX_NETWORK 9           // Limit of popup menu
+#define PWD_LEN     32          // Max password length
 
 static struct mpopup_item popup_eyefi[MAX_NETWORK+1];   // list of entries for popup menu (+1 for Cancel)
 static char eyefi_selectedNetwork[ESSID_LEN+1];
@@ -607,11 +608,6 @@ static void eyefi_available_networks()
 }
 
 //-----------------------------------------------------------------------------
-int basic_module_init()
-{
-    return 1;
-}
-
 int _module_unloader()
 {
     return 0;
@@ -630,8 +626,8 @@ libeyefi_sym _libeyefi =
          0, _module_unloader, _module_can_unload, 0, 0
     },
 
-	eyefi_wlan_state,
-	eyefi_available_networks,
+    eyefi_wlan_state,
+    eyefi_available_networks,
     eyefi_configured_networks,
 };
 
@@ -639,10 +635,10 @@ struct ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(struct ModuleInfo),
-    SIMPLE_MODULE_VERSION,			// Module version
+    EYEFI_VERSION,              // Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
-    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
     (int32_t)"EYEFI",// Module name
     (int32_t)"Handle Eyefi SD cards",
