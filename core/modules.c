@@ -738,7 +738,7 @@ module_handler_t h_eyefi =
 {
     (base_interface_t**)&libeyefi,
     &default_libeyefi.base,
-    SIMPLE_MODULE_VERSION,
+    EYEFI_VERSION,
     MODULE_NAME_EYEFI
 };
 
