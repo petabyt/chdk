@@ -439,11 +439,11 @@ static void module_log_unload(char *name)
 // Bind loaded module to library pointer
 static int bind_module( module_handler_t* hMod, void* module_lib )
 {
-    *hMod->lib = module_lib;
-
     // If unloading module, reset library to unloaded default
-    if (*hMod->lib == 0)
+    if (module_lib == 0)
         *hMod->lib = hMod->default_lib;
+    else
+        *hMod->lib = module_lib;
 
     return 0;
 }
@@ -593,6 +593,9 @@ static int _module_load(module_handler_t* hMod)
     if ( idx>=0 )
         return idx;
 
+    // Reset lib (should not be needed, loader should only be called from 'default' lib)
+    *hMod->lib = hMod->default_lib;
+
     // Find empty slot   
     for ( idx=0; idx<MAX_NUM_LOADED_MODULES && modules[idx].hdr; idx++ );
 
@@ -636,7 +639,6 @@ static int _module_load(module_handler_t* hMod)
 int module_load(module_handler_t* hMod)
 {
     // Attempt to load module
-    *hMod->lib = 0;
     _module_load(hMod);
 
     // If load succeeded return success
@@ -645,7 +647,7 @@ int module_load(module_handler_t* hMod)
         return 1;
     }
 
-    // If load failed reset library to unloaded default
+    // If load failed reset library to unloaded default (should not be needed!)
     if (*hMod->lib == 0)
         *hMod->lib = hMod->default_lib;
 
