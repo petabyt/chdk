@@ -73,3 +73,5 @@
     #undef  CAM_DEFAULT_MENU_CURSOR_FG
     #define CAM_DEFAULT_MENU_CURSOR_BG  IDX_COLOR_RED      // Override menu cursor colors
     #define CAM_DEFAULT_MENU_CURSOR_FG  IDX_COLOR_WHITE    // Override menu cursor colors
+
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works

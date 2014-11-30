@@ -204,6 +204,21 @@ typedef struct
 
     // Depth of Field, Hyperfocal distance, etc
     DOF_TYPE dof_values;
+
+#if defined(OPT_FILEIO_STATS)
+    // Optional stats from file IO functions (open, close, read, write, etc)
+    struct
+    {
+        int     fileio_semaphore_errors;
+        int     max_semaphore_timeout;
+        int     close_badfile_count;
+        int     write_badfile_count;
+        int     open_count;
+        int     close_count;
+        int     open_fail_count;
+        int     close_fail_count;
+    } fileio_stats;
+#endif
 } _cam_info;
 
 extern _cam_info camera_info;

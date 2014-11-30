@@ -82,8 +82,6 @@
 
     #undef  CAM_HAS_MANUAL_FOCUS
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS
 
@@ -149,5 +147,7 @@
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1       // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
     #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1      // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
 
 //----------------------------------------------------------

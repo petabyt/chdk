@@ -102,8 +102,6 @@
 
     #define CAM_QUALITY_OVERRIDE            1
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 99     // Override min subject distance
 

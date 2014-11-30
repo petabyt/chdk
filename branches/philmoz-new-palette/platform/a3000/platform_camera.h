@@ -62,7 +62,6 @@
     #define CAM_DATE_FOLDER_NAMING          0x100   // Camera uses date for naming image folders
 // for the purposes of CHDK, the FACE button is treated as the erase button
 //    #undef  CAM_HAS_ERASE_BUTTON
-   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220010  // specifies an LED that turns on while camera waits for USB remote to sync
 

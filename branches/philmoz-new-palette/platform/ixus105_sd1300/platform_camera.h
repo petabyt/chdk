@@ -67,8 +67,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Display" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_DISPLAY }
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     #undef  CAM_VIDEO_CONTROL
 
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()

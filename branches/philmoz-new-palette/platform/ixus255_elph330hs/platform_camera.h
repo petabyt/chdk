@@ -85,8 +85,6 @@
 
     #undef  CAM_HAS_MANUAL_FOCUS
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS
 
