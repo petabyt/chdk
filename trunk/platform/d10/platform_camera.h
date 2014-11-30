@@ -107,4 +107,6 @@
 
     #define CAM_ALLOWS_USB_PORT_FORCING     1    // USB remote state can be forced to be present
 
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
+
 //--------------------------------------------------
