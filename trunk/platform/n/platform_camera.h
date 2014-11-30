@@ -67,7 +67,6 @@
     #define CAM_EMUL_KEYPRESS_DURATION      10
 
     #undef  MKDIR_RETURN_ONE_ON_SUCCESS                     // mkdir() return 1 on success, 0 on fail.
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1               // enable fix for camera crash at startup when opening the conf / font files
 
     #define PARAM_CAMERA_NAME               3               // parameter number for GetParameterData - Camera Model name
 

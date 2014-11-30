@@ -128,8 +128,6 @@
 
     #define CAM_QUALITY_OVERRIDE            1       // enable 'super fine' override
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // cameras intermittently crashing on startup with "ASSERT!! FsIoNotify.c Line 457   Task name: SpyTask" in ROMLOG, ToDo: working ?
-
     // Warning : SD override for this camera with these values has not been tested
     #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
     #define CAM_SD_OVER_IN_AFL              1
