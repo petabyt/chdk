@@ -60,8 +60,6 @@
     #define CAM_JPEG_WIDTH                  3456
     #define CAM_JPEG_HEIGHT                 2592
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1   // enable fix for camera crash at startup when opening the conf / font files see http://chdk.setepontos.com/index.php?topic=6179.0
-
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
    //#define REMOTE_SYNC_STATUS_LED  0xC0xxyyyy  // specifies an LED that turns on while camera waits for USB remote to sync

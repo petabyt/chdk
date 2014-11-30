@@ -141,10 +141,6 @@
     
     #define CAM_KEY_PRESS_DELAY             30  // delay after a press - TODO can we combine this with above ?
     #define CAM_KEY_RELEASE_DELAY           30  // delay after a release - TODO do we really need to wait after release ?
-
-    #undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX     // enable fix for camera intermittently crash at startup when opening the conf / font files
-                                                // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
-                                                // NOTE enabled for all DRYOS below
     
     // RAW & DNG related values
     #define DEFAULT_RAW_EXT                 1   // extension to use for raw (see raw_exts in conf.c)
@@ -256,6 +252,8 @@
     
     #define CAM_GUI_FSELECT_SIZE  15, 7, 14     // filename, filesize, filedate camera file select window column widths
 
+    #undef  CAM_IS_VID_REC_WORKS                // Define if the 'is_video_recording()' function works
+
     // Keyboard repeat and initial delays (override in platform_camera.h if needed)
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500
@@ -267,11 +265,17 @@
 // Include the settings file for the camera model currently being compiled.
 #include "platform_camera.h"
 
-// default to startup crash fix on for DryOS
-// TODO remove from individual camera.h files when verified OK, 
-// defined check is just to avoid warning, can't turn it off on platform_camera.h!
-#if defined(CAM_DRYOS) && !defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
+#if !defined(CAM_IS_VID_REC_WORKS)
+#if !defined(CAM_FILEIO_SEM_TIMEOUT)
+    #define CAM_FILEIO_SEM_TIMEOUT          3000    // TakeSemaphore timeout
+#endif
+#else
+#if !defined(CAM_FILEIO_SEM_TIMEOUT)
+    #define CAM_FILEIO_SEM_TIMEOUT          0       // TakeSemaphore timeout - is_video_recording() == false
+#endif
+#if !defined(CAM_FILEIO_SEM_TIMEOUT_VID)
+    #define CAM_FILEIO_SEM_TIMEOUT_VID      200     // TakeSemaphore timeout - is_video_recording() == true
+#endif
 #endif
 
 //==========================================================

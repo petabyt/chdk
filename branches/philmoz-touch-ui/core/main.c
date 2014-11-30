@@ -257,6 +257,14 @@ void core_spytask()
         sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
         draw_txt_string(1, i++, osd_buf, conf.osd_color);
 #endif
+#if defined(OPT_FILEIO_STATS)
+        sprintf(osd_buf, "%3d %3d %3d %3d %3d %3d %3d %4d",
+                camera_info.fileio_stats.fileio_semaphore_errors, camera_info.fileio_stats.close_badfile_count,
+                camera_info.fileio_stats.write_badfile_count, camera_info.fileio_stats.open_count,
+                camera_info.fileio_stats.close_count, camera_info.fileio_stats.open_fail_count,
+                camera_info.fileio_stats.close_fail_count, camera_info.fileio_stats.max_semaphore_timeout);
+        draw_txt_string(1, i++, osd_buf, conf.osd_color);
+#endif
 
         if (camera_info.perf.md_af_tuning)
         {
