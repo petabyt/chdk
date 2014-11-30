@@ -801,6 +801,20 @@ static void gui_lua_native_call_warning()
 }
 #endif
 
+#if defined(CAM_IS_VID_REC_WORKS)
+static void unsafe_io_warning(unsigned int btn)
+{
+    if (btn==MBOX_BTN_NO)
+        conf.allow_unsafe_io = 0;
+}
+
+static void gui_unsafe_io_warning()
+{
+    if (conf.allow_unsafe_io)
+        gui_mbox_init(LANG_WARNING, LANG_MENU_ALLOW_UNSAFE_IO_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER, unsafe_io_warning);
+}
+#endif
+
 //-------------------------------------------------------------------
 static void gui_menuproc_eyefi_available_networks()
 {
@@ -874,6 +888,9 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x80,LANG_MENU_MISC_MEMORY_INFO,           MENUITEM_PROC,                  gui_show_memory_info, 0 ),
 #if !defined(OPT_FORCE_LUA_CALL_NATIVE)
     MENU_ITEM   (0x5c,LANG_MENU_ENABLE_LUA_NATIVE_CALLS,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.script_allow_lua_native_calls, (int)gui_lua_native_call_warning ),
+#endif
+#if defined(CAM_IS_VID_REC_WORKS)
+    MENU_ITEM   (0x5c,LANG_MENU_ENABLE_UNSAFE_IO,           MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.allow_unsafe_io, (int)gui_unsafe_io_warning ),
 #endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
     MENU_ITEM   (0x2f,LANG_EYEFI,                           MENUITEM_SUBMENU,               &eyefi_submenu,                     0 ),

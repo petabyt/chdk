@@ -445,6 +445,8 @@ typedef struct {
     
     int hotshoe_override;       // flash hot shoe override (0=no override, 1='not occupied', 2='occupied')
 
+    int allow_unsafe_io;        // Allow open/close/write to continue if fileio_semaphore times out (instead of returning error)
+
 } Conf;
 
 extern Conf conf;

@@ -327,6 +327,9 @@
 260 "*** TERMINATED ***"
 261 "*** Autostart ***"
 
+262 "Enable Unsafe IO?"
+263 "Enabling 'unsafe IO' will allow\nCHDK to perform some IO while also\nrecording video. This may cause\ncrashes, or lockups of your camera.\n\nDo you want to enable 'unsafe IO'?"
+
 264 "Disable Overrides on Startup"
 
 265 "Show Canon Overexp. Value"

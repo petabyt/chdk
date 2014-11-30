@@ -249,6 +249,11 @@ ifdef OPT_EXPIRE_TEST
 EXPIRE_TIME:=$(shell expr `date +%s` + $(OPT_EXPIRE_TEST) '*' 86400)
 CFLAGS+= -DOPT_EXPIRE_TEST=$(EXPIRE_TIME)
 endif
+
+ifdef OPT_FILEIO_STATS
+CFLAGS+=-DOPT_FILEIO_STATS
+endif
+
 ##########################################################################
 
 .PHONY: default

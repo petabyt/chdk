@@ -357,8 +357,37 @@ short SetAE_ShutterSpeed(short *tv)             { return _SetAE_ShutterSpeed(tv)
 
 extern int fileio_semaphore;
 
+int takeFileIOSemaphore()
+{
+    int timeout = CAM_FILEIO_SEM_TIMEOUT;
+#if defined(CAM_IS_VID_REC_WORKS)
+    if (is_video_recording())
+        timeout = CAM_FILEIO_SEM_TIMEOUT_VID;
+#endif
+#if defined(OPT_FILEIO_STATS)
+    int t = get_tick_count();
+#endif
+    // Check fileio semaphore with timeout, if not available we are probably recording video
+    if (_TakeSemaphore(fileio_semaphore,timeout) & 1)
+    {
+#if defined(OPT_FILEIO_STATS)
+        camera_info.fileio_stats.fileio_semaphore_errors++;
+#endif
+        return 0;
+    }
+#if defined(OPT_FILEIO_STATS)
+    t = get_tick_count() - t;
+    if (t > camera_info.fileio_stats.max_semaphore_timeout)
+        camera_info.fileio_stats.max_semaphore_timeout = t;
+#endif
+    return 1;
+}
+
 int open (const char *name, int flags, int mode )
 {
+#if defined(OPT_FILEIO_STATS)
+    camera_info.fileio_stats.open_count++;
+#endif
 #if !CAM_DRYOS
     // Adjust O_TRUNC and O_CREAT flags for VxWorks
     // Remove O_APPEND flag if present (not in VxWorks)
@@ -367,45 +396,69 @@ int open (const char *name, int flags, int mode )
     if(!name || name[0]!='A')
         return -1;
 #endif
-/*
-#if defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)	// enable fix for camera crash at startup when opening the conf / font files
-												// see http://chdk.setepontos.com/index.php?topic=6179.0
-	if (flags == O_RDONLY)						// At startup opening the conf / font files conflicts with Canon task if use _Open. Camera can randomly crash.
-		return _open(name, flags, mode);
+    int haveSemaphore = takeFileIOSemaphore();
+    if (!haveSemaphore)
+#if defined(CAM_IS_VID_REC_WORKS)
+        if (!conf.allow_unsafe_io)
 #endif
-*/
-#if CAM_DRYOS
-    _TakeSemaphore(fileio_semaphore,0);
+            return -1;
     int fd = _Open(name, flags, mode);
-    _GiveSemaphore(fileio_semaphore);
-    return fd;
-#else
-    return _Open(name, flags, mode);
+    if (haveSemaphore)
+        _GiveSemaphore(fileio_semaphore);
+#if defined(OPT_FILEIO_STATS)
+    if (fd == -1)
+        camera_info.fileio_stats.open_fail_count++;
 #endif
+    return fd;
 }
 
 int close (int fd)
 {
-#if CAM_DRYOS
-    _TakeSemaphore(fileio_semaphore,0);
-    int r = _Close(fd);
-    _GiveSemaphore(fileio_semaphore);
-    return r;
-#else
-    return _Close(fd);
+#if defined(OPT_FILEIO_STATS)
+    camera_info.fileio_stats.close_count++;
 #endif
+    if (fd == -1)
+    {
+#if defined(OPT_FILEIO_STATS)
+        camera_info.fileio_stats.close_badfile_count++;
+#endif
+        return -1;
+    }
+    int haveSemaphore = takeFileIOSemaphore();
+    if (!haveSemaphore)
+#if defined(CAM_IS_VID_REC_WORKS)
+        if (!conf.allow_unsafe_io)
+#endif
+            return -1;
+    int r = _Close(fd);
+    if (haveSemaphore)
+        _GiveSemaphore(fileio_semaphore);
+#if defined(OPT_FILEIO_STATS)
+    if (r == -1)
+        camera_info.fileio_stats.close_fail_count++;
+#endif
+    return r;
 }
 
 int write (int fd, const void *buffer, long nbytes)
 {
-#if CAM_DRYOS
-    _TakeSemaphore(fileio_semaphore,0);
-    int r = _Write(fd, buffer, nbytes);
-    _GiveSemaphore(fileio_semaphore);
-    return r;
-#else
-    return _Write(fd, buffer, nbytes);
+    if (fd == -1)
+    {
+#if defined(OPT_FILEIO_STATS)
+        camera_info.fileio_stats.write_badfile_count++;
 #endif
+        return -1;
+    }
+    int haveSemaphore = takeFileIOSemaphore();
+    if (!haveSemaphore)
+#if defined(CAM_IS_VID_REC_WORKS)
+        if (!conf.allow_unsafe_io)
+#endif
+            return -1;
+    int r = _Write(fd, buffer, nbytes);
+    if (haveSemaphore)
+        _GiveSemaphore(fileio_semaphore);
+    return r;
 }
 
 int read (int fd, void *buffer, long nbytes)
@@ -468,16 +521,25 @@ DIR *opendir(const char* name)
     // If malloc failed return failure
     if (dir == 0) return NULL;
 
+    int have_semaphore = takeFileIOSemaphore();
+    if (!have_semaphore)
+#if defined(CAM_IS_VID_REC_WORKS)
+        if (!conf.allow_unsafe_io)
+#endif
+            return NULL;
+
     // Save camera internal DIR structure (we don't care what it is)
 #if defined(CAM_DRYOS)
     extern void *_OpenFastDir(const char* name);
-    _TakeSemaphore(fileio_semaphore,0);
     dir->cam_DIR = _OpenFastDir(name);
-    _GiveSemaphore(fileio_semaphore);
 #else
     extern void *_opendir(const char* name);
     dir->cam_DIR = _opendir(name);
 #endif
+
+    if (have_semaphore)
+        _GiveSemaphore(fileio_semaphore);
+
     // Init readdir return value
     dir->dir.d_name[0] = 0;
 
@@ -542,13 +604,18 @@ int closedir(DIR *d)
     int rv = -1;
     if (d && d->cam_DIR)
     {
-#if defined(CAM_DRYOS)
-        _TakeSemaphore(fileio_semaphore,0);
-        rv = _closedir(d->cam_DIR);
-        _GiveSemaphore(fileio_semaphore);
-#else
-        rv = _closedir(d->cam_DIR);
+        int have_semaphore = takeFileIOSemaphore();
+        if (!have_semaphore)
+#if defined(CAM_IS_VID_REC_WORKS)
+            if (!conf.allow_unsafe_io)
 #endif
+                return -1;
+
+        rv = _closedir(d->cam_DIR);
+
+        if (have_semaphore)
+            _GiveSemaphore(fileio_semaphore);
+
         // Mark closed (just in case)
         d->cam_DIR = 0;
         // Free allocated memory
@@ -671,6 +738,12 @@ FILE *fopen(const char *filename, const char *mode) {
         return NULL;
     }
 #endif
+
+    // Check fileio semaphore, if not available we are probably recording video
+    if (!takeFileIOSemaphore())
+        return NULL;
+    _GiveSemaphore(fileio_semaphore);
+
     return (FILE *)_Fopen_Fut(filename,mode);
 }
 
@@ -1774,5 +1847,3 @@ int stop_usb_HPtimer()
 #endif
     return 0;
 }
-
-

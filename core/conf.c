@@ -486,6 +486,8 @@ static ConfInfo conf_info[] = {
     CONF_INFO(230, conf.memdmp_start,                           CONF_DEF_VALUE, i:0),
     CONF_INFO(231, conf.memdmp_size,                            CONF_DEF_VALUE, i:0),
 
+    CONF_INFO(240, conf.allow_unsafe_io,                        CONF_DEF_VALUE, i:0),
+
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 
     {0,0,0,0,{0}}

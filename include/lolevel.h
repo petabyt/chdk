@@ -158,7 +158,7 @@ extern int _taskDeleteHookAdd (void *deleteHook);
 extern long _iosDevAdd(void*,void*,int);
 extern long _iosDevDelete(void*);
 extern long _iosDrvInstall(void*,void*,void*,void*,void*,void*,void*);
-extern void _TakeSemaphore(int sem, int timeout);
+extern int _TakeSemaphore(int sem, int timeout);
 extern void _GiveSemaphore(int sem);
 
 /* misc */
