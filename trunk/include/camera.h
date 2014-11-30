@@ -254,6 +254,8 @@
     
     #define CAM_GUI_FSELECT_SIZE  15, 7, 14     // filename, filesize, filedate camera file select window column widths
 
+    #undef  CAM_IS_VID_REC_WORKS                // Define if the 'is_video_recording()' function works
+
     // Keyboard repeat and initial delays (override in platform_camera.h if needed)
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500
@@ -264,6 +266,19 @@
 
 // Include the settings file for the camera model currently being compiled.
 #include "platform_camera.h"
+
+#if !defined(CAM_IS_VID_REC_WORKS)
+#if !defined(CAM_FILEIO_SEM_TIMEOUT)
+    #define CAM_FILEIO_SEM_TIMEOUT          3000    // TakeSemaphore timeout
+#endif
+#else
+#if !defined(CAM_FILEIO_SEM_TIMEOUT)
+    #define CAM_FILEIO_SEM_TIMEOUT          0       // TakeSemaphore timeout - is_video_recording() == false
+#endif
+#if !defined(CAM_FILEIO_SEM_TIMEOUT_VID)
+    #define CAM_FILEIO_SEM_TIMEOUT_VID      200     // TakeSemaphore timeout - is_video_recording() == true
+#endif
+#endif
 
 // default to startup crash fix on for DryOS
 // TODO remove from individual camera.h files when verified OK, 
