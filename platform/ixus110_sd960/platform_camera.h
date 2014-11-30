@@ -54,8 +54,6 @@
     #undef CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     #define CAM_HAS_JOGDIAL                 1
     #define CAM_FEATURE_FEATHER             1
 

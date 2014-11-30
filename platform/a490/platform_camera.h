@@ -72,9 +72,6 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1    // enable workaround for camera crash at startup when opening the conf / font files
-                                                  // see http://chdk.setepontos.com/index.php?topic=6179.0
-
     #define CAM_DATE_FOLDER_NAMING           0x100 //Value found in the last function, which is called in GetImageFolder. (first compare)
 
     #define CAM_HAS_FILEWRITETASK_HOOK       1

@@ -60,7 +60,6 @@
     #define CAM_ACTIVE_AREA_Y2              2332
     // camera name
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
     

@@ -102,8 +102,6 @@
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_DATE_FOLDER_NAMING          0x400
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     #define REMOTE_SYNC_STATUS_LED          0xC0220130   // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.

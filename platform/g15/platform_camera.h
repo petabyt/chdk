@@ -129,9 +129,6 @@
 
     #define CAM_DATE_FOLDER_NAMING              0x400
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1       // enable fix for camera crash at startup when opening the conf / font files
-                                                        // see http://chdk.setepontos.com/index.php?topic=6179.0
-
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
 

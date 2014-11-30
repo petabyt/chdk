@@ -79,8 +79,6 @@
 
     #define CAM_DATE_FOLDER_NAMING          0x400
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1       // ??
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1       // ??
 
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME     1

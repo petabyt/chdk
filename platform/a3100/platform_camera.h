@@ -73,8 +73,6 @@
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
-   #define CAM_STARTUP_CRASH_FILE_OPEN_FIX  1     // enable workaround for camera crash at startup when opening the conf / font files
-
     #define REMOTE_SYNC_STATUS_LED          0xC0220010        // specifies the power led as the LED that turns on while camera waits for USB remote to sync
 
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()

@@ -139,10 +139,6 @@
     
     #define CAM_KEY_PRESS_DELAY             30  // delay after a press - TODO can we combine this with above ?
     #define CAM_KEY_RELEASE_DELAY           30  // delay after a release - TODO do we really need to wait after release ?
-
-    #undef  CAM_STARTUP_CRASH_FILE_OPEN_FIX     // enable fix for camera intermittently crash at startup when opening the conf / font files
-                                                // Some cameras throw "ASSERT!! FsIoNotify.c Line xxx    Task name: SpyTask" in ROMLOG
-                                                // NOTE enabled for all DRYOS below
     
     // RAW & DNG related values
     #define DEFAULT_RAW_EXT                 1   // extension to use for raw (see raw_exts in conf.c)
@@ -278,13 +274,6 @@
 #if !defined(CAM_FILEIO_SEM_TIMEOUT_VID)
     #define CAM_FILEIO_SEM_TIMEOUT_VID      200     // TakeSemaphore timeout - is_video_recording() == true
 #endif
-#endif
-
-// default to startup crash fix on for DryOS
-// TODO remove from individual camera.h files when verified OK, 
-// defined check is just to avoid warning, can't turn it off on platform_camera.h!
-#if defined(CAM_DRYOS) && !defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
 #endif
 
 //==========================================================

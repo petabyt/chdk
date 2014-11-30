@@ -50,8 +50,6 @@
     #undef  CAM_MENU_BORDERWIDTH
     #define CAM_MENU_BORDERWIDTH            10
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX 1
-
     // pattern
     #define cam_CFAPattern                  0x01000201 // Green  Blue  Red  Green
     // color
