@@ -58,6 +58,7 @@
        -498, 10000,    1957, 10000,    4116, 10000
     #define cam_CalibrationIlluminant1      21      // D65
 
+    #define CAM_HAS_VIDEO_BUTTON            1
     // no separate erase button
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_DISP_BUTTON
