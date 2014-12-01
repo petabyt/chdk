@@ -540,6 +540,10 @@ static int factor(void)
     accept(TOKENIZER_GET_VIDEO_BUTTON);
     r = (camera_info.cam_has_video_button) ? 1 : 0;
     break;
+  case TOKENIZER_GET_VIDEO_RECORDING:
+    accept(TOKENIZER_GET_VIDEO_RECORDING);
+    r = is_video_recording();
+    break;
   case TOKENIZER_GET_RAW_COUNT:
     accept(TOKENIZER_GET_RAW_COUNT);
     r = GetRawCount();

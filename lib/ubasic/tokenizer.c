@@ -146,6 +146,7 @@ static const struct keyword_token keywords[] = {
   {"get_user_av96",           TOKENIZER_GET_USER_AV96},
   {"get_user_tv_id",          TOKENIZER_GET_USER_TV_ID},
   {"get_user_tv96",           TOKENIZER_GET_USER_TV96},
+  {"get_video_recording",     TOKENIZER_GET_VIDEO_RECORDING},
   {"get_video_button",        TOKENIZER_GET_VIDEO_BUTTON},
   {"get_vbatt",               TOKENIZER_GET_VBATT},  
   {"get_zoom_steps",          TOKENIZER_GET_ZOOM_STEPS},
