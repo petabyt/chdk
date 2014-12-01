@@ -1372,6 +1372,12 @@ static int luaCB_get_video_button( lua_State* L )
   return 1;
 }
 
+static int luaCB_get_video_recording( lua_State* L )
+{
+  lua_pushboolean( L, is_video_recording() );
+  return 1;
+}
+
 static int luaCB_get_drive_mode( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_drive_mode() );
@@ -2745,6 +2751,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_movie_status)
     FUNC(set_movie_status)
     FUNC(get_video_button)
+    FUNC(get_video_recording)
  
     FUNC(get_histo_range)
     FUNC(shot_histo_enable)

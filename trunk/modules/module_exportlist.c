@@ -270,6 +270,7 @@
             shooting_get_tv96_from_shutter_speed
             shooting_get_shutter_speed_from_tv96
             shooting_can_focus
+            is_video_recording
 
             rbf_char_width
             rbf_font_height
