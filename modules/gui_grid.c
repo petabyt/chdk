@@ -221,10 +221,10 @@ libgrids_sym _libgrids =
     grid_lines_load
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     GUI_GRID_VERSION,			// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version

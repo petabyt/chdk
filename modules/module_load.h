@@ -13,7 +13,7 @@
 // The 'default_lib' value points to the 'unloaded' interface functions
 // These can then auto-load the module when called and redirect to the loaded
 // interface functions.
-typedef struct _module_handler
+typedef struct
 {
     base_interface_t**  lib;
     base_interface_t*   default_lib;
@@ -24,7 +24,7 @@ typedef struct _module_handler
 
 typedef struct
 {
-    struct flat_hdr*    hdr;
+    flat_hdr*           hdr;
     char                modulename[12];
     module_handler_t*   hMod;   // handler info
 } module_entry;
@@ -32,7 +32,7 @@ typedef struct
 // Common module functions
 //-------------------------
 
-struct flat_hdr* module_preload(const char *name, _version_t ver);
+flat_hdr* module_preload(const char *name, _version_t ver);
 int module_load(module_handler_t* hMod);
 void module_unload(const char* name);
 

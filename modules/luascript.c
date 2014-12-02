@@ -2957,10 +2957,10 @@ libscriptapi_sym _liblua =
     script_shoot_hook_run,
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     SCRIPT_API_VERSION,			// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version

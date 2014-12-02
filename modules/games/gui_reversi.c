@@ -419,10 +419,10 @@ void gui_reversi_draw() {
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     SIMPLE_MODULE_VERSION,		// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
