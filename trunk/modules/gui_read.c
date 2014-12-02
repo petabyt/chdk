@@ -314,10 +314,10 @@ libtxtread_sym _libtxtread =
     gui_read_init
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     GUI_READ_VERSION,			// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version

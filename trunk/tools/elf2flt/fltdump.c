@@ -11,7 +11,7 @@
 #define USE_INT32_FOR_PTRS      // To avoid pointer size issues in structs in flt.h
 #include "flt.h"
 
-struct flat_hdr* flat;
+flat_hdr* flat;
 unsigned char* flat_buf;
 char* filename_elf="";
 int FLAG_VERBOSE=0;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     }
 
 
-	flat = (struct flat_hdr*) b_get_buf();
+	flat = (flat_hdr*) b_get_buf();
 	flat_buf = (unsigned char*)b_get_buf();
 
     char magic[5];          // "CFLA"
@@ -128,13 +128,13 @@ int main(int argc, char **argv)
 
 	if ( flat->rev == FLAT_VERSION )
 	{
-		struct ModuleInfo* _module_info = (struct ModuleInfo*)(flat_buf + flat->_module_info_offset);
+		ModuleInfo* _module_info = (ModuleInfo*)(flat_buf + flat->_module_info_offset);
 		if ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ) 
 		{
 		  printf("Malformed module info - bad magicnum!\n");
 		  return 1;
 		}
-		if ( _module_info->sizeof_struct != sizeof(struct ModuleInfo) ) 
+		if ( _module_info->sizeof_struct != sizeof(ModuleInfo) ) 
 		{
 		  printf("Malformed module info - bad sizeof!\n");
 		  return 1;
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 	if ( !FLAG_DUMP_FLAT )
 	  return 0;
 
-    dump_section( "FLT_header", flat_buf, sizeof(struct flat_hdr) );
+    dump_section( "FLT_header", flat_buf, sizeof(flat_hdr) );
     dump_section( "FLT_text", flat_buf+flat->entry, flat->data_start-flat->entry );
     dump_section( "FLT_data", flat_buf+flat->data_start, flat->bss_start-flat->data_start);
     dump_section( "FLT_bss",  flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );

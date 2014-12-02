@@ -597,10 +597,10 @@ librawop_sym _librawop =
     raw_subtract
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     RAW_MERGE_VERSION,			// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version

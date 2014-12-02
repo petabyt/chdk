@@ -50,7 +50,7 @@ typedef struct {
 typedef struct {
     int index;
     module_entry m;
-    struct flat_hdr h;
+    flat_hdr h;
 } mod_info;
 
 // this does not describe the structure, just a convenient way to access uncached + use less memory
@@ -140,7 +140,7 @@ void dbg_dump_write(const char *dumpname,unsigned flags, int user_data_len, char
             }
             pb->mi.index = i;
             memcpy(&pb->mi.m,m,sizeof(module_entry));
-            memcpy(&pb->mi.h,m->hdr,sizeof(struct flat_hdr));
+            memcpy(&pb->mi.h,m->hdr,sizeof(flat_hdr));
             write(fd,&pb->mi,sizeof(mod_info));
         }
 

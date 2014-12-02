@@ -676,7 +676,7 @@ static void gui_uedit_module_selected(const char *fn)
         if (chk_ext(ext,"flt"))
         {
             _version_t v = ANY_VERSION;
-            struct flat_hdr* mod = module_preload(fn, v);
+            flat_hdr* mod = module_preload(fn, v);
             if (mod > 0)
             {
                 if (mod->_module_info->lib->run != 0)   // Simple Module?
@@ -832,10 +832,10 @@ libsimple_sym _librun =
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     SIMPLE_MODULE_VERSION,		// Module version
 
     ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version

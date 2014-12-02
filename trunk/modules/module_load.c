@@ -104,7 +104,7 @@ sym_hash symbol_hash_table[] =
 
 //********************************************************/
 
-typedef int (*_module_action_t)( struct flat_hdr* flat, void* relocbuf, uint32_t count );
+typedef int (*_module_action_t)( flat_hdr* flat, void* relocbuf, uint32_t count );
 
 //********************************************************/
 
@@ -221,7 +221,7 @@ static int module_find(const char * name )
 //    symidx = import[i].importidx
 //	  *(flat_base+import[i].offs) += module_find_symbol_address(symidx)
 
-static int module_do_relocations( struct flat_hdr* flat, void* relocbuf, uint32_t reloc_count )
+static int module_do_relocations( flat_hdr* flat, void* relocbuf, uint32_t reloc_count )
 {
     int i;
     unsigned char* buf = (unsigned char*)flat;
@@ -255,7 +255,7 @@ static const void* module_find_symbol_address(uint32_t importid)
     return 0;
 }
 
-static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t import_count )
+static int module_do_imports( flat_hdr* flat, void* relocbuf, uint32_t import_count )
 {
     int i;
     unsigned char* buf = (unsigned char*)flat;
@@ -280,7 +280,7 @@ static int module_do_imports( struct flat_hdr* flat, void* relocbuf, uint32_t im
 // variables to quick error
 static const char* module_filename;
 static int module_fd;
-static struct flat_hdr* flat_buf;
+static flat_hdr* flat_buf;
 
 //-----------------------------------------------
 static void moduleload_error(char* text, int value)
@@ -448,7 +448,7 @@ static int bind_module( module_handler_t* hMod, void* module_lib )
     return 0;
 }
 
-struct flat_hdr* module_preload(const char *name, _version_t ver)
+flat_hdr* module_preload(const char *name, _version_t ver)
 {
     module_fd = -1;
     module_filename = name;
@@ -456,7 +456,7 @@ struct flat_hdr* module_preload(const char *name, _version_t ver)
     buf_load = 0;
 
     char path[60];
-    struct flat_hdr flat;
+    flat_hdr flat;
     int size_flat;
 
     flat_module_path_make(path,module_filename);
@@ -479,7 +479,7 @@ struct flat_hdr* module_preload(const char *name, _version_t ver)
 
     size_flat = flat.reloc_start;
 
-    flat_buf = (struct flat_hdr*)malloc( size_flat );
+    flat_buf = (flat_hdr*)malloc( size_flat );
     if ( !flat_buf ) 
     {
         moduleload_error("malloc",0);
@@ -501,9 +501,9 @@ struct flat_hdr* module_preload(const char *name, _version_t ver)
 
     // Module info checks
 
-    struct ModuleInfo *mod_info = flat_buf->_module_info = (struct ModuleInfo*)((unsigned int)flat_buf+flat_buf->_module_info_offset);
+    ModuleInfo *mod_info = flat_buf->_module_info = (ModuleInfo*)((unsigned int)flat_buf+flat_buf->_module_info_offset);
 
-    if ( mod_info->magicnum != MODULEINFO_V1_MAGICNUM || mod_info->sizeof_struct != sizeof(struct ModuleInfo) )
+    if ( mod_info->magicnum != MODULEINFO_V1_MAGICNUM || mod_info->sizeof_struct != sizeof(ModuleInfo) )
     {
         moduleload_error("Malformed module info", 0 );
         return 0;

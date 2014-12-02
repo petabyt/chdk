@@ -39,7 +39,7 @@ unsigned int /*short*/ strtaboff = 0, strtabsize;
 
 
 char* flat_buf;         // point to buffer of flat file
-struct flat_hdr* flat;  // point to flat_buf, but casted to header
+flat_hdr* flat;  // point to flat_buf, but casted to header
 
 uint32_t flat_reloc_count;
 reloc_record_t* flat_reloc;   // point to begining of relocation table in memory
@@ -558,7 +558,7 @@ elfloader_load(char* filename, char* fltfile)
 
   int div0hack_size = sizeof(div0_arm);
 
-  int flatmainsize = sizeof(struct flat_hdr)+text.size+div0hack_size+data.size+rodata.size+bss.size;  
+  int flatmainsize = sizeof(flat_hdr)+text.size+div0hack_size+data.size+rodata.size+bss.size;
   int flatrelocsize = text.relasize+rodata.relasize+data.relasize;
 
 
@@ -577,11 +577,11 @@ elfloader_load(char* filename, char* fltfile)
 
   // Fill flat with sections aligned to int32
 
-  flat = (struct flat_hdr*) flat_buf;
+  flat = (flat_hdr*) flat_buf;
 
   if ( FLAG_VERBOSE )
       printf(">>elf2flt: load segments\n");
-  int offset=sizeof(struct flat_hdr);
+  int offset=sizeof(flat_hdr);
   text.flat_offset = offset;
   memcpy( flat_buf+offset, text.address, text.size );
   DEBUGPRINTF("load .txt to %x (%x->%x)\n",offset,text.size,text.size+align4(text.size));
@@ -651,13 +651,13 @@ elfloader_load(char* filename, char* fltfile)
     return ELFFLT_NO_MODULEINFO;
   }
 
-  struct ModuleInfo* _module_info = (struct ModuleInfo*) (flat_buf + flat->_module_info_offset);
+  ModuleInfo* _module_info = (ModuleInfo*) (flat_buf + flat->_module_info_offset);
   if ( _module_info->magicnum != MODULEINFO_V1_MAGICNUM ) 
   {
     PRINTERR(stderr, "Wrong _module_info->magicnum value. Please check correct filling of this structure\n");
     return ELFFLT_NO_MODULEINFO;
   }
-  if ( _module_info->sizeof_struct != sizeof(struct ModuleInfo) ) 
+  if ( _module_info->sizeof_struct != sizeof(ModuleInfo) ) 
   {
     PRINTERR(stderr, "Wrong _module_info->sizeof_struct value. Please check correct filling of this structure\n");
     return ELFFLT_NO_MODULEINFO;
@@ -730,7 +730,7 @@ elfloader_load(char* filename, char* fltfile)
   }
 
   if ( FLAG_DUMP_FLAT ) {
-    dump_section( "FLT_header", (unsigned char*)flat_buf, sizeof(struct flat_hdr) );
+    dump_section( "FLT_header", (unsigned char*)flat_buf, sizeof(flat_hdr) );
     dump_section( "FLT_text", (unsigned char*)flat_buf+flat->entry, flat->data_start-flat->entry );
     dump_section( "FLT_data", (unsigned char*)flat_buf+flat->data_start, flat->bss_start-flat->data_start);
     dump_section( "FLT_bss",  (unsigned char*)flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
