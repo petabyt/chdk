@@ -31,8 +31,8 @@
     #define CAM_RAW_ROWS                    3504    // Found @0xFFB21398  a3300is
 
     #define CAM_ADJUSTABLE_ALT_BUTTON 1
-    #define CAM_ALT_BUTTON_NAMES            { "Print", "Face", "Disp"}
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FACE, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Face", "Disp"}
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_FACE, KEY_DISPLAY }
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // Found @0xff83a6a8   a3300is
@@ -97,12 +97,17 @@
 
     #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware	
 
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+    #define CAM_FILEWRITETASK_MULTIPASS     1
+
     // Define shortcut overrides where defaults are not suitable
     // a3300 has no erase button, so make DISP button the toggle_raw and Alt +/- shortcuts.
     //Alt mode
     // NOTE both of these conflict with adjustable alt
     #define SHORTCUT_TOGGLE_RAW             KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE              KEY_FACE
+
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1

@@ -83,7 +83,7 @@ int get_usb_bit()
 }
 
 static KeyMap keymap[] = {
-    { 0, KEY_PRINT           ,BTN_Play }, 
+    { 0, KEY_PLAYBACK           ,BTN_Play }, 
     { 2, KEY_SHOOT_FULL      ,BTN_ShootFull | BTN_ShootHalf }, // Found @0xffb5dc9c, levent 0x01
     { 2, KEY_SHOOT_HALF      ,BTN_ShootHalf }, // Found @0xffb5dc94, levent 0x00
     { 2, KEY_SHOOT_FULL_ONLY ,BTN_ShootFull }, // Found @0xffb5dc9c, levent 0x01

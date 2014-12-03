@@ -41,13 +41,3 @@ void *vid_get_viewport_fb()
 	return (void*)0x40546b80;       // Found @0xffb1e2ac   a3300is          
 }
 
-void vid_bitmap_refresh() {
-	
-	extern int full_screen_refresh;
-	extern void _ScreenUnlock();
-	extern void _ScreenLock();
-
-	full_screen_refresh |= 3;
-	_ScreenLock();
-	_ScreenUnlock();
-}
