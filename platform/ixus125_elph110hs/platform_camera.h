@@ -66,6 +66,8 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define DNG_VERT_RLE_BADPIXELS              1
 
+    #define CAM_HAS_MOVIE_DIGEST_MODE           1
+
     #define CAM_HAS_VIDEO_BUTTON                1
 
     #define cam_CalibrationIlluminant1          1
