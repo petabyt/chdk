@@ -107,3 +107,7 @@
     // NOTE both of these conflict with adjustable alt
     #define SHORTCUT_TOGGLE_RAW          KEY_DISPLAY
     #define SHORTCUT_MF_TOGGLE           KEY_FACE
+
+    #define CAM_USE_ALT_SET_ZOOM_POINT          1   // Define to use the alternate code in lens_set_zoom_point()
+    #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1   // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
+
