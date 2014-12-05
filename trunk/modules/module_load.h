@@ -4,6 +4,7 @@
 // Module definitions for inclusion into core CHDK files.
 
 #include "module_def.h"
+
 #define MAX_NUM_LOADED_MODULES  10
 
 // Base typedefs
@@ -24,15 +25,15 @@ typedef struct
 
 typedef struct
 {
-    flat_hdr*           hdr;
-    char                modulename[12];
-    module_handler_t*   hMod;   // handler info
+    flat_hdr*           hdr;            // memory allocated for module, 0 if not used
+    unsigned int        hName;          // hash of the module path name, for finding loaded modules
+    module_handler_t*   hMod;           // handler info
 } module_entry;
 
 // Common module functions
 //-------------------------
 
-flat_hdr* module_preload(const char *name, _version_t ver);
+flat_hdr* module_preload(const char *path, const char *name, _version_t ver);
 int module_load(module_handler_t* hMod);
 void module_unload(const char* name);
 

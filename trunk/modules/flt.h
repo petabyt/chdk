@@ -24,9 +24,11 @@ typedef int             int32_t;
 typedef struct
 {
     int     (*loader)();        // loader function. Optional
-                                // Should only perform initialisation that can be done module is first loaded.
+                                // Should only perform initialisation that can be done when module is first loaded.
+                                // Returns 0 for success, non-zero (error code) on failure
     int     (*unloader)();      // unloader function. Optional
                                 // Does any necessary clean up just prior to module being removed
+                                // Returns 0 for success, non-zero (error code) on failure [return value not currently used]
     int     (*can_unload)();    // ask module if it is safe to unload. Optional
                                 // Called each keyboard task tick to see if it is safe to unload the module
     int     (*exit_alt)();      // alert module that CHDK is leaving <ALT> mode. Optional
@@ -34,7 +36,7 @@ typedef struct
                                 // should tell the module to return 'true' on the next call to can_unload
                                 // This function should not do any cleanup or shutdown of the module
     int     (*run)();           // run module (for simple modules like games). Optional
-                                // If not supplied the an extended interface is required to call module code
+                                // If not supplied then an extended interface is required to call module code
 } base_interface_t;
 
 // Module information structure
@@ -64,46 +66,43 @@ typedef struct
     _version_t          cam_info_ver;           // CAM INFO version (camera_info in camera_info.h)
 } ModuleInfo;
 
-//================= CFLT format header =====================
+//================= FLAT Header structure ==============
 
 /*
-    Structure of CFLAT v6 file:
-    - flat_hdr
-    - .text     [start from flt_hdr.entry]
-    - .rodata   [start from flt_hdr.data_start]
-    - .data
-    - .bss      [start from flt_hdr.bss_start]
-    - reloc_list [start from flt_hdr.reloc_start]
-        * this is just array of offsets in flat
-    - import_list  [start from flt_hdr.import_start]
-        * this is array of import_record_t
+    Structure of CFLAT v10 file:
+        - flt_hdr           [see flat_hdr structure]
+        - .text             [start from flt_hdr.entry]
+        - .rodata + .data   [start from flt_hdr.data_start]
+        - reloc_list        [start from flt_hdr.reloc_start]
+            * this is just array of offsets in flat
+        - import_list       [start from flt_hdr.import_start]
+            * this is array of import_record_t
+
+    Notes:
+        .bss no longer stored in file, segment generated at runtime,
+             - starts immediately after .data segment (@flt_hdr.reloc_start)
+             - size specified in flt_hdr.bss_size
 */
 
-#define FLAT_VERSION        0x00000009L
-#define FLAT_MAGIC_NUMBER   "CFLAT"
-
-//================= FLAT Header structure ==============
-/*
- * To make everything easier to port and manage cross platform
- * development,  all fields are in network byte order.
- */
+#define FLAT_VERSION        10
+#define FLAT_MAGIC_NUMBER   0x414c4643      //"CFLA"
 
 // Module file header
 // This is located at the start of the module file and is used to load the module
 // into memory and perform any necessary relocations.
 // Once loaded the _module_info pointer handles everything else.
-typedef struct {
-    char magic[4];          // "CFLA"
-    uint32_t rev;           // version (as above)
+typedef struct
+{
+    uint32_t magic;         // "CFLA"  (must match FLAT_MAGIC_NUMBER)
+    uint32_t rev;           // version (must match FLAT_VERSION)
     uint32_t entry;         // Offset of start .text segment
-    uint32_t data_start;    // Offset of data segment from beginning of file
-    uint32_t bss_start;     // Offset of bss segment from beginning of file
-                            // (It is assumed that data_end through bss_end forms the bss segment.)
+    uint32_t data_start;    // Offset of .data segment from beginning of file
+    uint32_t bss_size;      // Size of .bss segment (for run time allocation) [bss start == reloc_start]
 
     // Relocation info
-    uint32_t reloc_start;   // Offset of relocation records from beginning of file
+    uint32_t reloc_start;   // Offset of relocation records from beginning of file (also start of bss segment)
     uint32_t import_start;  // Offset of import section
-    uint32_t file_size;     // size of file
+    uint32_t import_size;   // size of import section
 
     // Offset / Pointer to ModuleInfo structure
     union
@@ -118,4 +117,3 @@ typedef struct {
 } flat_hdr;
 
 #endif /* __FLT_H__ */
-

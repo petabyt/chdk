@@ -45,10 +45,10 @@ void print_offs(char *prefix, int offs,char* postfix)
     
     if ( offs >=flat->entry && offs<flat->data_start )
        { sect="text"; secoffs=flat->entry;}
-    else if  ( offs >=flat->data_start && offs<flat->bss_start )
+    else if  ( offs >=flat->data_start && offs<flat->reloc_start )
        { sect="data"; secoffs=flat->data_start;}
-    else if  ( offs >=flat->bss_start && offs<flat->reloc_start )
-       { sect="bss"; secoffs=flat->bss_start;}         
+    else if  ( offs >=flat->reloc_start && offs<(flat->reloc_start+flat->bss_size) )
+       { sect="bss"; secoffs=flat->reloc_start;}
     printf("%s 0x%08x (%s+0x%08x)%s",prefix, offs,sect,offs-secoffs,postfix);
 }
 
@@ -62,7 +62,7 @@ char* get_flat_string( int32_t offs )
 		return buf;
 	}
 
-    if  ( offs >=flat->bss_start || offs<flat->data_start )
+    if  ( offs >=flat->reloc_start || offs<flat->data_start )
 	  return "";
 
 	strncpy( buf, (char*)flat_buf+offs, sizeof(buf)-1);
@@ -96,14 +96,14 @@ int main(int argc, char **argv)
 	flat_buf = (unsigned char*)b_get_buf();
 
     char magic[5];          // "CFLA"
-	memcpy(magic,flat->magic,4);
+	memcpy(magic,&flat->magic,4);
 	magic[4]=0;
-
 
 	printf("\nFLT Headers:\n");
 	printf("->magic        %s (flat rev.%d)\n", magic, flat->rev );
 
-	if ( memcmp(magic,FLAT_MAGIC_NUMBER,4) ) {
+	if (flat->magic != FLAT_MAGIC_NUMBER)
+	{
 		printf("This is not CHDK-FLAT!\n");
 		return 1;
 	}	
@@ -116,14 +116,14 @@ int main(int argc, char **argv)
 	int flat_reloc_count;
 	flat_reloc_count = (flat->import_start-flat->reloc_start)/sizeof(uint32_t);
 	int flat_import_count;
-	flat_import_count = (flat->file_size-flat->import_start)/sizeof(uint32_t);
+	flat_import_count = (flat->import_size)/sizeof(uint32_t);
 
 
 	printf("->entry(.text) 0x%x (size %d)\n", flat->entry, flat->data_start - flat->entry );
-	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->bss_start - flat->data_start );
-	printf("->bss_start    0x%x (size %d)\n", flat->bss_start, flat->reloc_start - flat->bss_start );
+	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->reloc_start - flat->data_start );
+	printf("->bss_start    0x%x (size %d)\n", flat->reloc_start, flat->bss_size );
 	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat->import_start - flat->reloc_start );
-	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->file_size - flat->import_start );
+	printf("->import_start 0x%x (size %d)\n", flat->import_start, flat->import_size );
     printf("\n");
 
 	if ( flat->rev == FLAT_VERSION )
@@ -166,8 +166,8 @@ int main(int argc, char **argv)
 
     dump_section( "FLT_header", flat_buf, sizeof(flat_hdr) );
     dump_section( "FLT_text", flat_buf+flat->entry, flat->data_start-flat->entry );
-    dump_section( "FLT_data", flat_buf+flat->data_start, flat->bss_start-flat->data_start);
-    dump_section( "FLT_bss",  flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
+    dump_section( "FLT_data", flat_buf+flat->data_start, flat->reloc_start-flat->data_start);
+    //dump_section( "FLT_bss",  flat_buf+flat->reloc_start, flat->bss_size );
 
 	int i;
     printf("\nDump relocations 0x%x (size=%d):\n",flat->reloc_start,flat_reloc_count*sizeof(uint32_t));

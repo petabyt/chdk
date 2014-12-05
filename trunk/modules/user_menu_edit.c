@@ -676,7 +676,7 @@ static void gui_uedit_module_selected(const char *fn)
         if (chk_ext(ext,"flt"))
         {
             _version_t v = ANY_VERSION;
-            flat_hdr* mod = module_preload(fn, v);
+            flat_hdr* mod = module_preload(fn, fn, v);  // Pass fn as both path and name (file browser sends us full path to module)
             if (mod > 0)
             {
                 if (mod->_module_info->lib->run != 0)   // Simple Module?
@@ -698,6 +698,7 @@ static void gui_uedit_module_selected(const char *fn)
         }
     }
 }
+
 static void uedit_set(unsigned int actn)
 {
     switch (actn)

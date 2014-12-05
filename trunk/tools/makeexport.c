@@ -74,7 +74,7 @@ unsigned int hash(unsigned char *str)
 //
 // @tsv - Utility to convert export list to different required format
 //
-// USAGE:   makeexport module_exportlist.c module_exportlist.h exportlist.inc module_hashlist.h
+// USAGE:   makeexport module_exportlist.c module_exportlist.h exportlist.inc module_hashlist.c
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv )
@@ -129,7 +129,7 @@ int main( int argc, char **argv )
     char* cur, *cursym;
 
     cur = file1;
-	fprintf(out_h,"//Section: ids of exported symbols\n");
+	//fprintf(out_h,"//Section: ids of exported symbols\n");
     
     // Main cycle
     for(;*cur; )
@@ -175,7 +175,7 @@ int main( int argc, char **argv )
 				if ( symbol[size]>='a' && symbol[size]<='z')
 					symbol[size]-=0x20;
 			}
-			fprintf(out_h,"#define MODULESYM_%-32s 0x%08x\n",symbol,hash_val);
+			//fprintf(out_h,"#define MODULESYM_%-32s 0x%08x\n",symbol,hash_val);
 
 			num_lines++;
 		}
@@ -184,16 +184,31 @@ int main( int argc, char **argv )
 		for(; *cur==10; cur++);
     }
 
+    int n;
     sort_hash();
     fprintf(out_hash,"// This is an automatically generated file. DO NOT EDIT!\n");
-    int n;
+    fprintf(out_hash, "\n#include \"module_hash.h\"\n\n");
+    fprintf(out_hash, "// Address references so that symbol table will compile and link.\n// Don't need correct signatures here, just the name for linking.\n");
+    for (n=0; n<hash_idx; n++)
+    {
+        if (hash_vals[n].symbol[0] == '&')  // variable
+        {
+            fprintf(out_hash,"extern int %s;\n",hash_vals[n].symbol+1);
+        }
+        else                                // function
+        {
+            fprintf(out_hash,"extern void %s(void);\n",hash_vals[n].symbol);
+        }
+    }
+    fprintf(out_hash, "\n// Symbol hash table for resolving exported symbol references\nsym_hash symbol_hash_table[] =\n{\n");
     for (n=0; n<hash_idx; n++)
     {
         fprintf(out_hash,"{ 0x%08x, %s },\n",hash_vals[n].hash,hash_vals[n].symbol);
     }
+    fprintf(out_hash, "};\n");
 
 	if (num_lines>=1)
-		fprintf(out_h,"\n#define EXPORTLIST_LAST_IDX %d\n\n",num_lines);
+		fprintf(out_h,"#define EXPORTLIST_COUNT %d\n\n",hash_idx);
 	else {
 		fprintf(out_h,"#error Malformed export list. Only %d valid records\n\n",num_lines);
 		exit(-2);
