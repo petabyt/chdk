@@ -267,10 +267,10 @@ void print_offs(char *prefix, int offs, char* postfix)
     
     if ( offs >=flat->entry && offs<flat->data_start )
        { sect="text"; secoffs=flat->entry;}
-    else if  ( offs >=flat->data_start && offs<flat->bss_start )
+    else if  ( offs >=flat->data_start && offs<flat->reloc_start )
        { sect="data"; secoffs=flat->data_start;}
-    else if  ( offs >=flat->bss_start && offs<flat->reloc_start )
-       { sect="bss"; secoffs=flat->bss_start;}         
+    else if  ( offs >=flat->reloc_start && offs<(flat->reloc_start+flat->bss_size) )
+       { sect="bss"; secoffs=flat->reloc_start;}
     printf("%s 0x%08x (%s+0x%08x)%s",prefix, offs,sect,offs-secoffs,postfix);
 }
 
@@ -285,7 +285,7 @@ char* get_flat_string( int32_t offs )
 		return buf;
 	}
 
-    if  ( offs >=flat->bss_start || offs<flat->data_start )
+    if  ( offs >=flat->reloc_start || offs<flat->data_start )
 	  return "";
 
 	strncpy( buf, flat_buf+offs, sizeof(buf)-1);
@@ -534,8 +534,6 @@ elfloader_load(char* filename, char* fltfile)
   text.name=".text";
   data.name=".data";
 
-
-
   b_seek_read(text.offset, text.address, text.size);
   b_seek_read(data.offset, data.address, data.size);
   b_seek_read(rodata.offset, rodata.address, rodata.size);
@@ -558,12 +556,12 @@ elfloader_load(char* filename, char* fltfile)
 
   int div0hack_size = sizeof(div0_arm);
 
-  int flatmainsize = sizeof(flat_hdr)+text.size+div0hack_size+data.size+rodata.size+bss.size;
+  int flatmainsize = sizeof(flat_hdr)+text.size+div0hack_size+data.size+rodata.size;
   int flatrelocsize = text.relasize+rodata.relasize+data.relasize;
 
 
   // Take to account aligning to int32 each section  
-  flatmainsize += align4(text.size) + align4(data.size) + align4(rodata.size) + align4(bss.size);
+  flatmainsize += align4(text.size) + align4(data.size) + align4(rodata.size);
   
   flat_buf=malloc( flatmainsize+flatrelocsize );      
   if ( !flat_buf) { PRINTERR(stderr, "fail to malloc flat buf\n"); return ELFFLT_OUTPUT_ERROR;}
@@ -587,7 +585,6 @@ elfloader_load(char* filename, char* fltfile)
   DEBUGPRINTF("load .txt to %x (%x->%x)\n",offset,text.size,text.size+align4(text.size));
   offset+=text.size+div0hack_size+align4(text.size);
 
-
   rodata.flat_offset = offset;
   DEBUGPRINTF("load .rodata to %x (%x->%x)\n",offset,rodata.size,rodata.size+align4(rodata.size));
   memcpy( flat_buf+offset, rodata.address, rodata.size );
@@ -599,15 +596,16 @@ elfloader_load(char* filename, char* fltfile)
   offset+=data.size+align4(data.size);
 
   bss.flat_offset = offset;
-  DEBUGPRINTF(".bss to %x (%x->%x)\n",offset,bss.size,bss.size+align4(bss.size));
+  DEBUGPRINTF(".bss to %x (%x)\n",offset,bss.size);
   DEBUGPRINTF("result=%x\n",  flatmainsize);
 
   // Initialize flat headers
-  memcpy(flat->magic, FLAT_MAGIC_NUMBER, sizeof(flat->magic));       // Set magic (CHDK_FLAT)
+  flat->magic = FLAT_MAGIC_NUMBER;
   flat->rev = FLAT_VERSION;
   flat->entry = text.flat_offset;
   flat->data_start = rodata.flat_offset;
-  flat->bss_start = bss.flat_offset;  
+  //flat->bss_start = bss.flat_offset;
+  flat->bss_size = bss.size;
   flat->reloc_start = flatmainsize;
   flat_reloc_count = 0;
 
@@ -698,15 +696,15 @@ elfloader_load(char* filename, char* fltfile)
       }
   }
 
-  flat->file_size = flat->import_start+new_import_cnt*sizeof(uint32_t);
+  flat->import_size = new_import_cnt*sizeof(uint32_t);
 
   if ( FLAG_DUMP_FLT_HEADERS ) {
 	printf("\nFLT Headers:\n");
 	printf("->entry        0x%x (size %d)\n", flat->entry, flat->data_start - flat->entry );
-	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->bss_start - flat->data_start );
-	printf("->bss_start    0x%x (size %d)\n", flat->bss_start,   flat->reloc_start - flat->bss_start );
+	printf("->data_start   0x%x (size %d)\n", flat->data_start,  flat->reloc_start - flat->data_start );
+	printf("->bss_start    0x%x (size %d)\n", flat->reloc_start, flat->bss_size );
 	printf("->reloc_start  0x%x (size %d)\n", flat->reloc_start, flat_reloc_count*sizeof(reloc_record_t) );
-	printf("->import_start 0x%x (size %d %d)\n", flat->import_start, flat->file_size-flat->import_start, flat_import_count*sizeof(import_record_t) );
+	printf("->import_start 0x%x (size %d %d)\n", flat->import_start, flat->import_size, flat_import_count*sizeof(import_record_t) );
     printf("\n");
 
 	printf("\nModule info:\n");
@@ -732,8 +730,8 @@ elfloader_load(char* filename, char* fltfile)
   if ( FLAG_DUMP_FLAT ) {
     dump_section( "FLT_header", (unsigned char*)flat_buf, sizeof(flat_hdr) );
     dump_section( "FLT_text", (unsigned char*)flat_buf+flat->entry, flat->data_start-flat->entry );
-    dump_section( "FLT_data", (unsigned char*)flat_buf+flat->data_start, flat->bss_start-flat->data_start);
-    dump_section( "FLT_bss",  (unsigned char*)flat_buf+flat->bss_start, flat->reloc_start-flat->bss_start );
+    dump_section( "FLT_data", (unsigned char*)flat_buf+flat->data_start, flat->reloc_start-flat->data_start);
+    //dump_section( "FLT_bss",  (unsigned char*)flat_buf+flat->reloc_start, flat->bss_size );
 
     printf("\nDump relocations 0x%x (size=%d):\n",flat->reloc_start,flat_reloc_count*sizeof(reloc_record_t));
     for( i = 0; i< flat_reloc_count; i++)
@@ -757,7 +755,7 @@ elfloader_load(char* filename, char* fltfile)
     }
   }
 
-  int filesize = flat->file_size;
+  int filesize = flat->import_start + flat->import_size;
 
   printf("\n\nOutput file %s (size=%d bytes)\n",fltfile,filesize);
 

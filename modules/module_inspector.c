@@ -149,8 +149,12 @@ void gui_module_draw()
             module_entry* mod = module_get_adr(idx);;
 			if (mod == 0) continue;
 
-			char txt[50];
-		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, mod->modulename, (unsigned)mod->hdr, mod->hdr->reloc_start);
+			char txt[50], name[13];
+			// Module name can include full path, extract just filename and display max of 12 chars
+			char *s = strrchr(mod->hMod->name, '/');
+			if (s) s = s + 1; else s = mod->hMod->name;
+			strncpy(name, s, 12); name[12] = 0;
+		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, name, (unsigned)mod->hdr, mod->hdr->reloc_start+mod->hdr->bss_size);
         	draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 3+showidx, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 			showidx++;
 		}
