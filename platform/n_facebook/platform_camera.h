@@ -109,9 +109,10 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1               // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
 
     #undef  CAM_VIDEO_CONTROL
+    #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME
-    //#define CAM_EV_IN_VIDEO               1
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME    
 
 //--------------------------------------------------
