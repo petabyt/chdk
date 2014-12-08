@@ -177,6 +177,7 @@ static const struct keyword_token keywords[] = {
   {"set_raw_nr",              TOKENIZER_SET_RAW_NR},
   {"set_raw",                 TOKENIZER_SET_RAW},
   {"set_resolution",          TOKENIZER_SET_RESOLUTION},
+  {"set_remote_timing",       TOKENIZER_SET_REMOTE_TIMING},
   {"set_sv96",		          TOKENIZER_SET_SV96},
   {"set_tv96_direct",         TOKENIZER_SET_TV96_DIRECT},
   {"set_tv_rel",              TOKENIZER_SET_USER_TV_BY_ID_REL}, //FOR COMPATIBILITY
@@ -217,7 +218,6 @@ static const struct keyword_token keywords[] = {
   {"get_autostart",           TOKENIZER_GET_SCRIPT_AUTOSTART},
   {"set_autostart",           TOKENIZER_SET_SCRIPT_AUTOSTART},
   {"get_usb_power",           TOKENIZER_GET_USB_POWER},
-  {"enable_remote_hp_timer",    TOKENIZER_ENABLE_REMOTE_HP_TIMER},
   {"usb_force_active",        TOKENIZER_FORCE_USB_PRESENT},  
   {"exit_alt",                TOKENIZER_EXIT_ALT},
   {"enter_alt",               TOKENIZER_ENTER_ALT}, 

@@ -1272,7 +1272,7 @@ static int luaCB_get_usb_power( lua_State* L )
 }
 
 // enable USB High Perfomance timer
-static int luaCB_enable_remote_hp_timer( lua_State* L )
+static int luaCB_set_remote_timing( lua_State* L )
 {
   int val= luaL_checknumber(L,1);
   if (val > 0 )
@@ -1280,6 +1280,11 @@ static int luaCB_enable_remote_hp_timer( lua_State* L )
   else
      lua_pushboolean(L,stop_usb_HPtimer());
   return 1;
+}
+// TEMP backward compat
+static int luaCB_enable_remote_hp_timer( lua_State* L )
+{
+    return luaCB_set_remote_timing(L);
 }
 
 // enable shared USB port between ptp and precision sync
@@ -2723,6 +2728,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_autostart)
     FUNC(set_autostart)
     FUNC(get_usb_power)
+    FUNC(set_remote_timing)
     FUNC(enable_remote_hp_timer)
     FUNC(usb_force_active)    
     FUNC(enter_alt)
