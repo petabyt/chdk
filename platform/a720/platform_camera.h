@@ -39,6 +39,7 @@
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_EV_IN_VIDEO                 1
     #undef  CAM_VIDEO_CONTROL
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 
     #define CAM_DNG_LENS_INFO               { 58,10, 348,10, 28,10, 48,10 } // See comments in camera.h
     // pattern

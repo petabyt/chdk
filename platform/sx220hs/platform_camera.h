@@ -54,6 +54,7 @@
     #define CAM_VIDEO_QUALITY_ONLY              1
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
 
     #undef  CAM_USE_ZOOM_FOR_MF
 

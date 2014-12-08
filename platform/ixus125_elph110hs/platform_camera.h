@@ -70,6 +70,8 @@
 
     #define CAM_HAS_VIDEO_BUTTON                1
 
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
+
     #define cam_CalibrationIlluminant1          1
 
     #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData
