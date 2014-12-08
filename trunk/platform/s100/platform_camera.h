@@ -122,5 +122,7 @@
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
+    
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 
 //--------------------------------------------------
