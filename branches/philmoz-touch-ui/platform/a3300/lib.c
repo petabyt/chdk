@@ -2,19 +2,10 @@
 #include "platform_palette.h"
 #include "lolevel.h"
 
-void shutdown()
+void shutdown() // method taken from the ixus140_elph130 port
 {
-	volatile long *p = (void*)0xC02200F4;
-
-	asm(
-		"MRS     R1, CPSR\n"
-		"AND     R0, R1, #0x80\n"
-		"ORR     R1, R1, #0x80\n"
-		"MSR     CPSR_cf, R1\n"
-		:::"r1","r0");
-
-	*p = 0x44;  // power off.
-
+    extern void _TurnOffE1(void);
+    _TurnOffE1();
 	while(1);
 }
 
@@ -40,12 +31,7 @@ long vid_get_viewport_height()
 	return 240;
 }
 
-
-//Have to disable here and add to /sub for 100a 
-//cause 100d crashes when in shoot mode trying to access Alt menu.
-//Re-Added in /SUB/100a
-//---------------------------------------------------------------
-/*void vid_bitmap_refresh() {
+void vid_bitmap_refresh() {
 	
 	extern int full_screen_refresh;
 	extern void _ScreenUnlock();
@@ -54,7 +40,7 @@ long vid_get_viewport_height()
 	full_screen_refresh |= 3;
 	_ScreenLock();
 	_ScreenUnlock();
-}*/
+}
 
 void *vid_get_bitmap_active_palette() {
 	extern int active_palette_buffer;
@@ -71,9 +57,9 @@ void load_chdk_palette() {
 	if ((active_palette_buffer == 0) || (active_palette_buffer == 4))
 	{
 		int *pal = (int*)vid_get_bitmap_active_palette();
-		if (pal[CHDK_COLOR_BASE+1] != 0x326EA40)	  // see if CHDK palette already loaded -- if not, load it
+		if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)	  // see if CHDK palette already loaded -- if not, load it
 		{
-		//	pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red -- We'll use Canon's red because otherwise during boot we get white behind splash
+            pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
 			pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
 			pal[CHDK_COLOR_BASE+2]  = 0x34CD57F;  // Light Red
 			pal[CHDK_COLOR_BASE+3]  = 0x373BFAE;  // Green
@@ -86,6 +72,7 @@ void load_chdk_palette() {
 			pal[CHDK_COLOR_BASE+10] = 0x3A9A917;  // Yellow
 			pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
 			pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
+            pal[CHDK_COLOR_BASE+13] = 0x0090000;  // Transparent dark grey
 			
 			extern char palette_control;
 			palette_control = 1;
@@ -95,3 +82,5 @@ void load_chdk_palette() {
 }
 #endif
 
+int vid_get_palette_type()                      { return 3; }
+int vid_get_palette_size()                      { return 256 * 4; }

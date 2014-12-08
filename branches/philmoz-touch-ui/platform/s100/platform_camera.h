@@ -49,6 +49,7 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1 
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     // camera name
@@ -121,5 +122,7 @@
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
+    
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 
 //--------------------------------------------------

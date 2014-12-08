@@ -97,6 +97,7 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_MONOCHROME,      33334 },
     { MODE_LIVE,                33336 },
     { MODE_DIGITAL_IS,          33338 },
+    { MODE_VIDEO_STD,           33792 },    
 } ;	
 
 #include "../generic/shooting.c"

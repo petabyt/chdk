@@ -181,13 +181,13 @@ void gui_calendar_draw() {
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     SIMPLE_MODULE_VERSION,		// Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     -LANG_MENU_MISC_CALENDAR,	// Module name

@@ -40,3 +40,22 @@ __gnu_thumb1_case_uhi:
 	pop	{r0, r1}
 	bx	lr
 	.size __gnu_thumb1_case_uhi, . - __gnu_thumb1_case_uhi
+
+    .text
+    .align 0
+    .force_thumb
+    .syntax unified
+    .global __gnu_thumb1_case_sqi
+    .thumb_func
+    .type __gnu_thumb1_case_sqi,function
+__gnu_thumb1_case_sqi:
+     push    {r1}
+     mov r1, lr
+     lsrs    r1, r1, #1
+     lsls    r1, r1, #1
+     ldrsb   r1, [r1, r0]
+     lsls    r1, r1, #1
+     add lr, r1
+     pop {r1}
+     bx  lr
+    .size __gnu_thumb1_case_sqi, . - __gnu_thumb1_case_sqi

@@ -105,9 +105,13 @@ struct elf32_sym {
 
 
 /* Supported relocations */
-#define R_ARM_PC24	1	/* PC relative 26 bit branch */
-#define R_ARM_ABS32     2
-#define R_ARM_THM_CALL  10
-#define R_ARM_PLT32  	27
+#define R_ARM_PC24	        1	/* PC relative 26 bit branch */
+#define R_ARM_ABS32         2
+#define R_ARM_THM_CALL      10
+#define R_ARM_PLT32  	    27
+#define R_ARM_CALL          28
+#define R_ARM_JUMP24        29
+#define R_ARM_THM_JUMP24    30
+#define R_ARM_V4BX          40
 
 #endif /* __ELF_H__ */

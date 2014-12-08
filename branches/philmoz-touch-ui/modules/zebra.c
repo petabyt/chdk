@@ -542,13 +542,13 @@ libzebra_sym _libzebra =
     gui_osd_draw_zebra
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     ZEBRA_VERSION,				// Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     (int32_t)"Zebra Overlay (dll)",// Module name

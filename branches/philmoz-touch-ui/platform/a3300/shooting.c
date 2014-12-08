@@ -73,10 +73,7 @@ const ISOTable iso_table[] = {
 
 };
 
-struct {
-	int hackmode;
-	int canonmode;
-} modemap[] = {
+const CapturemodeMap modemap[] = {
 	{ MODE_P,					32772 },
 	{ MODE_LIVE,				33332 },
 	{ MODE_AUTO,				32768 },
