@@ -31,7 +31,7 @@
 
     #define CAM_ADJUSTABLE_ALT_BUTTON                   1
     #define CAM_ALT_BUTTON_NAMES                        { "Playback", "Video", "Display" }
-    #define CAM_ALT_BUTTON_OPTIONS                      { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_OPTIONS                      { KEY_PLAYBACK, KEY_VIDEO, KEY_DISPLAY }
 
     // pattern
     #define cam_CFAPattern                              0x01000201 // Green  Blue  Red  Green
@@ -66,6 +66,9 @@
     #define CAM_HAS_VIDEO_BUTTON                        1
     #define CAM_VIDEO_QUALITY_ONLY                      1
     #undef  CAM_VIDEO_CONTROL
+    #define CAM_HAS_MOVIE_DIGEST_MODE                   1   //Camera doesn't actually have MOVIE_DIGEST_MOVIE, but this is required by is_video_recording.
+                                                            //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
+
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION                  1
@@ -107,5 +110,7 @@
 
     #define CAM_SD_OVER_IN_AF                           1
     #define CAM_SD_OVER_IN_MF                           1
+
+    #define CAM_IS_VID_REC_WORKS                        1   // is_video_recording() function works    
 
 //--------------------------------------------------
