@@ -687,8 +687,8 @@ static int factor(void)
     accept(TOKENIZER_GET_DRAW_TITLE_LINE);  
     r = camera_info.state.osd_title_line ;
     break;
-  case TOKENIZER_ENABLE_REMOTE_HP_TIMER:
-    accept(TOKENIZER_ENABLE_REMOTE_HP_TIMER);
+  case TOKENIZER_SET_REMOTE_TIMING:
+    accept(TOKENIZER_SET_REMOTE_TIMING);
     int hpenable= expr();
     if ( hpenable > 0) r = start_usb_HPtimer(hpenable);
     else r = stop_usb_HPtimer();
