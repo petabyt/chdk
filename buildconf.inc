@@ -59,10 +59,10 @@ OPT_GEN_STUBS=1
 #OPT_FILEIO_STATS=1
 
 # Create module .elf and .flt dump files
-#GEN_MODULE_DUMPS=1
+#OPT_GEN_MODULE_DUMPS=1
 
 # Define this to use EABI instead of ELF for the GCC ABI
-#USE_GCC_EABI=1
+#OPT_USE_GCC_EABI=1
 
 # ***please new entries above this line for protecting the chdk shell against errors***
 

@@ -36,7 +36,7 @@ all: $(FLTS)
 	@echo \-\> $@
 	mkdir -p .o
 	$(CC) $(CFLAGS) -o .o/$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-    ifdef GEN_MODULE_DUMPS
+    ifdef OPT_GEN_MODULE_DUMPS
 		$(OBJDUMP) -j .text -j .rodata.str1.1 -j .data -j .bss -z -d -r -f -h .o/$*.elf >.o/$*.elf.dump
 		$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -v -S -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
     else

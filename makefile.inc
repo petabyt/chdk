@@ -122,7 +122,7 @@ ENCODE_DISKBOOT=$(topdir)tools/dancingbits$(EXE)
 
 ##########################################################################
 
-ifdef USE_GCC_EABI
+ifdef OPT_USE_GCC_EABI
     CROSS_COMPILE=arm-none-eabi-
     ARCH=-march=armv5te
     ABI=_eabi
@@ -261,7 +261,7 @@ CFLAGS+=-DOPT_FILEIO_STATS
 endif
 
 # Architecture version for modules (to prevent loading on wrong build)
-ifdef USE_GCC_EABI
+ifdef OPT_USE_GCC_EABI
 CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
 else
 CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
