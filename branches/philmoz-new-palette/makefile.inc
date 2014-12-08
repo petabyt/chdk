@@ -122,7 +122,15 @@ ENCODE_DISKBOOT=$(topdir)tools/dancingbits$(EXE)
 
 ##########################################################################
 
-CROSS_COMPILE=arm-elf-
+ifdef USE_GCC_EABI
+    CROSS_COMPILE=arm-none-eabi-
+    ARCH=-march=armv5te
+    ABI=_eabi
+else
+    CROSS_COMPILE=arm-elf-
+    ARCH=
+    ABI=_elf
+endif
 
 CC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
@@ -141,15 +149,13 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # technically not required for gcc >= 4.6.3, and probably not required for vxworks cams
 # see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
 CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
-# flags for gcc v4
-# CFLAGS+=-mcpu=arm946e-s
-# for gcc v3, we use to allow use of strd etc
+# for gcc >= v3, we want to allow use of strd etc
 ifeq ($(GCC_VERSION_MAJOR),3)
     CFLAGS+=-march=armv5te
 else
     ifeq ($(GCC_VERSION_MAJOR),4)
         # TODO should be -mcpu, but breaks things ATM
-        CFLAGS+=-mtune=arm946e-s
+        CFLAGS+=-mtune=arm946e-s $(ARCH)
     endif
 endif
 
@@ -252,6 +258,13 @@ endif
 
 ifdef OPT_FILEIO_STATS
 CFLAGS+=-DOPT_FILEIO_STATS
+endif
+
+# Architecture version for modules (to prevent loading on wrong build)
+ifdef USE_GCC_EABI
+CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
+else
+CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
 endif
 
 ##########################################################################

@@ -364,13 +364,13 @@ libpalette_sym _libpalette =
     gui_palette_init
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     GUI_PALETTE_VERSION,		// Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     (int32_t)"Palette",					// Module name

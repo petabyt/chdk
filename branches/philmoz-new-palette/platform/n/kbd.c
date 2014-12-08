@@ -5,6 +5,7 @@
 #include "conf.h"
 #include "keyboard.h"
 #include "touchscreen.h"
+#include "levent.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
@@ -415,10 +416,18 @@ void my_kbd_read_keys()
 
 
 /****************/
+static int is_video_key_pressed = 0;
 
 void kbd_key_press(long key)
 {
     int i;
+    
+    if (key == KEY_VIDEO && !is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("PressMovieButton"),0);
+        is_video_key_pressed = 1;
+        return;
+    }    
 
     for (i=0;keymap[i].hackkey;i++) {
         if (keymap[i].hackkey == key)
@@ -432,6 +441,14 @@ void kbd_key_press(long key)
 void kbd_key_release(long key)
 {
     int i;
+    
+    if (key == KEY_VIDEO && is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
+        is_video_key_pressed = 0;
+        return;
+    }
+        
     for (i=0;keymap[i].hackkey;i++) {
         if (keymap[i].hackkey == key) {
             kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;

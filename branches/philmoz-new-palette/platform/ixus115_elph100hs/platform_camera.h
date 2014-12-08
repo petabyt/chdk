@@ -48,6 +48,7 @@
     //#define CAM_EV_IN_VIDEO               1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
     #define CAM_QUALITY_OVERRIDE            1
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 
 //    #define CAM_USE_ZOOM_FOR_MF              1    // Zoom lever can be used for manual focus adjustments
     #define CAM_NEED_SET_ZOOM_DELAY         100  // Define to add a delay after setting the zoom position

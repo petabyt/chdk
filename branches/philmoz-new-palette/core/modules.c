@@ -14,6 +14,73 @@
 #include "shooting.h"
 
 //------------------------------------------------
+// Notes on the module auto-load system
+//
+// Module functions are called through a pointer to a module interface structure.
+// For example, the Raw Merge module interface is defined as:
+//        typedef struct
+//        {
+//            base_interface_t    base;
+//
+//            int (*raw_merge_start)(int action);
+//            int (*raw_merge_add_file)(const char* filename);
+//            void (*raw_merge_end)(void);
+//            int (*raw_subtract)(const char *fromName, const char *fromDir, const char *subName, const char *subDir);
+//        } librawop_sym;
+//
+// Each of the functions can be called through the global 'librawop' pointer.
+// For example:
+//      librawop->raw_merge_start(...);
+//
+// However the functions can only be called if the pointer actually points to something valid
+//
+// Prior to the auto-load system, the core code had to do something like this:
+//      if (librawop == 0)
+//      {
+//          librawop = module_load("_rawop.flt");
+//          ... probably do some error checking here as well
+//      }
+//      librawop->raw_merge_start(...);
+//      ... other Raw Merge stuff
+//      module_unload(librawop);
+//      librawop = 0;
+//
+// With the module auto-load system the core code can just call:
+//      librawop->raw_merge_start(...);
+// and everything else is take care of automatically.
+//
+// The system works by initialising every global module pointer to a dummy instance of the
+// module interface. The dummy interface must implement the same set of functions; but the
+// functions themselves don't have to do anything in all cases.
+//
+// The dummy interface for Raw Merge is:
+//        librawop_sym default_librawop =
+//        {
+//            { 0,0,0,0,0 },
+//            default_raw_merge_start,
+//            dummy_int,                  //raw_merge_add_file
+//            dummy_void,                 //raw_merge_end,
+//            default_raw_subtract
+//        };
+//
+// Only the raw_merge_start and raw_subtract functions do anything interesting, raw_merge_add_file
+// and raw_merge_end do nothing if the module is not loaded.
+//
+// The implementation of default_raw_merge_start, and default_raw_subtract (see code below)
+// try to load the actual module, if this is successful, then they call the equivalent module function
+//
+// Once the module is loaded into memory, the global module pointer is updated to point to the
+// module code. Subsequent calls to the module functions call the real module code, not the dummy
+// interface.
+//
+// When the module is unloaded, the global pointer is reset back to the dummy interface so future
+// calls will reload the module.
+//
+// Load / unload is managed with the module_handler_t structure. This contains pointers to the global
+// module pointer, the dummy interface, version and module name.
+//------------------------------------------------
+
+//------------------------------------------------
 // Dummy functions for default module libraries
 // Used when function does not need to do anything
 // unless module is loaded

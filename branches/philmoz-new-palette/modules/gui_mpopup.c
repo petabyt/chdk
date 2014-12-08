@@ -204,13 +204,13 @@ libmpopup_sym _libmpopup =
     gui_mpopup_init
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     GUI_MPOPUP_VERSION,			// Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     (int32_t)"Popup menu module",   // Module name

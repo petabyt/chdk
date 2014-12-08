@@ -1400,13 +1400,13 @@ libdng_sym _libdng =
 	free_dng_header_for_ptp
 };
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     DNG_VERSION,                // Module version
 
-    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
     (int32_t)"DNG (dll)",       // Module name

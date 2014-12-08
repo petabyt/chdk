@@ -96,6 +96,8 @@
     #undef  CAM_GUI_FSELECT_SIZE      
     #define CAM_GUI_FSELECT_SIZE            13, 7, 9       // use narrow columns in file select window gui
 
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+
 //------ Powershot N - fence for values checked as okay - stuff below here not checked yet ---------------
 
     #undef  CAM_USE_ZOOM_FOR_MF                             // not useful if cam does not have Canon MF mode - just changes focus mode
@@ -108,9 +110,10 @@
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1               // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
 
     #undef  CAM_VIDEO_CONTROL
+    #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME
-    //#define CAM_EV_IN_VIDEO               1
 
 //--------------------------------------------------

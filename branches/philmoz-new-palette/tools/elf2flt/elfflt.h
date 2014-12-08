@@ -43,7 +43,7 @@ struct relevant_section {
 extern struct relevant_section bss, data, rodata, text;
 
 extern char* flat_buf;
-extern struct flat_hdr* flat;
+extern flat_hdr* flat;
 
 typedef uint32_t reloc_record_t;
 

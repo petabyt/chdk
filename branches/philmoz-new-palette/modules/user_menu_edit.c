@@ -676,7 +676,7 @@ static void gui_uedit_module_selected(const char *fn)
         if (chk_ext(ext,"flt"))
         {
             _version_t v = ANY_VERSION;
-            struct flat_hdr* mod = module_preload(fn, v);
+            flat_hdr* mod = module_preload(fn, fn, v);  // Pass fn as both path and name (file browser sends us full path to module)
             if (mod > 0)
             {
                 if (mod->_module_info->lib->run != 0)   // Simple Module?
@@ -698,6 +698,7 @@ static void gui_uedit_module_selected(const char *fn)
         }
     }
 }
+
 static void uedit_set(unsigned int actn)
 {
     switch (actn)
@@ -832,13 +833,13 @@ libsimple_sym _librun =
 
 /******************** Module Information structure ******************/
 
-struct ModuleInfo _module_info =
+ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
-    sizeof(struct ModuleInfo),
+    sizeof(ModuleInfo),
     SIMPLE_MODULE_VERSION,		// Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     -LANG_MENU_USER_MENU_EDIT,	// Module name
