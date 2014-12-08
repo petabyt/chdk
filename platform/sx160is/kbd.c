@@ -48,7 +48,6 @@ static KeyMap keymap[] = {
     { 1, KEY_ERASE           ,0x08000000 },
     { 1, KEY_MENU            ,0x00800000 }, // Found @0xffba4ae4, levent 0x09
     { 1, KEY_SET             ,0x00000001 }, // Found @0xffba4acc, levent 0x08
-    { 2, KEY_PRINT           ,0x00000008 }, // Key PLAYBACK for ALT menu
     { 2, KEY_LEFT            ,0x00002000 }, // Found @0xffba4b4c, levent 0x06
     { 2, KEY_RIGHT           ,0x00001000 }, // Found @0xffba4b44, levent 0x07
     { 2, KEY_ZOOM_IN         ,0x00000080 }, // Found @0xffba4b34, levent 0x02
