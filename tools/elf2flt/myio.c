@@ -10,7 +10,6 @@
 #include <fcntl.h>
 #include <string.h>
 
-
 #include "myio.h"
 
 static char* filebuf=0;

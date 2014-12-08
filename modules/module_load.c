@@ -430,6 +430,9 @@ static char* validate(ModuleInfo *mod_info, _version_t ver)
     if (mod_info->chdk_required_branch && (mod_info->chdk_required_branch != CURRENT_CHDK_BRANCH))
         return "require different CHDK branch";
 
+    if (mod_info->chdk_required_architecture != OPT_ARCHITECTURE)
+        return "wrong CHDK architecture";
+
     if (mod_info->chdk_required_ver > CHDK_BUILD_NUM)
     {
         sprintf(msg, "require CHDK%05d", mod_info->chdk_required_ver);

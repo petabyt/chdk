@@ -1,5 +1,4 @@
 # This file is included from */sub/*/Makefile
-#
 
 include $(topdir)makefile.inc
 

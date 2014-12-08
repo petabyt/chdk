@@ -745,7 +745,7 @@ ModuleInfo _module_info =
     sizeof(ModuleInfo),
     MOTION_DETECTOR_VERSION,	// Module version
 
-    ANY_CHDK_BRANCH, 0,			// Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     (int32_t)"Motion Detect",   // Module name

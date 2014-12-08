@@ -1425,7 +1425,7 @@ ModuleInfo _module_info = {
     sizeof(ModuleInfo),
     GUI_FSELECT_VERSION,        // Module version
 
-    ANY_CHDK_BRANCH, 0,         // Requirements of CHDK version
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
     -LANG_MENU_MISC_FILE_BROWSER,   // Module name

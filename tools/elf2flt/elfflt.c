@@ -164,6 +164,9 @@ relocate_section( struct relevant_section* base_sect)
     	printf("rel_load %x: offs=0x%x, info=0x%x [type=%d]\n",a,rela.r_offset, rela.r_info, ELF32_R_TYPE(rela.r_info));
     if (ret < 0) return ELFFLT_INPUT_ERROR;
 
+    if (ELF32_R_TYPE(rela.r_info) == R_ARM_V4BX)
+        continue;
+
 	int symidx = ELF32_R_SYM(rela.r_info);            
 	if ( symidx*sizeof(struct elf32_sym) >= symtabsize ) {
         PRINTERR(stderr, "elf2flt unknown symbolidx #%d for relocation %s:%d\n", symidx, base_sect->name,relidx);

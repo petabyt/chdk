@@ -10,13 +10,19 @@ typedef int             int32_t;
 
 #define MODULEINFO_V1_MAGICNUM      0x023703e5
 
+// CHDK versions
 #define ANY_CHDK_BRANCH		        0
 #define REQUIRE_CHDK_MAIN           1
 #define REQUIRE_CHDK_DE		        2
 #define REQUIRE_CHDK_SDM	        3
 #define REQUIRE_CHDK_PRIVATEBUILD	4
 
+// PlatformID check (can be used to make a module specific to a camera model)
 #define ANY_PLATFORM_ALLOWED	    0
+
+// Architecture of build (GCC ABI, thumb/thumb2, etc)
+#define GCC_ELF_THUMB               1
+#define GCC_EABI_THUMB              2
 
 // Base module interface - once loaded into memory and any relocations done these
 // functions provide the minimum interface to run the module code.
@@ -43,11 +49,12 @@ typedef struct
 // Contains everything used to communicate with and run code in the module
 typedef struct
 {
-	uint32_t            magicnum;               // MODULEINFO_V1_MAGICNUM - sanity check when loading
-	uint32_t            sizeof_struct;          // sizeof this struct - sanity check when loading
-	_version_t          module_version;         // version of module - compared to version in module_handler_t
-	uint32_t            chdk_required_branch;   // CHDK version checks
+	uint32_t            magicnum;                   // MODULEINFO_V1_MAGICNUM - sanity check when loading
+	uint32_t            sizeof_struct;              // sizeof this struct - sanity check when loading
+	_version_t          module_version;             // version of module - compared to version in module_handler_t
+	uint32_t            chdk_required_branch;       // CHDK version checks
 	uint32_t            chdk_required_ver;
+    uint32_t            chdk_required_architecture;
 	uint32_t            chdk_required_platfid;
 
 	int32_t             moduleName;			    // pointer to string with module name or -LANG_ID
