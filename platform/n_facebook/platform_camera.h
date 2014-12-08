@@ -97,6 +97,8 @@
     #undef  CAM_GUI_FSELECT_SIZE      
     #define CAM_GUI_FSELECT_SIZE            13, 7, 9       // use narrow columns in file select window gui
 
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+
 //------ Powershot N - fence for values checked as okay - stuff below here not checked yet ---------------
 
     #undef  CAM_USE_ZOOM_FOR_MF                             // not useful if cam does not have Canon MF mode - just changes focus mode
