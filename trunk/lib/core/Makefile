@@ -23,9 +23,9 @@ module_hashlist.o: $(topdir)modules/module_hashlist.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -fno-builtin -c -o $@ $<
 
-$(topdir)modules/module_hashlist.c: $(topdir)modules/module_exportlist.c $(topdir)/tools/makeexport$(EXE)
+$(topdir)modules/module_hashlist.c: $(topdir)modules/module_exportlist.c $(topdir)modules/module_exportlist$(ABI).inc $(topdir)/tools/makeexport$(EXE)
 	@echo $< \-\> $@
-	$(topdir)tools/makeexport$(EXE) $(topdir)modules/module_exportlist.c $(topdir)modules/module_exportlist.h $(topdir)/modules/exportlist.inc $(topdir)modules/module_hashlist.c
+	$(topdir)tools/makeexport$(EXE) $(topdir)modules/module_exportlist.h $(topdir)/modules/exportlist.inc $(topdir)modules/module_hashlist.c $(topdir)modules/module_exportlist.c $(topdir)modules/module_exportlist$(ABI).inc
 
 clean:
 	rm -f $(OBJS) *.a

@@ -9,29 +9,6 @@
 // Symbols to be exported should be on separate lines. Blank lines and '//' style comments are allowed
 // (Despite the name, this is not a C source file. File should probably be renamed.)
 
-    // GCC library functions for linking modules without including
-    // a copy of the GCC library in each module
-            __modsi3
-            __umodsi3
-            __divsi3
-            __udivsi3
-            __divsf3
-            __mulsf3
-            __divdf3
-            __muldf3
-            __floatunsisf
-            __fixunssfsi
-            __extendsfdf2
-            __truncdfsf2
-            __floatsidf
-            __floatsisf
-            __fixdfsi
-            __adddf3
-            __subdf3
-            __ltdf2
-            __gtdf2
-            __bswapsi2
-
             module_get_adr
             module_exit_alt
             module_restore_edge
