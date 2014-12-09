@@ -28,7 +28,7 @@
     #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Display" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #define CAM_DRYOS_2_3_R39                   1
@@ -125,5 +125,7 @@
 
     #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_MF                   1
+
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works    
 
 //--------------------------------------------------
