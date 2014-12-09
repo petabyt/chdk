@@ -6,7 +6,7 @@ CFLAGS+=-DLOW_LEVEL
 
 # Change CPU architecture to ARM V4 if building with GCC EABI
 # Otherwise incorrect wrapper calls to firmware functions are generated
-ifdef USE_GCC_EABI
+ifdef OPT_USE_GCC_EABI
     CFLAGS+=-march=armv4
 endif
 
