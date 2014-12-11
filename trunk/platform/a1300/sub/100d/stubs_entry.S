@@ -241,6 +241,7 @@ NHSTUB(mktime_ext                             ,0xff896064) //  1
 NHSTUB(open                                   ,0xff815934) //109
 NHSTUB(OpenFastDir                            ,0xffa53b70) //115
 NHSTUB(closedir                               ,0xffa53b20) //121
+NHSTUB(get_fstype                             ,0xff8665b4) //122
 NHSTUB(qsort                                  ,0xff9d70dc) //  6
 NHSTUB(realloc                                ,0xff9d71b8) //115
 NHSTUB(reboot_fw_update                       ,0xffa5919c) //106

@@ -394,6 +394,7 @@
 0xff027e68,Fseek_Fut_FW
 0xff027dc8,Fwrite_Fut
 0xff027dc8,Fwrite_Fut_FW
+0xff078840,get_fstype
 0xff0afecc,get_resource_pointer
 0xff2dcc80,get_string_by_id
 0xff06204c,GetAccelerometerDataWithCorrect_FW
