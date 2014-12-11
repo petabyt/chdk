@@ -316,6 +316,7 @@
 0xff8757bc,GetDrive_ClusterSize
 0xff8757f0,GetDrive_TotalClusters
 0xff87581c,GetDrive_FreeClusters
+0xff875840,get_fstype
 0xff875b84,task_SD1stInit
 0xff879fb4,task_ImgPlayDrv
 0xff87b36c,task_RedEyeCapt

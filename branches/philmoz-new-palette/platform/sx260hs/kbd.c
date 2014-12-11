@@ -18,7 +18,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
-static int alt_mode_led=0;
 extern void _GetKbdState(long*);
 
 #ifdef CAM_HAS_GPS
@@ -51,7 +50,6 @@ int get_usb_bit() {
 
 // Using Finsig
 static KeyMap keymap[] = {
-    { 1, KEY_PRINT           ,0x00800000 }, // KEY_PLAYBACK as ALT 
     { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff441578, levent 0x101
     { 1, KEY_SHOOT_FULL      ,0x03000000 }, // Found @0xff441588, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x02000000 }, // Found @0xff441588, levent 0x01

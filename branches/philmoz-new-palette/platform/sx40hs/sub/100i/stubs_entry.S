@@ -242,6 +242,7 @@ NHSTUB(mktime_ext                             ,0xff0b3bc0) //  1
 NHSTUB(open                                   ,0xff00ab20) //109
 NHSTUB(OpenFastDir                            ,0xff33959c) //115
 NHSTUB(closedir                               ,0xff33954c) //121
+NHSTUB(get_fstype                             ,0xff06a684) //122
 NHSTUB(qsort                                  ,0xff3ae9f4) //  6
 NHSTUB(rand                                   ,0xff295dbc) //121
 NHSTUB(realloc                                ,0xff295cfc) //115

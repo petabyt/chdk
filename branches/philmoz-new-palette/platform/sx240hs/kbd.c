@@ -18,7 +18,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
-static int alt_mode_led=0;
 extern void _GetKbdState(long*);
 
 #ifdef CAM_HAS_GPS
@@ -42,7 +41,6 @@ extern int Taste_press;
 #define USB_MASK            0x10000000 // Found @0xff441638, levent 0x202
 #define USB_IDX             2
 
-
 int get_usb_bit() {
     long usb_physw[3];
     usb_physw[USB_IDX] = 0;
@@ -52,7 +50,7 @@ int get_usb_bit() {
 
 // Using Finsig
 static KeyMap keymap[] = {
-    { 1, KEY_PRINT           ,0x00800000 }, // KEY_PLAYBACK as ALT 
+    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff441550, levent 0x101
     { 1, KEY_SHOOT_FULL      ,0x03000000 }, // Found @0xff441560, levent 0x01
     { 1, KEY_SHOOT_FULL_ONLY ,0x02000000 }, // Found @0xff441560, levent 0x01
     { 1, KEY_SHOOT_HALF      ,0x01000000 }, // Found @0xff441558, levent 0x00
@@ -62,8 +60,6 @@ static KeyMap keymap[] = {
     { 1, KEY_ZOOM_IN         , 0x30000000 },
     { 1, KEY_ZOOM_IN         , 0x10000000 },
     { 1, KEY_ZOOM_IN         , 0x20000000 },
-    { 1, KEY_POWER           ,0x00400000 }, // Found @0xff441548, levent 0x100
-    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff441550, levent 0x101    
     { 2, KEY_VIDEO           ,0x00000020 }, // Found @0xff4415b0, levent 0x1a
     { 2, KEY_MENU            ,0x00000040 }, // Found @0xff4415b8, levent 0x09
     { 2, KEY_DISPLAY         ,0x00000080 }, // Found @0xff4415c0, levent 0x0a

@@ -394,6 +394,7 @@
 0xff034d7c,Fseek_Fut_FW
 0xff034cdc,Fwrite_Fut
 0xff034cdc,Fwrite_Fut_FW
+0xff0aa99c,get_fstype
 0xff0c4368,get_resource_pointer
 0xff24bff4,get_string_by_id
 0xff08f738,GetAdChValue
