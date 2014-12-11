@@ -801,7 +801,7 @@ static void get_int_disp_string(int value)
         int spos, cpos;
         for (spos=0; spos<5; spos++) if (tbuf[spos] == '-') break;
         cpos = 4 - factor_disp_len();
-        if (cpos <= spos)
+        if ((cpos > 0) && (cpos <= spos))
         {
             tbuf[spos] = ' ';
             tbuf[cpos-1] = '-';
