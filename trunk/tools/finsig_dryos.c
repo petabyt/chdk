@@ -347,6 +347,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "open" },
     { "OpenFastDir" },
     { "closedir" },
+    { "get_fstype", OPTIONAL },
     { "qsort" },
     { "rand" },
     { "read", UNUSED|OPTIONAL },
@@ -832,6 +833,39 @@ int find_closedir(firmware *fw)
         {
             uint32_t fadr = followBranch(fw, idx2adr(fw, k-2), 0x01000001);
             fwAddMatch(fw,fadr,32,0,121);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// Special case for 'get_fstype'
+int find_get_fstype(firmware *fw)
+{
+    int j = get_saved_sig(fw,"OpenFastDir");
+    if (j >= 0)
+    {
+        int k = find_Nth_inst(fw, isBL, adr2idx(fw,func_names[j].val)+1, 6, 2);
+        if (k > 0)
+        {
+            // sanity check 1
+            if ( (fwval(fw, k+1) & 0xffff0fff) != 0xe1b00000 ) // movs rx, r0
+                return 0;
+            // sanity check 2
+            uint32_t cmpinst = ((fwval(fw, k+1) & 0x0000f000)<<4) + 0xe3500004; // cmp rx, #4
+            int l;
+            int m = 0;
+            for (l=0; l<32; l++)
+            {
+                if ( fwval(fw, k+1+l) == cmpinst )
+                    m++;
+            }
+            if (m != 2)
+                return 0;
+            // confirmed
+            uint32_t fadr = followBranch(fw, idx2adr(fw, k), 0x01000001);
+            fwAddMatch(fw,fadr,32,0,122);
             return 1;
         }
     }
@@ -1772,6 +1806,7 @@ string_sig string_sigs[] =
     { 22, "DisplayDialogBox", (char*)find_DisplayDialogBox, 0 },
     { 22, "add_ui_to_dialog", (char*)find_add_ui_to_dialog, 0 },
     { 22, "get_string_by_id", (char*)find_get_string_by_id, 0 },
+    { 22, "get_fstype", (char*)find_get_fstype, 0 },
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
