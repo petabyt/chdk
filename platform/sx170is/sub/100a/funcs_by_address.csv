@@ -193,6 +193,7 @@
 0xff81c970,StartFactoryModeController_FW
 0xff81cb48,task_FsIoNotifyTask
 0xff81e32c,SetHPTimerAfterTimeout
+0xff81f998,get_fstype
 0xff81fa20,GetDrive_ClusterSize
 0xff820240,GetDrive_TotalClusters
 0xff82026c,GetDrive_FreeClusters

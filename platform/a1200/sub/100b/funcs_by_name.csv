@@ -328,6 +328,7 @@
 0xff836668,Fseek_Fut_FW
 0xff8365c8,Fwrite_Fut
 0xff8365c8,Fwrite_Fut_FW
+0xff86f344,get_fstype
 0xff882d8c,get_resource_pointer
 0xffa004f4,get_string_by_id
 0xff85cd20,GetAdChValue

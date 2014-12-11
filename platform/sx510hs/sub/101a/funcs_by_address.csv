@@ -194,6 +194,7 @@
 0xff00d16c,IsNormalCameraMode_FW
 0xff00d184,StartFactoryModeController_FW
 0xff00d3a0,task_FsIoNotifyTask
+0xff0101f0,get_fstype
 0xff010278,GetDrive_ClusterSize
 0xff010a64,GetDrive_TotalClusters
 0xff010a90,GetDrive_FreeClusters

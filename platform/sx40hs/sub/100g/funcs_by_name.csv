@@ -443,6 +443,7 @@
 0xff027218,Fseek_Fut_FW
 0xff027178,Fwrite_Fut
 0xff027178,Fwrite_Fut_FW
+0xff06a684,get_fstype
 0xff089bc4,get_resource_pointer
 0xff2910d4,get_string_by_id
 0xff053648,GetAdChValue

@@ -387,6 +387,7 @@
 0xff09f604,ResetRegistNoticeCBR_FW
 0xff09f614,RegistFirmScanNoticeCBR_FW
 0xff0a28f8,task_FsIoNotifyTask
+0xff0a5708,get_fstype
 0xff0a578c,GetDrive_ClusterSize
 0xff0a5f44,GetDrive_TotalClusters
 0xff0a5f6c,GetDrive_FreeClusters

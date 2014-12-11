@@ -307,6 +307,7 @@
 0xff86fd50,GetDrive_ClusterSize
 0xff86fd80,GetDrive_TotalClusters
 0xff86fda8,GetDrive_FreeClusters
+0xff86fdc8,get_fstype
 0xff86ffe0,MakeSDCardBootable
 0xff8700f4,task_SD1stInit
 0xff87337c,task_ImgPlayDrv

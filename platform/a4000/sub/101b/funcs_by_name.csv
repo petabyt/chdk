@@ -358,6 +358,7 @@
 0xff8310dc,Fseek_Fut_FW
 0xff83103c,Fwrite_Fut
 0xff83103c,Fwrite_Fut_FW
+0xff8664d0,get_fstype
 0xff87a314,get_resource_pointer
 0xff9d69fc,get_string_by_id
 0xffa71e38,GetAccelX_atMechaCpu_FW

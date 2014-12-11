@@ -303,6 +303,7 @@
 0xff86fc80,GetDrive_ClusterSize
 0xff86fcb4,GetDrive_TotalClusters
 0xff86fce0,GetDrive_FreeClusters
+0xff86fd04,get_fstype
 0xff870018,task_SD1stInit
 0xff873568,task_ImgPlayDrv
 0xff87463c,task_RedEyeCapt

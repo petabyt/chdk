@@ -384,6 +384,7 @@
 0xff025fec,Fwrite_Fut
 0xff025fec,Fwrite_Fut_FW
 0xff1553f0,Get_AcceleTemperature_FW
+0xff06cc30,get_fstype
 0xff088580,get_resource_pointer
 0xff29a7a0,get_string_by_id
 0xff053028,GetAccelerometerDataWithCorrect_FW
