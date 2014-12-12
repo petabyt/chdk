@@ -456,7 +456,7 @@ static void process_dir(const char *parent, const char *name, int nested, void (
         {
             if (!de.deleted)
             {
-                // Sub directory? Process recursively (but only one level deep)
+                // Sub directory? Process recursively (but only 'nested' level deep)
                 if (de.isdir)
                 {
                     if (!de.isparent && !de.iscurrent && nested)
@@ -841,8 +841,7 @@ static void fselect_delete_file_cb(unsigned int btn)
     if (btn==MBOX_BTN_YES)
     {
         started();
-        sprintf(selected_file, "%s/%s", current_dir, selected->name);
-        remove(selected_file);
+        delete_file(current_dir, selected->name);
         finished();
         selected_file[0] = 0;
         gui_fselect_readdir = 1;
@@ -850,97 +849,122 @@ static void fselect_delete_file_cb(unsigned int btn)
     gui_fselect_redraw = 2;
 }
 
-// If 'file' is a RAW file, scan its 'folder' for a JPG with the same
-// image number, if not found delete the RAW image file.
-static void purge_file(const char *folder, const char *file)
+// Find a JPG matching a given RAW name. If 'nested' > 0 search recursively in
+// child directories of 'folder.
+// Returns 1 if found, 0 if not found (or match is not a RAW file)
+static int find_jpg(const char *folder, const char *match, int nested)
 {
     DIR         *d;
     fs_dirent   de;
-
-    // Check if file is a RAW file
-    if (!is_raw(file))
-        return;
+    int         rv = 0;
 
     // Open directory
     d = opendir(folder);
 
     if (d)
     {
-        // Flag if JPG found
-        int found = 0;
-
         // Process contents
-        while (fs_readdir(d, &de, folder))
+        while (fs_readdir(d, &de, folder) && !rv)
         {
-            // Make sure it's a file and not deleted
-            if (!de.isdir && !de.deleted)
+            if (!de.deleted)
             {
-                //If the four digits of the Canon number are the same AND file is JPG
-                if (is_jpg(de.de->d_name) && (strncmp(file+4, de.de->d_name+4, 4) == 0))
+                // Sub directory? Process recursively (but only 'nested' levels deep)
+                if (de.isdir)
                 {
-                    found = 1; //A JPG file with the same Canon number was found
-                    break;
+                    if (!de.isparent && !de.iscurrent && nested)
+                    {
+                        // Search sub-directory
+                        char *path = malloc(strlen(folder) + strlen(de.de->d_name) + 2);
+                        sprintf(path, "%s/%s", folder, de.de->d_name);
+                        if (find_jpg(path, match, nested-1))
+                            rv = 1;
+                        free(path);
+                    }
+                }
+                else
+                {
+                    //If the four digits of the Canon number are the same AND file is JPG
+                    if (is_jpg(de.de->d_name) && (strncmp(match+4, de.de->d_name+4, 4) == 0))
+                        rv = 1;
                 }
             }
         }
-
-        //If no JPG found, delete RAW file
-        if (found == 0)
-        {
-            sprintf(buf, "%s/%s", folder, file);
-            remove(buf);
-        }
+        closedir(d);
     }
 
-    closedir(d);
+    return rv;
 }
 
-static void fselect_purge_cb(unsigned int btn)
+// If 'file' is a RAW file, scan its 'folder' for a JPG with the same
+// image number, if not found delete the RAW image file.
+static void purge_file(const char *folder, const char *file)
+{
+    //If no JPG found, delete RAW file
+    if (is_raw(file))
+        if (!find_jpg(folder, file, 0))
+            delete_file(folder, file);
+}
+
+// If 'file' is a RAW file, scan its 'folder' and all sibling folders for a JPG with the same
+// image number, if not found delete the RAW image file.
+// Used when 'Purge RAW' run on the A/DCIM directory. CHDK can store RAW files in a different
+// sub-directory of A/DCIM than the corresponding JPG.
+static void purge_file_DCIM(const char *folder, const char *file)
+{
+    //If no JPG found, delete RAW file (search all sub-folders of A/DCIM for JPG)
+    if (is_raw(file))
+        if (!find_jpg("A/DCIM", file, 1))
+            delete_file(folder, file);
+}
+
+static void fselect_purge_cb_DCIM(unsigned int btn)
 {
     if (btn == MBOX_BTN_YES)
     {
-        //If selected folder is DCIM (this is to purge all RAW files in any Canon folder)
-        if (chk_name(selected->name, "DCIM") && ((selected->attr & DOS_ATTR_DIRECTORY) != 0))
-        {
-            process_dir(current_dir, selected->name, 1, purge_file, 0);
-        }
-        //If item is a Canon sub-folder of A/DCIM (this is to purge all RAW files inside a single Canon folder)
-        else if (chk_name(current_dir, "A/DCIM") && ((selected->attr & DOS_ATTR_DIRECTORY) != 0))
-        {
-            process_dir(current_dir, selected->name, 0, purge_file, 0);
-        }
-        else
-        {
-            //Inside a Canon folder (files list)
-            fitem *ptr, *ptr2;
+        //If selected folder is A/DCIM or A/RAW (this is to purge all RAW files in any sub-folder)
+        process_dir(current_dir, selected->name, 1, purge_file_DCIM, 0);
+    }
+}
 
-            //Loop to find all the RAW files in the list
-            for (ptr=items.head; ptr; ptr=ptr->next)
+static void fselect_purge_cb_dir(unsigned int btn)
+{
+    if (btn == MBOX_BTN_YES)
+    {
+        //If item is a Canon sub-folder of A/DCIM or A/RAW (this is to purge all RAW files inside a single Canon folder)
+        process_dir(current_dir, selected->name, 0, purge_file, 0);
+    }
+}
+
+static void fselect_purge_cb_file(unsigned int btn)
+{
+    if (btn == MBOX_BTN_YES)
+    {
+        //Inside a Canon folder (files list)
+        fitem *ptr, *ptr2;
+
+        //Loop to find all the RAW files in the list
+        for (ptr=items.head; ptr; ptr=ptr->next)
+        {
+            //If file is RAW (Either CRW/CR2 prefix or file extension) and is not marked
+            if (is_raw(ptr->name) && !ptr->marked)
             {
-                //If file is RAW (Either CRW/CR2 prefix or file extension) and is not marked
-                if (is_raw(ptr->name) && !ptr->marked)
+                // Flag for checking if matching JPG exists
+                int found = 0;
+
+                //Loop to find a corresponding JPG file in the list
+                for (ptr2=items.head; ptr2; ptr2=ptr2->next)
                 {
-                    // Flag for checking if matching JPG exists
-                    int found = 0;
-
-                    //Loop to find a corresponding JPG file in the list
-                    for (ptr2=items.head; ptr2; ptr2=ptr2->next)
+                    //If this is a JPG and the four digits of the Canon number are the same
+                    if (is_jpg(ptr2->name) && (strncmp(ptr->name+4, ptr2->name+4, 4) == 0))
                     {
-                        //If this is a JPG and the four digits of the Canon number are the same
-                        if (is_jpg(ptr2->name) && (strncmp(ptr->name+4, ptr2->name+4, 4) == 0))
-                        {
-                            found=1;
-                            break;
-                        }
-                    }
-
-                    //If no JPG found, delete RAW file
-                    if (found == 0)
-                    {
-                        sprintf(buf, "%s/%s", current_dir, ptr->name);
-                        remove(buf);
+                        found=1;
+                        break;
                     }
                 }
+
+                //If no JPG found, delete RAW file
+                if (found == 0)
+                    delete_file(current_dir, ptr->name);
             }
         }
         gui_fselect_readdir = 1;
@@ -1050,8 +1074,7 @@ static void fselect_marked_paste_cb(unsigned int btn)
                                 if (marked_operation == MARKED_OP_CUT && ss==0)
                                 {
                                     close(fsrc); fsrc = -1;
-                                    sprintf(selected_file, "%s/%s", marked_dir, ptr->name);
-                                    remove(selected_file);
+                                    delete_file(marked_dir, ptr->name);
                                 }
                             }
                         }
@@ -1112,7 +1135,7 @@ static void fselect_marked_delete_cb(unsigned int btn)
 
     if (btn != MBOX_BTN_YES) return;
 
-    cnt=fselect_marked_count();
+    cnt = fselect_marked_count();
     for (ptr=items.head; ptr; ptr=ptr->next)
         if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
         {
@@ -1120,20 +1143,17 @@ static void fselect_marked_delete_cb(unsigned int btn)
             ++del_cnt;
             if (cnt)
                 gui_browser_progress_show(lang_str(LANG_FSELECT_PROGRESS_TITLE),del_cnt*100/cnt);
-            sprintf(selected_file, "%s/%s", current_dir, ptr->name);
-            remove(selected_file);
+            delete_file(current_dir, ptr->name);
             finished();
-            selected_file[0]=0;
         }
 
     if (del_cnt == 0 && selected)
     {
         started();
-        sprintf(selected_file, "%s/%s", current_dir, selected->name);
-        remove(selected_file);
+        delete_file(current_dir, selected->name);
         finished();
-        selected_file[0]=0;
     }
+    selected_file[0] = 0;
     gui_fselect_readdir = 1;
     gui_fselect_redraw = 2;
 }
@@ -1378,32 +1398,25 @@ static void fselect_mpopup_cb(unsigned int actn)
                           MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_marked_delete_cb);
             break;
          case MPOPUP_PURGE:
-           if (chk_name(selected->name,"DCIM"))
+           if (chk_name(current_dir, "A") && (chk_name(selected->name, "DCIM") || chk_name(selected->name, "RAW")))
            {
-               //If selected item is DCIM folder
-               sprintf(buf, lang_str(LANG_FSELECT_PURGE_DCIM_TEXT), fselect_marked_count());
-               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
-                         MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb);
+               //If selected folder is A/DCIM or A/RAW (this is to purge all RAW files in any sub-folder)
+               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, LANG_FSELECT_PURGE_DCIM_TEXT, MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb_DCIM);
            }
-           else if (chk_name(current_dir,"A/DCIM"))
+           else if ((chk_name(current_dir, "A/DCIM")) || (chk_name(current_dir, "A/RAW")))
            {
                //If selected item is a Canon folder
-               sprintf(buf, lang_str(LANG_FSELECT_PURGE_CANON_FOLDER_TEXT), fselect_marked_count());
-               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
-                         MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb);
+               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, LANG_FSELECT_PURGE_CANON_FOLDER_TEXT, MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb_dir);
            }
            else if (is_raw(selected->name))
            {
                //If selected item is a file produced by the camera
-               sprintf(buf, lang_str(LANG_FSELECT_PURGE_LIST_TEXT), fselect_marked_count());
-               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
-                         MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb);
+               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, LANG_FSELECT_PURGE_LIST_TEXT, MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb_file);
            }
            else
            {
-               sprintf(buf, lang_str(LANG_FSELECT_PURGE_DISABLED_TEXT), fselect_marked_count());
-               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
-                         MBOX_TEXT_CENTER|MBOX_BTN_OK|MBOX_DEF_BTN1, fselect_purge_cb);
+               // Invalid selection
+               gui_mbox_init(LANG_FSELECT_PURGE_TITLE, LANG_FSELECT_PURGE_DISABLED_TEXT, MBOX_TEXT_CENTER|MBOX_BTN_OK|MBOX_DEF_BTN1, 0);
            }
            break;
         case MPOPUP_SELINV:
