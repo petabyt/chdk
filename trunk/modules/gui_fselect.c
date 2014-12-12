@@ -68,25 +68,36 @@ static char buf[100];
 static gui_handler *gui_fselect_mode_old; // stored previous gui_mode
 
 // basic element of file list
-struct fitem {
+typedef struct _fitem
+{
     unsigned int    n;
-    char            *name;
     unsigned char   attr;
     unsigned long   size;
     unsigned long   mtime;
     unsigned char   marked;
-    struct fitem    *prev, *next;
-};
-static struct fitem *head=NULL;     // head of list<fitem>:  holder of current directory list
-static struct fitem *top;           // ptr to first displayed file (top on the screen)
-static struct fitem *selected;      // ptr to current file (file on cursor)
-static unsigned int count;          // cur_dir_file_list.size()
+    struct _fitem   *prev, *next;
+    char            name[1];    // this structure must dynamically allocated !!!
+                                // when allocating add the required length of the name (malloc(sizeof(fitem) + strlen(name))
+                                // only one buffer then needs to be allocated and released
+} fitem;
+
+// List container
+typedef struct
+{
+    unsigned int    count;
+    fitem           *head;
+    fitem           *tail;
+} flist;
+
+static flist    items;          // head of list<fitem>:  holder of current directory list
+static flist    marked_items;   // head of list<fitem>:  holder of selected files list (keep independent filelist). made by Cut/Copy
+
+static fitem    *top;           // ptr to first displayed file (top on the screen)
+static fitem    *selected;      // ptr to current file (file on cursor)
+
+static char marked_operation;   // info for paste: MARKED_OP_NONE, MARKED_OP_CUT, MARKED_OP_COPY
+
 static unsigned int max_dir_len;    // just NAME_SIZE+SIZE_SIZE+SPACING
-
-static struct fitem *marked_head=NULL;  // head of list<fitem>:  holder of selected files list (keep independent filelist). made by Cut/Copy
-static unsigned int marked_count;       // marked_file_list.size()
-static char marked_operation;           // info for paste: MARKED_OP_NONE, MARKED_OP_CUT, MARKED_OP_COPY
-
 
 static coord main_x, main_y, main_w, main_h; //main browser window coord (without BORDERs)
 static coord head_x, head_y, head_w, head_h; //header window coord
@@ -112,7 +123,6 @@ static char raw_operation;      // info for process_raw_files() RAW_OPERATION_AV
 
 #define MPOPUP_RAWOPS           0x0020
 #define MPOPUP_MORE             0x0040
-
 
 static struct mpopup_item popup[]= {
         { MPOPUP_CUT,           LANG_POPUP_CUT    },
@@ -155,10 +165,326 @@ static struct mpopup_item popup_more[]= {
 };
 
 //-------------------------------------------------------------------
-static void fselect_goto_prev(int step) {
+// List helper functions
+
+static void free_list(flist *list)
+{
+    fitem *ptr = list->head;
+
+    while (ptr)
+    {
+        fitem *prev = ptr;
+        ptr = ptr->next;
+        free(prev);
+    }
+
+    list->head = list->tail = 0;
+    list->count = 0;
+}
+
+static void add_item(flist *list, const char *name, unsigned char attr, unsigned long size, unsigned long mtime, unsigned char marked)
+{
+    fitem *p = malloc(sizeof(fitem) + strlen(name));
+    if (p)
+    {
+        p->n = list->count;
+        strcpy(p->name, name);
+        p->attr = attr;
+        p->size = size;
+        p->mtime = mtime;
+        p->marked = marked;
+
+        p->next = 0;
+        p->prev = list->tail;
+        if (list->tail)
+            list->tail->next = p;
+        list->tail = p;
+        if (list->head == 0)
+            list->head = p;
+
+        list->count++;
+    }
+}
+
+int fselect_sort(const void* v1, const void* v2)
+{
+    fitem *i1 = *((fitem **)v1);
+    fitem *i2 = *((fitem **)v2);
+
+    if (i1->attr & DOS_ATTR_DIRECTORY)
+    {
+        if (i2->attr & DOS_ATTR_DIRECTORY)
+        {
+            if (i1->name[0]=='.' && i1->name[1]=='.' && i1->name[2]==0)
+            {
+                return -1;
+            }
+            else if (i2->name[0]=='.' && i2->name[1]=='.' && i2->name[2]==0)
+            {
+                return 1;
+            }
+            else
+            {
+                return strcmp(i1->name, i2->name);
+            }
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    else
+    {
+        if (i2->attr & DOS_ATTR_DIRECTORY)
+        {
+            return 1;
+        }
+        else
+        {
+            return strcmp(i1->name, i2->name);
+        }
+    }
+}
+
+static void sort_list(flist *list)
+{
+    if (list->count)
+    {
+        // sort
+        fitem **sbuf = malloc(list->count*sizeof(fitem*));
+        if (sbuf)
+        {
+            fitem *ptr = list->head;
+            int i = 0;
+            while (ptr)
+            {
+                sbuf[i++] = ptr;
+                ptr = ptr->next;
+            }
+
+            extern int fselect_sort_nothumb(const void* v1, const void* v2);
+            qsort(sbuf, list->count, sizeof(fitem*), fselect_sort_nothumb);
+
+            list->head = sbuf[0];
+            list->tail = sbuf[list->count-1];
+            for (i=0; i<list->count-1; i++)
+            {
+                sbuf[i]->n = i;
+                sbuf[i]->next = sbuf[i+1];
+                sbuf[i+1]->prev = sbuf[i];
+            }
+            list->head->prev = 0;
+            list->tail->next = 0;
+            list->tail->n = list->count - 1;
+
+            free(sbuf);
+        }
+    }
+}
+
+//-------------------------------------------------------------------
+// File / folder helper functions
+
+static void delete_file(const char *path, const char *name)
+{
+    sprintf(buf, "%s/%s", path, name);
+    remove(buf);
+}
+
+static void delete_dir(const char *path)
+{
+    remove(path);
+}
+
+//-------------------------------------------------------------------
+// Helper methods to check filenames (case insensitive)
+
+// Match extension
+static int chk_ext(const char *ext, const char *tst)
+{
+    if (ext)
+    {
+        ext++;
+        if (strlen(ext) == strlen(tst))
+        {
+            int i;
+            for (i=0; i<strlen(tst); i++)
+                if (toupper(ext[i]) != toupper(tst[i]))
+                    return 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Match start of filename
+static int chk_prefix(const char *name, const char *prefix)
+{
+    if (name && (strlen(name) >= strlen(prefix)))
+    {
+        int i;
+        for (i=0; i<strlen(prefix); i++)
+            if (toupper(prefix[i]) != toupper(name[i]))
+                return 0;
+        return 1;
+    }
+    return 0;
+}
+
+// Match entire name
+static int chk_name(const char *name, const char *tst)
+{
+    if (name && (strlen(name) == strlen(tst)))
+    {
+        int i;
+        for (i=0; i<strlen(tst); i++)
+            if (toupper(tst[i]) != toupper(name[i]))
+                return 0;
+        return 1;
+    }
+    return 0;
+}
+
+// Check for current or parent directory
+static int is_parent(const char *name)  { return (strcmp(name, "..") == 0); }
+static int is_current(const char *name)  { return (strcmp(name, ".") == 0); }
+
+// Check if file is a RAW image
+static int is_raw(const char *name)
+{
+    char *ext = strrchr(name, '.');
+    return ((chk_prefix(name,"crw_") || (chk_prefix(name,"img_")))) &&
+           ((chk_ext(ext,"cr2") || (chk_ext(ext,"crw") || (chk_ext(ext,"dng")))));
+}
+
+// Check if file is a JPG
+static int is_jpg(const char *name)
+{
+    char *ext = strrchr(name, '.');
+    return (chk_prefix(name,"img_")) && (chk_ext(ext,"jpg"));
+}
+
+//-------------------------------------------------------------------
+// Structure to hold info about a file or directory
+typedef struct
+{
+    struct dirent   *de;
+    unsigned char   attr;
+    unsigned long   size;
+    unsigned long   mtime;
+    short           deleted;        // deleted entry?
+    short           isdir;          // directory?
+    short           isparent;       // parent directory (..)?
+    short           iscurrent;      // current directory (.)?
+} fs_dirent;
+
+// Custom readdir - populates extra info about the file or directory
+// Uses stat() after calling readdir() - we don't currently get this
+// extra data from the firmware function.
+static int fs_readdir(DIR *d, fs_dirent *de, const char* path)
+{
+    de->de = readdir(d);
+    de->attr = 0xFF;
+    de->size = 0;
+    de->mtime = 0;
+    de->deleted  = 0;
+    de->isparent = 0;
+    de->iscurrent = 0;
+    de->isdir = 0;
+
+    if (de->de)
+    {
+        if (de->de->d_name[0] == 0xE5)
+        {
+            de->deleted = 1;
+        }
+        else
+        {
+            de->isparent = is_parent(de->de->d_name);
+            de->iscurrent = is_current(de->de->d_name);
+
+            sprintf(buf, "%s/%s", path, de->de->d_name);
+            struct stat st;
+            if (stat(buf, &st) == 0)
+            {
+                de->attr  = st.st_attrib;
+                de->size  = st.st_size;
+                de->mtime = st.st_mtime;
+            }
+            else
+            {
+                de->attr = (de->isparent) ? DOS_ATTR_DIRECTORY : 0xFF;
+            }
+
+            de->isdir = ((de->attr & DOS_ATTR_DIRECTORY) != 0);
+        }
+
+        return 1;
+    }
+
+    return 0;
+}
+
+// Process contents of named directory
+//  - for sub directories, process recursively if required (up to 'nested' levels deep)
+//  - for files, call 'file_process' function
+// Once file & directory processing done, call 'dir_process' function on input path
+static void process_dir(const char *parent, const char *name, int nested, void (*file_process)(const char *path, const char *file), void (*dir_process)(const char *path))
+{
+    DIR         *d;
+    fs_dirent   de;
+
+    // Get full name
+    char *path;
+    if (name)
+    {
+        path = malloc(strlen(parent) + strlen(name) + 2);
+        sprintf(path, "%s/%s", parent, name);
+    }
+    else
+    {
+        path = (char*)parent;
+    }
+
+    // Open directory
+    d = opendir(path);
+
+    if (d)
+    {
+        // Process contents
+        while (fs_readdir(d, &de, path))
+        {
+            if (!de.deleted)
+            {
+                // Sub directory? Process recursively (but only one level deep)
+                if (de.isdir)
+                {
+                    if (!de.isparent && !de.iscurrent && nested)
+                        process_dir(path, de.de->d_name, nested-1, file_process, dir_process);
+                }
+                else if (file_process)
+                {
+                    file_process(path, de.de->d_name);
+                }
+            }
+        }
+        closedir(d);
+
+        if (dir_process)
+            dir_process(path);
+    }
+
+    if (name)
+        free(path);
+}
+
+//-------------------------------------------------------------------
+static void fselect_goto_prev(int step)
+{
     register int j, i;
 
-    for (j=0; j<step; ++j) {
+    for (j=0; j<step; ++j)
+    {
         if (selected->prev==top && top->prev)
             top=top->prev;
         if (selected->prev)
@@ -173,11 +499,13 @@ static void fselect_goto_prev(int step) {
 }
 
 //-------------------------------------------------------------------
-static void fselect_goto_next(int step) {
+static void fselect_goto_next(int step)
+{
     register int j, i;
-    struct fitem  *ptr;
+    fitem  *ptr;
 
-    for (j=0; j<step; ++j) {
+    for (j=0; j<step; ++j)
+    {
         for (i=0, ptr=top; i<BODY_LINES-1 && ptr; ++i, ptr=ptr->next);
         if (i==BODY_LINES-1 && ptr && ptr->prev==selected && ptr->next)
             top=top->next;
@@ -193,124 +521,38 @@ static void fselect_goto_next(int step) {
 }
 
 //-------------------------------------------------------------------
-static void gui_fselect_free_data() {
-    struct fitem  *ptr = head, *prev;
-
-    while (ptr) {
-        if (ptr->name)
-            free(ptr->name);
-        prev = ptr;
-        ptr = ptr->next;
-        free(prev);
-    }
-    head = top = selected = NULL;
-    count = 0;
+static void gui_fselect_free_data()
+{
+    free_list(&items);
+    top = selected = NULL;
 }
 
 //-------------------------------------------------------------------
-extern int fselect_sort_nothumb(const void* v1, const void* v2);
-int fselect_sort(const void* v1, const void* v2) {
-    struct fitem *i1=*((struct fitem **)v1), *i2=*((struct fitem **)v2);
-
-    if (i1->attr & DOS_ATTR_DIRECTORY) {
-        if (i2->attr & DOS_ATTR_DIRECTORY) {
-            if (i1->name[0]=='.' && i1->name[1]=='.' && i1->name[2]==0) {
-                return -1;
-            } else if (i2->name[0]=='.' && i2->name[1]=='.' && i2->name[2]==0) {
-                return 1;
-            } else {
-                return strcmp(i1->name, i2->name);
-            }
-        } else {
-            return -1;
-        }
-    } else {
-        if (i2->attr & DOS_ATTR_DIRECTORY) {
-            return 1;
-        } else {
-            return strcmp(i1->name, i2->name);
-        }
-    }
-}
-
-//-------------------------------------------------------------------
-static void gui_fselect_read_dir(const char* dir) {
-    DIR           *d;
-    struct dirent *de;
-    static struct stat   st;
-    struct fitem  **ptr = &head, *prev = NULL;
+static void gui_fselect_read_dir(const char* dir)
+{
+    DIR         *d;
+    fs_dirent   de;
+    fitem  *ptr, *sbuf;
     int    i;
 
     gui_fselect_free_data();
-//#ifdef CAM_DRYOS_2_3_R39
-    if(dir[0]=='A' && dir[1]==0)
+
+    if (dir[0]=='A' && dir[1]==0)
         d = opendir("A/");
     else
         d = opendir(dir);
-/* //remove for platf independedncy. looks like sequence above is safe
-#else
-    d = opendir(dir);
-#endif
-*/
-    if (d) {
-        de = readdir(d);
-        while (de) {
-            if (de->d_name[0] != 0xE5 /* deleted entry */ && (de->d_name[0]!='.' || de->d_name[1]!=0)) {
-                *ptr = malloc(sizeof(struct fitem));
-                if (*ptr) {
-                    (*ptr)->n = count;
-                    (*ptr)->name = malloc(strlen(de->d_name)+1);
-                    if ((*ptr)->name)
-                        strcpy((*ptr)->name, de->d_name);
-                    sprintf(buf, "%s/%s", dir, de->d_name);
-                    if (stat(buf, &st)==0) {
-                        (*ptr)->attr=st.st_attrib;
-                        (*ptr)->size=st.st_size;
-                        (*ptr)->mtime=st.st_mtime;
-                    } else {
-                        (*ptr)->attr=(de->d_name[0]=='.' && de->d_name[1]=='.' && de->d_name[2]==0)?DOS_ATTR_DIRECTORY:0xFF;
-                        (*ptr)->size=(*ptr)->mtime=0;
-                    }
-                    (*ptr)->marked=0;
-                    (*ptr)->prev=prev;
-                    prev=*ptr;
-                    ptr = &((*ptr)->next);
-                    ++count;
-                }
-            }
-            de = readdir(d);
-        }
+
+    if (d)
+    {
+        while (fs_readdir(d, &de, dir))
+            if (!de.deleted && !de.iscurrent)
+                add_item(&items, de.de->d_name, de.attr, de.size, de.mtime, 0);
         closedir(d);
     }
-    *ptr=NULL;
 
-    if (count) {
-        // sort
-        ptr=malloc(count*sizeof(struct fitem*));
-        if (ptr) {
-            prev=head;
-            count=0;
-            while (prev) {
-                ptr[count++]=prev;
-                prev=prev->next;
-            }
+    sort_list(&items);
 
-            qsort(ptr, count, sizeof(struct fitem*), fselect_sort_nothumb);
-
-            for (i=0; i<count-1; ++i) {
-                ptr[i]->n=i;
-                ptr[i]->next=ptr[i+1];
-                ptr[i+1]->prev=ptr[i];
-            }
-            ptr[0]->prev=ptr[count-1]->next=NULL;
-            ptr[count-1]->n=count-1;
-            head=ptr[0];
-
-            free(ptr);
-        }
-    }
-
-    top = selected = head;
+    top = selected = items.head;
 }
 
 //-------------------------------------------------------------------
@@ -389,10 +631,10 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
     // Find selected file if it exists in list
     if (selected_file[0])
     {
-        struct fitem *p = head;
+        fitem *p = items.head;
         while (p)
         {
-            if (strcmp(p->name,selected_file) == 0)
+            if (chk_name(p->name,selected_file))
             {
                 break;
             }
@@ -410,7 +652,8 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
 }
 
 //-------------------------------------------------------------------
-void gui_fselect_draw_initial() {
+void gui_fselect_draw_initial()
+{
     int title_font_size;
 
     draw_filled_rect(head_x, head_y, head_x+head_w-1, head_y+head_h-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK)); //header box
@@ -423,9 +666,10 @@ void gui_fselect_draw_initial() {
 }
 
 //-------------------------------------------------------------------
-void gui_fselect_draw(int enforce_redraw) {
+void gui_fselect_draw(int enforce_redraw)
+{
     int i, j, off_name_x, off_size_x, off_time_x, off_body_x, off_body_y;
-    struct fitem  *ptr;
+    fitem  *ptr;
     char buf[100];
     struct tm *time;
     unsigned long sum_size;
@@ -441,7 +685,8 @@ void gui_fselect_draw(int enforce_redraw) {
     if ( enforce_redraw )
         gui_fselect_redraw = 2;
 
-    if (gui_fselect_redraw) {
+    if (gui_fselect_redraw)
+    {
         if (gui_fselect_redraw == 2)
             gui_fselect_draw_initial();
 
@@ -452,8 +697,8 @@ void gui_fselect_draw(int enforce_redraw) {
         off_body_x = off_time_x+TIME_FONT_SIZE+SPACING;
 
         sum_size = 0;
-        for (i=0, ptr=top; i<BODY_LINES && ptr; ++i, ptr=ptr->next) {
-
+        for (i=0, ptr=top; i<BODY_LINES && ptr; ++i, ptr=ptr->next)
+        {
             cl_marked = MAKE_COLOR((ptr==selected)?COLOR_RED:COLOR_GREY, (ptr->marked)?cl_markered:COLOR_WHITE);
             cl_selected = (ptr==selected)?MAKE_COLOR(COLOR_RED, COLOR_RED):MAKE_COLOR(COLOR_GREY, COLOR_GREY);
 
@@ -463,10 +708,14 @@ void gui_fselect_draw(int enforce_redraw) {
 
             if (j==NAME_SIZE && ptr->name[j]) buf[NAME_SIZE-1] = '~'; // too long name
 
-            if (ptr->attr & DOS_ATTR_DIRECTORY && ptr->attr != 0xFF) { //?
-                if (j<NAME_SIZE) {
+            if (ptr->attr & DOS_ATTR_DIRECTORY && ptr->attr != 0xFF)
+            { //?
+                if (j<NAME_SIZE)
+                {
                     buf[j++]='/';
-                } else {
+                }
+                else
+                {
                     buf[NAME_SIZE-2]='~';
                     buf[NAME_SIZE-1]='/';
                 }
@@ -480,15 +729,23 @@ void gui_fselect_draw(int enforce_redraw) {
             draw_filled_rect(off_name_x+NAME_FONT_SIZE, off_body_y, off_name_x+NAME_FONT_SIZE+SPACING-1, off_body_y+FONT_HEIGHT-1, cl_selected);
 
             // print size or <Dir>
-            if (ptr->attr & DOS_ATTR_DIRECTORY) {
-                if (ptr->attr == 0xFF) {
+            if (ptr->attr & DOS_ATTR_DIRECTORY)
+            {
+                if (ptr->attr == 0xFF)
+                {
                     sprintf(buf, "  ???  ");
-                } else if (ptr->name[0] == '.' && ptr->name[1] == '.' && ptr->name[2] == 0) {
+                }
+                else if (ptr->name[0] == '.' && ptr->name[1] == '.' && ptr->name[2] == 0)
+                {
                     sprintf(buf, "<UpDir>");
-                } else {
+                }
+                else
+                {
                     sprintf(buf, "< Dir >");
                 }
-            } else {
+            }
+            else
+            {
                 if (ptr->size < 1024)
                     sprintf(buf, "%5d b", ptr->size); // " 1023 b"
                 else if (ptr->size < 1024*1024)
@@ -509,10 +766,13 @@ void gui_fselect_draw(int enforce_redraw) {
             draw_filled_rect(off_size_x+SIZE_FONT_SIZE, off_body_y, off_size_x+SIZE_FONT_SIZE+SPACING-1, off_body_y+FONT_HEIGHT-1, cl_selected);
 
             // print modification time
-            if (ptr->mtime) {
+            if (ptr->mtime)
+            {
                 time = localtime(&(ptr->mtime));
                 sprintf(buf, "%02u.%02u'%02u %02u:%02u", time->tm_mday, time->tm_mon+1, (time->tm_year<100)?time->tm_year:time->tm_year-100, time->tm_hour, time->tm_min);
-            } else {
+            }
+            else
+            {
                 sprintf(buf, "%14s", "");
             }
             buf[TIME_SIZE] = 0;
@@ -525,36 +785,44 @@ void gui_fselect_draw(int enforce_redraw) {
 
         //fill the rest of body
         off_body_y += FONT_HEIGHT;
-        if (i>0 && i<BODY_LINES) {
+        if (i>0 && i<BODY_LINES)
+        {
             draw_filled_rect(body_x, off_body_y, body_x+body_w-1, body_y+body_h-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
         }
 
-       // scrollbar
+        // scrollbar
         draw_filled_rect(off_body_x, body_y, off_body_x+SCROLLBAR-1, body_y+body_h-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-        if (count>BODY_LINES) {
+        if (items.count>BODY_LINES)
+        {
             i = BODY_FONT_LINES - 1;
-            j = i*BODY_LINES/count;
+            j = i*BODY_LINES/items.count;
             if (j<20) j=20;
-            i = (i-j)*selected->n/(count-1);
+            i = (i-j)*selected->n/(items.count-1);
             draw_filled_rect(off_body_x, body_y+i, off_body_x+SCROLLBAR-2, body_y+i+j, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
         }
 
         //footer
         i = strlen(current_dir);
-        if (i > max_dir_len) {
+        if (i > max_dir_len)
+        {
           strncpy(buf, current_dir+i-max_dir_len, max_dir_len);
           buf[0] = '.';
           buf[1] = '.';
-        } else {
+        }
+        else
+        {
           strcpy(buf, current_dir);
         }
         buf[max_dir_len] = 0;
         draw_filled_rect(foot_x, foot_y, foot_x+foot_w-1, foot_y+foot_h-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //footer box
         draw_string(off_name_x, foot_y, buf, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); //current dir
 
-        if (sum_size) {
+        if (sum_size)
+        {
           sprintf(buf, "%d b", sum_size); //selected size
-        } else {
+        }
+        else
+        {
           unsigned int fr, tot;
           fr = GetFreeCardSpaceKb(); tot = GetTotalCardSpaceKb();
           if (fr < 1024*1024)
@@ -568,129 +836,109 @@ void gui_fselect_draw(int enforce_redraw) {
 }
 
 //-------------------------------------------------------------------
-static void fselect_delete_file_cb(unsigned int btn) {
-    if (btn==MBOX_BTN_YES) {
+static void fselect_delete_file_cb(unsigned int btn)
+{
+    if (btn==MBOX_BTN_YES)
+    {
         started();
         sprintf(selected_file, "%s/%s", current_dir, selected->name);
         remove(selected_file);
         finished();
-        selected_file[0]=0;
+        selected_file[0] = 0;
         gui_fselect_readdir = 1;
     }
     gui_fselect_redraw = 2;
 }
 
+// If 'file' is a RAW file, scan its 'folder' for a JPG with the same
+// image number, if not found delete the RAW image file.
+static void purge_file(const char *folder, const char *file)
+{
+    DIR         *d;
+    fs_dirent   de;
+
+    // Check if file is a RAW file
+    if (!is_raw(file))
+        return;
+
+    // Open directory
+    d = opendir(folder);
+
+    if (d)
+    {
+        // Flag if JPG found
+        int found = 0;
+
+        // Process contents
+        while (fs_readdir(d, &de, folder))
+        {
+            // Make sure it's a file and not deleted
+            if (!de.isdir && !de.deleted)
+            {
+                //If the four digits of the Canon number are the same AND file is JPG
+                if (is_jpg(de.de->d_name) && (strncmp(file+4, de.de->d_name+4, 4) == 0))
+                {
+                    found = 1; //A JPG file with the same Canon number was found
+                    break;
+                }
+            }
+        }
+
+        //If no JPG found, delete RAW file
+        if (found == 0)
+        {
+            sprintf(buf, "%s/%s", folder, file);
+            remove(buf);
+        }
+    }
+
+    closedir(d);
+}
+
 static void fselect_purge_cb(unsigned int btn)
 {
-    DIR             *d,  *d2,  *d3,  *d4;
-    struct dirent   *de, *de2, *de3, *de4;
-    struct fitem    *ptr, *ptr2;
-    char            sub_dir[20], sub_dir_search[20];
-    char            selected_item[256];
-    int             i, found=0;
-
-    if (btn==MBOX_BTN_YES) {
+    if (btn == MBOX_BTN_YES)
+    {
         //If selected folder is DCIM (this is to purge all RAW files in any Canon folder)
-        if (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') {
-            sprintf(current_dir+strlen(current_dir), "/%s", selected->name);
-            d=opendir(current_dir);
-            while ((de=readdir(d)) != NULL) {//Loop to find all Canon folders
-                if (de->d_name[0] != '.' && de->d_name[1] != '.') {//If item is not UpDir
-                    sprintf(sub_dir, "%s/%s", current_dir, de->d_name);
-                    d2=opendir(sub_dir);
-                    while ((de2=readdir(d2)) != NULL) {//Loop to find all the RAW files inside a Canon folder
-                        if (de2->d_name[0] == 'C' || de2->d_name[9] == 'C') {//If file is RAW (Either CRW/CR2 prefix or file extension)
-                            d3=opendir(current_dir);
-                            while ((de3=readdir(d3)) != NULL) {//Loop to find all Canon folders
-                                if (de3->d_name[0] != '.' && de3->d_name[1] != '.') {//If item is not UpDir
-                                    sprintf(sub_dir_search, "%s/%s", current_dir, de3->d_name);
-                                    d4=opendir(sub_dir_search);
-                                    while ((de4=readdir(d4)) != NULL) {//Loop to find a corresponding JPG file inside a Canon folder
-                                        if (de2->d_name[4] == de4->d_name[4] && de2->d_name[5] == de4->d_name[5] &&//If the four digits of the Canon number are the same
-                                            de2->d_name[6] == de4->d_name[6] && de2->d_name[7] == de4->d_name[7] &&
-                                            de4->d_name[9] == 'J' && !(de4->d_name[0] == 'C' || de4->d_name[9] == 'C' || de4->d_name[0] == 0xE5)) {//If file is JPG, is not CRW/CR2 and is not a deleted item
-                                                started();
-                                                found=1;//A JPG file with the same Canon number was found
-                                        }
-                                    }
-                                    closedir(d4);
-                                }
-                            }
-                            closedir(d3);
-                            //If no JPG found, delete RAW file
-                            if (found == 0) {
-                                sprintf(selected_item, "%s/%s", sub_dir, de2->d_name);
-                                remove(selected_item);
-                                finished();
-                            }
-                            else {
-                                found=0;
-                                finished();
-                            }
-                        }
-                    }
-                    closedir(d2);
-                }
-            }
-            closedir(d);
-            i=strlen(current_dir);
-            while (current_dir[--i] != '/');
-            current_dir[i]=0;
+        if (chk_name(selected->name, "DCIM") && ((selected->attr & DOS_ATTR_DIRECTORY) != 0))
+        {
+            process_dir(current_dir, selected->name, 1, purge_file, 0);
         }
-        //If item is a Canon folder (this is to purge all RAW files inside a single Canon folder)
-        else if (selected->name[3] == 'C') {
-            sprintf(current_dir+strlen(current_dir), "/%s", selected->name);
-            d=opendir(current_dir);
-            while ((de=readdir(d)) != NULL) {//Loop to find all the RAW files inside the Canon folder
-                if (de->d_name[0] == 'C' || de->d_name[9] == 'C') {//If file is RAW (Either CRW/CR2 prefix or file extension)
-                    d2=opendir(current_dir);
-                    while ((de2=readdir(d2)) != NULL) {//Loop to find a corresponding JPG file inside the Canon folder
-                        if (de->d_name[4] == de2->d_name[4] && de->d_name[5] == de2->d_name[5] &&//If the four digits of the Canon number are the same
-                            de->d_name[6] == de2->d_name[6] && de->d_name[7] == de2->d_name[7] &&
-                            de2->d_name[9] == 'J' && !(de2->d_name[0] == 'C' || de2->d_name[9] == 'C' || de2->d_name[0] == 0xE5)) {//If file is JPG and is not CRW/CR2 and is not a deleted item
-                                started();
-                                found=1;//A JPG file with the same Canon number was found
-                        }
-                    }
-                    closedir(d2);
-                    //If no JPG found, delete RAW file
-                    if (found == 0) {
-                        sprintf(selected_item, "%s/%s", current_dir, de->d_name);
-                        remove(selected_item);
-                        finished();
-                    }
-                    else {
-                        found=0;
-                        finished();
-                    }
-                }
-            }
-            closedir(d);
-            i=strlen(current_dir);
-            while (current_dir[--i] != '/');
-            current_dir[i]=0;
+        //If item is a Canon sub-folder of A/DCIM (this is to purge all RAW files inside a single Canon folder)
+        else if (chk_name(current_dir, "A/DCIM") && ((selected->attr & DOS_ATTR_DIRECTORY) != 0))
+        {
+            process_dir(current_dir, selected->name, 0, purge_file, 0);
         }
-        else {
-            //If inside a Canon folder (files list)
-            for (ptr=head; ptr; ptr=ptr->next) {//Loop to find all the RAW files in the list
-                if ((ptr->name[0] == 'C' || ptr->name[9] == 'C') && !(ptr->marked)) {//If file is RAW (Either CRW/CR2 prefix or file extension) and is not marked
-                    for (ptr2=head; ptr2; ptr2=ptr2->next) {//Loop to find a corresponding JPG file in the list
-                        if (ptr->name[4] == ptr2->name[4] && ptr->name[5] == ptr2->name[5] &&//If the four digits of the Canon number are the same
-                            ptr->name[6] == ptr2->name[6] && ptr->name[7] == ptr2->name[7] &&
-                            ptr2->name[9] == 'J' && !(ptr2->name[0] == 'C' || ptr2->name[9] == 'C')) {//If file is JPG and is not CRW/CR2
-                                started();
-                                found=1;
+        else
+        {
+            //Inside a Canon folder (files list)
+            fitem *ptr, *ptr2;
+
+            //Loop to find all the RAW files in the list
+            for (ptr=items.head; ptr; ptr=ptr->next)
+            {
+                //If file is RAW (Either CRW/CR2 prefix or file extension) and is not marked
+                if (is_raw(ptr->name) && !ptr->marked)
+                {
+                    // Flag for checking if matching JPG exists
+                    int found = 0;
+
+                    //Loop to find a corresponding JPG file in the list
+                    for (ptr2=items.head; ptr2; ptr2=ptr2->next)
+                    {
+                        //If this is a JPG and the four digits of the Canon number are the same
+                        if (is_jpg(ptr2->name) && (strncmp(ptr->name+4, ptr2->name+4, 4) == 0))
+                        {
+                            found=1;
+                            break;
                         }
                     }
+
                     //If no JPG found, delete RAW file
-                    if (found == 0) {
-                        sprintf(selected_file, "%s/%s", current_dir, ptr->name);
-                        remove(selected_file);
-                        finished();
-                    }
-                    else {
-                        found=0;
-                        finished();
+                    if (found == 0)
+                    {
+                        sprintf(buf, "%s/%s", current_dir, ptr->name);
+                        remove(buf);
                     }
                 }
             }
@@ -702,34 +950,12 @@ static void fselect_purge_cb(unsigned int btn)
 
 
 //-------------------------------------------------------------------
-static void fselect_delete_folder_cb(unsigned int btn) {
-    DIR           *d;
-    struct dirent *de;
-    int           i;
-
-    if (btn==MBOX_BTN_YES) {
-        sprintf(current_dir+strlen(current_dir), "/%s", selected->name);
-        d = opendir(current_dir);
-        if (d) {
-            de = readdir(d);
-            while (de) {
-                if (de->d_name[0] != 0xE5 /* deleted entry */ && (de->d_name[0]!='.' || (de->d_name[1]!='.' && de->d_name[1]!=0) || (de->d_name[1]=='.' && de->d_name[2]!=0))) {
-                    started();
-                    sprintf(selected_file, "%s/%s", current_dir, de->d_name);
-                    remove(selected_file);
-                    finished();
-                }
-                de = readdir(d);
-            }
-            closedir(d);
-        }
-        started();
-        remove(current_dir);
-        finished();
-        i=strlen(current_dir);
-        while (current_dir[--i] != '/');
-        current_dir[i]=0;
-        selected_file[0]=0;
+static void fselect_delete_folder_cb(unsigned int btn)
+{
+    if (btn==MBOX_BTN_YES)
+    {
+        process_dir(current_dir, selected->name, 999, delete_file, delete_dir);
+        selected_file[0] = 0;
         gui_fselect_readdir = 1;
     }
     gui_fselect_redraw = 2;
@@ -744,120 +970,93 @@ static void confirm_delete_directory()
 }
 
 //-------------------------------------------------------------------
-static void fselect_marked_toggle() {
-    if (selected && selected->attr != 0xFF && !(selected->attr & DOS_ATTR_DIRECTORY)) {
+static void fselect_marked_toggle()
+{
+    if (selected && selected->attr != 0xFF && !(selected->attr & DOS_ATTR_DIRECTORY))
+    {
         selected->marked = !selected->marked;
     }
 }
 
 //-------------------------------------------------------------------
-static void gui_fselect_marked_free_data() {
-    struct fitem  *ptr = marked_head, *prev;
-
-    while (ptr) {
-        if (ptr->name)
-            free(ptr->name);
-        prev=ptr;
-        ptr=ptr->next;
-        free(prev);
-    }
-    marked_head=NULL;
-    marked_count=0;
+static void gui_fselect_marked_free_data()
+{
+    free_list(&marked_items);
     marked_operation = MARKED_OP_NONE;
 }
 
 //-------------------------------------------------------------------
-static void fselect_marked_copy_list() {
+static void fselect_marked_copy_list()
+{
     gui_fselect_marked_free_data();
 
-    struct fitem  *ptr, **marked_ptr=&marked_head, *prev = NULL;
+    fitem *ptr;
 
-    for (ptr=head; ptr; ptr=ptr->next) {
-        if (ptr->marked) {
-            *marked_ptr = malloc(sizeof(struct fitem));
-            if (*marked_ptr) {
-                (*marked_ptr)->n = ptr->n;
-                (*marked_ptr)->name = malloc(strlen(ptr->name)+1);
-                if ((*marked_ptr)->name)
-                   strcpy((*marked_ptr)->name, ptr->name);
-                (*marked_ptr)->attr=ptr->attr;
-                (*marked_ptr)->size=ptr->size;
-                (*marked_ptr)->mtime=ptr->mtime;
-                (*marked_ptr)->marked=ptr->marked;
-                (*marked_ptr)->prev=prev;
-                prev=*marked_ptr;
-                marked_ptr = &((*marked_ptr)->next);
-                *marked_ptr=NULL;
-                ++marked_count;
-            }
-        }
-    }
+    for (ptr=items.head; ptr; ptr=ptr->next)
+        if (ptr->marked)
+            add_item(&marked_items, ptr->name, ptr->attr, ptr->size, ptr->mtime, 1);
 
-    if (!marked_count)
+    if (!marked_items.count)
         if (selected && selected->attr != 0xFF)
-            if (!(selected->attr & DOS_ATTR_DIRECTORY)) {
-                *marked_ptr = malloc(sizeof(struct fitem));
-                if (*marked_ptr) {
-                    (*marked_ptr)->n = selected->n;
-                    (*marked_ptr)->name = malloc(strlen(selected->name)+1);
-                    if ((*marked_ptr)->name)
-                        strcpy((*marked_ptr)->name, selected->name);
-                    (*marked_ptr)->attr=selected->attr;
-                    (*marked_ptr)->size=selected->size;
-                    (*marked_ptr)->mtime=selected->mtime;
-                    (*marked_ptr)->marked=!(0);
-                    (*marked_ptr)->prev=prev;
-                    prev=*marked_ptr;
-                    marked_ptr = &((*marked_ptr)->next);
-                    *marked_ptr=NULL;
-                    ++marked_count;
-                }
-            }
+            if (!(selected->attr & DOS_ATTR_DIRECTORY))
+                add_item(&marked_items, selected->name, selected->attr, selected->size, selected->mtime, 1);
 
     sprintf(marked_dir, "%s", current_dir);
 }
 
 //-------------------------------------------------------------------
-static void fselect_marked_paste_cb(unsigned int btn) {
-    struct fitem  *ptr;
+static void fselect_marked_paste_cb(unsigned int btn)
+{
+    fitem  *ptr;
     int ss, sd = 0, fsrc, fdst, i=0;
     register int *buf;
     static struct utimbuf t;
 
     if (btn != MBOX_BTN_YES) return;
 
-    if (strcmp(marked_dir, current_dir) != 0) {
+    if (strcmp(marked_dir, current_dir) != 0)
+    {
         buf = umalloc(MARKED_BUF_SIZE);
-        if (buf) {
-            for (ptr=marked_head; ptr; ptr=ptr->next) {
-                if (ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY)) {
+        if (buf)
+        {
+            for (ptr=marked_items.head; ptr; ptr=ptr->next)
+            {
+                if (ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
+                {
                     started();
                     ++i;
-                    if (marked_count)
-                        gui_browser_progress_show(lang_str(LANG_FSELECT_PROGRESS_TITLE),i*100/marked_count);
+                    if (marked_items.count)
+                        gui_browser_progress_show(lang_str(LANG_FSELECT_PROGRESS_TITLE),i*100/marked_items.count);
                     sprintf(selected_file, "%s/%s", marked_dir, ptr->name);
                     fsrc = open(selected_file, O_RDONLY, 0777);
-                    if (fsrc>=0) {
+                    if (fsrc>=0)
+                    {
                         sprintf(selected_file, "%s/%s", current_dir, ptr->name);
                         // trying to open for read to check if file exists
                         fdst = open(selected_file, O_RDONLY, 0777);
-                        if (fdst<0) {
+                        if (fdst<0)
+                        {
                             fdst = open(selected_file, O_WRONLY|O_CREAT, 0777);
-                            if (fdst>=0) {
-                                do {
+                            if (fdst>=0)
+                            {
+                                do
+                                {
                                     ss=read(fsrc, buf, MARKED_BUF_SIZE);
                                     if (ss>0) sd=write(fdst, buf, ss);
                                 } while (ss>0 && ss==sd);
                                 close(fdst);
                                 t.actime = t.modtime = ptr->mtime;
                                 utime(selected_file, &t);
-                                if (marked_operation == MARKED_OP_CUT && ss==0) {
+                                if (marked_operation == MARKED_OP_CUT && ss==0)
+                                {
                                     close(fsrc); fsrc = -1;
                                     sprintf(selected_file, "%s/%s", marked_dir, ptr->name);
                                     remove(selected_file);
                                 }
                             }
-                        } else {
+                        }
+                        else
+                        {
                             close(fdst);
                         }
                         if (fsrc>=0) close(fsrc);
@@ -867,7 +1066,8 @@ static void fselect_marked_paste_cb(unsigned int btn) {
                 }
             }
             ufree(buf);
-            if (marked_operation == MARKED_OP_CUT) {
+            if (marked_operation == MARKED_OP_CUT)
+            {
                 gui_fselect_marked_free_data();
             }
         }
@@ -877,21 +1077,26 @@ static void fselect_marked_paste_cb(unsigned int btn) {
 }
 
 //-------------------------------------------------------------------
-static inline unsigned int fselect_real_marked_count() {
-    struct fitem  *ptr;
+static inline unsigned int fselect_real_marked_count()
+{
+    fitem  *ptr;
     register unsigned int cnt=0;
 
-    for (ptr=head; ptr; ptr=ptr->next) {
+    for (ptr=items.head; ptr; ptr=ptr->next)
+    {
         if (ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->marked)
             ++cnt;
     }
     return cnt;
 }
+
 //-------------------------------------------------------------------
-static unsigned int fselect_marked_count() {
+static unsigned int fselect_marked_count()
+{
     register unsigned int cnt=fselect_real_marked_count();
 
-    if (!cnt) {
+    if (!cnt)
+    {
         if (selected && selected->attr != 0xFF && !(selected->attr & DOS_ATTR_DIRECTORY))
             ++cnt;
     }
@@ -900,15 +1105,17 @@ static unsigned int fselect_marked_count() {
 }
 
 //-------------------------------------------------------------------
-static void fselect_marked_delete_cb(unsigned int btn) {
-    struct fitem  *ptr;
+static void fselect_marked_delete_cb(unsigned int btn)
+{
+    fitem  *ptr;
     unsigned int del_cnt=0, cnt;
 
     if (btn != MBOX_BTN_YES) return;
 
     cnt=fselect_marked_count();
-    for (ptr=head; ptr; ptr=ptr->next)
-        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY)) {
+    for (ptr=items.head; ptr; ptr=ptr->next)
+        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
+        {
             started();
             ++del_cnt;
             if (cnt)
@@ -919,7 +1126,8 @@ static void fselect_marked_delete_cb(unsigned int btn) {
             selected_file[0]=0;
         }
 
-    if (del_cnt == 0 && selected) {
+    if (del_cnt == 0 && selected)
+    {
         started();
         sprintf(selected_file, "%s/%s", current_dir, selected->name);
         remove(selected_file);
@@ -931,7 +1139,8 @@ static void fselect_marked_delete_cb(unsigned int btn) {
 }
 
 //-------------------------------------------------------------------
-static void fselect_chdk_replace_cb(unsigned int btn) {
+static void fselect_chdk_replace_cb(unsigned int btn)
+{
     int ss, sd = 0, fsrc, fdst;
     register int *buf;
     static struct utimbuf t;
@@ -941,19 +1150,21 @@ static void fselect_chdk_replace_cb(unsigned int btn) {
     buf = umalloc(MARKED_BUF_SIZE);
     sprintf(selected_file, "%s/%s", current_dir, selected->name);
     fsrc = open(selected_file, O_RDONLY, 0777);
-    if (fsrc>=0) {
+    if (fsrc>=0)
+    {
         strcpy(selected_file,"A/DISKBOOT.BIN");
             fdst = open(selected_file, O_WRONLY|O_CREAT|O_TRUNC, 0777);
-            if (fdst>=0) {
-                do {
+            if (fdst>=0)
+            {
+                do
+                {
                     ss=read(fsrc, buf, MARKED_BUF_SIZE);
                     if (ss>0) sd=write(fdst, buf, ss);
                 } while (ss>0 && ss==sd);
                 close(fdst);
                 t.actime = t.modtime = selected->mtime;
                 utime(selected_file, &t);
-            //shutdown();
-                        gui_browser_progress_show("Please reboot",100);
+                gui_browser_progress_show("Please reboot",100);
             }
         if (fsrc>=0) close(fsrc);
     }
@@ -961,10 +1172,11 @@ static void fselect_chdk_replace_cb(unsigned int btn) {
 }
 
 //-------------------------------------------------------------------
-static void fselect_marked_inverse_selection() {
-    struct fitem  *ptr;
+static void fselect_marked_inverse_selection()
+{
+    fitem  *ptr;
 
-    for (ptr=head; ptr; ptr=ptr->next)
+    for (ptr=items.head; ptr; ptr=ptr->next)
         if (ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
             ptr->marked = !ptr->marked;
 
@@ -974,11 +1186,11 @@ static void fselect_marked_inverse_selection() {
 //-------------------------------------------------------------------
 void process_raw_files(void)
 {
-    struct fitem *ptr;
+    fitem *ptr;
 
     if ((fselect_marked_count()>1) && librawop->raw_merge_start(raw_operation))
     {
-        for (ptr=head; ptr; ptr=ptr->next)
+        for (ptr=items.head; ptr; ptr=ptr->next)
             if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
             {
                 sprintf(selected_file, "%s/%s", current_dir, ptr->name);
@@ -992,10 +1204,10 @@ void process_raw_files(void)
 
 static void fselect_subtract_cb(unsigned int btn)
 {
-    struct fitem *ptr;
+    fitem *ptr;
     if (btn != MBOX_BTN_YES) return;
 
-    for (ptr=head; ptr; ptr=ptr->next)
+    for (ptr=items.head; ptr; ptr=ptr->next)
     {
         if (ptr->marked && ptr->attr != 0xFF &&
             !(ptr->attr & DOS_ATTR_DIRECTORY) &&
@@ -1008,25 +1220,30 @@ static void fselect_subtract_cb(unsigned int btn)
     gui_fselect_redraw = 2;
 }
 
-
 #define MAX_SUB_NAMES 6
-static void setup_batch_subtract(void) {
-    struct fitem *ptr;
+static void setup_batch_subtract(void)
+{
+    fitem *ptr;
     int i;
     char *p = buf + sprintf(buf,"%s %s\n",selected->name,lang_str(LANG_FSELECT_SUB_FROM));
-    for (ptr=head, i=0; ptr; ptr=ptr->next) {
-        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->size >= camera_sensor.raw_size) {
-            if ( i < MAX_SUB_NAMES ) {
+    for (ptr=items.head, i=0; ptr; ptr=ptr->next)
+    {
+        if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY) && ptr->size >= camera_sensor.raw_size)
+        {
+            if ( i < MAX_SUB_NAMES )
+            {
                 sprintf(p, "%s\n",ptr->name);
                 // keep a pointer to the one before the end, so we can stick ...and more on
-                if (i < MAX_SUB_NAMES - 1) {
+                if (i < MAX_SUB_NAMES - 1)
+                {
                     p += strlen(p);
                 }
             }
             i++;
         }
     }
-    if (i > MAX_SUB_NAMES) {
+    if (i > MAX_SUB_NAMES)
+    {
 //      "...%d more files"
         sprintf(p,lang_str(LANG_FSELECT_SUB_AND_MORE),i - (MAX_SUB_NAMES - 1));
     }
@@ -1036,7 +1253,7 @@ static void setup_batch_subtract(void) {
 //-------------------------------------------------------------------
 void process_dng_to_raw_files(void)
 {
-    struct fitem *ptr;
+    fitem *ptr;
     int i=0;
     started();
     msleep(100);
@@ -1044,7 +1261,7 @@ void process_dng_to_raw_files(void)
 
     if (fselect_real_marked_count())
     {
-        for (ptr=head; ptr; ptr=ptr->next)
+        for (ptr=items.head; ptr; ptr=ptr->next)
             if (ptr->marked && ptr->attr != 0xFF && !(ptr->attr & DOS_ATTR_DIRECTORY))
             {
                 sprintf(selected_file, "%s/%s", current_dir, ptr->name);
@@ -1060,9 +1277,8 @@ void process_dng_to_raw_files(void)
     gui_fselect_readdir = 1;
 }
 
-
-
-static void fselect_mpopup_rawop_cb(unsigned int actn) {
+static void fselect_mpopup_rawop_cb(unsigned int actn)
+{
     switch (actn) {
         case MPOPUP_RAW_AVERAGE:
             raw_operation=RAW_OPERATION_AVERAGE;
@@ -1087,7 +1303,8 @@ static void fselect_mpopup_rawop_cb(unsigned int actn) {
 
 static void mkdir_cb(const char* name)
 {
-    if (name) {
+    if (name)
+    {
         sprintf(selected_file,"%s/%s",current_dir,name);
         mkdir(selected_file);
         gui_fselect_readdir = 1;
@@ -1097,7 +1314,8 @@ static void mkdir_cb(const char* name)
 
 static void rename_cb(const char* name)
 {
-    if (name) {
+    if (name)
+    {
         char newname[100];
         sprintf(selected_file, "%s/%s", current_dir, selected->name);
         sprintf(newname,"%s/%s",current_dir,name);
@@ -1107,9 +1325,10 @@ static void rename_cb(const char* name)
     }
 }
 
-static void fselect_mpopup_more_cb(unsigned int actn) {
-
-    switch (actn) {
+static void fselect_mpopup_more_cb(unsigned int actn)
+{
+    switch (actn)
+    {
         case MPOPUP_MKDIR:
             libtextbox->textbox_init(LANG_POPUP_MKDIR, LANG_PROMPT_MKDIR, "", 15, mkdir_cb, 0);
             break;
@@ -1127,8 +1346,10 @@ static int mpopup_rawop_flag;
 static int mpopup_more_flag;
 
 //-------------------------------------------------------------------
-static void fselect_mpopup_cb(unsigned int actn) {
-    switch (actn) {
+static void fselect_mpopup_cb(unsigned int actn)
+{
+    switch (actn)
+    {
         case MPOPUP_CUT:
             fselect_marked_copy_list();
             marked_operation=MARKED_OP_CUT;
@@ -1138,13 +1359,15 @@ static void fselect_mpopup_cb(unsigned int actn) {
             marked_operation=MARKED_OP_COPY;
             break;
         case MPOPUP_PASTE:
-            if (marked_operation == MARKED_OP_CUT) {
-                sprintf(buf, lang_str(LANG_FSELECT_CUT_TEXT), marked_count, marked_dir);
+            if (marked_operation == MARKED_OP_CUT)
+            {
+                sprintf(buf, lang_str(LANG_FSELECT_CUT_TEXT), marked_items.count, marked_dir);
                 gui_mbox_init(LANG_FSELECT_CUT_TITLE, (int)buf,
                               MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_marked_paste_cb);
             }
-            else {
-                sprintf(buf, lang_str(LANG_FSELECT_COPY_TEXT), marked_count, marked_dir);
+            else
+            {
+                sprintf(buf, lang_str(LANG_FSELECT_COPY_TEXT), marked_items.count, marked_dir);
                 gui_mbox_init(LANG_FSELECT_COPY_TITLE, (int)buf,
                               MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_marked_paste_cb);
             }
@@ -1155,22 +1378,29 @@ static void fselect_mpopup_cb(unsigned int actn) {
                           MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_marked_delete_cb);
             break;
          case MPOPUP_PURGE:
-           if (selected->name[0] == 'D' && selected->name[1] == 'C' && selected->name[2] == 'I' && selected->name[3] == 'M') {//If selected item is DCIM folder
+           if (chk_name(selected->name,"DCIM"))
+           {
+               //If selected item is DCIM folder
                sprintf(buf, lang_str(LANG_FSELECT_PURGE_DCIM_TEXT), fselect_marked_count());
                gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
                          MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb);
            }
-           else if (selected->name[3] == 'C') {//If selected item is a Canon folder
+           else if (chk_name(current_dir,"A/DCIM"))
+           {
+               //If selected item is a Canon folder
                sprintf(buf, lang_str(LANG_FSELECT_PURGE_CANON_FOLDER_TEXT), fselect_marked_count());
                gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
                          MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb);
            }
-           else if (selected->name[9] == 'C' || selected->name[9] == 'T' || selected->name[9] == 'W' || selected->name[9] == 'J') {//If seleted item is a file produced by the camera
+           else if (is_raw(selected->name))
+           {
+               //If selected item is a file produced by the camera
                sprintf(buf, lang_str(LANG_FSELECT_PURGE_LIST_TEXT), fselect_marked_count());
                gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
                          MBOX_TEXT_CENTER|MBOX_BTN_YES_NO|MBOX_DEF_BTN2, fselect_purge_cb);
            }
-           else {
+           else
+           {
                sprintf(buf, lang_str(LANG_FSELECT_PURGE_DISABLED_TEXT), fselect_marked_count());
                gui_mbox_init(LANG_FSELECT_PURGE_TITLE, (int)buf,
                          MBOX_TEXT_CENTER|MBOX_BTN_OK|MBOX_DEF_BTN1, fselect_purge_cb);
@@ -1208,19 +1438,6 @@ void finalize_fselect()
     gui_fselect_marked_free_data();
 }
 
-static int chk_ext(char *ext, char *tst)
-{
-    if (ext && (strlen(ext) == strlen(tst)+1))
-    {
-        int i;
-        for (i=0; i<strlen(tst); i++)
-            if (toupper(ext[i+1]) != toupper(tst[i]))
-                return 0;
-        return 1;
-    }
-    return 0;
-}
-
 static void exit_fselect(char* file)
 {
     finalize_fselect();
@@ -1242,10 +1459,12 @@ int gui_fselect_kbd_process()
 {
     int i;
 
-    switch (kbd_get_autoclicked_key() | get_jogdial_direction()) {
+    switch (kbd_get_autoclicked_key() | get_jogdial_direction())
+    {
         case JOGDIAL_LEFT:
         case KEY_UP:
-            if (selected) {
+            if (selected)
+            {
                 if (camera_info.state.is_shutter_half_press) fselect_goto_prev(4);
                 else fselect_goto_prev(1);
                 gui_fselect_redraw = 1;
@@ -1253,36 +1472,42 @@ int gui_fselect_kbd_process()
             break;
         case KEY_DOWN:
         case JOGDIAL_RIGHT:
-            if (selected) {
+            if (selected)
+            {
                 if (camera_info.state.is_shutter_half_press) fselect_goto_next(4);
                 else fselect_goto_next(1);
                 gui_fselect_redraw = 1;
             }
             break;
         case KEY_ZOOM_OUT:
-            if (selected) {
+            if (selected)
+            {
                 fselect_goto_prev(BODY_LINES-1);
                 gui_fselect_redraw = 1;
             }
             break;
         case KEY_ZOOM_IN:
-            if (selected) {
+            if (selected)
+            {
                 fselect_goto_next(BODY_LINES-1);
                 gui_fselect_redraw = 1;
             }
             break;
         case KEY_RIGHT:
-            if (selected) {
+            if (selected)
+            {
                 fselect_marked_toggle();
                 fselect_goto_next(1);
                 gui_fselect_redraw = 1;
             }
             break;
         case KEY_LEFT:
-            if (selected && selected->attr != 0xFF) {
+            if (selected && selected->attr != 0xFF)
+            {
                 i=MPOPUP_CUT|MPOPUP_COPY|MPOPUP_SELINV|MPOPUP_MORE;
                 mpopup_rawop_flag=0;
-                if (fselect_marked_count() > 0) {
+                if (fselect_marked_count() > 0)
+                {
                     i |= MPOPUP_DELETE;
                     if ( fselect_marked_count()>1 )
                         mpopup_rawop_flag |=MPOPUP_RAW_ADD|MPOPUP_RAW_AVERAGE;
@@ -1309,7 +1534,6 @@ int gui_fselect_kbd_process()
                 if ( mpopup_rawop_flag )
                     i |= MPOPUP_RAWOPS;
 
-
                 mpopup_more_flag = MPOPUP_MKDIR;
                 if (selected->attr & DOS_ATTR_DIRECTORY)
                     mpopup_more_flag |=MPOPUP_RMDIR;
@@ -1320,10 +1544,13 @@ int gui_fselect_kbd_process()
             }
             break;
         case KEY_SET:
-            if (selected && selected->attr != 0xFF && gui_fselect_redraw==0) {
-                if (selected->attr & DOS_ATTR_DIRECTORY) {
+            if (selected && selected->attr != 0xFF && gui_fselect_redraw==0)
+            {
+                if (selected->attr & DOS_ATTR_DIRECTORY)
+                {
                     i=strlen(current_dir);
-                    if (selected->name[0]=='.' && selected->name[1]=='.' && selected->name[2]==0) {
+                    if (selected->name[0]=='.' && selected->name[1]=='.' && selected->name[2]==0)
+                    {
                         while (current_dir[--i] != '/');
                         current_dir[i]=0;
                     } else {
@@ -1331,7 +1558,9 @@ int gui_fselect_kbd_process()
                     }
                     gui_fselect_readdir = 1;
                     gui_fselect_redraw = 1;
-                } else  {
+                }
+                else
+                {
                     sprintf(selected_file, "%s/%s", current_dir, selected->name);
 
                     char *ext = strrchr(selected->name,'.');
