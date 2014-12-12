@@ -121,4 +121,6 @@
     #define CAM_DISP_BUTTON_NAME                "Video"
     #define SHORTCUT_TOGGLE_RAW                 KEY_VIDEO
 
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
+
 //--------------------------------------------------

@@ -64,6 +64,9 @@
     #define CAM_SD_OVER_IN_AF               1
 
     #define CAM_USB_EVENTID_VXWORKS         0x10A5 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
+
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+
 //--------------------------------------------------
 
     #undef  CAM_DEFAULT_MENU_CURSOR

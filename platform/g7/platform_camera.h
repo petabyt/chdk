@@ -71,6 +71,8 @@
 
     // Warning : no usable SD override mode found for G7 .. bummer !
 
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+
 //--------------------------------------------------
 
     #undef  CAM_DEFAULT_MENU_CURSOR
