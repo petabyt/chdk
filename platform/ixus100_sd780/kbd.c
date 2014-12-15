@@ -26,7 +26,7 @@ extern long aHookList[];
 extern long aHookNum;
 
 #define KEYS_MASK0 (0x0000000F)
-#define KEYS_MASK1 (0x00094800)
+#define KEYS_MASK1 (0x00084800)
 #define KEYS_MASK2 (0x00007041)
 
 #define SD_READONLY_FLAG (0x20000)  // 1 << 0x11
@@ -259,9 +259,8 @@ static KeyMap keymap[] = {
 
 	{ 1, KEY_SET		, 0x00004000 },
 	{ 1, KEY_MENU		, 0x00000800 },
-	{ 1, KEY_POWER		, 0x00010000 },  //SD780 Power button
+//	{ 1, KEY_POWER		, 0x00010000 },  //SD780 Power button
 	{ 1, KEY_PLAYBACK	, 0x00080000 },  //SD780 Play button
-	{ 1, KEY_PRINT		, 0x00080000 }, // <ALT> key
 
 	//xxxf --> xxxd when in movie mode by switch
 	//xxxxxxx4 --> xxxxxxx5 when in lens extended recording mode
