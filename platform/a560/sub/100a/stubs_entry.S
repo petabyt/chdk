@@ -44,8 +44,8 @@ NHSTUB(MakeAFScan                             ,0xffe952b8) //  2 86%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffec4568) // Found @0xffec4568,          stubs_min = 0xffec4568 (0xFFEC4568)
-//DEF(FlashParamsTable                        ,0xffed3430) // Found @0xffed3430,          stubs_min = 0xffed3430 (0xFFED3430)
+DEF(levent_table                            ,0xffec4568) // Found @0xffec4568
+DEF(FlashParamsTable                        ,0xffed3430) // Found @0xffed3430
 DEF(fileio_semaphore                        ,0x0000948c) // Found @0xffe3dcd8
 DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffece0e8
 
@@ -119,7 +119,7 @@ NHSTUB(SetCurrentCaptureModeType              ,0xffc183b4) //120
 NHSTUB(SetFileAttributes                      ,0xffe3b7fc) //  3
 NHSTUB(SetLogicalEventActive                  ,0xffec99b0) //1104
 NHSTUB(SetPropertyCase                        ,0xffc0bb80) //  3
-//NHSTUB(SetScriptMode                        ,0xffec9a14) //120            == 0xffec9a14
+NHSTUB(SetScriptMode                          ,0xffec9a14) //120
 NHSTUB(SleepTask                              ,0xffea963c) //120
 NHSTUB(TakeSemaphore                          ,0xffea90ec) //1101
 NHSTUB(TurnOffBackLight                       ,0xffc304cc) //  2
