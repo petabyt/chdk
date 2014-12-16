@@ -25,8 +25,8 @@ NHSTUB(localtime                              ,0xffef96fc) //  1 93%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd69bbc) // Found @0xffd69bbc,          stubs_min = 0xffd69bbc (0xFFD69BBC)
-//DEF(FlashParamsTable                        ,0xffd73a14) // Found @0xffd73a14,          stubs_min = 0xffd73a14 (0xFFD73A14)
+DEF(levent_table                            ,0xffd69bbc) // Found @0xffd69bbc
+DEF(FlashParamsTable                        ,0xffd73a14) // Found @0xffd73a14
 DEF(fileio_semaphore                        ,0x00002734) // Found @0xffc5e690
 DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xffd751b4
 
@@ -72,8 +72,8 @@ NHSTUB(Fwrite_Fut                             ,0xffc5a0e8) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc1d200) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1d1ec) //102
 NHSTUB(GetCurrentAvValue                      ,0xffeb3d50) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xffc607b0) //119            == 0xffc607b0
-//NHSTUB(GetDrive_FreeClusters                ,0xffc60828) //1103            == 0xffc60828
+NHSTUB(GetDrive_ClusterSize                   ,0xffc607b0) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffc60828) //1103
 NHSTUB(GetDrive_TotalClusters                 ,0xffc607ec) //119
 NHSTUB(GetFocusLensSubjectDistance            ,0xffea2f3c) //  2
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffea34f0) //  2
@@ -107,7 +107,7 @@ NHSTUB(SetFileAttributes                      ,0xffc611ec) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd6eab0) //1104
 NHSTUB(SetParameterData                       ,0xffd75fb0) //  2
 NHSTUB(SetPropertyCase                        ,0xffc14c9c) //  2
-//NHSTUB(SetScriptMode                        ,0xffd6eb18) //120            == 0xffd6eb18
+NHSTUB(SetScriptMode                          ,0xffd6eb18) //120
 NHSTUB(SleepTask                              ,0xffc119d0) //120
 NHSTUB(TakeSemaphore                          ,0xffc114cc) //1101
 NHSTUB(TurnOffBackLight                       ,0xffdbd750) //  2
