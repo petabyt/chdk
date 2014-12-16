@@ -57,8 +57,8 @@ NHSTUB(Mount_FileSystem                       ,0xffc596cc) //  1 90%
 // Current modemap entry not found in firmware - MODE_VIDEO_STD            3613
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd31ba0) // Found @0xffd31ba0,          stubs_min = 0xffd31ba0 (0xFFD31BA0)
-//DEF(FlashParamsTable                        ,0xffd3adb0) // Found @0xffd3adb0,          stubs_min = 0xffd3adb0 (0xFFD3ADB0)
+DEF(levent_table                            ,0xffd31ba0) // Found @0xffd31ba0
+DEF(FlashParamsTable                        ,0xffd3adb0) // Found @0xffd3adb0
 DEF(fileio_semaphore                        ,0x00002530) // Found @0xffc57af0
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd3c804
 
@@ -90,7 +90,7 @@ NHSTUB(CreateTask                             ,0xffc11260) //120
 NHSTUB(DebugAssert                            ,0xffc03aec) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc535c8) //  1
 NHSTUB(DoAELock                               ,0xffd22cf0) //120
-//NHSTUB(DoAFLock                             ,0xffd22ba0) //120            == 0xffd22ba0
+NHSTUB(DoAFLock                               ,0xffd22ba0) //120
 NHSTUB(ExecuteEventProcedure                  ,0xffc0680c) //  1
 NHSTUB(ExitTask                               ,0xffc11620) //120
 NHSTUB(Fclose_Fut                             ,0xffc53708) //120
@@ -105,9 +105,9 @@ NHSTUB(Fwrite_Fut                             ,0xffc5383c) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc1c044) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1c030) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe5bf44) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xffc59c04) //119            == 0xffc59c04
+NHSTUB(GetDrive_ClusterSize                   ,0xffc59c04) //119
 NHSTUB(GetDrive_FreeClusters                  ,0xffc59c7c) //1103
-//NHSTUB(GetDrive_TotalClusters               ,0xffc59c40) //119            == 0xffc59c40
+NHSTUB(GetDrive_TotalClusters                 ,0xffc59c40) //119
 NHSTUB(GetOpticalTemperature                  ,0xffc1c01c) //120
 NHSTUB(GetPropertyCase                        ,0xffc14518) //  1
 NHSTUB(GetZoomLensCurrentPoint                ,0xffe41344) //120
@@ -134,7 +134,7 @@ NHSTUB(SetCurrentCaptureModeType              ,0xffd6750c) //120
 NHSTUB(SetFileAttributes                      ,0xffc5a5e4) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd367e8) //1104
 NHSTUB(SetPropertyCase                        ,0xffc143ec) //  1
-//NHSTUB(SetScriptMode                        ,0xffd36850) //120            == 0xffd36850
+NHSTUB(SetScriptMode                          ,0xffd36850) //120
 NHSTUB(SleepTask                              ,0xffc11174) //120
 NHSTUB(TakeSemaphore                          ,0xffc10c70) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd7e1f0) //  2
@@ -142,10 +142,10 @@ NHSTUB(TurnOnBackLight                        ,0xffd7e1c0) //  2
 NHSTUB(TurnOnDisplay                          ,0xffd07964) //120
 NHSTUB(TurnOffDisplay                         ,0xffd07974) //120
 NHSTUB(UnlockAE                               ,0xffd22d10) //120
-//NHSTUB(UnlockAF                             ,0xffd22be4) //120            == 0xffd22be4
+NHSTUB(UnlockAF                               ,0xffd22be4) //120
 NHSTUB(UnlockMainPower                        ,0xffd389cc) //120
 NHSTUB(UpdateMBROnFlash                       ,0xffc59938) //  1
-//NHSTUB(VbattGet                             ,0xffc1b014) //120            == 0xffc1b014
+NHSTUB(VbattGet                               ,0xffc1b014) //120
 NHSTUB(Write                                  ,0xffc5a4cc) //120
 NHSTUB(_log                                   ,0xffe9381c) //121
 NHSTUB(_log10                                 ,0xffe8fcf4) //121
@@ -220,6 +220,6 @@ NHSTUB(EngDrvRead                             ,0xffc6b3f8) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xffd3b52c) //102
 NHSTUB(CancelHPTimer                          ,0xffc059f0) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xffc0557c) //119
-//NHSTUB(MFOn                                 ,0xffd2366c) //120            == 0xffd2366c
-//NHSTUB(MFOff                                ,0xffd2369c) //120            == 0xffd2369c
+NHSTUB(MFOn                                   ,0xffd2366c) //120
+NHSTUB(MFOff                                  ,0xffd2369c) //120
 NHSTUB(GetAdChValue                           ,0xffc18968) //120
