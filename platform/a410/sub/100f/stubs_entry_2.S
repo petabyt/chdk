@@ -20,9 +20,6 @@ NHSTUB(TurnOnMic,                   NULL_SUB)
 // Additional
 NHSTUB(ExpCtrlTool_StartContiAE,    0xFFCD8898)
 NHSTUB(ExpCtrlTool_StopContiAE,     0xFFCD88B0)
-NHSTUB(MFOff,                       0xffd24c48)
-NHSTUB(MFOn,                        0xffd24c18)
-NHSTUB(SetScriptMode,               0xFFD3799C)
 NHSTUB(exmem_free,                  0xFFC02904)
 
 IGNORE(MoveFocusLensToDistance) // Custom version in focushack.c, ignore firmware version
