@@ -54,8 +54,8 @@ NHSTUB(MakeAFScan                             ,0xffd285f8) //  1 89%
 // Strange mode 0x0001000f in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffd32d98) // Found @0xffd32d98,          stubs_min = 0xffd32d98 (0xFFD32D98)
-//DEF(FlashParamsTable                        ,0xffd3bc1c) // Found @0xffd3bc1c,          stubs_min = 0xffd3bc1c (0xFFD3BC1C)
+DEF(levent_table                            ,0xffd32d98) // Found @0xffd32d98
+DEF(FlashParamsTable                        ,0xffd3bc1c) // Found @0xffd3bc1c
 DEF(fileio_semaphore                        ,0x0000251c) // Found @0xffc57cf0
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd3d550
 
@@ -133,7 +133,7 @@ NHSTUB(SetFileAttributes                      ,0xffc5a804) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffd37938) //1104
 NHSTUB(SetParameterData                       ,0xffd3e224) //  1
 NHSTUB(SetPropertyCase                        ,0xffc154bc) //  1
-//NHSTUB(SetScriptMode                        ,0xffd3799c) //120            == 0xffd3799c
+NHSTUB(SetScriptMode                          ,0xffd3799c) //120
 NHSTUB(SleepTask                              ,0xffc121c4) //120
 NHSTUB(TakeSemaphore                          ,0xffc11b80) //1101
 NHSTUB(TurnOffBackLight                       ,0xffd7a150) //  1
@@ -213,6 +213,6 @@ NHSTUB(EngDrvRead                             ,0xffc6bad4) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xffd3c30c) //102
 NHSTUB(CancelHPTimer                          ,0xffc05b4c) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xffc056d8) //119
-//NHSTUB(MFOn                                 ,0xffd24c18) //120            == 0xffd24c18
-//NHSTUB(MFOff                                ,0xffd24c48) //120            == 0xffd24c48
+NHSTUB(MFOn                                   ,0xffd24c18) //120
+NHSTUB(MFOff                                  ,0xffd24c48) //120
 NHSTUB(GetAdChValue                           ,0xffc19648) //120
