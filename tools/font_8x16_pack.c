@@ -58,34 +58,64 @@ static void font_init_data(unsigned short *src, int st, int num)
 }
 
 //-------------------------------------------------------------------
+static void check_used(unsigned short *cp)
+{
+    int i;
+    for (i=0; i<128; i++)
+    {
+        unsigned short c = cp[i];
+        int j;
+        for (j=0; orig_font_data[j].charcode != -1; j++)
+        {
+            if (orig_font_data[j].charcode == c)
+            {
+                orig_font_data[j].isUsed++;
+            }
+        }
+    }
+}
+
+//-------------------------------------------------------------------
 
 int main(int argc, char **argv)
 {
     int i, j, offset, size, f = 0;
+
+    int ncp = sizeof(codepages)/(sizeof(unsigned short*));
     
+    // Check if chars in font are used in any codepages
+    check_used(cp_common);
+    for (j=0; j<ncp; j++)
+    {
+        check_used(codepages[j]);
+    }
+
     printf("// This is a compressed version of font_8x16_uni.h produced by the tools/font_8x16_pack program\n\n");
     printf("// Format of each character is 'FontData' structure, followed by FontData.size bytes of character data.\n\n");
     printf("static unsigned char font_data[] = {\n");
 
     for (i=0; orig_font_data[i].charcode != -1; i++)
     {
-        offset = 0;
-        size = 16;
-        for (j=0; j<16 && orig_font_data[i].data[j] == 0; j++) { offset++; size--; }
-        for (j=15; j>offset && orig_font_data[i].data[j] == 0; j--) { size--; }
-
-        font_data[f++] = orig_font_data[i].charcode & 0xFF;
-        font_data[f++] = (orig_font_data[i].charcode >> 8) & 0xFF;
-        font_data[f++] = offset;
-        font_data[f++] = size;
-
-        printf("0x%02x, 0x%02x, 0x%02x, 0x%02x,", orig_font_data[i].charcode & 0xff, (orig_font_data[i].charcode >> 8) & 0xFF, offset, size);
-        for (j=0; j<size; j++)
+        if (orig_font_data[i].isUsed > 0)
         {
-            font_data[f++] = orig_font_data[i].data[offset+j] & 0xFF;
-            printf(" 0x%02x,",orig_font_data[i].data[offset+j] & 0xFF);
+            offset = 0;
+            size = 16;
+            for (j=0; j<16 && orig_font_data[i].data[j] == 0; j++) { offset++; size--; }
+            for (j=15; j>offset && orig_font_data[i].data[j] == 0; j--) { size--; }
+
+            font_data[f++] = orig_font_data[i].charcode & 0xFF;
+            font_data[f++] = (orig_font_data[i].charcode >> 8) & 0xFF;
+            font_data[f++] = offset;
+            font_data[f++] = size;
+
+            printf("0x%02x, 0x%02x, 0x%02x, 0x%02x,", orig_font_data[i].charcode & 0xff, (orig_font_data[i].charcode >> 8) & 0xFF, offset, size);
+            for (j=0; j<size; j++)
+            {
+                font_data[f++] = orig_font_data[i].data[offset+j] & 0xFF;
+                printf(" 0x%02x,",orig_font_data[i].data[offset+j] & 0xFF);
+            }
+            printf("\n");
         }
-        printf("\n");
     }
 
     font_data[f++] = 0xFF;
@@ -104,8 +134,6 @@ int main(int argc, char **argv)
         if ((i & 15) == 15) printf("\n");
     }
     printf("};\n");
-
-    int ncp = sizeof(codepages)/(sizeof(unsigned short*));
 
     for (j=0; j<ncp; j++)
     {
