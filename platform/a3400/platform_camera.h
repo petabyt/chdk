@@ -63,6 +63,8 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1       // camera doesn't actually have digest mode, this is needed by is_video_recording
+    #define CAM_IS_VID_REC_WORKS            1
 
     #define DNG_VERT_RLE_BADPIXELS          1
 
@@ -77,6 +79,7 @@
     #undef  CAM_HAS_MANUAL_FOCUS
 
     #define CAM_LOAD_CUSTOM_COLORS          1       // Enable loading CHDK colors into the camera palette memory/hardware
+    #define COLOR_GREY_DK_TRANS             (CHDK_COLOR_BASE+13)
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1
