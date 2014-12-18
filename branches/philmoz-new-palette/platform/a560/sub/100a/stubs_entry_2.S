@@ -13,7 +13,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 // Additional
 NHSTUB(ExpCtrlTool_StartContiAE,    0xFFD15CB8)
 NHSTUB(ExpCtrlTool_StopContiAE,     0xFFD15CE8)
-NHSTUB(SetScriptMode,               0xFFEC9A14)
 NHSTUB(TurnOffMic,                  0xffdde07c)
 NHSTUB(TurnOnMic,                   0xffdde040)
 NHSTUB(GetVRAMHPixelsSize,0xFFE020D8) // by find_eventproc name @ 0xFFF1F528

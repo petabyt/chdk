@@ -1265,11 +1265,6 @@ static int luaCB_set_remote_timing( lua_State* L )
      lua_pushboolean(L,stop_usb_HPtimer());
   return 1;
 }
-// TEMP backward compat
-static int luaCB_enable_remote_hp_timer( lua_State* L )
-{
-    return luaCB_set_remote_timing(L);
-}
 
 // enable shared USB port between ptp and precision sync
 static int luaCB_usb_force_active( lua_State* L )
@@ -2713,7 +2708,6 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_autostart)
     FUNC(get_usb_power)
     FUNC(set_remote_timing)
-    FUNC(enable_remote_hp_timer)
     FUNC(usb_force_active)    
     FUNC(enter_alt)
     FUNC(exit_alt)
