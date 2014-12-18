@@ -1,0 +1,21 @@
+************************************
+SX170IS Notes
+************************************
+Porting thread: http://chdk.setepontos.com/index.php?topic=11164.msg109425#msg109425
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+Ported by nafraf
+
+KNOWN BUGS
+**********
+- Mute on zoom not implemented.
+- RAW capture does not work. See porting thread.
+
+For Developers
+**************
+- 
+
+
