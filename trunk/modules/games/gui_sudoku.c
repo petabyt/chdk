@@ -34,8 +34,8 @@ gui_handler GUI_MODE_SUDOKU =
 static int running = 0;
 
 //-------------------------------------------------------------------
-#define SUDOKU_BG_COLOR		MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)
-#define MARKER_COLOR		COLOR_PLY_GREEN // green for all cameras in play mode
+#define SUDOKU_BG_COLOR		COLOR_WHITE
+#define MARKER_COLOR		COLOR_GREEN // green for all cameras in play mode
 #define TEXT_COLOR			MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK)
 #define MARKER_TEXT_COLOR 	MAKE_COLOR(MARKER_COLOR, COLOR_WHITE)
 
@@ -130,7 +130,7 @@ int is_one_num(int number)
 
 void del_numpad()
 {
-	draw_filled_rect(xPadStart, yPadStart-padLineDistance, xPadStart+padLineDistance*3, yPadStart+padLineDistance*4, SUDOKU_BG_COLOR);
+	draw_filled_rect(xPadStart, yPadStart-padLineDistance, xPadStart+padLineDistance*3, yPadStart+padLineDistance*4, MAKE_COLOR(SUDOKU_BG_COLOR,SUDOKU_BG_COLOR));
 }
 
 void draw_numpad()
@@ -140,14 +140,14 @@ void draw_numpad()
 	del_numpad();
 
 	//horizontal
-	draw_line(xPadStart+padLineDistance, yPadStart-padLineDistance, xPadStart+2*padLineDistance, yPadStart-padLineDistance, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	for (i=0; i<4; i++)draw_line(xPadStart, yPadStart+padLineDistance*i, xPadStart+padLineDistance*3, yPadStart+padLineDistance*i, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+	draw_line(xPadStart+padLineDistance, yPadStart-padLineDistance, xPadStart+2*padLineDistance, yPadStart-padLineDistance, COLOR_BLACK);
+	for (i=0; i<4; i++) draw_line(xPadStart, yPadStart+padLineDistance*i, xPadStart+padLineDistance*3, yPadStart+padLineDistance*i, COLOR_BLACK);
 
 	//vertical
-	draw_line(xPadStart, yPadStart, xPadStart, yPadStart+3*padLineDistance, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xPadStart+padLineDistance, yPadStart-padLineDistance, xPadStart+padLineDistance, yPadStart+3*padLineDistance, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xPadStart+2*padLineDistance, yPadStart-padLineDistance, xPadStart+2*padLineDistance, yPadStart+3*padLineDistance, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xPadStart+3*padLineDistance, yPadStart, xPadStart+3*padLineDistance, yPadStart+3*padLineDistance, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+	draw_line(xPadStart, yPadStart, xPadStart, yPadStart+3*padLineDistance, COLOR_BLACK);
+	draw_line(xPadStart+padLineDistance, yPadStart-padLineDistance, xPadStart+padLineDistance, yPadStart+3*padLineDistance, COLOR_BLACK);
+	draw_line(xPadStart+2*padLineDistance, yPadStart-padLineDistance, xPadStart+2*padLineDistance, yPadStart+3*padLineDistance, COLOR_BLACK);
+	draw_line(xPadStart+3*padLineDistance, yPadStart, xPadStart+3*padLineDistance, yPadStart+3*padLineDistance, COLOR_BLACK);
 
 	//numbers
 	i=0;
@@ -161,9 +161,9 @@ void draw_numpad()
 	draw_string(xPadStart+padLineDistance+(padLineDistance-FONT_WIDTH)/2, yPadStart+padLineDistance*(-1)+(padLineDistance-FONT_HEIGHT)/2, str, MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK));
 
 	//marker
-	draw_rect(xPadStart+xPosPad*padLineDistance, yPadStart+yPosPad*padLineDistance, xPadStart+(xPosPad+1)*padLineDistance, yPadStart+(yPosPad+1)*padLineDistance, MAKE_COLOR(MARKER_COLOR, MARKER_COLOR));
-	draw_rect(xPadStart+xPosPad*padLineDistance+1, yPadStart+yPosPad*padLineDistance+1, xPadStart+(xPosPad+1)*padLineDistance-1, yPadStart+(yPosPad+1)*padLineDistance-1, MAKE_COLOR(MARKER_COLOR, MARKER_COLOR));
-	draw_rect(xPadStart+xPosPad*padLineDistance+2, yPadStart+yPosPad*padLineDistance+2, xPadStart+(xPosPad+1)*padLineDistance-2, yPadStart+(yPosPad+1)*padLineDistance-2, MAKE_COLOR(MARKER_COLOR, MARKER_COLOR));
+	draw_rect(xPadStart+xPosPad*padLineDistance, yPadStart+yPosPad*padLineDistance, xPadStart+(xPosPad+1)*padLineDistance, yPadStart+(yPosPad+1)*padLineDistance, MARKER_COLOR);
+	draw_rect(xPadStart+xPosPad*padLineDistance+1, yPadStart+yPosPad*padLineDistance+1, xPadStart+(xPosPad+1)*padLineDistance-1, yPadStart+(yPosPad+1)*padLineDistance-1, MARKER_COLOR);
+	draw_rect(xPadStart+xPosPad*padLineDistance+2, yPadStart+yPosPad*padLineDistance+2, xPadStart+(xPosPad+1)*padLineDistance-2, yPadStart+(yPosPad+1)*padLineDistance-2, MARKER_COLOR);
 }
 
 int get_pad_num()
@@ -215,32 +215,32 @@ void draw_field()
 	//Lines
 	for (i=0; i<10; ++i){
 		//vertical lines
-		draw_line(xFieldBorder+fieldLineDistance*i, yFieldBorder, xFieldBorder+fieldLineDistance*i, yFieldBorder+fieldLineLength, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+		draw_line(xFieldBorder+fieldLineDistance*i, yFieldBorder, xFieldBorder+fieldLineDistance*i, yFieldBorder+fieldLineLength, COLOR_BLACK);
 		//horizontal lines
-		draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*i, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*i, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+		draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*i, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*i, COLOR_BLACK);
 	}
 	//draw thick vertical lines
-	draw_line(xFieldBorder+fieldLineDistance*3-1, yFieldBorder, xFieldBorder+fieldLineDistance*3-1, yFieldBorder+fieldLineLength, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xFieldBorder+fieldLineDistance*3+1, yFieldBorder, xFieldBorder+fieldLineDistance*3+1, yFieldBorder+fieldLineLength, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+	draw_line(xFieldBorder+fieldLineDistance*3-1, yFieldBorder, xFieldBorder+fieldLineDistance*3-1, yFieldBorder+fieldLineLength, COLOR_BLACK);
+	draw_line(xFieldBorder+fieldLineDistance*3+1, yFieldBorder, xFieldBorder+fieldLineDistance*3+1, yFieldBorder+fieldLineLength, COLOR_BLACK);
 
-	draw_line(xFieldBorder+fieldLineDistance*6-1, yFieldBorder, xFieldBorder+fieldLineDistance*6-1, yFieldBorder+fieldLineLength, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xFieldBorder+fieldLineDistance*6+1, yFieldBorder, xFieldBorder+fieldLineDistance*6+1, yFieldBorder+fieldLineLength, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+	draw_line(xFieldBorder+fieldLineDistance*6-1, yFieldBorder, xFieldBorder+fieldLineDistance*6-1, yFieldBorder+fieldLineLength, COLOR_BLACK);
+	draw_line(xFieldBorder+fieldLineDistance*6+1, yFieldBorder, xFieldBorder+fieldLineDistance*6+1, yFieldBorder+fieldLineLength, COLOR_BLACK);
 
 	//draw thick horizontal lines
-	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*3-1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*3-1, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*3+1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*3+1, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*3-1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*3-1, COLOR_BLACK);
+	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*3+1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*3+1, COLOR_BLACK);
 
-	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*6-1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*6-1, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
-	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*6+1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*6+1, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*6-1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*6-1, COLOR_BLACK);
+	draw_line(xFieldBorder, yFieldBorder+fieldLineDistance*6+1, xFieldBorder+fieldLineLength, yFieldBorder+fieldLineDistance*6+1, COLOR_BLACK);
 
 	//cursor
 	if (mode==MODE_VIEW){
-		draw_rect(xFieldBorder+xPos*fieldLineDistance, yFieldBorder+yPos*fieldLineDistance, xFieldBorder+(xPos+1)*fieldLineDistance, yFieldBorder+(yPos+1)*fieldLineDistance, MAKE_COLOR(MARKER_COLOR, MARKER_COLOR));
-		draw_rect(xFieldBorder+xPos*fieldLineDistance+1, yFieldBorder+yPos*fieldLineDistance+1, xFieldBorder+(xPos+1)*fieldLineDistance-1, yFieldBorder+(yPos+1)*fieldLineDistance-1, MAKE_COLOR(MARKER_COLOR, MARKER_COLOR));
-		draw_rect(xFieldBorder+xPos*fieldLineDistance+2, yFieldBorder+yPos*fieldLineDistance+2, xFieldBorder+(xPos+1)*fieldLineDistance-2, yFieldBorder+(yPos+1)*fieldLineDistance-2, MAKE_COLOR(MARKER_COLOR, MARKER_COLOR));
+		draw_rect(xFieldBorder+xPos*fieldLineDistance, yFieldBorder+yPos*fieldLineDistance, xFieldBorder+(xPos+1)*fieldLineDistance, yFieldBorder+(yPos+1)*fieldLineDistance, MARKER_COLOR);
+		draw_rect(xFieldBorder+xPos*fieldLineDistance+1, yFieldBorder+yPos*fieldLineDistance+1, xFieldBorder+(xPos+1)*fieldLineDistance-1, yFieldBorder+(yPos+1)*fieldLineDistance-1, MARKER_COLOR);
+		draw_rect(xFieldBorder+xPos*fieldLineDistance+2, yFieldBorder+yPos*fieldLineDistance+2, xFieldBorder+(xPos+1)*fieldLineDistance-2, yFieldBorder+(yPos+1)*fieldLineDistance-2, MARKER_COLOR);
 	}
 	if (mode==MODE_EDIT){
-		draw_filled_ellipse(xFieldBorder+(xPos+1)*fieldLineDistance-fieldLineDistance/2, yFieldBorder+(yPos+1)*fieldLineDistance-fieldLineDistance/2, fieldLineDistance/2-3, fieldLineDistance/2-1, MAKE_COLOR(MARKER_COLOR, COLOR_RED));
+		draw_filled_ellipse(xFieldBorder+(xPos+1)*fieldLineDistance-fieldLineDistance/2, yFieldBorder+(yPos+1)*fieldLineDistance-fieldLineDistance/2, fieldLineDistance/2-3, fieldLineDistance/2-1, MARKER_COLOR);
 		sprintf(str, "%i", get_dec_num(user[yPos][xPos]));
 		draw_string(xFieldBorder+fieldLineDistance*xPos+(fieldLineDistance-FONT_WIDTH)/2, yFieldBorder+fieldLineDistance*yPos+(fieldLineDistance-FONT_HEIGHT)/2, str, MAKE_COLOR(MARKER_COLOR, COLOR_WHITE));
 	}

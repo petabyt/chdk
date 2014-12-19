@@ -151,7 +151,7 @@ int textbox_init(int title, int msg, const char* defaultstr, unsigned int maxsiz
 
 static void gui_tbox_draw_buttons() {
     coord x = tbox_buttons_x;
-    color cl;
+    twoColors cl;
 
     cl = MAKE_COLOR((tbox_button_active==0)?COLOR_RED:COLOR_BLACK, COLOR_WHITE);
     draw_rect(x-1, tbox_buttons_y+FONT_HEIGHT-1, x+BUTTON_SIZE*FONT_WIDTH+3, tbox_buttons_y+2*FONT_HEIGHT+3, COLOR_BLACK); //shadow
@@ -264,7 +264,7 @@ void gui_tbox_draw()
         {
             // draw keyboard
             char ch;
-            color cl;
+            twoColors cl;
 
             // clean previous symbols line
             draw_filled_rect(key_offset_x, tbox_buttons_y, key_offset_x+(tbox_width-1)*FONT_WIDTH, tbox_buttons_y+3*FONT_HEIGHT, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
@@ -323,11 +323,11 @@ void gui_tbox_draw()
         text_limit_reached--;
     }
     if (cursor_to_draw) {
-        draw_line(text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+1, text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+FONT_HEIGHT-3, MAKE_COLOR(COLOR_GREY, COLOR_YELLOW));
+        draw_line(text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+1, text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+FONT_HEIGHT-3, COLOR_YELLOW);
         cursor_to_draw = 0;
     }
     else {
-        draw_line(text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+1, text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+FONT_HEIGHT-3, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
+        draw_line(text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+1, text_offset_x+(1+cursor-offset)*FONT_WIDTH, text_offset_y+FONT_HEIGHT-3, COLOR_GREY);
         cursor_to_draw = 1;
     }
 }

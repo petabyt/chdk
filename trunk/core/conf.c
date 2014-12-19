@@ -164,20 +164,20 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO2( 36, conf.usb_info_pos,                          CONF_OSD_POS,   95,0),
 
     // Keep these together
-    CONF_INFO( 50, conf.histo_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
-    CONF_INFO( 51, conf.histo_color2,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_WHITE)),
-    CONF_INFO( 52, conf.osd_color,                              CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE)),
-    CONF_INFO( 53, conf.osd_color_warn,                         CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED)),
-    CONF_INFO( 54, conf.osd_color_override,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED)),
-    CONF_INFO( 55, conf.menu_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
-    CONF_INFO( 56, conf.menu_title_color,                       CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_WHITE, COLOR_BLACK)),
-    CONF_INFO( 57, conf.menu_cursor_color,                      CONF_DEF_VALUE, cl:CAM_DEFAULT_MENU_CURSOR),
-    CONF_INFO( 58, conf.menu_symbol_color,                      CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
-    CONF_INFO( 59, conf.reader_color,                           CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY, COLOR_WHITE)),
-    CONF_INFO( 60, conf.grid_color,                             CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK, COLOR_WHITE)),
-    CONF_INFO( 61, conf.space_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE)),
-    CONF_INFO( 62, conf.zebra_color,                            CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED)),
-    CONF_INFO( 63, conf.edge_overlay_color,                     CONF_DEF_VALUE, cl:MAKE_COLOR(COLOR_RED, COLOR_RED)),
+    CONF_INFOC( 50, conf.histo_color,                           CONF_DEF_VALUE, IDX_COLOR_GREY_DK,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 51, conf.histo_color2,                          CONF_DEF_VALUE, IDX_COLOR_RED,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 52, conf.osd_color,                             CONF_DEF_VALUE, IDX_COLOR_GREY_DK_TRANS,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 53, conf.osd_color_warn,                        CONF_DEF_VALUE, IDX_COLOR_GREY_DK_TRANS,IDX_COLOR_RED,1,1),
+    CONF_INFOC( 54, conf.osd_color_override,                    CONF_DEF_VALUE, IDX_COLOR_GREY_DK_TRANS,IDX_COLOR_RED,1,1),
+    CONF_INFOC( 55, conf.menu_color,                            CONF_DEF_VALUE, IDX_COLOR_GREY_DK,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 56, conf.menu_title_color,                      CONF_DEF_VALUE, IDX_COLOR_WHITE,IDX_COLOR_BLACK,1,1),
+    CONF_INFOC( 57, conf.menu_cursor_color,                     CONF_DEF_VALUE, CAM_DEFAULT_MENU_CURSOR_BG,CAM_DEFAULT_MENU_CURSOR_FG,1,1),
+    CONF_INFOC( 58, conf.menu_symbol_color,                     CONF_DEF_VALUE, IDX_COLOR_GREY_DK,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 59, conf.reader_color,                          CONF_DEF_VALUE, IDX_COLOR_GREY,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 60, conf.grid_color,                            CONF_DEF_VALUE, IDX_COLOR_GREY_DK,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 61, conf.space_color,                           CONF_DEF_VALUE, IDX_COLOR_GREY_DK_TRANS,IDX_COLOR_WHITE,1,1),
+    CONF_INFOC( 62, conf.zebra_color,                           CONF_DEF_VALUE, IDX_COLOR_RED,IDX_COLOR_RED,1,1),
+    CONF_INFOC( 63, conf.edge_overlay_color,                    CONF_DEF_VALUE, 0,IDX_COLOR_RED,0,1),
 
     CONF_INFO( 80, conf.show_clock,                             CONF_DEF_VALUE, i:2),
     CONF_INFO( 81, conf.clock_format,                           CONF_DEF_VALUE, i:0),
@@ -1180,7 +1180,7 @@ void config_restore(ConfInfo *ci, const char *filename, void (*info_func)(unsign
                                 tVarArrayConfig *cfg = (tVarArrayConfig*)(ci[i].var);
                                 size = cfg->load(buf+offs);
                             }
-                            else
+                            else if (ci[i].size == size)    // only restore if size matches
                             {
                                 memcpy(ci[i].var, buf+offs, size);
                             }
@@ -1338,13 +1338,14 @@ static int findConfInfo(ConfInfo *ci, unsigned short id)
 void resetColors()
 {
     int i, n;
+
     // Iterate over color override ID's
     for (n=COLOR_FIRST_OVERRIDE; n<=COLOR_LAST_OVERRIDE; n++)
     {
         i = findConfInfo(osd_conf_info, n);
         if (i != -1)
         {
-            *((color*)osd_conf_info[i].var) = osd_conf_info[i].cl;
+            *((confColor*)osd_conf_info[i].var) = osd_conf_info[i].cl;
         }
     }
 }

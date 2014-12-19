@@ -113,18 +113,6 @@ void my_kbd_read_keys() {
     kbd_new_state[1] = physw_status[1];
     //kbd_new_state[2] = physw_status[2];
 
-  /*static char osd_buf[64];
-        sprintf(osd_buf, "1:%8x  ", physw_status[0]);
-        draw_txt_string(28, 10, osd_buf, conf.osd_color);
-
-        sprintf(osd_buf, "2:%8x  ", physw_status[1]);
-        draw_txt_string(28, 11, osd_buf, conf.osd_color);
-
-        sprintf(osd_buf, "3:%8x  ", physw_status[2]);
-        draw_txt_string(28, 12, osd_buf, conf.osd_color);*/
-
-
-
     if (kbd_process() == 0) {
         // we read keyboard state with _kbd_read_keys()
 

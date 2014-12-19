@@ -16,7 +16,7 @@
             module_set_script_lang
             module_run
             module_preload
-            &module_colors
+            &chdk_colors
 
             &libscriptapi
             &libtextbox
@@ -139,6 +139,9 @@
             draw_set_draw_proc
             draw_restore
 
+            chdkColorToCanonColor
+            user_color
+            get_script_color
             gui_set_mode
             gui_default_kbd_process_menu_btn
             get_batt_perc
@@ -361,7 +364,6 @@
             levent_table
 
             script_set_terminate_key
-            script_colors
             script_start_gui
             script_end
 

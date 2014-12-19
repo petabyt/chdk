@@ -313,11 +313,11 @@ static void redraw() {
                     break;
                 case FIELD_PLAYER1:
                     draw_filled_ellipse(field_x+cell_size*x+(cell_size>>1), field_y+cell_size*y+(cell_size>>1), 
-                                        (cell_size>>1)-4, (cell_size>>1)-4, MAKE_COLOR(MARKER_COLOR_WHITE, MARKER_COLOR_WHITE));
+                                        (cell_size>>1)-4, (cell_size>>1)-4, MARKER_COLOR_WHITE);
                     break;
                 case FIELD_PLAYER2:
                     draw_filled_ellipse(field_x+cell_size*x+(cell_size>>1), field_y+cell_size*y+(cell_size>>1), 
-                                        (cell_size>>1)-4, (cell_size>>1)-4, MAKE_COLOR(MARKER_COLOR_BLACK, MARKER_COLOR_BLACK));
+                                        (cell_size>>1)-4, (cell_size>>1)-4, MARKER_COLOR_BLACK);
                     break;
             }
         }

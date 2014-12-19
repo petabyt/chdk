@@ -5,7 +5,7 @@
 
 #define ANY_VERSION             {0,0}
 
-#define CONF_VERSION            {2,2}       // Version for Conf structure
+#define CONF_VERSION            {3,0}       // Version for Conf structure
 
 #define CAM_SCREEN_VERSION      {1,0}       // Version for camera_screen
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
@@ -20,7 +20,7 @@
 #define RAW_MERGE_VERSION       {3,0}
 #define GUI_TBOX_VERSION        {2,0}
 #define GUI_READ_VERSION        {2,0}
-#define GUI_PALETTE_VERSION     {2,1}
+#define GUI_PALETTE_VERSION     {2,2}
 #define GUI_MPOPUP_VERSION      {2,0}
 #define GUI_GRID_VERSION        {2,0}
 #define GUI_FSELECT_VERSION     {2,0}

@@ -246,7 +246,7 @@ void do_expire_check() {
         return;
     }
 
-    color cl;
+    twoColors cl;
     if (camera_info.state.gui_mode_alt) {
         cl=MAKE_COLOR(COLOR_RED, COLOR_WHITE);
         gui_reset_alt_helper(); // replace the helper with nag screen
@@ -276,7 +276,7 @@ void do_expire_check() {
 void do_expire_splash(int x,int y) {
     static char under_dev_text[64];
     int days_left = get_expire_days_left();
-    color cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+    twoColors cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
     if(days_left) {
         sprintf(under_dev_text, "TEST BUILD %d DAYS LEFT",days_left);
     } else {
@@ -1517,12 +1517,12 @@ static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, grid_submenu_items };
 
 static void gui_menu_run_palette(int arg)
 {
-    libpalette->show_palette(PALETTE_MODE_DEFAULT, 0, NULL);
+    libpalette->show_palette(PALETTE_MODE_DEFAULT, (chdkColor){0,0}, NULL);
 }
 
 static void gui_menu_test_palette(int arg)
 {
-    libpalette->show_palette(PALETTE_MODE_TEST, 0, NULL);
+    libpalette->show_palette(PALETTE_MODE_TEST, (chdkColor){0,0}, NULL);
 }
 
 static void gui_menu_reset_colors_selected(unsigned int btn)
@@ -2120,18 +2120,6 @@ static const char *text[] =
     "Camera: " PLATFORM " - " PLATFORMSUB
 };
 
-static const color logo_colors[8] = 
-{
-    COLOR_BLACK,
-    COLOR_RED_DK,
-    COLOR_RED,
-    COLOR_GREY,
-    COLOR_GREY_LT,
-    COLOR_RED_LT,
-    COLOR_TRANSPARENT,
-    COLOR_WHITE
-};
-
 static void init_splash()
 {
     gui_splash = (conf.splash_show) ? SPLASH_TIME : 0;
@@ -2164,7 +2152,19 @@ static void gui_draw_splash()
 {
     coord x, y;
     int i;
-    color cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+    twoColors cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+
+    const color logo_colors[8] =
+    {
+        COLOR_BLACK,
+        COLOR_RED_DK,
+        COLOR_RED,
+        COLOR_GREY,
+        COLOR_GREY_LT,
+        COLOR_RED_LT,
+        COLOR_TRANSPARENT,
+        COLOR_WHITE
+    };
 
     x = (camera_screen.width-logo_text_width)>>1; 
     y = ((camera_screen.height-logo_text_height)>>1) + 20;
@@ -2346,7 +2346,7 @@ static char* gui_shortcut_text(int button)
     }
 }
 
-static int shortcut_text(int x, int y, int button, int func_str, const char *state, color col)
+static int shortcut_text(int x, int y, int button, int func_str, const char *state, twoColors col)
 {
     buf[0] = 0;
     if (state)
@@ -2397,11 +2397,14 @@ static void gui_draw_alt_helper()
     int y = FONT_HEIGHT;
     int x = ((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*35/2));
 
+    twoColors col = user_color(conf.menu_color);
+    twoColors hdr_col = user_color(conf.menu_title_color);
+
     sprintf(buf,lang_str(LANG_HELP_HEADER),
             lang_str(LANG_HELP_ALT_SHORTCUTS),
             (conf.user_menu_enable && conf.user_menu_as_root)?lang_str(LANG_HELP_USER_MENU):lang_str(LANG_HELP_CHDK_MENU)); 
     buf[35] = 0;
-    draw_string(x, y, buf, conf.menu_title_color);
+    draw_string(x, y, buf, hdr_col);
     y += FONT_HEIGHT;
 
     if (conf.user_menu_enable)
@@ -2410,69 +2413,69 @@ static void gui_draw_alt_helper()
                 lang_str(LANG_HELP_HALF_PRESS),
                 (conf.user_menu_enable && conf.user_menu_as_root)?lang_str(LANG_HELP_CHDK_MENU):lang_str(LANG_HELP_USER_MENU)); 
         buf[35] = 0;
-        draw_string(x, y, buf, conf.menu_color);
+        draw_string(x, y, buf, col);
         y += FONT_HEIGHT;
     }
 
-    draw_string(x, y, lang_str(LANG_HELP_SCRIPTS), conf.menu_color);
+    draw_string(x, y, lang_str(LANG_HELP_SCRIPTS), col);
     y += FONT_HEIGHT;
 
 #if !defined(CAM_HAS_MANUAL_FOCUS) && defined(SHORTCUT_MF_TOGGLE)
-    y = shortcut_text(x, y, SHORTCUT_MF_TOGGLE,LANG_HELP_MANUAL_FOCUS,gui_on_off_enum(0,&conf.subj_dist_override_koef), conf.menu_color);
+    y = shortcut_text(x, y, SHORTCUT_MF_TOGGLE,LANG_HELP_MANUAL_FOCUS,gui_on_off_enum(0,&conf.subj_dist_override_koef), col);
 #endif
 
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
         sprintf(buf,lang_str(LANG_HELP_FOCUS),gui_shortcut_text(SHORTCUT_SET_INFINITY),gui_shortcut_text(SHORTCUT_SET_HYPERFOCAL));
-        draw_string(x, y, buf, conf.menu_color);
+        draw_string(x, y, buf, col);
         y += FONT_HEIGHT;
     }
 
 #if !CAM_HAS_ERASE_BUTTON
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], col);
     else
 #endif
     if (shooting_get_common_focus_mode())           // Check in manual focus mode
     {
 #if CAM_HAS_ZOOM_LEVER
         if (SHORTCUT_TOGGLE_RAW != SHORTCUT_SET_INFINITY)
-            y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_INF_FOCUS, 0, conf.menu_color);
+            y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_INF_FOCUS, 0, col);
 #else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_CHG_FOCUS_FACTOR, 0, conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW, LANG_HELP_CHG_FOCUS_FACTOR, 0, col);
 #endif
     }
     else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), col);
 #else
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], col);
     else
 #endif
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), col);
 #endif
 
-    y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, conf.menu_title_color);
+    y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, hdr_col);
 
     if ( conf.enable_shortcuts)
     {
-        y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable], conf.menu_color);
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo], conf.menu_color);
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw), conf.menu_color);
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd), conf.menu_color);
+        y = shortcut_text(x, y, SHORTCUT_DISABLE_OVERRIDES,LANG_MENU_OVERRIDE_DISABLE,gui_override_disable_modes[conf.override_disable], col);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_HISTO,LANG_MENU_HISTO_SHOW,gui_histo_show_modes[conf.show_histo], col);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_ZEBRA,LANG_MENU_ZEBRA_DRAW,gui_on_off_enum(0,&conf.zebra_draw), col);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_OSD,LANG_MENU_OSD_SHOW,gui_on_off_enum(0,&conf.show_osd), col);
     }
     else
     {
-        y = shortcut_text(x, y, 0,LANG_HELP_SHORTCUTS_DISABLED, 0, conf.menu_color);
+        y = shortcut_text(x, y, 0,LANG_HELP_SHORTCUTS_DISABLED, 0, col);
     }
 
     if (conf.hide_osd == 0)
-        y = shortcut_text(x, y, KEY_DISPLAY, LANG_HELP_HIDE_OSD, 0, conf.menu_color);
+        y = shortcut_text(x, y, KEY_DISPLAY, LANG_HELP_HIDE_OSD, 0, col);
 
     if (is_menu_shortcut)
-        y = shortcut_text(x, y, 0 ,LANG_HELP_NOT_ALT, 0, conf.menu_color);
+        y = shortcut_text(x, y, 0 ,LANG_HELP_NOT_ALT, 0, col);
 }
 
 #endif
@@ -2498,7 +2501,7 @@ void gui_chdk_draw()
 
         if (camera_info.state.mode_rec || camera_info.state.mode_play)
         {
-            draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH, 14, script_title, conf.menu_color);
+            draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH, 14, script_title, user_color(conf.menu_color));
         }
         clear_for_title = 1;   
     }
@@ -2755,7 +2758,7 @@ extern int no_modules_flag;
 void gui_draw_no_module_warning()
 {
     if ( no_modules_flag == 1 ) {
-        draw_txt_string(1, 1, lang_str(LANG_ERROR_MISSING_MODULES), conf.osd_color_warn);
+        draw_txt_string(1, 1, lang_str(LANG_ERROR_MISSING_MODULES), user_color(conf.osd_color_warn));
     }
 }
 

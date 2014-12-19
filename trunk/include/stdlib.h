@@ -16,12 +16,28 @@ typedef struct
     unsigned short  minor;
 } _version_t;
 
-typedef int             coord;
-typedef unsigned short  color;
+// Structures to store user configurable color entry
+#pragma pack(1)     // make sure they are packed as tightly as possible
 
-#define MAKE_COLOR(bg, fg)  ((color)((((char)(bg))<<8)|((char)(fg))))
-#define FG_COLOR(color)     ((unsigned char)(color & 0xFF))
-#define BG_COLOR(color)     ((unsigned char)(color >> 8))
+typedef struct {
+    unsigned char   col;        // color value
+    unsigned char   type;       // 0 = Canon palette index, 1 = CHDK color index (chdk_colors)
+} chdkColor;
+
+typedef struct {
+    chdkColor       fg;         // foreground
+    chdkColor       bg;         // background
+} confColor;
+
+#pragma pack()
+
+typedef int             coord;
+typedef unsigned char   color;
+typedef unsigned short  twoColors;
+
+#define MAKE_COLOR(bg, fg)  ((twoColors)(((color)(bg) << 8) | (color)(fg)))
+#define FG_COLOR(c)         ((color)(c     ))
+#define BG_COLOR(c)         ((color)(c >> 8))
 
 //==========================================================
 

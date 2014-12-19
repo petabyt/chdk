@@ -304,7 +304,7 @@ int rbf_str_clipped_width(const char *str, int l, int maxlen) {
 }
 
 //-------------------------------------------------------------------
-void font_draw_char(int x, int y, char *cdata, int width, int height, int pixel_width, color cl) {
+void font_draw_char(int x, int y, char *cdata, int width, int height, int pixel_width, twoColors cl) {
     int xx, yy;
 
     // draw pixels for font character
@@ -315,7 +315,7 @@ void font_draw_char(int x, int y, char *cdata, int width, int height, int pixel_
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_char(int x, int y, int ch, color cl) {
+int rbf_draw_char(int x, int y, int ch, twoColors cl) {
     // Convert char for code page
     ch = code_page_char(ch);
 
@@ -332,7 +332,7 @@ int rbf_draw_char(int x, int y, int ch, color cl) {
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_symbol(int x, int y, int ch, color cl) {
+int rbf_draw_symbol(int x, int y, int ch, twoColors cl) {
     int space=0, pixel_width, sym_height, txt_height;
 
     // Skip if symbol font height taller than text font height (or invalid char value)
@@ -369,7 +369,7 @@ int rbf_draw_symbol(int x, int y, int ch, color cl) {
 
 //-------------------------------------------------------------------
 // Draw a string colored 'c1' with the character at string-position 'c' colored 'c2'.
-int rbf_draw_string_c(int x, int y, const char *str, color c1, int c, color c2) {
+int rbf_draw_string_c(int x, int y, const char *str, twoColors c1, int c, twoColors c2) {
      int l=0, i=0;
 
      while (*str) {
@@ -380,8 +380,8 @@ int rbf_draw_string_c(int x, int y, const char *str, color c1, int c, color c2) 
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_string(int x, int y, const char *str, color cl) {
-    return rbf_draw_string_c(x, y, str, cl, -1, 0);
+int rbf_draw_string(int x, int y, const char *str, twoColors cl) {
+    return rbf_draw_string_c(x, y, str, cl, -1, MAKE_COLOR(0,0));
 }
 
 //-------------------------------------------------------------------
@@ -401,10 +401,10 @@ void rbf_disable_cursor()
     cursor_on = 0;
 }
 
-int rbf_draw_clipped_string(int x, int y, const char *str, color cl, int l, int maxlen)
+int rbf_draw_clipped_string(int x, int y, const char *str, twoColors cl, int l, int maxlen)
 {
     int i = 0;
-    color inv_cl = ((cl & 0xFF00) >> 8) | ((cl & 0xFF) << 8);
+    twoColors inv_cl = MAKE_COLOR(FG_COLOR(cl), BG_COLOR(cl));
 
     // Draw chars from string up to max pixel length
     while (*str && l+rbf_char_width(*str)<=maxlen)
@@ -420,7 +420,7 @@ int rbf_draw_clipped_string(int x, int y, const char *str, color cl, int l, int 
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_string_len(int x, int y, int len, const char *str, color cl) {
+int rbf_draw_string_len(int x, int y, int len, const char *str, twoColors cl) {
     // Draw string characters
     int l = rbf_draw_clipped_string(x, y, str, cl, 0, len);
 
@@ -432,7 +432,7 @@ int rbf_draw_string_len(int x, int y, int len, const char *str, color cl) {
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_string_right_len(int x, int y, int len, const char *str, color cl) {
+int rbf_draw_string_right_len(int x, int y, int len, const char *str, twoColors cl) {
     // Calulate amount of padding needed on the left
     int l = len - rbf_str_clipped_width(str, 0, len);
 
@@ -447,7 +447,7 @@ int rbf_draw_string_right_len(int x, int y, int len, const char *str, color cl) 
 }
 
 //-------------------------------------------------------------------
-int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, color cl) { 
+int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, twoColors cl) { 
     int l=0, i, ll, lr;
 
     // If symbol to be added to string determing the width of the symbol + space
@@ -469,8 +469,8 @@ int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, co
     for (i=0; i<=l && i<3; i++) {
         if (i < 2) {
             // First and second columns make rounded top corners
-            draw_line(x+i,     y+2-i, x+i,     bottom, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));        // left side
-            draw_line(right-i, y+2-i, right-i, bottom, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));        // right side
+            draw_line(x+i,     y+2-i, x+i,     bottom, BG_COLOR(cl));        // left side
+            draw_line(right-i, y+2-i, right-i, bottom, BG_COLOR(cl));        // right side
         }
         else {
             // Rest of empty space is just filled with rectangles

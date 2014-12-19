@@ -148,7 +148,7 @@ void save_edge_overlay(void)
 
     if( !is_buffer_ready() )
     {
-        draw_string(0, 0, "No overlay to save.", conf.osd_color);
+        draw_string(0, 0, "No overlay to save.", user_color(conf.osd_color));
         return;
     }
 
@@ -183,7 +183,7 @@ void save_edge_overlay(void)
         t.actime = t.modtime = time(NULL);
         utime(fn, &t);
         sprintf(msg, "Saved as %s",fn);
-        draw_string(0, 0, msg, conf.osd_color);
+        draw_string(0, 0, msg, user_color(conf.osd_color));
     }
     closedir(d);
 }
@@ -497,7 +497,7 @@ static int draw_edge_overlay()
     int x, y;
     int x_off, y_off;
 
-    const color cl = conf.edge_overlay_color;
+    const color cl = FG_COLOR(user_color(conf.edge_overlay_color));
     const int y_slice_min = camera_screen.edge_hmargin+ slice   *slice_height;
     const int y_slice_max = camera_screen.edge_hmargin+(slice+1)*slice_height;
     const int y_min = camera_screen.edge_hmargin;
@@ -527,10 +527,9 @@ static int draw_edge_overlay()
                     // If there is no edge based on the newest data, but there is one painted on the screen
                     // from previous calls, delete it from the screen.
                     const int bEdge = bv_get(edgebuf, y_edgebuf + x);
-                    const int bDraw = bEdge || (draw_get_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset) == conf.edge_overlay_color);
-                    const color cl = bEdge ? conf.edge_overlay_color : 0;
+                    const int bDraw = bEdge || (draw_get_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset) == cl);
                     if (bEdge || bDraw)
-                        draw_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset, cl);
+                        draw_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset, bEdge ? cl : 0);
                     
                 }
             }   // for x
@@ -724,7 +723,7 @@ void edge_overlay()
             // We try to detect button presses during the lengthy
             // calculations.
             bFullPress |= draw_edge_overlay();
-            //draw_string(0, 0, "Frozen", conf.osd_color);
+            //draw_string(0, 0, "Frozen", user_color(conf.osd_color));
         }
 
         // In event of a FullPress, we either capture a new

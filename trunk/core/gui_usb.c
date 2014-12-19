@@ -5,43 +5,34 @@
 #include "gui_usb.h"
 
 //-------------------------------------------------------------------
-void gui_usb_draw_icon() {
-    register coord xx, yy;
+static icon_cmd usb_icon[] =
+{
+        { IA_FILLED_ROUND_RECT, 3, 11, 29, 14, IDX_COLOR_GREY_DK, IDX_COLOR_GREY_DK },
+        { IA_FILLED_ROUND_RECT, 0,  0, 31, 11, IDX_COLOR_GREY_DK, IDX_COLOR_GREY_DK },
+        { IA_FILLED_RECT,       2,  1, 29,  2, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,       1,  2,  2,  8, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,      29,  2, 30,  8, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,       5,  5, 26,  8, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,       7,  7,  9,  8, IDX_COLOR_YELLOW,  IDX_COLOR_YELLOW  },
+        { IA_FILLED_RECT,      12,  7, 14,  8, IDX_COLOR_YELLOW,  IDX_COLOR_YELLOW  },
+        { IA_FILLED_RECT,      17,  7, 19,  8, IDX_COLOR_YELLOW,  IDX_COLOR_YELLOW  },
+        { IA_FILLED_RECT,      22,  7, 24,  8, IDX_COLOR_YELLOW,  IDX_COLOR_YELLOW  },
+        { IA_FILLED_RECT,       2,  9,  3, 10, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,      28,  9, 29, 10, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,       3, 11,  4, 12, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,      27, 11, 28, 12, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_FILLED_RECT,       5, 12, 26, 13, IDX_COLOR_GREY,    IDX_COLOR_GREY    },
+        { IA_END }
+};
 
-    xx = conf.usb_info_pos.x;
-    yy = conf.usb_info_pos.y;
-
-    color cl1 = COLOR_GREY_DK;
-    color cl2 = COLOR_GREY;
-    color cl3 = COLOR_YELLOW;
-
-    // usb icon
-    draw_filled_round_rect(xx+3, yy+11, xx+29, yy+14, MAKE_COLOR(cl1, cl1));
-    draw_filled_round_rect(xx,   yy,    xx+31, yy+11, MAKE_COLOR(cl1, cl1));
-    
-    draw_filled_rect(xx+2,       yy+1,  xx+29, yy+2,  MAKE_COLOR(cl2, cl2));
-    
-    draw_filled_rect(xx+1,       yy+2,  xx+2,  yy+8,  MAKE_COLOR(cl2, cl2));
-    draw_filled_rect(xx+29,      yy+2,  xx+30, yy+8,  MAKE_COLOR(cl2, cl2));
-    
-    draw_filled_rect(xx+5,       yy+5,  xx+26, yy+8,  MAKE_COLOR(cl2, cl2));
-    
-    draw_filled_rect(xx+7,       yy+7,  xx+9,  yy+8,  MAKE_COLOR(cl3, cl3));
-    draw_filled_rect(xx+12,      yy+7,  xx+14, yy+8,  MAKE_COLOR(cl3, cl3));
-    draw_filled_rect(xx+17,      yy+7,  xx+19, yy+8,  MAKE_COLOR(cl3, cl3));
-    draw_filled_rect(xx+22,      yy+7,  xx+24, yy+8,  MAKE_COLOR(cl3, cl3));
-    
-    draw_filled_rect(xx+2,       yy+9,  xx+3,  yy+10, MAKE_COLOR(cl2, cl2));
-    draw_filled_rect(xx+28,      yy+9,  xx+29, yy+10, MAKE_COLOR(cl2, cl2));
-    
-    draw_filled_rect(xx+3,       yy+11, xx+4,  yy+12, MAKE_COLOR(cl2, cl2));
-    draw_filled_rect(xx+27,      yy+11, xx+28, yy+12, MAKE_COLOR(cl2, cl2));
-    
-    draw_filled_rect(xx+5,       yy+12, xx+26, yy+13, MAKE_COLOR(cl2, cl2));
+static void gui_usb_draw_icon()
+{
+    draw_icon_cmds(conf.usb_info_pos.x, conf.usb_info_pos.y, usb_icon);
 }
 //-------------------------------------------------------------------
-static void gui_usb_draw_text(){
-    color cl = conf.osd_color;
+static void gui_usb_draw_text()
+{
+    twoColors cl = user_color(conf.osd_color);
     draw_string(conf.usb_info_pos.x, conf.usb_info_pos.y, "<USB>", cl);
 }
 //--------------------------------------------------------------------

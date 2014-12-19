@@ -249,26 +249,30 @@ void histogram_process()
 //-------------------------------------------------------------------
 // Histogram display functions
 
-static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
+static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small)
+{
+    twoColors hc = user_color(conf.histo_color);
+    twoColors hc2 = user_color(conf.histo_color2);
+
     register unsigned int i, v, threshold;
-    register color cl, cl_over, cl_bg = BG_COLOR(conf.histo_color);
+    register color cl, cl_over, cl_bg = BG_COLOR(hc);
     coord w=HISTO_WIDTH, h=HISTO_HEIGHT;
 
     switch (hist) 
     {
         case HISTO_R: 
-            cl=(camera_info.state.mode_rec)?COLOR_REC_RED:COLOR_PLY_RED;
+            cl=COLOR_RED;
             break;
         case HISTO_G: 
-            cl=(camera_info.state.mode_rec)?COLOR_REC_GREEN:COLOR_PLY_GREEN;
+            cl=COLOR_GREEN;
             break;
         case HISTO_B:
-            cl=(camera_info.state.mode_rec)?COLOR_REC_BLUE:COLOR_PLY_BLUE;
+            cl=COLOR_BLUE;
             break;
         case HISTO_RGB:
         case HISTO_Y:
         default:
-            cl=conf.histo_color; 
+            cl=FG_COLOR(hc);
             break;
     }
 
@@ -279,7 +283,7 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
 
             for (v=1; v<h-1; ++v)
                 draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl:cl_bg);
-            cl_over = (threshold==h && conf.show_overexp)?BG_COLOR(conf.histo_color2):cl;
+            cl_over = (threshold==h && conf.show_overexp)?BG_COLOR(hc2):cl;
             for (; v<h; ++v)
                 draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl_over:cl_bg);
         }
@@ -289,28 +293,32 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small) {
 
             for (v=1; v<h-3; ++v)
                 draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl:cl_bg);
-            cl_over = (threshold==h && conf.show_overexp)?BG_COLOR(conf.histo_color2):cl;
+            cl_over = (threshold==h && conf.show_overexp)?BG_COLOR(hc2):cl;
             for (; v<h; ++v)
                 draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl_over:cl_bg);
         }
     }
 
-    draw_rect(x, y, x+1+w, y+h, FG_COLOR(conf.histo_color2));
+    draw_rect(x, y, x+1+w, y+h, FG_COLOR(hc2));
     //Vertical Lines
-    if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+w)*i/5, y, x+(1+w)*i/5, y+h, FG_COLOR(conf.histo_color2));
+    if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+w)*i/5, y, x+(1+w)*i/5, y+h, FG_COLOR(hc2));
 }
 
 //-------------------------------------------------------------------
-static void gui_osd_draw_blended_histo(coord x, coord y) {
+static void gui_osd_draw_blended_histo(coord x, coord y)
+{
+    twoColors hc = user_color(conf.histo_color);
+    twoColors hc2 = user_color(conf.histo_color2);
+
     register unsigned int i, v, red, grn, blu, sel;
     color cls[] = {
-        BG_COLOR(conf.histo_color),
-        (camera_info.state.mode_rec)?COLOR_REC_BLUE:COLOR_PLY_BLUE,
-        (camera_info.state.mode_rec)?COLOR_REC_GREEN:COLOR_PLY_GREEN,
-        (camera_info.state.mode_rec)?COLOR_REC_CYAN:COLOR_PLY_CYAN,
-        (camera_info.state.mode_rec)?COLOR_REC_RED:COLOR_PLY_RED,
-        (camera_info.state.mode_rec)?COLOR_REC_MAGENTA:COLOR_PLY_MAGENTA,
-        (camera_info.state.mode_rec)?COLOR_REC_YELLOW:COLOR_PLY_YELLOW,
+        BG_COLOR(hc),
+        COLOR_BLUE,
+        COLOR_GREEN,
+        COLOR_CYAN,
+        COLOR_RED,
+        COLOR_MAGENTA,
+        COLOR_YELLOW,
         COLOR_WHITE
     };
 
@@ -330,9 +338,9 @@ static void gui_osd_draw_blended_histo(coord x, coord y) {
         }
     }
 
-    draw_rect(x, y, x+1+HISTO_WIDTH, y+HISTO_HEIGHT, FG_COLOR(conf.histo_color2));
+    draw_rect(x, y, x+1+HISTO_WIDTH, y+HISTO_HEIGHT, FG_COLOR(hc2));
     //Vertical lines
-    if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+HISTO_WIDTH)*i/5, y, x+(1+HISTO_WIDTH)*i/5, y+HISTO_HEIGHT, FG_COLOR(conf.histo_color2));
+    if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+HISTO_WIDTH)*i/5, y, x+(1+HISTO_WIDTH)*i/5, y+HISTO_HEIGHT, FG_COLOR(hc2));
 
 }
 
@@ -349,6 +357,9 @@ void gui_osd_draw_histo(int is_osd_edit)
         )
        )
     {
+        twoColors hc = user_color(conf.histo_color);
+        twoColors hc2 = user_color(conf.histo_color2);
+
         switch (conf.histo_layout)
         {
             case OSD_HISTO_LAYOUT_Y:
@@ -392,22 +403,22 @@ void gui_osd_draw_histo(int is_osd_edit)
 
         if (conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B) {
             if (under_exposed && conf.show_overexp) {
-                draw_filled_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
+                draw_filled_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2));
             }
 
             if (over_exposed && conf.show_overexp) {
-                draw_filled_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, MAKE_COLOR(BG_COLOR(conf.histo_color2), BG_COLOR(conf.histo_color2)));
+                draw_filled_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2));
             }
         }
         if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
-            draw_string(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, "EXP", conf.histo_color);
+            draw_string(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, "EXP", hc);
         if (conf.histo_auto_ajust){
             if (histo_magnification) {
                 char osd_buf[64];
                 sprintf(osd_buf, " %d.%02dx ", histo_magnification/100, histo_magnification%100);
-                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, osd_buf, conf.histo_color);
+                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, osd_buf, hc);
             } else if (is_osd_edit){
-                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, " 9.99x ", conf.histo_color);
+                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, " 9.99x ", hc);
             } else {
                 draw_filled_rect(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
             }

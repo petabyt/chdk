@@ -661,8 +661,8 @@ void gui_fselect_draw_initial()
     draw_string(head_x+((head_w-title_font_size)>>1), head_y, fselect_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title text
 
     draw_rect_thick(main_x-BORDER, main_y-BORDER, main_x+main_w+BORDER-1, main_y+main_h+BORDER-1, COLOR_WHITE, BORDER); //border frame
-    draw_line(body_x, body_y-1, body_x+body_w-1, body_y-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border head-body
-    draw_line(foot_x, foot_y-1, foot_x+foot_w-1, foot_y-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border body-foot
+    draw_line(body_x, body_y-1, body_x+body_w-1, body_y-1, COLOR_WHITE); //border head-body
+    draw_line(foot_x, foot_y-1, foot_x+foot_w-1, foot_y-1, COLOR_WHITE); //border body-foot
 }
 
 //-------------------------------------------------------------------
@@ -673,8 +673,7 @@ void gui_fselect_draw(int enforce_redraw)
     char buf[100];
     struct tm *time;
     unsigned long sum_size;
-    color cl_markered = (camera_info.state.mode_rec)?COLOR_YELLOW:0x66;
-    color cl_marked, cl_selected;
+    twoColors cl_marked, cl_selected;
 
     if (gui_fselect_readdir)
     {
@@ -699,7 +698,7 @@ void gui_fselect_draw(int enforce_redraw)
         sum_size = 0;
         for (i=0, ptr=top; i<BODY_LINES && ptr; ++i, ptr=ptr->next)
         {
-            cl_marked = MAKE_COLOR((ptr==selected)?COLOR_RED:COLOR_GREY, (ptr->marked)?cl_markered:COLOR_WHITE);
+            cl_marked = MAKE_COLOR((ptr==selected)?COLOR_RED:COLOR_GREY, (ptr->marked)?COLOR_YELLOW:COLOR_WHITE);
             cl_selected = (ptr==selected)?MAKE_COLOR(COLOR_RED, COLOR_RED):MAKE_COLOR(COLOR_GREY, COLOR_GREY);
 
             // print name
