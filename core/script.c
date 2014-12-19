@@ -297,7 +297,7 @@ long script_start_gui( int autostart )
     sc_param *p = script_params;
     while (p)
     {
-        libscriptapi->set_variable(p->name, p->val, (p->range == 1));
+        libscriptapi->set_variable(p->name, p->val, (p->range == 1), (p->data_type == DTYPE_TABLE), p->options[p->val]);
         p = p->next;
     }
 

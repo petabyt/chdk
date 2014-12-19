@@ -15,6 +15,10 @@ enum {	SCRIPT_STATE_INACTIVE=0,  // 0 - script is inactive now
 };
 
 //-------------------------------------------------------------------
+// Possible data types
+#define DTYPE_INT       0           // Default
+#define DTYPE_TABLE     1           // For parameters that select from a list of values, send to Lua as a table (Lua only)
+
 // Structure used to hold a single script parameter
 typedef struct _sc_param
 {
@@ -26,6 +30,7 @@ typedef struct _sc_param
     int             range;          // Min / Max values for validation
     short           range_type;     // Specifies if range values is signed (-9999-32767) or unsigned (0-65535)
                                     // Note: -9999 limit on negative values is due to current gui_menu code (and because menu only displays chars)
+    short           data_type;      // See defines above
     int             option_count;   // Number of options for parameter
     char*           option_buf;     // Memory buffer to store option names for parameter
     const char**    options;        // Array of option names (points into option_buf memory)

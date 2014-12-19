@@ -2920,13 +2920,22 @@ void register_lua_funcs( lua_State* L )
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-static void lua_set_variable(char *name, int value, int isBool)
+static void lua_set_variable(char *name, int value, int isBool, int isTable, const char *label)
 {
     lua_pushstring( L, name );
-    if (isBool)
-        lua_pushboolean( L, value );
+    if (isTable)
+    {
+        lua_createtable(L, 0, 2);
+        SET_INT_FIELD("value", value);
+        SET_STR_FIELD("label", label);
+    }
     else
-        lua_pushnumber( L, value );
+    {
+        if (isBool)
+            lua_pushboolean( L, value );
+        else
+            lua_pushnumber( L, value );
+    }
     lua_settable( L, LUA_GLOBALSINDEX );
 }
 
