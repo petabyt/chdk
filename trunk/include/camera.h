@@ -251,7 +251,7 @@
 
     #undef CAM_FILE_COUNTER_IS_VAR              // file counter is variable file_counter_var in stubs, not a param
     
-    #define CAM_GUI_FSELECT_SIZE  16, 6, 14     // filename, filesize, filedate camera file select window column widths
+    #define CAM_GUI_FSELECT_SIZE  20, 6, 14     // filename, filesize, filedate camera file select window column widths
 
     #undef  CAM_IS_VID_REC_WORKS                // Define if the 'is_video_recording()' function works
 

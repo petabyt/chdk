@@ -190,6 +190,7 @@ struct dirent   // Returned from readdir
 typedef struct
 {
     void            *cam_DIR;   // Camera specific internal DIR structure
+    int             fw_dir;     // 1 if firmware function is used, 0 if CHDK implementation
     struct dirent   dir;        // Last info returned from readdir
 } DIR;
 

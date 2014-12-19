@@ -771,7 +771,9 @@
 #define LANG_MSG_RESET_COLORS_TITLE             631
 #define LANG_MSG_RESET_COLORS_TEXT              632
 
-#define GUI_LANG_ITEMS                          632
+#define LANG_MENU_DISABLE_LFN_SUPPORT           633
+
+#define GUI_LANG_ITEMS                          633
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

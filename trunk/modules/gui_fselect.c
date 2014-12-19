@@ -33,7 +33,7 @@ gui_handler GUI_MODE_FSELECT_MODULE =
     /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw, gui_fselect_kbd_process, gui_fselect_kbd_process_menu_btn, 0, 0 };
 
 //-------------------------------------------------------------------
-#define BODY_LINES              10
+#define BODY_LINES              12
 #define BODY_FONT_LINES         BODY_LINES * FONT_HEIGHT
 
 #define NAME_SIZE               camera_screen.fselect_name_size  // "FILENAME.123 "  (8.3 filenames)

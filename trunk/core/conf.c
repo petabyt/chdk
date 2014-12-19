@@ -487,6 +487,8 @@ static ConfInfo conf_info[] = {
 
     CONF_INFO(240, conf.allow_unsafe_io,                        CONF_DEF_VALUE, i:0),
 
+    CONF_INFO(250, conf.disable_lfn_parser,                     CONF_DEF_VALUE, i:0),
+
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 
     {0,0,0,0,{0}}
