@@ -13,5 +13,5 @@ print("number:", test_number)
 print("big number:", test_long)
 print("value id:", test_value_id)
 print("bool:", test_bool)
-print("table:", test_table.value, test_table.label)
+print("table:", test_table.value, test_table[test_table.value])
 
