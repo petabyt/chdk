@@ -123,6 +123,7 @@
 
             draw_txt_string
             draw_string
+            draw_string_box
             draw_string_scaled
             draw_rect
             draw_filled_rect

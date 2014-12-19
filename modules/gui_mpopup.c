@@ -29,11 +29,11 @@ static gui_handler              *gui_mpopup_mode_old;
 static int                      running = 0;
 static char                     mpopup_to_draw;
 
-#define MAX_ACTIONS             10
+#define MAX_ACTIONS             14
 
 struct mpopup_item* actions;
 
-static int                      mpopup_actions[MAX_ACTIONS];    // Content of raised popupmenu
+static short                    mpopup_actions[MAX_ACTIONS];    // Content of raised popupmenu
 static int                      mpopup_actions_num;             // Num of items in raised popupmenu
 static int                      mpopup_actions_active;          // Idx of current item (cursor)
 static coord                    mpopup_actions_x, mpopup_actions_y;    // top-left coord of window
@@ -51,14 +51,15 @@ void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags
 
     mpopup_actions_num = 0;
     actions = popup_actions;
-    for (i=0; actions[i].flag && mpopup_actions_num<MAX_ACTIONS; ++i) {
-        if (flags & MPOPUP_MASK & actions[i].flag)
+    for (i=0; actions[i].flag && mpopup_actions_num<MAX_ACTIONS; ++i)
+    {
+        if ((flags & MPOPUP_MASK & actions[i].flag) || (actions[i].flag == MPOPUP_CANCEL))
             mpopup_actions[mpopup_actions_num++] = i;
-		else if ( actions[i].flag==MPOPUP_CANCEL )
-			mpopup_actions[mpopup_actions_num++] = i;
     }
-    if (mpopup_actions_num == 0) {
+    if (mpopup_actions_num == 0)
+    {
         on_select(MPOPUP_CANCEL);
+        running--;
 		return;
 	}
 
@@ -70,7 +71,8 @@ void gui_mpopup_init(struct mpopup_item* popup_actions, const unsigned int flags
 }
 
 //-------------------------------------------------------------------
-unsigned int gui_mpopup_result() {
+unsigned int gui_mpopup_result()
+{
     return actions[mpopup_actions[mpopup_actions_active]].flag;
 }
 
@@ -81,10 +83,8 @@ static void gui_mpopup_draw_actions() {
     twoColors cl;
 
     for (i=0; i<mpopup_actions_num; ++i) {
-        cl = MAKE_COLOR((mpopup_actions_active==i)?COLOR_RED:COLOR_GREY, (mpopup_actions_active==i)?COLOR_RED:COLOR_GREY);
-        draw_filled_rect(mpopup_actions_x, y, mpopup_actions_x+mpopup_actions_w*FONT_WIDTH, y+FONT_HEIGHT-1, cl);
         cl = MAKE_COLOR((mpopup_actions_active==i)?COLOR_RED:COLOR_GREY, COLOR_WHITE);
-        draw_string(mpopup_actions_x+FONT_WIDTH, y, lang_str(actions[mpopup_actions[i]].text), cl);
+        draw_string_box(mpopup_actions_x, y, FONT_WIDTH, mpopup_actions_w*FONT_WIDTH+1, lang_str(actions[mpopup_actions[i]].text), cl);
         y+=FONT_HEIGHT;
     }
 }
@@ -124,7 +124,7 @@ void exit_mpopup(int action)
     gui_set_mode(gui_mpopup_mode_old);
 
 	mpopup_on_select_t on_select = mpopup_on_select;	// this could be reinited in callback
-	mpopup_on_select=0;
+	mpopup_on_select = 0;
     if (on_select) 
         on_select(action);
 

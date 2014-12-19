@@ -92,13 +92,7 @@ void console_draw()
             if (i < 0) i = MAX_CONSOLE_HISTORY-1;
             strncpy(buf,console_buf[i],console_line_length);
             buf[console_line_length] = 0;
-            draw_string(x, y - c * FONT_HEIGHT, buf, col);
-
-            int l = strlen(buf);
-            if (l < console_line_length)
-                draw_filled_rect(x + l * FONT_WIDTH, y - c * FONT_HEIGHT,
-                                 x + console_line_length * FONT_WIDTH - 1, y - c * FONT_HEIGHT + FONT_HEIGHT - 1,
-                                 MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
+            draw_string_box(x, y - c * FONT_HEIGHT, 0, console_line_length * FONT_WIDTH, buf, col);
 
             console_displayed = 1;
         }
@@ -238,16 +232,10 @@ static void gui_console_draw()
         for (c = h-1, i = console_cur_line-console_scroll; c >= 0; --c, --i)
         {
             if (i < 0) i += MAX_CONSOLE_HISTORY;
-
-            draw_string(x-1, y + c * FONT_HEIGHT, console_buf[i], col);
-
-            int l = strlen(console_buf[i]);
-            if (l < w)
-                draw_filled_rect(x + l * FONT_WIDTH, y + c * FONT_HEIGHT,
-                                 x + w * FONT_WIDTH - 1, y + c * FONT_HEIGHT + FONT_HEIGHT - 1,
-                                 MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
+            draw_string_box(x-1, y + c * FONT_HEIGHT, 0, w * FONT_WIDTH, console_buf[i], col);
         }
 
+        // Scrollbar
         draw_filled_rect(x+w*FONT_WIDTH, y+((MAX_CONSOLE_HISTORY-console_scroll-h)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY, 
                          x+w*FONT_WIDTH+2, y+((MAX_CONSOLE_HISTORY-console_scroll)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY-1, 
                          MAKE_COLOR(COLOR_RED, COLOR_RED));

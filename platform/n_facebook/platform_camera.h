@@ -95,7 +95,7 @@
     #define CAM_SD_OVER_IN_MF               1               //
 
     #undef  CAM_GUI_FSELECT_SIZE      
-    #define CAM_GUI_FSELECT_SIZE            13, 7, 9       // use narrow columns in file select window gui
+    #define CAM_GUI_FSELECT_SIZE            15, 6, 8       // use narrow columns in file select window gui
 
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 

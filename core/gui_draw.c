@@ -384,7 +384,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
 }
 
 //-------------------------------------------------------------------
-void draw_string(coord x, coord y, const char *s, twoColors cl)
+int draw_string(coord x, coord y, const char *s, twoColors cl)
 {
     while(*s)
     {
@@ -397,6 +397,17 @@ void draw_string(coord x, coord y, const char *s, twoColors cl)
 	        break;
 	    }
     }
+    return x;
+}
+
+void draw_string_box(coord x, coord y, int left, int width, const char *buf, twoColors txtcol)
+{
+    twoColors bg = MAKE_COLOR(BG_COLOR(txtcol), BG_COLOR(txtcol));
+    if (left > 0)
+        draw_filled_rect(x, y, x+left-1, y+FONT_HEIGHT-1, bg);
+    int l = draw_string(x+left, y, buf, txtcol) - x;
+    if (l < width)
+        draw_filled_rect(x+l, y, x+width-1, y+FONT_HEIGHT-1, bg);
 }
 
 void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize)
