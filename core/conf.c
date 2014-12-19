@@ -368,7 +368,6 @@ static ConfInfo conf_info[] = {
     CONF_INFO( 43, conf.dng_crop_size,                          CONF_DEF_VALUE, i:0),
 
     CONF_INFO( 50, conf.script_shoot_delay,                     CONF_DEF_VALUE, i:0),
-    CONF_INFO( 51, conf.script_vars,                            CONF_INT_PTR,   i:0),
     CONF_INFO( 52, conf.script_param_set,                       CONF_DEF_VALUE, i:0),
     CONF_INFO( 53, conf.script_startup,                         CONF_DEF_VALUE, i:SCRIPT_AUTOSTART_NONE),
     CONF_INFO( 54, conf.script_file,                            CONF_CHAR_PTR,  ptr:""),
@@ -616,7 +615,7 @@ static short conf_map_1_2[] =
     1020, // 2 conf.save_raw
     1050, // 3 conf.script_shoot_delay
     1060, // 4 conf.show_histo
-    1051, // 5 conf.script_vars
+    0,
     1052, // 6 conf.script_param_set
     2150, // 7 conf.show_dof
     2100, // 8 conf.batt_volts_max

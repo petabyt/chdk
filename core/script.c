@@ -31,10 +31,6 @@ static int script_terminate_request = 0; // script abort requested from another 
 // Forward references
 void script_end();
 
-// External references
-extern const char* script_source_str;
-extern char script_params[SCRIPT_NUM_PARAMS][28];
-
 //=======================================================
 //                 SCRIPT CONSOLE FUNCTIONS
 //=======================================================
@@ -297,12 +293,12 @@ long script_start_gui( int autostart )
     {
         return -1;
     }
-    for (i=0; i<SCRIPT_NUM_PARAMS; ++i)
+
+    sc_param *p = script_params;
+    while (p)
     {
-        if( script_params[i][0] )
-        {
-            libscriptapi->set_variable(i, conf.script_vars[i]);
-        }
+        libscriptapi->set_variable(p->name, p->val, (p->range == 1));
+        p = p->next;
     }
 
     conf_update_prevent_shutdown();

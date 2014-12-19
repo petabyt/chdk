@@ -18,6 +18,11 @@ int jump_label(char * label);
 
 static int ubasic_run_restore(void)             { return jump_label("restore"); }
 
+static void _set_variable(char *name, int value, int isBool)
+{
+    ubasic_set_variable(name[0] - (name[0]>='a'?'a':('A'-26)), value);
+}
+
 // shoot hooks not supported in ubasic
 static void ubasic_script_shoot_hook_run(int hook) { return; }
 /******************** Module Information structure ******************/
@@ -31,7 +36,7 @@ libscriptapi_sym _libubasic =
     ubasic_init,
     ubasic_run,
     ubasic_end,
-    ubasic_set_variable,
+    _set_variable,
     ubasic_set_as_ret,
     ubasic_run_restore,
     ubasic_script_shoot_hook_run,
