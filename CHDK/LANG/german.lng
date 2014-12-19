@@ -318,6 +318,10 @@
 259 "Lua Native Calls aktivieren?"
 260 "*** ABGEBROCHEN ***"
 261 "*** Autostart ***"
+
+262 "Aktivierung unsichere IO?"
+263 "Die Aktivierung 'unsichere IO'\nerlaubt CHDK Ein- und Ausgabe-\noperationen während der Video-\naufnahme. Möglicherweise kann\ndas zu einem Systemabsturz führen.\n\nSollen 'unsichere IO' aktiviert\nwerden?"
+
 264 "Lösche Ersatzwerte bei Start"
 
 265 "Canon-Überbelichtungswert"
@@ -769,3 +773,5 @@
 
 631 "Zurücksetzen aller Farben ..."
 632 "Sicher, dass alle Farben auf \nStandardwerte\nzurückgesetzt werden sollen?"
+
+633 "altern. Support lange Dateinamen"
