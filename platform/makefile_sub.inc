@@ -15,7 +15,7 @@ FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
 #add platform dependent 'core' files (build as THUMB)
 OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
-     shooting.thm.o camera_info.thm.o remotecap.thm.o
+     shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o
 
 capt_seq.o: capt_seq.c $(topdir)platform/generic/capt_seq.c
 filewrite.o: filewrite.c $(topdir)platform/generic/filewrite.c

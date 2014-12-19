@@ -509,129 +509,94 @@ int remove(const char *name)
 }
 
 //----------------------------------------------------------------------------
-// directory wrappers
+// minimal directory wrappers, rest of implementation is in core/lib_thumb.c
 
-extern int   _closedir(void *d);
-//extern void  _rewinddir(void *d);     // Not used
-
-DIR *opendir(const char* name)
+int fw_closedir(void *d)
 {
-    // Create CHDK DIR structure
-    DIR *dir = malloc(sizeof(DIR));
-    // If malloc failed return failure
-    if (dir == 0) return NULL;
-
     int have_semaphore = takeFileIOSemaphore();
     if (!have_semaphore)
 #if defined(CAM_IS_VID_REC_WORKS)
         if (!conf.allow_unsafe_io)
 #endif
-            return NULL;
+            return -1;
 
-    // Save camera internal DIR structure (we don't care what it is)
-#if defined(CAM_DRYOS)
-    extern void *_OpenFastDir(const char* name);
-    dir->cam_DIR = _OpenFastDir(name);
-#else
-    extern void *_opendir(const char* name);
-    dir->cam_DIR = _opendir(name);
-#endif
+    extern int _closedir(void *d);
+    int ret = _closedir(d);
 
     if (have_semaphore)
         _GiveSemaphore(fileio_semaphore);
 
-    // Init readdir return value
-    dir->dir.d_name[0] = 0;
-
-    // If failed clean up and return failure
-    if (!dir->cam_DIR)
-    {
-        free(dir);
-        return NULL;
-    }
-
-    return dir;
+    return ret;
 }
 
-#ifndef CAM_DRYOS
-
-// Internal VxWorks dirent structure returned by readdir
-struct __dirent
-{
-    char            d_name[100];
-};
-
-extern void *_readdir(void *d);
-
-struct dirent* readdir(DIR *d)
-{
-    if (d && d->cam_DIR)
+#if defined(CAM_DRYOS)
+    int __attribute__((weak)) _get_fstype(int drive_id)
     {
-        // Get next entry from firmware function
-        struct __dirent *de = _readdir(d->cam_DIR);
-        // Return next directory name if present, else return 0 (end of list)
-        if (de)
-        {
-            strcpy(d->dir.d_name,de->d_name);
-            return &d->dir;
-        }
-        else
-        {
-            d->dir.d_name[0] = 0;
-        }
+        // replacement function for early DryOS cameras
+        return 0;
     }
-    return NULL;
-}
 
-#else // dryos
-
-extern int _ReadFastDir(void *d, void* dd); // DRYOS
-
-struct dirent * readdir(DIR *d)
-{
-    if (d && d->cam_DIR)
+    int get_fstype(void)
     {
-        _ReadFastDir(d->cam_DIR, d->dir.d_name);
-        return d->dir.d_name[0]? &d->dir : NULL;
+        // fw function returns 1..3 for FAT 12-16-32, 4 for exFAT
+        // TODO: fix this if any supported camera gets more than 1 drive OR the returned values change
+        extern int _get_fstype(int);
+        return _get_fstype(0);
     }
-    return NULL;
-}
 
-#endif // dryos dir functions
-
-int closedir(DIR *d)
-{
-    int rv = -1;
-    if (d && d->cam_DIR)
+    void *fw_opendir(const char* name)
     {
+        void *ret;
         int have_semaphore = takeFileIOSemaphore();
         if (!have_semaphore)
 #if defined(CAM_IS_VID_REC_WORKS)
             if (!conf.allow_unsafe_io)
 #endif
-                return -1;
+                return NULL;
 
-        rv = _closedir(d->cam_DIR);
+        extern void *_OpenFastDir(const char* name);
+        ret = _OpenFastDir(name);
 
         if (have_semaphore)
             _GiveSemaphore(fileio_semaphore);
 
-        // Mark closed (just in case)
-        d->cam_DIR = 0;
-        // Free allocated memory
-        free(d);    
+        return ret;
     }
-    return rv;
-}
 
-//Not used
-//void rewinddir(DIR *d)
-//{
-//    if (d && d->cam_DIR)
-//    {
-//        _rewinddir(d->cam_DIR);
-//    }
-//}
+    int fw_readdir(void *d, void* dd)
+    {
+        extern int _ReadFastDir(void *d, void* dd);
+        return _ReadFastDir(d, dd);
+    }
+
+#else // Vx
+
+    void *fw_opendir(const char* name)
+    {
+        void *ret;
+        int have_semaphore = takeFileIOSemaphore();
+        if (!have_semaphore)
+#if defined(CAM_IS_VID_REC_WORKS)
+            if (!conf.allow_unsafe_io)
+#endif
+                return NULL;
+
+        extern void *_opendir(const char* name);
+        ret = _opendir(name);
+
+        if (have_semaphore)
+            _GiveSemaphore(fileio_semaphore);
+
+        return ret;
+    }
+
+    void *fw_readdir(void *d)
+    {
+        extern void *_readdir(void *d);
+        return _readdir(d);
+    }
+
+#endif // CAM_DRYOS
 
 //-----------------------------------------------------------------------------------
 
