@@ -26,6 +26,7 @@ extern char* get_raw_image_addr(void);
 extern void patch_bad_pixel(unsigned int x,unsigned  int y);
 extern int raw_createfile(void);
 extern void raw_closefile(int fd);
+extern void raw_get_path(char *path);
 
 //-------------------------------------------------------------------
 #endif

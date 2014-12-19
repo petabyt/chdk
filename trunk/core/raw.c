@@ -68,6 +68,31 @@ char* get_alt_raw_image_addr(void) {    // return inactive buffer for cameras wi
     else return ADR_TO_CACHED(r);
 }
 //-------------------------------------------------------------------
+// Get path to save raw files based on user settings
+void raw_get_path(char *path)
+{
+    char rdir[32];
+
+    switch ( conf.raw_in_dir )
+    {
+        case 2:
+            strcpy(path,"A/RAW");
+            mkdir_if_not_exist(path);
+            get_target_dir_name(rdir);
+            strcat(path, &rdir[6]) ;
+            break ;
+        case 1:
+            mkdir_if_not_exist("A/DCIM");
+            get_target_dir_name(path);
+            break ;
+        default:
+            mkdir_if_not_exist("A/DCIM");
+            strcpy(path, RAW_TARGET_DIRECTORY);
+            break ;
+    }
+    mkdir_if_not_exist(path);
+    strcat(path, "/");
+}
 
 /*
 create a new raw file and return the file descriptor from open
@@ -81,29 +106,11 @@ static int raw_br_counter;  // bracketing counter for raw suffix
 int raw_createfile(void)
 {
     int fd;
-    char dir[32], rdir[32];
 
     raw_create_time = time(NULL);
     
-    switch ( conf.raw_in_dir ) {
-        case 2 :
-            strcpy(dir,"A/RAW");
-            mkdir_if_not_exist(dir);
-            get_target_dir_name(rdir);
-            strcat(dir,&rdir[6]) ;
-            break ;
-        case 1 :
-            mkdir_if_not_exist("A/DCIM");
-            get_target_dir_name(dir);
-            break ;
-        default :
-            mkdir_if_not_exist("A/DCIM");        
-            sprintf(dir, RAW_TARGET_DIRECTORY);
-            break ;
-    }
-    mkdir_if_not_exist(dir);
+    raw_get_path(fn);
 
-    sprintf(fn, "%s/", dir);
     if(raw_br_counter && conf.bracketing_add_raw_suffix && (shooting_get_drive_mode()!=1)) {
         sprintf(fn+strlen(fn), 
                 RAW_BRACKETING_FILENAME,
@@ -187,7 +194,9 @@ void raw_process(void)
     {                             
         libdng->capture_data_for_exif();
 	}
-    if (camera_info.state.state_kbd_script_run && shot_histogram_isenabled()) build_shot_histogram();
+
+    if (camera_info.state.state_kbd_script_run)
+        libshothisto->build_shot_histogram();
 
     libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_RAW);
 

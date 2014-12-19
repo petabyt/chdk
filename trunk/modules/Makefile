@@ -24,7 +24,7 @@ LDOPTS+=-Wl,-N,-Ttext,0x24 -r -Wl,-d
 FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
      _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop.flt \
      txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt eyefi.flt histo.flt
+     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt eyefi.flt histo.flt shothist.flt
 
 all: $(FLTS)
 
@@ -66,6 +66,7 @@ txtread.flt: gui_read.o
 edgeovr.flt: edgeoverlay.o bitvector.o $(OBJ_ISDIGIT)
 zebra.flt: zebra.o
 histo.flt: histogram.o
+shothist.flt: shot_histogram.o
 curves.flt: curves.o
 mdetect.flt: motion_detector.o
 grids.flt: gui_grid.o
@@ -102,6 +103,8 @@ lua.flt: luascript.o script_key_funcs.o script_shoot_hook.o cordic_math.o dbg_du
 cpuinfo.flt: cpuinfo.o cpuinfo_arm.o 
 
 eyefi.flt: eyefi.o md5.o sha1.o
+
+shot_histogram.o: shot_histogram.c shot_histogram.h
 
 clean:
 	rm -f *.o .o/*.* *.flt *.dump

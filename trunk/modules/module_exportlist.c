@@ -28,6 +28,7 @@
             &libmpopup
             &libtxtread
             &libhisto
+            &libshothisto
 
             &altGuiHandler
             &camera_info
@@ -174,6 +175,7 @@
             patch_bad_pixel
             raw_createfile
             raw_closefile
+            raw_get_path
 
             kbd_get_autoclicked_key
             kbd_is_key_pressed
@@ -274,6 +276,7 @@
             GetFreeCardSpaceKb
             get_exposure_counter
             get_target_dir_name
+            get_target_file_num
             GetJpgCount
             GetRawCount
 
@@ -338,9 +341,6 @@
             lens_get_zoom_point
             play_sound
 
-            shot_histogram_get_range
-            shot_histogram_isenabled
-            shot_histogram_set
             live_histogram_read_y
 
             stat_get_vbatt
