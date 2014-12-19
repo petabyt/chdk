@@ -85,7 +85,8 @@ extern void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, twoCo
 extern void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, twoColors cl, int thickness);
 
 extern void draw_char(coord x, coord y, const char ch, twoColors cl);
-extern void draw_string(coord x, coord y, const char *s, twoColors cl);
+extern int  draw_string(coord x, coord y, const char *s, twoColors cl);
+extern void draw_string_box(coord x, coord y, int left, int width, const char *buf, twoColors txtcol);
 extern void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize);
 extern void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize);
 extern void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale);
