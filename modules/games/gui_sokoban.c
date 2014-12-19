@@ -271,12 +271,12 @@ static int sokoban_move(int dx, int dy) {
 }
 
 //-------------------------------------------------------------------
-static void sokoban_draw_box(int x, int y, color cl) {
+static void sokoban_draw_box(int x, int y, twoColors cl) {
     draw_filled_rect(camera_screen.ts_button_border+x*cell_size, y*cell_size, camera_screen.ts_button_border+x*cell_size+cell_size-1, y*cell_size+cell_size-1, cl);
-    draw_line(camera_screen.ts_button_border+x*cell_size+2, y*cell_size, camera_screen.ts_button_border+x*cell_size+2, y*cell_size+cell_size-1, cl);
-    draw_line(camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size, camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size+cell_size-1, cl);
-    draw_line(camera_screen.ts_button_border+x*cell_size+2, y*cell_size+2, camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size+2, cl);
-    draw_line(camera_screen.ts_button_border+x*cell_size+2, y*cell_size+cell_size-1-2, camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size+cell_size-1-2, cl);
+    draw_line(camera_screen.ts_button_border+x*cell_size+2, y*cell_size, camera_screen.ts_button_border+x*cell_size+2, y*cell_size+cell_size-1, FG_COLOR(cl));
+    draw_line(camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size, camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size+cell_size-1, FG_COLOR(cl));
+    draw_line(camera_screen.ts_button_border+x*cell_size+2, y*cell_size+2, camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size+2, FG_COLOR(cl));
+    draw_line(camera_screen.ts_button_border+x*cell_size+2, y*cell_size+cell_size-1-2, camera_screen.ts_button_border+x*cell_size+cell_size-1-2, y*cell_size+cell_size-1-2, FG_COLOR(cl));
 }
 
 //-------------------------------------------------------------------
@@ -423,7 +423,7 @@ void gui_sokoban_draw() {
                     case MARKER_PLAYER:
                     case MARKER_PLAYER_PLACE:
                         draw_filled_rect(camera_screen.ts_button_border+x*cell_size, y*cell_size, camera_screen.ts_button_border+x*cell_size+cell_size-1, y*cell_size+cell_size-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-                        draw_filled_ellipse(camera_screen.ts_button_border+x*cell_size+(cell_size>>1)-1, y*cell_size+(cell_size>>1)-1, (cell_size>>1)-3, (cell_size>>1)-3, MAKE_COLOR(PLAYER_COLOR_1, PLAYER_COLOR_2));
+                        draw_filled_ellipse(camera_screen.ts_button_border+x*cell_size+(cell_size>>1)-1, y*cell_size+(cell_size>>1)-1, (cell_size>>1)-3, (cell_size>>1)-3, PLAYER_COLOR_1);
                         break;
                     case MARKER_EMPTY:
                     default:

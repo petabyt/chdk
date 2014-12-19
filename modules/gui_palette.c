@@ -21,14 +21,14 @@ gui_handler GUI_MODE_PALETTE_MODULE =
 
 //-------------------------------------------------------------------
 static int running = 0;
-static color cl;
+static chdkColor cl;
 static int palette_mode;
-static void (*palette_on_select)(color clr);
+static void (*palette_on_select)(chdkColor clr);
 static int gui_palette_redraw;
 static int test_page;
 
 //-------------------------------------------------------------------
-void gui_palette_init(int mode, color st_color, void (*on_select)(color clr))
+void gui_palette_init(int mode, chdkColor st_color, void (*on_select)(chdkColor clr))
 {
     running = 1;
     cl = st_color;
@@ -47,21 +47,62 @@ int gui_palette_kbd_process()
         case KEY_DOWN:
             if (palette_mode != PALETTE_MODE_TEST)
             {
-                cl = (((cl+16)&0xf0)|(cl&0x0f));
+                if (cl.type)
+                {
+                    cl.type = 0;
+                    if (cl.col > 15)
+                        cl.col = 15;
+                }
+                else
+                {
+                    if ((cl.col & 0xF0) == 0xF0)
+                    {
+                        cl.type = 1;
+                        cl.col &= 0x0F;
+                    }
+                    else
+                    {
+                        cl.col = (((cl.col+16)&0xf0)|(cl.col&0x0f));
+                    }
+                }
                 gui_palette_redraw = 1;
             }
             break;
         case KEY_UP:
             if (palette_mode != PALETTE_MODE_TEST)
             {
-                cl = (((cl-16)&0xf0)|(cl&0x0f));
+                if (cl.type)
+                {
+                    cl.type = 0;
+                    if (cl.col > 15)
+                        cl.col = 15;
+                    cl.col |= 0xF0;
+                }
+                else
+                {
+                    if ((cl.col & 0xF0) == 0x00)
+                    {
+                        cl.type = 1;
+                    }
+                    else
+                    {
+                        cl.col = (((cl.col-16)&0xf0)|(cl.col&0x0f));
+                    }
+                }
                 gui_palette_redraw = 1;
             }
             break;
         case KEY_LEFT:
             if (palette_mode != PALETTE_MODE_TEST)
             {
-                cl = ((cl&0xf0)|((cl-1)&0x0f));
+                if (cl.type)
+                {
+                    if (cl.col-- == 0) cl.col = IDX_COLOR_MAX;
+                }
+                else
+                {
+                    cl.col = ((cl.col&0xf0)|((cl.col-1)&0x0f));
+                }
             }
             else
             {
@@ -72,7 +113,14 @@ int gui_palette_kbd_process()
         case KEY_RIGHT:
             if (palette_mode != PALETTE_MODE_TEST)
             {
-                cl = ((cl&0xf0)|((cl+1)&0x0f));
+                if (cl.type)
+                {
+                    if (cl.col++ == IDX_COLOR_MAX) cl.col = 0;
+                }
+                else
+                {
+                    cl.col = ((cl.col&0xf0)|((cl.col+1)&0x0f));
+                }
             }
             else
             {
@@ -108,19 +156,16 @@ static void palette_test()
         draw_filled_rect(xl, 0, xr-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
         draw_string(xr-22*FONT_WIDTH, 0, "Use \x1b\x1a to change page", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-        unsigned char cols[3][20] = {
+        color cols[3][20] = {
                 {
                         COLOR_WHITE         ,COLOR_RED           ,COLOR_RED_DK        ,COLOR_RED_LT        ,
                         COLOR_GREEN         ,COLOR_BLUE          ,COLOR_BLUE_LT       ,COLOR_YELLOW        ,
                         COLOR_GREY          ,COLOR_GREY_DK       ,COLOR_GREY_LT       ,COLOR_TRANSPARENT
                 },
                 {
-                        COLOR_REC_RED       ,COLOR_REC_GREEN     ,
-                        COLOR_REC_BLUE      ,COLOR_REC_CYAN      ,
-                        COLOR_REC_MAGENTA   ,COLOR_REC_YELLOW    ,
-                        COLOR_PLY_RED       ,COLOR_PLY_GREEN     ,
-                        COLOR_PLY_BLUE      ,COLOR_PLY_CYAN      ,
-                        COLOR_PLY_MAGENTA   ,COLOR_PLY_YELLOW    ,
+                        COLOR_RED       ,COLOR_GREEN     ,
+                        COLOR_BLUE      ,COLOR_CYAN      ,
+                        COLOR_MAGENTA   ,COLOR_YELLOW
                 },
                 {
                         3   ,6  ,9  ,12 ,15,
@@ -166,14 +211,13 @@ static void palette_test()
         {
             draw_string(xl, 0, "Histogram Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             c = 0;
-            co = (camera_info.state.mode_rec) ? 0 : 6;
             w = (xr - xl) / 2;
             h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
             for (y=0; y<3; y++)
             {
                 for (x=0; x<2; x++, c++)
                 {
-                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c+co],cols[test_page][c+co]));
+                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c],cols[test_page][c]));
                     draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
                 }
             }
@@ -182,14 +226,13 @@ static void palette_test()
         {
             draw_string(xl, 0, "Script/Icon Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             c = 0;
-            co = (camera_info.state.mode_rec) ? 0 : 1;
             w = (xr - xl) / 5;
             h = (camera_screen.height - (2 * FONT_HEIGHT)) / 4;
             for (y=0; y<4; y++)
             {
                 for (x=0; x<5; x++, c++)
                 {
-                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(script_colors[cols[test_page][c]][co],script_colors[cols[test_page][c]][co]));
+                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(get_script_color(cols[test_page][c]+256),get_script_color(cols[test_page][c]+256)));
                     draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
                 }
             }
@@ -200,13 +243,14 @@ static void palette_test()
 }
 
 //-------------------------------------------------------------------
-#define CELL_SIZE           13
-#define BORDER_SIZE         8
+#define CELL_SIZE           12
+#define BORDER_SIZE         6
 #define CELL_ZOOM           6
 #define DISP_LEFT           BORDER_SIZE
-#define DISP_RIGHT          (BORDER_SIZE + CELL_SIZE * 16)
-#define DISP_TOP            (FONT_HEIGHT + BORDER_SIZE)
-#define DISP_BOTTOM         (FONT_HEIGHT + BORDER_SIZE + CELL_SIZE * 16)
+#define DISP_RIGHT          (DISP_LEFT + CELL_SIZE * 16)
+#define DISP_TOP_CHDK       (FONT_HEIGHT + BORDER_SIZE)
+#define DISP_TOP            (DISP_TOP_CHDK + 20)
+#define DISP_BOTTOM         (DISP_TOP + CELL_SIZE * 16)
 
 static void palette_draw()
 {
@@ -224,34 +268,53 @@ static void palette_draw()
         draw_filled_rect(xl, 0, xr, FONT_HEIGHT-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
         draw_string(xr-29*FONT_WIDTH, 0, "    Use \x18\x19\x1b\x1a to change color ", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
         if ( pal )
-            sprintf(buf, " %s: 0x%02hX 0x%08X", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl, pal[cl]);
+            sprintf(buf, " %s: 0x%02hX 0x%08X", lang_str(LANG_PALETTE_TEXT_COLOR), cl.col, pal[chdkColorToCanonColor(cl)]);
         else
-            sprintf(buf, " %s: 0x%02hX", lang_str(LANG_PALETTE_TEXT_COLOR), (unsigned char)cl );
+            sprintf(buf, " %s: 0x%02hX", lang_str(LANG_PALETTE_TEXT_COLOR), cl.col );
         draw_string(xl, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-        // Draw Palette color boxes
-        c = COLOR_BLACK;
+        // Draw gray borders
+        draw_rect_thick(xl, DISP_TOP_CHDK-BORDER_SIZE, xr-1, camera_screen.height-1, COLOR_GREY, BORDER_SIZE); // outer border
+        draw_filled_rect(xl+BORDER_SIZE, DISP_TOP-7, xr-BORDER_SIZE-1, DISP_TOP-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //horiz divider
+        draw_filled_rect(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //vert divider
+        draw_filled_rect(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, xr-BORDER_SIZE-1, DISP_TOP+3*CELL_SIZE-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //above sample
+
+        // Draw CHDK Palette color boxes
+        c = 0;
+        for (x=DISP_LEFT; x<DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1); x+=CELL_SIZE, c++)
+        {
+            draw_filled_rect(xl+x, DISP_TOP_CHDK, xl+x+CELL_SIZE, DISP_TOP_CHDK+CELL_SIZE, MAKE_COLOR(chdk_colors[c],COLOR_BLACK));
+        }
+        draw_string(xl+DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1)+1, DISP_TOP_CHDK, " <-- CHDK     ", MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
+
+        // Draw Canon Palette color boxes
+        c = 0;
         for (y=DISP_TOP; y<DISP_BOTTOM; y+=CELL_SIZE)
         {
-            for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c+=MAKE_COLOR(1,0))
+            for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c++)
             {
-                draw_filled_rect(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, c);
+                draw_filled_rect(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, MAKE_COLOR(c,COLOR_BLACK));
             }
         }
-
-        // Draw gray borders
-        draw_rect_thick(xl, DISP_TOP-BORDER_SIZE, xr-1, camera_screen.height-1, COLOR_GREY, BORDER_SIZE); // outer border
-        draw_filled_rect(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //middle
+        draw_string(xl+DISP_RIGHT+BORDER_SIZE, DISP_TOP+10, "<-- Canon", MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
 
         // Co-ordinate of selected color
-        y = DISP_TOP + ((cl>>4)&0x0F) * CELL_SIZE;
-        x = DISP_LEFT + (cl&0x0F) * CELL_SIZE;
+        if (cl.type)
+        {
+            y = DISP_TOP_CHDK;
+            x = DISP_LEFT + cl.col * CELL_SIZE;
+        }
+        else
+        {
+            y = DISP_TOP + ((cl.col>>4)&0x0F) * CELL_SIZE;
+            x = DISP_LEFT + (cl.col&0x0F) * CELL_SIZE;
+        }
 
         // Highlight selected color
-        draw_filled_rect_thick(xl+x-CELL_ZOOM, y-CELL_ZOOM, xl+x+CELL_SIZE+CELL_ZOOM, y+CELL_SIZE+CELL_ZOOM, MAKE_COLOR(cl, COLOR_RED), 2);
+        draw_filled_rect_thick(xl+x-CELL_ZOOM, y-CELL_ZOOM, xl+x+CELL_SIZE+CELL_ZOOM, y+CELL_SIZE+CELL_ZOOM, MAKE_COLOR(chdkColorToCanonColor(cl), COLOR_RED), 2);
 
         // Fill 'sample' area with selected color
-        draw_filled_rect(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, xr-BORDER_SIZE-1, DISP_BOTTOM, MAKE_COLOR(cl, COLOR_WHITE));
+        draw_filled_rect(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP+CELL_SIZE*3, xr-BORDER_SIZE-1, DISP_BOTTOM, MAKE_COLOR(chdkColorToCanonColor(cl), COLOR_WHITE));
 
         gui_palette_redraw = 0;
     }

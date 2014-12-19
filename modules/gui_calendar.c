@@ -68,7 +68,7 @@ static void gui_calendar_initial_draw() {
 
     draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
     draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+1, 0, lang_str(LANG_CALENDAR_TODAY), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-    draw_rect(cal_x-3, cal_y-3, cal_x+cal_w+2, cal_y+cal_h+2, CALENDAR_COLOR);
+    draw_rect(cal_x-3, cal_y-3, cal_x+cal_w+2, cal_y+cal_h+2, FG_COLOR(CALENDAR_COLOR));
     draw_filled_rect(cal_x-1, cal_y-1, cal_x+cal_w, cal_y+FONT_HEIGHT+8, TITLE_COLOR);
     draw_filled_rect(cal_x-1, cal_y+FONT_HEIGHT+8, cal_x+cal_w, cal_y+cal_h, CALENDAR_COLOR);
 

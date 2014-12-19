@@ -60,17 +60,17 @@ gui_handler GUI_MODE_TETRIS =
 #define TETROMINO_J     (5)
 #define TETROMINO_L     (6)
 /* Tetromino colors */
-#define TETRIS_COLOR_CYAN      COLOR_PLY_CYAN
-#define TETRIS_COLOR_RED       COLOR_PLY_RED
-#define TETRIS_COLOR_BLUE      COLOR_PLY_BLUE
+#define TETRIS_COLOR_CYAN      COLOR_CYAN
+#define TETRIS_COLOR_RED       COLOR_RED
+#define TETRIS_COLOR_BLUE      COLOR_BLUE
 #define TETRIS_COLOR_ORANGE    COLOR_WHITE
-#define TETRIS_COLOR_GREEN     COLOR_PLY_GREEN
-#define TETRIS_COLOR_YELLOW    COLOR_PLY_YELLOW
-#define TETRIS_COLOR_PURPLE    COLOR_PLY_MAGENTA
+#define TETRIS_COLOR_GREEN     COLOR_GREEN
+#define TETRIS_COLOR_YELLOW    COLOR_YELLOW
+#define TETRIS_COLOR_PURPLE    COLOR_MAGENTA
 #define EMPTY_CELL  (-1)
 /* screen colors */
-#define TETRIS_COLOR_BG        MAKE_COLOR(COLOR_GREY_DK,COLOR_GREY_DK)
-#define TETRIS_COLOR_BOARD     MAKE_COLOR(COLOR_GREY,COLOR_GREY)
+#define TETRIS_COLOR_BG        COLOR_GREY_DK
+#define TETRIS_COLOR_BOARD     COLOR_GREY
 #define TETRIS_COLOR_TEXT      COLOR_WHITE
 
 typedef struct StcTetramino {
@@ -168,7 +168,7 @@ void platformRenderGame(StcGame *gameInstance){
                             PREVIEW_Y + (TILE_SIZE * j),
                             camera_screen.ts_button_border+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             PREVIEW_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                            TETRIS_COLOR_BG);
+                            MAKE_COLOR(TETRIS_COLOR_BG,TETRIS_COLOR_BG));
                 }
             }
         }
@@ -210,7 +210,7 @@ void platformRenderGame(StcGame *gameInstance){
                             BOARD_Y + (TILE_SIZE * j),
                             camera_screen.ts_button_border+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
                             BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                             TETRIS_COLOR_BOARD);
+                             MAKE_COLOR(TETRIS_COLOR_BOARD,TETRIS_COLOR_BOARD));
                     }
         }
     }
@@ -663,7 +663,7 @@ void gameUpdate(StcGame *game) {
 }
 
 void gui_tetris_init(){
-    draw_filled_rect(camera_screen.ts_button_border+0,0,camera_screen.width-camera_screen.ts_button_border,camera_screen.height, TETRIS_COLOR_BG);
+    draw_filled_rect(camera_screen.ts_button_border+0,0,camera_screen.width-camera_screen.ts_button_border,camera_screen.height, MAKE_COLOR(TETRIS_COLOR_BG,TETRIS_COLOR_BG));
     draw_rect(camera_screen.ts_button_border+BOARD_X-1,BOARD_Y-1,camera_screen.ts_button_border+BOARD_WIDTH*TILE_SIZE+10,BOARD_HEIGHT*TILE_SIZE+10, TETRIS_COLOR_TEXT);
     game = createGame();
     gameInit(game);

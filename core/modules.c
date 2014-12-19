@@ -533,7 +533,7 @@ module_handler_t h_palette =
 };
 
 // Default (unloaded) function
-static void default_show_palette(int mode, color st_color, void (*on_select)(color clr))
+static void default_show_palette(int mode, chdkColor st_color, void (*on_select)(chdkColor clr))
 {
     // If load succeeded call module version of function
     if (module_load(&h_palette))

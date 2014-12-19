@@ -10,7 +10,7 @@ ifdef OPT_USE_GCC_EABI
     CFLAGS+=-march=armv4
 endif
 
-OBJS=main.o lib.o wrappers.o kbd.o shooting.o
+OBJS=main.o lib.o wrappers.o kbd.o shooting.o platform_palette.o
 
 libplatform.a: $(OBJS)
 
@@ -21,6 +21,7 @@ lib.o: lib.c
 main.o: main.c
 shooting.o: shooting.c ../generic/shooting.c
 wrappers.o: wrappers.c ../generic/wrappers.c
+platform_palette.o: platform_palette.c platform_palette.h
 
 clean:
 	rm -f $(OBJS) libplatform.a

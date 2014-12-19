@@ -420,7 +420,7 @@ static void gui_draw_initial()
         y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
-        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color))); 
+        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))));
     }
     else
     {
@@ -442,7 +442,7 @@ static void gui_draw_initial()
 
 // Local variables used by menu draw functions
 static int imenu, yy, xx, symbol_width;
-static color cl, cl_symbol;
+static twoColors cl, cl_symbol;
 
 // Common code extracted from gui_draw for displaying the symbol on the left
 static void gui_draw_symbol(int num_symbols)
@@ -513,10 +513,10 @@ static void gui_draw(int enforce_redraw)
         {
             if (validrow(imenu))
             {
-                cl = (gui_menu_curr_item==imenu)?conf.menu_cursor_color:conf.menu_color;
+                cl = user_color((gui_menu_curr_item==imenu) ? conf.menu_cursor_color : conf.menu_color);
                 if (inUserMenu(imenu) && (curr_menu->title != LANG_MENU_USER_MENU))
                     cl = MAKE_COLOR(BG_COLOR(cl),COLOR_GREEN);
-                cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR(BG_COLOR(cl),FG_COLOR(conf.menu_symbol_color)):conf.menu_symbol_color;
+                cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR(BG_COLOR(cl),FG_COLOR(user_color(conf.menu_symbol_color))):user_color(conf.menu_symbol_color);
 
                 xx = x;
 

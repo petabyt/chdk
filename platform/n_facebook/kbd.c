@@ -268,10 +268,10 @@ void virtual_buttons()
         int i, x1, y1, x2, y2, ofst;
         int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
-        color c1 = MAKE_COLOR(COLOR_RED_DK,COLOR_WHITE);        // ALT exit button
-        color c2 = MAKE_COLOR(COLOR_WHITE, COLOR_BLUE_DK);      // Right side keys
-        color c3 = MAKE_COLOR(COLOR_WHITE, COLOR_RED_DK);       // Left side keys
-        color c4 = MAKE_COLOR(CHDK_COLOR_BASE+13, COLOR_WHITE); // Semi-transparent keys
+        twoColors c1 = MAKE_COLOR(COLOR_RED_DK,COLOR_WHITE);        // ALT exit button
+        twoColors c2 = MAKE_COLOR(COLOR_WHITE, COLOR_BLUE_DK);      // Right side keys
+        twoColors c3 = MAKE_COLOR(COLOR_WHITE, COLOR_RED_DK);       // Left side keys
+        twoColors c4 = MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE); // Semi-transparent keys
         
         for (i=0; keymap[i].hackkey; i++)
         {
@@ -282,7 +282,7 @@ void virtual_buttons()
                 y1 = keymap[i].y1;
                 y2 = keymap[i].y2;
 
-                color clr = c3;
+                twoColors clr = c3;
                 if ( guiMode == GUI_MODE_SCRIPT ) clr = c4 ;
                 else
                 {

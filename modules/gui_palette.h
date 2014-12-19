@@ -15,7 +15,7 @@ typedef struct
 {
     base_interface_t    base;
 
-    void (*show_palette)(int mode, color st_color, void (*on_select)(color clr));
+    void (*show_palette)(int mode, chdkColor st_color, void (*on_select)(chdkColor clr));
 } libpalette_sym;
 
 //-------------------------------------------------------------------

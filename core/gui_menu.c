@@ -36,7 +36,8 @@ static int          x, y;
 static int          w, wplus, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br1, len_br2, cl_rect;
 static int          int_incr = 1;
-static unsigned char *item_color;
+static confColor    *item_color;
+static int          item_color_type;    // MENUITEM_COLOR_FG / MENUITEM_COLOR_BG
 
 //-------------------------------------------------------------------
 CMenuItem* find_menu_item(CMenu *curr_menu, int itemid )
@@ -262,9 +263,16 @@ void gui_menu_cancel_redraw()
 //-------------------------------------------------------------------
 // Function passed to gui_palette_init
 // This is called when a new color is selected to update the menu / config value
-static void gui_menu_color_selected(color clr)
+static void gui_menu_color_selected(chdkColor clr)
 {
-    *item_color = FG_COLOR(clr);
+    if (item_color_type == MENUITEM_COLOR_FG)
+    {
+        item_color->fg = clr;
+    }
+    else
+    {
+        item_color->bg = clr;
+    }
     gui_menu_erase_and_redraw();
 }
 
@@ -625,9 +633,15 @@ int gui_menu_kbd_process() {
                         gui_menu_back();
                         break;
                     case MENUITEM_COLOR_FG:
+                        item_color = (confColor*)(curr_menu->menu[gui_menu_curr_item].value);
+                        item_color_type = MENUITEM_COLOR_FG;
+                        libpalette->show_palette(PALETTE_MODE_SELECT, item_color->fg, gui_menu_color_selected);
+                        gui_menu_redraw=2;
+                        break;
                     case MENUITEM_COLOR_BG:
-                        item_color=((unsigned char*)(curr_menu->menu[gui_menu_curr_item].value)) + (((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?1:0);
-                        libpalette->show_palette(PALETTE_MODE_SELECT, FG_COLOR(*item_color), gui_menu_color_selected);
+                        item_color = (confColor*)(curr_menu->menu[gui_menu_curr_item].value);
+                        item_color_type = MENUITEM_COLOR_BG;
+                        libpalette->show_palette(PALETTE_MODE_SELECT, item_color->bg, gui_menu_color_selected);
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_ENUM:
@@ -687,7 +701,7 @@ void gui_menu_draw_initial()
         y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
-        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(conf.menu_color), BG_COLOR(conf.menu_color))); 
+        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))));
     }
     else
     {
@@ -702,14 +716,14 @@ void gui_menu_draw_initial()
         }
     }
 
-    rbf_draw_menu_header(x, y-rbf_font_height(), w+wplus, (conf.menu_symbol_enable)?curr_menu->symbol:0, lang_str(curr_menu->title), conf.menu_title_color);
+    rbf_draw_menu_header(x, y-rbf_font_height(), w+wplus, (conf.menu_symbol_enable)?curr_menu->symbol:0, lang_str(curr_menu->title), user_color(conf.menu_title_color));
 }
 
 //-------------------------------------------------------------------
 
 // Local variables used by menu draw functions
 static int imenu, yy, xx, symbol_width;
-static color cl, cl_symbol;
+static twoColors cl, cl_symbol;
 
 // Common code extracted from gui_menu_draw for displaying the symbol on the left
 static void gui_menu_draw_symbol(int num_symbols)
@@ -909,18 +923,18 @@ void gui_menu_draw(int enforce_redraw)
 
         for (imenu=gui_menu_top_item, i=0, yy=y; curr_menu->menu[imenu].text && i<num_lines; ++imenu, ++i, yy+=rbf_font_height())
         {
-            cl = (gui_menu_curr_item==imenu)?conf.menu_cursor_color:conf.menu_color;
+            cl = user_color((gui_menu_curr_item==imenu) ? conf.menu_cursor_color : conf.menu_color);
             /*
             * When cursor is over a symbol, force symbol background color to be the menu cursor color but
             * keep the symbol color user defined.
             * old method was to set the symbol color to the symbol background color when the cursor highlighted it.
             * This method allows the user to have any symbol color and background color they want with the restriction
             * that the symbol background color will match the rest of the line when the cursor highlights it.
-            * It creates a nice consistent look expecially when the symbol color matches the menu text color.
+            * It creates a nice consistent look especially when the symbol color matches the menu text color.
             * without this mod, there is no way to ever make the symbol color match the color of the rest of text menu line
             * when the cursor highlights a line.
             */
-            cl_symbol = (gui_menu_curr_item==imenu)?MAKE_COLOR(BG_COLOR(cl),FG_COLOR(conf.menu_symbol_color)):conf.menu_symbol_color; //color 8Bit=Hintergrund 8Bit=Vordergrund
+            cl_symbol = (gui_menu_curr_item==imenu) ? MAKE_COLOR(BG_COLOR(cl),FG_COLOR(user_color(conf.menu_symbol_color))) : user_color(conf.menu_symbol_color); //color 8Bit=Hintergrund 8Bit=Vordergrund
 
             xx = x;
 
@@ -963,7 +977,7 @@ void gui_menu_draw(int enforce_redraw)
                 if (xx > (x + len_space))
                 {
                     draw_filled_rect(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
-                    draw_line(x+len_space, yy+rbf_font_height()/2, xx-1, yy+rbf_font_height()/2, cl);
+                    draw_line(x+len_space, yy+rbf_font_height()/2, xx-1, yy+rbf_font_height()/2, FG_COLOR(cl));
                     draw_filled_rect(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
                 }
                 else
@@ -976,19 +990,27 @@ void gui_menu_draw(int enforce_redraw)
                 if (xx < (x+w-len_space))
                 {
                     draw_filled_rect(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
-                    draw_line(xx, yy+rbf_font_height()/2, x+w-1-len_space, yy+rbf_font_height()/2, cl);
+                    draw_line(xx, yy+rbf_font_height()/2, x+w-1-len_space, yy+rbf_font_height()/2, FG_COLOR(cl));
                     draw_filled_rect(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
                 }
 
                 rbf_draw_char(x+w-len_space, yy, ' ', cl);
                 break;
             case MENUITEM_COLOR_FG:
-            case MENUITEM_COLOR_BG:
+                {
                 gui_menu_draw_symbol(1);
                 xx+=rbf_draw_string_len(xx, yy, w-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
-                draw_filled_round_rect(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, 
-                    MAKE_COLOR(((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?8:0))&0xFF, 
-                               ((*(curr_menu->menu[imenu].value))>>(((curr_menu->menu[imenu].type & MENUITEM_MASK)==MENUITEM_COLOR_BG)?8:0))&0xFF));
+                color mc = FG_COLOR(user_color(*((confColor*)curr_menu->menu[imenu].value)));
+                draw_filled_round_rect(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, MAKE_COLOR(mc,mc));
+                }
+                break;
+            case MENUITEM_COLOR_BG:
+                {
+                gui_menu_draw_symbol(1);
+                xx+=rbf_draw_string_len(xx, yy, w-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
+                color mc = BG_COLOR(user_color(*((confColor*)curr_menu->menu[imenu].value)));
+                draw_filled_round_rect(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, MAKE_COLOR(mc,mc));
+                }
                 break;
             case MENUITEM_ENUM:
                 if (curr_menu->menu[imenu].value)

@@ -82,7 +82,7 @@ static void gui_mbox_draw_buttons()
 {
     int i;
     coord x = mbox_buttons_x;
-    color cl;
+    twoColors cl;
 
     for (i=0; i<mbox_buttons_num; ++i)
     {

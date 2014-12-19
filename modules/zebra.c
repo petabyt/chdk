@@ -129,8 +129,8 @@ static void gui_osd_zebra_free()
 // returns 1 if zebra should be drawn
 static int gui_osd_zebra_init(int show)
 {
-    cl_under = BG_COLOR(conf.zebra_color);
-    cl_over = FG_COLOR(conf.zebra_color);
+    cl_under = BG_COLOR(user_color(conf.zebra_color));
+    cl_over = FG_COLOR(user_color(conf.zebra_color));
 
     if (show)
     {
@@ -450,12 +450,12 @@ int gui_osd_draw_zebra(int show)
 
     color cls[] = {
         COLOR_TRANSPARENT,
-        (camera_info.state.mode_rec)?COLOR_REC_BLUE:COLOR_PLY_BLUE,
-        (camera_info.state.mode_rec)?COLOR_REC_GREEN:COLOR_PLY_GREEN,
-        (camera_info.state.mode_rec)?COLOR_REC_CYAN:COLOR_PLY_CYAN,
-        (camera_info.state.mode_rec)?COLOR_REC_RED:COLOR_PLY_RED,
-        (camera_info.state.mode_rec)?COLOR_REC_MAGENTA:COLOR_PLY_MAGENTA,
-        (camera_info.state.mode_rec)?COLOR_REC_YELLOW:COLOR_PLY_YELLOW,
+        COLOR_BLUE,
+        COLOR_GREEN,
+        COLOR_CYAN,
+        COLOR_RED,
+        COLOR_MAGENTA,
+        COLOR_YELLOW,
         COLOR_BLACK
     };
 

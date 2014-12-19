@@ -317,7 +317,7 @@ void write_timezone(){
 		for(zba=5; zba>0; zba--)
 		{
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_1));
-			draw_txt_string(8, 8, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(8, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 			msleep(1000);
 		}
 	}
@@ -352,7 +352,7 @@ void write_home(){
 		for(zba=5; zba>0; zba--)
 		{
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_1));
-			draw_txt_string(8, 8, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(8, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 			msleep(1000);
 		}
 	}
@@ -386,7 +386,7 @@ void test_timezone(){
 		{
 			char vBuf[256];
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_2));
-			draw_txt_string(1, 13, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(1, 13, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 			msleep(5000);
 		}
 	}
@@ -426,26 +426,26 @@ void anzeige_gps(){
 			mx1=0;
 			my1=0;
 
-			f_v_0=COLOR_GPS_TRANSPARENT;
-			f_h_0=COLOR_GPS_TRANSPARENT;
+			f_v_0=COLOR_TRANSPARENT;
+			f_h_0=COLOR_TRANSPARENT;
 
-			f_v_1=COLOR_GPS_GREEN;
-			f_h_1=COLOR_GPS_GREEN;
+			f_v_1=COLOR_GREEN;
+			f_h_1=COLOR_GREEN;
 
 			if (g_d_stat == 0)
 			{
-				f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-				f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+				f_v_1=COLOR_RED;
+				f_h_1=COLOR_RED;
 			}
 			if (g_d_stat == 1)
 			{
-				f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-				f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+				f_v_1=COLOR_YELLOW;
+				f_h_1=COLOR_YELLOW;
 			}
 			if (g_d_stat == 2)
 			{
-				f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-				f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+				f_v_1=COLOR_GREEN;
+				f_h_1=COLOR_GREEN;
 			}
 			if (camera_info.state.mode_play)
 			{
@@ -467,54 +467,54 @@ void anzeige_gps(){
 
 				if ((int)lat0e == 0)
 				{
-					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+					f_v_1=COLOR_RED;
+					f_h_1=COLOR_RED;
 				}
 				else
 				{
-					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+					f_v_1=COLOR_YELLOW;
+					f_h_1=COLOR_YELLOW;
 				}
 				if ( strcmp(vBuf0, vBuf1) !=0 )
 				{
-					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+					f_v_1=COLOR_GREEN;
+					f_h_1=COLOR_GREEN;
 				}
 			}
 
 
 
-			f_v_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-			f_h_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+			f_v_2=COLOR_BLACK;
+			f_h_2=COLOR_BLACK;
 
-			f_v_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-			f_h_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_v_3=COLOR_YELLOW;
+			f_h_3=COLOR_YELLOW;
 
-			f_v_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
-			f_h_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_v_4=COLOR_BLUE;
+			f_h_4=COLOR_BLUE;
 
 			for(pos1=0; pos1<laenge1; pos1++)
 			{
 				int data = bitmap[pos1];
 				if (data == 48)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_0, f_h_0));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_0);
 				}
 				if (data == 49)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_1, f_h_1));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_1);
 				}
 				if (data == 50)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_2, f_h_2));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_2);
 				}
 				if (data == 51)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_3, f_h_3));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_3);
 				}
 				if (data == 52)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_4, f_h_4));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_4);
 				}
 				if (data == 10 || data == 13)
 				{
@@ -586,23 +586,23 @@ void anzeige_track(){
 			mx1=0;
 			my1=0;
 
-			f_v_0=COLOR_GPS_TRANSPARENT;
-			f_h_0=COLOR_GPS_TRANSPARENT;
+			f_v_0=COLOR_TRANSPARENT;
+			f_h_0=COLOR_TRANSPARENT;
 
-			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+			f_v_1=COLOR_BLACK;
+			f_h_1=COLOR_BLACK;
 
-			f_v_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
-			f_h_2=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_v_2=COLOR_BLUE;
+			f_h_2=COLOR_BLUE;
 
-			f_v_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-			f_h_3=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_v_3=COLOR_YELLOW;
+			f_h_3=COLOR_YELLOW;
 
-			f_v_4=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-			f_h_4=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+			f_v_4=COLOR_RED;
+			f_h_4=COLOR_RED;
 
-			f_v_5=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-			f_h_5=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+			f_v_5=COLOR_GREEN;
+			f_h_5=COLOR_GREEN;
 
 			for(pos1=0; pos1<laenge1; pos1++)
 			{
@@ -620,27 +620,27 @@ void anzeige_track(){
 				}
 				if (data == 48)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_0, f_h_0));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_0);
 				}
 				if (data == 49)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_1, f_h_1));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_1);
 				}
 				if (data == 50)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_2, f_h_2));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_2);
 				}
 				if (data == 51)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_3, f_h_3));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_3);
 				}
 				if (data == 52)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_4, f_h_4));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_4);
 				}
 				if (data == 53)
 				{
-					draw_pixel(o_x1+mx1, o_y1+my1, MAKE_COLOR(f_v_5, f_h_5));
+					draw_pixel(o_x1+mx1, o_y1+my1, f_h_5);
 				}
 				if (data == 10 || data == 13)
 				{
@@ -704,9 +704,9 @@ void gpx_bild_ohne_signal(){
 				for(zba=30; zba>0; zba--)
 				{
 					sprintf(vBuf, lang_str(LANG_MENU_GPS_t_3));
-					draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+					draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 					sprintf(vBuf, lang_str(LANG_MENU_GPS_t_4),zba);
-					draw_txt_string(0, 9, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+					draw_txt_string(0, 9, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 					if ( (((zba) % 2)) == 0 )
 					{
 						debug_led(0);
@@ -738,7 +738,7 @@ void gpx_bild_ohne_signal(){
 			int zba;
 			for(zba=5; zba>0; zba--)
 			{
-				draw_txt_string(10, 7, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+				draw_txt_string(10, 7, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 				msleep(1000);
 			}
 		}
@@ -773,7 +773,7 @@ void gpx_bild_ohne_signal(){
 			{
 				sprintf(vBuf, " %01d:%02d",minuten, sekunden);
 			}
-			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 
 			// Display einschalten wenn Countdown < 30 Sekunden
 
@@ -969,9 +969,9 @@ void gpx_bild_ohne_signal(){
 			for(zba=15; zba>0; zba--)
 				{
 					sprintf(vBuf, lang_str(LANG_MENU_GPS_t_4), zba);
-					draw_txt_string(0, 2, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_BLUE));
+					draw_txt_string(0, 2, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLUE));
 					sprintf(vBuf, lang_str(LANG_MENU_GPS_t_18));
-					draw_txt_string(0, 3, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+					draw_txt_string(0, 3, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 					play_sound(6);
 
 					for(zba1=100; zba1>0; zba1--)
@@ -1240,9 +1240,9 @@ void gpx_record(){
 				for(zba=30; zba>0; zba--)
 				{
 					sprintf(vBuf, lang_str(LANG_MENU_GPS_t_3));
-					draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+					draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 					sprintf(vBuf, lang_str(LANG_MENU_GPS_t_4),zba);
-					draw_txt_string(0, 9, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+					draw_txt_string(0, 9, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 					if ( (((zba) % 2)) == 0 )
 					{
 						debug_led(0);
@@ -1332,7 +1332,7 @@ void gps_navigate_home(){
 	{
 		char vBuf[256];
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_7));
-		draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+		draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 		msleep(5000);
 		nav_home=0;
 	}
@@ -1365,7 +1365,7 @@ void init_gps_trackback_task(){
 	{
 		char vBuf[256];
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_8), bild);
-		draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+		draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 		msleep(5000);
 	}
 }
@@ -1421,7 +1421,7 @@ double gps_kurswinkel(int zaehler){
 	if (camera_info.state.gui_mode_none)
 	{
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_9), (int)pdelta.delta);
-		draw_txt_string(16, 9, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_WHITE));
+		draw_txt_string(16, 9, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
 		
 		int s = (int)rest;
 		int stunden = s / 3600;
@@ -1431,31 +1431,31 @@ double gps_kurswinkel(int zaehler){
 		int sekunden = s;
 		
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_10), stunden, minuten, sekunden);
-		draw_txt_string(16, 10, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_WHITE));
+		draw_txt_string(16, 10, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
 
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_11), formatDouble (anz1, (pspeed.delta * 3.6), 0, 1));
-		draw_txt_string(16, 11, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_WHITE));
+		draw_txt_string(16, 11, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_12), (int)marsch);
-		draw_txt_string(16, 12, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_WHITE));
+		draw_txt_string(16, 12, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_13), (int)winkel);
-		draw_txt_string(16, 13, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_WHITE));
+		draw_txt_string(16, 13, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
 
 		if (nav_home==0)
 		{
 			sprintf(bild, "%s", camera_jpeg_current_filename());
             bild[8] = '\0';
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_14), bild);
-			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 		}
 		if (nav_home==1)
 		{
 //			sprintf(bild, "%s", camera_jpeg_current_filename());
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_17));//, bild);
-			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 		}
 		
 		sprintf(vBuf, lang_str(LANG_MENU_GPS_t_15), formatDouble (anz1, g_d_lat_nav, 0, 7), formatDouble (anz2, g_d_lon_nav, 0, 7));
-		draw_txt_string(0, 2, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+		draw_txt_string(0, 2, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 	}
 		
 	}
@@ -1465,7 +1465,7 @@ double gps_kurswinkel(int zaehler){
 		if (camera_info.state.gui_mode_none)
 		{
 			sprintf(vBuf, lang_str(LANG_MENU_GPS_t_16), (int)angle1);
-			draw_txt_string(1, 13, vBuf, MAKE_COLOR(COLOR_GPS_TRANSPARENT, COLOR_GPS_RED));
+			draw_txt_string(1, 13, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
 		}
 	}
 
@@ -1503,20 +1503,20 @@ void anzeige_kompass(){
 	int offset_y = 150;		//128
 	int m_y = offset_y + 31;
 
-	int f_v_0=COLOR_GPS_TRANSPARENT;
-	int f_h_0=COLOR_GPS_TRANSPARENT;
+	int f_v_0=COLOR_TRANSPARENT;
+	int f_h_0=COLOR_TRANSPARENT;
 
-	int f_v_1=COLOR_GPS_BLUE;
-	int f_h_1=COLOR_GPS_BLUE;
+	int f_v_1=COLOR_BLUE;
+	int f_h_1=COLOR_BLUE;
 
-	int f_v_2=(camera_info.state.mode_rec) ? COLOR_GPS_WHITE : COLOR_GPS_PLAY_WHITE;
-	int f_h_2=(camera_info.state.mode_rec) ? COLOR_GPS_WHITE : COLOR_GPS_PLAY_WHITE;
+	int f_v_2=COLOR_WHITE;
+	int f_h_2=COLOR_WHITE;
 
-	int f_v_3=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-	int f_h_3=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+	int f_v_3=COLOR_BLACK;
+	int f_h_3=COLOR_BLACK;
 
-	int f_v_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
-	int f_h_4=(camera_info.state.mode_rec) ? COLOR_GPS_BLACK : COLOR_GPS_PLAY_BLACK;
+	int f_v_4=COLOR_BLACK;
+	int f_h_4=COLOR_BLACK;
 
 	double alter_c_w=cos(0);
 	double alter_s_w=sin(0);
@@ -1536,18 +1536,18 @@ void anzeige_kompass(){
 
 		if (g_d_stat == 0 )
 		{
-			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+			f_v_1=COLOR_RED;
+			f_h_1=COLOR_RED;
 		}
 		if (g_d_stat == 1 )
 		{
-			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
+			f_v_1=COLOR_YELLOW;
+			f_h_1=COLOR_YELLOW;
 		}
 		if (g_d_stat == 2 )
 		{
-			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+			f_v_1=COLOR_GREEN;
+			f_h_1=COLOR_GREEN;
 		}
 		if (camera_info.state.gui_mode_none)
 		{
@@ -1555,8 +1555,8 @@ void anzeige_kompass(){
 		}
 		if (g_d_stat == 2 )
 		{
-			f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
-			f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_BLUE : COLOR_GPS_PLAY_BLUE;
+			f_v_1=COLOR_BLUE;
+			f_h_1=COLOR_BLUE;
 		}
 		if (m>=0 && m<180)
 		{
@@ -1655,11 +1655,11 @@ void anzeige_kompassnadel (int winkel, double s_w, double c_w, char *bitmap, int
 
 				if (data == 49)
 				{
-					draw_pixel(x_n, y_n, MAKE_COLOR(f_v_1, f_h_1));
+					draw_pixel(x_n, y_n, f_h_1);
 				}
 				if (data == 50)
 				{
-					draw_pixel(x_n, y_n, MAKE_COLOR(f_v_2, f_h_2));
+					draw_pixel(x_n, y_n, f_h_2);
 				}
 			}
 			if (data == 10 || data == 13)
@@ -1693,19 +1693,19 @@ void anzeige_kompassbild (char *bitmap1, int o_x, int o_y, int f_v_0, int f_h_0,
 			int data = bitmap1[pos];
 			if (data == 48)
 			{
-				draw_pixel(o_x+mx, o_y+my, MAKE_COLOR(f_v_0, f_h_0));
+				draw_pixel(o_x+mx, o_y+my, f_h_0);
 			}
 			if (data == 49)
 			{
-				draw_pixel(o_x+mx, o_y+my, MAKE_COLOR(f_v_1, f_h_1));
+				draw_pixel(o_x+mx, o_y+my, f_h_1);
 			}
 			if (data == 50)
 			{
-				draw_pixel(o_x+mx, o_y+my, MAKE_COLOR(f_v_2, f_h_2));
+				draw_pixel(o_x+mx, o_y+my, f_h_2);
 			}
 			if (data == 51)
 			{
-				draw_pixel(o_x+mx, o_y+my, MAKE_COLOR(f_v_4, f_h_4));
+				draw_pixel(o_x+mx, o_y+my, f_h_4);
 			}
 			if (data == 10 || data == 13)
 			{

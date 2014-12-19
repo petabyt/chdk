@@ -112,7 +112,8 @@
     #define CAM_WHITE_LEVEL                 ((1<<CAM_SENSOR_BITS_PER_PIXEL)-1)      // 10bpp = 1023 ((1<<10)-1), 12bpp = 4095 ((1<<12)-1)
     #define CAM_BLACK_LEVEL                 ((1<<(CAM_SENSOR_BITS_PER_PIXEL-5))-1)  // 10bpp = 31 ((1<<5)-1),    12bpp = 127 ((1<<7)-1)
 
-    #define CAM_DEFAULT_MENU_CURSOR         MAKE_COLOR(COLOR_BLUE,COLOR_YELLOW)     // Default menu cursor colors
+    #define CAM_DEFAULT_MENU_CURSOR_BG      IDX_COLOR_BLUE      // Default menu cursor colors
+    #define CAM_DEFAULT_MENU_CURSOR_FG      IDX_COLOR_YELLOW    // Default menu cursor colors
 
     // Older cameras had a screen/bitmap buffer that was 360 pixels wide (or 480 for wide screen models)
     // CHDK was built around this 360 pixel wide display model

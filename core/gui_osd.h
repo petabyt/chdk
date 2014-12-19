@@ -22,7 +22,7 @@
 
 //-------------------------------------------------------------------
 extern void gui_draw_osd_elements(int is_osd_edit, int is_zebra);
-extern void gui_osd_draw_clock(int x, int y, color cl, int is_osd_edit);
+extern void gui_osd_draw_clock(int x, int y, twoColors cl, int is_osd_edit);
 extern void gui_draw_debug_vals_osd();
 extern void gui_update_debug_page();
 

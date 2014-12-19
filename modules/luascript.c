@@ -1129,26 +1129,10 @@ static int luaCB_textbox( lua_State* L ) {
 }
 
 // begin lua draw fuctions
-static int get_color(int cl) {
-    char out=0;                     //defaults to 0 if any wrong number
-
-    if (cl<256)
-        out=cl;
-    else {
-        if (cl-256<sizeof(script_colors)) {
-            if(camera_info.state.mode_rec)
-                out=script_colors[cl-256][1];
-            else
-                out=script_colors[cl-256][0];
-        }
-    }
-    return out;
-}
-
 static int luaCB_draw_pixel( lua_State* L ) {
   coord x1=luaL_checknumber(L,1);
   coord y1=luaL_checknumber(L,2);
-  color cl=get_color(luaL_checknumber(L,3));
+  color cl=get_script_color(luaL_checknumber(L,3));
   draw_pixel(x1,y1,cl);
   return 0;
 }
@@ -1158,7 +1142,7 @@ static int luaCB_draw_line( lua_State* L ) {
   coord y1=luaL_checknumber(L,2);
   coord x2=luaL_checknumber(L,3);
   coord y2=luaL_checknumber(L,4);
-  color cl=get_color(luaL_checknumber(L,5));
+  color cl=get_script_color(luaL_checknumber(L,5));
   draw_line(x1,y1,x2,y2,cl);
   return 0;
 }
@@ -1168,7 +1152,7 @@ static int luaCB_draw_rect( lua_State* L ) {
   coord y1=luaL_checknumber(L,2);
   coord x2=luaL_checknumber(L,3);
   coord y2=luaL_checknumber(L,4);
-  color cl=get_color(luaL_checknumber(L,5));
+  color cl=get_script_color(luaL_checknumber(L,5));
   int   th=luaL_optnumber(L,6,1);
   draw_rect_thick(x1,y1,x2,y2,cl,th);
   return 0;
@@ -1179,11 +1163,11 @@ static int luaCB_draw_rect_filled( lua_State* L ) {
   coord y1 =luaL_checknumber(L,2);
   coord x2 =luaL_checknumber(L,3);
   coord y2 =luaL_checknumber(L,4);
-  color clf=get_color(luaL_checknumber(L,5));
-  color clb=get_color(luaL_checknumber(L,6));
+  color clf=get_script_color(luaL_checknumber(L,5));
+  color clb=get_script_color(luaL_checknumber(L,6));
   int   th =luaL_optnumber(L,7,1);
-  clf=256*clb+clf;
-  draw_filled_rect_thick(x1,y1,x2,y2,clf,th);
+  twoColors cl = MAKE_COLOR(clb,clf);
+  draw_filled_rect_thick(x1,y1,x2,y2,cl,th);
   return 0;
 }
 
@@ -1192,7 +1176,7 @@ static int luaCB_draw_ellipse( lua_State* L ) {
   coord y1=luaL_checknumber(L,2);
   coord a=luaL_checknumber(L,3);
   coord b=luaL_checknumber(L,4);
-  color cl=get_color(luaL_checknumber(L,5));
+  color cl=get_script_color(luaL_checknumber(L,5));
   draw_ellipse(x1,y1,a,b,cl);
   return 0;
 }
@@ -1202,7 +1186,7 @@ static int luaCB_draw_ellipse_filled( lua_State* L ) {
   coord y1=luaL_checknumber(L,2);
   coord a=luaL_checknumber(L,3);
   coord b=luaL_checknumber(L,4);
-  color cl=256*get_color(luaL_checknumber(L,5));
+  color cl=get_script_color(luaL_checknumber(L,5));
   draw_filled_ellipse(x1,y1,a,b,cl);
   return 0;
 }
@@ -1212,8 +1196,8 @@ static int luaCB_draw_string( lua_State* L )
   coord x1 = luaL_checknumber(L,1);
   coord y1 = luaL_checknumber(L,2);
   const char *t = luaL_checkstring( L, 3 );
-  color clf = get_color(luaL_checknumber(L,4));
-  color clb = get_color(luaL_checknumber(L,5));
+  color clf = get_script_color(luaL_checknumber(L,4));
+  color clb = get_script_color(luaL_checknumber(L,5));
   int xsize = luaL_optnumber(L,6,1);
   int ysize = luaL_optnumber(L,7,xsize);
   

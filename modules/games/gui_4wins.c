@@ -27,12 +27,12 @@ gui_handler GUI_MODE_4WINS =
 #define BORDER_TOP	 RECT_SIZE
 #define FIELD_HEIGHT 7
 #define FIELD_WIDTH	 7
-#define P1_COLOR	 MAKE_COLOR(COLOR_PLY_BLUE,COLOR_PLY_BLUE)
-#define P2_COLOR	 MAKE_COLOR(COLOR_PLY_GREEN,COLOR_PLY_GREEN)
-#define BK_COLOR	 MAKE_COLOR(COLOR_GREY,COLOR_GREY)
+#define P1_COLOR	 COLOR_BLUE
+#define P2_COLOR	 COLOR_GREEN
+#define BK_COLOR	 COLOR_GREY
 #define FIELD_COLOR	 MAKE_COLOR(COLOR_GREY_LT,COLOR_GREY_LT)//(füllfarbe,rand)
 #define TEXT_COLOR   MAKE_COLOR(COLOR_GREY, COLOR_WHITE)
-#define INFO_COLOR   MAKE_COLOR(COLOR_GREY_LT, COLOR_GREY_LT)
+#define INFO_COLOR   COLOR_GREY_LT
 #define INFO_TEXT_COLOR   MAKE_COLOR(INFO_COLOR, COLOR_WHITE)
 
 char cursor_position,cur_player=1;
@@ -176,7 +176,7 @@ char ki_findColumn(char mode, char player) {							//player = 1|2
 void draw_txt_message(char* text) {
     coord w, x, y;
     int l;
-    color cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+    twoColors cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
     l=strlen(text);
     w=l*FONT_WIDTH+10;
 
@@ -309,9 +309,9 @@ int gui_4wins_init()
 	finished=in_game=0;
 	srand(time(NULL));
 	
-	draw_filled_rect(0, 0, camera_screen.width, camera_screen.height, BK_COLOR);		// draw backgraund
+	draw_filled_rect(0, 0, camera_screen.width, camera_screen.height, MAKE_COLOR(BK_COLOR,BK_COLOR));		// draw backgraund
 	draw_filled_rect(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR);
-	draw_filled_round_rect(camera_screen.ts_button_border+240, 90, camera_screen.ts_button_border+360-BORDER, 240-10, INFO_COLOR);
+	draw_filled_round_rect(camera_screen.ts_button_border+240, 90, camera_screen.ts_button_border+360-BORDER, 240-10, MAKE_COLOR(INFO_COLOR,INFO_COLOR));
     draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+12, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
     draw_line(camera_screen.ts_button_border,15,camera_screen.ts_button_border+360,15,COLOR_GREY_LT);
 

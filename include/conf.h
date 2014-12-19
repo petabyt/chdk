@@ -197,22 +197,25 @@ typedef struct {
     OSD_scale ev_video_scale;
     OSD_scale usb_info_scale;
 
-    color histo_color;
-    color histo_color2; // markers/border
-    color osd_color;
-    color osd_color_warn;
-    color space_color;
-    color menu_color;
-    color menu_title_color;
-    color menu_cursor_color;
-    color menu_symbol_color;
+    // User adjustable colors
+    confColor histo_color;
+    confColor histo_color2;     // markers/border
+    confColor osd_color;
+    confColor osd_color_warn;
+    confColor osd_color_override;
+    confColor space_color;
+    confColor menu_color;
+    confColor menu_title_color;
+    confColor menu_cursor_color;
+    confColor menu_symbol_color;
+    confColor reader_color;
+    confColor zebra_color;      // under/over
+    confColor grid_color;
+    confColor edge_overlay_color;
+
     int menu_center;
     int menu_select_first_entry;
     int menu_symbol_enable;
-    color reader_color;
-    color zebra_color;    // under/over
-    color grid_color;
-    color osd_color_override;
 
     int font_cp;
     char menu_rbf_file[CONF_STR_LEN];
@@ -356,7 +359,6 @@ typedef struct {
     int edge_overlay_pano_overlap;      // overlap in % in pano mode
     int edge_overlay_show;              // whether to show overlay even when no button is pressed
     int edge_overlay_play;              // whether edge overlay is switched on also for play mode
-    color edge_overlay_color;
 
     int synch_enable;
     int ricoh_ca1_mode;
@@ -542,7 +544,7 @@ typedef struct {
     union {
         void            *ptr;
         int             i;
-        color           cl;
+        confColor       cl;
         OSD_pos         pos;
         OSD_scale       scale;
         long            (*func)(void);
@@ -550,8 +552,9 @@ typedef struct {
     unsigned int        last_saved;     // Record last value saved to file to determine if file needs updating
 } ConfInfo;
 
-#define CONF_INFO(id, param, type, def)     { id, sizeof( param ), type, &param, {def}, 0 }
-#define CONF_INFO2(id, param, type, px, py) { id, sizeof( param ), type, &param, {pos:{px,py}}, 0 }
+#define CONF_INFO(id, param, type, def)             { id, sizeof( param ), type, &param, {def}, 0 }
+#define CONF_INFO2(id, param, type, px, py)         { id, sizeof( param ), type, &param, {pos:{px,py}}, 0 }
+#define CONF_INFOC(id, param, type, bc, fc, bt, ft) { id, sizeof( param ), type, &param, {cl:{fg:{fc,ft},bg:{bc,bt}}}, 0 }
 
 extern void config_save(ConfInfo *conf_info, const char *filename, int config_base);
 extern void config_restore(ConfInfo *confinfo, const char *filename, void (*info_func)(unsigned short id));
