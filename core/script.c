@@ -262,7 +262,7 @@ void script_end()
     action_stack_kill(running_script_stack_name);
     running_script_stack_name = -1;
 
-	shot_histogram_set(0);
+	libshothisto->shot_histogram_set(0);
     kbd_key_release_all();
 
     conf_setAutosave(1);    // Turn on autosave of config file in conf_setValue in case script turned it off
@@ -273,7 +273,7 @@ long script_start_gui( int autostart )
 {
     int i;
 
-    shot_histogram_set(0);
+    libshothisto->shot_histogram_set(0);
     camera_info.state.auto_started = autostart;
 
     // Kill high speed USB timer if running

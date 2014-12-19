@@ -69,4 +69,8 @@
 //--------------------------
 #include "eyefi.h"
 
+// MODULE "Shot Histogram"
+//--------------------------
+#include "shot_histogram.h"
+
 #endif

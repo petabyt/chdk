@@ -793,7 +793,6 @@ libtxtread_sym default_libtxtread =
 // Library pointer
 libtxtread_sym* libtxtread = &default_libtxtread;
 
-
 /************* MODULE EYEFI ******/
 
 #define MODULE_NAME_EYEFI "eyefi.flt"
@@ -836,3 +835,44 @@ libeyefi_sym default_libeyefi=
 
 // Library pointer
 libeyefi_sym* libeyefi = &default_libeyefi;
+
+/************* MODULE Shot Histogram ******/
+
+#define MODULE_NAME_SHOTHIST "shothist.flt"
+
+// Forward reference
+extern libshothisto_sym default_libshothisto;
+
+module_handler_t h_shothisto =
+{
+    (base_interface_t**)&libshothisto,
+    &default_libshothisto.base,
+    SHOT_HISTO_VERSION,
+    MODULE_NAME_SHOTHIST
+};
+
+static int default_shot_histogram_set(int enable)
+{
+    // If enabling shot histogram, then load module, otherwise nothing to do
+    if (enable)
+        if (module_load(&h_shothisto))
+            return libshothisto->shot_histogram_set(enable);
+    return 1;
+}
+static int default_shot_histogram_get_range()
+{
+    return -1;  // Module not loaded
+}
+
+// Default library - module unloaded
+libshothisto_sym default_libshothisto=
+{
+    { 0,0,0,0,0 },
+    default_shot_histogram_set,
+    default_shot_histogram_get_range,
+    dummy_void,                         //build_shot_histogram,
+    dummy_void,                         //write_to_file
+};
+
+// Library pointer
+libshothisto_sym* libshothisto = &default_libshothisto;

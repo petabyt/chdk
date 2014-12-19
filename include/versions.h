@@ -29,6 +29,7 @@
 #define DNG_VERSION             {3,1}
 #define CURVES_VERSION          {2,0}
 #define EYEFI_VERSION           {1,0}
+#define SHOT_HISTO_VERSION      {1,0}
 
 //-------------------------------------------------------------------
 

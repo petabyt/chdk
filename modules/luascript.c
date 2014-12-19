@@ -1465,15 +1465,20 @@ static int luaCB_get_histo_range( lua_State* L )
 {
   int from = (luaL_checknumber(L,1));
   int to = (luaL_checknumber(L,2));
-  if (shot_histogram_isenabled()) lua_pushnumber( L, shot_histogram_get_range(from, to) );
-  else lua_pushnumber( L, -1 ); // TODO should probably return nil 
+  lua_pushnumber( L, libshothisto->shot_histogram_get_range(from, to) );
   return 1;
 }
 
 static int luaCB_shot_histo_enable( lua_State* L )
 {
-  shot_histogram_set(luaL_checknumber( L, 1 ));
+  libshothisto->shot_histogram_set(luaL_checknumber( L, 1 ));
   return 0;
+}
+
+static int luaCB_shot_histo_write_to_file( lua_State* L )
+{
+    libshothisto->write_to_file();
+    return 0;
 }
 
 /*
@@ -2739,6 +2744,7 @@ static const luaL_Reg chdk_funcs[] = {
  
     FUNC(get_histo_range)
     FUNC(shot_histo_enable)
+    FUNC(shot_histo_write_to_file)
     FUNC(get_live_histo)
     FUNC(play_sound)
     FUNC(get_temperature)

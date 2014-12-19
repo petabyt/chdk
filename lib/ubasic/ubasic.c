@@ -557,8 +557,7 @@ static int factor(void)
     accept(TOKENIZER_GET_HISTO_RANGE);
     int from = expr();
     int to = expr();
-    if (shot_histogram_isenabled()) r = (unsigned short)shot_histogram_get_range(from, to);
-    else r = -1;
+    r = (unsigned short)libshothisto->shot_histogram_get_range(from, to);
     break;
   case TOKENIZER_GET_TEMPERATURE:
     accept(TOKENIZER_GET_TEMPERATURE);
@@ -2211,6 +2210,12 @@ static void md_detect_motion_statement()
 }
 
 /*---------------------------------------------------------------------------*/
+static int _shot_histogram_set(int enable)
+{
+    return libshothisto->shot_histogram_set(enable);
+}
+
+/*---------------------------------------------------------------------------*/
 
 static void
 statement(void)
@@ -2566,7 +2571,7 @@ statement(void)
       break;
 
   case TOKENIZER_SHOT_HISTO_ENABLE:
-      one_int_param_function(token, (void (*)(int))shot_histogram_set);
+      one_int_param_function(token, (void (*)(int))_shot_histogram_set);
       break;
 
   case TOKENIZER_SET_RECORD:
