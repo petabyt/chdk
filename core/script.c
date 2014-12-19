@@ -206,7 +206,7 @@ void gui_script_draw()
 }
 
 // GUI handler for Script mode
-gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, 0 };      
+gui_handler scriptGuiHandler = { GUI_MODE_SCRIPT, gui_script_draw, gui_script_kbd_process, 0, 0, 0 };
 
 static gui_handler *old_gui_handler = 0;
 

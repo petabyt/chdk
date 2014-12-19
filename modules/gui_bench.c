@@ -16,7 +16,7 @@ void gui_module_menu_kbd_process();
 int gui_bench_kbd_process();
 
 gui_handler GUI_MODE_BENCH = 
-    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw, gui_bench_kbd_process, gui_module_menu_kbd_process, 0 };
+    /*GUI_MODE_BENCH*/  { GUI_MODE_MODULE, gui_bench_draw, gui_bench_kbd_process, gui_module_menu_kbd_process, 0, 0 };
 
 //-------------------------------------------------------------------
 static struct {

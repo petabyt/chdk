@@ -20,7 +20,7 @@ void gui_read_draw();
 void gui_read_kbd_leave();
 
 gui_handler GUI_MODE_READ = 
-/*GUI_MODE_READ*/   { GUI_MODE_MODULE, gui_read_draw, gui_read_kbd_process, gui_read_kbd_process_menu_btn, 0 };
+/*GUI_MODE_READ*/   { GUI_MODE_MODULE, gui_read_draw, gui_read_kbd_process, gui_read_kbd_process_menu_btn, 0, 0 };
 
 gui_handler *old_mode;
 

@@ -60,6 +60,8 @@ typedef struct
 	// Menu button handler for mode
     void (*kbd_process_menu_btn)(void);
 
+    int (*touch_handler)(int x, int y);
+
 	int flags;
 } gui_handler;
 
@@ -69,6 +71,7 @@ extern gui_handler altGuiHandler;
 
 extern int gui_kbd_process();
 extern void gui_default_kbd_process_menu_btn();
+extern int gui_touch_process(int x, int y);
 
 extern void gui_redraw();
 extern void gui_set_need_restore();

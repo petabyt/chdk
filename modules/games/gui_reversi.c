@@ -15,9 +15,10 @@
 void gui_game_menu_kbd_process();
 int gui_reversi_kbd_process();
 void gui_reversi_draw();
+static int gui_reversi_touch_handler(int,int);
 
 gui_handler GUI_MODE_REVERSI = 
-    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE, gui_reversi_draw, gui_reversi_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_REVERSI*/    { GUI_MODE_MODULE, gui_reversi_draw, gui_reversi_kbd_process, gui_game_menu_kbd_process, gui_reversi_touch_handler, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define FIELD_EMPTY             0
@@ -392,6 +393,23 @@ int gui_reversi_kbd_process() {
                 NewGame();
             need_redraw = 1;
             break;
+    }
+    return 0;
+}
+
+static int gui_reversi_touch_handler(int sx, int sy)
+{
+    if ((sx >= field_x) && (sx < field_x+cell_size*8) && (sy >= field_y) && (sy < field_x+cell_size*8))
+    {
+        sx = (sx - field_x) / cell_size;
+        sy = (sy - field_y) / cell_size;
+        if ((sx != xPos) || (sy != yPos))
+        {
+            xPos = sx;
+            yPos = sy;
+            need_redraw = 1;
+        }
+        return KEY_SET;
     }
     return 0;
 }

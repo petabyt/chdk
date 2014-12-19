@@ -211,6 +211,19 @@ int chdk_process_touch()
                 touch_panel_button &= ~keymap[i].canonkey;              //
             }
        }
+       
+        // Check if menu touched
+        int mk = gui_touch_process(tx, ty);
+        if (mk != 0)
+        {
+            for (i=0; keymap[i].hackkey; i++)
+            {
+                if ((keymap[i].hackkey == mk) && is_button_active(i,camera_info.state.gui_mode,camMode))
+                {
+                    touch_panel_state &= ~keymap[i].canonkey;
+                }
+            }
+        }       
     }
     else
     {

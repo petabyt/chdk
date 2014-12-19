@@ -16,7 +16,7 @@ void gui_module_menu_kbd_process();
 void gui_hexbox_draw();
 
 gui_handler GUI_MODE_HEXBOX =
-    /*GUI_MODE_HEXBOX*/ { GUI_MODE_MODULE, gui_hexbox_draw, gui_hexbox_kbd_process, gui_module_menu_kbd_process, 0 };
+    /*GUI_MODE_HEXBOX*/ { GUI_MODE_MODULE, gui_hexbox_draw, gui_hexbox_kbd_process, gui_module_menu_kbd_process, 0, 0 };
 
 static gui_handler *gui_hexbox_mode_old; // stored previous gui_mode
 static int running = 0;

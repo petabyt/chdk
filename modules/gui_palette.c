@@ -17,7 +17,7 @@ int gui_palette_kbd_process();
 void gui_palette_draw();
 
 gui_handler GUI_MODE_PALETTE_MODULE = 
-/*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw, gui_palette_kbd_process, gui_module_menu_kbd_process, 0 };
+/*GUI_MODE_PALETTE*/    { GUI_MODE_PALETTE, gui_palette_draw, gui_palette_kbd_process, gui_module_menu_kbd_process, 0, 0 };
 
 //-------------------------------------------------------------------
 static int running = 0;

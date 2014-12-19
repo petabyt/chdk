@@ -17,7 +17,7 @@ int gui_snake_kbd_process();
 void gui_snake_draw();
 
 gui_handler GUI_MODE_SNAKE = 
-    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE, gui_snake_draw, gui_snake_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE, gui_snake_draw, gui_snake_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define SNAKE_MAX_LENGTH 0xF0

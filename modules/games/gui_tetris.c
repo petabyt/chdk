@@ -18,7 +18,7 @@ int gui_tetris_kbd_process();
 void gui_tetris_draw();
 
 gui_handler GUI_MODE_TETRIS = 
-    /*GUI_MODE_TETRIS*/ { GUI_MODE_MODULE, gui_tetris_draw, gui_tetris_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_TETRIS*/ { GUI_MODE_MODULE, gui_tetris_draw, gui_tetris_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 #define BOARD_WIDTH     (10)
 #define BOARD_HEIGHT    (22)

@@ -17,7 +17,7 @@ void gui_tbox_kbd_process_menu_btn();
 void gui_tbox_draw();
 
 gui_handler GUI_MODE_TBOX =
-    /*GUI_MODE_TBOX*/ { GUI_MODE_MODULE, gui_tbox_draw, gui_tbox_kbd_process, gui_tbox_kbd_process_menu_btn, 0 };
+    /*GUI_MODE_TBOX*/ { GUI_MODE_MODULE, gui_tbox_draw, gui_tbox_kbd_process, gui_tbox_kbd_process_menu_btn, 0, 0 };
 
 static gui_handler *gui_tbox_mode_old; // stored previous gui_mode
 static int running = 0;

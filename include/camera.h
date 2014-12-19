@@ -83,6 +83,8 @@
     #undef  CAM_TOUCHSCREEN_UI                  // Define to enable touch screen U/I (e.g. IXUS 310 HS)
     #define CAM_TS_BUTTON_BORDER            0   // Define this to leave a border on each side of the OSD display for touch screen buttons.
                                                 // Used on the IXUS 310 to stop the OSD from overlapping the on screen buttons on each side
+    #define CAM_TS_MENU_BORDER              0   // Define this to leave a border at top and bottom of menu to avoid areas where touch sensor does not work
+                                                // Used on the IXUS 310 to allow touch selection of menu entries
     #define CAM_DISP_ALT_TEXT               1   // Display the '<ALT>' message at the bottom of the screen in ALT mode (IXUS 310 changes button color instead)
 
     #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD     // CHDK can make single AF scan during video record

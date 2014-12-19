@@ -223,7 +223,7 @@ void gui_menu_init(CMenu *menu_ptr) {
         set_tv_override_menu(curr_menu);
     }
 
-    num_lines = camera_screen.height/rbf_font_height()-1;
+    num_lines = (camera_screen.height - camera_screen.ts_menu_border*2)/rbf_font_height()-1;
     x = camera_screen.menu_border_width;
     w = camera_screen.width-x-x;
     len_bool = rbf_str_width("\x95");
@@ -242,7 +242,7 @@ void gui_menu_init(CMenu *menu_ptr) {
 static int gui_menu_rows()
 {
     int n;
-    // Count the numer of rows in current menu
+    // Count the number of rows in current menu
     for(n = 0; curr_menu->menu[n].text; n++);
     return n;
 }
@@ -510,6 +510,27 @@ static void gui_menu_updown(int increment)
     }
 }
 
+static int gui_menu_touch_handler(int tx, int ty)
+{
+    int h = ((count > num_lines) ? num_lines : count) * rbf_font_height();
+    if ((tx >= x) && (ty >= y) && (tx < (x + w)) && (ty < (y + h)))
+    {
+        int r = ((ty - y) / rbf_font_height()) + gui_menu_top_item;
+        if (((curr_menu->menu[r].type & MENUITEM_MASK) != MENUITEM_TEXT) &&
+            ((curr_menu->menu[r].type & MENUITEM_MASK) != MENUITEM_SEPARATOR))
+        {
+            if (gui_menu_curr_item != r)
+            {
+                gui_menu_curr_item = r;
+                // Redraw menu if needed
+                if (gui_menu_redraw == 0) gui_menu_redraw = 1;
+            }
+            return KEY_SET;
+        }
+    }
+    return 0;
+}
+
 //-------------------------------------------------------------------
 // Process button presses when in GUI_MODE_MENU mode
 int gui_menu_kbd_process() {
@@ -696,9 +717,9 @@ void gui_menu_draw_initial()
 { 
     count = gui_menu_rows();
 
+    y = (camera_screen.height - ((num_lines - 1) * rbf_font_height())) >> 1;
     if (count > num_lines)
     {
-        y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
         draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))));
@@ -708,11 +729,7 @@ void gui_menu_draw_initial()
         wplus = 0;
         if (conf.menu_center)
         {
-            y = (camera_screen.height-(count-1)*rbf_font_height())>>1; 
-        }
-        else
-        {
-            y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);  
+            y = (camera_screen.height - ((count - 1) * rbf_font_height())) >> 1;
         }
     }
 
@@ -1062,5 +1079,5 @@ void gui_menu_kbd_process_menu_btn()
 
 //-------------------------------------------------------------------
 // GUI handler for menus
-gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, 0 };
+gui_handler menuGuiHandler = { GUI_MODE_MENU, gui_menu_draw, gui_menu_kbd_process, gui_menu_kbd_process_menu_btn, gui_menu_touch_handler, 0 };
 //-------------------------------------------------------------------

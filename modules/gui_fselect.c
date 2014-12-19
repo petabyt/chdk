@@ -30,7 +30,7 @@ void gui_fselect_kbd_process_menu_btn();
 void gui_fselect_draw(int enforce_redraw);
 
 gui_handler GUI_MODE_FSELECT_MODULE =
-    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw, gui_fselect_kbd_process, gui_fselect_kbd_process_menu_btn, 0 };
+    /*GUI_MODE_FSELECT*/    { GUI_MODE_FSELECT, gui_fselect_draw, gui_fselect_kbd_process, gui_fselect_kbd_process_menu_btn, 0, 0 };
 
 //-------------------------------------------------------------------
 #define HEAD_LINES              1

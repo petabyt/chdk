@@ -187,7 +187,7 @@ void gui_osd_menu_kbd_process()
 gui_handler layoutGuiHandler =
 {
     // THIS IS OSD LAYOUT EDITOR
-    GUI_MODE_OSD, gui_osd_draw, gui_osd_kbd_process, gui_osd_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE
+    GUI_MODE_OSD, gui_osd_draw, gui_osd_kbd_process, gui_osd_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE
 };
 
 // =========  MODULE INIT =================
