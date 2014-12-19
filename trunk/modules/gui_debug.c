@@ -18,7 +18,7 @@ void gui_module_menu_kbd_process();
 int gui_debug_kbd_process();
 
 gui_handler GUI_MODE_DEBUG = 
-/*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE, gui_debug_draw, gui_debug_kbd_process, gui_module_menu_kbd_process, 0 };
+/*GUI_MODE_DEBUG*/  { GUI_MODE_MODULE, gui_debug_draw, gui_debug_kbd_process, gui_module_menu_kbd_process, 0, 0 };
 
 //-------------------------------------------------------------------
 static int running = 0;

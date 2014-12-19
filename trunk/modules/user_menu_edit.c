@@ -786,7 +786,7 @@ static int gui_uedit_kbd_process() {
 
 //-------------------------------------------------------------------
 // GUI handler for menus
-static gui_handler ueditGuiHandler = { GUI_MODE_MODULE, gui_draw, gui_uedit_kbd_process, gui_uedit_kbd_process_menu_btn, 0 };
+static gui_handler ueditGuiHandler = { GUI_MODE_MODULE, gui_draw, gui_uedit_kbd_process, gui_uedit_kbd_process_menu_btn, 0, 0 };
 //-------------------------------------------------------------------
 
 

@@ -19,7 +19,7 @@ int gui_4wins_kbd_process();
 void gui_4wins_draw();
 
 gui_handler GUI_MODE_4WINS = 
-    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_game_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 #define BORDER		 20
 #define XBORDER		 (camera_screen.ts_button_border+BORDER)

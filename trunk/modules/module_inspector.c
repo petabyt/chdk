@@ -75,7 +75,7 @@ int gui_module_kbd_process();
 void gui_module_draw();
 
 gui_handler GUI_MODE_MODULE_INSPECTOR = 
-/*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE, gui_module_draw, gui_module_kbd_process, gui_module_menu_kbd_process, 0 };
+/*GUI_MODE_MODULE_INSPECTOR*/   { GUI_MODE_MODULE, gui_module_draw, gui_module_kbd_process, gui_module_menu_kbd_process, 0, 0 };
 
 int modinspect_redraw;
 gui_handler *modinspect_old_guimode;

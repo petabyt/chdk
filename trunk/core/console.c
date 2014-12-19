@@ -193,7 +193,7 @@ void console_redraw()
 static void gui_console_draw();
 static int gui_console_kbd_process();
 
-static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_console_draw, gui_console_kbd_process, 0, 0 };
+static gui_handler mboxGuiHandler = { GUI_MODE_MBOX, gui_console_draw, gui_console_kbd_process, 0, 0, 0 };
 
 static gui_handler	    *gui_console_mode_old;
 

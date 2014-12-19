@@ -17,9 +17,10 @@
 int gui_mpopup_kbd_process();
 void gui_mpopup_kbd_process_menu_btn();
 void gui_mpopup_draw();
+static int gui_mpopup_touch_handler(int,int);
 
-gui_handler GUI_MODE_MPOPUP_MODULE = 
-    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
+gui_handler GUI_MODE_MPOPUP_MODULE =
+    /*GUI_MODE_MPOPUP*/ { GUI_MODE_MPOPUP, gui_mpopup_draw, gui_mpopup_kbd_process, gui_mpopup_kbd_process_menu_btn, gui_mpopup_touch_handler, GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
 // Simple popup menu. No title, no separators, only processing items
 
@@ -157,6 +158,21 @@ int gui_mpopup_kbd_process()
     case KEY_SET:
 		exit_mpopup(actions[mpopup_actions[mpopup_actions_active]].flag);		
         break;
+    }
+    return 0;
+}
+
+static int gui_mpopup_touch_handler(int sx, int sy)
+{
+    if ((sx >= mpopup_actions_x) && (sx <= mpopup_actions_x+mpopup_actions_w*FONT_WIDTH) && (sy >= mpopup_actions_y) && (sy <= mpopup_actions_y+mpopup_actions_num*FONT_HEIGHT))
+    {
+        sy = (sy - mpopup_actions_y) / FONT_HEIGHT;
+        if (mpopup_actions_active != sy)
+        {
+            mpopup_actions_active = sy;
+            mpopup_to_draw = 1;
+        }
+        return KEY_SET;
     }
     return 0;
 }

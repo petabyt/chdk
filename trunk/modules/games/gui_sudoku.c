@@ -29,7 +29,7 @@ void gui_sudoku_draw();
 void exit_sudoku();
 
 gui_handler GUI_MODE_SUDOKU =
-    /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE, gui_sudoku_draw, gui_sudoku_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_SUDOKU*/  { GUI_MODE_MODULE, gui_sudoku_draw, gui_sudoku_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 static int running = 0;
 

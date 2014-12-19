@@ -32,7 +32,7 @@ int gui_sokoban_kbd_process();
 void gui_sokoban_draw();
 
 gui_handler GUI_MODE_SOKOBAN = 
-    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE, gui_sokoban_draw, gui_sokoban_kbd_process, gui_module_menu_kbd_process, GUI_MODE_FLAG_NODRAWRESTORE };
+    /*GUI_MODE_SOKOBAN*/    { GUI_MODE_MODULE, gui_sokoban_draw, gui_sokoban_kbd_process, gui_module_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
 #define FIELD_WIDTH             15

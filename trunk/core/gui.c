@@ -2779,7 +2779,7 @@ void gui_chdk_kbd_process_menu_btn()
 
 //-------------------------------------------------------------------
 // GUI handler for <ALT> mode
-gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process, gui_chdk_kbd_process_menu_btn, 0, };
+gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process, gui_chdk_kbd_process_menu_btn, 0, 0, };
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
@@ -2855,6 +2855,14 @@ int gui_kbd_process()
         // Call mode handler for other buttons
         if (gui_mode->kbd_process) return gui_mode->kbd_process();
     }
+    return 0;
+}
+
+// Handle touch screen presses
+int gui_touch_process(int x, int y)
+{
+    if (gui_mode && gui_mode->touch_handler)
+        return gui_mode->touch_handler(x, y);
     return 0;
 }
 

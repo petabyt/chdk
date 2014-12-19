@@ -1349,5 +1349,5 @@ static void gui_default_draw()
 
 //-------------------------------------------------------------------
 // GUI/KBD handlers - Canon modes (not in CHDK <ALT> mode, menu etc)
-gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_default_draw, gui_std_kbd_process, 0, 0 };
+gui_handler defaultGuiHandler = { GUI_MODE_NONE, gui_default_draw, gui_std_kbd_process, 0, 0, 0 };
 //-------------------------------------------------------------------
