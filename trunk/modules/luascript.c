@@ -2920,14 +2920,19 @@ void register_lua_funcs( lua_State* L )
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
  **************************************************************/
 
-static void lua_set_variable(char *name, int value, int isBool, int isTable, const char *label)
+static void lua_set_variable(char *name, int value, int isBool, int isTable, int labelCount, const char **labels)
 {
     lua_pushstring( L, name );
     if (isTable)
     {
-        lua_createtable(L, 0, 2);
+        lua_createtable(L, 0, labelCount+1);
+        int i;
+        for (i=0; i<labelCount; i++)
+        {
+            lua_pushstring(L,labels[i]);
+            lua_rawseti(L,-2,i);
+        }
         SET_INT_FIELD("value", value);
-        SET_STR_FIELD("label", label);
     }
     else
     {

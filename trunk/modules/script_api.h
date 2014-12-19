@@ -22,7 +22,7 @@ typedef struct
     int     (*script_start)( char const* script, int is_ptp ); // initialize and load script
     int     (*script_run)( void );          // run script timeslice
     void    (*script_reset)(void);
-    void    (*set_variable)(char *name, int value, int isBool, int isTable, const char *label);
+    void    (*set_variable)(char *name, int value, int isBool, int isTable, int labelCount, const char **labels);
     void    (*set_as_ret)(int as_ret);      // save 'return' value from action stack code (e.g. motion detect, shoot)
     int     (*run_restore)( void );         // run the "restore" function at the end of a script
     void    (*shoot_hook)(int hook);        // run a hook in the shooting process, called from hooked task
