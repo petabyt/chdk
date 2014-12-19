@@ -405,6 +405,11 @@ static int process_single(const char *ptr)
         else if (*ptr == '{')
         {
             ptr = get_values(p, ptr+1, '}');
+            ptr = skip_whitespace(ptr);
+            if (strncmp(ptr,"table",5) == 0)
+            {
+                p->data_type = DTYPE_TABLE;
+            }
         }
         ptr = skip_whitespace(ptr);
         if (strncmp(ptr,"bool",4) == 0)

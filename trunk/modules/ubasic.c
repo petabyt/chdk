@@ -18,7 +18,7 @@ int jump_label(char * label);
 
 static int ubasic_run_restore(void)             { return jump_label("restore"); }
 
-static void _set_variable(char *name, int value, int isBool)
+static void _set_variable(char *name, int value, int isBool, int isTable, const char *label)
 {
     ubasic_set_variable(name[0] - (name[0]>='a'?'a':('A'-26)), value);
 }
