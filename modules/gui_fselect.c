@@ -399,7 +399,7 @@ static int copy_file(const char *src_dir, const char *src_file, const char *dst_
 
         if (fdst >= 0)
         {
-            int ss, sd;
+            int ss, sd = 0;
 
             // Allocate buffer if not already allocated
             if (ubuf == 0)
