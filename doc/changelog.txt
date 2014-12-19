@@ -1,5 +1,8 @@
 Detailed change history is available from subversion https://www.assembla.com/code/chdk/subversion/commits
 
+=1.4=
+Unstable development branch
+
 =1.3=
 Current stable, released Dec 18 2014. Implemented new features are listed below :
 * Address some of the longstanding issues with focus overrides - especially in scripts. Discussion: http://chdk.setepontos.com/index.php?topic=11078.0
