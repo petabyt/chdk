@@ -151,19 +151,24 @@ void core_spytask()
     cam_console_init();
 #endif
 
-    mkdir("A/CHDK");
-    mkdir("A/CHDK/FONTS");
-    mkdir("A/CHDK/SYMBOLS");
-    mkdir("A/CHDK/SCRIPTS");
-    mkdir("A/CHDK/LANG");
-    mkdir("A/CHDK/BOOKS");
-    mkdir("A/CHDK/MODULES");
-    mkdir("A/CHDK/MODULES/CFG");
-    mkdir("A/CHDK/GRIDS");
-    mkdir("A/CHDK/CURVES");
-    mkdir("A/CHDK/DATA");
-    mkdir("A/CHDK/LOGS");
-    mkdir("A/CHDK/EDGE");
+    static char *chdk_dirs[] =
+    {
+        "A/CHDK",
+        "A/CHDK/FONTS",
+        "A/CHDK/SYMBOLS",
+        "A/CHDK/SCRIPTS",
+        "A/CHDK/LANG",
+        "A/CHDK/BOOKS",
+        "A/CHDK/MODULES",
+        "A/CHDK/MODULES/CFG",
+        "A/CHDK/GRIDS",
+        "A/CHDK/CURVES",
+        "A/CHDK/DATA",
+        "A/CHDK/LOGS",
+        "A/CHDK/EDGE",
+    };
+    for (i = 0; i < sizeof(chdk_dirs) / sizeof(char*); i++)
+        mkdir_if_not_exist(chdk_dirs[i]);
 
     no_modules_flag = stat("A/CHDK/MODULES/FSELECT.FLT",0) ? 1 : 0 ;
 
