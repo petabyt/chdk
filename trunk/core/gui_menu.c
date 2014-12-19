@@ -314,7 +314,7 @@ static void update_int_value(const CMenuItem *mi, int direction)
     *(mi->value) += int_incr * direction;
 
     // Limit new value to defined bounds
-    if ( mi->type & MENUITEM_F_UNSIGNED)
+    if ((mi->type & MENUITEM_F_UNSIGNED) || (mi->type & MENUITEM_SD_INT))
     {
         if (*(mi->value) < 0) 
             *(mi->value) = 0;
@@ -337,10 +337,11 @@ static void update_int_value(const CMenuItem *mi, int direction)
         }
     }
 
-    if (*(mi->value) > 99999) 
-        *(mi->value) = 99999;
+    int maxval = (mi->type & MENUITEM_SD_INT) ? 9999999 : 99999;
+    if (*(mi->value) > maxval)
+        *(mi->value) = maxval;
 
-    if ( mi->type & MENUITEM_F_UNSIGNED)
+    if (mi->type & MENUITEM_F_UNSIGNED)
     {
         if ( mi->type & MENUITEM_F_MAX)
         {
@@ -350,7 +351,7 @@ static void update_int_value(const CMenuItem *mi, int direction)
     }
     else
     {
-        if ( mi->type & MENUITEM_F_MAX)
+        if (mi->type & MENUITEM_F_MAX)
         {
             if (*(mi->value) > MENU_MAX_SIGNED(mi->arg)) 
                 *(mi->value) = MENU_MAX_SIGNED(mi->arg);
@@ -824,14 +825,17 @@ static char tbuf[64];
 
 // Convert an int value to a display string, adjust position of '-' for negative values to
 // not clash with int_incr 'cursor' position
-static void get_int_disp_string(int value)
+static void get_int_disp_string(int value, int dlen)
 {
-    sprintf(tbuf, "%5d", value);
+    if (dlen == 6)
+        sprintf(tbuf, "%7d", value);
+    else
+        sprintf(tbuf, "%5d", value);
     if (value < 0)
     {
         int spos, cpos;
         for (spos=0; spos<5; spos++) if (tbuf[spos] == '-') break;
-        cpos = 4 - factor_disp_len();
+        cpos = dlen - factor_disp_len();
         if ((cpos > 0) && (cpos <= spos))
         {
             tbuf[spos] = ' ';
@@ -867,8 +871,8 @@ static void gui_menu_draw_state_value(CMenuItem *c)
     switch (c[0].type & MENUITEM_MASK)
     {
     case MENUITEM_INT:
-        get_int_disp_string(*(c[0].value));
-        gui_set_int_cursor(4);
+        get_int_disp_string(*(c[0].value), (c[0].type & MENUITEM_SD_INT)?6:4);
+        gui_set_int_cursor((c[0].type & MENUITEM_SD_INT)?6:4);
         ch = tbuf;
         break;
     case MENUITEM_ENUM:
@@ -964,8 +968,8 @@ void gui_menu_draw(int enforce_redraw)
                 gui_menu_draw_value((*(curr_menu->menu[imenu].value))?"\x95":" ", len_bool);
                 break;
             case MENUITEM_INT:
-                get_int_disp_string(*(curr_menu->menu[imenu].value));
-                gui_menu_draw_value(tbuf, len_int);
+                get_int_disp_string(*(curr_menu->menu[imenu].value), (curr_menu->menu[imenu].type & MENUITEM_SD_INT)?6:4);
+                gui_menu_draw_value(tbuf, (curr_menu->menu[imenu].type & MENUITEM_SD_INT)?len_enum:len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
             case MENUITEM_SUBMENU:

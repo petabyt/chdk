@@ -1,17 +1,9 @@
 --[[
 @title video test
-@param a video start
-@default a 0
-@values a auto shoot vid_btn skip
-@param b mode change delay, ms
-@default b 250
-@param c modes test
-@default c 1
-@range c 0 1
+#menu_test_mode=0 "video start" {auto shoot vid_btn skip}
+#mode_change_delay=250 "mode change delay, ms"
+#mode_test=1 "modes test" bool
 --]]
-menu_test_mode=a
-mode_change_delay=b
-mode_test=(c == 1)
 
 -- log to table, because file IO will fail when recording video
 log = {}

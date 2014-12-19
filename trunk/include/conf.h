@@ -108,7 +108,6 @@ typedef struct {
     int script_shoot_delay;
     int show_histo;
     int script_allow_lua_native_calls;
-    int script_vars[SCRIPT_NUM_PARAMS];
     char script_file[CONF_STR_LEN];
 
     int show_dof;
