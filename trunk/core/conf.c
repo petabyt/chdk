@@ -541,18 +541,18 @@ static ConfInfo gps_conf_info[] = {
     // GPS
     CONF_INFO(  1, conf.gps_record,                 CONF_DEF_VALUE,     i:0),
     CONF_INFO(  2, conf.gps_navi_show,              CONF_DEF_VALUE,     i:0),
-    CONF_INFO(  3, conf.gps_kompass_show,           CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  3, conf.gps_compass_show,           CONF_DEF_VALUE,     i:0),
     CONF_INFO(  4, conf.gps_coordinates_show,       CONF_DEF_VALUE,     i:0),
     CONF_INFO(  5, conf.gps_height_show,            CONF_DEF_VALUE,     i:0),
     CONF_INFO(  6, conf.gps_waypoint_save,          CONF_DEF_VALUE,     i:0),
     CONF_INFO(  7, conf.gps_track_time,             CONF_DEF_VALUE,     i:1),
-    CONF_INFO(  8, conf.gps_kompass_hide,           CONF_DEF_VALUE,     i:0),
+    CONF_INFO(  8, conf.gps_compass_hide,           CONF_DEF_VALUE,     i:0),
 
     CONF_INFO(  9, conf.gps_wait_for_signal,        CONF_DEF_VALUE,     i:300),
-    CONF_INFO( 10, conf.gps_kompass_time,           CONF_DEF_VALUE,     i:1),
+    CONF_INFO( 10, conf.gps_compass_time,           CONF_DEF_VALUE,     i:1),
     CONF_INFO( 11, conf.gps_navi_time,              CONF_DEF_VALUE,     i:1),
     CONF_INFO( 12, conf.gps_wait_for_signal_time,   CONF_DEF_VALUE,     i:5),
-    CONF_INFO( 13, conf.gps_kompass_smooth,         CONF_DEF_VALUE,     i:7),
+    CONF_INFO( 13, conf.gps_compass_smooth,         CONF_DEF_VALUE,     i:7),
     CONF_INFO( 14, conf.gps_batt,                   CONF_DEF_VALUE,     i:25),
     CONF_INFO( 15, conf.gps_countdown,              CONF_DEF_VALUE,     i:0),
     CONF_INFO( 16, conf.gps_2D_3D_fix,              CONF_DEF_VALUE,     i:2),
@@ -867,17 +867,17 @@ static short conf_map_1_2[] =
     1091, // 252 conf.ext_video_time
     4001, // 253 conf.gps_record
     4002, // 254 conf.gps_navi_show
-    4003, // 255 conf.gps_kompass_show
+    4003, // 255 conf.gps_compass_show
     4004, // 256 conf.gps_coordinates_show
     4005, // 257 conf.gps_height_show
     4006, // 258 conf.gps_waypoint_save
     4007, // 259 conf.gps_track_time
-    4008, // 260 conf.gps_kompass_hide
+    4008, // 260 conf.gps_compass_hide
     4009, // 261 conf.gps_wait_for_signal
-    4010, // 262 conf.gps_kompass_time
+    4010, // 262 conf.gps_compass_time
     4011, // 263 conf.gps_navi_time
     4012, // 264 conf.gps_wait_for_signal_time
-    4013, // 265 conf.gps_kompass_smooth
+    4013, // 265 conf.gps_compass_smooth
     4014, // 266 conf.gps_batt
     4015, // 267 conf.gps_countdown
     4016, // 268 conf.gps_2D_3D_fix

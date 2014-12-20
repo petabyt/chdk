@@ -20,16 +20,6 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static KeyMap keymap[];
 extern void _GetKbdState(long*);
 
-#ifdef CAM_HAS_GPS
-extern int Taste_Funktion;
-extern int Taste_Taste;
-//extern int Taste_Taste_0;
-//extern int Taste_Taste_1;
-extern int Taste_Druck;
-extern int Taste_press;
-//extern int kbd_blocked;
-#endif
-
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 #define KEYS_MASK0 (0x00000000)
 #define KEYS_MASK1 (0x3F800000)     // SX 260 ASm1989
@@ -40,6 +30,10 @@ extern int Taste_press;
 #define SD_READONLY_IDX     2
 #define USB_MASK            0x10000000 // Found @0xff441660, levent 0x202
 #define USB_IDX             2
+
+#ifdef CAM_HAS_GPS
+int gps_key_trap=0 ;
+#endif
 
 int get_usb_bit() {
     long usb_physw[3];
@@ -148,21 +142,19 @@ void my_kbd_read_keys() {
 
     _GetKbdState( kbd_new_state );
     _kbd_read_keys_r2( kbd_new_state);
-
+    
 #ifdef CAM_HAS_GPS
-    if (Taste_Funktion != 0)
+    if (gps_key_trap > 0)
     {
-        if (Taste_Taste == kbd_get_pressed_key())
+        if (kbd_get_pressed_key() == gps_key_trap)
         {
-            Taste_Druck=1;
-            kbd_key_release(Taste_Taste);
+            kbd_key_release(gps_key_trap);
             kbd_key_press(0);
-            Taste_Funktion=0;
-            Taste_Taste=0;
+            gps_key_trap = -1;
             msleep(1000);
-            }
+        }
     }
-#endif
+#endif     
 
     if (kbd_process() == 0) {
     // we read keyboard state with _kbd_read_keys()

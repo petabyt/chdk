@@ -27,7 +27,9 @@ extern void _GetKbdState(long*);
 #define USB_MASK            0x04000000 // Found @0xff3a29bc, levent 0x202
 #define USB_IDX             2
 
-
+#ifdef CAM_HAS_GPS
+int gps_key_trap=0 ;
+#endif
 
 int get_usb_bit()
 {
@@ -102,6 +104,19 @@ void my_kbd_read_keys() {
 
 	_GetKbdState(kbd_new_state);
 	_kbd_read_keys_r2(kbd_new_state);
+    
+#ifdef CAM_HAS_GPS
+    if (gps_key_trap > 0)
+    {
+        if (kbd_get_pressed_key() == gps_key_trap)
+        {
+            kbd_key_release(gps_key_trap);
+            kbd_key_press(0);
+            gps_key_trap = -1;
+            msleep(1000);
+        }
+    }
+#endif       
 	
 	if (kbd_process() == 0) {
 		// we read keyboard state with _kbd_read_keys()

@@ -218,22 +218,10 @@ void load_chdk_palette()
 #endif
 
 //Unchecked, copied from D20
-#ifdef CAM_HAS_GPS
 char *camera_jpeg_current_filename() {
      return (void*)0xBD06C;                 //0xFF1E2E88 search for  "%03d-%04d"
 }
 
-char * camera_jpeg_current_latitude() {     //it is camera_jpeg_current_filename + 0x78
-    return (void*)0xBD0E4;
+char *camera_jpeg_current_gps() {
+    return (void*)0xBD0E0;
 }
-
-char * camera_jpeg_current_longitude() {    //it is camera_jpeg_current_filename + 0x94
-    return (void*)0xBD100;
-}
-
-char * camera_jpeg_current_height() {       //it is camera_jpeg_current_filename + 0x190
-    return (void*)0xBD1FC;
-}
-#endif
-
-
