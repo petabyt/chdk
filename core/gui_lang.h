@@ -24,7 +24,6 @@
 
 #define LANG_MENU_RAW_TITLE             13
 #define LANG_MENU_RAW_SAVE              14
-#define LANG_MENU_RESET_DEFAULT_SCRIPT  15
 #define LANG_MENU_RAW_FIRST_ONLY        16
 #define LANG_MENU_RAW_SAVE_IN_DIR       17
 #define LANG_MENU_RAW_PREFIX            18
