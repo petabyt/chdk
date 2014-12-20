@@ -269,6 +269,8 @@ long script_start_gui( int autostart )
 {
     int i;
 
+    if (conf.script_file[0] == 0) return 0;
+
     libshothisto->shot_histogram_set(0);
     camera_info.state.auto_started = autostart;
 
@@ -289,7 +291,7 @@ long script_start_gui( int autostart )
     script_console_add_line((autostart)?LANG_CONSOLE_TEXT_AUTOSTARTED:LANG_CONSOLE_TEXT_STARTED);
 
     module_set_script_lang(conf.script_file);
-    if ( !libscriptapi->script_start(script_source_str,0) )
+    if ( !libscriptapi->script_start_file(conf.script_file) )
     {
         return -1;
     }

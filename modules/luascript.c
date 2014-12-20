@@ -268,6 +268,13 @@ int lua_script_start( char const* script, int ptp )
     return 1;
 }
 
+int lua_script_start_file(char const* filename)
+{
+    static char loader[256];
+    sprintf(loader, "local sub = loadfile(\"%s\"); collectgarbage(); sub()", filename);
+    return lua_script_start(loader, 0);
+}
+
 // run a timeslice of lua script
 int lua_script_run(void)
 {
@@ -2955,6 +2962,7 @@ libscriptapi_sym _liblua =
     },
 
     lua_script_start,
+    lua_script_start_file,
     lua_script_run,
     lua_script_reset,
     lua_set_variable,
