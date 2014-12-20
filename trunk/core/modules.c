@@ -313,12 +313,22 @@ static int default_script_start(char const* script, int is_ptp)
     // Failure
     return 0;
 }
+static int default_script_start_file(char const* filename)
+{
+    // If load succeeded call module version of function
+    if (module_load(&h_script))
+        return libscriptapi->script_start_file(filename);
+
+    // Failure
+    return 0;
+}
 
 // Default library - module unloaded
 libscriptapi_sym default_libscriptapi =
 {
     { 0,0,0,0,0 },
     default_script_start,
+    default_script_start_file,
     dummy_int,              //script_run
     dummy_void,             //script_reset
     dummy_void,             //set_variable

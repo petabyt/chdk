@@ -20,6 +20,7 @@ typedef struct
     base_interface_t    base;
 
     int     (*script_start)( char const* script, int is_ptp ); // initialize and load script
+    int     (*script_start_file)( char const* filename ); // initialize and load script from file
     int     (*script_run)( void );          // run script timeslice
     void    (*script_reset)(void);
     void    (*set_variable)(char *name, int value, int isBool, int isTable, int labelCount, const char **labels);

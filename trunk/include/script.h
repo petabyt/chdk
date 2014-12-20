@@ -42,7 +42,6 @@ typedef struct _sc_param
 
 // External references
 extern char script_title[36];
-extern const char* script_source_str;
 extern sc_param* script_params;
 
 //-------------------------------------------------------------------

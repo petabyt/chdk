@@ -1,6 +1,7 @@
 #include "camera_info.h"
 #include "stdlib.h"
 #include "gui.h"
+#include "fileutil.h"
 
 #include "script_api.h"
 #include "module_def.h"
@@ -23,17 +24,47 @@ static void _set_variable(char *name, int value, int isBool, int isTable, int la
     ubasic_set_variable(name[0] - (name[0]>='a'?'a':('A'-26)), value);
 }
 
+static char *script_source = 0;
+static char last_script[100] = "";
+
+static int ubasic_init_file(char const* filename)
+{
+    if (strcmp(last_script, filename) != 0)
+    {
+        strcpy(last_script, filename);
+        if (script_source)
+            free(script_source);
+        script_source = load_file(filename, 0, 1);
+    }
+    if (script_source)
+    {
+        return ubasic_init(script_source, 0);
+    }
+    return 0;
+}
+
 // shoot hooks not supported in ubasic
 static void ubasic_script_shoot_hook_run(int hook) { return; }
 /******************** Module Information structure ******************/
 
+static int module_unloader()
+{
+    if (script_source)
+    {
+        free(script_source);
+        script_source = 0;
+    }
+    return 0;
+}
+
 libscriptapi_sym _libubasic =
 {
     {
-         0, 0, 0, 0, 0
+         0, module_unloader, 0, 0, 0
     },
 
     ubasic_init,
+    ubasic_init_file,
     ubasic_run,
     ubasic_end,
     _set_variable,

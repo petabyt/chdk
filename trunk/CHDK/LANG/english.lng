@@ -22,6 +22,7 @@
  13 "RAW"
 
  14 "Save RAW"
+ 15 "Reset to default script"
  16 "Only First RAW in Series"
  17 "RAW File Folder"
  18 "RAW File Prefix"
@@ -472,7 +473,7 @@
 
 382 "AF key"
 383 "Load default param values"
-384 "Parameters set"
+384 "Saved Parameters Set"
 
 385 "Disable Raw @ Sports"
 386 "Disable Raw @ Burst"

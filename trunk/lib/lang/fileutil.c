@@ -4,6 +4,7 @@
 // PURPOSE:
 // Universal file loader: alloc space in uncached memory and load file
 // Allocates 1 extra byte and terminates loaded data with a 0 if 'add0' == 1
+// If non-zero value passed in *st_size, then at most *st_size bytes read
 // RETURN:
 //  pointer to loaded file (0 if fail)
 //      stat() size stored in st_size (-1 if no file)
@@ -25,6 +26,8 @@ static char* _load_file(const char* name, int* rv_size, int* st_size, int add0)
     {
         // get file size & check size is valid
 		ssize = st.st_size;
+		if ((st_size != 0) && (*st_size > 0) && (ssize > *st_size))       // Limit size read to the size requested
+		    ssize = *st_size;
 	    if (ssize > 0)
         {
             // open file & check file is valid
@@ -67,14 +70,15 @@ static char* _load_file(const char* name, int* rv_size, int* st_size, int add0)
 	return buf;
 }
 
-// Use _load_file to read a file into memory
+// Use _load_file to read length bytes from a file into memory
+// Set length = 0 to read entire file
 // Returns:
 //      read() size in *rv_size
 //      memory buffer allocated (caller must free buffer)
 //-------------------------------------------------------------------
-char* load_file(const char* name, int* rv_size, int add0)
+char* load_file_to_length(const char* name, int* rv_size, int add0, int length)
 {
-	int rsize, ssize;
+	int rsize, ssize = length;
 
 	char* buf = _load_file(name, &rsize, &ssize, add0);
 
@@ -88,6 +92,16 @@ char* load_file(const char* name, int* rv_size, int add0)
     }
 
 	return buf;
+}
+
+// Use _load_file to read a file into memory
+// Returns:
+//      read() size in *rv_size
+//      memory buffer allocated (caller must free buffer)
+//-------------------------------------------------------------------
+char* load_file(const char* name, int* rv_size, int add0)
+{
+    return load_file_to_length(name, rv_size, add0, 0);
 }
 
 // PURPOSE:

@@ -14,9 +14,8 @@ static void gui_update_script_submenu();
 
 //-------------------------------------------------------------------
 
-#define SCRIPT_DEFAULT_FILENAME     "A/SCRIPT.LUA"
+#define SCRIPT_DEFAULT_FILENAME     "A/CHDK/SCRIPTS/DEFAULT.LUA"
 #define SCRIPT_DATA_PATH            "A/CHDK/DATA/"
-#define SCRIPT_DEFAULT_DIR          "A/CHDK/SCRIPTS/"
 
 // Requested filename
 enum FilenameMakeModeEnum {
@@ -24,80 +23,6 @@ enum FilenameMakeModeEnum {
     MAKE_PARAM_FILENAME,            // "DATA/scriptname_%d"
     MAKE_PARAM_FILENAME_V2          // "DATA/scriptname.$d"
 };
-
-//-------------------------------------------------------------------
-
-const char *script_source_str=NULL;         // ptr to content of script
-
-static const char *lua_script_default =
-    "--[[\n"
-    "@title Default Script\n"
-    "]]\n"
-#if defined(VER_CHDK)
-    "chdk_def_lang=1\n"
-#else
-    "chdk_def_lang=2\n"
-#endif
-    "langs     = {}\n"
-    "langs[1]  = {[\"name\"]=\"ENGLISH\", [\"font_cp\"]=0, [\"hint\"]=\"CHDK language changed to english\"}\n"
-    "langs[2]  = {[\"name\"]=\"GERMAN\",  [\"font_cp\"]=2, [\"hint\"]=\"CHDK-Sprache auf deutsch geändert\"}\n"
-    "langs[13] = {[\"name\"]=\"RUSSIAN\", [\"font_cp\"]=1, [\"hint\"]=\"CHDK language changed to russian\"}\n"
-    
-    "function get_cam_lang()\n"
-        "local l\n"
-        "if get_propset()==1 then\n"
-            "l=get_prop(196)/256\n"
-            "if l>7 then l=l+1 end\n"
-            "if l>22 then l=l+1 end\n"
-        "else\n"
-            "l=get_prop(61)/256\n"
-        "end\n"
-        "return l+1\n"
-    "end\n"
-    
-    "function get_chdk_lang()\n"
-        "local l=0\n"
-        "local lf=get_config_value(64)\n"
-        "if lf==\"\" then\n"
-            "l=chdk_def_lang\n"
-        "else\n"
-            "for i,v in ipairs(langs) do\n"
-                "if string.find(lf, v[\"name\"]..\".LNG\")~=nil then\n"
-                    "l=i\n"
-                    "break\n"
-                "end\n"
-            "end\n"
-        "end\n"
-        "return l\n"
-    "end\n"
-    
-    "function file_exists(name)\n"
-         "local f=io.open(name,\"r\")\n"
-         "if f~=nil then io.close(f) return true else return false end\n"
-    "end\n"
-    
-    "chdk_lang=get_chdk_lang()\n"
-    "cam_lang=get_cam_lang()\n"
-    
-    "if cam_lang~=chdk_lang then\n"
-        "if chdk_lang==0 or cam_lang==chdk_def_lang then\n"
-            "set_config_value(64,\"\")\n"
-            "set_config_value(65,langs[chdk_def_lang].font_cp)\n"
-            "print(langs[chdk_def_lang].hint)\n"
-        "elseif langs[cam_lang]~=nil then\n"
-            "if file_exists(\"A/CHDK/LANG/\"..langs[cam_lang].name..\".LNG\") then\n"
-                "set_config_value(64,\"A/CHDK/LANG/\"..langs[cam_lang].name..\".LNG\")\n"
-                "set_config_value(65,langs[cam_lang].font_cp)\n"
-                "print(langs[cam_lang].hint)\n"
-            "else\n"
-                "print(langs[cam_lang].name..\".LNG is missing\")\n"
-            "end\n"
-        "else\n"
-            "print(\"unknown language id (\"..cam_lang..\")\")\n"
-        "end\n"
-    "else\n"
-        "print(\";)\")\n"
-    "end\n";
 
 // ================ SCRIPT PARAMETERS ==========
 
@@ -198,7 +123,7 @@ const char* get_script_filename()
 {
     const char* name = 0;
     // find name of script
-    if (conf.script_file && conf.script_file[0])
+    if (conf.script_file[0] != 0)
     {
         name = strrchr(conf.script_file, '/');
         if (name)
@@ -434,20 +359,10 @@ static int process_single(const char *ptr)
 //=======================================================
 
 //-------------------------------------------------------------------
-// PURPOSE: Parse script (script_source_str) for parameters and title
+// PURPOSE: Parse script (conf.script_file) for parameters and title
 //-------------------------------------------------------------------
 static void script_scan()
 {
-    register const char *ptr = script_source_str;
-    register int i, n;
-
-    if ( !ptr ) { ptr = lua_script_default; }     // sanity check
-
-    // Build title from name (in case no title in script)
-    const char *c = get_script_filename();
-    strncpy(script_title, c, sizeof(script_title)-1);
-    script_title[sizeof(script_title)-1]=0;
-
     // Reset everything
     sc_param *p = script_params;
     while (p)
@@ -463,7 +378,25 @@ static void script_scan()
     script_params = tail = 0;
     script_param_count = 0;
 
+    // Load script file
+    const char *buf=0;
+    if (conf.script_file[0] != 0)
+        buf = load_file_to_length(conf.script_file, 0, 1, 4096);    // Assumes parameters are in first 4K of script file
+
+    // Check file loaded
+    if (buf == 0)
+    {
+        strcpy(script_title, "NO SCRIPT");
+        return;
+    }
+
+    // Build title from name (in case no title in script)
+    const char *c = get_script_filename();
+    strncpy(script_title, c, sizeof(script_title)-1);
+    script_title[sizeof(script_title)-1]=0;
+
     // Fillup order, defaults
+    const char *ptr = buf;
     while (ptr[0])
     {
         ptr = skip_whitespace(ptr);
@@ -496,6 +429,8 @@ static void script_scan()
         }
         ptr = skip_eol(ptr);
     }
+
+    free((void*)buf);
 }
 
 //-------------------------------------------------------------------
@@ -544,8 +479,8 @@ static char* make_param_filename(enum FilenameMakeModeEnum mode)
 //-------------------------------------------------------------------
 static void get_last_paramset_num()
 {
-    // skip if internal script used
-    if (conf.script_file == NULL || conf.script_file[0] == 0) return;
+    // skip if no script available
+    if (conf.script_file[0] == 0) return;
 
     char *nm = make_param_filename(MAKE_PARAMSETNUM_FILENAME);
     if ( !load_int_value_file( nm, &conf.script_param_set ) )
@@ -569,8 +504,8 @@ static void get_last_paramset_num()
 //-------------------------------------------------------------------
 static int load_params_values()
 {
-    // skip if internal script used
-    if (conf.script_file == NULL || conf.script_file[0] == 0) return 0;
+    // skip if no script loaded
+    if (conf.script_file[0] == 0) return 0;
     // skip if 'default' parameters requested
     if (conf.script_param_set == DEFAULT_PARAM_SET) return 0;
     
@@ -734,44 +669,21 @@ void script_reset_to_default_params_values()
 // PARAMETERS:  fn - full path of script
 //
 // RESULTS: conf.script_file
-//          script_source_str - loaded script file content
 //
 // NOTES:  1. Try to load fn, if fn or file is empty - SCRIPT_DEFAULT_FILENAME, 
-//                if default not exists - use builtin
+//                if default not exists - display 'NO SCRIPT'
 //         2. Update conf.script_file, title, submenu
 //-------------------------------------------------------------------
 void script_load(const char *fn)
 {
     char* buf;
 
-    if(script_source_str && script_source_str != lua_script_default)
-        free((void *)script_source_str);
-
     // if filename is empty, try to load default named script.
-    // if no such one, lua_script_default will be used
-    if ( !fn[0] )
-    {
-        buf = load_file(SCRIPT_DEFAULT_FILENAME, 0, 1);
-        if ( buf )
-            fn = SCRIPT_DEFAULT_FILENAME;
-    }
-    else
-    {
-        buf = load_file(fn, 0, 1);
-    }
+    // if no such one, no script will be used
+    if ((fn == 0) || (fn[0] == 0))
+        fn = SCRIPT_DEFAULT_FILENAME;
 
-    if ( !buf )
-    {
-        // if failed to load - say "internal" and raise flag need update
-        script_source_str = lua_script_default;
-        conf.script_file[0] = 0;
-    }
-    else
-    {
-        // if ok - set pointers to script
-        script_source_str = buf;
-        strcpy(conf.script_file, fn);
-    }
+    strcpy(conf.script_file, fn);
 
     get_last_paramset_num();    // update data paths
     script_scan();              // re-fill @title/@names/@range/@value + reset values to @default
@@ -791,6 +703,11 @@ static const char* gui_script_param_set_enum(int change, int arg)
         save_params_values(0);
         gui_enum_value_change(&conf.script_param_set,change,sizeof(modes)/sizeof(modes[0]));
 
+        if (conf.script_param_set == DEFAULT_PARAM_SET)
+            conf.script_param_save = 0;
+        else
+            conf.script_param_save = 1;
+
         if ( !load_params_values() )
             script_reset_to_default_params_values();
         gui_update_script_submenu();
@@ -799,27 +716,10 @@ static const char* gui_script_param_set_enum(int change, int arg)
     return modes[conf.script_param_set];
 }
 
-static const char* gui_script_param_save_enum(int change, int arg)
+static void gui_load_script_selected(const char *fn)
 {
-    static const char* modes[]={ "Off", "On" };
-
-    if (conf.script_param_set != DEFAULT_PARAM_SET)
+    if (fn)
     {
-        if (change != 0)
-        {
-            gui_enum_value_change(&conf.script_param_save,change,sizeof(modes)/sizeof(modes[0]));
-            if (conf.script_param_save)
-                save_params_values(0);
-        }
-
-        return modes[conf.script_param_save];
-    }
-
-    return modes[0];
-}
-
-static void gui_load_script_selected(const char *fn) {
-    if (fn) {
         gui_menu_cancel_redraw();   // Stop menu redraw until after menu rebuilt from script params
         save_params_values(0);
         script_load(fn);
@@ -827,11 +727,22 @@ static void gui_load_script_selected(const char *fn) {
     }
 }
 
-static void gui_load_script(int arg) {
+static void gui_load_script(int arg)
+{
     libfselect->file_select(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
 }
 
-static void gui_load_script_default(int arg) {
+static void gui_reset_script_default(int arg)
+{
+    gui_menu_cancel_redraw();       // Stop menu redraw until after menu rebuilt from script params
+    save_params_values(0);
+    conf.script_file[0] = 0;        // Reset loaded script
+    script_load(conf.script_file);
+    gui_set_need_restore();
+}
+
+static void gui_load_script_default(int arg)
+{
     script_reset_to_default_params_values();
     gui_update_script_submenu();
     save_params_values(1);
@@ -839,6 +750,23 @@ static void gui_load_script_default(int arg) {
 
 static const char* gui_script_autostart_modes[]=            { "Off", "On", "Once", "ALT"};
 
+static void cb_change_param_save_enum()
+{
+    if (conf.script_param_set != DEFAULT_PARAM_SET)
+    {
+        if (conf.script_param_save)
+            save_params_values(0);
+    }
+    else
+    {
+        conf.script_param_save = 0;
+    }
+}
+
+static CMenuItem param_save[2] = {
+    MENU_ITEM   (0, 0,  MENUITEM_ENUM,                                      gui_script_param_set_enum,      0 ),
+    MENU_ITEM   (0, 0,  MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,                &conf.script_param_save,        (int)cb_change_param_save_enum ),
+};
 
 // Indexes into script_submenu_items array, if you add or remove entries adjust these
 #define SCRIPT_SUBMENU_PARAMS_IDX   8       // First adjustable parameter entry
@@ -850,9 +778,9 @@ static CMenuItem hdr_script_submenu_items[] = {
     // remote autostart
     MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
+    MENU_ITEM   (0x35,LANG_MENU_RESET_DEFAULT_SCRIPT,       MENUITEM_PROC,                      gui_reset_script_default,   0 ),
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
-    MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_ENUM,                      gui_script_param_set_enum,  0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_SCRIPT_PARAM_SAVE,          MENUITEM_ENUM,                      gui_script_param_save_enum, 0 ),
+    MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_STATE_VAL_PAIR,            &param_save,                0 ),
     MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
 };
 
