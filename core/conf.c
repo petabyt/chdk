@@ -1431,7 +1431,7 @@ int conf_getValue(unsigned short id, tConfigVal* configVal)
 //-------------------------------------------------------------------
 static int config_autosave = 1;
 
-static int setValue(ConfInfo *ci, unsigned short id, tConfigVal configVal)
+static int setValue(ConfInfo *ci, unsigned short id, tConfigVal configVal, void (*info_func)(unsigned short id))
 {
     int i;
     int ret = CONF_EMPTY, len, len2;
@@ -1480,7 +1480,7 @@ static int setValue(ConfInfo *ci, unsigned short id, tConfigVal configVal)
                 if( configVal.isStr )
                 {
                     len = strlen(configVal.str);
-                    if( len>0 && len<CONF_STR_LEN)
+                    if (len<CONF_STR_LEN)
                     {
                         strncpy(ci[i].var, configVal.str ,len+1);
                     }
@@ -1499,8 +1499,15 @@ static int setValue(ConfInfo *ci, unsigned short id, tConfigVal configVal)
         }
     }
 
-    if ((ret!=CONF_EMPTY) && (config_autosave))
-        conf_save();
+    if (ret != CONF_EMPTY)
+    {
+        // Perform an updates required on change of value
+        if (info_func)
+            info_func(id);
+        // Save config file is autosave enabled
+        if (config_autosave)
+            conf_save();
+    }
 
     return ret;
 }
@@ -1514,7 +1521,7 @@ int conf_setValue(unsigned short id, tConfigVal configVal)
 
     for (i=0; confinfo_handlers[i].ci != 0; i++)
         if ((id >= confinfo_handlers[i].start_id) && (id <= confinfo_handlers[i].end_id))
-            return setValue(confinfo_handlers[i].ci, id - confinfo_handlers[i].start_id, configVal);
+            return setValue(confinfo_handlers[i].ci, id - confinfo_handlers[i].start_id, configVal, confinfo_handlers[i].info_func);
 
     return CONF_EMPTY;
 }
