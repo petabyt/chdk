@@ -778,7 +778,6 @@ static CMenuItem hdr_script_submenu_items[] = {
     // remote autostart
     MENU_ENUM2  (0x5f,LANG_MENU_SCRIPT_AUTOSTART,           &conf.script_startup,               gui_script_autostart_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_LUA_RESTART,                MENUITEM_BOOL,                      &conf.debug_lua_restart_on_error,   0 ),
-    MENU_ITEM   (0x35,LANG_MENU_RESET_DEFAULT_SCRIPT,       MENUITEM_PROC,                      gui_reset_script_default,   0 ),
     MENU_ITEM   (0x5d,LANG_MENU_SCRIPT_DEFAULT_VAL,         MENUITEM_PROC,                      gui_load_script_default,    0 ),
     MENU_ITEM   (0x5e,LANG_MENU_SCRIPT_PARAM_SET,           MENUITEM_STATE_VAL_PAIR,            &param_save,                0 ),
     MENU_ITEM   (0x0 ,(int)script_title,                    MENUITEM_SEPARATOR,                 0,                          0 ),
