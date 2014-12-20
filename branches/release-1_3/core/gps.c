@@ -44,9 +44,7 @@ void anzeige_kompassnadel (int winkel, double s_w, double c_w, char *bitmap, int
 void anzeige_kompassbild (char *bitmap1, int o_x, int o_y, int f_v_0, int f_h_0, int f_v_1, int f_h_1, int f_v_2, int f_h_2, int f_v_4, int f_h_4);
 
 extern char * camera_jpeg_current_filename();
-extern char * camera_jpeg_current_latitude();
-extern char * camera_jpeg_current_longitude();
-extern char * camera_jpeg_current_height();
+extern void *camera_jpeg_current_gps();
 
 extern int exit_gpx_record;
 extern int exit_gps_kompass;
@@ -449,36 +447,19 @@ void anzeige_gps(){
 			}
 			if (camera_info.state.mode_play)
 			{
-				int lati[6];
-				memcpy((void*)lati, camera_jpeg_current_latitude(), sizeof(lati));
-				double lat000=lati[0]/(lati[1]*1.0);
-				double lat001=lati[2]/(lati[3]*60.0);
-				double lat002=lati[4]/(lati[5]*3600.0);
-				double lat0e=lat000+lat001+lat002;
+                gps_img_data *igps = camera_jpeg_current_gps();
 
-				int hei[5];
-				memcpy((void*)hei, camera_jpeg_current_height(), sizeof(hei));
-				char vBuf0[10];
-				char vBuf1[10];
-				char vBuf2[]="-----m";
-				sprintf(vBuf0, "%s",hei);
-				sprintf(vBuf1, "%s",vBuf2);
-
-
-				if ((int)lat0e == 0)
-				{
-					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
-				}
-				else
+                f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+                f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_RED : COLOR_GPS_PLAY_RED;
+                if (igps->latitudeRef[0] && igps->longitudeRef[0])
 				{
 					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
 					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_YELLOW : COLOR_GPS_PLAY_YELLOW;
-				}
-				if ( strcmp(vBuf0, vBuf1) !=0 )
-				{
-					f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
-					f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+                    if (igps->height[1])
+                    {
+                        f_v_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+                        f_h_1=(camera_info.state.mode_rec) ? COLOR_GPS_GREEN : COLOR_GPS_PLAY_GREEN;
+                    }
 				}
 			}
 
@@ -1342,22 +1323,27 @@ void init_gps_trackback_task(){
 
 	if ((int)conf.gps_on_off ==0) {return; }
 
-	int lati[6];
-	memcpy((void*)lati, camera_jpeg_current_latitude(), sizeof(lati));
-	g_d_lat_nav=0.0;
-	g_d_lat_nav=(lati[0]/(lati[1]*1.0)) + (lati[2]/(lati[3]*60.0)) + (lati[4]/(lati[5]*3600.0));
+    gps_img_data *igps = camera_jpeg_current_gps();
 
-	int longi[6];
-	memcpy((void*)longi, camera_jpeg_current_longitude(), sizeof(longi));
+	g_d_lat_nav=0.0;
 	g_d_lon_nav=0.0;
-	g_d_lon_nav=(longi[0]/(longi[1]*1.0)) + (longi[2]/(longi[3]*60.0)) + (longi[4]/(longi[5]*3600.0));
 
 	char bild[9];
 	sprintf(bild, "%s", camera_jpeg_current_filename());
 	bild[8] = '\0';
 
-	if ((int)g_d_lat_nav != 0)
+
+//	if ((int)g_d_lat_nav != 0)
+    if (igps->latitudeRef[0] && igps->longitudeRef[0])
 	{
+        g_d_lat_nav=(double)igps->latitude[0]/(double)igps->latitude[1]*1.0 + 
+                             igps->latitude[2]/(igps->latitude[3]*60.0) + 
+                             igps->latitude[4]/(igps->latitude[5]*3600.0);
+        if (igps->latitudeRef[0] == 'S') g_d_lat_nav = -g_d_lat_nav;
+        g_d_lon_nav=(double)igps->longitude[0]/(double)igps->longitude[1]*1.0 + 
+                             igps->longitude[2]/(igps->longitude[3]*60.0) + 
+                             igps->longitude[4]/(igps->longitude[5]*3600.0);
+        if (igps->longitudeRef[0] == 'W') g_d_lon_nav = -g_d_lon_nav;
 		exit_gps_kompass=0;
 		init_gps_kompass_task();
 	}

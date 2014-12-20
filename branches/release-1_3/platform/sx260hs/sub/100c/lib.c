@@ -30,16 +30,6 @@ void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x2ec0+0x54)); } // Fo
 char *camera_jpeg_count_str()    { return (char*)0x000dd3b4; }             // Found @0xff26fe7c
 //int get_flash_params_count(void) { return 0xa6; }                          // Found @0xff1f401c
 
-#ifdef CAM_HAS_GPS
-char * camera_jpeg_current_latitude() {     //asm1989 way to calculate it is camera_jpeg_current_filename  + 0x78
-    return (void*)0xD92A4;
+char *camera_jpeg_current_gps() {
+    return (void*)0xD92A0;
 }
-
-char * camera_jpeg_current_longitude() {    //asm1989 way to calculate it is camera_jpeg_current_filename  + 0x94
-    return (void*)0xD92C0;
-}
-
-char * camera_jpeg_current_height() {
-    return (void*)0xD909C;
-}
-#endif

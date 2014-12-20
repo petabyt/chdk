@@ -23,6 +23,18 @@ typedef struct {
     char    unknown2[160];
 } tGPS;
 
+//current image in play mode
+typedef struct {
+    char    latitudeRef[4];
+    int     latitude[6];
+    char    longitudeRef[4];
+    int     longitude[6];
+    char    heightRef[4];
+    int     height[2];
+    int     timeStamp[6];
+    char    dateStamp[11];
+} gps_img_data;
+
 extern void gps_startup();
 extern void write_timezone();
 extern void write_home();

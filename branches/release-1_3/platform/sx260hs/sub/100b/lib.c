@@ -31,16 +31,6 @@ char *camera_jpeg_current_filename() {
      return (void*)0xD922C;                 //RAM dump, @ FF22FADC serach for  "%03d-%04d"  sx230:0xCA818
 }
 
-#ifdef CAM_HAS_GPS
-char * camera_jpeg_current_latitude() {     //RAM dump
-    return (void*)0xD92A4;
+char *camera_jpeg_current_gps() {
+    return (void*)0xD92A0;
 }
-
-char * camera_jpeg_current_longitude() {    //RAM dump
-    return (void*)0xD92C0;
-}
-
-char * camera_jpeg_current_height() {       //RAM dump
-    return (void*)0xD909C;
-}
-#endif
