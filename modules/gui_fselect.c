@@ -478,21 +478,22 @@ static int fs_readdir(DIR *d, fs_dirent *de, const char* path)
         }
         else
         {
-            de->isparent = is_parent(de->de->d_name);
+            de->isparent  = is_parent(de->de->d_name);
             de->iscurrent = is_current(de->de->d_name);
 
             sprintf(pbuf, "%s/%s", path, de->de->d_name);
             struct stat st;
-            if (stat(pbuf, &st) == 0)
+            if (de->isparent || de->iscurrent)
+            {
+                de->isdir = 1;
+                de->isvalid = 1;
+            }
+            else if (stat(pbuf, &st) == 0)
             {
                 de->size  = st.st_size;
                 de->mtime = st.st_mtime;
                 de->isvalid = 1;
                 de->isdir = ((st.st_attrib & DOS_ATTR_DIRECTORY) != 0);
-            }
-            else if (de->isparent || de->iscurrent)
-            {
-                de->isdir = 1;
             }
         }
 
