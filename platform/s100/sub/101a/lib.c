@@ -34,16 +34,6 @@ char *camera_jpeg_current_filename() {
      return (void*)0xCB764;                 //0xFF24D14C search for  "%03d-%04d"
 }
 
-#ifdef CAM_HAS_GPS
-char * camera_jpeg_current_latitude() {     //it is camera_jpeg_current_filename + 0x78
-    return (void*)0xCB7DC;
+char *camera_jpeg_current_gps() {
+    return (void*)0xCB7D8;
 }
-
-char * camera_jpeg_current_longitude() {    //it is camera_jpeg_current_filename + 0x94
-    return (void*)0xCB7F8;
-}
-
-char * camera_jpeg_current_height() {
-    return (void*)0xCB5D4;
-}
-#endif

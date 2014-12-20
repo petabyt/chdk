@@ -5,9 +5,9 @@
 #include "keyboard.h"
 
 typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
+    short grp;
+    short hackkey;
+    long canonkey;
 } KeyMap;
 
 static long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
@@ -15,13 +15,6 @@ static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
-
-#ifdef CAM_HAS_GPS
-extern int Taste_Funktion;
-extern int Taste_Taste;
-extern int Taste_Druck;
-extern int Taste_press;
-#endif
 
 #define KEYS_MASK0 (0x000181EF)
 #define KEYS_MASK1 (0x00B00000)
@@ -32,12 +25,16 @@ extern int Taste_press;
 #define USB_MASK            0x10000000 // Found @0xff45383c, levent 0x202
 #define USB_IDX             2
 
+#ifdef CAM_HAS_GPS
+int gps_key_trap=0 ;
+#endif
+
 int get_usb_bit() 
 {
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+    long usb_physw[3];
+    usb_physw[USB_IDX] = 0;
+    _kbd_read_keys_r2(usb_physw);
+    return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
@@ -64,25 +61,25 @@ static KeyMap keymap[] = {
 };
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
-	asm volatile(
+    asm volatile(
         "STMFD   SP!, {R1-R7,LR}\n"  
-        "MOV     R5, #0\n"					
+        "MOV     R5, #0\n"                  
         "BL      my_kbd_read_keys\n"
         "B       _kbd_p1_f_cont\n"
     );
-	
-	return 0;
+    
+    return 0;
 }
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
-	while (physw_run){
-		_SleepTask(physw_sleep_delay);
+    while (physw_run){
+        _SleepTask(physw_sleep_delay);
 
-		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
-			_kbd_p2_f();
-		}
-	}
+        if (wrap_kbd_p1_f() == 1){ // autorepeat ?
+            _kbd_p2_f();
+        }
+    }
 }
 
 // no stack manipulation needed here, since we create the task directly
@@ -114,54 +111,52 @@ void jogdial_control(int n)
 
 void my_kbd_read_keys()
 {
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
+    kbd_prev_state[0] = kbd_new_state[0];
+    kbd_prev_state[1] = kbd_new_state[1];
+    kbd_prev_state[2] = kbd_new_state[2];
 
-	_GetKbdState(kbd_new_state);
-	_kbd_read_keys_r2(kbd_new_state);
-
+    _GetKbdState(kbd_new_state);
+    _kbd_read_keys_r2(kbd_new_state);
+    
 #ifdef CAM_HAS_GPS
-	if (Taste_Funktion != 0)
-	{
-		if (Taste_Taste == kbd_get_pressed_key())
-		{
-			Taste_Druck=1;
-			kbd_key_release(Taste_Taste);
-			kbd_key_press(0);
-			Taste_Funktion=0;
-			Taste_Taste=0;
-			msleep(1000);
-			}
-	}
-#endif
+    if (gps_key_trap > 0)
+    {
+        if (kbd_get_pressed_key() == gps_key_trap)
+        {
+            kbd_key_release(gps_key_trap);
+            kbd_key_press(0);
+            gps_key_trap = -1;
+            msleep(1000);
+        }
+    }
+#endif    
 
-	if (kbd_process() == 0){
+    if (kbd_process() == 0){
         // leave it alone...
         physw_status[0] = kbd_new_state[0];
         physw_status[1] = kbd_new_state[1];
         physw_status[2] = kbd_new_state[2];
         jogdial_control(0);
 
-	} else {
-		// override keys
-	 	physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
-		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
+    } else {
+        // override keys
+        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
+        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
+        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
 
-		if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run)
-		{
-			jogdial_control(1);
-			get_jogdial_direction();
-		}
-		else if (jogdial_stopped && camera_info.state.state_kbd_script_run) jogdial_control(0);
-	}
+        if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run)
+        {
+            jogdial_control(1);
+            get_jogdial_direction();
+        }
+        else if (jogdial_stopped && camera_info.state.state_kbd_script_run) jogdial_control(0);
+    }
 
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
+    if (conf.remote_enable) {
+        physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
+    } else {
+        physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
+    }
 
 }
 
@@ -175,79 +170,79 @@ void kbd_set_alt_mode_key_mask(long key)
 
 void kbd_key_press(long key)
 {
-	int i;
+    int i;
 
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key)
-		{
-			kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-			return;
-		}
-	}
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key)
+        {
+            kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
+            return;
+        }
+    }
 }
 
 void kbd_key_release(long key)
 {
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-			return;
-		}
-	}
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
+            return;
+        }
+    }
 }
 
 void kbd_key_release_all()
 {
-	kbd_mod_state[0] |= KEYS_MASK0;
-	kbd_mod_state[1] |= KEYS_MASK1;
-	kbd_mod_state[2] |= KEYS_MASK2;
+    kbd_mod_state[0] |= KEYS_MASK0;
+    kbd_mod_state[1] |= KEYS_MASK1;
+    kbd_mod_state[2] |= KEYS_MASK2;
 }
 
 long kbd_is_key_pressed(long key)
 {
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-		}
-	}
-	return 0;
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+        }
+    }
+    return 0;
 }
 
 long kbd_is_key_clicked(long key)
 {
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-			       ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-		}
-	}
-	return 0;
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
+                   ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
+        }
+    }
+    return 0;
 }
 
 long kbd_get_pressed_key()
 {
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
+            return keymap[i].hackkey;
+        }
+    }
+    return 0;
 }
 
 long kbd_get_clicked_key()
 {
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
+            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
+            return keymap[i].hackkey;
+        }
+    }
+    return 0;
 }
 
 long kbd_use_zoom_as_mf() {

@@ -52,17 +52,7 @@ char *camera_jpeg_current_filename()
 	 return (void*)0xCA818;
 }
 
-char * camera_jpeg_current_latitude()
+void *camera_jpeg_current_gps()
 {
-	return (void*)0xCA890;
-}
-
-char * camera_jpeg_current_longitude()
-{
-	return (void*)0xCA8AC;
-}
-
-char * camera_jpeg_current_height()
-{
-	return (void*)0xCA668;
+	return (void*)0xCA88C;
 }

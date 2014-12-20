@@ -12,6 +12,10 @@
 #include "edgeoverlay.h"
 #include "module_load.h"
 
+#ifdef CAM_HAS_GPS
+  #include "gps.h"
+#endif
+
 //==========================================================
 
 static char osd_buf[50];
@@ -23,9 +27,6 @@ volatile int chdk_started_flag=0;
 int no_modules_flag;
 
 static volatile int spytask_can_start;
-#ifdef CAM_HAS_GPS
-    extern void wegpunkt();
-#endif
 
 static unsigned int memdmptick = 0;
 volatile int memdmp_delay = 0; // delay in seconds
@@ -114,6 +115,11 @@ void core_spytask()
 {
     int cnt = 1;
     int i=0;
+#ifdef CAM_HAS_GPS
+    int gps_delay_timer = 200 ;
+    int gps_state = -1 ;
+#endif
+    
 
     // Init camera_info bits that can't be done statically
     camera_info_init();
@@ -212,6 +218,19 @@ void core_spytask()
             memdmptick = 0;
             dump_memory();
         }
+
+#ifdef CAM_HAS_GPS
+        if ( --gps_delay_timer == 0 )
+        {
+            gps_delay_timer = 50 ;
+            if ( gps_state != (int)conf.gps_on_off )
+            {
+                gps_state = (int)conf.gps_on_off ;
+                init_gps_startup(!gps_state) ; 
+            }
+        }
+#endif        
+        
         // Change ALT mode if the KBD task has flagged a state change
         gui_activate_alt_mode();
 
@@ -228,7 +247,7 @@ void core_spytask()
             hook_raw_save_complete();
             raw_data_available = 0;
 #ifdef CAM_HAS_GPS
-            if( (int)conf.gps_waypoint_save == 1 ) wegpunkt();
+            if (((int)conf.gps_on_off == 1) && ((int)conf.gps_waypoint_save == 1)) gps_waypoint();
 #endif
             continue;
         }

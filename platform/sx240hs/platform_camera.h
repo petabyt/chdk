@@ -100,8 +100,6 @@
     #undef  CAMERA_MAX_DIST
     #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
 
-//    #define CAM_HAS_GPS                         1           // Only valid for sx260
-
     #define CAM_USE_SUNRISE                     1
 
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1

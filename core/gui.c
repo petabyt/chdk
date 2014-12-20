@@ -428,100 +428,125 @@ static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, debug_submenu_items };
 
 #ifdef CAM_HAS_GPS
 
+#define GPS_START 0
+#define GPS_STOP 1
+
 // forward reference
 static CMenuItem gps_submenu_items[];
-
-int exit_gpx_record=1;
-int exit_gps_kompass=1;
-int exit_gps_navi=1;
 
 static void gpx_start_stop(int arg)
 {
     int i = 0;
-    while( gps_submenu_items[i].value != (int*)gpx_start_stop ) i++;    //find entry
-    if( gps_submenu_items[i].text == LANG_MENU_GPS_TRACK_START ) {  //toggle text
-        gps_submenu_items[i].text = LANG_MENU_GPS_TRACK_STOP;
-		exit_gpx_record = 0;
-		init_gpx_record_task();
-
-    } else {
-        gps_submenu_items[i].text = LANG_MENU_GPS_TRACK_START;
-		exit_gpx_record = 1;
+    if( conf.gps_on_off ) {  
+        while( gps_submenu_items[i].value != (int*)gpx_start_stop ) i++;    //find entry
+        if( gps_submenu_items[i].text == LANG_MENU_GPS_TRACK_START ) {      //toggle text
+            gps_submenu_items[i].text = LANG_MENU_GPS_TRACK_STOP;
+            init_gps_logging_task(GPS_START);
+        } else {
+            gps_submenu_items[i].text = LANG_MENU_GPS_TRACK_START;
+            init_gps_logging_task(GPS_STOP); 
+        }
     }
 }
 
-static void show_kompass(int arg)
+static void navigate_to_home(int);
+static void navigate_to_image(int);
+
+static void show_compass(int arg)
 {
     int i = 0;
-    while( gps_submenu_items[i].value != (int*)show_kompass ) i++;    //find entry
-    if( gps_submenu_items[i].text == LANG_MENU_GPS_KOMPASS_SHOW ) {  //toggle text
-        gps_submenu_items[i].text = LANG_MENU_GPS_KOMPASS_HIDE;
-		exit_gps_kompass = 0;
-		init_gps_kompass_task();
-
-    } else {
-        gps_submenu_items[i].text = LANG_MENU_GPS_KOMPASS_SHOW;
-		exit_gps_kompass = 1;
+    if( conf.gps_on_off ) {      
+        while( gps_submenu_items[i].value != (int*)show_compass ) i++;      //find entry
+        if( gps_submenu_items[i].text == LANG_MENU_GPS_COMPASS_SHOW ) {     //toggle text
+            init_gps_compass_task(GPS_START);
+            gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_HIDE;
+            i = 0;
+            while( gps_submenu_items[i].value != (int*)navigate_to_home ) i++;
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+            i = 0;
+            while( gps_submenu_items[i].value != (int*)navigate_to_image ) i++;  
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
+        } else {
+            gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW;
+            init_gps_compass_task(GPS_STOP);        
+        }
     }
 }
 
-static void show_navi(int arg)
+static void navigate_to_image(int arg)
 {
     int i = 0;
-    while( gps_submenu_items[i].value != (int*)show_navi ) i++;    //find entry
-    if( gps_submenu_items[i].text == LANG_MENU_GPS_NAVI_SHOW ) {  //toggle text
-        gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HIDE;
-		exit_gpx_record = 0;
-		exit_gps_navi = 0;
-		exit_gps_kompass = 0;
-		init_gps_trackback_task();
-
-    } else {
-        gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
-		exit_gps_navi = 1;
-		exit_gps_kompass = 1;
-		exit_gpx_record = 1;
+    if( conf.gps_on_off ) {      
+        while( gps_submenu_items[i].value != (int*)navigate_to_image ) i++;  //find entry
+        if( gps_submenu_items[i].text == LANG_MENU_GPS_NAVI_SHOW ) {         //toggle text
+            init_gps_navigate_to_photo(GPS_START);
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HIDE;
+            i = 0;
+            while( gps_submenu_items[i].value != (int*)show_compass ) i++;
+            gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW; 
+            i = 0;
+            while( gps_submenu_items[i].value != (int*)navigate_to_home ) i++;  
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+        } else {
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
+            init_gps_navigate_to_photo(GPS_STOP);        
+        }
     }
 }
 
-static void navigate_home(int arg)
+static void navigate_to_home(int arg)
 {
-	int i = 0;
-    while( gps_submenu_items[i].value != (int*)navigate_home ) i++;    //find entry
-    if( gps_submenu_items[i].text == LANG_MENU_GPS_NAVI_HOME ) {  //toggle text
-        gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME_END;
-		exit_gpx_record = 0;
-		exit_gps_navi = 0;
-		exit_gps_kompass = 0;
-		gps_navigate_home();
-
-    } else {
-        gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
-		exit_gps_navi = 1;
-		exit_gps_kompass = 1;
-		exit_gpx_record = 1;
+    int i = 0;
+    if( conf.gps_on_off ) {      
+        while( gps_submenu_items[i].value != (int*)navigate_to_home ) i++;   //find entry
+        if( gps_submenu_items[i].text == LANG_MENU_GPS_NAVI_HOME ) {         //toggle text
+            init_gps_navigate_to_home(GPS_START);
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME_END;
+            i = 0;
+            while( gps_submenu_items[i].value != (int*)show_compass ) i++;
+            gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW; 
+            i = 0;
+            while( gps_submenu_items[i].value != (int*)navigate_to_image ) i++;  
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
+        } else {
+            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+            init_gps_navigate_to_home(GPS_STOP);        
+        }
     }
 }
 
 static void mark_timezone(int arg)
 {
-    write_timezone();
+    gps_write_timezone();
 }
 
 static void mark_home(int arg)
 {
-    write_home();
+    gps_write_home();
+}
+
+static void cb_gps_menu_reset()
+{
+    int i;
+    if( conf.gps_on_off == 0 ) {  
+        for( i=0 ; gps_submenu_items[i].value != (int*)gpx_start_stop; i++);
+        gps_submenu_items[i].text = LANG_MENU_GPS_TRACK_START;
+	for( i=0 ; gps_submenu_items[i].value != (int*)navigate_to_home; i++);
+	gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+        for( i=0 ; gps_submenu_items[i].value != (int*)show_compass; i++ );
+        gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW;
+    }
 }
 
 static CMenuItem gps_logging_items[] = {
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_TRACK_TIME,				MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_track_time, 		MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_TRACK_TIME,				MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_track_time, 		MENU_MINMAX(1, 60) ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_TRACK_SYMBOL,			MENUITEM_BOOL,  									&conf.gps_track_symbol,		0 ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_TRACK_SYMBOL,			MENUITEM_BOOL,  									&conf.gps_track_symbol,		0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_REC_PLAY_SET_1,			MENUITEM_BOOL,          							&conf.gps_rec_play_set_1,	0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_REC_PLAY_TIME_1,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_rec_play_time_1,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_PLAY_DARK_SET_1,		MENUITEM_BOOL,          							&conf.gps_play_dark_set_1,	0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_PLAY_DARK_TIME_1,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_play_dark_time_1,	MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_REC_PLAY_SET_1,			MENUITEM_BOOL,          							&conf.gps_rec_play_set_1,	0 ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_REC_PLAY_TIME_1,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_rec_play_time_1,	MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_PLAY_DARK_SET_1,		MENUITEM_BOOL,          							&conf.gps_play_dark_set_1,	0 ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_PLAY_DARK_TIME_1,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_play_dark_time_1,	MENU_MINMAX(1, 60) ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        				0,							0 ),
     {0}
@@ -532,13 +557,13 @@ static CMenu gps_logging_submenu = {0x86,LANG_MENU_GPS_LOGGING, gps_logging_item
 static CMenuItem gps_tagging_items[] = {
     MENU_ITEM	(0x5c,LANG_MENU_GPS_WAYPOINT_SAVE,          MENUITEM_BOOL,          		                    &conf.gps_waypoint_save,	0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_GPS_WAIT_FOR_SIGNAL,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_wait_for_signal,	MENU_MINMAX(1, 599) ),
-    MENU_ITEM   (0x2a,LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME,	MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_wait_for_signal_time,	MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_WAIT_FOR_SIGNAL,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_wait_for_signal,	MENU_MINMAX(1, 599) ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME,	MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_wait_for_signal_time,	MENU_MINMAX(1, 60) ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_REC_PLAY_SET,			MENUITEM_BOOL,          							&conf.gps_rec_play_set,		0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_REC_PLAY_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_rec_play_time,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_PLAY_DARK_SET,			MENUITEM_BOOL,          							&conf.gps_play_dark_set,	0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_PLAY_DARK_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_play_dark_time,	MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_REC_PLAY_SET,			MENUITEM_BOOL,          							&conf.gps_rec_play_set,		0 ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_REC_PLAY_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_rec_play_time,	MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_PLAY_DARK_SET,			MENUITEM_BOOL,          							&conf.gps_play_dark_set,	0 ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_PLAY_DARK_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_play_dark_time,	MENU_MINMAX(1, 60) ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
     MENU_ITEM	(0x5c,LANG_MENU_GPS_COUNTDOWN,          	MENUITEM_BOOL,          							&conf.gps_countdown	,		0 ),
 //    MENU_ITEM	(0x5c,LANG_MENU_GPS_COUNTDOWN_BLINK,      	MENUITEM_BOOL,          							&conf.gps_countdown_blink,	0 ),
@@ -550,9 +575,9 @@ static CMenuItem gps_tagging_items[] = {
 static CMenu gps_tagging_submenu = {0x86,LANG_MENU_GPS_TAGGING, gps_tagging_items };
 
 static CMenuItem gps_navigation_items[] = {
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_KOMPASS_SMOOTH,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_kompass_smooth,	MENU_MINMAX(1, 40) ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_KOMPASS_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_kompass_time, 	MENU_MINMAX(1, 60) ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_TIME,				MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_navi_time,		MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_COMPASS_SMOOTH,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_compass_smooth,	MENU_MINMAX(1, 40) ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_COMPASS_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_compass_time, 	MENU_MINMAX(1, 60) ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_NAVI_TIME,				MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_navi_time,		MENU_MINMAX(1, 60) ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
     MENU_ITEM	(0x2a,LANG_MENU_GPS_MARK_HOME,              MENUITEM_PROC,          		(int*)mark_home,					0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
@@ -565,15 +590,15 @@ static CMenu gps_navigation_submenu = {0x86,LANG_MENU_GPS_NAVIGATION, gps_naviga
 static const char* gui_gps_sat_fix[] =                  { "immer", "2D", "3D", "2D/3D" };
 
 static CMenuItem gps_values_items[] = {
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_BATT,					MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_batt,				MENU_MINMAX(0, 99) ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_BATT_WARNING,			MENUITEM_BOOL,  									&conf.gps_batt_warn,		0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_BEEP_WARNING,			MENUITEM_BOOL,  									&conf.gps_beep_warn,		0 ),
+    MENU_ITEM	(0x5f,LANG_MENU_GPS_BATT,					MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_batt,				MENU_MINMAX(0, 99) ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_BATT_WARNING,			MENUITEM_BOOL,  									&conf.gps_batt_warn,		0 ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_BEEP_WARNING,			MENUITEM_BOOL,  									&conf.gps_beep_warn,		0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ENUM2  (0x69,LANG_MENU_GPS_2D_3D_FIX,				&conf.gps_2D_3D_fix,   								gui_gps_sat_fix ),
+    MENU_ENUM2  (0x5f,LANG_MENU_GPS_2D_3D_FIX,				&conf.gps_2D_3D_fix,   								gui_gps_sat_fix ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_SYMBOL_SHOW,			MENUITEM_BOOL,  									&conf.gps_show_symbol,		0 ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_SYMBOL_SHOW,			MENUITEM_BOOL,  									&conf.gps_show_symbol,		0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_TEST_TIMEZONE,			MENUITEM_BOOL,  									&conf.gps_test_timezone,	0 ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_TEST_TIMEZONE,			MENUITEM_BOOL,  									&conf.gps_test_timezone,	0 ),
     MENU_ITEM	(0x2a,LANG_MENU_GPS_MARK_TIMEZONE,          MENUITEM_PROC,          		                    (int*)mark_timezone,		0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				                    0,							0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        				0,							0 ),
@@ -583,23 +608,23 @@ static CMenuItem gps_values_items[] = {
 static CMenu gps_values_submenu = {0x86,LANG_MENU_GPS_VALUES, gps_values_items };
 
 static CMenuItem gps_submenu_items[] = {
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_ON_OFF,					MENUITEM_BOOL,  				&conf.gps_on_off,					0 ),
+    MENU_ITEM	(0x5c,LANG_MENU_GPS_ON_OFF,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK,  				&conf.gps_on_off,  (int)cb_gps_menu_reset  ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				0,									0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_KOMPASS_SHOW,           MENUITEM_PROC,  				(int*)show_kompass,					0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_SHOW,              MENUITEM_PROC,          		(int*)show_navi,					0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_HOME,              MENUITEM_PROC,          		(int*)navigate_home,				0 ),
+    MENU_ITEM	(0x2a,LANG_MENU_GPS_COMPASS_SHOW,           MENUITEM_PROC,  				(int*)show_compass,					0 ),
+    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_SHOW,              MENUITEM_PROC,          		(int*)navigate_to_image,			0 ),
+    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_HOME,              MENUITEM_PROC,          		(int*)navigate_to_home,				0 ),
     MENU_ITEM	(0x2a,LANG_MENU_GPS_TRACK_START,            MENUITEM_PROC,          		(int*)gpx_start_stop,				0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				0,									0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_GPS_VALUES,               	MENUITEM_SUBMENU,               &gps_values_submenu,            	0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_GPS_LOGGING,               	MENUITEM_SUBMENU,               &gps_logging_submenu,            	0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_GPS_TAGGING,               	MENUITEM_SUBMENU,               &gps_tagging_submenu,            	0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_GPS_NAVIGATION,            	MENUITEM_SUBMENU,               &gps_navigation_submenu,            0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_VALUES,               	MENUITEM_SUBMENU,               &gps_values_submenu,            	0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_LOGGING,               	MENUITEM_SUBMENU,               &gps_logging_submenu,            	0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_TAGGING,               	MENUITEM_SUBMENU,               &gps_tagging_submenu,            	0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_NAVIGATION,            	MENUITEM_SUBMENU,               &gps_navigation_submenu,            0 ),
     MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				0,									0 ),
     MENU_ITEM	(0x51,LANG_MENU_BACK,                       MENUITEM_UP, 					0,                                  0 ),
     {0}
 };
 
-static CMenu gps_submenu = {0x2a,LANG_MENU_GPS, gps_submenu_items };
+static CMenu gps_submenu = {0x86,LANG_MENU_GPS, gps_submenu_items };
 
 #endif
 
@@ -2007,7 +2032,7 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
     MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),
 #ifdef CAM_HAS_GPS
-    MENU_ITEM	(0x2a,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
+    MENU_ITEM	(0x28,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
 #endif
 #if CAM_REMOTE
     MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),

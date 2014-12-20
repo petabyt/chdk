@@ -604,23 +604,23 @@
 // GPS
 #define LANG_MENU_GPS                           487
 #define LANG_MENU_GPS_NAVI_SHOW                 488
-#define LANG_MENU_GPS_KOMPASS_SHOW              489
+#define LANG_MENU_GPS_COMPASS_SHOW              489
 #define LANG_MENU_GPS_COORDINATES_SHOW          490
 #define LANG_MENU_GPS_HEIGHT_SHOW               491
 #define LANG_MENU_GPS_WAYPOINT_SAVE             492
 #define LANG_MENU_GPS_TRACK_TIME                493
 #define LANG_MENU_GPS_TRACK_START               494
 #define LANG_MENU_GPS_TRACK_STOP                495
-#define LANG_MENU_GPS_KOMPASS_HIDE              496
+#define LANG_MENU_GPS_COMPASS_HIDE              496
 #define LANG_MENU_GPS_NAVI_HIDE                 497
 #define LANG_MENU_GPS_WAIT_FOR_SIGNAL           498
-#define LANG_MENU_GPS_KOMPASS_TIME              499
+#define LANG_MENU_GPS_COMPASS_TIME              499
 #define LANG_MENU_GPS_NAVI_TIME                 500
 #define LANG_MENU_GPS_REC_PLAY_TIME             501
 #define LANG_MENU_GPS_PLAY_DARK_TIME            502
 #define LANG_MENU_GPS_VALUES                    503
 #define LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME      504
-#define LANG_MENU_GPS_KOMPASS_SMOOTH            505
+#define LANG_MENU_GPS_COMPASS_SMOOTH            505
 #define LANG_MENU_GPS_LOGGING                   506
 #define LANG_MENU_GPS_TAGGING                   507
 #define LANG_MENU_GPS_NAVIGATION                508

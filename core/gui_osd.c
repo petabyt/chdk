@@ -14,9 +14,6 @@
 #include "gui_space.h"
 #include "histogram.h"
 #include "usb_remote.h"
-#ifdef CAM_HAS_GPS
-#include "gps.h"
-#endif
 #include "modules.h"
 
 //-------------------------------------------------------------------
@@ -1278,17 +1275,8 @@ void gui_draw_osd()
     if (half_disp_press) 
         return;
 
-    int is_osd_visible = osd_visible();
-
     libhisto->gui_osd_draw_histo(0);
     gui_draw_osd_elements(0,0);
-
-    if (is_osd_visible)
-    {
-#ifdef CAM_HAS_GPS
-        gps_startup();  // TODO: Probably not the best place for this???
-#endif
-    }
 
     gui_osd_draw_movie_time_left();
 

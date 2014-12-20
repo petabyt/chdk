@@ -19,10 +19,6 @@ char *hook_alt_raw_image_addr() {
         return (char*) 0x44000000;
 }
 
-char *camera_jpeg_current_filename() {
-     return (void*)0xD922C;                 //@ FF22FADC search for  "%03d-%04d"  sx230:0xCA818
-}
-
 //Found by finsig sx240hs 100c
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff047848
 //void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff3e3784
@@ -31,15 +27,11 @@ char *camera_jpeg_count_str()    { return (char*)0x000dd3b4; }             // Fo
 //int get_flash_params_count(void) { return 0xa6; }                          // Found @0xff1f401c
 
 #ifdef CAM_HAS_GPS
-char * camera_jpeg_current_latitude() {     //asm1989 way to calculate it is camera_jpeg_current_filename  + 0x78
-    return (void*)0xD92A4;
+char *camera_jpeg_current_filename() {
+     return (void*)0xD922C;                 //@ FF22FADC search for  "%03d-%04d"  sx230:0xCA818
 }
 
-char * camera_jpeg_current_longitude() {    //asm1989 way to calculate it is camera_jpeg_current_filename  + 0x94
-    return (void*)0xD92C0;
-}
-
-char * camera_jpeg_current_height() {
-    return (void*)0xD909C;
+char *camera_jpeg_current_gps() {
+    return (void*)0xD92A0;
 }
 #endif
