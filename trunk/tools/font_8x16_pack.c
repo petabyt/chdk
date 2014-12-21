@@ -10,50 +10,39 @@
 //
 
 //-------------------------------------------------------------------
-// Format of header block for each character in the packed 'font_data' array
-// This is immediately followed by 'size' bytes of character data.
-typedef struct {
-    unsigned char charcode[2];      // Don't change this to a short as the data is not aligned in memory
-    unsigned char offset;
-    unsigned char size;
-} FontData;
-
-//-------------------------------------------------------------------
 #define DEFAULT_SYMBOL          0xFFFD
 
 //-------------------------------------------------------------------
 // Packed font data
 unsigned char font_data[16384];
+unsigned short char_codes[4096];    // List of used charcodes
+unsigned short font_offsets[4096];  // Offsets into font_data for each charcode
 
 //-------------------------------------------------------------------
-static FontData* font_find_data (unsigned short charcode)
+static unsigned short font_find_offset(unsigned short charcode)
 {
     int i=0;
-    unsigned short c;
 
-    while (1)
+    for (i=0; char_codes[i] != 0xFFFF; i++)
     {
-        FontData *f = (FontData*)(font_data+i);
-        c = (f->charcode[1] << 8) | f->charcode[0];
-        if (c == 0xFFFF) return 0;
-        if (c == charcode) return f;
-        i = i + f->size + sizeof(FontData);
+        if (char_codes[i] == charcode)
+            return font_offsets[i];
     }
-    return 0;
+    return 0xFFFF;
 }
 
 //-------------------------------------------------------------------
 static void font_init_data(unsigned short *src, int st, int num)
 {
     int i;
-    FontData *f;
+    unsigned short f;
 
     for (i=0; i<num; ++i)
     {
-        f = font_find_data(src[i]);
-        if (f == 0)
-            f = font_find_data(DEFAULT_SYMBOL);
-        src[st+i] = (short)((unsigned char*)f - font_data);
+        f = font_find_offset(src[i]);
+        if (f == 0xFFFF)
+            f = font_find_offset(DEFAULT_SYMBOL);
+        src[st+i] = f;
     }
 }
 
@@ -79,7 +68,7 @@ static void check_used(unsigned short *cp)
 
 int main(int argc, char **argv)
 {
-    int i, j, offset, size, f = 0;
+    int i, j, f = 0, cc = 0;
 
     int ncp = sizeof(codepages)/(sizeof(unsigned short*));
     
@@ -98,29 +87,36 @@ int main(int argc, char **argv)
     {
         if (orig_font_data[i].isUsed > 0)
         {
-            offset = 0;
-            size = 16;
-            for (j=0; j<16 && orig_font_data[i].data[j] == 0; j++) { offset++; size--; }
-            for (j=15; j>offset && orig_font_data[i].data[j] == 0; j--) { size--; }
-
-            font_data[f++] = orig_font_data[i].charcode & 0xFF;
-            font_data[f++] = (orig_font_data[i].charcode >> 8) & 0xFF;
-            font_data[f++] = offset;
-            font_data[f++] = size;
-
-            printf("0x%02x, 0x%02x, 0x%02x, 0x%02x,", orig_font_data[i].charcode & 0xff, (orig_font_data[i].charcode >> 8) & 0xFF, offset, size);
-            for (j=0; j<size; j++)
+            int top = 0;
+            int bottom = 0;
+            for (j=0; j<16 && orig_font_data[i].data[j] == 0; j++) { top++; }
+            for (j=15; j>=top && orig_font_data[i].data[j] == 0; j--) { bottom++; }
+            if (top == 16)  // Blank character
             {
-                font_data[f++] = orig_font_data[i].data[offset+j] & 0xFF;
-                printf(" 0x%02x,",orig_font_data[i].data[offset+j] & 0xFF);
+                // Fix values to fit into 4 bits each (sorted out in draw_char function)
+                top--;
+                bottom++;
+            }
+
+            char_codes[cc] = orig_font_data[i].charcode;
+            font_offsets[cc] = f;
+            cc++;
+
+            font_data[f++] = (top << 4) | bottom;
+
+            printf("/*%04x*/ 0x%02x,", orig_font_data[i].charcode, (top << 4) | bottom);
+            for (j=top; j<16-bottom; j++)
+            {
+                font_data[f++] = orig_font_data[i].data[j] & 0xFF;
+                printf(" 0x%02x,",orig_font_data[i].data[j] & 0xFF);
             }
             printf("\n");
         }
     }
 
-    font_data[f++] = 0xFF;
-    font_data[f++] = 0xFF;
-    printf("0xff, 0xff\n};\n\n");
+    char_codes[cc] = 0xFFFF;
+
+    printf("};\n\n");
 
     // Set up codepage entries, and save to file
     font_init_data(cp_common, 0, 128);

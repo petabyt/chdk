@@ -320,18 +320,31 @@ void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, twoCol
 } 
 
 //-------------------------------------------------------------------
-void draw_char(coord x, coord y, const char ch, twoColors cl)
+static unsigned char* get_cdata(unsigned int *offset, unsigned int *size, const char ch)
 {
     FontData *f = (FontData*)get_current_font_data(ch);
-    const unsigned char *sym = (unsigned char*)f + sizeof(FontData) - f->offset;
+
+    *offset = f->skips >> 4;            // # of blank lines at top
+    *size = 16 - (f->skips & 0xF);      // last line of non-blank data
+    if (*size == *offset)               // special case for blank char (top == 15 && bottom == 1)
+        *offset++;
+
+    return (unsigned char*)f + sizeof(FontData) - *offset;
+}
+
+void draw_char(coord x, coord y, const char ch, twoColors cl)
+{
     int i, ii;
 
+    unsigned int offset, size;
+    unsigned char *sym = get_cdata(&offset, &size, ch);
+
     // First draw blank lines at top
-    for (i=0; i<f->offset; i++)
+    for (i=0; i<offset; i++)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
 
     // Now draw character data
-    for (; i<f->offset+f->size; i++)
+    for (; i<size; i++)
     {
 	    for (ii=0; ii<FONT_WIDTH; ii++)
         {
@@ -346,19 +359,20 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 
 void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
 {
+    int i, ii;
+
     twoColors clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
     twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
 
-    FontData *f = (FontData*)get_current_font_data(ch);
-    const unsigned char *sym = (unsigned char*)f + sizeof(FontData) - f->offset;
-    int i, ii;
+    unsigned int offset, size;
+    unsigned char *sym = get_cdata(&offset, &size, ch);
 
     // First draw blank lines at top
-    for (i=0; i<f->offset; i++)
+    for (i=0; i<offset; i++)
         draw_filled_rect(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+i*ysize+ysize-1,clb);
 
     // Now draw character data
-    for (; i<(f->offset+f->size); i++)
+    for (; i<size; i++)
     {
         unsigned char last = sym[i] & 0x80;
         int len = 1;

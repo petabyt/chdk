@@ -19,11 +19,9 @@
 
 //-------------------------------------------------------------------
 // Format of header block for each character in the 'font_data' array
-// This is immediately followed by 'size' bytes of character data.
+// This is immediately followed by '16 - top - bottom' bytes of character data.
 typedef struct {
-	unsigned char charcode[2];      // Don't change this to a short as the data is not aligned in memory
-	unsigned char offset;
-	unsigned char size;
+	unsigned char skips;    // Top and Bottom skip counts for blank rows (4 bits each - ((top << 4) | bottom))
 } FontData;
 
 //-------------------------------------------------------------------
