@@ -63,7 +63,7 @@ int main( int argc, char **argv )
 	char* lng_filename = (argc>2 && file2) ? argv[2] : argv[1];
 
 	int num_empty_lines=0;
-	char buf[200];
+	char buf[500];
 
 	printf("//Auto generated file. Do not edit the contents of this file.\n//Update the CHDK/LANG/*.lng files to make changes.\n//Generated from %s\n\n",lng_filename);
 
