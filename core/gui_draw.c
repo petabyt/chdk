@@ -320,6 +320,14 @@ void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, twoCol
 } 
 
 //-------------------------------------------------------------------
+#pragma pack(1)
+// Format of header block for each character in the 'font_data' array
+// This is immediately followed by '16 - top - bottom' bytes of character data.
+typedef struct {
+    unsigned char skips;    // Top and Bottom skip counts for blank rows (4 bits each - ((top << 4) | bottom))
+} FontData;
+#pragma pack()
+
 static unsigned char* get_cdata(unsigned int *offset, unsigned int *size, const char ch)
 {
     FontData *f = (FontData*)get_current_font_data(ch);

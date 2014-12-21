@@ -18,13 +18,6 @@
 #define  FONT_CP_WIN_1257       5
 
 //-------------------------------------------------------------------
-// Format of header block for each character in the 'font_data' array
-// This is immediately followed by '16 - top - bottom' bytes of character data.
-typedef struct {
-	unsigned char skips;    // Top and Bottom skip counts for blank rows (4 bits each - ((top << 4) | bottom))
-} FontData;
-
-//-------------------------------------------------------------------
 extern void font_set(int codepage);
 extern unsigned char *get_current_font_data(unsigned char ch);
 
