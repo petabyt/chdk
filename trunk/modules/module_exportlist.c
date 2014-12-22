@@ -305,6 +305,7 @@
             console_set_autoredraw
             console_set_layout
             script_console_add_line
+            script_console_add_error
             script_print_screen_statement
 
             get_focal_length

@@ -456,7 +456,7 @@ static void action_stack_process()
         {
             char buf[100];
             sprintf(buf,"AS Error - Not a Function. Aborting. %d %08x %08x.",active_stack->stack_ptr,id,f);
-            script_console_add_line((long)buf);
+            script_console_add_error((long)buf);
             action_stack_finish(active_stack);
             return;
         }
