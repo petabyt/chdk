@@ -11,26 +11,6 @@
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
 #define CAM_INFO_VERSION        {1,0}       // Version for camera_info
 
-#define SIMPLE_MODULE_VERSION   {1,0}       // Version for simple modules & games
-
-#define MOTION_DETECTOR_VERSION {2,0}
-#define ZEBRA_VERSION           {2,0}
-#define HISTO_VERSION           {1,0}
-#define SCRIPT_API_VERSION      {3,0}
-#define RAW_MERGE_VERSION       {3,0}
-#define GUI_TBOX_VERSION        {2,0}
-#define GUI_READ_VERSION        {2,0}
-#define GUI_PALETTE_VERSION     {2,2}
-#define GUI_MPOPUP_VERSION      {2,0}
-#define GUI_GRID_VERSION        {2,0}
-#define GUI_FSELECT_VERSION     {2,0}
-#define GUI_HEXBOX_VERSION      {1,0}
-#define EDGEOVERLAY_VERSION     {2,0}
-#define DNG_VERSION             {3,1}
-#define CURVES_VERSION          {2,0}
-#define EYEFI_VERSION           {1,0}
-#define SHOT_HISTO_VERSION      {1,0}
-
 //-------------------------------------------------------------------
 
 #endif

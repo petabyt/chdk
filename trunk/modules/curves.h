@@ -5,6 +5,9 @@
 
 #define CURVE_DIR "A/CHDK/CURVES"
 
+// Update version if changes are made to the module interface
+#define CURVES_VERSION          {2,0}
+
 typedef struct 
 {
     base_interface_t    base;

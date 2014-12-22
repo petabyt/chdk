@@ -15,6 +15,9 @@ struct mpopup_item {
 
 //-------------------------------------------------------------------
 
+// Update version if changes are made to the module interface
+#define GUI_MPOPUP_VERSION      {2,0}
+
 typedef struct
 {
     base_interface_t    base;

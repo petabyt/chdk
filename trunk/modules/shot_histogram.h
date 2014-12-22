@@ -8,6 +8,9 @@
 
 #include "flt.h"
 
+// Update version if changes are made to the module interface
+#define SHOT_HISTO_VERSION      {1,0}
+
 // Shot Histogram module interface
 typedef struct
 {

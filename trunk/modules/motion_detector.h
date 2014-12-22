@@ -79,6 +79,9 @@ function md_get_cell_diff (
 
 #include "flt.h"
 
+// Update version if changes are made to the module interface
+#define MOTION_DETECTOR_VERSION {2,0}
+
 typedef struct
 {
     base_interface_t    base;

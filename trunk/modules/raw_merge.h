@@ -6,6 +6,9 @@
 #define RAW_OPERATION_SUM 0
 #define RAW_OPERATION_AVERAGE 1
 
+// Update version if changes are made to the module interface
+#define RAW_MERGE_VERSION       {3,0}
+
 typedef struct 
 {
     base_interface_t    base;

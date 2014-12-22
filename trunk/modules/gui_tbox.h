@@ -18,6 +18,9 @@
 // In this case the module owns the buffer and the contents must be copied to local
 // storage in the 'on_select' code.
 
+// Update version if changes are made to the module interface
+#define GUI_TBOX_VERSION        {2,0}
+
 typedef struct
 {
     base_interface_t    base;

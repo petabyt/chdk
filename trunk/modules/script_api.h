@@ -14,6 +14,10 @@ enum {
     SCRIPT_SHOOT_HOOK_RAW,
     SCRIPT_NUM_SHOOT_HOOKS,
 };
+
+// Update version if changes are made to the module interface
+#define SCRIPT_API_VERSION      {3,0}
+
 // Module interface for script languages (Lua and uBasic)
 typedef struct
 {

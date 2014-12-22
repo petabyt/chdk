@@ -6,6 +6,9 @@
 // if you change this, remember to change the mkdir in main too
 #define EDGE_SAVE_DIR "A/CHDK/EDGE"
 
+// Update version if changes are made to the module interface
+#define EDGEOVERLAY_VERSION     {2,0}
+
 typedef struct
 {
     base_interface_t    base;
