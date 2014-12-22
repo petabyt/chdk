@@ -1284,7 +1284,7 @@ void gui_draw_osd()
 }
 
 // GUI handler for normal shooting / playback modes
-static void gui_default_draw()
+static void gui_default_draw(int force_redraw)
 {
 #if CAM_SWIVEL_SCREEN
     static int flashlight = 0;
@@ -1332,7 +1332,7 @@ static void gui_default_draw()
 #endif
 
     if (conf.console_show)
-        console_draw();
+        console_draw(force_redraw);
 }
 
 //-------------------------------------------------------------------

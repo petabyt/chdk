@@ -72,7 +72,7 @@ void console_clear()
         console_redraw();
 }
 
-void console_draw()
+void console_draw(int force_redraw)
 {
     char buf[MAX_CONSOLE_LINE_LENGTH+1];
 
@@ -81,23 +81,26 @@ void console_draw()
     twoColors col = user_color(conf.osd_color);
 
     long t = get_tick_count();
-    if (t <= console_last_modified + (conf.console_timeout*1000))
+    if (t <= console_last_modified + (conf.console_timeout*1000))               // Redraw if changed
     {
-        int y = (console_y + console_max_lines - 1) * FONT_HEIGHT;
-        int x = console_x * FONT_WIDTH + camera_screen.ts_button_border;
-
-        int c, i;
-        for (c = 0, i = console_cur_line; c < console_num_lines; ++c, --i)
+        if ((console_displayed == 0) || force_redraw)
         {
-            if (i < 0) i = MAX_CONSOLE_HISTORY-1;
-            strncpy(buf,console_buf[i],console_line_length);
-            buf[console_line_length] = 0;
-            draw_string_box(x, y - c * FONT_HEIGHT, 0, console_line_length * FONT_WIDTH, buf, col);
+            int y = (console_y + console_max_lines - 1) * FONT_HEIGHT;
+            int x = console_x * FONT_WIDTH + camera_screen.ts_button_border;
 
-            console_displayed = 1;
+            int c, i;
+            for (c = 0, i = console_cur_line; c < console_num_lines; ++c, --i)
+            {
+                if (i < 0) i = MAX_CONSOLE_HISTORY-1;
+                strncpy(buf,console_buf[i],console_line_length);
+                buf[console_line_length] = 0;
+                draw_string_box(x, y - c * FONT_HEIGHT, 0, console_line_length * FONT_WIDTH, buf, col);
+
+                console_displayed = 1;
+            }
         }
     }
-    else if (console_displayed)
+    else if (console_displayed && !camera_info.state.state_kbd_script_run)      // Erase if drawn and script not running
     {
         gui_set_need_restore();
         console_displayed = 0;
@@ -133,7 +136,9 @@ void console_add_line(const char *str)
             break;
         }
     } while(1);
-    
+
+    // ToDo: this should probably only be done if console_autoredraw == 0; but that breaks existing scripts (e.g. EDI.lua)
+    console_displayed = 0;
     console_last_modified = get_tick_count();
 }
 
@@ -179,7 +184,8 @@ void console_set_autoredraw(int val)
 void console_redraw()
 {
     gui_set_need_restore();
-	console_last_modified = get_tick_count();
+    console_displayed = 0;
+    console_last_modified = get_tick_count();
 }
 
 //-------------------------------------------------------------------

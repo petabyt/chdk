@@ -173,16 +173,16 @@ int lua_script_error(lua_State *Lt,int runtime)
     {
         if(!*err)
         {
-            script_console_add_line( (long)"ERROR: empty error message" );
+            script_console_add_error( (long)"ERROR: empty error message" );
         }
         else
         {
-            script_console_add_line( (long)err );
+            script_console_add_error( (long)err );
         }
     }
     else
     {
-        script_console_add_line( (long)"ERROR: NULL error message" );
+        script_console_add_error( (long)"ERROR: NULL error message" );
     }
 
     if (lua_script_is_ptp)
@@ -205,7 +205,7 @@ int lua_script_error(lua_State *Lt,int runtime)
         }
     }
 
-    script_console_add_line(LANG_CONSOLE_TEXT_TERMINATED);
+    script_console_add_error(LANG_CONSOLE_TEXT_TERMINATED);
     return SCRIPT_RUN_ERROR;
 }
 
@@ -304,7 +304,7 @@ int lua_script_run(void)
         lua_script_finish(Lt);
         // Display 'Finished message', unless running from PTP
         if (lua_script_is_ptp == 0)
-            script_console_add_line(LANG_CONSOLE_TEXT_FINISHED);
+            script_console_add_error(LANG_CONSOLE_TEXT_FINISHED);
         return SCRIPT_RUN_ENDED;
     }
 
@@ -321,7 +321,7 @@ int lua_run_restore()
 			script_console_add_line( (long)lua_tostring( Lt, -1 ) );
 		}
         if (lua_script_is_ptp == 0)
-            script_console_add_line(LANG_CONSOLE_TEXT_FINISHED);
+            script_console_add_error(LANG_CONSOLE_TEXT_FINISHED);
 	}
     return 0;
 }

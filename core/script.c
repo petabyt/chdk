@@ -92,6 +92,12 @@ void script_console_add_line(long str_id)
     }
 }
 
+void script_console_add_error(long str_id)
+{
+    console_set_autoredraw(1);          // Force console display on
+    script_console_add_line(str_id);
+}
+
 //=======================================================
 //                 SCRIPT FUNCTIONS
 //=======================================================
@@ -157,7 +163,7 @@ void script_get_alt_text(char *buf)
 void script_check_terminate(void)
 {
     if(camera_info.state.state_kbd_script_run && script_terminate_request) {
-        script_console_add_line(LANG_CONSOLE_TEXT_TERMINATED);
+        script_console_add_error(LANG_CONSOLE_TEXT_TERMINATED);
         script_end();
     }
 }
@@ -169,7 +175,7 @@ static int gui_script_kbd_process()
     // Stop a script if the shutter button pressed in Script mode
     if (kbd_is_key_clicked(script_terminate_key))
     {
-        script_console_add_line(LANG_CONSOLE_TEXT_INTERRUPTED);
+        script_console_add_error(LANG_CONSOLE_TEXT_INTERRUPTED);
         if (camera_info.state.state_kbd_script_run == SCRIPT_STATE_INTERRUPTED)
             script_end();
         else
@@ -232,6 +238,7 @@ void script_end()
     script_terminate_key = KEY_SHOOT_FULL ;
 
     script_print_screen_end();
+    console_set_autoredraw(1);          // Force console display on in case script turned it off
 
     // Restore old handler - prevent calling MD draw after module unloaded
     if (old_gui_handler)

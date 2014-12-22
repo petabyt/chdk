@@ -2510,7 +2510,7 @@ static void gui_draw_alt_helper()
 
 //-------------------------------------------------------------------
 
-void gui_chdk_draw()
+void gui_chdk_draw(int force_redraw)
 {
     static int clear_for_title = 1;
 
@@ -2539,7 +2539,7 @@ void gui_chdk_draw()
         clear_for_title = 0;
     }
 
-    console_draw();
+    console_draw(force_redraw);
 }
 
 //-------------------------------------------------------------------

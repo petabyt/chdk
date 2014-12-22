@@ -2678,12 +2678,12 @@ int ubasic_run(void)
                 }
                 sprintf(buf, "uBASIC:%d %s ", ubasic_linenumber(), msg);
                 // Show error message
-                script_console_add_line((long)buf);
-                script_console_add_line(LANG_CONSOLE_TEXT_TERMINATED);
+                script_console_add_error((long)buf);
+                script_console_add_error(LANG_CONSOLE_TEXT_TERMINATED);
                 return SCRIPT_RUN_ERROR;
             }
             // Show 'Finished' message
-            script_console_add_line(LANG_CONSOLE_TEXT_FINISHED);
+            script_console_add_error(LANG_CONSOLE_TEXT_FINISHED);
             return SCRIPT_RUN_ENDED;
         }
 

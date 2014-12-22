@@ -50,6 +50,7 @@ extern void script_load(const char *fn);
 extern void save_params_values(int enforce);
 
 extern void script_console_add_line(long str_id);
+extern void script_console_add_error(long str_id);
 extern void script_print_screen_statement(int val);
 //-------------------------------------------------------------------
 
