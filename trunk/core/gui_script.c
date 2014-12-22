@@ -191,13 +191,27 @@ static const char* get_default(sc_param *p, const char *ptr, int isScript)
     ptr = skip_to_token(ptr);
     if (p)
     {
-        p->val = strtol(ptr, NULL, 0);
+        int type = MENUITEM_INT|MENUITEM_SCRIPT_PARAM;
+        if (strncmp(ptr, "true", 4) == 0)
+        {
+            p->val = 1;
+            type = MENUITEM_BOOL|MENUITEM_SCRIPT_PARAM;
+        }
+        else if (strncmp(ptr, "false", 5) == 0)
+        {
+            p->val = 0;
+            type = MENUITEM_BOOL|MENUITEM_SCRIPT_PARAM;
+        }
+        else
+        {
+            p->val = strtol(ptr, NULL, 0);
+        }
         p->old_val = p->val;
         if (isScript)   // Loading from script file (rather than saved param set file)
         {
             p->def_val = p->val;
             p->range = 0;
-            p->range_type = MENUITEM_INT|MENUITEM_SCRIPT_PARAM;
+            p->range_type = type;
         }
     }
     return skip_token(ptr);
@@ -339,7 +353,6 @@ static int process_single(const char *ptr)
         ptr = skip_whitespace(ptr);
         if (strncmp(ptr,"bool",4) == 0)
         {
-            p->range = MENU_MINMAX(1,0);
             p->range_type = MENUITEM_BOOL|MENUITEM_SCRIPT_PARAM;
             ptr = skip_token(ptr);
         }
