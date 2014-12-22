@@ -168,6 +168,7 @@ static void gui_tbox_draw_buttons() {
 
 void gui_tbox_draw()
 {
+    int fldlen = (maxlen<MAX_TEXT_WIDTH)?maxlen:MAX_TEXT_WIDTH; // length of edit field
     if ((gui_tbox_redraw && !text_limit_reached) || gui_tbox_redraw == 2) {
         if (gui_tbox_redraw==2) {
             text_limit_reached = 0;
@@ -225,7 +226,7 @@ void gui_tbox_draw()
 
             tbox_buttons_x = x+((tbox_width*FONT_WIDTH-bw)>>1);
 
-            text_offset_x = x+((tbox_width-((maxlen<MAX_TEXT_WIDTH)?maxlen:MAX_TEXT_WIDTH))>>1)*FONT_WIDTH;
+            text_offset_x = x+((tbox_width-fldlen)>>1)*FONT_WIDTH;
             text_offset_y = y+(h-2)*FONT_HEIGHT+SPACING_BELOW_TEXT;
 
             tbox_buttons_y = text_offset_y+FONT_HEIGHT+SPACING_BELOW_TEXT; // on place of symbol line
@@ -242,13 +243,13 @@ void gui_tbox_draw()
 
         // draw edit field
         int i;
-        for (i=offset; (i-offset)<((maxlen<MAX_TEXT_WIDTH)?maxlen:MAX_TEXT_WIDTH); i++) {
+        for (i=offset; (i-offset)<fldlen; i++) {
             draw_char(text_offset_x+(i-offset)*FONT_WIDTH, text_offset_y, (i<strlen(text))?text[i]:' ', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
         }
         
         // draw long text marker
-        if ((strlen(text)-offset)>MAX_TEXT_WIDTH) draw_char(text_offset_x+MAX_TEXT_WIDTH*FONT_WIDTH, text_offset_y, '\20', MAKE_COLOR(COLOR_GREY, COLOR_RED));
-        else draw_char(text_offset_x+MAX_TEXT_WIDTH*FONT_WIDTH, text_offset_y, ' ', MAKE_COLOR(COLOR_GREY, COLOR_GREY));
+        if ((strlen(text)-offset)>fldlen) draw_char(text_offset_x+fldlen*FONT_WIDTH, text_offset_y, '\20', MAKE_COLOR(COLOR_GREY, COLOR_RED));
+        else draw_char(text_offset_x+fldlen*FONT_WIDTH, text_offset_y, ' ', MAKE_COLOR(COLOR_GREY, COLOR_GREY));
         if (offset>0) draw_char(text_offset_x-FONT_WIDTH, text_offset_y, '\21', MAKE_COLOR(COLOR_GREY, COLOR_RED));
         else draw_char(text_offset_x-FONT_WIDTH, text_offset_y, ' ', MAKE_COLOR(COLOR_GREY, COLOR_GREY));
 
