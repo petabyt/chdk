@@ -8,6 +8,9 @@
 // TODO for ptp_data_chunk
 #include "remotecap.h"
 
+// Update version if changes are made to the module interface
+#define DNG_VERSION             {3,1}
+
 // This is to minimize export list to different modules
 typedef struct
 {

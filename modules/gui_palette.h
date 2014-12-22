@@ -11,6 +11,9 @@
 
 //-------------------------------------------------------------------
 
+// Update version if changes are made to the module interface
+#define GUI_PALETTE_VERSION     {2,2}
+
 typedef struct
 {
     base_interface_t    base;

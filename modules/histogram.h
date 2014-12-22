@@ -20,6 +20,9 @@
 
 #include "flt.h"
 
+// Update version if changes are made to the module interface
+#define HISTO_VERSION           {1,0}
+
 typedef struct
 {
     base_interface_t    base;

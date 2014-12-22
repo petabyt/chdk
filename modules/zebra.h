@@ -14,6 +14,9 @@
 #define ZEBRA_MODE_ZEBRA_1          4
 #define ZEBRA_MODE_ZEBRA_2          5
 
+// Update version if changes are made to the module interface
+#define ZEBRA_VERSION           {2,0}
+
 typedef struct
 {
     base_interface_t    base;

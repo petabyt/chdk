@@ -36,6 +36,9 @@ void pbkdf2_sha1(const char *passphrase, const char *ssid, size_t ssid_len, int 
 
 //-------------------------------------------------------------------
 
+// Update version if changes are made to the module interface
+#define EYEFI_VERSION           {1,0}
+
 typedef struct
 {
     base_interface_t    base;
