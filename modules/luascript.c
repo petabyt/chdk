@@ -271,7 +271,7 @@ int lua_script_start( char const* script, int ptp )
 int lua_script_start_file(char const* filename)
 {
     static char loader[256];
-    sprintf(loader, "local sub = loadfile(\"%s\"); collectgarbage(); sub()", filename);
+    sprintf(loader, "local sub, err = loadfile(\"%s\"); collectgarbage(); if sub then sub() else error(err) end", filename);
     return lua_script_start(loader, 0);
 }
 
