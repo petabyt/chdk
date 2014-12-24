@@ -138,6 +138,7 @@ int isASCIIstring(firmware *fw, uint32_t adr);
 
 // Find a string in the firmware dump
 int find_str(firmware *fw, char *str);
+int find_Nth_str(firmware *fw, char *str, int N);
 // Find the next instruction of a specified type starting at idx within len instructions
 int find_inst(firmware *fw, int (*inst)(firmware*,int), int idx, int len);
 // Find the previous instruction of a specified type starting at idx within len instructions

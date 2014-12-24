@@ -214,6 +214,7 @@
 0xff022c90,ExitFromCompensationEVF
 0xff022ce4,DoAELock
 0xff022d08,UnlockAE
+0xff024318,malloc_strictly
 0xff02463c,AllocateUncacheableMemory
 0xff02467c,FreeUncacheableMemory
 0xff0248d8,_GetSystemTime

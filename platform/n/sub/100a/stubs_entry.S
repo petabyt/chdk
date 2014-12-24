@@ -96,7 +96,7 @@ DEF(jpeg_count_str                          ,0x00220c20) // Found @0xff2c1778
 DEF(ctypes, 0xff5bac84)
 
 // LED table init @ 0xff1c050c
-// LED #1:  #0 in GPIO table, offset 0x4
+// LED #1: unknown (index: 0x80000001), offset 0x4
 
 // For capt_seq.c
 DEF(_nrflag,0xdec0) // Found @ ff2ff5f4 (0xdec0) & ff2ff630 (+0x00)

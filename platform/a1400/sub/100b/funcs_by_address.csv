@@ -225,6 +225,7 @@
 0xff831200,Restart
 0xff831698,HardwareDefectWithRestart_FW
 0xff8316ec,HardwareDefect_FW
+0xff8317f0,malloc_strictly
 0xff831aa0,_GetSystemTime
 0xff831bd8,SetTimerAfter
 0xff831c58,SetTimerWhen

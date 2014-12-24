@@ -990,6 +990,7 @@
 0xff3e50d4,MakeScriptDisk_FW
 0xff0ab684,MakeSDCardBootable
 0xff002ea4,malloc
+0xff039c58,malloc_strictly
 0xff231e04,Mecha.Create_FW
 0xff3e23f4,MechaCPUMemoryDump_FW
 0xff3e2418,MechaCPUMemoryWrite_FW

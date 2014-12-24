@@ -1076,6 +1076,7 @@
 0xff3754ec,MakeBootDisk_FW
 0xff375500,MakeScriptDisk_FW
 0xff0052e0,malloc
+0xff017e58,malloc_strictly
 0xff1d6324,Mecha.Create_FW
 0xff3706c0,MechaCPUMemoryDump_FW
 0xff3706e4,MechaCPUMemoryWrite_FW

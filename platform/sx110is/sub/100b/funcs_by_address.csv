@@ -168,6 +168,7 @@
 0xffc17460,ReleaseRecursiveLock
 0xffc176ac,SleepTask
 0xffc176ac,SleepTask_FW
+0xffc1777c,malloc_strictly
 0xffc17828,AllocateUncacheableMemory
 0xffc17868,FreeUncacheableMemory
 0xffc17ad4,_GetSystemTime

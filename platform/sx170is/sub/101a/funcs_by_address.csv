@@ -244,6 +244,7 @@
 0xff826c3c,Restart
 0xff8270c8,HardwareDefectWithRestart_FW
 0xff82711c,HardwareDefect_FW
+0xff827220,malloc_strictly
 0xff827400,atol_FW
 0xff82740c,strtolx
 0xff827608,strtol

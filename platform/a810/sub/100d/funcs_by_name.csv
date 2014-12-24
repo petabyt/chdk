@@ -763,6 +763,7 @@
 0xffa7217c,MakeScriptDisk_FW
 0xff866814,MakeSDCardBootable
 0xff812f20,malloc
+0xff832d7c,malloc_strictly
 0xff95c038,Mecha.Create_FW
 0xff95c0a8,MechaReset_FW
 0xff95c0b4,MechaTerminate_FW
