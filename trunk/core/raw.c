@@ -146,7 +146,7 @@ void raw_closefile(int fd)
 
 }
 
-// Set in raw_savefile and used in get_raw_pixel & set_raw_pixel (for performance)
+// Set in raw_process and used in get_raw_pixel & set_raw_pixel (for performance)
 // Don't call set/get_raw_pixel until this value is initialised
 static char *rawadr;    // Pointer to current raw image buffer
 
