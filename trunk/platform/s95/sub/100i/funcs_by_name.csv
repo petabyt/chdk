@@ -906,6 +906,7 @@
 0xff836a1c,MakeDirectory_Fut
 0xffafb454,MakeScriptDisk_FW
 0xff8141e8,malloc
+0xff83ad1c,malloc_strictly
 0xff986f3c,Mecha.Create_FW
 0xff986f98,MechaReset_FW
 0xff986fa4,MechaTerminate_FW

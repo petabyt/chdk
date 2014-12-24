@@ -1177,6 +1177,7 @@
 0xff390394,MakeScriptDisk_FW
 0xff072de4,MakeSDCardBootable
 0xff002eb4,malloc
+0xff020614,malloc_strictly
 0xff42d450,MeasureVcmDriveTimeWithPosition_FW
 0xff1f0c34,Mecha.Create_FW
 0xff38dc70,MechaCPUMemoryDump_FW
