@@ -379,7 +379,7 @@ static int luaCB_get_curve_file( lua_State* L )
 
 static int luaCB_set_aelock(lua_State* L) 
 {
-  int val = luaL_checknumber(L, 1);
+  int val = on_off_value_from_lua_arg(L, 1);
   if (val>0) DoAELock();  // 1: enable AELock
   else UnlockAE();       // 0: disable unlock AE
   return 0;
@@ -387,7 +387,7 @@ static int luaCB_set_aelock(lua_State* L)
 
 static int luaCB_set_aflock(lua_State* L) 
 {
-  int val = luaL_checknumber(L, 1);
+  int val = on_off_value_from_lua_arg(L, 1);
   if (val>0) DoAFLock();  // 1: enable AFLock
   else UnlockAF();       // 0: disable unlock AF
   return 0;
@@ -395,8 +395,8 @@ static int luaCB_set_aflock(lua_State* L)
 
 static int luaCB_set_mf(lua_State* L) 
 {
-  int val = luaL_checknumber(L, 1);
-  if (val>0) val=DoMFLock();  // 1: enable 
+  int val = on_off_value_from_lua_arg(L, 1);
+  if (val>0) val=DoMFLock();  // 1: enable
   else val=UnlockMF();       // 0: disable
   lua_pushnumber(L, val); 
   return 1; 
@@ -759,10 +759,7 @@ static int luaCB_set_av96( lua_State* L )
 
 static int luaCB_set_focus_interlock_bypass( lua_State* L )
 {
-    int mode = luaL_checknumber( L, 1 );
-
-    set_focus_bypass(mode) ;
-
+    set_focus_bypass(on_off_value_from_lua_arg( L, 1 ));
     return 0;
 }
 
@@ -867,7 +864,7 @@ static int luaCB_get_raw_nr( lua_State* L )
 
 static int luaCB_set_raw( lua_State* L )
 {
-  conf.save_raw = luaL_checknumber( L, 1 );
+  conf.save_raw = on_off_value_from_lua_arg( L, 1 );
   return 0;
 }
 
@@ -1265,7 +1262,7 @@ static int luaCB_get_usb_power( lua_State* L )
 // enable USB High Perfomance timer
 static int luaCB_set_remote_timing( lua_State* L )
 {
-  int val= luaL_checknumber(L,1);
+  int val= on_off_value_from_lua_arg(L,1);
   if (val > 0 )
      lua_pushboolean(L,start_usb_HPtimer(val));
   else
@@ -1320,12 +1317,8 @@ static int luaCB_shut_down( lua_State* L )
 
 static int luaCB_print_screen( lua_State* L )
 {
-  
-  if (lua_isboolean( L, 1 ))
-    script_print_screen_statement( lua_toboolean( L, 1 ) );
-  else
-    script_print_screen_statement( luaL_checknumber( L, 1 ));
-  return 0;
+    script_print_screen_statement( on_off_value_from_lua_arg( L, 1 ) );
+    return 0;
 }
 
 static int luaCB_get_movie_status( lua_State* L )
@@ -1478,7 +1471,7 @@ static int luaCB_get_histo_range( lua_State* L )
 
 static int luaCB_shot_histo_enable( lua_State* L )
 {
-  libshothisto->shot_histogram_set(luaL_checknumber( L, 1 ));
+  libshothisto->shot_histogram_set(on_off_value_from_lua_arg( L, 1 ));
   return 0;
 }
 
@@ -1754,7 +1747,7 @@ static int luaCB_raw_merge_end( lua_State* L )
 // Enable/disable LCD back light (input argument 1/0)
 static int luaCB_set_backlight( lua_State* L )
 {
-  int val = (luaL_checknumber(L,1));
+  int val = on_off_value_from_lua_arg(L,1);
 
   if (val > 0) TurnOnBackLight();
   else TurnOffBackLight();
@@ -1764,7 +1757,7 @@ static int luaCB_set_backlight( lua_State* L )
 // Enable/disable LCD display (input argument 1/0)
 static int luaCB_set_lcd_display( lua_State* L )
 {
-  int val = (luaL_checknumber(L,1));
+  int val = on_off_value_from_lua_arg(L,1);
 
   if (val > 0) TurnOnDisplay();
   else TurnOffDisplay();
@@ -1994,7 +1987,7 @@ static int luaCB_set_record( lua_State* L )
 // only for when USB is connected
 static int luaCB_switch_mode_usb( lua_State* L )
 {
-  switch_mode_usb(luaL_checknumber(L,1));
+  switch_mode_usb(on_off_value_from_lua_arg(L,1));
   return 0;
 }
  
@@ -2235,7 +2228,7 @@ static int luaCB_set_config_value( lua_State* L ) {
 }
 
 static int luaCB_set_config_autosave( lua_State* L ) {
-    conf_setAutosave(luaL_checknumber(L, 1));
+    conf_setAutosave(on_off_value_from_lua_arg(L, 1));
     return 0;
 }
 
