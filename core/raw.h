@@ -22,6 +22,7 @@ extern void raw_process(void);
 extern void raw_prepare_develop(const char* filename, int prompt);
 extern int make_pixel_list(char * ptr, int size);
 extern unsigned short get_raw_pixel(unsigned int x,unsigned  int y);
+extern void set_raw_pixel(unsigned int x,unsigned int y, unsigned short v);
 extern char* get_raw_image_addr(void);
 extern void patch_bad_pixel(unsigned int x,unsigned  int y);
 extern int raw_createfile(void);

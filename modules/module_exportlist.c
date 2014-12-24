@@ -173,6 +173,7 @@
             hook_raw_image_addr
             raw_prepare_develop
             get_raw_pixel
+            set_raw_pixel
             patch_bad_pixel
             raw_createfile
             raw_closefile
