@@ -918,6 +918,7 @@
 0xffaf2aa0,MakeScriptDisk_FW
 0xff87659c,MakeSDCardBootable
 0xff8141ec,malloc
+0xff83bffc,malloc_strictly
 0xff986b4c,Mecha.Create_FW
 0xffaf0154,MechaCPUMemoryDump_FW
 0xffaf0170,MechaCPUMemoryWrite_FW

@@ -982,6 +982,7 @@
 0xff834c7c,MakeDirectory_Fut
 0xffa9bba8,MakeScriptDisk_FW
 0xff8140dc,malloc
+0xff838d3c,malloc_strictly
 0xffaffdc0,MeasureVcmDriveTimeWithPosition_FW
 0xff95cf0c,Mecha.Create_FW
 0xff95cf64,MechaReset_FW

@@ -161,6 +161,7 @@
 0xff8392cc,WaitForAnyEventFlagStrictly
 0xff8392f8,WaitForAllEventFlagStrictly
 0xff839324,AcquireRecursiveLockStrictly
+0xff839370,malloc_strictly
 0xff83941c,AllocateUncacheableMemory
 0xff83945c,FreeUncacheableMemory
 0xff8396c8,_GetSystemTime
