@@ -43,6 +43,7 @@
 #include "module_def.h"
 #include "luascript.h"
 #include "script_shoot_hook.h"
+#include "rawhookops.h"
 
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
@@ -1676,13 +1677,13 @@ static int luaCB_bitnot( lua_State* L )
   return 1;
 }
 
-static void set_string_field(lua_State* L, const char *key, const char *val)
+void set_string_field(lua_State* L, const char *key, const char *val)
 {
   lua_pushstring(L, val);
   lua_setfield(L, -2, key);
 }
 
-static void set_number_field(lua_State* L, const char *key, int val)
+void set_number_field(lua_State* L, const char *key, int val)
 {
   lua_pushnumber(L, val);
   lua_setfield(L, -2, key);
@@ -2873,6 +2874,7 @@ void register_lua_funcs( lua_State* L )
   const luaL_reg *r;
 
   register_shoot_hooks( L );
+  luaopen_rawop( L );
 
   lua_pushlightuserdata( L, action_push_click );
   lua_pushcclosure( L, luaCB_keyfunc, 1 );
