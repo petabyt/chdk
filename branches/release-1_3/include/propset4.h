@@ -5,6 +5,7 @@
 constants for propset 4
 WARNING:
 The build uses tools/gen_propset_lua.sed to generate propset4.lua from this file
+DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 */
 
 #define PROPCASE_AF_LOCK                         11     // 0 = AF not locked, 1 = AF locked
