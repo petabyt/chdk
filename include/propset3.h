@@ -4,6 +4,7 @@
 constants for propset 3
 WARNING:
  The build uses tools/gen_propset_lua.sed to generate propset3.lua from this file
+DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 */
 #define PROPCASE_DRIVE_MODE                 102
 #define PROPCASE_FOCUS_MODE                 133     //WIKI|Propcase manual_focus

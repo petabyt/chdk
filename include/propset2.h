@@ -25,12 +25,10 @@ WARNING:
 #define PROPCASE_SUBJECT_DIST1              245
 #define PROPCASE_SUBJECT_DIST2              65
 #define PROPCASE_ISO_MODE                   149
-/*
-For details, see http://chdk.setepontos.com/index.php?topic=11604.0
-#define PROPCASE_EXPOSURE_LOCK              206     // Correct name for PROPCASE_SHOOTING - gets set when set_aelock called or AEL button pressed
-#define PROPCASE_SHOOTING                   115     // sx100, a470 (gets set to 1 when camera has focused and set exposure, returns to 0 after shot)
-#define PROPCASE_SHOOTING                   297     // g10 (gets set to 1 when camera has focused and set exposure, returns to 0 after shot)
-*/
+//For details, see http://chdk.setepontos.com/index.php?topic=11604.0
+//#define PROPCASE_EXPOSURE_LOCK              206     // Correct name for PROPCASE_SHOOTING - gets set when set_aelock called or AEL button pressed
+//#define PROPCASE_SHOOTING                   115     // sx100, a470 (gets set to 1 when camera has focused and set exposure, returns to 0 after shot)
+//#define PROPCASE_SHOOTING                   297     // g10 (gets set to 1 when camera has focused and set exposure, returns to 0 after shot)
 #define PROPCASE_SHOOTING                   206     // until a better solution is found
 #define PROPCASE_IS_FLASH_READY             208
 #define PROPCASE_OVEREXPOSURE               103

@@ -5,6 +5,7 @@
 constants for propset 6
 WARNING:
 The build uses tools/gen_propset_lua.sed to generate propset6.lua from this file
+DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 */
 
 #define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked
