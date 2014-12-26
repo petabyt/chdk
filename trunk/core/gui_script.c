@@ -192,15 +192,19 @@ static const char* get_default(sc_param *p, const char *ptr, int isScript)
     if (p)
     {
         int type = MENUITEM_INT|MENUITEM_SCRIPT_PARAM;
+        int range = 0;
         if (strncmp(ptr, "true", 4) == 0)
         {
             p->val = 1;
             type = MENUITEM_BOOL|MENUITEM_SCRIPT_PARAM;
+            range = MENU_MINMAX(1,0);   // Force boolean data type in Lua (ToDo: this is clunky, needs fixing)
+
         }
         else if (strncmp(ptr, "false", 5) == 0)
         {
             p->val = 0;
             type = MENUITEM_BOOL|MENUITEM_SCRIPT_PARAM;
+            range = MENU_MINMAX(1,0);   // Force boolean data type in Lua (ToDo: this is clunky, needs fixing)
         }
         else
         {
@@ -210,7 +214,7 @@ static const char* get_default(sc_param *p, const char *ptr, int isScript)
         if (isScript)   // Loading from script file (rather than saved param set file)
         {
             p->def_val = p->val;
-            p->range = 0;
+            p->range = range;
             p->range_type = type;
         }
     }
@@ -353,6 +357,7 @@ static int process_single(const char *ptr)
         ptr = skip_whitespace(ptr);
         if (strncmp(ptr,"bool",4) == 0)
         {
+            p->range = MENU_MINMAX(1,0);   // Force boolean data type in Lua (ToDo: this is clunky, needs fixing)
             p->range_type = MENUITEM_BOOL|MENUITEM_SCRIPT_PARAM;
             ptr = skip_token(ptr);
         }
