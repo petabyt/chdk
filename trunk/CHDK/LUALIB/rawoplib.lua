@@ -104,6 +104,8 @@ function rawop.fill_rect_rgb(xstart,ystart,width,height,r,g,b)
 	local xb = xstart + cfa_b_x
 	local yb = ystart + cfa_b_y
 	local ymax = ystart + height
+	-- limit yield high iteration loop
+	local count, ms = set_yield(-1,20)
 	while yr < ymax do
 		local x=0
 		while x < width do
@@ -118,6 +120,7 @@ function rawop.fill_rect_rgb(xstart,ystart,width,height,r,g,b)
 		yg2 = yg2 + 2
 		yb = yb + 2
 	end
+	set_yield(count,ms)
 end
 
 function rawop.rect_rgb(x,y,width,height,linewidth,r,g,b)
