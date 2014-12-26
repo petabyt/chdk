@@ -13,20 +13,20 @@ unsigned char ply_colors[] =
         (CHDK_COLOR_BASE+0),        // Red
         (CHDK_COLOR_BASE+1),        // Dark Red
         (CHDK_COLOR_BASE+2),        // Light Red
-        (CHDK_COLOR_BASE+3),        // Green
-        (CHDK_COLOR_BASE+4),        // Dark Green
-        (CHDK_COLOR_BASE+5),        // Light Green
-        (CHDK_COLOR_BASE+6),        // Blue
-        (CHDK_COLOR_BASE+7),        // Dark Blue
-        (CHDK_COLOR_BASE+8),        // Light Blue / Cyan
+        (CHDK_COLOR_BASE+5),        // Green
+        (CHDK_COLOR_BASE+6),        // Dark Green
+        (CHDK_COLOR_BASE+7),        // Light Green
+        (CHDK_COLOR_BASE+8),        // Blue
+        (CHDK_COLOR_BASE+9),        // Dark Blue
+        (CHDK_COLOR_BASE+10),       // Light Blue / Cyan
         0x16,                       // Grey
         0x1a,                       // Dark Grey
         0x0E,                       // Light Grey
-        (CHDK_COLOR_BASE+10),       // Yellow
-        (CHDK_COLOR_BASE+11),       // Dark Yellow
-        (CHDK_COLOR_BASE+12),       // Light Yellow
+        (CHDK_COLOR_BASE+12),       // Yellow
+        (CHDK_COLOR_BASE+13),       // Dark Yellow
+        (CHDK_COLOR_BASE+14),       // Light Yellow
         0x1a,                       // Dummy for Transparent Dark Grey
-        (CHDK_COLOR_BASE+9),        // Magenta
+        (CHDK_COLOR_BASE+11),       // Magenta
 };
 
 // Record mode colors
@@ -38,19 +38,19 @@ unsigned char rec_colors[] =
         (CHDK_COLOR_BASE+0),        // Red
         (CHDK_COLOR_BASE+1),        // Dark Red
         (CHDK_COLOR_BASE+2),        // Light Red
-        (CHDK_COLOR_BASE+3),        // Green
-        (CHDK_COLOR_BASE+4),        // Dark Green
-        (CHDK_COLOR_BASE+5),        // Light Green
-        (CHDK_COLOR_BASE+6),        // Blue
-        (CHDK_COLOR_BASE+7),        // Dark Blue
-        (CHDK_COLOR_BASE+8),        // Light Blue / Cyan
+        (CHDK_COLOR_BASE+5),        // Green
+        (CHDK_COLOR_BASE+6),        // Dark Green
+        (CHDK_COLOR_BASE+7),        // Light Green
+        (CHDK_COLOR_BASE+8),        // Blue
+        (CHDK_COLOR_BASE+9),        // Dark Blue
+        (CHDK_COLOR_BASE+10),       // Light Blue / Cyan
         0x16,                       // Grey
         0x1a,                       // Dark Grey
         0x0E,                       // Light Grey
-        (CHDK_COLOR_BASE+10),       // Yellow
-        (CHDK_COLOR_BASE+11),       // Dark Yellow
-        (CHDK_COLOR_BASE+12),       // Light Yellow
+        (CHDK_COLOR_BASE+12),       // Yellow
+        (CHDK_COLOR_BASE+13),       // Dark Yellow
+        (CHDK_COLOR_BASE+14),       // Light Yellow
         0x1a,                       // Dummy for Transparent Dark Grey
-        (CHDK_COLOR_BASE+9),        // Magenta
+        (CHDK_COLOR_BASE+11),       // Magenta
 };
 
