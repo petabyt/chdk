@@ -1475,6 +1475,7 @@ string_sig string_sigs[] =
     {20, "SS_MFOff", "SS.MFOff_FW", 1 },
     {20, "SetLogicalEventActive", "UiEvnt_SetLogicalEventActive_FW", 1 },
     {20, "GetAdChValue", "GetAdChValue_FW", 0 },
+    {20, "CalcLog10", "CalcLog10_FW", 4 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1695,6 +1696,7 @@ string_sig string_sigs[] =
     { 9, "_divmod_signed_int", "mod_FW", 0,                                0,    0,    0,    0,    0,    0,    0,    0,    0,    4,    4,    4,    4 },
     { 9, "_divmod_unsigned_int", "SetTimerAfter", 0,                      23,   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,    0,    0 },
     { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   15,   15,   15 },
+    { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    8,    0 },
     { 9, "_dflt", "CalcLog10", 0,                                          9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
     { 9, "_dfltu", "CalcLog10", 0,                                         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4 },
     { 9, "_dmul", "CalcLog10", 0,                                         12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
@@ -1724,13 +1726,13 @@ string_sig string_sigs[] =
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54   R55
     { 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,                        0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00, 0x00, 0x00, 0x00 },
-    { 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1,  0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C, 0x4C, 0x4C, 0x4C },
-    { 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1,          0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50, 0x50, 0x50, 0x50 },
-    { 12, "free", "free", 1,                                            0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48, 0x48, 0x48, 0x48 },
-    { 12, "malloc", "malloc", 0x01000003,                               0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44, 0x44, 0x44, 0x44 },
+    { 12, "AllocateUncacheableMemory", "AllocateUncacheableMemory", 1,  0x2C, 0x2C, 0x2C, 0x2C, 0x2C, 0x34, 0x34, 0x34, 0x4C, 0x4C, 0x4C, 0x4C, 0x54 },
+    { 12, "FreeUncacheableMemory", "FreeUncacheableMemory", 1,          0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x38, 0x38, 0x50, 0x50, 0x50, 0x50, 0x58 },
+    { 12, "free", "free", 1,                                            0x28, 0x28, 0x28, 0x28, 0x28, 0x30, 0x30, 0x30, 0x48, 0x48, 0x48, 0x48, 0x50 },
+    { 12, "malloc", "malloc", 0x01000003,                               0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44, 0x44, 0x44, 0x4c }, // uses 'malloc_strictly'
     { 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
     { 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
-    { 12, "_log10", "_log10", 0x01000006,                               0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C,0x35C,0x35C },
+    { 12, "_log10", "_log10", 0x01000006,                               0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C,0x35C,0x388 }, // uses 'CalcLog10'
     { 12, "_log10", "_log10", 0x01000006,                               0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
     { 12, "_log10", "_log10", 0x01000006,                               0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
     { 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
@@ -1888,6 +1890,7 @@ int dryos_offset(firmware *fw, string_sig *sig)
     case 51:    return sig->dryos51_offset;
     case 52:    return sig->dryos52_offset;
     case 54:    return sig->dryos54_offset;
+    case 55:    return sig->dryos55_offset;
     }
     return 0;
 }
