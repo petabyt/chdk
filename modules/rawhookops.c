@@ -92,6 +92,13 @@ static int rawop_raw_to_ev96(lua_State *L) {
     return 1;
 }
 
+static int rawop_ev96_to_raw(lua_State *L) {
+    int v=luaL_checknumber(L,1);
+    // TODO not clear if this should be clamped to valid raw ranges?
+    lua_pushnumber(L,pow(2,(double)v/96+log2_raw_neutral)+camera_sensor.black_level);
+    return 1;
+}
+
 static int rawop_meter(lua_State *L) {
   	unsigned x1=luaL_checknumber(L,1);
   	unsigned y1=luaL_checknumber(L,2);
@@ -135,6 +142,7 @@ static const luaL_Reg rawop_funcs[] = {
   {"get_pixel", rawop_get_pixel},
   {"set_pixel", rawop_set_pixel},
   {"raw_to_ev96", rawop_raw_to_ev96},
+  {"ev96_to_raw", rawop_ev96_to_raw},
   {"meter", rawop_meter},
   {NULL, NULL}
 };
