@@ -8,6 +8,7 @@ imath library test
     use CORDIC algorithm
 ********************************************
 @title imath functions V0.2
+@chdk_version 1.3
 ]]
 
 -- Int2Str(value[,x10^dpow:default=0[, unit:string][, fix:number]])

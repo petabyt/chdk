@@ -12,7 +12,7 @@ CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 OBJS = gui_batt.o gui_space.o gui_usb.o gui_mbox.o gps.o gui_script.o gui_menu.o gui_user_menu.o
 OBJS+= suba.o levent.o console.o gps_math.o live_view.o ptp.o action_stack.o script.o
 OBJS+= usb_input.o usb_module.o usb_remote.o autoiso.o
-OBJS+= module_hashlist.o module_load.o modules.o
+OBJS+= module_hashlist.o module_load.o modules.o versions.o
 
 all: libcore.a
 

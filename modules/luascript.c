@@ -272,7 +272,10 @@ int lua_script_start( char const* script, int ptp )
 int lua_script_start_file(char const* filename)
 {
     static char loader[256];
-    sprintf(loader, "local sub, err = loadfile(\"%s\"); collectgarbage(); if sub then sub() else error(err) end", filename);
+    char *wrapper = "";
+    if ((script_version.major == 1) && (script_version.minor == 3))
+        wrapper = "require(\"wrap13\"); ";
+    sprintf(loader, "%slocal sub, err = loadfile(\"%s\"); collectgarbage(); if sub then sub() else error(err) end", wrapper, filename);
     return lua_script_start(loader, 0);
 }
 
@@ -871,8 +874,8 @@ static int luaCB_set_raw( lua_State* L )
 
 static int luaCB_get_raw( lua_State* L )
 {
-  lua_pushnumber( L, conf.save_raw );
-  return 1;
+    lua_pushboolean( L, conf.save_raw );
+    return 1;
 }
 
 static int luaCB_set_sv96( lua_State* L )
@@ -1352,8 +1355,7 @@ static int luaCB_set_movie_status( lua_State* L )
 
 static int luaCB_get_video_button( lua_State* L )
 {
-  int to = (camera_info.cam_has_video_button) ? 1 : 0;
-  lua_pushnumber( L, to );
+  lua_pushboolean( L, camera_info.cam_has_video_button );
   return 1;
 }
 
@@ -1383,7 +1385,7 @@ static int luaCB_get_focus_state( lua_State* L )
 
 static int luaCB_get_focus_ok( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_focus_ok() );
+  lua_pushboolean( L, shooting_get_focus_ok() );
   return 1;
 }
 
@@ -2234,12 +2236,12 @@ static int luaCB_set_config_autosave( lua_State* L ) {
 }
 
 static int luaCB_save_config_file( lua_State* L ) {
-    lua_pushnumber(L, save_config_file(luaL_checknumber(L, 1), luaL_optstring(L, 2, NULL)));
+    lua_pushboolean(L, save_config_file(luaL_checknumber(L, 1), luaL_optstring(L, 2, NULL)));
     return 1;
 }
 
 static int luaCB_load_config_file( lua_State* L ) {
-    lua_pushnumber(L, load_config_file(luaL_checknumber(L, 1), luaL_optstring(L, 2, NULL)));
+    lua_pushboolean(L, load_config_file(luaL_checknumber(L, 1), luaL_optstring(L, 2, NULL)));
     return 1;
 }
 

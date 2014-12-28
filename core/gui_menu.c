@@ -401,6 +401,15 @@ static void update_enum_value(const CMenuItem *mi, int direction)
     gui_menu_redraw=1;
 }
 
+static int isText(int n)
+{
+    return (
+            (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_TEXT ||
+            (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_ERROR ||
+            (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_SEPARATOR
+           );
+}
+
 // Open a sub-menu
 void gui_activate_sub_menu(CMenu *sub_menu)
 {
@@ -413,7 +422,7 @@ void gui_activate_sub_menu(CMenu *sub_menu)
     if (conf.menu_select_first_entry)
     {
         gui_menu_set_curr_menu(sub_menu, 0, 0);
-        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR)
+        if (isText(gui_menu_curr_item))
         {
             //++gui_menu_top_item;
             ++gui_menu_curr_item;
@@ -497,8 +506,7 @@ static void gui_menu_updown(int increment)
 
             // Check in case scroll moved off top of menu
             if (gui_menu_top_item < 0) gui_menu_top_item = 0;
-        } while ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_TEXT || 
-                 (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK)==MENUITEM_SEPARATOR);
+        } while (isText(gui_menu_curr_item));
 
         // Reset amount to increment integer values by
         int_incr = 1;
@@ -517,8 +525,7 @@ static int gui_menu_touch_handler(int tx, int ty)
     if ((tx >= x) && (ty >= y) && (tx < (x + w)) && (ty < (y + h)))
     {
         int r = ((ty - y) / rbf_font_height()) + gui_menu_top_item;
-        if (((curr_menu->menu[r].type & MENUITEM_MASK) != MENUITEM_TEXT) &&
-            ((curr_menu->menu[r].type & MENUITEM_MASK) != MENUITEM_SEPARATOR))
+        if (!isText(r))
         {
             if (gui_menu_curr_item != r)
             {
@@ -979,6 +986,15 @@ void gui_menu_draw(int enforce_redraw)
             case MENUITEM_UP:
                 sprintf(tbuf, "%s%s", (conf.menu_symbol_enable)?"":"<- ", lang_str(curr_menu->menu[imenu].text));
                 gui_menu_draw_text(tbuf,1);
+                break;
+            case MENUITEM_ERROR:
+                {
+                    twoColors save = cl;
+                    cl = MAKE_COLOR(BG_COLOR(cl), COLOR_RED);
+                    rbf_draw_string_len(xx, yy, w, lang_str(curr_menu->menu[imenu].text), cl);
+                    gui_menu_draw_text(lang_str(curr_menu->menu[imenu].text),1);
+                    cl = save;
+                }
                 break;
             case MENUITEM_PROC:
             case MENUITEM_TEXT:

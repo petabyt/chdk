@@ -1,5 +1,6 @@
 --[[
 @title parameter test
+@chdk_version 1.4
 #test_number=250 "numbers" [-500 500]
 #test_long=1000000 "big numbers" long
 #test_value_id=0 "value id" {val_1 val_2 val_3}

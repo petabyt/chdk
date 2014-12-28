@@ -1,5 +1,6 @@
 --[[
 @title MF Test Suite v3.1
+@chdk_version 1.3
 
 Instructions : 
   1) Ensure camera is in P mode (not AUTO).

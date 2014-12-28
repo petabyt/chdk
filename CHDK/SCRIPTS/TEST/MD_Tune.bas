@@ -1,5 +1,6 @@
 rem MD tuning - for use with MD AF assist LED tuning
 @title MD Tune
+@chdk_version 1.3
 
 @param a Columns
 @default a 6

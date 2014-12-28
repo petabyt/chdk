@@ -2,6 +2,7 @@
 --plays a sound and lights the print led at a given interval
 --[[
 @title metronome
+@chdk_version 1.3
 @param a beats/min
 @default a 60
 ]]

@@ -1,8 +1,9 @@
 --[[
 @title video test
+@chdk_version 1.4
 #menu_test_mode=0 "video start" {auto shoot vid_btn skip}
 #mode_change_delay=250 "mode change delay, ms"
-#mode_test=1 "modes test" bool
+#mode_test=true "modes test"
 --]]
 
 -- log to table, because file IO will fail when recording video

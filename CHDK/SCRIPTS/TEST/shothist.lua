@@ -1,5 +1,6 @@
 --[[
 @title Shot Histo Test
+@chdk_version 1.3
 
 @param a time delay (sec)
 @default a 2

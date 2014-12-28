@@ -1,5 +1,6 @@
 --[[
 @title drawings test
+@chdk_version 1.3
 
 @param a 1st color
 @default a 160

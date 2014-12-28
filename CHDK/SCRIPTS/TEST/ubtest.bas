@@ -1,4 +1,5 @@
 @title ubasic functionality test
+@chdk_version 1.3
 @param a interactive
 @default a 1
 @param b sleep between tests sec/10

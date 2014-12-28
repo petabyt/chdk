@@ -1,5 +1,6 @@
 --[[
 @title save ROM crash log to ROMLOG.LOG
+@chdk_version 1.3
 requires CHDK built with native function call support
 @param a remove old files 1=yes, 0=no
 @default a 1

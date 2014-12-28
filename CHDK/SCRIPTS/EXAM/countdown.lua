@@ -2,6 +2,7 @@
 --uses sound, in order to hear it the camera musnt be muted
 --[[
 @title countdown
+@chdk_version 1.3
 @param a hours
 @default a 0
 @param b minutes

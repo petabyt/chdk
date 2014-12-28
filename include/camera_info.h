@@ -31,6 +31,14 @@ typedef struct {
 // Data Structure to store camera specific information
 // Used by modules to ensure module code is platform independent
 
+// Note: if these structures are changed update the corresponding version
+//      _cam_sensor --> CAM_SENSOR_VERSION
+//      _cam_screen --> CAM_SCREEN_VERSION
+//      _cam_info   --> CAM_INFO_VERSION
+#define CAM_SCREEN_VERSION      {1,0}       // Version for camera_screen
+#define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
+#define CAM_INFO_VERSION        {1,0}       // Version for camera_info
+
 typedef struct {
 	_version_t api_version;     // version of this structure
 

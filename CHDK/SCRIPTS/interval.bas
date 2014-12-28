@@ -1,4 +1,5 @@
 @title Intervalometer
+@chdk_version 1.3
 @param a = interval (sec)
 @default a 15
  

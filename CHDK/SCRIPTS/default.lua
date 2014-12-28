@@ -1,5 +1,6 @@
 --[[
 @title Default Script
+@chdk_version 1.3
 ]]
 
 bi=get_buildinfo()

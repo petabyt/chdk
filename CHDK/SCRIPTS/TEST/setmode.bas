@@ -1,4 +1,5 @@
 @title set mode test
+@chdk_version 1.3
 @param a 0=by prop val 1=by CHDK val
 @default a 1
 @param b Value to set

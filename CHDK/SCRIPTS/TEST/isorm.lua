@@ -1,5 +1,6 @@
 --[[
 @title test real vs market ISO
+@chdk_version 1.3
 @param a min ISO
 @default a 80
 @param b max ISO

@@ -1,6 +1,7 @@
 --stopwatch.lua    by Kettmeister & msl from the german forum
 --[[ 
 @title stopwatch 
+@chdk_version 1.3
 @param a split time (1)/lap time(0) 
 @default a 1 
 ]] 

@@ -1,4 +1,5 @@
 --[[ 
+@chdk_version 1.3
 @param a autonumber paramNNN.log
 @range a 0 1
 @default a 1

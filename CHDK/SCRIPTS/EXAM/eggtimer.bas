@@ -4,6 +4,7 @@ rem disables display for energy saving
 rem Die Eieruhr - für juciphox User und alle Kameras!!!, Autor: gehtnix  
 rem Timer zum Eierkochen
 @title eggtimer
+@chdk_version 1.3
 @param a soft minutes
 @default a 5
 @param b medium minutes

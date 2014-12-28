@@ -1,6 +1,7 @@
 --Example lua script that generates random numbers in various ways. idea & code by PhyrePhoX and msl
 --[[
 @title lotto demo
+@chdk_version 1.3
 @param n how many
 @default n 6
 @param s min

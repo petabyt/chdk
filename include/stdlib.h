@@ -10,12 +10,6 @@
 
 #include "versions.h"
 
-typedef struct
-{
-    unsigned short  major;
-    unsigned short  minor;
-} _version_t;
-
 // Structures to store user configurable color entry
 #pragma pack(1)     // make sure they are packed as tightly as possible
 

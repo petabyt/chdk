@@ -1,5 +1,6 @@
 --[[
 @title test native func interface
+@chdk_version 1.3
 @param a 0 = event only 1 = unsafe!
 @default a 0
 --]]

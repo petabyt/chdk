@@ -27,6 +27,8 @@ enum FilenameMakeModeEnum {
 // ================ SCRIPT PARAMETERS ==========
 
 char script_title[36];                          // Title of current script
+_chdk_version_t script_version;                 // parsed from @chdk_version header, default to 1.3.0.0
+int script_has_version = 0;                     // indicates if script included @chdk_version header
 static int last_script_param_set = -1;          // used to test if script_param_set has changed
 
 #define DEFAULT_PARAM_SET       10              // Value of conf.script_param_set for 'Default' rather than saved parameters
@@ -396,6 +398,9 @@ static void script_scan()
     script_params = tail = 0;
     script_param_count = 0;
 
+    parse_version(&script_version, "1.3.0.0", 0);
+    script_has_version = 0;
+
     // Load script file
     const char *buf=0;
     if (conf.script_file[0] != 0)
@@ -439,6 +444,12 @@ static void script_scan()
             else if (strncmp("@values", ptr, 7)==0)
             {
                 process_values(ptr+7);
+            }
+            else if (strncmp("@chdk_version", ptr, 13)==0)
+            {
+                ptr = skip_whitespace(ptr+13);
+                parse_version(&script_version, ptr, 0);
+                script_has_version = 1;
             }
         }
         else if (ptr[0] == '#')
@@ -811,8 +822,14 @@ static void gui_update_script_submenu()
     int i;
     sc_param *p;
 
+    int warn = 0;
+    if (!script_has_version || (cmp_chdk_version(chdk_version, script_version) < 0))
+    {
+        warn = 1;
+    }
+
     // Calculate # of header items, and total required for header, parameters, back button and terminator
-    int f = sizeof(hdr_script_submenu_items) / sizeof(CMenuItem);
+    int f = (sizeof(hdr_script_submenu_items) / sizeof(CMenuItem)) + warn;
     int n = f + script_param_count + 2;
 
     // If we need more room, then free up old buffer
@@ -835,6 +852,22 @@ static void gui_update_script_submenu()
 
     // Copy header items
     memcpy(script_submenu_items, hdr_script_submenu_items, sizeof(hdr_script_submenu_items));
+
+    // Add warning if no @chdk_version, or if chdk_version < script_version
+    if (warn)
+    {
+        script_submenu_items[f-1].type = MENUITEM_ERROR;
+        if (cmp_chdk_version(chdk_version, script_version) < 0)
+        {
+            static char warning[50];
+            sprintf(warning, "Script requires CHDK ver: %d.%d.%d.%d", script_version.major, script_version.minor, script_version.maintenance, script_version.revision);
+            script_submenu_items[f-1].text = (int)warning;
+        }
+        else
+        {
+            script_submenu_items[f-1].text = (int)"No @chdk_version, assuming CHDK 1.3";
+        }
+    }
 
     // Update menu to point to new submenu buffer
     script_submenu.menu = script_submenu_items;

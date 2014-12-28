@@ -1,5 +1,6 @@
 --[[
-@desription dynamic range test
+@title dynamic range test
+@chdk_version 1.3
 @param a + stops
 @default a 4
 @param b - stops

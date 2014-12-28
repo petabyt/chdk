@@ -1,5 +1,6 @@
 --[[
 @title High Dynamic Range
+@chdk_version 1.3
 @param f 1/2 stop range
 @default f 4
 --]]

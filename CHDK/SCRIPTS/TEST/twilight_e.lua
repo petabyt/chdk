@@ -6,6 +6,7 @@ v0.8
 required CHDK 1.2 r.2453 or higher
 **********************************
 @title Twilight
+@chdk_version 1.3
 
 @param a Current Date?
 @default a 1
