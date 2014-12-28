@@ -12,9 +12,11 @@ functions for operating on raw framebuffer from script hooks
 
 extern void set_number_field(lua_State *L, const char *name, int value);
 
-// raw value of a neutral exposure
-// TODO should probably be R,G,B
-static double raw_neutral, log2_raw_neutral; 
+// TODO not really the same for R,G,B
+// raw value of a neutral exposure, including black level
+unsigned raw_neutral;
+// log2(raw_neutral - blacklevel), i.e. the range of significant raw values
+static double log2_raw_neutral_count; 
 
 static void set_rect_field(lua_State *L, const char * name, int x1, int y1, int x2, int y2) {
     lua_createtable(L, 0, 4);
@@ -87,7 +89,7 @@ static int rawop_raw_to_ev96(lua_State *L) {
     if( v <= camera_sensor.black_level) {
         v = camera_sensor.black_level+1;
     }
-    int r=96.0*(log2(v - camera_sensor.black_level) - log2_raw_neutral);
+    int r=96.0*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count);
     lua_pushnumber(L,r);
     return 1;
 }
@@ -95,7 +97,7 @@ static int rawop_raw_to_ev96(lua_State *L) {
 static int rawop_ev96_to_raw(lua_State *L) {
     int v=luaL_checknumber(L,1);
     // TODO not clear if this should be clamped to valid raw ranges?
-    lua_pushnumber(L,pow(2,(double)v/96+log2_raw_neutral)+camera_sensor.black_level);
+    lua_pushnumber(L,pow(2,(double)v/96+log2_raw_neutral_count)+camera_sensor.black_level);
     return 1;
 }
 
@@ -150,8 +152,10 @@ static const luaL_Reg rawop_funcs[] = {
 int luaopen_rawop(lua_State *L) {
     // initialize globals
     // emperical guestimate
-    raw_neutral = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
-    log2_raw_neutral = log2(raw_neutral);
+    double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
+    log2_raw_neutral_count = log2(raw_neutral_count);
+    // cast to int to avoid missing __fixunsdfsi assigning to unsigned
+    raw_neutral = (int)(raw_neutral_count + camera_sensor.black_level);
 	/* global lib*/
 	lua_newtable(L);
 	luaL_register(L, "rawop", rawop_funcs);  
