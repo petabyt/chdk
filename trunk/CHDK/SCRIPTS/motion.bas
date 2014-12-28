@@ -1,4 +1,5 @@
 @title Motion Detect
+@chdk_version 1.3
 @param f Trigger Threshold
 @default f 25
 @param p Trigger Delay (mSec)

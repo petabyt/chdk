@@ -1,5 +1,6 @@
 --[[
 @title set rec/play demo
+@chdk_version 1.3
 @param a 0=play 1=rec
 @default a 0
 --]]

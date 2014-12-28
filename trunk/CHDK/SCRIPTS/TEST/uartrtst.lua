@@ -1,5 +1,6 @@
 --[[
 @title UART redirect Test (UARTRTST.LOG)
+@chdk_version 1.3
 requires CHDK built with native function call support
 --]]
 

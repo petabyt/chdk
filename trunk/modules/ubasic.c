@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "gui.h"
 #include "fileutil.h"
+#include "conf.h"
 
 #include "script_api.h"
 #include "module_def.h"

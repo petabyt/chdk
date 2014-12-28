@@ -445,19 +445,19 @@ static char* validate(ModuleInfo *mod_info, _version_t ver)
         return msg;
     }
 
-    if (!API_VERSION_MATCH_REQUIREMENT(mod_info->module_version, ver))
+    if (!chk_api_version(mod_info->module_version, ver))
         return "incorrect module version";
 
-    if (!API_VERSION_MATCH_REQUIREMENT(conf.api_version, mod_info->conf_ver))
+    if (!chk_api_version(conf.api_version, mod_info->conf_ver))
         return "incorrect CONF version";
 
-    if (!API_VERSION_MATCH_REQUIREMENT( camera_screen.api_version, mod_info->cam_screen_ver))
+    if (!chk_api_version(camera_screen.api_version, mod_info->cam_screen_ver))
         return "incorrect CAM SCREEN version";
 
-    if (!API_VERSION_MATCH_REQUIREMENT( camera_sensor.api_version, mod_info->cam_sensor_ver))
+    if (!chk_api_version(camera_sensor.api_version, mod_info->cam_sensor_ver))
         return "incorrect CAM SENSOR version";
 
-    if (!API_VERSION_MATCH_REQUIREMENT( camera_info.api_version, mod_info->cam_info_ver))
+    if (!chk_api_version(camera_info.api_version, mod_info->cam_info_ver))
         return "incorrect CAM INFO version";
 
     return 0;

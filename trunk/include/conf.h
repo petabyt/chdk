@@ -70,11 +70,16 @@ typedef struct {
     tUserMenuItem   *items;
 } tUserMenuConfig;
 
-// Please try do not change existed structure, because this will broke modules compatibility
+//==========================================================
+
+// Changes to the 'conf' structure may require an update to the CONF_VERSION definition
 // If add field to the end of structure minor api version should be increased.
 // If any other change (remove something, change order, add not to the end, change meaning), major api version should be increased
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
 // making the modules camera/platform independant
+
+#define CONF_VERSION            {3,0}       // Version for Conf structure
+
 typedef struct {
 	_version_t api_version;			// version of this structure
 
@@ -453,6 +458,8 @@ typedef struct {
 } Conf;
 
 extern Conf conf;
+
+//==========================================================
 
 // Some macros to simplify the code
 

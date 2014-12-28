@@ -1,5 +1,6 @@
 --[[
 @title test iso override
+@chdk_version 1.3
 @param a shoot
 @default a 0
 @range a 0 1

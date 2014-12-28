@@ -1,25 +1,13 @@
 --[[
 @title lua lib test
-@param a skip io
-@default a 0
-@param b skip all os
-@default b 0
-@param c skip os time
-@default c 0
-@param d skip os time fmt
-@default d 0
-@param e skip os filesystem
-@default e 0
-@param f skip string
-@default f 0
+@chdk_version 1.4
+#do_io=true      "test io"
+#do_os=true      "test all os"
+#do_time=true    "test os time"
+#do_fmtdump=true "test os time fmt"
+#do_dir=true     "test os filesystem"
+#do_string=true  "test string"
 ]]
-
-do_io=a==0
-do_os=b==0
-do_time=c==0
-do_fmtdump=d==0
-do_dir=e==0
-do_string=f==0
 
 nfail=0
 want_ok=true

@@ -1,5 +1,6 @@
 --[[
 @title set cap mode test
+@chdk_version 1.3
 @param a 0=batch 1=menu 2=single
 @default a 0
 @param b batch: 0=valid only 1=all

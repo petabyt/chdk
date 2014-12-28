@@ -1,5 +1,6 @@
 --[[
 @title EDI - text editor
+@chdk_version 1.3
 @param n Newline  (0=Windows 1=Unix)
 @default n 0
 @values n Windows Unix

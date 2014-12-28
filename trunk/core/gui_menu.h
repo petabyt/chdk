@@ -18,6 +18,7 @@
 #define MENUITEM_STATE_VAL_PAIR 13  // value is a pointer to a 2 element CMenuItem array
                                     // used for config values that have an on/off state as well as an adjustable value (e.g. ISO override, etc)
                                     // the first element is the value control, the second is the on/off state control
+#define MENUITEM_ERROR          14  // Same as MENUITEM_TEXT but text in RED
 
 // Flags, which describe limits of F_INT value
 #define MENUITEM_F_MASK         0x00f0

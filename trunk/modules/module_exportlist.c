@@ -18,6 +18,8 @@
             module_preload
             &chdk_colors
 
+            &script_version
+
             &libscriptapi
             &libtextbox
             &librawop

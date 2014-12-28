@@ -120,6 +120,7 @@ void core_spytask()
     int gps_state = -1 ;
 #endif
     
+    parse_version(&chdk_version, BUILD_NUMBER, BUILD_SVNREV);
 
     // Init camera_info bits that can't be done statically
     camera_info_init();
