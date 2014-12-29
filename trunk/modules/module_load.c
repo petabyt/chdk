@@ -448,16 +448,16 @@ static char* validate(ModuleInfo *mod_info, _version_t ver)
     if (!chk_api_version(mod_info->module_version, ver))
         return "incorrect module version";
 
-    if (!chk_api_version(conf.api_version, mod_info->conf_ver))
+    if (!chk_api_version((_version_t)CONF_VERSION, mod_info->conf_ver))
         return "incorrect CONF version";
 
-    if (!chk_api_version(camera_screen.api_version, mod_info->cam_screen_ver))
+    if (!chk_api_version((_version_t)CAM_SCREEN_VERSION, mod_info->cam_screen_ver))
         return "incorrect CAM SCREEN version";
 
-    if (!chk_api_version(camera_sensor.api_version, mod_info->cam_sensor_ver))
+    if (!chk_api_version((_version_t)CAM_SENSOR_VERSION, mod_info->cam_sensor_ver))
         return "incorrect CAM SENSOR version";
 
-    if (!chk_api_version(camera_info.api_version, mod_info->cam_info_ver))
+    if (!chk_api_version((_version_t)CAM_INFO_VERSION, mod_info->cam_info_ver))
         return "incorrect CAM INFO version";
 
     return 0;

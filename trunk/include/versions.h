@@ -6,7 +6,7 @@
 
 //-------------------------------------------------------------------
 
-// Module / API version
+// API / structure version for checking module compatibility against core CHDK build
 typedef struct
 {
     unsigned short  major;
@@ -23,6 +23,8 @@ typedef struct
 } _chdk_version_t;
 
 extern _chdk_version_t chdk_version, script_version;
+
+//-------------------------------------------------------------------
 
 extern void parse_version(_chdk_version_t *ver, const char *build, const char *rev);
 extern int cmp_chdk_version(_chdk_version_t ver1, _chdk_version_t ver2);

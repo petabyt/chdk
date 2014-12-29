@@ -76,13 +76,12 @@ typedef struct {
 // If add field to the end of structure minor api version should be increased.
 // If any other change (remove something, change order, add not to the end, change meaning), major api version should be increased
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
-// making the modules camera/platform independant
+// making the modules camera/platform independent
 
 #define CONF_VERSION            {3,0}       // Version for Conf structure
 
-typedef struct {
-	_version_t api_version;			// version of this structure
-
+typedef struct
+{
     int save_raw;
     int save_raw_in_video;
     int save_raw_in_sports;

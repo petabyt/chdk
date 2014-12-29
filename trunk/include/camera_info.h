@@ -13,7 +13,8 @@
 //==========================================================
 
 // For Depth of Field, and Hyperfocal calculations
-typedef struct {
+typedef struct
+{
     short hyperfocal_valid;
     short distance_valid;
     int   hyperfocal_distance_1e3;
@@ -39,9 +40,8 @@ typedef struct {
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
 #define CAM_INFO_VERSION        {1,0}       // Version for camera_info
 
-typedef struct {
-	_version_t api_version;     // version of this structure
-
+typedef struct
+{
     int bits_per_pixel;
     int black_level;
     int white_level;
@@ -89,8 +89,6 @@ extern _cam_sensor camera_sensor;
 
 typedef struct 
 {
-	_version_t api_version; 			                // version of this structure
-
     int     width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
     int     physical_width;                             // Actual width of bitmap screen in pixels
     int     buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
@@ -114,8 +112,6 @@ typedef struct
 
 typedef struct
 {
-	_version_t api_version; 			// version of this structure
-
     // Canon PARAMS indexes
     struct
     {
