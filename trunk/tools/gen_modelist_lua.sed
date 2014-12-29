@@ -5,8 +5,8 @@ array of mode names indexed by their mode number from include/modelist.h\
 you may want to use LUALIB/capmode.lua instead\
 --]]\
 return {
-/^[[:space:]]*MODE_[A-Z0-9_]\+/ { 
- s/^[[:space:]]*MODE_\([A-Z0-9_]\+\)\([[:space:]]*\)\(=1\)\?,\?/  "\1",/;
+/^[[:space:]]*MODE_[A-Z0-9_][A-Z0-9_]*/ { 
+ s/^[[:space:]]*MODE_\([A-Z0-9_][A-Z0-9_]*\)\([[:space:]]*\)\(=1\)*,*/  "\1",/;
  s/\/\// --/;
  p;
 }
