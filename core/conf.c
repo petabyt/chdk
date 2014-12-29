@@ -18,7 +18,7 @@
 #include "module_def.h"
 
 //-------------------------------------------------------------------
-Conf conf = {CONF_VERSION};
+Conf conf;
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
