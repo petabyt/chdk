@@ -1,24 +1,15 @@
 --[[
 @title dynamic range test
-@chdk_version 1.3
-@param a + stops
-@default a 4
-@param b - stops
-@default b 6
-@param c - draw meter
-@default c 1
-@range c 0 1
+@chdk_version 1.4.0.3867
+#overstops=4 "+ stops"
+#understops=6 "- stops"
+#draw_meter=true "draw meter"
 ]]
 require'hookutil'
 require'rawoplib'
 
 props=require'propcase'
 capmode=require'capmode'
-
-overstops=a
-understops=b
-
-draw_meter = (c == 1)
 
 save_raw=get_raw()
 set_raw(1) 
@@ -42,7 +33,7 @@ function get_meter()
 
 	-- TODO a meter matching raw_histogram area / step might be interesting
 	local m = rawop.meter(x1,y1,meter_size,meter_size,1,1)
-	local r,g1,g2,b = rawop.meter_rgb4(x1,y1,meter_size,meter_size,2,2)
+	local r,g1,g2,b = rawop.meter_rgbg(x1,y1,meter_size,meter_size,2,2)
 	if draw_meter then
 		local low = rawop.fb.black_level + rawop.fb.black_level / 2
 		local high = rawop.fb.white_level - rawop.fb.black_level
@@ -54,28 +45,28 @@ function get_meter()
 			c = high
 		end
 		-- box around meter area
-		rawop.fill_rect_rgb(x1 - 2,y1 - 2,meter_size+4,2,c,c,c)
-		rawop.fill_rect_rgb(x1 - 2,y1 + meter_size,meter_size+4,2,c,c,c)
-		rawop.fill_rect_rgb(x1 - 2,y1,2,meter_size,c,c,c)
-		rawop.fill_rect_rgb(x1 + meter_size,y1,2,meter_size,c,c,c)
+		rawop.fill_rect_rgbg(x1 - 2,y1 - 2,meter_size+4,2,c,c,c)
+		rawop.fill_rect_rgbg(x1 - 2,y1 + meter_size,meter_size+4,2,c,c,c)
+		rawop.fill_rect_rgbg(x1 - 2,y1,2,meter_size,c,c,c)
+		rawop.fill_rect_rgbg(x1 + meter_size,y1,2,meter_size,c,c,c)
 
 		-- draw max scale
-		rawop.fill_rect_rgb(100,90,500,4,high,high,high)
-		rawop.fill_rect_rgb(100,94,500,4,low,low,low)
+		rawop.fill_rect_rgbg(100,90,500,4,high,high,high)
+		rawop.fill_rect_rgbg(100,94,500,4,low,low,low)
 		-- draw levels
-		rawop.fill_rect_rgb(100,100,meter_bar_width(m),20,m,m,m)
-		rawop.fill_rect_rgb(100,120,meter_bar_width(m),20,c,c,c)
-		rawop.fill_rect_rgb(100,200,meter_bar_width(r),20,r,low,low)
-		rawop.fill_rect_rgb(100,220,meter_bar_width(r),20,high,low,low)
-		rawop.fill_rect_rgb(100,300,meter_bar_width(g1),20,low,g1,low)
-		rawop.fill_rect_rgb(100,320,meter_bar_width(g1),20,low,high,low)
-		rawop.fill_rect_rgb(100,400,meter_bar_width(g2),20,low,g2,low)
-		rawop.fill_rect_rgb(100,420,meter_bar_width(g2),20,low,high,low)
-		rawop.fill_rect_rgb(100,500,meter_bar_width(b),20,low,low,b)
-		rawop.fill_rect_rgb(100,520,meter_bar_width(b),20,low,low,high)
+		rawop.fill_rect_rgbg(100,100,meter_bar_width(m),20,m,m,m)
+		rawop.fill_rect_rgbg(100,120,meter_bar_width(m),20,c,c,c)
+		rawop.fill_rect_rgbg(100,200,meter_bar_width(r),20,r,low,low)
+		rawop.fill_rect_rgbg(100,220,meter_bar_width(r),20,high,low,low)
+		rawop.fill_rect_rgbg(100,300,meter_bar_width(g1),20,low,g1,low)
+		rawop.fill_rect_rgbg(100,320,meter_bar_width(g1),20,low,high,low)
+		rawop.fill_rect_rgbg(100,400,meter_bar_width(g2),20,low,g2,low)
+		rawop.fill_rect_rgbg(100,420,meter_bar_width(g2),20,low,high,low)
+		rawop.fill_rect_rgbg(100,500,meter_bar_width(b),20,low,low,b)
+		rawop.fill_rect_rgbg(100,520,meter_bar_width(b),20,low,low,high)
 		-- draw blacklevel scale
-		rawop.fill_rect_rgb(100,550,meter_bar_width(rawop.fb.black_level),4,high,high,high)
-		rawop.fill_rect_rgb(100,554,meter_bar_width(rawop.fb.black_level),4,low,low,low)
+		rawop.fill_rect_rgbg(100,550,meter_bar_width(rawop.fb.black_level),4,high,high,high)
+		rawop.fill_rect_rgbg(100,554,meter_bar_width(rawop.fb.black_level),4,low,low,low)
 	end
 	return m,r,g1,g2,b
 end
