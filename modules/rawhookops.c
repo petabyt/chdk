@@ -22,6 +22,10 @@ static double log2_raw_neutral_count;
 // [r,g,g,b][x,y]
 unsigned cfa_offsets[4][2];
 const char *cfa_names[]={"r","g1","g2","b"};
+#define CFA_R 0
+#define CFA_G1 1
+#define CFA_G2 2
+#define CFA_B 3
 
 static void set_rect_field(lua_State *L, const char * name, int x1, int y1, int x2, int y2) {
     lua_createtable(L, 0, 4);
@@ -33,6 +37,7 @@ static void set_rect_field(lua_State *L, const char * name, int x1, int y1, int 
     lua_setfield(L, -2, name);
 }
 
+// TODO maybe this should just go into the rawop table?
 static int rawop_fb_info(lua_State *L) {
     lua_createtable(L, 0, 9);
     set_number_field(L,"width",camera_sensor.raw_rowpix);
@@ -69,27 +74,34 @@ static int rawop_fb_info(lua_State *L) {
     return 1;
 }
 
+/*
+v=rawop.get_pixel(x,y)
+returns raw value, or nil if out of bounds
+*/
 static int rawop_get_pixel(lua_State *L) {
   	unsigned x=luaL_checknumber(L,1);
   	unsigned y=luaL_checknumber(L,2);
     // TODO return nil for out of bounds
     // might not want to check, or return 0, or error()?
-    if(x >= (unsigned)camera_sensor.raw_rowpix || y > (unsigned)camera_sensor.raw_rows) {
-        lua_pushnil(L);
-        return 1;
+    if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
+        return 0;
     }
     // TODO could check if in raw hook
     lua_pushnumber(L,get_raw_pixel(x,y));
     return 1;
 }
 
+/*
+rawop.set_pixel(x,y,v)
+sets pixel to v
+*/
 static int rawop_set_pixel(lua_State *L) {
   	unsigned int x=luaL_checknumber(L,1);
   	unsigned int y=luaL_checknumber(L,2);
   	unsigned short v=luaL_checknumber(L,3);
     // TODO
     // might want to or error()?
-    if(x >= (unsigned)camera_sensor.raw_rowpix || y > (unsigned)camera_sensor.raw_rows) {
+    if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
         return 0;
     }
     // TODO could check if in raw hook
@@ -98,14 +110,72 @@ static int rawop_set_pixel(lua_State *L) {
     return 0;
 }
 
-static int rawop_fill_rect_rgb(lua_State *L) {
+/*
+r,g1,b,g2=rawop.get_pixels_rgbg(x,y)
+returns the values of the CFA quad containing x,y or nil if out of bounds
+x and y are truncated to the nearest even value.
+*/
+static int rawop_get_pixels_rgbg(lua_State *L) {
+  	unsigned int x=luaL_checknumber(L,1);
+  	unsigned int y=luaL_checknumber(L,2);
+
+	x &= 0xFFFFFFFE;
+	y &= 0xFFFFFFFE;
+
+    if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
+        return 0;
+    }
+    lua_pushnumber(L,get_raw_pixel(x+cfa_offsets[CFA_R][0],y+cfa_offsets[CFA_R][1]));
+    lua_pushnumber(L,get_raw_pixel(x+cfa_offsets[CFA_G1][0],y+cfa_offsets[CFA_G1][1]));
+    lua_pushnumber(L,get_raw_pixel(x+cfa_offsets[CFA_B][0],y+cfa_offsets[CFA_B][1]));
+    lua_pushnumber(L,get_raw_pixel(x+cfa_offsets[CFA_G2][0],y+cfa_offsets[CFA_G2][1]));
+    return 4;
+}
+
+/*
+rawop.set_pixels_rgbg(x,y,r,g1,b[,g2])
+sets the values of the CFA quad containing x,y
+if g2 is not specified, it is set to g1
+x and y are truncated to the nearest even value.
+*/
+static int rawop_set_pixels_rgbg(lua_State *L) {
+  	unsigned int x=luaL_checknumber(L,1);
+  	unsigned int y=luaL_checknumber(L,2);
+  	unsigned short r=luaL_checknumber(L,3);
+  	unsigned short g1=luaL_checknumber(L,4);
+  	unsigned short b=luaL_checknumber(L,5);
+  	unsigned short g2=luaL_optnumber(L,6,g1);
+
+	x &= 0xFFFFFFFE;
+	y &= 0xFFFFFFFE;
+
+    if(x >= (unsigned)camera_sensor.raw_rowpix - 1 || y >= (unsigned)camera_sensor.raw_rows - 1) {
+        return 0;
+    }
+    set_raw_pixel(x+cfa_offsets[CFA_R][0],y+cfa_offsets[CFA_R][1],r);
+    set_raw_pixel(x+cfa_offsets[CFA_G1][0],y+cfa_offsets[CFA_G1][1],g1);
+    set_raw_pixel(x+cfa_offsets[CFA_B][0],y+cfa_offsets[CFA_B][1],b);
+    set_raw_pixel(x+cfa_offsets[CFA_G2][0],y+cfa_offsets[CFA_G2][1],g2);
+    return 0;
+}
+/*
+rawop.fill_rect_rgbg(x,y,width,height,r,g1,b[,g2])
+fills the specified rectangle with the specified r,g,b values
+if g2 is not specified, it is set to g1
+x, y, width and height are truncated to the nearest even value.
+width and hight out of bounds are clipped
+*/
+
+static int rawop_fill_rect_rgbg(lua_State *L) {
   	unsigned int xstart=luaL_checknumber(L,1);
   	unsigned int ystart=luaL_checknumber(L,2);
   	unsigned int width=luaL_checknumber(L,3);
   	unsigned int height=luaL_checknumber(L,4);
-  	unsigned short r=luaL_checknumber(L,5);
-  	unsigned short g=luaL_checknumber(L,6);
-  	unsigned short b=luaL_checknumber(L,7);
+    unsigned int vals[4];
+    vals[CFA_R]=luaL_checknumber(L,5);
+    vals[CFA_G1]=luaL_checknumber(L,6);
+    vals[CFA_B]=luaL_checknumber(L,7);
+    vals[CFA_G2]=luaL_optnumber(L,8,vals[CFA_G1]);
     // clamp to even
     xstart = xstart & 0xFFFFFFFE;
     ystart = ystart & 0xFFFFFFFE;
@@ -114,24 +184,34 @@ static int rawop_fill_rect_rgb(lua_State *L) {
     unsigned int xmax = xstart + width;
     unsigned int ymax = ystart + height;
     int x,y;
-    if(xstart >= (unsigned)camera_sensor.raw_rowpix || ystart > (unsigned)camera_sensor.raw_rows) {
+    if(xstart >= (unsigned)camera_sensor.raw_rowpix || ystart >= (unsigned)camera_sensor.raw_rows) {
         return 0;
     }
-    if(xmax >= (unsigned)camera_sensor.raw_rowpix || xmax > (unsigned)camera_sensor.raw_rows) {
-        return 0;
+    if(xmax > (unsigned)camera_sensor.raw_rowpix) {
+        xmax = (unsigned)camera_sensor.raw_rowpix; 
     }
-    // TODO this could be optimized to get rid of adds + array lookups
-    for(y=ystart; y<ymax; y+=2) {
-        for(x=xstart; x<xmax; x+=2) {
-            set_raw_pixel(x+cfa_offsets[0][0],y+cfa_offsets[0][1],r);
-            set_raw_pixel(x+cfa_offsets[1][0],y+cfa_offsets[1][1],g);
-            set_raw_pixel(x+cfa_offsets[2][0],y+cfa_offsets[2][1],g);
-            set_raw_pixel(x+cfa_offsets[3][0],y+cfa_offsets[3][1],b);
+    if(ymax > (unsigned)camera_sensor.raw_rows) {
+        ymax = (unsigned)camera_sensor.raw_rows;
+    }
+    int i;
+    // TODO setting full rows would probably be faster
+    for(i=0; i<4; i++) {
+        unsigned short c=vals[i];
+        for(y=ystart+cfa_offsets[i][1]; y<ymax; y+=2) {
+            for(x=xstart+cfa_offsets[i][0]; x<xmax; x+=2) {
+                set_raw_pixel(x,y,c);
+            }
         }
     }
     return 0;
 }
 
+/*
+ev96=rawop.raw_to_ev96(rawval)
+convert a raw value (blacklevel+1 to whitelevel) into an APEX96 EV relative to neutral
+if rawval is <= to blacklevel, it is clamped to blacklevel.
+values > whitelevel are converted normally
+*/
 static int rawop_raw_to_ev96(lua_State *L) {
     int v=luaL_checknumber(L,1);
     // TODO not clear what we should return, minimum real value for now
@@ -143,6 +223,10 @@ static int rawop_raw_to_ev96(lua_State *L) {
     return 1;
 }
 
+/*
+rawval=rawop.ev96_to_raw(ev96)
+Convert an APEX96 EV (offset from raw_neutral) to a raw value. No range checking is done
+*/
 static int rawop_ev96_to_raw(lua_State *L) {
     int v=luaL_checknumber(L,1);
     // TODO not clear if this should be clamped to valid raw ranges?
@@ -150,6 +234,21 @@ static int rawop_ev96_to_raw(lua_State *L) {
     return 1;
 }
 
+/*
+mean_raw_val=rawop.meter(x,y,x_count,y_count,x_step,y_step)
+return the average values of count pixels in x and y, sampled at step size step,
+or nil if the range is invalid or the total number of pixels could result in overflow
+
+To prevent overflow, the total number of pixels must less unsigned_max / white_level.
+Limits are roughly 
+10 bpp = 4 Mpix
+12 bpp = 1 Mpix
+14 bpp = 256 Kpix
+To meter larger numbers of pixels, use multiple calls and average the results
+
+To meter R G B separately, use multiple meter calls with the appropriate CFA offset and even steps
+To ensure all CFA colors are included in a single call, use odd steps
+*/
 static int rawop_meter(lua_State *L) {
   	unsigned x1=luaL_checknumber(L,1);
   	unsigned y1=luaL_checknumber(L,2);
@@ -192,7 +291,9 @@ static const luaL_Reg rawop_funcs[] = {
   {"fb_info", rawop_fb_info},
   {"get_pixel", rawop_get_pixel},
   {"set_pixel", rawop_set_pixel},
-  {"fill_rect_rgb", rawop_fill_rect_rgb},
+  {"get_pixels_rgbg", rawop_get_pixels_rgbg},
+  {"set_pixels_rgbg", rawop_set_pixels_rgbg},
+  {"fill_rect_rgbg", rawop_fill_rect_rgbg},
   {"raw_to_ev96", rawop_raw_to_ev96},
   {"ev96_to_raw", rawop_ev96_to_raw},
   {"meter", rawop_meter},
@@ -205,7 +306,7 @@ int luaopen_rawop(lua_State *L) {
     int g1=1;
 	for(i=0; i<4; i++) {
 		int c = (camera_sensor.cfa_pattern >> 8*i) & 0xFF;
-        int ci;
+        int ci=0;
         switch(c) {
             case 0:
                 ci=0;
