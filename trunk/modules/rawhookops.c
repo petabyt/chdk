@@ -18,6 +18,11 @@ unsigned raw_neutral;
 // log2(raw_neutral - blacklevel), i.e. the range of significant raw values
 static double log2_raw_neutral_count; 
 
+// offsets of bayer elements from an even pixel coordinate
+// [r,g,g,b][x,y]
+unsigned cfa_offsets[4][2];
+const char *cfa_names[]={"r","g1","g2","b"};
+
 static void set_rect_field(lua_State *L, const char * name, int x1, int y1, int x2, int y2) {
     lua_createtable(L, 0, 4);
     // not clear if we want corners, width/height or both
@@ -38,6 +43,7 @@ static int rawop_fb_info(lua_State *L) {
     set_number_field(L,"black_level",camera_sensor.black_level);
     set_number_field(L,"white_level",camera_sensor.white_level);
     set_number_field(L,"raw_neutral",(int)raw_neutral);
+    // not clear if we want corners, width/height or both
     set_rect_field(L,"active_area",
         camera_sensor.active_area.x1,
         camera_sensor.active_area.y1,
@@ -51,6 +57,15 @@ static int rawop_fb_info(lua_State *L) {
         camera_sensor.active_area.x1 + camera_sensor.jpeg.x + camera_sensor.jpeg.width,
         camera_sensor.active_area.y1 + camera_sensor.jpeg.y + camera_sensor.jpeg.height
     );
+    lua_createtable(L, 0, 4);
+    int i;
+    for(i=0;i<4;i++) {
+        lua_createtable(L, 0, 2);
+        set_number_field(L,"x",cfa_offsets[i][0]);
+        set_number_field(L,"y",cfa_offsets[i][1]);
+        lua_setfield(L, -2, cfa_names[i]);
+    }
+    lua_setfield(L, -2, "cfa_offsets");
     return 1;
 }
 
@@ -80,6 +95,40 @@ static int rawop_set_pixel(lua_State *L) {
     // TODO could check if in raw hook
     // TODO could check v
     set_raw_pixel(x,y,v);
+    return 0;
+}
+
+static int rawop_fill_rect_rgb(lua_State *L) {
+  	unsigned int xstart=luaL_checknumber(L,1);
+  	unsigned int ystart=luaL_checknumber(L,2);
+  	unsigned int width=luaL_checknumber(L,3);
+  	unsigned int height=luaL_checknumber(L,4);
+  	unsigned short r=luaL_checknumber(L,5);
+  	unsigned short g=luaL_checknumber(L,6);
+  	unsigned short b=luaL_checknumber(L,7);
+    // clamp to even
+    xstart = xstart & 0xFFFFFFFE;
+    ystart = ystart & 0xFFFFFFFE;
+    width = width & 0xFFFFFFFE;
+    height = height & 0xFFFFFFFE;
+    unsigned int xmax = xstart + width;
+    unsigned int ymax = ystart + height;
+    int x,y;
+    if(xstart >= (unsigned)camera_sensor.raw_rowpix || ystart > (unsigned)camera_sensor.raw_rows) {
+        return 0;
+    }
+    if(xmax >= (unsigned)camera_sensor.raw_rowpix || xmax > (unsigned)camera_sensor.raw_rows) {
+        return 0;
+    }
+    // TODO this could be optimized to get rid of adds + array lookups
+    for(y=ystart; y<ymax; y+=2) {
+        for(x=xstart; x<xmax; x+=2) {
+            set_raw_pixel(x+cfa_offsets[0][0],y+cfa_offsets[0][1],r);
+            set_raw_pixel(x+cfa_offsets[1][0],y+cfa_offsets[1][1],g);
+            set_raw_pixel(x+cfa_offsets[2][0],y+cfa_offsets[2][1],g);
+            set_raw_pixel(x+cfa_offsets[3][0],y+cfa_offsets[3][1],b);
+        }
+    }
     return 0;
 }
 
@@ -143,6 +192,7 @@ static const luaL_Reg rawop_funcs[] = {
   {"fb_info", rawop_fb_info},
   {"get_pixel", rawop_get_pixel},
   {"set_pixel", rawop_set_pixel},
+  {"fill_rect_rgb", rawop_fill_rect_rgb},
   {"raw_to_ev96", rawop_raw_to_ev96},
   {"ev96_to_raw", rawop_ev96_to_raw},
   {"meter", rawop_meter},
@@ -151,6 +201,31 @@ static const luaL_Reg rawop_funcs[] = {
 
 int luaopen_rawop(lua_State *L) {
     // initialize globals
+    int i;
+    int g1=1;
+	for(i=0; i<4; i++) {
+		int c = (camera_sensor.cfa_pattern >> 8*i) & 0xFF;
+        int ci;
+        switch(c) {
+            case 0:
+                ci=0;
+            break;
+            case 1:
+                if(g1) {
+                    ci=1;
+                    g1=0;
+                } else {
+                    ci=2;
+                }
+            break;
+            case 2:
+                ci=3;
+            break;
+        }
+        cfa_offsets[ci][0] = i&1;
+        cfa_offsets[ci][1] = (i&2)>>1;
+    }
+
     // emperical guestimate
     double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
     log2_raw_neutral_count = log2(raw_neutral_count);
