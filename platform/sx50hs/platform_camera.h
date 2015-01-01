@@ -48,9 +48,6 @@
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2 
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH                10
-
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
 

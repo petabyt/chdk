@@ -307,7 +307,7 @@ static void gui_init(CMenu *menu_ptr) {
     }
 
     num_lines = camera_screen.height/rbf_font_height()-1;
-    x = camera_screen.menu_border_width;
+    x = camera_screen.menu_border_width + camera_screen.ts_button_border;
     w = camera_screen.width-x-x;
     len_bool = rbf_str_width("\x95");
     len_space = rbf_char_width(' ');

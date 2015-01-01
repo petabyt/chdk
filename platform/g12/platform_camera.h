@@ -63,9 +63,6 @@
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2
 
-    #undef CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH                10
-
     // camera name
     #define PARAM_CAMERA_NAME                   4   // parameter number for GetParameterData - Camera Model name
     #define PARAM_OWNER_NAME                    7   // parameter number for GetParameterData - Owner name

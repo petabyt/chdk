@@ -55,7 +55,7 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    1               // edge overlay margin
     #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            47              // Need to leave this much border to avoid overlap with on screen buttons.
+    #define CAM_MENU_BORDERWIDTH            -3              // Need to leave this much border to avoid overlap with on screen buttons (added to CAM_TS_BUTTON_BORDER).
     #undef  CAM_TS_BUTTON_BORDER
     #define CAM_TS_BUTTON_BORDER            50              // 60  = Define this to leave a border on each side of the palette display.
     #undef  CAM_DISP_ALT_TEXT                               // Turn off <ALT> at bottom of screen in Alt mode - changes button color instead

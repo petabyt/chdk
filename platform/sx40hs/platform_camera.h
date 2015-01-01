@@ -50,9 +50,6 @@
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH                10
-
     #undef  CAM_MARKET_ISO_BASE
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
     #define CAM_ISO_LIMIT_IN_HQ_BURST           1420// Defines max market ISO override value for HQ Burst mode (higher values crash camera)

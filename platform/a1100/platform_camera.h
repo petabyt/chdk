@@ -76,9 +76,6 @@
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
-    #undef CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1

@@ -37,9 +37,6 @@
     #define CAM_ALT_BUTTON_NAMES            { "Print", "Disp",  "AE Lock", "Jump" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_DISPLAY, KEY_MICROPHONE, KEY_METERING}
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
-
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_HAS_ND_FILTER               1
     #define CAM_QUALITY_OVERRIDE            1

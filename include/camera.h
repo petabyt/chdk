@@ -76,7 +76,7 @@
     #define CAM_EMUL_KEYPRESS_DELAY         40  // Delay to interpret <alt>-button press as longpress
     #define CAM_EMUL_KEYPRESS_DURATION      5   // Length of keypress emulation
 
-    #define CAM_MENU_BORDERWIDTH            30  // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
+    #define CAM_MENU_BORDERWIDTH            10  // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
                                                 // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
                                                 // scroll bar on the right.
 
