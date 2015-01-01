@@ -58,8 +58,6 @@
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                 2   // use .CR2
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            70  // Need to leave this much border to avoid overlap with on screen buttons.
     #undef  CAM_TS_BUTTON_BORDER
     #define CAM_TS_BUTTON_BORDER            60  // Define this to leave a border on each side of the palette display. Used on the IXUS 310 to
                                                 // stop the palette from overlapping the on screen buttons on each side

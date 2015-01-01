@@ -55,9 +55,6 @@
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH                10
-
     #define CAM_DNG_LENS_INFO                   { 52,10, 260,10, 20,10, 59,10 }
 
     // From S110 native RAW file as converted to DNG using Adobe DNG Converter

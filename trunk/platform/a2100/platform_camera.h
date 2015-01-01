@@ -40,11 +40,6 @@
 
     //#undef  CAM_SHOW_OSD_IN_SHOOT_MENU              // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode
 
-    #undef CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10      // Defines the width of the border on each side of the CHDK menu. The CHDK menu will have this
-                                                    // many pixels left blank to the on each side. Should not be less than 10 to allow room for the
-                                                    // scroll bar on the right.
-
     #define CAM_MULTIPART                   1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1

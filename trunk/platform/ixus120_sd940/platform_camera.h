@@ -50,9 +50,6 @@
 
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
-
     #define CAM_COLORMATRIX1                               \
       827547, 1000000, -290458, 1000000, -126086, 1000000, \
      -12829,  1000000, 530507,  1000000, 50537,   1000000, \

@@ -224,7 +224,7 @@ void gui_menu_init(CMenu *menu_ptr) {
     }
 
     num_lines = (camera_screen.height - camera_screen.ts_menu_border*2)/rbf_font_height()-1;
-    x = camera_screen.menu_border_width;
+    x = camera_screen.menu_border_width + camera_screen.ts_button_border;
     w = camera_screen.width-x-x;
     len_bool = rbf_str_width("\x95");
     len_int = rbf_str_width("99999");

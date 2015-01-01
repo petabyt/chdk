@@ -57,9 +57,6 @@
     #undef DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                     2   // use .CR2 
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH                10
-
     #define CAM_DNG_LENS_INFO                   { 61,10, 305,10, 18,10, 28,10 }    // See comments in camera.h
 
     // From G15 native RAW file as converted to DNG using Adobe DNG Converter

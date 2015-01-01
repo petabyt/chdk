@@ -52,9 +52,6 @@
     #define CAM_ACTIVE_AREA_X2              4440    // "
     #define CAM_ACTIVE_AREA_Y2              3334    // "
 
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
-
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_RESET_AEL_AFTER_VIDEO_AF    1   // Cam needs AE Lock state reset after AF in video recording

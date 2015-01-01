@@ -79,9 +79,6 @@
 
     #define CAM_DATE_FOLDER_NAMING                      0x400
 
-    // Menu width like in g11 and s90
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH                        10
     // CR2 accesible through USB
     #undef  DEFAULT_RAW_EXT
     #define DEFAULT_RAW_EXT                             2

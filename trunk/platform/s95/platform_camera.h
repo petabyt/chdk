@@ -32,8 +32,6 @@
 
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL                 1

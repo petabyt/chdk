@@ -34,8 +34,6 @@
     #define CAM_PROPSET                     4
     #define CAM_DRYOS                       1
     #undef  CAM_USE_ZOOM_FOR_MF
-    #undef  CAM_MENU_BORDERWIDTH
-    #define CAM_MENU_BORDERWIDTH            10
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_HAS_JOGDIAL                 1
     #undef  CAM_KEY_PRESS_DELAY
