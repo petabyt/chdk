@@ -24,3 +24,5 @@
     __ltdf2
     __gtdf2
     __bswapsi2
+    __floatunsidf
+    __fixunsdfsi

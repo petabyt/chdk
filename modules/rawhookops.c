@@ -26,6 +26,7 @@ const char *cfa_names[]={"r","g1","g2","b"};
 #define CFA_G1 1
 #define CFA_G2 2
 #define CFA_B 3
+#define RAWOP_HISTO_META "rawop.histo_meta"
 
 static void set_rect_field(lua_State *L, const char * name, int x1, int y1, int x2, int y2) {
     lua_createtable(L, 0, 4);
@@ -79,8 +80,8 @@ v=rawop.get_pixel(x,y)
 returns raw value, or nil if out of bounds
 */
 static int rawop_get_pixel(lua_State *L) {
-  	unsigned x=luaL_checknumber(L,1);
-  	unsigned y=luaL_checknumber(L,2);
+    unsigned x=luaL_checknumber(L,1);
+    unsigned y=luaL_checknumber(L,2);
     // TODO return nil for out of bounds
     // might not want to check, or return 0, or error()?
     if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
@@ -96,9 +97,9 @@ rawop.set_pixel(x,y,v)
 sets pixel to v
 */
 static int rawop_set_pixel(lua_State *L) {
-  	unsigned int x=luaL_checknumber(L,1);
-  	unsigned int y=luaL_checknumber(L,2);
-  	unsigned short v=luaL_checknumber(L,3);
+    unsigned int x=luaL_checknumber(L,1);
+    unsigned int y=luaL_checknumber(L,2);
+    unsigned short v=luaL_checknumber(L,3);
     // TODO
     // might want to or error()?
     if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
@@ -116,11 +117,11 @@ returns the values of the CFA quad containing x,y or nil if out of bounds
 x and y are truncated to the nearest even value.
 */
 static int rawop_get_pixels_rgbg(lua_State *L) {
-  	unsigned int x=luaL_checknumber(L,1);
-  	unsigned int y=luaL_checknumber(L,2);
+    unsigned int x=luaL_checknumber(L,1);
+    unsigned int y=luaL_checknumber(L,2);
 
-	x &= 0xFFFFFFFE;
-	y &= 0xFFFFFFFE;
+    x &= 0xFFFFFFFE;
+    y &= 0xFFFFFFFE;
 
     if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
         return 0;
@@ -139,15 +140,15 @@ if g2 is not specified, it is set to g1
 x and y are truncated to the nearest even value.
 */
 static int rawop_set_pixels_rgbg(lua_State *L) {
-  	unsigned int x=luaL_checknumber(L,1);
-  	unsigned int y=luaL_checknumber(L,2);
-  	unsigned short r=luaL_checknumber(L,3);
-  	unsigned short g1=luaL_checknumber(L,4);
-  	unsigned short b=luaL_checknumber(L,5);
-  	unsigned short g2=luaL_optnumber(L,6,g1);
+    unsigned int x=luaL_checknumber(L,1);
+    unsigned int y=luaL_checknumber(L,2);
+    unsigned short r=luaL_checknumber(L,3);
+    unsigned short g1=luaL_checknumber(L,4);
+    unsigned short b=luaL_checknumber(L,5);
+    unsigned short g2=luaL_optnumber(L,6,g1);
 
-	x &= 0xFFFFFFFE;
-	y &= 0xFFFFFFFE;
+    x &= 0xFFFFFFFE;
+    y &= 0xFFFFFFFE;
 
     if(x >= (unsigned)camera_sensor.raw_rowpix - 1 || y >= (unsigned)camera_sensor.raw_rows - 1) {
         return 0;
@@ -167,10 +168,10 @@ width and hight out of bounds are clipped
 */
 
 static int rawop_fill_rect_rgbg(lua_State *L) {
-  	unsigned int xstart=luaL_checknumber(L,1);
-  	unsigned int ystart=luaL_checknumber(L,2);
-  	unsigned int width=luaL_checknumber(L,3);
-  	unsigned int height=luaL_checknumber(L,4);
+    unsigned int xstart=luaL_checknumber(L,1);
+    unsigned int ystart=luaL_checknumber(L,2);
+    unsigned int width=luaL_checknumber(L,3);
+    unsigned int height=luaL_checknumber(L,4);
     unsigned int vals[4];
     vals[CFA_R]=luaL_checknumber(L,5);
     vals[CFA_G1]=luaL_checknumber(L,6);
@@ -250,12 +251,12 @@ To meter R G B separately, use multiple meter calls with the appropriate CFA off
 To ensure all CFA colors are included in a single call, use odd steps
 */
 static int rawop_meter(lua_State *L) {
-  	unsigned x1=luaL_checknumber(L,1);
-  	unsigned y1=luaL_checknumber(L,2);
-  	unsigned x_count=luaL_checknumber(L,3);
-  	unsigned y_count=luaL_checknumber(L,4);
-  	unsigned x_step=luaL_checknumber(L,5);
-  	unsigned y_step=luaL_checknumber(L,6);
+    unsigned x1=luaL_checknumber(L,1);
+    unsigned y1=luaL_checknumber(L,2);
+    unsigned x_count=luaL_checknumber(L,3);
+    unsigned y_count=luaL_checknumber(L,4);
+    unsigned x_step=luaL_checknumber(L,5);
+    unsigned y_step=luaL_checknumber(L,6);
 
     // no pixels
     if(!x_count || !y_count) {
@@ -287,6 +288,161 @@ static int rawop_meter(lua_State *L) {
     return 1;
 }
 
+
+typedef struct {
+    unsigned shift;
+    unsigned entries;
+    unsigned total_pixels;
+    unsigned *data;
+} rawop_histo_t;
+/*
+create new histogram object, with enough slots for raw values shifted by shift
+histo=rawop.new_histogram([shift])
+TODO might make more sense to specify size or bit rather than shift from camera dependent bpp
+*/
+static int rawop_create_histogram(lua_State *L) {
+    unsigned shift=luaL_optnumber(L,1,0);
+
+    if(shift >= camera_sensor.bits_per_pixel) {
+        return luaL_error(L,"invalid shift");
+    }
+    rawop_histo_t *h = (rawop_histo_t *)lua_newuserdata(L,sizeof(rawop_histo_t));
+    if(!h) {
+        return luaL_error(L,"failed to create userdata");
+    }
+    h->shift = shift;
+    h->entries = 1 << (camera_sensor.bits_per_pixel - shift);
+    h->total_pixels = 0;
+    h->data = malloc(h->entries*sizeof(unsigned));
+    if(!h->data) {
+        return luaL_error(L,"insufficient memory");
+    }
+    luaL_getmetatable(L, RAWOP_HISTO_META);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+/*
+update histogram data using specified area of raw buffer
+histo:update(top,left,width,height,xstep,ystep)
+*/
+static int rawop_histo_update(lua_State *L) {
+    rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+
+    unsigned xstart=luaL_checknumber(L,2);
+    unsigned ystart=luaL_checknumber(L,3);
+    unsigned width=luaL_checknumber(L,4);
+    unsigned height=luaL_checknumber(L,5);
+    unsigned xstep=luaL_checknumber(L,6);
+    unsigned ystep=luaL_checknumber(L,7);
+
+    // TODO only allow in raw hook
+    memset(h->data,0,h->entries*4);
+    h->total_pixels=0;
+    if(xstart >= (unsigned)camera_sensor.raw_rowpix 
+        || ystart >= (unsigned)camera_sensor.raw_rows
+        || xstep == 0 || ystep == 0) {
+        luaL_error(L,"invalid update area");
+        return 0;
+    }
+    unsigned xmax=xstart+width;
+    unsigned ymax=ystart+height;
+    if(xmax > (unsigned)camera_sensor.raw_rowpix) {
+        xmax = (unsigned)camera_sensor.raw_rowpix; 
+    }
+    if(ymax > (unsigned)camera_sensor.raw_rows) {
+        ymax = (unsigned)camera_sensor.raw_rows;
+    }
+    // total with clipping and rounding accounted for
+    h->total_pixels=(((xmax - xstart)/xstep))*(((ymax - ystart)/ystep));
+    unsigned x,y;
+    if(h->shift) {
+        for(y=ystart;y<ymax;y+=ystep) {
+            for(x=xstart;x<xmax;x+=xstep) {
+                h->data[get_raw_pixel(x,y)>>h->shift]++;
+            }
+        }
+    } else {
+        for(y=ystart;y<ymax;y+=ystep) {
+            for(x=xstart;x<xmax;x+=xstep) {
+                h->data[get_raw_pixel(x,y)]++;
+            }
+        }
+    }
+    return 0;
+}
+
+/*
+frac=histo:range(min,max[,'count'])
+return number of values in range, either as a fraction in parts per 1000, or total count
+TODO any reason to make 1000 adjustable?
+*/
+static int rawop_histo_range(lua_State *L) {
+    rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+    unsigned minval=luaL_checknumber(L,2);
+    unsigned maxval=luaL_checknumber(L,3);
+    int frac=1;
+    if(lua_gettop(L) >= 4) {
+        const char *s=lua_tostring(L,4);
+        if(!s || strcmp(s,"count") != 0) {
+            return luaL_error(L,"invalid format");
+        }
+        frac=0;
+    }
+    if(maxval >= h->entries || minval > maxval) {
+        return luaL_error(L,"invalid range");
+    }
+    // TODO error?
+    if(!h->total_pixels) {
+        return luaL_error(L,"no pixels");
+//        lua_pushnumber(L,0);
+//        return 1;
+    }
+
+    unsigned count=0;
+    int i;
+    for(i=minval;i<=maxval;i++) {
+        count+=h->data[i];
+    }
+    // TODO full raw buffer count*1000 could overflow 32 bit int
+    // could check / work around using ints but probably not worth it
+    if(frac) {
+        lua_pushnumber(L,(1000*(double)count)/(double)h->total_pixels);
+    } else {
+        lua_pushnumber(L,count);
+    }
+    return 1;
+}
+
+/*
+total=histo:total_pixels()
+returns total number of pixels sampled
+*/
+static int rawop_histo_total_pixels(lua_State *L) {
+    rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+    lua_pushnumber(L,h->total_pixels);
+    return 1;
+}
+
+static int rawop_histo_gc(lua_State *L) {
+    rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+    free(h->data);
+    h->data=NULL;
+    return 0;
+}
+
+static const luaL_Reg rawop_histo_meta_methods[] = {
+  {"__gc", rawop_histo_gc},
+  {NULL, NULL}
+};
+
+static const luaL_Reg rawop_histo_methods[] = {
+  {"update", rawop_histo_update},
+  {"range", rawop_histo_range},
+  {"total_pixels", rawop_histo_total_pixels},
+  {NULL, NULL}
+};
+
 static const luaL_Reg rawop_funcs[] = {
   {"fb_info", rawop_fb_info},
   {"get_pixel", rawop_get_pixel},
@@ -297,6 +453,7 @@ static const luaL_Reg rawop_funcs[] = {
   {"raw_to_ev96", rawop_raw_to_ev96},
   {"ev96_to_raw", rawop_ev96_to_raw},
   {"meter", rawop_meter},
+  {"create_histogram", rawop_create_histogram},
   {NULL, NULL}
 };
 
@@ -304,8 +461,8 @@ int luaopen_rawop(lua_State *L) {
     // initialize globals
     int i;
     int g1=1;
-	for(i=0; i<4; i++) {
-		int c = (camera_sensor.cfa_pattern >> 8*i) & 0xFF;
+    for(i=0; i<4; i++) {
+        int c = (camera_sensor.cfa_pattern >> 8*i) & 0xFF;
         int ci=0;
         switch(c) {
             case 0:
@@ -330,10 +487,18 @@ int luaopen_rawop(lua_State *L) {
     // emperical guestimate
     double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
     log2_raw_neutral_count = log2(raw_neutral_count);
-    // cast to int to avoid missing __fixunsdfsi assigning to unsigned
-    raw_neutral = (int)(raw_neutral_count + camera_sensor.black_level);
-	/* global lib*/
-	lua_newtable(L);
-	luaL_register(L, "rawop", rawop_funcs);  
-	return 1;
+    raw_neutral = raw_neutral_count + camera_sensor.black_level;
+
+    luaL_newmetatable(L,RAWOP_HISTO_META);
+    luaL_register(L, NULL, rawop_histo_meta_methods);  
+    /* use a table of methods for the __index method */
+    lua_newtable(L);
+    luaL_register(L, NULL, rawop_histo_methods);  
+    lua_setfield(L,-2,"__index");
+    lua_pop(L,1);
+
+    /* global lib*/
+    lua_newtable(L);
+    luaL_register(L, "rawop", rawop_funcs);  
+    return 1;
 }
