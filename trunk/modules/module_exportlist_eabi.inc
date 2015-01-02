@@ -24,3 +24,5 @@
     __aeabi_fmul
     __aeabi_f2uiz
     __bswapsi2
+    __aeabi_ui2d
+    __aeabi_d2uiz
