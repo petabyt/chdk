@@ -83,17 +83,17 @@ const CapturemodeMap modemap[] = {
 
     { MODE_VIDEO_STD,          2609   }, 
 
-    { MODE_SCN_PORTRAIT,       16399  },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16397  },
-    { MODE_SCN_KIDS_PETS,      16402  },
-    { MODE_SCN_INDOOR,         16403  },
-    { MODE_SCN_LOWLIGHT,       16417  },
-    { MODE_SCN_BEACH,          16407  },
-    { MODE_SCN_FOLIAGE,        16405  },
-    { MODE_SCN_SNOW,           16406  },
-    { MODE_SCN_SUNSET,         16404  },
-    { MODE_SCN_FIREWORK,       16408  },
-    { MODE_SCN_LONG_SHUTTER,   16390  },
+    { MODE_PORTRAIT,           16399  },
+    { MODE_NIGHT_SNAPSHOT,     16397  },
+    { MODE_KIDS_PETS,          16402  },
+    { MODE_INDOOR,             16403  },
+    { MODE_LOWLIGHT,           16417  },
+    { MODE_BEACH,              16407  },
+    { MODE_FOLIAGE,            16405  },
+    { MODE_SNOW,               16406  },
+    { MODE_SUNSET,             16404  },
+    { MODE_FIREWORK,           16408  },
+    { MODE_LONG_SHUTTER,       16390  },
 };
 
 #include "../generic/shooting.c"

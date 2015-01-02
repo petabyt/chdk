@@ -31,5 +31,3 @@ int get_zoom_x(int zp) {
     else if (zp>NUM_FL-1) return fl_tbl[NUM_FL-1]*10/fl_tbl[0];
     else return fl_tbl[zp]*10/fl_tbl[0];
 }
-
-#define MODESCNT (sizeof(modemap)/sizeof(modemap[0]))

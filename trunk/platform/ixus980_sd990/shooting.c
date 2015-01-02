@@ -108,22 +108,22 @@ const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 }, 
     { MODE_M,                  32769 }, // unlike most other ixus/sd, this has a real M mode
     { MODE_P,                  32772 },
-    { MODE_SCN_PORTRAIT,       16397 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
-    { MODE_SCN_KIDS_PETS,      16400 },
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_SUNSET,         16402 },
-    { MODE_SCN_FOLIAGE,        16403 },
-    { MODE_SCN_SNOW,           16404 },
-    { MODE_SCN_BEACH,          16405 },
-    { MODE_SCN_FIREWORK,       16406 },
-    { MODE_SCN_UNDERWATER,     16407 },
-    { MODE_SCN_AQUARIUM,       16408 },
-    { MODE_SCN_ISO_3200,       16413 },
-    { MODE_SCN_DIGITAL_MACRO,  33288 }, // this is under the SCN menu
-    { MODE_SCN_COLOR_ACCENT,   16923 },
-    { MODE_SCN_COLOR_SWAP,     16924 },
-    { MODE_SCN_STITCH,         16906 }, // SCN, either direction
+    { MODE_PORTRAIT,           16397 },
+    { MODE_NIGHT_SNAPSHOT,     16395 },
+    { MODE_KIDS_PETS,          16400 },
+    { MODE_INDOOR,             16401 },
+    { MODE_SUNSET,             16402 },
+    { MODE_FOLIAGE,            16403 },
+    { MODE_SNOW,               16404 },
+    { MODE_BEACH,              16405 },
+    { MODE_FIREWORK,           16406 },
+    { MODE_UNDERWATER,         16407 },
+    { MODE_AQUARIUM,           16408 },
+    { MODE_ISO_3200,           16413 },
+    { MODE_DIGITAL_MACRO,      33288 }, // this is under the SCN menu
+    { MODE_COLOR_ACCENT,       16923 },
+    { MODE_COLOR_SWAP,         16924 },
+    { MODE_STITCH,             16906 }, // SCN, either direction
     { MODE_QUICK,              33312 },
 
     { MODE_VIDEO_STD,          2600  },

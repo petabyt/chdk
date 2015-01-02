@@ -102,14 +102,14 @@ const CapturemodeMap modemap[] = {
 //    { MODE_VIDEO_STD,          2598  }, ??? in canon mode list
     { MODE_VIDEO_COMPACT,      2599  },
     { MODE_STITCH,             33290 },
-//    { MODE_SCN_UNDERWATER,          16406 }, no underwater mode, not in canon list
-    { MODE_SCN_AQUARIUM,       16407 },
-    { MODE_SCN_NIGHT_SCENE,    16398 },
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_FOLIAGE,        16402 },
-    { MODE_SCN_SNOW,           16403 },
-    { MODE_SCN_BEACH,          16404 },
-    { MODE_SCN_FIREWORK,       16405 },
+//    { MODE_UNDERWATER,              16406 }, no underwater mode, not in canon list
+    { MODE_AQUARIUM,           16407 },
+    { MODE_NIGHT_SCENE,        16398 },
+    { MODE_INDOOR,             16401 },
+    { MODE_FOLIAGE,            16402 },
+    { MODE_SNOW,               16403 },
+    { MODE_BEACH,              16404 },
+    { MODE_FIREWORK,           16405 },
     { MODE_KIDS_PETS,          32784 },	
     { MODE_NIGHT_SNAPSHOT,     32779 },
     { MODE_LANDSCAPE,          32780 },	

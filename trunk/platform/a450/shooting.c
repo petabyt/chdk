@@ -95,16 +95,16 @@ const CapturemodeMap modemap[] = {
     { MODE_P,                  32772 },
     { MODE_SUPER_MACRO,        33289 }, // in canon list, confirmed on a460
 //    { MODE_STITCH,               33290 }, // reported as functional stitch assist in forum, not in official specs
-    { MODE_SCN_PORTRAIT,       16397 },
+    { MODE_PORTRAIT,           16397 },
     { MODE_VIDEO_STD,          2597  },
     { MODE_VIDEO_COMPACT,      2599  },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
-    { MODE_SCN_KIDS_PETS,      16400 },
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_FOLIAGE,        16402 },
-    { MODE_SCN_SNOW,           16403 },
-    { MODE_SCN_BEACH,          16404 },
-    { MODE_SCN_FIREWORK,       16405 },
+    { MODE_NIGHT_SNAPSHOT,     16395 },
+    { MODE_KIDS_PETS,          16400 },
+    { MODE_INDOOR,             16401 },
+    { MODE_FOLIAGE,            16402 },
+    { MODE_SNOW,               16403 },
+    { MODE_BEACH,              16404 },
+    { MODE_FIREWORK,           16405 },
 };
 #include "../generic/shooting.c"
 

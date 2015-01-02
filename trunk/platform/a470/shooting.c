@@ -104,16 +104,16 @@ const CapturemodeMap modemap[] = {
     { MODE_SUPER_MACRO,        33289 }, // guessed
     { MODE_VIDEO_STD,          2599  },
     { MODE_VIDEO_COMPACT,      2601  },
-    { MODE_SCN_AQUARIUM,       16408 },  
-    { MODE_SCN_SUNSET,         16402 },  // was NIGHT, but night snapshot is below
-    { MODE_SCN_FOLIAGE,        16403 },
-    { MODE_SCN_SNOW,           16404 },  
-    { MODE_SCN_BEACH,          16405 },  
-    { MODE_SCN_FIREWORK,       16406 }, 
-	{ MODE_SCN_PORTRAIT,       16397 },	
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_KIDS_PETS,      16400 },	
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
+    { MODE_AQUARIUM,           16408 },  
+    { MODE_SUNSET,             16402 },  // was NIGHT, but night snapshot is below
+    { MODE_FOLIAGE,            16403 },
+    { MODE_SNOW,               16404 },  
+    { MODE_BEACH,              16405 },  
+    { MODE_FIREWORK,           16406 }, 
+	{ MODE_PORTRAIT,           16397 },	
+    { MODE_INDOOR,             16401 },
+    { MODE_KIDS_PETS,          16400 },	
+    { MODE_NIGHT_SNAPSHOT,     16395 },
 };
 
 #include "../generic/shooting.c"

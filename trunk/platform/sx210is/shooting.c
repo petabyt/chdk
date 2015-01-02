@@ -118,19 +118,19 @@ const CapturemodeMap modemap[] = {
 	{ MODE_VIDEO_STD,          2612   },// Changed in SX210
 	{ MODE_KIDS_PETS,          32786  },// Changed in SX210
 	{ MODE_INDOOR,             32787  },// Changed in SX210
-	{ MODE_SCN_MINIATURE,      16940  },   //New in sx210 ???
-	{ MODE_SCN_FISHEYE,        16939  },    //New in sx210 ???
-	{ MODE_SCN_LOWLIGHT,       16417 },    //New in sx210 ???
-	{ MODE_SCN_SMART_SHUTTER,  33320 },    //New in sx210 ???
-//	{ MODE_SCN_SUNSET,         16402  },   //??
-//	{ MODE_SCN_NIGHT_SCENE,    16398  }, //??
-	{ MODE_SCN_FIREWORK,       16408  },// Changed in SX210
-	{ MODE_SCN_BEACH,          16407  },// Changed in SX210
-	{ MODE_SCN_FOLIAGE,        16405  },// Changed in SX210
-	{ MODE_SCN_SNOW,           16406  },// Changed in SX210
-	{ MODE_SCN_COLOR_ACCENT,   16925  }, // Changed in SX210?
-	{ MODE_SCN_COLOR_SWAP,     16926  }, // Changed in SX210
-	{ MODE_SCN_STITCH,         16908  }  // Changed in SX210
+	{ MODE_MINIATURE,          16940  },   //New in sx210 ???
+	{ MODE_FISHEYE,            16939  },    //New in sx210 ???
+	{ MODE_LOWLIGHT,           16417 },    //New in sx210 ???
+	{ MODE_SMART_SHUTTER,      33320 },    //New in sx210 ???
+//	{ MODE_SUNSET,             16402  },   //??
+//	{ MODE_NIGHT_SCENE,        16398  }, //??
+	{ MODE_FIREWORK,           16408  },// Changed in SX210
+	{ MODE_BEACH,              16407  },// Changed in SX210
+	{ MODE_FOLIAGE,            16405  },// Changed in SX210
+	{ MODE_SNOW,               16406  },// Changed in SX210
+	{ MODE_COLOR_ACCENT,       16925  }, // Changed in SX210?
+	{ MODE_COLOR_SWAP,         16926  }, // Changed in SX210
+	{ MODE_STITCH,             16908  }  // Changed in SX210
 };
 
 #include "../generic/shooting.c"

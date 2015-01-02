@@ -103,8 +103,8 @@ const CapturemodeMap modemap[] = {
     { MODE_PORTRAIT,            32783  },
     { MODE_KIDS_PETS,           32786  },
     { MODE_SMART_SHUTTER,       33321  },
-    { MODE_SCN_FACE_SELF_TIMER, 33320  },
-    { MODE_SCN_WINK_SELF_TIMER, 33322  },
+    { MODE_FACE_SELF_TIMER,     33320  },
+    { MODE_WINK_SELF_TIMER,     33322  },
     { MODE_HIGHSPEED_BURST,     33288  },
     { MODE_BEST_IMAGE,          33289  },
     { MODE_NIGHT_SCENE,         33325  }, // NOTE handheld night scene

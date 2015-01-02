@@ -81,12 +81,12 @@ const ISOTable iso_table[] = {   // TODO : FIXME
 const CapturemodeMap modemap[] = {
     { MODE_AUTO,                32768 },
     { MODE_P,                   32772 },  
-    { MODE_SCN_FISHEYE,         33329 },   
-    { MODE_SCN_MINIATURE,       33330 },  
-    { MODE_SCN_TOY_CAMERA,      33333 },  
-    { MODE_SCN_MONOCHROME,      33336 },          
+    { MODE_FISHEYE,             33329 },   
+    { MODE_MINIATURE,           33330 },  
+    { MODE_TOY_CAMERA,          33333 },  
+    { MODE_MONOCHROME,          33336 },          
     { MODE_VIDEO_SUPER_SLOW,     2633 },    
-    { MODE_SCN_CREATIVE_EFFECT, 32785 },
+    { MODE_CREATIVE_EFFECT,     32785 },
     { MODE_VIDEO_STD,           33792 },
     { MODE_VIDEO_SPEED,         33796 },
 };

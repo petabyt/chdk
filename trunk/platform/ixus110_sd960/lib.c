@@ -86,7 +86,7 @@ int vid_get_viewport_height_proper() {
 int vid_get_viewport_fullscreen_height() {
     // except for stitch, always full screen
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
         return 240;
     }
     return vid_get_viewport_height_proper();
@@ -94,7 +94,7 @@ int vid_get_viewport_fullscreen_height() {
 int vid_get_viewport_fullscreen_width() {
     // except for stitch, always full screen
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
         return 960;
     }
     return vid_get_viewport_width_proper();

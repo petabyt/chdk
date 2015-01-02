@@ -114,17 +114,17 @@ const CapturemodeMap modemap[] = {   // PROPCASE 0, check with CHDK debug menu o
     {MODE_MY_COLORS,          33306},   // mode M "color swap" ???
     {MODE_NIGHT_SNAPSHOT,     16395},   // mode SCN NIGHT SNAPSHOT ???
     //{MODE_SCN_NIGHT,          16395},   // mode SCN NIGHT SNAPSHOT ???
-    {MODE_SCN_PORTRAIT,       16397},
-    {MODE_SCN_KIDS_PETS,      16399},
-    {MODE_SCN_INDOOR,         16400},
-    {MODE_SCN_FOLIAGE,        16401},
-    {MODE_SCN_SNOW,           16402},
-    {MODE_SCN_BEACH,          16403},
-    {MODE_SCN_FIREWORK,       16404},
+    {MODE_PORTRAIT,           16397},
+    {MODE_KIDS_PETS,          16399},
+    {MODE_INDOOR,             16400},
+    {MODE_FOLIAGE,            16401},
+    {MODE_SNOW,               16402},
+    {MODE_BEACH,              16403},
+    {MODE_FIREWORK,           16404},
     //{MODE_SCN_WATER,          16405},   // old?
-    {MODE_SCN_UNDERWATER,     16405},   // ToDo: verify if correct
-    {MODE_SCN_AQUARIUM,       16406},
-    {MODE_SCN_ISO_3200,       16411},
+    {MODE_UNDERWATER,         16405},   // ToDo: verify if correct
+    {MODE_AQUARIUM,           16406},
+    {MODE_ISO_3200,           16411},
     {MODE_VIDEO_STD,          2596},
     {MODE_VIDEO_COLOR_ACCENT, 2594},
     {MODE_VIDEO_COLOR_SWAP,   2595},

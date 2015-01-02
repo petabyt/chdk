@@ -95,14 +95,14 @@ canon mode list FFEDD5F4 in 100b
 const CapturemodeMap modemap[] = {
   { MODE_VIDEO_STD,          2600  },  //Verified
   { MODE_VIDEO_COMPACT,      2602  },  //Verified
-  { MODE_SCN_AQUARIUM,       16408 },  //Verified
-  { MODE_SCN_SNOW,           16404 },  //Verified
-  { MODE_SCN_FOLIAGE,        16403 },  //verified
-  { MODE_SCN_SUNSET,         16402 },  //verified
-  { MODE_SCN_NIGHT_SCENE,    16398 },  //verified
-  { MODE_SCN_ISO_3200,       16413 },  //verified
-  { MODE_SCN_FIREWORK,       16406 },  //verified
-  { MODE_SCN_BEACH,          16405 },  //verified
+  { MODE_AQUARIUM,           16408 },  //Verified
+  { MODE_SNOW,               16404 },  //Verified
+  { MODE_FOLIAGE,            16403 },  //verified
+  { MODE_SUNSET,             16402 },  //verified
+  { MODE_NIGHT_SCENE,        16398 },  //verified
+  { MODE_ISO_3200,           16413 },  //verified
+  { MODE_FIREWORK,           16406 },  //verified
+  { MODE_BEACH,              16405 },  //verified
   { MODE_INDOOR,             32785 },  //verified
   { MODE_KIDS_PETS,          32784 },  //verified
   { MODE_NIGHT_SNAPSHOT,     32779 },  //verified

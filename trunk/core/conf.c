@@ -1565,13 +1565,13 @@ int is_raw_possible() {
        || (m == MODE_AUTO)                   // some cameras don't have valid raw in auto mode
 #endif
 #ifdef CAM_DISABLE_RAW_IN_ISO_3200
-       || (m == MODE_SCN_ISO_3200)           // some cameras don't have valid raw in ISO3200 binned mode, not the same as low light
+       || (m == MODE_ISO_3200)           // some cameras don't have valid raw in ISO3200 binned mode, not the same as low light
 #endif
 #ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
        || (shooting_get_resolution()==7)     // True if shooting resolution is 'low light'
 #endif
 #if defined(CAM_DISABLE_RAW_IN_HQ_BURST)
-       || (m == MODE_SCN_HIGHSPEED_BURST)    // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
+       || (m == MODE_HIGHSPEED_BURST)    // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
        || (m == MODE_NIGHT_SCENE)            // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)

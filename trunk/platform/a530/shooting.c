@@ -102,15 +102,15 @@ const CapturemodeMap modemap[] = {
     { MODE_VIDEO_COLOR_SWAP,   2592  }, // guessed a540
     { MODE_VIDEO_STD,          2593  },
     { MODE_VIDEO_COMPACT,      2595  },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
-    { MODE_SCN_COLOR_ACCENT,   16920 }, // guessed a540
-    { MODE_SCN_COLOR_SWAP,     16921 }, // guessed a540
-    { MODE_SCN_FOLIAGE,        16401 },
-    { MODE_SCN_SNOW,           16402 },
-    { MODE_SCN_BEACH,          16403 },
-    { MODE_SCN_FIREWORK,       16404 },
-    { MODE_SCN_INDOOR,         16400 },
-    { MODE_SCN_KIDS_PETS,      16399 },
+    { MODE_NIGHT_SNAPSHOT,     16395 },
+    { MODE_COLOR_ACCENT,       16920 }, // guessed a540
+    { MODE_COLOR_SWAP,         16921 }, // guessed a540
+    { MODE_FOLIAGE,            16401 },
+    { MODE_SNOW,               16402 },
+    { MODE_BEACH,              16403 },
+    { MODE_FIREWORK,           16404 },
+    { MODE_INDOOR,             16400 },
+    { MODE_KIDS_PETS,          16399 },
     { MODE_NIGHT_SCENE,        32782 },
     { MODE_LANDSCAPE,          32780 },	
     { MODE_PORTRAIT,           32781 },

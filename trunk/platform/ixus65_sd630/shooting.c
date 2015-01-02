@@ -99,15 +99,15 @@ const CapturemodeMap modemap[] = {
     { MODE_STITCH,             33290 },
 
     // the following match a540 and ixus60
-    { MODE_SCN_KIDS_PETS,      16399 }, // "kids and pets"
-    { MODE_SCN_INDOOR,         16400 }, // "indoor"
-    { MODE_SCN_FOLIAGE,        16401 }, // "foliage"
-    { MODE_SCN_SNOW,           16402 }, // "snow"
-    { MODE_SCN_BEACH,          16403 }, // "beach"
-    { MODE_SCN_FIREWORK,       16404 }, // "fireworks"
-    { MODE_SCN_UNDERWATER,     16405 }, // "under water"
-    { MODE_SCN_COLOR_ACCENT,   16920 }, // "color accent"
-    { MODE_SCN_COLOR_SWAP,     16921 }, // "color swap"
+    { MODE_KIDS_PETS,          16399 }, // "kids and pets"
+    { MODE_INDOOR,             16400 }, // "indoor"
+    { MODE_FOLIAGE,            16401 }, // "foliage"
+    { MODE_SNOW,               16402 }, // "snow"
+    { MODE_BEACH,              16403 }, // "beach"
+    { MODE_FIREWORK,           16404 }, // "fireworks"
+    { MODE_UNDERWATER,         16405 }, // "under water"
+    { MODE_COLOR_ACCENT,       16920 }, // "color accent"
+    { MODE_COLOR_SWAP,         16921 }, // "color swap"
 
     { MODE_DIGITAL_MACRO,      33288 }, // ixus60
     { MODE_NIGHT_SNAPSHOT,     32779 }, // ixus60

@@ -192,7 +192,7 @@ typedef struct
         int     mode_rec_or_review;         // Are we in camera record mode (still image) or review hold & OSD displayed in review hold
         int     mode_play;                  // Are we in camera playback mode
         int     mode_photo;                 // Are we in camera photo mode (playback or not video and not stitch)
-                                            //  - why is some functionality disabled in MODE_STITCH; but not MODE_SCN_STICH (e.g. bracketing) ?????
+                                            //  - why is some functionality disabled in MODE_STITCH; but not MODE_SCN_STITCH (e.g. bracketing) ?????
     } state;
 
     // Performance counters

@@ -90,15 +90,15 @@ const CapturemodeMap modemap[] = {
     { MODE_PORTRAIT,           16396 },
 //    { MODE_NIGHT_SCENE,        32782 }, // "night scene" on dial, different from "night snapshot" under "scene" below
     { MODE_STITCH,             33289 }, //
-    { MODE_SCN_NIGHT_SNAPSHOT, 16394 }, // "night snapshot"
-    { MODE_SCN_KIDS_PETS,      16398 }, // "kids and pets"
-    { MODE_SCN_INDOOR,         16399 }, // "indoor"
-    { MODE_SCN_FOLIAGE,        16400 }, // "foliage"
-    { MODE_SCN_SNOW,           16401 }, // "snow"
-    { MODE_SCN_BEACH,          16402 }, // "beach"
-    { MODE_SCN_FIREWORK,       16403 }, // "fireworks"
-    { MODE_SCN_COLOR_ACCENT,   33303 }, // "color accent"
-    { MODE_SCN_COLOR_SWAP,     33304 }, // "color swap"
+    { MODE_NIGHT_SNAPSHOT,     16394 }, // "night snapshot"
+    { MODE_KIDS_PETS,          16398 }, // "kids and pets"
+    { MODE_INDOOR,             16399 }, // "indoor"
+    { MODE_FOLIAGE,            16400 }, // "foliage"
+    { MODE_SNOW,               16401 }, // "snow"
+    { MODE_BEACH,              16402 }, // "beach"
+    { MODE_FIREWORK,           16403 }, // "fireworks"
+    { MODE_COLOR_ACCENT,       33303 }, // "color accent"
+    { MODE_COLOR_SWAP,         33304 }, // "color swap"
     { MODE_SUPER_MACRO,        33288 }, // 
     { MODE_VIDEO_STD,          3613  }, //
 /*    { MODE_VIDEO_SPEED,        2594  }, // "fast frame rate"

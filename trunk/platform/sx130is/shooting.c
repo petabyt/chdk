@@ -115,20 +115,20 @@ const CapturemodeMap modemap[] = {
 	{ MODE_VIDEO_STD,          2614   },
 	{ MODE_VIDEO_MINIATURE,    2620   },
 
-    { MODE_SCN_FACE_SELF_TIMER,16936  },
-	{ MODE_SCN_SMART_SHUTTER,  16937  },
-    { MODE_SCN_WINK_SELF_TIMER,16938  },
-	{ MODE_SCN_LOWLIGHT,       16417  },
-	{ MODE_SCN_SUPER_VIVID,    16934  },
-	{ MODE_SCN_POSTER_EFFECT,  16935  },
-	{ MODE_SCN_COLOR_ACCENT,   16925  },
-	{ MODE_SCN_COLOR_SWAP,     16926  },
-	{ MODE_SCN_FISHEYE,        16939  },
-	{ MODE_SCN_MINIATURE,      16940  },
-	{ MODE_SCN_BEACH,          16407  },
-	{ MODE_SCN_FOLIAGE,        16405  },
-	{ MODE_SCN_SNOW,           16406  },
-	{ MODE_SCN_FIREWORK,       16408  }
+    { MODE_FACE_SELF_TIMER,    16936  },
+	{ MODE_SMART_SHUTTER,      16937  },
+    { MODE_WINK_SELF_TIMER,    16938  },
+	{ MODE_LOWLIGHT,           16417  },
+	{ MODE_SUPER_VIVID,        16934  },
+	{ MODE_POSTER_EFFECT,      16935  },
+	{ MODE_COLOR_ACCENT,       16925  },
+	{ MODE_COLOR_SWAP,         16926  },
+	{ MODE_FISHEYE,            16939  },
+	{ MODE_MINIATURE,          16940  },
+	{ MODE_BEACH,              16407  },
+	{ MODE_FOLIAGE,            16405  },
+	{ MODE_SNOW,               16406  },
+	{ MODE_FIREWORK,           16408  }
 };
 
 

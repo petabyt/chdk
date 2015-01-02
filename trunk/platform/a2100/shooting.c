@@ -117,14 +117,14 @@ Movie: 640 x 480 (30 fps/30 fps LP), 320 x 240 (30 fps) available up to 4GB or 6
 canon mode list FFEB9B10 in 100c
 */
 const CapturemodeMap modemap[] = {
-  { MODE_SCN_AQUARIUM,       16408 },
-  { MODE_SCN_SNOW,           16404 },
-  { MODE_SCN_FOLIAGE,        16403 },
-  { MODE_SCN_SUNSET,         16402 },
-  { MODE_SCN_NIGHT_SCENE,    16398 },
-  { MODE_SCN_ISO_3200,       16413 },
-  { MODE_SCN_FIREWORK,       16406 },
-  { MODE_SCN_BEACH,          16405 },
+  { MODE_AQUARIUM,           16408 },
+  { MODE_SNOW,               16404 },
+  { MODE_FOLIAGE,            16403 },
+  { MODE_SUNSET,             16402 },
+  { MODE_NIGHT_SCENE,        16398 },
+  { MODE_ISO_3200,           16413 },
+  { MODE_FIREWORK,           16406 },
+  { MODE_BEACH,              16405 },
   { MODE_INDOOR,             32785 },
   { MODE_KIDS_PETS,          32784 },
   { MODE_NIGHT_SNAPSHOT,     32779 },
