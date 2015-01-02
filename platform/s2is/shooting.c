@@ -97,12 +97,12 @@ const CapturemodeMap modemap[] = {
     { MODE_VIDEO_STD,          16 },
     { MODE_STITCH,             15 },
     { MODE_MY_COLORS,           4 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 14 },
-    { MODE_SCN_INDOOR,         13 },
-    { MODE_SCN_FOLIAGE,         9 },
-    { MODE_SCN_SNOW,           10 },
-    { MODE_SCN_BEACH,          11 },
-    { MODE_SCN_FIREWORK,       12 }, 
+    { MODE_NIGHT_SNAPSHOT,     14 },
+    { MODE_INDOOR,             13 },
+    { MODE_FOLIAGE,             9 },
+    { MODE_SNOW,               10 },
+    { MODE_BEACH,              11 },
+    { MODE_FIREWORK,           12 }, 
 };
 
 #include "../generic/shooting.c"

@@ -78,24 +78,24 @@ const CapturemodeMap modemap[] = {
 	{ MODE_LIVE,				33332 },
 	{ MODE_AUTO,				32768 },
 	{ MODE_EASY,				33314 },
-	{ MODE_SCN_PORTRAIT,		16399 },
-	{ MODE_SCN_LANDSCAPE,		16398 },
-	{ MODE_SCN_KIDS_PETS,		16402 },
-	{ MODE_SCN_SMART_SHUTTER,	16937 },
-	{ MODE_SCN_LOWLIGHT,		16417 },
-	{ MODE_SCN_BEACH,			16407 },
-	{ MODE_SCN_FOLIAGE,			16405 },
-	{ MODE_SCN_SNOW,			16406 },
-	{ MODE_SCN_FIREWORK,		16408 },
-	{ MODE_SCN_LONG_SHUTTER,	16390 },
-	{ MODE_SCN_FISHEYE,			8747 },	// not found in stub_entry.S - efect mode - fish eye    	a3300is
-	{ MODE_SCN_MINIATURE,		8748 },	// not found in stub_entry.S - efect mode - miniature		a3300is
-	{ MODE_SCN_TOY_CAMERA,		8751 },	// not found in stub_entry.S - efect mode - toy camera		a3300is
-	{ MODE_SCN_MONOCHROME,		8754 },	// not found in stub_entry.S - efect mode - monochrome		a3300is
-	{ MODE_SCN_SUPER_VIVID,		8742 },	// not found in stub_entry.S - efect mode - super vivid		a3300is
-	{ MODE_SCN_POSTER_EFFECT,	8743 },	// not found in stub_entry.S - efect mode - poster effect	a3300is
-   { MODE_SCN_FACE_SELF_TIMER, 16936 },
-   { MODE_SCN_WINK_SELF_TIMER,	16938 },
+	{ MODE_PORTRAIT,    		16399 },
+	{ MODE_LANDSCAPE,    		16398 },
+	{ MODE_KIDS_PETS,    		16402 },
+	{ MODE_SMART_SHUTTER,    	16937 },
+	{ MODE_LOWLIGHT,    		16417 },
+	{ MODE_BEACH,    			16407 },
+	{ MODE_FOLIAGE,    			16405 },
+	{ MODE_SNOW,    			16406 },
+	{ MODE_FIREWORK,    		16408 },
+	{ MODE_LONG_SHUTTER,    	16390 },
+	{ MODE_FISHEYE,    			8747 },	// not found in stub_entry.S - efect mode - fish eye    	a3300is
+	{ MODE_MINIATURE,    		8748 },	// not found in stub_entry.S - efect mode - miniature		a3300is
+	{ MODE_TOY_CAMERA,    		8751 },	// not found in stub_entry.S - efect mode - toy camera		a3300is
+	{ MODE_MONOCHROME,    		8754 },	// not found in stub_entry.S - efect mode - monochrome		a3300is
+	{ MODE_SUPER_VIVID,    		8742 },	// not found in stub_entry.S - efect mode - super vivid		a3300is
+	{ MODE_POSTER_EFFECT,    	8743 },	// not found in stub_entry.S - efect mode - poster effect	a3300is
+   { MODE_FACE_SELF_TIMER,     16936 },
+   { MODE_WINK_SELF_TIMER,    	16938 },
 	{ MODE_DISCREET,			32817 },
 	{ MODE_VIDEO_STD,			2621 },
 	{ MODE_VIDEO_MINIATURE,		2627 },

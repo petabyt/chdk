@@ -95,17 +95,17 @@ const CapturemodeMap modemap[] = {
     { MODE_P,                  32772 },
     { MODE_PORTRAIT,           0x800D },
     { MODE_NIGHT_SNAPSHOT,     0x800B },
-    { MODE_SCN_KIDS_PETS,      0x8010 },
-    { MODE_SCN_INDOOR,         0x8011 },
-    { MODE_SCN_SUNSET,         0x4012 },
-    { MODE_SCN_FOLIAGE,        0x4013 },
-    { MODE_SCN_SNOW,           0x4014 },
-    { MODE_SCN_BEACH,          0x4015 },
-    { MODE_SCN_FIREWORK,       0x4016 },
-    { MODE_SCN_NIGHT_SCENE,    0x4006 }, //AKA Long Shutter
-    { MODE_SCN_UNDERWATER,     0x4017 },
-    { MODE_SCN_AQUARIUM,       0x4018 },
-    { MODE_SCN_ISO_3200,       0x401D },
+    { MODE_KIDS_PETS,          0x8010 },
+    { MODE_INDOOR,             0x8011 },
+    { MODE_SUNSET,             0x4012 },
+    { MODE_FOLIAGE,            0x4013 },
+    { MODE_SNOW,               0x4014 },
+    { MODE_BEACH,              0x4015 },
+    { MODE_FIREWORK,           0x4016 },
+    { MODE_NIGHT_SCENE,        0x4006 }, //AKA Long Shutter
+    { MODE_UNDERWATER,         0x4017 },
+    { MODE_AQUARIUM,           0x4018 },
+    { MODE_ISO_3200,           0x401D },
     { MODE_DIGITAL_MACRO,      0x4208 },
 };
 

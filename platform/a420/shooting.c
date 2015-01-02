@@ -86,15 +86,15 @@ const CapturemodeMap modemap[] = {
     { MODE_AUTO,               0x8000 },
     { MODE_PORTRAIT,           0x400c },
     { MODE_STITCH,             0x8209 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 0x400a }, // "night snapshot"
-    { MODE_SCN_KIDS_PETS,      0x400e }, // "kids and pets"
-    { MODE_SCN_INDOOR,         0x400f }, // "indoor"
-    { MODE_SCN_FOLIAGE,        0x4010 }, // "foliage"
-    { MODE_SCN_SNOW,           0x4011 }, // "snow"
-    { MODE_SCN_BEACH,          0x4012 }, // "beach"
-    { MODE_SCN_FIREWORK,       0x4013 }, // "fireworks"
-    { MODE_SCN_COLOR_ACCENT,   0x8217 }, // "color accent"
-    { MODE_SCN_COLOR_SWAP,     0x8218 }, // "color swap"
+    { MODE_NIGHT_SNAPSHOT,     0x400a }, // "night snapshot"
+    { MODE_KIDS_PETS,          0x400e }, // "kids and pets"
+    { MODE_INDOOR,             0x400f }, // "indoor"
+    { MODE_FOLIAGE,            0x4010 }, // "foliage"
+    { MODE_SNOW,               0x4011 }, // "snow"
+    { MODE_BEACH,              0x4012 }, // "beach"
+    { MODE_FIREWORK,           0x4013 }, // "fireworks"
+    { MODE_COLOR_ACCENT,       0x8217 }, // "color accent"
+    { MODE_COLOR_SWAP,         0x8218 }, // "color swap"
     { MODE_VIDEO_STD,          0xe1d  }, // from propcase 0, no distinction of movie modes here
     { MODE_SUPER_MACRO,        0x8208 }  // "super macro"
 //    { MODE_VIDEO_SPEED,        2594  }, // "fast frame rate"

@@ -101,14 +101,14 @@ const CapturemodeMap modemap[] = {
     { MODE_VIDEO_STD,          18 }, // note, not in canon list, has 0x10012 etc like a620
     { MODE_STITCH,             5  },
     { MODE_MY_COLORS,          4  },
-    { MODE_SCN_UNDERWATER,     13 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 15 },
-    { MODE_SCN_KIDS_PETS,      16 },
-    { MODE_SCN_INDOOR,         14 },
-    { MODE_SCN_FOLIAGE,        10 },
-    { MODE_SCN_SNOW,           11 },
-    { MODE_SCN_BEACH,          12 },
-    { MODE_SCN_FIREWORK,       17 }
+    { MODE_UNDERWATER,         13 },
+    { MODE_NIGHT_SNAPSHOT,     15 },
+    { MODE_KIDS_PETS,          16 },
+    { MODE_INDOOR,             14 },
+    { MODE_FOLIAGE,            10 },
+    { MODE_SNOW,               11 },
+    { MODE_BEACH,              12 },
+    { MODE_FIREWORK,           17 }
 };
 
 #include "../generic/shooting.c"

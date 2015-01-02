@@ -105,15 +105,15 @@ const CapturemodeMap modemap[] = {
 	{ MODE_VIDEO_STD,          2594   },
 //	{ MODE_VIDEO_RECORDING,    3618   },
 	{ MODE_STITCH,             33290  },
-	{ MODE_SCN_COLOR_SWAP,     16923  }, // was MODE_MY_COLORS
-	{ MODE_SCN_NIGHT_SCENE,    16398  },
-	{ MODE_SCN_INDOOR,         16401  },
-	{ MODE_SCN_FOLIAGE,        16402  },
-	{ MODE_SCN_SNOW,           16403  },
-	{ MODE_SCN_BEACH,          16404  },
-	{ MODE_SCN_FIREWORK,       16405  },
-	{ MODE_SCN_AQUARIUM,       16407  },
-	{ MODE_SCN_COLOR_ACCENT,   16922  },
+	{ MODE_COLOR_SWAP,         16923  }, // was MODE_MY_COLORS
+	{ MODE_NIGHT_SCENE,        16398  },
+	{ MODE_INDOOR,             16401  },
+	{ MODE_FOLIAGE,            16402  },
+	{ MODE_SNOW,               16403  },
+	{ MODE_BEACH,              16404  },
+	{ MODE_FIREWORK,           16405  },
+	{ MODE_AQUARIUM,           16407  },
+	{ MODE_COLOR_ACCENT,       16922  },
 	{ MODE_SPORTS,             33287  }, // guessed, base on sx1/sx10
 //	{ MODE_SUPER_MACRO,          ???  }, // not really a mode ?
 //	{ MODE_C1,          8222  }, // guessed

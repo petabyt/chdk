@@ -104,21 +104,21 @@ const CapturemodeMap modemap[] = {
     { MODE_VIDEO_COLOR_ACCENT, 2594  },
     { MODE_STITCH,             33290 },
     { MODE_MY_COLORS,          16922 },
-    { MODE_SCN_UNDERWATER,     16405 },
-    { MODE_SCN_AQUARIUM,       16406 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 }, // not sure which of these is which
-    { MODE_SCN_NIGHT_SCENE,    16398 },
-    { MODE_SCN_KIDS_PETS,      16399 },
-    { MODE_SCN_INDOOR,         16400 },
-    { MODE_SCN_FOLIAGE,        16401 },
-    { MODE_SCN_SNOW,           16402 },
-    { MODE_SCN_BEACH,          16403 },
-    { MODE_SCN_FIREWORK,       16404 },
-    { MODE_SCN_ISO_3200,       16411 },
-    { MODE_SCN_PORTRAIT,       16397 },
-    { MODE_SCN_LANDSCAPE,      16396 },
-    { MODE_SCN_SPORT,          16903 },
-    { MODE_SCN_COLOR_ACCENT,   16921 }
+    { MODE_UNDERWATER,         16405 },
+    { MODE_AQUARIUM,           16406 },
+    { MODE_NIGHT_SNAPSHOT,     16395 }, // not sure which of these is which
+    { MODE_NIGHT_SCENE,        16398 },
+    { MODE_KIDS_PETS,          16399 },
+    { MODE_INDOOR,             16400 },
+    { MODE_FOLIAGE,            16401 },
+    { MODE_SNOW,               16402 },
+    { MODE_BEACH,              16403 },
+    { MODE_FIREWORK,           16404 },
+    { MODE_ISO_3200,           16411 },
+    { MODE_PORTRAIT,           16397 },
+    { MODE_LANDSCAPE,          16396 },
+    { MODE_SPORTS,             16903 },
+    { MODE_COLOR_ACCENT,       16921 }
 // from canon mode list, C1, C2 - See include/modelist.h
 //    { MODE C1,               8222 },
 //    { MODE C2,               8223 }

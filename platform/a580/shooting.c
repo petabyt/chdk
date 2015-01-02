@@ -108,13 +108,13 @@ const CapturemodeMap modemap[] = {
     { MODE_KIDS_PETS,          32784 }, // OK!
     { MODE_INDOOR,             32785 }, // OK!
 
-    { MODE_SCN_NIGHT_SCENE,    16398 }, // OK!
-    { MODE_SCN_SUNSET,         16402 }, // OK!
-    { MODE_SCN_FOLIAGE,        16403 }, // OK!
-    { MODE_SCN_SNOW,           16404 }, // OK!
-    { MODE_SCN_BEACH,          16405 }, // OK!
-    { MODE_SCN_FIREWORK,       16406 }, // OK!
-    { MODE_SCN_AQUARIUM,       16408 }, // OK!
+    { MODE_NIGHT_SCENE,        16398 }, // OK!
+    { MODE_SUNSET,             16402 }, // OK!
+    { MODE_FOLIAGE,            16403 }, // OK!
+    { MODE_SNOW,               16404 }, // OK!
+    { MODE_BEACH,              16405 }, // OK!
+    { MODE_FIREWORK,           16406 }, // OK!
+    { MODE_AQUARIUM,           16408 }, // OK!
 
     { MODE_VIDEO_STD,          2599  }, // OK!
     { MODE_VIDEO_COMPACT,      2601  }, // OK!

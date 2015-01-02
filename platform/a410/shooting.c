@@ -84,13 +84,13 @@ const CapturemodeMap modemap[] = {
     { MODE_AUTO,                4 },
     { MODE_PORTRAIT,            5 },
     { MODE_STITCH,              3 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 10 }, // "night snapshot"
-    { MODE_SCN_KIDS_PETS,      11 }, // "kids and pets"
-    { MODE_SCN_INDOOR,          9 }, // "indoor"
-    { MODE_SCN_FOLIAGE,         6 }, // "foliage"
-    { MODE_SCN_SNOW,            7 }, // "snow"
-    { MODE_SCN_BEACH,           8 }, // "beach"
-    { MODE_SCN_FIREWORK,       12 }, // "fireworks"
+    { MODE_NIGHT_SNAPSHOT,     10 }, // "night snapshot"
+    { MODE_KIDS_PETS,          11 }, // "kids and pets"
+    { MODE_INDOOR,              9 }, // "indoor"
+    { MODE_FOLIAGE,             6 }, // "foliage"
+    { MODE_SNOW,                7 }, // "snow"
+    { MODE_BEACH,               8 }, // "beach"
+    { MODE_FIREWORK,           12 }, // "fireworks"
     { MODE_VIDEO_STD,          13 }, // there's only one mode for video (according to the modemap, this is supposed to be 0x1000d)
     { MODE_SUPER_MACRO,         1 },
     { MODE_MY_COLORS,           2 }

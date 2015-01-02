@@ -97,13 +97,13 @@ const CapturemodeMap modemap[] = {
     { MODE_COLOR_ACCENT,       33306 },
     { MODE_COLOR_SWAP,         33307 }, // was MY_COLORS
     { MODE_STITCH,             33290 }, 
-    { MODE_SCN_PORTRAIT,       16397 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
-    { MODE_SCN_INDOOR,         16401 },
-    { MODE_SCN_FOLIAGE,        16402 },
-    { MODE_SCN_SNOW,           16403 },
-    { MODE_SCN_BEACH,          16404 },
-    { MODE_SCN_AQUARIUM,       16407 },
+    { MODE_PORTRAIT,           16397 },
+    { MODE_NIGHT_SNAPSHOT,     16395 },
+    { MODE_INDOOR,             16401 },
+    { MODE_FOLIAGE,            16402 },
+    { MODE_SNOW,               16403 },
+    { MODE_BEACH,              16404 },
+    { MODE_AQUARIUM,           16407 },
     // TODO this appears to be the standard mode+1024 for cameras with a video button
     // most of these can go away when we handle that more sanely
     { MODE_VIDEO_STD,          33792 },

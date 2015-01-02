@@ -107,17 +107,17 @@ const CapturemodeMap modemap[] = {
 	{ MODE_STITCH,             33290  },
 	{ MODE_SPORTS,             33287  },
 
-	{ MODE_SCN_NIGHT_SCENE,    16398  },
-	{ MODE_SCN_INDOOR,         16401  },
-	{ MODE_SCN_SUNSET,         16402  },
-	{ MODE_SCN_FOLIAGE,        16403  },
-	{ MODE_SCN_SNOW,           16404  },
-	{ MODE_SCN_BEACH,          16405  },
-	{ MODE_SCN_FIREWORK,       16406  },
-	{ MODE_SCN_AQUARIUM,       16408  },
-	{ MODE_SCN_ISO_3200,       16413  },
-	{ MODE_SCN_COLOR_ACCENT,   16923  },
-	{ MODE_SCN_COLOR_SWAP,     16924  }
+	{ MODE_NIGHT_SCENE,        16398  },
+	{ MODE_INDOOR,             16401  },
+	{ MODE_SUNSET,             16402  },
+	{ MODE_FOLIAGE,            16403  },
+	{ MODE_SNOW,               16404  },
+	{ MODE_BEACH,              16405  },
+	{ MODE_FIREWORK,           16406  },
+	{ MODE_AQUARIUM,           16408  },
+	{ MODE_ISO_3200,           16413  },
+	{ MODE_COLOR_ACCENT,       16923  },
+	{ MODE_COLOR_SWAP,         16924  }
 //	{ MODE_SUPER_MACRO,     ???  }, // maybe it doesn't get it's own mode value ?
 /* this sets C mode 
 (saved custom settings for M, P etc.) Resulting PROPCASE_SHOOTING_MODE is whatever mode

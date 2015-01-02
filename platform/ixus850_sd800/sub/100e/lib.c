@@ -145,7 +145,7 @@ int vid_get_viewport_height_proper() {
 int vid_get_viewport_fullscreen_height() {
     // except for stitch, always full screen
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
         return 240;
     }
     return vid_get_viewport_height_proper();
@@ -154,7 +154,7 @@ int vid_get_viewport_fullscreen_height() {
 int vid_get_viewport_fullscreen_width() {
     // except for stitch, always full screen
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
         return 720;
     }
     return vid_get_viewport_width_proper();
@@ -163,7 +163,7 @@ int vid_get_viewport_fullscreen_width() {
 int vid_get_viewport_display_xoffset_proper() {
     int val=0;
     int m = mode_get();
-    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH) {
+    if((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH) {
         short dir=0;
         short seq=0;
         get_property_case(PROPCASE_STITCH_DIRECTION,&dir,sizeof(dir));
@@ -180,7 +180,7 @@ int vid_get_viewport_display_xoffset_proper() {
 }
 int vid_get_viewport_display_yoffset_proper() {
     int m = mode_get();
-    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_SCN_STITCH)?60:0; // window is 120, centered in 240 screen
+    return ((m&MODE_MASK) != MODE_PLAY && (m&MODE_SHOOTING_MASK) == MODE_STITCH)?60:0; // window is 120, centered in 240 screen
 }
 
 /*****************

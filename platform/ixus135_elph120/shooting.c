@@ -114,20 +114,20 @@ const CapturemodeMap modemap[] = {
     { MODE_STITCH,              33293 }, // either direction
     { MODE_MINIATURE,           33330 },
     { MODE_FISHEYE,             33329 },
-    { MODE_SCN_TOY_CAMERA,      33333 }, // not really a SCN mode
+    { MODE_TOY_CAMERA,          33333 }, // not really a SCN mode
     { MODE_LOWLIGHT,            32807 },
     { MODE_COLOR_ACCENT,        33315 },
     { MODE_COLOR_SWAP,          33316 },
-    { MODE_SCN_MONOCHROME,      33336 },
+    { MODE_MONOCHROME,          33336 },
     { MODE_SUPER_VIVID,         33324 },
     { MODE_POSTER_EFFECT,       33325 },
     { MODE_PORTRAIT,            32787 },
     { MODE_SNOW,                32795 },
     { MODE_FIREWORK,            32797 },
     { MODE_AUTO,                32768 },
-    { MODE_SCN_FACE_SELF_TIMER, 33326 },
+    { MODE_FACE_SELF_TIMER,     33326 },
     { MODE_SMART_SHUTTER,       33327 },
-    { MODE_SCN_WINK_SELF_TIMER, 33328 },
+    { MODE_WINK_SELF_TIMER,     33328 },
     { MODE_VIDEO_STD,           33796 },
 };
 

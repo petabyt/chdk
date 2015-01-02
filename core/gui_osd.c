@@ -318,7 +318,7 @@ void gui_osd_draw_state(int is_osd_edit)
         }
         if (is_iso_override_enabled || is_osd_edit)
             gui_print_osd_state_string_int("ISO:", shooting_iso_real_to_market(shooting_get_iso_override_value())); // get_iso_override returns "real" units, clamped within camera limits
-        if (is_osd_edit || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_SCN_BEST_IMAGE))
+        if (is_osd_edit || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_BEST_IMAGE))
         {
           if (is_tv_bracketing_enabled || is_av_bracketing_enabled || is_iso_bracketing_enabled || is_sd_bracketing_enabled)
             gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());

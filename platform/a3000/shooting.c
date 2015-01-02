@@ -91,15 +91,15 @@ const CapturemodeMap modemap[] = { // prop 49
 	{ MODE_NIGHT_SCENE,        32781  },
 	{ MODE_KIDS_PETS,          32786  },
 	{ MODE_INDOOR,     	       32787  },
-	{ MODE_SCN_FACE_SELF_TIMER,16936  },
-	{ MODE_SCN_LOWLIGHT,  	   16417  },
-	{ MODE_SCN_SUPER_VIVID,	   16934  },
-	{ MODE_SCN_POSTER_EFFECT,  16935  },
-	{ MODE_SCN_BEACH,          16407  },
-	{ MODE_SCN_FOLIAGE,		   16405  },
-	{ MODE_SCN_SNOW,           16406  },
-    { MODE_SCN_FIREWORK,	   16408  },
-    { MODE_SCN_LONG_SHUTTER,   16390  }
+	{ MODE_FACE_SELF_TIMER,    16936  },
+	{ MODE_LOWLIGHT,      	   16417  },
+	{ MODE_SUPER_VIVID,    	   16934  },
+	{ MODE_POSTER_EFFECT,      16935  },
+	{ MODE_BEACH,              16407  },
+	{ MODE_FOLIAGE,    		   16405  },
+	{ MODE_SNOW,               16406  },
+    { MODE_FIREWORK,    	   16408  },
+    { MODE_LONG_SHUTTER,       16390  }
 };
 
 

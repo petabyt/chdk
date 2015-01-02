@@ -27,43 +27,42 @@ void startup()
 }
 
 
+//// TODO setting the DP button as a shortcut to movie in canon menu
+//// gives a value of (current mode)+1024 while movie is recording, unless
+//// already in movie mode
+//static struct {
+//	int hackmode;
+//	int canonmode;
+//} modemap[] = {
+//    { MODE_AUTO,               32768 },
+//    { MODE_M,                  32769 },
+//    { MODE_P,                  32772 },
+//    { MODE_PORTRAIT,           0x800D },
+//    { MODE_NIGHT_SNAPSHOT,     0x800B },
+//    { MODE_KIDS_PETS,          0x8010 },
+//    { MODE_INDOOR,             0x8011 },
+//    { MODE_SUNSET,             0x4012 },
+//    { MODE_FOLIAGE,            0x4013 },
+//    { MODE_SNOW,               0x4014 },
+//    { MODE_BEACH,              0x4015 },
+//    { MODE_FIREWORK,           0x4016 },
+//    { MODE_NIGHT_SCENE,        0x4006 }, //AKA Long Shutter
+//    { MODE_UNDERWATER,         0x4017 },
+//    { MODE_AQUARIUM,           0x4018 },
+//    { MODE_ISO_3200,           0x401D },
+//    { MODE_DIGITAL_MACRO,      0x4208 },
+//    { MODE_COLOR_ACCENT,       0x421B },
+//    { MODE_COLOR_SWAP,         0x421C },
+//    { MODE_STITCH,             0x420A },
+//  //{ MODE_QUICK,              33312 },
+//
+//    { MODE_VIDEO_STD,          0xA29  },
+//    { MODE_VIDEO_COLOR_ACCENT, 0xA27  },
+//    { MODE_VIDEO_COLOR_SWAP,   0xA28  },
+//};
+//
+//#define MODESCNT (sizeof(modemap)/sizeof(modemap[0]))
 
-// TODO setting the DP button as a shortcut to movie in canon menu
-// gives a value of (current mode)+1024 while movie is recording, unless
-// already in movie mode
-static struct {
-	int hackmode;
-	int canonmode;
-} modemap[] = {
-    { MODE_AUTO,               32768 },
-    { MODE_M,                  32769 },
-    { MODE_P,                  32772 },
-    { MODE_PORTRAIT,           0x800D },
-    { MODE_NIGHT_SNAPSHOT,     0x800B },
-    { MODE_SCN_KIDS_PETS,      0x8010 },
-    { MODE_SCN_INDOOR,         0x8011 },
-    { MODE_SCN_SUNSET,         0x4012 },
-    { MODE_SCN_FOLIAGE,        0x4013 },
-    { MODE_SCN_SNOW,           0x4014 },
-    { MODE_SCN_BEACH,          0x4015 },
-    { MODE_SCN_FIREWORK,       0x4016 },
-    { MODE_SCN_NIGHT_SCENE,    0x4006 }, //AKA Long Shutter
-    { MODE_SCN_UNDERWATER,     0x4017 },
-    { MODE_SCN_AQUARIUM,       0x4018 },
-    { MODE_SCN_ISO_3200,       0x401D },
-    { MODE_DIGITAL_MACRO,      0x4208 },
-    { MODE_SCN_COLOR_ACCENT,   0x421B },
-    { MODE_SCN_COLOR_SWAP,     0x421C },
-    { MODE_STITCH,             0x420A },
-  //{ MODE_QUICK,              33312 },
-
-    { MODE_VIDEO_STD,          0xA29  },
-    { MODE_VIDEO_COLOR_ACCENT, 0xA27  },
-    { MODE_VIDEO_COLOR_SWAP,   0xA28  },
-};
-
-
-#define MODESCNT (sizeof(modemap)/sizeof(modemap[0]))
 
 // Focus length table in firmware @0xfffe2a8c
 #define NUM_FL      7   // 0 - 6, entries in firmware
@@ -94,21 +93,21 @@ int get_zoom_x(int zp) {
     return get_focal_length(zp)*10/focus_len_table[0];
 }
 
-/*
-physw_ bit OK
-*/
-int mode_get2() {
-    int mode, i, t=0xFF;
-    mode  = (physw_status[1] & 0x00000001)?MODE_REC:MODE_PLAY;
-
-    _GetPropertyCase(PROPCASE_SHOOTING_MODE, &t, 4);
-    for (i=0; i<MODESCNT; ++i) {
-	if (modemap[i].canonmode == t) {
-	    return (mode | (modemap[i].hackmode & MODE_SHOOTING_MASK));
-	}
-    }
-    return (mode);
-}
+///*
+//physw_ bit OK
+//*/
+//int mode_get2() {
+//    int mode, i, t=0xFF;
+//    mode  = (physw_status[1] & 0x00000001)?MODE_REC:MODE_PLAY;
+//
+//    _GetPropertyCase(PROPCASE_SHOOTING_MODE, &t, 4);
+//    for (i=0; i<MODESCNT; ++i) {
+//	if (modemap[i].canonmode == t) {
+//	    return (mode | (modemap[i].hackmode & MODE_SHOOTING_MASK));
+//	}
+//    }
+//    return (mode);
+//}
 
 long get_vbatt_min()
 {

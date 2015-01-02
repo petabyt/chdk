@@ -93,16 +93,16 @@ canon modelist @FF972440 in 101a
 */
 
 const CapturemodeMap modemap[] = {
-    { MODE_SCN_DIGITAL_MACRO,   0 },
+    { MODE_DIGITAL_MACRO,       0 },
     { MODE_P,                   1 },
     { MODE_LONG_SHUTTER,        2 },
     { MODE_AUTO,                3 },
     { MODE_MY_COLORS,           4 },
-    { MODE_SCN_PORTRAIT,        5 },
-	{ MODE_SCN_UNDERWATER,      6 },
-    { MODE_SCN_INDOOR,          7 },
-    { MODE_SCN_KIDS_PETS,       8 },
-    { MODE_SCN_NIGHT_SNAPSHOT,  9 },
+    { MODE_PORTRAIT,            5 },
+	{ MODE_UNDERWATER,          6 },
+    { MODE_INDOOR,              7 },
+    { MODE_KIDS_PETS,           8 },
+    { MODE_NIGHT_SNAPSHOT,      9 },
 	{ MODE_STITCH,             10 },
     { MODE_VIDEO_STD,          11 }
 };

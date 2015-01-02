@@ -267,7 +267,7 @@ short shooting_get_iso_override_value()
     // Apply limits if needed
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
     // Limit max ISO in HQ burst mode (also done in shooting_set_iso_real; but done here so OSD display value is correct)
-    if (camera_info.state.mode_shooting == MODE_SCN_HIGHSPEED_BURST)
+    if (camera_info.state.mode_shooting == MODE_HIGHSPEED_BURST)
         if (iso > CAM_ISO_LIMIT_IN_HQ_BURST) iso = CAM_ISO_LIMIT_IN_HQ_BURST;
 #endif
 #ifdef CAM_MIN_ISO_OVERRIDE
@@ -380,7 +380,7 @@ void shooting_set_iso_real(short iso, short is_now)
         {
 #ifdef CAM_ISO_LIMIT_IN_HQ_BURST
             // Limit max ISO in HQ burst mode
-            if (camera_info.state.mode_shooting == MODE_SCN_HIGHSPEED_BURST)
+            if (camera_info.state.mode_shooting == MODE_HIGHSPEED_BURST)
                 if (iso > ISO_MARKET_TO_REAL(CAM_ISO_LIMIT_IN_HQ_BURST)) iso = ISO_MARKET_TO_REAL(CAM_ISO_LIMIT_IN_HQ_BURST);
 #endif
 #ifdef CAM_MIN_ISO_OVERRIDE
@@ -1346,7 +1346,7 @@ void shooting_bracketing(void)
 {  
     if (shooting_get_drive_mode()!=0)  
     {
-        if (camera_info.state.mode_shooting!=MODE_STITCH && camera_info.state.mode_shooting!=MODE_SCN_BEST_IMAGE) 
+        if (camera_info.state.mode_shooting!=MODE_STITCH && camera_info.state.mode_shooting!=MODE_BEST_IMAGE)
         {
             if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)
                 bracketing_reset() ;

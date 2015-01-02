@@ -95,20 +95,20 @@ Shooting Modes
 Movie: 640x480, 320x240, 160x120
 */
 const CapturemodeMap modemap[] = {
-    { MODE_SCN_DIGITAL_MACRO,   0 },
+    { MODE_DIGITAL_MACRO,       0 },
     { MODE_P,                   1 },
     { MODE_LONG_SHUTTER,        2 }, // 1-15s
     { MODE_AUTO,                3 },
     { MODE_MY_COLORS,           4 },
-    { MODE_SCN_PORTRAIT,        5 },
-    { MODE_SCN_FOLIAGE,         6 },
-    { MODE_SCN_SNOW,            7 },
-    { MODE_SCN_BEACH,           8 },
-    { MODE_SCN_FIREWORK,        9 }, 
-    { MODE_SCN_UNDERWATER,     10 },
-    { MODE_SCN_INDOOR,         11 },
-    { MODE_SCN_KIDS_PETS,      12 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 13 },
+    { MODE_PORTRAIT,            5 },
+    { MODE_FOLIAGE,             6 },
+    { MODE_SNOW,                7 },
+    { MODE_BEACH,               8 },
+    { MODE_FIREWORK,            9 }, 
+    { MODE_UNDERWATER,         10 },
+    { MODE_INDOOR,             11 },
+    { MODE_KIDS_PETS,          12 },
+    { MODE_NIGHT_SNAPSHOT,     13 },
     { MODE_STITCH,             14 },
     { MODE_VIDEO_STD,          15 }
 };

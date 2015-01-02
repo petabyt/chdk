@@ -43,98 +43,77 @@ enum {
     MODE_TV                 ,
     MODE_AV                 ,
     MODE_M                  , // note, use only for true manual modes that allow direct control of Tv/Av
-    MODE_PORTRAIT           ,
-    MODE_NIGHT_SCENE        , // "night scene" mode. Note, this can be a dail position, or under the scene menu (SCN_NIGHT_SCENE).
+
+    MODE_AQUARIUM           ,
+    MODE_BEACH              ,
+    MODE_BEST_IMAGE         ,
+    MODE_BLUR_REDUCTION     , // a800
+    MODE_COLOR_ACCENT       ,
+    MODE_COLOR_SWAP         ,
+    MODE_CREATIVE_EFFECT    , // "creative light effect", only known on ixus950_sd850
+    MODE_DIGITAL_IS         , // a810/a2300
+    MODE_DIGITAL_MACRO      ,
+    MODE_DISCREET           , // A3300is
+    MODE_EASY               ,
+    MODE_FACE_SELF_TIMER    , // sx30/g12 (Smart Shutter, Face Self Timer mode)
+    MODE_FIREWORK           , // ixus1000 end
+    MODE_FISHEYE            ,
+    MODE_FOLIAGE            ,
+    MODE_HDR                , // g12 (HDR scene mode)
+    MODE_HIGHSPEED_BURST    ,
+    MODE_INDOOR             ,
+    MODE_ISO_3200           ,
+    MODE_KIDS_PETS          ,
     MODE_LANDSCAPE          ,
-    MODE_VIDEO_STD          ,
-    MODE_VIDEO_SPEED        ,
-    MODE_VIDEO_COMPACT      ,
-    MODE_VIDEO_MY_COLORS    ,
+    MODE_LIVE               , // A3300is
+    MODE_LONG_SHUTTER       , // "long shutter" mode on cameras without true manual mode. Allows manual shutter >= 1 second, uses manual shutter value propcase. Usually found under func menu in "manual" mode.
+    MODE_LOWLIGHT           , // g11
+    MODE_MINIATURE          ,
+    MODE_MONOCHROME         , // sx220
+    MODE_MY_COLORS          ,
+    MODE_NIGHT_SCENE        , // "night scene" mode. Note, this can be a dial position, or under the scene menu (SCN_NIGHT_SCENE).
+    MODE_NIGHT_SNAPSHOT     ,
+    MODE_NOSTALGIC          , // s90
+    MODE_PORTRAIT           ,
+    MODE_POSTER_EFFECT      ,
+    MODE_QUICK              ,
+    MODE_SMART_SHUTTER      , // ixus1000_sd4500 - the following are not under SCN
+    MODE_SMOOTH_SKIN        , // sx260
+    MODE_SNOW               ,
+    MODE_SOFTFOCUS          , // sx260 asm1989
+    MODE_SPORTS             ,
+    MODE_STITCH             ,
+    MODE_SUNSET             ,
+    MODE_SUPER_MACRO        ,
+    MODE_SUPER_VIVID        ,
+    MODE_TOY_CAMERA         , // sx220
+    MODE_UNDERWATER         ,
+    MODE_UNDERWATER_MACRO   , // D20
+    MODE_WINK_SELF_TIMER    , // sx30/g12 (Smart Shutter, Wink Self Timer mode)
+
     MODE_VIDEO_COLOR_ACCENT ,
     MODE_VIDEO_COLOR_SWAP   ,
-    MODE_STITCH             ,
-    MODE_MY_COLORS          ,
-    MODE_SCN_UNDERWATER     ,
-    MODE_SCN_NIGHT_SNAPSHOT ,
-    MODE_LONG_SHUTTER       , // "long shutter" mode on cameras without true manual mode. Allows manual shutter >= 1 second, uses manual shutter value propcase. Usually found under func menu in "manual" mode.
-    MODE_SCN_LANDSCAPE      ,
-    MODE_COLOR_SWAP         ,
-    MODE_SCN_SNOW           ,
-    MODE_SCN_BEACH          ,
-    MODE_SCN_FIREWORK       ,
-    MODE_SCN_COLOR_ACCENT   ,
-    MODE_SCN_COLOR_SWAP     ,
+    MODE_VIDEO_COMPACT      ,
     MODE_VIDEO_HIRES        ,
-    MODE_SCN_AQUARIUM       ,
-    MODE_COLOR_ACCENT       ,
-    MODE_SCN_NIGHT_SCENE    ,
-    MODE_SCN_ISO_3200       ,
-    MODE_SCN_SPORT          ,
-    MODE_SCN_KIDS_PETS      ,
-    MODE_INDOOR             ,
-    MODE_KIDS_PETS          ,
-    MODE_NIGHT_SNAPSHOT     ,
-    MODE_DIGITAL_MACRO      ,
-    MODE_SCN_FOLIAGE        ,
-    MODE_VIDEO_TIME_LAPSE   ,
-    MODE_SCN_INDOOR         ,
-    MODE_SCN_PORTRAIT       ,
-    MODE_SUPER_MACRO        ,
-    MODE_VIDEO_PORTRAIT     , // tx1 junk
-    MODE_VIDEO_NIGHT        , // tx1 junk
-    MODE_VIDEO_INDOOR       , // tx1 junk
-    MODE_VIDEO_FOLIAGE      , // tx1 junk
-    MODE_VIDEO_SNOW         , // tx1 junk
-    MODE_VIDEO_BEACH        , // tx1 junk
-    MODE_VIDEO_AQUARIUM     , // tx1 junk
-    MODE_VIDEO_SUPER_MACRO  , // tx1 junk
-    MODE_VIDEO_STITCH       , // tx1 junk
-    MODE_VIDEO_MANUAL       , // tx1 junk
-    MODE_SPORTS             ,
-    MODE_QUICK              ,
-    MODE_SCN_SUNSET         ,
-    MODE_SCN_CREATIVE_EFFECT, // "creative light effect", only known on ixus950_sd850
-    MODE_EASY               ,
-    MODE_SCN_DIGITAL_MACRO  ,
-    MODE_SCN_STITCH         , // Why do we need this as well as MODE_STITCH ???? It is not checked in the code like MODE_STITCH
-    MODE_SCN_LONG_SHUTTER   , // only known on sx1, d10
-    MODE_LOWLIGHT           , // g11
-    MODE_SCN_NOSTALGIC      , // s90
-    MODE_SCN_SMART_SHUTTER  , // sx30/g12 (Smart Shutter, Smile detection mode)
-    MODE_SCN_LOWLIGHT       , // sx30
-    MODE_SCN_SUPER_VIVID    , // sx30
-    MODE_SCN_POSTER_EFFECT  , // sx30
-    MODE_SCN_FISHEYE        , // sx30
-    MODE_SCN_MINIATURE      , // sx30
-    MODE_SCN_HDR            , // g12 (HDR scene mode)
-    MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
     MODE_VIDEO_IFRAME_MOVIE , // sx220
+    MODE_VIDEO_MINIATURE    , // g12 (miniature effect video mode)
     MODE_VIDEO_MOVIE_DIGEST , // sx220 (the camera automatically record a short video clip (up to approximately 4 seconds) every time you shoot
-    MODE_SCN_HIGHSPEED_BURST, // sx220
-    MODE_SCN_BEST_IMAGE     , // sx220
-    MODE_SCN_TOY_CAMERA     , // sx220
-    MODE_SCN_MONOCHROME     , // sx220
-    MODE_SCN_WINK_SELF_TIMER, // sx30/g12 (Smart Shutter, Wink Self Timer mode)
-    MODE_SCN_FACE_SELF_TIMER, // sx30/g12 (Smart Shutter, Face Self Timer mode)
+    MODE_VIDEO_MY_COLORS    ,
+    MODE_VIDEO_SPEED        ,
+    MODE_VIDEO_STD          ,
     MODE_VIDEO_SUPER_SLOW   , // IXUS 310 HS Super Slow Motion Movie
-    MODE_SMART_SHUTTER      , // ixus1000_sd4500 - the following are not under SCN
-    MODE_HIGHSPEED_BURST    ,
-    MODE_BEST_IMAGE         ,
-    MODE_SUPER_VIVID        ,
-    MODE_POSTER_EFFECT      ,
-    MODE_FISHEYE            ,
-    MODE_MINIATURE          ,
-    MODE_BEACH              ,
-    MODE_FOLIAGE            ,
-    MODE_SNOW               ,
-    MODE_FIREWORK           , // ixus1000 end
-    MODE_LIVE               , // A3300is
-    MODE_DISCREET           , // A3300is
-    MODE_BLUR_REDUCTION     , // a800
-    MODE_SCN_SOFTFOCUS      , // sx260 asm1989
-    MODE_SCN_SMOOTH_SKIN    , // sx260
-    MODE_DIGITAL_IS         , // a810/a2300
-    MODE_SCN_UNDERWATER_MACRO, // D20
+    MODE_VIDEO_TIME_LAPSE   ,
+
+    MODE_VIDEO_AQUARIUM     , // tx1 junk
+    MODE_VIDEO_BEACH        , // tx1 junk
+    MODE_VIDEO_FOLIAGE      , // tx1 junk
+    MODE_VIDEO_INDOOR       , // tx1 junk
+    MODE_VIDEO_MANUAL       , // tx1 junk
+    MODE_VIDEO_NIGHT        , // tx1 junk
+    MODE_VIDEO_PORTRAIT     , // tx1 junk
+    MODE_VIDEO_SNOW         , // tx1 junk
+    MODE_VIDEO_STITCH       , // tx1 junk
+    MODE_VIDEO_SUPER_MACRO  , // tx1 junk
 };
 
 #endif

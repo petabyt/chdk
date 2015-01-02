@@ -101,17 +101,17 @@ const CapturemodeMap modemap[] = {
     { MODE_NIGHT_SCENE,        32782 },
     { MODE_PORTRAIT,           32781 },
 //    { MODE_MY_COLORS,          16922 }, // NOT in canon list!
-//    { MODE_SCN_UNDERWATER,          16405 }, // NOT in canon list!
+//    { MODE_UNDERWATER,              16405 }, // NOT in canon list!
 // using these from a540, NOT VERIFIED!
-    { MODE_SCN_COLOR_ACCENT,   16920 }, // "color accent".
-    { MODE_SCN_COLOR_SWAP,     16921 }, // a540 "color swap", was MODE_SCN_COLOR_ACCENT (like a710)
-    { MODE_SCN_FOLIAGE,        16401 },
-    { MODE_SCN_SNOW,           16402 },
-    { MODE_SCN_BEACH,          16403 },
-    { MODE_SCN_INDOOR,         16400 },
-    { MODE_SCN_NIGHT_SNAPSHOT, 16395 },
-    { MODE_SCN_KIDS_PETS,      16399 },
-    { MODE_SCN_FIREWORK,       16404 },
+    { MODE_COLOR_ACCENT,       16920 }, // "color accent".
+    { MODE_COLOR_SWAP,         16921 }, // a540 "color swap", was MODE_COLOR_ACCENT (like a710)
+    { MODE_FOLIAGE,            16401 },
+    { MODE_SNOW,               16402 },
+    { MODE_BEACH,              16403 },
+    { MODE_INDOOR,             16400 },
+    { MODE_NIGHT_SNAPSHOT,     16395 },
+    { MODE_KIDS_PETS,          16399 },
+    { MODE_FIREWORK,           16404 },
 //    { MODE_VIDEO_STD,          2596  }, // NOT in canon list!
 //    { MODE_VIDEO_SPEED,        2597  }, ""
 //    { MODE_VIDEO_COMPACT,      2598  }, ""
