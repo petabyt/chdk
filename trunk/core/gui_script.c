@@ -856,16 +856,17 @@ static void gui_update_script_submenu()
     // Add warning if no @chdk_version, or if chdk_version < script_version
     if (warn)
     {
-        script_submenu_items[f-1].type = MENUITEM_ERROR;
         if (cmp_chdk_version(chdk_version, script_version) < 0)
         {
             static char warning[50];
             sprintf(warning, "Script requires CHDK ver: %d.%d.%d.%d", script_version.major, script_version.minor, script_version.maintenance, script_version.revision);
             script_submenu_items[f-1].text = (int)warning;
+            script_submenu_items[f-1].type = MENUITEM_ERROR;
         }
         else
         {
             script_submenu_items[f-1].text = (int)"No @chdk_version, assuming CHDK 1.3";
+            script_submenu_items[f-1].type = MENUITEM_WARNING;
         }
     }
 
