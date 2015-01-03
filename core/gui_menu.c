@@ -406,6 +406,7 @@ static int isText(int n)
     return (
             (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_TEXT ||
             (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_ERROR ||
+            (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_WARNING ||
             (curr_menu->menu[n].type & MENUITEM_MASK) == MENUITEM_SEPARATOR
            );
 }
@@ -934,6 +935,15 @@ static void gui_menu_draw_state_value(CMenuItem *c)
 }
 
 //-------------------------------------------------------------------
+static void menu_text(color c)
+{
+    twoColors save = cl;
+    cl = MAKE_COLOR(BG_COLOR(cl), c);
+    rbf_draw_string_len(xx, yy, w, lang_str(curr_menu->menu[imenu].text), cl);
+    gui_menu_draw_text(lang_str(curr_menu->menu[imenu].text),1);
+    cl = save;
+}
+
 void gui_menu_draw(int enforce_redraw)
 {
     int i, j;
@@ -988,13 +998,10 @@ void gui_menu_draw(int enforce_redraw)
                 gui_menu_draw_text(tbuf,1);
                 break;
             case MENUITEM_ERROR:
-                {
-                    twoColors save = cl;
-                    cl = MAKE_COLOR(BG_COLOR(cl), COLOR_RED);
-                    rbf_draw_string_len(xx, yy, w, lang_str(curr_menu->menu[imenu].text), cl);
-                    gui_menu_draw_text(lang_str(curr_menu->menu[imenu].text),1);
-                    cl = save;
-                }
+                menu_text(COLOR_RED);
+                break;
+            case MENUITEM_WARNING:
+                menu_text(COLOR_YELLOW_DK);
                 break;
             case MENUITEM_PROC:
             case MENUITEM_TEXT:
