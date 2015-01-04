@@ -429,7 +429,7 @@ asm volatile (
 "    LDMNEFD SP!, {R4-R6,PC} \n"
 "    LDR     R5, =0x493E0 \n"  // --> Patched. Old value = 0x927C0. Reduce the memory size reserved for the UI
 "    MOV     R0, R5 \n"
-"    BL      sub_FF024384 \n"
+"    BL      sub_FF024384 /*_malloc_strictly*/ \n"
 "    MOV     R1, R5 \n"
 "    BL      sub_FF00129C \n"
 "    TST     R0, #1 \n"
