@@ -8,9 +8,8 @@ static const char* get_val(const char *s, short *v)
 {
     if (s && *s)
     {
-        *v = strtol(s, NULL, 0);
-        s = strchr(s, '.');
-        if (s) s++;
+        *v = strtol(s, &s, 0);
+        if (s && (*s == '.')) s++;
     }
     return s;
 }
