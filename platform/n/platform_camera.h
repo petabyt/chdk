@@ -98,6 +98,9 @@
 
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 
+    #undef  CAM_MARKET_ISO_BASE
+    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
+
 //------ Powershot N - fence for values checked as okay - stuff below here not checked yet ---------------
 
     #undef  CAM_USE_ZOOM_FOR_MF                             // not useful if cam does not have Canon MF mode - just changes focus mode
