@@ -145,8 +145,8 @@ asm volatile (
 //** sub_FF8101A0_my @ 0xFF8101A0 - 0xFF810208, length=27
 void __attribute__((naked,noinline)) sub_FF8101A0_my() {
 
+    *(int*)0x1930=(int)taskHook;
     *(int*)0x1934=(int)taskHook;
-    *(int*)0x1938=(int)taskHook;
 
     // replacement of sub_FF8218C8 for correct power-on.
     //(short press = playback mode, long press = record mode)
