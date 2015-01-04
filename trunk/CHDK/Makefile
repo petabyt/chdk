@@ -22,7 +22,7 @@ all: $(GENLUA)
 	@echo "copy modules"
 	mkdir -p MODULES
 	rm -f MODULES/*
-	cp $(topdir)modules/*.flt MODULES
+	cp $(topdir)modules/$O*.flt MODULES
 
 LUALIB/GEN/propset1.lua:  $(topdir)include/propset1.h
 	@echo "->" $@

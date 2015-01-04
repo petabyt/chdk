@@ -39,7 +39,7 @@ ifndef SKIP_TOOLS
 SUBDIRS+=tools
 endif
 
-# SKIP_MODULES prevents re-building core/modules in root level make, to speed up batch builds
+# SKIP_MODULES prevents re-building modules in root level make, to speed up batch builds
 ifndef SKIP_MODULES
 SUBDIRS+=modules
 endif
@@ -49,13 +49,8 @@ ifndef SKIP_CHDK
 SUBDIRS+=CHDK
 endif
 
-# Must do platform before core
+# Must do platform before loader
 SUBDIRS+=platform/$(PLATFORM) platform/$(PLATFORM)/sub/$(PLATFORMSUB)
-
-# SKIP_CORE prevents cleaning core in root level make, to speed up batch clean
-ifndef SKIP_CORE
-SUBDIRS+=core
-endif
 
 # Must do this last as it builds the final .bin file
 SUBDIRS+=loader/$(PLATFORM)
@@ -229,7 +224,7 @@ rebuild-stubs: platformcheck
 		$(MAKE) -C tools finsig_vxworks$(EXE) ;\
 		echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
 		rm -f $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/stubs_entry.S ;\
-		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_entry.S bin_compat.h ;\
+		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) FORCE_GEN_STUBS=1 stubs_entry.S bin_compat.h ;\
 	else \
 		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi
@@ -294,7 +289,7 @@ batch-print-missing-dumps:
 batch-rebuild-stubs:
 	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
 
-# rebuild all the stubs_entry.S files    
+# rebuild all the stubs_entry.S files
 # parallel version, starts each camera/firmware version build in a seperate session
 # Note:- Windows only, this will use all available CPU and a fair amount of memory
 #        but will rebuild much faster on a machine with many CPU cores
@@ -303,10 +298,9 @@ batch-rebuild-stubs-parallel:
 
 batch-clean:
 	$(MAKE) -C tools clean
-	$(MAKE) -C core clean
 	$(MAKE) -C modules clean
 	$(MAKE) -C CHDK clean
-	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
+	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 
 batch-run-code-gen:
-	SKIP_CORE=1 SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) run-code-gen $(CAMERA_LIST) -noskip
+	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) run-code-gen $(CAMERA_LIST) -noskip

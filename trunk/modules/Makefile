@@ -10,7 +10,7 @@ SUBDIRS+=$(topdir)lib/lang $(topdir)lib/font $(topdir)lib/core $(topdir)lib/libc
 
 OBJ_ISDIGIT=
 ifeq ($(GCC_VERSION_MAJOR),3)
-    OBJ_ISDIGIT+= $(topdir)lib/libc/issmth.o
+    OBJ_ISDIGIT+= $(topdir)lib/libc/$Oissmth.o
 endif
 
 CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE -fno-reorder-functions
@@ -21,93 +21,92 @@ LDOPTS+=-Wl,-N,-Ttext,0x24 -r -Wl,-d
 
 # Only build modules files here. Platform independant code to be linked to core CHDK should be in libraries (above)
 # to avoid 'long_call' overhead
-FLTS=fselect.flt edgeovr.flt curves.flt mpopup.flt palette.flt grids.flt mdetect.flt zebra.flt \
-     _dng.flt benchm.flt calend.flt 4wins.flt mastmind.flt reversi.flt sokoban.flt _rawop.flt \
-     txtread.flt memview.flt modinsp.flt tetris.flt snake.flt sudoku.flt _tbox.flt _osd_le.flt \
-     _hexbox.flt ubasic.flt lua.flt cpuinfo.flt useredit.flt eyefi.flt histo.flt shothist.flt
+FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids.flt $Omdetect.flt $Ozebra.flt \
+     $O_dng.flt $Obenchm.flt $Ocalend.flt $O4wins.flt $Omastmind.flt $Oreversi.flt $Osokoban.flt $O_rawop.flt \
+     $Otxtread.flt $Omemview.flt $Omodinsp.flt $Otetris.flt $Osnake.flt $Osudoku.flt $O_tbox.flt $O_osd_le.flt \
+     $O_hexbox.flt $Oubasic.flt $Olua.flt $Ocpuinfo.flt $Ouseredit.flt $Oeyefi.flt $Ohisto.flt $Oshothist.flt
 
 all: $(FLTS)
 
-%.o: games/%.c
+$O%.flt: $(topdir)lib/libc/$Olibc.a
+	@echo \-\> $@
+	mkdir -p .o
+	$(CC) $(CFLAGS) -o $O$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+    ifdef OPT_GEN_MODULE_DUMPS
+		$(OBJDUMP) -j .text -j .rodata.str1.1 -j .data -j .bss -z -d -r -f -h $O$*.elf >$O$*.elf.dump
+		$(topdir)/tools/elf2flt/elf2flt$(EXE) $O$*.elf $@ -e -f -h -r -s -v -S -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
+    else
+		$(topdir)/tools/elf2flt/elf2flt$(EXE) $O$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
+    endif
+
+$O%.o: games/%.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
-%.flt: $(topdir)lib/libc/libc.a
-	@echo \-\> $@
-	mkdir -p .o
-	$(CC) $(CFLAGS) -o .o/$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
-    ifdef OPT_GEN_MODULE_DUMPS
-		$(OBJDUMP) -j .text -j .rodata.str1.1 -j .data -j .bss -z -d -r -f -h .o/$*.elf >.o/$*.elf.dump
-		$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -e -f -h -r -s -v -S -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
-    else
-		$(topdir)/tools/elf2flt/elf2flt$(EXE) .o/$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
-    endif
-
-nothumb.o: nothumb.c
+$Onothumb.o: nothumb.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
-reversebytes.o: reversebytes.S
+$Oreversebytes.o: reversebytes.S
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
-cpuinfo_arm.o: cpuinfo_arm.c
+$Ocpuinfo_arm.o: cpuinfo_arm.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
-calend.flt: gui_calendar.o
-_tbox.flt: gui_tbox.o
-_hexbox.flt: gui_hexbox.o
-benchm.flt: gui_bench.o
-memview.flt: gui_debug.o
-palette.flt: gui_palette.o
-mpopup.flt: gui_mpopup.o
-txtread.flt: gui_read.o
-edgeovr.flt: edgeoverlay.o bitvector.o $(OBJ_ISDIGIT)
-zebra.flt: zebra.o
-histo.flt: histogram.o
-shothist.flt: shot_histogram.o
-curves.flt: curves.o
-mdetect.flt: motion_detector.o
-grids.flt: gui_grid.o
-modinsp.flt: module_inspector.o
-_dng.flt: dng.o reversebytes.o
-_rawop.flt: raw_merge.o reversebytes.o
-_osd_le.flt: gui_osd_edit.o
-fselect.flt: gui_fselect.o nothumb.o
-useredit.flt: user_menu_edit.o
+$Ocalend.flt: $Ogui_calendar.o
+$O_tbox.flt: $Ogui_tbox.o
+$O_hexbox.flt: $Ogui_hexbox.o
+$Obenchm.flt: $Ogui_bench.o
+$Omemview.flt: $Ogui_debug.o
+$Opalette.flt: $Ogui_palette.o
+$Ompopup.flt: $Ogui_mpopup.o
+$Otxtread.flt: $Ogui_read.o
+$Oedgeovr.flt: $Oedgeoverlay.o $Obitvector.o $(OBJ_ISDIGIT)
+$Ozebra.flt: $Ozebra.o
+$Ohisto.flt: $Ohistogram.o
+$Oshothist.flt: $Oshot_histogram.o
+$Ocurves.flt: $Ocurves.o
+$Omdetect.flt: $Omotion_detector.o
+$Ogrids.flt: $Ogui_grid.o
+$Omodinsp.flt: $Omodule_inspector.o
+$O_dng.flt: $Odng.o $Oreversebytes.o
+$O_rawop.flt: $Oraw_merge.o $Oreversebytes.o
+$O_osd_le.flt: $Ogui_osd_edit.o
+$Ofselect.flt: $Ogui_fselect.o $Onothumb.o
+$Ouseredit.flt: $Ouser_menu_edit.o
+$Ocpuinfo.flt: $Ocpuinfo.o $Ocpuinfo_arm.o 
+$Oeyefi.flt: $Oeyefi.o $Omd5.o $Osha1.o
 
-4wins.flt: gui_4wins.o
-mastmind.flt: gui_mastermind.o
-reversi.flt: gui_reversi.o
-tetris.flt: gui_tetris.o
-snake.flt: gui_snake.o
-sokoban.flt: gui_sokoban.o
-sudoku.flt: gui_sudoku.o
+$Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(topdir)lib/ubasic/$Olibubasic.a
+$Olua.flt: $Oluascript.o $Oscript_key_funcs.o $Oscript_shoot_hook.o $Ocordic_math.o $Odbg_dump.o $Orawhookops.o $(topdir)lib/lua/$Oliblua.a
 
-gui_calendar.o: gui_calendar.c simple_module.c
-gui_bench.o: gui_bench.c simple_module.c
-eyefi.o: eyefi.c simple_module.c
+$O4wins.flt: $Ogui_4wins.o
+$Omastmind.flt: $Ogui_mastermind.o
+$Oreversi.flt: $Ogui_reversi.o
+$Otetris.flt: $Ogui_tetris.o
+$Osnake.flt: $Ogui_snake.o
+$Osokoban.flt: $Ogui_sokoban.o
+$Osudoku.flt: $Ogui_sudoku.o
 
-gui_4wins.o: games/gui_4wins.c games/simple_game.c
-gui_mastermind.o: games/gui_mastermind.c games/simple_game.c
-gui_reversi.o: games/gui_reversi.c games/simple_game.c
-gui_tetris.o: games/gui_tetris.c games/simple_game.c
-gui_snake.o: games/gui_snake.c games/simple_game.c
+$Ogui_calendar.o: gui_calendar.c simple_module.c
+$Ogui_bench.o: gui_bench.c simple_module.c
+$Oeyefi.o: eyefi.c simple_module.c
 
-cpuinfo.o: simple_module.c
+$Ogui_4wins.o: games/gui_4wins.c games/simple_game.c
+$Ogui_mastermind.o: games/gui_mastermind.c games/simple_game.c
+$Ogui_reversi.o: games/gui_reversi.c games/simple_game.c
+$Ogui_tetris.o: games/gui_tetris.c games/simple_game.c
+$Ogui_snake.o: games/gui_snake.c games/simple_game.c
 
-ubasic.flt: ubasic.o script_key_funcs.o $(topdir)lib/ubasic/libubasic.a
-lua.flt: luascript.o script_key_funcs.o script_shoot_hook.o cordic_math.o dbg_dump.o rawhookops.o $(topdir)lib/lua/liblua.a
+$Ocpuinfo.o: simple_module.c
 
-cpuinfo.flt: cpuinfo.o cpuinfo_arm.o 
-
-eyefi.flt: eyefi.o md5.o sha1.o
-
-shot_histogram.o: shot_histogram.c shot_histogram.h
+$Oshot_histogram.o: shot_histogram.c shot_histogram.h
 
 clean:
-	rm -f *.o .o/*.* *.flt *.dump
+	rm -f $O*.* *.o *.flt *.dump
+	rm -f $(topdir)core/*.o $(topdir)core/main.bin* $(topdir)core/main.elf*
 
 distclean: clean
 #	rm -f *.flt

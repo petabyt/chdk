@@ -9,14 +9,14 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB)
 
-OBJS = thumb1_case.o
+OBJS = $Othumb1_case.o
 
-all: libc.a
+all: $Olibc.a
 
-libc.a: $(OBJS)
+$Olibc.a: $(OBJS)
 
 clean:
-	rm -f $(OBJS) libc.a
+	rm -f $O*.* *.o *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

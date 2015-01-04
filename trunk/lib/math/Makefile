@@ -6,16 +6,16 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 
-OBJS = d2d.o wrapper.o
+OBJS = $Od2d.o $Owrapper.o
 
-all: libmath.a
+all: $Olibmath.a
 
-libmath.a: $(OBJS)
+$Olibmath.a: $(OBJS)
 
-d2d.o: d2d.c fdlibm.h
+$Od2d.o: d2d.c fdlibm.h
 
 clean:
-	rm -f $(OBJS) *.a
+	rm -f $O*.* *.o *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

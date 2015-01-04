@@ -24,7 +24,7 @@ wrappers.o: wrappers.c ../generic/wrappers.c
 platform_palette.o: platform_palette.c platform_palette.h
 
 clean:
-	rm -f $(OBJS) libplatform.a
+	rm -f *.o *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)
