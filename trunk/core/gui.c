@@ -479,14 +479,16 @@ static void navigate_to_image(int arg)
     if( conf.gps_on_off ) {      
         while( gps_submenu_items[i].value != (int*)navigate_to_image ) i++;  //find entry
         if( gps_submenu_items[i].text == LANG_MENU_GPS_NAVI_SHOW ) {         //toggle text
-            init_gps_navigate_to_photo(GPS_START);
-            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HIDE;
-            i = 0;
-            while( gps_submenu_items[i].value != (int*)show_compass ) i++;
-            gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW; 
-            i = 0;
-            while( gps_submenu_items[i].value != (int*)navigate_to_home ) i++;  
-            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+            if( init_gps_navigate_to_photo(GPS_START) )
+            {
+                gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HIDE;
+                i = 0;
+                while( gps_submenu_items[i].value != (int*)show_compass ) i++;
+                gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW; 
+                i = 0;
+                while( gps_submenu_items[i].value != (int*)navigate_to_home ) i++;  
+                gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+            }
         } else {
             gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
             init_gps_navigate_to_photo(GPS_STOP);        
@@ -500,14 +502,16 @@ static void navigate_to_home(int arg)
     if( conf.gps_on_off ) {      
         while( gps_submenu_items[i].value != (int*)navigate_to_home ) i++;   //find entry
         if( gps_submenu_items[i].text == LANG_MENU_GPS_NAVI_HOME ) {         //toggle text
-            init_gps_navigate_to_home(GPS_START);
-            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME_END;
-            i = 0;
-            while( gps_submenu_items[i].value != (int*)show_compass ) i++;
-            gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW; 
-            i = 0;
-            while( gps_submenu_items[i].value != (int*)navigate_to_image ) i++;  
-            gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
+            if( init_gps_navigate_to_home(GPS_START))
+            {
+                gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME_END;
+                i = 0;
+                while( gps_submenu_items[i].value != (int*)show_compass ) i++;
+                gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW; 
+                i = 0;
+                while( gps_submenu_items[i].value != (int*)navigate_to_image ) i++;  
+                gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_SHOW;
+            }
         } else {
             gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
             init_gps_navigate_to_home(GPS_STOP);        

@@ -13,7 +13,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
 
 // Additional
-NHSTUB(GPS_UpdateData,              0xFF140C20)     //asm1989 100b FF140BB0 Looks like sx230 FF0554A0
 //NHSTUB(LockAndRefresh,              0xFF0A27EC)     //asm1989 Looks like sx230 ff0ad294
 NHSTUB(MakeAFScan,                  0xFF1BC964)     //asm1989 100b FF1BC8FC Looks like sx230    ff191018
 NHSTUB(ReadSDCard,                  0xFF19D880)     //asm1989 100b FF19D818 Like sx40 FF1AB268

@@ -19,12 +19,6 @@ char *hook_alt_raw_image_addr() {
         return (char*) 0x44000000;
 }
 
-#ifdef CAM_HAS_GPS
-char *camera_jpeg_current_filename() {
-     return (void*)0xD922C;                 //0xFF22FB7C search for  "%03d-%04d"
-}
-#endif
-
 //Found by finsig sx240hs 101a
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff047848
 //void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff3e3784

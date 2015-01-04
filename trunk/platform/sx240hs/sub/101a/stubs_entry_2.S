@@ -13,7 +13,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
 
 // Additional
-NHSTUB(GPS_UpdateData,              0xFF140C20)
 NHSTUB(LockAndRefresh,              0xFF0A27EC)
 NHSTUB(MakeAFScan,                  0xFF1BC964)
 NHSTUB(ReadSDCard,                  0xFF19D880)

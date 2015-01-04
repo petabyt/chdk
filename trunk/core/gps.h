@@ -11,8 +11,8 @@ extern long   kbd_get_pressed_key();
 extern void   GPS_UpdateData();
 extern int    gps_key_trap ;
 
-extern void init_gps_navigate_to_photo(int  );
-extern void init_gps_navigate_to_home(int);
+extern int init_gps_navigate_to_photo(int  );
+extern int init_gps_navigate_to_home(int);
 extern void init_gps_compass_task(int );
 extern void init_gps_logging_task(int );
 extern void init_gps_startup(int ); 
