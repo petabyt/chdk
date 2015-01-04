@@ -9,17 +9,17 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 
-OBJS = gui_batt.o gui_space.o gui_usb.o gui_mbox.o gps.o gui_script.o gui_menu.o gui_user_menu.o
-OBJS+= suba.o levent.o console.o gps_math.o live_view.o ptp.o action_stack.o script.o
-OBJS+= usb_input.o usb_module.o usb_remote.o autoiso.o
-OBJS+= module_hashlist.o module_load.o modules.o versions.o
+OBJS = $Ogui_batt.o $Ogui_space.o $Ogui_usb.o $Ogui_mbox.o $Ogps.o $Ogui_script.o $Ogui_menu.o $Ogui_user_menu.o
+OBJS+= $Osuba.o $Olevent.o $Oconsole.o $Ogps_math.o $Olive_view.o $Optp.o $Oaction_stack.o $Oscript.o
+OBJS+= $Ousb_input.o $Ousb_module.o $Ousb_remote.o $Oautoiso.o
+OBJS+= $Omodule_hashlist.o $Omodule_load.o $Omodules.o $Oversions.o
 
-all: libcore.a
+all: $Olibcore.a
 
-libcore.a: $(OBJS)
+$Olibcore.a: $(OBJS)
 
-module_load.o: $(topdir)modules/module_load.c $(topdir)modules/module_load.h $(topdir)modules/module_exportlist.h
-module_hashlist.o: $(topdir)modules/module_hashlist.c
+$Omodule_load.o: $(topdir)modules/module_load.c $(topdir)modules/module_load.h $(topdir)modules/module_exportlist.h
+$Omodule_hashlist.o: $(topdir)modules/module_hashlist.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -fno-builtin -c -o $@ $<
 
@@ -28,7 +28,7 @@ $(topdir)modules/module_hashlist.c: $(topdir)modules/module_exportlist.c $(topdi
 	$(topdir)tools/makeexport$(EXE) $(topdir)modules/module_exportlist.h $(topdir)/modules/exportlist.inc $(topdir)modules/module_hashlist.c $(topdir)modules/module_exportlist.c $(topdir)modules/module_exportlist$(ABI).inc
 
 clean:
-	rm -f $(OBJS) *.a
+	rm -f $O*.* *.o *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)

@@ -10,7 +10,7 @@ LDOPTS+=-Wl,-N,-Ttext,$(MEMBASEADDR)
 
 CPPFLAGS+=-I.
 
-CORE_FILE=$(topdir)core/main.bin
+CORE_FILE=$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/main.bin
 RESET_FILE=$(curdir)resetcode/main.bin
 
 CPPFLAGS+=-DCORE_FILE=\"$(CORE_FILE)\"

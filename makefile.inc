@@ -11,6 +11,10 @@ include $(topdir)buildconf.inc
 include $(topdir)version.inc
 -include $(topdir)revision.inc
 
+# Sub-directory for object and dump files
+# used by modules build
+O=.o/
+
 ifndef OPT_DE_VERSION
     VER=CHDK
     ifndef OPT_DEFAULT_LANG
@@ -279,13 +283,20 @@ ifndef SKIPBUILDRULES
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
+# rule for building .o in $O sub-directory from .c in the current directory
+$O%.o: %.c
+	mkdir -p $O
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
 # rule for building .o from .c in the same directory - forces THUMB build
 %.thm.o: %.c
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) $(CTHUMB) -nostdinc -c -o $@ $<
 
 # rule for building .o from .c in the 'core' directory
-%.o: $(topdir)core/%.c
+$O%.o: $(topdir)core/%.c
+	mkdir -p $O
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
@@ -295,12 +306,19 @@ ifndef SKIPBUILDRULES
 	$(CC) $(CFLAGS) $(CTHUMB) -nostdinc -c -o $@ $<
 
 # rule for building .o from .c in the 'modules' directory
-%.o: $(topdir)modules/%.c
+$O%.o: $(topdir)modules/%.c
+	mkdir -p $O
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
-	
+
 # rule for building .o from .S in the same directory
 %.o: %.S
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
+# rule for building .o in $O sub-directory from .S in the current directory
+$O%.o: %.S
+	mkdir -p $O
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 	

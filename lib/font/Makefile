@@ -6,19 +6,19 @@ include $(topdir)makefile.inc
 
 CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
 
-OBJS = font_8x16.o rbf_font.o
+OBJS = $Ofont_8x16.o $Orbf_font.o
 
-all: libfont.a
+all: $Olibfont.a
 
-libfont.a: $(OBJS)
+$Olibfont.a: $(OBJS)
 
-font_8x16.o: font_8x16.c font_8x16_uni_packed.h
+$Ofont_8x16.o: font_8x16.c font_8x16_uni_packed.h
 
 font_8x16_uni_packed.h: font_8x16_uni.h codepages.h $(topdir)tools/font_8x16_pack$(EXE)
 	$(topdir)tools/font_8x16_pack$(EXE) > font_8x16_uni_packed.h
 
 clean:
-	rm -f $(OBJS) *.a
+	rm -f $O*.* *.o *.a
 
 distclean: clean
 	rm -f $(OBJS:.o=.d)
