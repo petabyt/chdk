@@ -201,6 +201,11 @@ void unlock(int n_task)
 //  Helper functions - called from within running tasks
 //
 
+void draw_txt_centered(int line, char *buf, int color)
+{
+    draw_txt_string( (camera_screen.width/FONT_WIDTH-strlen(buf))>>1 , line, buf, color) ;
+}
+
 static void compass_display_task();
 static void run_compass_task(int mode){  
     
@@ -239,7 +244,7 @@ static void test_timezone(){                           // creates timezone.txt f
         {
             char vBuf[256];
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_2));   //"Timezone has changed!"
-            draw_txt_string(1, 13, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+            draw_txt_centered(13, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
             msleep(5000);
         }
     }
@@ -265,7 +270,7 @@ static char *load_bitmap(char *datei){
     return bitmap;
 }
 
-static double draw_gps_course_info(int count){             // calculate course information
+static double draw_gps_course_info(int count){             // calculate & display course information
 
     char vBuf[512];
     int angle1=0;
@@ -293,17 +298,17 @@ static double draw_gps_course_info(int count){             // calculate course i
 
     if (abs(regressionChange (&deltareg))<0.5 || rest < 5.0) rest = 0.0;
 
-    if (navigation_mode > 0)
+    if (camera_info.state.gui_mode_none)
     {
         angle1=(int)angle;
         char anz1[40];
         char anz2[40];
-        char image[9];
+        char image[9];        
 
-        if (camera_info.state.gui_mode_none)
+        if (navigation_mode > 0)
         {
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_9), (int)pdelta.delta);
-            draw_txt_string(16, 9, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
+            draw_txt_string(16, 9, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));
 
             int s = (int)rest;
             int hour = s / 3600;
@@ -313,41 +318,39 @@ static double draw_gps_course_info(int count){             // calculate course i
             int second = s;
 
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_10), hour, minute, second);
-            draw_txt_string(16, 10, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
+            draw_txt_string(16, 10, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));
 
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_11), formatDouble (anz1, (pspeed.delta * 3.6), 0, 1));
-            draw_txt_string(16, 11, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
+            draw_txt_string(16, 11, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_12), direction);
-            draw_txt_string(16, 12, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
+            draw_txt_string(16, 12, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_13), (int)angle);
-            draw_txt_string(16, 13, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE));
+            draw_txt_string(16, 13, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));
 
             if (navigation_mode==1)
             {
                 sprintf(image, "%s", camera_jpeg_current_filename());
                 image[8] = '\0';
                 sprintf(vBuf, lang_str(LANG_MENU_GPS_t_14), image);  // "Navigation to photo: %s started"
-                draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+                draw_txt_centered(1, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
             }
             
             if (navigation_mode==2)
             {
-                sprintf(vBuf, lang_str(LANG_MENU_GPS_t_17));  // "Navigation to Home Loc started"
-                draw_txt_string(0, 1, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+                sprintf(vBuf, lang_str(LANG_MENU_GPS_t_17));         // "Navigation to Home started"
+                draw_txt_centered(1, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
             }
 
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_15), formatDouble (anz1, g_d_lat_nav, 0, 7), formatDouble (anz2, g_d_lon_nav, 0, 7)); //"latitude=%s  -  longitude=%s "
-            draw_txt_string(0, 2, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+            draw_txt_centered(2, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
         }
-
-    }
-    else
-    {
-        angle1= direction;
-        if (camera_info.state.gui_mode_none)
+        else
         {
+            angle1= direction;
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_16), (int)angle1);   // "heading = %i°"
-            draw_txt_string(1, 6, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+            draw_txt_string(16, 10, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));            
+            sprintf(vBuf, lang_str(LANG_MENU_GPS_t_15), formatDouble (anz1, g_d_lat_nav, 0, 7), formatDouble (anz2, g_d_lon_nav, 0, 7)); //"latitude=%s  -  longitude=%s "
+            draw_txt_string(16, 11, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE));  
         }
     }
 
@@ -360,7 +363,7 @@ static void draw_compass_needle (int angle, double s_w, double c_w, char *bitmap
 /*
     char vBuf[32];
     sprintf(vBuf, "%d", angle );      
-    draw_txt_string(30, 0, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));   
+    draw_txt_string(30, 0, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));   
 */
     if(bitmap)
     {
@@ -640,11 +643,11 @@ static void gps_data_task(){
         gps.longitude[0] / gps.longitude[1] , 
         gps.longitude[2] / gps.longitude[3] ,
         gps.longitude[4] / gps.longitude[5] );      
-    draw_txt_string(1, 0, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));    
+    draw_txt_string(1, 0, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));    
     formatDouble (lat, g_d_lat, 0, 7),
     formatDouble (lon, g_d_lon, 0, 7),    
     sprintf(vBuf,"lat=%s lon=%s",lat,lon );
-    draw_txt_string(1, 1, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));              
+    draw_txt_string(1, 1, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));              
     ************/
     
             sprintf(g_d_tim, "%02d:%02d:%02d", ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
@@ -857,9 +860,9 @@ static void no_signal_task(){
                 for(zba=30; zba>0; zba--)
                 {
                     sprintf(vBuf, lang_str(LANG_MENU_GPS_t_3));      // "Battery below setting!"
-                    draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_YELLOW, COLOR_RED));
+                    draw_txt_centered(8, vBuf, MAKE_COLOR(COLOR_YELLOW, COLOR_RED));
                     sprintf(vBuf, lang_str(LANG_MENU_GPS_t_4),zba); // "Camera will shutdown in %02d seconds!"
-                    draw_txt_string(0, 9, vBuf, MAKE_COLOR(COLOR_RED, COLOR_BLUE));
+                    draw_txt_centered(9, vBuf, MAKE_COLOR(COLOR_RED, COLOR_BLUE));
                     if ( (((zba) % 2)) == 0 )
                     {
                         debug_led(0);
@@ -891,7 +894,7 @@ static void no_signal_task(){
             int zba;
             for(zba=5; zba>0; zba--)
             {
-                draw_txt_string(10, 7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
+                draw_txt_centered(7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
                 msleep(1000);
             }
         }
@@ -925,7 +928,7 @@ static void no_signal_task(){
             {
                 sprintf(vBuf, " %01d:%02d",minute, second);
             }
-            draw_txt_string(0, 0, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+            draw_txt_centered(0, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
 
             // Switch on the display when countdown <30 seconds
             if ((blite_off==1) && (time_to_end <=30))
@@ -1119,9 +1122,9 @@ static void no_signal_task(){
         for(zba=15; zba>0; zba--)           // outer loop = 30 seconds
         {
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_4), zba);     // "Camera will shutdown in %02d seconds!"
-            draw_txt_string(0, 2, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
+            draw_txt_centered(2, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_18));         //"To cancel [Press half]"
-            draw_txt_string(0, 3, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
+            draw_txt_centered(3, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
             play_sound(6);
 
             for(zba1=100; zba1>0; zba1--)   // inner loop = 2 seconds
@@ -1242,9 +1245,9 @@ static void gps_logging_task(){
                 for(zba=30; zba>0; zba--)
                 {
                     sprintf(vBuf, lang_str(LANG_MENU_GPS_t_3));  // "Battery below setting!"
-                    draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+                    draw_txt_centered(8, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
                     sprintf(vBuf, lang_str(LANG_MENU_GPS_t_4),zba);
-                    draw_txt_string(0, 9, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+                    draw_txt_centered(9, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
                     if ( (((zba) % 2)) == 0 )
                     {
                         debug_led(0);
@@ -1597,7 +1600,7 @@ void gps_write_timezone(){          // called from gui.c when "Set position as c
         for(zba=5; zba>0; zba--)
         {
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_1));
-            draw_txt_string(8, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+            draw_txt_centered(8, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
             msleep(1000);
         }
     }
@@ -1637,7 +1640,7 @@ void gps_write_home(){             // called from gui.c when "Set position as ho
         for(zba=5; zba>0; zba--)
         {
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_1));
-            draw_txt_string(8, 8, vBuf, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_RED));
+            draw_txt_centered(8, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
             msleep(1000);
         }
     }
@@ -1698,7 +1701,7 @@ void init_gps_compass_task(int stop_request){               // called from gui.c
 }
 
 
-void init_gps_navigate_to_home(stop_request){               // called from gui.c when navigate home selected from GUI
+int init_gps_navigate_to_home(stop_request){               // called from gui.c when navigate home selected from GUI
 
     exit_compass_task = stop_request ;
     if ( stop_request == 0 )
@@ -1723,19 +1726,21 @@ void init_gps_navigate_to_home(stop_request){               // called from gui.c
         if ((int)g_d_lat_nav != 0)
         {        
             run_compass_task(2);          
+            return(1);
         }
         else
         {
             char vBuf[256];
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_7));  // "Navigation to Home Loc is not possible!"
-            draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
-            msleep(4000);
+            draw_txt_centered(7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
+            msleep(3000);
             navigation_mode=0;
         }
     }
+    return(0);
 }
 
-void init_gps_navigate_to_photo(int stop_request){                  // called from gui.c when show navi selected by GUI
+int init_gps_navigate_to_photo(int stop_request){                  // called from gui.c when show navi selected by GUI
 
     exit_compass_task = stop_request ; 
 
@@ -1762,16 +1767,18 @@ void init_gps_navigate_to_photo(int stop_request){                  // called fr
             if (igps->longitudeRef[0] == 'W') g_d_lon_nav = -g_d_lon_nav;
              
             run_compass_task(1);
+            return(1);
         }
         else
         {
             char vBuf[256];
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_8), image);  //"Cant navigate to photo: %s!"
-            draw_txt_string(0, 8, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
-            msleep(5000);
+            draw_txt_centered(7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
+            msleep(3000);
             navigation_mode=0;
         }
     }   
+    return(0) ;
 }
 
 
