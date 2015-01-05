@@ -111,6 +111,8 @@
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN 1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #define CAM_ISO_LIMIT_IN_HQ_BURST           1420    // Defines max market ISO override value for HQ Burst mode (higher values crash camera)
     #define CAM_HAS_MOVIE_DIGEST_MODE           1       // Changes the values in the 'movie_status' variable if the camera has this mode
+    #undef  CAM_MARKET_ISO_BASE
+    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
 
     #define CAM_LOAD_CUSTOM_COLORS              1       // Enable loading CHDK colors into the camera palette memory/hardware
 
