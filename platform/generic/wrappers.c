@@ -9,35 +9,9 @@
 #include "ptp_chdk.h"
 
 //----------------------------------------------------------------------------
-// Char Wrappers
+// Char Wrappers (VxWorks - ARM stubs)
 
-#if CAM_DRYOS
-#define _U      0x01    /* upper */ 
-#define _L      0x02    /* lower */ 
-#define _D      0x04    /* digit */ 
-#define _C      0x20    /* cntrl */ 
-#define _P      0x10    /* punct */ 
-#define _S      0x40    /* white space (space/lf/tab) */ 
-#define _X      0x80    /* hex digit */ 
-#define _SP     0x08    /* hard space (0x20) */ 
-static int _ctype(int c,int t) {
-    extern unsigned char ctypes[];  // Firmware ctypes table (in stubs_entry.S) 
-    return ctypes[c&0xFF] & t;
-}
-
-int isdigit(int c) { return _ctype(c,_D); }
-int isspace(int c) { return _ctype(c,_S); }
-int isalpha(int c) { return _ctype(c,(_U|_L)); }
-int isupper(int c) { return _ctype(c,_U); }
-int islower(int c) { return _ctype(c,_L); }
-int ispunct(int c) { return _ctype(c,_P); }
-int isxdigit(int c) { return _ctype(c,(_X|_D)); }
-int iscntrl(int c) { return _ctype(c,_C); }
-
-int tolower(int c) { return isupper(c) ? c | 0x20 : c; }
-int toupper(int c) { return islower(c) ? c & ~0x20 : c; }
-
-#else	//!CAM_DRYOS
+#if !CAM_DRYOS
 
 int isdigit(int c) { return _isdigit(c); }
 int isspace(int c) { return _isspace(c); }
@@ -47,15 +21,10 @@ int islower(int c) { return _islower(c); }
 int ispunct(int c) { return _ispunct(c); }
 int isxdigit(int c) { return _isxdigit(c); }
 
-// don't want to require the whole ctype table on vxworks just for this one
-int iscntrl(int c) { return ((c >=0 && c <32) || c == 127); }
-
 int tolower(int c) { return _tolower(c); }
 int toupper(int c) { return _toupper(c); }
 
 #endif
-
-int isalnum(int c) { return (isdigit(c) || isalpha(c)); }
 
 //----------------------------------------------------------------------------
 
@@ -809,34 +778,12 @@ unsigned long strtoul(const char *nptr, char **endptr, int base) {
 #endif
 }
 
-char *strpbrk(const char *s, const char *accept) {
 #if !CAM_DRYOS
-    return _strpbrk(s, accept);
-#else
-    const char *sc1,*sc2;
-
-    for( sc1 = s; *sc1 != '\0'; ++sc1) {
-     for( sc2 = accept; *sc2 != '\0'; ++sc2) {
-      if (*sc1 == *sc2) return (char *) sc1;
-     }
-    }
-return (void*)0;
-#endif
-}
-
-char *strstr (const char *s1, const char *s2)
+char *strpbrk(const char *s, const char *accept)
 {
-  const char *p = s1;
-  const int len = _strlen (s2);
-
-  for (; (p = _strchr (p, *s2)) != 0; p++)
-  {
-    if (_strncmp (p, s2, len) == 0)
-      return (char *)p;
-  }
-  return (0);
+    return _strpbrk(s, accept);
 }
-
+#endif
 
 //----------------------------------------------------------------------------
 
@@ -901,12 +848,6 @@ struct tm *localtime(const time_t *_tod) {
     static int x[10];
     return _LocalTime(_tod, &x);
 #endif
-}
-
-struct tm *get_localtime()
-{
-    time_t t = time(NULL);
-    return localtime(&t);
 }
 
 long strftime(char *s, unsigned long maxsize, const char *format, const struct tm *timp) {
@@ -984,18 +925,11 @@ int memcmp(const void *s1, const void *s2, long n) {
     return _memcmp(s1, s2, n);
 }
 
-void *memchr(const void *s, int c, int n) {
 #if !CAM_DRYOS
+void *memchr(const void *s, int c, int n) {
 	return _memchr(s,c,n);
-#else
-	while (n-- > 0) {
-		if (*(char *)s == c)
-			return (void *)s;
-		s++;
-	}
-	return (void *)0;
-#endif
 }
+#endif
 
 //----------------------------------------------------------------------------
 
@@ -1080,21 +1014,12 @@ void enable_shutdown() {
         shutdown_disabled = 0;
     }
 }
-void camera_shutdown_in_a_second(void){
-int i;
-//#if CAM_DRYOS
-//#else
-_SetAutoShutdownTime(1); // 1 sec
-for (i=0;i<200;i++) _UnlockMainPower(); // set power unlock counter to 200 or more, because every keyboard function call try to lock power again ( if "Disable LCD off" menu is "alt" or "script").
-//#endif
-}
 
-unsigned int GetJpgCount(void){
- return strtol(camera_jpeg_count_str(),((void*)0),0);
-}
-
-unsigned int GetRawCount(void){
- return GetFreeCardSpaceKb()/((camera_sensor.raw_size / 1024)+GetFreeCardSpaceKb()/GetJpgCount());
+void camera_shutdown_in_a_second(void) {
+    int i;
+    _SetAutoShutdownTime(1); // 1 sec
+    for (i=0;i<200;i++)
+        _UnlockMainPower(); // set power unlock counter to 200 or more, because every keyboard function call try to lock power again ( if "Disable LCD off" menu is "alt" or "script").
 }
 
 void EnterToCompensationEVF(void)
@@ -1458,7 +1383,6 @@ void change_ext_to_default(void){
 
 #endif
 
-
 #if !CAM_DRYOS
 static long drv_struct[16];
 #endif
@@ -1556,20 +1480,6 @@ int __attribute__((weak)) vid_get_viewport_display_xoffset() {
 // viewport display y offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
 int __attribute__((weak)) vid_get_viewport_display_yoffset() {
 	return vid_get_viewport_yoffset();
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
-// see G12 port for sample implementation
-int vid_get_viewport_image_offset() {
-	return (vid_get_viewport_yoffset() * vid_get_viewport_byte_width() * vid_get_viewport_yscale()) + (vid_get_viewport_xoffset() * 3);
-}
-
-// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
-// returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
-// see G12 port for sample implementation
-int vid_get_viewport_row_offset() {
-	return (vid_get_viewport_byte_width() * vid_get_viewport_yscale()) - (vid_get_viewport_width() * 3);
 }
 
 // for cameras with two (or more?) RAW buffers this can be used to speed up DNG creation by
