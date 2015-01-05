@@ -224,8 +224,8 @@ void gui_menu_init(CMenu *menu_ptr) {
     }
 
     num_lines = (camera_screen.height - camera_screen.ts_menu_border*2)/rbf_font_height()-1;
-    x = camera_screen.menu_border_width + camera_screen.ts_button_border;
-    w = camera_screen.width-x-x;
+    x = camera_screen.disp_left  + camera_screen.menu_border_width;
+    w = camera_screen.disp_width - camera_screen.menu_border_width;
     len_bool = rbf_str_width("\x95");
     len_int = rbf_str_width("99999");
     len_enum = rbf_str_width("WUBfS3a");
@@ -437,7 +437,7 @@ void gui_activate_sub_menu(CMenu *sub_menu)
     // FIXME check on stack overrun;
     if (gui_menu_stack_ptr > MENUSTACK_MAXDEPTH)
     {
-        draw_txt_string(0, 0, "E1", MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
+        draw_string(1, 0, "E1", MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
         gui_menu_stack_ptr = 0;
     }
 
@@ -731,7 +731,7 @@ void gui_menu_draw_initial()
     {
         wplus = 8; 
         // scrollbar background 
-        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))));
+        draw_rectangle((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))), RECT_BORDER0|DRAW_FILLED);
     }
     else
     {
@@ -1020,9 +1020,9 @@ void gui_menu_draw(int enforce_redraw)
 
                 if (xx > (x + len_space))
                 {
-                    draw_filled_rect(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+                    draw_rectangle(x+len_space, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
                     draw_line(x+len_space, yy+rbf_font_height()/2, xx-1, yy+rbf_font_height()/2, FG_COLOR(cl));
-                    draw_filled_rect(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+                    draw_rectangle(x+len_space, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
                 }
                 else
                 {
@@ -1033,9 +1033,9 @@ void gui_menu_draw(int enforce_redraw)
 
                 if (xx < (x+w-len_space))
                 {
-                    draw_filled_rect(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+                    draw_rectangle(xx, yy, x+w-len_space-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
                     draw_line(xx, yy+rbf_font_height()/2, x+w-1-len_space, yy+rbf_font_height()/2, FG_COLOR(cl));
-                    draw_filled_rect(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+                    draw_rectangle(xx, yy+rbf_font_height()/2+1, x+w-len_space-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
                 }
 
                 rbf_draw_char(x+w-len_space, yy, ' ', cl);
@@ -1045,7 +1045,7 @@ void gui_menu_draw(int enforce_redraw)
                 gui_menu_draw_symbol(1);
                 xx+=rbf_draw_string_len(xx, yy, w-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
                 color mc = FG_COLOR(user_color(*((confColor*)curr_menu->menu[imenu].value)));
-                draw_filled_round_rect(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, MAKE_COLOR(mc,mc));
+                draw_rectangle(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, MAKE_COLOR(mc,mc), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
                 }
                 break;
             case MENUITEM_COLOR_BG:
@@ -1053,7 +1053,7 @@ void gui_menu_draw(int enforce_redraw)
                 gui_menu_draw_symbol(1);
                 xx+=rbf_draw_string_len(xx, yy, w-len_space-symbol_width, lang_str(curr_menu->menu[imenu].text), cl);
                 color mc = BG_COLOR(user_color(*((confColor*)curr_menu->menu[imenu].value)));
-                draw_filled_round_rect(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, MAKE_COLOR(mc,mc));
+                draw_rectangle(x+w-1-cl_rect-2-len_space, yy+2, x+w-1-2-len_space, yy+rbf_font_height()-1-2, MAKE_COLOR(mc,mc), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
                 }
                 break;
             case MENUITEM_ENUM:
@@ -1079,9 +1079,9 @@ void gui_menu_draw(int enforce_redraw)
             j = i*num_lines/count;                          // bar height
             if (j<20) j=20;
             i = (i-j)*((gui_menu_curr_item<0)?0:gui_menu_curr_item)/(count-1);   // top pos
-            draw_filled_round_rect((x+w)+2, y+1,   (x+w)+6, y+1+i,                             MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_filled_round_rect((x+w)+2, y+i+j, (x+w)+6, y+num_lines*rbf_font_height()-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_filled_round_rect((x+w)+2, y+1+i, (x+w)+6, y+i+j,                             MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+            draw_rectangle((x+w)+2, y+1,   (x+w)+6, y+1+i,                             MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
+            draw_rectangle((x+w)+2, y+i+j, (x+w)+6, y+num_lines*rbf_font_height()-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
+            draw_rectangle((x+w)+2, y+1+i, (x+w)+6, y+i+j,                             MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
         }
     }
 }

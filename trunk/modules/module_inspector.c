@@ -126,11 +126,11 @@ static void gui_mem_info(char *typ, cam_meminfo *meminfo, int showidx)
 {
     char txt[50];
     sprintf(txt,"%-5s: %08x-%08x: %d",typ,meminfo->start_address, meminfo->end_address, meminfo->total_size);
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 5+showidx,  txt,       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_string(camera_screen.disp_left, showidx, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 	sprintf(txt,"alloc: now=%d(%d) max=%d", meminfo->allocated_size, meminfo->allocated_count, meminfo->allocated_peak);
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 6+showidx,  txt,       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_string(camera_screen.disp_left, showidx+FONT_HEIGHT, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 	sprintf(txt,"free:  now=%d(%d) max=%d", meminfo->free_size, meminfo->free_block_count, meminfo->free_block_max_size);
-    draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 7+showidx,  txt,       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_string(camera_screen.disp_left, showidx+2*FONT_HEIGHT, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 void gui_module_draw()
@@ -139,11 +139,12 @@ void gui_module_draw()
 
     if (modinspect_redraw) {
 
-    	draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+5, 0,  "*** Module Inspector ***", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 2,  "Idx Name         Addr       Size", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    	draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
+        draw_string(camera_screen.disp_left+5*FONT_WIDTH, 0, "*** Module Inspector ***", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(camera_screen.disp_left+FONT_WIDTH, FONT_HEIGHT, "SET-redraw, DISP-unload_all, MENU-exit", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(camera_screen.disp_left, 2*FONT_HEIGHT, "Idx Name         Addr       Size", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-		showidx=0;
+		showidx=3*FONT_HEIGHT;
 		for ( idx=0; idx<MAX_NUM_LOADED_MODULES; idx++)
 		{
             module_entry* mod = module_get_adr(idx);;
@@ -155,11 +156,11 @@ void gui_module_draw()
 			if (s) s = s + 1; else s = mod->hMod->name;
 			strncpy(name, s, 12); name[12] = 0;
 		    sprintf(txt,"%02d: %-12s %08x - %d bytes", idx, name, (unsigned)mod->hdr, mod->hdr->reloc_start+mod->hdr->bss_size);
-        	draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH, 3+showidx, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-			showidx++;
+        	draw_string(camera_screen.disp_left, showidx, txt, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+			showidx += FONT_HEIGHT;
 		}
 
-        draw_txt_string(camera_screen.ts_button_border/FONT_WIDTH+1, 4+showidx,  "SET-redraw, DISP-unload_all, MENU-exit",       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        showidx += FONT_HEIGHT;
 
     	cam_meminfo meminfo;
 
@@ -168,14 +169,14 @@ void gui_module_draw()
         memset(&meminfo,0,sizeof(meminfo));
         GetMemInfo(&meminfo);
         gui_mem_info("MEM", &meminfo, showidx);
-        showidx += 3;
+        showidx += 3*FONT_HEIGHT;
 
         // Display ARAM memory info (only if enabled)
         memset(&meminfo,0,sizeof(meminfo));
         if (GetARamInfo(&meminfo))
         {
             gui_mem_info("ARAM", &meminfo, showidx);
-            showidx += 3;
+            showidx += 3*FONT_HEIGHT;
 		}
 
         // Display EXMEM memory info (only if enabled)

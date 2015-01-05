@@ -48,7 +48,7 @@ typedef struct
     // Gui_Mode enum value
     int mode;
 
-	// Called to redraw screen. Argument is GUI_REDRAWFLAG_* set
+	// Called to redraw screen. Argument is non-zero to force redraw
     void (*redraw)(int);
 
 	// Main button handler for mode

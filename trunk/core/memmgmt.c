@@ -134,14 +134,14 @@ static void chdk_testing(chdk_heap *h)
     if (cnt != 0)
     {
         sprintf(osd_buf, "s:%8x e:%8x", h->start, h->end);
-        draw_txt_string(2, 12, osd_buf, user_color(conf.osd_color));
+        draw_string(2*FONT_WIDTH, 12*FONT_HEIGHT, osd_buf, user_color(conf.osd_color));
         sprintf(osd_buf, "f:%8x l:%8x c:%d", f, l, cnt);
     }
     else
     {
         sprintf(osd_buf, "OK 0x%x", h->start);
     }
-    draw_txt_string(2, 13, osd_buf, user_color(conf.osd_color));
+    draw_string(2*FONT_WIDTH, 13*FONT_HEIGHT, osd_buf, user_color(conf.osd_color));
     // end of check	
 }
 #endif

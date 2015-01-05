@@ -64,10 +64,10 @@ void gui_osd_draw()
         if ( yscale == 0) yscale = 1 ;
         for (i=1; i<=2; ++i)
         {
-            draw_rect((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0, 
-                      (osd[curr_item].pos->x+(osd[curr_item].size.x)*xscale)+i-1, 
-                      (osd[curr_item].pos->y+(osd[curr_item].size.y)*yscale)+i-1,
-                      COLOR_GREEN);
+            draw_rectangle((osd[curr_item].pos->x>=i)?osd[curr_item].pos->x-i:0, (osd[curr_item].pos->y>=i)?osd[curr_item].pos->y-i:0,
+                           (osd[curr_item].pos->x+(osd[curr_item].size.x)*xscale)+i-1,
+                           (osd[curr_item].pos->y+(osd[curr_item].size.y)*yscale)+i-1,
+                           MAKE_COLOR(COLOR_GREEN,COLOR_GREEN), RECT_BORDER1);
         }
         sprintf(osd_buf, " %s:  x:%d y:%d s:%d f:%d:%d ", lang_str(osd[curr_item].title), osd[curr_item].pos->x, osd[curr_item].pos->y, step, xscale, yscale);
         draw_string(0, (osd[curr_item].pos->x<strlen(osd_buf)*FONT_WIDTH+4 && osd[curr_item].pos->y<FONT_HEIGHT+4)?camera_screen.height-FONT_HEIGHT:0,

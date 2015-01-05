@@ -352,7 +352,7 @@ int rbf_draw_symbol(int x, int y, int ch, twoColors cl) {
       // if symbol font shorter than text font center symbol vertically and fill empty space above
       if (txt_height > sym_height) {
         space = (txt_height - sym_height)/2;
-        draw_filled_rect(x, y, x+pixel_width, y+space, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+        draw_rectangle(x, y, x+pixel_width, y+space, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
         y+=space;
       }
 
@@ -361,7 +361,7 @@ int rbf_draw_symbol(int x, int y, int ch, twoColors cl) {
 
       // Fill space below symbol if shorter than text font
       if (txt_height > sym_height)
-          draw_filled_rect(x, y+sym_height, x+pixel_width, y-space+txt_height-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+          draw_rectangle(x, y+sym_height, x+pixel_width, y-space+txt_height-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
     }
 
     return pixel_width;
@@ -426,7 +426,7 @@ int rbf_draw_string_len(int x, int y, int len, const char *str, twoColors cl) {
 
     // Fill any remaining space on right with background color
     if (l < len)
-        draw_filled_rect(x+l, y, x+len-1, y+rbf_font->hdr.height-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+        draw_rectangle(x+l, y, x+len-1, y+rbf_font->hdr.height-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
 
     return len;
 }
@@ -438,7 +438,7 @@ int rbf_draw_string_right_len(int x, int y, int len, const char *str, twoColors 
 
     // Fill padding with background color
     if (l > 0)
-        draw_filled_rect(x, y, x+l-1, y+rbf_font->hdr.height-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));
+        draw_rectangle(x, y, x+l-1, y+rbf_font->hdr.height-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
 
     // Draw chars
     l = rbf_draw_clipped_string(x, y, str, cl, l, len);
@@ -474,8 +474,8 @@ int rbf_draw_menu_header(int x, int y, int len, char symbol, const char *str, tw
         }
         else {
             // Rest of empty space is just filled with rectangles
-            draw_filled_rect(x+i,      y, x+ll-1,   bottom, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));    // left side
-            draw_filled_rect(right-lr, y, right-i,  bottom, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)));    // right side
+            draw_rectangle(x+i,      y, x+ll-1,   bottom, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);    // left side
+            draw_rectangle(right-lr, y, right-i,  bottom, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);    // right side
         }
     }
 

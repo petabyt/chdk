@@ -211,20 +211,11 @@ static CMenu autoiso_submenu = {0x2d,LANG_MENU_AUTOISO_TITLE, autoiso_submenu_it
 //-------------------------------------------------------------------
 #if OPT_EXPIRE_TEST
 
-static int exp_text_width, exp_text_height;
+static const char *exp_text = "Test version expired\nPlease post feedback to:\nchdk.setepontos.com\nYour comments are needed\nto finish this port.\nThanks";
 
-static const char *exp_text[] =
-{
-    "  Test version expired  ",
-    "Please post feedback to:",
-    "  chdk.setepontos.com   ",
-    "Your comments are needed",
-    "to finish this port.    ",
-    "Thanks                  "
-};
-
-#define EXP_TEXT_WIDTH   32
+#define EXP_TEXT_WIDTH   28
 #define EXP_TEXT_HEIGHT  6
+
 int get_expire_days_left(void) {
     time_t ts = time(NULL);
     if(ts > OPT_EXPIRE_TEST) {
@@ -238,7 +229,6 @@ void do_expire_check() {
         return;
     }
     static int in_splash = SPLASH_TIME;
-
 
     if(in_splash)
     {
@@ -255,22 +245,11 @@ void do_expire_check() {
     } else {
         return;
     }
-    coord x, y;
-    exp_text_width  = EXP_TEXT_WIDTH * FONT_HEIGHT + 8;
-    exp_text_height = EXP_TEXT_HEIGHT * FONT_WIDTH + 10;
 
-    x = (camera_screen.width-exp_text_width)>>1;
-    y = ((camera_screen.height-exp_text_height)>>1) - 60;
+    coord x = (camera_screen.width  - EXP_TEXT_WIDTH*FONT_WIDTH) >> 1;
+    coord y = (camera_screen.height - EXP_TEXT_HEIGHT*FONT_HEIGHT) >> 1;
 
-    int i;
-    for (i=0; i<EXP_TEXT_HEIGHT; i++)
-    {
-        draw_string(x+((exp_text_width-strlen(exp_text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, exp_text[i], cl);
-        // outside of alt, just show the "expired" line
-        if (!camera_info.state.gui_mode_alt) {
-            break;
-        }
-    }
+    draw_text_justified(x, y, exp_text, cl, EXP_TEXT_WIDTH, camera_info.state.gui_mode_alt ? EXP_TEXT_HEIGHT : 1, TEXT_CENTER|TEXT_FILL);
 }
 
 void do_expire_splash(int x,int y) {
@@ -2201,7 +2180,7 @@ static void gui_draw_splash()
     x = (camera_screen.width-logo_text_width)>>1; 
     y = ((camera_screen.height-logo_text_height)>>1) + 20;
 
-    draw_filled_round_rect(x, y, x+logo_text_width, y+logo_text_height, MAKE_COLOR(COLOR_RED, COLOR_RED));
+    draw_rectangle(x, y, x+logo_text_width, y+logo_text_height, MAKE_COLOR(COLOR_RED, COLOR_RED), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
     for (i=0; i<sizeof(text)/sizeof(text[0]); ++i)
     {
         draw_string(x+((logo_text_width-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
@@ -2526,14 +2505,17 @@ void gui_chdk_draw(int force_redraw)
 
     if (camera_info.state.osd_title_line) 
     {
+        int w = camera_screen.disp_width;
 #ifdef CAM_DISP_ALT_TEXT
         script_get_alt_text(buf);
-        draw_string(((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*strlen(buf)/2)), (CAM_SCREEN_HEIGHT-FONT_HEIGHT), buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+        w = draw_string_justified(camera_screen.disp_left, camera_screen.height-FONT_HEIGHT,
+                                  buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE), 0, w, TEXT_CENTER) - camera_screen.disp_left;
 #endif     
 
         if (camera_info.state.mode_rec || camera_info.state.mode_play)
         {
-            draw_txt_string(CAM_TS_BUTTON_BORDER/FONT_WIDTH, 14, script_title, user_color(conf.menu_color));
+            // Draw script title (up to <ALT> text, if shown)
+            draw_string_clipped(camera_screen.disp_left, camera_screen.height-FONT_HEIGHT, script_title, user_color(conf.menu_color), w);
         }
         clear_for_title = 1;   
     }
@@ -2790,7 +2772,7 @@ extern int no_modules_flag;
 void gui_draw_no_module_warning()
 {
     if ( no_modules_flag == 1 ) {
-        draw_txt_string(1, 1, lang_str(LANG_ERROR_MISSING_MODULES), user_color(conf.osd_color_warn));
+        draw_string(FONT_WIDTH, FONT_HEIGHT, lang_str(LANG_ERROR_MISSING_MODULES), user_color(conf.osd_color_warn));
     }
 }
 

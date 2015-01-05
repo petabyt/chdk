@@ -1161,8 +1161,8 @@ static int luaCB_draw_rect( lua_State* L ) {
   coord x2=luaL_checknumber(L,3);
   coord y2=luaL_checknumber(L,4);
   color cl=get_script_color(luaL_checknumber(L,5));
-  int   th=luaL_optnumber(L,6,1);
-  draw_rect_thick(x1,y1,x2,y2,cl,th);
+  int   th=luaL_optnumber(L,6,1) & RECT_BORDER_MASK;
+  draw_rectangle(x1,y1,x2,y2,MAKE_COLOR(cl,cl),th);
   return 0;
 }
 
@@ -1173,9 +1173,8 @@ static int luaCB_draw_rect_filled( lua_State* L ) {
   coord y2 =luaL_checknumber(L,4);
   color clf=get_script_color(luaL_checknumber(L,5));
   color clb=get_script_color(luaL_checknumber(L,6));
-  int   th =luaL_optnumber(L,7,1);
-  twoColors cl = MAKE_COLOR(clb,clf);
-  draw_filled_rect_thick(x1,y1,x2,y2,cl,th);
+  int   th =luaL_optnumber(L,7,1) & RECT_BORDER_MASK;
+  draw_rectangle(x1,y1,x2,y2,MAKE_COLOR(clb,clf),th|DRAW_FILLED);
   return 0;
 }
 
@@ -1185,7 +1184,7 @@ static int luaCB_draw_ellipse( lua_State* L ) {
   coord a=luaL_checknumber(L,3);
   coord b=luaL_checknumber(L,4);
   color cl=get_script_color(luaL_checknumber(L,5));
-  draw_ellipse(x1,y1,a,b,cl);
+  draw_ellipse(x1,y1,a,b,cl,0);
   return 0;
 }
 
@@ -1195,7 +1194,7 @@ static int luaCB_draw_ellipse_filled( lua_State* L ) {
   coord a=luaL_checknumber(L,3);
   coord b=luaL_checknumber(L,4);
   color cl=get_script_color(luaL_checknumber(L,5));
-  draw_filled_ellipse(x1,y1,a,b,cl);
+  draw_ellipse(x1,y1,a,b,cl,DRAW_FILLED);
   return 0;
 }
 

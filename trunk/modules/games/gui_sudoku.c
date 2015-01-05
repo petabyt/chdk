@@ -130,7 +130,7 @@ int is_one_num(int number)
 
 void del_numpad()
 {
-	draw_filled_rect(xPadStart, yPadStart-padLineDistance, xPadStart+padLineDistance*3, yPadStart+padLineDistance*4, MAKE_COLOR(SUDOKU_BG_COLOR,SUDOKU_BG_COLOR));
+	draw_rectangle(xPadStart, yPadStart-padLineDistance, xPadStart+padLineDistance*3, yPadStart+padLineDistance*4, MAKE_COLOR(SUDOKU_BG_COLOR,SUDOKU_BG_COLOR), RECT_BORDER0|DRAW_FILLED);
 }
 
 void draw_numpad()
@@ -161,9 +161,12 @@ void draw_numpad()
 	draw_string(xPadStart+padLineDistance+(padLineDistance-FONT_WIDTH)/2, yPadStart+padLineDistance*(-1)+(padLineDistance-FONT_HEIGHT)/2, str, MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK));
 
 	//marker
-	draw_rect(xPadStart+xPosPad*padLineDistance, yPadStart+yPosPad*padLineDistance, xPadStart+(xPosPad+1)*padLineDistance, yPadStart+(yPosPad+1)*padLineDistance, MARKER_COLOR);
-	draw_rect(xPadStart+xPosPad*padLineDistance+1, yPadStart+yPosPad*padLineDistance+1, xPadStart+(xPosPad+1)*padLineDistance-1, yPadStart+(yPosPad+1)*padLineDistance-1, MARKER_COLOR);
-	draw_rect(xPadStart+xPosPad*padLineDistance+2, yPadStart+yPosPad*padLineDistance+2, xPadStart+(xPosPad+1)*padLineDistance-2, yPadStart+(yPosPad+1)*padLineDistance-2, MARKER_COLOR);
+	draw_rectangle(xPadStart+xPosPad*padLineDistance, yPadStart+yPosPad*padLineDistance,
+	               xPadStart+(xPosPad+1)*padLineDistance, yPadStart+(yPosPad+1)*padLineDistance, MAKE_COLOR(MARKER_COLOR,MARKER_COLOR), RECT_BORDER1);
+	draw_rectangle(xPadStart+xPosPad*padLineDistance+1, yPadStart+yPosPad*padLineDistance+1,
+	               xPadStart+(xPosPad+1)*padLineDistance-1, yPadStart+(yPosPad+1)*padLineDistance-1, MAKE_COLOR(MARKER_COLOR,MARKER_COLOR), RECT_BORDER1);
+	draw_rectangle(xPadStart+xPosPad*padLineDistance+2, yPadStart+yPosPad*padLineDistance+2,
+	               xPadStart+(xPosPad+1)*padLineDistance-2, yPadStart+(yPosPad+1)*padLineDistance-2, MAKE_COLOR(MARKER_COLOR,MARKER_COLOR), RECT_BORDER1);
 }
 
 int get_pad_num()
@@ -208,7 +211,7 @@ void draw_field()
 	static char str[16];
 
 	//redraw last field to remove the marker
-	draw_filled_rect(xFieldBorder+xPosOld*fieldLineDistance, yFieldBorder+yPosOld*fieldLineDistance, xFieldBorder+(xPosOld+1)*fieldLineDistance, yFieldBorder+(yPosOld+1)*fieldLineDistance, MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK));
+	draw_rectangle(xFieldBorder+xPosOld*fieldLineDistance, yFieldBorder+yPosOld*fieldLineDistance, xFieldBorder+(xPosOld+1)*fieldLineDistance, yFieldBorder+(yPosOld+1)*fieldLineDistance, MAKE_COLOR(SUDOKU_BG_COLOR, COLOR_BLACK), RECT_BORDER1|DRAW_FILLED);
 	xPosOld=xPos;
 	yPosOld=yPos;
 
@@ -235,12 +238,15 @@ void draw_field()
 
 	//cursor
 	if (mode==MODE_VIEW){
-		draw_rect(xFieldBorder+xPos*fieldLineDistance, yFieldBorder+yPos*fieldLineDistance, xFieldBorder+(xPos+1)*fieldLineDistance, yFieldBorder+(yPos+1)*fieldLineDistance, MARKER_COLOR);
-		draw_rect(xFieldBorder+xPos*fieldLineDistance+1, yFieldBorder+yPos*fieldLineDistance+1, xFieldBorder+(xPos+1)*fieldLineDistance-1, yFieldBorder+(yPos+1)*fieldLineDistance-1, MARKER_COLOR);
-		draw_rect(xFieldBorder+xPos*fieldLineDistance+2, yFieldBorder+yPos*fieldLineDistance+2, xFieldBorder+(xPos+1)*fieldLineDistance-2, yFieldBorder+(yPos+1)*fieldLineDistance-2, MARKER_COLOR);
+		draw_rectangle(xFieldBorder+xPos*fieldLineDistance, yFieldBorder+yPos*fieldLineDistance,
+		               xFieldBorder+(xPos+1)*fieldLineDistance, yFieldBorder+(yPos+1)*fieldLineDistance, MAKE_COLOR(MARKER_COLOR,MARKER_COLOR), RECT_BORDER1);
+		draw_rectangle(xFieldBorder+xPos*fieldLineDistance+1, yFieldBorder+yPos*fieldLineDistance+1,
+		               xFieldBorder+(xPos+1)*fieldLineDistance-1, yFieldBorder+(yPos+1)*fieldLineDistance-1, MAKE_COLOR(MARKER_COLOR,MARKER_COLOR), RECT_BORDER1);
+		draw_rectangle(xFieldBorder+xPos*fieldLineDistance+2, yFieldBorder+yPos*fieldLineDistance+2,
+		               xFieldBorder+(xPos+1)*fieldLineDistance-2, yFieldBorder+(yPos+1)*fieldLineDistance-2, MAKE_COLOR(MARKER_COLOR,MARKER_COLOR), RECT_BORDER1);
 	}
 	if (mode==MODE_EDIT){
-		draw_filled_ellipse(xFieldBorder+(xPos+1)*fieldLineDistance-fieldLineDistance/2, yFieldBorder+(yPos+1)*fieldLineDistance-fieldLineDistance/2, fieldLineDistance/2-3, fieldLineDistance/2-1, MARKER_COLOR);
+		draw_ellipse(xFieldBorder+(xPos+1)*fieldLineDistance-fieldLineDistance/2, yFieldBorder+(yPos+1)*fieldLineDistance-fieldLineDistance/2, fieldLineDistance/2-3, fieldLineDistance/2-1, MARKER_COLOR, DRAW_FILLED);
 		sprintf(str, "%i", get_dec_num(user[yPos][xPos]));
 		draw_string(xFieldBorder+fieldLineDistance*xPos+(fieldLineDistance-FONT_WIDTH)/2, yFieldBorder+fieldLineDistance*yPos+(fieldLineDistance-FONT_HEIGHT)/2, str, MAKE_COLOR(MARKER_COLOR, COLOR_WHITE));
 	}
@@ -262,7 +268,7 @@ void draw_field()
 //how to redraw without flickering?
 void redraw()
 {
-	draw_filled_rect(camera_screen.ts_button_border, 0, camera_screen.width-camera_screen.ts_button_border-1, camera_screen.height-1, SUDOKU_BG_COLOR);
+	draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(SUDOKU_BG_COLOR,SUDOKU_BG_COLOR), RECT_BORDER0|DRAW_FILLED);
 	draw_menu();
 	draw_field();
 	if (mode==MODE_EDIT)draw_numpad();
@@ -988,9 +994,9 @@ int gui_sudoku_kbd_process()
 int gui_sudoku_init()
 {
 	int x, y;
-	xFieldBorder = 12 + camera_screen.ts_button_border;
+	xFieldBorder = 12 + camera_screen.disp_left;
 	yFieldBorder = 12;
-    xMenuPos = camera_screen.width - camera_screen.ts_button_border - FONT_WIDTH*15;
+    xMenuPos = camera_screen.disp_right - FONT_WIDTH*15 + 1;
 	xPos=4;
 	yPos=4;
 	fieldLineDistance=(camera_screen.height-yFieldBorder*2)/9;

@@ -123,25 +123,20 @@
             isupper
             isxdigit
 
-            draw_txt_string
+            text_dimensions
             draw_string
-            draw_string_box
+            draw_string_justified
+            draw_text_justified
             draw_string_scaled
-            draw_rect
-            draw_filled_rect
-            draw_filled_ellipse
-            draw_filled_round_rect
             draw_line
             draw_char
             draw_get_pixel
             draw_pixel
-            draw_txt_char
-            draw_rect_thick
-            draw_filled_rect_thick
-            draw_rect_shadow
             draw_ellipse
             draw_set_draw_proc
             draw_restore
+            draw_button
+            draw_rectangle
 
             chdkColorToCanonColor
             user_color

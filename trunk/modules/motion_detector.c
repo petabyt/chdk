@@ -695,7 +695,7 @@ void md_draw_grid()
 
                 if (motion_detector.draw_grid & 1)
                 {
-                    draw_rect(x_start+2, y_start+2, x_end-2, y_end-2, FG_COLOR(c));
+                    draw_rectangle(x_start+2, y_start+2, x_end-2, y_end-2, c, RECT_BORDER1);
                 }
             }
         }

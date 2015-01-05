@@ -682,7 +682,7 @@ void gui_osd_draw_ev_video(int is_osd_edit)
 
     twoColors col = user_color(conf.osd_color);
 
-    draw_filled_rect(x0,y0,x0+70,y0+24, visible? MAKE_COLOR(BG_COLOR(col),BG_COLOR(col)): COLOR_TRANSPARENT);
+    draw_rectangle(x0,y0,x0+70,y0+24, visible? MAKE_COLOR(BG_COLOR(col),BG_COLOR(col)): COLOR_TRANSPARENT, RECT_BORDER1|DRAW_FILLED);
 
     if (!visible) { return; }
 
@@ -1292,7 +1292,7 @@ static void gui_default_draw(int force_redraw)
     if (conf.flashlight && (camera_info.state.mode&MODE_SCREEN_OPENED) && (camera_info.state.mode&MODE_SCREEN_ROTATED))
     {
         flashlight = 1;
-        draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+        draw_rectangle(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
         return;
     }
     else if (flashlight)

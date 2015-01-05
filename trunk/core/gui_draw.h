@@ -54,8 +54,32 @@ extern  unsigned char   *chdk_colors;
 
 //-------------------------------------------------------------------
 
-#define FONT_WIDTH                      8
-#define FONT_HEIGHT                     16
+#define FONT_WIDTH              8
+#define FONT_HEIGHT             16
+
+// Text justification & options
+#define TEXT_LEFT               0
+#define TEXT_CENTER             1
+#define TEXT_RIGHT              2
+#define TEXT_FILL               16
+
+// Drawing flag options for rectangle and ellipse
+#define RECT_BORDER0            0       // Border widths
+#define RECT_BORDER1            1
+#define RECT_BORDER2            2
+#define RECT_BORDER3            3
+#define RECT_BORDER4            4
+#define RECT_BORDER5            5
+#define RECT_BORDER6            6
+#define RECT_BORDER7            7
+#define RECT_BORDER_MASK        7
+#define DRAW_FILLED             8       // Filled rectangle or ellipse
+#define RECT_SHADOW0            0       // Drop shadow widths
+#define RECT_SHADOW1            0x10
+#define RECT_SHADOW2            0x20
+#define RECT_SHADOW3            0x30
+#define RECT_SHADOW_MASK        0x30
+#define RECT_ROUND_CORNERS      0x40    // Round corners on rectangle
 
 //-------------------------------------------------------------------
 extern void draw_init();
@@ -72,37 +96,24 @@ extern void draw_line(coord x1, coord y1, coord x2, coord y2, color cl);
 extern void draw_hline(coord x, coord y, int len, color cl);
 extern void draw_vline(coord x, coord y, int len, color cl);
 
-// draw frame
-extern void draw_rect(coord x1, coord y1, coord x2, coord y2, color cl);
-extern void draw_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness);
-extern void draw_rect_shadow(coord x1, coord y1, coord x2, coord y2, color cl, int thickness);
-extern void draw_round_rect(coord x1, coord y1, coord x2, coord y2, color cl);
-extern void draw_round_rect_thick(coord x1, coord y1, coord x2, coord y2, color cl, int thickness);
-// color: hi_byte - BG; lo_byte - FG
-extern void draw_filled_rect(coord x1, coord y1, coord x2, coord y2, twoColors cl);
-extern void draw_filled_rect_thick(coord x1, coord y1, coord x2, coord y2, twoColors cl, int thickness);
-extern void draw_filled_round_rect(coord x1, coord y1, coord x2, coord y2, twoColors cl);
-extern void draw_filled_round_rect_thick(coord x1, coord y1, coord x2, coord y2, twoColors cl, int thickness);
+// draw shapes
+extern void draw_rectangle(coord x1, coord y1, coord x2, coord y2, twoColors cl, int flags);
+extern void draw_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl, int flags);
 
+// draw text
+extern int  text_dimensions(const char *s, int width, int max_chars, int *max_lines);
 extern void draw_char(coord x, coord y, const char ch, twoColors cl);
+extern int  draw_string_clipped(coord x, coord y, const char *s, twoColors cl, int max_width);
 extern int  draw_string(coord x, coord y, const char *s, twoColors cl);
-extern void draw_string_box(coord x, coord y, int left, int width, const char *buf, twoColors txtcol);
-extern void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize);
+extern int  draw_string_justified(coord x, coord y, const char *s, twoColors cl, int xo, int max_width, int justification);
+extern int  draw_text_justified(coord x, coord y, const char *s, twoColors cl, int max_chars, int max_lines, int justification);
 extern void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize);
 extern void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale);
+extern void draw_button(int x, int y, int w, int str_id, int active);
 
-extern void draw_txt_rect(coord col, coord row, unsigned int length, unsigned int height, color cl);
-extern void draw_txt_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, color cl);
-extern void draw_txt_filled_rect(coord col, coord row, unsigned int length, unsigned int height, twoColors cl);
-extern void draw_txt_filled_rect_exp(coord col, coord row, unsigned int length, unsigned int height, unsigned int exp, twoColors cl);
 extern void draw_txt_string(coord col, coord row, const char *str, twoColors cl);
-extern void draw_txt_char(coord col, coord row, const char ch, twoColors cl);
 
 extern void draw_restore();
-
-extern void draw_circle(coord x, coord y, const unsigned int r, color cl);
-extern void draw_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl);
-extern void draw_filled_ellipse(coord xc, coord yc, unsigned int a, unsigned int b, color cl);
 
 extern color get_script_color(int cl);
 
