@@ -45,10 +45,10 @@ asm volatile (
 "    CMP     R1, #1 \n"
 "    BNE     loc_FFDABBC4 \n"
 "    LDR     R0, [R4, #8] \n"
-"    BL      sub_FFC0B920 /*_GiveSemaphore_FW*/ \n"
+"    BL      _GiveSemaphore \n"
 
 "loc_FFDABBBC:\n"
-"    BL      sub_FFC0BC54 /*_ExitTask_FW*/ \n"
+"    BL      _ExitTask \n"
 "    LDMFD   SP!, {R1-R5,PC} \n"
 
 "loc_FFDABBC4:\n"
@@ -84,7 +84,7 @@ asm volatile (
 "    LDR     R0, [R4] \n"
 "    CMN     R0, #1 \n"
 "    BEQ     loc_FFDABC44 \n"
-"    BL      fwt_close \n"  // --> Patched. Old value = _Close_FW.
+"    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    MVN     R0, #0 \n"
 "    STR     R0, [R4] \n"
 "    LDR     R0, =0x8C1E4 \n"
@@ -93,7 +93,7 @@ asm volatile (
 
 "loc_FFDABC44:\n"
 "    LDR     R0, [R4, #0xC] \n"
-"    BL      sub_FFC0B920 /*_GiveSemaphore_FW*/ \n"
+"    BL      _GiveSemaphore \n"
 "    B       loc_FFDABB8C \n"
 
 "loc_FFDABC50:\n"
@@ -136,7 +136,7 @@ asm volatile (
 "    MOV     R0, R6 \n"
 "    MOV     R1, R7 \n"
 "    MOV     R2, R8 \n"
-"    BL      fwt_open \n"  // --> Patched. Old value = _Open_FW.
+"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
 "    LDR     PC, =0xFFDABE7C \n"  // Continue in firmware
 );
 }
@@ -172,8 +172,8 @@ asm volatile (
 
 "loc_FFDABFD4:\n"
 "    LDR     R1, =0x20D \n"
-"    LDR     R0, =0xFFDABF64 \n"
-"    BL      sub_FFC0BE9C /*_DebugAssert*/ \n"
+"    LDR     R0, =0xFFDABF64 /*'dwFWrite.c'*/ \n"
+"    BL      _DebugAssert \n"
 "    B       loc_FFDABFC8 \n"
 
 "loc_FFDABFE4:\n"
@@ -194,7 +194,7 @@ asm volatile (
 "    LDR     R0, [R9] \n"
 "    MOV     R2, R8 \n"
 "    MOV     R1, R7 \n"
-"    BL      fwt_write \n"  // --> Patched. Old value = _Write_FW.
+"    BL      fwt_write \n"  // --> Patched. Old value = _Write.
 "    LDR     R1, [R4, #4] \n"
 "    CMP     R8, R0 \n"
 "    ADD     R1, R1, R0 \n"
@@ -210,9 +210,9 @@ asm volatile (
 "    SUB     R5, R5, R0 \n"
 "    CMP     R5, R6 \n"
 "    ADD     R7, R7, R0 \n"
-"    LDRCS   R0, =0xFFDABF64 \n"
+"    LDRCS   R0, =0xFFDABF64 /*'dwFWrite.c'*/ \n"
 "    MOVCS   R1, #0x23C \n"
-"    BLCS    sub_FFC0BE9C /*_DebugAssert*/ \n"
+"    BLCS    _DebugAssert \n"
 "    CMP     R5, #0 \n"
 "    BNE     loc_FFDABFEC \n"
 "    LDR     R0, [R4] \n"
@@ -236,7 +236,7 @@ asm volatile (
 "    SUB     SP, SP, #0x1C \n"
 "    CMN     R0, #1 \n"
 "    BEQ     sub_FFDAC0B4 \n"
-"    BL      fwt_close \n"  // --> Patched. Old value = _Close_FW.
+"    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    LDR     PC, =0xFFDAC0A0 \n"  // Continue in firmware
 );
 }
