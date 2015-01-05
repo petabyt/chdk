@@ -86,7 +86,7 @@ void console_draw(int force_redraw)
         if ((console_displayed == 0) || force_redraw)
         {
             int y = (console_y + console_max_lines - 1) * FONT_HEIGHT;
-            int x = console_x * FONT_WIDTH + camera_screen.ts_button_border;
+            int x = console_x * FONT_WIDTH + camera_screen.disp_left;
 
             int c, i;
             for (c = 0, i = console_cur_line; c < console_num_lines; ++c, --i)
@@ -94,7 +94,7 @@ void console_draw(int force_redraw)
                 if (i < 0) i = MAX_CONSOLE_HISTORY-1;
                 strncpy(buf,console_buf[i],console_line_length);
                 buf[console_line_length] = 0;
-                draw_string_box(x, y - c * FONT_HEIGHT, 0, console_line_length * FONT_WIDTH, buf, col);
+                draw_string_justified(x, y - c * FONT_HEIGHT, buf, col, 0, console_line_length * FONT_WIDTH, TEXT_LEFT|TEXT_FILL);
 
                 console_displayed = 1;
             }
@@ -215,36 +215,31 @@ static void gui_console_draw()
 {
     if (console_redraw_flag)
     {
-        coord x=0, y=0;
-        int w, h, l;
-
         twoColors col = user_color(conf.menu_color);
 
-        w = MAX_CONSOLE_LINE_LENGTH;
-        h = MAX_CONSOLE_DISP_LINES;
+        int w = MAX_CONSOLE_LINE_LENGTH;
+        int h = MAX_CONSOLE_DISP_LINES;
 
-        x = (camera_screen.width - w * FONT_WIDTH) >> 1;
-        y = (camera_screen.height - (h+1) * FONT_HEIGHT) >> 1;
+        coord x = (camera_screen.width - w * FONT_WIDTH) >> 1;
+        coord y = (camera_screen.height - (h+1) * FONT_HEIGHT) >> 1;
 
-        draw_filled_rect_thick(x-3, y-3, x+w*FONT_WIDTH+3, y+(h+1)*FONT_HEIGHT+2, col, 1); // main box
-        draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+1, col); //title
+        draw_rectangle(x-3, y-3, x+w*FONT_WIDTH+3, y+(h+1)*FONT_HEIGHT+2, col, RECT_BORDER1|DRAW_FILLED); // main box
+        draw_rectangle(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+1, col, RECT_BORDER1|DRAW_FILLED); //title
 
-        char *t = "Console - press SET to close";
-        l = strlen(t);
-        draw_string(x+((w-l)>>1)*FONT_WIDTH, y, t, col); //title text
+        draw_string_justified(x, y, "Console - press SET to close", col, 0, w*FONT_WIDTH, TEXT_CENTER); //title text
         y += FONT_HEIGHT + 2;
 
         int c, i;
         for (c = h-1, i = console_cur_line-console_scroll; c >= 0; --c, --i)
         {
             if (i < 0) i += MAX_CONSOLE_HISTORY;
-            draw_string_box(x-1, y + c * FONT_HEIGHT, 0, w * FONT_WIDTH, console_buf[i], col);
+            draw_string_justified(x-1, y + c * FONT_HEIGHT, console_buf[i], col, 0, w * FONT_WIDTH, TEXT_LEFT|TEXT_FILL);
         }
 
         // Scrollbar
-        draw_filled_rect(x+w*FONT_WIDTH, y+((MAX_CONSOLE_HISTORY-console_scroll-h)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY, 
-                         x+w*FONT_WIDTH+2, y+((MAX_CONSOLE_HISTORY-console_scroll)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY-1, 
-                         MAKE_COLOR(COLOR_RED, COLOR_RED));
+        draw_rectangle(x+w*FONT_WIDTH, y+((MAX_CONSOLE_HISTORY-console_scroll-h)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY,
+                       x+w*FONT_WIDTH+2, y+((MAX_CONSOLE_HISTORY-console_scroll)*(h*FONT_HEIGHT))/MAX_CONSOLE_HISTORY-1,
+                       MAKE_COLOR(COLOR_RED, COLOR_RED), RECT_BORDER0|DRAW_FILLED);
 
         console_redraw_flag = 0;
     }

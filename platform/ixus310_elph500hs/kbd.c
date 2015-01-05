@@ -267,7 +267,7 @@ void virtual_buttons()
                 if (camera_info.state.gui_mode && (keymap[i].hackkey == KEY_PRINT)) cl = c2;
                 if (keymap[i].conf_val && *keymap[i].conf_val) cl = c2;
 
-                draw_filled_round_rect_thick(x1, y1, x2, y2, cl, 3);
+                draw_rectangle(x1, y1, x2, y2, cl, RECT_BORDER3|DRAW_FILLED|RECT_ROUND_CORNERS);
 
                 if (keymap[i].conf_val && keymap[i].chg_val)
                 {

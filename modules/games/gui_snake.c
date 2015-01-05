@@ -204,7 +204,7 @@ const char wall[8][8] = {
 };
 
 static void draw_element(int x,int y,const char element[8][8],char angle){
-  x = x * SNAKE_ELEMENT_SIZE;
+  x = camera_screen.disp_left + x * SNAKE_ELEMENT_SIZE;
   y = y * SNAKE_ELEMENT_SIZE;
   int xx,yy;
   for(xx=0;xx<SNAKE_ELEMENT_SIZE;xx++)
@@ -240,10 +240,10 @@ static void load_laby(int num){
       if(ring[x][y] != ' '){
         draw_element(x,y,wall,0);
       }else{
-        draw_filled_rect(x * SNAKE_ELEMENT_SIZE,
-                         y * SNAKE_ELEMENT_SIZE,
-                         x * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                         y * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
+        draw_rectangle(camera_screen.disp_left + x * SNAKE_ELEMENT_SIZE,
+                       y * SNAKE_ELEMENT_SIZE,
+                       camera_screen.disp_left + x * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
+                       y * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
       }
     }
 }
@@ -281,10 +281,10 @@ static void snake_start(){
   for(i=snake_tail;i<snake_head;i++){
     snake[i][0] = 2+i;
     snake[i][1] = 2;
-    draw_filled_rect(snake[i][0] * SNAKE_ELEMENT_SIZE,
-                     snake[i][1] * SNAKE_ELEMENT_SIZE,
-                     snake[i][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                     snake[i][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_RED));
+    draw_rectangle(camera_screen.disp_left + snake[i][0] * SNAKE_ELEMENT_SIZE,
+                   snake[i][1] * SNAKE_ELEMENT_SIZE,
+                   camera_screen.disp_left + snake[i][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
+                   snake[i][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_RED), RECT_BORDER1|DRAW_FILLED);
   }
   direction = DIR_RIGHT;
   for(i=0;i<10;i++)
@@ -293,9 +293,9 @@ static void snake_start(){
 
 
 static void game_over(){
-    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
+    draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
     sprintf(str_buf,"Points: %d",points);
-    draw_string(0,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
+    draw_string(camera_screen.disp_left,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     msleep(3000);
     snake_start();
 }
@@ -402,10 +402,10 @@ void gui_snake_draw() {
     }
     prevdir = direction;
     if(clear_tail){
-        draw_filled_rect(snake[snake_tail][0] * SNAKE_ELEMENT_SIZE,
-                         snake[snake_tail][1] * SNAKE_ELEMENT_SIZE,
-                         snake[snake_tail][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                         snake[snake_tail][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
+        draw_rectangle(camera_screen.disp_left + snake[snake_tail][0] * SNAKE_ELEMENT_SIZE,
+                       snake[snake_tail][1] * SNAKE_ELEMENT_SIZE,
+                       camera_screen.disp_left + snake[snake_tail][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
+                       snake[snake_tail][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
     }
     snake_head = new_head;
     snake_tail = new_tail;
@@ -417,12 +417,12 @@ void gui_snake_draw() {
     if(draw_points){
       draw_points = 0;
       sprintf(str_buf,"Points: %d",points);
-      draw_string(10,220,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
+      draw_string(camera_screen.disp_left + 10,220,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     }
 }
 
 int gui_snake_init() {
-    draw_filled_rect(0,0,camera_screen.width,camera_screen.height, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE));
+    draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
     snake_start();
     gui_set_mode(&GUI_MODE_SNAKE);
     return 1;

@@ -147,13 +147,13 @@ static void palette_test()
     color c, co;
     static char buf[64];
 
-    xl = camera_screen.ts_button_border;
-    xr = camera_screen.width - camera_screen.ts_button_border;
+    xl = camera_screen.disp_left;
+    xr = camera_screen.disp_right;
 
     if (gui_palette_redraw)
     {
         // Draw top text line - current color + instructions
-        draw_filled_rect(xl, 0, xr-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+        draw_rectangle(xl, 0, xr, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
         draw_string(xr-22*FONT_WIDTH, 0, "Use \x1b\x1a to change page", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         color cols[3][20] = {
@@ -196,13 +196,13 @@ static void palette_test()
         {
             draw_string(xl, 0, "System Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             c = 0;
-            w = (xr - xl) / 4;
+            w = camera_screen.disp_width / 4;
             h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
             for (y=0; y<3; y++)
             {
                 for (x=0; x<4; x++, c++)
                 {
-                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c],cols[test_page][c]));
+                    draw_rectangle(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c],cols[test_page][c]), RECT_BORDER0|DRAW_FILLED);
                     draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
                 }
             }
@@ -211,13 +211,13 @@ static void palette_test()
         {
             draw_string(xl, 0, "Histogram Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             c = 0;
-            w = (xr - xl) / 2;
+            w = camera_screen.disp_width / 2;
             h = (camera_screen.height - (2 * FONT_HEIGHT)) / 3;
             for (y=0; y<3; y++)
             {
                 for (x=0; x<2; x++, c++)
                 {
-                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c],cols[test_page][c]));
+                    draw_rectangle(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(cols[test_page][c],cols[test_page][c]), RECT_BORDER0|DRAW_FILLED);
                     draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
                 }
             }
@@ -226,13 +226,14 @@ static void palette_test()
         {
             draw_string(xl, 0, "Script/Icon Colors", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             c = 0;
-            w = (xr - xl) / 5;
+            w = camera_screen.disp_width / 5;
             h = (camera_screen.height - (2 * FONT_HEIGHT)) / 4;
             for (y=0; y<4; y++)
             {
                 for (x=0; x<5; x++, c++)
                 {
-                    draw_filled_rect(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6, MAKE_COLOR(get_script_color(cols[test_page][c]+256),get_script_color(cols[test_page][c]+256)));
+                    draw_rectangle(xl+(x*w), (2*FONT_HEIGHT)+(y*h), xl+(x*w)+w-1, (2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-6,
+                            MAKE_COLOR(get_script_color(cols[test_page][c]+256),get_script_color(cols[test_page][c]+256)), RECT_BORDER0|DRAW_FILLED);
                     draw_string(xl+(x*w),(2*FONT_HEIGHT)+(y*h)+h-FONT_HEIGHT-3, nams[test_page][c], MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
                 }
             }
@@ -258,14 +259,14 @@ static void palette_draw()
     color c;
     static char buf[64];
 
-    xl = camera_screen.ts_button_border;
-    xr = camera_screen.width - camera_screen.ts_button_border;
+    xl = camera_screen.disp_left;
+    xr = camera_screen.disp_right;
     int *pal = (int*)vid_get_bitmap_active_palette();
 
     if (gui_palette_redraw)
     {
         // Draw top text line - current color + instructions
-        draw_filled_rect(xl, 0, xr, FONT_HEIGHT-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+        draw_rectangle(xl, 0, xr, FONT_HEIGHT-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
         draw_string(xr-29*FONT_WIDTH, 0, "    Use \x18\x19\x1b\x1a to change color ", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
         if ( pal )
             sprintf(buf, " %s: 0x%02hX 0x%08X", lang_str(LANG_PALETTE_TEXT_COLOR), cl.col, pal[chdkColorToCanonColor(cl)]);
@@ -274,16 +275,16 @@ static void palette_draw()
         draw_string(xl, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         // Draw gray borders
-        draw_rect_thick(xl, DISP_TOP_CHDK-BORDER_SIZE, xr-1, camera_screen.height-1, COLOR_GREY, BORDER_SIZE); // outer border
-        draw_filled_rect(xl+BORDER_SIZE, DISP_TOP-7, xr-BORDER_SIZE-1, DISP_TOP-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //horiz divider
-        draw_filled_rect(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //vert divider
-        draw_filled_rect(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, xr-BORDER_SIZE-1, DISP_TOP+3*CELL_SIZE-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY)); //above sample
+        draw_rectangle(xl, DISP_TOP_CHDK-BORDER_SIZE, xr, camera_screen.height-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER6); // outer border
+        draw_rectangle(xl+BORDER_SIZE, DISP_TOP-7, xr-BORDER_SIZE, DISP_TOP-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //horiz divider
+        draw_rectangle(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //vert divider
+        draw_rectangle(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, xr-BORDER_SIZE, DISP_TOP+3*CELL_SIZE-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //above sample
 
         // Draw CHDK Palette color boxes
         c = 0;
         for (x=DISP_LEFT; x<DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1); x+=CELL_SIZE, c++)
         {
-            draw_filled_rect(xl+x, DISP_TOP_CHDK, xl+x+CELL_SIZE, DISP_TOP_CHDK+CELL_SIZE, MAKE_COLOR(chdk_colors[c],COLOR_BLACK));
+            draw_rectangle(xl+x, DISP_TOP_CHDK, xl+x+CELL_SIZE, DISP_TOP_CHDK+CELL_SIZE, MAKE_COLOR(chdk_colors[c],COLOR_BLACK), RECT_BORDER1|DRAW_FILLED);
         }
         draw_string(xl+DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1)+1, DISP_TOP_CHDK, " <-- CHDK     ", MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
 
@@ -293,7 +294,7 @@ static void palette_draw()
         {
             for (x=DISP_LEFT; x<DISP_RIGHT; x+=CELL_SIZE, c++)
             {
-                draw_filled_rect(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, MAKE_COLOR(c,COLOR_BLACK));
+                draw_rectangle(xl+x, y, xl+x+CELL_SIZE, y+CELL_SIZE, MAKE_COLOR(c,COLOR_BLACK), RECT_BORDER1|DRAW_FILLED);
             }
         }
         draw_string(xl+DISP_RIGHT+BORDER_SIZE, DISP_TOP+10, "<-- Canon", MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
@@ -311,10 +312,10 @@ static void palette_draw()
         }
 
         // Highlight selected color
-        draw_filled_rect_thick(xl+x-CELL_ZOOM, y-CELL_ZOOM, xl+x+CELL_SIZE+CELL_ZOOM, y+CELL_SIZE+CELL_ZOOM, MAKE_COLOR(chdkColorToCanonColor(cl), COLOR_RED), 2);
+        draw_rectangle(xl+x-CELL_ZOOM, y-CELL_ZOOM, xl+x+CELL_SIZE+CELL_ZOOM, y+CELL_SIZE+CELL_ZOOM, MAKE_COLOR(chdkColorToCanonColor(cl), COLOR_RED), RECT_BORDER2|DRAW_FILLED);
 
         // Fill 'sample' area with selected color
-        draw_filled_rect(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP+CELL_SIZE*3, xr-BORDER_SIZE-1, DISP_BOTTOM, MAKE_COLOR(chdkColorToCanonColor(cl), COLOR_WHITE));
+        draw_rectangle(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP+CELL_SIZE*3, xr-BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(chdkColorToCanonColor(cl), COLOR_WHITE), RECT_BORDER1|DRAW_FILLED);
 
         gui_palette_redraw = 0;
     }

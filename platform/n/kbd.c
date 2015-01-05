@@ -307,7 +307,7 @@ void virtual_buttons()
                 }
                 ofst = 16;
 
-                draw_filled_round_rect(x1, y1, x2, y2, clr);
+                draw_rectangle(x1, y1, x2, y2, clr, RECT_BORDER1|DRAW_FILLED|RECT_ROUND_CORNERS);
 
                 if      (keymap[i].hackkey == KEY_UP)
                 {

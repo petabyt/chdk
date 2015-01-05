@@ -738,11 +738,11 @@ void gui_fselect_draw(int enforce_redraw)
         if (gui_fselect_redraw == 2)
         {
             // Title
-            draw_string_box(main_x, main_y, ((main_w - (strlen(fselect_title) * FONT_WIDTH))>>1), main_w, fselect_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string_justified(main_x, main_y, fselect_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), 0, main_w, TEXT_CENTER|TEXT_FILL);
 
-            draw_rect_thick(main_x-BORDER, main_y-BORDER, main_x+main_w+BORDER-1, main_y+MAIN_H+BORDER-1, COLOR_WHITE, BORDER); //border frame
-            draw_line(main_x, body_y-1, main_x+main_w-1, body_y-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border head-body
-            draw_line(main_x, foot_y-1, main_x+main_w-1, foot_y-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE)); //border body-foot
+            draw_rectangle(main_x-BORDER, main_y-BORDER, main_x+main_w+BORDER-1, main_y+MAIN_H+BORDER-1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER2); //border frame
+            draw_line(main_x, body_y-1, main_x+main_w-1, body_y-1, COLOR_WHITE); //border head-body
+            draw_line(main_x, foot_y-1, main_x+main_w-1, foot_y-1, COLOR_WHITE); //border body-foot
         }
 
         int off_body_y = body_y;
@@ -835,25 +835,25 @@ void gui_fselect_draw(int enforce_redraw)
             j += TIME_SIZE;
             dbuf[j] = 0;
 
-            draw_string_box(main_x, off_body_y, SPACING, main_w-SCROLLBAR, dbuf, cl_marked);
+            draw_string_justified(main_x, off_body_y, dbuf, cl_marked, SPACING, main_w-SCROLLBAR, TEXT_LEFT|TEXT_FILL);
         }
 
         //fill the rest of body
         if (i>0 && i<BODY_LINES)
         {
-            draw_filled_rect(main_x, off_body_y, main_x+main_w-SCROLLBAR-1, body_y+BODY_FONT_LINES-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY));
+            draw_rectangle(main_x, off_body_y, main_x+main_w-SCROLLBAR-1, body_y+BODY_FONT_LINES-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED);
         }
 
         // scrollbar
         int off_sbar_x = main_x + main_w - SCROLLBAR;
-        draw_filled_rect(off_sbar_x, body_y, off_sbar_x+SCROLLBAR-1, body_y+BODY_FONT_LINES-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+        draw_rectangle(off_sbar_x, body_y, off_sbar_x+SCROLLBAR-1, body_y+BODY_FONT_LINES-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
         if (items.count > BODY_LINES)
         {
             i = BODY_FONT_LINES - 1;
             j = (i * BODY_LINES) / items.count;
             if (j < 20) j = 20;
             i = ((i - j) * selected->n) / (items.count-1);
-            draw_filled_rect(off_sbar_x, body_y+i, off_sbar_x+SCROLLBAR-2, body_y+i+j, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+            draw_rectangle(off_sbar_x, body_y+i, off_sbar_x+SCROLLBAR-2, body_y+i+j, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
         }
 
         //footer
@@ -869,7 +869,7 @@ void gui_fselect_draw(int enforce_redraw)
         {
             strcpy(dbuf, items.dir);
         }
-        draw_string_box(main_x, foot_y, SPACING, main_w, dbuf, MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
+        draw_string_justified(main_x, foot_y, dbuf, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), SPACING, main_w, TEXT_LEFT|TEXT_FILL);
 
         if (sum_size)
         {

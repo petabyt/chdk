@@ -161,16 +161,16 @@ void gui_grid_draw_osd(int force)
                         draw_line(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?FG_COLOR(col):ptr->clf);
                         break;
                     case GRID_ELEM_RECT:
-                        draw_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?FG_COLOR(col):ptr->clf);
+                        draw_rectangle(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?col:MAKE_COLOR(ptr->clb, ptr->clf), RECT_BORDER1);
                         break;
                     case GRID_ELEM_FILLED_RECT:
-                        draw_filled_rect(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?col:MAKE_COLOR(ptr->clb, ptr->clf));
+                        draw_rectangle(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?col:MAKE_COLOR(ptr->clb, ptr->clf), RECT_BORDER1|DRAW_FILLED);
                         break;
                     case GRID_ELEM_ELLIPSE:
-                        draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?FG_COLOR(col):ptr->clf);
+                        draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?FG_COLOR(col):ptr->clf, 0);
                         break;
                     case GRID_ELEM_FILLED_ELLIPSE:
-                        draw_filled_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?BG_COLOR(col):ptr->clf);
+                        draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?BG_COLOR(col):ptr->clf, DRAW_FILLED);
                         break;
                 }
             }

@@ -57,8 +57,8 @@ int hexbox_init(int *num, char *title, int flags)
     x = (camera_screen.width - w) >> 1;
     y = ((camera_screen.height - h)>>5)<<4;
 
-    offs_title = ((camera_screen.width - strlen(box_title)*FONT_WIDTH)>>1)/FONT_WIDTH;
-    offs_num = ((camera_screen.width - (10+6+1)*FONT_WIDTH)>>1)/FONT_WIDTH; // "0x12345678 4095M+"
+    offs_title = ((camera_screen.width - strlen(box_title)*FONT_WIDTH)>>1);
+    offs_num = ((camera_screen.width - (10+6+1)*FONT_WIDTH)>>1); // "0x12345678 4095M+"
 
     hexbox_to_draw = 1;
 
@@ -107,9 +107,10 @@ void gui_hexbox_draw_hex32(unsigned int hexnum, int digit, unsigned int posx, un
     char buf[12];
     digit += 2; // due to '0x'
     sprintf(buf, "0x%08X", hexnum);
-    draw_txt_string(posx,posy, buf,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-    if ( (digit>=2)&&(digit<10) ) {
-        draw_txt_char( posx+digit, posy, buf[digit], MAKE_COLOR(COLOR_RED, COLOR_WHITE));
+    draw_string(posx, posy, buf,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    if ((digit >= 2) && (digit < 10))
+    {
+        draw_char(posx+digit*FONT_WIDTH, posy, buf[digit], MAKE_COLOR(COLOR_RED, COLOR_WHITE));
     }
 }
 
@@ -127,7 +128,7 @@ void gui_hexbox_draw_hint(unsigned int hexnum, unsigned int posx, unsigned int p
     else {
         sprintf(buf, "%4d  ", hexnum);
     }
-    draw_txt_string(posx,posy, buf,  MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
+    draw_string(posx, posy, buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLACK));
 }
 
 //-------------------------------------------------------
@@ -136,16 +137,15 @@ void gui_hexbox_draw()
 {
     switch (hexbox_to_draw) {
         case 1:
-            draw_rect_shadow(x-3, y-3, x+w+5, y+h+5, COLOR_BLACK, 3);
-            draw_filled_rect_thick(x-4, y-4, x+w+4, y+h+4, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3);
-            draw_filled_rect(x-2, y-2, x+w+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(offs_title, y/FONT_HEIGHT, box_title,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(x/FONT_WIDTH+2, y/FONT_HEIGHT+4, box_helpline,  MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
+            draw_rectangle(x-4, y-4, x+w+4, y+h+4, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), RECT_BORDER3|DRAW_FILLED|RECT_SHADOW3);
+            draw_rectangle(x-2, y-2, x+w+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), RECT_BORDER1|DRAW_FILLED);
+            draw_string(offs_title, y, box_title,  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(x+FONT_WIDTH*2, y+FONT_HEIGHT*4, box_helpline,  MAKE_COLOR(COLOR_GREY, COLOR_WHITE));
 
             // fall through
         case 2:
-            gui_hexbox_draw_hex32(*num_to_edit, currpos, offs_num, y / FONT_HEIGHT + 2);
-            gui_hexbox_draw_hint(*num_to_edit, offs_num + 10 + 1, y / FONT_HEIGHT + 2);
+            gui_hexbox_draw_hex32(*num_to_edit, currpos, offs_num, y + FONT_HEIGHT * 2);
+            gui_hexbox_draw_hint(*num_to_edit, offs_num + 11*FONT_WIDTH, y + FONT_HEIGHT * 2);
             hexbox_to_draw = 0;
             break;
     }

@@ -307,8 +307,8 @@ static void gui_init(CMenu *menu_ptr) {
     }
 
     num_lines = camera_screen.height/rbf_font_height()-1;
-    x = camera_screen.menu_border_width + camera_screen.ts_button_border;
-    w = camera_screen.width-x-x;
+    x = camera_screen.disp_left + camera_screen.menu_border_width;
+    w = camera_screen.disp_width - camera_screen.menu_border_width;
     len_bool = rbf_str_width("\x95");
     len_space = rbf_char_width(' ');
 
@@ -345,7 +345,7 @@ void gui_activate_sub_menu(CMenu *sub_menu)
     // FIXME check on stack overrun;
     if (gui_menu_stack_ptr > MENUSTACK_MAXDEPTH)
     {
-        draw_txt_string(0, 0, "E1", MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
+        draw_string(1, 0, "E1", MAKE_COLOR(COLOR_RED, COLOR_YELLOW));
         gui_menu_stack_ptr = 0;
     }
 
@@ -420,7 +420,7 @@ static void gui_draw_initial()
         y = ((camera_screen.height-(num_lines-1)*rbf_font_height())>>1);
         wplus = 8; 
         // scrollbar background 
-        draw_filled_rect((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))));
+        draw_rectangle((x+w), y, (x+w)+wplus, y+num_lines*rbf_font_height()-1, MAKE_COLOR(BG_COLOR(user_color(conf.menu_color)), BG_COLOR(user_color(conf.menu_color))), RECT_BORDER0|DRAW_FILLED);
     }
     else
     {
@@ -562,9 +562,9 @@ static void gui_draw(int enforce_redraw)
             j = i*num_lines/count;                          // bar height
             if (j<20) j=20;
             i = (i-j)*((gui_menu_curr_item<0)?0:gui_menu_curr_item)/(count-1);   // top pos
-            draw_filled_round_rect((x+w)+2, y+1,   (x+w)+6, y+1+i,                             MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_filled_round_rect((x+w)+2, y+i+j, (x+w)+6, y+num_lines*rbf_font_height()-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_filled_round_rect((x+w)+2, y+1+i, (x+w)+6, y+i+j,                             MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+            draw_rectangle((x+w)+2, y+1,   (x+w)+6, y+1+i,                             MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
+            draw_rectangle((x+w)+2, y+i+j, (x+w)+6, y+num_lines*rbf_font_height()-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
+            draw_rectangle((x+w)+2, y+1+i, (x+w)+6, y+i+j,                             MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
         }
     }
 }

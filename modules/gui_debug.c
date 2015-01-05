@@ -47,16 +47,13 @@ static void gui_debug_draw_values(const coord y, void* addr) {
     if ((addr<=(void*)camera_info.maxramaddr || addr>=(void*)camera_info.rombaseaddr))
     {
         sprintf(buf, "0x%08X (%10u)", *((unsigned int*)addr), *((unsigned int*)addr));
-        draw_txt_string(10, y, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         sprintf(buf, "0x%04X     (     %5hu)", *((unsigned short*)addr), *((unsigned short*)addr));
-        draw_txt_string(10, y+1, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y+FONT_HEIGHT, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         sprintf(buf, "0x%02X       (       %3hu)", *((unsigned char*)addr), *((unsigned char*)addr));
-        draw_txt_string(10, y+2, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-
-        //sprintf(buf, "0x%lf", *((double*)addr));
-        //draw_txt_string(10, y+3, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y+2*FONT_HEIGHT, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
         for (i=0; i<30; ++i) {
             if (*((char*)(addr+i))) buf[i]=*((char*)(addr+i));
@@ -66,15 +63,14 @@ static void gui_debug_draw_values(const coord y, void* addr) {
             buf[i++]=' ';
         }
         buf[i]=0;
-        draw_txt_string(10, y+4, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y+3*FONT_HEIGHT, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
     else
     {
-        draw_txt_string(10, y, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        draw_txt_string(10, y+1, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        draw_txt_string(10, y+2, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        //draw_txt_string(10, y+3, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-        draw_txt_string(10, y+4, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y+FONT_HEIGHT, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y+2*FONT_HEIGHT, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(10*FONT_WIDTH, y+3*FONT_HEIGHT, bad_address, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
 }
 
@@ -82,37 +78,35 @@ static void gui_debug_draw_values(const coord y, void* addr) {
 void gui_debug_draw() {
     switch (debug_to_draw) {
         case 1:
-            draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_txt_string(1, 0, "Address:", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(22, 0, "Incr:", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(39,0,  "Auto:", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(1, 1, "Values:",  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 2, "DWORD  :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 3, "WORD   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 4, "BYTE   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 5, "DOUBLE :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 6, "STRING :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(1, 7, "Dereferencing:",  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 8, "DWORD  :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 9, "WORD   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 10, "BYTE   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 11, "DOUBLE :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(2, 12, "STRING :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
+            draw_string(1*FONT_WIDTH, 0*FONT_HEIGHT, "Address:", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(22*FONT_WIDTH,0*FONT_HEIGHT, "Incr:", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(39*FONT_WIDTH,0*FONT_HEIGHT, "Auto:", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(1*FONT_WIDTH, 1*FONT_HEIGHT, "Values:",  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 2*FONT_HEIGHT, "DWORD  :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 3*FONT_HEIGHT, "WORD   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 4*FONT_HEIGHT, "BYTE   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 5*FONT_HEIGHT, "STRING :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(1*FONT_WIDTH, 7*FONT_HEIGHT, "Dereferencing:",  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 8*FONT_HEIGHT, "DWORD  :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 9*FONT_HEIGHT, "WORD   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 10*FONT_HEIGHT,"BYTE   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(2*FONT_WIDTH, 11*FONT_HEIGHT,"STRING :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
             debug_to_draw = 2;
             break;
         case 2:
             sprintf(buf, "0x%08X", addr);
-            draw_txt_string(10, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(10*FONT_WIDTH, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             sprintf(buf, "0x%08X", step);
-            draw_txt_string(28, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(28*FONT_WIDTH, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             sprintf(buf,"%0d",debug_cont_update);
-            draw_txt_string(44, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            gui_debug_draw_values(2, addr);
+            draw_string(44*FONT_WIDTH, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            gui_debug_draw_values(2*FONT_HEIGHT, addr);
             if ((addr<=(void*)camera_info.maxramaddr || addr>=(void*)camera_info.rombaseaddr))
-                gui_debug_draw_values(8, *((void**)addr));
+                gui_debug_draw_values(8*FONT_HEIGHT, *((void**)addr));
             else
-                gui_debug_draw_values(8, addr);
+                gui_debug_draw_values(8*FONT_HEIGHT, addr);
             conf.mem_view_addr_init = (long)addr;
 
             if (debug_cont_update==0) debug_to_draw = 0;

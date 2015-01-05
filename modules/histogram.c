@@ -299,7 +299,7 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small)
         }
     }
 
-    draw_rect(x, y, x+1+w, y+h, FG_COLOR(hc2));
+    draw_rectangle(x, y, x+1+w, y+h, hc2, RECT_BORDER1);
     //Vertical Lines
     if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+w)*i/5, y, x+(1+w)*i/5, y+h, FG_COLOR(hc2));
 }
@@ -338,7 +338,7 @@ static void gui_osd_draw_blended_histo(coord x, coord y)
         }
     }
 
-    draw_rect(x, y, x+1+HISTO_WIDTH, y+HISTO_HEIGHT, FG_COLOR(hc2));
+    draw_rectangle(x, y, x+1+HISTO_WIDTH, y+HISTO_HEIGHT, hc2, RECT_BORDER1);
     //Vertical lines
     if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+HISTO_WIDTH)*i/5, y, x+(1+HISTO_WIDTH)*i/5, y+HISTO_HEIGHT, FG_COLOR(hc2));
 
@@ -401,13 +401,15 @@ void gui_osd_draw_histo(int is_osd_edit)
                 break;
         }
 
-        if (conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B) {
-            if (under_exposed && conf.show_overexp) {
-                draw_filled_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2));
+        if (conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B)
+        {
+            if (under_exposed && conf.show_overexp)
+            {
+                draw_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2), DRAW_FILLED);
             }
-
-            if (over_exposed && conf.show_overexp) {
-                draw_filled_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2));
+            if (over_exposed && conf.show_overexp)
+            {
+                draw_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2), DRAW_FILLED);
             }
         }
         if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
@@ -420,7 +422,7 @@ void gui_osd_draw_histo(int is_osd_edit)
             } else if (is_osd_edit){
                 draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, " 9.99x ", hc);
             } else {
-                draw_filled_rect(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT));
+                draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
             }
         }
     }

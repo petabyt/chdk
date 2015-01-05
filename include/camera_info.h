@@ -36,7 +36,7 @@ typedef struct
 //      _cam_sensor --> CAM_SENSOR_VERSION
 //      _cam_screen --> CAM_SCREEN_VERSION
 //      _cam_info   --> CAM_INFO_VERSION
-#define CAM_SCREEN_VERSION      {1,0}       // Version for camera_screen
+#define CAM_SCREEN_VERSION      {2,0}       // Version for camera_screen
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
 #define CAM_INFO_VERSION        {1,0}       // Version for camera_info
 
@@ -92,10 +92,11 @@ typedef struct
     int     width, height, size;                        // Size of bitmap screen in CHDK co-ordinates
     int     physical_width;                             // Actual width of bitmap screen in pixels
     int     buffer_width, buffer_height, buffer_size;   // Physical size of bitmap screen
-    int     edge_hmargin;                               // margin and touch-screen adjustment values
-    int     ts_button_border, ts_menu_border;           // margin and touch-screen adjustment values
+    int     disp_left, disp_right, disp_width;          // Usable horizontal size (after excluding touch screen buttons)
+    int     edge_hmargin;                               // edge overlay top & bottom margin to skip
     int     zebra_nobuf, zebra_aspect_adjust;           // zebra feature settings
     int     has_variable_aspect;                        // zebra feature settings
+    int     ts_menu_border;                             // touch screen top & bottom margin to skip for menus (area that is less sensitive)
     int     menu_border_width;                          // Width of border on each side of CHDK menu
     int     fselect_name_size;                          // file select window file name column width
     int     fselect_size_size;                          // file select window file size column width

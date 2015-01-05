@@ -52,7 +52,7 @@ static void gui_bench_draw_results_screen(int pos, int value, int ss) {
             sprintf(buf, "%7d Kb/s  %3d FPS", value/1024, value/ss);
         else
             sprintf(buf, lang_str(LANG_BENCH_CALCULATING));
-        draw_txt_string(18, pos, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(18*FONT_WIDTH, pos*FONT_HEIGHT, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
 }
 
@@ -63,7 +63,7 @@ static void gui_bench_draw_results(int pos, int value) {
             sprintf(buf, "%7d Kb/s      ", value/1024);
         else
             sprintf(buf, lang_str(LANG_BENCH_CALCULATING));
-        draw_txt_string(18, pos, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+        draw_string(18*FONT_WIDTH, pos*FONT_HEIGHT, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
     }
 }
 
@@ -71,22 +71,22 @@ static void gui_bench_draw_results(int pos, int value) {
 void gui_bench_draw() {
     switch (bench_to_draw) {
         case 1:
-            draw_filled_rect(0, 0, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_txt_string(1, 0,  lang_str(LANG_BENCH_TITLE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
+            draw_string(1*FONT_WIDTH, 0*FONT_HEIGHT,  lang_str(LANG_BENCH_TITLE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-            draw_txt_string(1, 2,  lang_str(LANG_BENCH_SCREEN),       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 3,  lang_str(LANG_BENCH_WRITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 4,  lang_str(LANG_BENCH_READ), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(1*FONT_WIDTH, 2*FONT_HEIGHT,  lang_str(LANG_BENCH_SCREEN), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 3*FONT_HEIGHT,  lang_str(LANG_BENCH_WRITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 4*FONT_HEIGHT,  lang_str(LANG_BENCH_READ), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-            draw_txt_string(1, 6,  lang_str(LANG_BENCH_MEMORY),       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 7,  lang_str(LANG_BENCH_WRITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 8,  lang_str(LANG_BENCH_READ), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(1*FONT_WIDTH, 6*FONT_HEIGHT,  lang_str(LANG_BENCH_MEMORY),  MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 7*FONT_HEIGHT,  lang_str(LANG_BENCH_WRITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 8*FONT_HEIGHT,  lang_str(LANG_BENCH_READ), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-            draw_txt_string(1, 10, lang_str(LANG_BENCH_FLASH_CARD),   MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 11, lang_str(LANG_BENCH_WRITE_RAW), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 12, lang_str(LANG_BENCH_WRITE_MEM), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 13, lang_str(LANG_BENCH_WRITE_64K), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(3, 14, lang_str(LANG_BENCH_READ_64K), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(1*FONT_WIDTH, 10*FONT_HEIGHT, lang_str(LANG_BENCH_FLASH_CARD), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 11*FONT_HEIGHT, lang_str(LANG_BENCH_WRITE_RAW), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 12*FONT_HEIGHT, lang_str(LANG_BENCH_WRITE_MEM), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 13*FONT_HEIGHT, lang_str(LANG_BENCH_WRITE_64K), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_string(3*FONT_WIDTH, 14*FONT_HEIGHT, lang_str(LANG_BENCH_READ_64K), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             
             /* no break here */
         case 2:

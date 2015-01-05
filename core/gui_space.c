@@ -53,8 +53,8 @@ static void spacebar_outer(OSD_pos pos, int w, int h)
         yy = camera_screen.height-height-4;
     }
 
-    draw_rect(xx, yy, xx+width+3, yy+height+3, COLOR_BLACK);     // Outer black rectangle
-    draw_rect(xx+1, yy+1, xx+width+2, yy+height+2, FG_COLOR(cl));          // Inner white/red rectangle
+    draw_rectangle(xx, yy, xx+width+3, yy+height+3, MAKE_COLOR(COLOR_BLACK,COLOR_BLACK), RECT_BORDER1);     // Outer black rectangle
+    draw_rectangle(xx+1, yy+1, xx+width+2, yy+height+2, cl, RECT_BORDER1);          // Inner white/red rectangle
 }
 
 static void gui_space_draw_spacebar_horizontal()
@@ -68,8 +68,8 @@ static void gui_space_draw_spacebar_horizontal()
     x = width - ((perc*width)/100);
     if (x < 1) x = 1;
     if (x >= width) x = width;
-    else draw_filled_rect(xx+x+2, yy+2, xx+width+1, yy+height+1, MAKE_COLOR(FG_COLOR(cl), FG_COLOR(cl)));               // If not empty fill 'free' space area
-    draw_filled_rect(xx+2, yy+2, xx+x+1, yy+height+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));  // fill 'used' space area
+    else draw_rectangle(xx+x+2, yy+2, xx+width+1, yy+height+1, MAKE_COLOR(FG_COLOR(cl), FG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED); // If not empty fill 'free' space area
+    draw_rectangle(xx+2, yy+2, xx+x+1, yy+height+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK), RECT_BORDER1|DRAW_FILLED);  // fill 'used' space area
 }
 
 static void gui_space_draw_spacebar_vertical() {
@@ -82,8 +82,8 @@ static void gui_space_draw_spacebar_vertical() {
     y = height - ((perc*height)/100);
     if (y < 1) y = 1;
     if (y >= height) y = height;
-    else draw_filled_rect(xx+2, yy+y+2, xx+width+1, yy+height+1, MAKE_COLOR(FG_COLOR(cl), FG_COLOR(cl)));               // If not empty fill 'free' space area
-    draw_filled_rect(xx+2, yy+2, xx+width+1, yy+y+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK));   // fill 'used' space area
+    else draw_rectangle(xx+2, yy+y+2, xx+width+1, yy+height+1, MAKE_COLOR(FG_COLOR(cl), FG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED); // If not empty fill 'free' space area
+    draw_rectangle(xx+2, yy+2, xx+width+1, yy+y+1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_BLACK), RECT_BORDER1|DRAW_FILLED);   // fill 'used' space area
 }
 
 static icon_cmd space_icon[] =

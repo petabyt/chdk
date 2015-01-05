@@ -22,7 +22,7 @@ gui_handler GUI_MODE_4WINS =
     /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 #define BORDER		 20
-#define XBORDER		 (camera_screen.ts_button_border+BORDER)
+#define XBORDER		 (camera_screen.disp_left+BORDER)
 #define RECT_SIZE	 30
 #define BORDER_TOP	 RECT_SIZE
 #define FIELD_HEIGHT 7
@@ -60,7 +60,7 @@ static char set_stone(int column, char player, char visible)
 	{
 		for(i=1;field[column-1][i];i++);			//1 ist wichtig (0=Fundament)
 		if (visible) {
-			draw_filled_ellipse((XBORDER+((column-1)*RECT_SIZE))+15, (BORDER+((6-i)*RECT_SIZE))+15+BORDER_TOP, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR);
+			draw_ellipse((XBORDER+((column-1)*RECT_SIZE))+15, (BORDER+((6-i)*RECT_SIZE))+15+BORDER_TOP, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR, DRAW_FILLED);
 		}
 		field[column-1][i]=player;
 		return 1;
@@ -175,20 +175,19 @@ char ki_findColumn(char mode, char player) {							//player = 1|2
 /*======================= K I   END ===============================*/
 void draw_txt_message(char* text) {
     coord w, x, y;
-    int l;
     twoColors cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
-    l=strlen(text);
-    w=l*FONT_WIDTH+10;
+    w = (strlen(text) + 2) * FONT_WIDTH;
 
-    x = (camera_screen.width-camera_screen.ts_button_border-w)>>1; y = ((camera_screen.height)>>1);
-    draw_filled_round_rect(x, y, x+w, y+FONT_HEIGHT+6, MAKE_COLOR(COLOR_RED, COLOR_RED));
-    draw_string(x+((w-strlen(text)*FONT_WIDTH)>>1), y+4, text, cl);
+    x = (camera_screen.width-w)>>1;
+    y = ((camera_screen.height)>>1);
+    draw_rectangle(x, y, x+w, y+FONT_HEIGHT+8, cl, RECT_BORDER2|DRAW_FILLED|RECT_ROUND_CORNERS);
+    draw_string_justified(x, y+4, text, cl, 0, w, TEXT_CENTER);
 }
 //-------------------------------------------------------------------
 static void change_player()
 {
 	if (cur_player==1) cur_player=2; else cur_player=1;
-	draw_filled_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR);
+	draw_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR, DRAW_FILLED);
 }
 //-------------------------------------------------------------------
 static char win_query()
@@ -245,12 +244,8 @@ void win() {
 //-------------------------------------------------------------------
 void draw_mode()
 {
-    int x = (camera_screen.ts_button_border/FONT_WIDTH) + 30;
-	draw_txt_string(x, 4, "            ", TEXT_COLOR);
-	if (mode_rival==1)
-		draw_txt_string(x, 4, lang_str(LANG_CONNECT4_HUMAN), TEXT_COLOR);
-	else
-		draw_txt_string(x, 4, "cam", TEXT_COLOR);
+    int x = camera_screen.disp_left + 30*FONT_WIDTH;
+    draw_string_justified(x, 4*FONT_HEIGHT, (mode_rival==1) ? lang_str(LANG_CONNECT4_HUMAN) : "cam", TEXT_COLOR, 0, 12*FONT_WIDTH, TEXT_LEFT|TEXT_FILL);
 }
 //-------------------------------------------------------------------
 void change_mode()
@@ -282,7 +277,7 @@ void set()
 //-------------------------------------------------------------------
 static void move_cursor(int in_x_pos)
 {
-	draw_filled_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10,BK_COLOR);
+	draw_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10,BK_COLOR, DRAW_FILLED);
 	if(in_game)
 	{
 		if(cursor_position==0 && in_x_pos<0) 
@@ -297,7 +292,7 @@ static void move_cursor(int in_x_pos)
 		else 
 			cursor_position=(cursor_position+in_x_pos)%8;
 	}
-	draw_filled_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR);
+	draw_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR, DRAW_FILLED);
 }
 //-------------------------------------------------------------------
 int gui_4wins_init() 
@@ -309,18 +304,18 @@ int gui_4wins_init()
 	finished=in_game=0;
 	srand(time(NULL));
 	
-	draw_filled_rect(0, 0, camera_screen.width, camera_screen.height, MAKE_COLOR(BK_COLOR,BK_COLOR));		// draw backgraund
-	draw_filled_rect(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR);
-	draw_filled_round_rect(camera_screen.ts_button_border+240, 90, camera_screen.ts_button_border+360-BORDER, 240-10, MAKE_COLOR(INFO_COLOR,INFO_COLOR));
-    draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+12, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
-    draw_line(camera_screen.ts_button_border,15,camera_screen.ts_button_border+360,15,COLOR_GREY_LT);
+	draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(BK_COLOR,BK_COLOR), RECT_BORDER0|DRAW_FILLED);		// draw backgraund
+	draw_rectangle(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR, RECT_BORDER0|DRAW_FILLED);
+	draw_rectangle(camera_screen.disp_left+240, 90, camera_screen.disp_left+360-BORDER, 240-10, MAKE_COLOR(INFO_COLOR,INFO_COLOR), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
+    draw_string(camera_screen.disp_left+12*FONT_WIDTH, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
+    draw_line(camera_screen.disp_left,15,camera_screen.disp_left+360,15,COLOR_GREY_LT);
 
 	for(i=0;i<7;i++)
 	{
 		for(j=0;j<6;j++)
 		{
 			field[i][j+1]=0;
-			draw_filled_ellipse(XBORDER+(i*RECT_SIZE)+(RECT_SIZE/2), BORDER+(j*RECT_SIZE)+(RECT_SIZE/2)+BORDER_TOP, 10, 10, BK_COLOR);
+			draw_ellipse(XBORDER+(i*RECT_SIZE)+(RECT_SIZE/2), BORDER+(j*RECT_SIZE)+(RECT_SIZE/2)+BORDER_TOP, 10, 10, BK_COLOR, DRAW_FILLED);
 		}
 	}
 	for(i=0;i<7;i++)
@@ -329,13 +324,13 @@ int gui_4wins_init()
 	}
 
 	move_cursor(0);
-	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+30, 3, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
+	draw_string(camera_screen.disp_left+30*FONT_WIDTH, 3*FONT_HEIGHT, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
     sprintf(str, "%d",count_win[0]);
-	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+34, camera_screen.height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
+	draw_string(camera_screen.disp_left+34*FONT_WIDTH, camera_screen.height-9*FONT_HEIGHT, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
     sprintf(str, ":");
-	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+36, camera_screen.height/FONT_HEIGHT-9, str, INFO_TEXT_COLOR);
+	draw_string(camera_screen.disp_left+36*FONT_WIDTH, camera_screen.height-9*FONT_HEIGHT, str, INFO_TEXT_COLOR);
     sprintf(str, "%d",count_win[1]);
-	draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+38, camera_screen.height/FONT_HEIGHT-9, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
+	draw_string(camera_screen.disp_left+38*FONT_WIDTH, camera_screen.height-9*FONT_HEIGHT, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
 	draw_mode();
 	if(cur_player==2&&!mode_rival) set();
 
@@ -371,8 +366,8 @@ int gui_4wins_kbd_process()
 void gui_4wins_draw() {
   static char str[16];
   sprintf(str, "Batt: %3d%%", get_batt_perc());
-  draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH)+31, camera_screen.height/FONT_HEIGHT-2, str, INFO_TEXT_COLOR);
-  gui_osd_draw_clock(camera_screen.ts_button_border+35*FONT_WIDTH,208-FONT_HEIGHT,INFO_TEXT_COLOR,1);
+  draw_string(camera_screen.disp_left+31*FONT_WIDTH, camera_screen.height-2*FONT_HEIGHT, str, INFO_TEXT_COLOR);
+  gui_osd_draw_clock(camera_screen.disp_left+34*FONT_WIDTH,camera_screen.height-3*FONT_HEIGHT,INFO_TEXT_COLOR,1);
 }
 
 #include "simple_game.c"

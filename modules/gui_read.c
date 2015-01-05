@@ -43,7 +43,7 @@ static int reader_is_active;	// Flag raised when reader is succesfully runned
 //-------------------------------------------------------------------
 static void gui_read_draw_batt() {
     sprintf(buffer, "Batt:%3d%%", get_batt_perc());
-    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_string(camera_screen.disp_right-11*FONT_WIDTH, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
@@ -52,20 +52,19 @@ static void gui_read_draw_clock() {
 
     ttm = get_localtime();
     sprintf(buffer, "%2u:%02u", ttm->tm_hour, ttm->tm_min);
-    draw_txt_string((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2-1-1-9-2-5, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+    draw_string(camera_screen.disp_right-17*FONT_WIDTH, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 }
 
 //-------------------------------------------------------------------
 static void gui_read_draw_scroll_indicator() {
-    draw_txt_char((camera_screen.width-camera_screen.ts_button_border)/FONT_WIDTH-2, 0, (conf.reader_autoscroll)?((pause)?'\x05':'\x04'):'\x03', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
+    draw_char(camera_screen.disp_right-FONT_WIDTH, 0,
+                  (conf.reader_autoscroll)?((pause)?'\x05':'\x04'):'\x03', MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
 }
 
 //-------------------------------------------------------------------
 int gui_read_init(const char* file)
 {
     running = 1;
-
-    twoColors col = user_color(conf.reader_color);
 
     static struct stat   st;
     read_file = open(file, O_RDONLY, 0777);
@@ -80,20 +79,14 @@ int gui_read_init(const char* file)
     }
     pause = 0;
     read_to_draw = 1;
-    x=camera_screen.ts_button_border+6; 
+    x=camera_screen.disp_left+6; 
     y=FONT_HEIGHT;
-    w=camera_screen.width-camera_screen.ts_button_border*2-6-6-8;
+    w=camera_screen.disp_width-6-6-8;
     h=camera_screen.height-y;
     last_time = get_tick_count();
     
 	reader_is_active=1;    
     old_mode = gui_set_mode(&GUI_MODE_READ);
-
-    draw_filled_rect(0, 0, camera_screen.width-1, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-    draw_filled_rect(0, y, camera_screen.width-1, camera_screen.height-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
-
-    gui_read_draw_scroll_indicator();
-    gui_read_draw_batt();
 
     return (read_file >= 0);
 }
@@ -101,7 +94,7 @@ int gui_read_init(const char* file)
 //-------------------------------------------------------------------
 static void read_goto_next_line() {
     twoColors col = user_color(conf.reader_color);
-    draw_filled_rect(xx, yy, x+w-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
+    draw_rectangle(xx, yy, x+w-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)), RECT_BORDER0|DRAW_FILLED);
     xx  = x;
     yy += rbf_font_height();
 }
@@ -112,15 +105,30 @@ static int read_fit_next_char(int ch) {
 }
 
 //-------------------------------------------------------------------
-void gui_read_draw() {
-    if (conf.reader_autoscroll && !pause && get_tick_count()-last_time >= conf.reader_autoscroll_delay*1000 && (conf.reader_pos+read_on_screen)<read_file_size) {
+void gui_read_draw(int force_redraw)
+{
+    twoColors col = user_color(conf.reader_color);
+
+    static int first_draw = 1;
+    if (first_draw || force_redraw)
+    {
+        draw_rectangle(camera_screen.disp_left, 0,
+                       camera_screen.disp_right, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
+        draw_rectangle(camera_screen.disp_left, y,
+                       camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)), RECT_BORDER0|DRAW_FILLED);
+        gui_read_draw_scroll_indicator();
+        read_to_draw = 1;
+        first_draw = 0;
+    }
+
+    if (conf.reader_autoscroll && !pause && get_tick_count()-last_time >= conf.reader_autoscroll_delay*1000 && (conf.reader_pos+read_on_screen)<read_file_size)
+    {
         conf.reader_pos += read_on_screen;
         read_to_draw = 1;
     }
-    if (read_to_draw) {
+    if (read_to_draw)
+    {
         int n, i, ii, ll, new_word=1;
-
-        twoColors col = user_color(conf.reader_color);
 
         xx=x; yy=y;
 
@@ -132,7 +140,7 @@ void gui_read_draw() {
             if (n==0) {
                  read_goto_next_line();
                  if (yy < y+h)
-                     draw_filled_rect(x, yy, x+w-1, y+h-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)));
+                     draw_rectangle(x, yy, x+w-1, y+h-1, MAKE_COLOR(BG_COLOR(col), BG_COLOR(col)), RECT_BORDER0|DRAW_FILLED);
                  break;
             }
             i=0;
@@ -191,9 +199,8 @@ void gui_read_draw() {
             read_on_screen+=i;
         }
     
-        sprintf(buffer, "(%3d%%) %d/%d  ", (read_file_size)?(conf.reader_pos*100/read_file_size):0, conf.reader_pos, read_file_size);
-        buffer[camera_screen.width/FONT_WIDTH]=0;
-        draw_txt_string((camera_screen.ts_button_border/FONT_WIDTH), 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title infoline
+        sprintf(buffer, "(%3d%%) %d/%d", (read_file_size)?(conf.reader_pos*100/read_file_size):0, conf.reader_pos, read_file_size);
+        draw_string_justified(camera_screen.disp_left, 0, buffer, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), 0, 20*FONT_WIDTH, TEXT_LEFT|TEXT_FILL); //title infoline
 
         // scrollbar
         if (read_file_size) {
@@ -201,12 +208,12 @@ void gui_read_draw() {
             n=i*read_on_screen/read_file_size;           // bar height
             if (n<20) n=20;
             i=(i-n)*conf.reader_pos/read_file_size;   // top pos
-            draw_filled_rect(x+w+6+2, y+1,   x+w+6+6, y+1+i,   MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_filled_rect(x+w+6+2, y+i+n, x+w+6+6, y+h-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
-            draw_filled_rect(x+w+6+2, y+1+i, x+w+6+6, y+i+n,   MAKE_COLOR(COLOR_WHITE, COLOR_WHITE));
+            draw_rectangle(x+w+6+2, y+1,   x+w+6+6, y+1+i,   MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
+            draw_rectangle(x+w+6+2, y+i+n, x+w+6+6, y+h-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
+            draw_rectangle(x+w+6+2, y+1+i, x+w+6+6, y+i+n,   MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
         } else {
-            draw_filled_rect((x+w)*FONT_WIDTH+2, y*FONT_HEIGHT+1, 
-                             (x+w)*FONT_WIDTH+6, (y+h)*FONT_HEIGHT-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK));
+            draw_rectangle((x+w)*FONT_WIDTH+2, y*FONT_HEIGHT+1,
+                           (x+w)*FONT_WIDTH+6, (y+h)*FONT_HEIGHT-1-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
         }
 
         read_to_draw = 0;

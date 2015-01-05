@@ -79,88 +79,46 @@ void gui_mbox_init(int title, int msg, const unsigned int flags, void (*on_selec
 }
 
 //-------------------------------------------------------------------
-static void gui_mbox_draw_buttons()
-{
-    int i;
-    coord x = mbox_buttons_x;
-    twoColors cl;
-
-    for (i=0; i<mbox_buttons_num; ++i)
-    {
-        cl = MAKE_COLOR((mbox_button_active==i)?COLOR_RED:COLOR_BLACK, COLOR_WHITE);
-        draw_rect(x-1, mbox_buttons_y-1, x+BUTTON_SIZE*FONT_WIDTH+3, mbox_buttons_y+FONT_HEIGHT+3, COLOR_BLACK); //shadow
-        draw_filled_rect(x-2, mbox_buttons_y-2, x+BUTTON_SIZE*FONT_WIDTH+2, mbox_buttons_y+FONT_HEIGHT+2, cl);
-        draw_string(x+(((BUTTON_SIZE-strlen(lang_str(buttons[mbox_buttons[i]].text)))*FONT_WIDTH)>>1), mbox_buttons_y, lang_str(buttons[mbox_buttons[i]].text), cl);
-        x += BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP;
-    }
-}
-
-//-------------------------------------------------------------------
 void gui_mbox_draw()
 {
     if (mbox_to_draw & 1)
     {
-        char c[MAX_LINES][MAX_WIDTH+1];
-        const char *p=mbox_msg;
-        coord x=0, y=0, d;
-        unsigned int w, h=0, l=0, bw=(mbox_buttons_num*BUTTON_SIZE*FONT_WIDTH+(mbox_buttons_num-1)*BUTTON_SEP);
+        int bw=(mbox_buttons_num*BUTTON_SIZE*FONT_WIDTH+(mbox_buttons_num-1)*BUTTON_SEP);
 
-        w = strlen(mbox_title);
-        if (w > MAX_WIDTH) w = MAX_WIDTH;
-        while (*p)
+        int h = MAX_LINES;
+        int w = text_dimensions(mbox_msg, strlen(mbox_title), MAX_WIDTH, &h) + 2;
+
+        if (bw+BUTTON_SEP > w*FONT_WIDTH)
+            w = (bw+BUTTON_SEP)/FONT_WIDTH+1;
+    
+        coord x = (camera_screen.width - w * FONT_WIDTH) >> 1;
+        coord y = (camera_screen.height - (h+2) * FONT_HEIGHT) >> 1;
+        draw_rectangle(x-4, y-4, x+w*FONT_WIDTH+4, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+7,
+                       MAKE_COLOR(COLOR_GREY, COLOR_WHITE), RECT_BORDER3|DRAW_FILLED|RECT_SHADOW3); // main box
+        draw_rectangle(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), RECT_BORDER1|DRAW_FILLED); //title
+    
+        draw_string_justified(x, y, mbox_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), 0, w*FONT_WIDTH, TEXT_CENTER); //title text
+        y += FONT_HEIGHT+2+SPACING_TITLE;
+
+        int justification = TEXT_LEFT;
+        switch (mbox_flags & MBOX_TEXT_MASK)
         {
-            if (*p == '\n')
-            {
-                c[h++][l] = 0;
-                l=0;
-                if (h == MAX_LINES) break;
-            }
-            else
-            {
-                if (l < MAX_WIDTH)
-                {
-                    c[h][l++]=*p;
-                    if (l > w) w = l;
-                }
-            }
-            ++p;
+            case MBOX_TEXT_CENTER:  justification = TEXT_CENTER; break;
+            case MBOX_TEXT_RIGHT:   justification = TEXT_RIGHT; break;
         }
-        w+=2;
-        if (h<MAX_LINES)
-            c[h++][l] = 0;
-        if (bw+BUTTON_SEP>w*FONT_WIDTH) 
-            w=(bw+BUTTON_SEP)/FONT_WIDTH+1;
-    
-        x = (camera_screen.width - w * FONT_WIDTH) >> 1;
-        y = (camera_screen.height - (h+2) * FONT_HEIGHT) >> 1;
-        draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+8, COLOR_BLACK, 3); //shadow
-        draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+(h+2)*FONT_HEIGHT+SPACING_BTN+2+SPACING_TITLE+7, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
-        draw_filled_rect(x-2, y-2, x+w*FONT_WIDTH+2, y+FONT_HEIGHT+2, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title
-    
-        l = strlen(mbox_title);
-        draw_string(x+((w-l)>>1)*FONT_WIDTH, y, mbox_title, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); //title text
-        y+=FONT_HEIGHT+2+SPACING_TITLE;
-    
+        draw_text_justified(x+FONT_WIDTH, y, mbox_msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), w-1, MAX_LINES, justification); // text
+
         mbox_buttons_x = x+((w*FONT_WIDTH-bw)>>1);
         mbox_buttons_y = y+h*FONT_HEIGHT+SPACING_BTN;
-
-        while (h)
-        {
-            l = strlen(c[--h]);
-            switch (mbox_flags & MBOX_TEXT_MASK)
-            {
-                case MBOX_TEXT_CENTER:  d = ((w-l)>>1)*FONT_WIDTH; break;
-                case MBOX_TEXT_RIGHT:   d = (w-l-1)*FONT_WIDTH; break;
-                case MBOX_TEXT_LEFT:
-                default:                d = FONT_WIDTH; break;
-            }
-            draw_string(x+d, y+h*FONT_HEIGHT, c[h], MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // text
-        }
     }
 
     if (mbox_to_draw & 2)
     {
-        gui_mbox_draw_buttons();
+        int i;
+        for (i=0; i<mbox_buttons_num; ++i)
+        {
+            draw_button(mbox_buttons_x + i * (BUTTON_SIZE*FONT_WIDTH+BUTTON_SEP), mbox_buttons_y, BUTTON_SIZE, buttons[mbox_buttons[i]].text, (mbox_button_active == i));
+        }
     }
 
     mbox_to_draw = 0;
@@ -221,12 +179,10 @@ int gui_mbox_touch_handler(int sx, int sy)
 void gui_browser_progress_show(const char* msg, const unsigned int perc)
 {
     coord x=60, y=100;
-    unsigned int w=240, h=40, len;
+    unsigned int w=240, h=40;
 
-    draw_rect_shadow(x+1, y+1, x+w+1, y+h+1, COLOR_BLACK, 3); //shadow
-    draw_filled_rect(x, y, x+w, y+h, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); // main box
-    len = strlen(msg);
-    draw_string(x+((w-len*FONT_WIDTH)>>1), y+2, msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE)); //title text
-    draw_filled_rect(x+10, y+4+FONT_HEIGHT, x+w-10, y+h-10, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE)); // progress rect
-    draw_filled_rect(x+11, y+5+FONT_HEIGHT, x+11+(w-22)*perc/100, y+h-11, MAKE_COLOR(COLOR_RED, COLOR_RED)); // progress bar
+    draw_rectangle(x, y, x+w, y+h, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), RECT_BORDER1|DRAW_FILLED|RECT_SHADOW3); // main box
+    draw_string_justified(x, y+2, msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 0, w, TEXT_CENTER); //title text
+    draw_rectangle(x+10, y+4+FONT_HEIGHT, x+w-10, y+h-10, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), RECT_BORDER1|DRAW_FILLED); // progress rect
+    draw_rectangle(x+11, y+5+FONT_HEIGHT, x+11+(w-22)*perc/100, y+h-11, MAKE_COLOR(COLOR_RED, COLOR_RED), RECT_BORDER0|DRAW_FILLED); // progress bar
 }

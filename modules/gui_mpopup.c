@@ -84,7 +84,7 @@ static void gui_mpopup_draw_actions() {
 
     for (i=0; i<mpopup_actions_num; ++i) {
         cl = MAKE_COLOR((mpopup_actions_active==i)?COLOR_RED:COLOR_GREY, COLOR_WHITE);
-        draw_string_box(mpopup_actions_x, y, FONT_WIDTH, mpopup_actions_w*FONT_WIDTH+1, lang_str(actions[mpopup_actions[i]].text), cl);
+        draw_string_justified(mpopup_actions_x, y, lang_str(actions[mpopup_actions[i]].text), cl, FONT_WIDTH, mpopup_actions_w*FONT_WIDTH+1, TEXT_LEFT|TEXT_FILL);
         y+=FONT_HEIGHT;
     }
 }
@@ -106,8 +106,8 @@ void gui_mpopup_draw() {
     
         x = (camera_screen.width - w*FONT_WIDTH) / 2;
         y = (camera_screen.height - h*FONT_HEIGHT) / 2;
-        draw_rect_shadow(x-3, y-3, x+w*FONT_WIDTH+5, y+h*FONT_HEIGHT+4, COLOR_BLACK, 3); //shadow
-        draw_filled_rect_thick(x-4, y-4, x+w*FONT_WIDTH+4, y+h*FONT_HEIGHT+3, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 3); // main box
+        draw_rectangle(x-4, y-4, x+w*FONT_WIDTH+4, y+h*FONT_HEIGHT+3,
+                       MAKE_COLOR(COLOR_GREY, COLOR_WHITE), RECT_BORDER3|DRAW_FILLED|RECT_SHADOW3); // main box
     
         mpopup_actions_x = x;
         mpopup_actions_y = y;
