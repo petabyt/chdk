@@ -127,3 +127,125 @@ int closedir(DIR *d)
     }
     return rv;
 }
+
+//----------------------------------------------------------------------------
+// Char Wrappers (ARM stubs not required)
+
+#if CAM_DRYOS
+
+#define _U      0x01    /* upper */
+#define _L      0x02    /* lower */
+#define _D      0x04    /* digit */
+#define _C      0x20    /* cntrl */
+#define _P      0x10    /* punct */
+#define _S      0x40    /* white space (space/lf/tab) */
+#define _X      0x80    /* hex digit */
+#define _SP     0x08    /* hard space (0x20) */
+static int _ctype(int c,int t) {
+    extern unsigned char ctypes[];  // Firmware ctypes table (in stubs_entry.S)
+    return ctypes[c&0xFF] & t;
+}
+
+int isdigit(int c) { return _ctype(c,_D); }
+int isspace(int c) { return _ctype(c,_S); }
+int isalpha(int c) { return _ctype(c,(_U|_L)); }
+int isupper(int c) { return _ctype(c,_U); }
+int islower(int c) { return _ctype(c,_L); }
+int ispunct(int c) { return _ctype(c,_P); }
+int isxdigit(int c) { return _ctype(c,(_X|_D)); }
+int iscntrl(int c) { return _ctype(c,_C); }
+
+int tolower(int c) { return isupper(c) ? c | 0x20 : c; }
+int toupper(int c) { return islower(c) ? c & ~0x20 : c; }
+
+#else
+
+// don't want to require the whole ctype table on vxworks just for this one
+int iscntrl(int c) { return ((c >=0 && c <32) || c == 127); }
+
+#endif
+
+int isalnum(int c) { return (isdigit(c) || isalpha(c)); }
+
+//----------------------------------------------------------------------------
+
+#if CAM_DRYOS
+char *strpbrk(const char *s, const char *accept)
+{
+    const char *sc1,*sc2;
+
+    for (sc1 = s; *sc1 != '\0'; ++sc1)
+    {
+        for (sc2 = accept; *sc2 != '\0'; ++sc2)
+        {
+            if (*sc1 == *sc2)
+                return (char*)sc1;
+        }
+    }
+    return 0;
+}
+#endif
+
+char *strstr(const char *s1, const char *s2)
+{
+    const char *p = s1;
+    const int len = strlen(s2);
+
+    for (; (p = strchr(p, *s2)) != 0; p++)
+    {
+        if (strncmp(p, s2, len) == 0)
+            return (char*)p;
+    }
+    return (0);
+}
+
+#if CAM_DRYOS
+void *memchr(const void *s, int c, int n)
+{
+    while (n-- > 0)
+    {
+        if (*(char *)s == c)
+            return (void *)s;
+        s++;
+    }
+    return (void *)0;
+}
+#endif
+
+//----------------------------------------------------------------------------
+
+struct tm *get_localtime()
+{
+    time_t t = time(NULL);
+    return localtime(&t);
+}
+
+//----------------------------------------------------------------------------
+
+unsigned int GetJpgCount(void)
+{
+    return strtol(camera_jpeg_count_str(),((void*)0),0);
+}
+
+unsigned int GetRawCount(void)
+{
+    return GetFreeCardSpaceKb()/((camera_sensor.raw_size / 1024)+GetFreeCardSpaceKb()/GetJpgCount());
+}
+
+//----------------------------------------------------------------------------
+
+// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
+// returns the byte offset into the viewport buffer where the image pixels start (to skip any black borders)
+// see G12 port for sample implementation
+int vid_get_viewport_image_offset() {
+    return (vid_get_viewport_yoffset() * vid_get_viewport_byte_width() * vid_get_viewport_yscale()) + (vid_get_viewport_xoffset() * 3);
+}
+
+// viewport image offset - used when image size != viewport size (zebra, histogram, motion detect & edge overlay)
+// returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
+// see G12 port for sample implementation
+int vid_get_viewport_row_offset() {
+    return (vid_get_viewport_byte_width() * vid_get_viewport_yscale()) - (vid_get_viewport_width() * 3);
+}
+
+//----------------------------------------------------------------------------
