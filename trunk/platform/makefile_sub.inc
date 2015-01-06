@@ -54,7 +54,7 @@ endif
 	rm -f $(topdir)size.txt
 
 clean:
-	rm -f *.o *.a *.err *.elf *.syms *.dump
+	rm -f *.o *.a *.err *.bin *.elf *.syms *.dump
 
 distclean: clean
 	rm -f stubs_entry.S stubs_auto.S bin_compat.h
