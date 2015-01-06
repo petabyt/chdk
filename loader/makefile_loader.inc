@@ -25,3 +25,8 @@ distclean: distclean-recursive
 	rm -f *.o *.bin *.elf *.dump *.elf.syms
 
 include $(topdir)bottom.inc
+
+
+# Define empty recipes for source files (including the makefiles)
+# to prevent make from trying implicit rules to create them. Speeds up build process
+$(topdir)platform/makefile_loader.inc: ;
