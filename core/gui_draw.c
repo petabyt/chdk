@@ -371,7 +371,7 @@ int draw_string_justified(coord x, coord y, const char *s, twoColors cl, int xo,
         draw_rectangle(x, y, x+xo-1, y+FONT_HEIGHT-1, cl, RECT_BORDER0|DRAW_FILLED);
 
     // Draw string (get length drawn in pixels)
-    l = draw_string_clipped(x+xo, y, s, cl, max_width - xo) - (x + xo);
+    l = draw_string_clipped(x+xo, y, s, cl, max_width - xo) - x;
 
     // Fill right side
     if ((justification & TEXT_FILL) && (l < max_width))
