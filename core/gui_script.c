@@ -30,6 +30,7 @@ char script_title[36];                          // Title of current script
 _chdk_version_t script_version;                 // parsed from @chdk_version header, default to 1.3.0.0
 int script_has_version = 0;                     // indicates if script included @chdk_version header
 static int last_script_param_set = -1;          // used to test if script_param_set has changed
+static int is_script_loaded = 0;                // set after successful loading of script
 
 #define DEFAULT_PARAM_SET       10              // Value of conf.script_param_set for 'Default' rather than saved parameters
 #define MAX_PARAM_NAME_LEN      64              // Max length of a script name or description
@@ -400,6 +401,7 @@ static void script_scan()
 
     parse_version(&script_version, "1.3.0.0", 0);
     script_has_version = 0;
+    is_script_loaded = 0;
 
     // Load script file
     const char *buf=0;
@@ -460,6 +462,7 @@ static void script_scan()
     }
 
     free((void*)buf);
+    is_script_loaded = 1;
 }
 
 //-------------------------------------------------------------------
@@ -823,7 +826,7 @@ static void gui_update_script_submenu()
     sc_param *p;
 
     int warn = 0;
-    if (!script_has_version || (cmp_chdk_version(chdk_version, script_version) < 0))
+    if (is_script_loaded && (!script_has_version || (cmp_chdk_version(chdk_version, script_version) < 0)))
     {
         warn = 1;
     }
