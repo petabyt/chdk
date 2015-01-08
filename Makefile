@@ -229,6 +229,11 @@ rebuild-stubs: platformcheck
 		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi
 
+rebuild-stubs_auto: platformcheck
+	echo "rebuild stubs_auto for $(PLATFORM)-$(PLATFORMSUB)" ;\
+	rm -f $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/stubs_auto.S ;\
+	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_auto.S ;\
+
 run-code-gen: platformcheck
 	$(MAKE) -C tools code_gen$(EXE)
 	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) run-code-gen
@@ -285,9 +290,13 @@ os-camera-lists:
 batch-print-missing-dumps:
 	sh tools/auto_build.sh $(MAKE) print-missing-dump $(CAMERA_LIST) -noskip
 
-# rebuild all the stubs_entry.S files    
+# rebuild all the stubs_entry.S files
 batch-rebuild-stubs:
 	sh tools/auto_build.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
+
+# rebuild all the stubs_auto.S files
+batch-rebuild-stubs_auto:
+	sh tools/auto_build.sh $(MAKE) rebuild-stubs_auto $(CAMERA_LIST) -noskip
 
 # rebuild all the stubs_entry.S files
 # parallel version, starts each camera/firmware version build in a seperate session
