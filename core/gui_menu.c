@@ -939,7 +939,6 @@ static void menu_text(color c)
 {
     twoColors save = cl;
     cl = MAKE_COLOR(BG_COLOR(cl), c);
-    rbf_draw_string_len(xx, yy, w, lang_str(curr_menu->menu[imenu].text), cl);
     gui_menu_draw_text(lang_str(curr_menu->menu[imenu].text),1);
     cl = save;
 }
