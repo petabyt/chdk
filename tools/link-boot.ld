@@ -9,9 +9,6 @@ SECTIONS
 	_start = .;
 	*(.entry)
 	*(.text) *(.glue_7t) *(.glue_7)
-	*(.rodata)
-	*(.rdata)
-	*(.blob*)
 	. = ALIGN(4);
     }
     . = ALIGN(4);
@@ -20,6 +17,9 @@ SECTIONS
 
     .data : {
 	link_data_start = .;
+    *(.rodata*)
+    *(.rdata)
+    *(.blob*)
 	*(.data)
 	. = ALIGN(4);
     }
