@@ -2925,14 +2925,15 @@ static void lua_set_variable(char *name, int value, int isBool, int isTable, int
     lua_pushstring( L, name );
     if (isTable)
     {
-        lua_createtable(L, 0, labelCount+1);
+        lua_createtable(L, labelCount, 2);
         int i;
         for (i=0; i<labelCount; i++)
         {
             lua_pushstring(L,labels[i]);
-            lua_rawseti(L,-2,i);
+            lua_rawseti(L,-2,i+1);
         }
-        SET_INT_FIELD("value", value);
+        SET_INT_FIELD("index", value+1);        // Make value 1 based for Lua table index
+        SET_STR_FIELD("value", labels[value]);
     }
     else
     {
