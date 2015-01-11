@@ -2389,9 +2389,6 @@ NOTES
 * the meaning of fields may not correspond exactly between exmem and system
 */
 static int luaCB_get_meminfo( lua_State* L ) {
-    // for memory info, duplicated from lowlevel
-    extern const char _start;
-
     const char *heapname = luaL_optstring( L, 1, "combined" );
     cam_meminfo meminfo;
     if (strcmp(heapname,"combined") == 0) {
@@ -2422,7 +2419,7 @@ static int luaCB_get_meminfo( lua_State* L ) {
         return 1;
     }
     // adjust start and size, if CHDK is loaded at heap start
-    if(meminfo.start_address == (int)(&_start)) {
+    if(meminfo.start_address == camera_info.text_start) {
         meminfo.start_address += camera_info.memisosize;
         meminfo.total_size -= camera_info.memisosize;
     }
@@ -2431,7 +2428,7 @@ static int luaCB_get_meminfo( lua_State* L ) {
     // CHDK allocates from all available heaps now
     lua_pushboolean( L, 1);
     lua_setfield(L, -2, "chdk_malloc");
-    set_number_field( L, "chdk_start", (int)(&_start) );
+    set_number_field( L, "chdk_start", camera_info.text_start);
     set_number_field( L, "chdk_size", camera_info.memisosize );
     set_meminfo_num( L, "start_address", meminfo.start_address );
     set_meminfo_num( L, "end_address", meminfo.end_address);
