@@ -6,7 +6,7 @@
 
 static long *nrflag = (long*)0x8A6C; // 0x89F4;  // sx220 0x8964 0x896C-8 at FF18D1DC not sure 0xEF44//sx210  0x75B0 ASM1989 08.21.2010 found at FF972F10
 #define NR_AUTO (0)                            // have to explictly reset value back to 0 to enable auto
-#define PAUSE_FOR_FILE_COUNTER 100          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
+#define PAUSE_FOR_FILE_COUNTER 320          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated, based on test >280ms may be required
 #include "../../../generic/capt_seq.c"
 
 void __attribute__((naked,noinline)) capt_seq_task(){
