@@ -24,8 +24,7 @@ EXMEM_BUFFER_SIZE=0x80000 	# Amount of EXMEM memory to allocate for CHDK; 40000=
 
 # points to the start of the memory pool used by the firmware
 ifdef OPT_CHDK_IN_EXMEM
-MEMISOSTART=0x3C24BE0		# MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32 (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
-#MEMISOSTART=0x3C84BE0		# MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32 (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
+MEMISOSTART=0x3CA4BE0		# MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32 (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
 else
 MEMISOSTART=0x1639D4
 endif
