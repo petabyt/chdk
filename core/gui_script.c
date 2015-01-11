@@ -355,6 +355,7 @@ static int process_single(const char *ptr)
             if (strncmp(ptr,"table",5) == 0)
             {
                 p->data_type = DTYPE_TABLE;
+                p->val--;   // Initial value is 1 based for Lua table, convert to 0 based for C code
             }
         }
         ptr = skip_whitespace(ptr);
