@@ -291,7 +291,7 @@ void core_spytask()
                 camera_info.fileio_stats.write_badfile_count, camera_info.fileio_stats.open_count,
                 camera_info.fileio_stats.close_count, camera_info.fileio_stats.open_fail_count,
                 camera_info.fileio_stats.close_fail_count, camera_info.fileio_stats.max_semaphore_timeout);
-        draw_txt_string(1, i++, osd_buf, conf.osd_color);
+        draw_txt_string(1, i++, osd_buf,user_color( conf.osd_color));
 #endif
 
         if (camera_info.perf.md_af_tuning)
