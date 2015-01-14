@@ -44,7 +44,7 @@ DEF(some_flag_for_af_scan                   ,0x00009b58) // Found @0xff94a35c
 DEF(focus_len_table                         ,0xffb77e38) // Found @0xffb77e38
 DEF(zoom_busy                               ,0x00009100) // Found @0xff940890
 DEF(focus_busy                              ,0x00008f8c) // Found @0xff9398a4
-//DEF(recreview_hold                          ,0x0000645c) // Found @0xff88b600, ** != ** stubs_min = 0x0000a868 (0xA78C+0xDC)
+DEF(recreview_hold                          ,0x0000645c) // Found @0xff88b600
 // Camera has 2 RAW buffers @ 0x40f65b18 & 0x424f1948
 //  Note: active buffer --> raw_buffers[ active_raw_buffer   *3]
 //        other buffer  --> raw_buffers[(active_raw_buffer^1)*3]
