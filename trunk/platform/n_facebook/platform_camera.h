@@ -115,6 +115,7 @@
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_HAS_VIDEO_BUTTON            1
+    #undef  CAM_MASK_VID_REC_ACTIVE                 // allow video recording state to change reported shooting mode   
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
