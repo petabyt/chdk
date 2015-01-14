@@ -23,17 +23,3 @@ void *vid_get_viewport_fb()
 	return (void*)0x4070D9D0;
 }
 
-void *vid_get_viewport_fb_d()
-{
-	return (void*)(*(int*)(0x5260+0x58)); 
-}
-
-long vid_get_viewport_height()
-{
-	return 240;
-}
-
-char *camera_jpeg_count_str()
-{
-	return (char*)0x4C138;
-}

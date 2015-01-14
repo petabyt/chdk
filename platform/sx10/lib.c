@@ -1,6 +1,12 @@
 #include "platform.h"
 #include "lolevel.h"
 
+char *camera_jpeg_count_str()
+{
+    extern char jpeg_count_str[];
+    return jpeg_count_str;
+}
+
 void vid_bitmap_refresh()
 {
  extern int enabled_refresh_physical_screen;
@@ -47,4 +53,30 @@ void JogDial_CW(void){
 
 void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft, 1 - rotation count
+}
+
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+	return viewport_fb_d;
+}
+
+long vid_get_viewport_height()
+{
+	return 240;
+}
+
+
+// PTP display stuff
+int vid_get_palette_type() { return 4; }  //Test 1, 2 or 4
+int vid_get_palette_size() { return 16*4; }
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)*(unsigned int*)(0x8378+0x20);  // sub_ff8f3a08, via sub_ff9d9e1c two refs to "Palette Class."
+}
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)(0x8378+0xC)); //"Add: %p Width : %ld Hight : %ld", 
+                                         // 100c: sub_ff8f3acc
+                                         // 101a: sub_ff8f3ad4
 }
