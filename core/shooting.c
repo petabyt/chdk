@@ -1446,7 +1446,11 @@ int mode_get(void)
 #endif
 
     get_property_case(PROPCASE_SHOOTING_MODE, &t, 4);
+#ifdef CAM_MASK_VID_REC_ACTIVE
+    mode |= shooting_mode_canon2chdk(t & (~CAM_MASK_VID_REC_ACTIVE));
+#else
     mode |= shooting_mode_canon2chdk(t);
+#endif
 
     // Set camera state variables from mode info
     camera_info.state.mode = mode;

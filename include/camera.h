@@ -90,6 +90,7 @@
     #undef  CAM_AF_SCAN_DURING_VIDEO_RECORD     // CHDK can make single AF scan during video record
     #undef  CAM_RESET_AEL_AFTER_VIDEO_AF        // Cam needs AE Lock state reset after AF in video recording
     #undef  CAM_HAS_VIDEO_BUTTON                // Camera can take stills in video mode, and vice versa
+    #define CAM_MASK_VID_REC_ACTIVE    0x0400   // mask so that Canon mode does not change when cam's with video button enter video recording mode
     #undef  CAM_EV_IN_VIDEO                     // CHDK can change exposure in video mode
     #define CAM_VIDEO_CONTROL               1   // pause / unpause video recordings
     #undef  CAM_VIDEO_QUALITY_ONLY              // Override Video Bitrate is not supported
