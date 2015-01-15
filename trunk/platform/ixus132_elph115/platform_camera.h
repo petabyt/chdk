@@ -127,6 +127,7 @@
 
     #define CAM_USE_ALT_SET_ZOOM_POINT       1
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1
+    #define CAM_NEED_SET_ZOOM_DELAY         300
 
     // TODO
     // only non-AF led available
