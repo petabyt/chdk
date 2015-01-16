@@ -37,6 +37,8 @@ flat_hdr* module_preload(const char *path, const char *name, _version_t ver);
 int module_load(module_handler_t* hMod);
 void module_unload(const char* name);
 
+void get_module_info(const char *name, ModuleInfo *mi, char *modName, int modNameLen);
+
 int module_run(char* name);
 
 module_entry* module_get_adr(unsigned int idx);

@@ -20,8 +20,10 @@
  12 "Back"
 
  13 "RAW"
-
  14 "Save RAW"
+ 
+ 15 "Tools"
+ 
  16 "Only First RAW in Series"
  17 "RAW File Folder"
  18 "RAW File Prefix"
@@ -124,8 +126,6 @@
  98 "Wrap by Words"
  99 "Enable Autoscroll"
 100 "Autoscroll Delay (sec)"
-
-101 "Games"
 
 102 "Reversi"
 103 "Sokoban"

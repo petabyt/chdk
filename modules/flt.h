@@ -45,6 +45,15 @@ typedef struct
                                 // If not supplied then an extended interface is required to call module code
 } base_interface_t;
 
+// Module types
+#define MTYPE_UNKNOWN       0       // Undefined
+#define MTYPE_EXTENSION     1       // System extension (e.g. dng, edge overlay, etc)
+#define MTYPE_GAME          2       // Games (added to Games menu)
+#define MTYPE_TOOL          3       // Custom tool (added to Tools menu)
+#define MTYPE_SCRIPT_LANG   4       // Script language
+#define MTYPE_MASK          0xFF    // Mask for type values above
+#define MTYPE_SUBMENU_TOOL  0x100   // Flag to indicate tool module is a submenu
+
 // Module information structure
 // Contains everything used to communicate with and run code in the module
 typedef struct
@@ -58,7 +67,7 @@ typedef struct
 	uint32_t            chdk_required_platfid;
 
 	int32_t             moduleName;			    // pointer to string with module name or -LANG_ID
-	int32_t             description;		    // pointer to string with module description (not currently used)
+	int32_t             moduleType; 		    // module type flags (see MTYPE_ definitions)
 
 #if defined(USE_INT32_FOR_PTRS) // For elfflt.c on 64 bit Linux
     uint32_t            lib;
@@ -71,6 +80,8 @@ typedef struct
     _version_t          cam_screen_ver;         // CAM SCREEN version (camera_screen in camera_info.h)
     _version_t          cam_sensor_ver;         // CAM SENSOR version (camera_sensor in camera_info.h)
     _version_t          cam_info_ver;           // CAM INFO version (camera_info in camera_info.h)
+
+    char                symbol;                 // Optional symbol to use in Games / Tools menu for module
 } ModuleInfo;
 
 //================= FLAT Header structure ==============

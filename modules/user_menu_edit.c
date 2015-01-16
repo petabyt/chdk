@@ -317,7 +317,7 @@ static void gui_init(CMenu *menu_ptr) {
 
 //-------------------------------------------------------------------
 // Return to previous menu on stack
-static void gui_menu_back() {
+void gui_menu_back() {
     if (gui_menu_stack_ptr > 0)
     {
         gui_menu_stack_ptr--;
@@ -842,8 +842,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    -LANG_MENU_USER_MENU_EDIT,	// Module name
-    0,
+    -LANG_MENU_USER_MENU_EDIT,
+    MTYPE_EXTENSION,
 
     &_librun.base,
 

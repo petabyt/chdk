@@ -470,8 +470,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"Histogram Overlay (dll)",// Module name
-    (int32_t)"Histogram Overlay",
+    (int32_t)"Histogram Overlay (dll)",
+    MTYPE_EXTENSION,
 
     &_libhisto.base,
 

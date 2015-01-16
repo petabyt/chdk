@@ -51,8 +51,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"Module Inspector",// Module name
-    (int32_t)"Show list of loaded modules",
+    (int32_t)"Module Inspector",
+    MTYPE_EXTENSION,            //Show list of loaded modules
 
     &_librun.base,
 

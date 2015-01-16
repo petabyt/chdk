@@ -1409,8 +1409,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"DNG (dll)",       // Module name
-    (int32_t)"Processing of DNG",
+    (int32_t)"DNG (dll)",
+    MTYPE_EXTENSION,            //Processing of DNG
 
     &_libdng.base,
 

@@ -83,8 +83,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"uBasic",          // Module name
-    (int32_t)"Run uBasic Scripts",
+    (int32_t)"uBasic",
+    MTYPE_SCRIPT_LANG,          //Run uBasic Scripts
 
     &_libubasic.base,
 

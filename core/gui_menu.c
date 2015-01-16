@@ -53,13 +53,13 @@ CMenuItem* find_menu_item(CMenu *curr_menu, int itemid )
         if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
             return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
         }
-        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU) {
-
-                if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-                    rv = find_menu_item((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
-                    if ( rv )
-                        return rv;
-                }
+        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
+        {
+            if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
+                rv = find_menu_item((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
+                if ( rv )
+                    return rv;
+            }
         }
         gui_menu_curr_item++;
     }
@@ -278,7 +278,8 @@ static void gui_menu_color_selected(chdkColor clr)
 
 //-------------------------------------------------------------------
 // Return to previous menu on stack
-static void gui_menu_back() {
+void gui_menu_back()
+{
     if (gui_menu_stack_ptr > 0)
     {
         gui_menu_stack_ptr--;

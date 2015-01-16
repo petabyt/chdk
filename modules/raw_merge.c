@@ -606,8 +606,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"RAW operations (dll)",// Module name
-    (int32_t)"Implementation of RAW operations\n(Avg, Sum, Sub)",
+    (int32_t)"RAW operations (dll)",
+    MTYPE_EXTENSION,            //Implementation of RAW operations\n(Avg, Sum, Sub)
 
     &_librawop.base,
 

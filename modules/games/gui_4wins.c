@@ -384,7 +384,7 @@ ModuleInfo _module_info =
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
     -LANG_MENU_GAMES_CONNECT4,	// Module name
-    (int32_t) "Game",
+    MTYPE_GAME,
 
     &_librun.base,
 

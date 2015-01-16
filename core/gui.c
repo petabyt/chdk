@@ -23,7 +23,6 @@
 #include "usb_remote.h"
 #include "module_load.h"
 #include "clock.h"
-#include "eyefi.h"
 
 // splash screen time
 #if defined(OPT_EXPIRE_TEST)
@@ -390,8 +389,6 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_TASKLIST_START,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &debug_tasklist_start, MENU_MINMAX(0, 63) ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_DEBUG_SHOW_MISC_VALS,       MENUITEM_BOOL,                  &conf.debug_misc_vals_show,         0 ),
-    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMORY_BROWSER,       MENUITEM_PROC,                  module_run,             "memview.flt" ),
-    MENU_ITEM   (0x2a,LANG_MENU_DEBUG_BENCHMARK,            MENUITEM_PROC,                  module_run,             "benchm.flt" ),
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,      &conf.debug_shortcut_action,    gui_debug_shortcut_modes ),
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP,               MENUITEM_SUBMENU,               &memdmp_submenu,                    0 ),
     MENU_ITEM   (0x2a,LANG_SAVE_ROMLOG,                     MENUITEM_PROC,                  save_romlog,                        0 ),
@@ -663,19 +660,115 @@ static CMenu reader_submenu = {0x37,LANG_MENU_READ_TITLE, reader_submenu_items }
 
 //-------------------------------------------------------------------
 
-static CMenuItem games_submenu_items[] = {
-    MENU_ITEM(0x38,LANG_MENU_GAMES_REVERSI,           MENUITEM_PROC,  module_run, "reversi.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_SOKOBAN,           MENUITEM_PROC,  module_run, "sokoban.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_CONNECT4,          MENUITEM_PROC,  module_run, "4wins.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_MASTERMIND,        MENUITEM_PROC,  module_run, "mastmind.flt" ),
-    MENU_ITEM(0x38,"Snake" ,                          MENUITEM_PROC,  module_run, "snake.flt" ),
-    MENU_ITEM(0x38,LANG_MENU_GAMES_TETRIS,            MENUITEM_PROC,  module_run, "tetris.flt" ),
-	MENU_ITEM(0x38,"Sudoku",						  MENUITEM_PROC,  module_run, "sudoku.flt" ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
+static CMenu games_submenu = {0x38,LANG_MENU_MISC_GAMES, 0 };
+static CMenu tools_submenu = {0x28,LANG_MENU_MISC_TOOLS, 0 };
 
-static CMenu games_submenu = {0x38,LANG_MENU_GAMES_TITLE, games_submenu_items };
+int submenu_sort(const void* v1, const void* v2)
+{
+    CMenuItem *mi1 = (CMenuItem*)v1;
+    CMenuItem *mi2 = (CMenuItem*)v2;
+
+    return strcmp(lang_str(mi1->text), lang_str(mi2->text));
+}
+
+static CMenuItem* create_module_menu(int mtype, char symbol)
+{
+    DIR             *d;
+    struct dirent   *de;
+    int             mcnt = 0;
+    ModuleInfo      mi;
+    char            modName[33];
+    char            *nm;
+
+    // Open directory & count # of game modules
+    d = opendir("A/CHDK/MODULES");
+
+    if (d)
+    {
+        while ((de = readdir(d)))
+        {
+            if ((de->d_name[0] != 0xE5) && (strcmp(de->d_name,".") != 0) && (strcmp(de->d_name,"..") != 0))
+            {
+                get_module_info(de->d_name, &mi, 0, 0);
+                if ((mi.moduleType & MTYPE_MASK) == mtype)
+                    mcnt++;
+            }
+        }
+
+        closedir(d);
+    }
+
+    // Allocate memory for menu
+    CMenuItem *submenu = malloc((mcnt+2) * sizeof(CMenuItem));
+    memset(submenu, 0, (mcnt+2) * sizeof(CMenuItem));
+
+    // Re-open directory & create game menu
+    d = opendir("A/CHDK/MODULES");
+
+    if (d)
+    {
+        mcnt = 0;
+        while ((de = readdir(d)))
+        {
+            if ((de->d_name[0] != 0xE5) && (strcmp(de->d_name,".") != 0) && (strcmp(de->d_name,"..") != 0))
+            {
+                get_module_info(de->d_name, &mi, modName, 33);
+                if ((mi.moduleType & MTYPE_MASK) == mtype)
+                {
+                    submenu[mcnt].symbol = (mi.symbol != 0) ? mi.symbol : symbol;
+                    if (mi.moduleType & MTYPE_SUBMENU_TOOL)
+                        submenu[mcnt].type = MENUITEM_SUBMENU_PROC;
+                    else
+                        submenu[mcnt].type = MENUITEM_PROC;
+                    if (mi.moduleName < 0)
+                        submenu[mcnt].text = -mi.moduleName;    // LANG string
+                    else
+                    {
+                        nm = malloc(strlen(modName)+1);
+                        strcpy(nm, modName);
+                        submenu[mcnt].text = (int)nm;
+                    }
+                    submenu[mcnt].value = (int*)module_run;
+                    nm = malloc(strlen(de->d_name))+1;
+                    strcpy(nm, de->d_name);
+                    submenu[mcnt].arg = (int)nm;
+                    mcnt++;
+                }
+            }
+        }
+
+        closedir(d);
+
+        submenu[mcnt].symbol = 0x51;
+        submenu[mcnt].type = MENUITEM_UP;
+        submenu[mcnt].text = LANG_MENU_BACK;
+    }
+
+    if (mcnt > 0)
+    {
+        extern int submenu_sort_arm(const void* v1, const void* v2);
+        qsort(submenu, mcnt, sizeof(CMenuItem), submenu_sort_arm);
+    }
+
+    return submenu;
+}
+
+static void gui_module_menu(CMenu *m, int type)
+{
+    if (m->menu == 0)
+        m->menu = create_module_menu(type, m->symbol);
+    gui_activate_sub_menu(m);
+}
+
+static void gui_games_menu(int arg)
+{
+    gui_module_menu(&games_submenu, MTYPE_GAME);
+}
+
+static void gui_tools_menu(int arg)
+{
+    gui_module_menu(&tools_submenu, MTYPE_TOOL);
+}
 
 //-------------------------------------------------------------------
 
@@ -824,39 +917,6 @@ static void gui_unsafe_io_warning()
 #endif
 
 //-------------------------------------------------------------------
-static void gui_menuproc_eyefi_available_networks()
-{
-    libeyefi->availableNetworks();
-}
-
-static void gui_menuproc_eyefi_configured_networks()
-{
-    libeyefi->configuredNetworks();
-}
-
-static void gui_menuproc_eyefi_wlan_off()
-{
-    libeyefi->wlanOnOff(0);
-}
-
-static void gui_menuproc_eyefi_wlan_on()
-{
-    libeyefi->wlanOnOff(1);
-}
-
-static CMenuItem eyefi_submenu_items[] = {
-    MENU_ITEM   (0x5c,LANG_MENU_EYEFI_AVAILABLE_NETWORKS,   MENUITEM_PROC,          gui_menuproc_eyefi_available_networks,  0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_EYEFI_CONFIGURED_NETWORKS,  MENUITEM_PROC,          gui_menuproc_eyefi_configured_networks, 0 ),
-    MENU_ITEM   (0x5c,LANG_FORCE_EYEFI_WLAN_OFF,            MENUITEM_PROC,          gui_menuproc_eyefi_wlan_off,            0 ),
-    MENU_ITEM   (0x5c,LANG_FORCE_EYEFI_WLAN_ON,             MENUITEM_PROC,          gui_menuproc_eyefi_wlan_on,             0 ),
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                                      0 ),
-    {0}
-};
-
-static CMenu eyefi_submenu = {0x21,LANG_MENU_EYEFI_TITLE, eyefi_submenu_items };
-
-//-------------------------------------------------------------------
-
 static const char* gui_console_show_enum[]={ "ALT", "Always" };
 
 static void gui_console_clear(int arg)
@@ -887,7 +947,8 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_MODULES,                    MENUITEM_SUBMENU,               &module_submenu,                    0 ),
     MENU_ITEM   (0x36,LANG_MENU_MISC_CALENDAR,              MENUITEM_PROC,                  module_run, "calend.flt" ),
     MENU_ITEM   (0x37,LANG_MENU_MISC_TEXT_READER,           MENUITEM_SUBMENU,               &reader_submenu,                    0 ),
-    MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU,               &games_submenu,                     0 ),
+    MENU_ITEM   (0x38,LANG_MENU_MISC_GAMES,                 MENUITEM_SUBMENU_PROC,          gui_games_menu,                     0 ),
+    MENU_ITEM   (0x28,LANG_MENU_MISC_TOOLS,                 MENUITEM_SUBMENU_PROC,          gui_tools_menu,                     0 ),
     MENU_ITEM   (0x28,LANG_MENU_CONSOLE_SETTINGS,           MENUITEM_SUBMENU,               &console_settings_submenu, 0 ),
 #if CAM_SWIVEL_SCREEN
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FLASHLIGHT,            MENUITEM_BOOL,                  &conf.flashlight, 0 ),
@@ -904,7 +965,6 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_DISABLE_LFN_SUPPORT,        MENUITEM_BOOL,                  &conf.disable_lfn_parser, 0 ),
 #endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
-    MENU_ITEM   (0x2f,LANG_EYEFI,                           MENUITEM_SUBMENU,               &eyefi_submenu,                     0 ),
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x2a,LANG_MENU_MAIN_DEBUG,                 MENUITEM_SUBMENU,               &debug_submenu,                     0 ),
 #endif

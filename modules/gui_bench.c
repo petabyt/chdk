@@ -294,8 +294,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    -LANG_MENU_DEBUG_BENCHMARK,	// Module name
-    (int32_t) "Test camera low level perfomance",
+    -LANG_MENU_DEBUG_BENCHMARK,
+    MTYPE_TOOL,             //Test camera low level performance
 
     &_librun.base,
 
@@ -303,4 +303,6 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     CAM_SENSOR_VERSION,         // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0x2a,                       // Menu symbol
 };

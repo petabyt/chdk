@@ -214,8 +214,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    -LANG_MENU_DEBUG_MEMORY_BROWSER,	// Module name
-    (int32_t)"Simple memory content browser",
+    -LANG_MENU_DEBUG_MEMORY_BROWSER,
+    MTYPE_TOOL,             //Simple memory content browser
 
     &_librun.base,
 
@@ -223,6 +223,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     CAM_INFO_VERSION,           // CAM INFO version
+
+    0x2a,                       // Menu symbol
 };
 
 /*************** END OF AUXILARY PART *******************/
