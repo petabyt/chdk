@@ -803,49 +803,6 @@ libtxtread_sym default_libtxtread =
 // Library pointer
 libtxtread_sym* libtxtread = &default_libtxtread;
 
-/************* MODULE EYEFI ******/
-
-#define MODULE_NAME_EYEFI "eyefi.flt"
-
-// Forward reference
-extern libeyefi_sym default_libeyefi;
-
-module_handler_t h_eyefi =
-{
-    (base_interface_t**)&libeyefi,
-    &default_libeyefi.base,
-    EYEFI_VERSION,
-    MODULE_NAME_EYEFI
-};
-
-static void default_wlanOnOff(int on_off)
-{
-    if (module_load(&h_eyefi))
-        libeyefi->wlanOnOff(on_off);
-}
-static void default_availableNetworks()
-{
-    if (module_load(&h_eyefi))
-        libeyefi->availableNetworks();
-}
-static void default_configuredNetworks()
-{
-    if (module_load(&h_eyefi))
-        libeyefi->configuredNetworks();
-}
-
-// Default library - module unloaded
-libeyefi_sym default_libeyefi=
-{
-	{ 0,0,0,0,0 },
-	default_wlanOnOff,          //Turn eyefi wlan on/off
-	default_availableNetworks,  //Select or add network
-    default_configuredNetworks, //Select or delete network
-};
-
-// Library pointer
-libeyefi_sym* libeyefi = &default_libeyefi;
-
 /************* MODULE Shot Histogram ******/
 
 #define MODULE_NAME_SHOTHIST "shothist.flt"

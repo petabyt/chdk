@@ -722,7 +722,7 @@ elfloader_load(char* filename, char* fltfile)
 	  	printf("Any platform.\n");
 	else
 	  	printf(" Platform #%d only.\n", _module_info->chdk_required_platfid );
-	printf("->Description: %s\n", get_flat_string(_module_info->description) );
+	//printf("->Description: %s\n", get_flat_string(_module_info->description) );
 	print_offs("->lib                 = ", (int)_module_info->lib,"\n");
 	//print_offs("->_module_loader()    = ", (int)_module_info->loader,"\n");
 	//print_offs("->_module_unloader()  = ", (int)_module_info->unloader,"\n");

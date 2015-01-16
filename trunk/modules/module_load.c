@@ -525,7 +525,7 @@ flat_hdr* module_preload(const char *path, const char *name, _version_t ver)
         return 0;
     }
 
-    // Read module header only to get size infi
+    // Read module header only to get size info
     flat_hdr flat;
     b_read(module_fd, (char*)&flat, sizeof(flat));  // TODO - compare loaded with requested size
 
@@ -832,3 +832,43 @@ module_entry* module_get_adr(unsigned int idx)
             return &modules[idx];
     return 0;
 }
+
+//-----------------------------------------------
+// Load module file and return ModuleInfo data
+void get_module_info(const char *name, ModuleInfo *mi, char *modName, int modNameLen)
+{
+    memset(mi, 0, sizeof(ModuleInfo));
+    modName[0] = 0;     // Only used if module name stored in file (not a LANG string)
+
+    // Get full path to module file, and hash of path
+    char path[60];
+    get_module_path(path, name);
+
+    // open file
+    int fd = open(path, O_RDONLY, 0777);
+    if (fd < 0)
+        return;
+
+    // Read module header only to get size info
+    flat_hdr flat;
+    read(fd, (char*)&flat, sizeof(flat_hdr));
+
+    // Check version and magic number - make sure it is a CHDK module file
+    if ((flat.rev == FLAT_VERSION) && (flat.magic == FLAT_MAGIC_NUMBER))
+    {
+        lseek(fd, flat._module_info_offset, SEEK_SET);
+        read(fd, mi, sizeof(ModuleInfo));
+
+        if ((mi->moduleName >= 0) && modName)
+        {
+            // Load module name string
+            lseek(fd, mi->moduleName, SEEK_SET);
+            read(fd, modName, modNameLen-1);
+            modName[modNameLen-1] = 0;
+        }
+    }
+
+    close(fd);
+}
+
+//-----------------------------------------------

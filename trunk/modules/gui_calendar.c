@@ -88,8 +88,7 @@ int basic_module_init() {
     cal_h = 4+FONT_HEIGHT+4+4+FONT_HEIGHT+4+(FONT_HEIGHT+4)*6;
     cal_x = (camera_screen.width-cal_w)/2;
     cal_y = FONT_HEIGHT+(camera_screen.height-FONT_HEIGHT-cal_h)/2;
-    gui_calendar_initial_draw();
-    need_redraw = 1;
+    need_redraw = 2;
 	return 1;
 }
 
@@ -133,6 +132,9 @@ void gui_calendar_draw() {
     static char str[32];
     int w, d, i;
     static struct tm *ttm;
+
+    if (need_redraw == 2)
+        gui_calendar_initial_draw();
 
     ttm = get_localtime();
     sprintf(str, " %2u %s %04u  %2u:%02u:%02u   ", ttm->tm_mday, lang_str(months[ttm->tm_mon]), 1900+ttm->tm_year, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
@@ -190,8 +192,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    -LANG_MENU_MISC_CALENDAR,	// Module name
-    0,
+    -LANG_MENU_MISC_CALENDAR,
+    MTYPE_TOOL,
 
     &_librun.base,
 
@@ -199,4 +201,6 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0x36,                       // Calendar menu symbol
 };

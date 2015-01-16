@@ -10,7 +10,6 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include "flt.h"
 
 //-------------------------------------------------------------------
 // SHA1 / MD5 stuff
@@ -33,22 +32,6 @@ void md5_vector(size_t num_elem, const u8 *addr[], const size_t *len, u8 *mac);
 void hmac_md5_vector(const u8 *key, size_t key_len, size_t num_elem, const u8 *addr[], const size_t *len, u8 *mac);
 void hmac_md5(const u8 *key, size_t key_len, const u8 *data, size_t data_len, u8 *mac);
 void pbkdf2_sha1(const char *passphrase, const char *ssid, size_t ssid_len, int iterations, u8 *buf, size_t buflen);
-
-//-------------------------------------------------------------------
-
-// Update version if changes are made to the module interface
-#define EYEFI_VERSION           {1,0}
-
-typedef struct
-{
-    base_interface_t    base;
-
-    void (*wlanOnOff)(int on_off);
-    void (*availableNetworks)();
-    void (*configuredNetworks)();
-} libeyefi_sym;
-
-extern libeyefi_sym* libeyefi;
 
 //-------------------------------------------------------------------
 #endif

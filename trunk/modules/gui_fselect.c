@@ -1660,8 +1660,8 @@ ModuleInfo _module_info = {
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    -LANG_MENU_MISC_FILE_BROWSER,   // Module name
-    0,
+    -LANG_MENU_MISC_FILE_BROWSER,
+    MTYPE_EXTENSION,
 
     &_libfselect.base,
 

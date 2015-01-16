@@ -11,6 +11,7 @@
 #include "gui_mbox.h"
 #include "gui_tbox.h"
 #include "gui_mpopup.h"
+#include "gui_menu.h"
 #include "eyefi.h"
 
 //-------------------------------------------------------------------
@@ -608,40 +609,68 @@ static void eyefi_available_networks()
 }
 
 //-----------------------------------------------------------------------------
-int _module_unloader()
+static void eyefi_wlan_off()
 {
+    eyefi_wlan_state(0);
+}
+
+static void eyefi_wlan_on()
+{
+    eyefi_wlan_state(1);
+}
+
+static CMenuItem eyefi_submenu_items[] = {
+    MENU_ITEM   (0x5c,LANG_MENU_EYEFI_AVAILABLE_NETWORKS,   MENUITEM_PROC,          eyefi_available_networks,  0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_EYEFI_CONFIGURED_NETWORKS,  MENUITEM_PROC,          eyefi_configured_networks, 0 ),
+    MENU_ITEM   (0x5c,LANG_FORCE_EYEFI_WLAN_OFF,            MENUITEM_PROC,          eyefi_wlan_off,            0 ),
+    MENU_ITEM   (0x5c,LANG_FORCE_EYEFI_WLAN_ON,             MENUITEM_PROC,          eyefi_wlan_on,             0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                         0 ),
+    {0}
+};
+
+static CMenu eyefi_submenu = {0x21,LANG_MENU_EYEFI_TITLE, eyefi_submenu_items };
+
+//-----------------------------------------------------------------------------
+int _module_can_unload()
+{
+    return (running == 0) || (get_curr_menu() != &eyefi_submenu);
+}
+
+int _run()
+{
+    running = 1;
+    gui_activate_sub_menu(&eyefi_submenu);
     return 0;
 }
 
-int _module_can_unload()
+int _module_exit_alt()
 {
-    return running == 0;
+    running = 0;
+    return 0;
 }
+
+#include "simple_module.h"
 
 // =========  MODULE INIT =================
 
-libeyefi_sym _libeyefi =
+libsimple_sym _libeyefi =
 {
     {
-         0, _module_unloader, _module_can_unload, 0, 0
+         0, 0, _module_can_unload, _module_exit_alt, _run
     },
-
-    eyefi_wlan_state,
-    eyefi_available_networks,
-    eyefi_configured_networks,
 };
 
 ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(ModuleInfo),
-    EYEFI_VERSION,              // Module version
+    SIMPLE_MODULE_VERSION,      // Module version
 
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"EYEFI",// Module name
-    (int32_t)"Handle Eyefi SD cards",
+    (int32_t)"EyeFi Config",
+    MTYPE_TOOL|MTYPE_SUBMENU_TOOL,  //Handle Eyefi SD cards
 
     &_libeyefi.base,
 

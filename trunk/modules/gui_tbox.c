@@ -539,8 +539,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"Virtual keyboard",// Module name
-    0,
+    (int32_t)"Virtual keyboard",
+    MTYPE_EXTENSION,
 
     &_libtextbox.base,
 

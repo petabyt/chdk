@@ -446,7 +446,7 @@ ModuleInfo _module_info =
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
     (int32_t)"Snake",           // Module name
-    (int32_t)"Game",
+    MTYPE_GAME,
 
     &_librun.base,
 

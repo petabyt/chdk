@@ -250,8 +250,8 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"CPU INFO",// Module name
-    (int32_t)"Read CPU and cache information from CP15",
+    (int32_t)"CPU INFO",
+    MTYPE_TOOL,             //Read CPU and cache information from CP15
 
     &_librun.base,
 

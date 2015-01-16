@@ -28,6 +28,14 @@ int toupper(int c) { return _toupper(c); }
 
 //----------------------------------------------------------------------------
 
+int submenu_sort_arm(const void* v1, const void* v2)
+{
+    extern int submenu_sort(const void* v1, const void* v2);
+    return submenu_sort(v1, v2);
+}
+
+//----------------------------------------------------------------------------
+
 void msleep(long msec)
 {
     _SleepTask(msec);
