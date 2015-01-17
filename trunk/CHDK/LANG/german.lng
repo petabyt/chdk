@@ -21,8 +21,10 @@
  12 "zurück"
 
  13 "RAW/DNG"
-
  14 "Speichere RAW"
+
+ 15 "Tools"
+
  16 "Nur 1. RAW einer Serie"
  17 "RAW/DNG-Ordner"
  18 "RAW-Datei Präfix"
@@ -732,6 +734,7 @@
 597 "Modul zum Benutzermenu hinzufügen"
 598 "Menüeintrag aus Benutzermenu entfernen"
 
+599 "EyeFi-Konfiguration"
 600 "EyeFi-Operationen"
 601 "Verfügbare Netzwerke"
 602 "Konfigurierte Netzwerke"
