@@ -669,7 +669,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"EyeFi Config",
+    -LANG_EYEFI,
     MTYPE_TOOL|MTYPE_SUBMENU_TOOL,  //Handle Eyefi SD cards
 
     &_libeyefi.base,
