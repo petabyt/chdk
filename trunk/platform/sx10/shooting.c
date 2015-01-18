@@ -103,7 +103,7 @@ const CapturemodeMap modemap[] = {
 	{ MODE_LANDSCAPE,          32780  },
 	// TODO dupe, order matters
 	{ MODE_VIDEO_STD,          2597   }, // video standby
-	{ MODE_VIDEO_STD,          3622   }, // video in progress (not clear this belongs here)
+//	{ MODE_VIDEO_STD,          3622   }, // video in progress - not a real mode - see http://chdk.setepontos.com/index.php?topic=12163.0
 	{ MODE_STITCH,             33290  },
 	{ MODE_SPORTS,             33287  },
 

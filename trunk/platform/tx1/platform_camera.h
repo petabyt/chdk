@@ -34,7 +34,6 @@
     #define CAM_MULTIPART                   1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_VIDEO_BUTTON            1
-    #undef  CAM_MASK_VID_REC_ACTIVE                 // allow video recording state to change reported shooting mode
     
 
     // pattern
