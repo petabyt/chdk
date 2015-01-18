@@ -32,6 +32,7 @@
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_FLASH, KEY_VIDEO }
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
+    #undef  CAM_MASK_VID_REC_ACTIVE                 // allow video recording state to change reported shooting mode   
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_BRACKETING                  1
     #undef  CAM_VIDEO_CONTROL

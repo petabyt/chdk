@@ -69,6 +69,8 @@
     #define CAM_SD_OVER_IN_MF               1
 
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+    #undef  CAM_MASK_VID_REC_ACTIVE             // allow video recording state to change reported shooting mode
+    
 
 //--------------------------------------------------
 
