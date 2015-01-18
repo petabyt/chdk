@@ -44,15 +44,19 @@ local function initialize()
 	initialized = true
 end
 
-uartr.start=function(name,replace)
+uartr.start=function(name,replace,bufsize)
 	initialize()
+	-- default buf size
+	if not bufsize then
+		bufsize = 0
+	end
 	if type(name) ~= "string" then
-		call_event_proc("StartRedirectUART",0,0) -- auto buffer size, auto file name
+		call_event_proc("StartRedirectUART",bufsize,0) -- auto file name
 	else
 		if replace then
 			os.remove(name)
 		end
-		call_event_proc("StartRedirectUART",0,name) -- auto buffer size, our file name
+		call_event_proc("StartRedirectUART",bufsize,name) -- our file name
 	end
 	sleep(10) -- a yield appears to be needed before redirection is active
 	call_event_proc("Printf","uartr.lua: start UART redirection\n");
