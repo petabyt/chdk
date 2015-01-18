@@ -128,7 +128,7 @@ const CapturemodeMap modemap[] = {
     { MODE_FACE_SELF_TIMER,     33326 },
     { MODE_SMART_SHUTTER,       33327 },
     { MODE_WINK_SELF_TIMER,     33328 },
-    { MODE_VIDEO_STD,           33796 },
+//  { MODE_VIDEO_STD,           33796 }, // not a real mode - see http://chdk.setepontos.com/index.php?topic=12163.0
 };
 
 #include "../generic/shooting.c"

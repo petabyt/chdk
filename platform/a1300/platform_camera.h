@@ -61,7 +61,6 @@
     #define CAM_HAS_ND_FILTER               1
 
     #define CAM_HAS_VIDEO_BUTTON            1
-    #undef  CAM_MASK_VID_REC_ACTIVE                 // allow video recording state to change reported shooting mode
     
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1

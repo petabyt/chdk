@@ -87,8 +87,8 @@ const CapturemodeMap modemap[] = {
     { MODE_MONOCHROME,          33336 },          
     { MODE_VIDEO_SUPER_SLOW,     2633 },    
     { MODE_CREATIVE_EFFECT,     32785 },
-    { MODE_VIDEO_STD,           33792 },
-    { MODE_VIDEO_SPEED,         33796 },
+//  { MODE_VIDEO_STD,           33792 },  // not a real mode - see http://chdk.setepontos.com/index.php?topic=12163.0
+//  { MODE_VIDEO_SPEED,         33796 },  // not a real mode - see http://chdk.setepontos.com/index.php?topic=12163.0
 };
 
 #include "../generic/shooting.c"
