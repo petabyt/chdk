@@ -11,7 +11,7 @@ NHSTUB(ExecuteEventProcedure, 0xFF81756C) // same as in ixus40
 NHSTUB(ExitFromCompensationEVF, 0xff93dfdc) //
 NHSTUB(FreeMemory, 0xff81eb10) //ixus40: same issue as with allocatememory
 NHSTUB(FreeUncacheableMemory, 0xFF8152BC) // same
-NHSTUB(GetCurrentMachineTime, 0xff8209cc) // this is the inner function
+NHSTUB(GetCurrentMachineTime, 0xff81fefc)
 NHSTUB(GetFocusLensSubjectDistance, 0xFFA5F808) // inner function
 NHSTUB(GetFocusLensSubjectDistanceFromLens, 0xffa5fe7c) // inner function
 NHSTUB(GetParameterData, 0xff958b44) //try this instead of 0xff95a318) //
