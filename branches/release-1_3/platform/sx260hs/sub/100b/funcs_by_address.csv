@@ -489,6 +489,7 @@
 0xff06d6bc,task_CaptSeqTask
 0xff07665c,task_SsTask
 0xff076e60,PT_PlaySound
+0xff078b3c,GetCurrentMachineTime
 0xff079a1c,ExecuteShutDownPropertyService_FW
 0xff079c10,get_resource_pointer
 0xff079d5c,WriteToRom_FW
@@ -967,6 +968,7 @@
 0xff1c2e38,GetLogToFile_FW
 0xff1c2e60,IsRomLogAvailable_FW
 0xff1c2e74,EraseLogSector_FW
+0xff1c3464,HwOcReadICAPCounter
 0xff1c8fc0,AdditionAgentRAM_FW
 0xff1c9100,EFUSE_ReadData_FW
 0xff1c9530,EFUSE_GetVdlData_FW

@@ -465,6 +465,7 @@
 0xff07d4c4,task_DvlpSeqTask
 0xff083644,task_SsTask
 0xff083df4,PT_PlaySound
+0xff0863cc,GetCurrentMachineTime
 0xff087254,CreateEventFlag
 0xff0872ac,DeleteEventFlag
 0xff0872fc,CheckAnyEventFlag
@@ -943,6 +944,7 @@
 0xff1d6638,GetLogToFile_FW
 0xff1d6660,IsRomLogAvailable_FW
 0xff1d6674,EraseLogSector_FW
+0xff1d6c68,HwOcReadICAPCounter
 0xff1db7c0,AdditionAgentRAM_FW
 0xff1db8f8,EFUSE_ReadData_FW
 0xff1dbd28,EFUSE_GetVdlData_FW

@@ -385,6 +385,7 @@
 0xffc4b22c,task_CaptSeq
 0xffc4b22c,task_CaptSeqTask
 0xffc4fb78,task_SsTask
+0xffc50e8c,GetCurrentMachineTime
 0xffc529d4,get_resource_pointer
 0xffc52e20,UnLoadScript_FW
 0xffc52f10,Printf_FW
@@ -746,6 +747,7 @@
 0xffd0fc3c,task_WavRead
 0xffd10f10,GetLogToFile_FW
 0xffd10f38,EraseLogSector_FW
+0xffd11470,HwOcReadICAPCounter
 0xffd11644,WriteToRom_FW
 0xffd116f4,EraseSectorOfRom_FW
 0xffd1572c,GetTimeOfSystem_FW

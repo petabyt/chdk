@@ -26,8 +26,6 @@
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff8176e0
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0xff86e074
-// ERROR: CancelHPTimer is not found.                      //--- ---    *** != 0xff8877b8
-// ERROR: SetHPTimerAfterNow is not found.                 //--- ---    *** != 0xff8876b0
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffae03dc -> ffc60e44
@@ -255,6 +253,8 @@ NHSTUB(time                                   ,0x003f9210) //119
 NHSTUB(vsprintf                               ,0xff817d98) //115
 NHSTUB(EngDrvRead                             ,0xff81bfa0) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xff890ec8) //105
+//NHSTUB(CancelHPTimer                        ,0xff8877b8) //119            == 0xff8877b8
+//NHSTUB(SetHPTimerAfterNow                   ,0xff8876b0) //119            == 0xff8876b0
 NHSTUB(SS_MFOn                                ,0xff991c20) //120
 NHSTUB(SS_MFOff                               ,0xff991c30) //120
 NHSTUB(GetAdChValue                           ,0xff854f30) //120

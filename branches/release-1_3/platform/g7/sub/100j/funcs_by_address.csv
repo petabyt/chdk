@@ -69,6 +69,8 @@
 0xff81bb6c,CloseConsole_FW
 0xff81bcb8,task_ConsoleSvr
 0xff81be54,task_LowConsole
+0xff81ecf8,GetCurrentMachineTime
+0xff81f720,HwOcReadICAPCounter
 0xff81fcfc,task_UartSio
 0xff82020c,task_UartLog
 0xff8206cc,StartUARTRedirect_FW

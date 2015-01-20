@@ -470,6 +470,7 @@
 0xf80ce658,EpilogFile_FW
 0xf80ce684,task_Epilog
 0xf80ce6c0,EpilogMenu_FW
+0xf80cf19c,GetCurrentMachineTime
 0xf80d0134,ExecuteShutDownPropertyService_FW
 0xf80d032c,get_resource_pointer
 0xf80d0478,WriteToRom_FW
@@ -974,6 +975,7 @@
 0xf826be64,GetLogToFile_FW
 0xf826be8c,IsRomLogAvailable_FW
 0xf826bea0,EraseLogSector_FW
+0xf826c498,HwOcReadICAPCounter
 0xf82723d4,AdditionAgentRAM_FW
 0xf8272514,EFUSE_ReadData_FW
 0xf8272944,EFUSE_GetVdlData_FW
