@@ -472,6 +472,7 @@
 0xff08f830,SSFS_ShootPicture_FW
 0xff08f8ac,task_SsTask
 0xff0900b0,PT_PlaySound
+0xff091d68,GetCurrentMachineTime
 0xff092cf8,ExecuteShutDownPropertyService_FW
 0xff092eec,get_resource_pointer
 0xff093038,WriteToRom_FW
@@ -930,6 +931,7 @@
 0xff1eb24c,EpilogFile_FW
 0xff1eb278,task_Epilog
 0xff1eb2b4,EpilogMenu_FW
+0xff1ebb24,HwOcReadICAPCounter
 0xff1f1698,AdditionAgentRAM_FW
 0xff1f17d8,EFUSE_ReadData_FW
 0xff1f1c08,EFUSE_GetVdlData_FW

@@ -31,8 +31,6 @@ NHSTUB(DeleteFile_Fut                         ,0xff034bb4) //  1 90%
 // Mode 32784 in firmware but not in current modemap
 // Mode 33334 in firmware but not in current modemap
 // Mode 33295 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_SPEED         33796
-// Current modemap entry not found in firmware - MODE_VIDEO_STD           33792
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00040b64) // Found @0xff032410

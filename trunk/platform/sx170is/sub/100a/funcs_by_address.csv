@@ -192,7 +192,6 @@
 0xff81c958,IsNormalCameraMode_FW
 0xff81c970,StartFactoryModeController_FW
 0xff81cb48,task_FsIoNotifyTask
-0xff81e32c,SetHPTimerAfterTimeout
 0xff81f998,get_fstype
 0xff81fa20,GetDrive_ClusterSize
 0xff820240,GetDrive_TotalClusters
@@ -444,11 +443,15 @@
 0xff884824,GetLogToFile_FW
 0xff884848,IsRomLogAvailable_FW
 0xff88485c,EraseLogSector_FW
+0xff885180,GetCurrentMachineTime
 0xff88617c,ExecuteShutDownPropertyService_FW
 0xff886370,get_resource_pointer
 0xff88663c,UnLoadScript_FW
 0xff886728,Printf_FW
 0xff886738,LoadScript_FW
+0xff8876b0,SetHPTimerAfterNow
+0xff887730,SetHPTimerAfterTimeout
+0xff8877b8,CancelHPTimer
 0xff889194,task_WdtPrint
 0xff889244,task_WdtReset
 0xff889304,StartWDT_FW
@@ -862,6 +865,7 @@
 0xff9977ac,EpilogFile_FW
 0xff9977d8,task_Epilog
 0xff997818,EpilogMenu_FW
+0xff998094,HwOcReadICAPCounter
 0xff99daa0,AdditionAgentRAM_FW
 0xff9a53f0,PTM_AllReset_FW
 0xff9a5748,PTM_GetWorkingCaptureMode_FW

@@ -355,6 +355,7 @@
 0xffd07c20,GetCurrentFocusLensPosition_FW
 0xffd07c20,GetCurrentFocusPosition_FW
 0xffdd56f0,GetCurrentImgDrvMode_FW
+0xffc60b68,GetCurrentMachineTime
 0xffceb578,GetCurrentMaximumLogSize_FW
 0xffdd5858,GetCurrentOptTemp_FW
 0xffc80d98,GetCurrentShutterSpeed_FW
@@ -481,6 +482,7 @@
 0xffc7bfb0,GUISrv_StartGUISystem_FW
 0xffc6d130,HardwareDefect_FW
 0xffc6d0e0,HardwareDefectWithRestart_FW
+0xffd13b04,HwOcReadICAPCounter
 0xffceb540,InactivateAdjLog_FW
 0xffd0ef88,InitializeAdjustmentFunction_FW
 0xffd0ef18,InitializeAdjustmentSystem_FW

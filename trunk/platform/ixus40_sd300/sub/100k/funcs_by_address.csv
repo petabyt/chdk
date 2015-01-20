@@ -62,6 +62,8 @@
 0xff81eb9c,Peek8_FW
 0xff81eba8,EraseSignature_FW
 0xff81ebd8,GetSystemTime_FW
+0xff81fefc,GetCurrentMachineTime
+0xff8209cc,HwOcReadICAPCounter
 0xff820f6c,task_ReceiveSio
 0xff821064,task_SendSio
 0xff821204,task_DmacSioTask

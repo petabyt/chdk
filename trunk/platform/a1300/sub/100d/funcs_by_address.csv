@@ -408,6 +408,7 @@
 0xff86eca8,task_CaptSeqTask
 0xff874a14,task_SsTask
 0xff87503c,PT_PlaySound
+0xff876f38,GetCurrentMachineTime
 0xff877e10,ExecuteShutDownPropertyService_FW
 0xff878004,get_resource_pointer
 0xff878150,WriteToRom_FW
@@ -848,6 +849,7 @@
 0xff963960,GetLogToFile_FW
 0xff963988,IsRomLogAvailable_FW
 0xff96399c,EraseLogSector_FW
+0xff963f90,HwOcReadICAPCounter
 0xff969bb8,AdditionAgentRAM_FW
 0xff977b74,UIFS_WriteFirmInfoToFile
 0xff977b74,UIFS_WriteFirmInfoToFile_FW

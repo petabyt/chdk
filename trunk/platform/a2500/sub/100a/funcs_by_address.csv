@@ -405,6 +405,7 @@
 0xff885ee8,SSFS_CompleteSynchroWrite_FW
 0xff885ee8,SSFS_ShootPicture_FW
 0xff885f64,task_SsTask
+0xff88820c,GetCurrentMachineTime
 0xff889214,ExecuteShutDownPropertyService_FW
 0xff889408,get_resource_pointer
 0xff889554,WriteToRom_FW
@@ -833,6 +834,7 @@
 0xff97b9d0,EpilogFile_FW
 0xff97b9fc,task_Epilog
 0xff97ba38,EpilogMenu_FW
+0xff97c2a8,HwOcReadICAPCounter
 0xff9816c0,AdditionAgentRAM_FW
 0xff986538,PTM_AllReset_FW
 0xff986890,PTM_GetWorkingCaptureMode_FW

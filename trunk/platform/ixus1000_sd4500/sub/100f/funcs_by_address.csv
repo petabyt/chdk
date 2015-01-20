@@ -419,6 +419,7 @@
 0xff884d98,task_DvlpSeqTask
 0xff88a1b8,task_SsTask
 0xff88a804,PT_PlaySound
+0xff88ca4c,GetCurrentMachineTime
 0xff88d8b0,CreateEventFlag
 0xff88d908,DeleteEventFlag
 0xff88d958,CheckAnyEventFlag
@@ -884,6 +885,7 @@
 0xff98d990,NR_SetDoubleNRType_FW
 0xff98f73c,GetLogToFile_FW
 0xff98f764,EraseLogSector_FW
+0xff98fc5c,HwOcReadICAPCounter
 0xff994480,AdditionAgentRAM_FW
 0xff9a12dc,UIFS_WriteFirmInfoToFile
 0xff9a12dc,UIFS_WriteFirmInfoToFile_FW
