@@ -476,6 +476,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GetSRAndDisableInterrupt", OPTIONAL|UNUSED }, // disables IRQ, returns a value
     { "SetSR", OPTIONAL|UNUSED }, // enables IRQ, puts back value returned by GetSR
     { "EnableInterrupt", OPTIONAL|UNUSED }, // enables IRQ
+    { "GetCurrentMachineTime", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
+    { "HwOcReadICAPCounter", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED|DONT_EXPORT },
@@ -942,6 +944,22 @@ int find_filesem_init(firmware *fw)
     return 1;
 }
 
+int find_getcurrentmachinetime(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"SetHPTimerAfterNow");
+    if (f1 < 0)
+        return 0;
+    f1 = adr2idx(fw, func_names[f1].val);
+    f1 = find_inst(fw, isBL, f1, 16);
+    if (f1>0)
+    {
+        f1 = idxFollowBranch(fw,f1,0x01000001);
+        fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+        return 1;
+    }
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -1040,6 +1058,7 @@ string_sig string_sigs[] =
     {20, "MFOn", "MFOn_FW", 1 },
     {20, "MFOff", "MFOff_FW", 1 },
     {20, "GetAdChValue", "GetAdChValue_FW", 0 },
+    {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 3 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1367,6 +1386,7 @@ string_sig string_sigs[] =
 
     { 22, "set_control_event", (char*)find_set_control_event, 0 }, // vx
     { 22, "filesem_init", (char*)find_filesem_init, 0 }, // vx
+    { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
