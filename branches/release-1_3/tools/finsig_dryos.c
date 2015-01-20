@@ -470,6 +470,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "add_ui_to_dialog", OPTIONAL|UNUSED}, // name made up, assigns resources to a dialog
     { "get_string_by_id", OPTIONAL|UNUSED}, // name made up, retrieves a localised or unlocalised string by its ID
     { "malloc_strictly", OPTIONAL|UNUSED }, // name made up
+    { "GetCurrentMachineTime", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
+    { "HwOcReadICAPCounter", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1375,6 +1377,51 @@ int find_get_string_by_id(firmware *fw)
     return 0;
 }
 
+int find_getcurrentmachinetime(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"SetHPTimerAfterTimeout");
+    if (f1 < 0)
+        return 0;
+    f1 = adr2idx(fw, func_names[f1].val);
+    f1 = find_inst(fw, isBL, f1, 16);
+    if (f1>0)
+    {
+        f1 = idxFollowBranch(fw,f1,0x01000001);
+        fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+        return 1;
+    }
+    return 0;
+}
+
+// for cases where method 15 fails (sx170)
+int find_sethptimeraftertimeout(firmware *fw)
+{
+    int sadr = find_str(fw, "FrameRateGenerator.c");
+    int j = find_nxt_str_ref(fw, sadr, -1);
+    if (j < 0)
+        return 0;
+    int f1, f2, n;
+    for (n=0; n<2; n++)
+    {
+        f1 = find_inst_rev(fw, isBL, j-1, 7);
+        f2 = find_Nth_inst_rev(fw, isBL, j-1, 128, 2);
+        // check whether previous BL is too close
+        if ((f1 < 1) || (f1-f2<8))
+        {
+            j = find_nxt_str_ref(fw, sadr, j+1);
+            if (j < 0)
+                return 0;
+        }
+        else
+        {
+            f1 = idxFollowBranch(fw,f1,0x01000001);
+            fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -1476,6 +1523,7 @@ string_sig string_sigs[] =
     {20, "SetLogicalEventActive", "UiEvnt_SetLogicalEventActive_FW", 1 },
     {20, "GetAdChValue", "GetAdChValue_FW", 0 },
     {20, "CalcLog10", "CalcLog10_FW", 4 },
+    {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 1 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1752,7 +1800,7 @@ string_sig string_sigs[] =
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55
-    { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
+    { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0001, 0x0007, 0x0007 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -1852,6 +1900,8 @@ string_sig string_sigs[] =
     { 22, "get_string_by_id", (char*)find_get_string_by_id, 0 },
     { 22, "get_fstype", (char*)find_get_fstype, 0 },
     { 22, "malloc_strictly", (char*)find_malloc_strictly, 0 },
+    { 22, "SetHPTimerAfterTimeout", (char*)find_sethptimeraftertimeout, 0},
+    { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
