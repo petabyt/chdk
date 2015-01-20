@@ -1230,6 +1230,8 @@
 0xffeb9b0c,ShowAllTaskInfo_FW
 0xffebac14,GetLogToFile_FW
 0xffebadc4,EraseLogSector_FW
+0xffebb494,GetCurrentMachineTime
+0xffebc620,HwOcReadICAPCounter
 0xffebcaac,CreateEventFlag
 0xffebcbb8,DeleteEventFlag
 0xffebcd58,CheckAnyEventFlag

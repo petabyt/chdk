@@ -428,6 +428,7 @@
 0xff88ada8,SSFS_ShootPicture_FW
 0xff88ae24,task_SsTask
 0xff88b628,PT_PlaySound
+0xff88d728,GetCurrentMachineTime
 0xff88e6b0,ExecuteShutDownPropertyService_FW
 0xff88e8a4,get_resource_pointer
 0xff88e9f0,WriteToRom_FW
@@ -871,6 +872,7 @@
 0xff99a07c,EpilogFile_FW
 0xff99a0a8,task_Epilog
 0xff99a0e4,EpilogMenu_FW
+0xff99a954,HwOcReadICAPCounter
 0xff9a04c8,AdditionAgentRAM_FW
 0xff9a3cac,PTM_AllReset_FW
 0xff9a400c,PTM_GetWorkingCaptureMode_FW

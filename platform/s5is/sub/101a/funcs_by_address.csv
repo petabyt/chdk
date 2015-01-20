@@ -566,6 +566,7 @@
 0xff86c188,ShowAllTaskInfo_FW
 0xff86d428,GetLogToFile_FW
 0xff86d66c,EraseLogSector_FW
+0xff86dc48,GetCurrentMachineTime
 0xff86f7b0,get_resource_pointer
 0xff86fb1c,ScriptEnabled_FW
 0xff86fb30,ScriptDisEnabled_FW
@@ -983,6 +984,7 @@
 0xff963e58,task_SoundPlay
 0xff964458,task_WavRead
 0xff964dfc,task_WavWrite
+0xff9659d8,HwOcReadICAPCounter
 0xff965ba4,WriteToRom_FW
 0xff965c54,EraseSectorOfRom_FW
 0xff969e8c,SystemEventDelete_FW

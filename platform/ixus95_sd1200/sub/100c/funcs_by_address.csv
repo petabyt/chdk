@@ -378,6 +378,7 @@
 0xffc49fe0,task_CaptSeq
 0xffc49fe0,task_CaptSeqTask
 0xffc4faa4,task_SsTask
+0xffc513c0,GetCurrentMachineTime
 0xffc521f0,CreateEventFlag
 0xffc52248,DeleteEventFlag
 0xffc52298,CheckAnyEventFlag
@@ -778,6 +779,7 @@
 0xffcfd884,NR_SetLotasPonyType_FW
 0xffcfe9e8,GetLogToFile_FW
 0xffcfea10,EraseLogSector_FW
+0xffcfef28,HwOcReadICAPCounter
 0xffcff0f4,WriteToRom_FW
 0xffcff1a4,EraseSectorOfRom_FW
 0xffd033ec,AdditionAgentRAM_FW

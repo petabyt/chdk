@@ -433,6 +433,7 @@
 0xff0ba008,EpilogFile_FW
 0xff0ba034,task_Epilog
 0xff0ba070,EpilogMenu_FW
+0xff0bab6c,GetCurrentMachineTime
 0xff0bbb7c,ExecuteShutDownPropertyService_FW
 0xff0bbd74,get_resource_pointer
 0xff0bbec0,WriteToRom_FW
@@ -884,6 +885,7 @@
 0xff1fbae4,GetLogToFile_FW
 0xff1fbb0c,IsRomLogAvailable_FW
 0xff1fbb20,EraseLogSector_FW
+0xff1fc110,HwOcReadICAPCounter
 0xff201550,AdditionAgentRAM_FW
 0xff2063c8,PTM_AllReset_FW
 0xff206720,PTM_GetWorkingCaptureMode_FW

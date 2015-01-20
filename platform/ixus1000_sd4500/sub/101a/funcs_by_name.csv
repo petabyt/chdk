@@ -404,6 +404,7 @@
 0xff9738ac,GetCurrentFocusPosition_FW
 0xffa971d4,GetCurrentImgDrvMode_FW
 0xff97544c,GetCurrentIrisPosition_FW
+0xff88ca78,GetCurrentMachineTime
 0xff94c5b0,GetCurrentMaximumLogSize_FW
 0xffa9733c,GetCurrentOptTemp_FW
 0xff8ba21c,GetCurrentShutterSpeed_FW
@@ -628,6 +629,7 @@
 0xffb516cc,HitISLensAgainstRightEdge_FW
 0xffb51708,HitISLensAgainstTopEdge_FW
 0xffb519ec,HitISMechaEdgeInOpenControl_FW
+0xff98fc88,HwOcReadICAPCounter
 0xff861b98,i2c_read_event_FW
 0xff861b50,i2c_write_event_FW
 0xff94c578,InactivateAdjLog_FW

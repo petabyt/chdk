@@ -45,19 +45,7 @@ NHSTUB(MakeAFScan                             ,0xffb2c7e4) //  2 79%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffb68d28 -> ffb68d28
-// Current modemap entry not found in firmware - MODE_VIDEO_SUPER_MACRO   34313
-// Current modemap entry not found in firmware - MODE_VIDEO_AQUARIUM      17431
-// Current modemap entry not found in firmware - MODE_VIDEO_BEACH         17428
-// Current modemap entry not found in firmware - MODE_VIDEO_SNOW          17427
-// Current modemap entry not found in firmware - MODE_VIDEO_FOLIAGE       17426
-// Current modemap entry not found in firmware - MODE_VIDEO_INDOOR        17425
-// Current modemap entry not found in firmware - MODE_VIDEO_NIGHT         17419
-// Current modemap entry not found in firmware - MODE_VIDEO_PORTRAIT      17421
-// Current modemap entry not found in firmware - MODE_VIDEO_STITCH        34314
-// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_SWAP    34331
-// Current modemap entry not found in firmware - MODE_VIDEO_COLOR_ACCENT  34330
-// Current modemap entry not found in firmware - MODE_VIDEO_MANUAL        33796
-// Current modemap entry not found in firmware - MODE_VIDEO_STD           33792
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 //DEF(levent_table                            ,0xffb5bf2c) // Found @0xffb5bf2c,          stubs_min = 0xffb5bf2c (0xFFB5BF2C)

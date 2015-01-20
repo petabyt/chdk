@@ -68,6 +68,7 @@
 0xffb60178,CancelBPFilterForBP_FW
 0xffb61f24,CancelExStrobeMode_FW
 0xffad659c,CancelFocusLensMaxSpeedLimit_FW
+0xff8877b8,CancelHPTimer
 0xffb5d7a8,CancelImageDrive_FW
 0xff905b58,CancelImager_FW
 0xffb67634,CancelLoopGainCalc_FW
@@ -417,6 +418,7 @@
 0xff983880,GetCurrentFocusPosition_FW
 0xffa9a638,GetCurrentImgDrvMode_FW
 0xff873584,GetCurrentIrisPosition_FW
+0xff885180,GetCurrentMachineTime
 0xff95b2c0,GetCurrentMaximumLogSize_FW
 0xffa9a7a4,GetCurrentOptTemp_FW
 0xff8b530c,GetCurrentShutterSpeed_FW
@@ -670,6 +672,7 @@
 0xffb66df0,HitISLensAgainstTopEdge_FW
 0xffb66e50,HitISLensToMechaEdge_FW
 0xffb67230,HitISMechaEdgeInOpenControl_FW
+0xff998094,HwOcReadICAPCounter
 0xff95b290,InactivateAdjLog_FW
 0xff991d04,InitializeAdjustmentFunction_FW
 0xff991c94,InitializeAdjustmentSystem_FW
@@ -1303,7 +1306,8 @@
 0xffad7db4,SetGyroHPFINOffsetPitch_FW
 0xffad7dd0,SetGyroHPFINOffsetYaw_FW
 0xffb643c8,SetHour_FW
-0xff81e32c,SetHPTimerAfterTimeout
+0xff8876b0,SetHPTimerAfterNow
+0xff887730,SetHPTimerAfterTimeout
 0xff990b10,SetIgnoreAVJACK_FW
 0xffb64110,SetImageMode_FW
 0xffb640ec,SetInputVoltage_FW

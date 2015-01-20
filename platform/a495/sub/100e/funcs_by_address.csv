@@ -353,6 +353,7 @@
 0xffc59274,task_CaptSeqTask
 0xffc5ee4c,task_SsTask
 0xffc5f400,PT_PlaySound
+0xffc60b68,GetCurrentMachineTime
 0xffc626e4,get_resource_pointer
 0xffc629a0,WriteToRom_FW
 0xffc62a50,EraseSectorOfRom_FW
@@ -769,6 +770,7 @@
 0xffd12330,NR_SetDoubleNRType_FW
 0xffd135f0,GetLogToFile_FW
 0xffd13618,EraseLogSector_FW
+0xffd13b04,HwOcReadICAPCounter
 0xffd182e4,AdditionAgentRAM_FW
 0xffd1f9d4,UIFS_WriteFirmInfoToFile
 0xffd1f9d4,UIFS_WriteFirmInfoToFile_FW

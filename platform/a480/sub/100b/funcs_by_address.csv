@@ -344,6 +344,7 @@
 0xffc42f34,task_CaptSeq
 0xffc42f34,task_CaptSeqTask
 0xffc47d90,task_SsTask
+0xffc49094,GetCurrentMachineTime
 0xffc4abdc,get_resource_pointer
 0xffc4b028,UnLoadScript_FW
 0xffc4b118,Printf_FW
@@ -727,6 +728,7 @@
 0xffceabd0,NR_SetLotasPonyType_FW
 0xffcec2a4,GetLogToFile_FW
 0xffcec2cc,EraseLogSector_FW
+0xffcec7e4,HwOcReadICAPCounter
 0xffcec9b0,WriteToRom_FW
 0xffceca60,EraseSectorOfRom_FW
 0xffcf0ca8,AdditionAgentRAM_FW

@@ -409,6 +409,7 @@
 0xff87e70c,task_DvlpSeqTask
 0xff8838c8,task_SsTask
 0xff884058,PT_PlaySound
+0xff885fec,GetCurrentMachineTime
 0xff886e50,CreateEventFlag
 0xff886ea8,DeleteEventFlag
 0xff886ef8,CheckAnyEventFlag
@@ -902,6 +903,7 @@
 0xff964aec,NR_SetDoubleNRType_FW
 0xff966674,GetLogToFile_FW
 0xff96669c,EraseLogSector_FW
+0xff966b94,HwOcReadICAPCounter
 0xff966d70,WriteToRom_FW
 0xff966e20,EraseSectorOfRom_FW
 0xff96b068,AdditionAgentRAM_FW

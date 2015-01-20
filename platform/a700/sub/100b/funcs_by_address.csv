@@ -68,6 +68,8 @@
 0xffc0b638,CloseConsole_FW
 0xffc0b784,task_ConsoleSvr
 0xffc0b920,task_LowConsole
+0xffc0e0c4,GetCurrentMachineTime
+0xffc0ead4,HwOcReadICAPCounter
 0xffc0f050,task_UartSio
 0xffc0f488,CreateEventFlag
 0xffc0f594,DeleteEventFlag

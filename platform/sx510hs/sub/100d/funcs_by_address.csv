@@ -471,6 +471,7 @@
 0xff07f448,EpilogFile_FW
 0xff07f474,task_Epilog
 0xff07f4b4,EpilogMenu_FW
+0xff07ffc0,GetCurrentMachineTime
 0xff080fc4,ExecuteShutDownPropertyService_FW
 0xff0811bc,get_resource_pointer
 0xff081488,UnLoadScript_FW
@@ -925,6 +926,7 @@
 0xff1d82c8,NR_SetDoubleNRType_FW
 0xff1dad54,task_WbSeqTask
 0xff1db420,task_DvlpSeqTask
+0xff1dd000,HwOcReadICAPCounter
 0xff1e2a80,AdditionAgentRAM_FW
 0xff1ea5b4,PTM_AllReset_FW
 0xff1ea90c,PTM_GetWorkingCaptureMode_FW

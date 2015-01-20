@@ -70,6 +70,8 @@
 0xffc0b7cc,CloseConsole_FW
 0xffc0b918,task_ConsoleSvr
 0xffc0bab4,task_LowConsole
+0xffc0e898,GetCurrentMachineTime
+0xffc0f2a8,HwOcReadICAPCounter
 0xffc0f8bc,task_UartSio
 0xffc0fdcc,task_UartLog
 0xffc1028c,StartUARTRedirect_FW

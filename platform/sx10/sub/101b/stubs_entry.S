@@ -23,7 +23,7 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa79ab4 -> ffb744b0
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            3622
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00011ec4) // Found @0xff821b14
