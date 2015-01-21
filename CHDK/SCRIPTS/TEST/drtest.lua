@@ -1,6 +1,6 @@
 --[[
 @title dynamic range test
-@chdk_version 1.4.0.3937
+@chdk_version 1.4.0.3939
 #overstops=4 "+ stops"
 #understops=6 "- stops"
 #draw_meter=true "draw meter"
