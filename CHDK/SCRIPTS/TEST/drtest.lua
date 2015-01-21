@@ -114,7 +114,7 @@ function logline(desc)
 		error(err)
 	end
 	if not st then
-		f:write('desc,date,tick,exp,tv96,sv96,av96,bv96,m,m96,r,r96,g1,g1_96,g2,g2_96,b,b96,peak,peak%,bl%,wl%,ccd temp,t1,t2\n')
+		f:write('desc,date,tick,exp,tv96,sv96,av96,bv96,m,m96,r,r96,g1,g1_96,g2,g2_96,b,b96,peak,peak%,bl%,wl%,ccd temp\n')
 		local bi=get_buildinfo()
 		f:write(string.format("%s %s %s %s %s %s %s %s 0x%x\n",
 					bi.platform,bi.platsub,bi.version,bi.build_number,bi.build_revision,
