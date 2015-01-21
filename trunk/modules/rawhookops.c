@@ -210,7 +210,7 @@ static int rawop_fill_rect_rgbg(lua_State *L) {
 /*
 ev96=rawop.raw_to_ev96(rawval)
 convert a raw value (blacklevel+1 to whitelevel) into an APEX96 EV relative to neutral
-if rawval is <= to blacklevel, it is clamped to blacklevel.
+if rawval is <= to blacklevel, it is clamped to blacklevel + 1.
 values > whitelevel are converted normally
 */
 static int rawop_raw_to_ev96(lua_State *L) {
@@ -290,33 +290,21 @@ static int rawop_meter(lua_State *L) {
 
 
 typedef struct {
-    unsigned shift;
     unsigned entries;
     unsigned total_pixels;
     unsigned *data;
 } rawop_histo_t;
 /*
-create new histogram object, with enough slots for raw values shifted by shift
-histo=rawop.new_histogram([shift])
-TODO might make more sense to specify size or bit rather than shift from camera dependent bpp
+create new histogram object
+histo=rawop.create_histogram()
 */
 static int rawop_create_histogram(lua_State *L) {
-    unsigned shift=luaL_optnumber(L,1,0);
-
-    if(shift >= camera_sensor.bits_per_pixel) {
-        return luaL_error(L,"invalid shift");
-    }
     rawop_histo_t *h = (rawop_histo_t *)lua_newuserdata(L,sizeof(rawop_histo_t));
     if(!h) {
         return luaL_error(L,"failed to create userdata");
     }
-    h->shift = shift;
-    h->entries = 1 << (camera_sensor.bits_per_pixel - shift);
     h->total_pixels = 0;
-    h->data = malloc(h->entries*sizeof(unsigned));
-    if(!h->data) {
-        return luaL_error(L,"insufficient memory");
-    }
+    h->data = NULL;
     luaL_getmetatable(L, RAWOP_HISTO_META);
     lua_setmetatable(L, -2);
     return 1;
@@ -324,9 +312,13 @@ static int rawop_create_histogram(lua_State *L) {
 
 /*
 update histogram data using specified area of raw buffer
-histo:update(top,left,width,height,xstep,ystep)
+histo:update(top,left,width,height,xstep,ystep[,bits])
+bits specifies the bit depth of histogram. defaults to camera bit depth
+must be <= camera bit depth
+amount of memory required for the histogram data is determined by bits
 */
 static int rawop_histo_update(lua_State *L) {
+    // TODO only allow in raw hook
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
 
     unsigned xstart=luaL_checknumber(L,2);
@@ -335,13 +327,18 @@ static int rawop_histo_update(lua_State *L) {
     unsigned height=luaL_checknumber(L,5);
     unsigned xstep=luaL_checknumber(L,6);
     unsigned ystep=luaL_checknumber(L,7);
+    unsigned bits=luaL_optnumber(L,8,camera_sensor.bits_per_pixel);
+    if(bits > camera_sensor.bits_per_pixel || bits < 1) {
+        return luaL_error(L,"invalid bit depth");
+    }
+    unsigned shift = camera_sensor.bits_per_pixel - bits;
+    unsigned entries = 1 << bits;
 
-    // TODO only allow in raw hook
-    memset(h->data,0,h->entries*4);
     h->total_pixels=0;
     if(xstart >= (unsigned)camera_sensor.raw_rowpix 
         || ystart >= (unsigned)camera_sensor.raw_rows
-        || xstep == 0 || ystep == 0) {
+        || xstep == 0 || ystep == 0
+        || width == 0 || height == 0) {
         luaL_error(L,"invalid update area");
         return 0;
     }
@@ -354,12 +351,25 @@ static int rawop_histo_update(lua_State *L) {
         ymax = (unsigned)camera_sensor.raw_rows;
     }
     // total with clipping and rounding accounted for
-    h->total_pixels=(((xmax - xstart)/xstep))*(((ymax - ystart)/ystep));
+    h->total_pixels=((1+(xmax - xstart - 1)/xstep))*((1+(ymax - ystart - 1)/ystep));
+
+    // TODO shorts or ints based on total pixels
+    if(h->entries != entries || !h->data) {
+        free(h->data);
+        h->data = malloc(entries*sizeof(unsigned));
+        if(!h->data) {
+            h->total_pixels=0;
+            return luaL_error(L,"insufficient memory");
+        }
+    }
+    h->entries = entries;
+    memset(h->data,0,h->entries*sizeof(unsigned));
+
     unsigned x,y;
-    if(h->shift) {
+    if(shift) {
         for(y=ystart;y<ymax;y+=ystep) {
             for(x=xstart;x<xmax;x+=xstep) {
-                h->data[get_raw_pixel(x,y)>>h->shift]++;
+                h->data[get_raw_pixel(x,y)>>shift]++;
             }
         }
     } else {
@@ -379,6 +389,9 @@ TODO any reason to make 1000 adjustable?
 */
 static int rawop_histo_range(lua_State *L) {
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+    if(!h->data) {
+        return luaL_error(L,"no data");
+    }
     unsigned minval=luaL_checknumber(L,2);
     unsigned maxval=luaL_checknumber(L,3);
     int frac=1;
@@ -420,14 +433,26 @@ returns total number of pixels sampled
 */
 static int rawop_histo_total_pixels(lua_State *L) {
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+    if(!h->data) {
+        return luaL_error(L,"no data");
+    }
     lua_pushnumber(L,h->total_pixels);
     return 1;
 }
 
-static int rawop_histo_gc(lua_State *L) {
+/*
+histo:free()
+free memory used by histogram data. histo:update must be called again to before any other functions
+*/
+static int rawop_histo_free(lua_State *L) {
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
     free(h->data);
     h->data=NULL;
+    return 0;
+}
+
+static int rawop_histo_gc(lua_State *L) {
+    rawop_histo_free(L);
     return 0;
 }
 
@@ -440,6 +465,7 @@ static const luaL_Reg rawop_histo_methods[] = {
   {"update", rawop_histo_update},
   {"range", rawop_histo_range},
   {"total_pixels", rawop_histo_total_pixels},
+  {"free", rawop_histo_free},
   {NULL, NULL}
 };
 
@@ -485,6 +511,8 @@ int luaopen_rawop(lua_State *L) {
     }
 
     // emperical guestimate
+    // average pixel value of a neutral subject shot with canon AE, as a fraction of usable dynamic range
+    // reasonably close on d10, elph130, a540
     double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
     log2_raw_neutral_count = log2(raw_neutral_count);
     raw_neutral = raw_neutral_count + camera_sensor.black_level;
