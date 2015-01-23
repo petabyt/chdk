@@ -1,3 +1,1 @@
-topdir=../../
-
-include $(topdir)loader/makefile_loader.inc
+include ../makefile_loader.inc
