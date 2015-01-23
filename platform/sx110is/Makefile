@@ -1,4 +1,2 @@
-topdir=../../
-
-include $(topdir)platform/makefile_platform.inc
+include ../makefile_platform.inc
 
