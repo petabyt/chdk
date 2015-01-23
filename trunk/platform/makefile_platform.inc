@@ -1,4 +1,5 @@
 # This file is included from platform/*/Makefile
+topdir=../../
 
 include $(topdir)makefile.inc
 
@@ -34,4 +35,4 @@ include $(topdir)bottom.inc
 
 # Define empty recipes for source files (including the makefiles)
 # to prevent make from trying implicit rules to create them. Speeds up build process
-$(topdir)platform/makefile_platform.inc: ;
+../makefile_platform.inc: ;
