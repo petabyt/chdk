@@ -1,20 +1,8 @@
 topdir=../
 
-SKIPBUILDRULES=1
-SKIPPLATFORMCHECK=1
+include $(topdir)makefile_tools.inc
 
-include $(topdir)makefile.inc
-include $(topdir)version.inc
-
-OBJS=pakwif.o finsig_vxworks.o finsig_dryos.o gensig_vxworks.o gensig_dryos.o \
-     dumpchk.o dancingbits.o rawconvert.o dumputil.o find_levent.o find_eventproc.o \
-     yuvconvert.o font_8x16_pack.o makelang.o code_gen.o
-
-ifdef OPT_FI2
-  SUBDIRS=packfi2
-endif
-
-SUBDIRS+=elf2flt
+SUBDIRS=packfi2 elf2flt
 
 EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) gensig_vxworks$(EXE) gensig_dryos$(EXE) \
      dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE) gen_conf_lua$(EXE)
@@ -23,15 +11,6 @@ all: $(EXES)
 
 # not needed by batch builds, not built by default
 extras: rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
-
-%.o: %.c
-	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -c -o $@ $<
-
-.dep/%.d: %.c .dep
-	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \
-	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	    rm -f $@.$$$$
 
 makeexport$(EXE): makeexport.o
 	@echo $< \-\> $@
@@ -171,3 +150,8 @@ font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
 
 include $(topdir)bottom.inc
 
+# Define empty recipes for source files (including the makefiles)
+# to prevent make from trying implicit rules to create them. Speeds up build process
+chdk_dasm.h: ;
+firmware_load.h: ;
+stubs_load.h: ;
