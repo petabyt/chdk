@@ -1,27 +1,12 @@
 topdir=../../
 
-SKIPBUILDRULES=1
-SKIPPLATFORMCHECK=1
+include $(topdir)makefile_tools.inc
 
-include $(topdir)makefile.inc
-
-# Add directory to find flt.h file.
-HOSTCFLAGS+=-I$(topdir)modules
-
-OBJS= myio.o elf-arm.o elfflt.o main.o
+HOSTCFLAGS+=-Wno-format
 
 all: elf2flt$(EXE) fltdump$(EXE)
 
-%.o: %.c
-	@echo $< \-\> $@
-	$(HOSTCC) $(HOSTCFLAGS) -Wno-format -c -o $@ $<
-
-.dep/%.d: %.c .dep
-	$(HOSTCC) $(HOSTCFLAGS) -MM $< > $@.$$$$; \
-	    sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	    rm -f $@.$$$$
-
-elf2flt$(EXE): $(OBJS)
+elf2flt$(EXE): myio.o elf-arm.o elfflt.o main.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
