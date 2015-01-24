@@ -18,10 +18,10 @@ main.bin: main.elf
 main.elf: $(OBJS)
 
 clean: clean-recursive
-	rm -f $(OBJS) main.bin main.elf main.dump main.elf.syms
+	rm -f *.o *.bin *.elf *.dump *.elf.syms
 
 distclean: distclean-recursive
-	rm -f $(OBJS) main.bin main.elf main.dump main.elf.syms
+	rm -f *.o *.bin *.elf *.dump *.elf.syms
 	rm -f reboot_core.h copy_and_reset.h
 
 blobs.o: $(RESET_FILE) $(CORE_FILE)
