@@ -12,9 +12,9 @@ main.bin: main.elf
 main.elf: $(OBJS)
 
 clean: clean-recursive
-	rm -f $(OBJS) main.bin main.elf main.dump main.elf.syms
+	rm -f *.o *.bin *.elf *.dump *.elf.syms
 
 distclean: distclean-recursive
-	rm -f $(OBJS) main.bin main.elf main.dump main.elf.syms
+	rm -f *.o *.bin *.elf *.dump *.elf.syms
 
 include $(topdir)bottom.inc
