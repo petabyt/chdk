@@ -1,8 +1,6 @@
 topdir=../../
 
-SKIPPLATFORMCHECK=1
-
-include $(topdir)makefile.inc
+include $(topdir)makefile_arm.inc
 
 OBJS = $Ocallfunc.o $Oreboot.o $Ocache.o
 
