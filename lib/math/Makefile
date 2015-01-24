@@ -1,10 +1,6 @@
 topdir=../../
 
-SKIPPLATFORMCHECK=1
-
-include $(topdir)makefile.inc
-
-CFLAGS+=$(CTHUMB) -DCHDK_MODULE_CODE
+include $(topdir)makefile_core.inc
 
 OBJS = $Od2d.o $Owrapper.o
 
