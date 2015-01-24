@@ -38,6 +38,9 @@ OPT_GEN_SIGS=1
 # If enabled (and firmware binaries are present) compiler will update "stubs_entry.S"
 OPT_GEN_STUBS=1
 
+# Define this to add a 100K block of 0 bytes to the end of main.bin
+#OPT_ZERO100K
+
 # for CHDK-DE presets without OPT_DEFAULT_LANG
 #OPT_DE_VERSION=1
 

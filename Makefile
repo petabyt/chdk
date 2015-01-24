@@ -1,5 +1,4 @@
 topdir=./
-srcdir=./
 
 tmp:=$(shell echo "BUILD_SVNREV := $(DEF_SVN_REF)" > revision.inc)
 
@@ -10,7 +9,7 @@ CAMERA_LIST=camera_list.csv
 #  e.g. OS/X date command does not support -R option, use GNU date (gdate) from coreutils 
 ZIPDATE=date -R
 
-include makefile.inc
+include makefile_cam.inc
 
 BUILD_SVNREV:=$(shell svnversion -cn $(topdir) | $(ESED) 's/[0-9]*:([0-9]+)[MPS]*/\1/')
 ifeq ($(BUILD_SVNREV), )
@@ -28,9 +27,6 @@ ifeq ($(BUILD_SVNREV), Unversioned directory)
 	BUILD_SVNREV:=$(DEF_SVN_REF)
 endif
 tmp:=$(shell echo "BUILD_SVNREV := $(BUILD_SVNREV)" > revision.inc)
-
-# CHDK folder for full package
-ZIPDIRS:=$(shell ls -R CHDK | grep CHDK/ | $(ESED) 's?:?/*?')
 
 SUBDIRS=
 
@@ -50,10 +46,10 @@ SUBDIRS+=CHDK
 endif
 
 # Must do platform before loader
-SUBDIRS+=platform/$(PLATFORM) platform/$(PLATFORM)/sub/$(PLATFORMSUB)
+SUBDIRS+=$(cam) $(camfw)
 
 # Must do this last as it builds the final .bin file
-SUBDIRS+=loader/$(PLATFORM)
+SUBDIRS+=$(loader)
 
 
 .PHONY: platformcheck
@@ -77,51 +73,55 @@ version: FORCE
 FORCE:
 
 
+ZIP_SMALL=$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
+ZIP_FULL=$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
+ifdef PLATFORMOS
+    ifeq ($(PLATFORMOS),vxworks)
+        FW_UPD_FILE=$(bin)/PS.FIR
+    endif
+    ifeq ($(PLATFORMOS),dryos)
+        ifdef OPT_FI2
+            ifdef FI2KEY
+                FW_UPD_FILE=$(bin)/PS.FI2
+            else
+                $(error WARNING OPT_FI2 set but FI2KEY is not! please read platform/fi2.inc.txt)
+            endif
+        endif
+    endif
+endif
+
+
 .PHONY: fir
 fir: version firsub
 
 
 firsub: platformcheck all
-	mkdir -p $(topdir)bin
-	cp $(topdir)loader/$(PLATFORM)/main.bin $(topdir)bin/main.bin
-    ifndef NOZERO100K
+	mkdir -p $(bin)
+	cp $(loader)/main.bin $(bin)/main.bin
+    ifdef OPT_ZERO100K
         ifeq ($(OSTYPE),Windows)
-			zero | dd bs=1k count=100 >> $(topdir)bin/main.bin 2> $(DEVNULL)
+			zero | dd bs=1k count=100 >> $(bin)/main.bin 2> $(DEVNULL)
         else
-			dd if=/dev/zero bs=1k count=100 >> $(topdir)bin/main.bin 2> $(DEVNULL)
+			dd if=/dev/zero bs=1k count=100 >> $(bin)/main.bin 2> $(DEVNULL)
         endif
     endif
-    ifdef PLATFORMOS
+    ifdef FW_UPD_FILE
+		@echo \-\> $(FW_UPD_FILE)
         ifeq ($(PLATFORMOS),vxworks)
-			@echo \-\> PS.FIR
-			$(PAKWIF) $(topdir)bin/PS.FIR $(topdir)bin/main.bin $(PLATFORMID) 0x01000101
+			$(PAKWIF) $(FW_UPD_FILE) $(bin)/main.bin $(PLATFORMID) 0x01000101
         endif
         ifeq ($(PLATFORMOS),dryos)
-            ifdef OPT_FI2
-                ifdef FI2KEY
-					@echo \-\> PS.FI2
-					$(PAKFI2) $(topdir)bin/main.bin -p $(PLATFORMID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(topdir)bin/PS.FI2
-                else
-					@echo WARNING OPT_FI2 set but FI2KEY is not! please read platform/fi2.inc.txt
-                endif
-            endif
+			$(PAKFI2) $(bin)/main.bin -p $(PLATFORMID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(FW_UPD_FILE)
         endif
     endif
     ifdef NEED_ENCODED_DISKBOOT
 		@echo dance \-\> DISKBOOT.BIN ver $(NEED_ENCODED_DISKBOOT)
-		$(ENCODE_DISKBOOT) $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN $(NEED_ENCODED_DISKBOOT) 
-		rm $(topdir)bin/main.bin
+		$(ENCODE_DISKBOOT) $(bin)/main.bin $(bin)/DISKBOOT.BIN $(NEED_ENCODED_DISKBOOT) 
+		rm $(bin)/main.bin
     else
-		mv $(topdir)bin/main.bin  $(topdir)bin/DISKBOOT.BIN
+		mv $(bin)/main.bin $(bin)/DISKBOOT.BIN
     endif
 	@echo "**** Firmware creation completed successfully"
-
-
-.PHONY: upload
-upload: fir
-	@echo Uploading...
-	cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB).FIR $(topdir)bin/PS.FIR
-	/home/vitalyb/Projects/ch/libptp2-1.1.0/src/ptpcam -u -m 0xbf01 --filename $(topdir)bin/PS.FIR
 
 
 .PHONY: firzip
@@ -129,114 +129,74 @@ firzip: version firzipsub
 
 
 firzipsub: infoline clean firsub
-	@echo \-\> $(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
-	rm -f $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)$(BUILD_SVNREV)$(STATE).zip
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV) date:`$(ZIPDATE)`" | \
-		zip -9jz $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
-    ifdef PLATFORMOS
-        ifeq ($(PLATFORMOS),vxworks)
-			zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
-			rm -f $(topdir)bin/PS.FIR
-        endif
-        ifeq ($(PLATFORMOS),dryos)
-            ifdef OPT_FI2
-                ifdef FI2KEY
-					zip -9j $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-					rm -f $(topdir)bin/PS.FI2
-                endif
-            endif
-        endif
-    endif
-	zip -9 $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)CHDK/MODULES/* > $(DEVNULL)
+	@echo \-\> $(VER)-$(ZIP_SMALL)
+	rm -f $(bin)/$(VER)-$(ZIP_SMALL)
+	LANG=C echo "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV) date:`$(ZIPDATE)`" | \
+		zip -9jz $(bin)/$(VER)-$(ZIP_SMALL) $(bin)/DISKBOOT.BIN $(FW_UPD_FILE) > $(DEVNULL)
+	rm -f $(bin)/DISKBOOT.BIN $(FW_UPD_FILE)
+	zip -9 $(bin)/$(VER)-$(ZIP_SMALL) $(chdk)/MODULES/* > $(DEVNULL)
+
     # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
-    # Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
-    # firmware version that needs to be copied to another firmware version
+    # COPY_TO is extracted from camera_list.csv for batch builds.
 	# For the case where one CHDK version applies to two or more other Canon firmware version place all the
 	# 'copy to' firmware versions together seperated by ':' - e.g. "a2000,100c,BETA,100a:100b,"
     ifdef COPY_TO
 		@echo "**** Copying duplicate Firmwares"
 		$(foreach COPY_PLATFORMSUB, $(subst :, ,$(COPY_TO)), \
-			cp $(topdir)bin/$(VER)-$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/$(VER)-$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
+			cp $(bin)/$(VER)-$(ZIP_SMALL) $(bin)/$(VER)-$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
 		)
     endif
-	rm -f $(topdir)bin/DISKBOOT.BIN
 
 
 firzipsubcomplete: infoline clean firsub
-	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
-	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
-	@echo \-\> $(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
-	rm -f $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
-	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
-	LANG=C echo -e "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
-	zip -9jz $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/DISKBOOT.BIN > $(DEVNULL)
-	$(foreach ZIPDIR, $(ZIPDIRS), \
-		zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)$(ZIPDIR) > $(DEVNULL) ; \
-	)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)CHDK/syscurves.CVF      > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)doc/changelog.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)tools/vers.req  > $(DEVNULL)
-	cat $(topdir)doc/1_intro.txt  $(topdir)platform/$(PLATFORM)/notes.txt $(topdir)doc/2_installation.txt $(topdir)doc/3_faq.txt $(topdir)doc/4_urls.txt $(topdir)doc/5_gpl.txt $(topdir)doc/6_ubasic_copyright.txt > $(topdir)doc/readme.txt
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-	zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)doc/readme.txt  > $(DEVNULL)
-	zip -9 $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)CHDK/MODULES/*  > $(DEVNULL)
+	cat $(doc)/1_intro.txt $(cam)/notes.txt $(doc)/2_installation.txt $(doc)/3_faq.txt $(doc)/4_urls.txt $(doc)/5_gpl.txt $(doc)/6_ubasic_copyright.txt > $(doc)/readme.txt
+	@echo \-\> $(ZIP_SMALL)
+	rm -f $(bin)/$(ZIP_SMALL)
+	LANG=C echo "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
+		zip -9jz $(bin)/$(ZIP_SMALL) $(bin)/DISKBOOT.BIN $(FW_UPD_FILE) $(doc)/changelog.txt $(doc)/readme.txt > $(DEVNULL)
+	rm -f $(bin)/DISKBOOT.BIN $(FW_UPD_FILE)
+	@echo \-\> $(ZIP_FULL)
+	cp -f $(bin)/$(ZIP_SMALL) $(bin)/$(ZIP_FULL)
+	zip -9 $(bin)/$(ZIP_SMALL) $(chdk)/MODULES/* > $(DEVNULL)
+	zip -9j $(bin)/$(ZIP_FULL) $(tools)/vers.req > $(DEVNULL)
+	zip -9r $(bin)/$(ZIP_FULL) $(chdk)/* -x CHDK/logo\*.dat \*Makefile > $(DEVNULL)
 
-    ifdef PLATFORMOS
-        ifeq ($(PLATFORMOS),vxworks)
-			zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
-			zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FIR > $(DEVNULL)
-			rm -f $(topdir)bin/PS.FIR
-        endif
-        ifeq ($(PLATFORMOS),dryos)
-            ifdef OPT_FI2
-                ifdef FI2KEY
-					zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-					zip -9j $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/PS.FI2 > $(DEVNULL)
-					rm -f $(topdir)bin/PS.FI2
-                endif
-            endif
-        endif
-    endif
     # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
-    # Define COPY_TO in $(topdir)/platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc of the source
-    # firmware version that needs to be copied to another firmware version
+    # COPY_TO is extracted from camera_list.csv for batch builds.
 	# For the case where one CHDK version applies to two or more other Canon firmware version place all the
 	# 'copy to' firmware versions together seperated by ':' - e.g. "a2000,100c,BETA,100a:100b,"
     ifdef COPY_TO
 		@echo "**** Copying duplicate Firmwares"
 		$(foreach COPY_PLATFORMSUB, $(subst :, ,$(COPY_TO)), \
-			cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip ; \
-			cp $(topdir)bin/$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip $(topdir)bin/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
+			cp $(bin)/$(ZIP_FULL) $(bin)/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip ; \
+			cp $(bin)/$(ZIP_SMALL) $(bin)/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
 		)
     endif
-	rm -f $(topdir)bin/DISKBOOT.BIN
 
 print-missing-dump: platformcheck
-	if [ ! -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+	if [ ! -s $(TARGET_PRIMARY) ] ; then \
 		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
 	fi
 
 rebuild-stubs: platformcheck
-	if [ -s $(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN ] ; then \
+	if [ -s $(TARGET_PRIMARY) ] ; then \
 		$(MAKE) -C tools finsig_dryos$(EXE) ;\
 		$(MAKE) -C tools finsig_vxworks$(EXE) ;\
 		echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
-		rm -f $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/stubs_entry.S ;\
-		$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) FORCE_GEN_STUBS=1 stubs_entry.S bin_compat.h ;\
+		rm -f $(camfw)/stubs_entry.S ;\
+		$(MAKE) -C $(camfw) FORCE_GEN_STUBS=1 stubs_entry.S ;\
 	else \
 		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi
 
 rebuild-stubs_auto: platformcheck
 	echo "rebuild stubs_auto for $(PLATFORM)-$(PLATFORMSUB)" ;\
-	rm -f $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/stubs_auto.S ;\
-	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) stubs_auto.S ;\
+	rm -f $(camfw)/stubs_auto.S ;\
+	$(MAKE) -C $(camfw) stubs_auto.S ;\
 
 run-code-gen: platformcheck
 	$(MAKE) -C tools code_gen$(EXE)
-	$(MAKE) -C $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB) run-code-gen
+	$(MAKE) -C $(camfw) run-code-gen
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry: platformcheck
@@ -264,20 +224,20 @@ allmodules:
 batch: version alltools allmodules
 	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firsub $(CAMERA_LIST) -noskip
 	@echo "**** Summary of memisosizes"
-	cat $(topdir)bin/caminfo.txt
-	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+	cat $(bin)/caminfo.txt
+	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 batch-zip: version alltools allmodules
 	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
-	cat $(topdir)bin/caminfo.txt
-	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+	cat $(bin)/caminfo.txt
+	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 batch-zip-complete: version alltools allmodules
 	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
-	cat $(topdir)bin/caminfo.txt
-	rm -f $(topdir)bin/caminfo.txt   > $(DEVNULL)
+	cat $(bin)/caminfo.txt
+	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 # note, this will include cameras with SKIP_AUTOBUILD set
 os-camera-lists:
