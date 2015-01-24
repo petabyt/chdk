@@ -1,4 +1,8 @@
 
+# Define default target (place this first so it is always selected if no target on command line)
+.PHONY: default
+default: all
+
 MEMISOSIZE="(&_end-&_start)"
 # override this on the command line or in buildconf to use PRIMARY.BIN from a different tree
 # should be an absolute path
@@ -272,9 +276,6 @@ CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
 endif
 
 ##########################################################################
-
-.PHONY: default
-default: all
 
 ifndef SKIPBUILDRULES
 
