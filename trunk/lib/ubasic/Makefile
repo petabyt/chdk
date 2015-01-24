@@ -1,11 +1,6 @@
 topdir=../../
 
-SKIPPLATFORMCHECK=1
-SKIPINTERWORK=1
-
-include $(topdir)makefile.inc
-
-CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
+include $(topdir)makefile_modules.inc
 
 OBJS = $Ocamera_functions.o $Otokenizer.o $Oubasic.o
 
@@ -13,7 +8,7 @@ all: $Olibubasic.a
 
 $Olibubasic.a: $(OBJS)
 
-UBASIC_TEST_CFLAGS=-g -Wall -DUBASIC_TEST -DCAMERA_$(PLATFORM) -DPLATFORMID=$(PLATFORMID) -I$(topdir)platform/$(PLATFORM)
+UBASIC_TEST_CFLAGS=-g -Wall -DUBASIC_TEST -DCAMERA_$(PLATFORM) -DPLATFORMID=$(PLATFORMID) -I$(cam)
 ifdef UBASIC_DEBUG
 	UBASIC_TEST_CFLAGS+=-DDEBUG=1
 endif

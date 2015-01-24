@@ -1,23 +1,17 @@
 topdir=../
 
-SKIPPLATFORMCHECK=1
-SKIPINTERWORK=1
+include $(topdir)makefile_modules.inc
 
-include $(topdir)makefile.inc
-
-SUBDIRS=$(topdir)lib/lua $(topdir)lib/ubasic $(topdir)lib/armutil $(topdir)lib/math
-SUBDIRS+=$(topdir)lib/lang $(topdir)lib/font $(topdir)lib/core $(topdir)lib/libc
+SUBDIRS=$(llua) $(lubasic) $(larmutil) $(lmath) $(llang) $(lfont) $(lcore) $(llibc)
 
 OBJ_ISDIGIT=
 ifeq ($(GCC_VERSION_MAJOR),3)
-    OBJ_ISDIGIT+= $(topdir)lib/libc/$Oissmth.o
+    OBJ_ISDIGIT+= $(llibc)/$Oissmth.o
 endif
 
-CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE -fno-reorder-functions
+CFLAGS+=-fno-reorder-functions
 
-# warning: library order matters!
-LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,0x24 -r -Wl,-d
+LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,0x24 -r -Wl,-d
 
 # Only build modules files here. Platform independant code to be linked to core CHDK should be in libraries (above)
 # to avoid 'long_call' overhead
@@ -28,15 +22,15 @@ FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids
 
 all: $(FLTS)
 
-$O%.flt: $(topdir)lib/libc/$Olibc.a
+$O%.flt: $(llibc)/$Olibc.a
 	@echo \-\> $@
 	mkdir -p .o
-	$(CC) $(CFLAGS) -o $O$*.elf -Wl,--start-group $^ $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $O$*.elf -Wl,--start-group $^ -Wl,--end-group $(LDOPTS)
     ifdef OPT_GEN_MODULE_DUMPS
-		$(OBJDUMP) -j .text -j .rodata.str1.1 -j .data -j .bss -z -d -r -f -h $O$*.elf >$O$*.elf.dump
-		$(topdir)/tools/elf2flt/elf2flt$(EXE) $O$*.elf $@ -e -f -h -r -s -v -S -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt >$@.dump
+		$(OBJDUMP) -j .text -j .data -j .bss -z -d -r -f -h $O$*.elf >$O$*.elf.dump
+		$(tools)/elf2flt/elf2flt$(EXE) $O$*.elf $@ -e -f -h -r -s -v -S -iexportlist.inc -!$(tools)/elf2flt/stoplist.txt >$@.dump
     else
-		$(topdir)/tools/elf2flt/elf2flt$(EXE) $O$*.elf $@ -iexportlist.inc -!$(topdir)/tools/elf2flt/stoplist.txt > $(DEVNULL)
+		$(tools)/elf2flt/elf2flt$(EXE) $O$*.elf $@ -iexportlist.inc -!$(tools)/elf2flt/stoplist.txt > $(DEVNULL)
     endif
 
 $O%.o: games/%.c
@@ -79,8 +73,8 @@ $Ouseredit.flt: $Ouser_menu_edit.o
 $Ocpuinfo.flt: $Ocpuinfo.o $Ocpuinfo_arm.o 
 $Oeyefi.flt: $Oeyefi.o $Omd5.o $Osha1.o
 
-$Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(topdir)lib/ubasic/$Olibubasic.a
-$Olua.flt: $Oluascript.o $Oscript_key_funcs.o $Oscript_shoot_hook.o $Ocordic_math.o $Odbg_dump.o $Orawhookops.o $(topdir)lib/lua/$Oliblua.a
+$Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(lubasic)/$Olibubasic.a
+$Olua.flt: $Oluascript.o $Oscript_key_funcs.o $Oscript_shoot_hook.o $Ocordic_math.o $Odbg_dump.o $Orawhookops.o $(llua)/$Oliblua.a
 
 $O4wins.flt: $Ogui_4wins.o
 $Omastmind.flt: $Ogui_mastermind.o
@@ -106,7 +100,7 @@ $Oshot_histogram.o: shot_histogram.c shot_histogram.h
 
 clean:
 	rm -f $O*.* *.o *.flt *.dump
-	rm -f $(topdir)core/*.o $(topdir)core/main.bin* $(topdir)core/main.elf*
+	rm -f $(core)/*.o $(core)/main.bin* $(core)/main.elf*
 
 distclean: clean
 #	rm -f *.flt

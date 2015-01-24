@@ -1,11 +1,6 @@
 topdir=../../
 
-SKIPPLATFORMCHECK=1
-SKIPINTERWORK=1
-
-include $(topdir)makefile.inc
-
-CFLAGS+=$(CTHUMB) -mlong-calls -DCHDK_MODULE_CODE
+include $(topdir)makefile_modules.inc
 
 OBJS = $Osetjmp.o \
        $Olapi.o $Olcode.o $Oldebug.o $Oldo.o $Oldump.o $Olfunc.o $Olgc.o $Ollex.o $Olmem.o \
