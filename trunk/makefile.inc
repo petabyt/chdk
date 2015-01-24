@@ -1,3 +1,9 @@
+# *************
+# Legacy makefile - no longer used (see other makefile_???.inc files)
+#
+# Kept temporarily for CHDK-Shell compatibility
+# Changing this file will have no effect on CHDK build
+# *************
 
 # Define default target (place this first so it is always selected if no target on command line)
 .PHONY: default

@@ -1,8 +1,6 @@
 topdir=../
 
-SKIPPLATFORMCHECK=1
-
-include $(topdir)makefile.inc
+include $(topdir)makefile_base.inc
 
 ifndef OPT_DE_VERSION
 LOGO=logo.dat
@@ -22,51 +20,32 @@ all: $(GENLUA)
 	@echo "copy modules"
 	mkdir -p MODULES
 	rm -f MODULES/*
-	cp $(topdir)modules/$O*.flt MODULES
+	cp $(modules)/$O*.flt MODULES
 
-LUALIB/GEN/propset1.lua:  $(topdir)include/propset1.h
+# Rule for creating Lua propset files
+LUALIB/GEN/propset%.lua:  $(include)/propset%.h
 	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
+	sed -n -f  $(tools)/gen_propset_lua.sed < $< > $@
 
-LUALIB/GEN/propset2.lua:  $(topdir)include/propset2.h
+LUALIB/GEN/modelist.lua:  $(include)/modelist.h
 	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
+	sed -n -f  $(tools)/gen_modelist_lua.sed < $< > $@
 
-LUALIB/GEN/propset3.lua:  $(topdir)include/propset3.h
+LUALIB/GEN/cnf_core.lua: $(core)/conf.c $(tools)/gen_conf_lua$(EXE)
 	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
+	$(tools)/gen_conf_lua$(EXE) $(core)/conf.c conf_info 1000 > $@
 
-LUALIB/GEN/propset4.lua:  $(topdir)include/propset4.h
+LUALIB/GEN/cnf_osd.lua: $(core)/conf.c $(tools)/gen_conf_lua$(EXE)
 	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
+	$(tools)/gen_conf_lua$(EXE) $(core)/conf.c osd_conf_info 2000 > $@
 
-LUALIB/GEN/propset5.lua:  $(topdir)include/propset5.h
+LUALIB/GEN/cnf_user.lua: $(core)/conf.c $(tools)/gen_conf_lua$(EXE)
 	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
+	$(tools)/gen_conf_lua$(EXE) $(core)/conf.c user_menu_conf_info 3000 > $@
 
-LUALIB/GEN/propset6.lua:  $(topdir)include/propset6.h
+LUALIB/GEN/cnf_gps.lua: $(core)/conf.c $(tools)/gen_conf_lua$(EXE)
 	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_propset_lua.sed < $< > $@
-
-LUALIB/GEN/modelist.lua:  $(topdir)include/modelist.h
-	@echo "->" $@
-	sed -n -f  $(topdir)tools/gen_modelist_lua.sed < $< > $@
-
-LUALIB/GEN/cnf_core.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
-	@echo "->" $@
-	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c conf_info 1000 > $@
-
-LUALIB/GEN/cnf_osd.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
-	@echo "->" $@
-	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c osd_conf_info 2000 > $@
-
-LUALIB/GEN/cnf_user.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
-	@echo "->" $@
-	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c user_menu_conf_info 3000 > $@
-
-LUALIB/GEN/cnf_gps.lua: $(topdir)core/conf.c $(topdir)tools/gen_conf_lua$(EXE)
-	@echo "->" $@
-	$(topdir)tools/gen_conf_lua$(EXE) $(topdir)core/conf.c gps_conf_info 4000 > $@
+	$(tools)/gen_conf_lua$(EXE) $(core)/conf.c gps_conf_info 4000 > $@
 
 clean:
 	rm -f $(GENLUA)
