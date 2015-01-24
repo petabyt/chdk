@@ -1,13 +1,9 @@
 # This file is included from */sub/*/Makefile
 topdir=../../../../
 
-include $(topdir)makefile.inc
-
-CFLAGS+=-DLOW_LEVEL
+include $(topdir)makefile_cam.inc
 
 all: libplatformsub.a main.bin
-
-TARGET_PRIMARY=$(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN
 
 FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
     awk -F'["|@]' '{printf "%s", substr($$5,2);}')
@@ -18,12 +14,12 @@ OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
      shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o
 
-capt_seq.o: capt_seq.c $(topdir)platform/generic/capt_seq.c
-filewrite.o: filewrite.c $(topdir)platform/generic/filewrite.c
+capt_seq.o: capt_seq.c $(platform)/generic/capt_seq.c
+filewrite.o: filewrite.c $(platform)/generic/filewrite.c
 
 libplatformsub.a: $(OBJS) bin_compat.h
 
-entry.o: $(topdir)core/entry.S FORCE
+entry.o: $(core)/entry.S FORCE
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
@@ -31,28 +27,25 @@ FORCE:
 
 main.bin: main.elf
 
-# warning: library order matters!
-LDLIBS= -lgcc
-LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,$(MEMISOSTART)
+LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(MEMISOSTART)
 
-main.elf: entry.o $(topdir)platform/$(PLATFORM)/libplatform.a \
-          $(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/libplatformsub.a \
-          $(topdir)lib/font/$Olibfont.a $(topdir)lib/math/$Olibmath.a \
-          $(topdir)lib/lang/$Oliblang.a $(topdir)lib/armutil/$Olibarmutil.a \
-          $(topdir)lib/core/$Olibcore.a
+main.elf: entry.o $(cam)/libplatform.a \
+          $(camfw)/libplatformsub.a \
+          $(lfont)/$Olibfont.a $(lmath)/$Olibmath.a \
+          $(llang)/$Oliblang.a $(larmutil)/$Olibarmutil.a \
+          $(lcore)/$Olibcore.a
 	@echo \-\> $@
-	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^  $(LDLIBS) -Wl,--end-group $(LDFLAGS) $(LDOPTS)
+	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ -lgcc -Wl,--end-group $(LDOPTS)
 	( $(NM) $@ | grep ' U ' > $@.syms ) && echo "error: unresolved symbols in $@ (see $@.syms)" && exit 1 || exit 0
 
-	$(SIZE) $@ | tee $(topdir)size.txt
+	$(SIZE) $@ | tee size.txt
 	@printf " %s-%s (%s, #%s): MEMISOSIZE used: 0x%s\n" \
       $(PLATFORM) $(PLATFORMSUB) $(PLATFORMOS) $(PLATFORMID) \
-      `tail -c16 $(topdir)size.txt | head -c6` >> $(topdir)bin/caminfo.txt
+      `tail -c16 size.txt | head -c6` >> $(bin)/caminfo.txt
 ifdef OPT_CHDK_IN_ARAM
-	$(topdir)tools/checkbinsize.sh $(topdir)size.txt $(ARAM_HEAP_SIZE)
+	$(tools)/checkbinsize.sh size.txt $(ARAM_HEAP_SIZE)
 endif
-	rm -f $(topdir)size.txt
+	rm -f size.txt
 
 clean:
 	rm -f *.o *.a *.err *.bin *.elf *.syms *.dump
@@ -64,7 +57,7 @@ distclean: clean
 run-code-gen:
 	@echo $^ \-\> $@
 	if [ -s $(TARGET_PRIMARY) ] && [ -s code_gen.txt ] ; then \
-	  $(topdir)tools/code_gen $(ROMBASEADDR) code_gen.txt $(TARGET_PRIMARY) $(ALT_ROMBASEADDR) ; \
+	  $(tools)/code_gen $(ROMBASEADDR) code_gen.txt $(TARGET_PRIMARY) $(ALT_ROMBASEADDR) ; \
 	else \
 	  echo CAUTION! code_gen cannot be run due to target firmware binary or code_gen.txt not found! ; \
 	fi ; \
@@ -83,12 +76,12 @@ ifdef FORCE_GEN_STUBS
     override OPT_GEN_STUBS=1
 endif
 
-stubs_entry.S: $(TARGET_PRIMARY) $(topdir)tools/signatures_$(PLATFORMOS).h $(topdir)tools/finsig_$(PLATFORMOS)$(EXE) stubs_entry_2.S stubs_min.S
+stubs_entry.S: $(TARGET_PRIMARY) $(tools)/signatures_$(PLATFORMOS).h $(tools)/finsig_$(PLATFORMOS)$(EXE) stubs_entry_2.S stubs_min.S
 	@echo \-\> $@
 ifdef OPT_GEN_STUBS
 	rm -f stubs_entry.S.err
 	if [ -s $(TARGET_PRIMARY) ] ; then \
-	  $(topdir)tools/finsig_$(PLATFORMOS) $(TARGET_PRIMARY) $(ROMBASEADDR) stubs_entry.S $(ALT_ROMBASEADDR) ; \
+	  $(tools)/finsig_$(PLATFORMOS) $(TARGET_PRIMARY) $(ROMBASEADDR) stubs_entry.S $(ALT_ROMBASEADDR) ; \
 	else \
 	  echo CAUTION! \'stubs_entry.S\' is not updated due to target firmware binary not found! ; \
 	  touch stubs_entry.S ; \

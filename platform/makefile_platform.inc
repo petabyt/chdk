@@ -1,9 +1,7 @@
 # This file is included from platform/*/Makefile
 topdir=../../
 
-include $(topdir)makefile.inc
-
-CFLAGS+=-DLOW_LEVEL
+include $(topdir)makefile_cam.inc
 
 # Change CPU architecture to ARM V4 if building with GCC EABI
 # Otherwise incorrect wrapper calls to firmware functions are generated
