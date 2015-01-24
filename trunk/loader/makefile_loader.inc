@@ -1,17 +1,13 @@
 # This file is included from loader/*/Makefile
 topdir=../../
 
-include $(topdir)makefile.inc
+include $(topdir)makefile_cam.inc
 
-LDLIBS=
-LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,--no-define-common,-EL,-T,$(topdir)tools/link-boot.ld
-LDOPTS+=-Wl,-N,-Ttext,$(MEMBASEADDR)
+LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,--no-define-common,-EL,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(MEMBASEADDR)
 
-CPPFLAGS+=-I.
+CORE_FILE=$(camfw)/main.bin
 
-CORE_FILE=$(topdir)platform/$(PLATFORM)/sub/$(PLATFORMSUB)/main.bin
-
-CPPFLAGS+=-DCORE_FILE=\"$(CORE_FILE)\"
+CPPFLAGS+=-I. -DCORE_FILE=\"$(CORE_FILE)\"
 
 all: main.bin
 
