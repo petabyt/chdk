@@ -45,11 +45,8 @@ ifndef SKIP_CHDK
 SUBDIRS+=CHDK
 endif
 
-# Must do platform before loader
-SUBDIRS+=$(cam) $(camfw)
-
-# Must do this last as it builds the final .bin file
-SUBDIRS+=$(loader)
+# Build camera, camera firmware & loader code (loader must be last)
+SUBDIRS+=$(cam) $(camfw) $(loader)
 
 
 .PHONY: platformcheck
