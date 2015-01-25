@@ -51,10 +51,10 @@
 
     #define CAM_JPEG_WIDTH                            4608
     #define CAM_JPEG_HEIGHT                           3456
-    #define CAM_ACTIVE_AREA_X1                          32
-    #define CAM_ACTIVE_AREA_Y1                          26
-    #define CAM_ACTIVE_AREA_X2                        4640
-    #define CAM_ACTIVE_AREA_Y2                        3486
+    #define CAM_ACTIVE_AREA_X1                          12
+    #define CAM_ACTIVE_AREA_Y1                          10
+    #define CAM_ACTIVE_AREA_X2                        4668
+    #define CAM_ACTIVE_AREA_Y2                        3490
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL                   12
