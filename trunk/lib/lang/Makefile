@@ -22,3 +22,9 @@ distclean: clean
 
 include $(topdir)bottom.inc
 
+
+# Define empty recipes for source files (including the makefiles)
+# to prevent make from trying implicit rules to create them. Speeds up build process
+$(chdk)/LANG/$(OPT_DEFAULT_LANG).lng: ;
+$(core)/gui_lang.h: ;
+$(tools)/makelang$(EXE): ;

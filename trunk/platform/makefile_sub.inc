@@ -19,11 +19,10 @@ filewrite.o: filewrite.c $(platform)/generic/filewrite.c
 
 libplatformsub.a: $(OBJS) bin_compat.h
 
-entry.o: $(core)/entry.S FORCE
+.FORCE: ;
+entry.o: $(core)/entry.S .FORCE
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
-
-FORCE:
 
 main.bin: main.elf
 
@@ -135,3 +134,8 @@ include $(topdir)bottom.inc
 # Define empty recipes for source files (including the makefiles)
 # to prevent make from trying implicit rules to create them. Speeds up build process
 ../../../makefile_sub.inc: ;
+$(tools)/signatures_$(PLATFORMOS).h: ;
+$(tools)/finsig_$(PLATFORMOS)$(EXE): ;
+$(platform)/generic/*.c: ;
+$(core)/*.c: ;
+$(core)/*.S: ;

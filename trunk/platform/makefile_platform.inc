@@ -34,3 +34,4 @@ include $(topdir)bottom.inc
 # Define empty recipes for source files (including the makefiles)
 # to prevent make from trying implicit rules to create them. Speeds up build process
 ../makefile_platform.inc: ;
+../generic/*.c: ;
