@@ -290,6 +290,7 @@ static int rawop_meter(lua_State *L) {
 
 
 typedef struct {
+    unsigned bits;
     unsigned entries;
     unsigned total_pixels;
     unsigned *data;
@@ -363,6 +364,7 @@ static int rawop_histo_update(lua_State *L) {
         }
     }
     h->entries = entries;
+    h->bits = bits;
     memset(h->data,0,h->entries*sizeof(unsigned));
 
     unsigned x,y;
@@ -395,7 +397,7 @@ static int rawop_histo_range(lua_State *L) {
     unsigned minval=luaL_checknumber(L,2);
     unsigned maxval=luaL_checknumber(L,3);
     int frac=1;
-    if(lua_gettop(L) >= 4) {
+    if(lua_gettop(L) >= 4 && !lua_isnil(L,4)) {
         const char *s=lua_tostring(L,4);
         if(!s || strcmp(s,"count") != 0) {
             return luaL_error(L,"invalid format");
@@ -441,6 +443,19 @@ static int rawop_histo_total_pixels(lua_State *L) {
 }
 
 /*
+total=histo:bits()
+returns bit depth of histogram
+*/
+static int rawop_histo_bits(lua_State *L) {
+    rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
+    if(!h->data) {
+        return luaL_error(L,"no data");
+    }
+    lua_pushnumber(L,h->bits);
+    return 1;
+}
+
+/*
 histo:free()
 free memory used by histogram data. histo:update must be called again to before any other functions
 */
@@ -465,6 +480,7 @@ static const luaL_Reg rawop_histo_methods[] = {
   {"update", rawop_histo_update},
   {"range", rawop_histo_range},
   {"total_pixels", rawop_histo_total_pixels},
+  {"bits", rawop_histo_bits},
   {"free", rawop_histo_free},
   {NULL, NULL}
 };
