@@ -59,3 +59,5 @@ include $(topdir)bottom.inc
 # to prevent make from trying implicit rules to create them. Speeds up build process
 $(core)/conf.c: ;
 $(tools)/gen_conf_lua$(EXE): ;
+$(include)/*.h: ;
+
