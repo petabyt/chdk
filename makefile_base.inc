@@ -16,10 +16,6 @@ include $(topdir)buildconf.inc
 include $(topdir)version.inc
 -include $(topdir)revision.inc
 
-# Sub-directory for object and dump files
-# used by modules build
-O=.o/
-
 ifndef OPT_DE_VERSION
     VER=CHDK
     ifndef OPT_DEFAULT_LANG
@@ -57,6 +53,15 @@ TARGET_PRIMARY=$(PRIMARY_ROOT)/$(PLATFORM)/sub/$(PLATFORMSUB)/PRIMARY.BIN
 PAKWIF=$(tools)/pakwif$(EXE)
 PAKFI2=$(tools)/packfi2/fi2enc$(EXE)
 ENCODE_DISKBOOT=$(tools)/dancingbits$(EXE)
+
+# Load camera settings (optional)
+ifdef PLATFORM
+  -include $(cam)/makefile.inc
+endif
+
+# Sub-directory for object and dump files
+# used by modules build
+O=.o/
 
 SILENT=SILENT
 
@@ -118,11 +123,10 @@ $(topdir)buildconf.inc: ;
 $(topdir)localbuildconf.inc: ;
 $(topdir)version.inc: ;
 $(topdir)revision.inc: ;
+$(cam)/makefile.inc: ;
 *.c: ;
 *.txt: ;
 *.sh: ;
 reversebytes.S: ;
 callfunc.S: ;
 setjmp.S: ;
-stubs_min.S: ;
-stubs_entry_2.S: ;

@@ -7,7 +7,7 @@ LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,--no-define-common,-EL,-T,$(too
 
 CORE_FILE=$(camfw)/main.bin
 
-CPPFLAGS+=-I. -DCORE_FILE=\"$(CORE_FILE)\"
+CFLAGS+=-I. -I$(camfw) -DCORE_FILE=\"$(CORE_FILE)\"
 
 all: main.bin
 

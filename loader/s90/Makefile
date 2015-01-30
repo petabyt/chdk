@@ -8,7 +8,7 @@ LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,--no-define-common,-EL,-T,$(too
 CORE_FILE=$(camfw)/main.bin
 RESET_FILE=resetcode/main.bin
 
-CPPFLAGS+=-I. -DCORE_FILE=\"$(CORE_FILE)\" -DRESET_FILE=\"$(RESET_FILE)\"
+CFLAGS+=-I. -DCORE_FILE=\"$(CORE_FILE)\" -DRESET_FILE=\"$(RESET_FILE)\"
 
 all: all-recursive main.bin
 

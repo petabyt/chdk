@@ -24,7 +24,7 @@ all: $(FLTS)
 
 $O%.flt: $(llibc)/$Olibc.a
 	@echo \-\> $@
-	mkdir -p .o
+	mkdir -p $O
 	$(CC) $(CFLAGS) -o $O$*.elf -Wl,--start-group $^ -Wl,--end-group $(LDOPTS)
     ifdef OPT_GEN_MODULE_DUMPS
 		$(OBJDUMP) -j .text -j .data -j .bss -z -d -r -f -h $O$*.elf >$O$*.elf.dump

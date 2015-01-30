@@ -139,3 +139,5 @@ $(tools)/finsig_$(PLATFORMOS)$(EXE): ;
 $(platform)/generic/*.c: ;
 $(core)/*.c: ;
 $(core)/*.S: ;
+stubs_min.S: ;
+stubs_entry_2.S: ;

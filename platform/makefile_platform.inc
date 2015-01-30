@@ -35,3 +35,4 @@ include $(topdir)bottom.inc
 # to prevent make from trying implicit rules to create them. Speeds up build process
 ../makefile_platform.inc: ;
 ../generic/*.c: ;
+platform_palette.h: ;

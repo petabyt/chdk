@@ -2,17 +2,18 @@
 
 include $(topdir)makefile_base.inc
 
-ifdef PLATFORM
-  ifdef PLATFORMSUB
+# Load camera firmware settings
+ifdef PLATFORMSUB
+  include $(camfw)/makefile.inc
+  ifndef MEMBASEADDR
     MEMBASEADDR=0x1900
-    include $(camfw)/makefile.inc
-    PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
-    ifdef RESTARTSTART
-      PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
-    endif
-    ifeq ($(PLATFORMOSVER),)
-      PLATFORMOSVER=0
-    endif
+  endif
+  PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE)
+  ifdef RESTARTSTART
+    PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
+  endif
+  ifeq ($(PLATFORMOSVER),)
+    PLATFORMOSVER=0
   endif
 endif
 

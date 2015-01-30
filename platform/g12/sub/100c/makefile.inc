@@ -1,14 +1,8 @@
-#PLATFORMID=0x320F
-PLATFORMID=12815
-
-PLATFORMOS=dryos
+# Camera settings for the G12 1.00c
 
 # Force ARAM on for G12, and load CHDK in ARAM
 override OPT_ARAM_MALLOC=1
 override OPT_CHDK_IN_ARAM=1
-
-ROMBASEADDR=0xFF810000
-MAXRAMADDR=0x07FFFFFF
 
 # Set up size variables for AgentRAM
 ARAM_HEAP_START=0x3ce000
@@ -27,9 +21,3 @@ else
 MEMISOSTART=0x16E820
 endif
 endif
-
-NEED_ENCODED_DISKBOOT=5
-
-KEYSYS=d4b
-
-PLATFORMOSVER=45

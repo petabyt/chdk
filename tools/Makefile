@@ -155,3 +155,4 @@ include $(topdir)bottom.inc
 chdk_dasm.h: ;
 firmware_load.h: ;
 stubs_load.h: ;
+../lib/font/font_8x16_uni.h: ;
