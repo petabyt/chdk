@@ -1,9 +1,10 @@
 --[[
 @title dynamic range test
-@chdk_version 1.4.0.3939
+@chdk_version 1.4.0.3967
 #overstops=4 "+ stops"
 #understops=6 "- stops"
 #draw_meter=true "draw meter"
+#draw_histo=true "draw histograms"
 ]]
 require'hookutil'
 require'rawoplib'
@@ -22,10 +23,6 @@ set_raw(1)
 function restore()
 	set_raw(save_raw)
 	log:close()
-end
-
-function meter_bar_width(v)
-	return (v * 500)/rawop.fb.white_level
 end
 
 -- log module
@@ -244,117 +241,186 @@ end
 -- end log module
 
 
+drtest={}
+
+function drtest:init()
+	self.histo=rawop.create_histogram()
+	self.evh={}
+	self.draw_low = rawop.fb.black_level + rawop.fb.black_level / 2
+	self.draw_high = rawop.fb.white_level - rawop.fb.black_level
+	self.draw_low_thresh = rawop.fb.white_level - rawop.fb.white_level/3
+end
+
+function meter_bar_width(v)
+	return (v * 500)/rawop.fb.white_level
+end
+
+function drtest:draw_meter()
+	if not draw_meter then
+		return
+	end
+	-- draw color that contrasts with meter
+	local c
+	if self.m > self.draw_low_thresh then
+		c = self.draw_low
+	else
+		c = self.draw_high
+	end
+	-- box around meter area
+	rawop.rect(meter_left - 2,meter_top - 2,meter_size+4,meter_size+4,2,c)
+
+	-- draw max scale
+	rawop.fill_rect(100,90,500,4,self.draw_high)
+	rawop.fill_rect(100,94,500,4,self.draw_low)
+	-- draw levels
+	rawop.fill_rect(100,100,meter_bar_width(self.m),20,self.m)
+	rawop.fill_rect(100,120,meter_bar_width(self.m),20,c)
+	rawop.fill_rect_rgbg(100,200,meter_bar_width(self.r),20,self.r,self.draw_low,self.draw_low)
+	rawop.fill_rect_rgbg(100,220,meter_bar_width(self.r),20,self.draw_high,self.draw_low,self.draw_low)
+	rawop.fill_rect_rgbg(100,300,meter_bar_width(self.g1),20,self.draw_low,self.g1,self.draw_low)
+	rawop.fill_rect_rgbg(100,320,meter_bar_width(self.g1),20,self.draw_low,self.draw_high,self.draw_low)
+	rawop.fill_rect_rgbg(100,400,meter_bar_width(self.g2),20,self.draw_low,self.g2,self.draw_low)
+	rawop.fill_rect_rgbg(100,420,meter_bar_width(self.g2),20,self.draw_low,self.draw_high,self.draw_low)
+	rawop.fill_rect_rgbg(100,500,meter_bar_width(self.b),20,self.draw_low,self.draw_low,self.b)
+	rawop.fill_rect_rgbg(100,520,meter_bar_width(self.b),20,self.draw_low,self.draw_low,self.draw_high)
+	-- draw blacklevel scale
+	rawop.fill_rect(100,550,meter_bar_width(rawop.fb.black_level),4,self.draw_high)
+	rawop.fill_rect(100,554,meter_bar_width(rawop.fb.black_level),4,self.draw_low)
+end
+
 --[[
 get rgb and combined meter
 ]]
-function get_meter()
+function drtest:do_meter()
 	local t0=get_tick_count()
-	local m = rawop.meter(meter_left,meter_top,meter_size,meter_size,1,1)
-	local r,g1,b,g2 = rawop.meter_rgbg(meter_left,meter_top,meter_size,meter_size,2,2)
-	log:set{meter_time=get_tick_count()-t0}
-
-	t0=get_tick_count()
-	if draw_meter then
-		local low = rawop.fb.black_level + rawop.fb.black_level / 2
-		local high = rawop.fb.white_level - rawop.fb.black_level
-		-- draw color that contrasts with meter
-		local c
-		if m > rawop.fb.white_level - rawop.fb.white_level/3 then
-			c = low
-		else
-			c = high
-		end
-		-- box around meter area
-		rawop.fill_rect_rgbg(meter_left - 2,meter_top - 2,meter_size+4,2,c,c,c)
-		rawop.fill_rect_rgbg(meter_left - 2,meter_top + meter_size,meter_size+4,2,c,c,c)
-		rawop.fill_rect_rgbg(meter_left - 2,meter_top,2,meter_size,c,c,c)
-		rawop.fill_rect_rgbg(meter_left + meter_size,meter_top,2,meter_size,c,c,c)
-
-		-- draw max scale
-		rawop.fill_rect_rgbg(100,90,500,4,high,high,high)
-		rawop.fill_rect_rgbg(100,94,500,4,low,low,low)
-		-- draw levels
-		rawop.fill_rect_rgbg(100,100,meter_bar_width(m),20,m,m,m)
-		rawop.fill_rect_rgbg(100,120,meter_bar_width(m),20,c,c,c)
-		rawop.fill_rect_rgbg(100,200,meter_bar_width(r),20,r,low,low)
-		rawop.fill_rect_rgbg(100,220,meter_bar_width(r),20,high,low,low)
-		rawop.fill_rect_rgbg(100,300,meter_bar_width(g1),20,low,g1,low)
-		rawop.fill_rect_rgbg(100,320,meter_bar_width(g1),20,low,high,low)
-		rawop.fill_rect_rgbg(100,400,meter_bar_width(g2),20,low,g2,low)
-		rawop.fill_rect_rgbg(100,420,meter_bar_width(g2),20,low,high,low)
-		rawop.fill_rect_rgbg(100,500,meter_bar_width(b),20,low,low,b)
-		rawop.fill_rect_rgbg(100,520,meter_bar_width(b),20,low,low,high)
-		-- draw blacklevel scale
-		rawop.fill_rect_rgbg(100,550,meter_bar_width(rawop.fb.black_level),4,high,high,high)
-		rawop.fill_rect_rgbg(100,554,meter_bar_width(rawop.fb.black_level),4,low,low,low)
-	end
-	log:set{draw_time=get_tick_count()-t0}
-	return m,r,g1,g2,b
+	self.m = rawop.meter(meter_left,meter_top,meter_size,meter_size,1,1)
+	self.r,self.g1,self.b,self.g2 = rawop.meter_rgbg(meter_left,meter_top,meter_size,meter_size,2,2)
+	log:set{
+		meter_time=get_tick_count()-t0,
+		m=self.m,
+		m96=rawop.raw_to_ev96(self.m),
+		r=self.r,
+		r96=rawop.raw_to_ev96(self.r),
+		g1=self.g1,
+		g1_96=rawop.raw_to_ev96(self.g1),
+		g2=self.g2,
+		g2_96=rawop.raw_to_ev96(self.g2),
+		b=self.b,
+		b96=rawop.raw_to_ev96(self.b),
+	}
 end
 
---[[
-very rough for quick look stats
-there will usually be two peaks due to greater green sensitivity,
-more pronounced with greater exposure
-]]
-function get_histo_stats()
-	-- TODO just reproduce shot_histogram behavior for now
+function drtest:draw_histo()
+	if not draw_histo then
+		return
+	end
+	-- fill histo area
+	local histo_height = #self.evh.all*4
+	rawop.fill_rect(100,596,1000,(histo_height+8)*2,rawop.fb.raw_neutral)
+	-- draw combined in dark values
+	self:draw_ev_histo(self.evh.all,100,600,self.draw_low)
+	-- draw RGB in corresponding colors
+	local top = 600 + histo_height + 8
+	self:draw_ev_histo(self.evh.r,100 + rawop.fb.cfa_offsets.r.x,top  + rawop.fb.cfa_offsets.r.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.g1,100 + rawop.fb.cfa_offsets.g1.x,top + rawop.fb.cfa_offsets.g1.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.g1,100 + rawop.fb.cfa_offsets.g2.x,top + rawop.fb.cfa_offsets.g2.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.b,100 + rawop.fb.cfa_offsets.b.x,top + rawop.fb.cfa_offsets.b.y, self.draw_high,2)
+end
+
+function drtest:draw_ev_histo(vals, left, top, val, step)
+	for i,v in ipairs(vals) do
+		rawop.fill_rect(left,top+(i-1)*4,v,4,val,step)
+	end
+end
+
+function drtest:make_ev_histo(step,mode)
+	local raw_min = rawop.fb.black_level
+	local r={
+		step = step,
+		mode = mode,
+	}
+	local count_max=0
+	repeat
+		local ev_min = rawop.raw_to_ev96(raw_min)
+		local raw_max = rawop.ev96_to_raw(ev_min + step - 1)
+		if raw_max > rawop.fb.white_level then
+			raw_max = rawop.fb.white_level
+		end
+		local count=self.histo:range(raw_min,raw_max,mode)
+		table.insert(r,count)
+		if count >= count_max then
+			count_max = count
+			r.peak_bin = #r
+			r.peak_raw_min = raw_min
+			r.peak_raw_max = raw_max
+		end
+		raw_min = raw_max + 1
+	until raw_max == rawop.fb.white_level
+
+	count_max = 0
+	for raw_val=r.peak_raw_min,r.peak_raw_max do
+		local count=self.histo:range(raw_val,raw_val,mode)
+		if count > count_max then
+			r.peak_raw_val = raw_val
+			r.peak_count = count
+		end
+	end
+	return r
+end
+-- convert per thousand to % string
+function pct_str(v)
+	return string.format("%d.%d",v/10,v%10)
+end
+
+function drtest:do_histo()
+	-- update combined
 	local t0=get_tick_count()
-	histo:update(rawop.fb.active_area.x1,rawop.fb.active_area.y1,
-						rawop.fb.active_area.x2 - rawop.fb.active_area.x1,
-						rawop.fb.active_area.y2 - rawop.fb.active_area.y1,
-						31,31,10)
+	self.histo:update(meter_left,meter_top, meter_size, meter_size, 1,1)
 	log:set{histo_update_time=get_tick_count()-t0}
 
-	local bin=32
-	local peak=0
-	local peak_count=0
 	t0=get_tick_count()
-	-- find the "bin" sized range with highest % of pixels
-	for v=0,1024-bin do
-		local count=histo:range(v,v+bin-1,'count')
-		if count > peak_count then
-			peak = v
-			peak_count = count
-		end
+	self.evh.all=self:make_ev_histo(12)
+	self.bl_pct,self.wl_pct = self.histo:range(1,rawop.fb.black_level),self.histo:range(rawop.fb.white_level,rawop.fb.white_level)
+	log:set{
+		histo_calc_time=get_tick_count()-t0,
+		peak=rawop.raw_to_ev96(self.evh.all.peak_raw_val),
+		['peak_bin%']=pct_str(self.evh.all[self.evh.all.peak_bin]),
+		['bl%']=pct_str(self.bl_pct),
+		['wl%']=pct_str(self.wl_pct),
+	}
+
+	-- update r g b channels
+	for i,name in ipairs{'r','g1','b'} do
+		t0=get_tick_count()
+		self.histo:update(meter_left + rawop.fb.cfa_offsets[name].x,
+							meter_top + rawop.fb.cfa_offsets[name].y,
+							meter_size, meter_size, 2,2)
+		log:set{histo_update_time=get_tick_count()-t0}
+
+		t0=get_tick_count()
+		self.evh[name] = self:make_ev_histo(12)
+		log:set{
+			histo_calc_time=get_tick_count()-t0,
+			['peak_'..name]=rawop.raw_to_ev96(self.evh[name].peak_raw_val),
+			['peak_'..name..'_bin%']=pct_str(self.evh[name][self.evh[name].peak_bin]),
+		}
 	end
-	local peak_pct = histo:range(peak,peak+bin-1)
-	-- find the peak within the bin
-	local count_max=0
-	for v=peak,peak+bin-1 do
-		local count=histo:range(v,v,'count')
-		if count > count_max then
-			peak = v
-			count_max = count
-		end
-	end
-	local bl_pct,wl_pct = histo:range(1,32),histo:range(1023,1023)
-	log:set{histo_calc_time=get_tick_count()-t0}
-	return peak,peak_pct,bl_pct,wl_pct
 end
 
-function doshot(shotdesc)
-	-- pct are actually per thousand
-	local peak,peak_pct,bl_pct,wl_pct = get_histo_stats()
-	local m,r,g1,g2,b = get_meter()
+function drtest:do_draw()
+	local t0=get_tick_count()
+	self:draw_meter()
+	self:draw_histo()
+	log:set{draw_time=get_tick_count()-t0}
+end
 
+function drtest:doshot(shotdesc)
 	log:set{
 		shot=shotdesc,
-		m=m,
-		m96=rawop.raw_to_ev96(m),
-		r=r,
-		r96=rawop.raw_to_ev96(r),
-		g1=g1,
-		g1_96=rawop.raw_to_ev96(g1),
-		g2=g2,
-		g2_96=rawop.raw_to_ev96(g2),
-		b=b,
-		b96=rawop.raw_to_ev96(b),
-		peak=peak,
-		['peak%']=string.format("%d.%d",peak_pct/10,peak_pct%10),
-		['bl%']=string.format("%d.%d",bl_pct/10,bl_pct%10),
-		['wl%']=string.format("%d.%d",wl_pct/10,wl_pct%10),
 	}
+	self:do_histo()
+	self:do_meter()
+	self:do_draw()
 end
 
 function log_base()
@@ -399,6 +465,8 @@ log:init{
 		'histo_update_time',
 		'histo_calc_time',
 		'draw_time',
+		'free_mem',
+		'lua_mem',
 		'tsensor',
 		'sv96',
 		'tv96',
@@ -414,7 +482,13 @@ log:init{
 		'b',
 		'b96',
 		'peak',
-		'peak%',
+		'peak_bin%',
+		'peak_r',
+		'peak_r_bin%',
+		'peak_g1',
+		'peak_g1_bin%',
+		'peak_b',
+		'peak_b_bin%',
 		'bl%',
 		'wl%',
 		'desc',
@@ -429,6 +503,12 @@ log:init{
 		end,
 		tick=get_tick_count,
 		exp=get_exp_count,
+		free_mem=function()
+			return get_meminfo().free_size
+		end,
+		lua_mem=function()
+			return collectgarbage('count')
+		end,
 		tsensor=function()
 			return get_temperature(1)
 		end,
@@ -445,11 +525,13 @@ log:init{
 	-- columns collected in a table, concatenated at write time
 	tables={
 		desc=' / ',
+		histo_update_time=' / ',
+		histo_calc_time=' / ',
 	},
 }
 logdesc=log:text_logger('desc')
 
-histo=rawop.create_histogram()
+drtest:init()
 
 -- TODO should focus at inf, possibly set zoom
 
@@ -467,9 +549,10 @@ for i=-overstops,understops do
 	-- wait for shot histo and exp count to be ready
 	hook_raw.wait_ready()
 	release("shoot_full_only")
-	doshot(string.format("%d",-i))
+	drtest:doshot(string.format("%d",-i))
 	log:write()
 	hook_raw.continue()
+	collectgarbage('step')
 	tv = tv+96
 end
 
