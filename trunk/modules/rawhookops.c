@@ -208,6 +208,41 @@ static int rawop_fill_rect_rgbg(lua_State *L) {
 }
 
 /*
+rawop.fill_rect(x,y,width,height,val[,xstep[,ystep]])
+sets every step-th pixel of the specified rectangle to the specified value
+width and hight out of bounds are clipped
+xstep defaults to 1, ystep defaults to xstep
+*/
+
+static int rawop_fill_rect(lua_State *L) {
+    unsigned int xstart=luaL_checknumber(L,1);
+    unsigned int ystart=luaL_checknumber(L,2);
+    unsigned int width=luaL_checknumber(L,3);
+    unsigned int height=luaL_checknumber(L,4);
+    unsigned short val=luaL_checknumber(L,5);
+    unsigned int xstep=luaL_optnumber(L,6,1);
+    unsigned int ystep=luaL_optnumber(L,7,xstep);
+    unsigned int xmax = xstart + width;
+    unsigned int ymax = ystart + height;
+    if(xstart >= (unsigned)camera_sensor.raw_rowpix || ystart >= (unsigned)camera_sensor.raw_rows) {
+        return 0;
+    }
+    if(xmax > (unsigned)camera_sensor.raw_rowpix) {
+        xmax = (unsigned)camera_sensor.raw_rowpix; 
+    }
+    if(ymax > (unsigned)camera_sensor.raw_rows) {
+        ymax = (unsigned)camera_sensor.raw_rows;
+    }
+    int x,y;
+    for(y=ystart; y<ymax; y+=ystep) {
+        for(x=xstart; x<xmax; x+=xstep) {
+            set_raw_pixel(x,y,val);
+        }
+    }
+    return 0;
+}
+
+/*
 ev96=rawop.raw_to_ev96(rawval)
 convert a raw value (blacklevel+1 to whitelevel) into an APEX96 EV relative to neutral
 if rawval is <= to blacklevel, it is clamped to blacklevel + 1.
@@ -491,6 +526,7 @@ static const luaL_Reg rawop_funcs[] = {
   {"set_pixel", rawop_set_pixel},
   {"get_pixels_rgbg", rawop_get_pixels_rgbg},
   {"set_pixels_rgbg", rawop_set_pixels_rgbg},
+  {"fill_rect", rawop_fill_rect},
   {"fill_rect_rgbg", rawop_fill_rect_rgbg},
   {"raw_to_ev96", rawop_raw_to_ev96},
   {"ev96_to_raw", rawop_ev96_to_raw},
