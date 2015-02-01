@@ -7,6 +7,8 @@ end
 local fb=rawop.fb_info()
 -- extended fb info
 rawop.fb=fb
+rawop.fb.white_level_ev96 = rawop.raw_to_ev96(rawop.fb.white_level)
+rawop.fb.black_level_ev96 = rawop.raw_to_ev96(rawop.fb.black_level) -- TODO actually black_level + 1
 
 -- locals to avoid a bunch of nested table lookups on every get call
 local cfa_r_x  = fb.cfa_offsets.r.x
@@ -19,10 +21,8 @@ local cfa_b_x  = fb.cfa_offsets.b.x
 local cfa_b_y  = fb.cfa_offsets.b.y
 
 --[[
-local set_pixel = rawop.set_pixel
-local get_pixel = rawop.get_pixel
+hollow rgb rectangle
 ]]
-
 function rawop.rect_rgbg(x,y,width,height,linewidth,r,g1,b,g2)
 	if width < 2*linewidth or height < 2*linewidth or linewidth < 2 then
 		return
@@ -31,6 +31,18 @@ function rawop.rect_rgbg(x,y,width,height,linewidth,r,g1,b,g2)
 	rawop.fill_rect_rgbg(x,y + height-linewidth,width,linewidth,r,g1,b,g2)
 	rawop.fill_rect_rgbg(x,y+linewidth,linewidth,height-2*linewidth,r,g1,b,g2)
 	rawop.fill_rect_rgbg(x + width - linewidth,y+linewidth,linewidth,height-2*linewidth,r,g1,b,g2)
+end
+--[[
+hollow single value rectangle
+]]
+function rawop.rect(x,y,width,height,linewidth,v,xstep,ystep)
+	if width < 2*linewidth or height < 2*linewidth or linewidth < 1 then
+		return
+	end
+	rawop.fill_rect(x,y,width,linewidth,v,xstep,ystep)
+	rawop.fill_rect(x,y + height-linewidth,width,linewidth,v,xstep,ystep)
+	rawop.fill_rect(x,y+linewidth,linewidth,height-2*linewidth,v,xstep,ystep)
+	rawop.fill_rect(x + width - linewidth,y+linewidth,linewidth,height-2*linewidth,v,xstep,ystep)
 end
 
 --[[
