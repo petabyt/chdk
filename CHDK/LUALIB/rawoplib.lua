@@ -10,6 +10,12 @@ rawop.fb=fb
 rawop.fb.white_level_ev96 = rawop.raw_to_ev96(rawop.fb.white_level)
 rawop.fb.black_level_ev96 = rawop.raw_to_ev96(rawop.fb.black_level) -- TODO actually black_level + 1
 
+rawop.fb.active_area.width = rawop.fb.active_area.x2 - rawop.fb.active_area.x1
+rawop.fb.active_area.height = rawop.fb.active_area.y2 - rawop.fb.active_area.y1
+
+rawop.fb.jpeg_area.width = rawop.fb.jpeg_area.x2 - rawop.fb.jpeg_area.x1
+rawop.fb.jpeg_area.height = rawop.fb.jpeg_area.y2 - rawop.fb.jpeg_area.y1
+
 -- locals to avoid a bunch of nested table lookups on every get call
 local cfa_r_x  = fb.cfa_offsets.r.x
 local cfa_r_y  = fb.cfa_offsets.r.y
