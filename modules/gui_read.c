@@ -67,6 +67,9 @@ int gui_read_init(const char* file)
     running = 1;
 
     static struct stat   st;
+
+    rbf_load_from_file(conf.reader_rbf_file, conf.reader_codepage);
+
     read_file = open(file, O_RDONLY, 0777);
     if (strcmp(file, conf.reader_file)!=0) {
         conf.reader_pos = 0;
