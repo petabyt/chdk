@@ -94,9 +94,7 @@ void my_kbd_read_keys()
 	{
 		physw_status[0] = kbd_new_state[0];
 		physw_status[1] = kbd_new_state[1];
-		physw_status[2] = (physw_status[2]  & (~KEYS_MASK2)) |
-		(kbd_new_state[2] & KEYS_MASK2);
-		physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
+		physw_status[2] = kbd_new_state[2];
 	}
 	else
 	{
@@ -107,7 +105,6 @@ void my_kbd_read_keys()
 				  (kbd_mod_state[1] & KEYS_MASK1);
 		physw_status[2] = (physw_status[2]  & (~KEYS_MASK2)) |
 					(kbd_mod_state[2] & KEYS_MASK2);  //fix needed as below
-		physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
 	}
 
     _kbd_read_keys_r2(physw_status);
