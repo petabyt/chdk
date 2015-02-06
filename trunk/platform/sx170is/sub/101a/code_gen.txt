@@ -204,7 +204,7 @@ FUNC sig=task_CaptSeq name=capt_seq_task
 ASM
 FW 66
 >>>
-//"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
+"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
 <<<
 FW 1
 >>>
@@ -235,9 +235,6 @@ FUNC ref=0
 ASM
 FW 31
 PATCHSUB
->>>
-"    BL      capt_seq_hook_raw_here \n"         // added
-<<<
 FW $
 ENDASM
 ENDFUNC
@@ -249,9 +246,6 @@ FUNC ref=1
 ASM
 FW 54
 PATCHSUB ref=0
->>>
-"    BL      capt_seq_hook_raw_here \n"         // added
-<<<
 FW $
 ENDASM
 ENDFUNC
@@ -280,6 +274,28 @@ FW $
 ENDASM
 ENDFUNC
 
+
+//////////////////////////////////////////////////////////////
+// task_developseq
+//////////////////////////////////////////////////////////////
+FUNC sig=task_DvlpSeqTask name=task_developseq_my
+ASM
+FW 36
+FW comment=" message from queue 2"
+FW
+FW comment=" 2nd msg after shoot"
+FW
+FW comment=" 1st msg after shoot"
+FW 12
+>>>
+"    BL      capt_seq_hook_raw_here\n"    // +
+<<<
+FW $
+>>>
+"    .ltorg\n"
+<<<
+ENDASM
+ENDFUNC
 
 //////////////////////////////////////////////////////////////
 // exp_drv_task

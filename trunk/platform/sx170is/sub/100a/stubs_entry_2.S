@@ -12,6 +12,7 @@ NHSTUB(SetHPTimerAfterNow,                  0xff8876b0)
 
 // Additional
 NHSTUB(TurnOffE1,                           0xff8269e0) // for shutdown(), to complicated to emulate
+DEF(task_DvlpSeqTask,                       0xff99581c)
 
 // Not needed
 NHSTUB(RefreshPhysicalScreen,       NULL_SUB)
