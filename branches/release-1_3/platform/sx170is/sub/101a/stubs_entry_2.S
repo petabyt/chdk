@@ -13,6 +13,7 @@ NHSTUB(Restart,                             0xff826c3c)
 
 // Additional
 NHSTUB(TurnOffE1,                           0xff8269e0) // for shutdown(), to complicated to emulate
+DEF(task_DvlpSeqTask,                       0xff99581c)
 
 // Not needed
 NHSTUB(RefreshPhysicalScreen,       NULL_SUB)

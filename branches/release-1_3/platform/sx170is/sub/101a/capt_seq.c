@@ -7,7 +7,7 @@
 
 //#define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
 static long *nrflag = (long*)(0xA8F8+0xC); // sx170is 100a Found @ 0xffa2feb4 (0xA8F8) & 0xffa2feb8 (+0xC)
-#define PAUSE_FOR_FILE_COUNTER 350  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
+//#define PAUSE_FOR_FILE_COUNTER 350  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
 
@@ -87,7 +87,7 @@ asm volatile (
 "    B       loc_FF87A920 \n"
 
 "loc_FF87A754:\n"
-//"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
+"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
 "    BL      sub_FF87AE34 \n"
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF877CE4 \n"
@@ -350,7 +350,6 @@ asm volatile (
 "    BL      sub_FFAD9E68 \n"
 "    MOV     R0, R4 \n"
 "    BL      sub_FFADA20C_my \n"  // --> Patched. Old value = 0xFFADA20C.
-"    BL      capt_seq_hook_raw_here \n"         // added
 "    TST     R0, #1 \n"
 "    LDMEQFD SP!, {R4-R6,PC} \n"
 
@@ -423,7 +422,6 @@ asm volatile (
 "    BL      sub_FF881BA8 \n"
 "    MOV     R0, R5 \n"
 "    BL      sub_FFADA20C_my \n"  // --> Patched. Old value = 0xFFADA20C.
-"    BL      capt_seq_hook_raw_here \n"         // added
 "    B       loc_FF993FF8 \n"
 
 "loc_FF993FDC:\n"
@@ -540,6 +538,98 @@ asm volatile (
 "    MOV     R0, R0, LSL#16 \n"
 "    MOV     R0, R0, LSR#16 \n"
 "    LDMFD   SP!, {R4-R6,PC} \n"
+);
+}
+
+/*************************************************************/
+//** task_developseq_my @ 0xFF99581C - 0xFF99592C, length=69
+void __attribute__((naked,noinline)) task_developseq_my() {
+asm volatile (
+"    STMFD   SP!, {R2-R8,LR} \n"
+"    LDR     R7, =0x7984 \n"
+
+"loc_FF995824:\n"
+"    MOV     R2, #0 \n"
+"    LDR     R0, [R7, #8] \n"
+"    LDR     R1, [R7, #0x10] \n"
+"    BL      sub_003F860C /*_PostMessageQueue*/ \n"
+"    LDR     R0, [R7, #4] \n"
+"    MOV     R2, #0 \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_003F84B8 \n"
+"    TST     R0, #1 \n"
+"    LDRNE   R2, =0x1C6 \n"
+"    BNE     loc_FF995870 \n"
+"    LDR     R0, [R7, #8] \n"
+"    MOV     R1, SP \n"
+"    BL      sub_003F85B0 \n"
+"    TST     R0, #1 \n"
+"    LDREQ   R5, =0x1D758 \n"
+"    MOVEQ   R6, #0 \n"
+"    BEQ     loc_FF995884 \n"
+"    MOV     R2, #0x1CC \n"
+
+"loc_FF995870:\n"
+"    LDR     R1, =0xFF9959BC /*'SsDvlpSeq.c'*/ \n"
+"    MOV     R0, #0 \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
+"    LDMFD   SP!, {R2-R8,PC} \n"
+
+"loc_FF995884:\n"
+"    LDR     R0, [R5, #0x19C] \n"
+"    CMP     R0, #0 \n"
+"    LDRNE   R0, [SP, #4] \n"
+"    LDRNE   R0, [R0] \n"
+"    CMPNE   R0, #5 \n"
+"    BNE     loc_FF9958A8 \n"
+"    BL      sub_FFADB5EC \n"
+"    BL      sub_FFADBD28 \n"
+"    BL      sub_FFADC784 \n"
+
+"loc_FF9958A8:\n"
+"    LDR     R1, [SP, #4] \n"
+"    LDR     R0, [R1] \n"  //  message from queue 2
+"    CMP     R0, #0 \n"
+"    BEQ     loc_FF9958D8 \n"  //  2nd msg after shoot
+"    CMP     R0, #3 \n"
+"    BEQ     loc_FF9958E4 \n"  //  1st msg after shoot
+"    CMP     R0, #5 \n"
+"    MOVEQ   R2, #0 \n"
+"    MOVEQ   R1, #0x11 \n"
+"    MOVEQ   R0, R2 \n"
+"    BLEQ    sub_FF8787AC \n"
+"    B       loc_FF9958FC \n"
+
+"loc_FF9958D8:\n"
+"    LDR     R0, [R1, #8] \n"
+"    BL      sub_FFADADBC \n"
+"    B       loc_FF9958FC \n"
+
+"loc_FF9958E4:\n"
+"    LDR     R0, [R1, #8] \n"
+"    MOV     R1, #1 \n"
+"    BL      sub_FFADB094 \n"
+"    BL      capt_seq_hook_raw_here\n"    // +
+"    LDR     R0, [SP, #4] \n"
+"    LDR     R0, [R0, #8] \n"
+"    BL      sub_FFADA77C \n"
+
+"loc_FF9958FC:\n"
+"    LDR     R4, [SP, #4] \n"
+"    LDR     R0, [R4, #4] \n"
+"    CMP     R0, #0 \n"
+"    MOVEQ   R2, #0x82 \n"
+"    LDREQ   R1, =0xFF9959BC /*'SsDvlpSeq.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
+"    STR     R6, [R4, #4] \n"
+"    LDR     R0, [R7, #4] \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_003F85B0 \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF995884 \n"
+"    B       loc_FF995824 \n"
+"    .ltorg\n"
 );
 }
 
