@@ -11,8 +11,7 @@ Ported by nafraf
 
 KNOWN BUGS
 **********
-- Mute on zoom not implemented.
-- RAW capture does not work. See porting thread.
+- Mute on zoom and video support is not implemented.
 
 For Developers
 **************

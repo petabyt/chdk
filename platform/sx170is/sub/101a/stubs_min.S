@@ -9,7 +9,7 @@ DEF(palette_buffer_ptr,             0x00007ce4) // Found @0xff9b0f98 : Guess pal
 DEF(palette_buffer,                 0x000c67f4) // Found @0xff9b1374 check this!!
 
 DEF(active_viewport_buffer,         0x00002164) // sub_ff83cf5c - by comparison to ixus140
-DEF(viewport_buffers,               0xffbac5c8) // by comparison to ixus140 !! Check this!!!
+DEF(viewport_buffers,               0xffbac5f4) // Note: this address tends to change between fw revisions because it's in the 'pre-initialized data' area!
 
 DEF(viewport_fb_d,                  0x000034D4) // ??? Found @0xff8701b4 (0x3380) + @0xff8701f0 (0x54) 
 
