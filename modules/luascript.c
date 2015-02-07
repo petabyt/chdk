@@ -1029,10 +1029,14 @@ static int luaCB_md_af_led_control( lua_State* L )
 {
     camera_info.perf.md_af_on_delay = luaL_checknumber( L, 1 );
     camera_info.perf.md_af_on_time = luaL_checknumber( L, 2 );
-    if ((camera_info.perf.md_af_on_time > 0) && (camera_info.cam_af_led >= 0))
+    if ((camera_info.perf.md_af_on_time > 0) && (camera_info.cam_af_led >= 0)) {
         camera_info.perf.md_af_tuning = 1;        // Enable MD testing with AF LED
-    else
+        // clear previous values
+        memset(&camera_info.perf.af_led,0,sizeof(camera_info.perf.af_led));
+        camera_info.perf.af_led.min = 0xFFFFFFFF;
+    } else {
         camera_info.perf.md_af_tuning = 0;        // Disable MD testing
+    }
     return 0;
 }
 
