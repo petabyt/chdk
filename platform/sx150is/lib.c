@@ -7,25 +7,14 @@ SX150IS
 /*
 SX150
 LED address:
-same as sx210
 orange 0xC0220010
-green  0xC0220014
 AF      0xC022000C
 */
 #define LED_AF		0xC022000C
-#define LED_ORANGE	0xC0220010
 #define LED_GREEN	0xC0220014
-
-#define DELAY 300000
 
 #define LED_ON 		*((long*) LED_GREEN) = 0x46
 #define LED_OFF		*((long*) LED_GREEN) = 0x44
-
-#define LED_ON_RED 		*((long*) LED_ORANGE) = 0x46
-#define LED_OFF_RED		*((long*) LED_ORANGE) = 0x44
-
-#define LED_ON_AF 		*((long*) LED_AF) = 0x46
-#define LED_OFF_AF		*((long*) LED_AF) = 0x44
 
 void debug_led(int state)
 {
@@ -34,60 +23,6 @@ void debug_led(int state)
     else
 		LED_OFF;
 } 
-
-void debug_wait()
-{
-	int counter;
-
-	counter = DELAY; 
-	while (counter--) { asm("nop\n nop\n"); };
-}
-
-
-void debug_blink()
-{
-	//led on
-	LED_ON;
-	debug_wait();
-
-	//led off
-	LED_OFF;
-	debug_wait();
-}
-
-void debug_blink_red()
-{
-	//led on
-	LED_ON_RED;
-	debug_wait();
-
-	//led off
-	LED_OFF_RED;
-	debug_wait();
-}
-
-
-/*	
-void debug_my_blink()
-{
-	volatile long *p = (void*)LED_GREEN;       		// turned off later, so assumed to be power
-	volatile long *p2 = (void*)LED_AF;       		// turned off later, so assumed to be power
-	int counter;
-
-	// DEBUG: blink led
-	//led on
-	counter = DELAY; 
-	*p = 0x46; 
-	while (counter--) { asm("nop\n nop\n"); };
-	*p2 = 0x46;
-	//led off
-	counter = DELAY; 
-	*p = 0x44; 
-	while (counter--) { asm("nop\n nop\n"); };
-	*p2= 0x44;
-	
-}
-*/ 
 
 #include "platform.h"
 #include "lolevel.h"
@@ -144,8 +79,12 @@ void shutdown()
 }
 
 
+/*
+7 = green indicator
+9 = AF
+*/
 void camera_set_led(int led, int state, int bright) {
- static char led_table[3]={0,1,9};
+ static char led_table[]={7,9};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
