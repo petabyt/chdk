@@ -30,13 +30,18 @@ ROM:FFB5004C                 ADR     R0, aCrawBuffSizeP ; "CRAW BUFF SIZE  %p"
 }
 
 
-// Live picture buffer (shoot not pressed)
+// Live view
+extern char active_viewport_buffer;
+extern void* viewport_buffers[];
+
 void *vid_get_viewport_live_fb()
 {
+    // not verified on sx150, but on other ports Video only seems to use the first viewport buffer.
+    if (MODE_IS_VIDEO(mode_get()) || movie_status == VIDEO_RECORD_IN_PROGRESS)
+        return viewport_buffers[0];     
 
-
-    return 0x0;
-
+    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+    return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
 
