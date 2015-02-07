@@ -106,6 +106,9 @@
 
 //  define REMOTE_SYNC_STATUS_LED              0xC0220120 // specifies an LED that turns on while camera waits for USB remote to sync
 
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                                  1
+
     #define MKDIR_RETURN_ONE_ON_SUCCESS                 1 // mkdir() return 1 on success, 0 on fail.
 
     #define CAM_SD_OVER_IN_AF                           1
