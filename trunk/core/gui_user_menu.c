@@ -129,14 +129,35 @@ static CMenuItem user_submenu_items[USER_MENU_ITEMS + 2] = {
 CMenu user_submenu = {0x2e,LANG_MENU_USER_MENU, user_submenu_items };
 
 //-------------------------------------------------------------------
+
+extern CMenu script_submenu;
+static char sfname[CONF_STR_LEN];
+
+static void load_user_menu_script_callback(unsigned int btn)
+{
+    if (btn==MBOX_BTN_YES)
+    {
+        script_load(sfname);
+        gui_activate_sub_menu(&script_submenu) ;
+    }
+}
+
 void gui_load_user_menu_script(const char *fn) 
 {
     if (fn)
     {
-		script_load(fn);
-
-        // exit menu system on the assumption the user will want to run the script just loaded
-        gui_set_mode(&altGuiHandler);
+        strcpy(sfname, fn);
+        
+        if( kbd_get_clicked_key() == KEY_SHOOT_FULL )       
+        {
+            script_load(sfname);                            // load script from menu choice            
+            gui_set_mode(&altGuiHandler);                   // exit the menu system
+            script_start_gui(0);                            // and run the script
+        }
+        else
+        {
+            gui_mbox_init(LANG_MENU_SCRIPT_LOAD, (int)sfname, MBOX_BTN_YES_NO|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, load_user_menu_script_callback);   
+        }
     }
 }
 

@@ -692,7 +692,12 @@ int gui_menu_kbd_process() {
                 }
             }
             break;
-
+        case KEY_SHOOT_FULL:                                // run script directly from User Menu ?
+            if(    (gui_menu_curr_item >= 0) 
+                && ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_PROC)
+                &&  (curr_menu->menu[gui_menu_curr_item].value == (int *)gui_load_user_menu_script ))
+                    select_proc();
+            break;
         case KEY_ZOOM_IN:
             if (decrement_factor())
                 gui_menu_redraw = 1;
