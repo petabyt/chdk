@@ -4,10 +4,6 @@ char *hook_raw_image_addr() {
     return (char*) 0x420F6420; //Found @0xffb5a2f4  search for "BJPEG BUFF"
 }
 
-char *hook_alt_raw_image_addr() {
-    return (char*) 0x420F6420; //Found @0xffb5a2f4  search for "BJPEG BUFF"
-}
-
 /*
  * Note copied from SX110 IS
  * GetBatteryTemperature usually will get back temperature of battery compartment/batteries. GetBatteryTemperature is implemented in Canon's firmware for SX120IS.
