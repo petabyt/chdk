@@ -159,61 +159,14 @@ static int rawop_set_pixels_rgbg(lua_State *L) {
     set_raw_pixel(x+cfa_offsets[CFA_G2][0],y+cfa_offsets[CFA_G2][1],g2);
     return 0;
 }
-/*
-rawop.fill_rect_rgbg(x,y,width,height,r,g1,b[,g2])
-fills the specified rectangle with the specified r,g,b values
-if g2 is not specified, it is set to g1
-x, y, width and height are truncated to the nearest even value.
-width and hight out of bounds are clipped
-*/
-
-static int rawop_fill_rect_rgbg(lua_State *L) {
-    unsigned int xstart=luaL_checknumber(L,1);
-    unsigned int ystart=luaL_checknumber(L,2);
-    unsigned int width=luaL_checknumber(L,3);
-    unsigned int height=luaL_checknumber(L,4);
-    unsigned int vals[4];
-    vals[CFA_R]=luaL_checknumber(L,5);
-    vals[CFA_G1]=luaL_checknumber(L,6);
-    vals[CFA_B]=luaL_checknumber(L,7);
-    vals[CFA_G2]=luaL_optnumber(L,8,vals[CFA_G1]);
-    // clamp to even
-    xstart = xstart & 0xFFFFFFFE;
-    ystart = ystart & 0xFFFFFFFE;
-    width = width & 0xFFFFFFFE;
-    height = height & 0xFFFFFFFE;
-    unsigned int xmax = xstart + width;
-    unsigned int ymax = ystart + height;
-    int x,y;
-    if(xstart >= (unsigned)camera_sensor.raw_rowpix || ystart >= (unsigned)camera_sensor.raw_rows) {
-        return 0;
-    }
-    if(xmax > (unsigned)camera_sensor.raw_rowpix) {
-        xmax = (unsigned)camera_sensor.raw_rowpix; 
-    }
-    if(ymax > (unsigned)camera_sensor.raw_rows) {
-        ymax = (unsigned)camera_sensor.raw_rows;
-    }
-    int i;
-    // TODO setting full rows would probably be faster
-    for(i=0; i<4; i++) {
-        unsigned short c=vals[i];
-        for(y=ystart+cfa_offsets[i][1]; y<ymax; y+=2) {
-            for(x=xstart+cfa_offsets[i][0]; x<xmax; x+=2) {
-                set_raw_pixel(x,y,c);
-            }
-        }
-    }
-    return 0;
-}
 
 /*
 rawop.fill_rect(x,y,width,height,val[,xstep[,ystep]])
 sets every step-th pixel of the specified rectangle to the specified value
 width and hight out of bounds are clipped
 xstep defaults to 1, ystep defaults to xstep
+step 2 can be used with cfa offsets to fill RGB
 */
-
 static int rawop_fill_rect(lua_State *L) {
     unsigned int xstart=luaL_checknumber(L,1);
     unsigned int ystart=luaL_checknumber(L,2);
@@ -527,7 +480,6 @@ static const luaL_Reg rawop_funcs[] = {
   {"get_pixels_rgbg", rawop_get_pixels_rgbg},
   {"set_pixels_rgbg", rawop_set_pixels_rgbg},
   {"fill_rect", rawop_fill_rect},
-  {"fill_rect_rgbg", rawop_fill_rect_rgbg},
   {"raw_to_ev96", rawop_raw_to_ev96},
   {"ev96_to_raw", rawop_ev96_to_raw},
   {"meter", rawop_meter},
