@@ -9,24 +9,13 @@ char *camera_jpeg_count_str()
     return jpeg_count_str;
 }
 
-#define LED_PR 0xC0220120
-
 void shutdown()
 {
-    volatile long *p = (void*)LED_PR;
-
-    asm(
-        "MRS     R1, CPSR\n"
-        "AND     R0, R1, #0x80\n"
-        "ORR     R1, R1, #0x80\n"
-        "MSR     CPSR_cf, R1\n"
-        :::"r1","r0");
-
-    *p = 0x44;  // power off.
-
-    while(1);
+    extern void _finish_shutdown(void);
+    _finish_shutdown();
 }
 
+#define LED_PR 0xC0220120
 void debug_led(int state)
 {
     // using power LED, which defaults to on
