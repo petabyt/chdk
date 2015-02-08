@@ -101,9 +101,7 @@ void JogDial_CCW(void){
 }
 
 
-#if defined(CAM_CHDK_PTP_LIVE_VIEW)
 // Functions for PTP Live View system
-
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
@@ -120,4 +118,3 @@ void *vid_get_bitmap_active_palette()
     extern char* palette_buffer[];
     return (palette_buffer[active_palette_buffer]+8);
 }
-#endif
