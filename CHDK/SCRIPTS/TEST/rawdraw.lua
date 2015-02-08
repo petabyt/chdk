@@ -114,7 +114,9 @@ for i=1,shots do
 	-- wait for the image to be captured
 	hook_raw.wait_ready()
 
+	local count,ms =set_yield(-1,-1)
 	do_draw()
+	set_yield(count,ms)
 
 	hook_raw.continue()
 end
