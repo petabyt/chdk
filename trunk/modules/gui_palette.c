@@ -244,20 +244,31 @@ static void palette_test()
 }
 
 //-------------------------------------------------------------------
-#define CELL_SIZE           12
+// sizes computed at runtime
+#define CELL_SIZE           cellsize
 #define BORDER_SIZE         6
-#define CELL_ZOOM           6
-#define DISP_LEFT           BORDER_SIZE
-#define DISP_RIGHT          (DISP_LEFT + CELL_SIZE * 16)
+#define CELL_ZOOM           BORDER_SIZE
 #define DISP_TOP_CHDK       (FONT_HEIGHT + BORDER_SIZE)
-#define DISP_TOP            (DISP_TOP_CHDK + 20)
-#define DISP_BOTTOM         (DISP_TOP + CELL_SIZE * 16)
+#define DISP_TOP            disptop
+#define DISP_LEFT           BORDER_SIZE
+#define DISP_RIGHT          dispright
+#define DISP_BOTTOM         dispbottom
 
 static void palette_draw()
 {
     unsigned int x, y, xl, xr;
     color c;
     static char buf[64];
+    static int cellsize = 0, disptop, dispright, dispbottom;
+
+    if (!cellsize)
+    {
+        // calculate these only once
+        cellsize = (camera_screen.height - FONT_HEIGHT - 3 * BORDER_SIZE -1 ) / 17;
+        disptop = camera_screen.height + DISP_TOP_CHDK - cellsize * 16 - FONT_HEIGHT - 2 * BORDER_SIZE - 1;
+        dispright = DISP_LEFT + cellsize * 16;
+        dispbottom = DISP_TOP + cellsize * 16;
+    }
 
     xl = camera_screen.disp_left;
     xr = camera_screen.disp_right;
@@ -276,7 +287,7 @@ static void palette_draw()
 
         // Draw gray borders
         draw_rectangle(xl, DISP_TOP_CHDK-BORDER_SIZE, xr, camera_screen.height-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER6); // outer border
-        draw_rectangle(xl+BORDER_SIZE, DISP_TOP-7, xr-BORDER_SIZE, DISP_TOP-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //horiz divider
+        draw_rectangle(xl+BORDER_SIZE, DISP_TOP_CHDK+CELL_SIZE+1, xr-BORDER_SIZE, DISP_TOP-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //horiz divider
         draw_rectangle(xl+DISP_RIGHT+1, DISP_TOP, xl+DISP_RIGHT+BORDER_SIZE, DISP_BOTTOM, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //vert divider
         draw_rectangle(xl+DISP_RIGHT+BORDER_SIZE+1, DISP_TOP, xr-BORDER_SIZE, DISP_TOP+3*CELL_SIZE-1, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED); //above sample
 
@@ -286,7 +297,8 @@ static void palette_draw()
         {
             draw_rectangle(xl+x, DISP_TOP_CHDK, xl+x+CELL_SIZE, DISP_TOP_CHDK+CELL_SIZE, MAKE_COLOR(chdk_colors[c],COLOR_BLACK), RECT_BORDER1|DRAW_FILLED);
         }
-        draw_string(xl+DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1)+1, DISP_TOP_CHDK, " <-- CHDK     ", MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
+        draw_rectangle(xl+DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1)+1, DISP_TOP_CHDK, xr-BORDER_SIZE, DISP_TOP_CHDK+CELL_SIZE, MAKE_COLOR(COLOR_GREY, COLOR_GREY), RECT_BORDER0|DRAW_FILLED);
+        draw_string(xl+DISP_LEFT+CELL_SIZE*(IDX_COLOR_MAX+1)+1, DISP_TOP_CHDK, " <-- CHDK", MAKE_COLOR(COLOR_GREY,COLOR_WHITE));
 
         // Draw Canon Palette color boxes
         c = 0;
