@@ -7,6 +7,7 @@
 0x003feb58,_dflt
 0x003feb88,_dfltu
 0x003fc384,_divmod_signed_int
+0x003fc81c,_divmod_unsigned_int
 0x003fec1c,_dmul
 0x003fee8c,_drsb
 0x003ff018,_dsub
@@ -26,6 +27,7 @@
 0x003feea4,_sqrt
 0xff814b6c,_uartr_req
 0xff958d80,AbortAEIntegralValue_FW
+0x003f8830,AcquireRecursiveLock
 0x003f7e48,AcquireRecursiveLockStrictly
 0xff95b27c,ActivateAdjLog_FW
 0xff9058ec,ActivateImager_FW
@@ -72,6 +74,7 @@
 0xffb5d77c,CancelImageDrive_FW
 0xff905b58,CancelImager_FW
 0xffb67608,CancelLoopGainCalc_FW
+0xff816298,CancelTimer
 0xff992490,Capture.Create_FW
 0xffb5d79c,CaptureWithParam_FW
 0xffa9a6e0,ChangeAdjImgDrvMode_FW
@@ -114,6 +117,8 @@
 0xffad7884,ChangeZoomLensPointToMagnification_FW
 0xffb61f48,ChargeStrobe_FW
 0xffb61f80,ChargeStrobeForFA_FW
+0x003f80c8,CheckAllEventFlag
+0x003f8080,CheckAnyEventFlag
 0xff889580,CheckSumAll_FW
 0xff81c6f4,ClearDUIDFixFlag_FW
 0xff81c674,ClearDurianMode_FW
@@ -184,8 +189,11 @@
 0xffad87d0,DelaySet_FW
 0xff88c69c,DeleteController_FW
 0xff816c44,DeleteDirectory_Fut
+0x003f802c,DeleteEventFlag
 0xff816bd0,DeleteFile_Fut,(stubs_entry_2.s)
+0x003f8424,DeleteMessageQueue
 0xff82458c,DeleteProxyOfEventProcedure_FW
+0x003f87dc,DeleteRecursiveLock
 0x003f7a38,DeleteSemaphore
 0x003f7a38,DeleteSemaphore_FW
 0xffb64e98,DevelopStillPicture_FW
@@ -601,6 +609,7 @@
 0xffb644f8,GetMonth_FW
 0xff83fa48,GetMovieJpegVRAMHPixelsSize_FW
 0xff83fa54,GetMovieJpegVRAMVPixelsSize_FW
+0x003f8710,GetNumberOfPostedMessages
 0xffb5cbb8,GetObClampValue_FW
 0xff959610,GetOnlyAEIntegData_FW
 0xff85c338,GetOpticalTemperature
@@ -617,6 +626,7 @@
 0xff81bdf8,GetSDProtect_FW
 0xffb6459c,GetSecond_FW
 0xff88c8d8,GetSelfControllerHandle_FW
+0x003f7c04,GetSemaphoreValue
 0xffb5ccb8,GetSensorPreGain_FW
 0xffb5d9b8,GetShutterSpeedRegularMaxLimit_FW
 0xffb5d9d4,GetShutterSpeedRegularMinLimit_FW
@@ -1157,6 +1167,7 @@
 0xffadcdd0,reboot_fw_update
 0xff8494cc,Rec2PB
 0xffad72d4,ReceiveMechaCircuitDataAll_FW
+0x003f84b8,ReceiveMessageQueue
 0x003f7d98,ReceiveMessageQueueStrictly
 0xffa9a92c,RecSoundForNCAdjEvent_FW
 0xff8624e4,RefreshAdjustmentTableMirror_FW
@@ -1165,6 +1176,7 @@
 0xff823ac8,RegisterEventProcedure
 0x003f5624,RegisterInterruptHandler
 0xff86878c,RegistFirmScanNoticeCBR_FW
+0x003f8964,ReleaseRecursiveLock
 0xffb61800,ReloadAFAdjustment_FW
 0xffb5cba8,ReloadCdsAdjustment_FW
 0xffb6208c,ReloadColorAdjustment_FW
@@ -1424,6 +1436,7 @@
 0xff86857c,SetTestRecMasterCxCy_FW
 0xff868640,SetTestRecSkimmingYUV_FW
 0xff8161c8,SetTimerAfter
+0xff816234,SetTimerWhen
 0xffb5e7b8,SetToolCorrectCoefficient_FW
 0xffb62bf0,SetVideoOutType_FW
 0xffb64d8c,SetWBTemperature_FW
@@ -1705,6 +1718,9 @@
 0xffa9c208,TerminateSoundRec_FW
 0xff866fd0,TerminateTestRec_FW
 0x003f9210,time
+0x003f86d0,TryPostMessageQueue
+0x003f85b0,TryReceiveMessageQueue
+0x003f7a98,TryTakeSemaphore
 0xff89ea58,TurnOffBackLight
 0xff853dc0,TurnOffDisplay
 0xff8269e0,TurnOffE1_FW
