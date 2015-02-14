@@ -9,8 +9,9 @@
 #include "stubs_load.h"
 #include "firmware_load.h"
 
-// enable/disable debug output for development
-#define DEBUG_ON 0
+//------------------------------------------------------------------------------------------------------------
+// #define DEBUG_PRINT_ALL_FUNC_NAMES 1 // enable debug output on stderr for development
+// #define LIST_IMPORTANT_FUNCTIONS   1 // always list functions with 'LIST_ALWAYS' flag, even when not found
 //------------------------------------------------------------------------------------------------------------
 
 // Buffer output into header and body sections
@@ -197,6 +198,7 @@ typedef struct {
 #define UNUSED          4
 #define BAD_MATCH       8
 #define EV_MATCH        16
+#define LIST_ALWAYS     32
 
 typedef struct {
     char        *name;
@@ -5124,17 +5126,29 @@ void write_funcs(firmware *fw, char *filename, func_entry *fns[], int (*compare)
 
     FILE *out_fp = fopen(filename, "w");
     for (k=0; k<next_func_entry; k++)
-        if ((fns[k]->val != 0) && (strncmp(fns[k]->name,"hook_",5) != 0))
+    {
+        if (strncmp(fns[k]->name,"hook_",5) != 0)
         {
-            if (fns[k]->flags & BAD_MATCH)
+            if (fns[k]->val != 0)
             {
-                osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
-                if (ostub2 && ostub2->val)
-                    fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
+                if (fns[k]->flags & BAD_MATCH)
+                {
+                    osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
+                    if (ostub2 && ostub2->val)
+                        fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
+                }
+                else
+                    fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
             }
-            else
-                fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
+#ifdef LIST_IMPORTANT_FUNCTIONS
+            else if (fns[k]->flags & LIST_ALWAYS)
+            {
+                // helps development by listing important functions even when not found
+                fprintf(out_fp, "0,%s,(NOT FOUND)\n", fns[k]->name);
+            }
+#endif
         }
+    }
     fclose(out_fp);
 }
 
@@ -5184,7 +5198,7 @@ int main(int argc, char **argv)
     {
         count = 0;
         curr_name = func_names[k].name;
-#if DEBUG_ON
+#ifdef DEBUG_PRINT_ALL_FUNC_NAMES
 fprintf(stderr,"%s:",curr_name);
 #endif
         find_matches(&fw, curr_name);

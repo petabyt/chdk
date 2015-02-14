@@ -9,6 +9,8 @@
 #include "firmware_load.h"
 
 //------------------------------------------------------------------------------------------------------------
+// #define LIST_IMPORTANT_FUNCTIONS 1   // always list functions with 'LIST_ALWAYS' flag, even when not found
+//------------------------------------------------------------------------------------------------------------
 
 // Buffer output into header and body sections
 
@@ -194,6 +196,7 @@ typedef struct {
 #define UNUSED          4
 #define BAD_MATCH       8
 #define EV_MATCH        16
+#define LIST_ALWAYS     32
 
 typedef struct {
     char        *name;
@@ -215,16 +218,16 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "LogCameraEvent", UNUSED|DONT_EXPORT },
     { "getImageDirName", UNUSED|DONT_EXPORT },
 
-    { "AllocateMemory", UNUSED },
+    { "AllocateMemory", UNUSED|LIST_ALWAYS },
     { "AllocateUncacheableMemory" },
     { "Close" },
-    { "CreateBinarySemaphore", UNUSED },
-    { "CreateCountingSemaphore", UNUSED },
+    { "CreateBinarySemaphore", UNUSED|LIST_ALWAYS },
+    { "CreateCountingSemaphore", UNUSED|LIST_ALWAYS },
     { "CreateTask" },
-    { "DebugAssert", OPTIONAL },
+    { "DebugAssert", OPTIONAL|LIST_ALWAYS },
     { "DeleteDirectory_Fut" },
     { "DeleteFile_Fut" },
-    { "DeleteSemaphore", UNUSED },
+    { "DeleteSemaphore", UNUSED|LIST_ALWAYS },
     { "DoAELock" },
     { "DoAFLock" },
     { "EnterToCompensationEVF" },
@@ -239,7 +242,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "Fgets_Fut" },
     { "Fopen_Fut" },
     { "Fread_Fut" },
-    { "FreeMemory", UNUSED },
+    { "FreeMemory", UNUSED|LIST_ALWAYS },
     { "FreeUncacheableMemory" },
     { "Fseek_Fut" },
     { "Fwrite_Fut" },
@@ -262,12 +265,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GetVRAMVPixelsSize" },
     { "GetZoomLensCurrentPoint" },
     { "GetZoomLensCurrentPosition" },
-    { "GiveSemaphore", OPTIONAL },
+    { "GiveSemaphore", OPTIONAL|LIST_ALWAYS },
     { "IsStrobeChargeCompleted" },
     { "LEDDrive", OPTIONAL },
     { "LocalTime" },
     { "LockMainPower" },
-    { "Lseek", UNUSED },
+    { "Lseek", UNUSED|LIST_ALWAYS },
     { "MakeDirectory_Fut" },
     { "MakeSDCardBootable", OPTIONAL },
     { "MoveFocusLensToDistance" },
@@ -326,7 +329,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "close" },
     { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
-    { "exmem_free", OPTIONAL },
+    { "exmem_free", OPTIONAL|LIST_ALWAYS },
     { "free" },
 
     { "kbd_p1_f" },
@@ -347,11 +350,11 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "open" },
     { "OpenFastDir" },
     { "closedir" },
-    { "get_fstype", OPTIONAL },
+    { "get_fstype", OPTIONAL|LIST_ALWAYS },
     { "qsort" },
     { "rand" },
     { "read", UNUSED|OPTIONAL },
-    { "realloc", OPTIONAL },
+    { "realloc", OPTIONAL|LIST_ALWAYS },
     { "reboot_fw_update" },
     { "set_control_event" },
     { "srand" },
@@ -383,95 +386,95 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "vsprintf" },
     { "write", UNUSED|OPTIONAL },
 
-    { "EngDrvIn", OPTIONAL|UNUSED },
-    { "EngDrvOut", OPTIONAL|UNUSED },
+    { "EngDrvIn", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "EngDrvOut", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "EngDrvRead" },
-    { "EngDrvBits", OPTIONAL|UNUSED },
+    { "EngDrvBits", OPTIONAL|UNUSED|LIST_ALWAYS },
 
     { "PTM_GetCurrentItem" },
-    { "PTM_SetCurrentItem", UNUSED },
-    { "PTM_NextItem", OPTIONAL|UNUSED },
-    { "PTM_PrevItem", OPTIONAL|UNUSED },
-    { "PTM_SetPropertyEnable", OPTIONAL|UNUSED },
+    { "PTM_SetCurrentItem", UNUSED|LIST_ALWAYS },
+    { "PTM_NextItem", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "PTM_PrevItem", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "PTM_SetPropertyEnable", OPTIONAL|UNUSED|LIST_ALWAYS },
 
     // OS functions, mostly to aid firmware analysis. Order is important!
-    { "_GetSystemTime", OPTIONAL|UNUSED }, // only for locating timer functions
-    { "SetTimerAfter", OPTIONAL|UNUSED },
-    { "SetTimerWhen", OPTIONAL|UNUSED },
-    { "CancelTimer", OPTIONAL|UNUSED },
+    { "_GetSystemTime", OPTIONAL|UNUSED|LIST_ALWAYS }, // only for locating timer functions
+    { "SetTimerAfter", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "SetTimerWhen", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CancelTimer", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "CancelHPTimer" },
-    { "SetHPTimerAfterTimeout", OPTIONAL|UNUSED },
+    { "SetHPTimerAfterTimeout", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "SetHPTimerAfterNow" },
-    { "CreateTaskStrictly", OPTIONAL|UNUSED },
-    { "CreateMessageQueue", OPTIONAL|UNUSED },
-    { "CreateRecursiveLock", OPTIONAL|UNUSED },
-    { "GetSemaphoreValue", OPTIONAL|UNUSED },
-    { "TryTakeSemaphore", OPTIONAL|UNUSED },
-    { "CreateMessageQueueStrictly", OPTIONAL|UNUSED },
-    { "CreateEventFlagStrictly", OPTIONAL|UNUSED },
-    { "CreateBinarySemaphoreStrictly", OPTIONAL|UNUSED },
-    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED },
-    { "CreateRecursiveLockStrictly", OPTIONAL|UNUSED },
-    { "TakeSemaphoreStrictly", OPTIONAL|UNUSED }, // r23+
-    { "ReceiveMessageQueueStrictly", OPTIONAL|UNUSED }, // r23+
-    { "PostMessageQueueStrictly", OPTIONAL|UNUSED },    // r23+
-    { "WaitForAnyEventFlagStrictly", OPTIONAL|UNUSED }, // r23+
-    { "WaitForAllEventFlagStrictly", OPTIONAL|UNUSED }, // r23+
-    { "AcquireRecursiveLockStrictly", OPTIONAL|UNUSED }, // r23+
-    { "DeleteMessageQueue", OPTIONAL|UNUSED },
-    { "PostMessageQueue", OPTIONAL|UNUSED },
-    { "ReceiveMessageQueue", OPTIONAL|UNUSED },
-    { "TryReceiveMessageQueue", OPTIONAL|UNUSED },
-    { "TryPostMessageQueue", OPTIONAL|UNUSED },
-    { "GetNumberOfPostedMessages", OPTIONAL|UNUSED },
-    { "DeleteRecursiveLock", OPTIONAL|UNUSED },
-    { "AcquireRecursiveLock", OPTIONAL|UNUSED },
-    { "ReleaseRecursiveLock", OPTIONAL|UNUSED },
-    { "WaitForAnyEventFlag", OPTIONAL|UNUSED },
-    { "WaitForAllEventFlag", OPTIONAL|UNUSED },
-    { "ClearEventFlag", OPTIONAL|UNUSED },
-    { "SetEventFlag", OPTIONAL|UNUSED },
-    { "GetEventFlagValue", OPTIONAL|UNUSED },
-    { "CreateEventFlag", OPTIONAL|UNUSED },
-    { "DeleteEventFlag", OPTIONAL|UNUSED },
-    { "CheckAnyEventFlag", OPTIONAL|UNUSED },
-    { "CheckAllEventFlag", OPTIONAL|UNUSED },
-    { "RegisterInterruptHandler", OPTIONAL|UNUSED },
-    { "UnregisterInterruptHandler", OPTIONAL|UNUSED },
-    { "GetSRAndDisableInterrupt", OPTIONAL|UNUSED }, // disables IRQ, returns a value
-    { "SetSR", OPTIONAL|UNUSED }, // enables IRQ, puts back value returned by GetSR
-    { "EnableInterrupt", OPTIONAL|UNUSED }, // enables IRQ
-    { "_divmod_signed_int", OPTIONAL|UNUSED}, // division for signed integers, remainder is returned in r1
-    { "_divmod_unsigned_int", OPTIONAL|UNUSED}, // division for unsigned integers, remainder is returned in r1
-    { "_dflt", OPTIONAL|UNUSED}, // int -> double
-    { "_dfltu", OPTIONAL|UNUSED}, // uint -> double
-    { "_dfix", OPTIONAL|UNUSED}, // double -> int
-    { "_dfixu", OPTIONAL|UNUSED}, // double -> uint
-    { "_dmul", OPTIONAL|UNUSED}, // double precision float multiplication
-    { "_ddiv", OPTIONAL|UNUSED}, // double precision float division
-    { "_dadd", OPTIONAL|UNUSED}, // addition for doubles
-    { "_dsub", OPTIONAL|UNUSED}, // subtraction for doubles
-    { "_drsb", OPTIONAL|UNUSED}, // reverse subtraction for doubles (?)
-    { "_dcmp", OPTIONAL|UNUSED}, // comparison of 2 doubles, only updates condition flags
-    { "_dcmp_reverse", OPTIONAL|UNUSED}, // like _dcmp, but operands in reverse order, only updates condition flags
-    { "_safe_sqrt", OPTIONAL|UNUSED}, // only calls _sqrt for numbers >= 0
-    { "_scalbn", OPTIONAL|UNUSED}, // double scalbn (double x, long exp), returns x * FLT_RADIX ** exp
-    { "_fflt", OPTIONAL|UNUSED}, // int -> float
-    { "_ffltu", OPTIONAL|UNUSED}, // uint -> float
-    { "_ffix", OPTIONAL|UNUSED}, // float -> int
-    { "_ffixu", OPTIONAL|UNUSED}, // float -> uint
-    { "_fmul", OPTIONAL|UNUSED}, // single precision float multiplication
-    { "_fdiv", OPTIONAL|UNUSED}, // single precision float division
-    { "_f2d", OPTIONAL|UNUSED}, // float -> double
-    { "DisplayBusyOnScreen", OPTIONAL|UNUSED}, // displays full screen "busy" message
-    { "UndisplayBusyOnScreen", OPTIONAL|UNUSED},
-    { "CreateDialogBox", OPTIONAL|UNUSED},
-    { "DisplayDialogBox", OPTIONAL|UNUSED},
-    { "add_ui_to_dialog", OPTIONAL|UNUSED}, // name made up, assigns resources to a dialog
-    { "get_string_by_id", OPTIONAL|UNUSED}, // name made up, retrieves a localised or unlocalised string by its ID
-    { "malloc_strictly", OPTIONAL|UNUSED }, // name made up
-    { "GetCurrentMachineTime", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
-    { "HwOcReadICAPCounter", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
+    { "CreateTaskStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateMessageQueue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateRecursiveLock", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "GetSemaphoreValue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "TryTakeSemaphore", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateMessageQueueStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateEventFlagStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateBinarySemaphoreStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateCountingSemaphoreStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateRecursiveLockStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "TakeSemaphoreStrictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // r23+
+    { "ReceiveMessageQueueStrictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // r23+
+    { "PostMessageQueueStrictly", OPTIONAL|UNUSED|LIST_ALWAYS },    // r23+
+    { "WaitForAnyEventFlagStrictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // r23+
+    { "WaitForAllEventFlagStrictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // r23+
+    { "AcquireRecursiveLockStrictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // r23+
+    { "DeleteMessageQueue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "PostMessageQueue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "ReceiveMessageQueue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "TryReceiveMessageQueue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "TryPostMessageQueue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "GetNumberOfPostedMessages", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "DeleteRecursiveLock", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "AcquireRecursiveLock", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "ReleaseRecursiveLock", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "WaitForAnyEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "WaitForAllEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "ClearEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "SetEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "GetEventFlagValue", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CreateEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "DeleteEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CheckAnyEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "CheckAllEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "RegisterInterruptHandler", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "UnregisterInterruptHandler", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "GetSRAndDisableInterrupt", OPTIONAL|UNUSED|LIST_ALWAYS }, // disables IRQ, returns a value
+    { "SetSR", OPTIONAL|UNUSED|LIST_ALWAYS }, // enables IRQ, puts back value returned by GetSR
+    { "EnableInterrupt", OPTIONAL|UNUSED|LIST_ALWAYS }, // enables IRQ
+    { "_divmod_signed_int", OPTIONAL|UNUSED|LIST_ALWAYS}, // division for signed integers, remainder is returned in r1
+    { "_divmod_unsigned_int", OPTIONAL|UNUSED|LIST_ALWAYS}, // division for unsigned integers, remainder is returned in r1
+    { "_dflt", OPTIONAL|UNUSED|LIST_ALWAYS}, // int -> double
+    { "_dfltu", OPTIONAL|UNUSED|LIST_ALWAYS}, // uint -> double
+    { "_dfix", OPTIONAL|UNUSED|LIST_ALWAYS}, // double -> int
+    { "_dfixu", OPTIONAL|UNUSED|LIST_ALWAYS}, // double -> uint
+    { "_dmul", OPTIONAL|UNUSED|LIST_ALWAYS}, // double precision float multiplication
+    { "_ddiv", OPTIONAL|UNUSED|LIST_ALWAYS}, // double precision float division
+    { "_dadd", OPTIONAL|UNUSED|LIST_ALWAYS}, // addition for doubles
+    { "_dsub", OPTIONAL|UNUSED|LIST_ALWAYS}, // subtraction for doubles
+    { "_drsb", OPTIONAL|UNUSED|LIST_ALWAYS}, // reverse subtraction for doubles (?)
+    { "_dcmp", OPTIONAL|UNUSED|LIST_ALWAYS}, // comparison of 2 doubles, only updates condition flags
+    { "_dcmp_reverse", OPTIONAL|UNUSED|LIST_ALWAYS}, // like _dcmp, but operands in reverse order, only updates condition flags
+    { "_safe_sqrt", OPTIONAL|UNUSED|LIST_ALWAYS}, // only calls _sqrt for numbers >= 0
+    { "_scalbn", OPTIONAL|UNUSED|LIST_ALWAYS}, // double scalbn (double x, long exp), returns x * FLT_RADIX ** exp
+    { "_fflt", OPTIONAL|UNUSED|LIST_ALWAYS}, // int -> float
+    { "_ffltu", OPTIONAL|UNUSED|LIST_ALWAYS}, // uint -> float
+    { "_ffix", OPTIONAL|UNUSED|LIST_ALWAYS}, // float -> int
+    { "_ffixu", OPTIONAL|UNUSED|LIST_ALWAYS}, // float -> uint
+    { "_fmul", OPTIONAL|UNUSED|LIST_ALWAYS}, // single precision float multiplication
+    { "_fdiv", OPTIONAL|UNUSED|LIST_ALWAYS}, // single precision float division
+    { "_f2d", OPTIONAL|UNUSED|LIST_ALWAYS}, // float -> double
+    { "DisplayBusyOnScreen", OPTIONAL|UNUSED|LIST_ALWAYS}, // displays full screen "busy" message
+    { "UndisplayBusyOnScreen", OPTIONAL|UNUSED|LIST_ALWAYS},
+    { "CreateDialogBox", OPTIONAL|UNUSED|LIST_ALWAYS},
+    { "DisplayDialogBox", OPTIONAL|UNUSED|LIST_ALWAYS},
+    { "add_ui_to_dialog", OPTIONAL|UNUSED|LIST_ALWAYS}, // name made up, assigns resources to a dialog
+    { "get_string_by_id", OPTIONAL|UNUSED|LIST_ALWAYS}, // name made up, retrieves a localised or unlocalised string by its ID
+    { "malloc_strictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up
+    { "GetCurrentMachineTime", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
+    { "HwOcReadICAPCounter", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -481,9 +484,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "NR_GetDarkSubType", OPTIONAL|UNUSED },
     { "NR_SetDarkSubType", OPTIONAL|UNUSED },
     { "SavePaletteData", OPTIONAL|UNUSED },
-    { "GUISrv_StartGUISystem", OPTIONAL|UNUSED },
-    { "get_resource_pointer", OPTIONAL|UNUSED }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
-    { "CalcLog10", OPTIONAL|UNUSED }, // helper
+    { "GUISrv_StartGUISystem", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
+    { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1744,7 +1747,7 @@ string_sig string_sigs[] =
     { 9, "_divmod_signed_int", "mod_FW", 0,                                0,    0,    0,    0,    0,    0,    0,    0,    0,    4,    4,    4,    4 },
     { 9, "_divmod_unsigned_int", "SetTimerAfter", 0,                      23,   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,    0,    0 },
     { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   15,   15,   15 },
-    { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    8,    0 },
+    { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    8,    8,    0 },
     { 9, "_dflt", "CalcLog10", 0,                                          9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
     { 9, "_dfltu", "CalcLog10", 0,                                         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4 },
     { 9, "_dmul", "CalcLog10", 0,                                         12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
@@ -1812,6 +1815,7 @@ string_sig string_sigs[] =
     // Ensure ordering in func_names is correct for dependencies here
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55
     { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x0014, 0x0014 },
+    { 19, "GetSemaphoreValue", "GiveSemaphore", 0,                               0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x000f, 0xf000, 0xf000 },
     { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d },
     { 19, "CreateMessageQueueStrictly", "CreateTaskStrictly", 0,                 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000d, 0x000e, 0x000e, 0x000e },
     { 19, "CreateEventFlagStrictly", "CreateMessageQueueStrictly", 0,            0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009, 0x0009 },
@@ -1832,20 +1836,31 @@ string_sig string_sigs[] =
                                                                                                                                                                                
     { 19, "PostMessageQueue", "TryReceiveMessageQueue", 0,                       0x091f, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 },
     { 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x002c, 0x002c },
+    { 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0027, 0xf000, 0xf000 },
     { 19, "ReceiveMessageQueue", "DeleteMessageQueue", 0,                        0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1024, 0x1029, 0x1029 },
+    { 19, "ReceiveMessageQueue", "DeleteMessageQueue", 0,                        0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x1025, 0xf000, 0xf000 },
     { 19, "TryReceiveMessageQueue", "ReceiveMessageQueue", 0,                    0x002b, 0x002b, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x1032, 0x073d, 0x073d },
+    { 19, "TryReceiveMessageQueue", "ReceiveMessageQueue", 0,                    0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x183e, 0xf000, 0xf000 },
     { 19, "TryPostMessageQueue", "PostMessageQueue", 0,                          0x0027, 0x0027, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x102e, 0x0031, 0x0031 },
+    { 19, "TryPostMessageQueue", "PostMessageQueue", 0,                          0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x1031, 0xf000, 0xf000 },
     { 19, "GetNumberOfPostedMessages", "TryPostMessageQueue", 0,                 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0015, 0x0015 },
     { 19, "DeleteRecursiveLock", "CreateRecursiveLock", 0,                       0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0016, 0x0016 },
+    { 19, "DeleteRecursiveLock", "CreateRecursiveLock", 0,                       0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0016, 0xf000, 0xf000 },
     { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x001a, 0x001a },
+    { 19, "AcquireRecursiveLock", "DeleteRecursiveLock", 0,                      0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0015, 0xf000, 0xf000 },
     { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0x0041, 0x0041, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x0048, 0x085a, 0x085a },
+    { 19, "ReleaseRecursiveLock", "AcquireRecursiveLock", 0,                     0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x004d, 0xf000, 0xf000 },
     { 19, "GetEventFlagValue", "ClearEventFlag", 0,                              0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x000e, 0x0013, 0x0013 },
     { 19, "DeleteEventFlag", "CreateEventFlag", 0,                               0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0018, 0x0018 },
+    { 19, "DeleteEventFlag", "CreateEventFlag", 0,                               0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0018, 0xf000, 0xf000 },
     { 19, "CheckAnyEventFlag", "DeleteEventFlag", 0,                             0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x0014, 0x001a, 0x001a },
+    { 19, "CheckAnyEventFlag", "DeleteEventFlag", 0,                             0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0015, 0xf000, 0xf000 },
     { 19, "CheckAllEventFlag", "CheckAnyEventFlag", 0,                           0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0017, 0x0017 },
     { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x001d, 0x001d },
+    { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0018, 0xf000, 0xf000 },
     { 19, "SetTimerAfter", "_GetSystemTime", 0,                                  0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e },
     { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x001b, 0x001b },
+    { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x001b, 0xf000, 0xf000 },
     { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019 },
     { 19, "CancelHPTimer", "SetHPTimerAfterTimeout", 0,                          0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022, 0x0022 },
     { 19, "SetHPTimerAfterNow", "SetHPTimerAfterTimeout", 0,                    -0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020,-0x0020 },
@@ -6095,17 +6110,29 @@ void write_funcs(firmware *fw, char *filename, func_entry *fns[], int (*compare)
 
     FILE *out_fp = fopen(filename, "w");
     for (k=0; k<next_func_entry; k++)
-        if ((fns[k]->val != 0) && (strncmp(fns[k]->name,"hook_",5) != 0))
+    {
+        if (strncmp(fns[k]->name,"hook_",5) != 0)
         {
-            if (fns[k]->flags & BAD_MATCH)
+            if (fns[k]->val != 0)
             {
-                osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
-                if (ostub2 && ostub2->val)
-                    fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
+                if (fns[k]->flags & BAD_MATCH)
+                {
+                    osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
+                    if (ostub2 && ostub2->val)
+                        fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
+                }
+                else
+                    fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
             }
-            else
-                fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
+#ifdef LIST_IMPORTANT_FUNCTIONS
+            else if (fns[k]->flags & LIST_ALWAYS)
+            {
+                // helps development by listing important functions even when not found
+                fprintf(out_fp, "0,%s,(NOT FOUND)\n", fns[k]->name);
+            }
+#endif
         }
+    }
     fclose(out_fp);
 }
 

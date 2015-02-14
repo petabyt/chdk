@@ -308,9 +308,9 @@ void load_platform(stub_values *sv)
 }
 
 // Load the build values from the makefile.inc source file
-void load_makefile(stub_values *sv)
+void load_a_makefile(stub_values *sv, char *fn)
 {
-    FILE *f = fopen("makefile.inc", "rb");
+    FILE *f = fopen(fn, "rb");
 
     if (f == NULL) return;
 
@@ -334,6 +334,12 @@ void load_makefile(stub_values *sv)
 			}
 		}
     }
+}
+
+void load_makefile(stub_values *sv)
+{
+    load_a_makefile(sv, "../../makefile.inc"); // new in CHDK 1.4
+    load_a_makefile(sv, "makefile.inc");
 }
 
 //------------------------------------------------------------------------------------------------------------
