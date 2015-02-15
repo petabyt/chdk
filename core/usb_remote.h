@@ -30,7 +30,7 @@ extern int GetAdChValue(int);
   ===================================================================================================*/
 
 extern int usb_remote_active;
-extern int usb_sync_wait;
+extern int usb_sync_wait_flag;
 extern int bracketing_timeout;
 extern int forced_usb_port ;
 

@@ -1284,6 +1284,13 @@ static int luaCB_usb_force_active( lua_State* L )
   return 1;
 }
 
+// set next shot to wait for USB sync ( 5V - 0V transition )
+static int luaCB_usb_sync_wait( lua_State* L )
+{
+  usb_sync_wait_flag = on_off_value_from_lua_arg(L,1);
+  return 0;
+}
+
 static int luaCB_enter_alt( lua_State* L )
 {
   enter_alt();
@@ -2716,7 +2723,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_autostart)
     FUNC(get_usb_power)
     FUNC(set_remote_timing)
-    FUNC(usb_force_active)    
+    FUNC(usb_force_active)
+    FUNC(usb_sync_wait)
     FUNC(enter_alt)
     FUNC(exit_alt)
     FUNC(get_alt_mode)

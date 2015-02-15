@@ -29,9 +29,7 @@
 /*===================================================================================================
     Variables
   ===================================================================================================*/
-
-int sync_counter=0;
-int usb_sync_wait = 0 ;
+int usb_sync_wait_flag=0 ;
 int usb_remote_active=0 ;
 int bracketing_timeout = 0 ;
 int usb_power=0;
@@ -132,7 +130,7 @@ static void debug_add_rec()
     debug_rec_buf[debug_num_rec].virtual_remote_state = virtual_remote_state;
     debug_rec_buf[debug_num_rec].usb_count = usb_count;
     debug_rec_buf[debug_num_rec].logic_module_state = logic_module_state;
-    debug_rec_buf[debug_num_rec].usb_sync_wait = usb_sync_wait;
+    debug_rec_buf[debug_num_rec].usb_sync_wait = usb_sync_wait_flag;
     debug_rec_buf[debug_num_rec].usb_remote_active = usb_remote_active;
 
     debug_num_rec++;
@@ -362,6 +360,7 @@ int get_usb_power(int mode)
     return x;
 }
 
+
 /*===================================================================================================
 
    main USB remote processing routine - called every 10 mSec fronm kbd.c
@@ -425,7 +424,7 @@ int handle_usb_remote()
         #endif
 
         #ifdef USB_REMOTE_DEBUGGING
-            extern void draw_string(coord x, coord y, const char *s, color cl);
+            extern int sync_counter ;
             extern long physw_status[3] ;
             extern int usb_buffer[] ;
             extern int * usb_buffer_in ;
@@ -467,13 +466,13 @@ int handle_usb_remote()
                 }
                 else
                 {
-                    sprintf(buf,"RMT=%d drv=%d lgc=%d  sync=%d  tmo=%d  ", usb_remote_active, driver_state, logic_module_state, usb_sync_wait, (bracketing_timeout?bracketing_timeout-get_tick_count():0));
+                    sprintf(buf,"RMT=%d drv=%d lgc=%d  sync=%d  tmo=%d  ", usb_remote_active, driver_state, logic_module_state, usb_sync_wait_flag, (bracketing_timeout?bracketing_timeout-get_tick_count():0));
                     draw_string(2,48,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
                 }
 
                 if (((debug_print+25)%100) ==0 )
                 {
-                    sprintf(buf,"switch=%s logic=%s sync=%s mode=%d  ", gui_USB_switch_types[switch_type], gui_USB_control_modes[control_module], conf.synch_enable?"yes":"no", camera_mode) ;
+                    sprintf(buf,"switch=%d logic=%d sync=%s mode=%d  ", switch_type, control_module, conf.synch_enable?"yes":"no", camera_mode) ;
                     draw_string(2,32,buf,MAKE_COLOR(COLOR_YELLOW,COLOR_BLACK));
                     sprintf(buf,"sync count=%d, pulse count=%d width=%d  b=%d  ", sync_counter, usb_count, usb_power,   bracketing.shoot_counter);
                     draw_string(2,64,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));

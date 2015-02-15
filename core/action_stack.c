@@ -263,14 +263,8 @@ void action_push_delay(long msec)
 // Process a button press action from the stack
 static int action_stack_AS_PRESS()
 {
-    extern int usb_sync_wait;
-
     long skey = action_pop_func(1); // Key parameter returned
-
-    if ((skey == KEY_SHOOT_FULL) && conf.remote_enable && conf.synch_enable) usb_sync_wait = 1;
-
     kbd_key_press(skey);
-
     return 1;
 }
 

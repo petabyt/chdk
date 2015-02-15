@@ -17,11 +17,11 @@
     Variables
   ===================================================================================================*/
 
-extern int sync_counter;
-extern int usb_sync_wait ;
+extern int usb_sync_wait_flag ;
 extern int usb_remote_active;
-
-int forced_usb_port = 0 ;
+#ifdef USB_REMOTE_DEBUGGING  
+int sync_counter=0;
+#endif
 
 /*---------------------------------------------------------------------------------------------------------
 
@@ -31,6 +31,8 @@ int forced_usb_port = 0 ;
       - enables the simultaneous use of the USB port for PTP communications and USB remote precision sync
 
   ---------------------------------------------------------------------------------------------------------*/
+
+int forced_usb_port = 0 ;
 
 int force_usb_state(int state)
 {
@@ -79,13 +81,10 @@ void _wait_until_remote_button_is_released(void)
     // hook for script to block processing just prior to exposure start
     libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_SHOOT);
 
-    if (   ( forced_usb_port && conf.synch_enable )    // forced USB port and menu:sync enabled or
-        ||(    ( conf.remote_enable)                   // menu:USB remote enabled
-            && ( conf.synch_enable )                   // menu:Sync enabled - tells us to wait for USB to disconnect
-            && ( usb_sync_wait     )))                 // only sync when USB remote is active - don't trap normal shooting
+    if ( usb_sync_wait_flag )                 // flag set when something wants the current shot to be sync'd
     {
-        usb_remote_status_led(1);                     // indicate to user we are waiting for remote button to release - this happens every time the camera takes a picture
-        tick = get_tick_count();                      // timestamp so we don't hang here forever if something goes wrong
+        usb_remote_status_led(1);             // indicate to user we are waiting for remote button to release - this happens every time the camera takes a picture
+        tick = get_tick_count();              // timestamp so we don't hang here forever if something goes wrong
 
     #ifdef CAM_REMOTE_USES_PRECISION_SYNC
 
@@ -136,9 +135,10 @@ void _wait_until_remote_button_is_released(void)
         if ( conf.synch_delay_enable && conf.synch_delay_value>0 ) kbd_synch_delay( conf.synch_delay_value );
 
     #endif
-
+    #ifdef USB_REMOTE_DEBUGGING   
         sync_counter++ ;
-        usb_sync_wait = 0 ;
+    #endif
+        usb_sync_wait_flag = 0 ;
         usb_remote_status_led(0);       // alert the user that we are all done
     }
 
