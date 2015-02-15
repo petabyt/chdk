@@ -100,16 +100,14 @@ void __attribute__((naked,noinline)) mykbd_task() {
 // Pointer to stack location where jogdial task records previous and current
 // jogdial positions
 extern short* jog_position;
-extern short rear_dial_position, front_dial_position;
+extern short rear_dial_position;
 
 void jogdial_control(int n) {
     if (jogdial_stopped && !n) {
         // If re-enabling jogdial set the task code current & previous positions to the actual
         // dial positions so that the change won't get processed by the firmware
         jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
-        jog_position[1] = jog_position[3] = front_dial_position;  // Front dial
-
-}
+    }
     jogdial_stopped = n;
 }
 
@@ -227,19 +225,14 @@ long kbd_get_clicked_key()
     return 0;
 }
 
-static short new_jogdial = 0, old_jogdial = 0, new_frontdial = 0, old_frontdial = 0;
+static short new_jogdial = 0, old_jogdial = 0;
 
 long get_jogdial_direction(void)
 {
     old_jogdial = new_jogdial;
     new_jogdial = rear_dial_position;
 
-    old_frontdial = new_frontdial;
-    new_frontdial = front_dial_position;
-
     if      (old_jogdial > new_jogdial)     return JOGDIAL_LEFT;
     else if (old_jogdial < new_jogdial)     return JOGDIAL_RIGHT;
-    else if (old_frontdial > new_frontdial) return FRONTDIAL_LEFT;
-    else if (old_frontdial < new_frontdial) return FRONTDIAL_RIGHT;
     else                                    return 0;
 }

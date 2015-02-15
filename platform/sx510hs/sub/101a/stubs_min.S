@@ -20,4 +20,3 @@ DEF(recreview_hold,                 0x000028f4+0x84) //@0xff04563c + 0x84 (offse
 
 //TODO
 DEF(rear_dial_position,        0xC0240106)  //To do
-DEF(front_dial_position,       0xC0240306)  //To do
