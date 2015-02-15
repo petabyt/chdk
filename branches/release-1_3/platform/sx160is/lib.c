@@ -11,7 +11,7 @@ char *camera_jpeg_count_str()
 
 void shutdown()
 {
-    extern void _finish_shutdown(void);
+    extern void __attribute__((noreturn)) _finish_shutdown(void);
     _finish_shutdown();
 }
 
