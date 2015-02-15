@@ -195,7 +195,7 @@ void usb_shoot_module_normal()
                         {
                             case SW_ONE_PRESS :
                                 usb_remote_stack_name = action_stack_create(&action_stack_AS_SHOOT);
-                                usb_sync_wait = 1;
+                                usb_sync_wait_flag = 1;
                                 logic_module_state = LM_HALF_PRESS ;
                                 break ;
                             case SW_TWO_PRESS :
@@ -228,7 +228,7 @@ void usb_shoot_module_normal()
                                 break ;
                             case SW_TWO_PRESS :
                             case SW_RICOH_CA1 :
-                                usb_sync_wait = 1;
+                                usb_sync_wait_flag = 1;
                                 kbd_key_press(KEY_SHOOT_FULL);
                                 logic_module_state = LM_FULL_PRESS ;
                                 break ;
@@ -276,7 +276,7 @@ void usb_shoot_module_normal()
                                 break ;
                             case SW_TWO_PRESS :
                             case SW_RICOH_CA1 :
-                                usb_sync_wait = 0;
+                                usb_sync_wait_flag = 0;
                                 logic_module_state = LM_RELEASE ;
                                 kbd_key_release(KEY_SHOOT_FULL);
                                 kbd_key_release(KEY_SHOOT_HALF);

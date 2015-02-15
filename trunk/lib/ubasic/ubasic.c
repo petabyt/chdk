@@ -2605,6 +2605,12 @@ statement(void)
     set_yield_statement();
     break;
 
+  case TOKENIZER_USB_SYNC_WAIT:
+    accept(TOKENIZER_USB_SYNC_WAIT);
+    if (expr()) usb_sync_wait_flag = 1;
+    else        usb_sync_wait_flag = 0;
+    break;
+
   default:
       DEBUG_PRINTF("ubasic.c: statement(): not implemented %d\n", token);
       ended = 1;

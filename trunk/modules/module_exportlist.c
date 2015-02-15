@@ -383,6 +383,8 @@
 
             force_usb_state
 
+            usb_sync_wait_flag
+
             call_func_ptr
             _ExecuteEventProcedure
 
