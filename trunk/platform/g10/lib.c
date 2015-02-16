@@ -63,11 +63,11 @@ int get_flash_params_count(void){
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x86E, 1);  // RotateJogDialRight (G10 1.02A table @ FFB43EEC)
+ _PostLogicalEventToUI(0x86E, 1);  // RotateJogDialRight (G10 1.02A table @ FFB43EEC)
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x86F, 1);  // RotateJogDialLeft (G10 1.02A table @ FFB43EF8)
+ _PostLogicalEventToUI(0x86F, 1);  // RotateJogDialLeft (G10 1.02A table @ FFB43EF8)
 }
 
 // Viewport and Bitmap values that shouldn't change across firmware versions.
