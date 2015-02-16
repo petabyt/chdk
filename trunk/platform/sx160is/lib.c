@@ -38,12 +38,12 @@ int get_flash_params_count(void)
 
 void JogDial_CW(void)
 {
-    _PostLogicalEventForNotPowerType(0x872, 1);  // RotateJogDialRight (in table @ ffc1b298, fw 1.00a)
+    _PostLogicalEventToUI(0x872, 1);  // RotateJogDialRight (in table @ ffc1b298, fw 1.00a)
 }
 
 void JogDial_CCW(void)
 {
-    _PostLogicalEventForNotPowerType(0x873, 1);  // RotateJogDialLeft (in table @ ffc1b2a4, fw 1.00a)
+    _PostLogicalEventToUI(0x873, 1);  // RotateJogDialLeft (in table @ ffc1b2a4, fw 1.00a)
 }
 
 int vid_get_viewport_width()
