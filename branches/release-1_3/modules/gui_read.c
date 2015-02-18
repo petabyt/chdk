@@ -36,6 +36,8 @@ static char buffer[READ_BUFFER_SIZE+1];
 static long last_time;
 static int xx, yy;
 static int pause;
+static int busy_drawing = 0;
+static int do_not_draw = 0;
 
 static int reader_is_active;	// Flag raised when reader is succesfully runned
 								// purpose: we shouldn't process "leave" sequence if we call unload module but reader was not runed yet
@@ -66,8 +68,6 @@ int gui_read_init(const char* file)
     running = 1;
 
     static struct stat   st;
-
-    rbf_load_from_file(conf.reader_rbf_file, conf.reader_codepage);
 
     read_file = open(file, O_RDONLY, 0777);
     if (strcmp(file, conf.reader_file)!=0) {
@@ -113,12 +113,25 @@ static int read_fit_next_char(int ch) {
 
 //-------------------------------------------------------------------
 void gui_read_draw() {
+    if (do_not_draw)
+        return;
+    busy_drawing = 1;
+
+    static int first_draw = 1;
+    if (first_draw)
+    {
+        // font has to be loaded from here (SpyTask)
+        rbf_load_from_file(conf.reader_rbf_file, conf.reader_codepage);
+        first_draw = 0;
+    }
+
     if (conf.reader_autoscroll && !pause && get_tick_count()-last_time >= conf.reader_autoscroll_delay*1000 && (conf.reader_pos+read_on_screen)<read_file_size) {
         conf.reader_pos += read_on_screen;
         read_to_draw = 1;
     }
+
     if (read_to_draw) {
-        int n, i, ii, ll, new_word=1;
+        int n, m, i, ii, ll, new_word=1;
         
         xx=x; yy=y;
 
@@ -132,6 +145,12 @@ void gui_read_draw() {
                  if (yy < y+h)
                      draw_filled_rect(x, yy, x+w-1, y+h-1, MAKE_COLOR(BG_COLOR(conf.reader_color), BG_COLOR(conf.reader_color)));
                  break;
+            }
+            else if (n<0) {
+                // read failed
+                do_not_draw = 1;
+                busy_drawing = 0;
+                return;
             }
             i=0;
             while (i<n && yy<=y+h-rbf_font_height()) {
@@ -162,7 +181,14 @@ void gui_read_draw() {
                                     n=ii=n-i;
                                     read_on_screen+=i;
                                     i=0;
-                                    n+=read(read_file, buffer+n, READ_BUFFER_SIZE-n);
+                                    m=read(read_file, buffer+n, READ_BUFFER_SIZE-n);
+                                    if (m<0) {
+                                        // read failed
+                                        do_not_draw = 1;
+                                        busy_drawing = 0;
+                                        return;
+                                    }
+                                    n+=m;
                                     for (; ii<n && buffer[ii]!=' ' && buffer[ii]!='\t' && buffer[ii]!='\r' && buffer[ii]!='\n'; ++ii) {
                                         ll+=rbf_char_width(buffer[ii]);
                                     }
@@ -212,6 +238,7 @@ void gui_read_draw() {
     }
     gui_read_draw_batt();
     gui_read_draw_clock();
+    busy_drawing = 0;
 }
 
 //-------------------------------------------------------------------
@@ -267,12 +294,20 @@ void gui_read_kbd_leave()
         return;
 
     reader_is_active = 0;
-    rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
+
+    do_not_draw = 1;
+
+    while (busy_drawing)
+    {
+        msleep(10);
+    }
+
     if (read_file >= 0)
     {
         close(read_file);
         read_file=-1;
     }
+    rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
 
     running = 0;
 }
