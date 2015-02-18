@@ -70,8 +70,6 @@ int gui_read_init(const char* file)
 
     static struct stat   st;
 
-    rbf_load_from_file(conf.reader_rbf_file, conf.reader_codepage);
-
     read_file = open(file, O_RDONLY, 0777);
     if (strcmp(file, conf.reader_file)!=0) {
         conf.reader_pos = 0;
@@ -120,6 +118,11 @@ void gui_read_draw(int force_redraw)
     static int first_draw = 1;
     if (first_draw || force_redraw)
     {
+        if (first_draw)
+        {
+            // font has to be loaded from here (SpyTask)
+            rbf_load_from_file(conf.reader_rbf_file, conf.reader_codepage);
+        }
         draw_rectangle(camera_screen.disp_left, 0,
                        camera_screen.disp_right, y-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
         draw_rectangle(camera_screen.disp_left, y,
