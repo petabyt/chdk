@@ -237,7 +237,7 @@ long get_jogdial_direction(void)
     old_jogdial = new_jogdial;
     new_jogdial = rear_dial_position;
 
-    if      (old_jogdial > new_jogdial)     return JOGDIAL_LEFT;
-    else if (old_jogdial < new_jogdial)     return JOGDIAL_RIGHT;
+    if      (old_jogdial > new_jogdial)     return JOGDIAL_RIGHT;
+    else if (old_jogdial < new_jogdial)     return JOGDIAL_LEFT;
     else                                    return 0;
 }
