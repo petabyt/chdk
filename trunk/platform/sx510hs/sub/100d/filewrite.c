@@ -97,8 +97,8 @@ asm volatile (
 "loc_FF348784:\n"
 "    LDR     R0, [R4, #4] \n"
 "    CMN     R0, #1 \n"
-"    BEQ     fwt_close \n"  // --> Patched. Old value = 0xFF3487AC.
-"    BL      _Close \n"
+"    BEQ     loc_FF3487AC \n"
+"    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    MVN     R0, #0 \n"
 "    STR     R0, [R4, #4] \n"
 "    LDR     R0, =0x125CCC \n"
