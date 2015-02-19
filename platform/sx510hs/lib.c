@@ -208,10 +208,10 @@ void load_chdk_palette()
 
 void JogDial_CW(void)
 {
-    _PostLogicalEventForNotPowerType(0x872, 1);  // RotateJogDialRight (in table @ ????, fw 1.01a)
+    _PostLogicalEventToUI(0x872, 1);  // RotateJogDialRight (in table @ ????, fw 1.01a)
 }
 
 void JogDial_CCW(void)
 {
-    _PostLogicalEventForNotPowerType(0x873, 1);  // RotateJogDialLeft (in table @ ???, fw 1.01a)
+    _PostLogicalEventToUI(0x873, 1);  // RotateJogDialLeft (in table @ ???, fw 1.01a)
 }
