@@ -20,6 +20,10 @@ FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids
      $Otxtread.flt $Omemview.flt $Omodinsp.flt $Otetris.flt $Osnake.flt $Osudoku.flt $O_tbox.flt $O_osd_le.flt \
      $O_hexbox.flt $Oubasic.flt $Olua.flt $Ocpuinfo.flt $Ouseredit.flt $Oeyefi.flt $Ohisto.flt $Oshothist.flt
 
+# Include optional rules for user defined modules
+# Can be used to add additional modules to FLTS and add the rules to build them
+-include makefile_usermodules.inc
+
 all: $(FLTS)
 
 $O%.flt: $(llibc)/$Olibc.a
