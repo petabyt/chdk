@@ -50,6 +50,9 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE       1 
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
+    #define CAM_HAS_ND_FILTER               1
+    #define  CAM_HAS_NATIVE_ND_FILTER       1
+
     // camera name
     #define PARAM_CAMERA_NAME               4 // parameter number for GetParameterData
     #undef  CAM_SENSOR_BITS_PER_PIXEL
