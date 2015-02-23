@@ -60,6 +60,8 @@
     #define CAM_HAS_ND_FILTER                   1
 
     #define CAM_HAS_VIDEO_BUTTON                1
+    #define CAM_HAS_MOVIE_DIGEST_MODE           1   // camera doesn't actually have digest mode, this is needed by is_video_recording
+    #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
 
     #define  CAM_EXT_TV_RANGE                   1    // CHDK can make exposure time longer than 64s
 

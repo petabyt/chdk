@@ -5,7 +5,7 @@
 #include "platform.h"
 #include "core.h"
 
-//#define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
+#define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
 static long *nrflag = (long*)(0xA8F8+0xC); // sx170is 100a Found @ 0xffa2feb4 (0xA8F8) & 0xffa2feb8 (+0xC)
 //#define PAUSE_FOR_FILE_COUNTER 350  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
@@ -441,7 +441,7 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_FFADA20C_my @ 0xFFADA20C - 0xFFADA290, length=34
+//** sub_FFADA20C_my @ 0xFFADA20C - 0xFFADA28C, length=33
 void __attribute__((naked,noinline)) sub_FFADA20C_my() {
 asm volatile (
 "    STMFD   SP!, {R2-R10,LR} \n"
@@ -478,66 +478,10 @@ asm volatile (
 "    MOVNE   R1, R4 \n"
 "    MOVEQ   R1, #0 \n"
 "    BL      sub_FF8BDC88 \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FFAD9EF0_my \n"  // --> Patched. Old value = 0xFFAD9EF0.
-"    LDR     PC, =0xFFADA294 \n"  // Continue in firmware
-);
-}
-
-/*************************************************************/
-//** sub_FFAD9EF0_my @ 0xFFAD9EF0 - 0xFFAD9F9C, length=44
-void __attribute__((naked,noinline)) sub_FFAD9EF0_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    LDR     R6, =0x1D758 \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, [R6, #0xFC] \n"
-"    LDR     R5, =0xD700 \n"
-"    CMP     R0, #0 \n"
-"    ADDNE   R0, R6, #0x100 \n"
-"    LDRNEH  R0, [R0, #0xAE] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FFAD9F40 \n"
-"    BL      _GetCCDTemperature \n"
-"    MOV     R1, R0 \n"
-"    STRH    R0, [R4, #0xB0] \n"
-"    LDR     R0, =0x1D950 \n"
-"    LDRSH   R2, [R0, #0xC] \n"
-"    LDRH    R0, [R6, #0x5E] \n"
-"    BL      sub_FFA2FE14 \n"
-"    STR     R0, [R5] \n"
-
-"loc_FFAD9F40:\n"
 "    BL      wait_until_remote_button_is_released\n" // added
 "    BL      capt_seq_hook_set_nr\n"                 // added
-"    LDR     R0, [R4, #0x20] \n"
-"    MOV     R1, #0 \n"
-"    CMP     R0, #0 \n"
-"    STRNE   R1, [R5] \n"
-"    LDR     R0, [R5] \n"
-"    CMP     R0, #0 \n"
-"    STREQH  R1, [R4, #0x18] \n"
-"    BEQ     loc_FFAD9F7C \n"
-"    CMP     R0, #1 \n"
-"    STREQH  R0, [R4, #0x18] \n"
-"    BEQ     loc_FFAD9F7C \n"
-"    LDR     R2, =0x343 \n"
-"    LDR     R1, =0xFFAD9AE0 /*'SsCaptureCommon.c'*/ \n"
-"    MOV     R0, #0 \n"
-"    BL      _DebugAssert \n"
-
-"loc_FFAD9F7C:\n"
-"    LDR     R0, [R4, #0x1C] \n"
-"    MOV     R3, #2 \n"
-"    ADD     R2, R4, #0x18 \n"
-"    MOV     R1, #0x33 \n"
-"    BL      sub_FF88B388 \n"
-"    LDR     R0, [R5] \n"
-"    MOV     R0, R0, LSL#16 \n"
-"    MOV     R0, R0, LSR#16 \n"
-"    LDMFD   SP!, {R4-R6,PC} \n"
+"    MOV     R0, R4 \n"
+"    LDR     PC, =0xFFADA290 \n"  // Continue in firmware
 );
 }
 
