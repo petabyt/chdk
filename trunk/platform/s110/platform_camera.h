@@ -159,4 +159,7 @@
     #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_MF                   1
 
+    #undef  CAM_MARKET_ISO_BASE
+    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
+
 //--------------------------------------------------
