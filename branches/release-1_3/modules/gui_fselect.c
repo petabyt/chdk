@@ -532,8 +532,7 @@ static void gui_fselect_read_dir(const char* dir)
 {
     DIR         *d;
     fs_dirent   de;
-    fitem  *ptr, *sbuf;
-    int    i;
+    int         fndParent = 0;  // Set if parent ".." directory returned by fs_readdir (does not exist on exFat paritions)
 
     gui_fselect_free_data();
 
@@ -545,9 +544,21 @@ static void gui_fselect_read_dir(const char* dir)
     if (d)
     {
         while (fs_readdir(d, &de, dir))
+        {
             if (!de.deleted && !de.iscurrent)
+            {
                 add_item(&items, de.de->d_name, de.attr, de.size, de.mtime, 0);
+                if (de.isparent)
+                    fndParent = 1;
+            }
+        }
         closedir(d);
+    }
+
+    // If not reading root directory, and ".." not found, then add it (for exFat partitions)
+    if ((strlen(dir) > 2) && !fndParent)
+    {
+        add_item(&items, "..", DOS_ATTR_DIRECTORY, 0, 0, 0);
     }
 
     sort_list(&items);
