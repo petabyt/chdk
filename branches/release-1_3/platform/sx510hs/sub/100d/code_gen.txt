@@ -343,9 +343,9 @@ FILE filewrite.c
 //////////////////////////////////////////////////////////////
 FUNC sig=task_FileWrite name=filewritetask
 ASM
-FW 45
+FW 46
 PATCHSUB name=fwt_close
-FW 18
+FW 17
 >>>
 
 //mod start
