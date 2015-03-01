@@ -5,8 +5,8 @@
 #include "platform.h"
 #include "core.h"
 
-//#define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
-static long *nrflag = (long*)(0xcf68+0xC); // sx510 101a Found @ 0xff2adfe4 (0xcf68) & 0xff2adfe8 (+0xC)
+#define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
+static long *nrflag = (long*)(0xCF68+0xC); // sx510 101a Found @ 0xff2adfe4 (0xcf68) & 0xff2adfe8 (+0xC)
 #define PAUSE_FOR_FILE_COUNTER 350  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
@@ -490,7 +490,7 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_FF371CF4_my @ 0xFF371CF4 - 0xFF371DC0, length=52
+//** sub_FF371CF4_my @ 0xFF371CF4 - 0xFF371DBC, length=51
 void __attribute__((naked,noinline)) sub_FF371CF4_my() {
 asm volatile (
 "    STMFD   SP!, {R2-R10,LR} \n"
@@ -551,42 +551,10 @@ asm volatile (
 "    MOVNE   R1, R4 \n"
 "    MOVEQ   R1, #0 \n"
 "    BL      sub_FF0D0290 \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF3719D8_my \n"  // --> Patched. Old value = 0xFF3719D8.
-"    LDR     PC, =0xFF371DC4 \n"  // Continue in firmware
-);
-}
-
-/*************************************************************/
-//** sub_FF3719D8_my @ 0xFF3719D8 - 0xFF371A28, length=21
-void __attribute__((naked,noinline)) sub_FF3719D8_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    LDR     R6, =0x2401C \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, [R6, #0xFC] \n"
-"    LDR     R5, =0x101D8 \n"
-"    CMP     R0, #0 \n"
-"    ADDNE   R0, R6, #0x100 \n"
-"    LDRNEH  R0, [R0, #0xAE] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FF371A28 \n"
-"    BL      _GetCCDTemperature \n"
-"    MOV     R1, R0 \n"
-"    STRH    R0, [R4, #0xB0] \n"
-"    LDR     R0, =0x24214 \n"
-"    LDRSH   R2, [R0, #0xC] \n"
-"    LDRH    R0, [R6, #0x5E] \n"
-"    BL      sub_FF2ADF44 \n"
-"    STR     R0, [R5] \n"
-
-"loc_FF371A28:\n"
 "    BL      wait_until_remote_button_is_released\n" // added
 "    BL      capt_seq_hook_set_nr\n"                 // added
-"    LDR     R0, [R4, #0x20] \n"
-"    LDR     PC, =0xFF371A2C \n"  // Continue in firmware
+"    MOV     R0, R4 \n"
+"    LDR     PC, =0xFF371DC0 \n"  // Continue in firmware
 );
 }
 

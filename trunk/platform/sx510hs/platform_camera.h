@@ -70,6 +70,9 @@
     #undef CAM_CHDK_HAS_EXT_VIDEO_MENU
 //    #define CAM_VIDEO_QUALITY_ONLY            1
 //    #define CAM_CHDK_HAS_EXT_VIDEO_MENU       1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1   //Camera doesn't actually have MOVIE_DIGEST_MOVIE, but this is required by is_video_recording.
+                                                //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works    
 
     // TODO
 //    #define CAM_AF_SCAN_DURING_VIDEO_RECORD   1
