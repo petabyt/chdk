@@ -93,14 +93,15 @@
 
     #define CAM_JPEG_WIDTH                      4034
     #define CAM_JPEG_HEIGHT                     3040
-    // S110 native RAW converted to DNG's EXIF data: Active Area
+    // S110 native RAW converted to DNG's EXIF had Active Area Y1=11, Y2=3059.
+    // Changed to even values due to CHDK code requirements
     #define CAM_ACTIVE_AREA_X1                  104
-    #define CAM_ACTIVE_AREA_Y1                  11
+    #define CAM_ACTIVE_AREA_Y1                  12
     #define CAM_ACTIVE_AREA_X2                  4152
-    #define CAM_ACTIVE_AREA_Y2                  3059
-    // S110 native RAW converted to DNG's EXIF data: CFA Pattern
-    #define cam_CFAPattern                      0x02010100 // [Red,Green][Green,Blue]
-
+    #define CAM_ACTIVE_AREA_Y2                  3058
+    // S110 native RAW converted to DNG's EXIF data: CFA Pattern was 0x02010100 // [Red,Green][Green,Blue]
+    // changed to [Green,Blue][Red,Green] to reflect CHDK active area
+    #define cam_CFAPattern                      0x01000201
     #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData - Camera Model name
     #define PARAM_OWNER_NAME                    7       // parameter number for GetParameterData - Owner name
     #define PARAM_DISPLAY_MODE1                 59      // param number for LCD display mode when camera in playback
