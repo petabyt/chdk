@@ -280,6 +280,19 @@
 #endif
 #endif
 
+// sanity check platform_camera.h defined values for some common errors
+#if (CAM_ACTIVE_AREA_X1&1) || (CAM_ACTIVE_AREA_Y1&1) || (CAM_ACTIVE_AREA_X2&1) || (CAM_ACTIVE_AREA_Y2&1)
+    #error "CAM_ACTIVE_AREA values must be even"
+#endif
+
+#if (CAM_ACTIVE_AREA_X2 - CAM_ACTIVE_AREA_X1) < CAM_JPEG_WIDTH
+    #error "CAM_JPEG_WIDTH larger than active area"
+#endif
+
+#if (CAM_ACTIVE_AREA_Y2 - CAM_ACTIVE_AREA_Y1) < CAM_JPEG_HEIGHT
+    #error "CAM_JPEG_HEIGHT larger than active area"
+#endif
+
 //==========================================================
 // END of Camera-dependent settings
 //==========================================================

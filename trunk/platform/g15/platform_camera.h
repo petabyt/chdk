@@ -95,13 +95,16 @@
 
     #define CAM_JPEG_WIDTH                      4034
     #define CAM_JPEG_HEIGHT                     3040
-    // G15 native RAW converted to DNG's EXIF data: Active Area
+    // G15 native RAW converted to DNG's EXIF had Active Area Y1=11, Y2=3059.
+    // Changed to even values due to CHDK code requirements
     #define CAM_ACTIVE_AREA_X1                  104
-    #define CAM_ACTIVE_AREA_Y1                  11
+    #define CAM_ACTIVE_AREA_Y1                  12
     #define CAM_ACTIVE_AREA_X2                  4152
-    #define CAM_ACTIVE_AREA_Y2                  3059
+    #define CAM_ACTIVE_AREA_Y2                  3058
     // G15 native RAW converted to DNG's EXIF data: CFA Pattern
-    #define cam_CFAPattern                      0x02010100 // [Red,Green][Green,Blue]
+//    #define cam_CFAPattern                      0x02010100 // [Red,Green][Green,Blue]
+    // adjusted for active area change
+    #define cam_CFAPattern                      0x01000201 // [Green,Blue][Red,Green]
 
     #define PARAM_CAMERA_NAME                   4       // parameter number for GetParameterData - Camera Model name
     #define PARAM_OWNER_NAME                    7       // parameter number for GetParameterData - Owner name
