@@ -36,9 +36,11 @@
     #define CAM_JPEG_WIDTH                  4320
     #define CAM_JPEG_HEIGHT                 3240
     #define CAM_ACTIVE_AREA_X1              16
-    #define CAM_ACTIVE_AREA_Y1              29
+//    #define CAM_ACTIVE_AREA_Y1              29
+    #define CAM_ACTIVE_AREA_Y1              30
     #define CAM_ACTIVE_AREA_X2              4352
-    #define CAM_ACTIVE_AREA_Y2              3275
+//    #define CAM_ACTIVE_AREA_Y2              3275
+    #define CAM_ACTIVE_AREA_Y2              3274
 
     #define    CAM_DNG_LENS_INFO            { 50,10, 200,10, 28,10, 59,10 } // See comments in camera.h
 
@@ -47,8 +49,8 @@
     #undef    CAM_SENSOR_BITS_PER_PIXEL
     #define    CAM_SENSOR_BITS_PER_PIXEL    12
 
-    #define    cam_CFAPattern               0x01000201    // Green  Blue  Red  Green
-//    #define    cam_CFAPattern               0x02010100    // Red  Green  Green  Blue
+//    #define    cam_CFAPattern               0x01000201    // Green  Blue  Red  Green
+    #define    cam_CFAPattern               0x02010100    // Red  Green  Green  Blue
 
     #define CAM_COLORMATRIX1                             \
     827547, 1000000, -290458, 1000000, -126086, 1000000, \

@@ -58,10 +58,16 @@
     // cropping
     #define CAM_JPEG_WIDTH                  3648
     #define CAM_JPEG_HEIGHT                 2736
-    #define CAM_ACTIVE_AREA_X1              344
-    #define CAM_ACTIVE_AREA_Y1              24
-    #define CAM_ACTIVE_AREA_X2              3991
-    #define CAM_ACTIVE_AREA_Y2              2759
+//  original definition, makes active < jpeg. jpeg matches canon specs
+//    #define CAM_ACTIVE_AREA_X1              344
+//    #define CAM_ACTIVE_AREA_Y1              24
+    #define CAM_ACTIVE_AREA_X1              340
+    #define CAM_ACTIVE_AREA_Y1              22
+//  odd values in original definition rounded
+//    #define CAM_ACTIVE_AREA_X2              3991
+//    #define CAM_ACTIVE_AREA_Y2              2759
+    #define CAM_ACTIVE_AREA_X2              3990
+    #define CAM_ACTIVE_AREA_Y2              2758
     // camera name
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
 

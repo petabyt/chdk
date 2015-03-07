@@ -75,7 +75,9 @@
     // From G15 native RAW file as converted to DNG using Adobe DNG Converter
     // http://www.adobe.com/support/downloads/product.jsp?product=106&platform=Windows
     // Matrices from converted DNG's EXIF data
-    #define cam_CFAPattern                  0x02010100 // = [Red,Green][Green,Blue]
+// CFA adjusted for active area
+//    #define cam_CFAPattern                  0x02010100 // = [Red,Green][Green,Blue]
+    #define cam_CFAPattern                  0x01000201 // = [Green,Blue][Red,Green]
     #define cam_CalibrationIlluminant1      17      // Standard Light A
     #define cam_CalibrationIlluminant2      21      // D65
     #define CAM_COLORMATRIX1    \
@@ -96,13 +98,15 @@
       -420, 10000,  -1341, 10000,  10012, 10000
     #define CAM_DNG_EXPOSURE_BIAS 0,1
 
+    // actual large jpeg 4000 x 3000
     #define CAM_JPEG_WIDTH                  4048
-    #define CAM_JPEG_HEIGHT                 3048
-    // S100 native RAW converted to DNG's EXIF data: Active Area
+    #define CAM_JPEG_HEIGHT                 3040
+    // S100 native RAW converted to DNG's EXIF had Active Area Y1=11, Y2=3059.
+    // Changed to even values due to CHDK code requirements
     #define CAM_ACTIVE_AREA_X1              104
-    #define CAM_ACTIVE_AREA_Y1              11
+    #define CAM_ACTIVE_AREA_Y1              12
     #define CAM_ACTIVE_AREA_X2              4152
-    #define CAM_ACTIVE_AREA_Y2              3059
+    #define CAM_ACTIVE_AREA_Y2              3058
 
     #define CAM_DATE_FOLDER_NAMING          0x400
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
