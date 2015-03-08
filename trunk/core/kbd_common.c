@@ -31,6 +31,9 @@ USB_MASK
 ** physw_status index for USB bit
 USB_IDX
 
+** get_usb_bit should use the following MMIO directly
+USB_MMIO
+
 ** battery cover override - requires additional supporting code
 BATTCOVER_IDX
 BATTCOVER_FLAG 
@@ -133,6 +136,16 @@ void kbd_update_physw_bits(void)
     }
 #endif
 }
+
+// if the port reads an MMIO directly to get USB +5v status, use generic get_usb_bit
+// others must define in platform kbd.c
+#ifdef USB_MMIO
+int get_usb_bit() 
+{
+    volatile int *mmio = (void*)USB_MMIO;
+    return(( *mmio & USB_MASK)==USB_MASK); 
+}
+#endif
 
 #ifdef KBD_SIMULATE_VIDEO_KEY
 static int is_video_key_pressed = 0;
