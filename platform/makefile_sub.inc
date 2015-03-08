@@ -11,7 +11,7 @@ FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
 #OBJS= should be defined in */sub/*/Makefile for camera files
 #add platform dependent 'core' files (build as THUMB)
 OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
-     gui.thm.o kbd_process.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
+     gui.thm.o kbd_process.thm.o kbd_common.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
      shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o
 
 capt_seq.o: capt_seq.c $(platform)/generic/capt_seq.c

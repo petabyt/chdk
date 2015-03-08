@@ -100,6 +100,8 @@
     #define CAM_OPTIONAL_EXTRA_BUTTON       1   // allow the Power button to be remapped in ALT mode
     #define CAM_EXTRA_BUTTON_NAMES          { "OFF", "Display" }
     #define CAM_EXTRA_BUTTON_OPTIONS        { 0, KEY_DISPLAY }
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1

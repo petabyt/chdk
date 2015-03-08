@@ -1,0 +1,274 @@
+/*
+common low level keyboard handling functions
+
+platform_kbd.h defines
+** controls for kbd.c implementation
+* this camera has a totally custom keyboard code, don't build common code
+KBD_CUSTOM_ALL
+
+* non-standard key state update
+KBD_CUSTOM_UPDATE_KEY_STATE
+
+* use logical event to simulate "video" button from script
+* for touchscreen cameras without a physical video button
+KBD_SIMULATE_VIDEO_KEY
+
+** defines for hardware bits etc
+
+* key masks - for keys used by CHDK in alt mode
+* bitwise OR of all keymap canon key values
+KEYS_MASK0
+KEYS_MASK1
+KEYS_MASK2
+
+** SD card read only bit, not defined for micro-sd
+SD_READONLY_FLAG
+** physw_status index for readonly bit
+SD_READONLY_IDX
+
+** USB +5v bit
+USB_MASK
+** physw_status index for USB bit
+USB_IDX
+
+** battery cover override - requires additional supporting code
+BATTCOVER_IDX
+BATTCOVER_FLAG 
+
+* override SD card door for cameras micro-sd cams that use it for autoboot
+SD_DOOR_OVERRIDE 1
+* bit for SD door
+SD_DOOR_FLAG
+* physw_status index for SD door
+SD_DOOR_IDX
+*/
+#include "platform.h"
+#include "core.h"
+#include "keyboard.h"
+#include "kbd_common.h"
+#include "conf.h"
+
+// for KBD_SIMULATE_VIDEO_KEY
+#include "levent.h"
+
+// if KBD_CUSTOM_ALL, platform kbd.c provides everything, this file is noop
+// when adding funtionality, grep KBD_CUSTOM_ALL and update accordingly
+#ifndef KBD_CUSTOM_ALL
+extern long physw_status[3];
+extern int forced_usb_port;
+
+#ifndef KBD_CUSTOM_UPDATE_KEY_STATE
+void kbd_update_key_state(void)
+{
+    kbd_prev_state[0] = kbd_new_state[0];
+    kbd_prev_state[1] = kbd_new_state[1];
+    kbd_prev_state[2] = kbd_new_state[2];
+
+#ifdef CAM_TOUCHSCREEN_UI
+    kbd_prev_state[3] = kbd_new_state[3];
+#endif
+
+    // note assumed kbd_pwr_on has been called if needed
+    kbd_fetch_data(kbd_new_state);
+    if (kbd_process() == 0){
+        // leave it alone...
+        physw_status[0] = kbd_new_state[0];
+        physw_status[1] = kbd_new_state[1];
+        physw_status[2] = kbd_new_state[2];
+
+#ifdef CAM_HAS_JOGDIAL
+        jogdial_control(0);
+#endif
+    } else {
+        // override keys
+        // TODO doesn't handle inverted logic yet
+        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
+
+        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
+
+        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
+
+#ifdef CAM_HAS_JOGDIAL
+        if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run) {
+            jogdial_control(1);
+            get_jogdial_direction();
+        }
+        else if (jogdial_stopped && camera_info.state.state_kbd_script_run) {
+            jogdial_control(0);
+        }
+#endif
+    }
+}
+#endif // KBD_CUSTOM_UPDATE_KEY_STATE
+
+void kbd_update_physw_bits(void)
+{
+    // TODO could save the real USB bit to avoid low level calls in get_usb_bit when immediate update not needed
+    if (forced_usb_port) {
+        physw_status[USB_IDX] = physw_status[USB_IDX] | USB_MASK;
+    } else if (conf.remote_enable) {
+        // TODO some cameras (e.g. a530, a540) didn't mask USB with remote,
+        // because +5v has no effect on canon firmware in rec mode
+        physw_status[USB_IDX] = physw_status[USB_IDX] & ~(USB_MASK);
+    }
+// microsd cams don't have a read only bit
+#ifdef SD_READONLY_IDX
+    physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
+#endif
+
+// n and possibly other micro SD cams uses door bit for autoboot, force back to closed (?)
+#ifdef SD_DOOR_OVERRIDE
+    physw_status[SD_DOOR_IDX] |= SD_DOOR_FLAG;                // override SD card door switch
+#endif
+
+#ifdef OPT_RUN_WITH_BATT_COVER_OPEN
+    physw_status[BATTCOVER_IDX] = physw_status[BATTCOVER_IDX] | BATTCOVER_FLAG;
+#endif
+
+#ifdef CAM_HOTSHOE_OVERRIDE
+    if (conf.hotshoe_override == 1) {
+        physw_status[HOTSHOE_IDX] = physw_status[HOTSHOE_IDX] & ~HOTSHOE_FLAG;
+    } else if (conf.hotshoe_override == 2) {
+        physw_status[HOTSHOE_IDX] = physw_status[HOTSHOE_IDX] | HOTSHOE_FLAG;
+    }
+#endif
+}
+
+#ifdef KBD_SIMULATE_VIDEO_KEY
+static int is_video_key_pressed = 0;
+#endif
+
+void kbd_key_press(long key)
+{
+#ifdef KBD_SIMULATE_VIDEO_KEY
+    if (key == KEY_VIDEO && !is_video_key_pressed)
+    {
+        // TODO define for ID would be more efficient
+        PostLogicalEventToUI(levent_id_for_name("PressMovieButton"),0);
+        is_video_key_pressed = 1;
+        // TODO not clear if this should return, or set state too
+        return;
+    }    
+#endif
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
+            return;
+        }
+    }
+}
+
+void kbd_key_release(long key)
+{
+#ifdef KBD_SIMULATE_VIDEO_KEY
+    if (key == KEY_VIDEO && is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
+        is_video_key_pressed = 0;
+        return;
+    }
+#endif
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
+            return;
+        }
+    }
+}
+
+void kbd_key_release_all()
+{
+    kbd_mod_state[0] |= KEYS_MASK0;
+    kbd_mod_state[1] |= KEYS_MASK1;
+    kbd_mod_state[2] |= KEYS_MASK2;
+// touch screen virtual keys
+#ifdef CAM_TOUCHSCREEN_UI
+    kbd_mod_state[3] |= 0xFFFFFFFF;
+#endif
+}
+
+long kbd_is_key_pressed(long key)
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+        }
+    }
+    return 0;
+}
+
+long kbd_is_key_clicked(long key)
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (keymap[i].hackkey == key){
+            return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
+                    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
+        }
+    }
+    return 0;
+}
+
+long kbd_get_pressed_key()
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
+            return keymap[i].hackkey;
+        }
+    }
+    return 0;
+}
+
+long kbd_get_clicked_key()
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++){
+        if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
+            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)){
+            return keymap[i].hackkey;
+        }
+    }
+    return 0;
+}
+
+// TODO different for cameras with an MF (s2, s3, s5 etc)
+#ifdef CAM_USE_ZOOM_FOR_MF
+long kbd_use_zoom_as_mf() {
+    static long zoom_key_pressed = 0;
+
+    if (kbd_is_key_pressed(KEY_ZOOM_IN) && camera_info.state.mode_rec) {
+        if (shooting_get_focus_mode()) {
+            kbd_key_release_all();
+            kbd_key_press(KEY_RIGHT);
+            zoom_key_pressed = KEY_ZOOM_IN;
+            return 1;
+        }
+    } else {
+        if (zoom_key_pressed==KEY_ZOOM_IN) {
+            kbd_key_release(KEY_RIGHT);
+            zoom_key_pressed = 0;
+            return 1;
+        }
+    }
+    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && camera_info.state.mode_rec) {
+        if (shooting_get_focus_mode()) {
+            kbd_key_release_all();
+            kbd_key_press(KEY_LEFT);
+            zoom_key_pressed = KEY_ZOOM_OUT;
+            return 1;
+        }
+    } else {
+        if (zoom_key_pressed==KEY_ZOOM_OUT) {
+            kbd_key_release(KEY_LEFT);
+            zoom_key_pressed = 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif // CAM_USE_ZOOM_FOR_MF
+#endif // KBD_CUSTOM_ALL

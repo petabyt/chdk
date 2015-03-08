@@ -19,7 +19,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(kbd_pwr_off                          ,0xff844148) //  2 64%    *** != 0x00000000
+NHSTUB(kbd_pwr_off                            ,0xff844148) //  2 64%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa6ac28 -> ffb5a440
