@@ -3,7 +3,7 @@
 #include "platform.h"
 #include "core.h"
 #include "conf.h"
-#include "keyboard.h"
+#include "kbd_common.h"
 #include "touchscreen.h"
 #include "levent.h"
 #include "gui.h"
@@ -16,22 +16,9 @@
 // (For 'nekut' whose camera has a broken playback button - http://chdk.setepontos.com/index.php?topic=6634.msg75039#msg75039) 
 //#define   TS_PLAY_POWER_HACK  1 
 
-typedef struct {
-	short       grp;
-	short       hackkey;
-	long        canonkey;
-    short       x1, y1, x2, y2, sc;
-    short       redraw;
-    char        *nm, *nm2;
-    int         min_gui_mode, max_gui_mode, cam_mode_mask;
-    int         *conf_val;
-    const char* (*chg_val)(int,int);
-    int         *conf_disable;
-} KeyMap;
-
-static long kbd_new_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_new_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long touch_panel_state;
 
 extern void _GetKbdState(long*);
@@ -52,22 +39,6 @@ extern void _GetKbdState(long*);
 //		for (i=0; i<0x900000; i++) { asm volatile ( "nop\n" ); }
 ////	}
 //}
-
-#define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x00009000)
-#define KEYS_MASK2 (0x00000a00) 
-
-#define SD_READONLY_FLAG (0x20000)
-#define USB_MASK (0x4000000)
-#define USB_IDX  2
-
-int get_usb_bit() 
-{
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
-}
 
 #define TS_KEY_TOGGLE_RAW   200
 #define TS_KEY_TOGGLE_ZEBRA 201
@@ -109,7 +80,7 @@ static const char* simulate_power_press(int change, int arg)
 } 
 #endif
 
-static KeyMap keymap[] = {
+KeyMap keymap[] = {
 
 //  { 1, TOUCH_SCREEN       , 0x00000008 }, // Touch screen panel
     { 1, KEY_ZOOM_IN        , 0x00001000 }, // Found @0xff3d144c, levent 0x02
@@ -322,52 +293,22 @@ int ts_process_touch()
     return rv;
 }
 
-long __attribute__((naked)) wrap_kbd_p1_f() ;
+//-----------------------------------------------------------------------------
 
-
-static void __attribute__((noinline)) mykbd_task_proceed()
+int get_usb_bit()
 {
-	while (physw_run){
-		_SleepTask(physw_sleep_delay);
-
-		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
-			_kbd_p2_f();
-		}
-	}
+    long usb_physw[3];
+    usb_physw[USB_IDX] = 0;
+    _kbd_read_keys_r2(usb_physw);
+    return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ;
 }
 
-// no stack manipulation needed here, since we create the task directly
-void __attribute__((naked,noinline))
-mykbd_task()
+void kbd_fetch_data(long *dst)
 {
-    mykbd_task_proceed();
+    _GetKbdState(dst);
+    _kbd_read_keys_r2(dst);
 
-    _ExitTask();
-}
-
-long __attribute__((naked,noinline)) wrap_kbd_p1_f()
-{
-	asm volatile(
-		"STMFD   SP!, {R1-R7,LR}\n"
-		"MOV     R5, #0\n"
-		//"BL      _kbd_read_keys \n"
-		"BL		my_kbd_read_keys\n"
-		"B       _kbd_p1_f_cont\n"
-	);
-	return 0; // shut up the compiler
-}
-
-void my_kbd_read_keys()
-{
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
-	kbd_prev_state[3] = kbd_new_state[3];
-
-	_GetKbdState(kbd_new_state);
-	_kbd_read_keys_r2(kbd_new_state);
-
-	static int was_active = 0;
+    static int was_active = 0;
 
     if (touch_screen_active == 2)               // Touch screen activated?
     {
@@ -382,135 +323,37 @@ void my_kbd_read_keys()
     {
         kbd_new_state[3] = touch_panel_state = 0xFFFFFFFF;  // Clear out virtual button state
     }
-
-	if (kbd_process() == 0){
-		// leave it alone...
-          physw_status[0] = kbd_new_state[0];
-          physw_status[1] = kbd_new_state[1];
-          physw_status[2] = kbd_new_state[2];
-	} else {
-		// override keys
-		physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
-		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
-	}
-
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
 }
 
-
-/****************/
-static int is_video_key_pressed = 0;
-
-void kbd_key_press(long key)
+void my_kbd_read_keys()
 {
-	int i;
+    kbd_update_key_state();
+    kbd_update_physw_bits();
+}
 
-    if (key == KEY_VIDEO && !is_video_key_pressed)
-    {
-        PostLogicalEventToUI(levent_id_for_name("PressMovieButton"),0);
-        is_video_key_pressed = 1;
-        return;
+long __attribute__((naked,noinline)) wrap_kbd_p1_f()
+{
+    asm volatile(
+        "STMFD   SP!, {R1-R7,LR}\n"
+        "MOV     R5, #0\n"
+        //"BL      _kbd_read_keys \n"
+        "BL     my_kbd_read_keys\n"
+        "B       _kbd_p1_f_cont\n"
+    );
+    return 0; // shut up the compiler
+}
+
+// no stack manipulation needed here, since we create the task directly
+void __attribute__((naked,noinline))
+mykbd_task()
+{
+    while (physw_run){
+        _SleepTask(physw_sleep_delay);
+
+        if (wrap_kbd_p1_f() == 1){ // autorepeat ?
+            _kbd_p2_f();
+        }
     }
 
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key)
-		{
-			kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-			return;
-		}
-	}
+    _ExitTask();
 }
-
-void kbd_key_release(long key)
-{
-	int i;
-
-    if (key == KEY_VIDEO && is_video_key_pressed)
-    {
-        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
-        is_video_key_pressed = 0;
-        return;
-    }
-
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-void kbd_key_release_all()
-{
-    if (is_video_key_pressed)
-    {
-        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
-        is_video_key_pressed = 0;
-    }
-
-	kbd_mod_state[0] |= KEYS_MASK0;
-	kbd_mod_state[1] |= KEYS_MASK1;
-	kbd_mod_state[2] |= KEYS_MASK2;
-    kbd_mod_state[3] = 0xFFFFFFFF;
-}
-
-long kbd_is_key_pressed(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++)
-    {
-		if ((keymap[i].hackkey == key) && keymap[i].canonkey)
-        {
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-		}
-	}
-	return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++)
-    {
-		if ((keymap[i].hackkey == key) && keymap[i].canonkey)
-        {
-			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-			       ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-		}
-	}
-	return 0;
-}
-
-long kbd_get_pressed_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++)
-    {
-		if (keymap[i].canonkey && ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
-        {
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
-long kbd_get_clicked_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++)
-    {
-		if (keymap[i].canonkey &&
-            ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
-        {
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-

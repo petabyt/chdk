@@ -24,7 +24,7 @@
 //NHSTUB(ExitFromCompensationEVF              ,0xff82571c) //104        *** != 0x00000000
 //NHSTUB(UnlockAF                             ,0xff825624) //120        *** != 0xff85e924
 //NHSTUB(exmem_free                           ,0xff86c888) //103        *** != 0xff86c7b0
-//NHSTUB(kbd_pwr_off                          ,0xff8470e4) //  2 64%    *** != 0x00000000
+NHSTUB(kbd_pwr_off                            ,0xff8470e4) //  2 64%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa54a9c -> ffb32f18
