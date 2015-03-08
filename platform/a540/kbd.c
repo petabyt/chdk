@@ -1,18 +1,7 @@
 #include "lolevel.h"
 #include "platform.h"
-//#include "conf.h"
-//#include "core.h"
 #include "keyboard.h"
 #include "kbd_common.h"
-
-#if 0
-#include <stdlib.h>
-
-static long alt_mode_key_mask = 0x000001000; // =  KEY_PRINT
-static long alt_mode_key_reg  = 2;
-
-#include "../generic/kbd.c"
-#endif
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
@@ -37,19 +26,8 @@ KeyMap keymap[] = {
 	{2,KEY_DISPLAY	, 0x00000400 },
 	{2,KEY_PRINT	, 0x00001000 },
 	{2,KEY_ERASE	, 0x00000800 },
-//        { KEY_DUMMY	, 0x00001000 },
 	{0, 0, 0 }
 };
-
-// TODO should move to common
-int get_usb_bit() 
-{
-    volatile long *mmio2 = (void*)0xc0220208;
-
-	long x = *mmio2;
-
-	return(( x & USB_MASK)==USB_MASK); 
-}
 
 #define NEW_SS (0x2000)
 

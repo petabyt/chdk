@@ -10,4 +10,7 @@
 #define USB_IDX 2
 #define USB_MASK 0x4000
 
+// MMIO to read USB +5v directly, for get_usb_bit
+#define USB_MMIO 0xc0220208
+
 #endif
