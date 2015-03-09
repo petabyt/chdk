@@ -3,8 +3,8 @@
 
 #define KEYS_MASK0 0x00000000
 #define KEYS_MASK1 0x00000000
-// TODO - carried over from old generic code, but not all bits used in key map
-#define KEYS_MASK2 0x00001FFF
+
+#define KEYS_MASK2 0x0000173F
 
 #define SD_READONLY_IDX 2
 #define SD_READONLY_FLAG 0x20000

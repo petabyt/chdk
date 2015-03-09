@@ -11,17 +11,17 @@ KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
      * for example
      */
-    {2, KEY_UP        , 0x00000001 }, // KEY_UP/KEY_ZOOM_IN 
-    {2, KEY_DOWN      , 0x00000002 }, // KEY_DOWN/KEY_ZOOM_OUT/KEY_ERASE
-    {2, KEY_LEFT      , 0x00000008 },
-    {2, KEY_RIGHT     , 0x00000004 },
-    {2, KEY_SET       , 0x00000100 },
-    {2, KEY_SHOOT_FULL, 0x00000030 }, // note 3 here!
+    {2, KEY_UP        ,      0x00000001 }, // KEY_UP/KEY_ZOOM_IN 
+    {2, KEY_DOWN      ,      0x00000002 }, // KEY_DOWN/KEY_ZOOM_OUT/KEY_ERASE
+    {2, KEY_LEFT      ,      0x00000008 },
+    {2, KEY_RIGHT     ,      0x00000004 },
+    {2, KEY_SET       ,      0x00000100 },
+    {2, KEY_SHOOT_FULL,      0x00000030 }, // note 3 here!
     {2, KEY_SHOOT_FULL_ONLY, 0x00000020 },
-    {2, KEY_SHOOT_HALF, 0x00000010 },
-    {2, KEY_MENU      , 0x00000400 },
-    {2, KEY_DISPLAY   , 0x00000200 },
-    {2, KEY_PRINT     , 0x00001000 }, // KEY_DOWN/KEY_ZOOM_OUT/KEY_ERASE
+    {2, KEY_SHOOT_HALF,      0x00000010 },
+    {2, KEY_MENU      ,      0x00000400 },
+    {2, KEY_DISPLAY   ,      0x00000200 },
+    {2, KEY_PRINT     ,      0x00001000 },
     {0, 0, 0 }
 };
 
