@@ -13,7 +13,7 @@
 #define SD_DOOR_FLAG    0x00080000 // SD card door switch
 #define SD_DOOR_IDX     2
 
-#define USB_MASK 0x00080000
+#define USB_MASK 0x10000000
 #define USB_IDX  2
 
 // simulate video button with levents
