@@ -70,9 +70,6 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 void my_kbd_read_keys()
 {
     kbd_update_key_state();
-
-//    _kbd_read_keys_r2(physw_status);
-
     kbd_update_physw_bits();
 }
 
@@ -81,15 +78,15 @@ void kbd_fetch_data(long *dst)
 {
     _GetKbdState(dst);
     _kbd_read_keys_r2(dst);
-
-    /*
-	// OK, FF8470CC
-    volatile long *mmio0 = (void*)0xc0220200;
-    volatile long *mmio1 = (void*)0xc0220204;
-    volatile long *mmio2 = (void*)0xc0220208;
-
-    dst[0] = *mmio0;
-    dst[1] = *mmio1;
-    dst[2] = *mmio2 & 0xffff;
-    */
 }
+
+/*
+// kb MMIOs, FF8470CC
+volatile long *mmio0 = (void*)0xc0220200;
+volatile long *mmio1 = (void*)0xc0220204;
+volatile long *mmio2 = (void*)0xc0220208;
+
+dst[0] = *mmio0;
+dst[1] = *mmio1;
+dst[2] = *mmio2 & 0xffff;
+*/
