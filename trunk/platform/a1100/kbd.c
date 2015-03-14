@@ -1,30 +1,15 @@
 #include "lolevel.h"
 #include "platform.h"
-#include "core.h"
-#include "conf.h"
 #include "keyboard.h"
-
-typedef struct {
-    short grp;
-    short hackkey;
-    long canonkey;
-} KeyMap;
-
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _platformsub_kbd_fetch_data(long*);
 
-#define KEYS_MASK0      (0x00000000)
-#define KEYS_MASK1      (0x0000FF00)
-#define KEYS_MASK2      (0x000000F0)
-
 #define NEW_SS          (0x2000)
-#define SD_READONLY_FLAG (0x20000)
-#define USB_MASK        (0x40000)
-#define USB_IDX  		2
 
 int get_usb_bit() 
 {
@@ -34,12 +19,9 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-#ifndef MALLOCD_STACK
-    static char kbd_stack[NEW_SS];
-#endif
+static char kbd_stack[NEW_SS];
 
-
-static KeyMap keymap[] = {
+KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
     * for example
     */
@@ -89,11 +71,7 @@ void __attribute__((naked,noinline)) mykbd_task()
 	register int i;
 	register long *newstack;
 
-#ifndef MALLOCD_STACK
 	newstack = (void*)kbd_stack;
-#else
-	newstack = malloc(NEW_SS);
-#endif
 
 	for (i=0;i<NEW_SS/4;i++)
 		newstack[i]=0xdededede;
@@ -134,127 +112,17 @@ void kbd_fetch_data(long *dst)
     dst[0] = *mmio0;
     dst[1] = *mmio1;
     dst[2] = *mmio2 & 0xffff;
-//  dst[2] = *mmio2;
 }
 
 void my_kbd_read_keys()
 {
-    kbd_prev_state[0] = kbd_new_state[0];
-    kbd_prev_state[1] = kbd_new_state[1];
-    kbd_prev_state[2] = kbd_new_state[2];
-
     _kbd_pwr_on();
 
-    kbd_fetch_data(kbd_new_state);
-
-    if (kbd_process() == 0){
-    //if(1){
-        // leave it alone...
-            physw_status[0] = kbd_new_state[0];
-            physw_status[1] = kbd_new_state[1];
-            physw_status[2] = kbd_new_state[2];
-            //  if(imgbuf)physw_status[2]  = physw_status[2] | menu_key_mask ;  ----->no imgbuf
-    } else {
-        // override keys
-            physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
-            (kbd_mod_state[0] & KEYS_MASK0);
-
-            physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) |
-            (kbd_mod_state[1] & KEYS_MASK1);
-
-            physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
-           (kbd_mod_state[2] & KEYS_MASK2);
-    }
+    kbd_update_key_state();
 
     _kbd_read_keys_r2(physw_status);
 
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
+    kbd_update_physw_bits();
 
     _kbd_pwr_off();
-
-}
-
-/****************/
-
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-        if (keymap[i].hackkey == key){
-            kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-            return;
-        }
-    }
-}
-
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-        if (keymap[i].hackkey == key){
-            kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-            return;
-        }
-    }
-}
-
-void kbd_key_release_all()
-{
-    kbd_mod_state[0] |= KEYS_MASK0;
-    kbd_mod_state[1] |= KEYS_MASK1;
-    kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-        if (keymap[i].hackkey == key){
-            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-        }
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-        if (keymap[i].hackkey == key){
-            return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-        }
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-        if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-            return keymap[i].hackkey;
-        }
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-        if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
-            return keymap[i].hackkey;
-        }
-    }
-    return 0;
-}
-
-long kbd_use_zoom_as_mf() {
- return 0;
 }
