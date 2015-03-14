@@ -1,10 +1,14 @@
-
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
+
+// run blinker task
+//#define BLINKER 1
+#ifdef BLINKER
 #include "stdlib.h"
 #include "gui.h"
 #include "../../../../core/gui_draw.h"
+#endif
 
 const char * const new_sa = &_end;
 
@@ -26,6 +30,7 @@ void CreateTask_spytask();
 extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 
+#ifdef BLINKER
 void __attribute__((naked,noinline)) task_blinker() {
 
 int pwr_led_count = 0 ;
@@ -72,7 +77,7 @@ volatile long *blue_LED = (void*)LED_DP;
 void CreateTask_Blinker() {
         _CreateTask("Blinker", 0x1, 0x200, task_blinker, 0);
 };
-
+#endif
 
 void taskCreateHook(int *p) {
     p-=17;

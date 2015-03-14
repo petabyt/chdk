@@ -83,7 +83,9 @@ ASM
 PATCHSUB name=CreateTask_PhySw ref=0
 ENDASM
 >>>
+#ifdef BLINKER
    CreateTask_Blinker();
+#endif
 <<<
 ASM
 FW 3
