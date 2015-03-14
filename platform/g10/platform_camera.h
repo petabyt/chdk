@@ -33,7 +33,7 @@
     #define CAM_HAS_NATIVE_ND_FILTER        1   // Camera has built-in ND filter with Canon menu support for enable/disable
 
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
- 
+
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
 
@@ -61,7 +61,7 @@
     #define CAM_MULTIPART                   1
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000  // G10 auto found @0xff828844
-  
+
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
@@ -75,7 +75,7 @@
 
     #undef  CAM_USES_ASPECT_CORRECTION   
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
-    #undef CAM_BITMAP_WIDTH
+    #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
     #undef  EDGE_HMARGIN 
@@ -112,5 +112,7 @@
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
 
 //--------------------------------------------------
