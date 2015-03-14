@@ -9,9 +9,8 @@
 
 #include "lolevel.h"
 #include "platform.h"
-#include "core.h"
-#include "conf.h"
 #include "keyboard.h"
+#include "kbd_common.h"
 
 // changed for A2100IS
 #define LED_PWR 0xC0220014      // A2100IS Green - power led 
@@ -100,27 +99,14 @@ KEY_MASK2=F3C
 111100111100 = F3C
 */
 
-typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
-} KeyMap;
-
-
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-
-static long alt_mode_key_mask = 0x08000000;	// Key Print on A2100
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
 
 
 
-#define SD_READONLY_FLAG    0x00020000 // Found @0xffe7172c, levent 0x90a
-#define SD_READONLY_IDX     2
-#define USB_MASK            0x00040000 // Found @0xffe71738, levent 0x902
-#define USB_IDX             2
 
 int get_usb_bit() {
 	long usb_physw[3];
@@ -131,9 +117,6 @@ int get_usb_bit() {
 
 
 
-#define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x1F000000)
-#define KEYS_MASK2 (0xF3C) 
 /*
 PS2: 0xFF1424EB
 
@@ -148,8 +131,8 @@ PS3 on PLAY	: 0x204fbf
 
 
   { 1, KEY_PRINT         ,0x08000000 }, // Found manually
-/*/
-static KeyMap keymap[] = {
+*/
+KeyMap keymap[] = {
    { 1, KEY_SET             ,0x01000000 }, // Found @0xffe71624, levent 0x08 0x1010238, 8, 1,
    { 1, KEY_MENU            ,0x02000000 }, // Found @0xffe71630, levent 0x09
    { 1, KEY_DISPLAY         ,0x04000000 }, // Found @0xffe7163c, levent 0x0a 0x101023A, 0xA, 1
@@ -169,7 +152,15 @@ static KeyMap keymap[] = {
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
 
-static void __attribute__((noinline)) mykbd_task_proceed() {
+// no stack manipulation needed here, since we create the task directly
+void __attribute__((noinline)) mykbd_task() {
+// volatile long *p1 = (void*)LED_PWR;
+// volatile long *p2 = (void*)LED_DP;
+// int counter;	
+// // DEBUG: blink led
+// counter = DELAY; *p1 = 0x46;*p2 = 0x46;  while (counter--) { asm("nop\n nop\n"); };
+// counter = DELAY; *p1 = 0x44;*p2 = 0x44;  while (counter--) { asm("nop\n nop\n"); }; 
+
 	while (physw_run){
 		_SleepTask(10) ;  //	*((int*)(0x1c30+0x14)));
 /*
@@ -191,19 +182,6 @@ static void __attribute__((noinline)) mykbd_task_proceed() {
 			_kbd_p2_f();
 		 }
 	}
-}
-
-// no stack manipulation needed here, since we create the task directly
-void __attribute__((naked,noinline)) mykbd_task() {
-// volatile long *p1 = (void*)LED_PWR;
-// volatile long *p2 = (void*)LED_DP;
-// int counter;	
-// // DEBUG: blink led
-// counter = DELAY; *p1 = 0x46;*p2 = 0x46;  while (counter--) { asm("nop\n nop\n"); };
-// counter = DELAY; *p1 = 0x44;*p2 = 0x44;  while (counter--) { asm("nop\n nop\n"); }; 
-
-
-     mykbd_task_proceed();
 
     _ExitTask();
 }
@@ -221,6 +199,15 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 
 
 void kbd_fetch_data(long *dst){
+	_GetKbdState(dst);
+	
+
+	/* Get the rest of the buttons */
+	// NSTUB(kbd_read_keys                           ,0xffc11a0c) //109
+	// NSTUB(kbd_read_keys_r2                        ,0xffc304dc) //109
+	_kbd_read_keys_r2(dst); // without this PS3 is almost empty: PS3: 0x400c
+
+    /*
     volatile long *mmio0 = (void*)0xc0220200;
     volatile long *mmio1 = (void*)0xc0220204;
     volatile long *mmio2 = (void*)0xc0220208;
@@ -229,144 +216,15 @@ void kbd_fetch_data(long *dst){
     dst[1] = *mmio1;// | 0x7EF02000;
     dst[2] = *mmio2;// | 0xf32;
 //  dst[2] = *mmio2;
+*/
 }
 
 void my_kbd_read_keys() {
-	
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
-
-	
-	// Get the state of the buttons on the top of the G10. Like On/off, shoot, zoom, etc.
-	// but none of the backside buttons, like cursor, menu, display,etc..
-	   
-		_kbd_pwr_on();  // i.e. kbd_pwr_on	ROM:FFC11A28                 BL      _sub_FFC30B94__PhySwGpio.c__0 ; LOCATION: PhySwGpio.c:0
-	
-	_GetKbdState(kbd_new_state); //empty without it
-	
-
-	/* Get the rest of the buttons */
-	// NSTUB(kbd_read_keys                           ,0xffc11a0c) //109
-	// NSTUB(kbd_read_keys_r2                        ,0xffc304dc) //109
-	_kbd_read_keys_r2(kbd_new_state); // without this PS3 is almost empty: PS3: 0x400c
-
-	//kbd_new_state[0] |=0x00008000;  /// disable the battery door switch
-		
-	if (kbd_process() == 0){
-
-		// leave it alone... pass key strokes to the camera
-         
-		  physw_status[0] = kbd_new_state[0];
-          physw_status[1] = kbd_new_state[1];
-          physw_status[2] = kbd_new_state[2];
-        
-
-	} else {
-		// override keys .. don't let them get to the camera or override them as on to trick the camera
-		
-		physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
-		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
-
-	}
-	
-//	_kbd_pwr_off();
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
-
+	_kbd_pwr_on();  // i.e. kbd_pwr_on	ROM:FFC11A28                 BL      _sub_FFC30B94__PhySwGpio.c__0 ; LOCATION: PhySwGpio.c:0
+    kbd_update_key_state();
+    kbd_update_physw_bits();
+// _kbd_pwr_off();
 }
 
 
-void kbd_set_alt_mode_key_mask(long key)
-{
-	int i;
-	for (i=0; keymap[i].hackkey; ++i) {
-		if (keymap[i].hackkey == key) {
-			alt_mode_key_mask = keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-
-void kbd_key_press(long key)
-{
-	int i;
-
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key)
-		{
-			kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-void kbd_key_release(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-void kbd_key_release_all()
-{
-	kbd_mod_state[0] |= KEYS_MASK0;
-	kbd_mod_state[1] |= KEYS_MASK1;
-	kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-long kbd_is_key_pressed(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-		}
-	}
-	return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-			       ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-		}
-	}
-	return 0;
-}
-
-long kbd_get_pressed_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
-long kbd_get_clicked_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
+void kbd_set_alt_mode_key_mask(long key) { }
