@@ -134,7 +134,7 @@ void kbd_update_physw_bits(void)
         physw_status[USB_IDX] = physw_status[USB_IDX] & ~(USB_MASK);
     }
 // microsd cams don't have a read only bit
-#ifdef SD_READONLY_IDX
+#ifndef KBD_SKIP_READONLY_BIT
     physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
 #endif
 
