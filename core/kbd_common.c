@@ -61,6 +61,11 @@ extern long physw_status[3];
 extern int forced_usb_port;
 
 #ifndef KBD_CUSTOM_UPDATE_KEY_STATE
+
+#ifdef CAM_HAS_GPS
+int gps_key_trap=0 ;
+#endif
+
 void kbd_update_key_state(void)
 {
     kbd_prev_state[0] = kbd_new_state[0];
@@ -73,6 +78,20 @@ void kbd_update_key_state(void)
 
     // note assumed kbd_pwr_on has been called if needed
     kbd_fetch_data(kbd_new_state);
+
+#ifdef CAM_HAS_GPS
+    if (gps_key_trap > 0)        // check if gps code is waiting for a specific key press to cancel shutdown
+    {
+        if (kbd_get_pressed_key() == gps_key_trap)
+        {
+            kbd_key_release(gps_key_trap);
+            kbd_key_press(0);
+            gps_key_trap = -1;  // signal the gps task that the specified button was pressed
+            msleep(1000);       // pause to allow button release so Canon f/w does not see the press
+        }
+    }
+#endif
+
     if (kbd_process() == 0){
         // leave it alone...
         physw_status[0] = kbd_new_state[0];
