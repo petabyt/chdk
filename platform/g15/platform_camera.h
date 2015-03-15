@@ -41,8 +41,9 @@
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
+    // NOTOE Meter conflicts with raw shortcut
     #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Video", "Meter", "AE Lock", "Erase" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_DISPLAY, KEY_AE_LOCK, KEY_ERASE }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PRINT, KEY_VIDEO, KEY_METERING, KEY_AE_LOCK, KEY_ERASE }
     #define CAM_DISP_BUTTON_NAME                "METER"
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO

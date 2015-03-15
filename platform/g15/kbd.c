@@ -34,12 +34,11 @@ int get_usb_bit()
 }
 
 static KeyMap keymap[] = {
-    { 0, KEY_METERING     ,0x00000400 }, 
-    { 0, KEY_AE_LOCK       ,0x00020000 }, 
+    { 0, KEY_METERING        ,0x00000400 }, 
+    { 0, KEY_AE_LOCK         ,0x00020000 }, 
     { 0, KEY_SET             ,0x00000800 }, // Found @0xff4a0d2c, levent 0x08
     { 0, KEY_RIGHT           ,0x00001000 }, // Found @0xff4a0d34, levent 0x07
     { 0, KEY_DOWN            ,0x00002000 }, // Found @0xff4a0d3c, levent 0x05
-    { 0, KEY_DISPLAY         ,0x00002000 }, // ^
     { 0, KEY_MENU            ,0x00004000 }, // Found @0xff4a0d44, levent 0x09
     { 0, KEY_LEFT            ,0x00008000 }, // Found @0xff4a0d4c, levent 0x06
     { 0, KEY_UP              ,0x00040000 }, // Found @0xff4a0d64, levent 0x04
