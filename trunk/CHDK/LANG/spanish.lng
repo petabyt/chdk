@@ -637,7 +637,7 @@
 532	"¡Cámara se apagará en %02d segundos!"
 533	"¡Apagado automático cancelado!"
 534	"Cámara esperará para GPS por %01d:%02d"
-535	"¡Navegación a inicio no es posible!"
+535	"¡Navegación a\n inicio no es posible!"
 536	"¡No puede ir a la foto: %s!"
 537	"Distancia:    = %i m"
 538	"Duración:    = %i:%i:%i"
