@@ -24,6 +24,7 @@
 #include "gui_draw.h"
 #include "gui_batt.h"
 #include "gui_lang.h"
+#include "gui_mbox.h"
 
 // for testing on cameras without a GPS chip - add #define CAM_HAS_GPS 1 to their platform_camera.h file for the test
 //#define SIMULATED_GPS 1    
@@ -242,10 +243,7 @@ static void test_timezone(){                           // creates timezone.txt f
 
         if (timezone_1 != timezone_2)
         {
-            char vBuf[256];
-            sprintf(vBuf, lang_str(LANG_MENU_GPS_t_2));   //"Timezone has changed!"
-            draw_txt_centered(13, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
-            msleep(5000);
+            gui_mbox_init(LANG_INFORMATION, LANG_MENU_GPS_t_2, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL); //Timezone has changed!
         }
     }
 }
@@ -890,13 +888,7 @@ static void no_signal_task(){
             abort = 1;
             time_to_end = 3600;
             TurnOnBackLight();
-            sprintf(vBuf, lang_str(LANG_MENU_GPS_t_5));  // "Automatic shutdown cancelled!"
-            int zba;
-            for(zba=5; zba>0; zba--)
-            {
-                draw_txt_centered(7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
-                msleep(1000);
-            }
+            gui_mbox_init(LANG_INFORMATION, LANG_MENU_GPS_t_5, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL); //Automatic shutdown cancelled!
         }
 
         // manage backlight and display
@@ -1596,13 +1588,7 @@ void gps_write_timezone(){          // called from gui.c when "Set position as c
     }
     else
     {
-        int zba;
-        for(zba=5; zba>0; zba--)
-        {
-            sprintf(vBuf, lang_str(LANG_MENU_GPS_t_1));
-            draw_txt_centered(8, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
-            msleep(1000);
-        }
+        gui_mbox_init(LANG_ERROR, LANG_MENU_GPS_t_1, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL); //No GPS!
     }
 }
 
@@ -1636,13 +1622,7 @@ void gps_write_home(){             // called from gui.c when "Set position as ho
     }
     else
     {
-        int zba;
-        for(zba=5; zba>0; zba--)
-        {
-            sprintf(vBuf, lang_str(LANG_MENU_GPS_t_1));
-            draw_txt_centered(8, vBuf, MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_RED));
-            msleep(1000);
-        }
+        gui_mbox_init(LANG_ERROR, LANG_MENU_GPS_t_1, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL); //No GPS!
     }
 }
 
@@ -1730,10 +1710,7 @@ int init_gps_navigate_to_home(stop_request){               // called from gui.c 
         }
         else
         {
-            char vBuf[256];
-            sprintf(vBuf, lang_str(LANG_MENU_GPS_t_7));  // "Navigation to Home Loc is not possible!"
-            draw_txt_centered(7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
-            msleep(3000);
+            gui_mbox_init(LANG_ERROR, LANG_MENU_GPS_t_7, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL); //Navigation to Home Loc is not possible!
             navigation_mode=0;
         }
     }
@@ -1773,8 +1750,7 @@ int init_gps_navigate_to_photo(int stop_request){                  // called fro
         {
             char vBuf[256];
             sprintf(vBuf, lang_str(LANG_MENU_GPS_t_8), image);  //"Cant navigate to photo: %s!"
-            draw_txt_centered(7, vBuf, MAKE_COLOR(COLOR_WHITE, COLOR_RED));
-            msleep(3000);
+            gui_mbox_init(LANG_ERROR, (int)vBuf, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL); //Cant navigate to photo: %s!
             navigation_mode=0;
         }
     }   

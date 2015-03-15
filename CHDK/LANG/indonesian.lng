@@ -621,7 +621,7 @@
 532	"Kamera dimatikan dalam %02d detik!"
 533	"Mematikan Otomatis dibatalkan!"
 534	"Kamera menunggu GPS for %01d:%02d"
-535	"Navigasi ke lokasi Asal tidak memungkinkan!"
+535	"Navigasi ke lokasi\n Asal tidak memungkinkan!"
 536	"Tak dapat Cant navigate to photo: %s!"
 537	"Jarak:    = %i m"
 538	"Durasi:    = %i:%i:%i"
