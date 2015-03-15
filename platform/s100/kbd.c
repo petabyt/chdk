@@ -75,25 +75,23 @@ void kbd_fetch_data(long *dst)
 
 void kbd_set_alt_mode_key_mask(long key) {}
 
-// Set to 1 to disable jogdial events from being processed in firmware
-int jogdial_stopped=0;
-// Pointer to stack location where jogdial task records previous and current
-// jogdial positions
+// ========= Jog Dial ==============
+
 extern short* jog_position;
 extern short rear_dial_position;
+
+int jogdial_stopped=0;
+static short new_jogdial=0, old_jogdial=0;
 
 void jogdial_control(int n)
 {
     if (jogdial_stopped && !n)
     {
-        // If re-enabling jogdial set the task code current & previous positions to the actual
-        // dial positions so that the change won't get processed by the firmware
         jog_position[0] = jog_position[2] = rear_dial_position;
     }
     jogdial_stopped = n;
 }
 
-static short new_jogdial=0, old_jogdial=0;
 
 long get_jogdial_direction(void)
 {
