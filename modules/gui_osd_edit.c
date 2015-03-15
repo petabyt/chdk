@@ -157,6 +157,9 @@ int gui_osd_kbd_process()
             curr_item = 0;
         osd_to_draw = 1;
         break;
+    // many current cams don't have a display button.
+    // Add video as another option, since modules have no way to determine available keys
+    case KEY_VIDEO:
     case KEY_DISPLAY:
         step=(step==1)?10:1;
         osd_to_draw = 1;
