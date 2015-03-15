@@ -23,8 +23,6 @@ KeyMap keymap[] = {
 	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
     { 0, KEY_ZOOM_IN         ,0x00002000 }, // Found @0xffb2fd64, levent 0x02
     { 0, KEY_ZOOM_OUT        ,0x00001000 }, // Found @0xffb2fd5c, levent 0x03
-// TODO alias should be removed, alt set to PLAYBACK
-    { 1, KEY_PRINT           ,0x80000000 }, // KEY Playback for ALT menu
     { 1, KEY_DOWN            ,0x00800000 }, // Found @0xffb2fd84, levent 0x05
     { 1, KEY_UP              ,0x00400000 }, // Found @0xffb2fd7c, levent 0x04
     { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xffb2fd74, levent 0x01

@@ -87,7 +87,7 @@
 
     #define  CAM_ADJUSTABLE_ALT_BUTTON      1    // ALT-button can be set from menu
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help", "Video" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PRINT, KEY_HELP, KEY_VIDEO }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_HELP, KEY_VIDEO }
     #undef  CAM_HAS_DISP_BUTTON
 
     #define SHORTCUT_TOGGLE_RAW             KEY_HELP // replacement for 'DISP', note the possible ALT button conflict
