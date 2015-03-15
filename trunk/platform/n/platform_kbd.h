@@ -6,6 +6,7 @@
 #define KEYS_MASK2 0x00030330
 
 // Micro SD, no read only bit
+#define KBD_SKIP_READONLY_BIT
 //#define SD_READONLY_IDX  
 //#define SD_READONLY_FLAG 
 // uses SD door for autoboot. SD door is different from battery door
