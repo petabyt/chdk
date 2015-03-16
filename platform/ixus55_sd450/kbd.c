@@ -1,52 +1,47 @@
 #include "lolevel.h"
 #include "platform.h"
-#include "conf.h"
-#include "core.h"
 #include "keyboard.h"
-
-typedef struct {
-	long hackkey;
-	long canonkey;
-} KeyMap;
-
-volatile long *mmio1 = (void*)0xc0220204;
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state = 0xFFFFFFFF ;
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static KeyMap keymap[];
+KeyMap keymap[] = {
+    /* tiny bug: key order matters. see kbd_get_pressed_key()
+     * for example
+     */
+    {2, KEY_UP      , 0x00000020 },
+    {2, KEY_DOWN    , 0x00000040 }, 
+    {2, KEY_LEFT    , 0x00000080 }, 
+    {2, KEY_RIGHT   , 0x00000100 },
+    {2, KEY_SET     , 0x00000200 },
+    {2, KEY_SHOOT_FULL, 0x00000006 },
+    {2, KEY_SHOOT_FULL_ONLY, 0x00000004 },
+    {2, KEY_SHOOT_HALF, 0x00000002 },
+    {2, KEY_ZOOM_IN , 0x00000008 },
+    {2, KEY_ZOOM_OUT, 0x00000010 },
+    {2, KEY_MENU    , 0x00000400 },
+    {2, KEY_DISPLAY , 0x00000800 },
+    {2, KEY_PRINT   , 0x00002000 },
+    {0,  0, 0 }
+};
+
 
 #define NEW_SS (0x2000)
-#define SD_READONLY_FLAG (0x20000)
 
-#define USB_MASK 0x40 
-#define USB_IDX  1
-
-int get_usb_bit() 
-{
-    register long usb_physw;
-    usb_physw = *(long*)0xc0220204; //can be read directly (the usb bit doesn't need kbd_power_on or so)
-    return(( usb_physw & USB_MASK)==USB_MASK);
-}
-
-#ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
-#endif
 
-long __attribute__((naked)) wrap_kbd_p1_f() ;
-
+long __attribute__((naked)) wrap_kbd_p1_f();
 
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
     while (physw_run){
-	_SleepTask(10);
-
-
-	if (wrap_kbd_p1_f() == 1){ // autorepeat ?
-	    _kbd_p2_f();
-	}
+        _SleepTask(10);
+        if (wrap_kbd_p1_f() == 1){ // autorepeat ?
+            _kbd_p2_f();
+        }
     }
 }
 
@@ -65,11 +60,7 @@ void __attribute__((naked,noinline)) mykbd_task()
     register int i;
     register long *newstack;
 
-#ifndef MALLOCD_STACK
     newstack = (void*)kbd_stack;
-#else
-    newstack = malloc(NEW_SS);
-#endif
 
     for (i=0;i<NEW_SS/4;i++)
 	newstack[i]=0xdededede;
@@ -104,172 +95,16 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 void my_kbd_read_keys()
 {
-    kbd_prev_state[0] = kbd_new_state[0];
-    kbd_prev_state[1] = kbd_new_state[1];
-    kbd_prev_state[2] = kbd_new_state[2];
-
     _kbd_pwr_on();
 
-    kbd_fetch_data(kbd_new_state);
+    kbd_update_key_state();
 
-    if (kbd_process() == 0){
-	// leave it alone...
-	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1];
-	physw_status[2] = kbd_new_state[2];
-
-    } else {
-	// override keys
-	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1];
-	physw_status[2] = (kbd_new_state[2] & (~0xaffe)) |
-			  (kbd_mod_state & 0xaffe);
-	}
-	
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = kbd_new_state[USB_IDX] & ~USB_MASK;
-	}
     _kbd_read_keys_r2(physw_status);
-	
-    physw_status[2] = physw_status[2] & ~SD_READONLY_FLAG;
+
+    kbd_update_physw_bits();
 
     _kbd_pwr_off();
-
 }
-
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state &= ~keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state |= keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release_all()
-{
-    kbd_mod_state |= 0xaffe;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_new_state[2] & keymap[i].canonkey) == 0) ? 1:0;
-	}
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_prev_state[2] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[2] & keymap[i].canonkey) == 0);
-	}
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if ((kbd_new_state[2] & keymap[i].canonkey) == 0){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (((kbd_prev_state[2] & keymap[i].canonkey) != 0) &&
-	    ((kbd_new_state[2] & keymap[i].canonkey) == 0)){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_use_zoom_as_mf() {
-    static long v;
-    static long zoom_key_pressed = 0;
-
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_RIGHT);
-            zoom_key_pressed = KEY_ZOOM_IN;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_RIGHT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_LEFT);
-            zoom_key_pressed = KEY_ZOOM_OUT;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_LEFT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    return 0;
-}
-
-
-
-
-
-static KeyMap keymap[] = {
-    /* tiny bug: key order matters. see kbd_get_pressed_key()
-     * for example
-     */
-        {KEY_UP      , 0x00000020 },
-        {KEY_DOWN    , 0x00000040 }, 
-        {KEY_LEFT    , 0x00000080 }, 
-        {KEY_RIGHT   , 0x00000100 },
-        {KEY_SET     , 0x00000200 },
-        {KEY_SHOOT_FULL, 0x00000006 },
-        {KEY_SHOOT_FULL_ONLY, 0x00000004 },
-        {KEY_SHOOT_HALF, 0x00000002 },
-        {KEY_ZOOM_IN , 0x00000008 },
-        {KEY_ZOOM_OUT, 0x00000010 },
-        {KEY_MENU    , 0x00000400 },
-        {KEY_DISPLAY , 0x00000800 },
-        {KEY_PRINT   , 0x00002000 },
-        { 0, 0 }
-};
 
 void kbd_fetch_data(long *dst)
 {
@@ -280,4 +115,3 @@ void kbd_fetch_data(long *dst)
     dst[1] = *mmio1;
     dst[2] = *mmio2 & 0xffff;
 }
-
