@@ -9,9 +9,15 @@ KBD_CUSTOM_ALL
 * non-standard key state update
 KBD_CUSTOM_UPDATE_KEY_STATE
 
+* non-standard manipulation of other physw bits (SD readonly, USB etc)
+KBD_CUSTOM_UPDATE_PHYSW_BITS
+
 * use logical event to simulate "video" button from script
 * for touchscreen cameras without a physical video button
 KBD_SIMULATE_VIDEO_KEY
+
+* For cams without an SD card lock (micro-SD)
+KBD_SKIP_READONLY_BIT
 
 ** defines for hardware bits etc
 
@@ -21,7 +27,7 @@ KEYS_MASK0
 KEYS_MASK1
 KEYS_MASK2
 
-** SD card read only bit, not defined for micro-sd
+** SD card read only bit
 SD_READONLY_FLAG
 ** physw_status index for readonly bit
 SD_READONLY_IDX
@@ -123,6 +129,7 @@ void kbd_update_key_state(void)
 }
 #endif // KBD_CUSTOM_UPDATE_KEY_STATE
 
+#ifndef KBD_CUSTOM_UPDATE_PHYSW_BITS
 void kbd_update_physw_bits(void)
 {
     // TODO could save the real USB bit to avoid low level calls in get_usb_bit when immediate update not needed
@@ -155,6 +162,7 @@ void kbd_update_physw_bits(void)
     }
 #endif
 }
+#endif // KBD_CUSTOM_UPDATE_PHYSW_BITS
 
 // if the port reads an MMIO directly to get USB +5v status, use generic get_usb_bit
 // others must define in platform kbd.c
