@@ -1,4 +1,5 @@
 #ifndef PLATFORM_KBD_H
+#define PLATFORM_KBD_H
 // platform code handles reading, updating physw
 #define KBD_CUSTOM_UPDATE_KEY_STATE 1
 #define KBD_CUSTOM_UPDATE_PHYSW_BITS 1
