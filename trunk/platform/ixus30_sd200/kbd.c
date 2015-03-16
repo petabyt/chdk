@@ -414,7 +414,7 @@ long my_kbd_read_keys(long x){
   if (kbd_data_process_request_data == 0){
 		return x;
   }else{
-    return (kbd_new_state[1]&~0x2FFE) | (kbd_mod_state[1] & 0x2FFE);
+    return (kbd_new_state[1]&~KEYS_MASK1) | (kbd_mod_state[1] & KEYS_MASK1);
   }
 		
 }
