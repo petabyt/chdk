@@ -1,4 +1,5 @@
 #ifndef PLATFORM_KBD_H
+#define PLATFORM_KBD_H
 
 #define KEYS_MASK0 (0x00002000) //Logic OR of group 0 Keymap values
 #define KEYS_MASK1 (0x00000000) //Logic OR of group 1 Keymap values

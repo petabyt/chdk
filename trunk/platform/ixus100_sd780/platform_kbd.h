@@ -1,4 +1,5 @@
 #ifndef PLATFORM_KBD_H
+#define PLATFORM_KBD_H
 
 #define KEYS_MASK0 (0x0000000F)
 #define KEYS_MASK1 (0x00084800)
