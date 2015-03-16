@@ -3,20 +3,41 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
-#include "lang.h"
-#include "../core/gui_lang.h"
+#include "kbd_common.h"
+//#include "lang.h"
+//#include "../core/gui_lang.h"
 
+/*
 typedef struct {
 	long hackkey;
 	long canonkey;
 } KeyMap;
-
+*/
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state = 0xFFFFFFFF;
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+//static long kbd_mod_state = 0xFFFFFFFF;
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static KeyMap keymap[];
+KeyMap keymap[] = {
+    /* tiny bug: key order matters. see kbd_get_pressed_key()
+     * for example
+     */
+	{1, KEY_UP	, 0x00000020 },
+	{1, KEY_DOWN	, 0x00000040 },
+	{1, KEY_LEFT	, 0x00000080 },
+	{1, KEY_RIGHT	, 0x00000100 },
+	{1, KEY_SET	, 0x00000200 },
+	{1, KEY_SHOOT_FULL, 0x00000006 }, // note 6 here!
+	{1, KEY_SHOOT_FULL_ONLY, 0x00000004 },
+	{1, KEY_SHOOT_HALF, 0x00000002 },
+	{1, KEY_ZOOM_IN	, 0x00000008 },
+	{1, KEY_ZOOM_OUT	, 0x00000010 },
+	{1, KEY_MENU	, 0x00000400 },
+	{1, KEY_DISPLAY	, 0x00000800 },
+	{1, KEY_PRINT	, 0x00002000 },
+	{0, 0, 0 }
+};
 
 //get some vxworks defines for semaphore stuff
 #define STATUS int
@@ -51,6 +72,7 @@ static int kbd_data_process_request_data=0;
 #define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
 
+/*
 #define USB_MASK 0x40 
 #define USB_IDX  1
 
@@ -59,7 +81,9 @@ int get_usb_bit()
     if ((*(int*)0xc0220204) & USB_MASK) return 1;
     return 0;
 }
+*/
 
+// TODO since kbd_process doesn't happen in the canon kbd_task, can probably use a smaller stack, or not swap at all
 #ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
 #endif
@@ -390,7 +414,7 @@ long my_kbd_read_keys(long x){
   if (kbd_data_process_request_data == 0){
 		return x;
   }else{
-    return (kbd_new_state[1]&~0x2FFE) | (kbd_mod_state & 0x2FFE);
+    return (kbd_new_state[1]&~0x2FFE) | (kbd_mod_state[1] & 0x2FFE);
   }
 		
 }
@@ -494,6 +518,7 @@ void __attribute__((naked,noinline)) platformsub_kbd_fetch_data_my()
 /****************/
 
 
+#if 0
 void kbd_key_press(long key)
 {
     int i;
@@ -604,8 +629,9 @@ long kbd_use_zoom_as_mf() {
 #endif
     return 0;
 }
+#endif
 
-
+// TODO should add forced_usb_port support
 int usb_power_status_override(int status){
     if (conf.remote_enable) {
         return status &~USB_MASK;
@@ -613,25 +639,6 @@ int usb_power_status_override(int status){
     return status;
 }
 
-static KeyMap keymap[] = {
-    /* tiny bug: key order matters. see kbd_get_pressed_key()
-     * for example
-     */
-	{ KEY_UP	, 0x00000020 },
-	{ KEY_DOWN	, 0x00000040 },
-	{ KEY_LEFT	, 0x00000080 },
-	{ KEY_RIGHT	, 0x00000100 },
-	{ KEY_SET	, 0x00000200 },
-	{ KEY_SHOOT_FULL, 0x00000006 }, // note 6 here!
-	{ KEY_SHOOT_FULL_ONLY, 0x00000004 },
-	{ KEY_SHOOT_HALF, 0x00000002 },
-	{ KEY_ZOOM_IN	, 0x00000008 },
-	{ KEY_ZOOM_OUT	, 0x00000010 },
-	{ KEY_MENU	, 0x00000400 },
-	{ KEY_DISPLAY	, 0x00000800 },
-	{ KEY_PRINT	, 0x00002000 },
-	{ 0, 0 }
-};
 
 //hack to get a second thread for the keyboard:
 //purpose: check if kbd_new_data flag is set 
