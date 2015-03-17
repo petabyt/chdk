@@ -1,46 +1,13 @@
 #include "lolevel.h"
 #include "platform.h"
-#include "core.h"
-#include "conf.h"
 #include "keyboard.h"
-
-/*-----------------------------------------------------------------------------
-	kbd.c
-
-	In this file we have to define the key which toggles the <ALT> mode.
-	
-	e.g. in this file KEY_VIDEO is used to activate/deactivate <ALT> mode.
-	line 35: alt_mode_key_mask = 0x00004000
-	line 62: { 2, KEY_PRINT		     ,0x00004000 },  //KEY_VIDEO for ALT menu
-	
-------------------------------------------------------------------------------*/
-
-typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
-} KeyMap;
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-
-static long alt_mode_key_mask = 0x00004000; // KEY_VIDEO
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
-
-
-#define KEYS_MASK0 (0x00004000|0X00000004)
-#define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x00004800|0x00000300|0x00000100|0x00000080|0x00000040|0x00000010|0x00000020|0x00000004|0x00000008|0x00000002|0x00000001)
-
-#define NEW_SS (0x2000)
-
-#define SD_READONLY_FLAG (0x00020000)
-#define SD_READONLY_REG 2
-
-#define USB_MASK (0x04000000)
-#define USB_IDX  2
 
 int get_usb_bit() 
 {
@@ -50,11 +17,7 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-#ifndef MALLOCD_STACK
-static char kbd_stack[NEW_SS];
-#endif
-
-static KeyMap keymap[] = {
+KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key() */
 
     { 2, KEY_SHOOT_FULL      ,0x00000300 }, // Found @0xffba2b80, levent 0x01
@@ -77,7 +40,7 @@ static KeyMap keymap[] = {
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
 
-static void __attribute__((noinline)) mykbd_task_proceed()
+void __attribute__((noinline)) mykbd_task()
 {
 	while (physw_run){
 		_SleepTask(10);
@@ -86,11 +49,6 @@ static void __attribute__((noinline)) mykbd_task_proceed()
 			_kbd_p2_f();
 		}
 	}
-}
-
-void __attribute__((naked,noinline)) mykbd_task()
-{
-	mykbd_task_proceed();
 
 	_ExitTask();
 }
@@ -109,143 +67,17 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 	 return 0; // shut up the compiler
 }
 
+void kbd_fetch_data(long *dst)
+{
+    _GetKbdState(dst);
+    _kbd_read_keys_r2(dst);
+}
+
 void my_kbd_read_keys()
 {
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
-
-	_GetKbdState(kbd_new_state);
-
-	/* Get the rest of the buttons */
-	
-	_kbd_read_keys_r2(kbd_new_state);
-	
-	kbd_new_state[2] |=0x00008000;  /// disable the battery door switch
-
-	if (kbd_process() == 0) {
-		// leave it alone...
-		physw_status[0] = kbd_new_state[0];
-		physw_status[1] = kbd_new_state[1];
-		physw_status[2] = kbd_new_state[2];
-
-		physw_status[0] |= alt_mode_key_mask;  /// disable the ALT mode button
-
-	}
-	else {
-		// override keys
-
-		physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |(kbd_mod_state[0] & KEYS_MASK0);
-		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |(kbd_mod_state[2] & KEYS_MASK2);
-	}
-		
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
-
+    kbd_update_key_state();
+    kbd_update_physw_bits();
 }
 
 
-void kbd_set_alt_mode_key_mask(long key)
-{
-	int i;
-	for (i=0; keymap[i].hackkey; ++i) {
-		if (keymap[i].hackkey == key) {
-			alt_mode_key_mask = keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-
-void kbd_key_press(long key)
-{
-	int i;
-
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key)
-		{
-			kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-
-void kbd_key_release(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-
-void kbd_key_release_all()
-{
-	kbd_mod_state[0] |= KEYS_MASK0;
-	kbd_mod_state[1] |= KEYS_MASK1;
-	kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-
-long kbd_is_key_pressed(long key)
-{
-	int i;
-
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-		}
-	}
-	return 0;
-}
-
-
-long kbd_is_key_clicked(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-			       ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-		}
-	}
-	return 0;
-}
-
-
-long kbd_get_pressed_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
-
-long kbd_get_clicked_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
-
-long kbd_use_zoom_as_mf() {
-	return 0;
-}
+void kbd_set_alt_mode_key_mask(long key) { }
