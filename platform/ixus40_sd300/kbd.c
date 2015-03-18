@@ -3,20 +3,33 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
-#include "lang.h"
-#include "../core/gui_lang.h"
-
-typedef struct {
-	long hackkey;
-	long canonkey;
-} KeyMap;
-
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state = 0xFFFFFFFF ;
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static KeyMap keymap[];
+KeyMap keymap[] = {
+    /* tiny bug: key order matters. see kbd_get_pressed_key()
+     * for example
+     */
+	{ KEY_UP	, 0x00000020 },
+	{ KEY_DOWN	, 0x00000040 },
+	{ KEY_LEFT	, 0x00000080 },
+	{ KEY_RIGHT	, 0x00000100 },
+	{ KEY_SET	, 0x00000200 },
+	{ KEY_SHOOT_FULL, 0x00000006 }, // note 6 here!
+    { KEY_SHOOT_FULL_ONLY, 0x00000004 },
+	{ KEY_SHOOT_HALF, 0x00000002 },
+	{ KEY_ZOOM_IN	, 0x00000008 },
+	{ KEY_ZOOM_OUT	, 0x00000010 },
+	{ KEY_MENU	, 0x00000400 },
+	{ KEY_DISPLAY	, 0x00000800 },
+	{ KEY_PRINT	, 0x00002000 },
+//	{ KEY_ERASE	, 0x00000800 },
+//        { KEY_DUMMY	, 0x10000000 },
+	{ 0, 0 }
+};
 
 
 //get some vxworks defines for semaphore stuff
@@ -49,25 +62,11 @@ SEM_ID semBinary;
 
 static int kbd_data_process_request_data=0;
 
-#define NEW_SS (0x2000)
 #define SD_READONLY_FLAG (0x20000)
 
-#define USB_MASK 0x40 
-#define USB_IDX  1
-
-int get_usb_bit() 
-{
-    if ((*(int*)0xc0220204) & USB_MASK) return 1;
-    return 0;
-}
-
-#ifndef MALLOCD_STACK
-static char kbd_stack[NEW_SS];
-#endif
 
 // extern void _platformsub_kbd_fetch_data(long*);
 long __attribute__((naked)) wrap_kbd_p1_f();
-void __attribute__((naked,noinline)) mykbd_task_proceed_2();
 
 //KBD HACK
 // long kbd_process_copy();
@@ -82,19 +81,11 @@ extern void msleep(long);
 // extern void h_kbd_p2_f();
 
 
-static void __attribute__((noinline)) mykbd_task_proceed()
+static void __attribute__((naked,noinline)) mykbd_task_proceed()
 	{
     asm volatile
 		(
 		"STMFD	SP!, {R4-R8,LR}\n"
-		"B	  mykbd_task_proceed_2\n"
-		);
-	}
-
-void __attribute__((noinline)) mykbd_task_proceed_2()
-	{
-    asm volatile
-		(
 				"LDR	R3, =0x20F8\n"
 				"SUB	SP, SP,	#8\n"
 				"LDR	R2, [R3]\n"
@@ -201,37 +192,10 @@ void __attribute__((noinline)) mykbd_task_proceed_2()
 	}
 
 
-void __attribute__((naked,noinline))
+// no stack manipulation needed here, this task does not call kbd_process()
+void __attribute__((noinline))
 	mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
 	{
-    /* WARNING
-	* Stack pointer manipulation performed here!
-	* This means (but not limited to):
-	*	function arguments destroyed;
-	*	function CAN NOT return properly;
-	*	MUST NOT call or use stack variables before stack
-	*	is setup properly;
-	*
-	*/
-
-    register int i;
-    register long *newstack;
-
-#ifndef MALLOCD_STACK
-    newstack = (void*)kbd_stack;
-#else
-    newstack = malloc(NEW_SS);
-#endif
-
-    for (i=0;i<NEW_SS/4;i++)
-		newstack[i]=0xdededede;
-
-    asm volatile
-		(
-		"MOV	SP, %0"
-		:: "r"(((char*)newstack)+NEW_SS)
-		: "memory"
-		);
     
     //create semaphore, empty = not available
      semBinary = _semBCreate(SEM_Q_FIFO|SEM_INVERSION_SAFE, SEM_EMPTY);
@@ -239,8 +203,6 @@ void __attribute__((naked,noinline))
     //_TakeSemaphore(semBinary,WAIT_FOREVER);
 
     mykbd_task_proceed();
-
-	/* function can be modified to restore SP here...*/
 
     _ExitTask();
 	}
@@ -392,7 +354,7 @@ long my_kbd_read_keys(long x){
   if (kbd_data_process_request_data == 0){
 		return x;
   }else{
-    return (kbd_new_state[1]&~0x2FFE) | (kbd_mod_state & 0x2FFE);
+    return (kbd_new_state[1]&~KEYS_MASK1) | (kbd_mod_state[1] & KEYS_MASK1);
   }
 		
 }
@@ -508,119 +470,7 @@ void __attribute__((naked,noinline)) platformsub_kbd_fetch_data_my()
 
 /****************/
 
-
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state &= ~keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state |= keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release_all()
-{
-    kbd_mod_state |= 0x2FFF;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_new_state[1] & keymap[i].canonkey) == 0) ? 1:0;
-	}
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_prev_state[1] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[1] & keymap[i].canonkey) == 0);
-	}
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if ((kbd_new_state[1] & keymap[i].canonkey) == 0){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (((kbd_prev_state[1] & keymap[i].canonkey) != 0) &&
-	    ((kbd_new_state[1] & keymap[i].canonkey) == 0)){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_use_zoom_as_mf() {
-#if !defined (CAMERA_ixus700)
-    static long v;
-    static long zoom_key_pressed = 0;
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(12, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_RIGHT);
-            zoom_key_pressed = KEY_ZOOM_IN;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_RIGHT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(12, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_LEFT);
-            zoom_key_pressed = KEY_ZOOM_OUT;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_LEFT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-#endif
-    return 0;
-}
-
-
+// TODO should add forced_usb_port support
 int usb_power_status_override(int status){
     if (conf.remote_enable) {
         return status &~USB_MASK;
@@ -628,28 +478,6 @@ int usb_power_status_override(int status){
     return status;
 }
 
-
-static KeyMap keymap[] = {
-    /* tiny bug: key order matters. see kbd_get_pressed_key()
-     * for example
-     */
-	{ KEY_UP	, 0x00000020 },
-	{ KEY_DOWN	, 0x00000040 },
-	{ KEY_LEFT	, 0x00000080 },
-	{ KEY_RIGHT	, 0x00000100 },
-	{ KEY_SET	, 0x00000200 },
-	{ KEY_SHOOT_FULL, 0x00000006 }, // note 6 here!
-    { KEY_SHOOT_FULL_ONLY, 0x00000004 },
-	{ KEY_SHOOT_HALF, 0x00000002 },
-	{ KEY_ZOOM_IN	, 0x00000008 },
-	{ KEY_ZOOM_OUT	, 0x00000010 },
-	{ KEY_MENU	, 0x00000400 },
-	{ KEY_DISPLAY	, 0x00000800 },
-	{ KEY_PRINT	, 0x00002000 },
-//	{ KEY_ERASE	, 0x00000800 },
-//        { KEY_DUMMY	, 0x10000000 },
-	{ 0, 0 }
-};
 
 //hack to get a second thread for the keyboard:
 //purpose: check if kbd_new_data flag is set 
