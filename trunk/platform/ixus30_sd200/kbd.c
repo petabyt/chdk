@@ -95,7 +95,7 @@ extern void msleep(long);
 // extern void h_kbd_p2_f();
 
 
-void __attribute__((noinline)) mykbd_task_proceed()
+void __attribute__((naked,noinline)) mykbd_task_proceed()
 	{
     asm volatile
 		(
@@ -206,7 +206,7 @@ void __attribute__((noinline)) mykbd_task_proceed()
 	}//ixus30 ok
 
 // no stack manipulation needed here, this task does not call kbd_process()
-void __attribute__((naked,noinline))
+void __attribute__((noinline))
 	mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
 	{
     
