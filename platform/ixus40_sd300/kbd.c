@@ -13,22 +13,20 @@ KeyMap keymap[] = {
     /* tiny bug: key order matters. see kbd_get_pressed_key()
      * for example
      */
-	{ KEY_UP	, 0x00000020 },
-	{ KEY_DOWN	, 0x00000040 },
-	{ KEY_LEFT	, 0x00000080 },
-	{ KEY_RIGHT	, 0x00000100 },
-	{ KEY_SET	, 0x00000200 },
-	{ KEY_SHOOT_FULL, 0x00000006 }, // note 6 here!
-    { KEY_SHOOT_FULL_ONLY, 0x00000004 },
-	{ KEY_SHOOT_HALF, 0x00000002 },
-	{ KEY_ZOOM_IN	, 0x00000008 },
-	{ KEY_ZOOM_OUT	, 0x00000010 },
-	{ KEY_MENU	, 0x00000400 },
-	{ KEY_DISPLAY	, 0x00000800 },
-	{ KEY_PRINT	, 0x00002000 },
-//	{ KEY_ERASE	, 0x00000800 },
-//        { KEY_DUMMY	, 0x10000000 },
-	{ 0, 0 }
+    {1, KEY_UP              , 0x00000020 },
+    {1, KEY_DOWN            , 0x00000040 },
+    {1, KEY_LEFT            , 0x00000080 },
+    {1, KEY_RIGHT           , 0x00000100 },
+    {1, KEY_SET             , 0x00000200 },
+    {1, KEY_SHOOT_FULL      , 0x00000006 }, // note 6 here!
+    {1, KEY_SHOOT_FULL_ONLY , 0x00000004 },
+    {1, KEY_SHOOT_HALF      , 0x00000002 },
+    {1, KEY_ZOOM_IN         , 0x00000008 },
+    {1, KEY_ZOOM_OUT        , 0x00000010 },
+    {1, KEY_MENU            , 0x00000400 },
+    {1, KEY_DISPLAY         , 0x00000800 },
+    {1, KEY_PRINT           , 0x00002000 },
+    {0, 0, 0 }
 };
 
 
