@@ -4,15 +4,6 @@
 #include "conf.h"
 #include "keyboard.h"
 #include "kbd_common.h"
-//#include "lang.h"
-//#include "../core/gui_lang.h"
-
-/*
-typedef struct {
-	long hackkey;
-	long canonkey;
-} KeyMap;
-*/
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
@@ -67,17 +58,6 @@ extern SEM_ID _semBCreate(int options, SEM_B_STATE initialState);
 SEM_ID semBinary;
 
 static int kbd_data_process_request_data=0;
-
-/*
-#define USB_MASK 0x40 
-#define USB_IDX  1
-
-int get_usb_bit() 
-{
-    if ((*(int*)0xc0220204) & USB_MASK) return 1;
-    return 0;
-}
-*/
 
 // extern void _platformsub_kbd_fetch_data(long*);
 long __attribute__((naked)) wrap_kbd_p1_f();
@@ -468,120 +448,6 @@ void __attribute__((naked,noinline)) platformsub_kbd_fetch_data_my()
 
 
 /****************/
-
-
-#if 0
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state &= ~keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state |= keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release_all()
-{
-    kbd_mod_state |= 0x2FFF;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_new_state[1] & keymap[i].canonkey) == 0) ? 1:0;
-	}
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_prev_state[1] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[1] & keymap[i].canonkey) == 0);
-	}
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if ((kbd_new_state[1] & keymap[i].canonkey) == 0){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (((kbd_prev_state[1] & keymap[i].canonkey) != 0) &&
-	    ((kbd_new_state[1] & keymap[i].canonkey) == 0)){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_use_zoom_as_mf() {
-#if !defined (CAMERA_ixus700)
-    static long v;
-    static long zoom_key_pressed = 0;
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(12, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_RIGHT);
-            zoom_key_pressed = KEY_ZOOM_IN;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_RIGHT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(12, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_LEFT);
-            zoom_key_pressed = KEY_ZOOM_OUT;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_LEFT);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-#endif
-    return 0;
-}
-#endif
 
 // TODO should add forced_usb_port support
 int usb_power_status_override(int status){
