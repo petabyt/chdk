@@ -19,6 +19,9 @@ KBD_SIMULATE_VIDEO_KEY
 * For cams without an SD card lock (micro-SD)
 KBD_SKIP_READONLY_BIT
 
+* Cameras that have an MF key and enable ZOOM_FOR_MF detect mf presses and use MF key
+KBD_ZOOM_FOR_MF_USE_MF_KEY
+
 ** defines for hardware bits etc
 
 * key masks - for keys used by CHDK in alt mode
@@ -275,8 +278,45 @@ long kbd_get_clicked_key()
     return 0;
 }
 
-// TODO different for cameras with an MF (s2, s3, s5 etc)
 #ifdef CAM_USE_ZOOM_FOR_MF
+// cameras with an MF use it (s2, s3, s5 etc)
+#ifdef KBD_ZOOM_FOR_MF_USE_MF_KEY
+long kbd_use_zoom_as_mf() {
+    static long zoom_key_pressed = 0;
+
+    if (kbd_is_key_pressed(KEY_ZOOM_IN) && kbd_is_key_pressed(KEY_MF) && camera_info.state.mode_rec) {
+        if (shooting_get_focus_mode()) {
+            kbd_key_release_all();
+            kbd_key_press(KEY_MF);
+            kbd_key_press(KEY_UP);
+            zoom_key_pressed = KEY_ZOOM_IN;
+            return 1;
+        }
+    } else {
+        if (zoom_key_pressed==KEY_ZOOM_IN) {
+            kbd_key_release(KEY_UP);
+            zoom_key_pressed = 0;
+            return 1;
+        }
+    }
+    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && kbd_is_key_pressed(KEY_MF) && camera_info.state.mode_rec) {
+        if (shooting_get_focus_mode()) {
+            kbd_key_release_all();
+            kbd_key_press(KEY_MF);
+            kbd_key_press(KEY_DOWN);
+            zoom_key_pressed = KEY_ZOOM_OUT;
+            return 1;
+        }
+    } else {
+        if (zoom_key_pressed==KEY_ZOOM_OUT) {
+            kbd_key_release(KEY_DOWN);
+            zoom_key_pressed = 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+#else
 long kbd_use_zoom_as_mf() {
     static long zoom_key_pressed = 0;
 
@@ -310,5 +350,6 @@ long kbd_use_zoom_as_mf() {
     }
     return 0;
 }
+#endif //KBD_ZOOM_FOR_MF_USE_MF_KEY
 #endif // CAM_USE_ZOOM_FOR_MF
 #endif // KBD_CUSTOM_ALL
