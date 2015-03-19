@@ -131,7 +131,7 @@ FUNC ref=0
 ASM
 FW 7
 PATCHSUB name=mykbd_task
-//PATCHVAL value=0x2000 comment="stack size for new task_PhySw so we don't have to do stack switch"
+PATCHVAL value=0x2000 comment="stack size for new task_PhySw so we don't have to do stack switch"
 FW $
 ENDASM
 ENDFUNC

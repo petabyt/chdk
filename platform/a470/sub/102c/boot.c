@@ -275,7 +275,7 @@ asm volatile (
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =mykbd_task \n"  // --> Patched. Old value = 0xFFC118A4.
-"    MOV     R2, #0x800 \n"
+"    MOV     R2, #0x2000 \n"  // --> Patched. Old value = 0x800. stack size for new task_PhySw so we don't have to do stack switch
 "    MOV     R1, #0x17 \n"
 "    LDR     R0, =0xFFC11B00 /*'PhySw'*/ \n"
 "    BL      sub_FFC0BBB8 /*_CreateTaskStrictly*/ \n"
