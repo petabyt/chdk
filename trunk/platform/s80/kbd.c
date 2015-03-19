@@ -1,32 +1,40 @@
 #include "lolevel.h"
 #include "platform.h"
-#include "core.h"
-#include "conf.h"
 #include "keyboard.h"
-
-typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
-} KeyMap;
-
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static KeyMap keymap[];
-static long alt_mode_key_mask = 0x00000000;
-
-#define KEYS_MASK0 (0x0000C000)	// state[0] mask
-#define KEYS_MASK1 (0x3C3E0033) // state[1] mask
-#define KEYS_MASK2 (0x00000000) // ????
+KeyMap keymap[] = {
+    /* tiny bug: key order matters. see kbd_get_pressed_key()
+     * for example
+     */
+        { 1, KEY_UP		, 0x00040000 },
+        { 1, KEY_DOWN		, 0x00100000 },
+        { 1, KEY_LEFT		, 0x00020000 },
+        { 1, KEY_RIGHT		, 0x00080000 }, // ok
+        { 1, KEY_SET		, 0x00200000 }, // ok
+        { 0, KEY_SHOOT_FULL	, 0x0000C000 }, // org
+        { 0, KEY_SHOOT_FULL_ONLY	, 0x00008000 }, //
+        { 0, KEY_SHOOT_HALF	, 0x00004000 }, // ?? org
+        { 1, KEY_ZOOM_IN	, 0x00000001 }, // ok
+        { 1, KEY_ZOOM_OUT	, 0x00000002 }, // ok
+        { 1, KEY_MENU		, 0x08000000 }, // ok
+        { 1, KEY_DISPLAY	, 0x10000000 }, // ok
+        { 1, KEY_PRINT		, 0x00000010 }, // ok
+        { 1, KEY_ERASE		, 0x20000000 }, // ok
+        { 1, KEY_EXPO_CORR	, 0x04000000 }, // ok
+        { 1, KEY_ISO		, 0x00040000 }, // up
+        { 1, KEY_FLASH		, 0x00080000 }, // right
+        { 1, KEY_MF		, 0x00100000 }, // down
+        { 1, KEY_MACRO		, 0x00020000 }, // left
+        { 1, KEY_MICROPHONE     , 0x00000020 }, //
+        { 0, 0, 0 }
+};
 
 #define NEW_SS (0x2000)
-#define SD_READONLY_FLAG (0x20000)
-#define SD_READONLY_REG 2
-#define USB_MASK (0x20)
-#define USB_IDX  2
 
 int get_usb_bit() 
 {
@@ -37,12 +45,10 @@ int get_usb_bit()
 }
 
 
-#ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
-#endif
 
 extern void _platformsub_kbd_fetch_data(long*);
-long __attribute__((naked)) wrap_kbd_p1_f() ;
+long __attribute__((naked)) wrap_kbd_p1_f();
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
@@ -71,11 +77,7 @@ mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
     register int i;
     register long *newstack;
 
-#ifndef MALLOCD_STACK
     newstack = (void*)kbd_stack;
-#else
-    newstack = malloc(NEW_SS);
-#endif
 
     for (i=0;i<NEW_SS/4;i++)
 	newstack[i]=0xdededede;
@@ -122,202 +124,32 @@ long get_jogdial_direction(void) {
     else return 0;
 }
 
-volatile int jogdial_stopped=0;
+int jogdial_stopped=0;
 
 void my_kbd_read_keys()
 {
-
-    kbd_prev_state[0] = kbd_new_state[0];
-    kbd_prev_state[1] = kbd_new_state[1];
-    kbd_prev_state[2] = kbd_new_state[2];
-
-    _platformsub_kbd_fetch_data(kbd_new_state);
-
-    if (kbd_process() == 0){
-        // leave it alone...
-        physw_status[0] = kbd_new_state[0];
-        physw_status[1] = kbd_new_state[1];
-        physw_status[2] = kbd_new_state[2];
-        physw_status[1] |= alt_mode_key_mask;
-        jogdial_stopped=0;
-        
-    } else {
-        // override keys
-        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
-                (kbd_mod_state[0] & KEYS_MASK0);
-        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) |
-                (kbd_mod_state[1] & KEYS_MASK1);
-        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
-                (kbd_mod_state[2] & KEYS_MASK2);
-
-        if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run) {
-            jogdial_stopped=1;
-            get_jogdial_direction();
-        }
-        else if (jogdial_stopped && camera_info.state.state_kbd_script_run)
-            jogdial_stopped=0;
-
-    }
+    kbd_update_key_state();
 
     _kbd_read_keys_r2(physw_status);
 
-    if (conf.remote_enable) {
-        physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~(SD_READONLY_FLAG | USB_MASK);
-    }
-    else
-        physw_status[SD_READONLY_REG] = physw_status[SD_READONLY_REG] & ~SD_READONLY_FLAG;
+    kbd_update_physw_bits();
 }
 
-/****************/
-
-void kbd_set_alt_mode_key_mask(long key)
+void kbd_fetch_data(long *dst)
 {
-    int i;
-    for (i=0; keymap[i].hackkey; ++i) {
-	if (keymap[i].hackkey == key) {
-	    alt_mode_key_mask = keymap[i].canonkey;
-	    return;
-	}
-    }
+    _platformsub_kbd_fetch_data(dst);
 }
 
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-	    return;
-	}
+void jogdial_control(int n) {
+    // this camera did not have jog_position defined
+    /*
+    if (jogdial_stopped && !n) {
+        // If re-enabling jogdial set the task code current & previous positions to the actual
+        // dial positions so that the change won't get processed by the firmware
+        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
     }
+    */
+    jogdial_stopped = n;
 }
 
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release_all()
-{
-  kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= KEYS_MASK1;
- // kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-	}
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-	}
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-	    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_use_zoom_as_mf() {
-    static long v;
-    static long zoom_key_pressed = 0;
-
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_MF);
-            kbd_key_press(KEY_UP);
-            zoom_key_pressed = KEY_ZOOM_IN;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_UP);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_MF);
-            kbd_key_press(KEY_DOWN);
-            zoom_key_pressed = KEY_ZOOM_OUT;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_DOWN);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    return 0;
-}
-static KeyMap keymap[] = {
-    /* tiny bug: key order matters. see kbd_get_pressed_key()
-     * for example
-     */
-        { 1, KEY_UP		, 0x00040000 },
-        { 1, KEY_DOWN		, 0x00100000 },
-        { 1, KEY_LEFT		, 0x00020000 },
-        { 1, KEY_RIGHT		, 0x00080000 }, // ok
-        { 1, KEY_SET		, 0x00200000 }, // ok
-        { 0, KEY_SHOOT_FULL	, 0x0000C000 }, // org
-        { 0, KEY_SHOOT_FULL_ONLY	, 0x00008000 }, //
-        { 0, KEY_SHOOT_HALF	, 0x00004000 }, // ?? org
-        { 1, KEY_ZOOM_IN	, 0x00000001 }, // ok
-        { 1, KEY_ZOOM_OUT	, 0x00000002 }, // ok
-        { 1, KEY_MENU		, 0x08000000 }, // ok
-        { 1, KEY_DISPLAY	, 0x10000000 }, // ok
-        { 1, KEY_PRINT		, 0x00000010 }, // ok
-        { 1, KEY_ERASE		, 0x20000000 }, // ok
-        { 1, KEY_EXPO_CORR	, 0x04000000 }, // ok
-        { 1, KEY_ISO		, 0x00040000 }, // up
-        { 1, KEY_FLASH		, 0x00080000 }, // right
-        { 1, KEY_MF		, 0x00100000 }, // down
-        { 1, KEY_MACRO		, 0x00020000 }, // left
-        { 1, KEY_MICROPHONE     , 0x00000020 }, //
-        { 0, 0, 0 }
-};
-
+void kbd_set_alt_mode_key_mask(long key) { }
