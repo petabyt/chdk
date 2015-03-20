@@ -1,47 +1,13 @@
 #include "lolevel.h"
 #include "platform.h"
-#include "core.h"
-#include "conf.h"
 #include "keyboard.h"
-
-typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
-} KeyMap;
-
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static KeyMap keymap[];
-
-volatile int jogdial_stopped=0;
-
-
-#define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x0000F000)
-#define KEYS_MASK2 (0x0000FF50)
-
-#define SD_READONLY_FLAG    (0x20000) // Found @0xffb90df0, levent 0x20a
-#define SD_READONLY_IDX     2
-
-#define USB_MASK              (0x00040000) // Found @0xffb90df8, levent 0x202
-#define USB_IDX             2
-
-int get_usb_bit() 
-{
-	long usb_physw[3];
-	usb_physw[USB_IDX] = 0;
-	_kbd_read_keys_r2(usb_physw);
-	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
-}
-
-extern void _platformsub_kbd_fetch_data(long*);
-extern void _GetKbdState(long* buffer);
-
-static KeyMap keymap[] = {
+KeyMap keymap[] = {
 	// Order IS important. kbd_get_pressed_key will walk down this table  
 	// and take the first matching mask. Notice that KEY_SHOOT_HALF is  
 	// always pressed if KEY_SHOOT_FULL is. --MarcusSt
@@ -64,14 +30,25 @@ static KeyMap keymap[] = {
 	{ 0, 0, 0 }
 };
 
-void kbd_fetch_data(long*);
 
-long __attribute__((naked)) wrap_kbd_p1_f() ;
+int jogdial_stopped=0;
 
-
-static void __attribute__((noinline)) mykbd_task_proceed()
+int get_usb_bit() 
 {
+	long usb_physw[3];
+	usb_physw[USB_IDX] = 0;
+	_kbd_read_keys_r2(usb_physw);
+	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
+}
 
+extern void _GetKbdState(long* buffer);
+
+long __attribute__((naked)) wrap_kbd_p1_f();
+
+void __attribute__((noinline))
+mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
+{
+	
 	/* Initialize our own kbd_new_state[] array with the
 	   current physical status.
 	   */
@@ -86,14 +63,6 @@ static void __attribute__((noinline)) mykbd_task_proceed()
 			_kbd_p2_f();
 		}
     }
-}
-
-
-void __attribute__((naked,noinline))
-mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
-{
-	
-	mykbd_task_proceed();
     /* function can be modified to restore SP here...
      */
     _ExitTask();
@@ -116,137 +85,35 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 void my_kbd_read_keys()
 {
-	static long i=0;
+    kbd_update_key_state();
 
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
+    _kbd_read_keys_r2(physw_status);
 
-	_GetKbdState(kbd_new_state);
-
-	if (kbd_process() == 0) {
-		// leave it alone...
-		physw_status[0] = kbd_new_state[0];
-		physw_status[1] = kbd_new_state[1];
-		physw_status[2] = kbd_new_state[2];
-		jogdial_stopped=0;
-	}
-	else {
-		// override keys
-		physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
-		physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-		physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
-		if (!jogdial_stopped && !camera_info.state.state_kbd_script_run) {
-			jogdial_stopped=1;
-			get_jogdial_direction();
-		}
-		else if (jogdial_stopped && camera_info.state.state_kbd_script_run)
-			jogdial_stopped=0;
-	}
-
-	_kbd_read_keys_r2(physw_status);
-
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
-
+    kbd_update_physw_bits();
 }
 
-// NOP
-void kbd_set_alt_mode_key_mask(long key)
+void kbd_fetch_data(long *dst)
 {
+    _GetKbdState(dst);
 }
 
+void kbd_set_alt_mode_key_mask(long key) { }
 
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-	    return;
-	}
+void jogdial_control(int n) {
+    // this camera did not have jog_position defined
+    /*
+    if (jogdial_stopped && !n) {
+        // If re-enabling jogdial set the task code current & previous positions to the actual
+        // dial positions so that the change won't get processed by the firmware
+        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
     }
+    */
+    jogdial_stopped = n;
 }
-
-
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release_all()
-{
-  kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= KEYS_MASK1;
-  kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-	}
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-		int i;
-		for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-				((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-		}
-		}
-		return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-	    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-
-long kbd_use_zoom_as_mf() {
-	return 0;
-}
-
-
 
 int Get_JogDial(void) {
  return (*(int*)0xC0240104)>>16;
 }
-
 
 
 long get_jogdial_direction(void) {
