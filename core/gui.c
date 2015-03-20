@@ -238,7 +238,9 @@ void do_expire_check() {
     twoColors cl;
     if (camera_info.state.gui_mode_alt) {
         cl=MAKE_COLOR(COLOR_RED, COLOR_WHITE);
+#ifdef CAM_DISP_ALT_TEXT
         gui_reset_alt_helper(); // replace the helper with nag screen
+#endif
     } else if (camera_info.state.gui_mode_none) {
         cl=MAKE_COLOR(COLOR_TRANSPARENT, COLOR_WHITE);
     } else {
