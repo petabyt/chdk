@@ -371,9 +371,9 @@ asm volatile (
 "    BL      sub_FF835FB4 \n"
 "    BL      sub_FF83A4C4 \n"
 //"  BL      _sub_FF830694 \n"  // --> Nullsub call removed.
-
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
 "    BL      Battery_door_hack\n"  // added
-
+#endif
 "    BL      sub_FF831FB8 \n"
 "    BL      sub_FF839EC0 \n"
 "    BL      sub_FF832614 \n"
@@ -404,6 +404,7 @@ asm volatile (
 }
 /*************************************************************/
 //** Battery_door_hack - loop hack that allows startup with battery door open
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
 void __attribute__((naked,noinline)) Battery_door_hack() {
 asm volatile (
 "		STMFD   SP!, {R4-R6,LR} \n"
@@ -415,7 +416,7 @@ asm volatile (
 "       LDMFD   SP!, {R4-R6,PC} \n"
 );
 }
-
+#endif
 /*************************************************************/
 //** init_file_modules_task @ 0xFF88E520 - 0xFF88E554, length=14
 void __attribute__((naked,noinline)) init_file_modules_task() {

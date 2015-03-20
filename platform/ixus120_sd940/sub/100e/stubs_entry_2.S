@@ -11,4 +11,3 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 // Additional
 NHSTUB(MakeAFScan,                  0xff9404e8)
 NHSTUB(closefastdir,                0xffa4cf28)
-NHSTUB(platformsub_kbd_fetch_data,  0xff858df8)
