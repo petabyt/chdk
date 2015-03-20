@@ -99,7 +99,9 @@ PATCHSUB name=taskcreatePhySw_my ref=0
 FW 3
 >>>
 
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
 "    BL      Battery_door_hack\n"  // added
+#endif
 
 <<<
 
@@ -125,6 +127,7 @@ ENDFUNC
 >>>
 /*************************************************************/
 //** Battery_door_hack - loop hack that allows startup with battery door open
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
 void __attribute__((naked,noinline)) Battery_door_hack() {
 asm volatile (
 "		STMFD   SP!, {R4-R6,LR} \n"
@@ -136,6 +139,7 @@ asm volatile (
 "       LDMFD   SP!, {R4-R6,PC} \n"
 );
 }
+#endif
 <<<
 
 //////////////////////////////////////////////////////////////

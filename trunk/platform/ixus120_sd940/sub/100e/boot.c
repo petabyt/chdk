@@ -374,6 +374,7 @@ asm volatile (
 #if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
 "    BL      Battery_door_hack\n"  // added
 #endif
+
 "    BL      sub_FF831FB8 \n"
 "    BL      sub_FF839EC0 \n"
 "    BL      sub_FF832614 \n"
@@ -417,6 +418,7 @@ asm volatile (
 );
 }
 #endif
+
 /*************************************************************/
 //** init_file_modules_task @ 0xFF88E520 - 0xFF88E554, length=14
 void __attribute__((naked,noinline)) init_file_modules_task() {

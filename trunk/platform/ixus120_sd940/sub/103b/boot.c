@@ -419,6 +419,7 @@ asm volatile (
 );
 }
 #endif
+
 /*************************************************************/
 //** init_file_modules_task @ 0xFF88E52C - 0xFF88E560, length=14
 void __attribute__((naked,noinline)) init_file_modules_task() {
