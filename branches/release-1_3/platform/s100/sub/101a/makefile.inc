@@ -19,8 +19,6 @@ MAXRAMADDR = 0x0fffffff
 # Found @ 0xffff3b38
 NEED_ENCODED_DISKBOOT=7
 
-#suppress FI2 since it doesn't work
-override OPT_FI2=
 # Found @ 0xffff3b28
 KEYSYS=d4c
 
