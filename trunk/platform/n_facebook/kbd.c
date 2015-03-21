@@ -5,50 +5,22 @@
 #include "conf.h"
 #include "keyboard.h"
 #include "touchscreen.h"
-#include "levent.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "font.h"
-
-
-typedef struct {
-    short grp;
-    short hackkey;
-    long canonkey;
-    short   x1, y1, x2, y2;
-    short   redraw;
-    char    *nm, *nm2;
-    int     min_gui_mode, max_gui_mode, cam_mode_mask;
-    int     *conf_val;
-    const char* (*chg_val)(int,int);
-    int     *conf_disable;
-} KeyMap;
+#include "kbd_common.h"
 
 long kbd_new_state[4]          = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[4]  = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[4]   = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[4]  = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[4]   = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static long touch_panel_state  =   0xFFFFFFFF;
 static long touch_panel_button =   0xFFFFFFFF;
 
 extern void _GetKbdState(long*);
 extern int kbd_is_blocked(void);
-
-#define KEYS_MASK0         (0x30000000) //Logic OR of group 0 Keymap values
-#define KEYS_MASK1         (0x00000000) //Logic OR of group 1 Keymap values
-#define KEYS_MASK2         (0x00030330) //Logic OR of group 2 Keymap values
-
-#define SD_READONLY_FLAG    0x000080000 // not likely to be found with microSD card camera ?
-#define SD_READONLY_IDX     0
-
-#define SDCARD_DOOR_FLAG    0x00080000 // SD card door switch
-#define SDCARD_DOOR_IDX     2
-
-// Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
-#define USB_MASK            0x10000000 // Found @0xff5bdc30, levent 0x202
-#define USB_IDX             2
 
 int get_usb_bit()
 {
@@ -65,6 +37,7 @@ int get_usb_bit()
 #define TS_KEY_PLAYBACK     204 
 #define TS_KEY_POWER        205
 #define TS_KEY_EXIT         206
+#define TS_KEY_USER_MENU    207
 #define TS_KEY_ZOMBIE       0xFFFE
 
 #define MODE_VID    0x400
@@ -122,7 +95,7 @@ static const char* ts_run_script(int change, int arg)
     return 0;
 }
 
-static KeyMap keymap[] = {
+KeyMap keymap[] = {
     // Order IS important. kbd_get_pressed_key will walk down this table
     // and take the first matching mask. Notice that KEY_SHOOT_HALF is
     // always pressed if KEY_SHOOT_FULL is.
@@ -143,15 +116,17 @@ static KeyMap keymap[] = {
     { 3, KEY_MENU           , 0x00000001,   0,    0, 39,  47,  0, "CHDK", "MENU", GUI_MODE_ALT, 100,          MODE_REC|MODE_PLAY },
     { 3, TS_KEY_EXIT        , 0x00000002,   0,  192, 39, 239,  0, "Exit",  "ALT", GUI_MODE_ALT, 100,          MODE_REC|MODE_PLAY, 0, ts_exit_alt, 0 },
     
-    { 3, TS_KEY_ZOMBIE      , 0x00000004,   0,   48, 39,  95,  0, "USER",  "MENU",GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, ts_user_menu_enable, 0 },
+    { 3, TS_KEY_USER_MENU   , 0x00000004,   0,   48, 39,  95,  0, "USER",  "MENU",GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, ts_user_menu_enable, 0 },
     { 3, KEY_SET            , 0x00000008,   0,   96, 39, 143,  0, "PRGM",  0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
-    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
+// was DISPLAY but assume blank name means not used, switched to ZOMBIE
+//    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
+    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
 
     { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,   48, 39,  95,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
-    { 3, TS_KEY_ZOMBIE      , 0x00000040,   0,   96, 39, 143,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
-    { 3, KEY_DISPLAY        , 0x00000080,   0,  144, 39, 191,  0, "BACK",  0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
+    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,   96, 39, 143,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, "BACK",  0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
     
-    { 3, KEY_DISPLAY        , 0x00000100,   0,  144, 39, 191,  0, "DISP",  0,     GUI_MODE_SCRIPT, GUI_MODE_OSD,  MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, "DISP",  0,     GUI_MODE_SCRIPT, GUI_MODE_OSD,  MODE_REC|MODE_PLAY },
     
     { 3, KEY_UP             , 0x00000200, 320,   0, 359,  47,  0, "Up",    0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
     { 3, KEY_LEFT           , 0x00000400, 320,  48, 359,  95,  0, "Left",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
@@ -170,6 +145,7 @@ static KeyMap keymap[] = {
 };
 
 
+// TODO generic touch stuff should be in kbd_common.c or it's own file
 static int is_button_displayed(int b, int guiMode, int camMode)
 {
     return(
@@ -183,7 +159,7 @@ static int is_button_displayed(int b, int guiMode, int camMode)
 
 static int is_button_active(int b, int guiMode, int camMode)
 {
-    return (is_button_displayed(b, guiMode, camMode) && keymap[b].canonkey);
+    return is_button_displayed(b, guiMode, camMode);
 }
 
 int show_virtual_buttons()
@@ -380,20 +356,11 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
     return 0;                                                           // bring peace and understanding to the compiler
 }
 
-static int sdelay = 0 ;
-
-void my_kbd_read_keys()
-{
-    kbd_prev_state[0] = kbd_new_state[0];
-    kbd_prev_state[1] = kbd_new_state[1];
-    kbd_prev_state[2] = kbd_new_state[2];
-    kbd_prev_state[3] = kbd_new_state[3];
-
-    _GetKbdState(kbd_new_state);
-    _kbd_read_keys_r2(kbd_new_state);
-
-    kbd_new_state[SDCARD_DOOR_IDX] |= SDCARD_DOOR_FLAG ;                // override SD card door switch
-
+//static int sdelay = 0 ;
+void kbd_fetch_data(long *state) {
+    _GetKbdState(state);
+    _kbd_read_keys_r2(state);
+    // update virtual buttons
     if( kbd_is_blocked() )
     {
        // if (sdelay > 5 )
@@ -407,130 +374,10 @@ void my_kbd_read_keys()
     {
         kbd_new_state[3] = touch_panel_state = 0xFFFFFFFF;              // No, clear out virtual button state
     }
-
-    if (kbd_process() == 0) {
-        // leave it alone... read keyboard state with _kbd_read_keys()
-        physw_status[0] = kbd_new_state[0];
-        physw_status[1] = kbd_new_state[1];
-        physw_status[2] = kbd_new_state[2];
-    } else {
-        // override keys
-        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
-        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
-        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
-    }
-    physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
-
-    if (conf.remote_enable) {
-        physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
-    }
-
 }
 
-
-/****************/
-static int is_video_key_pressed = 0;
-
-void kbd_key_press(long key)
+void my_kbd_read_keys()
 {
-    int i;
-        
-    if (key == KEY_VIDEO && !is_video_key_pressed)
-    {
-        PostLogicalEventToUI(levent_id_for_name("PressMovieButton"),0);
-        is_video_key_pressed = 1;
-        return;
-    } 
-
-    for (i=0;keymap[i].hackkey;i++) {
-        if (keymap[i].hackkey == key)
-        {
-            kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-            return;
-        }
-    }
+    kbd_update_key_state();
+    kbd_update_physw_bits();
 }
-
-void kbd_key_release(long key)
-{
-    int i;
-    
-    if (key == KEY_VIDEO && is_video_key_pressed)
-    {
-        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
-        is_video_key_pressed = 0;
-        return;
-    }
-          
-    for (i=0;keymap[i].hackkey;i++) {
-        if (keymap[i].hackkey == key) {
-            kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-            return;
-        }
-    }
-}
-
-void kbd_key_release_all()
-{
-    kbd_mod_state[0] |= KEYS_MASK0;
-    kbd_mod_state[1] |= KEYS_MASK1;
-    kbd_mod_state[2] |= KEYS_MASK2;
-    kbd_mod_state[3] = 0xFFFFFFFF;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-
-    for (i=0;keymap[i].hackkey;i++)
-    {
-        if ((keymap[i].hackkey == key) && keymap[i].canonkey)
-        {
-            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-        }
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++)
-    {
-        if ((keymap[i].hackkey == key) && keymap[i].canonkey)
-        {
-            return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-                   ((kbd_new_state[keymap[i].grp]  & keymap[i].canonkey) == 0);
-        }
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++)
-    {
-        if (keymap[i].canonkey && ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
-        {
-            return keymap[i].hackkey;
-        }
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++)
-    {
-        if (keymap[i].canonkey &&
-            ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
-        {
-            return keymap[i].hackkey;
-        }
-    }
-    return 0;
-}
-
