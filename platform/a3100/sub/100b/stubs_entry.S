@@ -19,7 +19,7 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(kbd_pwr_off                          ,0xff85471c) //  2 64%    *** != 0x00000000
+//NHSTUB(kbd_pwr_off                          ,0xff85471c) //  2 64%    *** != 0xff85472c
 NHSTUB(kbd_pwr_on                             ,0xff8546dc) //  2 82%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':

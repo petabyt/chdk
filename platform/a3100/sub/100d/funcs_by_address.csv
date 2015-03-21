@@ -237,6 +237,7 @@
 0xff853c48,LEDDrive_FW
 0xff854028,kbd_read_keys_r2
 0xff8546a8,GetKbdState
+0xff85472c,kbd_pwr_off,(stubs_entry_2.s)
 0xff8547d0,task_AudioTsk
 0xff854dbc,TurnOnVideoOutMode_FW
 0xff854e20,TurnOffVideoOutMode_FW
