@@ -1,31 +1,15 @@
 #include "lolevel.h"
 #include "platform.h"
-#include "core.h"
-#include "conf.h"
 #include "keyboard.h"
-
-typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
-} KeyMap;
-
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
-static long alt_mode_key_mask = 0x10000000;
-
-#define KEYS_MASK0 (0x0000000C)
-#define KEYS_MASK1 (0x1F1F0300)
-#define KEYS_MASK2 (0x00000000)
+extern void _GetKbdState(long *dst);
 
 #define NEW_SS (0x2000)
-#define SD_READONLY_FLAG (0x20000)
-
-#define USB_MASK (0x40000)
-#define USB_IDX  2
 
 int get_usb_bit() 
 {
@@ -35,11 +19,9 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-#ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
-#endif
 
-static KeyMap keymap[] = {
+KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key()
 	 * for example
 	 */
@@ -64,7 +46,7 @@ static KeyMap keymap[] = {
 };
 
 
-long __attribute__((naked)) wrap_kbd_p1_f() ;
+long __attribute__((naked)) wrap_kbd_p1_f();
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
@@ -91,11 +73,7 @@ void __attribute__((naked,noinline)) mykbd_task()
 	register int i;
 	register long *newstack;
 
-#ifndef MALLOCD_STACK
 	newstack = (void*)kbd_stack;
-#else
-	newstack = malloc(NEW_SS);
-#endif
 
 	for (i=0;i<NEW_SS/4;i++)
 		newstack[i]=0xdededede;
@@ -129,193 +107,33 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 }
 
 
-volatile int jogdial_stopped=0;
+int jogdial_stopped=0;
 
 void my_kbd_read_keys()
 {       
-	kbd_prev_state[0] = kbd_new_state[0];
-	kbd_prev_state[1] = kbd_new_state[1];
-	kbd_prev_state[2] = kbd_new_state[2];
-
-	// The following three lines replace the call to kbd_fetch_data
-	kbd_new_state[0] = physw_status[0];
-	kbd_new_state[1] = physw_status[1];
-	kbd_new_state[2] = physw_status[2];
-
-
-	if (kbd_process() == 0){
-		// leave it alone...
-		// keyboard state is already good so nothing needs to happen
-
-		// But do override the alt mode key
-		physw_status[1] |= alt_mode_key_mask;
-                jogdial_stopped=0;
-	} else {
-		// override keys
-		physw_status[0] = (kbd_new_state[0] | KEYS_MASK0) & (~KEYS_MASK0 | kbd_mod_state[0]); // Only overrides shoot-button... off, batt and modeswitch are still enabled.
-		physw_status[1] = (kbd_new_state[1] | KEYS_MASK1) & (~KEYS_MASK1 | kbd_mod_state[1]); // Overrides everything except mode-dial (0xF)
-		physw_status[2] = (kbd_new_state[2] | KEYS_MASK2) & (~KEYS_MASK2 | kbd_mod_state[2]); // Currently overrides nothing
-
-	if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run){ jogdial_stopped=1; get_jogdial_direction(); }
-	else if (jogdial_stopped && camera_info.state.state_kbd_script_run) jogdial_stopped=0; 
-
-	}
-
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
-
+    kbd_update_key_state();
+    kbd_update_physw_bits();
 }
-
-
-
-void kbd_set_alt_mode_key_mask(long key)
-{
-	int i;
-	for (i=0; keymap[i].hackkey; ++i) {
-		if (keymap[i].hackkey == key) {
-			alt_mode_key_mask = keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-
-void kbd_key_press(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-void kbd_key_release(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-			return;
-		}
-	}
-}
-
-void kbd_key_release_all()
-{
-  kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= KEYS_MASK1;
-  kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-long kbd_is_key_pressed(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-		}
-	}
-	return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (keymap[i].hackkey == key){
-			return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-			       ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-		}
-	}
-	return 0;
-}
-
-long kbd_get_pressed_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
-long kbd_get_clicked_key()
-{
-	int i;
-	for (i=0;keymap[i].hackkey;i++){
-		if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)) {
-			return keymap[i].hackkey;
-		}
-	}
-	return 0;
-}
-
-
 
 void kbd_fetch_data(long *dst)
 {
-    // This seems to be very different from the other cameras I've seen.
-    // Keyboard data seems to be largely unavailable around 0xC0220200 (or in
-    // the entire 0xC0200000 range even), everything seems to happen in
-    // physw_status. Because of this (physw_status already filled), this function
-    // need not be called on S5IS. Candidate for removal if everyone agrees.
-    volatile long *mmio0 = (void*)0x10C1C;
-    volatile long *mmio1 = (void*)0x10C20;
-    volatile long *mmio2 = (void*)0x10C24;
-
-    dst[0] = *mmio0;
-    dst[1] = *mmio1;
-    dst[2] = *mmio2 ;
+    _GetKbdState(dst);
+    _kbd_read_keys_r2(dst);
 }
 
-long kbd_use_zoom_as_mf() {
-	static long zoom_key_pressed = 0;
+void kbd_set_alt_mode_key_mask(long key) { }
 
-	if (kbd_is_key_pressed(KEY_ZOOM_IN) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
-
-		if (shooting_get_focus_mode()) {
-			kbd_key_release_all();
-			kbd_key_press(KEY_UP);
-			kbd_key_press(KEY_MF);
-			zoom_key_pressed = KEY_ZOOM_IN;
-			return 1;
-		}
-	} else {
-		if (zoom_key_pressed==KEY_ZOOM_IN) {
-			kbd_key_release(KEY_UP);
-			kbd_key_release(KEY_MF);
-			zoom_key_pressed = 0;
-			return 1;
-		}
-	}
-
-	if (kbd_is_key_pressed(KEY_ZOOM_OUT) && kbd_is_key_pressed(KEY_MF)  && (mode_get()&MODE_MASK) == MODE_REC) {
-		if (shooting_get_focus_mode()) {
-			kbd_key_release_all();
-			kbd_key_press(KEY_DOWN);
-			kbd_key_press(KEY_MF);
-			zoom_key_pressed = KEY_ZOOM_OUT;
-			return 1;
-		}
-	} else {
-		if (zoom_key_pressed==KEY_ZOOM_OUT) {
-			kbd_key_release(KEY_DOWN);
-			kbd_key_release(KEY_MF);
-			zoom_key_pressed = 0;
-			return 1;
-		}
-	}
-	return 0;
+void jogdial_control(int n) {
+    // this camera did not have jog_position defined
+    /*
+    if (jogdial_stopped && !n) {
+        // If re-enabling jogdial set the task code current & previous positions to the actual
+        // dial positions so that the change won't get processed by the firmware
+        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
+    }
+    */
+    jogdial_stopped = n;
 }
-
 
 static int new_jogdial=0, old_jogdial=0;
 

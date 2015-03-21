@@ -2,7 +2,7 @@
 #define NULL_SUB 0xff869b0c
 
 // Override stubs_entry.S
-NHSTUB(kbd_pwr_off,                 NULL_SUB)
+NHSTUB(kbd_pwr_off,                 0xFF85472C)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
