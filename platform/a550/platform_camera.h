@@ -65,6 +65,8 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
+    #define CAM_USB_EVENTID_VXWORKS         0x10A5 // LogicalEvent ID for ConnectUSBCable, needed to enable USB mode switch
+
 //--------------------------------------------------
 
     #undef  CAM_DEFAULT_MENU_CURSOR_BG
