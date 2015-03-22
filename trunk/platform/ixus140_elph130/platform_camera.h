@@ -105,8 +105,6 @@
                                                     // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
-//    #undef CAM_DEFAULT_ALT_BUTTON
-//    #define CAM_DEFAULT_ALT_BUTTON  KEY_PLAYBACK   // no print button
 
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO }
