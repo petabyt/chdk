@@ -139,7 +139,7 @@
 0xff827590,GetSwitchStatus_FW
 0xff827aac,kbd_read_keys_r2
 0xff827f54,GetKbdState
-0xff827ff8,kbd_pwr_off,(stubs_entry_2.s)
+0xff827f94,kbd_pwr_off,(stubs_entry_2.s)
 0xff828650,OnPrintHVSw_FW
 0xff828668,OffPrintHVSw_FW
 0xff82867c,GetHVSw_FW
