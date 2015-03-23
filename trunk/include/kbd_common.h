@@ -32,7 +32,7 @@ extern long kbd_new_state[];
 extern long kbd_mod_state[];
 extern long kbd_prev_state[];
 
-void kbd_update_key_state(void);
+long kbd_update_key_state(void);
 void kbd_update_physw_bits(void);
 void kbd_fetch_data(long *data);
 
