@@ -33,7 +33,7 @@ NHSTUB(WriteSDCard                            ,0xff87ef94) //  3 64%
 NHSTUB(add_ptp_handler                        ,0xffa7e780) //  1 96%
 NHSTUB(exmem_alloc                            ,0xff81282c) //  2 93%
 // ERROR: free is not found.                               //--- ---    *** != 0xffb1551c
-//NHSTUB(kbd_pwr_off                          ,0xff827fdc) //  1 83%    *** != 0xff827ff8
+//NHSTUB(kbd_pwr_off                          ,0xff827fdc) //  1 83%    *** != 0xff827f94
 // ALT: NHSTUB(kbd_pwr_off, 0xff827ff8) // 1 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff82a1a4) // 1 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff82a1c0) // 1 5/1
@@ -44,7 +44,7 @@ NHSTUB(exmem_alloc                            ,0xff81282c) //  2 93%
 // ALT: NHSTUB(kbd_pwr_off, 0xff829f70) // 3 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff82a040) // 3 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff82a05c) // 3 5/1
-// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff827fdc
+// ERROR: kbd_pwr_on is not found.                         //--- ---    *** != 0xff827f54
 NHSTUB(malloc                                 ,0xffb15510) //  1 53%
 //NHSTUB(realloc                              ,0xffafe640) //115        *** != 0xffb1475c
 NHSTUB(taskIdListGet                          ,0xffb22b58) //  1 82%
