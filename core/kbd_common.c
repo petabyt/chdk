@@ -75,7 +75,11 @@ extern int forced_usb_port;
 int gps_key_trap=0 ;
 #endif
 
-void kbd_update_key_state(void)
+/*
+ saves & updates key state, runs main CHDK kbd task code in kbd_process,
+ returns kbd_process value
+*/
+long kbd_update_key_state(void)
 {
     kbd_prev_state[0] = kbd_new_state[0];
     kbd_prev_state[1] = kbd_new_state[1];
@@ -101,7 +105,8 @@ void kbd_update_key_state(void)
     }
 #endif
 
-    if (kbd_process() == 0){
+    long status = kbd_process();
+    if (status == 0){
         // leave it alone...
         physw_status[0] = kbd_new_state[0];
         physw_status[1] = kbd_new_state[1];
@@ -129,6 +134,7 @@ void kbd_update_key_state(void)
         }
 #endif
     }
+    return status;
 }
 #endif // KBD_CUSTOM_UPDATE_KEY_STATE
 
