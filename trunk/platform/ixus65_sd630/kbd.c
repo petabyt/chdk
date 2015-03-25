@@ -121,7 +121,8 @@ void my_kbd_read_keys()
         _taskResume(taskFeatherID);
     } else {
         _taskSuspend(taskFeatherID);
-        if (kbd_mod_state[2] != KEYS_MASK2) {
+        // We still need this sema when simulating key presses
+        if ((kbd_mod_state[2] & KEYS_MASK2)!=KEYS_MASK2) {
             _taskResume(taskFeatherID);
         }
     }
