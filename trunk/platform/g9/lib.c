@@ -16,6 +16,10 @@ void shutdown()
     while(1);
 }
 
+char *camera_jpeg_count_str()
+{
+    return (char*)0x60354;
+}
 
 #define LED_PR 0xC022006C //used iso blue, was 0xc02200C4  //a650- 0xc02200C4
 
@@ -48,6 +52,44 @@ int get_flash_params_count(void){
  return 114;	//++  FF956AEC
 }
 
-int Get_JogDial(void){
- return (*(int*)0xC0220304)>>16;
+void *vid_get_viewport_live_fb() //By comparison to A720 - UNTESTED
+{
+    void **fb=(void **)0x228C;
+    unsigned char buff = *((unsigned char*)0x2124);
+    if (buff == 0) {
+        buff = 2;
+    }
+    else {
+        buff--;
+    }
+    return fb[buff];
+}
+
+void *vid_get_bitmap_fb()
+{ 
+    return (void*)0x10361000; 
+}
+
+void *vid_get_viewport_fb()
+{ 
+    return (void*)0x1067b540; 
+}
+
+long vid_get_viewport_height()
+{
+    return 240;
+}
+
+// PTP display stuff
+int vid_get_palette_type() { return 1; } //UNTESTED
+int vid_get_palette_size() { return 16*4; } //UNTESTED
+
+void *vid_get_bitmap_active_palette() 
+{
+    return (void *)0x47ce8;        //Found @ 0xff8f5e4c - Two refs to "BmpDDev"
+}
+
+void *vid_get_bitmap_active_buffer() 
+{
+    return (void*)(*(int*)0xd548); //Found @ 0xff8f5e50 - Two refs to "BmpDDev"
 }
