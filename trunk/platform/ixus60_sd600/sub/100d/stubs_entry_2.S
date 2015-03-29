@@ -7,13 +7,15 @@ NHSTUB(ExitFromCompensationEVF,     NULL_SUB)
 NHSTUB(GetDrive_FreeClusters,       0xFF867C04)
 NHSTUB(MakeAFScan,                  NULL_SUB)
 NHSTUB(free,                        0xFFB0C438)
-NHSTUB(kbd_pwr_on,                  0xFF827EE0)
+NHSTUB(kbd_pwr_on,                  0xFF827E3C)
+NHSTUB(kbd_pwr_off,                 0xFF827E7C)
+NHSTUB(GetKbdState,                 0xFF827DF8)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 // Additional
-NHSTUB(kbd_read_keys,               0xFF826D30)
+//NHSTUB(kbd_read_keys,               0xFF826D30)
 
 NHSTUB(printf,                      0xFFB08550)
 NHSTUB(taskNameToId,                0xFFB19990)

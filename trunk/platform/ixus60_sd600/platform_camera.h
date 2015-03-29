@@ -34,7 +34,8 @@
     #define CAM_HAS_HI_ISO_AUTO_MODE        1
     #define CAM_DRAW_EXPOSITION             1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
-    #define CAM_FEATURE_FEATHER             1
+// this was defined in the original port, but according to manual and reviews, didn't have
+//    #define CAM_FEATURE_FEATHER             1
 
 //  #define CAM_CONSOLE_LOG_ENABLED         1       //100a won't compile if this is defined ("undefined reference to `_iosDevFind'")
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
