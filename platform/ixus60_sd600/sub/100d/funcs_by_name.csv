@@ -447,6 +447,7 @@
 0xff826c64,kbd_p1_f
 0xff826c70,kbd_p1_f_cont
 0xff827048,kbd_p2_f
+0xff827e7c,kbd_pwr_off,(stubs_entry_2.s)
 0xff826d30,kbd_read_keys
 0xff8279b0,kbd_read_keys_r2
 0xff97dfc4,KeepDefaultMoveFocusEventToDialog_FW
