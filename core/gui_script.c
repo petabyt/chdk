@@ -356,6 +356,7 @@ static int process_single(const char *ptr)
             {
                 p->data_type = DTYPE_TABLE;
                 p->val--;   // Initial value is 1 based for Lua table, convert to 0 based for C code
+                p->def_val--;   // also adjust default
             }
         }
         ptr = skip_whitespace(ptr);
