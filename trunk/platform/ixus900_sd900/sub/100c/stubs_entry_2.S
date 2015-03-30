@@ -9,6 +9,7 @@ NHSTUB(WriteSDCard,                 0xFF88A8A4)
 NHSTUB(free,                        0xFFB5ABC8)
 NHSTUB(kbd_pwr_off,                 0xFF829238)
 NHSTUB(kbd_pwr_on,                  0xFF8291F8)
+NHSTUB(GetKbdState,                 0xFF8291B4)
 
 // Additional
 NHSTUB(ExpCtrlTool_StartContiAE,    0xFF91F0CC)
@@ -16,7 +17,7 @@ NHSTUB(ExpCtrlTool_StopContiAE,     0xFF91F0FC)
 NHSTUB(GetLogToFile,                0xFFB44520) // GetLogToFile() -> A/ROMLOG.txt
 NHSTUB(SetZoomActuatorSpeedPercent, 0xFF8E5AAC)
 NHSTUB(iosInit,                     0xFFB58E2C)
-NHSTUB(kbd_read_keys,               0xFF828024)
+//NHSTUB(kbd_read_keys,               0xFF828024)
 NHSTUB(ttyDrv_Start,                0xFF811874) // VxWorks console
 
 NHSTUB(taskNameToId,                0xFFB67700)
