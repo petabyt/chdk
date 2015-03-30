@@ -142,8 +142,8 @@
 0xff82aec4,ModePatternTo165DC_FW
 0xff82aedc,ModePatternTo165Normal_FW
 0xff82af70,GetKbdState
-0xff82b05c,kbd_pwr_on,(stubs_entry_2.s)
-0xff82b078,kbd_pwr_off,(stubs_entry_2.s)
+0xff82af70,kbd_pwr_on,(stubs_entry_2.s)
+0xff82afb0,kbd_pwr_off,(stubs_entry_2.s)
 0xff82b63c,OnPrintHVSw_FW
 0xff82b654,OffPrintHVSw_FW
 0xff82c7c0,GetAdChValue
