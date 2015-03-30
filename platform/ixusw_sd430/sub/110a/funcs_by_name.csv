@@ -446,8 +446,8 @@
 0xff829c94,kbd_p1_f
 0xff829ca0,kbd_p1_f_cont
 0xff82a078,kbd_p2_f
-0xff82b078,kbd_pwr_off,(stubs_entry_2.s)
-0xff82b05c,kbd_pwr_on,(stubs_entry_2.s)
+0xff82afb0,kbd_pwr_off,(stubs_entry_2.s)
+0xff82af70,kbd_pwr_on,(stubs_entry_2.s)
 0xff829d60,kbd_read_keys
 0xff97994c,KeepDefaultMoveFocusEventToDialog_FW
 0xff924b30,KizuMarkCheck_FW

@@ -14,8 +14,9 @@ NHSTUB(free,                        0xffc1d8f8)  //There is a call to free close
 NHSTUB(GetDrive_ClusterSize,        0xff872990)  //by comparison to ixus65 100a
 NHSTUB(GetDrive_FreeClusters,       0xff86b75c)  //close to **"AvailClusters.c"
 NHSTUB(GetDrive_TotalClusters,      0xff8729cc)  //by comparison to ixus65 100a
-NHSTUB(kbd_pwr_on,                  0xff82b05c)  //by comparsion to ixus65
-NHSTUB(kbd_pwr_off,                 0xff82b078)  //by comparsion to ixus65
+NHSTUB(kbd_pwr_on,                  0xFF82AF70)
+NHSTUB(kbd_pwr_off,                 0xFF82AFB0)
+NHSTUB(GetKbdState,                 0xFF82AF2C)
 NHSTUB(UnlockAF,                    0xff94fa20)  //Close to "CompleteUnlockAF"
 NHSTUB(DoAFLock,                    0xff94f9b8)  //by comparsion to ixus65 close to "CompleteAFLock"
 NHSTUB(kbd_read_keys,               0xff829d60)  //by comparsion to ixus65
