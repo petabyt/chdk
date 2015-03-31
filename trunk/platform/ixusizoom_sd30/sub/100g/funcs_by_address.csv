@@ -139,7 +139,7 @@
 0xff82847c,OffPrintPhySw_FW
 0xff828490,GetSwitchStatus_FW
 0xff828e44,GetKbdState
-0xff828f4c,kbd_pwr_off,(stubs_entry_2.s)
+0xff828e84,kbd_pwr_off,(stubs_entry_2.s)
 0xff829510,OnPrintHVSw_FW
 0xff829528,OffPrintHVSw_FW
 0xff82a680,GetAdChValue
@@ -352,7 +352,7 @@
 0xff92100c,DispCon_TurnOffDisplay_FW
 0xff92100c,TurnOffDisplay
 0xff92101c,DispCon_SetMaxBackLightBrightness_FW
-0xff828f30,kbd_pwr_on,(stubs_entry_2.s)
+0xff828e44,kbd_pwr_on,(stubs_entry_2.s)
 0xff923b04,LcdCon_SetLcdDriver_FW
 0xff923c20,LcdCon_SetLcdAdjParameter_FW
 0xff923d04,LcdCon_GetLcdAdjParameter_FW

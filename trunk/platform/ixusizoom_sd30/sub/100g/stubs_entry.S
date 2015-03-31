@@ -33,7 +33,7 @@ NHSTUB(add_ptp_handler                        ,0xffa3990c) //  1 96%
 NHSTUB(exmem_alloc                            ,0xff81293c) //  1 92%
 // ERROR: free is not found.                               //--- ---    *** != 0xffad366c
 // ERROR: kbd_read_keys_r2 is not found.                   //--- ---    *** != 0xff828950
-//NHSTUB(kbd_pwr_off                          ,0xff828f30) //  1 83%    *** != 0xff828f4c
+//NHSTUB(kbd_pwr_off                          ,0xff828f30) //  1 83%    *** != 0xff828e84
 // ALT: NHSTUB(kbd_pwr_off, 0xff828f4c) // 1 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff829f24) // 1 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff829f40) // 1 5/1
@@ -44,7 +44,7 @@ NHSTUB(exmem_alloc                            ,0xff81293c) //  1 92%
 // ALT: NHSTUB(kbd_pwr_off, 0xff829cf0) // 3 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff829dc0) // 3 5/1
 // ALT: NHSTUB(kbd_pwr_off, 0xff829ddc) // 3 5/1
-//NHSTUB(kbd_pwr_on                           ,0xff921148) //  1 55%    *** != 0xff828f30
+//NHSTUB(kbd_pwr_on                           ,0xff921148) //  1 55%    *** != 0xff828e44
 // ALT: NHSTUB(kbd_pwr_on, 0xff921174) // 1 5/4
 NHSTUB(malloc                                 ,0xffad3660) //  1 53%
 NHSTUB(taskIdListGet                          ,0xffae12a4) //  1 82%
