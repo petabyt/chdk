@@ -30,7 +30,7 @@ void taskCreateHook(int *p) {
     if (p[0]==0xff861210)  p[0]=(int)capt_seq_task;
     if (p[0]==0xff8b8b90)  p[0]=(int)exp_drv_task;
     if (p[0]==0xff85d4c0)  p[0]=(int)movie_record_task;
-    if (p[0]==0xffa2ac90)  p[0]=(int)filewritetask;
+    if (p[0]==0xffa2acb8)  p[0]=(int)filewritetask;
     if (p[0]==0xff877284)  p[0]=(int)init_file_modules_task;
     if (p[0]==0xff849530)  p[0]=(int)JogDial_task_my;
 }
@@ -60,6 +60,10 @@ void boot()
 
     for(i=0;i<canon_bss_len/4;i++)
     canon_bss_start[i]=0;
+
+    //Replacement of sub_FF848C84 (sub_FF822E10) for correct power-on.
+    //(short press = playback mode, long press = record mode)
+    *(int*)(0x261C+8)= (*(int*)0xC02200C0)&1 ? 1 : 2;
 
    *(int*)0x1930=(int)taskCreateHook;
    *(int*)0x1934=(int)taskCreateHook;
