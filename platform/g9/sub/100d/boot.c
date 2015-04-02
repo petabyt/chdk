@@ -61,8 +61,12 @@ void boot()
     for(i=0;i<canon_bss_len/4;i++)
     canon_bss_start[i]=0;
 
-   *(int*)0x1930=(int)taskCreateHook;
-   *(int*)0x1934=(int)taskCreateHook;
+    //Replacement of sub_FF848C84 (sub_FF822E10) for correct power-on.
+    //(short press = playback mode, long press = record mode)
+    *(int*)(0x261C+8)= (*(int*)0xC02200C0)&1 ? 1 : 2;
+
+    *(int*)0x1930=(int)taskCreateHook;
+    *(int*)0x1934=(int)taskCreateHook;
 
     // jump to init-sequence that follows the data-copy-routine
     asm volatile ("B      sub_FF8101A4_my\n");
