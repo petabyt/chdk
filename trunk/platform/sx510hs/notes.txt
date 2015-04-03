@@ -21,13 +21,11 @@ OTHER ISSUES
 ************
 Folder naming and file counter use a new method, seem to be working but may have issues
 Not clear if fast press override hack is needed, needs more testing
-#define CAM_ZEBRA_NOBUF 1 used to prevent crash, see: http://chdk.setepontos.com/index.php?topic=10984.msg112340#msg112340
 
 KNOWN BUGS
 **********
 - DNG color matrix is copy+paste from D10
-- If 1:1 aspect ratio, zebra shows wrong region on right side
-- Liveview has some problems. After selecting MODE_VIDEO_MOVIE_DIGEST, height is wrong for all modes.
+- Liveview does not work in fisheye mode
 - Reboot fails sometimes
 - aperture_sizes_table[] is a copy of ixus140
 

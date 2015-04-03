@@ -89,16 +89,14 @@ int vid_get_viewport_yscale() {
     return 2;
 }
 
-extern int _GetVRAMHPixelsSize();
-extern int _GetVRAMVPixelsSize();
-
 int vid_get_viewport_width()
 {
-        return 720;
-}
-
-int vid_get_viewport_width_proper() {
-    return ((mode_get()&MODE_MASK) == MODE_PLAY)?720:_GetVRAMHPixelsSize();
+    if (camera_info.state.mode_play)
+    {
+        return 360;
+    }
+    extern int _GetVRAMHPixelsSize();
+    return _GetVRAMHPixelsSize() >> 1;
 }
 
 int vid_get_viewport_fulllscreen_width()
@@ -108,32 +106,21 @@ int vid_get_viewport_fulllscreen_width()
 
 long vid_get_viewport_height()
 {
-    return 480;
-}
 
-int vid_get_viewport_height_proper()
-{
     int m = mode_get();
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
     if (MODE_IS_VIDEO(m) || is_video_recording())
         return 240;
 
-    if ((m & MODE_MASK) != MODE_PLAY) {
-// This mode causes problems to liveview, see notes.txt
-//        if((m&MODE_SHOOTING_MASK) == MODE_VIDEO_MOVIE_DIGEST)
-//            return 480;
-
+    if ((m & MODE_MASK) != MODE_PLAY) 
+    {
         // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
         if (aspect_ratio==1 || aspect_ratio==2)
             return 480;
     }
+    extern int _GetVRAMVPixelsSize();    
     return ((m & MODE_MASK) == MODE_PLAY)?480:_GetVRAMVPixelsSize();
-}
-
-int vid_get_viewport_fullscreen_height()
-{
-    return vid_get_viewport_height_proper();
 }
 
 // viewport width offset table for each aspect ratio
@@ -154,8 +141,9 @@ int vid_get_viewport_display_xoffset()
 
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset()<<1; }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset()<<1; }
-
-
+int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
+int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 

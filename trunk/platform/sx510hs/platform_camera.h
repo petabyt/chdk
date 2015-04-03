@@ -129,8 +129,6 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1
 
-    #define CAM_ZEBRA_NOBUF                 1
-
     #undef  CAM_MARKET_ISO_BASE
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
     
