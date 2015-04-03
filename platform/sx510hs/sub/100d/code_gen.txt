@@ -394,8 +394,8 @@ FW 2
 FW 33
 PATCHSUB name=fwt_open
 FW 24
-//PATCHSUB name=fwt_open
-FW 20
+PATCHSUB name=fwt_open
+FW 19
 >>>
 
 //mod start

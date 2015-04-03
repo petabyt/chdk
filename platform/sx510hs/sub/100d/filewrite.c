@@ -269,7 +269,7 @@ asm volatile (
 "    MOV     R2, R9 \n"
 "    MOV     R1, R5 \n"
 "    MOV     R0, R8 \n"
-"    BL      _Open \n"
+"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
 
 "loc_FF3484AC:\n"
 "    CMN     R0, #1 \n"
