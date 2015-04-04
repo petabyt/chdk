@@ -47,6 +47,10 @@ function camera_funcs.is_pressed()
         -- needs logic
 end
 
+function camera_funcs.set_exit_key(s)
+        print("exit key is:", s)
+end
+
 -- exposure
 function camera_funcs.get_av96()
     return camera_state.av96
@@ -65,7 +69,7 @@ function camera_funcs.get_sv96()
 end
 
 function camera_funcs.get_nd_present()
-    return 0
+    return camera_state.nd
 end
 
 function camera_funcs.set_nd_filter(n)
@@ -133,7 +137,6 @@ function camera_funcs.get_IS_mode()
     return camera_state.IS_mode
 end
 
-
 -- script status
 function camera_funcs.sleep(n)
     camera_state.tick_count=camera_state.tick_count+n
@@ -181,7 +184,7 @@ function camera_funcs.get_free_disk_space(n)
     return 1000000
 end
 
--- text console
+-- text/logs/console/drawings
 function camera_funcs.cls()
     print(">delete screen<")
 end
@@ -208,8 +211,49 @@ function camera_funcs.set_console_autoredraw(n)
     print(">redraw console<", n)
 end
 
-function camera_funcs.draw_string(col,row,msg,c1,c2)
-    print("draw string @ " .. col..":"..row.." Colors:"..c1..":","Msg> "..msg)
+function camera_funcs.draw_string(x,y,s,c1,c2)
+    print(string.format("draw string x:%d y:%d Colors:%d %d Msg> %s", x, y, c1, c2, s))
+end
+
+function camera_funcs.draw_pixel(x,y,cl)
+    print(string.format("draw string x:%d y:%d Color:%d", x, y, cl))
+end
+
+function camera_funcs.draw_rect(x1, y1, x2, y2, cl, th)
+    print(string.format("draw rect x1:%d y1:%d x2:%d y2:%d Color:%d", x1, y1, x2, y2, cl))
+end
+
+function camera_funcs.draw_rect_filled(x1, y1, x2, y2, c1, c2, th)
+    print(string.format("draw filled rect x1:%d y1:%d x2:%d y2:%d Colors:%d %d", x1, y1, x2, y2, c1, c2))
+end
+
+function camera_funcs.draw_ellipse(x, y, r1, r2, cl)
+    print(string.format("draw ellipse x:%d y:%d r1:%d r2:%d Color:%d", x, y, r1, r2, cl))
+end
+
+function camera_funcs.draw_ellipse_filled(x, y, r1, r2, cl)
+    print(string.format("draw filled ellipse x:%d y:%d r1:%d r2:%d Color:%d", x, y, r1, r2, cl))
+end
+
+function camera_funcs.draw_clear()
+    print("del drawings")
+end
+
+function camera_funcs.get_gui_screen_width()
+    return 360
+end
+
+function camera_funcs.get_gui_screen_height()
+    return 240
+end
+
+function camera_funcs.set_draw_title_line(n)
+    if n == 1 then print(">title line on<") camera_state.title_line = 1 end
+    if n == 0 then print(">title line off<") camera_state.title_line = 0 end
+end
+
+function camera_funcs.get_draw_title_line()
+    return camera_state.title_line
 end
 
 -- lens & focus
@@ -223,6 +267,10 @@ end
 
 function camera_funcs.get_focus_mode()
     return camera_state.f_mode
+end
+
+function camera_funcs.get_focus_state()
+    return 1
 end
 
 function camera_funcs.get_dofinfo()
@@ -254,9 +302,19 @@ function camera_funcs.set_zoom(n)
     camera_state.zoom=n
 end
 
+function camera_funcs.set_mf(n)
+    if n == 1 then print(">MF on<") end
+    if n == 0 then print(">MF off<") end
+end
+
 function camera_funcs.set_aflock(n)
     if n == 1 then print(">aflock on<") end
     if n == 0 then print(">aflock off<") end
+end
+
+function camera_funcs.set_aelock(n)
+    if n == 1 then print(">aelock on<") end
+    if n == 0 then print(">aelock off<") end
 end
 
 --camera
@@ -360,6 +418,10 @@ function camera_funcs.get_flash_mode()
     return camera_state.flash
 end
 
+function camera_funcs.get_flash_ready()
+    return 1
+end
+
 -- motion detection
 function camera_funcs.md_detect_motion()
     return 1
@@ -372,6 +434,14 @@ end
 
 function camera_funcs.get_histo_range(n1,n2)
     return 100
+end
+
+function camera_funcs.get_usb_power()
+    return 0
+end
+
+function camera_funcs.set_config_value(id, val)
+    print("cfg id", id, "value", val)
 end
 
 return camera_funcs

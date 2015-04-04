@@ -1,8 +1,8 @@
 --[[
 ********************************
 Licence: GPL
-(c) 2009-2012 reyalp, rudi, msl, fbonomi
-v 0.1
+(c) 2009-2015 reyalp, rudi, msl, fbonomi
+v 0.2
 ********************************
 
 http://chdk.setepontos.com/index.php?topic=2929.0
@@ -15,7 +15,7 @@ local usage_string=[[
 usage: lua emu.lua <chdk_script> [-conf=<conf_script>] [-modroot=<cam module root>] [-a=X -b=Y ...]
     <chdk_script> is the script to be tested
     <conf_script> is a lua script customizing the test case
-	<cam module root> is directory for emulated require to look for SCRIPTS and LUALIB
+    <cam module root> is directory for emulated require to look for SCRIPTS and LUALIB
     -a=X etc set the corresponding script parameter to the given value
 ]]
 
@@ -41,19 +41,20 @@ camera_state={
     ev96=0,
     nd=0,
     disk_size=1024*1024*1024,
-    propset=4,                  -- propset 1 - 5
+    propset=4,                  -- propset 1 - 6
     rec=false,
     vid=false,
     mode=1,
     drive=0,                    -- 0 = single 1 = continuous 2 = timer (on Digic 2) 3 = timer (on Digic 3,4,5)
     flash=0,                    -- 0 = flash auto, 1 = flash on, 2 = flash off
     focus=1000,
-    f_mode=0,                   --focus mode, 0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
+    f_mode=0,                   -- focus mode, 0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
     zoom_steps=125,
     zoom=0,
     autostart=0,
     IS_mode=0,
-	props={}, -- propcase values
+    props={},                   -- propcase values
+    title_line=1,
 }
 
 
@@ -74,28 +75,28 @@ local camera_funcs=require'camera_funcs'
 camera_env._G=camera_env
 camera_env.arg=nil
 camera_env.package = {
-	loaded={}
+    loaded={}
 }
 -- mark stuff that would be loaded on cam as loaded
 for i,k in ipairs({'string','debug','package','_G','io','table','math','coroutine','imath'}) do
-	camera_env.package.loaded[k] = package.loaded[k]
+    camera_env.package.loaded[k] = package.loaded[k]
 end
 -- make a version of require that runs the module in the camera environment
 camera_env.require=function(mname)
-	if camera_env.package.loaded[mname] then
-		return camera_env.package.loaded[mname]
-	end
-	-- TODO CHDK now honors package.path, this only does defaults!
-	local f=loadfile(camera_module_root..'/SCRIPTS/'..mname..'.lua')
-	if not f then
-		f=loadfile(camera_module_root..'/LUALIB/'..mname..'.lua')
-	end
-	if not f then
-		error("camera module '"..tostring(mname).."' not found")
-	end
-	setfenv(f,camera_env)
-	camera_env.package.loaded[mname]=f()
-	return camera_env.package.loaded[mname]
+    if camera_env.package.loaded[mname] then
+        return camera_env.package.loaded[mname]
+    end
+    -- TODO CHDK now honors package.path, this only does defaults!
+    local f=loadfile(camera_module_root..'/SCRIPTS/'..mname..'.lua')
+    if not f then
+        f=loadfile(camera_module_root..'/LUALIB/'..mname..'.lua')
+    end
+    if not f then
+        error("camera module '"..tostring(mname).."' not found")
+    end
+    setfenv(f,camera_env)
+    camera_env.package.loaded[mname]=f()
+    return camera_env.package.loaded[mname]
 end
 
 local script_title
@@ -106,12 +107,30 @@ local script_params={
 local header_item_funcs={
     title=function(line,line_num)
         local s=line:match("%s*@[Tt][Ii][Tt][Ll][Ee]%s*(.*)")
-        if s then 
+        if s then
             if script_title then
                 print("warning, extra @title line",line_num)
             else
                 script_title = s
                 print("title:",s)
+            end
+            return true
+        end
+    end,
+    version=function(line, line_num)
+        local s=line:match("%s*@chdk_version%s*([%d%.]+)")
+        if s then
+            if chdk_version then
+                print("warning, extra @chdk_version line", line_num)
+            else
+                chdk_version = {}
+                for v in string.gmatch(s, "%d+") do chdk_version[#chdk_version + 1] = v end
+                if s:sub(1, 1) ~= "." and s:sub(-1) ~= "." and #chdk_version > 1 and #chdk_version <= 4 then
+                    print("version:", table.concat(chdk_version, "."))
+                else
+                    chdk_version = nil
+                    print("warning, wrong @chdk_version line", line_num)
+                end
             end
             return true
         end
@@ -144,12 +163,122 @@ local header_item_funcs={
             return true
         end
     end,
+    hash_number=function(line, line_num)
+        local var_name, var_default, text, val_range = line:match('^%s*#([%w_]+)=(%-?%d+)%s+"([^"]+)"%s+%[(%-?%d+%s+%-?%d+)%]')
+        if val_range == nil then
+            var_name, var_default, text = line:match('^%s*#([%w_]+)=(%-?%d+)%s+"([^"]+)"%s*$')
+            val_range = "-65535 65535"
+        end
+        if var_name and var_default and val_range then
+            local range = {}
+            for val in string.gmatch(val_range, "%S+") do
+                range[#range + 1] = tonumber(val)
+            end
+            var_default = tonumber(var_default)
+            if range and #range == 2 then
+                if range[1] > range[2] then range[1], range[2] = range[2], range[1] end
+                if range[1] > var_default or range[2] < var_default then var_default = nil end
+            end
+            if var_default then
+                if not script_params[var_name] then
+                    script_params[var_name] = { default=var_default }
+                    print(string.format("#number %s %d [%d %d]", var_name, var_default, range[1], range[2]))
+                else
+                    print("warning, double #parameter", var_name, var_default, "line", line_num)
+                end
+                return true
+            else
+                print("warning, default value for numbers not in range! line:", line_num)
+            end
+        end
+    end,
+    hash_long=function(line, line_num)
+        local var_name, var_default, text = line:match('^%s*#([%w_]+)=(%d+)%s+"([^"]+)"%s+long')
+        if var_name and var_default then
+            var_default = tonumber(var_default)
+            if var_default >= 0 or var_default < 10000000 then
+                if not script_params[var_name] then
+                    script_params[var_name] = { default=var_default }
+                    print("#long  ",var_name,var_default)
+               else
+                    print("warning, double #parameter", var_name, var_default, "line", line_num)
+                end
+                return true
+            else
+                print("warning, wrong default value for long! line:", line_num)
+            end
+        end
+    end,
+    hash_bool=function(line, line_num)
+        local var_name, var_default, text = line:match('^%s*#([%w_]+)=(%d+)%s+"([^"]+)"%s+bool')
+        if var_name and var_default then
+            var_default = tonumber(var_default)
+            if var_default == 0 or var_default == 1 then
+                if not script_params[var_name] then
+                    script_params[var_name] = { default=var_default }
+                    print("#bool  ", var_name, var_default)
+                else
+                    print("warning, double #parameter", var_name, var_default, "line", line_num)
+                end
+                return true
+            else
+                print("warning, wrong default value for bool! line:", line_num)
+            end
+        end
+    end,
+    hash_bool2=function(line, line_num)
+        local var_name, var_default, text = line:match('^%s*#([%w_]+)=(true)%s+"([^"]+)"%s*$')
+        if (var_name == nil) then
+            var_name, var_default, text = line:match('^%s*#([%w_]+)=(false)%s+"([^"]+)"%s*$')
+        end
+        if var_name then
+            if (var_default == 'false') or (var_default == 'true') then
+                var_default = (var_default == 'true')
+                if script_params[var_name] == nil then
+                    script_params[var_name] = { default=var_default }
+                    print("#bool  ", var_name, var_default)
+                else
+                    print("warning, double #parameter", var_name, var_default, "line", line_num)
+                end
+                return true
+            else
+                print("warning, wrong default value for bool! line:", line_num)
+            end
+        end
+    end,
+    hash_values=function(line, line_num)
+        local var_name, var_default, text, val_range, val_ext = line:match('^%s*#([%w_]+)=(%-?%d+)%s+"([^"]+)"%s+{([%w%p%s]+)}%s*(%a*)')
+        if var_name and var_default and val_range and val_ext then
+            local values, lua_offset = {}, (val_ext == "table") and 0 or (#val_ext == 0) and 1 or nil
+            for val in string.gmatch(val_range, "%S+") do
+                if #val > 0 then values[#values + 1] = val end
+            end
+            var_default = tonumber(var_default)
+            if lua_offset and #values > 0 and values[var_default + lua_offset] then
+                if not script_params[var_name] then
+                    if lua_offset == 0 then
+                        values.index = var_default
+                        values.value = values[var_default]
+                        script_params[var_name] = { default = values }
+                    else
+                        script_params[var_name] = { default = var_default }
+                    end
+                    print(string.format("#values %s %d {%s} %s", var_name, var_default, table.concat(values," "), val_ext))
+                else
+                    print("warning, double #parameter", var_name, var_default, "line", line_num)
+                end
+                return true
+            else
+                print("warning, wrong default value for values! line:", line_num)
+            end
+        end
+    end,
 }
 
 function parse_script_header(scriptname)
     local line_num
-    line_num = 0
-    for line in io.lines(scriptname) do 
+    line_num = 1
+    for line in io.lines(scriptname) do
         for k,f in pairs(header_item_funcs) do
             if f(line,line_num) then
                 break
@@ -162,7 +291,7 @@ function parse_script_header(scriptname)
     end
     -- set the params to their default values
     for name,t in pairs(script_params) do
-        if t.default then
+        if t.default ~= nil then
             camera_env[name] = t.default
         else
             print("warning param",name,"missing default value")
@@ -202,13 +331,13 @@ while arg[i] do
                 print("expected number for",opt,"not",val)
             end
         end
-    else 
+    else
         print("bad arg",tostring(arg[i]))
     end
     i=i+1
 end
 if conf_script then
-	dofile(conf_script)
+    dofile(conf_script)
 end
 
 -- import the base camera functions, after conf so it can modify
@@ -221,6 +350,7 @@ if err then
     error("error loading " .. chdk_script_name .. " " .. err)
 end
 setfenv (chdk_script_f, camera_env)
+print()
 local status,result = pcall(chdk_script_f)
 if not status then
     error("error running " .. chdk_script_name .. " " .. result)
