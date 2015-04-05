@@ -1,4 +1,13 @@
 local camera_funcs = {}
+
+local function on_off_value(value)
+    if type(value) == "boolean" then
+        return value and 1 or 0
+    else
+        return value
+    end
+end
+
 -- keys
 function camera_funcs.shoot()
     if camera_state.raw > 0 then
@@ -122,11 +131,12 @@ end
 
 -- raw
 function camera_funcs.set_raw(n)
-    if n == 0 or n == 1 then camera_state.raw = n end
+    local _n = on_off_value(n)
+    if _n == 0 or _n == 1 then camera_state.raw = _n end
 end
 
 function camera_funcs.get_raw()
-    return camera_state.raw
+    return camera_state.raw == 1 and true or false
 end
 
 function camera_funcs.get_raw_count()
@@ -158,11 +168,11 @@ function camera_funcs.get_day_seconds()
 end
 
 function camera_funcs.get_time(c)
-  if c=="D" then 
+  if c=="D" then
     return os.date("%d")
-  elseif c=="M" then 
+  elseif c=="M" then
     return os.date("%m")
-  elseif c=="Y" then 
+  elseif c=="Y" then
     return os.date("%Y")
   elseif c=="h" then
     return os.date("%H")
@@ -170,7 +180,7 @@ function camera_funcs.get_time(c)
     return os.date("%M")
   elseif c=="s" then
     return os.date("%S")
-  else 
+  else
     return 9999
   end
 end
@@ -190,9 +200,10 @@ function camera_funcs.cls()
 end
 
 function camera_funcs.print_screen(n)
-    if n == 0 or n == false then
+    local _n = on_off_value(n)
+    if _n == 0 then
         print(">write log file off<")
-    elseif n == -1000 then
+    elseif _n == -1000 then
         print(">write log file append<")
     else
         print(">write log file on<")
@@ -248,8 +259,9 @@ function camera_funcs.get_gui_screen_height()
 end
 
 function camera_funcs.set_draw_title_line(n)
-    if n == 1 then print(">title line on<") camera_state.title_line = 1 end
-    if n == 0 then print(">title line off<") camera_state.title_line = 0 end
+    local _n = on_off_value(n)
+    if _n == 1 then print(">title line on<") camera_state.title_line = 1 end
+    if _n == 0 then print(">title line off<") camera_state.title_line = 0 end
 end
 
 function camera_funcs.get_draw_title_line()
@@ -303,18 +315,22 @@ function camera_funcs.set_zoom(n)
 end
 
 function camera_funcs.set_mf(n)
-    if n == 1 then print(">MF on<") end
-    if n == 0 then print(">MF off<") end
+    local _n = on_off_value(n)
+    if _n == 1 then print(">MF on<") end
+    if _n == 0 then print(">MF off<") end
+    return camera_state.rec
 end
 
 function camera_funcs.set_aflock(n)
-    if n == 1 then print(">aflock on<") end
-    if n == 0 then print(">aflock off<") end
+    local _n = on_off_value(n)
+    if _n == 1 then print(">aflock on<") end
+    if _n == 0 then print(">aflock off<") end
 end
 
 function camera_funcs.set_aelock(n)
-    if n == 1 then print(">aelock on<") end
-    if n == 0 then print(">aelock off<") end
+    local _n = on_off_value(n)
+    if _n == 1 then print(">aelock on<") end
+    if _n == 0 then print(">aelock off<") end
 end
 
 --camera
@@ -337,7 +353,7 @@ end
 -- return 1 or 0, depending on system clock... a quick&dirty simulation for shooting process
 -- TODO could / should base on shoot(), shoot_full etc
 function camera_funcs.get_shooting()
-    if os.date("%S")%3 == 1 then 
+    if os.date("%S")%3 == 1 then
         return true
     else
         return false
@@ -392,8 +408,9 @@ function camera_funcs.set_led(n, s)
 end
 
 function camera_funcs.set_backlight(n)
-    if n == 1 then print(">Backlight on<") end
-    if n == 0 then print(">Backlight off<") end
+    local _n = on_off_value(n)
+    if _n == 1 then print(">Backlight on<") end
+    if _n == 0 then print(">Backlight off<") end
 end
 
 function camera_funcs.get_mode()
@@ -401,10 +418,11 @@ function camera_funcs.get_mode()
 end
 
 function camera_funcs.set_record(n)
-    if n == 1  or n == true then
+    local _n = on_off_value(n)
+    if _n == 1 then
         camera_state.rec = true
         print("record mode")
-    elseif n == 0  or n == false then
+    elseif _n == 0 then
         camera_state.rec = false
         print("play mode")
     end
@@ -428,8 +446,8 @@ function camera_funcs.md_detect_motion()
 end
 
 -- histogram
-function camera_funcs.shot_histo_enable(s)
-    local x=n
+function camera_funcs.shot_histo_enable(n)
+    local _n = on_off_value(n)
 end
 
 function camera_funcs.get_histo_range(n1,n2)
@@ -442,6 +460,24 @@ end
 
 function camera_funcs.set_config_value(id, val)
     print("cfg id", id, "value", val)
+end
+
+function camera_funcs.save_config_file(id, file)
+    print(string.format("save cfg id='%s', file='%s'",id, file or "default"))
+    return false
+end
+
+function camera_funcs.load_config_file(id, file)
+    print(string.format("load cfg id='%s', file='%s'",id, file or "default"))
+    return false
+end
+
+function camera_funcs.get_video_button()
+    return false
+end
+
+function camera_funcs.get_focus_ok()
+    return true
 end
 
 return camera_funcs

@@ -100,6 +100,7 @@ camera_env.require=function(mname)
 end
 
 local script_title
+local chdk_version = {0, 0, 0, 0}
 
 local script_params={
 }
@@ -120,15 +121,15 @@ local header_item_funcs={
     version=function(line, line_num)
         local s=line:match("%s*@chdk_version%s*([%d%.]+)")
         if s then
-            if chdk_version then
+            if table.concat(chdk_version, ".") ~= "0.0.0.0" then
                 print("warning, extra @chdk_version line", line_num)
             else
-                chdk_version = {}
-                for v in string.gmatch(s, "%d+") do chdk_version[#chdk_version + 1] = v end
-                if s:sub(1, 1) ~= "." and s:sub(-1) ~= "." and #chdk_version > 1 and #chdk_version <= 4 then
-                    print("version:", table.concat(chdk_version, "."))
+                local cv = {}
+                for v in string.gmatch(s, "%d+") do cv[#cv + 1] = tonumber(v) end
+                if s:sub(1, 1) ~= "." and s:sub(-1) ~= "." and #cv > 1 and #cv <= 4 then
+                    for i = 1, #cv do chdk_version[i] = cv[i] end
+                    print("@chdk_version:", table.concat(chdk_version, "."))
                 else
-                    chdk_version = nil
                     print("warning, wrong @chdk_version line", line_num)
                 end
             end
@@ -159,7 +160,7 @@ local header_item_funcs={
             else
                 script_params[param_name].default = tonumber(param_default)
             end
-            print("default",param_name,param_default)
+            print("@default",param_name,param_default)
             return true
         end
     end,
@@ -349,8 +350,12 @@ local chdk_script_f,err = loadfile(chdk_script_name)
 if err then
     error("error loading " .. chdk_script_name .. " " .. err)
 end
+if chdk_version[1] == 1 and chdk_version[2] == 3 then
+    print("load wrap13.lua")
+    camera_env.require("wrap13")
+end
 setfenv (chdk_script_f, camera_env)
-print()
+print("=== START =============================")
 local status,result = pcall(chdk_script_f)
 if not status then
     error("error running " .. chdk_script_name .. " " .. result)
