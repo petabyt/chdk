@@ -373,9 +373,8 @@ static int rawop_histo_update(lua_State *L) {
 }
 
 /*
-frac=histo:range(min,max[,'count'])
-return number of values in range, either as a fraction in parts per 1000, or total count
-TODO any reason to make 1000 adjustable?
+frac=histo:range(min,max[,'count'|scale])
+return number of values in range, either as a fraction in parts per scale, or total count
 */
 static int rawop_histo_range(lua_State *L) {
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
@@ -384,13 +383,18 @@ static int rawop_histo_range(lua_State *L) {
     }
     unsigned minval=luaL_checknumber(L,2);
     unsigned maxval=luaL_checknumber(L,3);
-    int frac=1;
+    int scale=1000;
     if(lua_gettop(L) >= 4 && !lua_isnil(L,4)) {
         const char *s=lua_tostring(L,4);
         if(!s || strcmp(s,"count") != 0) {
-            return luaL_error(L,"invalid format");
+            scale=lua_tonumber(L,4);
+            // scale could be 0 from error passing 0, but neither is valid
+            if(!scale) {
+                return luaL_error(L,"invalid format");
+            }
+        } else {
+            scale=0;
         }
-        frac=0;
     }
     if(maxval >= h->entries || minval > maxval) {
         return luaL_error(L,"invalid range");
@@ -409,8 +413,8 @@ static int rawop_histo_range(lua_State *L) {
     }
     // TODO full raw buffer count*1000 could overflow 32 bit int
     // could check / work around using ints but probably not worth it
-    if(frac) {
-        lua_pushnumber(L,(1000*(double)count)/(double)h->total_pixels);
+    if(scale) {
+        lua_pushnumber(L,(scale*(double)count)/(double)h->total_pixels);
     } else {
         lua_pushnumber(L,count);
     }
