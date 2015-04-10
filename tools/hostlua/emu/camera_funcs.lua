@@ -480,4 +480,80 @@ function camera_funcs.get_focus_ok()
     return true
 end
 
+-- chdk bit routines for lua 5.1
+local function to32bits(value)
+    if type(value) ~= "number" then
+        error "wrong argument in bit functions"
+    end
+    local bittab, neg = {}, (value < 0)
+    local val = (neg) and -(value + 1) or value
+    for i=1, 32 do
+       bittab[i] = (val % 2 == 1) and true or false
+       val = val / 2
+    end
+    if neg then 
+        for i = 1, #bittab do bittab[i] = not(bittab[i]) end
+    end
+    return bittab
+end
+
+local function from32bits(bittab)
+    local res = 0
+    for i=#bittab, 1, -1 do
+        res = 2 * res + (bittab[i] and 1 or 0) 
+    end
+    return res
+end
+
+function camera_funcs.bitand(v1, v2)
+    local v1t = to32bits(v1)
+    local v2t = to32bits(v2)
+    for i = 1, #v1t do v1t[i] = (v1t[i] and v2t[i]) end
+    return from32bits(v1t)
+end
+
+function camera_funcs.bitor(v1, v2)
+    local v1t = to32bits(v1)
+    local v2t = to32bits(v2)
+    for i = 1, #v1t do v1t[i] = (v1t[i] or v2t[i]) end
+    return from32bits(v1t)
+end
+
+function camera_funcs.bitxor(v1, v2)
+    local v1t = to32bits(v1)
+    local v2t = to32bits(v2)
+    for i = 1, #v1t do v1t[i] = (v1t[i] ~= v2t[i]) end
+    return from32bits(v1t)
+end
+
+function camera_funcs.bitshl(v1, shift)
+    local v1t = to32bits(v1)
+    for i = #v1t, 1, -1 do 
+        v1t[i] = (i - shift > 0) and v1t[i - shift] or false
+    end
+    return from32bits(v1t)
+end
+
+function camera_funcs.bitshri(v1, shift)
+    local v1t = to32bits(v1)
+    for i = 1, #v1t - 1 do 
+        v1t[i] = v1t[(i + shift <= #v1t) and i + shift or #v1t]
+    end
+    return from32bits(v1t)
+end
+
+function camera_funcs.bitshru(v1, shift)
+    local v1t = to32bits(v1)
+    for i = 1, #v1t do 
+        v1t[i] = (i + shift <= #v1t) and v1t[i + shift] or false
+    end
+    return from32bits(v1t)
+end
+
+function camera_funcs.bitnot(v1)
+    local v1t = to32bits(v1)
+    for i = 1, #v1t do v1t[i] = not(v1t[i]) end
+    return from32bits(v1t)
+end
+
 return camera_funcs
