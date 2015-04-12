@@ -3,31 +3,47 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
-
-typedef struct {
-	short grp;
-	short hackkey;
-	long canonkey;
-} KeyMap;
-
+#include "kbd_common.h"
 
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+
+KeyMap keymap[] = {
+    /* tiny bug: key order matters. see kbd_get_pressed_key()
+     * for example
+     */
+    { 1, KEY_UP		, 0x00020000 },
+    { 1, KEY_DOWN		, 0x00080000 },
+    { 1, KEY_LEFT		, 0x00010000 },
+    { 1, KEY_RIGHT		, 0x00040000 },
+    { 1, KEY_SET		, 0x00100000 },
+    { 0, KEY_SHOOT_FULL	, 0x00000003 },
+    { 0, KEY_SHOOT_FULL_ONLY, 0x00000002 },
+    { 0, KEY_SHOOT_HALF	, 0x00000001 },
+    { 1, KEY_ZOOM_IN	, 0x10000000 },
+    { 1, KEY_ZOOM_IN	, 0x18000000 },
+    { 1, KEY_ZOOM_OUT	, 0x01000000 },
+    { 1, KEY_ZOOM_OUT	, 0x05000000 },
+    { 1, KEY_MENU		, 0x00200000 },
+    { 1, KEY_DISPLAY	, 0x00002000 },
+    { 1, KEY_PRINT		, 0x00004000 },
+    { 1, KEY_ERASE		, 0x00400000 },
+    { 1, KEY_ISO		, 0x00001000 },
+    { 1, KEY_FLASH		, 0x00000008 },
+    { 1, KEY_MF		, 0x00000010 },
+    { 1, KEY_MACRO		, 0x00000020 },
+    { 1, KEY_VIDEO		, 0x40000000 },
+    { 1, KEY_TIMER		, 0x02000000 },
+    { 0, 0, 0 }
+};
+
 
 long physw_copy[3];
-static KeyMap keymap[];
-static long alt_mode_key_mask = 0x00004000;
-
-#define KEYS_MASK0 (0x00000003)
-#define KEYS_MASK1 (0x5f7f7038)
-#define KEYS_MASK2 (0x00000000)
 
 #define NEW_SS (0x2000)
-#define SD_READONLY_FLAG (0x20000)
 
-#define USB_MASK (8) 
-#define USB_IDX  2
+// bit read in kbd update
 static long got_usb_bit = 0;
 
 int get_usb_bit() 
@@ -35,9 +51,7 @@ int get_usb_bit()
 	return (got_usb_bit == USB_MASK); 
 }
  
-#ifndef MALLOCD_STACK
 static char kbd_stack[NEW_SS];
-#endif
 
 extern void _platformsub_kbd_fetch_data(long*);
 long __attribute__((naked)) wrap_kbd_p1_f();
@@ -86,11 +100,7 @@ mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
     register int i;
     register long *newstack;
 
-#ifndef MALLOCD_STACK
     newstack = (void*)kbd_stack;
-#else
-    newstack = malloc(NEW_SS);
-#endif
 
     for (i=0;i<NEW_SS/4;i++)
 	newstack[i]=0xdededede;
@@ -158,194 +168,32 @@ void my_kbd_read_keys_cont(long *canon_key_state)
 
     got_usb_bit = kbd_new_state[USB_IDX] & USB_MASK;
 
-    kbd_new_state[0] = kbd_new_state[0] & ~SD_READONLY_FLAG;
-
     physw_copy[0] = kbd_new_state[0];
     physw_copy[1] = kbd_new_state[1];
     physw_copy[2] = kbd_new_state[2];
 
     if (kbd_process() == 0){
-	// leave it alone...
-	physw_status[0] = kbd_new_state[0];
-	physw_status[1] = kbd_new_state[1];
-	physw_status[2] = kbd_new_state[2];
-        physw_status[1] |= alt_mode_key_mask;
+        // leave it alone...
+        physw_status[0] = kbd_new_state[0];
+        physw_status[1] = kbd_new_state[1];
+        physw_status[2] = kbd_new_state[2];
     } else {
-	// override keys
-	physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
-			  (kbd_mod_state[0] & KEYS_MASK0);
+        // override keys
+        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) |
+                  (kbd_mod_state[0] & KEYS_MASK0);
 
-	physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) |
-			  (kbd_mod_state[1] & KEYS_MASK1);
+        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) |
+                  (kbd_mod_state[1] & KEYS_MASK1);
 
-	physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
-			  (kbd_mod_state[2] & KEYS_MASK2);
+        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
+                  (kbd_mod_state[2] & KEYS_MASK2);
     }
 
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
+    kbd_update_physw_bits();
 
     canon_key_state[0] = physw_status[0];
     canon_key_state[1] = physw_status[1];
     canon_key_state[2] = physw_status[2];
-
 }
 
-
-void kbd_set_alt_mode_key_mask(long key)
-{
-    int i;
-    for (i=0; keymap[i].hackkey; ++i) {
-	if (keymap[i].hackkey == key) {
-	    alt_mode_key_mask = keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_press(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
-	    return;
-	}
-    }
-}
-
-void kbd_key_release_all()
-{
-  kbd_mod_state[0] |= KEYS_MASK0;
-  kbd_mod_state[1] |= KEYS_MASK1;
-  kbd_mod_state[2] |= KEYS_MASK2;
-}
-
-long kbd_is_key_pressed(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
-	}
-    }
-    return 0;
-}
-
-long kbd_is_key_clicked(long key)
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (keymap[i].hackkey == key){
-	    return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-		    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
-	}
-    }
-    return 0;
-}
-
-long kbd_get_pressed_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_get_clicked_key()
-{
-    int i;
-    for (i=0;keymap[i].hackkey;i++){
-	if (((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
-	    ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0)){
-	    return keymap[i].hackkey;
-	}
-    }
-    return 0;
-}
-
-long kbd_use_zoom_as_mf() {
-    static long v;
-    static long zoom_key_pressed = 0;
-
-    if (kbd_is_key_pressed(KEY_ZOOM_IN) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_MF);
-            kbd_key_press(KEY_UP);
-            zoom_key_pressed = KEY_ZOOM_IN;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_IN) {
-            kbd_key_release(KEY_UP);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    if (kbd_is_key_pressed(KEY_ZOOM_OUT) && kbd_is_key_pressed(KEY_MF) && (mode_get()&MODE_MASK) == MODE_REC) {
-        get_property_case(PROPCASE_FOCUS_MODE, &v, 4);
-        if (v) {
-            kbd_key_release_all();
-            kbd_key_press(KEY_MF);
-            kbd_key_press(KEY_DOWN);
-            zoom_key_pressed = KEY_ZOOM_OUT;
-            return 1;
-        }
-    } else {
-        if (zoom_key_pressed==KEY_ZOOM_OUT) {
-            kbd_key_release(KEY_DOWN);
-            zoom_key_pressed = 0;
-            return 1;
-        }
-    }
-    return 0;
-}
-static KeyMap keymap[] = {
-    /* tiny bug: key order matters. see kbd_get_pressed_key()
-     * for example
-     */
-	{ 1, KEY_UP		, 0x00020000 },
-	{ 1, KEY_DOWN		, 0x00080000 },
-	{ 1, KEY_LEFT		, 0x00010000 },
-	{ 1, KEY_RIGHT		, 0x00040000 },
-	{ 1, KEY_SET		, 0x00100000 },
-	{ 0, KEY_SHOOT_FULL	, 0x00000003 },
-    { 0, KEY_SHOOT_FULL_ONLY, 0x00000002 },
-	{ 0, KEY_SHOOT_HALF	, 0x00000001 },
-	{ 1, KEY_ZOOM_IN	, 0x10000000 },
-	{ 1, KEY_ZOOM_IN	, 0x18000000 },
-	{ 1, KEY_ZOOM_OUT	, 0x01000000 },
-	{ 1, KEY_ZOOM_OUT	, 0x05000000 },
-	{ 1, KEY_MENU		, 0x00200000 },
-	{ 1, KEY_DISPLAY	, 0x00002000 },
-	{ 1, KEY_PRINT		, 0x00004000 },
-	{ 1, KEY_ERASE		, 0x00400000 },
-        { 1, KEY_ISO		, 0x00001000 },
-        { 1, KEY_FLASH		, 0x00000008 },
-        { 1, KEY_MF		, 0x00000010 },
-        { 1, KEY_MACRO		, 0x00000020 },
-        { 1, KEY_VIDEO		, 0x40000000 },
-        { 1, KEY_TIMER		, 0x02000000 },
-//        { 1, KEY_DUMMY   	, 0x00000000 },
-	{ 0, 0, 0 }
-};
-
+void kbd_set_alt_mode_key_mask(long key) { }
