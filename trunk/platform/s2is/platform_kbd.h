@@ -1,5 +1,6 @@
 #ifndef PLATFORM_KBD_H
 #define PLATFORM_KBD_H
+// plaform specific keyboard defines, see core/kbd_common.c for documentation
 // platform code handles getting / updating key state, very different from other platforms
 #define KBD_CUSTOM_UPDATE_KEY_STATE 1
 

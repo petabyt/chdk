@@ -1,6 +1,11 @@
 /*
 common low level keyboard handling functions
 
+WARNING:
+If you change code here, be sure to grep platform_kbd.h files for
+KBD_CUSTOM_ and make sure that the cameras special platform specific
+requirements are updated if required.
+
 platform_kbd.h defines
 ** controls for kbd.c implementation
 * this camera has a totally custom keyboard code, don't build common code
@@ -11,6 +16,7 @@ KBD_CUSTOM_UPDATE_KEY_STATE
 
 * non-standard manipulation of other physw bits (SD readonly, USB etc)
 KBD_CUSTOM_UPDATE_PHYSW_BITS
+
 
 * use logical event to simulate "video" button from script
 * for touchscreen cameras without a physical video button
@@ -53,6 +59,7 @@ SD_DOOR_OVERRIDE 1
 SD_DOOR_FLAG
 * physw_status index for SD door
 SD_DOOR_IDX
+
 */
 #include "platform.h"
 #include "core.h"

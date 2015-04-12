@@ -1,5 +1,6 @@
 #ifndef PLATFORM_KBD_H
 #define PLATFORM_KBD_H
+// plaform specific keyboard defines, see core/kbd_common.c for documentation
 // platform code handles reading, updating physw
 #define KBD_CUSTOM_UPDATE_KEY_STATE 1
 #define KBD_CUSTOM_UPDATE_PHYSW_BITS 1

@@ -1,5 +1,6 @@
 #ifndef PLATFORM_KBD_H
 #define PLATFORM_KBD_H
+// plaform specific keyboard defines, see core/kbd_common.c for documentation
 // non-standard key state update to handle inverted keys, etc
 #define KBD_CUSTOM_UPDATE_KEY_STATE 1
 #define KEYS_MASK0 (0x00020000)
