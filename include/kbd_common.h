@@ -1,5 +1,7 @@
 /*
 Common low level keyboard code. This file must not be included in module or platform independent code
+This file is the interface between core/kbd_common.c and the platforms kbd.c file
+Platform specific defines go in platform_kbd.h, see kbd_common.c for documentation
 */
 #ifndef KBD_COMMON_H
 #define KBD_COMMON_H

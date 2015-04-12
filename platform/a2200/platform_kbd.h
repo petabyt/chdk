@@ -1,5 +1,6 @@
 #ifndef PLATFORM_KBD_H
 #define PLATFORM_KBD_H
+// plaform specific keyboard defines, see core/kbd_common.c for documentation
 
 #define KEYS_MASK0			(0x05000000|0x00800000)
 #define KEYS_MASK1			(0x00000001|0x00000002|0x00000003|0x00001000|0x00002000|0x00004000|0x00008000|0x00010000|0x00020000|0x00040000|0x00080000)
