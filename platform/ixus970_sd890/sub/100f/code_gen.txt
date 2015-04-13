@@ -286,7 +286,8 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=1
 ASM
-FW 30
+FW 29
+PATCHSUB ref=0
 >>>
 "    BL      capt_seq_hook_raw_here \n"         // added
 <<<
