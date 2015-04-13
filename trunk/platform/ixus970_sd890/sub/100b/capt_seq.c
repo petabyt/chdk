@@ -327,7 +327,7 @@ asm volatile (
 "    BL      sub_FF93DA48 \n"
 "    BL      sub_FF93E520 \n"
 "    MOV     R0, R4 \n"
-"    BL      sub_FF93DB30 \n"
+"    BL      sub_FF93DB30_my \n"  // --> Patched. Old value = 0xFF93DB30.
 "    BL      capt_seq_hook_raw_here \n"         // added
 "    LDR     PC, =0xFF85E438 \n"  // Continue in firmware
 );
