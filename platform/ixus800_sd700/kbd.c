@@ -115,4 +115,3 @@ void kbd_fetch_data(long *dst)
     dst[2] = *mmio2 & 0xffff;
 }
 
-void kbd_set_alt_mode_key_mask(long key) {}

@@ -41,11 +41,6 @@ KeyMap keymap[] = {
     { 0, 0, 0 }
 };
 
-// NOP
-void kbd_set_alt_mode_key_mask(long key)
-{
-}
-
 //volatile int jogdial_stopped=0;
 int jogdial_stopped=0;
 

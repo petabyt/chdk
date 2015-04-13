@@ -79,7 +79,6 @@ extern long kbd_get_pressed_key();
 extern long kbd_get_clicked_key();
 extern long kbd_get_autoclicked_key();
 extern long kbd_use_zoom_as_mf();
-extern void kbd_set_alt_mode_key_mask(long key);
 extern void kbd_set_extra_button(short);
 extern long get_jogdial_direction(void);
 

@@ -120,4 +120,3 @@ void kbd_fetch_data(long *dst)
     _kbd_pwr_off();
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }

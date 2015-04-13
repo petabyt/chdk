@@ -136,7 +136,6 @@ void jogdial_control(int n) {
     jogdial_stopped = n;
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 static int new_jogdial=0, old_jogdial=0;
 

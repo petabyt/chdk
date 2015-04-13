@@ -39,11 +39,6 @@ KeyMap keymap[] = {
 	{ 0, 0, 0 }
 };
 
-void kbd_set_alt_mode_key_mask(long key)
-{
-	// NOP ; -> obsolete, use to set variable alt_mode_key_mask but that was useless without the register # (0,1, or 2)
-}
-
 
 long __attribute__((naked)) wrap_kbd_p1_f();
 

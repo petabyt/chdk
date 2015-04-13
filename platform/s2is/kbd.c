@@ -196,4 +196,3 @@ void my_kbd_read_keys_cont(long *canon_key_state)
     canon_key_state[2] = physw_status[2];
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }

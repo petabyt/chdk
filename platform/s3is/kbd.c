@@ -127,4 +127,3 @@ void kbd_fetch_data(long *dst)
     _platformsub_kbd_fetch_data(dst);
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }

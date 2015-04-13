@@ -51,7 +51,6 @@ KeyMap keymap[] = {
     { 0, 0, 0 }
 };
 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 #if 0
 void my_blinkk(void) {

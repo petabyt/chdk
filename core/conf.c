@@ -524,9 +524,7 @@ void conf_info_func(unsigned short id)
         set_usb_remote_state();
         break;
     case 220:
-#if CAM_ADJUSTABLE_ALT_BUTTON
-        kbd_set_alt_mode_key_mask(conf.alt_mode_button);
-#else
+#ifndef CAM_ADJUSTABLE_ALT_BUTTON
         conf.alt_mode_button = KEY_PRINT;
 #endif
         break;

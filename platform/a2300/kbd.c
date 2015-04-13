@@ -41,7 +41,6 @@ KeyMap keymap[] = {
 };
 
 // NOP 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
 	
