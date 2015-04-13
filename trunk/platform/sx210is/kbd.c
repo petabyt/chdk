@@ -188,4 +188,3 @@ long get_jogdial_direction(void) {
     }
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }

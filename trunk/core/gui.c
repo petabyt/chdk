@@ -2011,7 +2011,6 @@ const char* gui_alt_mode_button_enum(int change, int arg)
         i=0;
 
     conf.alt_mode_button = keys[i];
-    kbd_set_alt_mode_key_mask(conf.alt_mode_button);
     return names[i];
 }
 #endif

@@ -121,7 +121,6 @@ void kbd_fetch_data(long *dst)
     _kbd_read_keys_r2(dst);
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 void jogdial_control(int n) {
     // this camera did not have jog_position defined

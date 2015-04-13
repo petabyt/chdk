@@ -16,11 +16,6 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-// NOP
-void kbd_set_alt_mode_key_mask(long key)
-{
-}
-
 //void kbd_fetch_data(long*);
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;

@@ -77,7 +77,6 @@ void kbd_fetch_data(long *dst)
     _kbd_read_keys_r2(dst);
 }
 
-void kbd_set_alt_mode_key_mask(long key) {}
 
 int jogdial_stopped=0;
 static int new_jogdial=0, old_jogdial=0;

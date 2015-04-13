@@ -39,8 +39,6 @@ KeyMap keymap[] = {
     { 0, 0, 0 }
 };
 
-// NOP
-void kbd_set_alt_mode_key_mask(long key) { }
 
 
 extern long __attribute__((naked)) wrap_kbd_p1_f() {

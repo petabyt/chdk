@@ -110,7 +110,6 @@ void kbd_fetch_data(long *dst)
 }
 
 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 static short new_jogdial=0, old_jogdial=0;
 

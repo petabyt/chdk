@@ -64,8 +64,6 @@ void __attribute__((noinline)) mykbd_task() {
 	_ExitTask();
 }
 
-// NOP
-void kbd_set_alt_mode_key_mask(long key) { }
 
 void my_kbd_read_keys() {
     kbd_update_key_state();

@@ -153,4 +153,3 @@ long get_jogdial_direction(void) {
  else return 0;
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }

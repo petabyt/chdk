@@ -37,7 +37,6 @@ int get_usb_bit()
 }
 
 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 
 

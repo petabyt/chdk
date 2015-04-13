@@ -227,4 +227,3 @@ void my_kbd_read_keys() {
 }
 
 
-void kbd_set_alt_mode_key_mask(long key) { }

@@ -102,7 +102,6 @@ void jogdial_control(int n) {
     jogdial_stopped = n;
 }
 
-void kbd_set_alt_mode_key_mask(long key) { }
 
 int Get_JogDial(void) {
  return (*(int*)0xC0240104)>>16;
