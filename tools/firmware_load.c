@@ -1140,6 +1140,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                     case 0xCCE4D2E6:    fw->ksys = "d4d  "; break;
                     case 0x66E0C6D2:    fw->ksys = "d4e  "; break;
                     case 0xE1268DB4:    fw->ksys = "d4f  "; break;
+                    case 0x216EA8C8:    fw->ksys = "d4g  "; break;
                 }
             }
 
