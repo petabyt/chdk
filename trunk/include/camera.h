@@ -166,6 +166,9 @@
     #undef  CAM_FORWARDMATRIX1                  // DNG camera forward matrix 1
     #undef  CAM_FORWARDMATRIX2                  // DNG camera forward matrix 2
     #undef  CAM_DNG_EXPOSURE_BIAS               // Specify DNG exposure bias value (to override default of -0.5 in the dng.c code)
+    #undef  CAM_CALC_BLACK_LEVEL                // Set this to enable dynamic Black Level calculation from RAW sensor data
+                                                // E.G. G1X may use black = 2048 for long exposures at high ISO
+                                                // TODO: Raw Merge code does not use this - merging files with different black points may give strange results
     #undef  DNG_EXT_FROM                        // Extension in the cameras known extensions to replace with .DNG to allow DNG
                                                 // files to be transfered over standard PTP. Only applicable to older cameras
 

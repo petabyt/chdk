@@ -250,6 +250,10 @@ void core_spytask()
 #ifdef CAM_HAS_GPS
             if (((int)conf.gps_on_off == 1) && ((int)conf.gps_waypoint_save == 1)) gps_waypoint();
 #endif
+#if defined(CAM_CALC_BLACK_LEVEL)
+            // Reset to default in case used by non-RAW process code (e.g. raw merge)
+            camera_sensor.black_level = CAM_BLACK_LEVEL;
+#endif
             continue;
         }
 

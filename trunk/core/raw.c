@@ -189,6 +189,18 @@ void raw_process(void)
     rawadr = get_raw_image_addr();
     char *altrawadr = get_alt_raw_image_addr();
 
+#if defined(CAM_CALC_BLACK_LEVEL)
+    int v1 = get_raw_pixel(4, 4);
+    int v2 = get_raw_pixel(4, 5);
+    int v3 = get_raw_pixel(5, 4);
+    int v4 = get_raw_pixel(5, 5);
+    int raw_calc_black_level = (v1 + v2 + v3 + v4) / 4;
+    if (raw_calc_black_level > CAM_BLACK_LEVEL * 2)
+        camera_sensor.black_level = raw_calc_black_level;
+    else
+        camera_sensor.black_level = CAM_BLACK_LEVEL;
+#endif
+
     if ((conf.save_raw && conf.dng_raw && is_raw_enabled()) 
         || (remotecap_get_target() & PTP_CHDK_CAPTURE_DNGHDR))
     {                             

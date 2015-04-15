@@ -64,6 +64,9 @@
     // bayer sensor pattern
     #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
 
+    #define CAM_CALC_BLACK_LEVEL                1   // Calculate black level from RAW sensor data instead of using fixed value.
+                                                    // G1X has a mode with black level = 2048 (Tv >= 1.3s & ISO >= 320)
+
     #define CAM_DNG_LENS_INFO                   { 151,10, 604,10, 28,10, 58,10 }    // See comments in camera.h
 
     //From G1 X native RAW file as converted to DNG by Adobe convertor
