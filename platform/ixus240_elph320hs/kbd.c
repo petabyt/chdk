@@ -8,14 +8,38 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
-#include "kbd_common.h"
 
-long kbd_new_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-long kbd_prev_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-long kbd_mod_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
-long touch_panel_state;
+
+typedef struct {
+    short grp;
+    short hackkey;
+    long canonkey;
+    short   x1, y1, x2, y2;
+    short   redraw;
+    char    *nm, *nm2;
+    int     min_gui_mode, max_gui_mode, cam_mode_mask;
+    int     *conf_val;
+    const char* (*chg_val)(int,int);
+    int     *conf_disable;
+} KeyMap;
+
+static long kbd_new_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_prev_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long kbd_mod_state[4] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
+static long touch_panel_state;
 
 extern void _GetKbdState(long*);
+
+//#define DELAY_TIMEOUT 10000
+// override key and feather bits to avoid feather osd messing up chdk display in ALT mode
+#define KEYS_MASK0         (0x00000000) //Logic OR of group 0 Keymap values
+#define KEYS_MASK1         (0x2F000000) //Logic OR of group 1 Keymap values
+#define KEYS_MASK2         (0x00000000) //Logic OR of group 2 Keymap values
+
+#define SD_READONLY_FLAG    0x00008000 // Found @0xff5ac30c, levent 0x20a
+#define SD_READONLY_IDX     0
+#define USB_MASK            0x40000000 // Found @0xff5ac38c, levent 0x202
+#define USB_IDX             2
 
 int get_usb_bit()
 {
@@ -246,7 +270,7 @@ const char* ts_pg_up(int change, int arg)
     return debug_pg;
 }
 
-KeyMap keymap[] = {
+static KeyMap keymap[] = {
     // Order IS important. kbd_get_pressed_key will walk down this table
     // and take the first matching mask. Notice that KEY_SHOOT_HALF is
     // always pressed if KEY_SHOOT_FULL is. --MarcusSt
@@ -327,8 +351,13 @@ static int is_button_active(int b, int guiMode, int camMode)
 
 int show_virtual_buttons()
 {
+    // The canon_playback_menu_active check prevents the CHDK button from being shown in rec mode
+    // The variable does not appear to be equivalent to the variable used in ixus500_elph310hs
+    /*
     extern char canon_play_menu_active;
     return (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0) && (canon_play_menu_active == 0);
+    */
+    return (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0);
 }
 
 
@@ -440,7 +469,10 @@ void virtual_buttons()
                 ofst = 16;
                 if (keymap[i].hackkey == TS_UP_DN_BUTTON)
                 {
-                    draw_string(x1+4, y1+ofst, buf, cl);
+                    // unclear what was supposed to be displayed here
+                    // use hard coded string rather than uninitialized buffer
+//                    draw_string(x1+4, y1+ofst, buf, cl);
+                    draw_string(x1+4, y1+ofst, "UD!", cl);
                 }
                 else
                 {
@@ -496,12 +528,10 @@ int ts_process_touch()
     return rv;
 }
 
-long __attribute__((naked)) wrap_kbd_p1_f();
+long __attribute__((naked)) wrap_kbd_p1_f() ;
 
 
-// no stack manipulation needed here, since we create the task directly
-void __attribute__((noinline))
-mykbd_task()
+static void __attribute__((noinline)) mykbd_task_proceed()
 {
     while (physw_run) {
         _SleepTask(physw_sleep_delay);
@@ -510,6 +540,13 @@ mykbd_task()
             _kbd_p2_f();
         }
     }
+}
+
+// no stack manipulation needed here, since we create the task directly
+void __attribute__((naked,noinline))
+mykbd_task()
+{
+    mykbd_task_proceed();
 
     _ExitTask();
 }
@@ -528,14 +565,13 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 void my_kbd_read_keys()
 {
-    kbd_update_key_state();
-    kbd_update_physw_bits();
-}
+    kbd_prev_state[0] = kbd_new_state[0];
+    kbd_prev_state[1] = kbd_new_state[1];
+    kbd_prev_state[2] = kbd_new_state[2];
+    kbd_prev_state[3] = kbd_new_state[3];
 
-void kbd_fetch_data(long *dst)
-{
-    _GetKbdState(dst);
-    _kbd_read_keys_r2(dst);
+    _GetKbdState(kbd_new_state);
+    _kbd_read_keys_r2(kbd_new_state);
     if (touch_screen_active == 1)               // Touch screen activated?
     {
         kbd_new_state[3] = touch_panel_state;               // Yes, use virtual button state
@@ -544,4 +580,112 @@ void kbd_fetch_data(long *dst)
     {
         kbd_new_state[3] = touch_panel_state = 0xFFFFFFFF;  // No, clear out virtual button state
     }
+
+    if (kbd_process() == 0) {
+        // leave it alone...
+        // we read keyboard state with _kbd_read_keys()
+        physw_status[0] = kbd_new_state[0];
+        physw_status[1] = kbd_new_state[1];
+        physw_status[2] = kbd_new_state[2];
+    } else {
+        // override keys
+        physw_status[0] = (kbd_new_state[0] & (~KEYS_MASK0)) | (kbd_mod_state[0] & KEYS_MASK0);
+        physw_status[1] = (kbd_new_state[1] & (~KEYS_MASK1)) | (kbd_mod_state[1] & KEYS_MASK1);
+        physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
+    }
+    physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
+
+    if (conf.remote_enable) {
+        physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
+    }
+}
+
+
+/****************/
+
+void kbd_key_press(long key)
+{
+    int i;
+
+    for (i=0;keymap[i].hackkey;i++) {
+        if (keymap[i].hackkey == key)
+        {
+            kbd_mod_state[keymap[i].grp] &= ~keymap[i].canonkey;
+            return;
+        }
+    }
+}
+
+void kbd_key_release(long key)
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++) {
+        if (keymap[i].hackkey == key) {
+            kbd_mod_state[keymap[i].grp] |= keymap[i].canonkey;
+            return;
+        }
+    }
+}
+
+void kbd_key_release_all()
+{
+    kbd_mod_state[0] |= KEYS_MASK0;
+    kbd_mod_state[1] |= KEYS_MASK1;
+    kbd_mod_state[2] |= KEYS_MASK2;
+    kbd_mod_state[3] = 0xFFFFFFFF;
+}
+
+long kbd_is_key_pressed(long key)
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++)
+    {
+        if ((keymap[i].hackkey == key) && keymap[i].canonkey)
+        {
+            return ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0) ? 1:0;
+        }
+    }
+    return 0;
+}
+
+long kbd_is_key_clicked(long key)
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++)
+    {
+        if ((keymap[i].hackkey == key) && keymap[i].canonkey)
+        {
+            return ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
+            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0);
+        }
+    }
+    return 0;
+}
+
+long kbd_get_pressed_key()
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++)
+    {
+        if (keymap[i].canonkey && ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
+        {
+            return keymap[i].hackkey;
+        }
+    }
+    return 0;
+}
+
+long kbd_get_clicked_key()
+{
+    int i;
+    for (i=0;keymap[i].hackkey;i++)
+    {
+        if (keymap[i].canonkey &&
+            ((kbd_prev_state[keymap[i].grp] & keymap[i].canonkey) != 0) &&
+            ((kbd_new_state[keymap[i].grp] & keymap[i].canonkey) == 0))
+        {
+            return keymap[i].hackkey;
+        }
+    }
+    return 0;
 }
