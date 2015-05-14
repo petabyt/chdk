@@ -351,8 +351,13 @@ static int is_button_active(int b, int guiMode, int camMode)
 
 int show_virtual_buttons()
 {
+    // The canon_playback_menu_active check prevents the CHDK button from being shown in rec mode
+    // The variable does not appear to be equivalent to the variable used in ixus500_elph310hs
+    /*
     extern char canon_play_menu_active;
     return (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0) && (canon_play_menu_active == 0);
+    */
+    return (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0);
 }
 
 

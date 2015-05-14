@@ -8,7 +8,8 @@ DEF(touch_screen_y,                     0x00002b9e)     //ixus310 28f2 -> ixus24
 
 //To do: These were taken from ixus310
 DEF(touch_screen_active,                0x00002b88)     //ixus310 28c4 @ ixus240.101a 2b88 if touch pressed 0x01, else 0x00
-DEF(canon_play_menu_active,             0x0000e790)     //ixus240 e790: 0 - 0x32aae0 <- this is always set when in rec and goes back to 0 on play mode
+// does not seem equivalent to ixus310, disabled
+//DEF(canon_play_menu_active,             0x0000e798)     //ixus240 <- this is always set when in rec and goes back to 0 on play mode
 
 DEF(cds_gain_value,                     0x0000abd0)     //Check this!!!
 
