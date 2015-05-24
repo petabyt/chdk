@@ -47,18 +47,5 @@ extern void dbg_printf(char *fmt,...);
 
 /******************************************************************/
 
-// flash hot shoe sense bit override macro, for use in platform kbd.c
-#ifdef CAM_HOTSHOE_OVERRIDE
-#define HOTSHOE_OVERRIDE \
-    if (conf.hotshoe_override == 1) { \
-        physw_status[HOTSHOE_IDX] = physw_status[HOTSHOE_IDX] & ~HOTSHOE_FLAG; \
-    } \
-    else if (conf.hotshoe_override == 2) { \
-        physw_status[HOTSHOE_IDX] = physw_status[HOTSHOE_IDX] | HOTSHOE_FLAG; \
-    }
-#endif
-
-/******************************************************************/
-
 #endif
 
