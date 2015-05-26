@@ -1,6 +1,6 @@
 --[[
 @title dynamic range test
-@chdk_version 1.4.0.3967
+@chdk_version 1.4.0.4138
 #overstops=4 "+ stops"
 #understops=6 "- stops"
 #draw_meter=true "draw meter"
@@ -249,6 +249,7 @@ function drtest:init()
 	self.draw_low = rawop.fb.black_level + rawop.fb.black_level / 2
 	self.draw_high = rawop.fb.white_level - rawop.fb.black_level
 	self.draw_low_thresh = rawop.fb.white_level - rawop.fb.white_level/3
+	self.histo_scale = 100000
 end
 
 function meter_bar_width(v)
@@ -329,11 +330,14 @@ end
 
 function drtest:draw_ev_histo(vals, left, top, val, step)
 	for i,v in ipairs(vals) do
-		rawop.fill_rect(left,top+(i-1)*4,v,4,val,step)
+		rawop.fill_rect(left,top+(i-1)*4,v/100,4,val,step)
 	end
 end
 
 function drtest:make_ev_histo(step,mode)
+	if not mode then
+		mode = self.histo_scale
+	end
 	local raw_min = rawop.fb.black_level
 	local r={
 		step = step,
@@ -360,16 +364,16 @@ function drtest:make_ev_histo(step,mode)
 	count_max = 0
 	for raw_val=r.peak_raw_min,r.peak_raw_max do
 		local count=self.histo:range(raw_val,raw_val,mode)
-		if count > count_max then
+		if count >= count_max then
 			r.peak_raw_val = raw_val
 			r.peak_count = count
 		end
 	end
 	return r
 end
--- convert per thousand to % string
-function pct_str(v)
-	return string.format("%d.%d",v/10,v%10)
+-- convert histo frac to % string
+function drtest:pct_str(v)
+	return string.format("%d.%03d",v/(self.histo_scale/100),v%(self.histo_scale/100))
 end
 
 function drtest:do_histo()
@@ -380,13 +384,13 @@ function drtest:do_histo()
 
 	t0=get_tick_count()
 	self.evh.all=self:make_ev_histo(12)
-	self.bl_pct,self.wl_pct = self.histo:range(1,rawop.fb.black_level),self.histo:range(rawop.fb.white_level,rawop.fb.white_level)
+	self.bl_pct,self.wl_pct = self.histo:range(1,rawop.fb.black_level,self.histo_scale),self.histo:range(rawop.fb.white_level,rawop.fb.white_level,self.histo_scale)
 	log:set{
 		histo_calc_time=get_tick_count()-t0,
 		peak=rawop.raw_to_ev96(self.evh.all.peak_raw_val),
-		['peak_bin%']=pct_str(self.evh.all[self.evh.all.peak_bin]),
-		['bl%']=pct_str(self.bl_pct),
-		['wl%']=pct_str(self.wl_pct),
+		['peak_bin%']=self:pct_str(self.evh.all[self.evh.all.peak_bin]),
+		['bl%']=self:pct_str(self.bl_pct),
+		['wl%']=self:pct_str(self.wl_pct),
 	}
 
 	-- update r g b channels
@@ -402,7 +406,7 @@ function drtest:do_histo()
 		log:set{
 			histo_calc_time=get_tick_count()-t0,
 			['peak_'..name]=rawop.raw_to_ev96(self.evh[name].peak_raw_val),
-			['peak_'..name..'_bin%']=pct_str(self.evh[name][self.evh[name].peak_bin]),
+			['peak_'..name..'_bin%']=self:pct_str(self.evh[name][self.evh[name].peak_bin]),
 		}
 	end
 end
@@ -546,7 +550,7 @@ for i=-overstops,understops do
 	set_tv96_direct(tv)
 	ecnt=get_exp_count()
 	press("shoot_full_only")
-	-- wait for shot histo and exp count to be ready
+	-- wait for raw data to be ready
 	hook_raw.wait_ready()
 	release("shoot_full_only")
 	drtest:doshot(string.format("%d",-i))
