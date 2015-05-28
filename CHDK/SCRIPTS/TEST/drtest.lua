@@ -25,6 +25,9 @@ function restore()
 	log:close()
 end
 
+function printf(...)
+	print(string.format(...))
+end
 -- log module
 log={}
 function log:init(opts)
