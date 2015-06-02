@@ -87,19 +87,12 @@ void my_kbd_read_keys()
     _kbd_pwr_off();
 }
 
+extern short rear_dial_position;
+// jog_position hack does not appear to be needed on older cams
 void jogdial_control(int n) {
-    // this camera did not have jog_position defined
-    /*
-    if (jogdial_stopped && !n) {
-        // If re-enabling jogdial set the task code current & previous positions to the actual
-        // dial positions so that the change won't get processed by the firmware
-        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
-    }
-    */
     jogdial_stopped = n;
 }
 
-// TODO port did not have get_jogdial_direction implemented
 
 void kbd_fetch_data(long *dst)
 {
@@ -111,4 +104,16 @@ void kbd_fetch_data(long *dst)
     dst[0] = *mmio0;
     dst[1] = *mmio1;
     dst[2] = *mmio2 & 0xffff;
+}
+
+static short new_jogdial = 0, old_jogdial = 0;
+
+long get_jogdial_direction(void)
+{
+    old_jogdial = new_jogdial;
+    new_jogdial = rear_dial_position;
+
+    if      (old_jogdial > new_jogdial)     return JOGDIAL_RIGHT;
+    else if (old_jogdial < new_jogdial)     return JOGDIAL_LEFT;
+    else                                    return 0;
 }
