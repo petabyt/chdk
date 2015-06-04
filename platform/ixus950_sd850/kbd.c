@@ -111,7 +111,6 @@ void my_kbd_read_keys()
     }
 
     _kbd_pwr_on();
-    kbd_fetch_data(kbd_new_state);
     
     // TODO TouchW logic equivalent to jogdial
     if(kbd_update_key_state() == 0) {
