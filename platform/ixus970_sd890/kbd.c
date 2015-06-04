@@ -141,9 +141,9 @@ long get_jogdial_direction(void)
 	new_jogdial=Get_JogDial();
 
 	if (old_jogdial<new_jogdial) {
-		return JOGDIAL_LEFT;
-	} else if (old_jogdial>new_jogdial) {
 		return JOGDIAL_RIGHT;
+	} else if (old_jogdial>new_jogdial) {
+		return JOGDIAL_LEFT;
 	} else {
 		return 0;
 	}
