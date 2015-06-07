@@ -15,6 +15,7 @@ void CreateTask_spytask() {
 };
 
 
+void my_touchw_task(void);
 
 void taskCreateHook(int *p) {
     p-=16;
@@ -23,6 +24,7 @@ void taskCreateHook(int *p) {
     if (p[0]==0xff85821c)  p[0]=(int)movie_record_task;
     if (p[0]==0xffa021bc)  p[0]=(int)filewritetask;
     if (p[0]==0xff870ce8)  p[0]=(int)init_file_modules_task;
+    if (p[0]==0xff8e6dc0)  p[0]=(int)my_touchw_task;
 }
 
 void boot()
@@ -249,7 +251,7 @@ asm volatile (
 //"  BL      _StartDiskboot \n"  // load DISKBOOT.BIN
 "    BL      CreateTask_spytask\n" // added
 "    BL      sub_FF86D26C \n"
-"    BL      sub_FF82BCAC_my \n"  // --> Patched. Old value = 0xFF82BCAC. ---> touch_wheel.c
+"    BL      sub_FF82BCAC \n"
 "    BL      sub_FF828B4C \n"
 "    BL      sub_FF82BE28 \n"
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = _taskcreate_PhySw. Checks buttons and acts accordingly
@@ -566,5 +568,43 @@ asm volatile (
 "    MOV     R0, #1 \n"
 "    STR     R5, [R7, #4] \n"
 "    LDMFD   SP!, {R4-R8,PC} \n"
+);
+}
+
+/*************************************************************/
+//** my_touchw_task @ 0xFF8E6DC0 - 0xFF8E6DF8, length=15
+void __attribute__((naked,noinline)) my_touchw_task() {
+asm volatile (
+"    STMFD   SP!, {R4-R6,LR} \n"
+"    BL      sub_FF8E79C4 \n"
+"    LDR     R5, =0xFFAA0D8C \n"
+"    LDR     R4, =0x9C10 \n"
+
+"loc_FF8E6DD0:\n"
+"    LDR     R0, [R4, #0x1C] \n"
+"    MOV     R3, #0x1D0 \n"
+"    LDR     R2, =0xFF8E6FE0 /*'TouchWheel.c'*/ \n"
+"    MOV     R1, #0 \n"
+"    BL      sub_FF81BF78 /*_TakeSemaphoreStrictly*/ \n"
+"     BL      kbd_is_blocked\n"
+"     MOV     R6, R0\n"
+"    LDR     R0, [R4, #0x24] \n"
+"    LDR     R1, [R4, #0x28] \n"
+
+// if not blocked, use original
+"     CMP     R6, #0\n"
+"     BEQ     bypass_skip_touch\n"
+
+// if kbd is blocked, skip touch events
+"     CMP     R0, #2\n"
+"     CMPEQ   R1, #1\n"
+"     BEQ     loc_FF8E6DD0\n"
+
+"bypass_skip_touch:\n"
+
+"    ADD     R0, R5, R0, LSL#4 \n"
+"    LDR     R0, [R0, R1, LSL#2] \n"
+"    BLX     R0 \n"
+"    B       loc_FF8E6DD0 \n"
 );
 }
