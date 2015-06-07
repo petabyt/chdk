@@ -682,7 +682,7 @@ static CMenuItem* create_module_menu(int mtype, char symbol)
     char            modName[33];
     char            *nm;
 
-    // Open directory & count # of game modules
+    // Open directory & count # of modules matching mtype
     d = opendir("A/CHDK/MODULES");
 
     if (d)
@@ -731,7 +731,7 @@ static CMenuItem* create_module_menu(int mtype, char symbol)
                         submenu[mcnt].text = (int)nm;
                     }
                     submenu[mcnt].value = (int*)module_run;
-                    nm = malloc(strlen(de->d_name))+1;
+                    nm = malloc(strlen(de->d_name)+1);
                     strcpy(nm, de->d_name);
                     submenu[mcnt].arg = (int)nm;
                     mcnt++;
