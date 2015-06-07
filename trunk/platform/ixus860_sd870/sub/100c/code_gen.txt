@@ -5,6 +5,7 @@ FILE boot.c
 >>> file=../boot_hdr.c
 
 >>>
+void my_touchw_task(void);
 
 void taskCreateHook(int *p) {
     p-=16;
@@ -13,6 +14,7 @@ void taskCreateHook(int *p) {
     if (p[0]==0xff85821c)  p[0]=(int)movie_record_task;
     if (p[0]==0xffa021bc)  p[0]=(int)filewritetask;
     if (p[0]==0xff870ce8)  p[0]=(int)init_file_modules_task;
+    if (p[0]==0xff8e6dc0)  p[0]=(int)my_touchw_task;
 }
 
 void boot()
@@ -123,9 +125,7 @@ REM "load DISKBOOT.BIN"
 >>>
 "    BL      CreateTask_spytask\n" // added
 <<<
-FW 1
-PATCHSUB ref=0 comment="---> touch_wheel.c"
-FW 2
+FW 4
 PATCHSUB ref=1 name="taskcreatePhySw_my" comment="Checks buttons and acts accordingly"
 FW $
 ENDASM
@@ -206,6 +206,32 @@ REM           "Replaced, see below"
 "    LDRB    R12, [LR,#0x1FE]\n"           // New! First MBR signature byte (0x55)
 "    LDRB    LR, [LR,#0x1FF]\n"            //      Last MBR signature byte (0xAA)
 //mod end
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC start=0xFF8E6DC0 name=my_touchw_task
+ASM
+FW 9
+>>>
+"     BL      kbd_is_blocked\n"
+"     MOV     R6, R0\n"
+<<<
+FW 2
+>>>
+
+// if not blocked, use original
+"     CMP     R6, #0\n"
+"     BEQ     bypass_skip_touch\n"
+
+// if kbd is blocked, skip touch events
+"     CMP     R0, #2\n"
+"     CMPEQ   R1, #1\n"
+"     BEQ     loc_FF8E6DD0\n"
+
+"bypass_skip_touch:\n"
+
 <<<
 FW $
 ENDASM
