@@ -16,6 +16,8 @@ void CreateTask_spytask() {
 
 
 
+void my_touchw_task(void);
+
 void taskCreateHook(int *p) {
     p-=16;
     if (p[0]==0xff85c038)  p[0]=(int)capt_seq_task;
@@ -23,6 +25,7 @@ void taskCreateHook(int *p) {
     if (p[0]==0xff8584ec)  p[0]=(int)movie_record_task;
     if (p[0]==0xffa082a4)  p[0]=(int)filewritetask;
     if (p[0]==0xff871070)  p[0]=(int)init_file_modules_task;
+    if (p[0]==0xff8e85f8)  p[0]=(int)my_touchw_task;
 }
 
 void boot()
@@ -566,5 +569,44 @@ asm volatile (
 "    MOV     R0, #1 \n"
 "    STR     R5, [R7, #4] \n"
 "    LDMFD   SP!, {R4-R8,PC} \n"
+);
+}
+
+/*************************************************************/
+//** my_touchw_task @ 0xFF8E85F8 - 0xFF8E8630, length=15
+void __attribute__((naked,noinline)) my_touchw_task() {
+asm volatile (
+"    STMFD   SP!, {R4-R6,LR} \n"
+"    BL      sub_FF8E91FC \n"
+"    LDR     R5, =0xFFAA78B8 \n"
+"    LDR     R4, =0xD284 \n"
+
+"loc_FF8E8608:\n"
+"    LDR     R0, [R4, #0x1C] \n"
+"    MOV     R3, #0x1D0 \n"
+"    LDR     R2, =0xFF8E8818 /*'TouchWheel.c'*/ \n"
+"    MOV     R1, #0 \n"
+"    BL      sub_FF81BEB0 /*_TakeSemaphoreStrictly*/ \n"
+// loosely based on ixus860_sd870
+"     BL      kbd_is_blocked\n"
+"     MOV     R6, R0\n"
+"    LDR     R0, [R4, #0x24] \n"
+"    LDR     R1, [R4, #0x28] \n"
+
+// if not blocked, use original
+"     CMP     R6, #0\n"
+"     BEQ     bypass_skip_touch\n"
+
+// if kbd is blocked, skip touch events
+"     CMP     R0, #2\n"
+"     CMPEQ   R1, #1\n"
+"     BEQ     loc_FF8E8608\n"
+
+"bypass_skip_touch:\n"
+
+"    ADD     R0, R5, R0, LSL#4 \n"
+"    LDR     R0, [R0, R1, LSL#2] \n"
+"    BLX     R0 \n"
+"    B       loc_FF8E8608 \n"
 );
 }
