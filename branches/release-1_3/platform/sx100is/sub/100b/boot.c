@@ -68,7 +68,7 @@ void __attribute__((naked,noinline)) sub_FFC001A4_my() {
 
     // replacement of sub_FFC377B0 for correct power-on.
     //(short press = playback mode, long press = record mode)
-    *(int*)(0x2574+0x4)= (*(int*)0xC02200DC) & 1 ? 0x200000 : 0x400000;
+    *(int*)(0x2574+0x4)= (*(int*)0xC02200B8) & 1 ? 0x100000 : 0x200000;
     
 asm volatile (
 "    LDR     R0, =0xFFC0021C \n"
