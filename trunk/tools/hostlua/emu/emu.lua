@@ -2,7 +2,7 @@
 ********************************
 Licence: GPL
 (c) 2009-2015 reyalp, rudi, msl, fbonomi
-v 0.2
+v 0.3
 ********************************
 
 http://chdk.setepontos.com/index.php?topic=2929.0
@@ -30,31 +30,52 @@ end
 -- table to track state used by emulated camera functions
 -- global so it's accessible to camera funcs
 camera_state={
-    tick_count=0,               -- sleep, tick count
-    image_counter=1000,         -- current image number (IMG_1000.JPG)
-    raw=0,
-    mem={},                     -- peek and poke
-    av96=0,
-    bv96=0,
-    tv96=0,
-    sv96=0,
-    ev96=0,
-    nd=0,
-    disk_size=1024*1024*1024,
-    propset=4,                  -- propset 1 - 6
-    rec=false,
-    vid=false,
-    mode=1,
-    drive=0,                    -- 0 = single 1 = continuous 2 = timer (on Digic 2) 3 = timer (on Digic 3,4,5)
-    flash=0,                    -- 0 = flash auto, 1 = flash on, 2 = flash off
-    focus=1000,
-    f_mode=0,                   -- focus mode, 0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
-    zoom_steps=125,
-    zoom=0,
-    autostart=0,
-    IS_mode=0,
-    props={},                   -- propcase values
-    title_line=1,
+    tick_count      = 0,                -- sleep, tick count
+    exp_count       = 1000,             -- current image number (IMG_1000.JPG)
+    image_dir       = "A/DCIM/100CANON",-- path of the recent image dir
+    jpg_count       = 1000,             -- jpg image counter
+    raw             = 0,                -- raw status
+    raw_count       = 100,              -- raw image counter
+    raw_nr          = 0,                -- noise reduction status (0 = Auto 1 = OFF, 2 = ON)
+    mem             = {},               -- peek and poke
+    av96            = 320,              -- F3.2
+    bv96            = 388,              -- tv96+av96-sv96
+    tv96            = 576,              -- 1/60s
+    sv96            = 508,              -- ISO200
+    iso_market      = 200,              -- Canon ISO value
+    iso_mode        = 2,                -- number of ISO mode
+    ev96            = 0,                -- exposure correction (APEX96)
+    nd              = 0,                -- ND filter status
+    disk_size       = 1024*1024*1024,   -- value in byte
+    free_disk_space = 1000000,          -- value in byte
+    propset         = 4,                -- propset 1 - 6
+    rec             = true,             -- status of capture mode (false = play mode)
+    vid             = false,            -- status of video mode
+    mode            = 258,              -- P mode
+    drive           = 0,                -- 0 = single 1 = continuous 2 = timer (on Digic 2) 3 = timer (on Digic 3,4,5)
+    video_button    = true,             -- camera has extra video button
+    movie_state     = 0,                -- 0 or 1 = movie recording is stopped or paused, 4 = recording, 5 or 6 = recording has stopped, writing movie to SD card
+    flash           = 0,                -- 0 = flash auto, 1 = flash on, 2 = flash off
+    focus           = 1000,             -- subject distance
+    sd_over_modes   = 0x04,             -- 0x01 AutoFocus mode, 0x02  AFL active, 0x04  MF active
+    f_mode          = 0,                -- focus mode, 0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
+    focus_state     = 1,                -- focus ok = 1, not ok = 0
+    zoom_steps      = 125,              -- maximum zoomsteps
+    zoom            = 0,                -- zoom position
+    IS_mode         = 0,                -- 0 = continuous, 1 or 2 = shoot only, 2 or 3 = panning, 3 or 4 = off 
+    histo_range     = 100,              -- return value of a histogram range
+    autostarted     = 0,                -- 0 = false, 1 = true 
+    autostart       = 0,                -- autostart status (0 = off, 1 = on, 2 = once)
+    alt_mode        = true,             -- alte mode status
+    props           = {},               -- propcase values
+    title_line      = 1,                -- CHDK line 1 = on, 0 = off
+    remote_timing   = 0,                -- value for high precision USB remote timing
+    camera_os       = "dryos",          -- camera OS (vxworks or dryos)
+    platformid      = 0xDEADBEEF,       -- platform ID of the camera
+    battmax         = 3000,             -- maximum battery value
+    battmin         = 2300,             -- minimum battery value
+    screen_width    = 360,              -- LCD screen width (360 or 480 px)
+    screen_height   = 240               -- LCD screen heigth
 }
 
 
@@ -69,7 +90,7 @@ end
 -- root to search for camera modules
 local camera_module_root = 'A/CHDK'
 
-local camera_funcs=require'camera_funcs'
+camera_funcs=require'camera_funcs'
 
 -- and tidy some things up
 camera_env._G=camera_env
@@ -99,7 +120,9 @@ camera_env.require=function(mname)
     return camera_env.package.loaded[mname]
 end
 
-local script_title
+--change to global
+--local script_title
+
 local chdk_version = {0, 0, 0, 0}
 
 local script_params={
@@ -343,7 +366,7 @@ end
 
 -- import the base camera functions, after conf so it can modify
 for k,v in pairs(camera_funcs) do
-    camera_env[k]=v;
+    camera_env[k]=v
 end
 
 local chdk_script_f,err = loadfile(chdk_script_name)
