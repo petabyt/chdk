@@ -268,14 +268,14 @@ while true do
     print(" [SET] load geo data   [MENU] end")
     console_redraw()
     wait_click(0)
-    if     is_pressed("down") then
+    if     is_key("down") then
         location_id = location_id + 1
         if location_id > #location then location_id = 1 end
-    elseif is_pressed("up") then
+    elseif is_key("up") then
         location_id = location_id - 1
         if location_id < 1 then location_id = #location end
-    elseif is_pressed("set") then call_data()
-    elseif is_pressed("menu") then break
+    elseif is_key("set") then call_data()
+    elseif is_key("menu") then break
     end
 end
 
