@@ -63,17 +63,17 @@
     #define KBD_INITIAL_DELAY               300
 
     // "real" to "market" conversion definitions
-    #define SV96_MARKET_OFFSET              0           // market-real sv96 conversion value
+    #define SV96_MARKET_OFFSET              21           // market-real sv96 conversion value
 
-    // Conversion values for 'no' conversion required
+    // Conversion values for pow(2,-21/96) 'market' to 'real', and pow(2,21/96) 'real' to 'market'
     // Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
     // to the desired multiplication factor as possible within normal ISO range.
-    #define ISO_MARKET_TO_REAL_MULT         2
-    #define ISO_MARKET_TO_REAL_SHIFT        1
-    #define ISO_MARKET_TO_REAL_ROUND        0
-    #define ISO_REAL_TO_MARKET_MULT         2
-    #define ISO_REAL_TO_MARKET_SHIFT        1
-    #define ISO_REAL_TO_MARKET_ROUND        0
+    #define ISO_MARKET_TO_REAL_MULT         3520
+    #define ISO_MARKET_TO_REAL_SHIFT        12
+    #define ISO_MARKET_TO_REAL_ROUND        2048
+    #define ISO_REAL_TO_MARKET_MULT         9533
+    #define ISO_REAL_TO_MARKET_SHIFT        13
+    #define ISO_REAL_TO_MARKET_ROUND        4096
 
     #define PARAM_CAMERA_NAME               3    // Found @0xff95fd90
 
