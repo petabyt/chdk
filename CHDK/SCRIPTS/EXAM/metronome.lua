@@ -12,7 +12,7 @@ j=1
 print("press 'SET' to start")
 while (j==1) do
         wait_click(100)
-        if is_pressed "set" then -- start
+        if is_key("set") then -- start
                 count=get_tick_count()+(60000/a)
                 j=0
         end
@@ -36,8 +36,8 @@ while(j==1) do
                 end
         end
 
-        wait_click(1)
-        if is_pressed "menu" then --  end
+        wait_click(10)
+        if is_key("menu") then --  end
                 set_led(8, 0)
                 j=0
         end

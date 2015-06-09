@@ -44,7 +44,7 @@ print("[SET] start")
 
 while(i==1) do 
 	wait_click(0) 
-	if is_pressed "set" then	-- started 
+	if is_key("set") then	-- started 
 		count_a=get_tick_count()
 		cls()
 		print("[SET] time     [MENU] end")
@@ -57,13 +57,13 @@ end
 i=1 
 while(i==1) do
 	wait_click(0) 
-	if is_pressed "set" then	-- take time
+	if is_key("set") then	-- take time
 		cls()
 		print("[SET] time     [MENU] end")
 		print() 
-		to_time()									 
+		to_time()
 	end 
-	if is_pressed "menu" then	-- end
+	if is_key("menu") then	-- end
 		cls() 
 		to_time() 
 		print("finished")

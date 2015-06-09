@@ -18,7 +18,7 @@ i=1
 print("press 'SET' to start")
 while (i==1) do
         wait_click(100)
-        if is_pressed "set" then -- take time
+        if is_key("set") then -- take time
                 time_end=os.time() + a*3600 + b*60 + c
                 i=0
         end
@@ -38,7 +38,7 @@ print("press 'MENU' to stop")
 i=1
 while(i==1) do
         wait_click(250)
-        if is_pressed "menu" then --  end
+        if is_key("menu") then --  end
                 set_led(8, 0)
                 i=0
         end
