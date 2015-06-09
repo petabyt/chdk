@@ -193,14 +193,14 @@ function load_data(dfile, mode) --mode 0=overwrite, 1=append
 end
 
 function call_data()
-    --data_file = "A/CHDK/DATA/geo_data.txt"
     cls()
     print("File browser will open.")
-    print("Choose a file.")
+    print("Choose a data file.")
     console_redraw()
     sleep(2000)
     cls()
     data_file = file_browser("A/CHDK/DATA")
+    wait_click(10) -- cleanup keyboard input
     if data_file ~= nil then
         data, count = load_data(data_file)
     else
@@ -245,7 +245,7 @@ set_console_autoredraw(0)
 line = "-----------------------------------" 
 location_id = 1
 
-while true do
+repeat
     DoY = get_day_of_year(day, month, year)
     Tz = get_tz_value(location[location_id].tz, DST)
     Lat = location[location_id].lat
@@ -275,8 +275,7 @@ while true do
         location_id = location_id - 1
         if location_id < 1 then location_id = #location end
     elseif is_key("set") then call_data()
-    elseif is_key("menu") then break
     end
-end
+until is_key("menu")
 
 restore()

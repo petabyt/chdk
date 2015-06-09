@@ -143,7 +143,7 @@ function give_me_filename()
     end
 
 function mk_bar(text,width)
-    return(string.sub(string.sub("------------------------ ",26-(width-string.len(text))/2,25)..text..string.sub(" ------------------------",1,(width-string.len(text))/2),1,width-1))
+    return(string.sub(string.sub("------------------------ ",26-(width-#(text))/2,25)..text..string.sub(" ------------------------",1,(width-#(text))/2),1,width-1))
     end
 
 function load_file()
@@ -155,8 +155,8 @@ function load_file()
         print("No file selected!")
         restore()
     else
-        for li=0,string.len(file) do
-            char=string.sub(file,string.len(file)-li,string.len(file)-li)
+        for li=0,#(file) do
+            char=string.sub(file,#(file)-li,#(file)-li)
             if char~="/" then
                 FILENAME=char..FILENAME
                 else break
@@ -192,10 +192,10 @@ function edi_draw()
         elseif line_nr+SHIFT_Y ~= POS_Y then
             draw_line=FILE_CONTENT[line_nr+SHIFT_Y]
         elseif line_nr+SHIFT_Y == POS_Y then
-            draw_line=string.sub(FILE_CONTENT[line_nr+SHIFT_Y],1,POS_X).."\17"..string.sub(FILE_CONTENT[line_nr+SHIFT_Y],POS_X+1,string.len(FILE_CONTENT[line_nr+SHIFT_Y]))
+            draw_line=string.sub(FILE_CONTENT[line_nr+SHIFT_Y],1,POS_X).."\17"..string.sub(FILE_CONTENT[line_nr+SHIFT_Y],POS_X+1,#(FILE_CONTENT[line_nr+SHIFT_Y]))
             end
-        draw_line=string.sub(draw_line,SHIFT_X,string.len(draw_line))
-        if string.len(draw_line)>CONSOLE_WIDTH-2 then
+        draw_line=string.sub(draw_line,SHIFT_X,#(draw_line))
+        if #(draw_line)>CONSOLE_WIDTH-2 then
             draw_line=string.sub(draw_line,1,CONSOLE_WIDTH-2).."\26"
             end
         print(draw_line)
@@ -212,32 +212,32 @@ function edi_move()
     if input=="up" then
         POS_Y=POS_Y-JUMPS[JUMP]
         if POS_Y<1 then POS_Y=table.getn(FILE_CONTENT) end
-        if POS_X>string.len(FILE_CONTENT[POS_Y]) then POS_X=string.len(FILE_CONTENT[POS_Y]) end        
+        if POS_X>#(FILE_CONTENT[POS_Y]) then POS_X=#(FILE_CONTENT[POS_Y]) end        
         end
     if input=="down" then
         POS_Y=POS_Y+JUMPS[JUMP]
         if POS_Y>FILE_LINESN then POS_Y=1 end
-        if POS_X>string.len(FILE_CONTENT[POS_Y]) then POS_X=string.len(FILE_CONTENT[POS_Y]) end
+        if POS_X>#(FILE_CONTENT[POS_Y]) then POS_X=#(FILE_CONTENT[POS_Y]) end
         end
     if input=="left" then
         POS_X=POS_X-1
-        if POS_X<0 and POS_Y>1 then POS_Y=POS_Y-1;POS_X=string.len(FILE_CONTENT[POS_Y])
-        elseif POS_X<0 and POS_Y==1 then POS_Y=FILE_LINESN;POS_X=string.len(FILE_CONTENT[POS_Y]) end
+        if POS_X<0 and POS_Y>1 then POS_Y=POS_Y-1;POS_X=#(FILE_CONTENT[POS_Y])
+        elseif POS_X<0 and POS_Y==1 then POS_Y=FILE_LINESN;POS_X=#(FILE_CONTENT[POS_Y]) end
         end
     if input=="right" then
         POS_X=POS_X+1
-        if POS_X>string.len(FILE_CONTENT[POS_Y]) and POS_Y<FILE_LINESN then POS_Y=POS_Y+1;POS_X=0
-        elseif POS_X>string.len(FILE_CONTENT[POS_Y]) and POS_Y>=FILE_LINESN then POS_Y=1;POS_X=0 end
+        if POS_X>#(FILE_CONTENT[POS_Y]) and POS_Y<FILE_LINESN then POS_Y=POS_Y+1;POS_X=0
+        elseif POS_X>#(FILE_CONTENT[POS_Y]) and POS_Y>=FILE_LINESN then POS_Y=1;POS_X=0 end
         end
     if input=="zoom_in" then
         POS_X=POS_X+5
-        if POS_X>string.len(FILE_CONTENT[POS_Y]) and POS_Y<FILE_LINESN then POS_Y=POS_Y+1;POS_X=0
-        elseif POS_X>string.len(FILE_CONTENT[POS_Y]) and POS_Y>=FILE_LINESN then POS_Y=1;POS_X=0 end
+        if POS_X>#(FILE_CONTENT[POS_Y]) and POS_Y<FILE_LINESN then POS_Y=POS_Y+1;POS_X=0
+        elseif POS_X>#(FILE_CONTENT[POS_Y]) and POS_Y>=FILE_LINESN then POS_Y=1;POS_X=0 end
         end
     if input=="zoom_out" then
         POS_X=POS_X-5
-        if POS_X<0 and POS_Y>1 then POS_Y=POS_Y-1;POS_X=string.len(FILE_CONTENT[POS_Y])
-        elseif POS_X<0 and POS_Y==1 then POS_Y=FILE_LINESN;POS_X=string.len(FILE_CONTENT[POS_Y]) end
+        if POS_X<0 and POS_Y>1 then POS_Y=POS_Y-1;POS_X=#(FILE_CONTENT[POS_Y])
+        elseif POS_X<0 and POS_Y==1 then POS_Y=FILE_LINESN;POS_X=#(FILE_CONTENT[POS_Y]) end
         end
     if input=="erase" then
         POS_X=0
@@ -292,7 +292,7 @@ function edi_write()
         if POS_X>0 then
             WRITE_KEY=0;delete=1
         elseif POS_X==0 and POS_Y>1 then
-            POS_X=string.len(FILE_CONTENT[POS_Y-1])
+            POS_X=#(FILE_CONTENT[POS_Y-1])
             FILE_CONTENT[POS_Y-1]=FILE_CONTENT[POS_Y-1]..FILE_CONTENT[POS_Y]
             POS_Y=POS_Y-1
             for line=POS_Y+1,table.getn(FILE_CONTENT)-1 do
@@ -323,7 +323,7 @@ function edi_write()
                 FILE_CONTENT[FILE_LINESN+1-unline]=FILE_CONTENT[FILE_LINESN-unline]
                 end
             FILE_CONTENT[POS_Y]=string.sub(FILE_CONTENT[POS_Y+1],1,POS_X)..CR
-            FILE_CONTENT[POS_Y+1]=string.sub(FILE_CONTENT[POS_Y+1],POS_X+1,string.len(FILE_CONTENT[POS_Y+1]))
+            FILE_CONTENT[POS_Y+1]=string.sub(FILE_CONTENT[POS_Y+1],POS_X+1,#(FILE_CONTENT[POS_Y+1]))
             POS_X=0;POS_Y=POS_Y+1;FILE_LINESN=FILE_LINESN+1
             end        
         if insertion=="ASCII code" then insertion=insert_ascii() end
@@ -339,8 +339,8 @@ function edi_write()
         if todo=="About EDI" then about() end
         end
     if input==nil then WRITE_KEY=0;insertion="" end
-    FILE_CONTENT[POS_Y]=string.sub(FILE_CONTENT[POS_Y],1,POS_X-delete)..insertion..string.sub(FILE_CONTENT[POS_Y],POS_X+1,string.len(FILE_CONTENT[POS_Y]))
-    POS_X=POS_X+string.len(insertion)-delete
+    FILE_CONTENT[POS_Y]=string.sub(FILE_CONTENT[POS_Y],1,POS_X-delete)..insertion..string.sub(FILE_CONTENT[POS_Y],POS_X+1,#(FILE_CONTENT[POS_Y]))
+    POS_X=POS_X+#(insertion)-delete
     end
 
 function insert_ascii()
@@ -413,7 +413,7 @@ function menu(tab,width,height,header,item_width,top_lines)
                 draw_line=""
                 for place=1, table.getn(tab[line+menu_shift]) do
                     item=tab[line+menu_shift][place]
-                    if item_width~=nil then item=item..string.sub("                         ",1,item_width-string.len(item)) end
+                    if item_width~=nil then item=item..string.sub("                         ",1,item_width-#(item)) end
 
                     if menu_pos_x~=place then draw_line=draw_line.." "..item.." " end
                     if menu_pos_x==place then draw_line=draw_line.."\16"..item.."\17" end
@@ -422,7 +422,7 @@ function menu(tab,width,height,header,item_width,top_lines)
                 draw_line=""
                 for place=1, table.getn(tab[line+menu_shift]) do
                     item=tab[line+menu_shift][place]
-                    if item_width~=nil then item=item..string.sub("                         ",1,item_width-string.len(item)) end
+                    if item_width~=nil then item=item..string.sub("                         ",1,item_width-#(item)) end
                     draw_line=draw_line.." "..item.." "
                     end
                 end

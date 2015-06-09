@@ -24,11 +24,10 @@ function button()                               -- declare function
 	local x = 0                                   -- local variable only valid for this function
 	repeat                                        -- start loop
 		wait_click(150)                             -- wait for key klick
-		if is_pressed "set" then                    -- check which key ist pressed
+		if is_key("set") then                    -- check which key ist pressed
 			key = "SET"
 			x = 1
-		end
-		if is_pressed "menu" then
+		elseif is_key("menu") then
 			key = "MENU"
 			x = 1
 		end
