@@ -975,10 +975,10 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 }
                 break;
             case 54:
-            case 55:
                 fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFF40170:0xFFFF0170);
                 fw->pid_adr = (fw->base==0xFF010000)?0xFFF40040:0xFFFF0040;
                 break;
+            case 55:
             case 57: // TODO: based on a single fw dump (ixus275)
                 fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFFE0170:0xFFFF0170);
                 fw->pid_adr = (fw->base==0xFF010000)?0xFFFE0040:0xFFFF0040;
