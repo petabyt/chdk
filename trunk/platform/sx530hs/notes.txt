@@ -1,0 +1,10 @@
+************************************
+SX530 Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+
+This is an early, incomplete alpha port, use at your own risk!
+
+Porting thread 
+http://chdk.setepontos.com/index.php?topic=12418.0
+
