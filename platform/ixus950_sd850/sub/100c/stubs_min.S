@@ -10,7 +10,7 @@ DEF(focus_busy, 0x82E18)	// "FocusLens"
 
 DEF(playrec_mode, 0xF074)	// after "SsStartupTask.c", in the first called f-n
 
-DEF(FlashParamsTable, 0xFFB4DCB8)	// in GetReservedClusters_Fut_7 (sub_FFB4DE74), LDR R3, =off_FFB4DCB8
+//DEF(FlashParamsTable, 0xFFB4DCB8)	// in GetReservedClusters_Fut_7 (sub_FFB4DE74), LDR R3, =off_FFB4DCB8
 DEF(canon_menu_active,0x389C)		// after "StartRecModeMenu", LDR R4, =0x389C
 DEF(canon_shoot_menu_active,0x27FD)	// after "DSITask.c", LDR R5, =0x2800; then
 					// 0x2800-4+1=0x27FD (quietschi's prescription, SD1000)
@@ -22,5 +22,4 @@ DEF(movie_status, 0xA8640)
 DEF(some_flag_for_af_scan, 0xED58)
 DEF(some_f_for_dng, 0x8DEC)
 DEF(second_ext_for_dng, 0x8E10)
-DEF(levent_table,0xFFB3E214)
 DEF(sys_mempart_id, 0x5590)
