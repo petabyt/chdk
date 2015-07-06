@@ -46,3 +46,17 @@ void camera_set_led(int led, int state, int bright)
     else
 	p[0]=0x44;
 }
+
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x7bc0);  // in sub_ffddcda8 for 100e
+                                    // in sub_ffddce1c for 101a
+}
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x54360; // in sub_ffddcda8 for 100e
+                            // in sub_ffddce1c for 101a 
+}
+
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }

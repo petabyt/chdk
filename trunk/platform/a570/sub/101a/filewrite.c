@@ -28,7 +28,7 @@ typedef struct
 #include "../../../generic/filewrite.c"
 
 /*************************************************************/
-//** filewritetask @ 0xFFE3E090 - 0xFFE3E11C, length=36
+//** filewritetask @ 0xFFE3E090 - 0xFFE3E124, length=38
 void __attribute__((naked,noinline)) filewritetask() {
 asm volatile (
 "    STMFD   SP!, {R4,LR} \n"
@@ -82,6 +82,8 @@ asm volatile (
 
 "loc_FFE3E11C:\n"
 "    BL      _ExitTask \n"
+"    ADD     SP, SP, #4 \n"
+"    LDMFD   SP!, {R4,PC} \n"
 );
 }
 
