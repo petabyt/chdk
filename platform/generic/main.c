@@ -93,8 +93,8 @@ static int my_ncmp(const char *s1, const char *s2, long len)
 {
     int i;
     for (i=0;i<len;i++){
-	if (s1[i] != s2[i])
-	    return 1;
+    if (s1[i] != s2[i])
+        return 1;
     }
     return 0;
 }
@@ -107,47 +107,47 @@ void createHook (void *pNewTcb)
     // always hook first task creation
     // to create SpyProc
     if (!stop_hooking){
-	task_prev = (void*)(*entry);
-	*entry = (long)task_start_hook;
-	stop_hooking = 1;
+        task_prev = (void*)(*entry);
+        *entry = (long)task_start_hook;
+        stop_hooking = 1;
     } else {
-	// hook/replace another tasks
-	if (my_ncmp(name, "tPhySw", 6) == 0){
-	    *entry = (long)physw_hook;
-	}
+        // hook/replace another tasks
+        if (my_ncmp(name, "tPhySw", 6) == 0){
+            *entry = (long)physw_hook;
+        }
 
-	if (my_ncmp(name, "tInitFileM", 10) == 0){
-	    init_file_modules_prev = (void*)(*entry);
-	  #if CAM_MULTIPART
-	    *entry = (long)init_file_modules_task;
-	  #else
-	    *entry = (long)init_file_modules_hook;
-	  #endif
-	}
+        if (my_ncmp(name, "tInitFileM", 10) == 0){
+            init_file_modules_prev = (void*)(*entry);
+#if CAM_MULTIPART
+            *entry = (long)init_file_modules_task;
+#else
+            *entry = (long)init_file_modules_hook;
+#endif
+        }
 
-	if (my_ncmp(name, "tCaptSeqTa", 10) == 0){
-	    *entry = (long)capt_seq_hook;
-	}
+        if (my_ncmp(name, "tCaptSeqTa", 10) == 0){
+            *entry = (long)capt_seq_hook;
+        }
 
-	if (my_ncmp(name, "tMovieReco", 10) == 0){
-	  #if CAM_CHDK_HAS_EXT_VIDEO_MENU
-	    *entry = (long)movie_record_hook;
-	  #endif
-	}
+#if CAM_CHDK_HAS_EXT_VIDEO_MENU
+        if (my_ncmp(name, "tMovieReco", 10) == 0){
+            *entry = (long)movie_record_hook;
+        }
+#endif
 
-        #if CAM_EXT_TV_RANGE	
-	if (my_ncmp(name, "tExpDrvTas", 10) == 0){
-	    *entry = (long)exp_drv_task;
-	}
-        #endif
+#if CAM_EXT_TV_RANGE
+        if (my_ncmp(name, "tExpDrvTas", 10) == 0){
+            *entry = (long)exp_drv_task;
+        }
+#endif
 
-        #if CAM_HAS_FILEWRITETASK_HOOK    
-    if (my_ncmp(name, "tFileWrite", 10) == 0){
-        *entry = (long)filewritetask;
-    }
-        #endif
+#if CAM_HAS_FILEWRITETASK_HOOK
+        if (my_ncmp(name, "tFileWrite", 10) == 0){
+            *entry = (long)filewritetask;
+        }
+#endif
 
-	core_hook_task_create(pNewTcb);
+        core_hook_task_create(pNewTcb);
     }
 }
 
@@ -162,23 +162,23 @@ void startup()
 
     // sanity check
     if ((long)&link_bss_end > (MEMISOSTART + MEMISOSIZE)){
-	started();
-	shutdown();
+        started();
+        shutdown();
     }
 
     // initialize .bss senment
     while (bss<&link_bss_end)
-	*bss++ = 0;
+        *bss++ = 0;
 
     // fill memory with this magic value so we could see what
     // parts of memory were or not used
 #if 0
     long *ptr;
     for (ptr=(void*)MEMBASEADDR;((long)ptr)<MEMISOSTART;ptr+=4){
-	ptr[0]=0x55555555;
-	ptr[1]=0x55555555;
-	ptr[2]=0x55555555;
-	ptr[3]=0x55555555;
+    ptr[0]=0x55555555;
+    ptr[1]=0x55555555;
+    ptr[2]=0x55555555;
+    ptr[3]=0x55555555;
     }
 #endif
 
@@ -196,12 +196,12 @@ int (*_tyWriteOrig)(DEV_HDR *hdr, char *buf, int len);
 
 int hook_tyWriteOrig(DEV_HDR *hdr, char *buf, int len)
 {
-	// Slow, but stable writes
-	FILE *fd = fopen("A/stdout.txt", "a");
-	if (fd) {
-	    fwrite(buf, 1, len, fd);
-	    fclose(fd);
-	}
+    // Slow, but stable writes
+    FILE *fd = fopen("A/stdout.txt", "a");
+    if (fd) {
+        fwrite(buf, 1, len, fd);
+        fclose(fd);
+    }
 
     return _tyWriteOrig(hdr, buf, len);
 
@@ -216,28 +216,28 @@ void cam_console_init()
 
     _tyWriteOrig = (void*)DRV_struct[DEV_HDR_WRITE_OFFSET];
 
-	FILE *fd = fopen("A/chdklog.txt", "a");
-	if (fd) {
-	    // can't be used with "Fut" API
-	    //fprintf(fd, "DRV_struct: %x, _tyWriteOrig: %x\n", DRV_struct, _tyWriteOrig);
-	    char buf[256];
-	    int buflen = sprintf(buf, "DRV_struct: %x, _tyWriteOrig: %x\n", DRV_struct, _tyWriteOrig);
-	    fwrite(buf, 1, buflen, fd);
-	}
-
-	FILE *fdout = fopen("A/stdout.txt", "r");
-	if (fdout)
-	{
-        DRV_struct[DEV_HDR_WRITE_OFFSET] = (int)hook_tyWriteOrig;
-        fclose(fdout);
-	    // fprintf(fd, "tyWrite replaced, camera log enabled\n");
-	    fwrite("tyWrite replaced, camera log enabled\n", 1, sizeof("tyWrite replaced, camera log enabled\n"), fd);
+    FILE *fd = fopen("A/chdklog.txt", "a");
+    if (fd) {
+        // can't be used with "Fut" API
+        //fprintf(fd, "DRV_struct: %x, _tyWriteOrig: %x\n", DRV_struct, _tyWriteOrig);
+        char buf[256];
+        int buflen = sprintf(buf, "DRV_struct: %x, _tyWriteOrig: %x\n", DRV_struct, _tyWriteOrig);
+        fwrite(buf, 1, buflen, fd);
     }
 
-	if (fd)
-	{
-	    fclose(fd);
-	}
+    FILE *fdout = fopen("A/stdout.txt", "r");
+    if (fdout)
+    {
+        DRV_struct[DEV_HDR_WRITE_OFFSET] = (int)hook_tyWriteOrig;
+        fclose(fdout);
+        // fprintf(fd, "tyWrite replaced, camera log enabled\n");
+        fwrite("tyWrite replaced, camera log enabled\n", 1, sizeof("tyWrite replaced, camera log enabled\n"), fd);
+    }
+
+    if (fd)
+    {
+        fclose(fd);
+    }
 
 }
 
