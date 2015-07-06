@@ -55,8 +55,8 @@ NHSTUB(MakeAFScan                             ,0xffb0ecb0) //  2 79%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffb3e214) // Found @0xffb3e214,          stubs_min = 0xffb3e214 (0xFFB3E214)
-//DEF(FlashParamsTable                        ,0xffb4dcb8) // Found @0xffb4dcb8,          stubs_min = 0xffb4dcb8 (0xFFB4DCB8)
+DEF(levent_table                            ,0xffb3e214) // Found @0xffb3e214
+DEF(FlashParamsTable                        ,0xffb4dcb8) // Found @0xffb4dcb8
 DEF(fileio_semaphore                        ,0x0000c07c) // Found @0xffaa5680
 DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffb48214
 
@@ -99,9 +99,9 @@ NHSTUB(Fwrite_Fut                             ,0xffa9e7fc) //120
 NHSTUB(GetBatteryTemperature                  ,0xffa3d408) //102
 NHSTUB(GetCCDTemperature                      ,0xffa3d3f4) //102
 NHSTUB(GetCurrentAvValue                      ,0xffa58520) //120
-//NHSTUB(GetDrive_ClusterSize                 ,0xffaa27ac) //119            == 0xffaa27ac
-//NHSTUB(GetDrive_FreeClusters                ,0xffaa2820) //1103            == 0xffaa2820
-//NHSTUB(GetDrive_TotalClusters               ,0xffaa27e8) //119            == 0xffaa27e8
+NHSTUB(GetDrive_ClusterSize                   ,0xffaa27ac) //119
+NHSTUB(GetDrive_FreeClusters                  ,0xffaa2820) //1103
+NHSTUB(GetDrive_TotalClusters                 ,0xffaa27e8) //119
 NHSTUB(GetOpticalTemperature                  ,0xffa3d3e0) //120
 NHSTUB(GetZoomLensCurrentPoint                ,0xffaee5c0) //120
 NHSTUB(GetZoomLensCurrentPosition             ,0xffaee5d4) //102
@@ -129,9 +129,9 @@ NHSTUB(SetCurrentCaptureModeType              ,0xff82ab20) //120
 NHSTUB(SetFileAttributes                      ,0xffaa31a4) //  3
 NHSTUB(SetLogicalEventActive                  ,0xffb4399c) //1104
 NHSTUB(SetPropertyCase                        ,0xff81bb60) //  3
-//NHSTUB(SetScriptMode                        ,0xffb43a00) //120            == 0xffb43a00
+NHSTUB(SetScriptMode                          ,0xffb43a00) //120
 NHSTUB(SleepTask                              ,0xffb234c0) //120
-//NHSTUB(TakeSemaphore                        ,0xffb22f70) //1101            == 0xffb22f70
+NHSTUB(TakeSemaphore                          ,0xffb22f70) //1101
 NHSTUB(TurnOffBackLight                       ,0xff84af38) //  2
 NHSTUB(TurnOnBackLight                        ,0xff84af08) //  2
 NHSTUB(TurnOnDisplay                          ,0xffa2c354) //120
