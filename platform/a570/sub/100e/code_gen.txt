@@ -6,7 +6,7 @@ FILE filewrite.c
 //////////////////////////////////////////////////////////////
 // filewritetask
 //////////////////////////////////////////////////////////////
-FUNC sig=task_FileWrite name=filewritetask length=36
+FUNC sig=task_FileWrite name=filewritetask
 ASM
 FW 15
 PATCHSUB ref=1 comment="Open Stage"
