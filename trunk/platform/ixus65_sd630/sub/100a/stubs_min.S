@@ -22,7 +22,6 @@ DEF(zoom_busy, 0x79E20)
 DEF(focus_busy, 0x7A13C)
 DEF(movie_compression, 0x617C)
 DEF(zoom_status, 0x7450) // maybe 0x7460 ? sub_FF9B2050, "_MoveOpticalToTele"
-DEF(FlashParamsTable,0xFF975EB0)
 
 DEF(canon_menu_active, 0x8300) // FFA13E14 StartRecModeMenu
 DEF(canon_shoot_menu_active, 0x75AC+1) // FF9BB06C
@@ -30,7 +29,6 @@ DEF(recreview_hold, 0x76E50) // sub_FF9ACFC8
 
 DEF(some_f_for_dng, 0x8CBC)
 DEF(second_ext_for_dng, 0x8CE0)
-DEF(levent_table,0xFF96C760)
 DEF(playrec_mode,0x6484)
 
 DEF(sys_mempart_id, 0xc0b0)
