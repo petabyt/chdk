@@ -47,3 +47,18 @@ int get_flash_params_count(void){
  return 83;
 }
 
+void *vid_get_bitmap_active_buffer()
+{
+    return (void*)(*(int*)0x6a60);  // in sub_FF924374 for 100b
+                                    // in sub_FF9242A0 for 100c
+                                    // in sub_FF924628 for 100d
+}
+
+void *vid_get_bitmap_active_palette() {
+    return (void *)0x7b9d8; // in sub_FF924374 for 100b
+                            // in sub_FF9242A0 for 100c 
+                            // in sub_FF924628 for 100d
+}
+
+int vid_get_palette_type() { return 1; }
+int vid_get_palette_size() { return 16*4; }
