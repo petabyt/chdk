@@ -147,6 +147,14 @@ void createHook (void *pNewTcb)
         }
 #endif
 
+// for cameras that have a "touch control dial" with 'TouchW' task.
+// some cameras may use a different task name
+#ifdef HOOK_TOUCHW
+        if (my_ncmp(name, "tTouchW", 7) == 0){
+            *entry = (long)my_touchw_task;
+        }
+#endif
+
         core_hook_task_create(pNewTcb);
     }
 }
