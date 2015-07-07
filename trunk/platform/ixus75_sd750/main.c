@@ -1,3 +1,5 @@
+#define HOOK_TOUCHW
+extern void my_touchw_task(void);
 #include "../generic/main.c"
 
 long get_vbatt_min()

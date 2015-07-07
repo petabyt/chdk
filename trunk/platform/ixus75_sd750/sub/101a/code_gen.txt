@@ -84,3 +84,42 @@ ENDASM
 ENDFUNC
 
 ENDFILE
+
+//-------------------------- TOUCHW.C -----------------------------------------------------------
+FILE touchw.c
+>>>
+extern int kbd_is_blocked(void);
+<<<
+
+FUNC start=0xFFA3B7B4 name=my_touchw_task
+ASM
+>>>
+"    STMFD   SP!, {R4-R6,LR}\n"
+<<<
+SKIP 1
+FW 8
+>>>
+// loosely based on ixus860_sd870
+"     BL      kbd_is_blocked\n"
+"     MOV     R6, R0\n"
+<<<
+FW 2
+>>>
+
+// if not blocked, use original
+"     CMP     R6, #0\n"
+"     BEQ     bypass_skip_touch\n"
+
+// if kbd is blocked, skip touch events
+"     CMP     R0, #2\n"
+"     CMPEQ   R3, #1\n"
+"     BEQ     loc_FFA3B7C4\n"
+
+"bypass_skip_touch:\n"
+
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
