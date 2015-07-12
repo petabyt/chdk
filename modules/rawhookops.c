@@ -12,16 +12,19 @@ functions for operating on raw framebuffer from script hooks
 
 extern void set_number_field(lua_State *L, const char *name, int value);
 
+// set when in hook and capture mode supports raw
+static int raw_buffer_valid;
+
 // TODO not really the same for R,G,B
 // raw value of a neutral exposure, including black level
-unsigned raw_neutral;
+static unsigned raw_neutral;
 // log2(raw_neutral - blacklevel), i.e. the range of significant raw values
 static double log2_raw_neutral_count; 
 
 // offsets of bayer elements from an even pixel coordinate
 // [r,g,g,b][x,y]
-unsigned cfa_offsets[4][2];
-const char *cfa_names[]={"r","g1","g2","b"};
+static unsigned cfa_offsets[4][2];
+static const char *cfa_names[]={"r","g1","g2","b"};
 #define CFA_R 0
 #define CFA_G1 1
 #define CFA_G2 2
@@ -80,9 +83,12 @@ v=rawop.get_pixel(x,y)
 returns raw value, or nil if out of bounds
 */
 static int rawop_get_pixel(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     unsigned x=luaL_checknumber(L,1);
     unsigned y=luaL_checknumber(L,2);
-    // TODO return nil for out of bounds
+    // TODO return nil for out of bounds?
     // might not want to check, or return 0, or error()?
     if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
         return 0;
@@ -97,6 +103,9 @@ rawop.set_pixel(x,y,v)
 sets pixel to v
 */
 static int rawop_set_pixel(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     unsigned int x=luaL_checknumber(L,1);
     unsigned int y=luaL_checknumber(L,2);
     unsigned short v=luaL_checknumber(L,3);
@@ -117,6 +126,9 @@ returns the values of the CFA quad containing x,y or nil if out of bounds
 x and y are truncated to the nearest even value.
 */
 static int rawop_get_pixels_rgbg(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     unsigned int x=luaL_checknumber(L,1);
     unsigned int y=luaL_checknumber(L,2);
 
@@ -140,6 +152,9 @@ if g2 is not specified, it is set to g1
 x and y are truncated to the nearest even value.
 */
 static int rawop_set_pixels_rgbg(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     unsigned int x=luaL_checknumber(L,1);
     unsigned int y=luaL_checknumber(L,2);
     unsigned short r=luaL_checknumber(L,3);
@@ -168,6 +183,9 @@ xstep defaults to 1, ystep defaults to xstep
 step 2 can be used with cfa offsets to fill RGB
 */
 static int rawop_fill_rect(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     unsigned int xstart=luaL_checknumber(L,1);
     unsigned int ystart=luaL_checknumber(L,2);
     unsigned int width=luaL_checknumber(L,3);
@@ -239,6 +257,9 @@ To meter R G B separately, use multiple meter calls with the appropriate CFA off
 To ensure all CFA colors are included in a single call, use odd steps
 */
 static int rawop_meter(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     unsigned x1=luaL_checknumber(L,1);
     unsigned y1=luaL_checknumber(L,2);
     unsigned x_count=luaL_checknumber(L,3);
@@ -307,6 +328,9 @@ must be <= camera bit depth
 amount of memory required for the histogram data is determined by bits
 */
 static int rawop_histo_update(lua_State *L) {
+    if(!raw_buffer_valid) {
+        return luaL_error(L,"raw data not available");
+    }
     // TODO only allow in raw hook
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
 
@@ -491,8 +515,31 @@ static const luaL_Reg rawop_funcs[] = {
   {NULL, NULL}
 };
 
+// initialize raw params that may change between frames (currently neutral and related values)
+// could update only if changed, but not needed
+static void init_raw_params(void) {
+    // emperical guestimate
+    // average pixel value of a neutral subject shot with canon AE, as a fraction of usable dynamic range
+    // found to be reasonably close on d10, elph130, a540, g1x and more.
+    double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
+    log2_raw_neutral_count = log2(raw_neutral_count);
+    raw_neutral = raw_neutral_count + camera_sensor.black_level;
+}
+
+// update values that need to be updated when hook becomes active
+void rawop_update_hook_status(int active) {
+    if(active) {
+        raw_buffer_valid = is_raw_possible();
+        init_raw_params();
+    } else {
+        raw_buffer_valid = 0;
+    }
+}
+
 int luaopen_rawop(lua_State *L) {
     // initialize globals
+    raw_buffer_valid = 0;
+
     int i;
     int g1=1;
     for(i=0; i<4; i++) {
@@ -518,12 +565,9 @@ int luaopen_rawop(lua_State *L) {
         cfa_offsets[ci][1] = (i&2)>>1;
     }
 
-    // emperical guestimate
-    // average pixel value of a neutral subject shot with canon AE, as a fraction of usable dynamic range
-    // reasonably close on d10, elph130, a540
-    double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
-    log2_raw_neutral_count = log2(raw_neutral_count);
-    raw_neutral = raw_neutral_count + camera_sensor.black_level;
+    // TODO - maybe this should only be done in update_hook_status, since any changeable values
+    // will only be known at that point.
+    init_raw_params();
 
     luaL_newmetatable(L,RAWOP_HISTO_META);
     luaL_register(L, NULL, rawop_histo_meta_methods);  
