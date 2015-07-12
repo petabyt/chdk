@@ -282,6 +282,7 @@
             get_target_file_num
             GetJpgCount
             GetRawCount
+            is_raw_possible
 
             TurnOnBackLight
             TurnOffBackLight

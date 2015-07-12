@@ -26,17 +26,30 @@ void script_shoot_hook_set(int hook,int timeout) {
     hooks[hook].timeout = timeout;
 }
 
+void rawop_update_hook_status(int active);
+
 // called from hooked task, returns when hook is released or times out
 void script_shoot_hook_run(int hook)
 {
     int timeleft = hooks[hook].timeout;
-    hooks[hook].active = 1;
     hooks[hook].count++;
-    while(timeleft > 0 && hooks[hook].active) {
-        msleep(10);
-        timeleft -= 10;
+    // only mark hook active if it was set
+    if(timeleft > 0) {
+        // notify rawop when in raw hook, so it can update valid raw status
+        // and values that might change between shots
+        if(hook == SCRIPT_SHOOT_HOOK_RAW) {
+            rawop_update_hook_status(1);
+        }
+        hooks[hook].active = 1;
+        while(timeleft > 0 && hooks[hook].active) {
+            msleep(10);
+            timeleft -= 10;
+        }
+        if(hook == SCRIPT_SHOOT_HOOK_RAW) {
+            rawop_update_hook_status(0);
+        }
+        hooks[hook].active = 0;
     }
-    hooks[hook].active = 0;
     // TODO may want to record timeout
 }
 
