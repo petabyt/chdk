@@ -47,8 +47,8 @@ NHSTUB(MakeAFScan                             ,0xffb2c864) //  2 79%
 // No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
-//DEF(levent_table                            ,0xffb5bfac) // Found @0xffb5bfac,          stubs_min = 0xffb5bfac (0xFFB5BFAC)
-//DEF(FlashParamsTable                        ,0xffb6af48) // Found @0xffb6af48,          stubs_min = 0xffb6af48 (0xFFB6AF48)
+DEF(levent_table                            ,0xffb5bfac) // Found @0xffb5bfac
+DEF(FlashParamsTable                        ,0xffb6af48) // Found @0xffb6af48
 DEF(fileio_semaphore                        ,0x0000a348) // Found @0xffab13a0
 DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffb65d14
 
