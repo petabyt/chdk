@@ -31,41 +31,26 @@ static const char *cfa_names[]={"r","g1","g2","b"};
 #define CFA_B 3
 #define RAWOP_HISTO_META "rawop.histo_meta"
 
-static void set_rect_field(lua_State *L, const char * name, int x1, int y1, int x2, int y2) {
-    lua_createtable(L, 0, 4);
-    // not clear if we want corners, width/height or both
-    set_number_field(L,"x1",x1);
-    set_number_field(L,"y1",y1);
-    set_number_field(L,"x2",x2);
-    set_number_field(L,"y2",y2);
-    lua_setfield(L, -2, name);
+/*
+cfa=rawop.get_cfa()
+return: CFA pattern as a 32 bit interger, as used in DNG
+*/
+static int rawop_get_cfa(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.cfa_pattern);
+    return 1;
 }
 
-// TODO maybe this should just go into the rawop table?
-static int rawop_fb_info(lua_State *L) {
-    lua_createtable(L, 0, 9);
-    set_number_field(L,"width",camera_sensor.raw_rowpix);
-    set_number_field(L,"height",camera_sensor.raw_rows);
-    set_number_field(L,"bits_per_pixel",camera_sensor.bits_per_pixel);
-    // TODO may want to use a more friendly format
-    set_number_field(L,"cfa_pattern",camera_sensor.cfa_pattern);
-    set_number_field(L,"black_level",camera_sensor.black_level);
-    set_number_field(L,"white_level",camera_sensor.white_level);
-    set_number_field(L,"raw_neutral",(int)raw_neutral);
-    // not clear if we want corners, width/height or both
-    set_rect_field(L,"active_area",
-        camera_sensor.active_area.x1,
-        camera_sensor.active_area.y1,
-        camera_sensor.active_area.x2,
-        camera_sensor.active_area.y2);
-    // jpeg size area, not use selected default crop
-    // in absolute coordinates
-    set_rect_field(L,"jpeg_area",
-        camera_sensor.active_area.x1 + camera_sensor.jpeg.x,
-        camera_sensor.active_area.y1 + camera_sensor.jpeg.y,
-        camera_sensor.active_area.x1 + camera_sensor.jpeg.x + camera_sensor.jpeg.width,
-        camera_sensor.active_area.y1 + camera_sensor.jpeg.y + camera_sensor.jpeg.height
-    );
+/*
+cfa_offsets=rawop.get_cfa_offsets()
+returns: offsets of color filter elements with respect to an even valued x,y pair, in the form
+{
+ r={ y=1, x=0, },
+ g1={ y=0, x=0, },
+ b={ y=0, x=1, },
+ g2={ y=1, x=1, },
+}
+*/
+static int rawop_get_cfa_offsets(lua_State *L) {
     lua_createtable(L, 0, 4);
     int i;
     for(i=0;i<4;i++) {
@@ -74,13 +59,182 @@ static int rawop_fb_info(lua_State *L) {
         set_number_field(L,"y",cfa_offsets[i][1]);
         lua_setfield(L, -2, cfa_names[i]);
     }
-    lua_setfield(L, -2, "cfa_offsets");
     return 1;
 }
 
 /*
+bpp=rawop.get_bits_per_pixel()
+returns: sensor bit depth (10, 12, or 14 in currently supported cameras)
+*/
+static int rawop_get_bits_per_pixel(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.bits_per_pixel);
+    return 1;
+}
+
+/*
+neutral=rawop.get_raw_neutral()
+returns: approximate raw value of a neutral grey target exposed with canon AE
+raw_to_ev96(netural) = 0
+This is not aware of CFA, it is based on an average of all color elements
+
+NOTE on G1x, the value may change depending on ISO settings. The value is only
+updated when the raw hook is entered for the shot so for maximum portability,
+this function should only be called inside the raw hook.
+*/
+static int rawop_get_raw_neutral(lua_State *L) {
+    lua_pushnumber(L,(int)raw_neutral);
+    return 1;
+}
+
+/*
+bl=rawop.get_black_level()
+returns: sensor black level value
+
+NOTE on G1x, the value may change depending on ISO settings. The value is only
+updated when the raw hook is entered for the shot so for maximum portability,
+this function should only be called inside the raw hook.
+*/
+static int rawop_get_black_level(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.black_level);
+    return 1;
+}
+
+/*
+wl=rawop.get_white_level()
+returns: sensor white level value (2^bpp - 1 for all known sensors)
+*/
+static int rawop_get_white_level(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.white_level);
+    return 1;
+}
+
+/*
+w=rawop.get_raw_width()
+returns: width of the raw buffer, in pixels
+*/
+static int rawop_get_raw_width(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.raw_rowpix);
+    return 1;
+}
+
+/*
+h=rawop.get_raw_height()
+returns height of the raw buffer, in pixels
+*/
+static int rawop_get_raw_height(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.raw_rows);
+    return 1;
+}
+
+/*
+active area functions
+
+NOTES
+Active area is defined in the port, and is not affected by the "Crop size" DNG menu option
+
+Active area may include dark borders of pixels which contain image data, but are not exposed
+the same as the majority of the sensor. JPEG area may be a better choice for whole scene
+measurements.
+*/
+
+/*
+left=rawop.get_active_left()
+returns: x coordinate of the leftmost pixel containing valid data in the raw buffer
+*/
+static int rawop_get_active_left(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.active_area.x1);
+    return 1;
+}
+
+/*
+top=rawop.get_active_top()
+returns: y coordinate of the topmost pixel containing valid data in the raw buffer
+*/
+static int rawop_get_active_top(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.active_area.y1);
+    return 1;
+}
+
+/*
+w=rawop.get_active_width()
+returns: width of the active area, in pixels
+*/
+static int rawop_get_active_width(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.active_area.x2 - camera_sensor.active_area.x1);
+    return 1;
+}
+
+/*
+h=rawop.get_active_width()
+returns: height of the active area, in pixels
+*/
+static int rawop_get_active_height(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.active_area.y2 - camera_sensor.active_area.y1);
+    return 1;
+}
+
+/*
+JPEG area functions
+
+NOTES
+JPEG area is defined in the port, and is not affected by the "Crop size" DNG menu option
+
+JPEG area represents the approximate area of the sensor used for the JPEG, but may not
+exactly match either the pixel dimensions or sensor area.
+
+These functions return sensor coordinates, not active area relative coordinates used
+in DNG metadata.
+
+JPEG area generally will not include the dark borders that can affect active area, so jpeg
+area is a good choice for measuring the whole scene.
+*/
+
+/*
+left=rawop.get_jpeg_left()
+returns: x coordinate of the leftmost pixel of the jpeg area, in sensor coordinates
+*/
+static int rawop_get_jpeg_left(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.active_area.x1 + camera_sensor.jpeg.x);
+    return 1;
+}
+
+/*
+top=rawop.get_jpeg_top()
+returns: y coordinate of the topmost pixel of the jpeg area, in sensor coordinates
+*/
+static int rawop_get_jpeg_top(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.active_area.y1 + camera_sensor.jpeg.y);
+    return 1;
+}
+
+/*
+width=rawop.get_jpeg_width()
+returns: width of the jpeg area, in pixels
+*/
+static int rawop_get_jpeg_width(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.jpeg.width);
+    return 1;
+}
+
+/*
+height=rawop.get_jpeg_height()
+returns: height of the jpeg area, in pixels
+*/
+static int rawop_get_jpeg_height(lua_State *L) {
+    lua_pushnumber(L,camera_sensor.jpeg.height);
+    return 1;
+}
+
+
+/*
+raw buffer access functions
+*/
+/*
 v=rawop.get_pixel(x,y)
-returns raw value, or nil if out of bounds
+return: raw value, or nil if out of bounds
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 */
 static int rawop_get_pixel(lua_State *L) {
     if(!raw_buffer_valid) {
@@ -93,7 +247,6 @@ static int rawop_get_pixel(lua_State *L) {
     if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
         return 0;
     }
-    // TODO could check if in raw hook
     lua_pushnumber(L,get_raw_pixel(x,y));
     return 1;
 }
@@ -101,6 +254,9 @@ static int rawop_get_pixel(lua_State *L) {
 /*
 rawop.set_pixel(x,y,v)
 sets pixel to v
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 */
 static int rawop_set_pixel(lua_State *L) {
     if(!raw_buffer_valid) {
@@ -114,7 +270,6 @@ static int rawop_set_pixel(lua_State *L) {
     if(x >= (unsigned)camera_sensor.raw_rowpix || y >= (unsigned)camera_sensor.raw_rows) {
         return 0;
     }
-    // TODO could check if in raw hook
     // TODO could check v
     set_raw_pixel(x,y,v);
     return 0;
@@ -122,8 +277,11 @@ static int rawop_set_pixel(lua_State *L) {
 
 /*
 r,g1,b,g2=rawop.get_pixels_rgbg(x,y)
-returns the values of the CFA quad containing x,y or nil if out of bounds
+returns: values of the CFA quad containing x,y or nil if out of bounds
 x and y are truncated to the nearest even value.
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 */
 static int rawop_get_pixels_rgbg(lua_State *L) {
     if(!raw_buffer_valid) {
@@ -150,6 +308,9 @@ rawop.set_pixels_rgbg(x,y,r,g1,b[,g2])
 sets the values of the CFA quad containing x,y
 if g2 is not specified, it is set to g1
 x and y are truncated to the nearest even value.
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 */
 static int rawop_set_pixels_rgbg(lua_State *L) {
     if(!raw_buffer_valid) {
@@ -178,9 +339,12 @@ static int rawop_set_pixels_rgbg(lua_State *L) {
 /*
 rawop.fill_rect(x,y,width,height,val[,xstep[,ystep]])
 sets every step-th pixel of the specified rectangle to the specified value
-width and hight out of bounds are clipped
+width and height out of bounds are clipped
 xstep defaults to 1, ystep defaults to xstep
 step 2 can be used with cfa offsets to fill RGB
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 */
 static int rawop_fill_rect(lua_State *L) {
     if(!raw_buffer_valid) {
@@ -214,37 +378,12 @@ static int rawop_fill_rect(lua_State *L) {
 }
 
 /*
-ev96=rawop.raw_to_ev96(rawval)
-convert a raw value (blacklevel+1 to whitelevel) into an APEX96 EV relative to neutral
-if rawval is <= to blacklevel, it is clamped to blacklevel + 1.
-values > whitelevel are converted normally
-*/
-static int rawop_raw_to_ev96(lua_State *L) {
-    int v=luaL_checknumber(L,1);
-    // TODO not clear what we should return, minimum real value for now
-    if( v <= camera_sensor.black_level) {
-        v = camera_sensor.black_level+1;
-    }
-    int r=96.0*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count);
-    lua_pushnumber(L,r);
-    return 1;
-}
-
-/*
-rawval=rawop.ev96_to_raw(ev96)
-Convert an APEX96 EV (offset from raw_neutral) to a raw value. No range checking is done
-*/
-static int rawop_ev96_to_raw(lua_State *L) {
-    int v=luaL_checknumber(L,1);
-    // TODO not clear if this should be clamped to valid raw ranges?
-    lua_pushnumber(L,pow(2,(double)v/96+log2_raw_neutral_count)+camera_sensor.black_level);
-    return 1;
-}
-
-/*
 mean_raw_val=rawop.meter(x,y,x_count,y_count,x_step,y_step)
-return the average values of count pixels in x and y, sampled at step size step,
+returns: average values of count pixels in x and y, sampled at step size step,
 or nil if the range is invalid or the total number of pixels could result in overflow
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 
 To prevent overflow, the total number of pixels must less unsigned_max / white_level.
 Limits are roughly 
@@ -297,7 +436,49 @@ static int rawop_meter(lua_State *L) {
     return 1;
 }
 
+/*
+raw value conversion functions
+*/
+/*
+ev96=rawop.raw_to_ev96(rawval)
+convert a raw value (blacklevel+1 to whitelevel) into an APEX96 EV relative to neutral
+if rawval is <= to blacklevel, it is clamped to blacklevel + 1.
+values > whitelevel are converted normally
 
+NOTE on G1x, the result may change depending on ISO settings. The value is only
+updated when the raw hook is entered for the shot so for maximum portability,
+this function should only be called inside the raw hook.
+*/
+static int rawop_raw_to_ev96(lua_State *L) {
+    int v=luaL_checknumber(L,1);
+    // TODO not clear what we should return, minimum real value for now
+    if( v <= camera_sensor.black_level) {
+        v = camera_sensor.black_level+1;
+    }
+    int r=96.0*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count);
+    lua_pushnumber(L,r);
+    return 1;
+}
+
+/*
+rawval=rawop.ev96_to_raw(ev96)
+Convert an APEX96 EV (offset from raw_neutral) to a raw value. No range checking is done
+
+NOTE on G1x, the result may change depending on ISO settings. The value is only
+updated when the raw hook is entered for the shot so for maximum portability,
+this function should only be called inside the raw hook.
+*/
+static int rawop_ev96_to_raw(lua_State *L) {
+    int v=luaL_checknumber(L,1);
+    // TODO not clear if this should be clamped to valid raw ranges?
+    lua_pushnumber(L,pow(2,(double)v/96+log2_raw_neutral_count)+camera_sensor.black_level);
+    return 1;
+}
+
+
+/*
+histogram functions and methods
+*/
 typedef struct {
     unsigned bits;
     unsigned entries;
@@ -326,12 +507,14 @@ histo:update(top,left,width,height,xstep,ystep[,bits])
 bits specifies the bit depth of histogram. defaults to camera bit depth
 must be <= camera bit depth
 amount of memory required for the histogram data is determined by bits
+
+An error is generated if the this function is called outside the raw hook, or in a shooting
+mode for which raw data is not available.
 */
 static int rawop_histo_update(lua_State *L) {
     if(!raw_buffer_valid) {
         return luaL_error(L,"raw data not available");
     }
-    // TODO only allow in raw hook
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
 
     unsigned xstart=luaL_checknumber(L,2);
@@ -398,7 +581,7 @@ static int rawop_histo_update(lua_State *L) {
 
 /*
 frac=histo:range(min,max[,'count'|scale])
-return number of values in range, either as a fraction in parts per scale, or total count
+returns number of values in range, either as a fraction in parts per scale, or total count
 */
 static int rawop_histo_range(lua_State *L) {
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
@@ -447,7 +630,7 @@ static int rawop_histo_range(lua_State *L) {
 
 /*
 total=histo:total_pixels()
-returns total number of pixels sampled
+returns: total number of pixels sampled
 */
 static int rawop_histo_total_pixels(lua_State *L) {
     rawop_histo_t *h = (rawop_histo_t *)luaL_checkudata(L,1,RAWOP_HISTO_META);
@@ -502,23 +685,47 @@ static const luaL_Reg rawop_histo_methods[] = {
 };
 
 static const luaL_Reg rawop_funcs[] = {
-  {"fb_info", rawop_fb_info},
-  {"get_pixel", rawop_get_pixel},
-  {"set_pixel", rawop_set_pixel},
-  {"get_pixels_rgbg", rawop_get_pixels_rgbg},
-  {"set_pixels_rgbg", rawop_set_pixels_rgbg},
-  {"fill_rect", rawop_fill_rect},
-  {"raw_to_ev96", rawop_raw_to_ev96},
-  {"ev96_to_raw", rawop_ev96_to_raw},
-  {"meter", rawop_meter},
-  {"create_histogram", rawop_create_histogram},
+  // general raw characteristics
+  {"get_cfa",           rawop_get_cfa},
+  {"get_cfa_offsets",   rawop_get_cfa_offsets},
+  {"get_bits_per_pixel",rawop_get_bits_per_pixel},
+  {"get_raw_neutral",   rawop_get_raw_neutral},
+  {"get_black_level",   rawop_get_black_level},
+  {"get_white_level",   rawop_get_white_level},
+
+  // buffer sizes
+  {"get_raw_width",     rawop_get_raw_width},
+  {"get_raw_height",    rawop_get_raw_height},
+  {"get_active_left",   rawop_get_active_left},
+  {"get_active_top",    rawop_get_active_top},
+  {"get_active_width",  rawop_get_active_width},
+  {"get_active_height", rawop_get_active_height},
+  {"get_jpeg_left",     rawop_get_jpeg_left},
+  {"get_jpeg_top",      rawop_get_jpeg_top},
+  {"get_jpeg_width",    rawop_get_jpeg_width},
+  {"get_jpeg_height",   rawop_get_jpeg_height},
+
+  // raw buffer access
+  {"get_pixel",         rawop_get_pixel},
+  {"set_pixel",         rawop_set_pixel},
+  {"get_pixels_rgbg",   rawop_get_pixels_rgbg},
+  {"set_pixels_rgbg",   rawop_set_pixels_rgbg},
+  {"fill_rect",         rawop_fill_rect},
+  {"meter",             rawop_meter},
+
+  // value conversion
+  {"raw_to_ev96",       rawop_raw_to_ev96},
+  {"ev96_to_raw",       rawop_ev96_to_raw},
+
+  // histogram
+  {"create_histogram",  rawop_create_histogram},
   {NULL, NULL}
 };
 
 // initialize raw params that may change between frames (currently neutral and related values)
 // could update only if changed, but not needed
 static void init_raw_params(void) {
-    // emperical guestimate
+    // empirical guestimate
     // average pixel value of a neutral subject shot with canon AE, as a fraction of usable dynamic range
     // found to be reasonably close on d10, elph130, a540, g1x and more.
     double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);

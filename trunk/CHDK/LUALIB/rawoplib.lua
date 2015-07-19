@@ -4,27 +4,18 @@ utility functions for 'rawop' code
 if type(rawop) ~= 'table' then
 	error('rawop not supported')
 end
-local fb=rawop.fb_info()
--- extended fb info
-rawop.fb=fb
-rawop.fb.white_level_ev96 = rawop.raw_to_ev96(rawop.fb.white_level)
-rawop.fb.black_level_ev96 = rawop.raw_to_ev96(rawop.fb.black_level) -- TODO actually black_level + 1
 
-rawop.fb.active_area.width = rawop.fb.active_area.x2 - rawop.fb.active_area.x1
-rawop.fb.active_area.height = rawop.fb.active_area.y2 - rawop.fb.active_area.y1
-
-rawop.fb.jpeg_area.width = rawop.fb.jpeg_area.x2 - rawop.fb.jpeg_area.x1
-rawop.fb.jpeg_area.height = rawop.fb.jpeg_area.y2 - rawop.fb.jpeg_area.y1
-
+-- assumes CFA won't change on the fly (currently true)
+local cfa_offsets=rawop.get_cfa_offsets()
 -- locals to avoid a bunch of nested table lookups on every call
-local cfa_r_x  = fb.cfa_offsets.r.x
-local cfa_r_y  = fb.cfa_offsets.r.y
-local cfa_g1_x = fb.cfa_offsets.g1.x
-local cfa_g1_y = fb.cfa_offsets.g1.y
-local cfa_g2_x = fb.cfa_offsets.g2.x
-local cfa_g2_y = fb.cfa_offsets.g2.y
-local cfa_b_x  = fb.cfa_offsets.b.x
-local cfa_b_y  = fb.cfa_offsets.b.y
+local cfa_r_x  = cfa_offsets.r.x
+local cfa_r_y  = cfa_offsets.r.y
+local cfa_g1_x = cfa_offsets.g1.x
+local cfa_g1_y = cfa_offsets.g1.y
+local cfa_g2_x = cfa_offsets.g2.x
+local cfa_g2_y = cfa_offsets.g2.y
+local cfa_b_x  = cfa_offsets.b.x
+local cfa_b_y  = cfa_offsets.b.y
 
 local fill_rect = rawop.fill_rect
 local meter = rawop.meter
