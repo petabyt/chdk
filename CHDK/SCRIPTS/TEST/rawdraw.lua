@@ -1,6 +1,6 @@
 --[[
 @description raw drawing test
-@chdk_version 1.4.0.3867
+@chdk_version 1.4.0.4193
 #shots=1 "Shots"
 #enable_raw=true "Enable raw"
 ]]
@@ -27,8 +27,9 @@ function restore()
 	set_raw(prev_raw_conf)
 end
 
-local min_level = rawop.fb.black_level + 128
-local max_level = rawop.fb.white_level - 128
+-- initialized on in raw hook
+local min_level
+local max_level
 fails=0
 
 function check_pixel_and_draw_status(status_x,status_y,x,y,cr,cg1,cb,cg2)
@@ -44,12 +45,14 @@ function check_pixel_and_draw_status(status_x,status_y,x,y,cr,cg1,cb,cg2)
 end
 
 function do_draw()
-	-- centered 500 px square
+ 	min_level = rawop.get_black_level() + 128	
+ 	max_level = rawop.get_white_level() - 128
+ 	-- centered 500 px square
 	local meter_size = 500
 
-	local x1 = rawop.fb.width/2 - meter_size/2
+	local x1 = rawop.get_raw_width()/2 - meter_size/2
 
-	local y1 = rawop.fb.height/2 - meter_size/2
+	local y1 = rawop.get_raw_height()/2 - meter_size/2
 
 	local t0=get_tick_count()
 	local m = rawop.meter(x1,y1,meter_size,meter_size,1,1)
@@ -65,8 +68,8 @@ function do_draw()
 	rawop.fill_rect_rgbg(x1,y1 + meter_size - 16,16,16,min_level,g2,min_level)
 	rawop.fill_rect_rgbg(x1 + meter_size - 16,y1 + meter_size - 16,16,16,min_level,min_level,b)
 
-	local status_x = rawop.fb.jpeg_area.x1+100
-	local status_y = rawop.fb.jpeg_area.y1+100
+	local status_x = rawop.get_jpeg_left()+100
+	local status_y = rawop.get_jpeg_top()+100
 
 	-- check values from the rects drawn above
 	check_pixel_and_draw_status(status_x,status_y,x1,y1,r,min_level,min_level,min_level)
@@ -91,7 +94,7 @@ function do_draw()
 	end
 
 	-- draw a big rect for timing, with different green levels just for fun
-	rawop.fill_rect_rgbg(rawop.fb.width/2-500,rawop.fb.height-800,1000,500,min_level*4,min_level*3,min_level*2,min_level)
+	rawop.fill_rect_rgbg(rawop.get_raw_width()/2-500,rawop.get_raw_height()-800,1000,500,min_level*4,min_level*3,min_level*2,min_level)
 
 	-- TODO should check set pixel, out of bounds, rounding on rgbg funcs
 

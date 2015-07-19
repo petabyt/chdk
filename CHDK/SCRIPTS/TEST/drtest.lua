@@ -1,6 +1,6 @@
 --[[
 @title dynamic range test
-@chdk_version 1.4.0.4138
+@chdk_version 1.4.0.4193
 #overstops=4 "+ stops"
 #understops=6 "- stops"
 #draw_meter=true "draw meter"
@@ -12,11 +12,6 @@ require'rawoplib'
 props=require'propcase'
 capmode=require'capmode'
 
--- centered 500 px square
-meter_size = 500
-
-meter_left = rawop.fb.width/2 - meter_size/2
-meter_top = rawop.fb.height/2 - meter_size/2
 
 save_raw=get_raw()
 set_raw(1) 
@@ -249,14 +244,27 @@ drtest={}
 function drtest:init()
 	self.histo=rawop.create_histogram()
 	self.evh={}
-	self.draw_low = rawop.fb.black_level + rawop.fb.black_level / 2
-	self.draw_high = rawop.fb.white_level - rawop.fb.black_level
-	self.draw_low_thresh = rawop.fb.white_level - rawop.fb.white_level/3
 	self.histo_scale = 100000
+-- centered 500 px square
+	self.meter_size = 500
+end
+
+--[[
+update values from rawop per frame
+--]]
+function drtest:update_rawop_vals()
+	local bl=rawop.get_black_level()
+	local wl=rawop.get_white_level()
+	self.draw_low = bl + bl/2
+	self.draw_high = wl - bl
+	self.draw_low_thresh = wl - wl/3
+	self.cfa_offsets = rawop.get_cfa_offsets()
+	self.meter_left = rawop.get_raw_width()/2 - self.meter_size/2
+	self.meter_top = rawop.get_raw_height()/2 - self.meter_size/2
 end
 
 function meter_bar_width(v)
-	return (v * 500)/rawop.fb.white_level
+	return (v * 500)/rawop.get_white_level()
 end
 
 function drtest:draw_meter()
@@ -271,7 +279,7 @@ function drtest:draw_meter()
 		c = self.draw_high
 	end
 	-- box around meter area
-	rawop.rect(meter_left - 2,meter_top - 2,meter_size+4,meter_size+4,2,c)
+	rawop.rect(self.meter_left - 2,self.meter_top - 2,self.meter_size+4,self.meter_size+4,2,c)
 
 	-- draw max scale
 	rawop.fill_rect(100,90,500,4,self.draw_high)
@@ -288,8 +296,8 @@ function drtest:draw_meter()
 	rawop.fill_rect_rgbg(100,500,meter_bar_width(self.b),20,self.draw_low,self.draw_low,self.b)
 	rawop.fill_rect_rgbg(100,520,meter_bar_width(self.b),20,self.draw_low,self.draw_low,self.draw_high)
 	-- draw blacklevel scale
-	rawop.fill_rect(100,550,meter_bar_width(rawop.fb.black_level),4,self.draw_high)
-	rawop.fill_rect(100,554,meter_bar_width(rawop.fb.black_level),4,self.draw_low)
+	rawop.fill_rect(100,550,meter_bar_width(rawop.get_black_level()),4,self.draw_high)
+	rawop.fill_rect(100,554,meter_bar_width(rawop.get_black_level()),4,self.draw_low)
 end
 
 --[[
@@ -297,8 +305,8 @@ get rgb and combined meter
 ]]
 function drtest:do_meter()
 	local t0=get_tick_count()
-	self.m = rawop.meter(meter_left,meter_top,meter_size,meter_size,1,1)
-	self.r,self.g1,self.b,self.g2 = rawop.meter_rgbg(meter_left,meter_top,meter_size,meter_size,2,2)
+	self.m = rawop.meter(self.meter_left,self.meter_top,self.meter_size,self.meter_size,1,1)
+	self.r,self.g1,self.b,self.g2 = rawop.meter_rgbg(self.meter_left,self.meter_top,self.meter_size,self.meter_size,2,2)
 	log:set{
 		meter_time=get_tick_count()-t0,
 		m=self.m,
@@ -320,15 +328,15 @@ function drtest:draw_histo()
 	end
 	-- fill histo area
 	local histo_height = #self.evh.all*4
-	rawop.fill_rect(100,596,1000,(histo_height+8)*2,rawop.fb.raw_neutral)
+	rawop.fill_rect(100,596,1000,(histo_height+8)*2,rawop.get_raw_neutral())
 	-- draw combined in dark values
 	self:draw_ev_histo(self.evh.all,100,600,self.draw_low)
 	-- draw RGB in corresponding colors
 	local top = 600 + histo_height + 8
-	self:draw_ev_histo(self.evh.r,100 + rawop.fb.cfa_offsets.r.x,top  + rawop.fb.cfa_offsets.r.y, self.draw_high,2)
-	self:draw_ev_histo(self.evh.g1,100 + rawop.fb.cfa_offsets.g1.x,top + rawop.fb.cfa_offsets.g1.y, self.draw_high,2)
-	self:draw_ev_histo(self.evh.g1,100 + rawop.fb.cfa_offsets.g2.x,top + rawop.fb.cfa_offsets.g2.y, self.draw_high,2)
-	self:draw_ev_histo(self.evh.b,100 + rawop.fb.cfa_offsets.b.x,top + rawop.fb.cfa_offsets.b.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.r,100 +  self.cfa_offsets.r.x,top  + self.cfa_offsets.r.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.g1,100 + self.cfa_offsets.g1.x,top + self.cfa_offsets.g1.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.g1,100 + self.cfa_offsets.g2.x,top + self.cfa_offsets.g2.y, self.draw_high,2)
+	self:draw_ev_histo(self.evh.b,100 +  self.cfa_offsets.b.x,top +  self.cfa_offsets.b.y, self.draw_high,2)
 end
 
 function drtest:draw_ev_histo(vals, left, top, val, step)
@@ -341,7 +349,8 @@ function drtest:make_ev_histo(step,mode)
 	if not mode then
 		mode = self.histo_scale
 	end
-	local raw_min = rawop.fb.black_level
+	local bl,wl = rawop.get_black_level(), rawop.get_white_level()
+	local raw_min = bl
 	local r={
 		step = step,
 		mode = mode,
@@ -350,8 +359,8 @@ function drtest:make_ev_histo(step,mode)
 	repeat
 		local ev_min = rawop.raw_to_ev96(raw_min)
 		local raw_max = rawop.ev96_to_raw(ev_min + step - 1)
-		if raw_max > rawop.fb.white_level then
-			raw_max = rawop.fb.white_level
+		if raw_max > wl then
+			raw_max = wl
 		end
 		local count=self.histo:range(raw_min,raw_max,mode)
 		table.insert(r,count)
@@ -362,7 +371,7 @@ function drtest:make_ev_histo(step,mode)
 			r.peak_raw_max = raw_max
 		end
 		raw_min = raw_max + 1
-	until raw_max == rawop.fb.white_level
+	until raw_max == wl
 
 	count_max = 0
 	for raw_val=r.peak_raw_min,r.peak_raw_max do
@@ -382,12 +391,13 @@ end
 function drtest:do_histo()
 	-- update combined
 	local t0=get_tick_count()
-	self.histo:update(meter_left,meter_top, meter_size, meter_size, 1,1)
+	self.histo:update(self.meter_left,self.meter_top, self.meter_size, self.meter_size, 1,1)
 	log:set{histo_update_time=get_tick_count()-t0}
 
 	t0=get_tick_count()
 	self.evh.all=self:make_ev_histo(12)
-	self.bl_pct,self.wl_pct = self.histo:range(1,rawop.fb.black_level,self.histo_scale),self.histo:range(rawop.fb.white_level,rawop.fb.white_level,self.histo_scale)
+	self.bl_pct,self.wl_pct = self.histo:range(1,rawop.get_black_level(),self.histo_scale),
+								self.histo:range(rawop.get_white_level(),rawop.get_white_level(),self.histo_scale)
 	log:set{
 		histo_calc_time=get_tick_count()-t0,
 		peak=rawop.raw_to_ev96(self.evh.all.peak_raw_val),
@@ -399,9 +409,9 @@ function drtest:do_histo()
 	-- update r g b channels
 	for i,name in ipairs{'r','g1','b'} do
 		t0=get_tick_count()
-		self.histo:update(meter_left + rawop.fb.cfa_offsets[name].x,
-							meter_top + rawop.fb.cfa_offsets[name].y,
-							meter_size, meter_size, 2,2)
+		self.histo:update( self.meter_left + self.cfa_offsets[name].x,
+						   self.meter_top  + self.cfa_offsets[name].y,
+						   self.meter_size, self.meter_size, 2,2)
 		log:set{histo_update_time=get_tick_count()-t0}
 
 		t0=get_tick_count()
@@ -425,6 +435,7 @@ function drtest:doshot(shotdesc)
 	log:set{
 		shot=shotdesc,
 	}
+	self:update_rawop_vals()
 	self:do_histo()
 	self:do_meter()
 	self:do_draw()
