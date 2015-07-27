@@ -1190,6 +1190,8 @@ int shooting_set_mode_canon(int canonmode)
     if (canonmode == -1 || !rec_mode_active())
         return 0;
     SetCurrentCaptureModeType(canonmode);
+    // updated cached mode information immediately
+    mode_get();
     return 1;
 }
 
