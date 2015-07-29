@@ -14,6 +14,7 @@ extern void task_InitFileModules();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
 extern void task_PhySw();
+extern void task_FileWrite();
 #if 0
 extern void task_TouchPanel();
 void task_TouchPanel_my(void);
@@ -28,6 +29,7 @@ void taskHook(context_t **context) {
 	if(tcb->entry == (void*)task_InitFileModules)  tcb->entry = (void*)init_file_modules_task;
 	if(tcb->entry == (void*)task_MovieRecord)      tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)           tcb->entry = (void*)exp_drv_task;
+	if(tcb->entry == (void*)task_FileWrite)        tcb->entry = (void*)filewritetask;
 #if 0
 	if(tcb->entry == (void*)task_TouchPanel)       tcb->entry = (void*)task_TouchPanel_my;
 #endif
