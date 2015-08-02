@@ -6,14 +6,16 @@
 #ui_cont=true "Test cont mode"
 #ui_shots=5 "burst shots"
 #ui_append=false "append log"
+#ui_raw=false "CHDK raw"
 ]]
 --[[
 this script tests the operation and placement of the remote hook (wait_until_remote_button_is_released)
 raw hook (capt_seq_hook_raw_here), and override code (shooting_expo_param_override).
 
-It also verifies that the file counter (get_exp_count etc) increments by the time the raw hook is reached.
+It also checks if the file counter (get_exp_count etc) increments by the time the raw hook is reached.
 
 If one of the hooks isn't reached, the hook may need to be moved or additional branches may need to be hooked.
+
 If the file counter increments late, PAUSE_FOR_FILE_COUNTER may need to be set or increased in capt_seq.c
 
 If a hook isn't reached, the single shot test will generate errors like:
@@ -23,13 +25,23 @@ The fast and cont tests will generate errors like:
 
 NOTES:
 * Cameras that require a short PAUSE_FOR_FILE_COUNTER may pass the file counter tests.
-* Older cameras (where get_file_next_counter is file counter +1) will fail the fast and continious checks
+* PAUSE_FOR_FILE_COUNTER is only used if CHDK raw or remote shoot with raw is enabled.
+  If raw is not enabled, the script will not treat a late exposure counter increment as a failure, 
+  but will generate the message "PAUSE_FOR_FILE_COUNTER required?"
+* Older cameras (where get_file_next_counter is file counter +1) will fail the file counter checks in the
+  fast and continuous tests
 ]]
 
 require'hookutil'
 
 props=require'propcase'
 capmode=require'capmode'
+
+raw_enable_save=get_raw()
+set_raw(ui_raw)
+function restore()
+	set_raw(raw_enable_save)
+end
 
 local hooktest={
 	-- time to wait for any hook to become ready
@@ -39,8 +51,15 @@ local hooktest={
 	-- time for script to block raw hook
 	hook_raw_timeout=5000,
 	logname='A/hooktest.log',
+	hook_shoot_timeout_count=0,
+	hook_raw_timeout_count=0,
 	failcount=0,
 	failtotal=0,
+	hook_shoot_check_count=0,
+	hook_raw_check_count=0,
+	raw_exp_count_timeout_count=0,
+	raw_exp_count_max_wait=0,
+	raw_exp_count_min_wait=10000,
 }
 
 function hooktest:init(opts)
@@ -123,6 +142,7 @@ function hooktest:update_exp_count()
 -- expect wrap on next shot
 -- TODO reset may occur in other cases
 	if self.exp_count == 9999 then
+		self:log('exp_count wrap')
 		self.exp_count = 0
 	end
 end
@@ -131,14 +151,16 @@ end
 wait for shoot hook, log if it times out, continue
 ]]
 function hooktest:check_hook_shoot()
-	self:log('exp=%04d hook_shoot wait',get_exp_count())
+	self:log('exp=%04d dir=%s hook_shoot wait',get_exp_count(),get_image_dir())
+	self.hook_shoot_check_count = self.hook_shoot_check_count + 1
 	if not hook_shoot.wait_ready{timeout=self.hook_wait_timeout,timeout_error=false} then
 		self:log_fail('hook_shoot wait timeout')
 		-- hook is cleared on timeout, reset
 		hook_shoot.set(self.hook_shoot_timeout)
+		self.hook_shoot_timeout_count = self.hook_shoot_timeout_count + 1
 		return
 	end
-	self:log('exp=%04d hook_shoot ready',get_exp_count())
+	self:log('exp=%04d dir=%s hook_shoot ready',get_exp_count(),get_image_dir())
 	hook_shoot.continue()
 end
 
@@ -147,29 +169,52 @@ wait for raw hook, log if it times out, check file counter, if file counter not 
 report and wait
 ]]
 function hooktest:check_hook_raw()
-	self:log('exp=%04d hook_raw wait',get_exp_count())
+	self:log('exp=%04d dir=%s hook_raw wait',get_exp_count(),get_image_dir())
+	self.hook_raw_check_count = self.hook_raw_check_count + 1
 	if not hook_raw.wait_ready{timeout=self.hook_wait_timeout,timeout_error=false} then
 		self:log_fail('hook_raw wait timeout')
 		-- hook is cleared on timeout, reset
 		hook_raw.set(self.hook_raw_timeout)
+		self.hook_raw_timeout_count = self.hook_raw_timeout_count + 1
 		return
 	end
 	local c = get_exp_count()
-	self:log('exp=%0d hook_raw ready',c)
+	local t0 = get_tick_count()
+	self:log('exp=%04d dir=%s hook_raw ready',c,get_image_dir())
 
 	local next_ec = self.exp_count + 1 
 	if c ~= next_ec then
-		self:log_fail('exp count %d expect %d',c,next_ec)
+		-- if raw is enabled, PAUSE_FOR_FILE_COUNTER should be in effect, so this is certain fail
+		if get_raw() then
+			self:log_fail('exp count %d expect %d',c,next_ec)
+		else
+			-- if not, will warn at the end
+			self:log('exp count %d expect %d',c,next_ec)
+		end
 		-- wait up to 1 sec to see if counter increments late
-		ec_wait=0
+		local ec_wait=0
+		local ec_timeout=true
 		while ec_wait < 1000 do
 			sleep(10)
+			ec_wait = get_tick_count() - t0
 			if get_exp_count() == next_ec then
 				self:log('exp count increment late: %d',ec_wait)
+				ec_timeout = false
 				break
 			end
-			ec_wait = ec_wait + 10
 		end
+		if ec_wait > self.raw_exp_count_max_wait then
+			self.raw_exp_count_max_wait = ec_wait
+		end
+		if ec_wait < self.raw_exp_count_min_wait then
+			self.raw_exp_count_min_wait = ec_wait
+		end
+		if ec_timeout then
+			self.raw_exp_count_timeout_count = self.raw_exp_count_timeout_count + 1
+			self:log_fail('exp count wait timeout')
+		end
+	else 
+		self.raw_exp_count_min_wait = 0
 	end
 	self:update_exp_count()
 	hook_raw.continue()
@@ -182,7 +227,7 @@ check that preshoot hook was reached
 ]]
 function hooktest:preshoot()
 	local c_expect = hook_preshoot.count()+1
-	self:log('exp=%04d preshoot',get_exp_count())
+	self:log('exp=%04d dir=%s preshoot',get_exp_count(),get_image_dir())
 	press'shoot_half'
 	local timeout = get_tick_count() + 3000
 	repeat
@@ -193,7 +238,7 @@ function hooktest:preshoot()
 			return false
 		end
 	until get_shooting()
-	self:log('exp=%04d preshoot ready',get_exp_count())
+	self:log('exp=%04d dir=%s preshoot ready',get_exp_count(),get_image_dir())
 
 	local c = hook_preshoot.count()
 	if c ~= c_expect then
@@ -208,14 +253,26 @@ test a single shot with "shoot", verify each hook counter and the file counter i
 function hooktest:test_single()
 	local hook_names = {'hook_preshoot','hook_shoot','hook_raw'}
 	local counts={}
+	-- exp count can reset on first shot after boot depending on folder / file number settings
+	-- do a single warmup shot without checking counter
+	self:log('exp=%04d dir=%s warmup shoot start',get_exp_count(),get_image_dir())
+	local r=shoot()
+	if r ~= 0 then
+		self:log_fail('warmup shoot failed %d',r)
+	end
+	self:log('exp=%04d dir=%s warmup shoot done',get_exp_count(),get_image_dir())
+	sleep(500)
+
 	for _,name in ipairs(hook_names) do
 		counts[name] = _G[name].count()
 	end
 	self:update_exp_count()
+	self:log('exp=%04d dir=%s shoot start',get_exp_count(),get_image_dir())
 	local r=shoot()
 	if r ~= 0 then
 		self:log_fail('shoot failed %d',r)
 	end
+	self:log('exp=%04d dir=%s shoot done',get_exp_count(),get_image_dir())
 	for _,name in ipairs(hook_names) do
 		local c=_G[name].count()
 		if counts[name]+1 ~= c then
@@ -280,6 +337,25 @@ function hooktest:test_cont()
 end
 
 function hooktest:results()
+	if self.hook_shoot_timeout_count > 0 then
+		self:log('wait_until_remote_button_is_released bad/missing %d/%d',
+				self.hook_shoot_timeout_count,
+				self.hook_shoot_check_count)
+	end
+	if self.hook_raw_timeout_count > 0 then
+		self:log('capt_seq_hook_raw_here bad/missing %d/%d',
+				self.hook_raw_timeout_count,
+				self.hook_raw_check_count)
+	end
+	-- if every exp count wait failed, don't bother with pause messages
+	if self.raw_exp_count_max_wait > 0 and self.raw_exp_count_timeout_count ~= self.hook_raw_check_count then
+		if get_raw() then
+			self:logcon('PAUSE_FOR_FILE_COUNTER short/missing?')
+		else
+			self:logcon('PAUSE_FOR_FILE_COUNTER required?')
+		end
+		self:logcon('pause min=%d max=%d',self.raw_exp_count_min_wait,self.raw_exp_count_max_wait)
+	end
 	if self.failtotal > 0 then
 		self:logcon("FAILED %d",self.failtotal)
 	else
@@ -298,3 +374,4 @@ hooktest:run_test('single')
 hooktest:run_test('fast')
 hooktest:run_test('cont')
 hooktest:results()
+restore()
