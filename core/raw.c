@@ -100,6 +100,7 @@ name and
 create directories as need
 should only be called in raw hook
 modifies global fn
+returns -1 if not enough space for one raw
 */
 static int raw_create_time; // time raw file was opened, for time stamp
 static int raw_br_counter;  // bracketing counter for raw suffix
@@ -107,6 +108,10 @@ int raw_createfile(void)
 {
     int fd;
 
+    // fail if less than one raw + jpeg space free
+    if(GetRawCount() < 1) {
+        return -1;
+    }
     raw_create_time = time(NULL);
     
     raw_get_path(fn);
