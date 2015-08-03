@@ -229,7 +229,15 @@ unsigned int GetJpgCount(void)
 
 unsigned int GetRawCount(void)
 {
-    return GetFreeCardSpaceKb()/((camera_sensor.raw_size / 1024)+GetFreeCardSpaceKb()/GetJpgCount());
+    unsigned free_kb = GetFreeCardSpaceKb();
+    unsigned raw_kb =  camera_sensor.raw_size/1024;
+    // 0.25 raw margin
+    unsigned margin_kb = raw_kb/4;
+    if(free_kb <= margin_kb) {
+        return 0;
+    }
+    free_kb -= margin_kb;
+    return free_kb/(raw_kb+free_kb/GetJpgCount());
 }
 
 //----------------------------------------------------------------------------
