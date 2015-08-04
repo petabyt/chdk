@@ -41,10 +41,10 @@ FUNC ref=0 length=27
 
    // Replacement of sub_ for correct power-on.
    // (short press = playback mode, long press = record mode)
-   // look at power-on switch sub_FF92D94C
+   // See http://chdk.setepontos.com/index.php?topic=12321.msg123724#msg123724
+   // look at power-on switch sub_FF86B8C4
    // value and pointer from sub_FF86B2E8
-   //*(int*)(0x2A04 + 4) = (*(int*)0xC0220020)&1 ? 0x400000 : 0x200000;
-   *(int*)(0x2A04 + 4) = (*(int*)0xC022F484)&5 ? 0x400000 : 0x200000;
+   *(int*)(0x2A04 + 4) = (*(int*)0xC022F484)&0x20000 ? 0x400000 : 0x200000;
 
 <<<
 ASM
@@ -92,21 +92,16 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=0
 ASM
-FW 10
-PATCHSUB ref=0
-FW 11
-PATCHSUB ref=1 name=task_Startup_my
-FW $
-ENDASM
-ENDFUNC
-
-//////////////////////////////////////////////////////////////
-// Remove power-on mode handling
-//////////////////////////////////////////////////////////////
-FUNC ref=0 length=26
-ASM
-FW $-4
-REM "Disable StartUpChecks"
+FW L10
+REM "See: http://chdk.setepontos.com/index.php?topic=12321.msg121619#msg121619"
+REM
+REM
+REM
+>>> prelabel
+"    BL      loc_FF8285FC \n"  //Added
+<<<
+FW L22
+PATCHSUB ref=0 name=task_Startup_my
 FW $
 ENDASM
 ENDFUNC
@@ -114,7 +109,7 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 // task_Startup_my
 //////////////////////////////////////////////////////////////
-FUNC ref=1
+FUNC ref=0
 ASM
 FW 6
 REM "load DISKBOOT.BIN"

@@ -195,10 +195,10 @@ void __attribute__((naked,noinline)) sub_FF8203C4_my() {
 
    // Replacement of sub_ for correct power-on.
    // (short press = playback mode, long press = record mode)
-   // look at power-on switch sub_FF92D94C
+   // See http://chdk.setepontos.com/index.php?topic=12321.msg123724#msg123724
+   // look at power-on switch sub_FF86B8C4
    // value and pointer from sub_FF86B2E8
-   //*(int*)(0x2A04 + 4) = (*(int*)0xC0220020)&1 ? 0x400000 : 0x200000;
-   *(int*)(0x2A04 + 4) = (*(int*)0xC022F484)&5 ? 0x400000 : 0x200000;
+   *(int*)(0x2A04 + 4) = (*(int*)0xC022F484)&0x20000 ? 0x400000 : 0x200000;
 
 asm volatile (
 "    LDR     R0, =0xFF82043C \n"
@@ -369,10 +369,11 @@ asm volatile (
 "    MOV     R0, #0 \n"
 
 "loc_FF8285E8:\n"
-"    BL      sub_FF82D94C_my \n"  // --> Patched. Old value = 0xFF82D94C.
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF8285FC \n"
-"    BL      sub_FF82D134 \n"
+//"  BL      _sub_FF82D94C \n"  // See: http://chdk.setepontos.com/index.php?topic=12321.msg121619#msg121619
+//"  CMP     R0, #0 \n"
+//"  BNE     loc_FF8285FC \n"
+//"  BL      _sub_FF82D134 \n"
+"    BL      loc_FF8285FC \n"  //Added
 
 "loc_FF8285F8:\n"
 "    B       loc_FF8285F8 \n"
@@ -392,43 +393,6 @@ asm volatile (
 "    BL      _CreateTask \n"
 "    MOV     R0, #0 \n"
 "    LDMFD   SP!, {R3,PC} \n"
-);
-}
-
-/*************************************************************/
-//** sub_FF82D94C_my @ 0xFF82D94C - 0xFF82D9B0, length=26
-void __attribute__((naked,noinline)) sub_FF82D94C_my() {
-asm volatile (
-"    STMFD   SP!, {R2-R8,LR} \n"
-"    MOV     R7, R0 \n"
-"    MOV     R5, #0 \n"
-//"  BL      _sub_FF86B2E0 \n"  // --> Nullsub call removed.
-"    MOV     R0, #5 \n"
-"    BL      sub_FF8693A4 \n"
-"    MOV     R4, #1 \n"
-"    BIC     R6, R4, R0 \n"
-"    MOV     R0, #6 \n"
-"    BL      sub_FF8693A4 \n"
-"    CMP     R7, #0 \n"
-"    BIC     R4, R4, R0 \n"
-"    BEQ     loc_FF82D988 \n"
-"    ORRS    R0, R6, R4 \n"
-"    BEQ     loc_FF82D9B0 \n"
-
-"loc_FF82D988:\n"
-"    BL      sub_FF838500 \n"
-"    MOV     R2, R0 \n"
-"    MOV     R3, R5 \n"
-"    MOV     R1, R4 \n"
-"    MOV     R0, R6 \n"
-"    STR     R5, [SP] \n"
-"    STR     R5, [SP, #4] \n"
-//"  BL      _sub_FF86B2E8 \n"  // Disable StartUpChecks
-//"  BL      _sub_FF86B2E4 \n"  // --> Nullsub call removed.
-"    MOV     R0, #1 \n"
-
-"loc_FF82D9B0:\n"
-"    LDMFD   SP!, {R2-R8,PC} \n"
 );
 }
 
