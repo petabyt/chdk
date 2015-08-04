@@ -73,8 +73,8 @@
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
 
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_HELP }
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 
