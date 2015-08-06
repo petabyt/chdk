@@ -90,6 +90,7 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 //
 //////////////////////////////////////////////////////////////
+
 FUNC ref=0
 ASM
 FW L10
@@ -97,9 +98,7 @@ REM "See: http://chdk.setepontos.com/index.php?topic=12321.msg121619#msg121619"
 REM
 REM
 REM
->>> prelabel
-"    BL      loc_FF8285FC \n"  //Added
-<<<
+REM
 FW L22
 PATCHSUB ref=0 name=task_Startup_my
 FW $

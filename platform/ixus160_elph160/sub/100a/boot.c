@@ -373,10 +373,9 @@ asm volatile (
 //"  CMP     R0, #0 \n"
 //"  BNE     loc_FF8285FC \n"
 //"  BL      _sub_FF82D134 \n"
-"    BL      loc_FF8285FC \n"  //Added
 
 "loc_FF8285F8:\n"
-"    B       loc_FF8285F8 \n"
+//"  B       loc_FF8285F8 \n"
 
 "loc_FF8285FC:\n"
 "    BL      sub_FF82A464 \n"
