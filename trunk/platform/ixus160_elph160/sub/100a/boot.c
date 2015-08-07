@@ -151,37 +151,37 @@ asm volatile (
 //R0 = Pointer to task function to create
 
 /*** INSTALL capt_seq_task() hook ***/
-" LDR R1, =task_CaptSeq\n" // DryOS original code function ptr.
-" CMP R1, R0\n" // is the given taskptr equal to our searched function?
-" LDREQ R0, =capt_seq_task\n" // if so replace with our task function base ptr.
-" BEQ exitHook\n" // below compares not necessary if this check has found something.
+"    LDR     R1, =task_CaptSeq\n"       // DryOS original code function ptr.
+"    CMP     R1, R0\n"                  // is the given taskptr equal to our searched function?
+"    LDREQ   R0, =capt_seq_task\n"      // if so replace with our task function base ptr.
+"    BEQ exitHook\n"                    // below compares not necessary if this check has found something.
 
 /*** INSTALL exp_drv_task() hook ***/
-" LDR R1, =task_ExpDrv\n"
-" CMP R1, R0\n"
-" LDREQ R0, =exp_drv_task\n"
-" BEQ exitHook\n"
+"    LDR     R1, =task_ExpDrv\n"
+"    CMP     R1, R0\n"
+"    LDREQ   R0, =exp_drv_task\n"
+"    BEQ exitHook\n"
 
 /*** INSTALL filewrite() hook ***/
-" LDR R1, =task_FileWrite\n"
-" CMP R1, R0\n"
-" LDREQ R0, =filewritetask\n"
-" BEQ exitHook\n"
+"    LDR     R1, =task_FileWrite\n"
+"    CMP     R1, R0\n"
+"    LDREQ   R0, =filewritetask\n"
+"    BEQ exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
-" LDR R1, =task_MovieRecord\n"
-" CMP R1, R0\n"
-" LDREQ R0, =movie_record_task\n"
-" BEQ exitHook\n"
+"    LDR     R1, =task_MovieRecord\n"
+"    CMP     R1, R0\n"
+"    LDREQ   R0, =movie_record_task\n"
+"    BEQ exitHook\n"
 
 /*** INSTALL init_file_modules_task() hook ***/
-" LDR R1, =task_InitFileModules\n"
-" CMP R1, R0\n"
-" LDREQ R0, =init_file_modules_task\n"
+"   LDR     R1, =task_InitFileModules\n"
+"   CMP     R1, R0\n"
+"   LDREQ   R0, =init_file_modules_task\n"
 
 "exitHook:\n"
 // restore overwritten registers
-" LDMFD SP!, {R1}\n"
+"    LDMFD SP!, {R1}\n"
 // Execute overwritten instructions from original code, then jump to firmware
 "    STMFD   SP!, {R4-R8,LR} \n"
 "    CMP     R3, #0 \n"
@@ -430,7 +430,7 @@ asm volatile (
 }
 
 /*************************************************************/
-//** taskcreatePhySw_my @ 0xFF82D7F8 - 0xFF82D85C, length=26
+//** taskcreatePhySw_my @ 0xFF82D7F8 - 0xFF82D83C, length=18
 void __attribute__((naked,noinline)) taskcreatePhySw_my() {
 asm volatile (
 "    STMFD   SP!, {R3-R5,LR} \n"
@@ -453,14 +453,6 @@ asm volatile (
 
 "loc_FF82D83C:\n"
 "    LDMFD   SP!, {R3-R5,PC} \n"
-"    MOV     R1, R0 \n"
-"    MOV     R2, #0 \n"
-"    MOV     R0, #2 \n"
-"    B       sub_FF82DCC8 \n"
-"    MOV     R2, R1 \n"
-"    MOV     R1, R0 \n"
-"    MOV     R0, #3 \n"
-"    B       sub_FF82DCC8 \n"
 );
 }
 
