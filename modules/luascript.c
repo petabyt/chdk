@@ -638,6 +638,18 @@ static int luaCB_get_prop_str( lua_State* L ) {
     return 1;
 }
 
+/*
+b=get_raw_support()
+return true if in rec mode and raw data is available in the current capture mode
+NOTE
+currently returns true in dedicated video modes, even if still shooting is not possible
+*/
+static int luaCB_get_raw_support( lua_State* L )
+{
+  lua_pushboolean( L, is_raw_possible() && !camera_info.state.mode_play );
+  return 1;
+}
+
 static int luaCB_get_raw_count( lua_State* L )
 {
   lua_pushnumber( L, GetRawCount() );
@@ -2666,6 +2678,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_jpg_count)
     FUNC(get_prop)
     FUNC(get_prop_str)
+    FUNC(get_raw_support)
     FUNC(get_raw_count)
     FUNC(get_raw_nr)
     FUNC(get_raw)
