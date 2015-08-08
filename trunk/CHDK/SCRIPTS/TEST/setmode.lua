@@ -1,6 +1,6 @@
 --[[
 @title set cap mode test
-@chdk_version 1.3
+@chdk_version 1.4
 @param a 0=batch 1=menu 2=single
 @default a 0
 @param b batch: 0=valid only 1=all
@@ -83,8 +83,14 @@ end
 function log_printf(...)
 	log:write(string.format(...))
 end
+function get_raw_str()
+	if get_raw_support() then
+		return 'RAW  '
+	end
+	return 'NORAW'
+end
 function log_status()
-	log_printf("%20s %3d %5d %s",capmode.get_name(),capmode.get(),capmode.get_canon(),get_rec_str())
+	log_printf("%20s %3d %5d %s %s",capmode.get_name(),capmode.get(),capmode.get_canon(),get_rec_str(),get_raw_str())
 end
 
 fail_count=0

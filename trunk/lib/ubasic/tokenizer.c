@@ -133,6 +133,7 @@ static const struct keyword_token keywords[] = {
   {"get_propset",             TOKENIZER_GET_PROPSET},
   {"get_prop",                TOKENIZER_GET_PROP},
   {"get_quality",             TOKENIZER_GET_QUALITY},
+  {"get_raw_support",         TOKENIZER_GET_RAW_SUPPORT},
   {"get_raw_count",           TOKENIZER_GET_RAW_COUNT},
   {"get_raw_nr",              TOKENIZER_GET_RAW_NR},
   {"get_raw",                 TOKENIZER_GET_RAW},

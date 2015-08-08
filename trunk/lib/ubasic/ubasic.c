@@ -700,6 +700,10 @@ static int factor(void)
     accept(TOKENIZER_GET_ALT_MODE);
     r = (camera_info.state.gui_mode != 0);
     break;    
+  case TOKENIZER_GET_RAW_SUPPORT:
+    accept(TOKENIZER_GET_RAW_SUPPORT);
+    r = (is_raw_possible() && !camera_info.state.mode_play);
+    break;    
 
   //ARM Begin
       
