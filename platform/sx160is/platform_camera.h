@@ -68,6 +68,7 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_HAS_MOVIE_DIGEST_MODE                   1   //Camera doesn't actually have MOVIE_DIGEST_MOVIE, but this is required by is_video_recording.
                                                             //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE           1   // Binned mode, no valid raw data
 
 
     #undef  CAM_USES_ASPECT_CORRECTION
