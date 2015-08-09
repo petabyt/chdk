@@ -686,12 +686,6 @@ static int factor(void)
     accept(TOKENIZER_GET_DRAW_TITLE_LINE);  
     r = camera_info.state.osd_title_line ;
     break;
-  case TOKENIZER_SET_REMOTE_TIMING:
-    accept(TOKENIZER_SET_REMOTE_TIMING);
-    int hpenable= expr();
-    if ( hpenable > 0) r = start_usb_HPtimer(hpenable);
-    else r = stop_usb_HPtimer();
-    break;
   case TOKENIZER_FORCE_USB_PRESENT:
     accept(TOKENIZER_FORCE_USB_PRESENT);
     r=force_usb_state(expr()) ;
@@ -2613,6 +2607,15 @@ statement(void)
     accept(TOKENIZER_USB_SYNC_WAIT);
     if (expr()) usb_sync_wait_flag = 1;
     else        usb_sync_wait_flag = 0;
+    accept_cr();
+    break;
+
+  case TOKENIZER_SET_REMOTE_TIMING:
+    accept(TOKENIZER_SET_REMOTE_TIMING);
+    int hpenable= expr();
+    if ( hpenable > 0) start_usb_HPtimer(hpenable);
+    else stop_usb_HPtimer();
+    accept_cr();
     break;
 
   default:
