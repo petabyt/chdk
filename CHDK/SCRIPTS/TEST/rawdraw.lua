@@ -1,5 +1,5 @@
 --[[
-@description raw drawing test
+@title raw drawing test
 @chdk_version 1.4.0.4193
 #shots=1 "Shots"
 #enable_raw=true "Enable raw"
