@@ -1,5 +1,5 @@
 --[[
-@description ISO base check
+@title ISO base check
 @chdk_version 1.3
 Check if CAM_MARKET_ISO_BASE is required in platform_camera.h
 ]]

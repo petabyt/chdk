@@ -1,5 +1,5 @@
 --[[
-@description test 1.3 compat wrappers
+@title test 1.3 compat wrappers
 @chdk_version 1.3
 ]]
 function check_num(name,...)
