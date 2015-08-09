@@ -2600,6 +2600,14 @@ statement(void)
     set_yield_statement();
     break;
 
+  case TOKENIZER_SET_REMOTE_TIMING:
+    accept(TOKENIZER_SET_REMOTE_TIMING);
+    int hpenable= expr();
+    if ( hpenable > 0) start_usb_HPtimer(hpenable);
+    else stop_usb_HPtimer();
+    accept_cr(); 
+    break;
+
   default:
       DEBUG_PRINTF("ubasic.c: statement(): not implemented %d\n", token);
       ended = 1;
