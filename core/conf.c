@@ -1574,6 +1574,9 @@ int is_raw_possible() {
 #if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
        || (m == MODE_NIGHT_SCENE)            // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
 #endif
+#if defined(CAM_DISABLE_RAW_IN_DIGITAL_IS)
+       || (m == MODE_DIGITAL_IS)            // True if Digital IS mode (ixus160_elph160 crashes if RAW enabled in this mode)
+#endif
     );
 }
 
