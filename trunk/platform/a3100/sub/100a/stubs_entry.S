@@ -249,6 +249,7 @@ NHSTUB(strrchr                                ,0xff81400c) //  1
 NHSTUB(strtol                                 ,0xff83f0f4) //101
 NHSTUB(strtolx                                ,0xff83eef8) //109
    DEF(task_CaptSeq                           ,0xff86d6a0) //120
+   DEF(task_DvlpSeqTask                       ,0xff9332a8) //120
    DEF(task_ExpDrv                            ,0xff8aa748) //120
    DEF(task_FileWrite                         ,0xffa27c24) //120
    DEF(task_InitFileModules                   ,0xff886470) //120
