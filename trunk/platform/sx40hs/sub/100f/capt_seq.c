@@ -7,9 +7,82 @@
 
 #define USE_STUBS_NRFLAG 1          // see stubs_entry.S
 #define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
-#define PAUSE_FOR_FILE_COUNTER 150  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
+
+/*************************************************************/
+//** dvlp_seq_task @ 0xFF07E77C - 0xFF07E850, length=54
+void __attribute__((naked,noinline)) dvlp_seq_task() {
+asm volatile (
+"    STMFD   SP!, {R2-R6,LR} \n"
+"    LDR     R6, =0x3130 \n"
+
+"loc_FF07E784:\n"
+"    MOV     R2, #0 \n"
+"    LDR     R0, [R6, #8] \n"
+"    LDR     R1, [R6, #0x10] \n"
+"    BL      sub_FF02B240 /*_PostMessageQueue*/ \n"
+"    LDR     R0, [R6, #4] \n"
+"    MOV     R2, #0 \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_FF02B0F4 /*_ReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    MOVNE   R1, #0x190 \n"
+"    BNE     loc_FF07E7CC \n"
+"    LDR     R0, [R6, #8] \n"
+"    MOV     R1, SP \n"
+"    BL      sub_FF02B1BC /*_TryReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    MOVEQ   R5, #0 \n"
+"    BEQ     loc_FF07E7DC \n"
+"    LDR     R1, =0x196 \n"
+
+"loc_FF07E7CC:\n"
+"    LDR     R0, =0xFF07E934 /*'SsDvlpSeq.c'*/ \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
+"    LDMFD   SP!, {R2-R6,PC} \n"
+
+"loc_FF07E7DC:\n"
+"    LDR     R1, [SP, #4] \n"
+"    LDR     R0, [R1] \n"
+"    CMP     R0, #0 \n"
+"    BEQ     loc_FF07E800 \n"
+"    CMP     R0, #1 \n"
+"    BEQ     loc_FF07E80C \n"
+"    CMP     R0, #2 \n"
+"    BLEQ    sub_FF07E2A4 \n"
+"    B       loc_FF07E820 \n"
+
+"loc_FF07E800:\n"
+"    BL      capt_seq_hook_raw_here\n"      // +++  (9/8/2015 - moved here to fix RAW filename)
+"    LDR     R0, [R1, #8] \n"
+"    BL      sub_FF1D74CC \n"
+"    B       loc_FF07E820 \n"
+
+"loc_FF07E80C:\n"
+"    LDR     R0, [R1, #8] \n"
+"    BL      sub_FF1D77D0 \n"
+"    LDR     R0, [SP, #4] \n"
+"    LDR     R0, [R0, #8] \n"
+"    BL      sub_FF1D679C \n"
+
+"loc_FF07E820:\n"
+"    LDR     R4, [SP, #4] \n"
+"    LDR     R0, [R4, #4] \n"
+"    CMP     R0, #0 \n"
+"    MOVEQ   R1, #0x76 \n"
+"    LDREQ   R0, =0xFF07E934 /*'SsDvlpSeq.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
+"    STR     R5, [R4, #4] \n"
+"    LDR     R0, [R6, #4] \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_FF02B1BC /*_TryReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF07E7DC \n"
+"    B       loc_FF07E784 \n"
+);
+}
 
 /*************************************************************/
 //** capt_seq_task @ 0xFF07C46C - 0xFF07C778, length=196
@@ -81,20 +154,22 @@ asm volatile (
 "    B       loc_FF07C74C \n"
 
 "loc_FF07C55C:\n"
-"    BL      shooting_expo_iso_override\n"      // +->
+"    BL      shooting_expo_iso_override\n"      // added
 "    BL      sub_FF07CD70 \n"
-"    BL      shooting_expo_param_override\n"    // +->
+"    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF0795B8 \n"
-//"  LDR     R0, [R4, #0x28] \n"  // patch below makes these three lines redundant
+"    MOV     R0, #0\n"                          // added
+"    STR     R0, [R4,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+//"  LDR     R0, [R4, #0x28] \n"  // above patch makes these three lines redundant
 //"  CMP     R0, #0 \n"
 //"  BLNE    _sub_FF1D57C4 \n"
-"    MOV     R0, #0\n"                          // +
-"    STR     R0, [R4,#0x28]\n"                  // + fixes overrides behavior at short shutter press
 "    B       loc_FF07C74C \n"
 
 "loc_FF07C574:\n"
+"    BL      wait_until_remote_button_is_released\n"    // added
+"    BL      capt_seq_hook_set_nr\n"                    // added
 "    LDR     R0, [R0, #0x10] \n"
-"    BL      sub_FF07C894_my \n"  // --> Patched. Old value = 0xFF07C894.
+"    BL      sub_FF07C894 \n"
 "    B       loc_FF07C74C \n"
 
 "loc_FF07C580:\n"
@@ -307,245 +382,6 @@ asm volatile (
 "    BLEQ    _DebugAssert \n"
 "    STR     R6, [R5, #8] \n"
 "    B       loc_FF07C47C \n"
-);
-}
-
-/*************************************************************/
-//** sub_FF07C894_my @ 0xFF07C894 - 0xFF07C928, length=38
-void __attribute__((naked,noinline)) sub_FF07C894_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    LDR     R4, =0x3F64C \n"
-"    MOV     R5, R0 \n"
-"    LDR     R0, [R4, #0x28] \n"
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF07C8F0 \n"
-"    LDRH    R0, [R4] \n"
-"    SUB     R1, R0, #0x8200 \n"
-"    SUBS    R1, R1, #0x2F \n"
-"    SUBNE   R1, R0, #0x4200 \n"
-"    SUBNES  R1, R1, #0x2E \n"
-"    BLEQ    sub_FF07F06C \n"
-"    BL      sub_FF07ECB0 \n"
-"    MOV     R1, R5 \n"
-"    BL      sub_FF07ED08 \n"
-"    LDR     R0, =0x10F \n"
-"    MOV     R2, #4 \n"
-"    ADD     R1, R5, #0x68 \n"
-"    BL      _SetPropertyCase \n"
-"    MOV     R2, #4 \n"
-"    ADD     R1, R5, #0x6C \n"
-"    MOV     R0, #0x2C \n"
-"    BL      _SetPropertyCase \n"
-
-"loc_FF07C8F0:\n"
-"    MOV     R0, R5 \n"
-"    BL      sub_FF1D557C_my \n"  // --> Patched. Old value = 0xFF1D557C.
-"    BL      capt_seq_hook_raw_here\n"      // +++->
-"    MOV     R6, R0 \n"
-"    MOV     R2, R5 \n"
-"    MOV     R1, #1 \n"
-"    BL      sub_FF07A07C \n"
-"    TST     R6, #1 \n"
-"    MOVEQ   R0, R5 \n"
-"    BLEQ    sub_FF1D4788 \n"
-"    LDR     R0, [R4, #0xCC] \n"
-"    CMP     R0, #2 \n"
-"    LDMNEFD SP!, {R4-R6,PC} \n"
-"    MOV     R0, R5 \n"
-"    LDMFD   SP!, {R4-R6,LR} \n"
-"    B       sub_FF07A460 \n"
-);
-}
-
-/*************************************************************/
-//** sub_FF1D557C_my @ 0xFF1D557C - 0xFF1D57C0, length=146
-void __attribute__((naked,noinline)) sub_FF1D557C_my() {
-asm volatile (
-"    STMFD   SP!, {R3-R7,LR} \n"
-"    LDR     R5, =0x3F64C \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, [R5, #0x28] \n"
-"    LDR     R6, =0x420D \n"
-"    CMP     R0, #0 \n"
-"    MOV     R7, #0 \n"
-"    BNE     loc_FF1D560C \n"
-"    LDR     R0, [R5, #0xCC] \n"
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF1D55BC \n"
-"    MOV     R0, #0xC \n"
-"    BL      sub_FF083430 \n"
-"    TST     R0, #1 \n"
-"    BEQ     loc_FF1D560C \n"
-"    B       loc_FF1D5604 \n"
-
-"loc_FF1D55BC:\n"
-"    LDRH    R0, [R5] \n"
-"    CMP     R0, R6 \n"
-"    LDRNEH  R0, [R5, #0xA6] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BLS     loc_FF1D55EC \n"
-"    BL      sub_FF022080 \n"
-"    TST     R0, #1 \n"
-"    BEQ     loc_FF1D560C \n"
-"    BL      sub_FF083490 \n"
-"    B       loc_FF1D5604 \n"
-
-"loc_FF1D55EC:\n"
-"    MOV     R0, #0xC \n"
-"    BL      sub_FF083430 \n"
-"    TST     R0, #1 \n"
-"    BEQ     loc_FF1D560C \n"
-"    BL      sub_FF1D5DDC \n"
-"    BL      sub_FF079D48 \n"
-
-"loc_FF1D5604:\n"
-"    MOV     R0, #1 \n"
-"    LDMFD   SP!, {R3-R7,PC} \n"
-
-"loc_FF1D560C:\n"
-"    LDRH    R0, [R5] \n"
-"    CMP     R0, R6 \n"
-"    LDRNEH  R0, [R5, #0xA6] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BLS     loc_FF1D563C \n"
-"    LDRH    R0, [R5, #0xA4] \n"
-"    CMP     R0, #0 \n"
-"    LDREQH  R0, [R5, #0xA0] \n"
-"    CMPEQ   R0, #2 \n"
-"    BLEQ    sub_FF07D4A4 \n"
-
-"loc_FF1D563C:\n"
-"    LDRH    R1, [R5] \n"
-"    LDRH    R0, [R5, #0xA6] \n"
-"    CMP     R1, R6 \n"
-"    BEQ     loc_FF1D567C \n"
-"    CMP     R0, #3 \n"
-"    BEQ     loc_FF1D56BC \n"
-"    LDR     R0, [R4, #8] \n"
-"    CMP     R0, #1 \n"
-"    BLS     loc_FF1D5684 \n"
-"    LDRH    R0, [R5, #0xA4] \n"
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF1D56BC \n"
-"    LDRH    R0, [R5, #0xA0] \n"
-"    CMP     R0, #2 \n"
-"    BEQ     loc_FF1D56B8 \n"
-"    B       loc_FF1D5690 \n"
-
-"loc_FF1D567C:\n"
-"    CMP     R0, #3 \n"
-"    BEQ     loc_FF1D56BC \n"
-
-"loc_FF1D5684:\n"
-"    LDRH    R0, [R5, #0xA4] \n"
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF1D56BC \n"
-
-"loc_FF1D5690:\n"
-"    LDRH    R0, [R5, #0xA0] \n"
-"    CMP     R0, #1 \n"
-"    BNE     loc_FF1D56BC \n"
-"    CMP     R1, R6 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BLS     loc_FF1D56BC \n"
-"    LDR     R0, [R4, #0x10] \n"
-"    CMP     R0, #1 \n"
-"    BNE     loc_FF1D56BC \n"
-
-"loc_FF1D56B8:\n"
-"    BL      sub_FF1D6560 \n"
-
-"loc_FF1D56BC:\n"
-"    BL      sub_FF1D6528 \n"
-"    BL      sub_FF07CD60 \n"
-"    LDR     R0, [R5, #0x28] \n"
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF1D57AC \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF1D4660 \n"
-"    TST     R0, #1 \n"
-"    LDMNEFD SP!, {R3-R7,PC} \n"
-"    LDR     R0, [R5, #0xCC] \n"
-"    CMP     R0, #0 \n"
-"    LDRNEH  R0, [R5] \n"
-"    CMPNE   R0, R6 \n"
-"    LDRNEH  R0, [R5, #0xA6] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FF1D571C \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF1D4A80 \n"
-"    BL      sub_FF1D5D20 \n"
-"    LDR     R0, [R5, #0xCC] \n"
-"    CMP     R0, #0 \n"
-"    BEQ     loc_FF1D5738 \n"
-
-"loc_FF1D571C:\n"
-"    LDRH    R0, [R5] \n"
-"    CMP     R0, R6 \n"
-"    LDRNEH  R0, [R5, #0xA6] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FF1D5740 \n"
-
-"loc_FF1D5738:\n"
-"    MOV     R0, #2 \n"
-"    BL      sub_FF084BA0 \n"
-"    BL      wait_until_remote_button_is_released\n"	// ++
-"    BL      capt_seq_hook_set_nr\n"	// ++
-
-"loc_FF1D5740:\n"
-"    LDRH    R0, [R5] \n"
-"    SUB     R1, R0, #0x4200 \n"
-"    SUBS    R1, R1, #0x2E \n"
-"    BNE     loc_FF1D579C \n"
-"    MOV     R5, #1 \n"
-"    MOV     R2, #2 \n"
-"    MOV     R1, SP \n"
-"    ADD     R0, R2, #0x15C \n"
-"    STR     R5, [SP] \n"
-"    BL      _GetPropertyCase \n"
-"    TST     R0, #1 \n"
-"    MOVNE   R1, #0xC5 \n"
-"    LDRNE   R0, =0xFF1D58E8 /*'SsCaptureSeq.c'*/ \n"
-"    BLNE    _DebugAssert \n"
-"    LDRH    R0, [SP] \n"
-"    CMP     R0, #1 \n"
-"    BLS     loc_FF1D5794 \n"
-"    MOV     R0, R4 \n"
-"    STR     R5, [R4, #0x11C] \n"
-"    BL      sub_FF3583B0 \n"
-"    B       loc_FF1D57A4 \n"
-
-"loc_FF1D5794:\n"
-"    MOV     R0, #0 \n"
-"    STR     R0, [R4, #0x11C] \n"
-
-"loc_FF1D579C:\n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF1D5200 \n"
-
-"loc_FF1D57A4:\n"
-"    MOV     R7, R0 \n"
-"    B       loc_FF1D57BC \n"
-
-"loc_FF1D57AC:\n"
-"    LDR     R0, =0x9958 \n"
-"    LDR     R0, [R0] \n"
-"    CMP     R0, #0 \n"
-"    MOVNE   R7, #0x1D \n"
-
-"loc_FF1D57BC:\n"
-"    MOV     R0, R7 \n"
-"    LDMFD   SP!, {R3-R7,PC} \n"
 );
 }
 

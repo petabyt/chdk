@@ -12,6 +12,7 @@ extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 
 extern void task_CaptSeq();
+extern void task_DvlpSeqTask();
 extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
@@ -24,6 +25,7 @@ void taskHook(context_t **context)
 
 	// Replace firmware task addresses with ours
 	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
+    if(tcb->entry == (void*)task_DvlpSeqTask)       tcb->entry = (void*)dvlp_seq_task;
 	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;

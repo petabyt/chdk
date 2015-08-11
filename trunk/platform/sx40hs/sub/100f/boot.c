@@ -15,6 +15,7 @@ extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
 
 extern void task_CaptSeq();
+extern void task_DvlpSeqTask();
 extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
@@ -27,6 +28,7 @@ void taskHook(context_t **context)
 
 	// Replace firmware task addresses with ours
 	if(tcb->entry == (void*)task_CaptSeq)			tcb->entry = (void*)capt_seq_task; 
+    if(tcb->entry == (void*)task_DvlpSeqTask)       tcb->entry = (void*)dvlp_seq_task;
 	if(tcb->entry == (void*)task_InitFileModules)	tcb->entry = (void*)init_file_modules_task;
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
@@ -156,14 +158,12 @@ asm volatile (
 //** sub_FF000364_my @ 0xFF000364 - 0xFF0003CC, length=27
 void __attribute__((naked,noinline)) sub_FF000364_my() {
 
-   *(int*)0x1938=(int)taskHook;
-   *(int*)0x193C=(int)taskHook;
-
-
- if ( (*(int*)0xC022F48C & 0x800000) )
-		*(int*)(0x2628+0x8) = 0x200000;  // Playmode "PhySwConfig.c" SX40 FF0571D4
-	else
-		*(int*)(0x2628+0x8) = 0x100000; // Shootingmode
+    //http://chdk.setepontos.com/index.php/topic,4194.0.html
+    *(int*)0x1938=(int)taskHook;
+    *(int*)0x193C=(int)taskHook;    // need this for startup in Playback mode (otherwise init_file_modules_task doesn't hook properly)
+    
+    // replacement of sub_FF0571D4 for correct power-on.
+    *(int*)(0x2630) = (*(int*)0xC022F48C)&0x800000 ? 0x200000 : 0x100000; 
 
 asm volatile (
 "    LDR     R0, =0xFF0003DC \n"
