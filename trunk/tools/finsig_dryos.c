@@ -372,6 +372,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "strtolx" },
 
     { "task_CaptSeq" },
+    { "task_DvlpSeqTask", OPTIONAL },
     { "task_ExpDrv" },
     { "task_FileWrite", OPTIONAL },
     { "task_InitFileModules" },
