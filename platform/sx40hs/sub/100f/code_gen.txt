@@ -14,14 +14,12 @@ ENDFUNC
 FUNC ref=0 length=27
 >>>
 
-   *(int*)0x1938=(int)taskHook;
-   *(int*)0x193C=(int)taskHook;
-
-
- if ( (*(int*)0xC022F48C & 0x800000) )
-		*(int*)(0x2628+0x8) = 0x200000;  // Playmode "PhySwConfig.c" SX40 FF0571D4
-	else
-		*(int*)(0x2628+0x8) = 0x100000; // Shootingmode
+    //http://chdk.setepontos.com/index.php/topic,4194.0.html
+    *(int*)0x1938=(int)taskHook;
+    *(int*)0x193C=(int)taskHook;    // need this for startup in Playback mode (otherwise init_file_modules_task doesn't hook properly)
+    
+    // replacement of sub_FF0571D4 for correct power-on.
+    *(int*)(0x2630) = (*(int*)0xC022F48C)&0x800000 ? 0x200000 : 0x100000; 
 
 <<<
 ASM
@@ -160,19 +158,11 @@ FILE movie_rec.c
 
 FUNC sig=task_MovieRecord name=movie_record_task
 ASM
-FW 3
-PATCHSUB ref=0
-FW $
-ENDASM
-ENDFUNC
+FW 77
+>>>
 
-FUNC ref=0 length=391
-ASM
-FW 356
->>> prelabel
-
-"    LDR     R0, =0x8664\n" // +++++++++
-"    BL      set_quality\n" // +++++++++
+"    LDR     R0, =video_compression_rate\n" //added
+"    BL      set_quality\n"                 //added
 
 <<<
 FW $
@@ -187,47 +177,38 @@ FILE capt_seq.c
 
 >>> file=../capt_seq_hdr.c
 
+FUNC sig=task_DvlpSeqTask name=dvlp_seq_task
+ASM
+FW 33
+>>>
+"    BL      capt_seq_hook_raw_here\n"      // +++  (9/8/2015 - moved here to fix RAW filename)
+<<<
+FW $
+ENDASM
+ENDFUNC
+
 FUNC sig=task_CaptSeq name=capt_seq_task
 ASM
 FW 60
 >>>
-"    BL      shooting_expo_iso_override\n"      // +->
+"    BL      shooting_expo_iso_override\n"      // added
 <<<
 FW
 >>>
-"    BL      shooting_expo_param_override\n"    // +->
+"    BL      shooting_expo_param_override\n"    // added
 <<<
 FW
-REM "patch below makes these three lines redundant"
+>>>
+"    MOV     R0, #0\n"                          // added
+"    STR     R0, [R4,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+<<<
+REM "above patch makes these three lines redundant"
 REM
 REM
+FW
 >>>
-"    MOV     R0, #0\n"                          // +
-"    STR     R0, [R4,#0x28]\n"                  // + fixes overrides behavior at short shutter press
-<<<
-FW 2
-PATCHSUB ref=0
-FW $
-ENDASM
-ENDFUNC
-
-FUNC ref=0
-ASM
-FW 24
-PATCHSUB ref=0
->>>
-"    BL      capt_seq_hook_raw_here\n"      // +++->
-<<<
-FW $
-ENDASM
-ENDFUNC
-
-FUNC ref=0
-ASM
-FW 113
->>> prelabel
-"    BL      wait_until_remote_button_is_released\n"	// ++
-"    BL      capt_seq_hook_set_nr\n"	// ++
+"    BL      wait_until_remote_button_is_released\n"    // added
+"    BL      capt_seq_hook_set_nr\n"                    // added
 <<<
 FW $
 ENDASM

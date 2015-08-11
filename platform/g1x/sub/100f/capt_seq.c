@@ -7,9 +7,82 @@
 
 #define USE_STUBS_NRFLAG 1          // see stubs_entry.S
 #define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
-#define PAUSE_FOR_FILE_COUNTER 300  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
+
+/*************************************************************/
+//** dvlp_seq_task @ 0xFF07D4C4 - 0xFF07D598, length=54
+void __attribute__((naked,noinline)) dvlp_seq_task() {
+asm volatile (
+"    STMFD   SP!, {R2-R6,LR} \n"
+"    LDR     R6, =0x40B0 \n"
+
+"loc_FF07D4CC:\n"
+"    MOV     R2, #0 \n"
+"    LDR     R0, [R6, #8] \n"
+"    LDR     R1, [R6, #0x10] \n"
+"    BL      sub_FF029FF4 /*_PostMessageQueue*/ \n"
+"    LDR     R0, [R6, #4] \n"
+"    MOV     R2, #0 \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_FF029EA8 /*_ReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    MOVNE   R1, #0x190 \n"
+"    BNE     loc_FF07D514 \n"
+"    LDR     R0, [R6, #8] \n"
+"    MOV     R1, SP \n"
+"    BL      sub_FF029F70 /*_TryReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    MOVEQ   R5, #0 \n"
+"    BEQ     loc_FF07D524 \n"
+"    LDR     R1, =0x196 \n"
+
+"loc_FF07D514:\n"
+"    LDR     R0, =0xFF07D67C /*'SsDvlpSeq.c'*/ \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
+"    LDMFD   SP!, {R2-R6,PC} \n"
+
+"loc_FF07D524:\n"
+"    LDR     R1, [SP, #4] \n"
+"    LDR     R0, [R1] \n"
+"    CMP     R0, #0 \n"
+"    BEQ     loc_FF07D548 \n"
+"    CMP     R0, #1 \n"
+"    BEQ     loc_FF07D554 \n"
+"    CMP     R0, #2 \n"
+"    BLEQ    sub_FF07CFF4 \n"
+"    B       loc_FF07D568 \n"
+
+"loc_FF07D548:\n"
+"    BL      capt_seq_hook_raw_here\n"      // +++  (9/8/2015 - moved here to fix RAW filename)
+"    LDR     R0, [R1, #8] \n"
+"    BL      sub_FF1D3E7C \n"
+"    B       loc_FF07D568 \n"
+
+"loc_FF07D554:\n"
+"    LDR     R0, [R1, #8] \n"
+"    BL      sub_FF1D42C8 \n"
+"    LDR     R0, [SP, #4] \n"
+"    LDR     R0, [R0, #8] \n"
+"    BL      sub_FF1D2D30 \n"
+
+"loc_FF07D568:\n"
+"    LDR     R4, [SP, #4] \n"
+"    LDR     R0, [R4, #4] \n"
+"    CMP     R0, #0 \n"
+"    MOVEQ   R1, #0x76 \n"
+"    LDREQ   R0, =0xFF07D67C /*'SsDvlpSeq.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
+"    STR     R5, [R4, #4] \n"
+"    LDR     R0, [R6, #4] \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_FF029F70 /*_TryReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF07D524 \n"
+"    B       loc_FF07D4CC \n"
+);
+}
 
 /*************************************************************/
 //** capt_seq_task @ 0xFF07B330 - 0xFF07B630, length=193
@@ -96,7 +169,7 @@ asm volatile (
 "    BL      wait_until_remote_button_is_released\n"    // added
 "    BL      capt_seq_hook_set_nr\n"                    // added
 "    LDR     R0, [R0, #0x10] \n"
-"    BL      sub_FF07B74C_my \n"  // --> Patched. Old value = 0xFF07B74C.
+"    BL      sub_FF07B74C \n"
 "    B       loc_FF07B604 \n"
 
 "loc_FF07B444:\n"
@@ -306,63 +379,6 @@ asm volatile (
 "    BLEQ    _DebugAssert \n"
 "    STR     R6, [R5, #8] \n"
 "    B       loc_FF07B340 \n"
-);
-}
-
-/*************************************************************/
-//** sub_FF07B74C_my @ 0xFF07B74C - 0xFF07B7F4, length=43
-void __attribute__((naked,noinline)) sub_FF07B74C_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    LDR     R5, =0x409E0 \n"
-"    MOV     R6, R0 \n"
-"    LDR     R0, [R5, #0x2C] \n"
-"    LDR     R4, =0x222F \n"
-"    CMP     R0, #0 \n"
-"    BNE     loc_FF07B7A8 \n"
-"    LDRH    R0, [R5] \n"
-"    CMP     R0, R4 \n"
-"    SUBNE   R1, R0, #0x4200 \n"
-"    SUBNES  R1, R1, #0x2E \n"
-"    BLEQ    sub_FF07DDC4 \n"
-"    BL      sub_FF07DA60 \n"
-"    MOV     R1, R6 \n"
-"    BL      sub_FF07DAB8 \n"
-"    LDR     R0, =0x10F \n"
-"    MOV     R2, #4 \n"
-"    ADD     R1, R6, #0x58 \n"
-"    BL      _SetPropertyCase \n"
-"    MOV     R2, #4 \n"
-"    ADD     R1, R6, #0x5C \n"
-"    MOV     R0, #0x2C \n"
-"    BL      _SetPropertyCase \n"
-
-"loc_FF07B7A8:\n"
-"    LDRH    R0, [R5] \n"
-"    CMP     R0, R4 \n"
-"    MOV     R0, R6 \n"
-"    BNE     loc_FF07B7C0 \n"
-"    BL      sub_FF1D2418 \n"
-"    B       loc_FF07B7C4 \n"
-
-"loc_FF07B7C0:\n"
-"    BL      sub_FF1D140C \n"
-
-"loc_FF07B7C4:\n"
-"    BL      capt_seq_hook_raw_here\n"      // +++  (8/4/2013 - moved here to fix RAW Develop)
-"    MOV     R4, R0 \n"
-"    MOV     R2, R6 \n"
-"    MOV     R1, #1 \n"
-"    BL      sub_FF0790B4 \n"
-"    TST     R4, #1 \n"
-"    MOVEQ   R0, R6 \n"
-"    BLEQ    sub_FF1D05D0 \n"
-"    LDR     R0, [R5, #0xC8] \n"
-"    CMP     R0, #2 \n"
-"    LDMNEFD SP!, {R4-R6,PC} \n"
-"    MOV     R0, R6 \n"
-"    LDMFD   SP!, {R4-R6,LR} \n"
-"    B       sub_FF079288 \n"
 );
 }
 
