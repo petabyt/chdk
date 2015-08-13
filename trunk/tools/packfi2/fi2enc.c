@@ -96,14 +96,13 @@ static int get_hexstring( void *dst, const char *str, int len )
 static int fi2rec_size(uint32_t dryos_ver)
 {
     // return the correct size to use for the block record
-    switch (dryos_ver)
+    if (dryos_ver >= 50)
     {
-    case 50:
-	case 51:
-	case 52:
-    	return sizeof (fi2_rec_s);
-    default:
-    	return sizeof (fi2_rec_s) - 4; // exclude the new R50 extra value
+        return sizeof (fi2_rec_s);
+    }
+    else
+    {
+        return sizeof (fi2_rec_s) - 4; // exclude the new R50 extra value
     }
 }
 
