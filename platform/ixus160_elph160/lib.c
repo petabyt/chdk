@@ -11,29 +11,20 @@ void debug_led(int state)
 	*(int*)LED_PR=state ? 0x93d800 : 0x83dc00;
 }
 
+// TODO not really complete, last call from task_Bye
 void shutdown()
 {
-    volatile long *p = (void*)LED_PR;    // Green LED
-
-    asm(
-        "MRS     R1, CPSR\n"
-        "AND     R0, R1, #0x80\n"
-        "ORR     R1, R1, #0x80\n"
-        "MSR     CPSR_cf, R1\n"
-        :::"r1","r0");
-
-    *p = 0x83dc00;  // power off.
-
+    extern void _TurnOffE1(void);
+    _TurnOffE1();
     while(1);
 }
 
-// TODO: how to find the two values of the led_table
-// A2500 has two 'lights' - Power LED, and AF assist lamp
+// IXUS160/ELPH160 has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
 void camera_set_led(int led, int state, int bright) {
     static char led_table[2]={0,4};
-    if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
+    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);    
 }
 
 void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             // Found @0xffb7af7c
