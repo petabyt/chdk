@@ -30,3 +30,6 @@ NHSTUB(UnsetZoomForMovie, NULL_SUB)
 
 NHSTUB(CreateTask_low,          0x006B15A4)
 DEF(hook_CreateTask_low,        0x006B15A4)
+
+// Additional
+NHSTUB(TurnOffE1,               0xff8381ec) // for shutdown(), to complicated to emulate
