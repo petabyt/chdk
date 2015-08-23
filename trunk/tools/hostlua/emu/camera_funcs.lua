@@ -2,7 +2,7 @@
 ********************************
 Licence: GPL
 (c) 2009-2015 reyalp, rudi, msl
-v 0.3
+v 0.4
 ********************************
 Add here virtual camera functions
 for using with emu.lua.
@@ -19,6 +19,7 @@ local function on_off_value(value)
     end
 end
 
+
 local camera_funcs = {}
 
 -- Lens Functions & Depth of Field
@@ -31,7 +32,7 @@ function camera_funcs.get_focus_mode()
 end
 
 function camera_funcs.get_focus_ok()
-    return true
+    return camera_state.focus_ok
 end
 
 function camera_funcs.get_focus_state()
@@ -83,20 +84,71 @@ function camera_funcs.set_zoom_speed(n)
     print(">Zoom Speed<", n)
 end
 
+-- lookup tables for get_dofinfo() based on A720 zoom steps
+local fl = {5800, 6420, 7059, 7701, 8336, 9954, 11546, 13159, 14745, 17152, 19574, 22763, 26749, 30750, 34800}
+local efl = {35000, 38741, 42597, 46471, 50303, 60067, 69674, 79407, 88978, 103503, 118118, 137362, 161416, 185560, 210000}
+local aperture = {2880, 2901, 2943, 2986, 3029, 3152, 3268, 3376, 3475, 3642, 3789, 4000, 4299, 4638, 4950}
+
+local function div_add_round(val, div, add)
+    --usage div_add_round(val, div) or div_add_round(val, div, add)
+    local _round = val < 0 and -1 or 1
+    return (val / (div / 2) + 2 * (add and add or 0) + _round) / 2
+end
+
+local function calc_hyp_dist(fl, av, coc) -- focal length, aperture, coc scaled 1000
+    local min_stack = 65000 -- MAX_DIST
+    local hyp_1e3 = imath.div(imath.mul(imath.div(fl, coc), fl), av) + fl + 500
+    local hyp = hyp_1e3 / 1000
+    if hyp > 0 then
+        local v = div_add_round(hyp_1e3 - fl, 500, 1)
+        if v > 0 then
+            local q_1e3 = div_add_round(imath.muldiv(fl, fl -  hyp_1e3 - 1000, v), 1000)
+            local q2_1e3 = div_add_round(imath.muldiv(hyp, 2 * fl - hyp_1e3, v), 1000)
+            min_stack = (imath.sqrt((div_add_round(imath.mul(q_1e3, q_1e3), 1000) - q2_1e3) * 10) - q_1e3 / 10) / 100
+        end
+    end
+    return hyp, min_stack
+end
+
+local function calc_nfd(fl, focus, hyp)
+    local near, far, dof = -1, -1, -1
+    if fl and focus and hyp and fl > 0 and focus > 0 and hyp > 0 then
+        local hyp_1e3 = 1000 * hyp
+        local focus_1e3 = 1000 * focus
+        local m = imath.mul(focus, hyp_1e3 - fl)
+        local vn = (hyp_1e3 - 2 * fl + focus_1e3 + 500)/ 1000
+        local vf = (hyp_1e3 - focus_1e3 + 500)/ 1000
+        if vn > 0  and vf > 0 then
+            near, far = m / vn, m / vf
+            dof  = far - near
+        end
+    end
+    return near, far, dof
+end
+
 function camera_funcs.get_dofinfo()
+    local _focus = camera_state.focus
+    local _fl, _hyp_dist, _min_stack = nil, nil, nil
+    local _near, _far, _dof = -1, -1, -1
+    if #fl >= camera_state.zoom+1 then
+        _fl = fl[camera_state.zoom+1]
+        _hyp_dist, _min_stack = calc_hyp_dist(_fl, aperture[camera_state.zoom+1], camera_state.coc)
+        _near, _far, _dof = calc_nfd(_fl, _focus, _hyp_dist)
+    end
+
     return {
             hyp_valid = true,
             focus_valid = true,
-            aperture = 2679,
-            coc = 5,
-            focal_length = 5800,
-            eff_focal_length = 35000,
-            focus = 200,
-            near = 135,
-            far = 3400,
-            dof = 3400 - 135,
-            hyp_dist = 2517,
-            min_stack_dist = 100
+            aperture = #aperture >= camera_state.zoom+1 and aperture[camera_state.zoom+1] or nil,
+            coc = camera_state.coc,
+            focal_length = _fl,
+            eff_focal_length = #efl >= camera_state.zoom+1 and efl[camera_state.zoom+1] or nil,
+            focus = _focus,
+            hyp_dist = _hyp_dist,
+            near = _near,
+            far = _far,
+            dof = _dof,
+            min_stack_dist = _min_stack
     }
 end
 
@@ -135,6 +187,22 @@ function camera_funcs.get_sv96()
 end
 
 function camera_funcs.get_tv96()
+    return camera_state.tv96
+end
+
+function camera_funcs.get_user_av_id()
+    return camera_state.user_av_id
+end
+
+function camera_funcs.get_user_av96()
+    return camera_state.av96
+end
+
+function camera_funcs.get_user_tv_id()
+    return camera_state.user_tv_id
+end
+
+function camera_funcs.get_user_tv96()
     return camera_state.tv96
 end
 
@@ -178,6 +246,38 @@ end
 
 function camera_funcs.set_tv96_direct(n)
     camera_state.tv96=n
+end
+
+function camera_funcs.get_user_av_by_id(n)
+    camera_state.user_av_id = n
+end
+
+function camera_funcs.get_user_av_by_id_rel(n)
+    camera_state.user_av_id = camera_state.user_av_id + n
+end
+
+function camera_funcs.set_user_av96(n)
+    camera_state.av96 = n
+end
+
+function camera_funcs.get_user_tv_by_id(n)
+    camera_state.user_tv_id = n
+end
+
+function camera_funcs.get_user_tv_by_id_rel(n)
+    camera_state.user_tv_id = camera_state.user_tv_id + n
+end
+
+function camera_funcs.set_user_tv96(n)
+    camera_state.tv96 = n
+end
+
+function camera_funcs.get_live_histo()
+    local res ={}
+    for i=1, 255 do
+        res[i] = 0
+    end
+    return res, 7200
 end
 
 
@@ -267,6 +367,26 @@ end
 
 function camera_funcs.get_flash_mode()
     return camera_state.flash
+end
+
+function camera_funcs.get_meminfo(s)
+    if s == nil then s = "system" end
+    local mem = {
+    name                = "system",
+    chdk_malloc         = true,
+    chdk_start          = 643108,
+    chdk_size           = 149148,
+    start_address       = nil, -- pool start, not set for "combined"
+    end_address         = nil, -- pool end, not set for "combined"
+    total_size          = 1978624,
+    allocated_size      = 1114216,
+    allocated_peak      = 1147664,
+    allocated_count     = 1761,
+    free_size           = 850144,
+    free_block_max_size = 822016,
+    free_block_count    = 24
+    }
+    return s == "system" and mem or false
 end
 
 function get_flash_params_count()
@@ -398,12 +518,17 @@ end
 
 function camera_funcs.press(s)
     print(">press<", s)
+    if s == "shoot_half" then
+        camera_state.focus_ok = true
+    end
 end
 
 function camera_funcs.release(s)
     print(">release<", s)
     if s == "shoot_full" or s == "shoot_full_only" then
         camera_state.exp_count = camera_state.exp_count + 1
+    elseif s == "shoot_half" then
+        camera_state.focus_ok = false
     end
 end
 
@@ -447,12 +572,30 @@ function camera_funcs.get_image_dir()
     return camera_state.image_dir
 end
 
+function camera_funcs.file_browser(s)
+    print(">startup dir:<", s)
+    return ""
+end
+
 function camera_funcs.get_free_disk_space(n)
     return camera_state.free_disk_space
 end
 
 function camera_funcs.get_jpg_count()
     return camera_state.jpg_count
+end
+
+function camera_funcs.get_partitionInfo()
+    return {count=1, active=1, type=6, size=camera_state.disk_size/1024/1024}
+end
+
+function camera_funcs.set_file_attributes(s,n)
+    print(">Set file attributes for:<", s)
+    print(">attribute value:<", n)
+end
+
+function camera_funcs.swap_partition(n)
+    print(">Swap to partition #:<", n)
 end
 
 
@@ -498,12 +641,61 @@ function camera_funcs.set_autostart(n)
     camera_state.autostart=n
 end
 
+function camera_funcs.set_yield(count, ms)
+    local old_max_count = camera_state.yield_count
+    local old_max_ms = camera_state.yield_ms
+    local default_max_count = 25
+    local default_max_ms = 10
+    if count == nil then camera_state.yield_count = default_max_count else camera_state.yield_count = count end
+    if ms == nil then camera_state.yield_ms = default_max_ms else camera_state.yield_ms = ms end
+    return old_max_count, old_max_ms
+end
+
 function camera_funcs.sleep(n)
     camera_state.tick_count=camera_state.tick_count+n
 end
 
 
 --Firmware Interface
+function camera_funcs.call_event_proc(...)
+    return -1
+end
+
+function camera_funcs.call_func_ptr(...)
+    return -1
+end
+
+function camera_funcs.get_levent_def(n)
+    return nil
+end
+
+function camera_funcs.get_levent_index(n)
+    return nil
+end
+
+function camera_funcs.get_levent_def_by_index(n)
+    return nil
+end
+
+function camera_funcs.post_levent_to_ui(...)
+    print(">levent to ui:<")
+    print(...)
+end
+
+function camera_funcs.post_levent_for_npt(...)
+    print(">levent for npt:<")
+    print(...)
+end
+
+function camera_funcs.set_levent_active(...)
+    print(">set levent active:<")
+    print(...)
+end
+
+function camera_funcs.set_levent_script_mode(...)
+    print(">set levent script mode:<")
+    print(...)
+end
 
 
 --Display & Text Console
@@ -511,6 +703,12 @@ function camera_funcs.set_backlight(n)
     local _n = on_off_value(n)
     if _n == 1 then print(">Backlight on<") end
     if _n == 0 then print(">Backlight off<") end
+end
+
+function camera_funcs.set_lcd_display(n)
+    local _n = on_off_value(n)
+    if _n == 1 then print(">LCD Display on<") end
+    if _n == 0 then print(">LCD Display off<") end
 end
 
 function camera_funcs.set_draw_title_line(n)
@@ -590,6 +788,16 @@ end
 
 function camera_funcs.get_gui_screen_height()
     return camera_state.screen_height
+end
+
+function camera_funcs.textbox( t, m, d, l)
+    print(">title:<", t)
+    print(">message:<", m)
+    print(">default string<", d)
+    print(">max len:<", l)
+    local res = ""
+    if d ~= nil then res = d end
+    return res
 end
 
 
@@ -1178,11 +1386,32 @@ function camera_funcs.get_usb_power()
 end
 
 function camera_funcs.set_remote_timing(n)
-    if type(n) == "number" and val <= 10000 then
+    if type(n) == "number" and n <= 10000 then
         camera_state.remote_timing = n
     end
 end
 
+function camera_funcs.switch_mode_usb(n)
+    local _n = on_off_value(n)
+    if _n == 1 then
+        camera_state.rec = true
+        print(">record mode<")
+    elseif _n == 0 then
+        camera_state.rec = false
+        print(">play mode<")
+    end
+end
+
+function camera_funcs.usb_sync_wait(n)
+    local _n = on_off_value(n)
+    if _n == 1 then
+        camera_state.usb_sync = true
+        print(">usb sync mode ON<")
+    elseif _n == 0 then
+        camera_state.usb_sync= false
+        print(">usb sync mode OFF<")
+    end
+end
 
 --Tone Curves
 
