@@ -45,7 +45,8 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_IS_MODE                         145        // 0 = Continuous, 2 = only Shoot, 4 = OFF
 #define PROPCASE_ISO_MODE                        149
 #define PROPCASE_METERING_MODE                   157        // 0 = Evaluative, 1 = Spot, 2 = Center weighted avg
-
+#define PROPCASE_VIDEO_FRAMERATE                 167        // 1=25, 0=30 (elph130), may crash if doesn't match what canon uses for current resolution
+#define PROPCASE_VIDEO_RESOLUTION                170        // 4=1280x720, 2=640x480 (elph130)
 #define PROPCASE_CUSTOM_BLUE                     176        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_GREEN                    177        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_RED                      178        // Canon Menu slide bar values: 255, 254, 0, 1, 2
