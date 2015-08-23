@@ -74,6 +74,9 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_AF_ASSIST_BEAM                  5       // 0=disabled,  1=enabled
 
+#define PROPCASE_VIDEO_FRAMERATE                 168     // 0=30fps, 1=24fps, 2=240fps, 3=120fps; timelapse in miniature: 8=5x, 9=10x, 10=20x (SX220)
+#define PROPCASE_VIDEO_RESOLUTION                171     // 1=240p, 2=480p, 4=720p, 5=1080p (SX220)
+
 #define PROPCASE_CUSTOM_SATURATION               55      // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_CONTRAST                 59      // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_BLUE                     177     // Canon Menu slide bar values: 255, 254, 0, 1, 2

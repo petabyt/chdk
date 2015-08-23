@@ -2,7 +2,7 @@
 ********************************
 Licence: GPL
 (c) 2009-2015 reyalp, rudi, msl, fbonomi
-v 0.3
+v 0.4
 ********************************
 
 http://chdk.setepontos.com/index.php?topic=2929.0
@@ -56,17 +56,24 @@ camera_state={
     video_button    = true,             -- camera has extra video button
     movie_state     = 0,                -- 0 or 1 = movie recording is stopped or paused, 4 = recording, 5 or 6 = recording has stopped, writing movie to SD card
     flash           = 0,                -- 0 = flash auto, 1 = flash on, 2 = flash off
-    focus           = 1000,             -- subject distance
+    coc             = 5,                -- coc x 1000
+    focus           = 2000,             -- subject distance
     sd_over_modes   = 0x04,             -- 0x01 AutoFocus mode, 0x02  AFL active, 0x04  MF active
     f_mode          = 0,                -- focus mode, 0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
-    focus_state     = 1,                -- focus ok = 1, not ok = 0
-    zoom_steps      = 125,              -- maximum zoomsteps
+    focus_state     = 1,                -- focus ok = 1, not ok = 0, MF < 0
+    focus_ok        = false,            -- can be true after release/click "shoot_half"
+    zoom_steps      = 15,               -- maximum zoomsteps
     zoom            = 0,                -- zoom position
-    IS_mode         = 0,                -- 0 = continuous, 1 or 2 = shoot only, 2 or 3 = panning, 3 or 4 = off 
+    IS_mode         = 0,                -- 0 = continuous, 1 or 2 = shoot only, 2 or 3 = panning, 3 or 4 = off
+    user_av_id      = 1,                -- av id for Av and M mode
+    user_tv_id      = 1,                -- tv id for Tv and M mode
     histo_range     = 100,              -- return value of a histogram range
     autostarted     = 0,                -- 0 = false, 1 = true 
     autostart       = 0,                -- autostart status (0 = off, 1 = on, 2 = once)
     alt_mode        = true,             -- alte mode status
+    usb_sync        = false,            -- usb sync mode for mulitcam sync
+    yield_count     = 25,               -- maximum number of lua VM instructions
+    yield_ms        = 10,               -- maximum number of milliseconds
     props           = {},               -- propcase values
     title_line      = 1,                -- CHDK line 1 = on, 0 = off
     remote_timing   = 0,                -- value for high precision USB remote timing
