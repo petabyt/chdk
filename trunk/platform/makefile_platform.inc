@@ -6,7 +6,7 @@ include $(topdir)makefile_cam.inc
 # Change CPU architecture to ARM V4 if building with GCC EABI
 # Otherwise incorrect wrapper calls to firmware functions are generated
 ifdef OPT_USE_GCC_EABI
-    CFLAGS+=-march=armv4
+    ARCHFLAGS+=-march=armv4
 endif
 
 OBJS=main.o lib.o wrappers.o kbd.o shooting.o platform_palette.o

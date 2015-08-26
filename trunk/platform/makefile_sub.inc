@@ -3,6 +3,12 @@ topdir=../../../../
 
 include $(topdir)makefile_cam.inc
 
+# Change CPU architecture to ARM V4 if building with GCC EABI
+# Otherwise incorrect wrapper calls to firmware functions are generated
+ifdef OPT_USE_GCC_EABI
+    ARCHFLAGS+=-march=armv4
+endif
+
 all: libplatformsub.a main.bin
 
 FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
@@ -14,8 +20,23 @@ OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o kbd_common.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
      shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o
 
+# Build rules for source files containing assembly code - don't include 'march=armv4'
+# NOTE: these files should not contain C functions that could be called from Thumb code
 capt_seq.o: capt_seq.c $(platform)/generic/capt_seq.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
 filewrite.o: filewrite.c $(platform)/generic/filewrite.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
+movie_rec.o: movie_rec.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
+boot.o: boot.c
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 libplatformsub.a: $(OBJS) bin_compat.h
 
