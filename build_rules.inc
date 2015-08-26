@@ -3,7 +3,7 @@
 # rule for building .o from .c in the same directory
 %.o: %.c
 	@echo $< \-\> $@
-	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+	$(CC) $(CFLAGS) $(ARCHFLAGS) -nostdinc -c -o $@ $<
 
 # rule for building .o in $O sub-directory from .c in the current directory
 $O%.o: %.c
