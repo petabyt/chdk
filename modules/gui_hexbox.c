@@ -181,6 +181,7 @@ int gui_hexbox_kbd_process()
         case KEY_SHOOT_HALF:
             edit_hex_digit((unsigned int*)num_to_edit, currpos, 0); // zero current digit only
             break;
+        case KEY_SHOOT_FULL:
         case KEY_DISPLAY:
             *num_to_edit = 0; // zero the whole number
             currpos = 7;
@@ -201,7 +202,7 @@ void gui_module_menu_kbd_process()
 {
     *num_to_edit = num_backup; // edit cancelled
     running = 0;
-    gui_default_kbd_process_menu_btn();
+    gui_set_mode(gui_hexbox_mode_old);
 }
 
 
