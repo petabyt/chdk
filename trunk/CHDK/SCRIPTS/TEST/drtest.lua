@@ -573,5 +573,6 @@ for i=-overstops,understops do
 	collectgarbage('step')
 	tv = tv+96
 end
-
+-- allow final raw to save before restoring raw setting
+sleep(5000)
 restore()
