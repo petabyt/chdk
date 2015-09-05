@@ -27,7 +27,6 @@
     #define CAM_DISABLE_RAW_IN_AUTO             1 // disabled due to wrong raw buffer selection at quick shutter press
     #define CAM_DISABLE_RAW_IN_SPORTS           1 // sports mode seems to use a no-yet-found code path and corrupts JPEG/DNG
 
-    #define DNG_VERT_RLE_BADPIXELS              1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY
@@ -108,9 +107,6 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1           // enable workaround for camera crash at startup when opening the conf / font files
-                                                            // see http://chdk.setepontos.com/index.php?topic=6179.0
-
     //#define CAM_HAS_FILEWRITETASK_HOOK          1
     //#define CAM_FILEWRITETASK_SEEKS             1
 
@@ -127,8 +123,6 @@
     #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
 
     //#define CAM_HAS_GPS                         1
-
-    #define CAM_USE_SUNRISE                     1
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
