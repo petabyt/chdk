@@ -204,7 +204,9 @@
     #undef  CAM_DISABLE_RAW_IN_AUTO             // For cameras that don't have valid raw in AUTO mode
     #undef  CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
     #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #undef  CAM_DISABLE_RAW_IN_HYBRID_AUTO      // For cameras that lock up while saving raw in "Hybrid Auto" mode
     #undef  CAM_DISABLE_RAW_IN_DIGITAL_IS       // For cameras with 'Digital IS' mode that does not work with raw define this    
+    #undef  CAM_DISABLE_RAW_IN_SPORTS           // For cameras that corrupt DNG/JPEG in Sports mode
     #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max 'market' ISO override value for HQ Burst mode (higher values crash camera)
     #undef  CAM_MIN_ISO_OVERRIDE                // Defines min 'market' (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
     
@@ -237,6 +239,8 @@
 
     #undef  DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   // Draw pixels on active bitmap buffer only.
                                                 // Requires bitmap_buffer & active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
+
+    #undef  CAM_SUPPORT_BITMAP_RES_CHANGE       // port can adapt to resolution change of the bitmap buffer (when composite or hdmi output is used)
 
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)

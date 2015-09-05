@@ -36,7 +36,15 @@ n_args
 .text
 .global call_func_ptr
 call_func_ptr:
-    STMFD   SP!, {R4-R5,LR}
+
+#ifdef THUMB_FW
+.syntax unified
+.code 16
+.align 2
+    BX      PC                  // switch to ARM mode
+.code 32
+#endif
+    PUSH    {R4-R5,LR}
     MOV     R12, R0             // function to call
     MOV     R4, SP              // save SP
 
@@ -66,5 +74,5 @@ stack_setup_loop:
 do_call:
     BLX     R12                 // call the function
     MOV     SP, R4              // clean up stack
-    LDMFD   SP!, {R4-R5,LR}
+    POP     {R4-R5,LR}
     BX      LR

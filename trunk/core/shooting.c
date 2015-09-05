@@ -1447,6 +1447,11 @@ int mode_get(void)
     mode |= (screen_rotated())?MODE_SCREEN_ROTATED:0;
 #endif
 
+#ifdef CAM_SUPPORT_BITMAP_RES_CHANGE
+    extern void update_screen_dimensions();
+    update_screen_dimensions();
+#endif
+
     get_property_case(PROPCASE_SHOOTING_MODE, &t, 4);
 #ifdef CAM_MASK_VID_REC_ACTIVE
     mode |= shooting_mode_canon2chdk(t & (~CAM_MASK_VID_REC_ACTIVE));

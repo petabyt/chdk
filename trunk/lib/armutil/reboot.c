@@ -14,18 +14,18 @@
  does NOT save camera settings to flash
  does NOT retract lens before rebooting
  calling from playback mode is recommended
+ 
+ DIGIC 6: reboot not supported yet, unsuitable code #ifdef'd out
 */
 int reboot(const char *bootfile) {
-	if(bootfile == NULL) {
-		if(_ExecuteEventProcedure("DispDev_EnableEventProc") == -1) {
-			return 0;
-		}
-		if(_ExecuteEventProcedure("DispCon_TurnOffDisplay") == -1) {
-			return 0;
-		}
-		_Restart(0);
-	}
-
+#ifndef THUMB_FW
+    if(bootfile == NULL)
+#endif
+    {
+        _TurnOffDisplay();
+        _Restart(0);
+    }
+#ifndef THUMB_FW
 	int namelen=strlen(bootfile);
 	if(namelen > 3 && (strncmp(bootfile + namelen - 4,".FI",3) == 0)) {
 		_reboot_fw_update(bootfile);
@@ -72,16 +72,12 @@ int reboot(const char *bootfile) {
 		ufree(buf);
 		return 0;
 	}
-	if(_ExecuteEventProcedure("DispDev_EnableEventProc") == -1) {
-		ufree(buf);
-		return 0;
-	}
-	if(_ExecuteEventProcedure("DispCon_TurnOffDisplay") == -1) {
-		ufree(buf);
-		return 0;
-	}
+    _TurnOffDisplay();
 	_Restart(7);
 	canon_copy_and_restart((void *)0x1900,buf,size,(void *)0x1900);
+#else
+    return 0;
+#endif // THUMB_FW
 }
 
 

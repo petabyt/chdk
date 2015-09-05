@@ -2,7 +2,11 @@
 
 ifdef OPT_USE_GCC_EABI
     CROSS_COMPILE=arm-none-eabi-
-    ARCH=-march=armv5te
+    ifndef THUMB_FW
+        ARCH=-march=armv5te
+    else
+        ARCH=
+    endif
     ABI=_eabi
 else
     CROSS_COMPILE=arm-elf-
@@ -28,13 +32,17 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
 CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 # for gcc >= v3, we want to allow use of strd etc
-ifeq ($(GCC_VERSION_MAJOR),3)
-    CFLAGS+=-march=armv5te
-else
-    ifeq ($(GCC_VERSION_MAJOR),4)
-        # TODO should be -mcpu, but breaks things ATM
-        CFLAGS+=-mtune=arm946e-s $(ARCH)
+ifndef THUMB_FW
+    ifeq ($(GCC_VERSION_MAJOR),3)
+        CFLAGS+=-march=armv5te
+    else
+        ifeq ($(GCC_VERSION_MAJOR),4)
+            # TODO should be -mcpu, but breaks things ATM
+            CFLAGS+=-mtune=arm946e-s $(ARCH)
+        endif
     endif
+else
+    CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW
 endif
 
 CFLAGS+=-I$(include) -I$(core) -I$(modules) -I$(cam) $(PLFLAGS)
@@ -126,11 +134,20 @@ CFLAGS+=-DOPT_FILEIO_STATS
 endif
 
 # Architecture version for modules (to prevent loading on wrong build)
-ifdef OPT_USE_GCC_EABI
-CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
+ifndef THUMB_FW
+    ifdef OPT_USE_GCC_EABI
+        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
+    else
+        CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
+    endif
 else
-CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
+    ifdef OPT_USE_GCC_EABI
+        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2
+    else
+        CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB2
+    endif
 endif
+
 
 # Define empty recipes for source files (including the makefiles)
 # to prevent make from trying implicit rules to create them. Speeds up build process
