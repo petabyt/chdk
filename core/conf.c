@@ -1577,6 +1577,12 @@ int is_raw_possible() {
 #if defined(CAM_DISABLE_RAW_IN_DIGITAL_IS)
        || (m == MODE_DIGITAL_IS)            // True if Digital IS mode (ixus160_elph160 crashes if RAW enabled in this mode)
 #endif
+#if defined(CAM_DISABLE_RAW_IN_HYBRID_AUTO)
+       || (m == MODE_HYBRID_AUTO)            // True if Hybrid Auto mode (SX280HS raw hook conflicts with the saving of digest movie)
+#endif
+#if defined(CAM_DISABLE_RAW_IN_SPORTS)
+       || (m == MODE_SPORTS)            // True if Sports mode (SX280HS, multiple issues with raw buffer; storing raw makes little sense in this mode anyway)
+#endif
     );
 }
 

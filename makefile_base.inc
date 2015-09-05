@@ -61,7 +61,11 @@ endif
 
 # Sub-directory for object and dump files
 # used by modules build
-O=.o/
+ifndef THUMB_FW
+    O=.o/
+else
+    O=.o2/
+endif
 
 SILENT=SILENT
 

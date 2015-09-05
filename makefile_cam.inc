@@ -17,6 +17,19 @@ ifdef PLATFORMSUB
   endif
 endif
 
+ifndef TARGET_CAM
+TARGET_CAM=$(PLATFORM)
+endif
+ifndef TARGET_FW
+TARGET_FW=$(PLATFORMSUB)
+endif
+ifndef TARGET_PID
+TARGET_PID=$(PLATFORMID)
+endif
+ifeq ($(TARGET_PID),)
+override TARGET_PID=$(PLATFORMID)
+endif
+
 # Used in gui_debug.c for controlling memory browser allowed address ranges
 # override in platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc to set camera specific value
 ifdef MAXRAMADDR
@@ -36,7 +49,7 @@ ifdef OPT_FI2
 -include $(platform)/fi2.inc
 endif
 
-CFLAGS+=-mthumb-interwork -DLOW_LEVEL -DPLATFORM=\"$(PLATFORM)\" -DPLATFORMSUB=\"$(PLATFORMSUB)\" -DPLATFORMID=$(PLATFORMID) -DCAMERA_$(PLATFORM)=1
+CFLAGS+=-mthumb-interwork -DLOW_LEVEL -DPLATFORM=\"$(TARGET_CAM)\" -DPLATFORMSUB=\"$(TARGET_FW)\" -DPLATFORMID=$(TARGET_PID) -DCAMERA_$(PLATFORM)=1
 
 include $(topdir)build_rules.inc
 

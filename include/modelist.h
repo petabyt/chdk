@@ -114,6 +114,8 @@ enum {
     MODE_VIDEO_SNOW         , // tx1 junk
     MODE_VIDEO_STITCH       , // tx1 junk
     MODE_VIDEO_SUPER_MACRO  , // tx1 junk
+
+    MODE_HYBRID_AUTO        , // sx280
 };
 
 #endif

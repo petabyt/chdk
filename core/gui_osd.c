@@ -1101,6 +1101,9 @@ void gui_draw_debug_vals_osd()
 
     twoColors col = user_color(conf.osd_color);
 
+#define DBGMISCVALS_X ((CAM_SCREEN_WIDTH/FONT_WIDTH)-17)
+#define DBGMISCVALS_Y ((CAM_SCREEN_HEIGHT/FONT_HEIGHT)-6)
+
     // DEBUG: "Show misc. values"
     // change ROW to fit values on screen in draw_txt_string(COLUMN, ROW, ...)
     // uncomment call to gui_draw_debug_vals_osd() in gui_redraw() if you want debug values always on top
@@ -1108,44 +1111,44 @@ void gui_draw_debug_vals_osd()
         // show value of Memory Address selected with Memory Browser
         sprintf(osd_buf, "MEM: %#8x", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Hexadecimal integer
         //sprintf(osd_buf, "MEM: %8u", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Decimal integer
-        draw_txt_string(28,  9, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X,  DBGMISCVALS_Y, osd_buf, col);
 
         // show Autofocus status (if AF is working)
         extern volatile long focus_busy;
         sprintf(osd_buf, "FB:  %8u", focus_busy);
-        draw_txt_string(28, 10, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+1, osd_buf, col);
 
         // show Zoom status (if Lens is moving)
         extern volatile long zoom_busy;
         sprintf(osd_buf, "ZB:  %8u", zoom_busy);
-        draw_txt_string(28, 11, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+2, osd_buf, col);
 
         // show USB-Power status to debug remote / sync
         sprintf(osd_buf, "USB: %8u", get_usb_power(1));
-        draw_txt_string(28, 12, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+3, osd_buf, col);
 
         /*
         // some cameras missing zoom_status
         sprintf(osd_buf, "ZS:  %#8x", zoom_status);
-        draw_txt_string(28, 13, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+4, osd_buf, col);
         */
 
         /*
         sprintf(osd_buf, "VP:  %#8x", vid_get_viewport_active_buffer());
-        draw_txt_string(28, 14, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+5, osd_buf, col);
         */
 
         /*
         // debug keymap, KEYS_MASKx, SD_READONLY_FLAG, USB_MASK
         extern long physw_status[3];
         sprintf(osd_buf, "PS1: %#8x", physw_status[0]);
-        draw_txt_string(28, 10, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+1, osd_buf, col);
 
         sprintf(osd_buf, "PS2: %#8x", physw_status[1]);
-        draw_txt_string(28, 11, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+2, osd_buf, col);
 
         sprintf(osd_buf, "PS3: %#8x", physw_status[2]);
-        draw_txt_string(28, 12, osd_buf, col);
+        draw_txt_string(DBGMISCVALS_X, DBGMISCVALS_Y+3, osd_buf, col);
         */
 
         /*

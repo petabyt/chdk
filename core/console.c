@@ -7,7 +7,7 @@
 #include "gui.h"
 #include "gui_draw.h"
 
-#define MAX_CONSOLE_LINES       14
+#define MAX_CONSOLE_LINES       (camera_screen.height/FONT_HEIGHT-1)
 #define MAX_CONSOLE_HISTORY     30
 #define MAX_CONSOLE_LINE_LENGTH 44
 

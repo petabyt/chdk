@@ -19,10 +19,63 @@ static char* frame_buffer[2];
 
 static void draw_pixel_std(unsigned int offset, color cl)
 {
+#ifndef THUMB_FW
+    // drawing on 8bpp paletted overlay
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 	bitmap_buffer[active_bitmap_buffer][offset] = cl;
 #else
 	frame_buffer[0][offset] = frame_buffer[1][offset] = cl;
+#endif
+#else
+    // DIGIC 6, drawing on 16bpp YUV overlay
+
+#ifndef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+#error DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY is required for DIGIC 6 ports
+#endif
+
+    register int cli = cl ^ 0xffffffff;
+    extern volatile char *stencil_buffer[];
+    //extern int active_bitmap_buffer;
+    static unsigned int prev_offs = 0xffffffff;
+    register unsigned int offs2 = (offset>>1)<<2;
+    if (cli != 0xffffffff)
+    {
+        if (prev_offs != offs2)
+        {
+            bitmap_buffer[active_bitmap_buffer][offs2+2] = 0x80-((((int)cli)<<5)&0xe0);    // U?
+            bitmap_buffer[active_bitmap_buffer][offs2+0] = 0x80-((((int)cli)<<2)&0xe0);    // V?
+            prev_offs = offs2;
+        }
+        if (offset&1) // x is odd
+        {
+            bitmap_buffer[active_bitmap_buffer][offs2+3] = (cli&0xc0);    // Y
+        }
+        else // x is even
+        {
+            bitmap_buffer[active_bitmap_buffer][offs2+1] = (cli&0xc0);    // Y
+        }
+        // simple transparency
+        stencil_buffer[active_bitmap_buffer][offset] = (cli&16)?0x60:0xff;
+    }
+    else // color==0, black, fully transparent
+    {
+        if (prev_offs != offs2)
+        {
+            bitmap_buffer[active_bitmap_buffer][offs2+2] = 0x80;    // U?
+            bitmap_buffer[active_bitmap_buffer][offs2+0] = 0x80;    // V?
+            prev_offs = offs2;
+        }
+        if (offset&1) // x is odd
+        {
+            bitmap_buffer[active_bitmap_buffer][offs2+3] = 0;    // Y
+        }
+        else // x is even
+        {
+            bitmap_buffer[active_bitmap_buffer][offs2+1] = 0;    // Y
+        }
+        // fully transparent
+        stencil_buffer[active_bitmap_buffer][offset] = 0;
+    }
 #endif
 }
 
@@ -33,6 +86,7 @@ void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
 }
 
 //-------------------------------------------------------------------
+#ifndef THUMB_FW
 
 #define GUARD_VAL   COLOR_GREY_DK
 
@@ -58,6 +112,22 @@ int draw_test_guard()
     return 1;
 }
 
+#else // DIGIC 6
+
+extern volatile char *stencil_buffer[];
+
+void draw_set_guard()
+{
+    stencil_buffer[active_bitmap_buffer][0] = 0x42;
+}
+
+int draw_test_guard()
+{
+    if (stencil_buffer[active_bitmap_buffer][0] != 0x42) return 0;
+    return 1;
+}
+
+#endif
 //-------------------------------------------------------------------
 void draw_init()
 {
@@ -100,11 +170,16 @@ void draw_pixel(coord x, coord y, color cl)
 //-------------------------------------------------------------------
 color draw_get_pixel(coord x, coord y)
 {
+#ifndef THUMB_FW
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     return bitmap_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
 #else
     return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
+#endif
+#else
+    // DIGIC 6 not supported
+    return 0;
 #endif
 }
 

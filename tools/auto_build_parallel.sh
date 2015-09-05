@@ -6,10 +6,12 @@
 # ($4) = -noskip disable SKIP_AUTOBUILD
 # - also see main Makefile
 # parallel version - starts each build in a seperate session (Windows only)
-while IFS=, read cam fw state copy skip
+while IFS=, read cam fw pid state srccam srcfw skip
 do
   if [ ${cam} != "CAMERA" ] && ( [ "$4" = "-noskip" ] || [ "${skip}" = "" ] ); then \
     if [ "${state}" != "" ]; then state=_${state}; fi; \
-    start $1 -s --no-print-directory PLATFORM=${cam} PLATFORMSUB=${fw} STATE=${state} COPY_TO=${copy} SKIP_AUTOBUILD=${skip} $2 || exit 1; \
+    if [ "${srccam}" = "" ]; then srccam=${cam}; fi; \
+    if [ "${srcfw}" = "" ]; then srcfw=${fw}; fi; \
+    start $1 -s --no-print-directory TARGET_CAM=${cam} TARGET_FW=${fw} TARGET_PID=${pid} PLATFORM=${srccam} PLATFORMSUB=${srcfw} STATE=${state} SKIP_AUTOBUILD=${skip} $2 || exit 1; \
   fi;
 done < $3

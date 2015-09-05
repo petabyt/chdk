@@ -2,6 +2,14 @@ topdir=./
 
 tmp:=$(shell echo "BUILD_SVNREV := $(DEF_SVN_REF)" > revision.inc)
 
+# skip thumb-2 ports when using old arm-elf toolchains
+# used in the batch-zip and batch-zip-complete targets
+ifndef OPT_USE_GCC_EABI
+    NO_T2=-not2
+else
+    NO_T2=
+endif
+
 # can override on command line or *buildconf.inc for custom subsets
 CAMERA_LIST=camera_list.csv
 
@@ -60,7 +68,7 @@ endif
 
 .PHONY: infoline
 infoline: platformcheck
-	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(PLATFORM)-$(PLATFORMSUB)"
+	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(TARGET_CAM)-$(TARGET_FW)"
 
 .PHONY: version
 version: FORCE
@@ -70,8 +78,10 @@ version: FORCE
 FORCE:
 
 
-ZIP_SMALL=$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
-ZIP_FULL=$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
+ZIP_SMALL=$(TARGET_CAM)-$(TARGET_FW)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
+ZIP_FULL=$(TARGET_CAM)-$(TARGET_FW)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
+ZIP_SMALL_BASE=$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip
+ZIP_FULL_BASE=$(PLATFORM)-$(PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip
 ifdef PLATFORMOS
     ifeq ($(PLATFORMOS),vxworks)
         FW_UPD_FILE=$(bin)/PS.FIR
@@ -88,11 +98,20 @@ ifdef PLATFORMOS
 endif
 
 
+.PHONY: toolchaincheck
+toolchaincheck:
+    ifdef THUMB_FW
+        ifndef OPT_USE_GCC_EABI
+			$(error ERROR Thumb-2 ports require OPT_USE_GCC_EABI and arm-none-eabi toolchain)
+        endif
+    endif
+
+
 .PHONY: fir
 fir: version firsub
 
 
-firsub: platformcheck all
+firsub: toolchaincheck platformcheck all
 	mkdir -p $(bin)
 	cp $(loader)/main.bin $(bin)/main.bin
     ifdef OPT_ZERO100K
@@ -105,10 +124,10 @@ firsub: platformcheck all
     ifdef FW_UPD_FILE
 		@echo \-\> $(FW_UPD_FILE)
         ifeq ($(PLATFORMOS),vxworks)
-			$(PAKWIF) $(FW_UPD_FILE) $(bin)/main.bin $(PLATFORMID) 0x01000101
+			$(PAKWIF) $(FW_UPD_FILE) $(bin)/main.bin $(TARGET_PID) 0x01000101
         endif
         ifeq ($(PLATFORMOS),dryos)
-			$(PAKFI2) $(bin)/main.bin -p $(PLATFORMID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(FW_UPD_FILE)
+			$(PAKFI2) $(bin)/main.bin -p $(TARGET_PID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(FW_UPD_FILE)
         endif
     endif
     ifdef NEED_ENCODED_DISKBOOT
@@ -118,7 +137,14 @@ firsub: platformcheck all
     else
 		mv $(bin)/main.bin $(bin)/DISKBOOT.BIN
     endif
+	@echo "copy modules"
+	rm -f $(chdk)/MODULES/*
+	cp $(modules)/$O*.flt $(chdk)/MODULES
 	@echo "**** Firmware creation completed successfully"
+
+
+.PHONY: firbatchsub
+firbatchsub: infoline clean firsub
 
 
 .PHONY: firzip
@@ -128,47 +154,40 @@ firzip: version firzipsub
 firzipsub: infoline clean firsub
 	@echo \-\> $(VER)-$(ZIP_SMALL)
 	rm -f $(bin)/$(VER)-$(ZIP_SMALL)
-	LANG=C echo "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV) date:`$(ZIPDATE)`" | \
+	LANG=C echo "CHDK-$(VER) for $(TARGET_CAM) fw:$(TARGET_FW) build:$(BUILD_NUMBER)-$(BUILD_SVNREV) date:`$(ZIPDATE)`" | \
 		zip -9jz $(bin)/$(VER)-$(ZIP_SMALL) $(bin)/DISKBOOT.BIN $(FW_UPD_FILE) > $(DEVNULL)
 	rm -f $(bin)/DISKBOOT.BIN $(FW_UPD_FILE)
 	zip -9 $(bin)/$(VER)-$(ZIP_SMALL) $(chdk)/MODULES/* > $(DEVNULL)
 
-    # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
-    # COPY_TO is extracted from camera_list.csv for batch builds.
-	# For the case where one CHDK version applies to two or more other Canon firmware version place all the
-	# 'copy to' firmware versions together seperated by ':' - e.g. "a2000,100c,BETA,100a:100b,"
-    ifdef COPY_TO
-		@echo "**** Copying duplicate Firmwares"
-		$(foreach COPY_PLATFORMSUB, $(subst :, ,$(COPY_TO)), \
-			cp $(bin)/$(VER)-$(ZIP_SMALL) $(bin)/$(VER)-$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
-		)
-    endif
+
+firzipsubcopy: infoline
+	@echo \-\> $(VER)-$(ZIP_SMALL) as a copy of $(VER)-$(ZIP_SMALL_BASE)
+	rm -f $(bin)/$(VER)-$(ZIP_SMALL)
+	cp $(bin)/$(VER)-$(ZIP_SMALL_BASE) $(bin)/$(VER)-$(ZIP_SMALL)
 
 
 firzipsubcomplete: infoline clean firsub
 	cat $(doc)/1_intro.txt $(cam)/notes.txt $(doc)/2_installation.txt $(doc)/3_faq.txt $(doc)/4_urls.txt $(doc)/5_gpl.txt $(doc)/6_ubasic_copyright.txt > $(doc)/readme.txt
 	@echo \-\> $(ZIP_SMALL)
 	rm -f $(bin)/$(ZIP_SMALL)
-	LANG=C echo "CHDK-$(VER) for $(PLATFORM) fw:$(PLATFORMSUB) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
+	LANG=C echo "CHDK-$(VER) for $(TARGET_CAM) fw:$(TARGET_FW) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
 		zip -9jz $(bin)/$(ZIP_SMALL) $(bin)/DISKBOOT.BIN $(FW_UPD_FILE) $(doc)/changelog.txt $(doc)/readme.txt > $(DEVNULL)
 	rm -f $(bin)/DISKBOOT.BIN $(FW_UPD_FILE)
 	@echo \-\> $(ZIP_FULL)
 	cp -f $(bin)/$(ZIP_SMALL) $(bin)/$(ZIP_FULL)
 	zip -9 $(bin)/$(ZIP_SMALL) $(chdk)/MODULES/* > $(DEVNULL)
 	zip -9j $(bin)/$(ZIP_FULL) $(tools)/vers.req > $(DEVNULL)
-	zip -9r $(bin)/$(ZIP_FULL) $(chdk)/* -x CHDK/logo\*.dat \*Makefile > $(DEVNULL)
+	zip -9r $(bin)/$(ZIP_FULL) $(chdk)/* -x CHDK/logo\*.dat \*Makefile \*.svn\* > $(DEVNULL)
 
-    # if COPY_TO is defined then copy this camera/firmware version to the copied firmware version
-    # COPY_TO is extracted from camera_list.csv for batch builds.
-	# For the case where one CHDK version applies to two or more other Canon firmware version place all the
-	# 'copy to' firmware versions together seperated by ':' - e.g. "a2000,100c,BETA,100a:100b,"
-    ifdef COPY_TO
-		@echo "**** Copying duplicate Firmwares"
-		$(foreach COPY_PLATFORMSUB, $(subst :, ,$(COPY_TO)), \
-			cp $(bin)/$(ZIP_FULL) $(bin)/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)-full$(STATE).zip ; \
-			cp $(bin)/$(ZIP_SMALL) $(bin)/$(PLATFORM)-$(COPY_PLATFORMSUB)-$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE).zip ; \
-		)
-    endif
+
+firzipsubcompletecopy: infoline
+	@echo \-\> $(ZIP_FULL) as a copy of $(ZIP_FULL_BASE)
+	@echo \-\> $(ZIP_SMALL) as a copy of $(ZIP_SMALL_BASE)
+	rm -f $(bin)/$(ZIP_SMALL)
+	rm -f $(bin)/$(ZIP_FULL)
+	cp $(bin)/$(ZIP_SMALL_BASE) $(bin)/$(ZIP_SMALL)
+	cp $(bin)/$(ZIP_FULL_BASE) $(bin)/$(ZIP_FULL)
+
 
 print-missing-dump: platformcheck
 	if [ ! -s $(TARGET_PRIMARY) ] ; then \
@@ -197,49 +216,49 @@ run-code-gen: platformcheck
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry: platformcheck
-	echo $(PLATFORM),$(PLATFORMSUB),$(subst _,,$(STATE)),$(COPY_TO),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
-
+	echo $(TARGET_CAM),$(TARGET_FW),$(TARGET_PID),$(subst _,,$(STATE)),$(PLATFORM),$(PLATFORMSUB),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:
 	$(MAKE) -C tools clean all
 
 # for batch builds, build modules once, instead of once for every firmware
 allmodules:
-	$(MAKE) -C modules clean all
+	$(MAKE) -C modules clean all THUMB_FW=
+    ifeq ($(NO_T2), )
+		$(MAKE) -C modules clean all THUMB_FW=1
+    endif
 	$(MAKE) -C CHDK clean all
 
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
-# each row in 'camera_list.csv' has 5 entries:
+# each row in 'camera_list.csv' has 5 entries: *** TODO: OUTDATED INFORMATION ***
 # - camera (mandatory)         :- name of camera to build
 # - firmware (mandatory)       :- firmware version to build
 # - beta status (optional)     :- set to BETA for cameras still in beta status
-# - copy to (optional)         :- if this firmware version can also be used for another version on the same
-#                                 camera define the alternate firmware here. see COPY_TO comments above.
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
 batch: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firsub $(CAMERA_LIST) -noskip
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firbatchsub $(CAMERA_LIST) -noskip
 	@echo "**** Summary of memisosizes"
 	cat $(bin)/caminfo.txt
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 batch-zip: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST) $(NO_T2)
 	@echo "**** Summary of memisosizes"
 	cat $(bin)/caminfo.txt
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 batch-zip-complete: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST) $(NO_T2)
 	@echo "**** Summary of memisosizes"
 	cat $(bin)/caminfo.txt
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 # note, this will include cameras with SKIP_AUTOBUILD set
 os-camera-lists:
-	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_dryos.csv
-	echo 'CAMERA,FIRMWARE,BETA_STATUS,COPY_TO,SKIP_AUTOBUILD' > camera_list_vxworks.csv
+	echo 'CAMERA,FIRMWARE,PID,BETA_STATUS,SOURCE_CAMERA,SOURCE_FIRMWARE,SKIP_AUTOBUILD' > camera_list_dryos.csv
+	echo 'CAMERA,FIRMWARE,PID,BETA_STATUS,SOURCE_CAMERA,SOURCE_FIRMWARE,SKIP_AUTOBUILD' > camera_list_vxworks.csv
 	sh tools/auto_build.sh $(MAKE) os-camera-list-entry $(CAMERA_LIST) -noskip
 
 # make sure each enabled firmware/sub has a PRIMARY.BIN
@@ -264,7 +283,8 @@ batch-rebuild-stubs-parallel:
 
 batch-clean:
 	$(MAKE) -C tools clean
-	$(MAKE) -C modules clean
+	$(MAKE) -C modules clean THUMB_FW=
+	$(MAKE) -C modules clean THUMB_FW=1
 	$(MAKE) -C CHDK clean
 	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 

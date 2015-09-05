@@ -17,10 +17,10 @@ all: $(GENLUA)
 	@echo "copy" $(LOGO)
 	mkdir -p DATA
 	cp $(LOGO) DATA/$(LOGO)
-	@echo "copy modules"
+#	@echo "copy modules"
 	mkdir -p MODULES
-	rm -f MODULES/*
-	cp $(modules)/$O*.flt MODULES
+#	rm -f MODULES/*
+#	cp $(modules)/$O*.flt MODULES
 
 # Rule for creating Lua propset files
 LUALIB/GEN/propset%.lua:  $(include)/propset%.h
