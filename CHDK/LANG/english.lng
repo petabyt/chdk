@@ -231,7 +231,7 @@
 // benchmark
 175 "Benchmark"
 176 "Calculating..."
-177 "Camera Benchmark   Press [SET] to start"
+177 "CPU           :"
 178 "Screen"
 179 "Write       :"
 180 "Read        :"
@@ -751,3 +751,10 @@
 632 "Are you SURE to reset\nall colors to default?"
 
 633 "Disable long filename support"
+
+// additional benchmark module strings
+// Combined length of next 3 must be less than 31 characters
+634 "START"
+635 "Log"
+636 "SD Test"
+637 "Text output   :"

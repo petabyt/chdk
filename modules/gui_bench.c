@@ -57,6 +57,12 @@ static int bench_log = 0;
 
 #define BENCHTMP "A/BENCH.TMP"
 
+#define BENCH_CTL_START 0
+#define BENCH_CTL_LOG 1
+#define BENCH_CTL_SD 2
+#define BENCH_CTL_MAX BENCH_CTL_SD
+static int bench_cur_ctl = BENCH_CTL_START;
+static int bench_mode_next = BENCH_ALL;
 
 //-------------------------------------------------------------------
 void gui_bench_init() {
@@ -165,6 +171,29 @@ static void add_log_head(int really) {
     txtbufptr+=sprintf(txtbuf+txtbufptr,"Mode      : 0x%x\n\n",camera_info.state.mode);
 }
 
+static int bench_draw_control_txt(int pos, const char *s, int active) {
+    twoColors cl;
+    if(active) {
+        cl = user_color(conf.menu_cursor_color);
+    } else {
+        cl = user_color(conf.menu_color);
+    }
+    draw_txt_string(pos, 0,  s, cl);
+    return pos+strlen(s);
+}
+static int bench_draw_checkbox(int pos, const char *title, int active, int checked) {
+    pos = bench_draw_control_txt(pos,title,active);
+    pos = bench_draw_control_txt(pos," [",active);
+    pos = bench_draw_control_txt(pos,(checked)?"\x95":" ",active);
+    pos = bench_draw_control_txt(pos,"]",active);
+    return pos;
+}
+static void draw_controls(void) {
+    int pos = bench_draw_control_txt(1,lang_str(LANG_BENCH_START),bench_cur_ctl == BENCH_CTL_START);
+    pos = bench_draw_checkbox(pos+1,lang_str(LANG_BENCH_LOG),bench_cur_ctl == BENCH_CTL_LOG,bench_log);
+    bench_draw_checkbox(pos+1,lang_str(LANG_BENCH_SDTEST),bench_cur_ctl == BENCH_CTL_SD,bench_mode_next == BENCH_ALL);
+}
+
 //-------------------------------------------------------------------
 
 static void run_test(int num);
@@ -211,11 +240,9 @@ void gui_bench_draw() {
     switch (bench_to_draw) {
         case 1:
             draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(COLOR_BLACK, COLOR_BLACK), RECT_BORDER0|DRAW_FILLED);
-            draw_txt_string(1, 0,  lang_str(LANG_BENCH_TITLE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_controls();
 
-            draw_txt_string(1, 1,  (bench_log)?"Log enabled":"           ", MAKE_COLOR(COLOR_BLACK, COLOR_RED));
-
-            draw_txt_string(1, 2,  "CPU           :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_string(1, 2,  lang_str(LANG_BENCH_CPU), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
             draw_txt_string(1, 3,  lang_str(LANG_BENCH_SCREEN),       MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             draw_txt_string(3, 4,  lang_str(LANG_BENCH_WRITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
@@ -225,7 +252,7 @@ void gui_bench_draw() {
             draw_txt_string(3, 7,  lang_str(LANG_BENCH_WRITE), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             draw_txt_string(3, 8,  lang_str(LANG_BENCH_READ), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
-            draw_txt_string(1, 9,  "Text output   :", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_string(1, 9,  lang_str(LANG_BENCH_TEXTOUT), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
 
             draw_txt_string(1, 10, lang_str(LANG_BENCH_FLASH_CARD), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             draw_txt_string(3, 11, lang_str(LANG_BENCH_WRITE_RAW), MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
@@ -582,18 +609,29 @@ int gui_bench_kbd_process()
     if (bench_to_run) return 0; // ignore keyboard during tests
     switch (kbd_get_autoclicked_key()) {
     case KEY_SET:
-        gui_bench_init();
-        bench_mode = BENCH_ALL;
-        bench_to_run = 1;
+        switch(bench_cur_ctl) {
+            case BENCH_CTL_START:
+                gui_bench_init();
+                bench_mode = bench_mode_next;
+                bench_to_run = 1;
+                break;
+             case BENCH_CTL_LOG:
+                bench_log = !bench_log;
+                bench_to_draw = 1;
+                break;
+             case BENCH_CTL_SD:
+                bench_mode_next = (bench_mode_next == BENCH_ALL)?BENCH_NOCARD:BENCH_ALL;
+                bench_to_draw = 1;
+                break;
+        }
         break;
-    case KEY_SHOOT_HALF: // easter egg, do all tests except card speed
-        gui_bench_init();
-        bench_mode = BENCH_NOCARD;
-        bench_to_run = 1;
-        break;
+    // switch controls
     case KEY_LEFT:
-    case KEY_RIGHT: // switch logging on/off
-        bench_log = !bench_log;
+        bench_cur_ctl = (bench_cur_ctl>0)?bench_cur_ctl-1:BENCH_CTL_MAX;
+        bench_to_draw = 1;
+        break;
+    case KEY_RIGHT:
+        bench_cur_ctl = (bench_cur_ctl<BENCH_CTL_MAX)?bench_cur_ctl+1:0;
         bench_to_draw = 1;
         break;
     }

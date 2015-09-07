@@ -246,7 +246,7 @@
 #define LANG_MENU_DEBUG_BENCHMARK       175
 
 #define LANG_BENCH_CALCULATING          176
-#define LANG_BENCH_TITLE                177
+#define LANG_BENCH_CPU                  177
 #define LANG_BENCH_SCREEN               178
 #define LANG_BENCH_WRITE                179
 #define LANG_BENCH_READ                 180
@@ -772,7 +772,12 @@
 
 #define LANG_MENU_DISABLE_LFN_SUPPORT           633
 
-#define GUI_LANG_ITEMS                          633
+#define LANG_BENCH_START                        634
+#define LANG_BENCH_LOG                          635
+#define LANG_BENCH_SDTEST                       636
+#define LANG_BENCH_TEXTOUT                      637
+
+#define GUI_LANG_ITEMS                          637
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
