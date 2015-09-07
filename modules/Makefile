@@ -49,10 +49,6 @@ $Oreversebytes.o: reversebytes.S
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
-$Ocpuinfo_arm.o: cpuinfo_arm.c
-	@echo $< \-\> $@
-	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
-
 $Ocalend.flt: $Ogui_calendar.o
 $O_tbox.flt: $Ogui_tbox.o
 $O_hexbox.flt: $Ogui_hexbox.o
@@ -74,7 +70,7 @@ $O_rawop.flt: $Oraw_merge.o $Oreversebytes.o
 $O_osd_le.flt: $Ogui_osd_edit.o
 $Ofselect.flt: $Ogui_fselect.o $Onothumb.o
 $Ouseredit.flt: $Ouser_menu_edit.o
-$Ocpuinfo.flt: $Ocpuinfo.o $Ocpuinfo_arm.o 
+$Ocpuinfo.flt: $Ocpuinfo.o
 $Oeyefi.flt: $Oeyefi.o $Omd5.o $Osha1.o
 
 $Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(lubasic)/$Olibubasic.a
