@@ -440,38 +440,46 @@ static int rawop_meter(lua_State *L) {
 raw value conversion functions
 */
 /*
-ev96=rawop.raw_to_ev96(rawval)
-convert a raw value (blacklevel+1 to whitelevel) into an APEX96 EV relative to neutral
+ev96=rawop.raw_to_ev(rawval[,scale])
+convert a raw value (blacklevel+1 to whitelevel) into an APEX EV relative to neutral
 if rawval is <= to blacklevel, it is clamped to blacklevel + 1.
 values > whitelevel are converted normally
+
+scale optionally scales the APEX value, default 96 to be compatible with camera
+exposure parameters. Use 1000 for imath APEX values or 96000 for APEX96 with imath
 
 NOTE on G1x, the result may change depending on ISO settings. The value is only
 updated when the raw hook is entered for the shot so for maximum portability,
 this function should only be called inside the raw hook.
 */
-static int rawop_raw_to_ev96(lua_State *L) {
+static int rawop_raw_to_ev(lua_State *L) {
     int v=luaL_checknumber(L,1);
+    int scale=luaL_optnumber(L,2,96);
     // TODO not clear what we should return, minimum real value for now
     if( v <= camera_sensor.black_level) {
         v = camera_sensor.black_level+1;
     }
-    int r=96.0*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count);
+    int r=(double)scale*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count);
     lua_pushnumber(L,r);
     return 1;
 }
 
 /*
-rawval=rawop.ev96_to_raw(ev96)
-Convert an APEX96 EV (offset from raw_neutral) to a raw value. No range checking is done
+rawval=rawop.ev_to_raw(ev[,scale])
+Convert an APEX EV (offset from raw_neutral) to a raw value. No range checking is done
+
+scale optionally scales the APEX value, default 96 to be compatible with camera
+exposure parameters. Use 1000 for imath or 96000 for APEX96 with imath
 
 NOTE on G1x, the result may change depending on ISO settings. The value is only
 updated when the raw hook is entered for the shot so for maximum portability,
 this function should only be called inside the raw hook.
 */
-static int rawop_ev96_to_raw(lua_State *L) {
+static int rawop_ev_to_raw(lua_State *L) {
     int v=luaL_checknumber(L,1);
+    int scale=luaL_optnumber(L,2,96);
     // TODO not clear if this should be clamped to valid raw ranges?
-    lua_pushnumber(L,pow(2,(double)v/96+log2_raw_neutral_count)+camera_sensor.black_level);
+    lua_pushnumber(L,pow(2,(double)v/(double)scale+log2_raw_neutral_count)+camera_sensor.black_level);
     return 1;
 }
 
@@ -714,8 +722,8 @@ static const luaL_Reg rawop_funcs[] = {
   {"meter",             rawop_meter},
 
   // value conversion
-  {"raw_to_ev96",       rawop_raw_to_ev96},
-  {"ev96_to_raw",       rawop_ev96_to_raw},
+  {"raw_to_ev",       rawop_raw_to_ev},
+  {"ev_to_raw",       rawop_ev_to_raw},
 
   // histogram
   {"create_histogram",  rawop_create_histogram},
