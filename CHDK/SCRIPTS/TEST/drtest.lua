@@ -1,6 +1,6 @@
 --[[
 @title dynamic range test
-@chdk_version 1.4.0.4193
+@chdk_version 1.4.0.4241
 #overstops=4 "+ stops"
 #understops=6 "- stops"
 #draw_meter=true "draw meter"
@@ -300,6 +300,11 @@ function drtest:draw_meter()
 	rawop.fill_rect(100,554,meter_bar_width(rawop.get_black_level()),4,self.draw_low)
 end
 
+-- print a 1000 scaled value to decimal
+function drtest:f1k_str(v)
+	return string.format("%d.%03d",v/1000,math.abs(v)%1000)
+end
+
 --[[
 get rgb and combined meter
 ]]
@@ -310,15 +315,15 @@ function drtest:do_meter()
 	log:set{
 		meter_time=get_tick_count()-t0,
 		m=self.m,
-		m96=rawop.raw_to_ev96(self.m),
+		m96=self:f1k_str(rawop.raw_to_ev(self.m,96000)),
 		r=self.r,
-		r96=rawop.raw_to_ev96(self.r),
+		r96=self:f1k_str(rawop.raw_to_ev(self.r,96000)),
 		g1=self.g1,
-		g1_96=rawop.raw_to_ev96(self.g1),
+		g1_96=self:f1k_str(rawop.raw_to_ev(self.g1,96000)),
 		g2=self.g2,
-		g2_96=rawop.raw_to_ev96(self.g2),
+		g2_96=self:f1k_str(rawop.raw_to_ev(self.g2,96000)),
 		b=self.b,
-		b96=rawop.raw_to_ev96(self.b),
+		b96=self:f1k_str(rawop.raw_to_ev(self.b,96000)),
 	}
 end
 
@@ -357,8 +362,9 @@ function drtest:make_ev_histo(step,mode)
 	}
 	local count_max=0
 	repeat
-		local ev_min = rawop.raw_to_ev96(raw_min)
-		local raw_max = rawop.ev96_to_raw(ev_min + step - 1)
+		-- TODO should use higher than default precision
+		local ev_min = rawop.raw_to_ev(raw_min)
+		local raw_max = rawop.ev_to_raw(ev_min + step - 1)
 		if raw_max > wl then
 			raw_max = wl
 		end
@@ -400,7 +406,7 @@ function drtest:do_histo()
 								self.histo:range(rawop.get_white_level(),rawop.get_white_level(),self.histo_scale)
 	log:set{
 		histo_calc_time=get_tick_count()-t0,
-		peak=rawop.raw_to_ev96(self.evh.all.peak_raw_val),
+		peak=rawop.raw_to_ev(self.evh.all.peak_raw_val),
 		['peak_bin%']=self:pct_str(self.evh.all[self.evh.all.peak_bin]),
 		['bl%']=self:pct_str(self.bl_pct),
 		['wl%']=self:pct_str(self.wl_pct),
@@ -418,7 +424,7 @@ function drtest:do_histo()
 		self.evh[name] = self:make_ev_histo(12)
 		log:set{
 			histo_calc_time=get_tick_count()-t0,
-			['peak_'..name]=rawop.raw_to_ev96(self.evh[name].peak_raw_val),
+			['peak_'..name]=rawop.raw_to_ev(self.evh[name].peak_raw_val),
 			['peak_'..name..'_bin%']=self:pct_str(self.evh[name][self.evh[name].peak_bin]),
 		}
 	end

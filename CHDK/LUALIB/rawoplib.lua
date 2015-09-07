@@ -20,6 +20,10 @@ local cfa_b_y  = cfa_offsets.b.y
 local fill_rect = rawop.fill_rect
 local meter = rawop.meter
 
+-- temp for backward compatibility
+rawop.raw_to_ev96 = rawop.raw_to_ev
+rawop.ev96_to_raw = rawop.ev_to_raw
+
 --[[
 filled RGB rectangle
 ]]
