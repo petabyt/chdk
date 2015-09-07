@@ -282,8 +282,7 @@ static int module_do_action(int fd, flat_hdr* mod, uint32_t offset, uint32_t seg
             if (read(fd, buf_load, segment_size) == segment_size)
             {
                 // relocate or link module
-                func(mod, (uint32_t*)buf_load, segment_size >> 2);
-                return 1;
+                return func(mod, (uint32_t*)buf_load, segment_size >> 2);
             }
         }
         return 0;
