@@ -31,6 +31,13 @@ static const char *cfa_names[]={"r","g1","g2","b"};
 #define CFA_B 3
 #define RAWOP_HISTO_META "rawop.histo_meta"
 
+// simple round half away from zero
+static int round_d2i(double v) {
+    if(v<0.0) {
+        return (int)(v - 0.5);
+    }
+    return (int)(v + 0.5);
+}
 /*
 cfa=rawop.get_cfa()
 return: CFA pattern as a 32 bit interger, as used in DNG
@@ -459,7 +466,7 @@ static int rawop_raw_to_ev(lua_State *L) {
     if( v <= camera_sensor.black_level) {
         v = camera_sensor.black_level+1;
     }
-    int r=(double)scale*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count);
+    int r=round_d2i((double)scale*(log2(v - camera_sensor.black_level) - log2_raw_neutral_count));
     lua_pushnumber(L,r);
     return 1;
 }
@@ -479,7 +486,7 @@ static int rawop_ev_to_raw(lua_State *L) {
     int v=luaL_checknumber(L,1);
     int scale=luaL_optnumber(L,2,96);
     // TODO not clear if this should be clamped to valid raw ranges?
-    lua_pushnumber(L,pow(2,(double)v/(double)scale+log2_raw_neutral_count)+camera_sensor.black_level);
+    lua_pushnumber(L,round_d2i(pow(2,(double)v/(double)scale+log2_raw_neutral_count)+camera_sensor.black_level));
     return 1;
 }
 
@@ -629,7 +636,7 @@ static int rawop_histo_range(lua_State *L) {
     // TODO full raw buffer count*1000 could overflow 32 bit int
     // could check / work around using ints but probably not worth it
     if(scale) {
-        lua_pushnumber(L,(scale*(double)count)/(double)h->total_pixels);
+        lua_pushnumber(L,round_d2i((scale*(double)count)/(double)h->total_pixels));
     } else {
         lua_pushnumber(L,count);
     }
@@ -722,8 +729,8 @@ static const luaL_Reg rawop_funcs[] = {
   {"meter",             rawop_meter},
 
   // value conversion
-  {"raw_to_ev",       rawop_raw_to_ev},
-  {"ev_to_raw",       rawop_ev_to_raw},
+  {"raw_to_ev",         rawop_raw_to_ev},
+  {"ev_to_raw",         rawop_ev_to_raw},
 
   // histogram
   {"create_histogram",  rawop_create_histogram},
@@ -738,7 +745,7 @@ static void init_raw_params(void) {
     // found to be reasonably close on d10, elph130, a540, g1x and more.
     double raw_neutral_count = (double)(camera_sensor.white_level - camera_sensor.black_level)/(6.669);
     log2_raw_neutral_count = log2(raw_neutral_count);
-    raw_neutral = raw_neutral_count + camera_sensor.black_level;
+    raw_neutral = round_d2i(raw_neutral_count) + camera_sensor.black_level;
 }
 
 // update values that need to be updated when hook becomes active
