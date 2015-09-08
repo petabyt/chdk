@@ -172,7 +172,7 @@ static int rawop_get_active_width(lua_State *L) {
 }
 
 /*
-h=rawop.get_active_width()
+h=rawop.get_active_height()
 returns: height of the active area, in pixels
 */
 static int rawop_get_active_height(lua_State *L) {
@@ -657,7 +657,7 @@ static int rawop_histo_total_pixels(lua_State *L) {
 }
 
 /*
-total=histo:bits()
+bits=histo:bits()
 returns bit depth of histogram
 */
 static int rawop_histo_bits(lua_State *L) {
