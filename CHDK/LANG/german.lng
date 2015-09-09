@@ -222,15 +222,16 @@
 
 175 "Benchmark"
 176 "Berechnung..."
+177 "CPU               :"
 178 "Bildschirm"
-179 "Schreiben      :"
-180 "Lesen          :"
+179 "Schreiben       :"
+180 "Lesen           :"
 181 "Speicher"
 182 "Speicherkarte"
-183 "Schreiben (RAW):"
-184 "Schreiben (Mem):"
-185 "Schreiben (64k):"
-186 "Lesen     (64k):"
+183 "Schreiben (RAW) :"
+184 "Schreiben (Mem) :"
+185 "Schreiben (64k) :"
+186 "Lesen     (64k) :"
 
 187 "Stromsparmodus aus"
 
@@ -774,3 +775,10 @@
 632 "Sicher, dass alle Farben auf \nStandardwerte\nzurückgesetzt werden sollen?"
 
 633 "altern. Support lange Dateinamen"
+
+// additional benchmark module strings
+// Combined length of next 3 must be less than 31 characters
+634 "START"
+635 "Log"
+636 "SD-Test"
+637 "Textausgabe       :"
