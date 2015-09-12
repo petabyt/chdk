@@ -206,6 +206,7 @@ static const struct keyword_token keywords[] = {
   {"wheel_left",              TOKENIZER_WHEEL_LEFT},
   
   {"@title",                  TOKENIZER_REM},
+  {"@subtitle",               TOKENIZER_REM},
   {"@param",                  TOKENIZER_REM},
   {"@default",                TOKENIZER_REM},
   {"@range",                  TOKENIZER_REM},
