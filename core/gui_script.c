@@ -46,7 +46,7 @@ sc_param* find_param(char *name)
     sc_param *p = script_params;
     while (p)
     {
-        if (strcmp(name, p->name) == 0)
+        if ((p->name != 0) && (strcmp(name, p->name) == 0))
             break;
         p = p->next;
     }
@@ -69,8 +69,11 @@ sc_param* new_param(char *name)
     }
     script_param_count++;
 
-    p->name = malloc(strlen(name)+1);
-    strcpy(p->name, name);
+    if (name != 0)
+    {
+        p->name = malloc(strlen(name)+1);
+        strcpy(p->name, name);
+    }
 
     return p;
 }
@@ -149,6 +152,18 @@ static void process_title(const char *ptr)
     if (l >= sizeof(script_title)) l = sizeof(script_title) - 1;
     strncpy(script_title, ptr, l);
     script_title[l] = 0;
+}
+
+static void process_subtitle(const char *ptr)
+{
+    ptr = skip_whitespace(ptr);
+    int l = skip_toeol(ptr) - ptr;
+    if (l >= sizeof(script_title)) l = sizeof(script_title) - 1;
+    sc_param *p = new_param(0);
+    p->desc = malloc(l+1);
+    strncpy(p->desc, ptr, l);
+    p->desc[l] = 0;
+    p->range_type = MENUITEM_SEPARATOR;
 }
 
 //-------------------------------------------------------------------
@@ -432,6 +447,10 @@ static void script_scan()
             if (strncmp("@title", ptr, 6)==0)
             {
                 process_title(ptr+6);
+            }
+            else if (strncmp("@subtitle", ptr, 9)==0)
+            {
+                process_subtitle(ptr+9);
             }
             else if (strncmp("@param", ptr, 6)==0)
             {
