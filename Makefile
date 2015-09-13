@@ -2,14 +2,6 @@ topdir=./
 
 tmp:=$(shell echo "BUILD_SVNREV := $(DEF_SVN_REF)" > revision.inc)
 
-# skip thumb-2 ports when using old arm-elf toolchains
-# used in the batch-zip and batch-zip-complete targets
-ifndef OPT_USE_GCC_EABI
-    NO_T2=-not2
-else
-    NO_T2=
-endif
-
 # can override on command line or *buildconf.inc for custom subsets
 CAMERA_LIST=camera_list.csv
 
@@ -18,6 +10,14 @@ CAMERA_LIST=camera_list.csv
 ZIPDATE=date -R
 
 include makefile_cam.inc
+
+# skip thumb-2 ports when using old arm-elf toolchains
+# used in the batch-zip and batch-zip-complete targets
+ifndef OPT_USE_GCC_EABI
+    NO_T2=-not2
+else
+    NO_T2=
+endif
 
 BUILD_SVNREV:=$(shell svnversion -cn $(topdir) | $(ESED) 's/[0-9]*:([0-9]+)[MPS]*/\1/')
 ifeq ($(BUILD_SVNREV), )
