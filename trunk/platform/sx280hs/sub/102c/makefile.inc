@@ -1,4 +1,7 @@
 
+# No Digic6 finsig utility yet
+override OPT_GEN_STUBS=
+
 PLATFORMID=12895
 
 PLATFORMOS=dryos
