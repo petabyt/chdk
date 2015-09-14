@@ -78,7 +78,8 @@ gen_conf_lua$(EXE): gen_conf_lua.o
 
 clean:
 	rm -f *.o $(EXES) $(extras)
-	rm -f -d -r *.dSYM
+
+#	rm -f -d -r *.dSYM
 
 distclean: clean
 
