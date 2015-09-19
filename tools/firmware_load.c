@@ -528,6 +528,12 @@ int isBL_cond(firmware *fw, int offset)
     return ((fwval(fw,offset) & 0x0F000000) == 0x0B000000);
 }
 
+// BLEQ
+int isBLEQ(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFF000000) == 0x0B000000);
+}
+
 // B
 int isB(firmware *fw, int offset)
 {

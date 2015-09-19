@@ -10,6 +10,7 @@
 
 //------------------------------------------------------------------------------------------------------------
 // #define LIST_IMPORTANT_FUNCTIONS 1   // always list functions with 'LIST_ALWAYS' flag, even when not found
+// #define LIST_PHYSW_TABLE 1           // print all physw events to file
 //------------------------------------------------------------------------------------------------------------
 
 // Buffer output into header and body sections
@@ -1222,17 +1223,49 @@ int find_DisplayBusyOnScreen(firmware *fw)
 
     if ((j>=0)&&(s1>=0)&&(s2>=0))
     {
-        int m1 = find_Nth_inst(fw,isBL,j+1,10,4);
-        int m2 = idxFollowBranch(fw,m1,0x01000001);
+        int m1 = find_Nth_inst(fw,isBL,j+1,12,fw->dryos_ver<54?4:3);
+        int m2, k;
 
-        int k = find_nxt_str_ref(fw, s1, m2);
-        if ((k <= 0)||(k-m2 >= 22))
+        if (fw->dryos_ver > 56)
         {
-            // not found, try the next BL
-            m1 = find_inst(fw,isBL,m1+1,4);
+            // these functions are called indirectly in this part of fw on r57+
+            int found = 0;
+            for (k=-1; k>-3; k--)
+            {
+                if ((fwval(fw,m1+k) & 0xFE1FF000) == 0xE41F0000) // ldr r0, =func
+                {
+                    uint32_t u1 = LDR2val(fw, m1+k);
+                    if ( u1 > fw->base )
+                    {
+                        if (isSTMFD_LR(fw, adr2idx(fw, u1)))
+                        {
+                            found = 1;
+                            m2 = adr2idx(fw, u1);
+                            k = find_nxt_str_ref(fw, s1, m2);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!found)
+            {
+                return 0;
+            }
+        }
+        else
+        {
             m2 = idxFollowBranch(fw,m1,0x01000001);
             k = find_nxt_str_ref(fw, s1, m2);
+            if ((k <= 0)||(k-m2 >= 22))
+            {
+                // not found, try the next BL
+                m1 = find_inst(fw,isBL,m1+1,4);
+                m2 = idxFollowBranch(fw,m1,0x01000001);
+                k = find_nxt_str_ref(fw, s1, m2);
+            }
         }
+
+
         if ((k > 0)&&(k-m2 < 22))
         {
             // the string is referenced near enough
@@ -1275,13 +1308,28 @@ int find_DisplayBusyOnScreen(firmware *fw)
                     }
                 }
             }
-            m3 = find_inst(fw, isLDMFD_PC, k+30, 64);
-            if (m3>0)
+            if (fw->dryos_ver < 54)
             {
-                m3 = find_Nth_inst_rev(fw, isBL, m3-1, 8, 2);
+                m3 = find_inst(fw, isLDMFD_PC, k+30, 64);
                 if (m3>0)
                 {
-                    idx_displaydialogbox = m3;
+                    m3 = find_Nth_inst_rev(fw, isBL, m3-1, 8, 2);
+                    if (m3>0)
+                    {
+                        idx_displaydialogbox = m3;
+                    }
+                }
+            }
+            else
+            {
+                m3 = find_inst(fw, isLDMFD, k+30, 20);
+                if (m3>0)
+                {
+                    m3 = find_inst_rev(fw, isBL, m3-1, 4);
+                    if (m3>0)
+                    {
+                        idx_displaydialogbox = m3;
+                    }
                 }
             }
             return 1;
@@ -1298,23 +1346,50 @@ int find_UndisplayBusyOnScreen(firmware *fw)
     if (j < 0)
         j = find_str_ref(fw,"_PlayBusyScreen");
 
-    if (idx_createdialogbox > 0)
+    if (fw->dryos_ver < 57)
     {
-        int m;
-        for (m=0; m<2; m++)
+        if (idx_createdialogbox > 0)
         {
-            int n = find_Nth_inst(fw, isSTMFD_LR, idx_createdialogbox + 30, 140, m+1);
-            if (n>0)
+            int m;
+            for (m=0; m<2; m++)
             {
-                uint32_t a1 = idx2adr(fw,n);
-                if (j > 0)
+                int n = find_Nth_inst(fw, isSTMFD_LR, idx_createdialogbox + 30, 140, m+1);
+                if (n>0)
                 {
-                    int k;
-                    for (k=j; k<j+24; k++)
+                    uint32_t a1 = idx2adr(fw,n);
+                    if (j > 0)
                     {
-                        if (isBL_cond(fw,k)&&(idx2adr(fw,idxFollowBranch(fw,k,0xe1000001))==a1)) // BLEQ
+                        int k;
+                        for (k=j; k<j+24; k++)
                         {
-                            fwAddMatch(fw,a1,32,0,122);
+                            if (isBL_cond(fw,k)&&(idx2adr(fw,idxFollowBranch(fw,k,0xe1000001))==a1)) // BLEQ
+                            {
+                                fwAddMatch(fw,a1,32,0,122);
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        int m1 = find_Nth_inst(fw,isBLEQ,j+1,20,1);
+        if (m1 > 0)
+        {
+            // these functions are called indirectly in this part of fw on r57+
+            int k;
+            for (k=-1; k>-3; k--)
+            {
+                if ((fwval(fw,m1+k) & 0xFE1FF000) == 0x041F0000) // ldreq r0, =func
+                {
+                    uint32_t u1 = LDR2val(fw, m1+k);
+                    if ( u1 > fw->base )
+                    {
+                        if (isSTMFD_LR(fw, adr2idx(fw, u1)))
+                        {
+                            fwAddMatch(fw,u1,32,0,122);
                             return 1;
                         }
                     }
@@ -1749,7 +1824,7 @@ string_sig string_sigs[] =
     { 9, "_divmod_signed_int", "mod_FW", 0,                                0,    0,    0,    0,    0,    0,    0,    0,    0,    4,    4,    4,    4,    4 },
     { 9, "_divmod_unsigned_int", "SetTimerAfter", 0,                      23,   23,   23,   23,   23,   23,   23,   23,   23,   23,   23,    0,    0,    0 },
     { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   15,   15,   15,   15 },
-    { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    8,    8,    0,    0 },
+    { 9, "_divmod_unsigned_int", "DispCon_ShowWhiteChart_FW", 0,           0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    8,    8,    8,    0 },
     { 9, "_dflt", "CalcLog10", 0,                                          9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,    9 },
     { 9, "_dfltu", "CalcLog10", 0,                                         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4 },
     { 9, "_dmul", "CalcLog10", 0,                                         12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12,   12 },
@@ -1785,8 +1860,8 @@ string_sig string_sigs[] =
     { 12, "malloc", "malloc", 0x01000003,                               0x24, 0x24, 0x24, 0x24, 0x24, 0x2C, 0x2C, 0x2C, 0x44, 0x44, 0x44, 0x44, 0x4c, 0x4c }, // uses 'malloc_strictly'
     { 12, "TakeSemaphore", "TakeSemaphore", 1,                          0x14, 0x14, 0x14, 0x14, 0x14, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C, 0x1C },
     { 12, "GiveSemaphore", "GiveSemaphore", 1,                          0x18, 0x18, 0x18, 0x18, 0x18, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
-    { 12, "_log10", "_log10", 0x01000006,                              0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C,0x35C,0x388,0x388 }, // uses 'CalcLog10'
-    { 12, "_log10", "_log10", 0x01000006,                              0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
+    { 12, "_log10", "_log10", 0x01000006,                              0x278,0x280,0x280,0x284,0x294,0x2FC,0x2FC,0x31C,0x354,0x35C,0x35C,0x35C,0x388,0x38c }, // uses 'CalcLog10'
+    { 12, "_log10", "_log10", 0x01000006,                              0x000,0x278,0x27C,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x38c,0x000 },
     { 12, "_log10", "_log10", 0x01000006,                              0x000,0x000,0x2C4,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000,0x000 },
     { 12, "ClearEventFlag", "ClearEventFlag", 1,                        0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
     { 12, "SetEventFlag", "SetEventFlag", 1,                            0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08 },
@@ -1860,7 +1935,7 @@ string_sig string_sigs[] =
     { 19, "CheckAllEventFlag", "CheckAnyEventFlag", 0,                           0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0012, 0x0017, 0x0017, 0x0017 },
     { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x0016, 0x001d, 0x001d, 0x001d },
     { 19, "TryTakeSemaphore", "DeleteSemaphore", 0,                              0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0018, 0xf000, 0xf000, 0xf000 },
-    { 19, "SetTimerAfter", "_GetSystemTime", 0,                                  0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e },
+    { 19, "SetTimerAfter", "_GetSystemTime", 0,                                  0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x004e, 0x0054 },
     { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x0020, 0x001b, 0x001b, 0x001b },
     { 19, "SetTimerWhen", "SetTimerAfter", 0,                                    0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x001b, 0xf000, 0xf000, 0xf000 },
     { 19, "CancelTimer", "SetTimerWhen", 0,                                      0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019, 0x0019 },
@@ -1922,6 +1997,9 @@ string_sig string_sigs[] =
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
+
+    //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57
+    { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000 },
 
     { 0, 0, 0, 0 }
 };
@@ -2726,6 +2804,71 @@ int match_strsig23(firmware *fw, string_sig *sig, int j)
     return search_fw(fw, match_strsig23a, idx2adr(fw,j), sig->offset, 2);
 }
 
+// Sig pattern:
+//      Func            -   func
+//            .... [offset]
+//      Nth instruction backwards from string ref
+//      Ref to string   -       LDR Rx, pstr
+//            ....
+//      Ptr to string   -       DCD pstr
+// dryos_offset to be encoded as: 0xQNPP
+// P) additional offset
+// Q) instruction to locate: 0 for STMFD_LR, 0xf to disable
+// N) search the instruction this many times - 1 (i.e. 0 = first instruction backwards)
+// prev instruction search range is limited by sig->offset
+// the reference to the string has to occur within 256 words (fixed range)
+// based on method 104 of finsig_vxworks
+int match_strsig24(firmware *fw, string_sig *sig, int j)
+{
+
+    int ofst = dryos_offset(fw, sig);
+    int prinst = (ofst&0xf000)>>12;
+    int ninst = ((ofst&0xf00)>>8)+1;
+    ofst &= 0xff;
+    void *instid;
+    switch (prinst) {
+        case 0:
+            instid = (void*)isSTMFD_LR;
+            break;
+        default:
+            return 0;
+    }
+
+    uint32_t sadr = idx2adr(fw,j);        // string address
+    int j1;
+    for (j1 = j; j1 >= MAX(j-256,0); j1--)
+    {
+        if (isLDR(fw,j1))   // LDR ?
+        {
+            uint32_t pval = LDR2val(fw,j1);
+            if (pval == sadr)
+            {
+                int j2 = find_Nth_inst_rev(fw,instid,j1-1,sig->offset,ninst);
+                if (j2>0)
+                {
+                    fwAddMatch(fw,idx2adr(fw,j2-ofst),32,0,124);
+                    return 1;
+                }
+            }
+        }
+        else if (isADR_PC(fw,j1))   // ADR ?
+        {
+            uint32_t pval = ADR2adr(fw,j1);
+            if (pval == sadr)
+            {
+                int j2 = find_Nth_inst_rev(fw,instid,j1-1,sig->offset,ninst);
+                if (j2>0)
+                {
+                    fwAddMatch(fw,idx2adr(fw,j2-ofst),32,0,124);
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 // Call processing function based on type
 int find_strsig(firmware *fw, string_sig *sig)
 {
@@ -2761,6 +2904,7 @@ int find_strsig(firmware *fw, string_sig *sig)
     case 21:    return fw_process(fw, sig, (int (*)(firmware*, string_sig*, int))(sig->ev_name));
     case 22:    return ((int (*)(firmware*))(sig->ev_name))(fw);
     case 23:    return fw_string_process(fw, sig, match_strsig23, 1);
+    case 24:    return fw_string_process(fw, sig, match_strsig24, 0);
     }
 
     return 0;
@@ -5336,6 +5480,32 @@ void print_kval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, co
     }
 }
 
+void print_physw_raw_vals(firmware *fw, uint32_t tadr, int tsiz, int tlen)
+{
+    int tidx = adr2idx(fw,tadr);
+    int k, kval = 0;
+    uint32_t ev;
+    FILE *out_fp = fopen("physw_bits.txt", "w");
+    if (out_fp == NULL) return;
+
+    for (k=0; k<tlen; k+=tsiz)
+    {
+        ev = fw->buf[tidx+k+1];
+        kval = fw->buf[tidx+k];
+        tadr = idx2adr(fw,tidx+k);
+        if (kval > 0)
+        {
+
+            int r = (kval >> 5) & 7;
+            uint32_t b = (1 << (kval & 0x1F));
+            int i = (kval >> 16) & 1;
+
+            fprintf(out_fp, "levent 0x%08x, 0x%08x, index %d%s\n", ev, b, r, i?" (non-inverted logic)":"");
+        }
+    }
+    fclose(out_fp);
+}
+
 typedef struct {
     int         reg;
     uint32_t    bits;
@@ -5535,6 +5705,10 @@ void find_key_vals(firmware *fw)
         }
         if (tlen > 50*tsiz) tlen = 50*tsiz;
 
+#ifdef LIST_PHYSW_TABLE
+        // output all physw events from the table if enabled
+        print_physw_raw_vals(fw, tadr, tsiz, tlen);
+#endif
         bprintf("// Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).\n");
         if (fw->dryos_ver >= 49)
         {
@@ -5555,15 +5729,47 @@ void find_key_vals(firmware *fw)
         uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
         add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
         add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
-        add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
-        add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
-        add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);
-        add_kmval(fw,tadr,tsiz,tlen,5,"KEY_DOWN",0);
-        add_kmval(fw,tadr,tsiz,tlen,6,"KEY_LEFT",0);
-        add_kmval(fw,tadr,tsiz,tlen,7,"KEY_RIGHT",0);
-        add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
-        add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
-        add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
+        
+        if (fw->dryos_ver < 54)
+        {
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,5,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
+        }
+        else if (fw->dryos_ver < 55)
+        {
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xE,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
+            //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+        }
+        else
+        {
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
+            //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+        }
         if (fw->dryos_ver <= 47)
         {
             add_kmval(fw,tadr,tsiz,tlen,0x601,"KEY_PLAYBACK",0);
@@ -5974,7 +6180,7 @@ void output_firmware_vals(firmware *fw)
     }
     else
     {
-        if (fw->dryos_ver > 55)
+        if (fw->dryos_ver > 57) // ***** UPDATE for new DryOS version *****
             bprintf("//   DRYOS R%d (%s) *** New DRYOS Version - please update finsig_dryos.c ***\n",fw->dryos_ver,fw->dryos_ver_str);
         else
             bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,fw->dryos_ver_str);

@@ -25,7 +25,6 @@
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff98df94) //  3 90%        == 0xff98df94
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff827fb4
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-// ERROR: _log10 is not found.                             //--- ---    *** != 0x006bb8c8
 // ERROR: time is not found.                               //--- ---    *** != 0xffa1b39c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -73,19 +72,21 @@ DEF(jpeg_count_str                          ,0x000d7868) // Found @0xff9ff7f0
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_ZOOM_IN         ,0x00000002 }, // Found @0xffbc0b08, levent 0x02
+//    { 0, KEY_VIDEO           ,0x00000002 }, // Found @0xffbc0b08, levent 0x02
 //    { 0, KEY_POWER           ,0x00000020 }, // Found @0xffbc0b10, levent 0x100
 //    { 0, KEY_PLAYBACK        ,0x00000040 }, // Found @0xffbc0b18, levent 0x101
-//    { 0, KEY_DISPLAY         ,0x00000100 }, // Found @0xffbc0b20, levent 0x0a
-//    { 0, KEY_LEFT            ,0x00000200 }, // Found @0xffbc0b28, levent 0x06
-//    { 0, KEY_MENU            ,0x00000400 }, // Found @0xffbc0b30, levent 0x09
-//    { 0, KEY_RIGHT           ,0x00000800 }, // Found @0xffbc0b38, levent 0x07
-//    { 0, KEY_SET             ,0x00001000 }, // Found @0xffbc0b40, levent 0x08
+//    { 0, KEY_SET             ,0x00000100 }, // Found @0xffbc0b20, levent 0x0a
+//    { 0, KEY_UP              ,0x00000200 }, // Found @0xffbc0b28, levent 0x06
+//    { 0, KEY_RIGHT           ,0x00000400 }, // Found @0xffbc0b30, levent 0x09
+//    { 0, KEY_DOWN            ,0x00000800 }, // Found @0xffbc0b38, levent 0x07
+//    { 0, KEY_LEFT            ,0x00001000 }, // Found @0xffbc0b40, levent 0x08
+//    { 0, KEY_HELP            ,0x00004000 }, // Found @0xffbc0b50, levent 0x0d
+//    { 0, KEY_MENU            ,0x00008000 }, // Found @0xffbc0b58, levent 0x14
 //    { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffbc0b68, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffbc0b68, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffbc0b60, levent 0x00
-//    { 2, KEY_UP              ,0x00000010 }, // Found @0xffbc0b70, levent 0x04
-//    { 2, KEY_ZOOM_OUT        ,0x00000020 }, // Found @0xffbc0b78, levent 0x03
+//    { 2, KEY_ZOOM_OUT        ,0x00000010 }, // Found @0xffbc0b70, levent 0x04
+//    { 2, KEY_ZOOM_IN         ,0x00000020 }, // Found @0xffbc0b78, levent 0x03
 //    { 0, 0, 0 }
 //};
 
@@ -198,6 +199,7 @@ NHSTUB(VbattGet                               ,0xff82cab0) //120
 NHSTUB(Write                                  ,0xff827b6c) //120
 NHSTUB(WriteSDCard                            ,0xff881a2c) //108
 NHSTUB(_log                                   ,0x006bb388) //111
+//NHSTUB(_log10                               ,0x006bb8c8) //112            == 0x006bb8c8
 NHSTUB(_pow                                   ,0x006bba40) //121
 NHSTUB(_sqrt                                  ,0x006bd6e0) //  6
 NHSTUB(add_ptp_handler                        ,0xffa714d4) //121
