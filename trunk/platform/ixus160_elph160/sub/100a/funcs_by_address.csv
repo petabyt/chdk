@@ -1,6 +1,8 @@
 0x000d245c,task_AdditionAgent
 0x006bab48,_divmod_signed_int
+0x006bafe0,_divmod_unsigned_int
 0x006bb388,_log
+0x006bb8c8,_log10
 0x006bba40,_pow
 0x006bc9f0,_safe_sqrt
 0x006bca3c,_dadd
@@ -543,6 +545,8 @@
 0xff8ac824,TurnOnBackLight
 0xff8ac83c,TurnOffBackLight
 0xff8ad134,PT_PlaySound
+0xff8b0024,DisplayBusyOnScreen
+0xff8b0100,UndisplayBusyOnScreen
 0xff8b07d4,mktime_ext
 0xff8b0820,strftime
 0xff8b0f4c,memcpy
@@ -960,6 +964,10 @@
 0xff9b0ad4,UI_ShowStateOfRecMode_FW
 0xff9b0ae8,UI.Create_FW
 0xff9b0ae8,UI_RegistDebugEventProc_FW
+0xff9b285c,CreateDialogBox
+0xff9b2f68,DisplayDialogBox
+0xff9b756c,add_ui_to_dialog
+0xff9b7c74,get_string_by_id
 0xff9ccbb8,UIFS_WriteFirmInfoToFile
 0xff9ccbb8,UIFS_WriteFirmInfoToFile_FW
 0xff9d05c0,FmtMenu_ExecuteQuickFormat_FW

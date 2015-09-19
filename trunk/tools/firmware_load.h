@@ -16,6 +16,9 @@
         cameras with and 'alt' base address, and when firmware code is copied to RAM
  */
 
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+
 // Stores a range of valid data in the firmware dump (used to skip over empty blocks)
 typedef struct bufrange {
     uint32_t *p;
@@ -128,6 +131,7 @@ int isBX(firmware *fw, int offset);
 int isBX_LR(firmware *fw, int offset);
 int isBL(firmware *fw, int offset);
 int isBL_cond(firmware *fw, int offset);
+int isBLEQ(firmware *fw, int offset);
 int isB(firmware *fw, int offset);
 int isBorBL(firmware *fw, int offset);
 int isCMP(firmware *fw, int offset);
