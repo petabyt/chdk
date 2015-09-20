@@ -11,6 +11,6 @@ do
   if [ ${cam} != "CAMERA" ] && ( [ "$4" = "-noskip" ] || [ "${skip}" = "" ] ); then \
     if [ "${state}" != "" ]; then state=_${state}; fi; \
     if [ "${srcfw}" = "" ]; then srcfw=${fw}; fi; \
-    start $1 -s --no-print-directory TARGET_FW=${fw} PLATFORM=${srccam} PLATFORMSUB=${srcfw} STATE=${state} SKIP_AUTOBUILD=${skip} $2 || exit 1; \
+    start $1 -s --no-print-directory TARGET_FW=${fw} PLATFORM=${cam} PLATFORMSUB=${srcfw} STATE=${state} SKIP_AUTOBUILD=${skip} $2 || exit 1; \
   fi;
 done < $3
