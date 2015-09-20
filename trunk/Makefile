@@ -216,7 +216,12 @@ run-code-gen: platformcheck
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry: platformcheck
-	echo $(TARGET_CAM),$(TARGET_FW),$(TARGET_PID),$(subst _,,$(STATE)),$(PLATFORM),$(PLATFORMSUB),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
+ifeq ($(PLATFORMSUB),$(TARGET_FW))
+	echo $(TARGET_CAM),$(TARGET_FW),$(subst _,,$(STATE)),,$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
+else
+	echo $(TARGET_CAM),$(TARGET_FW),$(subst _,,$(STATE)),$(PLATFORMSUB),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
+endif
+
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:
 	$(MAKE) -C tools clean all
@@ -231,10 +236,11 @@ allmodules:
 
 # define targets to batch build all cameras & firmware versions
 # list of cameras/firmware versions is in 'camera_list.csv'
-# each row in 'camera_list.csv' has 5 entries: *** TODO: OUTDATED INFORMATION ***
+# each row in 'camera_list.csv' has 5 entries:
 # - camera (mandatory)         :- name of camera to build
 # - firmware (mandatory)       :- firmware version to build
 # - beta status (optional)     :- set to BETA for cameras still in beta status
+# - source firmware (optional) :- indicates the build for firmware column is copied *from* this firmware
 # - skip auto build (optional) :- any value in this column will exclude the camera/firmware from the auto build
 
 batch: version alltools allmodules
@@ -256,9 +262,10 @@ batch-zip-complete: version alltools allmodules
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 # note, this will include cameras with SKIP_AUTOBUILD set
+# doesn't include copied firmwares
 os-camera-lists:
-	echo 'CAMERA,FIRMWARE,PID,BETA_STATUS,SOURCE_CAMERA,SOURCE_FIRMWARE,SKIP_AUTOBUILD' > camera_list_dryos.csv
-	echo 'CAMERA,FIRMWARE,PID,BETA_STATUS,SOURCE_CAMERA,SOURCE_FIRMWARE,SKIP_AUTOBUILD' > camera_list_vxworks.csv
+	echo 'CAMERA,FIRMWARE,BETA_STATUS,SOURCE_FIRMWARE,SKIP_AUTOBUILD' > camera_list_dryos.csv
+	echo 'CAMERA,FIRMWARE,BETA_STATUS,SOURCE_FIRMWARE,SKIP_AUTOBUILD' > camera_list_vxworks.csv
 	sh tools/auto_build.sh $(MAKE) os-camera-list-entry $(CAMERA_LIST) -noskip
 
 # make sure each enabled firmware/sub has a PRIMARY.BIN
