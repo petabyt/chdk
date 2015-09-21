@@ -256,7 +256,7 @@ static const char *mpu_region_size_str(unsigned val) {
     if (val < 4 || val > 31)
         return "invalid";
     if (val < 11)
-        return two_nth_str[val-4];
+        return two_nth_str[val+1];
     return reg_sizes[val-11];
 }
 
