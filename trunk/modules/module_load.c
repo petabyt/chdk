@@ -837,7 +837,8 @@ module_entry* module_get_adr(unsigned int idx)
 void get_module_info(const char *name, ModuleInfo *mi, char *modName, int modNameLen)
 {
     memset(mi, 0, sizeof(ModuleInfo));
-    modName[0] = 0;     // Only used if module name stored in file (not a LANG string)
+    if (modName)
+        modName[0] = 0;     // Only used if module name stored in file (not a LANG string)
 
     // Get full path to module file, and hash of path
     char path[60];
