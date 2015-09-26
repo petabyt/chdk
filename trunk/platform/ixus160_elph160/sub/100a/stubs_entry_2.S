@@ -33,3 +33,8 @@ DEF(hook_CreateTask_low,        0x006B15A4)
 
 // Additional
 NHSTUB(TurnOffE1,               0xff8381ec) // for shutdown(), to complicated to emulate
+
+// temporary measure
+NHSTUB(init_focus_eventflag, 0xffb7ebfc)
+NHSTUB(init_nd_eventflag, 0xffaa8558)
+NHSTUB(init_nd_semaphore, 0xffad6344)
