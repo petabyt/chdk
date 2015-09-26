@@ -414,6 +414,7 @@ asm volatile (
 "    BL      sub_FF838AE8 \n"
 "    BL      CreateTask_spytask\n" // added
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF82D7F8.
+"    BL      init_required_fw_features\n" // added
 "    BL      sub_FF8328DC \n"
 "    BL      sub_FF8AD8A8 \n"
 "    BL      sub_FF82AFE0 \n"
@@ -476,4 +477,20 @@ asm volatile (
 "    MOV     R1, #0 \n"
 "    B       _PostLogicalEventToUI \n"
 );
+}
+
+/*
+    *** TEMPORARY workaround ***
+    Init stuff to avoid asserts on cameras running DryOS r54+
+    Execute this only once
+ */
+void init_required_fw_features(void) {
+    extern void _init_focus_eventflag();
+    extern void _init_nd_eventflag();
+    extern void _init_nd_semaphore();
+    //extern void _init_zoom_semaphore(); // for MoveZoomLensWithPoint
+
+    _init_focus_eventflag();
+    _init_nd_eventflag();
+    _init_nd_semaphore();
 }

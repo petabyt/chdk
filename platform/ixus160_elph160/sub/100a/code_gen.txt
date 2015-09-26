@@ -119,6 +119,9 @@ FW 6
 "    BL      CreateTask_spytask\n" // added
 <<<
 PATCHSUB ref=0 name=taskcreatePhySw_my
+>>>
+"    BL      init_required_fw_features\n" // added
+<<<
 FW $
 ENDASM
 ENDFUNC
@@ -148,6 +151,7 @@ FW $
 ENDASM
 ENDFUNC
 
+>>> file=../boot_extras.c
 ENDFILE
 
 
