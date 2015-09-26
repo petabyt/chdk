@@ -194,6 +194,10 @@ print-missing-dump: platformcheck
 		echo "missing primary for $(PLATFORM) $(PLATFORMSUB)" ; \
 	fi
 
+sigfinders:
+	$(MAKE) -C tools finsig_dryos$(EXE)
+	$(MAKE) -C tools finsig_vxworks$(EXE)
+
 rebuild-stubs: platformcheck
 	if [ -s $(TARGET_PRIMARY) ] ; then \
 		$(MAKE) -C tools finsig_dryos$(EXE) ;\
@@ -285,8 +289,13 @@ batch-rebuild-stubs_auto:
 # parallel version, starts each camera/firmware version build in a seperate session
 # Note:- Windows only, this will use all available CPU and a fair amount of memory
 #        but will rebuild much faster on a machine with many CPU cores
-batch-rebuild-stubs-parallel:
-	sh tools/auto_build_parallel.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) -noskip
+batch-rebuild-stubs-parallel: sigfinders
+	sh tools/auto_build_parallel.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) start -noskip
+
+# *nix version, may work on Windows too
+# Note:- needs GNU Parallel, runs one job per CPU core
+batch-rebuild-stubs-gnu-parallel: sigfinders
+	sh tools/auto_build_parallel.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) echo -noskip | parallel
 
 batch-clean:
 	$(MAKE) -C tools clean
