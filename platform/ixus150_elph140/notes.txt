@@ -1,0 +1,53 @@
+************************************
+IXUS150/ELPH140 Notes 
+************************************
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to [?] Help in the options.
+The Video button is used as RAW / Debug shortcut.
+
+This camera does not have an adjustable aperture. It does have an ND filter.
+
+This is an alpha port, use at your own risk!
+
+TESTED
+******
+(TODO tests were done with non-standard MEMISOSTART)
+usb remote hook - simple plug / unplug test
+RAW/DNG capture (tested in P mode only)
+llibtst.lua
+shutter, iso and ND override (not comprehensively)
+ptp control, rec/play switching
+zebra, histogram
+dark frame control - note issue below
+current bitmap buffer
+PTP live view (some modes such as fisheye may not work)
+fast live view buffer
+led functions
+remote capture / filewrite hook (tested JPEG only)
+extra long exposures / exp_drv task
+ubtest.bas
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
+exmem support (note, camera has ~3 mb regular heap free on startup with CHDK)
+
+OTHER ISSUES
+************
+Dark frame control: changes to this setting only take effect _after_ the next shot
+The hide OSD when pressing DISP in half shoot shortcut is not available, since the camera has no DISP key
+
+KNOWN BUGS
+**********
+DNG color matrix is copy+paste from Ixus160 (which is likely also copied)
+
+DEVELOPER NOTES
+***************
+- there's space that appears to be unused, after the DryOS kernel:
+  kernel region starts at 0x6b1000, ends at 0x6f0fff, free from 0x6c1404
+- camera live view runs at 25 frames per second
+- strange out-of-memory situation occured a few times during early testing, reason unknown
+- most DryOS r54 kernel functions no longer accept invalid (such as zero) object IDs
+  http://chdk.setepontos.com/index.php?topic=12516.0
+
