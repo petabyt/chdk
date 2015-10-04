@@ -1411,16 +1411,6 @@ int mode_is_video(int m)
             m==MODE_VIDEO_COLOR_SWAP ||
             m==MODE_VIDEO_MINIATURE ||
             m==MODE_VIDEO_TIME_LAPSE ||
-            m==MODE_VIDEO_PORTRAIT ||
-            m==MODE_VIDEO_NIGHT ||
-            m==MODE_VIDEO_INDOOR ||
-            m==MODE_VIDEO_FOLIAGE ||
-            m==MODE_VIDEO_SNOW  ||
-            m==MODE_VIDEO_BEACH ||
-            m==MODE_VIDEO_AQUARIUM ||
-            m==MODE_VIDEO_SUPER_MACRO ||
-            m==MODE_VIDEO_STITCH ||
-            m==MODE_VIDEO_MANUAL ||
             m==MODE_VIDEO_IFRAME_MOVIE
         // not clear if this should be considered a video mode ?
         //  m==MODE_VIDEO_MOVIE_DIGEST

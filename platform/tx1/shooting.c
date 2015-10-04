@@ -104,20 +104,6 @@ const CapturemodeMap modemap[] = {
     { MODE_SNOW,               16403 },
     { MODE_BEACH,              16404 },
     { MODE_AQUARIUM,           16407 },
-    // TODO this appears to be the standard mode+1024 for cameras with a video button - most of these can go away when we handle that more sanely
-//    { MODE_VIDEO_STD,          33792 },  // UPDATE : these are not real modes - see http://chdk.setepontos.com/index.php?topic=12163.0
-//    { MODE_VIDEO_MANUAL,       33796 },  //
-//    { MODE_VIDEO_COLOR_ACCENT, 34330 },  //
-//    { MODE_VIDEO_COLOR_SWAP,   34331 },  //
-//    { MODE_VIDEO_STITCH,       34314 },  // 
-//    { MODE_VIDEO_PORTRAIT,     17421 },  //
-//    { MODE_VIDEO_NIGHT,        17419 },  // 
-//    { MODE_VIDEO_INDOOR,       17425 },  //
-//    { MODE_VIDEO_FOLIAGE,      17426 },  //
-//    { MODE_VIDEO_SNOW,         17427 },  //
-//    { MODE_VIDEO_BEACH,        17428 },  //
-//    { MODE_VIDEO_AQUARIUM,     17431 },  //
-//    { MODE_VIDEO_SUPER_MACRO,  34313 },  // end
 };
 
 #include "../generic/shooting.c"

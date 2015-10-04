@@ -104,17 +104,6 @@ enum {
     MODE_VIDEO_SUPER_SLOW   , // IXUS 310 HS Super Slow Motion Movie
     MODE_VIDEO_TIME_LAPSE   ,
 
-    MODE_VIDEO_AQUARIUM     , // tx1 junk
-    MODE_VIDEO_BEACH        , // tx1 junk
-    MODE_VIDEO_FOLIAGE      , // tx1 junk
-    MODE_VIDEO_INDOOR       , // tx1 junk
-    MODE_VIDEO_MANUAL       , // tx1 junk
-    MODE_VIDEO_NIGHT        , // tx1 junk
-    MODE_VIDEO_PORTRAIT     , // tx1 junk
-    MODE_VIDEO_SNOW         , // tx1 junk
-    MODE_VIDEO_STITCH       , // tx1 junk
-    MODE_VIDEO_SUPER_MACRO  , // tx1 junk
-
     MODE_HYBRID_AUTO        , // sx280
 };
 
