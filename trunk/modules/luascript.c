@@ -274,8 +274,8 @@ int lua_script_start_file(char const* filename)
     static char loader[256];
     char *wrapper = "";
     if ((script_version.major == 1) && (script_version.minor == 3))
-        wrapper = "require(\"wrap13\"); ";
-    sprintf(loader, "%slocal sub, err = loadfile(\"%s\"); collectgarbage(); if sub then sub() else error(err) end", wrapper, filename);
+        wrapper = "require'wrap13' ";
+    sprintf(loader, "%slocal s,e=loadfile'%s' collectgarbage() if not s then error(e) end s()", wrapper, filename);
     return lua_script_start(loader, 0);
 }
 
@@ -319,14 +319,14 @@ int lua_script_run(void)
 // Mimic uBasic logic, return 0 to trigger script interrupt immediately
 int lua_run_restore()
 {
-	lua_getglobal(Lt, "restore");
-	if (lua_isfunction(Lt, -1)) {
-		if (lua_pcall( Lt, 0, 0, 0 )) {
-			script_console_add_line( (long)lua_tostring( Lt, -1 ) );
-		}
+    lua_getglobal(Lt, "restore");
+    if (lua_isfunction(Lt, -1)) {
+        if (lua_pcall( Lt, 0, 0, 0 )) {
+            script_console_add_line( (long)lua_tostring( Lt, -1 ) );
+        }
         if (lua_script_is_ptp == 0)
             script_console_add_error(LANG_CONSOLE_TEXT_FINISHED);
-	}
+    }
     return 0;
 }
 
@@ -348,10 +348,10 @@ static int lua_get_key_arg( lua_State * L, int narg )
 static unsigned on_off_value_from_lua_arg( lua_State* L, int index)
 {
   if( lua_isboolean(L,index) ) {
-  	return lua_toboolean(L,index);
+    return lua_toboolean(L,index);
   }
   else {
-  	return luaL_checknumber(L,index); 
+    return luaL_checknumber(L,index); 
   }
 }
 
@@ -1105,7 +1105,7 @@ static void return_string_selected(const char *str) {
     camera_info.state.state_kbd_script_run = SCRIPT_STATE_RAN;
 
     // Push selected file as script return value
-	lua_pushstring( Lt, (str && str[0])? str : NULL );
+    lua_pushstring( Lt, (str && str[0])? str : NULL );
 }
 
 static int action_stack_AS_WAIT_MODULE()
@@ -1809,7 +1809,7 @@ static unsigned levent_id_from_lua_arg( lua_State* L, int index)
   unsigned event_id;
   if (lua_type(L, index) == LUA_TSTRING) {
     const char *ev_name = lua_tostring(L, index);
-  	event_id = levent_id_for_name(ev_name);
+    event_id = levent_id_for_name(ev_name);
     if (event_id == 0) {
         return luaL_error( L, "bad event name '%s'", ev_name );
     }
@@ -1817,7 +1817,7 @@ static unsigned levent_id_from_lua_arg( lua_State* L, int index)
   // could check here if it is in the table, but even valid ones can crash
   // so we avoid searching the table if given a number
   else if (lua_type(L,index) == LUA_TNUMBER){
-  	event_id = lua_tonumber(L,index);
+    event_id = lua_tonumber(L,index);
   }
   else {
     return luaL_error( L, "expected event name or id" );
@@ -1832,10 +1832,10 @@ static unsigned levent_id_from_lua_arg( lua_State* L, int index)
 static unsigned levent_index_from_id_lua_arg( lua_State* L, int index )
 {
   if (lua_type(L, index) == LUA_TSTRING) {
-  	return levent_index_for_name(lua_tostring(L, index));
+    return levent_index_for_name(lua_tostring(L, index));
   }
   else if (lua_type(L,index) == LUA_TNUMBER){
-  	return levent_index_for_id(lua_tonumber(L,index));
+    return levent_index_for_id(lua_tonumber(L,index));
   }
   else {
     return luaL_error( L, "expected string or number" );
@@ -1886,7 +1886,7 @@ static int luaCB_get_levent_def_by_index( lua_State* L )
 {
   unsigned i = luaL_checknumber(L,1);
   if(i >= levent_count()) {
-  	lua_pushnil(L);
+    lua_pushnil(L);
     return 1;
   }
   lua_pushstring(L, levent_table[i].name);
@@ -1902,7 +1902,7 @@ static int luaCB_get_levent_def_by_index( lua_State* L )
   event is an event id (number) or name (string).
   unk is an optional number whose meaning is unknown, defaults to zero. 
     Based on code, other values would probably be a pointer.
-	This is NOT the 3rd item in the event table.
+    This is NOT the 3rd item in the event table.
 */
 static int luaCB_post_levent_to_ui( lua_State* L )
 {
@@ -1998,7 +1998,7 @@ static int luaCB_is_capture_mode_valid( lua_State* L )
   before doing anything that requires the new mode. e.g.
   set_record(true)
   while not get_mode() do
-  	sleep(10)
+    sleep(10)
   end
   uses switch_mode_usb if required
 */
@@ -2102,11 +2102,11 @@ NOTE:
 Many eventprocs are not registered by default, but can be loaded by calling another event proc
 Some useful ones are
 SystemEventInit
-	includes AllocateMemory, FreeMemory, sprintf, memcpy, Fut functions, log ...
+    includes AllocateMemory, FreeMemory, sprintf, memcpy, Fut functions, log ...
 UI_RegistDebugEventProc
-	includes capture mode functions, PTM_ functions and much more 
+    includes capture mode functions, PTM_ functions and much more 
 RegisterProductTestEvent
-	includes PT_ functions
+    includes PT_ functions
 
 Others:
 RegisterShootSeqEvent
@@ -2268,10 +2268,7 @@ static int luaCB_load_config_file( lua_State* L ) {
 }
 
 static int luaCB_set_file_attributes( lua_State* L ) {
-    unsigned int argc = lua_gettop(L);
-    if( argc>=2 ) {
-        lua_pushnumber(L, SetFileAttributes(luaL_checkstring(L, 1), luaL_checknumber(L, 2)));
-    }
+    lua_pushnumber(L, SetFileAttributes(luaL_checkstring(L, 1), luaL_checknumber(L, 2)));
     return 1;
 }
 
@@ -2657,7 +2654,7 @@ static int luaCB_shoot_hook_count( lua_State* L )
 
 //------------------------------------------------------------------------------------------
 
-#define FUNC( X ) { #X,	luaCB_##X },
+#define FUNC( X ) { #X, luaCB_##X },
 static const luaL_Reg chdk_funcs[] = {
     FUNC(shoot)
     FUNC(sleep)
@@ -2994,10 +2991,10 @@ ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(ModuleInfo),
-    SCRIPT_API_VERSION,			// Module version
+    SCRIPT_API_VERSION,         // Module version
 
-    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
-    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,   // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
     (int32_t)"Lua",
     MTYPE_SCRIPT_LANG,          //Run Lua Scripts
