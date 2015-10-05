@@ -103,4 +103,5 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                         1
 
+    #define CAM_REAR_CURTAIN 1
 //--------------------------------------------------
