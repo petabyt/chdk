@@ -24,8 +24,8 @@ displayed as a string when the mode is set, and can also be found in canon
 manuals and spec lists. If in doubt refer to the canon manuals for description of
 the modes function, and compare with existing cameras. Add a new enum value at the
 end of the list if it doesn't closely match any existing function.
-- Currently, modes under the SCN menu are given the SCN prefix, even if an equivalent
-non-scene constant already exists.
+- As of CHDK 1.4, "scene" modes are not distinguished frome other modes. Previous
+versions of CHDK used different enum values, e.g. MODE_PORTRAIT and MODE_SCN_PORTRAIT
 - Some cameras have C, or C1 and C2 modes. These are not actual shooting modes, but
 are used to load saved settings for other modes like M, P etc. These modes can be
 set using _SetCurrrentCaptureMode, but are not currently supported by the modemap
