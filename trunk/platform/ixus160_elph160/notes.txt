@@ -1,6 +1,7 @@
 ************************************
 IXUS160 / ELPH160 Notes 
 ************************************
+Porting thread: http://chdk.setepontos.com/index.php?topic=12321
 
 To enter CHDK <ALT> mode use the [>] Play button.
 
@@ -8,7 +9,6 @@ This is a beta port, use at your own risk!
 
 TESTED
 ******
-
 Filewrite task
 RAW/DNG shooting
 PTP support
@@ -16,15 +16,11 @@ Overrides
 
 NOT IMPLEMENTED
 ***************
-
 video stuff
 exmem support
 
 KNOWN BUGS
 **********
-- Power up mode detection does not work as expected on CHDK.
-  Camera always start in REC mode. 
-- Hooktest script fails  
 
  
 THANKS
