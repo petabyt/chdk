@@ -25,7 +25,7 @@ unsigned char ply_colors[] =
         (CHDK_COLOR_BASE+10),       // Yellow
         (CHDK_COLOR_BASE+11),       // Dark Yellow
         (CHDK_COLOR_BASE+12),       // Light Yellow
-        0x1a,                       // Dummy for Transparent Dark Grey
+        (CHDK_COLOR_BASE+13),       // Transparent Dark Grey
         (CHDK_COLOR_BASE+9),        // Magenta
 };
 
@@ -50,7 +50,7 @@ unsigned char rec_colors[] =
         (CHDK_COLOR_BASE+10),       // Yellow
         (CHDK_COLOR_BASE+11),       // Dark Yellow
         (CHDK_COLOR_BASE+12),       // Light Yellow
-        0x1a,                       // Dummy for Transparent Dark Grey
+        (CHDK_COLOR_BASE+13),       // Transparent Dark Grey
         (CHDK_COLOR_BASE+9),        // Magenta
 };
 
