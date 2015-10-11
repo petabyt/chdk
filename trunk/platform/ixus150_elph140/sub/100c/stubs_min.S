@@ -1,7 +1,7 @@
 #include "stubs_asm.h"
 
-// guessed from sub_FF85FE8C -> sub_FF860494
-DEF(recreview_hold, 0x000027B8)
+// guessed from sub_ff9e885c (see string in sub_ff85fde8)
+DEF(recreview_hold, 0x00008898)
 
 // 0xff8803a8 (0x3228), 0xff8803e0 (0x54)
 DEF(viewport_fb_d, 0x0000327c)
