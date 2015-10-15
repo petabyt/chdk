@@ -34,7 +34,7 @@ static void draw_pixel_std(unsigned int offset, color cl)
 #endif
 
     register int cli = cl ^ 0xffffffff;
-    extern volatile char *stencil_buffer[];
+    extern volatile char *opacity_buffer[];
     //extern int active_bitmap_buffer;
     static unsigned int prev_offs = 0xffffffff;
     register unsigned int offs2 = (offset>>1)<<2;
@@ -55,7 +55,7 @@ static void draw_pixel_std(unsigned int offset, color cl)
             bitmap_buffer[active_bitmap_buffer][offs2+1] = (cli&0xc0);    // Y
         }
         // simple transparency
-        stencil_buffer[active_bitmap_buffer][offset] = (cli&16)?0x60:0xff;
+        opacity_buffer[active_bitmap_buffer][offset] = (cli&16)?0x60:0xff;
     }
     else // color==0, black, fully transparent
     {
@@ -74,7 +74,7 @@ static void draw_pixel_std(unsigned int offset, color cl)
             bitmap_buffer[active_bitmap_buffer][offs2+1] = 0;    // Y
         }
         // fully transparent
-        stencil_buffer[active_bitmap_buffer][offset] = 0;
+        opacity_buffer[active_bitmap_buffer][offset] = 0;
     }
 #endif
 }
@@ -114,16 +114,16 @@ int draw_test_guard()
 
 #else // DIGIC 6
 
-extern volatile char *stencil_buffer[];
+extern volatile char *opacity_buffer[];
 
 void draw_set_guard()
 {
-    stencil_buffer[active_bitmap_buffer][0] = 0x42;
+    opacity_buffer[active_bitmap_buffer][0] = 0x42;
 }
 
 int draw_test_guard()
 {
-    if (stencil_buffer[active_bitmap_buffer][0] != 0x42) return 0;
+    if (opacity_buffer[active_bitmap_buffer][0] != 0x42) return 0;
     return 1;
 }
 

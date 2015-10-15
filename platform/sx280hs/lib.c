@@ -178,16 +178,8 @@ void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
 
-volatile char *stencil_buffer[2] = {(char*)0x41718600, (void*)0x41796f00};
-
-void *vid_get_bitmap_active_stencil() { // no longer needed?
-    if (active_bitmap_buffer&1) {
-        return (void*)0x41796f00;
-    }
-    else {
-        return (void*)0x41718600;
-    }
-}
+// the opacity buffer defines opacity for the bitmap overlay's pixels
+volatile char *opacity_buffer[2] = {(char*)0x41718600, (void*)0x41796f00};
 
 void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
