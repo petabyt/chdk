@@ -364,6 +364,11 @@ static void delete_dir(const char *path)
     remove(path);
 }
 
+// helper to handle gui lfn option
+static DIR * opendir_fselect(const char *path) {
+    return opendir_chdk(path,(conf.disable_lfn_parser_ui?OPENDIR_FL_NONE:OPENDIR_FL_CHDK_LFN));
+}
+
 // Uncached memory buffer for file copy
 // Keep byffer after allocation (until module exits)
 static unsigned char    *ubuf = 0;
@@ -525,7 +530,7 @@ static void process_dir(const char *parent, const char *name, int nested, void (
     }
 
     // Open directory
-    d = opendir(path);
+    d = opendir_fselect(path);
 
     if (d)
     {
@@ -615,9 +620,9 @@ static void gui_fselect_read_dir()
     gui_fselect_free_data();
 
     if ((items.dir[0] == 'A') && (items.dir[1] == 0))
-        d = opendir("A/");
+        d = opendir_fselect("A/");
     else
-        d = opendir(items.dir);
+        d = opendir_fselect(items.dir);
 
     if (d)
     {
@@ -929,7 +934,7 @@ static int find_jpg(const char *folder, const char *match, int nested)
     int         rv = 0;
 
     // Open directory
-    d = opendir(folder);
+    d = opendir_fselect(folder);
 
     if (d)
     {

@@ -60,6 +60,7 @@
             rename
             stat
             opendir
+            opendir_chdk
             readdir
             closedir
             mkdir

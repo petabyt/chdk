@@ -188,7 +188,13 @@ typedef struct
     struct dirent   dir;        // Last info returned from readdir
 } DIR;
 
-extern DIR*           opendir (const char* name);
+// opendir_chdk has non-standard second arg
+#define OPENDIR_FL_NONE     0x0 
+#define OPENDIR_FL_CHDK_LFN 0x1 // use CHDK long file name support, if available.
+                               // No effect on VxWorks, which supports LFNs natively
+                               // Non-CHDK LFN support on DryOS varies by OS version and filesystem
+extern DIR*           opendir (const char* name); // wrapper of opendir_chdk(name,FL_NONE) for easy compatibility
+extern DIR*           opendir_chdk (const char* name,unsigned flags);
 extern struct dirent* readdir (DIR*);
 extern int            closedir (DIR*);
 //extern void           rewinddir (DIR*);   // Not used

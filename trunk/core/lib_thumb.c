@@ -15,6 +15,11 @@ extern void *fw_opendir(const char* name);
 
 DIR *opendir(const char* name)
 {
+    return opendir_chdk(name,OPENDIR_FL_NONE);
+}
+
+DIR *opendir_chdk(const char* name, unsigned flags)
+{
     // Create CHDK DIR structure
     DIR *dir = malloc(sizeof(DIR));
     // If malloc failed return failure
@@ -23,7 +28,7 @@ DIR *opendir(const char* name)
 #if defined(CAM_DRYOS)
     extern int get_fstype(void);
     // try built-in routine first, but only on FAT
-    if ((get_fstype() < 4) && (!conf.disable_lfn_parser))
+    if ((get_fstype() < 4) && (flags & OPENDIR_FL_CHDK_LFN))
     {
         dir->fw_dir = 0;
         dir->cam_DIR = CHDKOpenDir(name);
