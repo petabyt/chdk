@@ -963,7 +963,7 @@ static CMenuItem misc_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_ENABLE_UNSAFE_IO,           MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.allow_unsafe_io, (int)gui_unsafe_io_warning ),
 #endif
 #if defined(CAM_DRYOS)
-    MENU_ITEM   (0x5c,LANG_MENU_DISABLE_LFN_SUPPORT,        MENUITEM_BOOL,                  &conf.disable_lfn_parser, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_DISABLE_LFN_SUPPORT,        MENUITEM_BOOL,                  &conf.disable_lfn_parser_ui, 0 ),
 #endif
     MENU_ITEM   (0x33,LANG_SD_CARD,                         MENUITEM_SUBMENU,               &sdcard_submenu,                    0 ),
 #ifdef OPT_DEBUGGING

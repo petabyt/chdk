@@ -452,7 +452,8 @@ typedef struct
 
     int allow_unsafe_io;        // Allow open/close/write to continue if fileio_semaphore times out (instead of returning error)
 
-    int disable_lfn_parser;     // 0 = use built-in opendir functions for long filenames on dryos, 1 = only use firmware opendir
+    int disable_lfn_parser_ui;     // 0 = use built-in opendir functions for long filenames in filebrowser on dryos,
+                                   // 1 = only use firmware opendir
 
 } Conf;
 

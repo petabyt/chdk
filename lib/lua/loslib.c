@@ -256,9 +256,24 @@ static int os_mkdir (lua_State *L) {
 #endif
 }
 
+
+static int get_table_optbool(lua_State *L, int narg, const char *fname, int d)
+{
+    int r;
+	lua_getfield(L, narg, fname);
+    // not set - use default
+	if(lua_isnil(L,-1)) {
+		r=d;
+	} else {// otherwise, treat as bool
+        r=lua_toboolean(L,-1); 
+    }
+	lua_pop(L,1);
+    return r;
+}
+
 /*
   syntax
-    t=os.listdir("name",[showall])
+    t=os.listdir("name",[showall|opts])
   returns array of filenames, or nil, strerror, errno
   if showall is true, t includes ".", ".." and deleted entries
   NOTE except for the root directory, names ending in / will not work
@@ -267,9 +282,15 @@ static int os_listdir (lua_State *L) {
   DIR *dir;
   struct dirent *de;
   const char *dirname = luaL_checkstring(L, 1);
-  int all=lua_toboolean(L, 2);
+  int all=0,od_flags=OPENDIR_FL_CHDK_LFN;
+  if(lua_istable(L,2)) {
+    all=get_table_optbool(L,2,"showall",0);
+    od_flags=(get_table_optbool(L,2,"chdklfn",1))?OPENDIR_FL_CHDK_LFN:OPENDIR_FL_NONE;
+  } else {
+    all=lua_toboolean(L, 2);
+  }
   int i=1;
-  dir = opendir(dirname);
+  dir = opendir_chdk(dirname,od_flags);
   if(!dir) 
     return os_pushresult(L, 0 , dirname);
   lua_newtable(L); 
@@ -362,12 +383,18 @@ static int idir_gc(lua_State *L) {
 static int os_idir (lua_State *L) {
   DIR *dir;
   const char *dirname = luaL_checkstring(L, 1);
-  int all=lua_toboolean(L, 2);
+  int all=0,od_flags=OPENDIR_FL_CHDK_LFN;
+  if(lua_istable(L,2)) {
+    all=get_table_optbool(L,2,"showall",0);
+    od_flags=(get_table_optbool(L,2,"chdklfn",1))?OPENDIR_FL_CHDK_LFN:OPENDIR_FL_NONE;
+  } else {
+    all=lua_toboolean(L, 2);
+  }
 
   lua_pushcfunction(L, idir_iter);
 
   idir_udata_t *ud = lua_newuserdata(L,sizeof(idir_udata_t));
-  ud->dir = opendir(dirname); // may be null, in which case iterator will stop on first iteration
+  ud->dir = opendir_chdk(dirname,od_flags); // may be null, in which case iterator will stop on first iteration
                                 // no obvious way to return error status
   ud->all = all;
 
