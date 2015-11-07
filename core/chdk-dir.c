@@ -21,8 +21,9 @@
 /*
  * Only a restricted set of ascii characters is supported in long filenames, falls back to short names otherwise
  * Uses less memory than the cameras' ReadFDir functions
- * Only meant to be used on earlier DryOS cameras which don't support exFAT
  * v 1.1: removed CHDK wrappers
+ * v 1.2: - add basic filename and total path length limit check (return short names when they are exceeded)
+ *        - bugfix: ignore terminating zero char of LFN
  */
 
 #include "stdlib.h"
@@ -46,7 +47,9 @@ typedef struct
         unsigned char *feu;
     };
     int     islfn;              // long file name is being read (state)
-    int     lfnpos;             // position in the long output string
+    int     lfnpos;             // position in the long output string (starts from 1 due to the terminating zero char)
+
+    int     mnl;                // maximum name length
 
     char    fn[FNMAX+1];        // current file name stored here by CHDKReadDir
 } myDIR_s;
@@ -94,6 +97,8 @@ void *CHDKOpenDir(const char* name)
                 dir->fn[0] = 0;
                 dir->dc = dirc;
                 dir->cp = -1;
+                // determine name length limit ('-1' is due to the extra '/' in a full filename)
+                dir->mnl = MIN(CAM_MAX_FNAME_LENGTH,CAM_MAX_PATH_LENGTH-strlen(name)-1);
                 return dir;
             }
             else
@@ -148,7 +153,7 @@ void read_lfn_entry(myDIR_s* dir)
     {
         // read unicode char, reading as halfword is not working on armv5 due to alignment
         int uch = *(unsigned char*)(dir->fe+lfnchpos[n])+((*(unsigned char*)(dir->fe+lfnchpos[n]+1))<<8);
-        if (uch != 0xffff)
+        if ((uch != 0xffff) && (uch != 0))  // unused space is filled with '0xffff' chars and zero or one '0x0' char
         {
             if ( (check_fn_char(uch) < 0) ) // disable lfn if any chars are outside 7bit ascii
             {
@@ -222,12 +227,13 @@ int CHDKReadDir(void *d, void* dd)
                     cs = (((cs & 1) << 7) | ((cs & 0xfe) >> 1)) + dir->feu[n];
                 }
                 // checksum computed
-                if ( cs == lfnchsum ) // lfn is valid and belongs to this short name -> return
+                if ( (cs == lfnchsum) && (dir->lfnpos-1 <= dir->mnl) ) 
                 {
+                    // lfn is valid, not too long, and belongs to this short name -> return
                     strcpy(dd, (dir->fn)+FNMAX-dir->lfnpos+1);
                     return (int)((dir->fn)+FNMAX-dir->lfnpos+1);
                 }
-                else // invalid checksum, try re-interpreting entry
+                else // invalid checksum or name too long, try re-interpreting entry
                 {
                     rewind_entry(dir);
                     dir->islfn = 0;
@@ -249,7 +255,7 @@ int CHDKReadDir(void *d, void* dd)
                     }
                     dir->islfn = dir->fe[0]; // number of lfn entries left + 1
                     read_lfn_entry(dir);
-                    if ( dir->lfnpos > 99 ) // CHDK limit (100 chars) hit, skip lfn
+                    if ( dir->lfnpos > 99+1 ) // CHDK limit (100 chars) hit, skip lfn
                     {
                         dir->islfn = 0;
                         continue;

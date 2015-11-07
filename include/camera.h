@@ -268,6 +268,10 @@
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500
 
+    // Below limits are for the CHDK LFN support routines (DryOS only)
+    #define CAM_MAX_FNAME_LENGTH            99  // camera can safely use filenames not longer than this (99 is a CHDK limit actually)
+    #define CAM_MAX_PATH_LENGTH             255 // maximum path+filename length
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------
