@@ -17,12 +17,12 @@ long lens_get_focus_pos()
 
 long lens_get_focus_pos_from_lens()
 {
-//    static long v=MAX_DIST;
+//    static long v=CAMERA_MAX_DIST;
 //    return (kbd_is_key_pressed(KEY_SHOOT_HALF) || camera_info.state.state_kbd_script_run  || shooting_get_common_focus_mode())?v=_GetFocusLensSubjectDistanceFromLens():v;
     if (rec_mode_active())
         return _GetFocusLensSubjectDistanceFromLens();
     else
-        return MAX_DIST;
+        return CAMERA_MAX_DIST;
 }
 
 

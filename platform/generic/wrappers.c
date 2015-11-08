@@ -230,7 +230,7 @@ void lens_set_zoom_speed(long newspd)
 
 void lens_set_focus_pos(long newpos)
 {
-    if (newpos >= MAX_DIST) newpos = INFINITY_DIST; // Set to infinity value that will work on all cameras
+    if (newpos >= CAMERA_MAX_DIST) newpos = INFINITY_DIST; // Set to infinity value that will work on all cameras
     _MoveFocusLensToDistance((short*)&newpos);
     while ((shooting_is_flash_ready()!=1) || (focus_busy)) msleep(10);
     newpos = _GetFocusLensSubjectDistance();

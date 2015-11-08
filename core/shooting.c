@@ -988,7 +988,7 @@ void shooting_update_dof_values()
     hyp_1e3 = shooting_get_hyperfocal_distance_1e3_f(av_1e3, fl);
     if (hyp_1e3>0) {
       hyp = (hyp_1e3+500)/1000;
-      camera_info.dof_values.min_stack_distance = MAX_DIST;
+      camera_info.dof_values.min_stack_distance = CAMERA_MAX_DIST;
       v = ((hyp_1e3 - fl)/250 + 2 + 1)/2;
       if (v>0) {
         int m = ((fl*((fl - hyp_1e3)/1000 - 1)/500)/v + 1)/2;
@@ -1319,8 +1319,8 @@ static void shooting_subject_distance_bracketing(int when)
     bracketing.dsubj_dist += (bracketing.subj_dist_step * bracket_delta[conf.bracket_type][bracketing.shoot_counter&1]);
     // Calculate new SD
     int value = bracketing.subj_dist + (bracketing.dsubj_dist * bracket_steps[conf.bracket_type][bracketing.shoot_counter&1]);
-    if (value < MIN_DIST) value = MIN_DIST;
-    else if (value > MAX_DIST) value = MAX_DIST;
+    if (value < CAMERA_MIN_DIST) value = CAMERA_MIN_DIST;
+    else if (value > CAMERA_MAX_DIST) value = CAMERA_MAX_DIST;
 
     // Inc for next shot
     bracketing.shoot_counter++;

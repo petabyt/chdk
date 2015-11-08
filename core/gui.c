@@ -1254,12 +1254,12 @@ const char* gui_subj_dist_override_value_enum(int change, int arg)
         strcpy(buf,"   Inf.");
     else
     {
-        // Increment / decrement the SD value, wrapping around from MIN_DIST to MAX_DIST
+        // Increment / decrement the SD value, wrapping around from CAMERA_MIN_DIST to CAMERA_MAX_DIST
         conf.subj_dist_override_value += (change/**koef*/);
-        if (conf.subj_dist_override_value < MIN_DIST)
-            conf.subj_dist_override_value = MAX_DIST;
-        else if (conf.subj_dist_override_value > MAX_DIST)
-            conf.subj_dist_override_value = MIN_DIST;
+        if (conf.subj_dist_override_value < CAMERA_MIN_DIST)
+            conf.subj_dist_override_value = CAMERA_MAX_DIST;
+        else if (conf.subj_dist_override_value > CAMERA_MAX_DIST)
+            conf.subj_dist_override_value = CAMERA_MIN_DIST;
         // philmoz 19/6/2014 - if SD override is < distance from sensor to front of lens (for current zoom) then adjust SD override
         if (conf.subj_dist_override_value < shooting_get_lens_to_focal_plane_width())
             conf.subj_dist_override_value = shooting_get_lens_to_focal_plane_width();
@@ -1449,7 +1449,7 @@ static CMenuItem av_override_items[2] = {
 #endif
 
 static CMenuItem sd_override_items[2] = {
-    MENU_ITEM   (0, 0,   MENUITEM_ENUM|MENUITEM_SD_INT,                     gui_subj_dist_override_value_enum,  MAX_DIST ),
+    MENU_ITEM   (0, 0,   MENUITEM_ENUM|MENUITEM_SD_INT,                     gui_subj_dist_override_value_enum,  CAMERA_MAX_DIST ),
     MENU_ITEM   (0, 0,   MENUITEM_ENUM,                                     gui_subj_dist_override_koef_enum,   0 ),
 };
 
@@ -2635,7 +2635,7 @@ static void sd_override_koef(int direction)
             conf.subj_dist_override_koef = SD_OVERRIDE_ON;
             menu_set_increment_factor(1);
         }
-        else if (menu_get_increment_factor() < menu_calc_max_increment_factor(MAX_DIST))
+        else if (menu_get_increment_factor() < menu_calc_max_increment_factor(CAMERA_MAX_DIST))
         {
             menu_set_increment_factor(menu_get_increment_factor() * 10);
         }
@@ -2649,7 +2649,7 @@ static void sd_override_koef(int direction)
         if (conf.subj_dist_override_koef==SD_OVERRIDE_INFINITY)
         {
             conf.subj_dist_override_koef = SD_OVERRIDE_ON;
-            menu_set_increment_factor(menu_calc_max_increment_factor(MAX_DIST));
+            menu_set_increment_factor(menu_calc_max_increment_factor(CAMERA_MAX_DIST));
         }
         else if (menu_get_increment_factor() > 1)
         {
@@ -2723,7 +2723,7 @@ int gui_chdk_kbd_process()
         {
             // In manual focus mode so update shooting distance
 #if CAM_HAS_ZOOM_LEVER
-            conf.subj_dist_override_value=MAX_DIST;
+            conf.subj_dist_override_value=CAMERA_MAX_DIST;
             shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
 #else
             gui_subj_dist_override_koef_enum(1,0);
@@ -2777,7 +2777,7 @@ int gui_chdk_kbd_process()
             }
             else if (kbd_is_key_clicked(SHORTCUT_SET_INFINITY))
             {
-                conf.subj_dist_override_value=MAX_DIST;
+                conf.subj_dist_override_value=CAMERA_MAX_DIST;
                 shooting_set_focus(shooting_get_subject_distance_override_value(), SET_NOW);
                 reset_helper = 1;
             }
