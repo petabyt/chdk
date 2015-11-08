@@ -649,9 +649,13 @@ static void do_save_param_file()
         sc_param *p = script_params;
         while (p)
         {
-            // Only need to save name and value - saved as #name=value
-            sprintf(buf,"#%s=%d\n",p->name,p->val);
-            write(fd, buf, strlen(buf));
+            // Only save parameters, skip 'subtitle' lines
+            if (p->name != 0)
+            {
+                // Only need to save name and value - saved as #name=value
+                sprintf(buf,"#%s=%d\n",p->name,p->val);
+                write(fd, buf, strlen(buf));
+            }
             p = p->next;
         }
         close(fd);
