@@ -104,8 +104,6 @@
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 99     // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                 2000000 // see SX220
 
     #define CAM_HAS_GPS                     1
 

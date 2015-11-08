@@ -89,8 +89,6 @@
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 88      // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                 66490   // Override max subject distance
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 

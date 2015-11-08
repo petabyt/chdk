@@ -97,8 +97,6 @@
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                     100         // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
 
     #define CAM_HAS_GPS                         1
 
