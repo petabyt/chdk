@@ -194,8 +194,6 @@ void shooting_set_playrec_mode(int mode);
 
 /******************************************************************/
 
-#define MIN_DIST                    CAMERA_MIN_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
-#define MAX_DIST                    CAMERA_MAX_DIST     // Defined in camera.h (can be overridden in platform_camera.h)
 #define INFINITY_DIST               0xFFFFFFFF          // Value to send to firmware to select 'infinity' focus
 
 int get_focal_length(int zp);
