@@ -235,7 +235,7 @@
     #undef  CAM_HAS_HI_ISO_AUTO_MODE            // Define if camera has 'HI ISO Auto' mode (as well as Auto ISO mode), needed for adjustment in user auto ISO menu 
 
     #define CAMERA_MIN_DIST         0           // Define min distance that can be set in _MoveFocusLensToDistance (allow override - e.g. G12 min dist = 1)
-    #define CAMERA_MAX_DIST         65535       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
+    #undef  CAMERA_MAX_DIST                     // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40, default defined below depending on OS)
 
     #undef  DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   // Draw pixels on active bitmap buffer only.
                                                 // Requires bitmap_buffer & active_bitmap_buffer location in stubs_min.S or stubs_entry.S.
@@ -278,6 +278,26 @@
 
 // Include the settings file for the camera model currently being compiled.
 #include "platform_camera.h"
+
+// Sanity check for DryOS defines
+#if defined(CAM_DRYOS_2_3_R39) || defined(CAM_DRYOS_2_3_R47)
+    #ifndef CAM_DRYOS_2_3_R31
+        #define CAM_DRYOS_2_3_R31 1
+    #endif
+#endif
+
+// DryOS r31 and later cameras use 32bit subject distance values
+// set a default limit that's high enough
+// earlier cameras need 65535 as default
+#ifdef CAM_DRYOS_2_3_R31
+    #ifndef CAMERA_MAX_DIST
+        #define CAMERA_MAX_DIST 2000000
+    #endif
+#else
+    #ifndef CAMERA_MAX_DIST
+        #define CAMERA_MAX_DIST 65535
+    #endif
+#endif
 
 #if !defined(CAM_IS_VID_REC_WORKS)
 #if !defined(CAM_FILEIO_SEM_TIMEOUT)
