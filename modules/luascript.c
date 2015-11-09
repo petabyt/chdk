@@ -49,6 +49,30 @@
 #include "../lib/lua/lauxlib.h"
 #include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
 
+#ifdef THUMB_FW
+// provide div and mod behavior similar to preivous CPUs for digic 6, instead of triggering exception handler
+// used in lua core, see luaconf.h
+int chdk_luai_numdiv(int a, int b) {
+    if(!a) {
+       return 0;
+    }
+    if(b) {
+        return a/b;
+    }
+    if(a>0) {
+        return 0x7FFFFFFF;
+    } else {
+        return 0x80000000;
+    }
+}
+int chdk_luai_nummod(int a, int b) {
+    if(!b) {
+       return 0;
+    }
+    return a%b;
+}
+#endif
+
 lua_State* L;
 lua_State* Lt;
 

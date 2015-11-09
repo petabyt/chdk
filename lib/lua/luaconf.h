@@ -556,8 +556,16 @@
 #define luai_numadd(a,b)	((a)+(b))
 #define luai_numsub(a,b)	((a)-(b))
 #define luai_nummul(a,b)	((a)*(b))
+// reyalp - added
+// provide behavior similar to preivous CPUs for digic 6, instead of triggering exception handler
+#ifdef THUMB_FW
+#define luai_numdiv(a,b)	(chdk_luai_numdiv((a),(b)))
+#define luai_nummod(a,b)	(chdk_luai_nummod((a),(b)))
+#else
 #define luai_numdiv(a,b)	((a)/(b))
 #define luai_nummod(a,b)	((a)%(b))
+#endif
+
 #define luai_numpow(a,b)	(luai_ipow(a,b))
 #define luai_numunm(a)		(-(a))
 #define luai_numeq(a,b)		((a)==(b))
@@ -790,4 +798,7 @@ void dbg_dump_assert(const char *dumpname, const char *expr,const char *file, in
 #endif
 
 #endif
-
+#ifdef THUMB_FW
+int chdk_luai_numdiv(int a, int b);
+int chdk_luai_nummod(int a, int b);
+#endif
