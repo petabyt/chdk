@@ -398,6 +398,9 @@
             CreateTask
             ExitTask
 
+            SetHPTimerAfterNow
+            CancelHPTimer
+
             remotecap_get_target_support
             remotecap_set_target
             remotecap_using_dng_module

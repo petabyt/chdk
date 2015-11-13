@@ -1730,3 +1730,14 @@ int stop_usb_HPtimer()
 #endif
     return 0;
 }
+
+// HP timer functions, callbacks need to be ARM on VxWorks
+int SetHPTimerAfterNow(int delay, int(*good_cb)(int, int), int(*bad_cb)(int, int), int param)
+{
+    return _SetHPTimerAfterNow(delay,good_cb,bad_cb,param);
+}
+
+int CancelHPTimer(int handle)
+{
+    return _CancelHPTimer(handle);
+}

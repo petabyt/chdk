@@ -8,4 +8,8 @@
 
 extern long get_tick_count();
 
+extern int SetHPTimerAfterNow(int delay, int(*good_cb)(int, int), int(*bad_cb)(int, int), int param);
+extern int CancelHPTimer(int handle);
+
+
 #endif
