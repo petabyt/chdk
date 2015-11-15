@@ -21,7 +21,6 @@
 // don't override them again in here.
 
     #define CAM_DRYOS                       1
-    #define CAM_DRYOS_2_3_R31               1    // note : structure used by stat changes in R39
 
     #undef  CAM_CIRCLE_OF_CONFUSION
     #define CAM_CIRCLE_OF_CONFUSION         7   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)

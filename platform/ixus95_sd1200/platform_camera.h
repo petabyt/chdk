@@ -22,7 +22,6 @@
 
     #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
-    #define CAM_DRYOS_2_3_R31               1
 
     #define CAM_RAW_ROWPIX                  3720
     #define CAM_RAW_ROWS                    2772

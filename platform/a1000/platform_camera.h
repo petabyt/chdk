@@ -22,7 +22,6 @@
 
     #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
-    #define CAM_DRYOS_2_3_R31               1
 
     #define CAM_RAW_ROWPIX                  3720   // for new 10 MP http://chdk.setepontos.com/index.php/topic,2654.msg46273.html#msg46273
     #define CAM_RAW_ROWS                    2772   // for new 10 MP

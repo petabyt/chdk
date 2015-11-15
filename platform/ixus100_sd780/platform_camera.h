@@ -22,7 +22,6 @@
 
     #define CAM_PROPSET                     2
     #define CAM_DRYOS                       1
-    #define CAM_DRYOS_2_3_R31               1
 
     #define CAM_RAW_ROWPIX                  4080    // 12 MP 12bpp
     #define CAM_RAW_ROWS                    3048    // VERIFY_SD780 Found RAW #s by searching " CrwAddress %lx, CrwSize H %ld V %ld\r"
