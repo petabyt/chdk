@@ -2,6 +2,7 @@
 PLATFORMID=12842
 
 PLATFORMOS=dryos
+PLATFORMOSVER=47
 
 ## Force EXMEM on - not enough heap to work in low memory
 #override OPT_EXMEM_MALLOC=1

@@ -6,6 +6,7 @@
 PLATFORMID=12839
 
 PLATFORMOS=dryos
+PLATFORMOSVER=47
 
 # Set up size variables for AgentRAM
 override OPT_ARAM_MALLOC=1
