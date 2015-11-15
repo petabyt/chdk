@@ -12,8 +12,10 @@ ifdef PLATFORMSUB
   ifdef RESTARTSTART
     PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
   endif
-  ifeq ($(PLATFORMOSVER),)
-    PLATFORMOSVER=0
+  ifeq ($(PLATFORMOS),dryos)
+    ifeq ($(PLATFORMOSVER),)
+      $(error PLATFORMOSVER not defined for DryOS cam)
+    endif
   endif
 endif
 
@@ -50,6 +52,9 @@ ifdef OPT_FI2
 endif
 
 CFLAGS+=-mthumb-interwork -DLOW_LEVEL -DPLATFORM=\"$(TARGET_CAM)\" -DPLATFORMSUB=\"$(TARGET_FW)\" -DPLATFORMID=$(TARGET_PID) -DCAMERA_$(PLATFORM)=1
+ifeq ($(PLATFORMOS),dryos)
+CFLAGS+=-DCAM_DRYOS_REL=$(PLATFORMOSVER)
+endif
 
 include $(topdir)build_rules.inc
 
