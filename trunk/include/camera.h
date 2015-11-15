@@ -26,7 +26,6 @@
     #undef  CAM_DRYOS                           // Camera is DryOS-based
     #undef  CAM_PROPSET                         // Camera's properties group (the generation)
     #define CAM_FLASHPARAMS_VERSION         3   // flash parameters structure version (every camera from 2005 on is version 3)
-    #undef  CAM_DRYOS_2_3_R31                   // Define for cameras with DryOS release R31 or greater -> G10
     #undef  CAM_DRYOS_2_3_R39                   // Define for cameras with DryOS release R39 or greater
     #undef  CAM_DRYOS_2_3_R47                   // Define for cameras with DryOS release R47 or greater -> Cameras can boot from FAT32
 
@@ -303,17 +302,10 @@
 // Include the settings file for the camera model currently being compiled.
 #include "platform_camera.h"
 
-// Sanity check for DryOS defines
-#if defined(CAM_DRYOS_2_3_R39) || defined(CAM_DRYOS_2_3_R47)
-    #ifndef CAM_DRYOS_2_3_R31
-        #define CAM_DRYOS_2_3_R31 1
-    #endif
-#endif
-
 // DryOS r31 and later cameras use 32bit subject distance values
 // set a default limit that's high enough
 // earlier cameras need 65535 as default
-#ifdef CAM_DRYOS_2_3_R31
+#if defined(CAM_DRYOS) && CAM_DRYOS_REL >= 31
     #ifndef CAMERA_MAX_DIST
         #define CAMERA_MAX_DIST 2000000
     #endif
