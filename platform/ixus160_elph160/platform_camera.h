@@ -104,4 +104,7 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
 
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                      1
+
 //----------------------------------------------------------
