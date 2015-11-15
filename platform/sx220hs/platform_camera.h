@@ -119,4 +119,8 @@
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 
+    // from test results in http://chdk.setepontos.com/index.php?topic=10833.100 sx220hs allows longer filenames than some other dryos r47 cams
+    #undef CAM_MAX_FNAME_LENGTH
+    #define CAM_MAX_FNAME_LENGTH        57 
+
 //--------------------------------------------------
