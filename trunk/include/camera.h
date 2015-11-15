@@ -269,8 +269,32 @@
     #define KBD_INITIAL_DELAY               500
 
     // Below limits are for the CHDK LFN support routines (DryOS only)
-    #define CAM_MAX_FNAME_LENGTH            99  // camera can safely use filenames not longer than this (99 is a CHDK limit actually)
-    #define CAM_MAX_PATH_LENGTH             255 // maximum path+filename length
+    // defaults can be overridden in camera_platform.h
+    // file name limits used here based on what the OS functions can create/write without errors
+    // in many cases, firmware can list, open and read longer paths
+#if defined(CAM_DRYOS_REL) // CAM_DRYOS_REL defined on command line, not from platform_camera.h
+    // #if CAM_DRYOS_REL == 20 // unknown
+    #if CAM_DRYOS_REL == 23
+        #define CAM_MAX_FNAME_LENGTH        18 
+        #define CAM_MAX_PATH_LENGTH         255
+    #elif CAM_DRYOS_REL == 31
+        #define CAM_MAX_FNAME_LENGTH        18 
+        #define CAM_MAX_PATH_LENGTH         59
+    #elif CAM_DRYOS_REL == 39
+        #define CAM_MAX_FNAME_LENGTH        30 
+        #define CAM_MAX_PATH_LENGTH         32
+//    #elif CAM_DRYOS_REL == 43 // unknown
+    #elif CAM_DRYOS_REL == 45
+        #define CAM_MAX_FNAME_LENGTH        57 
+        #define CAM_MAX_PATH_LENGTH         59
+    #elif CAM_DRYOS_REL == 47
+        #define CAM_MAX_FNAME_LENGTH        31 // note sx220hs seems to allow longer
+        #define CAM_MAX_PATH_LENGTH         59
+    #else // >= r49, and those unknown above
+        #define CAM_MAX_FNAME_LENGTH        99 // camera can safely use filenames not longer than this (99 is a CHDK limit actually)
+        #define CAM_MAX_PATH_LENGTH         255 // maximum path+filename length. Some actually allow much longer
+    #endif 
+#endif
 
 //----------------------------------------------------------
 // Overridden values for each camera
