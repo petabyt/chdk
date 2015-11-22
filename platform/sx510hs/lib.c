@@ -117,10 +117,10 @@ long vid_get_viewport_height()
     {
         // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
         if (aspect_ratio==1 || aspect_ratio==2)
-            return 480;
+            return 240;
     }
     extern int _GetVRAMVPixelsSize();    
-    return ((m & MODE_MASK) == MODE_PLAY)?480:_GetVRAMVPixelsSize();
+    return ((m & MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize()>>1;
 }
 
 // viewport width offset table for each aspect ratio
