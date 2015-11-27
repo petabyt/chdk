@@ -25,8 +25,10 @@
  12 "Vissza"
 
  13 "RAW"
-
  14 "Mentés RAW-ba"
+
+ 15 "Eszközök"
+
  16 "Csak a sorozat elsö képe RAW"
  17 "RAW fájlok könyvtára"
  18 "RAW fájl elötag"
@@ -234,6 +236,7 @@
 // benchmark
 175 "Sebességmérés"
 176 "Mérés folyamatban "
+177 "CPU           :"
 178 "Képernyö"
 179 "Írás        :"
 180 "Olvasás     :"
@@ -330,6 +333,9 @@
  259 "Lua rendszerhívások engedélyezése"
  260 "*** MEGSZAKÍTVA ***"
  261 "*** Autostart ***"
+
+ 262 "Kockázatos fájlmüveleteket enged"
+ 263 "Kockázatos fájlmüveletek engedé-\nlyezése videofelvétel alatt.\n(például: szkript kiválasztása,\nbetöltése) Ez a gép lefagyását\nokozhatja felvétel közben.\n\nBiztosan engedélyezed?"
 
  264 "Nincs felülbírálás induláskor"
 
@@ -580,28 +586,28 @@
 
 //GPS Anfang---------------------------------
 487 "GPS beállítások"
-488 "Navigációt mutat"
+488 "Navigáció a jelenlegi fotóhoz"
 489 "Iránytüt mutat"
 490 "Geo-koordinátákat mutat"
 491 "Magasság kijelzése"
 492 "Út-pont mentése minden JPG-be"
-493 "GPX-Track - idöintervallum          [s]"
-494 "GPX-Track felvétel                Indít"
-495 "GPX-Track felvétel              Leállít"
+493 "GPX-Track - idöintervallum [s]"
+494 "GPX-Track felvétel indítása"
+495 "GPX-Track felvétel leállítása"
 496 "Iránytü eltüntetése"
 497 "Navigáció eltüntetése"
-498 "GPS jelre várakozás ideje           [s]"
-499 "Iránytü - mintavétel idöintervallum [s]"
-500 "Navigáció - mintavétel idöinterv.   [s]"
-501 "Lejátszás módba vált                [s]"
-502 "Háttérvilágítás kikapcsolása        [s]"
+498 "GPS jelre várakozás ideje [s]"
+499 "Iránytü - mintavételi ciklus [s]"
+500 "Navigáció - mintavételi ciklus[s]"
+501 "Lejátszás módba vált [s]"
+502 "Háttérvilágítás kikapcsolása [s]"
 503 "Általános beállítások"
-504 "Mintavételi intervallum GPS vételig [s]"
-505 "Iránytü csillapítása             [1-40]"
+504 "GPS várakozási ciklus [s]"
+505 "Iránytü csillapítása"
 506 "Naplózás   - beállítások"
 507 "Tagging    - beállítások"
 508 "Navigáció  - beállítások"
-509 "Kikapcsol akku töltöttségnél    [0-99%]"
+509 "Kikapcsol %-os akku töltöttségnél"
 510 "Idözített tag-elés (rövid szöveg)"
 511 "0 - 2D-3D javítás"
 512 "LED villog idözített tag-elés alatt"
@@ -609,18 +615,18 @@
 514 "Háttérvilágítás kikapcsol"
 515 "Lejátszás módba vált"
 516 "Háttérvilágítás kikapcsol"
-517 "Lejátszás módba vált                [s]"
-518 "Háttérvilágítás kikapcsol           [s]"
+517 "Lejátszás módba vált [s]"
+518 "Háttérvilágítás kikapcsol [s]"
 519 "GPS állapot kijelzése"
 520 "Riaszt kimerült akku esetén"
 521 "'Otthon' pozíció beállítása" 
-522 "Vezess haza                       Indít"
+522 "Hazanavigálás indítása"
 523 "Aktuális idözóna beállítása"
 524 "Útvonalrögzítés jelének mutatása"
-525 "Vezess haza                     Leállít"
+525 "Hazanavigálás leállítása"
 526 "Idözónaváltás figyelése"
-527 "Hangos figyelmeztetés           [be/ki]"
-528 "GPS - CHDK                      [be/ki]"
+527 "Hangos figyelmeztetés"
+528 "CHDK GPS funkciók engedélyezése"
 529 "Nincs GPS!"
 530 "Idözóna megváltozott!"
 531 "Akku töltöttség a megadott érték alatt!"
@@ -711,6 +717,7 @@
 597 "Modul hozzáadása"
 598 "Menüpont eltávolítása"
 
+599 "EyeFi beállítások"
 600 "EyeFi müveletek"
 601 "Elérhetö hálózatok"
 602 "Beállított hálózatok"
@@ -744,3 +751,17 @@
 627 "Foglalt"
 628 "Üres"
 629 "Kikapcs"
+
+630 "CHDK színteszt"
+
+631 "Minden szín visszaállítása"
+632 "Biztos, hogy visszaállítod\naz alapértelmezett színeket?"
+
+633 "Hosszú fájlnév támogatás kikapcs."
+
+// additional benchmark module strings
+// Combined length of next 3 must be less than 31 characters
+634 "INDÍT"
+635 "Naplózás"
+636 "SD teszt"
+637 "Szövegkiírás  :"
