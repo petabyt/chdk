@@ -54,5 +54,5 @@ Why would I want to use CHDK?
     * to be able to know the battery status at all times (not just when it's about to run out of power)
     * you want or need any of the other enhancement features that CHDK provides 
 
-What are scripts? Scripts are BASIC language programs that give you the ability to control the operation of the camera under program control. They have been used to add or extend the native capability of the camera: more flexible intervalometers, extended-range exposure compensation, extended bracketing ability, lightning photography, etc. See the script pages for more details.
+What are scripts? Scripts are Lua or uBASIC language programs that give you the ability to control the operation of the camera under program control. They have been used to add or extend the native capability of the camera: more flexible intervalometers, extended-range exposure compensation, extended bracketing ability, lightning photography, etc. See the script pages for more details.
 
