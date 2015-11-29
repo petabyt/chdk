@@ -1,0 +1,46 @@
+************************************
+IXUS140 / ELPH130IS Notes 
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options, but this conflicts with some shortcuts.
+
+This camera does not have an adjustable aperture. It does have an ND filter
+
+CHDK is a hack, use at your own risk!
+
+TESTED
+******
+shutter, iso and ND override (not comprehensively)
+llibtst.lua
+ubtest.bas
+ptp control, rec/play switching
+RAW/DNG capture
+zebra
+PTP live view, but note fisheye mode issue below
+led functions
+dark frame control - note overrides outside of long shutter mode do not appear to trigger auto dark frame
+usb remote hook - only tested with plug / unplug test
+current bitmap buffer
+fast live view buffer
+extra long exposures / exp_drv task
+remote capture / filewrite hook, but note crash on switching to playback issue below
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
+exmem support (note, camera has ~1.7 mb regular heap free on startup with CHDK)
+
+OTHER ISSUES
+************
+Folder naming and file counter use a new method, seem to be working but may have issues
+Not clear if fast press override hack is needed, needs more testing
+subject distance override is only available in AF lock or CHDK 1.3 set_mf
+If using set_aflock from script in CHDK 1.2, you must use set the AF_LOCK propcase to 1 for sd override to work
+If the alt key is set to video, the raw/debug shortcut will not work
+The hide OSD when pressing DISP in half shoot shortcut is not available, since the camera has no DISP key
+
+KNOWN BUGS
+**********
+DNG color matrix is copy+paste from D10
+PTP Live view and functions like zebra, histogram do not work correctly in fisheye effect mode
+The camera crashes if you use PTP remoteshoot (or shoot and delete files) and then switch to playback mode

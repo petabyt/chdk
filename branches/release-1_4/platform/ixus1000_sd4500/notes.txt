@@ -1,0 +1,26 @@
+************************************
+IXUS1000/SD4500 Notes
+
+Press the Movie button briefly to enter CHDK alt mode. You can configure CHDK
+to use the Playback button instead. For the normal function of the button
+(recording a video or switching to playback), press it longer.
+
+The "Switch Partitions" feature should work if you switch the camera off and
+back on.
+
+------------
+Known issues
+
+The camera may crash if you try to switch into recording mode over PTP.
+
+The "Make Card Bootable" option may be broken; use a computer instead.
+
+CR2 RAW files are broken (because of the GRBG Bayer pattern) so use DNG.
+badpixels.bin generation seems to be broken, so only DNG 1.3 is available and
+not all RAW converters will fully work.
+
+Liveview does not work. Tested on 101a:
+http://chdk.setepontos.com/index.php?topic=5722.msg106830#msg106830
+
+setmode.lua claims it fails to change from VIDEO_COLOR_ACCENT to
+VIDEO_COLOR_SWAP even though it works.

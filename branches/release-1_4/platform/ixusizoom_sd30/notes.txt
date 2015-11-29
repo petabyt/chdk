@@ -1,0 +1,10 @@
+****************************************
+
+Camera depending notes: 
+- USB is only available through the proprietary CS-DC1 cradle.
+  To use USB remote, you must either switch to record mode using
+  switch_mode_usb or using the following event proc calls
+    call_event_proc'UI_RegistDebugEventProc'
+    call_event_proc'UiEvnt_StartDisguiseCradleStatus'
+- This camera only has an ND filter, not an adjustable aperture.
+- Subject distance (focus) overrides are non-functional

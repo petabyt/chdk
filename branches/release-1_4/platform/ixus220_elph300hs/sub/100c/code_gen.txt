@@ -1,0 +1,76 @@
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+
+FILE movie_rec.c
+
+>>> file=../movie_rec_hdr.c
+
+//////////////////////////////////////////////////////////////
+// movie_record_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_MovieRecord name=movie_record_task
+ASM
+FW 63
+ENDASM
+>>>
+if (conf.ext_video_time == 1)
+{
+<<<
+    ASM
+    PATCHSUB ref=0
+    ENDASM
+>>>
+}
+else
+{
+<<<
+    ASM
+    SKIP -1
+    FW
+    ENDASM
+>>>
+}
+<<<
+ASM
+FW 3
+>>>
+//begin patch
+"    LDR     R0, =video_compression_rate\n" //added
+"    BL      set_quality\n"                 //added
+//end patch
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// movie_record_task -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0 length=185
+ASM
+FW 118
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+
+//////////////////////////////////////////////////////////////
+// movie_record_task -> ref=0 -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 50
+PATCHVAL value=0x57600000 comment="2hrs 240fps"
+FW 5
+PATCHVAL value=0x28800000 comment="2hrs 120fps"
+FW 6
+PATCHVAL value=7200 comment="2hrs"
+FW 26
+PATCHVAL value=7200 comment="2hrs"
+FW 103
+SKIP 3
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
