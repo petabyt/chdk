@@ -1,7 +1,18 @@
 Detailed change history is available from subversion https://www.assembla.com/code/chdk/subversion/commits
 
 =1.4=
-Unstable development branch
+Current stable, released Nov 29 2015 as 1.4.1.
+
+Compatibility with 1.3:
+* Scripts are generally compatible.
+  You will see a warning if @chdk_version is not specified in the script header, but 1.3 compatible behavior will be used. If you use @chdk_version 1.4, the return values of some functions are changed.
+  See https://subversion.assembla.com/svn/chdk/trunk/CHDK/LUALIB/wrap13.lua for a list of functions with changed return values
+* Some CHDK script mode numbers have changed, and some names have been removed. This does not affect common modes like, M, P and Auto, but might affect scripts that use more obscure modes, especially if the are referred to by number rather than capmode.lua names
+* CFG files: CHDK 1.4 uses the same CFG files as 1.3.
+  It should generally be compatible and retain your settings, but if you don't want to risk re-doing your CFG, backing up the CHDK/*.CFG files before updating is recommended.  Custom colors will be reset, and if you switch back to 1.3, colors may be incorrect. CHDK 1.2 CFGs should be migrated as was done for 1.3.
+* Modules and language files are NOT compatible. You must update these when you update your build.
+
+Significant changes:
 * long file name support in script, file browser / selector.
   Discussion http://chdk.setepontos.com/index.php?topic=10833.0
 * enhanced script @parameter header including compact format, Boolean values, table support, and full variable names in Lua.
@@ -33,7 +44,7 @@ Unstable development branch
 * Convert shot histogram code to a module.
 
 =1.3=
-Current stable, released Dec 18 2014. Implemented new features are listed below :
+Obsolete, released Dec 18 2014. Implemented new features are listed below :
 * Address some of the longstanding issues with focus overrides - especially in scripts. Discussion: http://chdk.setepontos.com/index.php?topic=11078.0
 * Hooks to allow Lua to run at specific points in the shooting process. Discussion: http://chdk.setepontos.com/index.php?topic=11081.0
 * Increase available memory, allow CHDK to allocate from multiple pools. Discussion: http://chdk.setepontos.com/index.php?topic=10886.0
