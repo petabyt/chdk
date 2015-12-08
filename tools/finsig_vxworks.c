@@ -5097,13 +5097,9 @@ void output_firmware_vals(firmware *fw)
     bprintf("\n");
 }
 
-#if defined(__linux__) || defined(__APPLE__)
-#define stricmp strcasecmp
-#endif
-
 int compare_func_names(const func_entry **p1, const func_entry **p2)
 {
-    int rv = stricmp((*p1)->name, (*p2)->name);     // Case insensitive
+    int rv = strcasecmp((*p1)->name, (*p2)->name);     // Case insensitive
     if (rv != 0)
         return rv;
     return strcmp((*p1)->name, (*p2)->name);        // Case sensitive (if equal with insensitive test)
