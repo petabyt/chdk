@@ -7,6 +7,7 @@ export LC_ALL=C
 
 ifndef OSTYPE
   HOSTPLATFORM:=$(patsubst MINGW%,MINGW,$(shell uname -s))
+  ISCYGWIN:=$(patsubst CYGWIN%,CYGWIN,$(shell uname -s))
   ifeq ($(HOSTPLATFORM),MINGW)
     OSTYPE = Windows
     EXE = .exe
@@ -31,11 +32,21 @@ ifndef OSTYPE
         SORT = sort
         ESED = sed -E
       else
-        OSTYPE = Other
-        EXE =
-        SH =
-        DEVNULL = /dev/null
-        SORT = sort
+        ifeq ($(ISCYGWIN),CYGWIN)
+          OSTYPE = Windows
+          EXE = .exe
+          SH = sh
+          DEVNULL = /dev/null
+          OLDSEPARATOR = \\\\
+          NEWSEPARATOR = /
+          SORT := $(dir $(shell which uniq.exe | sed 's_$(OLDSEPARATOR)_$(NEWSEPARATOR)_g'))/sort.exe
+        else
+          OSTYPE = Other
+          EXE =
+          SH =
+          DEVNULL = /dev/null
+          SORT = sort
+        endif
       endif
     endif
   endif
