@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 // SD card off stuff doesn't appear to be needed
 

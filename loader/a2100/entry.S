@@ -1,5 +1,9 @@
 // G10 loader - entry.S
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 // Turn OFF SD Card power
 // to support autostart
 

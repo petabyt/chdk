@@ -220,11 +220,15 @@ run-code-gen: platformcheck
 
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry: platformcheck
-ifeq ($(PLATFORMSUB),$(TARGET_FW))
+ifeq ($(SRCFW),)
 	echo $(TARGET_CAM),$(TARGET_FW),$(subst _,,$(STATE)),,$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
 else
-	echo $(TARGET_CAM),$(TARGET_FW),$(subst _,,$(STATE)),$(PLATFORMSUB),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
+	echo $(TARGET_CAM),$(TARGET_FW),$(subst _,,$(STATE)),$(SRCFW),$(SKIP_AUTOBUILD) >> camera_list_$(PLATFORMOS).csv
 endif
+
+compat-table:
+	echo "rebuild loader/generic/compat_table.h"
+	sh tools/compatbuilder.sh $(CAMERA_LIST)
 
 # for batch builds, build tools for vx and dryos once, instead of once for every firmware
 alltools:

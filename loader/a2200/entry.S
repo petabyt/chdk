@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 // Turn OFF SD Card power
 // to support autostart. A2200 @FF8701D0

@@ -1,3 +1,5 @@
+#include "../generic/check_compat.c"
+
 extern long *blob_chdk_core;
 extern long blob_chdk_core_size;
 
@@ -8,18 +10,8 @@ void __attribute__((noreturn)) my_restart()
     const long *src = blob_chdk_core;
     long length = (blob_chdk_core_size + 3) >> 2;
 
-    if (src < dst && dst < src + length) {
-        /* Have to copy backwards */
-        src += length;
-        dst += length;
-        while (length--) {
-            *--dst = *--src;
-        }
-    } else {
-        while (length--) {
-            *dst++ = *src++;
-        }
-    }
+  core_copy(src, dst, length);
+
 
     //asm1989 apr2012 - sx260 @ FF026FBC   -> Looks the same as SX230 found at FF02D3D8
     asm volatile (

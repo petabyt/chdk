@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 // ROM:FFFF1388 (or search String "SdPower.c")
 // Turn OFF SD Card power to support autostart

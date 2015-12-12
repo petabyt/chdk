@@ -1,3 +1,5 @@
+#include "../generic/check_compat.c"
+
 // static void __attribute__((noreturn)) shutdown();
 // static void __attribute__((noreturn)) panic(int cnt);
 

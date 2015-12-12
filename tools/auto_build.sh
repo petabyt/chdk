@@ -13,13 +13,14 @@
 while IFS=, read cam fw state srcfw skip
 do
   if [ ${cam} != "CAMERA" ] && ( [ "$4" = "-noskip" ] || [ "${skip}" = "" ] ); then
+    srcfwo=${srcfw}
     if [ "${state}" != "" ]; then state=_${state}; fi
     if [ "${srcfw}" = "" ]; then srcfw=${fw}; fi
-    if [ "$4" = "-noskip" ] && [ ${srcfw} != ${fw} ]; then jmp=1; else jmp=0; fi
+    if [ "$4" = "-noskip" ] && [ ${srcfw} != ${fw} ] && [ "$2" != "os-camera-list-entry" ]; then jmp=1; else jmp=0; fi
     if ( [ "$2" = "firzipsub" ] || [ "$2" = "firzipsubcomplete" ] ) && [ ${srcfw} != ${fw} ] ; then cpy="copy"; else cpy=""; fi
     ist2=`grep -s "THUMB_FW" platform/${cam}/makefile.inc`
     if ( [ "${ist2}" = "" ] || [ "$4" != "-not2" ] ) && [ ${jmp} -eq 0 ] ; then
-      $1 -s --no-print-directory TARGET_FW=${fw} PLATFORM=${cam} PLATFORMSUB=${srcfw} STATE=${state} SKIP_AUTOBUILD=${skip} ${2}${cpy} || exit 1
+      $1 -s --no-print-directory TARGET_FW=${fw} PLATFORM=${cam} PLATFORMSUB=${srcfw} STATE=${state} SRCFW=${srcfwo} SKIP_AUTOBUILD=${skip} ${2}${cpy} || exit 1
     fi
   fi
 done < $3

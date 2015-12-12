@@ -1,4 +1,4 @@
-#include "check_compat.c"
+#include "../generic/check_compat.c"
 
 extern long *blob_chdk_core;
 extern long blob_chdk_core_size;
@@ -7,25 +7,16 @@ void __attribute__((noreturn)) my_restart()
 {
     check_compat();
 
-    // light up green LED
-    *(int*)0xd20b0994 = 0x4d0002;
-    // LED done
     long *dst = (long*)MEMISOSTART;
     const long *src = blob_chdk_core;
     long length = (blob_chdk_core_size + 3) >> 2;
 
-    if (src < dst && dst < src + length) {
-        /* Have to copy backwards */
-        src += length;
-        dst += length;
-        while (length--) {
-            *--dst = *--src;
-        }
-    } else {
-        while (length--) {
-            *dst++ = *src++;
-        }
-    }
+    core_copy(src, dst, length);
+
+    // light up green LED
+    *(int*)0xd20b0994 = 0x4d0002;
+    // LED done
+
     asm volatile ( // fc095c80 102b/102c
 /*    "movs    r0, #0x78\n"
     "mcr     p15, 0, r0, c1, c0\n"

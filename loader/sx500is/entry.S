@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 // looks like idle cycle is required for proper shutdown
 	MOV     R3, #0xF0000   // increased from 8000 to F0000 for extra delay

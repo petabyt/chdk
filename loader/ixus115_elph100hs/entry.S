@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 // Turn OFF SD Card power           
 // to support autostart. SX220 @FF06B2E0
