@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 // Turn OFF SD Card power           
 // to support autostart. Disabled for SX220.  why not for sx260  Testing asm1989 not commented

@@ -1,3 +1,5 @@
+#include "../generic/check_compat.c"
+
 extern long *blob_chdk_core;
 extern long blob_chdk_core_size;
 
@@ -21,17 +23,9 @@ void __attribute__((noreturn)) my_restart()
     const long *src = blob_chdk_core;
     long length = (blob_chdk_core_size + 3) >> 2;
 
-    if (src < dst && dst < src + length)
-    {
-        /* Have to copy backwards */
-        src += length;
-        dst += length;
-        while (length--)  *--dst = *--src;
-    }
-    else
-        while (length--)  *dst++ = *src++;
+  core_copy(src, dst, length);
 
-    // restart function
+// restart function
     // from sub_ff01786c via 0x12345678 - sx510hs 100c
     // note, the normal stores to a bunch of MMIOs do not appear to be present
     asm volatile (

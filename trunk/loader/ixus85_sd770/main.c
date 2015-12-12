@@ -1,3 +1,5 @@
+#include "../generic/check_compat.c"
+
 // #include "../../platform/ixus85_sd770/leds.h"
 
 // static void __attribute__((noreturn)) shutdown();
@@ -19,16 +21,9 @@ void __attribute__((noreturn)) my_restart()
   const long *src = blob_chdk_core;
   long length = (blob_chdk_core_size + 3) >> 2;
 
-  if (src < dst && dst < src + length)
-    {
-    /* Have to copy backwards */
-    src += length;
-    dst += length;
-    while (length--)  *--dst = *--src;
-    }
-  else
-    while (length--)  *dst++ = *src++;
-  }
+  core_copy(src, dst, length);
+
+}
 
 	asm volatile (
 		"MRS	R0, CPSR\n"

@@ -67,6 +67,9 @@ OPT_GEN_STUBS=1
 # Define this to use EABI instead of ELF for the GCC ABI
 #OPT_USE_GCC_EABI=1
 
+# Define this to disable runtime compatibility check in loader
+#OPT_DISABLE_COMPAT_CHECK=1
+
 # ***please new entries above this line for protecting the chdk shell against errors***
 
 # Override the value below to compile a different default language into

@@ -1,4 +1,8 @@
-    .section .entry
+.section .entry
+
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 
 //a3200is LEDs
 //0xC02200D4 = Flash
