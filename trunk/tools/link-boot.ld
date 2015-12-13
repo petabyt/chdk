@@ -19,6 +19,7 @@ SECTIONS
 	link_data_start = .;
     *(.rodata*)
     *(.rdata)
+    . = ALIGN(4);
     *(.blob*)
 	*(.data)
 	. = ALIGN(4);
