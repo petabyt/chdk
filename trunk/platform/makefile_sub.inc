@@ -142,7 +142,7 @@ bin_compat.h: stubs_entry.S .FORCE
 	 echo "/* THIS FILE IS GENERATED, DO NOT EDIT! */" > bin_compat.h ; \
 	 grep "Firmware Ver" stubs_entry.S | \
 	 awk -F'["|@]' '{printf "\nver_sig_t ver_sigs[]={\n"; \
-	 str=toupper("$(PLATFORMSUB)"); len=length(str); str1=substr(str,0,len-3) "." substr(str,len-2); \
+	 str=toupper("$(PLATFORMSUB)"); len=length(str); str1=substr(str,1,len-3) "." substr(str,len-2); \
 	 printf "    {(const char *)%s, \"GM%s\"},\n", substr($$5,2), str1;}' >> bin_compat.h ; \
 	 awk -v ptt="^$(PLATFORM),.+,$(PLATFORMSUB)" -F',' '$$0 ~ ptt { str=toupper($$2); \
 	 len=length(str); str1=substr(str,1,len-3) "." substr(str,len-2); \
