@@ -150,7 +150,7 @@ bin_compat.h: stubs_entry.S .FORCE
 	 >> bin_compat.h ; \
 	 echo "};" >> bin_compat.h ; \
 	 echo "pid_sig_t pid_sigs[]={" >> bin_compat.h ; \
-	 grep -E -m1 -h -s "PLATFORMID.+@" ../../makefile.inc makefile.inc stubs_entry.S | \
+	 grep -E -h -s "PLATFORMID.+@" ../../makefile.inc makefile.inc stubs_entry.S | \
 	 $(ESED) 's/(PLATFORMID.+@ *)([0-9xXa-fA-F]+)(.*)/PLATFORMID @ \2/' | \
 	 awk -F'@' '{printf "    {(short *)%s, PLATFORMID},\n", substr($$2,2); exit;}' >> bin_compat.h ; \
 	 echo "};" >> bin_compat.h ; \
