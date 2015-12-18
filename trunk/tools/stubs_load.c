@@ -176,6 +176,7 @@ void load_funcs(stub_values *sv, char *name)
         p->type = TYPE_NHSTUB;
         continue;
     }
+    fclose(f);
 }
 
 // Load a specified file.
@@ -217,6 +218,7 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
             }
         }
     }
+    fclose(f);
 }
 
 // Load a specified stubs file.
@@ -305,6 +307,7 @@ void load_platform(stub_values *sv)
 			}
 		}
     }
+    fclose(f);
 }
 
 // Load the build values from the makefile.inc source file
@@ -334,6 +337,7 @@ void load_a_makefile(stub_values *sv, char *fn)
 			}
 		}
     }
+    fclose(f);
 }
 
 void load_makefile(stub_values *sv)

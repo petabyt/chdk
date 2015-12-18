@@ -117,7 +117,7 @@ int main(int argc, char **argv)
             if (s != 0) found = 1;
         }
     }
-
+    fclose(f);
     printf(" _last_entry=%d\n}\n", lastid);
 
     return 0;
