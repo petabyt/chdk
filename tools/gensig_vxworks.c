@@ -327,6 +327,7 @@ int main(int argc, char **argv)
     printf("\t/* %d/%d */\n",wcount, size);
     printf("};\n\n");
 
+    fclose(f);
     return 0;
 }
 

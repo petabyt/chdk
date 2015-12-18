@@ -766,6 +766,7 @@ elfloader_load(char* filename, char* fltfile)
   i = write(output_fd, flat_buf, flat->import_start);
   i = write(output_fd, new_import_buf, new_import_cnt*sizeof(uint32_t));
   close(output_fd);
+  free(new_import_buf);
 
   return ELFFLT_OK;
 }
