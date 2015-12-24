@@ -67,12 +67,12 @@ int vid_get_viewport_width()
     }
     return _GetVRAMHPixelsSize() >> 1;
 }
-// taken from n
+
 long vid_get_viewport_height()
 {
   if ((mode_get() & MODE_MASK) == MODE_PLAY)
   {
-       return 480;
+       return 240;
   }
   return _GetVRAMVPixelsSize();
 }
