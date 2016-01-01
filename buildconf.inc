@@ -70,6 +70,18 @@ OPT_GEN_STUBS=1
 # Define this to disable runtime compatibility check in loader
 #OPT_DISABLE_COMPAT_CHECK=1
 
+# Define this to enable building of tools using the capstone library (http://www.capstone-engine.org/)
+# Required to rebuild stubs for thumb2 / digic 6 firmware
+#OPT_CAPSTONE_TOOLS=1
+
+# Set the following if capstone includes are not in the default search path
+#CAPSTONE_TOOLS_INC=-I/path/to/capstone/include
+
+# Set the following to the options required to link to the capstone library.
+# At a minimum, -lcapstone or similar is required. If the library is not
+# on the default search path, -L/path/to/capstone is also required
+#CAPSTONE_TOOLS_LINK=-L/path/to/capstone -lcapstone
+
 # ***please new entries above this line for protecting the chdk shell against errors***
 
 # Override the value below to compile a different default language into
