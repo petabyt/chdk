@@ -7,10 +7,19 @@ SUBDIRS=packfi2 elf2flt
 EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) gensig_vxworks$(EXE) gensig_dryos$(EXE) \
      dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE) gen_conf_lua$(EXE)
 
+ifeq ($(OPT_CAPSTONE_TOOLS),1)
+EXES+=finsig_thumb2$(EXE)
+endif
+
 all: $(EXES)
 
 # not needed by batch builds, not built by default
-extras: rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
+EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
+ifeq ($(OPT_CAPSTONE_TOOLS),1)
+EXTRA_EXES+=capdis$(exe)
+endif
+
+extras: $(EXTRA_EXES)
 
 makeexport$(EXE): makeexport.o
 	@echo $< \-\> $@
@@ -75,6 +84,14 @@ code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o chdk_dasm.o
 gen_conf_lua$(EXE): gen_conf_lua.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+finsig_thumb2$(EXE): finsig_thumb2.o stubs_load.o firmware_load_ng.o
+	@echo $^ \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^ $(CAPSTONE_TOOLS_LINK)
+
+capdis$(EXE): capdis.o firmware_load_ng.o
+	@echo $^ \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^ $(CAPSTONE_TOOLS_LINK)
 
 clean:
 	rm -f *.o $(EXES) $(extras)
@@ -146,6 +163,18 @@ firmware_load.o: firmware_load.c firmware_load.h stubs_load.h
 code_gen.o: code_gen.c chdk_dasm.h stubs_load.h firmware_load.h
 chdk_dasm.o: chdk_dasm.c chdk_dasm.h stubs_load.h firmware_load.h
 
+firmware_load_ng.o: firmware_load_ng.c firmware_load_ng.h stubs_load.h
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $<
+
+finsig_thumb2.o: finsig_thumb2.c stubs_load.h firmware_load_ng.h
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $< 
+
+capdis.o: capdis.c stubs_load.h firmware_load_ng.h
+	@echo $< \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $<
+
 font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
 
 include $(topdir)bottom.inc
@@ -154,5 +183,6 @@ include $(topdir)bottom.inc
 # to prevent make from trying implicit rules to create them. Speeds up build process
 chdk_dasm.h: ;
 firmware_load.h: ;
+firmware_load_ng.h: ;
 stubs_load.h: ;
 ../lib/font/font_8x16_uni.h: ;

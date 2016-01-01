@@ -1,0 +1,335 @@
+#ifndef FIRMWARE_LOAD_NG_H
+#define FIRMWARE_LOAD_NG_H
+// Digic 2-5+ (ignoring S1)
+#define FW_ARCH_ARMv5       1
+// Digic 6
+#define FW_ARCH_ARMv7       2
+
+// for clarity of thumb bit manipulations
+#define ADR_SET_THUMB(x) ((x)|1)
+#define ADR_CLEAR_THUMB(x) ((x)&~1)
+#define ADR_IS_THUMB(x) ((x)&1)
+
+// address regions
+#define ADR_RANGE_INVALID   0
+#define ADR_RANGE_ROM       1
+#define ADR_RANGE_RAM_CODE  2
+#define ADR_RANGE_INIT_DATA 3
+
+
+// Stores a range of valid data in the firmware dump (used to skip over empty blocks)
+typedef struct bufrange {
+    uint32_t *p;
+    int off; // NOTE these are in 32 bit blocks, not bytes
+    int len;
+    struct bufrange* next;
+} BufRange;
+
+
+// TODO may want to make run-time adjustable
+#define ADR_HIST_SIZE 64
+typedef struct { 
+    // circular buffer of previous adr values, for backtracking
+    // use addresses rather than insn, because you might want to scan with detail off and then backtrack with on
+    int cur; // index of current address, after iter
+    int count; // total number of valid entries
+    uint32_t adrs[ADR_HIST_SIZE]; 
+} adr_hist_t;
+
+typedef struct {
+    const uint8_t *code; // pointer into buffer for code
+    uint64_t adr; // firmware address - must be 64 bit for capstone iter
+    size_t size; // remaining code size
+    cs_insn *insn; // cached instruction
+    csh cs_handle; // capstone handle to use with this state
+    adr_hist_t ah; // history of prevoius instructions
+}  iter_state_t;
+
+// minimal based on firmware_load.h
+typedef struct {
+    union {
+        uint8_t        *buf8;                // Firmware data
+        uint32_t       *buf32;               // Firmware data
+    };
+    BufRange        *br, *last;         // Valid ranges
+
+    int             arch;           // firmware CPU arch
+    uint32_t        base;           // Base address of the firmware in the camera
+    int             main_offs;      // Offset of main firmware from the start of the dump
+
+    uint32_t        memisostart;        // Start address of the Canon heap memory (where CHDK is loaded)
+
+    int             size8;          // Size of the firmware (as loaded from the dump) in bytes
+    int             size32;         // Size of the firmware in 32 bit words
+
+	int			    dryos_ver;          // DryOS version number
+    char            *dryos_ver_str;     // DryOS version string
+    char            *firmware_ver_str;  // Camera firmware version string
+
+    uint32_t        data_start;         // Start address of DATA section in RAM
+    uint32_t        data_init_start;    // Start address of initialisation section for DATA in ROM
+    int             data_len;           // Length of data section in bytes
+    
+    // Alt copy of ROM in RAM (DryOS R50+)
+    uint8_t        *buf8_2;         // pointer to loaded FW code that is copied
+    uint32_t        base2;          // RAM address copied to
+    uint32_t        base_copied;    // ROM address copied from
+    int             size2;          // Block size copied in bytes
+    
+    // convenience values to optimize code searching
+    uint32_t        rom_code_search_min_adr; // minimum ROM address for normal code searches (i.e. firmware start)
+    uint32_t        rom_code_search_max_adr; // max ROM address for normal code searches, i.e. before copied data / code if known
+    // Values loaded from stubs & other files
+    stub_values     *sv;
+
+    csh cs_handle; // capstone handle
+    iter_state_t* is;
+} firmware;
+
+/*
+convert firmware address to pointer, or NULL if not in valid range
+*/
+uint8_t* adr2ptr(firmware *fw, uint32_t adr);
+
+// as above, but include initialized data area (NOTE may change on camera at runtime!)
+uint8_t* adr2ptr_with_data(firmware *fw, uint32_t adr);
+
+// convert pointer into buf into firmware address
+// current doesn't sanity check or adjust ranges
+uint32_t ptr2adr(firmware *fw, uint8_t *ptr);
+
+/*
+return which address range adr is in, or INVALID (=0) if none
+*/
+int adr_range(firmware *fw, uint32_t adr);
+
+// as above, but include initialized data area (NOTE may change on camera at runtime!)
+int adr_range_with_data(firmware *fw, uint32_t adr);
+
+
+//
+// Find the index of a string in the firmware
+// Assumes the string starts on a 32bit boundary.
+// String + terminating zero byte should be at least 4 bytes long
+// Handles multiple string instances
+int find_Nth_str(firmware *fw, char *str, int N);
+
+// above, N=1
+int find_str(firmware *fw, char *str);
+
+// Find the index of a string in the firmware, can start at any address
+// returns firmware address
+uint32_t find_str_bytes(firmware *fw, char *str);
+
+int isASCIIstring(firmware *fw, uint32_t adr);
+
+/*
+return firmware address of 32 bit value, starting at address "start"
+*/
+uint32_t find_u32_adr(firmware *fw, uint32_t val, uint32_t start);
+
+// return u32 value at adr
+uint32_t fw_u32(firmware *fw, uint32_t adr);
+
+// ****** address history functions ******
+// reset address history to empty
+void adr_hist_reset(adr_hist_t *ah);
+
+// return the index of current entry + i. may be negative or positive, wraps. Does not check validity
+int adr_hist_index(adr_hist_t *ah, int i);
+
+// add an entry to address history
+void adr_hist_add(adr_hist_t *ah, uint32_t adr);
+
+// return the i'th previous entry in this history, or 0 if not valid (maybe should be -1?)
+// i= 0 = most recently disassembled instruction, if any
+uint32_t adr_hist_get(adr_hist_t *ah, int i);
+
+// ****** instruction analysis utilities ******
+/*
+is insn a PC relative load?
+*/
+int isLDR_PC(cs_insn *insn);
+
+// if insn is LDR Rn, [pc,#x] return pointer to value, otherwise null
+uint32_t* LDR_PC2valptr_thumb(firmware *fw, cs_insn *insn);
+uint32_t* LDR_PC2valptr_arm(firmware *fw, cs_insn *insn);
+uint32_t* LDR_PC2valptr(firmware *fw, cs_insn *insn);
+
+// return the address of value loaded by LDR rd, [pc, #x] or 0 if not LDR PC
+uint32_t LDR_PC2adr(firmware *fw, cs_insn *insn);
+
+// is insn address calculated with subw rd, pc, ...
+int isSUBW_PC(cs_insn *insn);
+
+// is insn address calculated with addw rd, pc, ...
+int isADDW_PC(cs_insn *insn);
+
+// return value generated by an ADR or ADR-like instruction, or 0 (which should be rarely generated by ADR)
+uint32_t ADRx2adr(firmware *fw, cs_insn *insn);
+
+// return the value generated by an ADR (ie, the location of the value as a firmware address)
+// NOTE not checked if it is in dump
+uint32_t ADR2adr(firmware *fw, cs_insn *insn);
+
+// if insn is adr/ AKA ADD Rn, pc,#x return pointer to value, otherwise null
+uint32_t* ADR2valptr(firmware *fw, cs_insn *insn);
+
+// return value loaded by PC relative LDR instruction, or 0 if out of range
+uint32_t LDR_PC2val(firmware *fw, cs_insn *insn);
+
+// return the target of BL instruction, or 0 if current instruction isn't BL
+// both ARM and thumb instructions will NOT have the thumb bit set,
+// thumbness must be determined from current state
+uint32_t BL_target(firmware *fw, cs_insn *insn);
+
+// as above, but also including B for tail calls
+uint32_t B_BL_target(firmware *fw, cs_insn *insn);
+
+// as above, but also including BLX imm
+uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn);
+
+
+// ****** disassembly iterator utilities ******
+// allocate a new iterator state, optionally initializing at adr (0/invalid OK)
+iter_state_t *disasm_iter_new(firmware *fw, uint32_t adr);
+
+// free iterator state and associated resources
+void disasm_iter_free(iter_state_t *is);
+
+// initialize iterator state at adr
+int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr);
+
+/*
+disassemble next instruction, recording address in history
+returns false if state invalid or disassembly fails
+if disassembly fails, is->adr is not incremented
+*/
+int disasm_iter(firmware *fw, iter_state_t *is);
+
+// ***** disassembly utilities operating on the default iterator state *****
+/*
+initialize iter state to begin iterating at adr
+*/
+int fw_disasm_iter_start(firmware *fw, uint32_t adr);
+
+// disassemble the next instruction, updating cached state
+int fw_disasm_iter(firmware *fw);
+
+// disassemble single instruction at given adr, updating cached values
+// history is cleared
+int fw_disasm_iter_single(firmware *fw, uint32_t adr);
+
+// ****** standalone disassembly without an iter_state ******
+/*
+disassemble up to count instructions starting at firmware address adr
+allocates and returns insns in insn, can be freed with cs_free(insn, count)
+returns actual number disassembled, less than count on error
+*/
+size_t fw_disasm_adr(firmware *fw, uint32_t adr, unsigned count, cs_insn **insn);
+
+
+// ***** utilities for searching disassembly over large ranges ******
+/*
+callback used by fw_search_insn, called on valid instructions
+_search continues iterating until callback returns non-zero.
+is points to the most recently disassembled instruction
+callback may advance is directly by calling disasm_iter
+v1 and udata are passed through from the call to _search
+*/
+typedef uint32_t (*search_insn_fn)(firmware *fw, iter_state_t *is, uint32_t v1, void *udata);
+
+/*
+iterate over firmware disassembling, calling callback described above after each
+successful disassembly iteration.  If disassembly fails, the iter state is advanced
+2 bytes without calling the callback.
+starts at address is taken from the iter_state, which should be initialized by disasm_iter_new()
+disasm_iter_init(), or a previous search or iter call.
+end defaults to end of ram code or rom code (before init data, if known), based on start
+v1 and udata are provided to the callback
+*/
+uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f,uint32_t v1, void *udata, uint32_t adr_end);
+
+// ****** callbacks for use with fw_search_insn ******
+// search for constant references
+uint32_t search_disasm_const_ref(firmware *fw, iter_state_t *is, uint32_t val, void *unused);
+
+// search for calls/jumps to immediate addresses
+// returns 1 if found, address can be obtained from insn
+uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void *unused);
+
+// callback for use with search_disasm_calls_multi
+// adr is the matching address
+typedef int (*search_calls_multi_fn)(firmware *fw, iter_state_t *is, uint32_t adr);
+
+// structure used to define functions searched for, and functions to handle matches
+typedef struct {
+    uint32_t adr;
+    search_calls_multi_fn fn;
+} search_calls_multi_data_t;
+
+
+// Search for calls to multiple functions (more efficient than multiple passes)
+// if adr is found in null terminated search_calls_multi_data array, returns fn return value
+// otherwise 0
+uint32_t search_disasm_calls_multi(firmware *fw, iter_state_t *is, uint32_t unused, void *userdata);
+
+// ****** utilities for extracting register values ******
+/*
+backtrack through is_init state history picking up constants loaded into r0-r3
+return bitmask of regs with values found
+affects fw->is, does not affect is_init
+
+NOTE values may be inaccurate for many reasons, doesn't track all reg affecting ops,
+doesn't account for branches landing in the middle of inspected code
+doesn't account for many conditional cases
+*/
+int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, uint32_t *res);
+
+// ****** utilities for matching instructions and instruction sequences ******
+
+// use XXX_INVALID (=0) for don't care
+typedef struct {
+    arm_op_type type;
+    arm_reg reg; // if type is REG, compare
+} op_match_t;
+
+// use id ARM_INS_INVALID for don't care, ARM_INS_ENDING to end list of matches
+typedef struct {
+    arm_insn id;
+    int op_count; // -1 = don't care
+    op_match_t operands[4];
+} insn_match_t;
+
+// some common matches for insn_match_find_next
+// match a B instruction
+extern const insn_match_t match_b[];
+
+// match B and BL
+extern const insn_match_t match_b_bl[];
+
+// match B and BL, and BLX with an immediate
+extern const insn_match_t match_b_bl_blximm[];
+
+// check if single insn matches values defined by match
+int insn_match(cs_insn *insn, const insn_match_t *match);
+
+// iterate is until current instruction matches any of the provided matches or until limit reached
+int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match);
+
+// iterate as long as sequence of instructions matches sequence defined in match
+int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match);
+
+// ****** firmware loading / initialization / de-allocation ******
+// load firmware and initialize stuff that doesn't require disassembly
+void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_arch);
+
+// initialize capstone state for loaded fw
+int firmware_init_capstone(firmware *fw);
+
+// init basic copied RAM code / data ranges - init_capstone must be called first
+void firmware_init_data_ranges(firmware *fw);
+
+// free resources associated with fw
+void firmware_unload(firmware *fw);
+#endif

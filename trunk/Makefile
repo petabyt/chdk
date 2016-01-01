@@ -197,14 +197,28 @@ print-missing-dump: platformcheck
 sigfinders:
 	$(MAKE) -C tools finsig_dryos$(EXE)
 	$(MAKE) -C tools finsig_vxworks$(EXE)
+ifeq ($(OPT_CAPSTONE_TOOLS),1)
+	$(MAKE) -C tools finsig_thumb2$(EXE)
+endif
 
 rebuild-stubs: platformcheck
 	if [ -s $(TARGET_PRIMARY) ] ; then \
-		$(MAKE) -C tools finsig_dryos$(EXE) ;\
-		$(MAKE) -C tools finsig_vxworks$(EXE) ;\
-		echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
-		rm -f $(camfw)/stubs_entry.S ;\
-		$(MAKE) -C $(camfw) FORCE_GEN_STUBS=1 stubs_entry.S ;\
+		if [ "$(THUMB_FW)" == "1" ] ; then \
+			if [ "$(OPT_CAPSTONE_TOOLS)" == "1" ] ; then \
+				$(MAKE) -C tools finsig_thumb2$(EXE) ;\
+				echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
+				rm -f $(camfw)/stubs_entry.S ;\
+				$(MAKE) -C $(camfw) FORCE_GEN_STUBS=1 stubs_entry.S ;\
+			else \
+				echo "OPT_CAPSTONE_TOOLS not set, skipping $(PLATFORM)-$(PLATFORMSUB)"; \
+			fi ;\
+		else \
+			$(MAKE) -C tools finsig_dryos$(EXE) ;\
+			$(MAKE) -C tools finsig_vxworks$(EXE) ;\
+			echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
+			rm -f $(camfw)/stubs_entry.S ;\
+			$(MAKE) -C $(camfw) FORCE_GEN_STUBS=1 stubs_entry.S ;\
+		fi ;\
 	else \
 		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
 	fi

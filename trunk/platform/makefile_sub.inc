@@ -98,17 +98,28 @@ stubs_auto.S: $(STUBS_AUTO_DEPS)
 	    $(SORT) | uniq | \
 	    awk '{if(NF>0){printf("STUB2(%s)\n",$$1)}}' >> stubs_auto.S
 
+ifdef THUMB_FW
+    FINSIG_EXE=$(tools)/finsig_thumb2$(EXE)
+# capstone tools required to build thumb2 stubs, allow batch rebuilds without
+    ifneq ($(OPT_CAPSTONE_TOOLS),1)
+        override FORCE_GEN_STUBS=
+        override OPT_GEN_STUBS=
+    endif
+else
+    FINSIG_EXE=$(tools)/finsig_$(PLATFORMOS)$(EXE)
+endif
+
 # Force stubs build even if turned off in localbuildconf.inc (used for batch-rebuild-stubs target)
 ifdef FORCE_GEN_STUBS
     override OPT_GEN_STUBS=1
 endif
 
-stubs_entry.S: $(TARGET_PRIMARY) $(tools)/signatures_$(PLATFORMOS).h $(tools)/finsig_$(PLATFORMOS)$(EXE) stubs_entry_2.S stubs_min.S
+stubs_entry.S: $(TARGET_PRIMARY) $(tools)/signatures_$(PLATFORMOS).h $(FINSIG_EXE) stubs_entry_2.S stubs_min.S
 	@echo \-\> $@
 ifdef OPT_GEN_STUBS
 	rm -f stubs_entry.S.err
 	if [ -s $(TARGET_PRIMARY) ] ; then \
-	  $(tools)/finsig_$(PLATFORMOS) $(TARGET_PRIMARY) $(ROMBASEADDR) stubs_entry.S $(ALT_ROMBASEADDR) ; \
+	  $(FINSIG_EXE) $(TARGET_PRIMARY) $(ROMBASEADDR) stubs_entry.S $(ALT_ROMBASEADDR) ; \
 	else \
 	  echo CAUTION! \'stubs_entry.S\' is not updated due to target firmware binary not found! ; \
 	  touch stubs_entry.S ; \

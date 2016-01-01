@@ -198,6 +198,7 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
         int typ = TYPE_NHSTUB;
         int off = 7;
         s = strstr(line, "NHSTUB(");
+        if (s == 0) { off = 8; s = strstr(line, "NHSTUB2("); } // note may want to flag dif from NHSTUB
         if (s == 0) { off = 7; s = strstr(line, "IGNORE("); typ = TYPE_IGNORE; }
         if (s == 0) { off = 6; s = strstr(line, "NSTUB("); }
         if (s == 0) { off = 4; s = strstr(line, "DEF("); typ = TYPE_DEF; }
