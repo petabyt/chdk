@@ -1042,10 +1042,10 @@ void firmware_init_data_ranges(firmware *fw)
                 fptr=pv;
             }
         } else if(!dptr) {
-            if((*pv < fw->base) && (*pv < 0xb0000000)) { // TODO some cams (e.g M3, G3x have) yet another area with code, avoid that)
+            if(*pv < fw->base) {
                 dptr=pv;
             } else {
-                fptr=NULL; // dest address not in likely RAM, avoid that
+                fptr=NULL; // dest address in ROM, reset
             }
         } else if(!eptr) {
             if(*pv < fw->base) {
@@ -1077,10 +1077,10 @@ void firmware_init_data_ranges(firmware *fw)
                 fptr=pv;
             }
         } else if(!dptr) {
-            if(*pv < fw->base) {
+            if((*pv < fw->base) && (*pv < 0xb0000000)) { // TODO some cams (e.g M3, G3x) have yet another area with code, avoid that
                 dptr=pv;
             } else {
-                fptr=NULL; // dest address in ROM, reset
+                fptr=NULL; // dest address not in likely RAM, avoid that
             }
         } else if(!eptr) {
             if(*pv < fw->base) {
