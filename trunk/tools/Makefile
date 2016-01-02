@@ -16,7 +16,7 @@ all: $(EXES)
 # not needed by batch builds, not built by default
 EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
 ifeq ($(OPT_CAPSTONE_TOOLS),1)
-EXTRA_EXES+=capdis$(exe)
+EXTRA_EXES+=capdis$(EXE)
 endif
 
 extras: $(EXTRA_EXES)
@@ -172,7 +172,7 @@ finsig_thumb2.o: finsig_thumb2.c stubs_load.h firmware_load_ng.h
 	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $< 
 
 capdis.o: capdis.c stubs_load.h firmware_load_ng.h
-	@echo $< \-\> $@
+	@echo derp $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $<
 
 font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
