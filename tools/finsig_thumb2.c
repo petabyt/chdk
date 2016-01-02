@@ -77,6 +77,11 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 {
     // Do these first as they are needed to find others
     { "ExportToEventProcedure_FW", UNUSED|DONT_EXPORT },
+    { "RegisterEventProcedure", UNUSED|DONT_EXPORT },
+    { "RegisterEventProcedure_alt1", UNUSED|DONT_EXPORT },
+    { "RegisterEventProcedure_alt2", UNUSED|DONT_EXPORT },
+    { "RegisterEventProcTable", UNUSED|DONT_EXPORT },
+    { "CreateTask_arm", UNUSED|DONT_EXPORT },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
@@ -426,7 +431,7 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
 }
 
 typedef struct sig_rule_s sig_rule_t;
-typedef int (*sig_match_fn)(firmware *fw, sig_rule_t *rule);
+typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 // signature matching structure
 typedef struct sig_rule_s {
     sig_match_fn    match_fn;       // function to locate function
@@ -455,11 +460,196 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
     return 0;
 }
 
+// match 
+// r0=ref value
+// bl=<our func>
+int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // TODO could look at every instance of str
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_str_r0_call %s not found\n",rule->ref_name);
+        return 0;
+    }
+    // for efficiency, could search near the string
+    disasm_iter_init(fw,is,fw->rom_code_search_min_adr);
+
+    uint32_t adr=0;
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,0)) {
+        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+            if(disasm_iter(fw,is)) {
+                // TODO this could be more sophisticated, look multiple instructions tracking r0
+                // more branch types, etc
+                if(is->insn->id == ARM_INS_BL && is->insn->detail->arm.operands[0].type == ARM_OP_IMM) {
+                    adr = ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+                    save_sig(rule->name,adr); 
+                    break;
+                }
+            }
+        }
+    } 
+    return (adr != 0);
+}
+// find RegisterEventProcedure
+int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    static insn_match_t reg_evp_match[]={
+        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R2},{ARM_OP_REG,ARM_REG_R1}}},
+        {ARM_INS_LDR,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_MEM,ARM_REG_INVALID}}},
+        {ARM_INS_B,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+
+    int i=find_saved_sig("ExportToEventProcedure_FW");
+
+    if(i==-1) {
+        printf("sig_match_reg_evp: failed to find ExportToEventProcedure, giving up\n");
+        return 0;
+    }
+    uint32_t e_to_evp=func_names[i].val;  
+
+    //look for the underlying RegisterEventProcedure function (not currently used)
+    uint32_t reg_evp=0;
+    // start at identified Export..
+    disasm_iter_init(fw,is,ADR_CLEAR_THUMB(e_to_evp));
+    if(insn_match_seq(fw,is,reg_evp_match)) {
+        reg_evp=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+        //printf("RegisterEventProcedure found 0x%08x at %"PRIx64"\n",reg_evp,is->insn->address);
+        save_sig("RegisterEventProcedure",reg_evp);
+    }
+    return (reg_evp != 0);
+}
+
+// find event proc table registration, and some other stuff
+// TODO this should be broken up to some generic parts
+int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // ref to find RegisterEventProcTable
+    uint32_t str_adr = find_str_bytes(fw,"DispDev_EnableEventProc"); // note this string may appear more than once, assuming want first
+    if(!str_adr) {
+        printf("sig_match_reg_evp_table: failed to find DispDev_EnableEventProc\n");
+        return 0;
+    }
+    uint32_t reg_evp_alt1=0;
+    uint32_t reg_evp_tbl=0;
+    disasm_iter_init(fw,is,str_adr - 512); // reset to a bit before where the string was found
+    uint32_t dd_enable_p=0;
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
+        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+            if(insn_match_find_next(fw,is,2,match_b_bl)) {
+                reg_evp_alt1=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+                //printf("RegisterEventProcedure_alt1 found 0x%08x at %"PRIx64"\n",reg_evp_alt1,is->insn->address);
+                save_sig("RegisterEventProcedure_alt1",reg_evp_alt1);
+
+                uint32_t regs[4];
+
+                // get r0 and r1, backtracking up to 4 instructions
+                if((get_call_const_args(fw,is,4,regs)&3)==3) {
+                    // sanity check, arg0 was the original thing we were looking for
+                    if(regs[0]==str_adr) {
+                        dd_enable_p=regs[1]; // constant value should already have correct ARM/THUMB bit
+                        //printf("DispDev_EnableEventProc found 0x%08x at %"PRIx64"\n",dd_enable_p,is->insn->address);
+                        add_func_name("DispDev_EnableEventProc",dd_enable_p,NULL);
+                        break;
+                    }
+                }
+            }
+        }
+    } 
+    // found candidate function
+    if(dd_enable_p) {
+        disasm_iter_init(fw,is,ADR_CLEAR_THUMB(dd_enable_p)); // start at found func
+        if(insn_match_find_next(fw,is,4,match_b_bl)) { // find the first bl
+            // sanity check, make sure we get a const in r0
+            uint32_t regs[4];
+            if(get_call_const_args(fw,is,4,regs)&1) {
+                reg_evp_tbl=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+                // printf("RegisterEventProcTable found 0x%08x at %"PRIx64"\n",reg_evp_tbl,is->insn->address);
+                save_sig("RegisterEventProcTable",reg_evp_tbl);
+            }
+        }
+    }
+    return (reg_evp_tbl != 0);
+}
+
+// find an alternate eventproc registration call
+int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t reg_evp_alt2=0;
+    // TODO could make this a param for different fw variants
+    uint32_t str_adr = find_str_bytes(fw,"EngApp.Delete");
+    if(!str_adr) {
+        printf("sig_match_reg_evp_alt2: failed to find EngApp.Delete\n");
+        return 0;
+    }
+    uint32_t reg_evp_alt1=0;
+    int i=find_saved_sig("RegisterEventProcedure_alt1");
+    if(i != -1) {
+        reg_evp_alt1=func_names[i].val;
+    }
+
+    disasm_iter_init(fw,is,str_adr - 512); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
+        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+            if(insn_match_find_next(fw,is,3,match_b_bl)) {
+                uint32_t regs[4];
+                // sanity check, constants in r0, r1 and r0 was the original thing we were looking for
+                if((get_call_const_args(fw,is,4,regs)&3)==3) {
+                    if(regs[0]==str_adr) {
+                        reg_evp_alt2=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+                        // TODO could keep looking
+                        if(reg_evp_alt2 == reg_evp_alt1) {
+                            printf("RegisterEventProcedure_alt2 == _alt1 at %"PRIx64"\n",is->insn->address);
+                            reg_evp_alt2=0;
+                        } else {
+                            save_sig("RegisterEventProcedure_alt2",reg_evp_alt2);
+                           // printf("RegisterEventProcedure_alt2 found 0x%08x at %"PRIx64"\n",reg_evp_alt2,is->insn->address);
+                            // TODO could follow alt2 and make sure it matches expected mov r2,0, bl register..
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return (reg_evp_alt2 != 0);
+}
+
+// find CreateTask function used by ROM code
+// TODO could probably be generic func arg matching
+int sig_match_createtask_arm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t create_task=0;
+    // on digic 6 firmwares, the eventproc points to CreateTask in RAM, but ROM firmware code goes through an ARM wrapper
+    uint32_t str_adr = find_str_bytes(fw,"FileWriteTask"); // fairly unique task name early in the dump
+    if(!str_adr) {
+        printf("sig_match_createtask_arm: failed to find FileWriteTaks\n");
+        return  0;
+    }
+
+    disasm_iter_init(fw,is,str_adr - 1024); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+1024)) {
+        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+            if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
+                create_task=is->insn->detail->arm.operands[0].imm;
+                if(is->insn->id != ARM_INS_BLX) {
+                    // if not a BLX, thumb address
+                    create_task=ADR_SET_THUMB(create_task);
+                }
+
+                //printf("CreateTask found 0x%08x at %"PRIx64"\n",create_task,is->insn->address);
+                save_sig("CreateTask_arm",create_task);
+                // TODO could sanity check other args
+            }
+        }
+    }
+    return (create_task != 0);
+}
 
 // match already identified function found by name
 // if offset is 1, match the first called function with 20 insn instead (e.g. to avoid eventproc arg handling)
 // initial direct jumps (j_foo) assumed to have been handled
-int sig_match_named(firmware *fw, sig_rule_t *rule)
+int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     int i=find_saved_sig(rule->ref_name);
     if(i==-1) {
@@ -486,11 +676,11 @@ int sig_match_named(firmware *fw, sig_rule_t *rule)
         return 0;
     }
     int r=0;
-    fw_disasm_iter_start(fw,ADR_CLEAR_THUMB(ref_adr));
-    if(insn_match_find_next(fw,fw->is,20,match_b_bl_blximm)) {
-        uint32_t adr = B_BL_BLXimm_target(fw,fw->is->insn);
+    disasm_iter_init(fw,is,ADR_CLEAR_THUMB(ref_adr));
+    if(insn_match_find_next(fw,is,20,match_b_bl_blximm)) {
+        uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
-            if(fw->is->insn->id != ARM_INS_BLX) {
+            if(is->insn->id != ARM_INS_BLX) {
                 adr=ADR_SET_THUMB(adr);
             }
             save_sig(rule->name,adr); 
@@ -502,6 +692,99 @@ int sig_match_named(firmware *fw, sig_rule_t *rule)
         printf("sig_match_named: %s branch not found 0x%08x\n",rule->ref_name,ref_adr);
     }
     return r;
+}
+
+// bootstrap sigs
+// order is important
+sig_rule_t sig_rules_initial[]={
+// function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
+// NOTE _FW is in the CHDK column, because that's how it is in func_names
+{sig_match_str_r0_call, "ExportToEventProcedure_FW",   "ExportToEventProcedure"},
+{sig_match_reg_evp,     "RegisterEventProcedure",},
+{sig_match_reg_evp_table, "RegisterEventProcTable",},
+{sig_match_reg_evp_alt2, "RegisterEventProcedure_alt2",},
+{sig_match_createtask_arm, "CreateTask_arm",},
+{NULL},
+};
+
+sig_rule_t sig_rules_main[]={
+// function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
+{sig_match_named,   "CreateTask",               "CreateTask_FW",},
+{sig_match_named,   "ExitTask",                 "ExitTask_FW",},
+{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",1},
+{sig_match_named,   "Close",                    "Close_FW",},
+{sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
+{sig_match_named,   "Fopen_Fut",                "Fopen_Fut_FW",},
+{sig_match_named,   "Fread_Fut",                "Fread_Fut_FW",},
+{sig_match_named,   "Fseek_Fut",                "Fseek_Fut_FW",},
+{sig_match_named,   "Fwrite_Fut",               "Fwrite_Fut_FW",},
+{sig_match_named,   "GetAdChValue",             "GetAdChValue_FW",},
+{sig_match_named,   "GetCurrentAvValue",        "GetCurrentAvValue_FW",},
+{sig_match_named,   "GetBatteryTemperature",    "GetBatteryTemperature_FW",},
+{sig_match_named,   "GetCCDTemperature",        "GetCCDTemperature_FW",},
+{sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",1},
+{sig_match_named,   "GetOpticalTemperature",    "GetOpticalTemperature_FW",},
+{sig_match_named,   "GetSystemTime",            "GetSystemTime_FW",},
+{sig_match_named,   "GetVRAMHPixelsSize",       "GetVRAMHPixelsSize_FW",},
+{sig_match_named,   "GetVRAMVPixelsSize",       "GetVRAMVPixelsSize_FW",},
+{sig_match_named,   "GetZoomLensCurrentPoint",  "GetZoomLensCurrentPoint_FW",},
+{sig_match_named,   "GetZoomLensCurrentPosition","GetZoomLensCurrentPosition_FW",},
+{sig_match_named,   "GiveSemaphore",            "GiveSemaphore_FW",},
+{sig_match_named,   "IsStrobeChargeCompleted",  "EF.IsChargeFull_FW",},
+{sig_match_named,   "Read",                     "Read_FW",},
+{sig_match_named,   "LEDDrive",                 "LEDDrive_FW",},
+{sig_match_named,   "LockMainPower",            "LockMainPower_FW",},
+{sig_match_named,   "MoveFocusLensToDistance",  "MoveFocusLensToDistance_FW",},
+{sig_match_named,   "MoveIrisWithAv",           "MoveIrisWithAv_FW",},
+{sig_match_named,   "MoveZoomLensWithPoint",    "MoveZoomLensWithPoint_FW",},
+{sig_match_named,   "Open",                     "Open_FW",},
+{sig_match_named,   "PostLogicalEventForNotPowerType",  "PostLogicalEventForNotPowerType_FW",},
+{sig_match_named,   "PostLogicalEventToUI",     "PostLogicalEventToUI_FW",},
+{sig_match_named,   "PT_MoveOpticalZoomAt",     "SS.MoveOpticalZoomAt_FW",},
+{sig_match_named,   "PutInNdFilter",            "PutInNdFilter_FW",},
+{sig_match_named,   "PutOutNdFilter",           "PutOutNdFilter_FW",},
+{sig_match_named,   "SetAE_ShutterSpeed",       "SetAE_ShutterSpeed_FW",},
+{sig_match_named,   "SetAutoShutdownTime",      "SetAutoShutdownTime_FW",},
+{sig_match_named,   "SetCurrentCaptureModeType","SetCurrentCaptureModeType_FW",},
+{sig_match_named,   "SetScriptMode",            "SetScriptMode_FW",},
+{sig_match_named,   "SleepTask",                "SleepTask_FW",},
+{sig_match_named,   "TakeSemaphore",            "TakeSemaphore_FW",},
+{sig_match_named,   "TurnOnDisplay",            "DispCon_TurnOnDisplay_FW",},
+{sig_match_named,   "TurnOffDisplay",           "DispCon_TurnOffDisplay_FW",},
+{sig_match_named,   "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW",},
+{sig_match_named,   "UnlockMainPower",          "UnlockMainPower_FW",},
+//{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
+{sig_match_named,   "VbattGet",                 "VbattGet_FW",},
+{sig_match_named,   "Write",                    "Write_FW",},
+{sig_match_named,   "memcmp",                   "memcmp_FW",},
+{sig_match_named,   "memcpy",                   "memcpy_FW",},
+{sig_match_named,   "memset",                   "memset_FW",},
+{sig_match_named,   "lseek",                    "Lseek_FW",},
+{sig_match_named,   "strcmp",                   "strcmp_FW",},
+{sig_match_named,   "strcpy",                   "strcpy_FW",},
+{sig_match_named,   "strlen",                   "strlen_FW",},
+{sig_match_named,   "task_CaptSeq",             "task_CaptSeqTask",},
+{sig_match_named,   "task_ExpDrv",              "task_ExpDrvTask",},
+{sig_match_named,   "task_FileWrite",           "task_FileWriteTask",},
+//{sig_match_named,   "task_MovieRecord",         "task_MovieRecord",},
+//{sig_match_named,   "task_PhySw",               "task_PhySw",},
+{sig_match_named, "PTM_GetCurrentItem",         "PTM_GetCurrentItem_FW",},
+{NULL},
+};
+
+void run_sig_rules(firmware *fw, sig_rule_t *sig_rules)
+{
+    sig_rule_t *rule=sig_rules;
+    // for convenience, pass an iter_state to match fns so they don't have to manage
+    iter_state_t *is=disasm_iter_new(fw,0);
+    while(rule->match_fn) {
+//        printf("rule: %s ",rule->name);
+        //int r=rule->match_fn(fw,is,rule);
+        rule->match_fn(fw,is,rule);
+//        printf("%d\n",r);
+        rule++;
+    }
+    disasm_iter_free(is);
 }
 
 void add_event_proc(firmware *fw, char *name, uint32_t adr)
@@ -590,20 +873,6 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
             // TODO
             char *buf=malloc(64);
             char *nm=(char *)adr2ptr(fw,regs[0]);
-            /*
-            // some special cases
-            if(strcmp("CaptSeqTask",nm) == 0) {
-                strcpy(buf,"task_CaptSeq");
-            } else if(strcmp("ExpDrvTask",nm) == 0) {
-                strcpy(buf,"task_ExpDrv");
-            } else if(strcmp("MovieRecordTask",nm) == 0) {
-                strcpy(buf,"task_MovieRecord");
-            } else if(strcmp("FileWriteTask",nm) == 0) {
-                strcpy(buf,"task_FileWrite");
-            } else {
-                sprintf(buf,"task_%s",nm);
-            }
-            */
             sprintf(buf,"task_%s",nm);
             //printf("found %s 0x%08x at 0x%"PRIx64"\n",buf,regs[3],is->insn->address);
             add_func_name(buf,regs[3],NULL);
@@ -617,180 +886,62 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
 }
 
 /*
-find event proc registration, task creation funcs,
-then collect as many calls as possible, whether or not listed in funcs to find
+collect as many calls as possible of functions identified by name, whether or not listed in funcs to find
 */
-void find_initial_funcs(firmware *fw) {
-    static insn_match_t reg_evp_match[]={
-        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R2},{ARM_OP_REG,ARM_REG_R1}}},
-        {ARM_INS_LDR,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_MEM,ARM_REG_INVALID}}},
-        {ARM_INS_B,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
-        {ARM_INS_ENDING}
-    };
-    uint32_t str_adr = find_str_bytes(fw,"ExportToEventProcedure");
-    if(!str_adr) {
-        return;
-    }
-    // for efficiency, could search near the string
-    iter_state_t *is=disasm_iter_new(fw,fw->rom_code_search_min_adr);
-    //iter_state_t *is=disasm_iter_new(fw,0xfc1e2a50);
-
-    uint32_t e_to_evp=0;
-    //while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,0,0xfc1e2a5c)) {
-    //printf("find e_to_evp\n");
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,0)) {
-        // TODO should check that R1 in prev/next got func ptr
-        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-            if(disasm_iter(fw,is)) {
-                if(is->insn->id == ARM_INS_BL && is->insn->detail->arm.operands[0].type == ARM_OP_IMM) {
-                    e_to_evp = ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                    break;
-                }
-            }
-        }
-    } 
-    if(!e_to_evp) {
-        printf("failed to find ExportToEventProcedure, giving up\n");
-        return;
-    }
-    save_sig("ExportToEventProcedure_FW",e_to_evp); 
-
-    //look for the underlying RegisterEventProcedure function (not currently used)
-    uint32_t reg_evp=0;
-    // start at identified Export..
-    disasm_iter_init(fw,is,ADR_CLEAR_THUMB(e_to_evp));
-    if(insn_match_seq(fw,is,reg_evp_match)) {
-        reg_evp=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-        //printf("RegisterEventProcedure found 0x%08x at %"PRIx64"\n",reg_evp,is->insn->address);
-        add_func_name("RegisterEventProcedure",reg_evp,NULL);
-    }
-
-    // ref to find RegisterEventProcTable
-    str_adr = find_str_bytes(fw,"DispDev_EnableEventProc"); // note this string may appear more than once, assuming want first
-    uint32_t reg_evp_alt1=0;
-    uint32_t reg_evp_tbl=0;
-    if(str_adr) {
-        disasm_iter_init(fw,is,str_adr - 512); // reset to a bit before where the string was found
-        uint32_t dd_enable_p=0;
-        while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
-            if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-                if(insn_match_find_next(fw,is,2,match_b_bl)) {
-                    reg_evp_alt1=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                    //printf("RegisterEventProcedure_alt1 found 0x%08x at %"PRIx64"\n",reg_evp_alt1,is->insn->address);
-                    add_func_name("RegisterEventProcedure_alt1",reg_evp_alt1,NULL);
-
-                    uint32_t regs[4];
-
-                    // get r0 and r1, backtracking up to 4 instructions
-                    if((get_call_const_args(fw,is,4,regs)&3)==3) {
-                        // sanity check, arg0 was the original thing we were looking for
-                        if(regs[0]==str_adr) {
-                            dd_enable_p=regs[1]; // constat value should already have correct ARM/THUMB bit
-                            //printf("DispDev_EnableEventProc found 0x%08x at %"PRIx64"\n",dd_enable_p,is->insn->address);
-                            add_func_name("DispDev_EnableEventProc",dd_enable_p,NULL);
-                            break;
-                        }
-                    }
-                }
-            }
-        } 
-        // found candidate function
-        if(dd_enable_p) {
-            disasm_iter_init(fw,is,ADR_CLEAR_THUMB(dd_enable_p)); // start at found func
-            if(insn_match_find_next(fw,is,4,match_b_bl)) { // find the first bl
-                // sanity check, make sure we get a const in r0
-                uint32_t regs[4];
-                if(get_call_const_args(fw,is,4,regs)&1) {
-                    reg_evp_tbl=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                    //printf("RegisterEventProcTable found 0x%08x at %"PRIx64"\n",reg_evp_tbl,is->insn->address);
-                    add_func_name("RegisterEventProcTable",reg_evp_tbl,NULL);
-                }
-            }
-        }
-    }
-    
-    // Look for another alt event proc registration function
-    uint32_t reg_evp_alt2=0;
-    str_adr = find_str_bytes(fw,"EngApp.Delete");
-    if(str_adr) {
-        disasm_iter_init(fw,is,str_adr - 512); // reset to a bit before where the string was found
-        while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
-            if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-                if(insn_match_find_next(fw,is,3,match_b_bl)) {
-                    uint32_t regs[4];
-                    // sanity check, constants in r0, r1 and r0 was the original thing we were looking for
-                    if((get_call_const_args(fw,is,4,regs)&3)==3) {
-                        if(regs[0]==str_adr) {
-                            reg_evp_alt2=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                            if(reg_evp_alt2 == reg_evp_alt1) {
-                                printf("RegisterEventProcedure_alt2 == _alt1 at %"PRIx64"\n",is->insn->address);
-                                reg_evp_alt2=0;
-                            } else {
-                                add_func_name("RegisterEventProcedure_alt2",reg_evp_alt2,NULL);
-                               // printf("RegisterEventProcedure_alt2 found 0x%08x at %"PRIx64"\n",reg_evp_alt2,is->insn->address);
-                                // TODO could follow alt2 and make sure it matches expected mov r2,0, bl register..
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Try to find CreateTask
-    uint32_t create_task=0;
-    // on digic 6 firmwares, the eventproc points to CreateTask in RAM, but ROM firmware code goes through an ARM wrapper
-    str_adr = find_str_bytes(fw,"FileWriteTask"); // fairly unique task name early in the dump
-    if(str_adr) {
-        disasm_iter_init(fw,is,str_adr - 1024); // reset to a bit before where the string was found
-        while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+1024)) {
-            if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-                if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
-                    create_task=is->insn->detail->arm.operands[0].imm;
-                    if(is->insn->id != ARM_INS_BLX) {
-                        // if not a BLX, thumb address
-                        create_task=ADR_SET_THUMB(create_task);
-                    }
-
-                    //printf("CreateTask found 0x%08x at %"PRIx64"\n",create_task,is->insn->address);
-                    add_func_name("CreateTask_arm",create_task,NULL);
-                    // TODO could sanity check other args
-                }
-            }
-        }
-    }
-
-
-    //printf("find e_to_evp calls\n");
-    // TODO could check near where ExportToEventProcedure was found,
-    // then search whole fw for refs to multiple (e.g. createtask)
+void find_generic_funcs(firmware *fw) {
     search_calls_multi_data_t match_fns[10];
 
     int match_fn_count=0;
-    match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(e_to_evp);
-    match_fns[match_fn_count].fn=process_reg_eventproc_call;
-    match_fn_count++;
-    if(reg_evp_alt1) {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(reg_evp_alt1);
+
+    int i=find_saved_sig("ExportToEventProcedure_FW");
+
+    if(i==-1) {
+        printf("failed to find ExportToEventProcedure\n");
+    } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
         match_fns[match_fn_count].fn=process_reg_eventproc_call;
         match_fn_count++;
     }
-    if(reg_evp_alt2) {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(reg_evp_alt2);
+    i=find_saved_sig("RegisterEventProcedure_alt1");
+
+    if(i==-1) {
+        printf("failed to find RegisterEventProcedure_alt1\n");
+    } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
         match_fns[match_fn_count].fn=process_reg_eventproc_call;
         match_fn_count++;
     }
-    if(reg_evp_tbl) {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(reg_evp_tbl);
+
+    i=find_saved_sig("RegisterEventProcTable");
+
+    if(i==-1) {
+        printf("failed to find RegisterEventProcTable\n");
+    } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
         match_fns[match_fn_count].fn=process_reg_eventproc_table_call;
         match_fn_count++;
     }
-    if(create_task) {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(create_task);
+
+    i=find_saved_sig("RegisterEventProcedure_alt2");
+    if(i==-1) {
+        printf("failed to find RegisterEventProcedure_alt2\n");
+    } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].fn=process_reg_eventproc_call;
+        match_fn_count++;
+    }
+
+    i=find_saved_sig("CreateTask_arm");
+    if(i==-1) {
+        printf("failed to find CreateTask_arm\n");
+    } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
         match_fns[match_fn_count].fn=process_createtask_call;
         match_fn_count++;
     }
+
+    iter_state_t *is=disasm_iter_new(fw,0);
+
     match_fns[match_fn_count].adr=0;
     match_fns[match_fn_count].fn=NULL;
 
@@ -799,80 +950,6 @@ void find_initial_funcs(firmware *fw) {
     fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
 
     disasm_iter_free(is);
-}
-
-sig_rule_t sig_rules[]={
-// function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
-{sig_match_named,   "CreateTask",               "CreateTask_FW",},
-{sig_match_named,   "ExitTask",                 "ExitTask_FW",},
-{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",1},
-{sig_match_named,   "Close",                    "Close_FW",},
-{sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
-{sig_match_named,   "Fopen_Fut",                "Fopen_Fut_FW",},
-{sig_match_named,   "Fread_Fut",                "Fread_Fut_FW",},
-{sig_match_named,   "Fseek_Fut",                "Fseek_Fut_FW",},
-{sig_match_named,   "Fwrite_Fut",               "Fwrite_Fut_FW",},
-{sig_match_named,   "GetAdChValue",             "GetAdChValue_FW",},
-{sig_match_named,   "GetCurrentAvValue",        "GetCurrentAvValue_FW",},
-{sig_match_named,   "GetBatteryTemperature",    "GetBatteryTemperature_FW",},
-{sig_match_named,   "GetCCDTemperature",        "GetCCDTemperature_FW",},
-{sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",1},
-{sig_match_named,   "GetOpticalTemperature",    "GetOpticalTemperature_FW",},
-{sig_match_named,   "GetSystemTime",            "GetSystemTime_FW",},
-{sig_match_named,   "GetVRAMHPixelsSize",       "GetVRAMHPixelsSize_FW",},
-{sig_match_named,   "GetVRAMVPixelsSize",       "GetVRAMVPixelsSize_FW",},
-{sig_match_named,   "GetZoomLensCurrentPoint",  "GetZoomLensCurrentPoint_FW",},
-{sig_match_named,   "GetZoomLensCurrentPosition","GetZoomLensCurrentPosition_FW",},
-{sig_match_named,   "GiveSemaphore",            "GiveSemaphore_FW",},
-{sig_match_named,   "IsStrobeChargeCompleted",  "EF.IsChargeFull_FW",},
-{sig_match_named,   "Read",                     "Read_FW",},
-{sig_match_named,   "LEDDrive",                 "LEDDrive_FW",},
-{sig_match_named,   "LockMainPower",            "LockMainPower_FW",},
-{sig_match_named,   "MoveFocusLensToDistance",  "MoveFocusLensToDistance_FW",},
-{sig_match_named,   "MoveIrisWithAv",           "MoveIrisWithAv_FW",},
-{sig_match_named,   "MoveZoomLensWithPoint",    "MoveZoomLensWithPoint_FW",},
-{sig_match_named,   "Open",                     "Open_FW",},
-{sig_match_named,   "PostLogicalEventForNotPowerType",  "PostLogicalEventForNotPowerType_FW",},
-{sig_match_named,   "PostLogicalEventToUI",     "PostLogicalEventToUI_FW",},
-{sig_match_named,   "PT_MoveOpticalZoomAt",     "SS.MoveOpticalZoomAt_FW",},
-{sig_match_named,   "PutInNdFilter",            "PutInNdFilter_FW",},
-{sig_match_named,   "PutOutNdFilter",           "PutOutNdFilter_FW",},
-{sig_match_named,   "SetAE_ShutterSpeed",       "SetAE_ShutterSpeed_FW",},
-{sig_match_named,   "SetAutoShutdownTime",      "SetAutoShutdownTime_FW",},
-{sig_match_named,   "SetCurrentCaptureModeType","SetCurrentCaptureModeType_FW",},
-{sig_match_named,   "SetScriptMode",            "SetScriptMode_FW",},
-{sig_match_named,   "SleepTask",                "SleepTask_FW",},
-{sig_match_named,   "TakeSemaphore",            "TakeSemaphore_FW",},
-{sig_match_named,   "TurnOnDisplay",            "DispCon_TurnOnDisplay_FW",},
-{sig_match_named,   "TurnOffDisplay",           "DispCon_TurnOffDisplay_FW",},
-{sig_match_named,   "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW",},
-{sig_match_named,   "UnlockMainPower",          "UnlockMainPower_FW",},
-//{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
-{sig_match_named,   "VbattGet",                 "VbattGet_FW",},
-{sig_match_named,   "Write",                    "Write_FW",},
-{sig_match_named,   "memcmp",                   "memcmp_FW",},
-{sig_match_named,   "memcpy",                   "memcpy_FW",},
-{sig_match_named,   "memset",                   "memset_FW",},
-{sig_match_named,   "lseek",                    "Lseek_FW",},
-{sig_match_named,   "strcmp",                   "strcmp_FW",},
-{sig_match_named,   "strcpy",                   "strcpy_FW",},
-{sig_match_named,   "strlen",                   "strlen_FW",},
-{sig_match_named,   "task_CaptSeq",             "task_CaptSeqTask",},
-{sig_match_named,   "task_ExpDrv",              "task_ExpDrvTask",},
-{sig_match_named,   "task_FileWrite",           "task_FileWriteTask",},
-//{sig_match_named,   "task_MovieRecord",         "task_MovieRecord",},
-//{sig_match_named,   "task_PhySw",               "task_PhySw",},
-{sig_match_named, "PTM_GetCurrentItem",         "PTM_GetCurrentItem_FW",},
-{NULL},
-};
-
-void run_sig_rules(firmware *fw)
-{
-    sig_rule_t *rule=&sig_rules[0];
-    while(rule->match_fn) {
-        rule->match_fn(fw,rule);
-        rule++;
-    }
 }
 
 void output_firmware_vals(firmware *fw)
@@ -1116,9 +1193,10 @@ int main(int argc, char **argv)
     }
     
     output_firmware_vals(&fw);
-    find_initial_funcs(&fw);
 
-    run_sig_rules(&fw);
+    run_sig_rules(&fw,sig_rules_initial);
+    find_generic_funcs(&fw);
+    run_sig_rules(&fw,sig_rules_main);
     write_stubs(&fw,max_find_func);
 
     write_output();
