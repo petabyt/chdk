@@ -425,6 +425,109 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
     func_names[next_func_entry].name = 0;
 }
 
+typedef struct sig_rule_s sig_rule_t;
+typedef int (*sig_match_fn)(firmware *fw, sig_rule_t *rule);
+// signature matching structure
+typedef struct sig_rule_s {
+    sig_match_fn    match_fn;       // function to locate function
+    char        *name;              // function name used in CHDK
+    char        *ref_name;          // event / other name to match in the firmware
+    int         param;              // function specific param/offset
+    // DryOS version specific params / offsets
+    int         dryos52_param; // ***** UPDATE for new DryOS version *****
+    int         dryos54_param;
+    int         dryos55_param;
+    int         dryos57_param;
+    int         dryos58_param;
+} sig_rule_t;
+
+// Get DryOS version specific param
+int dryos_param(firmware *fw, sig_rule_t *sig)
+{
+    switch (fw->dryos_ver)
+    {
+    case 52:    return sig->dryos52_param;
+    case 54:    return sig->dryos54_param;
+    case 55:    return sig->dryos55_param;
+    case 57:    return sig->dryos57_param;
+    case 58:    return sig->dryos58_param;
+    }
+    return 0;
+}
+
+
+// match already identified function found by name
+// if offset is 1, match the first called function with 20 insn instead (e.g. to avoid eventproc arg handling)
+// initial direct jumps (j_foo) assumed to have been handled
+int sig_match_named(firmware *fw, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_named: %s function not found\n",rule->ref_name);
+        return 0;
+    }
+    uint32_t ref_adr = func_names[i].val;
+    if(!ref_adr) {
+        printf("sig_match_named: %s address not found\n",rule->ref_name);
+        return 0;
+    }
+    // no offset, just save match as is
+    // TODO might want to validate anyway
+    if(rule->param == 0) {
+        save_sig(rule->name,func_names[i].val); 
+        return 1;
+    }
+    if(rule->param > 1) {
+        printf("sig_match_named: %s invalid param %d\n",rule->ref_name, rule->param);
+    }
+    // TODO - need ARM support in iter state
+    if(!ADR_IS_THUMB(ref_adr)) {
+        printf("sig_match_named: %s is ARM 0x%08x\n",rule->ref_name, ref_adr);
+        return 0;
+    }
+    int r=0;
+    fw_disasm_iter_start(fw,ADR_CLEAR_THUMB(ref_adr));
+    if(insn_match_find_next(fw,fw->is,20,match_b_bl_blximm)) {
+        uint32_t adr = B_BL_BLXimm_target(fw,fw->is->insn);
+        if(adr) {
+            if(fw->is->insn->id != ARM_INS_BLX) {
+                adr=ADR_SET_THUMB(adr);
+            }
+            save_sig(rule->name,adr); 
+            r=1;
+        } else {
+            printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
+        }
+    } else {
+        printf("sig_match_named: %s branch not found 0x%08x\n",rule->ref_name,ref_adr);
+    }
+    return r;
+}
+
+void add_event_proc(firmware *fw, char *name, uint32_t adr)
+{
+    // TODO - need ARM support in iter state
+    if(!ADR_IS_THUMB(adr)) {
+        printf("add_event_proc: %s is ARM 0x%08x\n",name,adr);
+        add_func_name(name,adr,"_FW");
+        return;
+    }
+    if(!fw_disasm_iter_single(fw,ADR_CLEAR_THUMB(adr))) {
+        printf("add_event_proc: %s disassembly failed at 0x%08x\n",name,adr);
+        return;
+    }
+    // handle functions that immediately jump
+    // only one level of jump for now, doesn't check for conditionals, but first insn shouldn't be conditional
+    uint32_t b_adr=B_target(fw,fw->is->insn);
+    if(b_adr) {
+        char *buf=malloc(strlen(name)+6);
+        sprintf(buf,"j_%s_FW",name);
+        add_func_name(buf,adr,NULL);
+        adr=ADR_SET_THUMB(b_adr);
+    }
+    add_func_name(name,adr,"_FW");
+}
+
 // process a call to an 2 arg event proc registration function
 int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
     uint32_t regs[4];
@@ -433,7 +536,8 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
         // TODO follow ptr to verify code, pick up underlying functions
         if(isASCIIstring(fw,regs[0])) {
             char *nm=(char *)adr2ptr(fw,regs[0]);
-            add_func_name(nm,regs[1],NULL);
+            add_event_proc(fw,nm,regs[1]);
+            //add_func_name(nm,regs[1],NULL);
             //printf("eventproc found %s 0x%08x at 0x%"PRIx64"\n",nm,regs[1],is->insn->address);
         } else {
             printf("eventproc name not string at 0x%"PRIx64"\n",is->insn->address);
@@ -465,7 +569,8 @@ int process_reg_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unu
                 uint32_t fn=*p;
                 p++;
                 //printf("found %s 0x%08x\n",nm,fn);
-                add_func_name(nm,fn,NULL);
+                add_event_proc(fw,nm,fn);
+                //add_func_name(nm,fn,NULL);
             }
         } else {
             printf("failed to get RegisterEventProcTable arg 0x%08x at 0x%"PRIx64"\n",regs[0],is->insn->address);
@@ -485,6 +590,7 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
             // TODO
             char *buf=malloc(64);
             char *nm=(char *)adr2ptr(fw,regs[0]);
+            /*
             // some special cases
             if(strcmp("CaptSeqTask",nm) == 0) {
                 strcpy(buf,"task_CaptSeq");
@@ -497,6 +603,8 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
             } else {
                 sprintf(buf,"task_%s",nm);
             }
+            */
+            sprintf(buf,"task_%s",nm);
             //printf("found %s 0x%08x at 0x%"PRIx64"\n",buf,regs[3],is->insn->address);
             add_func_name(buf,regs[3],NULL);
         } else {
@@ -508,7 +616,11 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
     return 0;
 }
 
-void find_event_procs(firmware *fw) {
+/*
+find event proc registration, task creation funcs,
+then collect as many calls as possible, whether or not listed in funcs to find
+*/
+void find_initial_funcs(firmware *fw) {
     static insn_match_t reg_evp_match[]={
         {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R2},{ARM_OP_REG,ARM_REG_R1}}},
         {ARM_INS_LDR,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_MEM,ARM_REG_INVALID}}},
@@ -687,6 +799,75 @@ void find_event_procs(firmware *fw) {
     fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
 
     disasm_iter_free(is);
+}
+
+sig_rule_t sig_rules[]={
+// function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
+{sig_match_named,   "CreateTask",               "CreateTask_FW",},
+{sig_match_named,   "ExitTask",                 "ExitTask_FW",},
+{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",1},
+{sig_match_named,   "Close",                    "Close_FW",},
+{sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
+{sig_match_named,   "Fopen_Fut",                "Fopen_Fut_FW",},
+{sig_match_named,   "Fread_Fut",                "Fread_Fut_FW",},
+{sig_match_named,   "Fseek_Fut",                "Fseek_Fut_FW",},
+{sig_match_named,   "Fwrite_Fut",               "Fwrite_Fut_FW",},
+{sig_match_named,   "GetAdChValue",             "GetAdChValue_FW",},
+{sig_match_named,   "GetCurrentAvValue",        "GetCurrentAvValue_FW",},
+{sig_match_named,   "GetBatteryTemperature",    "GetBatteryTemperature_FW",},
+{sig_match_named,   "GetCCDTemperature",        "GetCCDTemperature_FW",},
+{sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",1},
+{sig_match_named,   "GetOpticalTemperature",    "GetOpticalTemperature_FW",},
+{sig_match_named,   "GetSystemTime",            "GetSystemTime_FW",},
+{sig_match_named,   "GetVRAMHPixelsSize",       "GetVRAMHPixelsSize_FW",},
+{sig_match_named,   "GetVRAMVPixelsSize",       "GetVRAMVPixelsSize_FW",},
+{sig_match_named,   "GetZoomLensCurrentPoint",  "GetZoomLensCurrentPoint_FW",},
+{sig_match_named,   "GetZoomLensCurrentPosition","GetZoomLensCurrentPosition_FW",},
+{sig_match_named,   "GiveSemaphore",            "GiveSemaphore_FW",},
+{sig_match_named,   "Read",                     "Read_FW",},
+{sig_match_named,   "LEDDrive",                 "LEDDrive_FW",},
+{sig_match_named,   "LockMainPower",            "LockMainPower_FW",},
+{sig_match_named,   "MoveFocusLensToDistance",  "MoveFocusLensToDistance_FW",},
+{sig_match_named,   "MoveIrisWithAv",           "MoveIrisWithAv_FW",},
+{sig_match_named,   "MoveZoomLensWithPoint",    "MoveZoomLensWithPoint_FW",},
+{sig_match_named,   "Open",                     "Open_FW",},
+{sig_match_named,   "PostLogicalEventForNotPowerType",  "PostLogicalEventForNotPowerType_FW",},
+{sig_match_named,   "PostLogicalEventToUI",     "PostLogicalEventToUI_FW",},
+{sig_match_named,   "PutInNdFilter",            "PutInNdFilter_FW",},
+{sig_match_named,   "PutOutNdFilter",           "PutOutNdFilter_FW",},
+{sig_match_named,   "SetAE_ShutterSpeed",       "SetAE_ShutterSpeed_FW",},
+{sig_match_named,   "SetAutoShutdownTime",      "SetAutoShutdownTime_FW",},
+{sig_match_named,   "SetCurrentCaptureModeType","SetCurrentCaptureModeType_FW",},
+{sig_match_named,   "SetScriptMode",            "SetScriptMode_FW",},
+{sig_match_named,   "SleepTask",                "SleepTask_FW",},
+{sig_match_named,   "TakeSemaphore",            "TakeSemaphore_FW",},
+{sig_match_named,   "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW",},
+{sig_match_named,   "UnlockMainPower",          "UnlockMainPower_FW",},
+//{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
+{sig_match_named,   "VbattGet",                 "VbattGet_FW",},
+{sig_match_named,   "Write",                    "Write_FW",},
+{sig_match_named,   "memcmp",                   "memcmp_FW",},
+{sig_match_named,   "memcpy",                   "memcpy_FW",},
+{sig_match_named,   "memset",                   "memset_FW",},
+{sig_match_named,   "strcmp",                   "strcmp_FW",},
+{sig_match_named,   "strcpy",                   "strcpy_FW",},
+{sig_match_named,   "strlen",                   "strlen_FW",},
+{sig_match_named,   "task_CaptSeq",             "task_CaptSeqTask",},
+{sig_match_named,   "task_ExpDrv",              "task_ExpDrvTask",},
+{sig_match_named,   "task_FileWrite",           "task_FileWriteTask",},
+//{sig_match_named,   "task_MovieRecord",         "task_MovieRecord",},
+//{sig_match_named,   "task_PhySw",               "task_PhySw",},
+{sig_match_named, "PTM_GetCurrentItem",         "PTM_GetCurrentItem_FW",},
+{NULL},
+};
+
+void run_sig_rules(firmware *fw)
+{
+    sig_rule_t *rule=&sig_rules[0];
+    while(rule->match_fn) {
+        rule->match_fn(fw,rule);
+        rule++;
+    }
 }
 
 void output_firmware_vals(firmware *fw)
@@ -930,8 +1111,9 @@ int main(int argc, char **argv)
     }
     
     output_firmware_vals(&fw);
-    find_event_procs(&fw);
+    find_initial_funcs(&fw);
 
+    run_sig_rules(&fw);
     write_stubs(&fw,max_find_func);
 
     write_output();
