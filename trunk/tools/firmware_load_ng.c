@@ -432,8 +432,17 @@ uint32_t LDR_PC2val(firmware *fw, cs_insn *insn)
     return 0;
 }
 
+// return the target of B instruction, or 0 if current instruction isn't BL
+uint32_t B_target(firmware *fw, cs_insn *insn)
+{
+    if(insn->id == ARM_INS_B) {
+        return insn->detail->arm.operands[0].imm;
+    }
+    return 0; // TODO could be valid
+}
+
+
 // return the target of BL instruction, or 0 if current instruction isn't BL
-// should maybe include BLX, possibly adjust thumb bit?
 uint32_t BL_target(firmware *fw, cs_insn *insn)
 {
     if(insn->id == ARM_INS_BL) {
@@ -461,6 +470,8 @@ uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn)
     }
     return 0; // TODO could be valid
 }
+
+// TODO should have variants of above including LDR pc, [pc, #x] for some of the above
 
 // ****** disassembly iterator utilities ******
 // allocate a new iterator state, optionally initializing at adr (0/invalid OK)

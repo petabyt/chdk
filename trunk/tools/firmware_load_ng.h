@@ -178,6 +178,11 @@ uint32_t* ADR2valptr(firmware *fw, cs_insn *insn);
 // return value loaded by PC relative LDR instruction, or 0 if out of range
 uint32_t LDR_PC2val(firmware *fw, cs_insn *insn);
 
+// return the target of B instruction, or 0 if current instruction isn't B
+// both ARM and thumb instructions will NOT have the thumb bit set,
+// thumbness must be determined from current state
+uint32_t B_target(firmware *fw, cs_insn *insn);
+
 // return the target of BL instruction, or 0 if current instruction isn't BL
 // both ARM and thumb instructions will NOT have the thumb bit set,
 // thumbness must be determined from current state
@@ -208,6 +213,8 @@ if disassembly fails, is->adr is not incremented
 int disasm_iter(firmware *fw, iter_state_t *is);
 
 // ***** disassembly utilities operating on the default iterator state *****
+// use the fw_disasm_iter functions to disassemble without setting up a new state,
+// but beware some other functions might change them
 /*
 initialize iter state to begin iterating at adr
 */
