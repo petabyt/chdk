@@ -73,8 +73,14 @@ typedef struct {
     // Alt copy of ROM in RAM (DryOS R50+)
     uint8_t        *buf8_2;         // pointer to loaded FW code that is copied
     uint32_t        base2;          // RAM address copied to
-    uint32_t        base_copied;    // ROM address copied from
+    uint32_t        base2_copied;    // ROM address copied from
     int             size2;          // Block size copied in bytes
+
+    // lets copy some more! (DryOS R57?+)
+    uint8_t        *buf8_3;         // pointer to loaded FW code that is copied
+    uint32_t        base3;          // RAM address copied to
+    uint32_t        base3_copied;   // ROM address copied from
+    int             size3;          // Block size copied in bytes
     
     // convenience values to optimize code searching
     uint32_t        rom_code_search_min_adr; // minimum ROM address for normal code searches (i.e. firmware start)

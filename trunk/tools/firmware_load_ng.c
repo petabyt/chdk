@@ -1031,20 +1031,33 @@ int firmware_init_capstone(firmware *fw)
     return 1;
 }
 
-// init basic copied RAM code / data ranges
-void firmware_init_data_ranges(firmware *fw)
+/*
+look for
+ldr rx, =ROM ADR
+ldr ry, =non-rom adr
+ldr rz, =non ROM adr > ry
+leave is pointing at last LDR, or last checked instruction
+*/
+
+int find_startup_copy(firmware *fw,
+                         iter_state_t *is,
+                         int max_search,
+                         uint32_t *src_start,
+                         uint32_t *dst_start,
+                         uint32_t *dst_end)
 {
-//TODO maybe should return status
+    int count=0;
     uint32_t *fptr = NULL;
     uint32_t *dptr = NULL;
     uint32_t *eptr = NULL;
-    int count=0;
-    // start at fw start  + 12 (32 bit jump, gaonisoy)
-    fw_disasm_iter_start(fw,fw->base + fw->main_offs + 12);
-    // TODO should use const finding funcs
-    while(fw_disasm_iter(fw) && count < 20) {
-        uint32_t *pv=LDR_PC2valptr(fw,fw->is->insn);
-        // not an LDR pc, reset;
+    *src_start=0;
+    *dst_start=0;
+    *dst_end=0;
+
+    while(disasm_iter(fw,is) && count < max_search) {
+        uint32_t *pv=LDR_PC2valptr(fw,is->insn);
+        // not an LDR pc, reset
+        // TODO some firmwares might use other instructions
         if(!pv) {
             fptr=dptr=eptr=NULL;
         }else if(!fptr) {
@@ -1059,64 +1072,129 @@ void firmware_init_data_ranges(firmware *fw)
                 fptr=NULL; // dest address in ROM, reset
             }
         } else if(!eptr) {
-            if(*pv < fw->base) {
+            if(*pv < fw->base && *pv > *dptr) {
                 eptr=pv;
-            } else { // dest end address in ROM, reset
+            } else { // dest end address in ROM, or before source, reset
+                    // TODO maybe should swap instead if < source
                 fptr=dptr=NULL;
             }
         }
         if(fptr && dptr && eptr) {
-            fw->buf8_2 = adr2ptr(fw,*fptr);
-            fw->base2 = *dptr;
-            fw->base_copied = *fptr;
-            fw->size2 = (*eptr - *dptr);
+            *src_start=*fptr;
+            *dst_start=*dptr;
+            *dst_end=*eptr;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// init basic copied RAM code / data ranges
+void firmware_init_data_ranges(firmware *fw)
+{
+//TODO maybe should return status
+    uint32_t src_start, dst_start, dst_end;
+    uint32_t last_found_copy = 0;
+
+    // start at fw start  + 12 (32 bit jump, gaonisoy)
+    iter_state_t *is=disasm_iter_new(fw, fw->base + fw->main_offs + 12);
+
+    fw->data_init_start=0;
+    fw->data_start=0;
+    fw->data_len=0;
+
+    fw->buf8_2=0;
+    fw->base2=0;
+    fw->base2_copied=0;
+    fw->size2=0;
+
+    fw->buf8_3=0;
+    fw->base3=0;
+    fw->base3_copied=0;
+    fw->size3=0;
+
+    fw->memisostart=0;
+
+    // TODO  pre-d6 ROMs have a lot more stuff before first copy
+    int max_search=100;
+    while(find_startup_copy(fw,is,max_search,&src_start,&dst_start,&dst_end)) {
+        // all known copied code is 3f1000 or higher, guess data
+        if(dst_start < 0x100000) {
+            // fprintf(stderr, "data?  @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
+            if(fw->data_init_start) {
+                fprintf(stderr,"firmware_init_data_ranges: data already found, unexpected start 0x%08x src 0x%08x end 0x%08x\n",
+                        dst_start,src_start,dst_end);
+                continue;
+            }
+
+            // not a known value, warn
+            if(dst_start != 0x1900 && dst_start != 0x8000) {
+                fprintf(stderr,"firmware_init_data_ranges: guess unknown ROM data_start 0x%08x src 0x%08x end 0x%08x\n",
+                        dst_start,src_start,dst_end);
+            }
+            fw->data_init_start=src_start;
+            fw->data_start=dst_start;
+            fw->data_len=dst_end-dst_start;
+        } else if(dst_start < 0x08000000) { /// highest known first copied ram code 0x010c1000
+            // fprintf(stderr,"code1? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
+            if(fw->base2) {
+                fprintf(stderr,"firmware_init_data_ranges: base2 already found, unexpected start 0x%08x src 0x%08x end 0x%08x\n",
+                        dst_start,src_start,dst_end);
+                continue;
+            }
+            // known values
+            if( dst_start != 0x003f1000 && 
+                dst_start != 0x00431000 && 
+                dst_start != 0x00471000 && 
+                dst_start != 0x00685000 && 
+                dst_start != 0x00671000 && 
+                dst_start != 0x006b1000 && 
+                dst_start != 0x010c1000 &&
+                dst_start != 0x010e1000) {
+                fprintf(stderr,"firmware_init_data_ranges: guess unknown base2 0x%08x src 0x%08x end 0x%08x\n",
+                        dst_start,src_start,dst_end);
+            }
+            fw->buf8_2 = adr2ptr(fw,src_start);
+            fw->base2 = dst_start;
+            fw->base2_copied = src_start;
+            fw->size2 = (dst_end - dst_start);
+        } else { // know < ROM based on match, assume second copied code
+            // fprintf(stderr, "code2? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
+            if(fw->base3) {
+                fprintf(stderr,"firmware_init_data_ranges: base3 already found, unexpected start 0x%08x src 0x%08x end 0x%08x\n",
+                        dst_start,src_start,dst_end);
+                continue;
+            }
+            if(dst_start != 0xbfe10800) { // known value (g5x)
+                fprintf(stderr,"firmware_init_data_ranges: guess unknown base3 0x%08x src 0x%08x end 0x%08x\n",
+                        dst_start,src_start,dst_end);
+            }
+            fw->buf8_3 = adr2ptr(fw,src_start);
+            fw->base3 = dst_start;
+            fw->base3_copied = src_start;
+            fw->size3 = (dst_end - dst_start);
+        }
+        last_found_copy=is->adr;
+        if(fw->data_start && fw->base2 && fw->base3) {
             break;
         }
-        count++;
+        // after first, shorter search range in between copies
+        max_search=16;
     }
-    // look for ROM to ram data copy 
-    // TODO identical logic to above, could look for something that looks like MEMBASEADDR
-    count=0;
-    while(fw_disasm_iter(fw) && count < 20) {
-        uint32_t *pv=LDR_PC2valptr(fw,fw->is->insn);
-        // not an LDR pc, reset;
-        if(!pv) {
-            fptr=dptr=eptr=NULL;
-        }else if(!fptr) {
-            // only candidate if in ROM
-            if(*pv > fw->base) {
-                fptr=pv;
-            }
-        } else if(!dptr) {
-            if((*pv < fw->base) && (*pv < 0xb0000000)) { // TODO some cams (e.g M3, G3x) have yet another area with code, avoid that
-                dptr=pv;
-            } else {
-                fptr=NULL; // dest address not in likely RAM, avoid that
-            }
-        } else if(!eptr) {
-            if(*pv < fw->base) {
-                eptr=pv;
-            } else { // dest end address in ROM, reset
-                fptr=dptr=NULL;
-            }
-        }
-        if(fptr && dptr && eptr) {
-            fw->data_init_start=*fptr;
-            fw->data_start=*dptr;
-            fw->data_len=*eptr-*dptr;
-            break;
-        }
-        count++;
-    }
-    count=0;
-    // look for BSS init
-    if(fw->data_start) {
-        while(fw_disasm_iter(fw) && count < 20) {
-            uint32_t *pv=LDR_PC2valptr(fw,fw->is->insn);
+
+    // look for BSS init after last found copy
+    if(last_found_copy) {
+        int count=0;
+        uint32_t *eptr=NULL;
+        uint32_t *dptr=NULL;
+        disasm_iter_init(fw,is,last_found_copy);
+        while(disasm_iter(fw,is) && count < 20) {
+            uint32_t *pv=LDR_PC2valptr(fw,is->insn);
             // not an LDR pc, reset;
             if(!pv) {
                 dptr=eptr=NULL;
             } else if(!dptr) {
+                // TODO older firmwares use reg with ending value from DATA copy
                 // should be equal to end pointer of data
                 if(*pv == fw->data_start + fw->data_len) {
                     dptr=pv;
@@ -1125,22 +1203,25 @@ void firmware_init_data_ranges(firmware *fw)
                 if(*pv < fw->base) {
                     eptr=pv;
                 } else { // dest end address in ROM, reset
-                    fptr=dptr=NULL;
+                    eptr=dptr=NULL;
                 }
             }
             if(dptr && eptr) {
+                // fprintf(stderr, "bss?   @0x%"PRIx64" 0x%08x-0x%08x\n",is->adr,*dptr,*eptr);
                 fw->memisostart=*eptr;
                 break;
             }
             count++;
         }
     }
-    // if data or copied firmware found, adjust code search range
+    // if data or copied firmware found, adjust default code search range
+    // TODO base3
     if(fw->data_start) {
         fw->rom_code_search_max_adr=fw->data_init_start;
-    } else if(fw->base_copied) {
-        fw->rom_code_search_max_adr=fw->base_copied;
+    } else if(fw->base2_copied) {
+        fw->rom_code_search_max_adr=fw->base2_copied;
     } 
+    disasm_iter_free(is);
 }
 
 // free resources associated with fw
