@@ -1003,8 +1003,13 @@ void output_firmware_vals(firmware *fw)
     }
     if (fw->base2 != 0)
     {
-        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base_copied,fw->base2,fw->size2/4);
+        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base2_copied,fw->base2,fw->size2/4);
     }
+    if (fw->base3 != 0)
+    {
+        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base3_copied,fw->base3,fw->size3/4);
+    }
+    add_blankline();
 
 }
 // copied from finsig_dryos
