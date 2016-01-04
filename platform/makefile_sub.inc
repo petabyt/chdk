@@ -178,7 +178,7 @@ include $(topdir)bottom.inc
 # to prevent make from trying implicit rules to create them. Speeds up build process
 ../../../makefile_sub.inc: ;
 $(tools)/signatures_$(PLATFORMOS).h: ;
-$(tools)/finsig_$(PLATFORMOS)$(EXE): ;
+$(FINSIG_EXE): ;
 $(platform)/generic/*.c: ;
 $(core)/*.c: ;
 $(core)/*.S: ;
