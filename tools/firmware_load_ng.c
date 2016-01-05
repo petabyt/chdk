@@ -618,7 +618,11 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
 
     // default to end of start range
     if(!adr_end) {
-        adr_end=r_start->start + r_start->bytes - 2;
+        if(r_start->type == ADR_RANGE_ROM) {
+            adr_end = fw->rom_code_search_max_adr;
+        } else {
+            adr_end=r_start->start + r_start->bytes - 2;
+        }
     }
     adr_range_t *r_end=adr_get_range(fw,adr_end);
 
