@@ -999,15 +999,25 @@ void output_firmware_vals(firmware *fw)
     if (fw->data_init_start)
     {
         bprintf("//   MEMBASEADDR = 0x%x\n",fw->data_start);
-        bprintf("\n// Note, init DATA :- from 0x%08x, to 0x%08x, len %d words.\n",fw->data_init_start,fw->data_start,fw->data_len/4);
     }
-    if (fw->base2 != 0)
-    {
-        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base2_copied,fw->base2,fw->size2/4);
-    }
-    if (fw->base3 != 0)
-    {
-        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base3_copied,fw->base3,fw->size3/4);
+
+    bprintf("\n// Detected address ranges:\n");
+    int i;
+    for(i=0; i<fw->adr_range_count; i++) {
+        if(fw->adr_ranges[i].type == ADR_RANGE_ROM) {
+            bprintf("// %-8s 0x%08x - 0x%08x (%7d bytes)\n",
+                    adr_range_type_str(fw->adr_ranges[i].type),
+                    fw->adr_ranges[i].start,
+                    fw->adr_ranges[i].start+fw->adr_ranges[i].bytes,
+                    fw->adr_ranges[i].bytes);
+        } else {
+            bprintf("// %-8s 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n",
+                    adr_range_type_str(fw->adr_ranges[i].type),
+                    fw->adr_ranges[i].start,
+                    fw->adr_ranges[i].start+fw->adr_ranges[i].bytes,
+                    fw->adr_ranges[i].src_start,
+                    fw->adr_ranges[i].bytes);
+        }
     }
     add_blankline();
 

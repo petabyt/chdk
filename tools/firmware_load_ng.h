@@ -36,16 +36,28 @@ typedef struct {
     uint32_t adrs[ADR_HIST_SIZE]; 
 } adr_hist_t;
 
+// state for disassembly iteration
 typedef struct {
     const uint8_t *code; // pointer into buffer for code
     uint64_t adr; // firmware address - must be 64 bit for capstone iter
     size_t size; // remaining code size
     cs_insn *insn; // cached instruction
     csh cs_handle; // capstone handle to use with this state
-    adr_hist_t ah; // history of prevoius instructions
+    adr_hist_t ah; // history of previous instructions
 }  iter_state_t;
 
-// minimal based on firmware_load.h
+// struct for regions of ROM that are copied elsewhere
+typedef struct {
+    uint8_t *buf;
+    uint32_t start;     // copied / relocated firmware address 
+    uint32_t src_start; // source ROM firmware address
+    int bytes; // size in bytes
+    int type;   // ADR_RANGE_* define
+} adr_range_t;
+
+#define FW_MAX_ADR_RANGES 5
+
+// loaded firmware
 typedef struct {
     union {
         uint8_t        *buf8;                // Firmware data
@@ -70,17 +82,9 @@ typedef struct {
     uint32_t        data_init_start;    // Start address of initialisation section for DATA in ROM
     int             data_len;           // Length of data section in bytes
     
-    // Alt copy of ROM in RAM (DryOS R50+)
-    uint8_t        *buf8_2;         // pointer to loaded FW code that is copied
-    uint32_t        base2;          // RAM address copied to
-    uint32_t        base2_copied;    // ROM address copied from
-    int             size2;          // Block size copied in bytes
-
-    // lets copy some more! (DryOS R57?+)
-    uint8_t        *buf8_3;         // pointer to loaded FW code that is copied
-    uint32_t        base3;          // RAM address copied to
-    uint32_t        base3_copied;   // ROM address copied from
-    int             size3;          // Block size copied in bytes
+    // address ranges for ROM and copied data
+    int             adr_range_count;
+    adr_range_t     adr_ranges[FW_MAX_ADR_RANGES];
     
     // convenience values to optimize code searching
     uint32_t        rom_code_search_min_adr; // minimum ROM address for normal code searches (i.e. firmware start)
@@ -100,18 +104,15 @@ uint8_t* adr2ptr(firmware *fw, uint32_t adr);
 // as above, but include initialized data area (NOTE may change on camera at runtime!)
 uint8_t* adr2ptr_with_data(firmware *fw, uint32_t adr);
 
+// return constant string describing type
+const char* adr_range_type_str(int type);
+
 // convert pointer into buf into firmware address
 // current doesn't sanity check or adjust ranges
 uint32_t ptr2adr(firmware *fw, uint8_t *ptr);
 
-/*
-return which address range adr is in, or INVALID (=0) if none
-*/
-int adr_range(firmware *fw, uint32_t adr);
-
-// as above, but include initialized data area (NOTE may change on camera at runtime!)
-int adr_range_with_data(firmware *fw, uint32_t adr);
-
+// return address range struct for adr, or NULL if not in known range
+adr_range_t *adr_get_range(firmware *fw, uint32_t adr);
 
 //
 // Find the index of a string in the firmware
@@ -334,6 +335,9 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
 int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match);
 
 // ****** firmware loading / initialization / de-allocation ******
+// add given address range
+void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type);
+
 // load firmware and initialize stuff that doesn't require disassembly
 void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_arch);
 
