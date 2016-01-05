@@ -151,28 +151,18 @@ int isASCIIstring(firmware *fw, uint32_t adr)
     return 0;
 }
 
-
-/*
-return which address range adr is in, or INVALID (=0) if none
-*/
-int adr_range(firmware *fw, uint32_t adr)
+// return address range struct for adr, or NULL if not in known range
+adr_range_t *adr_get_range(firmware *fw, uint32_t adr)
 {
-    if(fw->base2 && adr >= fw->base2 && adr < fw->base2 + fw->size2) {
-        return ADR_RANGE_RAM_CODE;
+    int i;
+    adr_range_t *r=fw->adr_ranges;
+    for(i=0;i<fw->adr_range_count;i++) {
+        if(adr >= r->start && adr < r->start + r->bytes) {
+            return r;
+        }
+        r++;
     }
-    if((adr >= fw->base) && (adr < fw->base + fw->size8)) {
-        return ADR_RANGE_ROM;
-    }
-    return ADR_RANGE_INVALID;
-}
-
-// as above, but include initialized data area (NOTE may change on camera at runtime!)
-int adr_range_with_data(firmware *fw, uint32_t adr)
-{
-    if(fw->data_start && adr >= fw->data_start && adr < fw->data_start + fw->data_len) {
-        return ADR_RANGE_INIT_DATA;
-    }
-    return adr_range(fw,adr);
+    return NULL;
 }
 
 uint32_t ptr2adr(firmware *fw, uint8_t *ptr)
@@ -183,11 +173,14 @@ uint32_t ptr2adr(firmware *fw, uint8_t *ptr)
 
 uint8_t* adr2ptr(firmware *fw, uint32_t adr)
 {
-    switch(adr_range(fw,adr)) {
+    adr_range_t *r=adr_get_range(fw,adr);
+    if(!r) {
+        return NULL;
+    }
+    switch(r->type) {
         case ADR_RANGE_RAM_CODE:
-            return (fw->buf8_2)+(adr - fw->base2);
         case ADR_RANGE_ROM:
-            return (fw->buf8)+(adr - fw->base);
+            return (r->buf)+(adr - r->start);
         default:
             return NULL;
     }
@@ -195,17 +188,37 @@ uint8_t* adr2ptr(firmware *fw, uint32_t adr)
 
 uint8_t* adr2ptr_with_data(firmware *fw, uint32_t adr)
 {
-    switch(adr_range_with_data(fw,adr)) {
+    adr_range_t *r=adr_get_range(fw,adr);
+    if(!r) {
+        return NULL;
+    }
+    switch(r->type) {
         case ADR_RANGE_RAM_CODE:
-            return (fw->buf8_2)+(adr - fw->base2);
-        case ADR_RANGE_ROM:
-            return (fw->buf8)+(adr - fw->base);
         case ADR_RANGE_INIT_DATA:
-            return (fw->buf8 + (fw->data_init_start - fw->base) + (adr - fw->data_start));
+        case ADR_RANGE_ROM:
+            return (r->buf)+(adr - r->start);
         default:
             return NULL;
     }
 }
+
+// return constant string describing type
+const char* adr_range_type_str(int type)
+{
+    switch(type) {
+        case ADR_RANGE_INVALID:
+            return "(invalid)";
+        case ADR_RANGE_ROM:
+            return "ROM";
+        case ADR_RANGE_RAM_CODE:
+            return "RAM code";
+        case ADR_RANGE_INIT_DATA:
+            return "RAM data";
+        default:
+            return "(unknown)";
+    }
+}
+
 
 /*
 return firmware address of 32 bit value, starting at address "start"
@@ -597,23 +610,26 @@ v1 and udata are provided to the callback
 uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32_t v1, void *udata,uint32_t adr_end)
 {
     uint32_t adr_start=is->adr; 
-    int r_start=adr_range(fw,adr_start);
+    adr_range_t *r_start=adr_get_range(fw,adr_start);
+    if(!r_start) {
+        fprintf(stderr,"fw_search_insn: invalid start address 0x%08x\n",adr_start);
+        return 0;
+    }
 
     // default to end of start range
     if(!adr_end) {
-        if(r_start == ADR_RANGE_RAM_CODE) {
-            adr_end=fw->base2 + (fw->size2 - 2);
-        } else {
-            // if start invalid, all will be rejected below
-            adr_end=fw->rom_code_search_max_adr;
-        }
+        adr_end=r_start->start + r_start->bytes - 2;
     }
-    int r_end=adr_range(fw,adr_end);
+    adr_range_t *r_end=adr_get_range(fw,adr_end);
 
-    if(!r_start || !r_end 
-        || (r_start != r_end) 
+    if(!r_end) {
+        fprintf(stderr,"fw_search_insn: invalid end address 0x%08x\n",adr_end);
+        return 0;
+    }
+
+    if( (r_start != r_end) 
         || (adr_end < adr_start)
-        || (adr_start & 1)
+        || (adr_start & 1) // TODO might want to use thumb bits to set dis mode
         || (adr_end & 1)) {
         fprintf(stderr,"fw_search_insn: invalid address range 0x%08x 0x%08x\n",adr_start,adr_end);
         return 0;
@@ -625,7 +641,7 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
     }
     uint32_t adr=adr_start;
     // don't bother with buf ranges for RAM code
-    if(r_start == ADR_RANGE_RAM_CODE) {
+    if(r_start->type != ADR_RANGE_ROM) {
         while(adr < adr_end) {
             if(disasm_iter(fw,is)) {
                 uint32_t r=f(fw,is,v1,udata);
@@ -934,6 +950,45 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
 }
 
 // ****** firmware loading / initialization / de-allocation ******
+// add given address range
+void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type)
+{
+    if(fw->adr_range_count == FW_MAX_ADR_RANGES) {
+        fprintf(stderr,"fw_add_adr_range: FW_MAX_ADR_RANGES hit\n");
+        return;
+    }
+    if(src_start < fw->base) {
+        fprintf(stderr,"fw_add_adr_range: src_start 0x%08x < base 0x%08x\n",src_start,fw->base);
+        return;
+    }
+    if(src_start >= fw->base+fw->size8) {
+        fprintf(stderr,"fw_add_adr_range: src_start 0x%08x outside dump end 0x%08x\n",src_start,fw->base+fw->size8);
+        return;
+    }
+    if(end <= start) {
+        fprintf(stderr,"fw_add_adr_range: end 0x%08x <= start 0x%08x\n",end,start);
+        return;
+    }
+    int len=end-start;
+    if(len > 0xFFFFFFFF - src_start) {
+        fprintf(stderr,"fw_add_adr_range: range too long %d\n",len);
+        return;
+    }
+    if(len > fw->size8 - (start - fw->base)) {
+        fprintf(stderr,"fw_add_adr_range: range outside of dump %d\n",len);
+        return;
+    }
+    adr_range_t *r=&fw->adr_ranges[fw->adr_range_count];
+    // TODO some firmware copies (i.e. g5x code 2) may end on non-word aligned address even though copy is words
+    r->start=start;
+    r->src_start=src_start;
+    r->bytes=len;
+    r->type=type;
+    r->buf=fw->buf8 + (r->src_start - fw->base);
+
+    fw->adr_range_count++;
+}
+
 
 // load firmware and initialize stuff that doesn't require disassembly
 void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_arch)
@@ -975,6 +1030,11 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     fclose(f);
     findRanges(fw);
     int k = find_str(fw, "gaonisoy");
+
+    fw->adr_range_count=0;
+    // add ROM
+    fw_add_adr_range(fw,fw->base, fw->base+fw->size8, fw->base, ADR_RANGE_ROM);
+
     fw->main_offs = 0;
     // assume firmware start is 32 bit jump over goanisoy
     if(k != 1) {
@@ -1000,10 +1060,6 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     {
         fw->firmware_ver_str = (char *)fw->buf8 + k*4;
     }
-    // ROM->RAM copied kernel code not yet found
-    fw->buf8_2 = 0;
-    fw->base2 = 0;
-    fw->size2 = 0;
     fw->rom_code_search_min_adr = fw->base + fw->main_offs; // 0 if not found
     fw->rom_code_search_max_adr=fw->base+fw->size8 - 4; // default == end of fw, may be adjusted by firmware_init_data_ranges
 }
@@ -1103,17 +1159,10 @@ void firmware_init_data_ranges(firmware *fw)
     fw->data_start=0;
     fw->data_len=0;
 
-    fw->buf8_2=0;
-    fw->base2=0;
-    fw->base2_copied=0;
-    fw->size2=0;
-
-    fw->buf8_3=0;
-    fw->base3=0;
-    fw->base3_copied=0;
-    fw->size3=0;
-
     fw->memisostart=0;
+
+    int base2_found=0;
+    int base3_found=0;
 
     // TODO  pre-d6 ROMs have a lot more stuff before first copy
     int max_search=100;
@@ -1135,13 +1184,15 @@ void firmware_init_data_ranges(firmware *fw)
             fw->data_init_start=src_start;
             fw->data_start=dst_start;
             fw->data_len=dst_end-dst_start;
+            fw_add_adr_range(fw,dst_start,dst_end,src_start, ADR_RANGE_INIT_DATA);
         } else if(dst_start < 0x08000000) { /// highest known first copied ram code 0x010c1000
             // fprintf(stderr,"code1? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
-            if(fw->base2) {
+            if(base2_found) {
                 fprintf(stderr,"firmware_init_data_ranges: base2 already found, unexpected start 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
                 continue;
             }
+            base2_found=1;
             // known values
             if( dst_start != 0x003f1000 && 
                 dst_start != 0x00431000 && 
@@ -1154,28 +1205,23 @@ void firmware_init_data_ranges(firmware *fw)
                 fprintf(stderr,"firmware_init_data_ranges: guess unknown base2 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
             }
-            fw->buf8_2 = adr2ptr(fw,src_start);
-            fw->base2 = dst_start;
-            fw->base2_copied = src_start;
-            fw->size2 = (dst_end - dst_start);
+            fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE);
         } else { // know < ROM based on match, assume second copied code
             // fprintf(stderr, "code2? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
-            if(fw->base3) {
+            if(base3_found) {
                 fprintf(stderr,"firmware_init_data_ranges: base3 already found, unexpected start 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
                 continue;
             }
+            base3_found=1;
             if(dst_start != 0xbfe10800) { // known value (g5x)
                 fprintf(stderr,"firmware_init_data_ranges: guess unknown base3 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
             }
-            fw->buf8_3 = adr2ptr(fw,src_start);
-            fw->base3 = dst_start;
-            fw->base3_copied = src_start;
-            fw->size3 = (dst_end - dst_start);
+            fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE);
         }
         last_found_copy=is->adr;
-        if(fw->data_start && fw->base2 && fw->base3) {
+        if(fw->data_start && base2_found && base3_found) {
             break;
         }
         // after first, shorter search range in between copies
@@ -1214,13 +1260,11 @@ void firmware_init_data_ranges(firmware *fw)
             count++;
         }
     }
-    // if data or copied firmware found, adjust default code search range
-    // TODO base3
+    // if data found, adjust default code search range
+    // TODO could use copied code regions too, but after data on known firmwares
     if(fw->data_start) {
         fw->rom_code_search_max_adr=fw->data_init_start;
-    } else if(fw->base2_copied) {
-        fw->rom_code_search_max_adr=fw->base2_copied;
-    } 
+    }
     disasm_iter_free(is);
 }
 
