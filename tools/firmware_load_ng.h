@@ -334,6 +334,16 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
 // iterate as long as sequence of instructions matches sequence defined in match
 int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match);
 
+// ****** utilities for non-disasm searching ******
+// Search the firmware for something. The desired matching is performed using the supplied 'func' function.
+// Continues searching until 'func' returns non-zero - then returns 1
+// otherwise returns 0.
+// Uses the BufRange structs to speed up searching
+// Note: this version searches byte by byte in the firmware dump instead of by words
+// borrowed from finsig_dryos
+typedef int (*search_bytes_fn)(firmware*, int k);
+int fw_search_bytes(firmware *fw, search_bytes_fn func);
+
 // ****** firmware loading / initialization / de-allocation ******
 // add given address range
 void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type);
