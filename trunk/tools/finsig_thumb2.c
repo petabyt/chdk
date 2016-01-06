@@ -56,12 +56,14 @@ void write_output()
 
 // Master list of functions / addresses to find
 
-#define DONT_EXPORT     1
-#define OPTIONAL        2
-#define UNUSED          4
-#define BAD_MATCH       8
-#define EV_MATCH        16
-#define LIST_ALWAYS     32
+#define DONT_EXPORT    0x01
+#define OPTIONAL       0x02
+#define UNUSED         0x04
+#define BAD_MATCH      0x08
+#define EV_MATCH       0x10
+#define LIST_ALWAYS    0x20
+// TODO doesn't really belong in funcs
+#define STUBSMIN_DEF   0x40
 
 typedef struct {
     char        *name;
@@ -76,6 +78,7 @@ int next_func_entry = 0;
 func_entry  func_names[MAX_FUNC_ENTRY] =
 {
     // Do these first as they are needed to find others
+    { "ctypes", STUBSMIN_DEF },
     { "ExportToEventProcedure_FW", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure_alt1", UNUSED|DONT_EXPORT },
@@ -959,6 +962,36 @@ void find_generic_funcs(firmware *fw) {
     disasm_iter_free(is);
 }
 
+int find_ctypes(firmware *fw, int k)
+{
+    static unsigned char ctypes[] =
+    {
+        0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x60, 0x60, 0x60, 0x60, 0x60, 0x20, 0x20,
+        0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20,
+        0x48, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x82, 0x82, 0x82, 0x82, 0x82, 0x82, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0x10, 0x10, 0x10, 0x10, 0x20
+    };
+
+    if (k < (fw->size8 - sizeof(ctypes)))
+    {
+        if (memcmp(((char*)fw->buf8)+k,ctypes,sizeof(ctypes)) == 0)
+        {
+            //printf("found ctypes 0x%08x\n",fw->base + k);
+            save_sig("ctypes",fw->base + k); 
+            // use ctypes as max search address for non-copied / relocated code. 
+            // seems to be true on current firmwares
+            fw->rom_code_search_max_adr = fw->base + k;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 void output_firmware_vals(firmware *fw)
 {
     bprintf("// Camera info:\n");
@@ -1056,27 +1089,30 @@ void write_funcs(firmware *fw, char *filename, func_entry *fns[], int (*compare)
     FILE *out_fp = fopen(filename, "w");
     for (k=0; k<next_func_entry; k++)
     {
-        if (strncmp(fns[k]->name,"hook_",5) != 0)
-        {
-            if (fns[k]->val != 0)
-            {
-                if (fns[k]->flags & BAD_MATCH)
-                {
-                    osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
-                    if (ostub2 && ostub2->val)
-                        fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
-                }
-                else
-                    fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
-            }
-#ifdef LIST_IMPORTANT_FUNCTIONS
-            else if (fns[k]->flags & LIST_ALWAYS)
-            {
-                // helps development by listing important functions even when not found
-                fprintf(out_fp, "0,%s,(NOT FOUND)\n", fns[k]->name);
-            }
-#endif
+        if(fns[k]->flags & STUBSMIN_DEF) {
+            continue;
         }
+        if (strncmp(fns[k]->name,"hook_",5) == 0) {
+            continue;
+        }
+        if (fns[k]->val != 0)
+        {
+            if (fns[k]->flags & BAD_MATCH)
+            {
+                osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
+                if (ostub2 && ostub2->val)
+                    fprintf(out_fp, "0x%08x,%s,(stubs_entry_2.s)\n", ostub2->val, fns[k]->name);
+            }
+            else
+                fprintf(out_fp, "0x%08x,%s\n", fns[k]->val, fns[k]->name);
+        }
+#ifdef LIST_IMPORTANT_FUNCTIONS
+        else if (fns[k]->flags & LIST_ALWAYS)
+        {
+            // helps development by listing important functions even when not found
+            fprintf(out_fp, "0,%s,(NOT FOUND)\n", fns[k]->name);
+        }
+#endif
     }
     fclose(out_fp);
 }
@@ -1091,6 +1127,36 @@ void write_func_lists(firmware *fw) {
     write_funcs(fw, "funcs_by_address.csv", fns, compare_func_addresses);
 }
 
+void print_stubs_min_def(firmware *fw, int k)
+{
+    if (!(func_names[k].flags & STUBSMIN_DEF)) {
+        return;
+    }
+    // find best match and report results
+    const char *curr_name = func_names[k].name;
+    osig* ostub2=find_sig(fw->sv->stubs_min,curr_name);
+    // TODO should be DEF_CONST for some
+    const char *macro = "DEF";
+    // TODO should save a ref address to print with stubs
+    if (ostub2)
+    {
+        bprintf("//%s(%-34s,0x%08x)",macro,curr_name,func_names[k].val);
+        if (func_names[k].val != ostub2->val)
+        {
+            bprintf(", ** != ** stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
+        }
+        else
+        {
+            bprintf(",          stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
+        }
+    }
+    else
+    {
+        bprintf("%s(%-34s,0x%08x)",macro,curr_name,func_names[k].val);
+    }
+    bprintf("\n");
+}
+
 // Output match results for function
 // matches stuff butchered out for now, just using value in func_names table
 void print_results(firmware *fw, const char *curr_name, int k)
@@ -1100,6 +1166,11 @@ void print_results(firmware *fw, const char *curr_name, int k)
     char line[500] = "";
 
     if (func_names[k].flags & DONT_EXPORT) {
+        return;
+    }
+
+    // listed separately 
+    if (func_names[k].flags & STUBSMIN_DEF) {
         return;
     }
 
@@ -1174,6 +1245,16 @@ void print_results(firmware *fw, const char *curr_name, int k)
 
 void write_stubs(firmware *fw,int max_find_func) {
     int k;
+    bprintf("// Values below can be overridden in 'stubs_min.S':\n");
+    for (k = 0; k < max_find_func; k++)
+    {
+        if(func_names[k].flags & STUBSMIN_DEF) {
+            print_stubs_min_def(fw,k);
+        }
+    }
+
+    add_blankline();
+
     for (k = 0; k < max_find_func; k++)
     {
         const char *curr_name = func_names[k].name;
@@ -1215,6 +1296,9 @@ int main(int argc, char **argv)
     }
     
     output_firmware_vals(&fw);
+
+    // find ctypes - used for code search limit
+    fw_search_bytes(&fw, find_ctypes);
 
     run_sig_rules(&fw,sig_rules_initial);
     find_generic_funcs(&fw);

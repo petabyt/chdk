@@ -953,6 +953,29 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
     return 0;
 }
 
+
+// Search the firmware for something. The desired matching is performed using the supplied 'func' function.
+// Continues searching until 'func' returns non-zero - then returns 1
+// otherwise returns 0.
+// Uses the BufRange structs to speed up searching
+// Note: this version searches byte by byte in the firmware dump instead of by words
+int fw_search_bytes(firmware *fw, search_bytes_fn func)
+{
+    BufRange *p = fw->br;
+    while (p)
+    {
+        int k;
+        for (k = p->off*4; k < (p->off + p->len)*4; k++)
+        {
+            if (func(fw,k))
+                return 1;
+        }
+        p = p->next;
+    }
+    return 0;
+}
+
+
 // ****** firmware loading / initialization / de-allocation ******
 // add given address range
 void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type)
