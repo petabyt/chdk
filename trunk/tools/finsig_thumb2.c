@@ -684,6 +684,16 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
             if(is->insn->id != ARM_INS_BLX) {
+                // check if target goes directly to a B, follow
+                // TODO - should be a generic function, only handles one level, thumb for now
+                disasm_iter_init(fw,is,ADR_CLEAR_THUMB(adr));
+                if(disasm_iter(fw,is) && is->insn->id == ARM_INS_B) {
+                    char *buf=malloc(strlen(rule->name)+3);
+                    // add j_ for cross referencing
+                    sprintf(buf,"j_%s",rule->name);
+                    add_func_name(buf,ADR_SET_THUMB(adr),NULL);
+                    adr=B_target(fw,is->insn);
+                }
                 adr=ADR_SET_THUMB(adr);
             }
             save_sig(rule->name,adr); 
@@ -766,10 +776,14 @@ sig_rule_t sig_rules_main[]={
 //{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
 {sig_match_named,   "VbattGet",                 "VbattGet_FW",},
 {sig_match_named,   "Write",                    "Write_FW",},
+{sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",1},
+{sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",1},
+{sig_match_named,   "free",                     "FreeMemory_FW",1},
+{sig_match_named,   "lseek",                    "Lseek_FW",},
+{sig_match_named,   "malloc",                   "AllocateMemory_FW",1},
 {sig_match_named,   "memcmp",                   "memcmp_FW",},
 {sig_match_named,   "memcpy",                   "memcpy_FW",},
 {sig_match_named,   "memset",                   "memset_FW",},
-{sig_match_named,   "lseek",                    "Lseek_FW",},
 {sig_match_named,   "strcmp",                   "strcmp_FW",},
 {sig_match_named,   "strcpy",                   "strcpy_FW",},
 {sig_match_named,   "strlen",                   "strlen_FW",},
