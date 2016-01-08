@@ -889,6 +889,12 @@ const insn_match_t match_b_bl_blximm[]={
     {ARM_INS_ENDING}
 };
 
+const insn_match_t match_bl_blximm[]={
+    {ARM_INS_BL,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
+    {ARM_INS_BLX,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+    {ARM_INS_ENDING}
+};
+
 
 // iterate as long as sequence of instructions matches sequence defined in match
 int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match)

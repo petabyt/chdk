@@ -649,6 +649,13 @@ int sig_match_createtask_arm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return (create_task != 0);
 }
 
+// default - use the named firmware function
+#define SIG_NAMED_ASIS        0
+// use the target of the first B, BX, BL, BLX etc
+#define SIG_NAMED_JMP_SUB     1
+// use the target of the first BL, BLX
+#define SIG_NAMED_SUB         2
+
 // match already identified function found by name
 // if offset is 1, match the first called function with 20 insn instead (e.g. to avoid eventproc arg handling)
 // initial direct jumps (j_foo) assumed to have been handled
@@ -666,12 +673,18 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     // no offset, just save match as is
     // TODO might want to validate anyway
-    if(rule->param == 0) {
+    if(rule->param == SIG_NAMED_ASIS) {
         save_sig(rule->name,func_names[i].val); 
         return 1;
     }
-    if(rule->param > 1) {
+    const insn_match_t *insn_match;
+    if(rule->param == SIG_NAMED_JMP_SUB) {
+        insn_match = match_b_bl_blximm;
+    } else if(rule->param == SIG_NAMED_SUB) {
+        insn_match = match_bl_blximm;
+    } else {
         printf("sig_match_named: %s invalid param %d\n",rule->ref_name, rule->param);
+        return 0;
     }
     // TODO - need ARM support in iter state
     if(!ADR_IS_THUMB(ref_adr)) {
@@ -680,7 +693,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     int r=0;
     disasm_iter_init(fw,is,ADR_CLEAR_THUMB(ref_adr));
-    if(insn_match_find_next(fw,is,20,match_b_bl_blximm)) {
+    if(insn_match_find_next(fw,is,20,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
             if(is->insn->id != ARM_INS_BLX) {
@@ -724,10 +737,10 @@ sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
 {sig_match_named,   "CreateTask",               "CreateTask_FW",},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
-{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",1},
+{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
-{sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",1},
-{sig_match_named,   "DoAFLock",                 "SS.DoAFLock_FW",1},
+{sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",       SIG_NAMED_JMP_SUB},
+{sig_match_named,   "DoAFLock",                 "SS.DoAFLock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
 {sig_match_named,   "Fopen_Fut",                "Fopen_Fut_FW",},
 {sig_match_named,   "Fread_Fut",                "Fread_Fut_FW",},
@@ -737,8 +750,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetCurrentAvValue",        "GetCurrentAvValue_FW",},
 {sig_match_named,   "GetBatteryTemperature",    "GetBatteryTemperature_FW",},
 {sig_match_named,   "GetCCDTemperature",        "GetCCDTemperature_FW",},
-{sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",1},
+{sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "GetOpticalTemperature",    "GetOpticalTemperature_FW",},
+{sig_match_named,   "GetPropertyCase",          "GetPropertyCase_FW",   SIG_NAMED_SUB},
 {sig_match_named,   "GetSystemTime",            "GetSystemTime_FW",},
 {sig_match_named,   "GetVRAMHPixelsSize",       "GetVRAMHPixelsSize_FW",},
 {sig_match_named,   "GetVRAMVPixelsSize",       "GetVRAMVPixelsSize_FW",},
@@ -755,9 +769,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "Open",                     "Open_FW",},
 {sig_match_named,   "PostLogicalEventForNotPowerType",  "PostLogicalEventForNotPowerType_FW",},
 {sig_match_named,   "PostLogicalEventToUI",     "PostLogicalEventToUI_FW",},
-{sig_match_named,   "PT_MFOn",                  "SS.MFOn_FW",1},
-{sig_match_named,   "PT_MFOff",                 "SS.MFOff_FW",1},
-{sig_match_named,   "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide_FW",1},
+{sig_match_named,   "PT_MFOn",                  "SS.MFOn_FW",           SIG_NAMED_JMP_SUB},
+{sig_match_named,   "PT_MFOff",                 "SS.MFOff_FW",          SIG_NAMED_JMP_SUB},
+{sig_match_named,   "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide_FW", SIG_NAMED_JMP_SUB},
 {sig_match_named,   "PT_MoveOpticalZoomAt",     "SS.MoveOpticalZoomAt_FW",},
 {sig_match_named,   "PutInNdFilter",            "PutInNdFilter_FW",},
 {sig_match_named,   "PutOutNdFilter",           "PutOutNdFilter_FW",},
@@ -766,21 +780,22 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "SetCurrentCaptureModeType","SetCurrentCaptureModeType_FW",},
 {sig_match_named,   "SetScriptMode",            "SetScriptMode_FW",},
 {sig_match_named,   "SleepTask",                "SleepTask_FW",},
+{sig_match_named,   "SetPropertyCase",          "SetPropertyCase_FW",   SIG_NAMED_SUB},
 {sig_match_named,   "TakeSemaphore",            "TakeSemaphore_FW",},
 {sig_match_named,   "TurnOnDisplay",            "DispCon_TurnOnDisplay_FW",},
 {sig_match_named,   "TurnOffDisplay",           "DispCon_TurnOffDisplay_FW",},
 {sig_match_named,   "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW",},
-{sig_match_named,   "UnlockAE",                 "SS.UnlockAE_FW",1},
-{sig_match_named,   "UnlockAF",                 "SS.UnlockAF_FW",1},
+{sig_match_named,   "UnlockAE",                 "SS.UnlockAE_FW",       SIG_NAMED_JMP_SUB},
+{sig_match_named,   "UnlockAF",                 "SS.UnlockAF_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "UnlockMainPower",          "UnlockMainPower_FW",},
 //{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
 {sig_match_named,   "VbattGet",                 "VbattGet_FW",},
 {sig_match_named,   "Write",                    "Write_FW",},
-{sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",1},
-{sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",1},
-{sig_match_named,   "free",                     "FreeMemory_FW",1},
+{sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",SIG_NAMED_JMP_SUB},
+{sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",SIG_NAMED_JMP_SUB},
+{sig_match_named,   "free",                     "FreeMemory_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "lseek",                    "Lseek_FW",},
-{sig_match_named,   "malloc",                   "AllocateMemory_FW",1},
+{sig_match_named,   "malloc",                   "AllocateMemory_FW",    SIG_NAMED_JMP_SUB},
 {sig_match_named,   "memcmp",                   "memcmp_FW",},
 {sig_match_named,   "memcpy",                   "memcpy_FW",},
 {sig_match_named,   "memset",                   "memset_FW",},
