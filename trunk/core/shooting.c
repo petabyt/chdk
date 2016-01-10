@@ -1040,9 +1040,13 @@ int shooting_get_hyperfocal_distance()
   return camera_info.dof_values.hyperfocal_distance;
 }
 
+static int focus_interlock_bypass = 0;
+
 short shooting_can_focus()
 {
     if(camera_info.state.mode_play) return 0 ;                 // don't focus in playback mode
+
+    if(focus_interlock_bypass) return 1;                       // checks disabled, allow
 
     if( camera_info.state.mode_video == 1) return 1;           // FIXME : default to MF enabled in video mode for now
 
@@ -1127,7 +1131,6 @@ void shooting_set_zoom_speed(int v) {
     }
 }
 
-static int focus_interlock_bypass = 0;
 void set_focus_bypass(int m)
 {
 	focus_interlock_bypass = m ;
@@ -1138,7 +1141,7 @@ void shooting_set_focus(int v, short is_now)
     int s=v;
     if (!camera_info.state.mode_play)
     {
-        if ((is_now) && ( focus_interlock_bypass || shooting_can_focus())) 
+        if (is_now && shooting_can_focus()) 
         {
             if (conf.dof_subj_dist_as_near_limit)
             {
