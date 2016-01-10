@@ -265,8 +265,8 @@ void adr_hist_reset(adr_hist_t *ah)
 {
     ah->cur=0;
     ah->count=0;
-    // TODO memset shouldn't be needed
-    memset(ah->adrs,0,ADR_HIST_SIZE*4);
+    // memset shouldn't be needed
+    // memset(ah->adrs,0,ADR_HIST_SIZE*4);
 }
 
 // return the index of current entry + i. may be negative or positive, wraps. Does not check validity
@@ -519,10 +519,10 @@ void disasm_iter_free(iter_state_t *is)
     return;
 }
 
-// initialize iterator state at adr
-int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
+// set iterator to adr, without clearing history (for branch following)
+// thumb bit in adr sets mode
+int disasm_iter_set(firmware *fw, iter_state_t *is, uint32_t adr)
 {
-    adr_hist_reset(&is->ah);
     // set handle based on thumb bit to allow disassembly
     if(ADR_IS_THUMB(adr)) {
         is->cs_handle=fw->cs_handle_thumb;
@@ -534,7 +534,7 @@ int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
         is->thumb=0;
         is->insn_min_size=4;
         if(!ADR_IS_ALIGN4(adr)) {
-            fprintf(stderr,"disasm_iter_init: unaligned ARM address 0x%08x\n",adr);
+            fprintf(stderr,"disasm_iter_set: unaligned ARM address 0x%08x\n",adr);
             is->code=NULL;
             is->size=0;
             is->adr=0;
@@ -543,6 +543,8 @@ int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
     }
     uint8_t *p=adr2ptr(fw,adr);
     if(!p) {
+// TODO invalid currently allowed, for new
+//        fprintf(stderr,"disasm_iter_set: bad address 0x%08x\n",adr);
         is->code=NULL; // make first iter fail
         is->size=0;
         is->adr=0;
@@ -553,6 +555,13 @@ int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
     is->size=fw->size8 - (p-fw->buf8);
     is->adr=adr;
     return 1;
+}
+
+// initialize iterator state at adr, clearing history
+int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
+{
+    adr_hist_reset(&is->ah);
+    return disasm_iter_set(fw,is,adr);
 }
 
 // disassemble next instruction, recording address in history
