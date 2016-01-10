@@ -475,7 +475,7 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     // for efficiency, could search near the string
-    disasm_iter_init(fw,is,fw->rom_code_search_min_adr);
+    disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default);
 
     uint32_t adr=0;
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,0)) {
@@ -514,7 +514,7 @@ int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     //look for the underlying RegisterEventProcedure function (not currently used)
     uint32_t reg_evp=0;
     // start at identified Export..
-    disasm_iter_init(fw,is,ADR_CLEAR_THUMB(e_to_evp));
+    disasm_iter_init(fw,is,e_to_evp);
     if(insn_match_seq(fw,is,reg_evp_match)) {
         reg_evp=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
         //printf("RegisterEventProcedure found 0x%08x at %"PRIx64"\n",reg_evp,is->insn->address);
@@ -535,7 +535,7 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     uint32_t reg_evp_alt1=0;
     uint32_t reg_evp_tbl=0;
-    disasm_iter_init(fw,is,str_adr - 512); // reset to a bit before where the string was found
+    disasm_iter_init(fw,is,(str_adr - 512) | fw->thumb_default); // reset to a bit before where the string was found
     uint32_t dd_enable_p=0;
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
@@ -561,7 +561,7 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     } 
     // found candidate function
     if(dd_enable_p) {
-        disasm_iter_init(fw,is,ADR_CLEAR_THUMB(dd_enable_p)); // start at found func
+        disasm_iter_init(fw,is,dd_enable_p); // start at found func
         if(insn_match_find_next(fw,is,4,match_b_bl)) { // find the first bl
             // sanity check, make sure we get a const in r0
             uint32_t regs[4];
@@ -591,7 +591,7 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         reg_evp_alt1=func_names[i].val;
     }
 
-    disasm_iter_init(fw,is,str_adr - 512); // reset to a bit before where the string was found
+    disasm_iter_init(fw,is,(str_adr - 512) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(insn_match_find_next(fw,is,3,match_b_bl)) {
@@ -630,7 +630,7 @@ int sig_match_createtask_arm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return  0;
     }
 
-    disasm_iter_init(fw,is,str_adr - 1024); // reset to a bit before where the string was found
+    disasm_iter_init(fw,is,(str_adr - 1024) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+1024)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
@@ -686,20 +686,20 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_named: %s invalid param %d\n",rule->ref_name, rule->param);
         return 0;
     }
-    // TODO - need ARM support in iter state
+    // TODO - update for arm/thunb handling iter_state
     if(!ADR_IS_THUMB(ref_adr)) {
         printf("sig_match_named: %s is ARM 0x%08x\n",rule->ref_name, ref_adr);
         return 0;
     }
     int r=0;
-    disasm_iter_init(fw,is,ADR_CLEAR_THUMB(ref_adr));
+    disasm_iter_init(fw,is,ref_adr);
     if(insn_match_find_next(fw,is,20,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
             if(is->insn->id != ARM_INS_BLX) {
                 // check if target goes directly to a B, follow
                 // TODO - should be a generic function, only handles one level, thumb for now
-                disasm_iter_init(fw,is,ADR_CLEAR_THUMB(adr));
+                disasm_iter_init(fw,is,adr | is->thumb);
                 if(disasm_iter(fw,is) && is->insn->id == ARM_INS_B) {
                     char *buf=malloc(strlen(rule->name)+3);
                     // add j_ for cross referencing
@@ -828,13 +828,13 @@ void run_sig_rules(firmware *fw, sig_rule_t *sig_rules)
 
 void add_event_proc(firmware *fw, char *name, uint32_t adr)
 {
-    // TODO - need ARM support in iter state
+    // TODO - update for ARM support in iter state
     if(!ADR_IS_THUMB(adr)) {
         printf("add_event_proc: %s is ARM 0x%08x\n",name,adr);
         add_func_name(name,adr,"_FW");
         return;
     }
-    if(!fw_disasm_iter_single(fw,ADR_CLEAR_THUMB(adr))) {
+    if(!fw_disasm_iter_single(fw,adr)) {
         printf("add_event_proc: %s disassembly failed at 0x%08x\n",name,adr);
         return;
     }
@@ -985,7 +985,7 @@ void find_generic_funcs(firmware *fw) {
     match_fns[match_fn_count].fn=NULL;
 
     // TODO should search ram CODE
-    disasm_iter_init(fw,is,fw->rom_code_search_min_adr); // reset to start of fw
+    disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default); // reset to start of fw
     fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
 
     disasm_iter_free(is);

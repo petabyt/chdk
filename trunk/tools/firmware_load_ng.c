@@ -300,6 +300,19 @@ uint32_t adr_hist_get(adr_hist_t *ah, int i)
 }
 
 // ****** instruction analysis utilities ******
+// is insn an ARM instruction?
+// like cs_insn_group(cs_handle,insn,ARM_GRP_ARM) but doesn't require handle and doesn't check or report errors
+int isARM(cs_insn *insn)
+{
+    int i;
+    for(i=0;i<insn->detail->groups_count;i++) {
+        if(insn->detail->groups[i] == ARM_GRP_ARM) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /*
 is insn a PC relative load?
 */
@@ -377,7 +390,7 @@ uint32_t* LDR_PC2valptr_arm(firmware *fw, cs_insn *insn)
 
 uint32_t* LDR_PC2valptr(firmware *fw, cs_insn *insn)
 {
-    if(cs_insn_group(fw->cs_handle,insn,ARM_GRP_ARM)) {
+    if(isARM(insn)) {
        return LDR_PC2valptr_arm(fw,insn);
     } else {
        return LDR_PC2valptr_thumb(fw,insn);
@@ -390,7 +403,7 @@ uint32_t LDR_PC2adr(firmware *fw, cs_insn *insn)
     if(!isLDR_PC(insn)) {
         return 0;
     }
-    if(cs_insn_group(fw->cs_handle,insn,ARM_GRP_ARM)) {
+    if(isARM(insn)) {
        return insn->address+8+insn->detail->arm.operands[1].mem.disp;
     } else {
        return (insn->address&~3)+4+insn->detail->arm.operands[1].mem.disp;
@@ -491,8 +504,9 @@ uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn)
 iter_state_t *disasm_iter_new(firmware *fw, uint32_t adr)
 {
     iter_state_t *is=(iter_state_t *)malloc(sizeof(iter_state_t));
-    is->cs_handle=fw->cs_handle; // TODO may want to allow different handles, e.g. for ARM and thumb
-    is->insn=cs_malloc(fw->cs_handle);
+    // it doesn't currently appear to matter which handle is used to allocate
+    // only used for overridable malloc functions and error reporting
+    is->insn=cs_malloc(fw->cs_handle_arm);
     disasm_iter_init(fw,is,adr);
     return is;
 }
@@ -509,11 +523,16 @@ void disasm_iter_free(iter_state_t *is)
 int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
 {
     adr_hist_reset(&is->ah);
-    // shouldn't try to start on thumb address
-    // TODO not clear if should warn or silently ignore
+    // set handle based on thumb bit to allow disassembly
     if(ADR_IS_THUMB(adr)) {
-        fprintf(stderr,"disasm_iter_init ignoring thumb bit at 0x%08x\n",adr);
-        adr=ADR_CLEAR_THUMB(adr);
+        is->cs_handle=fw->cs_handle_thumb;
+        is->thumb=1;
+        is->insn_min_size=2;
+        adr=ADR_CLEAR_THUMB(adr);// ADR used for iteration must not contain thumb bit
+    } else {
+        is->cs_handle=fw->cs_handle_arm;
+        is->thumb=0;
+        is->insn_min_size=4;
     }
     uint8_t *p=adr2ptr(fw,adr);
     if(!p) {
@@ -538,12 +557,13 @@ int disasm_iter(firmware *fw, iter_state_t *is)
     if(!is->code) {
         return 0;
     }
-    adr_hist_add(&is->ah,(uint32_t)is->adr);
+    adr_hist_add(&is->ah,(uint32_t)is->adr | is->thumb); // record thumb state to allow backtracking through state changes
     return cs_disasm_iter(is->cs_handle, &is->code, &is->size, &is->adr, is->insn);
 }
 
 // re-disassemble the current instruction
 // could be useful if turning detail off/on but doesn't seem to help perf much
+// NOTE out of date
 #if 0
 int disasm_iter_redo(firmware *fw,iter_state_t *is) {
     if(!is->code || !is->ah.count) {
@@ -587,6 +607,7 @@ int fw_disasm_iter_single(firmware *fw, uint32_t adr)
 disassemble up to count instructions starting at firmware address adr
 allocates and returns insns in insn, can be freed with cs_free(insn, count)
 */
+#if 0
 size_t fw_disasm_adr(firmware *fw, uint32_t adr, unsigned count, cs_insn **insn)
 {
     uint8_t *p=adr2ptr(fw,adr);
@@ -596,20 +617,21 @@ size_t fw_disasm_adr(firmware *fw, uint32_t adr, unsigned count, cs_insn **insn)
     }
     return cs_disasm(fw->cs_handle, p, fw->size8 - (p-fw->buf8), adr, count, insn);
 }
+#endif
 
 // ***** utilities for searching disassembly over large ranges ******
 /*
 iterate over firmware disassembling, calling callback described above after each
 successful disassembly iteration.  If disassembly fails, the iter state is advanced
 2 bytes without calling the callback.
-starts at address is taken from the iter_state, which should be initialized by disasm_iter_new()
-disasm_iter_init(), or a previous search or iter call.
+starts at address is taken from the iter_state, which should be initialized with
+disasm_iter_new(), disasm_iter_init(), or a previous search or iter call.
 end defaults to end of ram code or rom code (before init data, if known), based on start
 v1 and udata are provided to the callback
 */
-uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32_t v1, void *udata,uint32_t adr_end)
+uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32_t v1, void *udata, uint32_t adr_end)
 {
-    uint32_t adr_start=is->adr; 
+    uint32_t adr_start=is->adr;
     adr_range_t *r_start=adr_get_range(fw,adr_start);
     if(!r_start) {
         fprintf(stderr,"fw_search_insn: invalid start address 0x%08x\n",adr_start);
@@ -621,7 +643,7 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
         if(r_start->type == ADR_RANGE_ROM) {
             adr_end = fw->rom_code_search_max_adr;
         } else {
-            adr_end=r_start->start + r_start->bytes - 2;
+            adr_end=r_start->start + r_start->bytes - is->insn_min_size;
         }
     }
     adr_range_t *r_end=adr_get_range(fw,adr_end);
@@ -633,16 +655,18 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
 
     if( (r_start != r_end) 
         || (adr_end < adr_start)
-        || (adr_start & 1) // TODO might want to use thumb bits to set dis mode
         || (adr_end & 1)) {
         fprintf(stderr,"fw_search_insn: invalid address range 0x%08x 0x%08x\n",adr_start,adr_end);
         return 0;
     }
 
+    // is assumed to be already initialized
+    /*
     if(!disasm_iter_init(fw,is,adr_start)) {
         fprintf(stderr,"fw_search_insn: disasm_iter_init failed\n");
         return 0;
     }
+    */
     uint32_t adr=adr_start;
     // don't bother with buf ranges for RAM code
     if(r_start->type != ADR_RANGE_ROM) {
@@ -655,9 +679,9 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
                 adr=(uint32_t)is->adr; // adr was updated by iter or called sub
             } else {
                 // disassembly failed
-                // increment by half word and re-init
-                adr=adr+2;
-                if(!disasm_iter_init(fw,is,adr)) {
+                // increment by minimum instruction size and re-init
+                adr=adr+is->insn_min_size;
+                if(!disasm_iter_init(fw,is,adr|is->thumb)) {
                     fprintf(stderr,"fw_search_insn: disasm_iter_init failed\n");
                     return 0;
                 }
@@ -667,7 +691,7 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
     }
     BufRange *br=fw->br;
     // TODO might want to (optionally?) turn off details? For now, caller can set, doesn't seem to help perf much
-    // TODO when searching ROM, should skip over RAM copied areas (currently just limit range)
+    // TODO when searching ROM, could skip over RAM copied areas (currently just limit default range)
     while(br && adr < adr_end) {
         uint32_t *p_adr=(uint32_t *)adr2ptr(fw,(uint32_t)adr);
         uint32_t *br_end = br->p + br->len;
@@ -694,8 +718,8 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
             } else {
                 // disassembly failed. cs_disarm_iter does not update address
                 // increment by half word and re-init
-                adr=adr+2;
-                if(!disasm_iter_init(fw,is,adr)) {
+                adr=adr+is->insn_min_size;
+                if(!disasm_iter_init(fw,is,adr|is->thumb)) {
                     fprintf(stderr,"fw_search_insn: disasm_iter_init failed\n");
                     return 0;
                 }
@@ -797,7 +821,7 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
     for(i=1;i<=max_backtrack && known_bits !=0xf;i++) {
         // TODO going backwards and calling start each time inefficient
         // forward could also find multi-instruction constants in some cases (e.g mov + add, movw + movt)
-        fw_disasm_iter_single(fw,adr_hist_get(&is_init->ah,i));
+        fw_disasm_iter_single(fw,adr_hist_get(&is_init->ah,i)); // thumb state comes from hist
         /*
         if(dbg_count < 5) {
             printf("backtrack %d:%d  ",dbg_count,i);
@@ -1095,27 +1119,30 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     }
     fw->rom_code_search_min_adr = fw->base + fw->main_offs; // 0 if not found
     fw->rom_code_search_max_adr=fw->base+fw->size8 - 4; // default == end of fw, may be adjusted by firmware_init_data_ranges
+    // set expected instruction set
+    if(fw->arch==FW_ARCH_ARMv5) {
+        fw->thumb_default = 0;
+    } else if(fw->arch==FW_ARCH_ARMv7) {
+        fw->thumb_default = 1;
+    } else {
+        fprintf(stderr,"firmware_init_capstone: invalid arch\n");
+    }
 }
 
 
 // initialize capstone state for loaded fw
 int firmware_init_capstone(firmware *fw)
 {
-    cs_mode mode;
-    if(fw->arch==FW_ARCH_ARMv5) {
-        mode = CS_MODE_ARM;
-    } else if(fw->arch==FW_ARCH_ARMv7) { // TODO should set up handles for both ARM and THUMB/THUMB2
-        mode = CS_MODE_THUMB;
-    } else {
-        fprintf(stderr,"firmware_init_capstone: invalid arch\n");
+    if (cs_open(CS_ARCH_ARM, CS_MODE_ARM, &fw->cs_handle_arm) != CS_ERR_OK) {
+        fprintf(stderr,"cs_open ARM failed\n");
         return 0;
     }
-
-    if (cs_open(CS_ARCH_ARM, mode, &fw->cs_handle) != CS_ERR_OK) {
-        fprintf(stderr,"cs_open failed\n");
+    cs_option(fw->cs_handle_arm, CS_OPT_DETAIL, CS_OPT_ON);
+    if (cs_open(CS_ARCH_ARM, CS_MODE_THUMB, &fw->cs_handle_thumb) != CS_ERR_OK) {
+        fprintf(stderr,"cs_open thumb failed\n");
         return 0;
     }
-    cs_option(fw->cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+    cs_option(fw->cs_handle_thumb, CS_OPT_DETAIL, CS_OPT_ON);
     fw->is=disasm_iter_new(fw,0);
     return 1;
 }
@@ -1186,7 +1213,7 @@ void firmware_init_data_ranges(firmware *fw)
     uint32_t last_found_copy = 0;
 
     // start at fw start  + 12 (32 bit jump, gaonisoy)
-    iter_state_t *is=disasm_iter_new(fw, fw->base + fw->main_offs + 12);
+    iter_state_t *is=disasm_iter_new(fw, fw->base + fw->main_offs + 12 + fw->thumb_default);
 
     fw->data_init_start=0;
     fw->data_start=0;
@@ -1266,7 +1293,7 @@ void firmware_init_data_ranges(firmware *fw)
         int count=0;
         uint32_t *eptr=NULL;
         uint32_t *dptr=NULL;
-        disasm_iter_init(fw,is,last_found_copy);
+        disasm_iter_init(fw,is,last_found_copy | fw->thumb_default);
         while(disasm_iter(fw,is) && count < 20) {
             uint32_t *pv=LDR_PC2valptr(fw,is->insn);
             // not an LDR pc, reset;
@@ -1310,8 +1337,11 @@ void firmware_unload(firmware *fw)
     if(fw->is) {
         disasm_iter_free(fw->is);
     }
-    if(fw->cs_handle) {
-        cs_close(&fw->cs_handle);
+    if(fw->cs_handle_arm) {
+        cs_close(&fw->cs_handle_arm);
+    }
+    if(fw->cs_handle_thumb) {
+        cs_close(&fw->cs_handle_thumb);
     }
     free(fw->buf8);
     memset(fw,0,sizeof(firmware));

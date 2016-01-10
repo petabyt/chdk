@@ -31,6 +31,7 @@ typedef struct bufrange {
 typedef struct { 
     // circular buffer of previous adr values, for backtracking
     // use addresses rather than insn, because you might want to scan with detail off and then backtrack with on
+    // addresses have thumb bit set when disassembling in thumb mode
     int cur; // index of current address, after iter
     int count; // total number of valid entries
     uint32_t adrs[ADR_HIST_SIZE]; 
@@ -39,10 +40,12 @@ typedef struct {
 // state for disassembly iteration
 typedef struct {
     const uint8_t *code; // pointer into buffer for code
-    uint64_t adr; // firmware address - must be 64 bit for capstone iter
+    uint64_t adr; // firmware address - must be 64 bit for capstone iter, never has thumb bit set
     size_t size; // remaining code size
     cs_insn *insn; // cached instruction
-    csh cs_handle; // capstone handle to use with this state
+    uint32_t thumb; // thumb state
+    uint32_t insn_min_size; // 2 or 4, depending on thumb/arm state
+    csh cs_handle; // capstone handle to use with this state, updated for arm/thumb transitions
     adr_hist_t ah; // history of previous instructions
 }  iter_state_t;
 
@@ -78,6 +81,7 @@ typedef struct {
     char            *dryos_ver_str;     // DryOS version string
     char            *firmware_ver_str;  // Camera firmware version string
 
+    // TODO duplicated with adr_range stuff below
     uint32_t        data_start;         // Start address of DATA section in RAM
     uint32_t        data_init_start;    // Start address of initialisation section for DATA in ROM
     int             data_len;           // Length of data section in bytes
@@ -92,7 +96,9 @@ typedef struct {
     // Values loaded from stubs & other files
     stub_values     *sv;
 
-    csh cs_handle; // capstone handle
+    uint32_t thumb_default; // 1 if initial firmware code is expected to be thumb, 0 for arm.
+    csh cs_handle_thumb; // capstone handle for thumb disassembly
+    csh cs_handle_arm; // capstone handle for arm disassembly
     iter_state_t* is;
 } firmware;
 
@@ -153,6 +159,10 @@ void adr_hist_add(adr_hist_t *ah, uint32_t adr);
 uint32_t adr_hist_get(adr_hist_t *ah, int i);
 
 // ****** instruction analysis utilities ******
+// is insn an ARM instruction?
+// like cs_insn_group(cs_handle,insn,ARM_GRP_ARM) but doesn't require handle and doesn't check or report errors
+int isARM(cs_insn *insn);
+
 /*
 is insn a PC relative load?
 */
@@ -210,6 +220,7 @@ iter_state_t *disasm_iter_new(firmware *fw, uint32_t adr);
 void disasm_iter_free(iter_state_t *is);
 
 // initialize iterator state at adr
+// thumb bit in adr sets mode
 int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr);
 
 /*
@@ -240,7 +251,8 @@ disassemble up to count instructions starting at firmware address adr
 allocates and returns insns in insn, can be freed with cs_free(insn, count)
 returns actual number disassembled, less than count on error
 */
-size_t fw_disasm_adr(firmware *fw, uint32_t adr, unsigned count, cs_insn **insn);
+// UNUSED for now
+//size_t fw_disasm_adr(firmware *fw, uint32_t adr, unsigned count, cs_insn **insn);
 
 
 // ***** utilities for searching disassembly over large ranges ******

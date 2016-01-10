@@ -146,11 +146,11 @@ void usage(void) {
     fprintf(stderr,"usage capdis [options] <file> <load address>\n"
                     "options:\n"
                     " -c=<count> disassemble at most <count> instructions\n"
-                    " -s=<address> start disassembling at <address>\n"
+                    " -s=<address> start disassembling at <address>. LSB controls ARM/thumb mode\n"
                     " -e=<address> stop disassembling at <address>\n"
-                    " -o=<offset> start disassembling at <offset>\n"
+                    " -o=<offset> start disassembling at <offset>. LSB controls ARM/thumb mode\n"
                     " -f=<chdk|objdump> format as CHDK inline ASM, or similar to objdump (default clean ASM)\n"
-                    " -arm disassemble code as arm (default thumb/thumb2)\n"
+                    " -armv5 make firmware_load treat firmware as armv5\n"
                     " -v increase verbosity\n"
                     " -d-const add details about pc relative constant LDRs\n"
                     " -d-bin print instruction hex dump\n"
@@ -419,7 +419,7 @@ static void do_dis_range(firmware *fw,
                     l_insert(branch_list,b_tgt,0);
                 }
             } else {
-                if(!disasm_iter_init(fw,is,is->adr+2)) {
+                if(!disasm_iter_init(fw,is,(is->adr+is->insn_min_size) | is->thumb)) {
                     fprintf(stderr,"do_dis_range: disasm_iter_init failed\n");
                     break;
                 }
@@ -513,11 +513,15 @@ TODO most constants are decimal, while capstone defaults to hex
             uint16_t *pv=(uint16_t *)adr2ptr(fw,is->adr);
             // TODO optional data directives
             if(pv) {
-                printf("%s %04x\n",comment_start,*pv);
+                if(is->thumb) {
+                    printf("%s %04x\n",comment_start,*pv);
+                } else {
+                    printf("%s %04x %04x\n",comment_start,*pv,*(pv+1));
+                }
             } else {
                 printf("%s invalid address %"PRIx64"\n",comment_start,is->adr);
             }
-            if(!disasm_iter_init(fw,is,is->adr+2)) {
+            if(!disasm_iter_init(fw,is,(is->adr+is->insn_min_size)|is->thumb)) {
                 fprintf(stderr,"do_dis_range: disasm_iter_init failed\n");
                 break;
             }
@@ -538,7 +542,7 @@ int main(int argc, char** argv)
     unsigned dis_count=0;
     int verbose=0;
     unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS);
-    cs_mode dis_mode=CS_MODE_THUMB;
+    int dis_arch=FW_ARCH_ARMv7;
     if(argc < 2) {
         usage();
     }
@@ -567,8 +571,8 @@ int main(int argc, char** argv)
                 usage();
             }
         }
-        else if ( strcmp(argv[i],"-arm") == 0 ) {
-            dis_mode=CS_MODE_ARM;
+        else if ( strcmp(argv[i],"-armv5") == 0 ) {
+            dis_arch=FW_ARCH_ARMv5;
         }
         else if ( strcmp(argv[i],"-v") == 0 ) {
             verbose++;
@@ -661,7 +665,7 @@ int main(int argc, char** argv)
             fprintf(stderr,"end < start\n");
             usage();
         }
-        dis_count=(dis_end-dis_start)/2; // need a count for cs_disasm, assume all 16 bit ins
+        dis_count=(dis_end-dis_start)/2; // need a count for do_dis_range, assume all 16 bit ins
     }
     if(dis_count==0) {
         fprintf(stderr,"missing instruction count\n");
@@ -681,7 +685,7 @@ int main(int argc, char** argv)
     
     firmware fw;
     // TODO instruction set should be separate from arch
-    firmware_load(&fw,dumpname,load_addr,(dis_mode==CS_MODE_ARM)?FW_ARCH_ARMv5:FW_ARCH_ARMv7); 
+    firmware_load(&fw,dumpname,load_addr,dis_arch); 
     firmware_init_capstone(&fw);
     firmware_init_data_ranges(&fw);
 
