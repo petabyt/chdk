@@ -108,7 +108,6 @@
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      1   // Index of AF led in camera_set_led function
 
-    #define CAM_SD_OVER_IN_AF               1
-    #define CAM_SD_OVER_IN_MF               1
+    #define CAM_SD_OVER_IN_AF               1   // SD override works in regular AF mode
 
 //--------------------------------------------------

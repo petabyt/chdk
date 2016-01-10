@@ -8,9 +8,11 @@ To enter CHDK <Alt> mode use the Playback [>] button.
 
 Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
-KNOWN BUGS
+
+KNOWN ISSUES
 **********
--
+- Subject distance (focus) overrides work only in regular AF mode, not with AF Lock.
+  The set_mf script function is not implemented.
 
 For Developers
 **************
