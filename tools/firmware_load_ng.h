@@ -10,6 +10,11 @@
 #define ADR_CLEAR_THUMB(x) ((x)&~1)
 #define ADR_IS_THUMB(x) ((x)&1)
 
+#define ADR_ALIGN4(x) ((x)&~0x3)
+#define ADR_ALIGN2(x) ((x)&~0x1)
+
+#define ADR_IS_ALIGN4(x) (((x)&0x3)==0)
+
 // address regions
 #define ADR_RANGE_INVALID   0
 #define ADR_RANGE_ROM       1

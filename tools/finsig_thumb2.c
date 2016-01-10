@@ -13,6 +13,10 @@
 #include "stubs_load.h"
 #include "firmware_load_ng.h"
 
+// arbitrary standardized constant for search "near" a string ref etc
+// could base on ADR etc reach
+#define SEARCH_NEAR_REF_RANGE 1024
+
 /* copied from finsig_dryos.c */
 char    out_buf[32*1024] = "";
 int     out_len = 0;
@@ -471,14 +475,15 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // TODO could look at every instance of str
     uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
     if(!str_adr) {
-        printf("sig_match_str_r0_call %s not found\n",rule->ref_name);
+        printf("sig_match_str_r0_call: %s not found\n",rule->ref_name);
         return 0;
     }
-    // for efficiency, could search near the string
-    disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default);
+    // for efficiency, search near string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default);
+    // printf("sig_match_str_r0_call: %s 0x%08x\n",rule->ref_name,str_adr);
 
     uint32_t adr=0;
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,0)) {
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(disasm_iter(fw,is)) {
                 // TODO this could be more sophisticated, look multiple instructions tracking r0
@@ -533,11 +538,12 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_reg_evp_table: failed to find DispDev_EnableEventProc\n");
         return 0;
     }
+    //printf("sig_match_reg_evp_table: DispDev_EnableEventProc 0x%08x\n",str_adr);
     uint32_t reg_evp_alt1=0;
     uint32_t reg_evp_tbl=0;
-    disasm_iter_init(fw,is,(str_adr - 512) | fw->thumb_default); // reset to a bit before where the string was found
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     uint32_t dd_enable_p=0;
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(insn_match_find_next(fw,is,2,match_b_bl)) {
                 reg_evp_alt1=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
@@ -585,14 +591,15 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_reg_evp_alt2: failed to find EngApp.Delete\n");
         return 0;
     }
+    //printf("sig_match_reg_evp_alt2: EngApp.Delete 0x%08x\n",str_adr);
     uint32_t reg_evp_alt1=0;
     int i=find_saved_sig("RegisterEventProcedure_alt1");
     if(i != -1) {
         reg_evp_alt1=func_names[i].val;
     }
 
-    disasm_iter_init(fw,is,(str_adr - 512) | fw->thumb_default); // reset to a bit before where the string was found
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+512)) {
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(insn_match_find_next(fw,is,3,match_b_bl)) {
                 uint32_t regs[4];
@@ -626,12 +633,14 @@ int sig_match_createtask_arm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // on digic 6 firmwares, the eventproc points to CreateTask in RAM, but ROM firmware code goes through an ARM wrapper
     uint32_t str_adr = find_str_bytes(fw,"FileWriteTask"); // fairly unique task name early in the dump
     if(!str_adr) {
-        printf("sig_match_createtask_arm: failed to find FileWriteTaks\n");
+        printf("sig_match_createtask_arm: failed to find FileWriteTask\n");
         return  0;
     }
 
-    disasm_iter_init(fw,is,(str_adr - 1024) | fw->thumb_default); // reset to a bit before where the string was found
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+1024)) {
+    //printf("sig_match_createtask_arm: FileWriteTask 0x%08x\n",str_adr);
+
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
                 create_task=is->insn->detail->arm.operands[0].imm;
