@@ -533,6 +533,13 @@ int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr)
         is->cs_handle=fw->cs_handle_arm;
         is->thumb=0;
         is->insn_min_size=4;
+        if(!ADR_IS_ALIGN4(adr)) {
+            fprintf(stderr,"disasm_iter_init: unaligned ARM address 0x%08x\n",adr);
+            is->code=NULL;
+            is->size=0;
+            is->adr=0;
+            return 0;
+        }
     }
     uint8_t *p=adr2ptr(fw,adr);
     if(!p) {
@@ -623,7 +630,7 @@ size_t fw_disasm_adr(firmware *fw, uint32_t adr, unsigned count, cs_insn **insn)
 /*
 iterate over firmware disassembling, calling callback described above after each
 successful disassembly iteration.  If disassembly fails, the iter state is advanced
-2 bytes without calling the callback.
+minimum instruction size without calling the callback.
 starts at address is taken from the iter_state, which should be initialized with
 disasm_iter_new(), disasm_iter_init(), or a previous search or iter call.
 end defaults to end of ram code or rom code (before init data, if known), based on start
@@ -652,21 +659,14 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
         fprintf(stderr,"fw_search_insn: invalid end address 0x%08x\n",adr_end);
         return 0;
     }
+    // ignore thumb bit on end adr
+    adr_end=ADR_CLEAR_THUMB(adr_end);
 
-    if( (r_start != r_end) 
-        || (adr_end < adr_start)
-        || (adr_end & 1)) {
+    if((r_start != r_end) || (adr_end < adr_start)) {
         fprintf(stderr,"fw_search_insn: invalid address range 0x%08x 0x%08x\n",adr_start,adr_end);
         return 0;
     }
 
-    // is assumed to be already initialized
-    /*
-    if(!disasm_iter_init(fw,is,adr_start)) {
-        fprintf(stderr,"fw_search_insn: disasm_iter_init failed\n");
-        return 0;
-    }
-    */
     uint32_t adr=adr_start;
     // don't bother with buf ranges for RAM code
     if(r_start->type != ADR_RANGE_ROM) {
