@@ -695,38 +695,45 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_named: %s invalid param %d\n",rule->ref_name, rule->param);
         return 0;
     }
-    // TODO - update for arm/thunb handling iter_state
+    // untested, warn
     if(!ADR_IS_THUMB(ref_adr)) {
         printf("sig_match_named: %s is ARM 0x%08x\n",rule->ref_name, ref_adr);
-        return 0;
+//        return 0;
     }
-    int r=0;
     disasm_iter_init(fw,is,ref_adr);
     if(insn_match_find_next(fw,is,20,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
-            if(is->insn->id != ARM_INS_BLX) {
-                // check if target goes directly to a B, follow
-                // TODO - should be a generic function, only handles one level, thumb for now
-                disasm_iter_init(fw,is,adr | is->thumb);
-                if(disasm_iter(fw,is) && is->insn->id == ARM_INS_B) {
-                    char *buf=malloc(strlen(rule->name)+3);
-                    // add j_ for cross referencing
-                    sprintf(buf,"j_%s",rule->name);
-                    add_func_name(buf,ADR_SET_THUMB(adr),NULL);
-                    adr=B_target(fw,is->insn);
+            // BLX, set thumb bit 
+            if(is->insn->id == ARM_INS_BLX) {
+                // curently not thumb, set in target
+                if(!is->thumb) {
+                    adr=ADR_SET_THUMB(adr);
                 }
-                adr=ADR_SET_THUMB(adr);
+            } else {
+                // preserve current state
+                adr |= is->thumb;
+            }
+            disasm_iter_set(fw,is,adr);
+            // check for direct jump on new funtion
+            // TODO this should be generic, only handles one level, doesn't check some LDR etc variants
+            if(disasm_iter(fw,is) && is->insn->id == ARM_INS_B) {
+                char *buf=malloc(strlen(rule->name)+3);
+                // add j_ for cross referencing
+                sprintf(buf,"j_%s",rule->name);
+                add_func_name(buf,adr,NULL); // add the previous address as j_...
+                adr=B_target(fw,is->insn);
+                adr |= is->thumb; // use same thumb state as disassembled
             }
             save_sig(rule->name,adr); 
-            r=1;
+            return 1;
         } else {
             printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
         }
     } else {
         printf("sig_match_named: %s branch not found 0x%08x\n",rule->ref_name,ref_adr);
     }
-    return r;
+    return 0;
 }
 
 // bootstrap sigs
@@ -837,12 +844,11 @@ void run_sig_rules(firmware *fw, sig_rule_t *sig_rules)
 
 void add_event_proc(firmware *fw, char *name, uint32_t adr)
 {
-    // TODO - update for ARM support in iter state
+    // TODO - no ARM eventprocs seen so far, warn
     if(!ADR_IS_THUMB(adr)) {
         printf("add_event_proc: %s is ARM 0x%08x\n",name,adr);
-        add_func_name(name,adr,"_FW");
-        return;
     }
+    // attempt to disassemble target
     if(!fw_disasm_iter_single(fw,adr)) {
         printf("add_event_proc: %s disassembly failed at 0x%08x\n",name,adr);
         return;
@@ -853,8 +859,8 @@ void add_event_proc(firmware *fw, char *name, uint32_t adr)
     if(b_adr) {
         char *buf=malloc(strlen(name)+6);
         sprintf(buf,"j_%s_FW",name);
-        add_func_name(buf,adr,NULL);
-        adr=ADR_SET_THUMB(b_adr);
+        add_func_name(buf,adr,NULL); // this is the orignal named address
+        adr=b_adr | fw->is->thumb; // thumb bit from iter state
     }
     add_func_name(name,adr,"_FW");
 }

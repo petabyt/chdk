@@ -224,7 +224,11 @@ iter_state_t *disasm_iter_new(firmware *fw, uint32_t adr);
 // free iterator state and associated resources
 void disasm_iter_free(iter_state_t *is);
 
-// initialize iterator state at adr
+// set iterator to adr, without clearing history (for branch following)
+// thumb bit in adr sets mode
+int disasm_iter_set(firmware *fw, iter_state_t *is, uint32_t adr);
+
+// initialize iterator state at adr, clearing history
 // thumb bit in adr sets mode
 int disasm_iter_init(firmware *fw, iter_state_t *is, uint32_t adr);
 
