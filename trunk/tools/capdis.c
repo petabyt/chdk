@@ -645,12 +645,6 @@ int main(int argc, char** argv)
             usage();
         }
         dis_start = offset+load_addr;
-    } else if(dis_start) {
-        if(dis_start < load_addr) {
-            fprintf(stderr,"start < load address\n");
-            usage();
-        }
-        offset = dis_start-load_addr;
     }
     if(dis_end) {
         if(dis_count) {
@@ -684,10 +678,18 @@ int main(int argc, char** argv)
     }
     
     firmware fw;
-    // TODO instruction set should be separate from arch
     firmware_load(&fw,dumpname,load_addr,dis_arch); 
     firmware_init_capstone(&fw);
     firmware_init_data_ranges(&fw);
+
+    // check for RAM code address
+    if(dis_start < fw.base) {
+        adr_range_t *ar=adr_get_range(&fw,dis_start);
+        if(!ar || ar->type != ADR_RANGE_RAM_CODE) {
+            fprintf(stderr,"invalid start address 0x%08x\n",dis_start);
+            return 1;
+        }
+    }
 
     if(verbose) {
         printf("%s %s size:0x%x start:0x%x instructions:%d opts:0x%x\n",comment_start,dumpname,dumpsize,dis_start,dis_count,dis_opts);
