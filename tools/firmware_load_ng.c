@@ -326,6 +326,17 @@ int isLDR_PC(cs_insn *insn)
 
 }
 
+/*
+is insn a PC relative load to PC?
+*/
+int isLDR_PC_PC(cs_insn *insn)
+{
+    if(!isLDR_PC(insn)) {
+        return 0;
+    }
+    return (insn->detail->arm.operands[0].reg == ARM_REG_PC);
+}
+
 //  subw    rd, pc, #x?
 int isSUBW_PC(cs_insn *insn)
 {
@@ -456,6 +467,15 @@ uint32_t LDR_PC2val(firmware *fw, cs_insn *insn)
         return *p;
     }
     return 0;
+}
+
+// return value loaded by PC relative LDR pc..., or 0 if not matching or out of range
+uint32_t LDR_PC_PC_target(firmware *fw, cs_insn *insn)
+{
+    if(!isLDR_PC_PC(insn)) {
+        return 0;
+    }
+    return LDR_PC2val(fw,insn);
 }
 
 // return the target of B instruction, or 0 if current instruction isn't BL
@@ -808,21 +828,32 @@ doesn't account for many conditional cases
 */
 int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, uint32_t *res)
 {
-//    static int dbg_count=0;
     int i;
+    /*
+    static int dbg_count=0;
+    if(is_init->insn->address==...) {
+        dbg_count=1;
+    } else {
+        dbg_count=0;
+    }
+    */
 
     // init regs to zero (to support adds etc)
     for (i=0;i<4;i++) {
         res[i]=0;
     }
 
-//    dbg_count++;
     // count includes current instruction (i.e. BL of call)
     if(is_init->ah.count <= 1) {
         return 0;
     }
-    if(is_init->ah.count < max_backtrack) {
-        max_backtrack = is_init->ah.count;
+    if(is_init->ah.count - 1 < max_backtrack) {
+        /*
+        if(dbg_count > 0) {
+            printf("max_backtrack %d hist count %d\n",max_backtrack,is_init->ah.count);
+        }
+        */
+        max_backtrack = is_init->ah.count-1;
     }
     uint32_t found_bits=0; // registers with known const values
     uint32_t known_bits=0; // registers with some value
@@ -832,7 +863,7 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
         // forward could also find multi-instruction constants in some cases (e.g mov + add, movw + movt)
         fw_disasm_iter_single(fw,adr_hist_get(&is_init->ah,i)); // thumb state comes from hist
         /*
-        if(dbg_count < 5) {
+        if(dbg_count > 0) {
             printf("backtrack %d:%d  ",dbg_count,i);
             printf("%"PRIx64" %s %s\n",fw->is->insn->address,fw->is->insn->mnemonic, fw->is->insn->op_str);
         }
@@ -870,14 +901,14 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
             uint32_t *pv=LDR_PC2valptr(fw,fw->is->insn);
             if(pv) {
                 res[rd_i] += *pv;
-//                    printf("found ldr r%d,=0x%08x\n",rd_i,res[rd_i].val);
+//                if(dbg_count) printf("found ldr r%d,=0x%08x\n",rd_i,res[rd_i]);
                 found_bits |=rd_bit;
                 continue;
             }
             uint32_t v=ADRx2adr(fw,fw->is->insn); // assumes ADR doesn't generate 0, probably safe
             if(v) {
                 res[rd_i] += v;
-//                        printf("found adrx r%d,0x%08x\n",rd_i,res[rd_i].val);
+//                 if(dbg_count) printf("found adrx r%d,0x%08x\n",rd_i,res[rd_i]);
                 found_bits |=rd_bit;
                 continue;
             }
@@ -885,12 +916,12 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
             if( (insn_id == ARM_INS_MOV || insn_id == ARM_INS_MOVS || insn_id == ARM_INS_MOVW) 
                 && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
                 res[rd_i] += fw->is->insn->detail->arm.operands[1].imm;
-//                    printf("found move r%d,#0x%08x\n",rd_i,res[rd_i]);
+//                if(dbg_count) printf("found move r%d,#0x%08x\n",rd_i,res[rd_i]);
                 found_bits |=rd_bit;
             } else if( (insn_id == ARM_INS_ADD || insn_id == ARM_INS_ADDW) 
                 && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
                 res[rd_i] += fw->is->insn->detail->arm.operands[1].imm;
-//                      printf("found add r%d,#0x%08x\n",rd_i,res[rd_i]);
+//                if(dbg_count) printf("found add r%d,#0x%08x\n",rd_i,res[rd_i]);
                 // pretend reg is not known
                 known_bits ^=rd_bit;
                 // do not set found bit here
@@ -899,7 +930,64 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
             */
         }
     }
+//    if(dbg_count) printf("get_call_const_args found 0x%08x\n",found_bits);
     return found_bits;
+}
+
+/*
+starting from is_init, look for a direct jump, such as
+ B <target>
+ LDR PC, [pc, #x]
+ movw ip, #x
+ movt ip, #x
+ bx ip
+if found, return target address with thumb bit set appropriately
+NOTE does not check for conditional
+uses fw->is
+*/
+uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
+{
+    uint32_t adr=B_target(fw,is_init->insn);
+    // B ... return with thumb set to current mode
+    if(adr) {
+        return (adr | is_init->thumb);
+    }
+    adr=LDR_PC_PC_target(fw,is_init->insn);
+    // LDR pc #... thumb is set in the loaded address
+    if(adr) {
+        return adr;
+    }
+    // an immediate move to ip (R12), candidate for multi-instruction veneer
+    if((is_init->insn->id == ARM_INS_MOV || is_init->insn->id == ARM_INS_MOVW) 
+        && is_init->insn->detail->arm.operands[0].reg == ARM_REG_IP
+        && is_init->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
+        adr = is_init->insn->detail->arm.operands[1].imm;
+        // iter in default state, starting from is_init
+        if(!fw_disasm_iter_single(fw,is_init->adr | is_init->thumb)) {
+            fprintf(stderr,"get_direct_jump_target: disasm single failed at 0x%"PRIx64"\n",fw->is->insn->address);
+            return 0;
+        }
+        // check for MOVT ip, #x
+        if(!(fw->is->insn->id == ARM_INS_MOVT
+            && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_IP
+            && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM)) {
+            fprintf(stderr,"get_direct_jump_target: disasm 1 failed at 0x%"PRIx64"\n",fw->is->insn->address);
+            return 0;
+        }
+        // thumb set in loaded adr
+        adr = (fw->is->insn->detail->arm.operands[1].imm << 16) | (adr&0xFFFF);
+        if(!fw_disasm_iter(fw)) {
+            fprintf(stderr,"get_direct_jump_target: disasm 2 failed at 0x%"PRIx64"\n",fw->is->insn->address);
+            return 0;
+        }
+        // BX ip ?
+        if(fw->is->insn->id == ARM_INS_BX
+            && fw->is->insn->detail->arm.operands[0].type == ARM_OP_REG
+            && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_IP) {
+            return adr;
+        }
+    }
+    return 0;
 }
 
 // ****** utilities for matching instructions and instruction sequences ******

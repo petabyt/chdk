@@ -173,6 +173,11 @@ is insn a PC relative load?
 */
 int isLDR_PC(cs_insn *insn);
 
+/*
+is insn a PC relative load to PC?
+*/
+int isLDR_PC_PC(cs_insn *insn);
+
 // if insn is LDR Rn, [pc,#x] return pointer to value, otherwise null
 uint32_t* LDR_PC2valptr_thumb(firmware *fw, cs_insn *insn);
 uint32_t* LDR_PC2valptr_arm(firmware *fw, cs_insn *insn);
@@ -320,6 +325,19 @@ doesn't account for branches landing in the middle of inspected code
 doesn't account for many conditional cases
 */
 int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, uint32_t *res);
+
+/*
+starting from is_init, look for a direct jump, such as
+ B <target>
+ LDR PC, [pc, #x]
+ movw ip, #x
+ movt ip, #x
+ bx ip
+if found, return target address with thumb bit set appropriately
+NOTE does not check for conditional
+uses fw->is
+*/
+uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init);
 
 // ****** utilities for matching instructions and instruction sequences ******
 
