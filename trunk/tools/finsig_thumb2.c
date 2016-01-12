@@ -88,7 +88,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "RegisterEventProcedure_alt1", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure_alt2", UNUSED|DONT_EXPORT },
     { "RegisterEventProcTable", UNUSED|DONT_EXPORT },
-    { "CreateTask_arm", UNUSED|DONT_EXPORT },
+    { "CreateTaskStrictly", UNUSED|DONT_EXPORT },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
@@ -437,6 +437,29 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
     func_names[next_func_entry].name = 0;
 }
 
+// save sig, with up to one level veneer added as j_...
+void save_sig_with_j(firmware *fw, char *name, uint32_t adr)
+{
+    // attempt to disassemble target
+    if(!fw_disasm_iter_single(fw,adr)) {
+        printf("save_sig_with_j: %s disassembly failed at 0x%08x\n",name,adr);
+        return;
+    }
+    // handle functions that immediately jump
+    // only one level of jump for now, doesn't check for conditionals, but first insn shouldn't be conditional
+    //uint32_t b_adr=B_target(fw,fw->is->insn);
+    uint32_t b_adr=get_direct_jump_target(fw,fw->is);
+    if(b_adr) {
+        char *buf=malloc(strlen(name)+6);
+        sprintf(buf,"j_%s",name);
+        add_func_name(buf,adr,NULL); // this is the orignal named address
+//        adr=b_adr | fw->is->thumb; // thumb bit from iter state
+        adr=b_adr; // thumb bit already handled by get_direct...
+    }
+    save_sig(name,adr);
+}
+
+
 typedef struct sig_rule_s sig_rule_t;
 typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 // signature matching structure
@@ -469,35 +492,39 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
 
 // match 
 // r0=ref value
+//...
 // bl=<our func>
 int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    // TODO could look at every instance of str
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
-    if(!str_adr) {
-        printf("sig_match_str_r0_call: %s not found\n",rule->ref_name);
-        return 0;
-    }
-    // for efficiency, search near string
-    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default);
-    // printf("sig_match_str_r0_call: %s 0x%08x\n",rule->ref_name,str_adr);
-
     uint32_t adr=0;
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name); // fairly unique task name early in the dump
+    if(!str_adr) {
+        printf("sig_match_str_r0_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+
+//    printf("sig_match_str_r0_call: %s ref str %s 0x%08x\n",rule->name,rule->ref_name,str_adr);
+
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-            if(disasm_iter(fw,is)) {
-                // TODO this could be more sophisticated, look multiple instructions tracking r0
-                // more branch types, etc
-                if(is->insn->id == ARM_INS_BL && is->insn->detail->arm.operands[0].type == ARM_OP_IMM) {
-                    adr = ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                    save_sig(rule->name,adr); 
-                    break;
+            // printf("sig_match_str_r0_call: %s ref str %s ref 0x%"PRIx64"\n",rule->name,rule->ref_name,is->insn->address);
+            // TODO should check if intervening insn nuke r0
+            if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
+                adr=is->insn->detail->arm.operands[0].imm;
+                if(is->insn->id != ARM_INS_BLX) {
+                    // if not a BLX, thumb address (TODO assumes search was on thumb code, currently valid)
+                    adr=ADR_SET_THUMB(adr);
                 }
+                // printf("sig_match_str_r0_call: thumb %s call 0x%08x\n",rule->name,adr);
+                save_sig_with_j(fw,rule->name,adr);
             }
         }
-    } 
+    }
     return (adr != 0);
 }
+
 // find RegisterEventProcedure
 int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -625,39 +652,6 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return (reg_evp_alt2 != 0);
 }
 
-// find CreateTask function used by ROM code
-// TODO could probably be generic func arg matching
-int sig_match_createtask_arm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    uint32_t create_task=0;
-    // on digic 6 firmwares, the eventproc points to CreateTask in RAM, but ROM firmware code goes through an ARM wrapper
-    uint32_t str_adr = find_str_bytes(fw,"FileWriteTask"); // fairly unique task name early in the dump
-    if(!str_adr) {
-        printf("sig_match_createtask_arm: failed to find FileWriteTask\n");
-        return  0;
-    }
-
-    //printf("sig_match_createtask_arm: FileWriteTask 0x%08x\n",str_adr);
-
-    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
-        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-            if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
-                create_task=is->insn->detail->arm.operands[0].imm;
-                if(is->insn->id != ARM_INS_BLX) {
-                    // if not a BLX, thumb address
-                    create_task=ADR_SET_THUMB(create_task);
-                }
-
-                //printf("CreateTask found 0x%08x at %"PRIx64"\n",create_task,is->insn->address);
-                save_sig("CreateTask_arm",create_task);
-                // TODO could sanity check other args
-            }
-        }
-    }
-    return (create_task != 0);
-}
-
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -715,15 +709,18 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 adr |= is->thumb;
             }
             disasm_iter_set(fw,is,adr);
-            // check for direct jump on new funtion
-            // TODO this should be generic, only handles one level, doesn't check some LDR etc variants
-            if(disasm_iter(fw,is) && is->insn->id == ARM_INS_B) {
-                char *buf=malloc(strlen(rule->name)+3);
-                // add j_ for cross referencing
-                sprintf(buf,"j_%s",rule->name);
-                add_func_name(buf,adr,NULL); // add the previous address as j_...
-                adr=B_target(fw,is->insn);
-                adr |= is->thumb; // use same thumb state as disassembled
+            if(disasm_iter(fw,is)) {
+                // TODO only checks one level
+                uint32_t j_adr=get_direct_jump_target(fw,is);
+                if(j_adr) {
+                    char *buf=malloc(strlen(rule->name)+3);
+                    // add j_ for cross referencing
+                    sprintf(buf,"j_%s",rule->name);
+                    add_func_name(buf,adr,NULL); // add the previous address as j_...
+                    adr=j_adr;
+                }
+            } else {
+                printf("sig_match_named: disasm failed in j_ check at %s 0x%08x\n",rule->name,adr);
             }
             save_sig(rule->name,adr); 
             return 1;
@@ -745,13 +742,13 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_reg_evp,     "RegisterEventProcedure",},
 {sig_match_reg_evp_table, "RegisterEventProcTable",},
 {sig_match_reg_evp_alt2, "RegisterEventProcedure_alt2",},
-{sig_match_createtask_arm, "CreateTask_arm",},
+{sig_match_str_r0_call,"CreateTaskStrictly",    "FileWriteTask",},
+{sig_match_str_r0_call,"CreateTask",            "EvShel",},
 {NULL},
 };
 
 sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
-{sig_match_named,   "CreateTask",               "CreateTask_FW",},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
@@ -855,12 +852,14 @@ void add_event_proc(firmware *fw, char *name, uint32_t adr)
     }
     // handle functions that immediately jump
     // only one level of jump for now, doesn't check for conditionals, but first insn shouldn't be conditional
-    uint32_t b_adr=B_target(fw,fw->is->insn);
+    //uint32_t b_adr=B_target(fw,fw->is->insn);
+    uint32_t b_adr=get_direct_jump_target(fw,fw->is);
     if(b_adr) {
         char *buf=malloc(strlen(name)+6);
         sprintf(buf,"j_%s_FW",name);
         add_func_name(buf,adr,NULL); // this is the orignal named address
-        adr=b_adr | fw->is->thumb; // thumb bit from iter state
+//        adr=b_adr | fw->is->thumb; // thumb bit from iter state
+        adr=b_adr; // thumb bit already handled by get_direct...
     }
     add_func_name(name,adr,"_FW");
 }
@@ -985,10 +984,32 @@ void find_generic_funcs(firmware *fw) {
         match_fn_count++;
     }
 
-    i=find_saved_sig("CreateTask_arm");
+    i=find_saved_sig("CreateTaskStrictly");
     if(i==-1) {
-        printf("failed to find CreateTask_arm\n");
+        printf("failed to find CreateTaskStrictly\n");
     } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].fn=process_createtask_call;
+        match_fn_count++;
+    }
+    // if veneer exists, use that too
+    i=find_saved_sig("j_CreateTaskStrictly");
+    if(i!=-1) {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].fn=process_createtask_call;
+        match_fn_count++;
+    }
+    i=find_saved_sig("CreateTask");
+    if(i==-1) {
+        printf("failed to find CreateTask\n");
+    } else {
+        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].fn=process_createtask_call;
+        match_fn_count++;
+    }
+    // if veneer exists, use that too
+    i=find_saved_sig("j_CreateTask");
+    if(i!=-1) {
         match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
         match_fns[match_fn_count].fn=process_createtask_call;
         match_fn_count++;
