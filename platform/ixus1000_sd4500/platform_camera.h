@@ -60,9 +60,9 @@
     #define cam_CFAPattern                  0x01020001 // Green Red Blue Green (http://chdk.setepontos.com/index.php?board=29.0)
 
    #define CAM_COLORMATRIX1                     \
-      12194, 10000, -3534, 10000, -1846, 10000, \
-       -117, 10000,  5518, 10000,   374, 10000, \
-        997, 10000,  1261, 10000,  3258, 10000
+      13124, 10000, -5329, 10000, -1390, 10000, \
+      -3602, 10000, 11658, 10000,  1944, 10000, \
+      -1612, 10000,  2863, 10000,  4885, 10000
 
     #define cam_CalibrationIlluminant1      1        // Daylight
 
