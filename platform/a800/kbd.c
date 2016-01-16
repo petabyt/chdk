@@ -48,7 +48,7 @@ void __attribute__((noinline)) mykbd_task()
 	kbd_new_state[1] = physw_status[1];
 	kbd_new_state[2] = physw_status[2] ^ KEYS_INV2;
 	while (physw_run){
-		_SleepTask(10);
+		_SleepTask(physw_sleep_delay);
 		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
 			_kbd_p2_f();
 		}
@@ -73,25 +73,6 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 void my_kbd_read_keys()
 {
-	// If script are running, replace PRINT button with DISPLAY
-	if (camera_info.state.state_kbd_script_run) {
-		int i;
-		for (i=0; keymap[i].hackkey; i++) {
-			if (keymap[i].hackkey == KEY_PRINT) {
-				keymap[i].hackkey = KEY_DISPLAY;
-				break;
-			}
-		}
-	} else {
-		int i;
-		for (i=0; keymap[i].hackkey; i++) {
-			if (keymap[i].hackkey == KEY_DISPLAY) {
-				keymap[i].hackkey = KEY_PRINT;
-				break;
-			}
-		}
-	}
-	
 	kbd_prev_state[0] = kbd_new_state[0];
 	//kbd_prev_state[1] = kbd_new_state[1];
 	kbd_prev_state[2] = kbd_new_state[2];
