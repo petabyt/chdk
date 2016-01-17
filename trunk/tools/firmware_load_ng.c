@@ -259,6 +259,20 @@ uint32_t fw_u32(firmware *fw, uint32_t adr)
     return *p;
 }
 
+// memcmp, but using a firmware address, returning 1 adr/size out of range
+int fw_memcmp(firmware *fw, uint32_t adr,const void *cmp, size_t n)
+{
+    uint32_t *p=(uint32_t *)adr2ptr(fw,adr);
+    if(!p) {
+        return 1;
+    }
+    if(n >= fw->size8 - (adr - fw->base)) {
+        return 1;
+    }
+    return memcmp(p,cmp,n);
+}
+
+
 // ****** address history functions ******
 // reset address history to empty
 void adr_hist_reset(adr_hist_t *ah)
@@ -1183,19 +1197,22 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     fread(fw->buf8, 1, fw->size8, f);
     fclose(f);
     findRanges(fw);
-    int k = find_str(fw, "gaonisoy");
 
     fw->adr_range_count=0;
     // add ROM
     fw_add_adr_range(fw,fw->base, fw->base+fw->size8, fw->base, ADR_RANGE_ROM);
 
     fw->main_offs = 0;
+    int k = find_str(fw, "gaonisoy");
     // assume firmware start is 32 bit jump over goanisoy
-    if(k != 1) {
-        if(memcmp(fw->buf8+0x20004,"gaonisoy",8) == 0) {
+    if(k == -1) {
+        fprintf(stderr,"WARNING gaonisoy string not found, assuming code start offset 0\n");
+    } else if (k != 1) {
+        // check at 0x20004 - note doesn't just use offset of first gaonisoy, because could be ref'd in romstarter
+        if(fw_memcmp(fw,fw->base+0x20004,"gaonisoy",8) == 0) {
             fw->main_offs = 0x20000;
-        } else { // error, -1? 0 would be on older fw
-            fw->main_offs = 0;
+        } else {
+            fprintf(stderr,"WARNING code start offset not found, assuming 0\n");
         }
     }
     k = find_str(fw, "DRYOS version 2.3, release #");

@@ -149,6 +149,9 @@ uint32_t find_u32_adr(firmware *fw, uint32_t val, uint32_t start);
 // return u32 value at adr
 uint32_t fw_u32(firmware *fw, uint32_t adr);
 
+// memcmp, but using a firmware address, returning 1 adr/size out of range
+int fw_memcmp(firmware *fw, uint32_t adr,const void *cmp, size_t n);
+
 // ****** address history functions ******
 // reset address history to empty
 void adr_hist_reset(adr_hist_t *ah);
