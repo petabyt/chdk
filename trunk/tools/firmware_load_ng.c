@@ -1226,6 +1226,50 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     }
 }
 
+// test to verify thumb blx bug is patched in linked capstone
+int do_blx_check(firmware *fw)
+{
+/*
+test code blxbork.S
+.syntax unified
+.globl arm_code
+.globl _start
+_start:
+.code 16
+blx arm_code
+movs r0, #1
+blx arm_code
+.align 4
+.code 32
+arm_code:
+bx lr
+
+arm-none-eabi-gcc -nostdlib blxbork.S -o blxbork.elf
+*/
+
+static const uint8_t code[]=
+    "\x00\xf0\x06\xe8" // blx arm_code (start + 0x10)
+    "\x01\x20" // movs r0,#1, to cause non-word align
+    "\x00\xf0\x04\xe8" // blx arm_code
+;
+    cs_insn *insn;
+    size_t count;
+    count = cs_disasm(fw->cs_handle_thumb, code, sizeof(code), 0xFF000000, 3, &insn);
+
+    if(!(count == 3 && insn[0].id == ARM_INS_BLX && insn[2].id == ARM_INS_BLX)) {
+        fprintf(stderr,"do_blx_check: disassembly failed\n");
+        return 0;
+    }
+
+    int r=(insn[0].detail->arm.operands[0].imm == insn[2].detail->arm.operands[0].imm);
+
+
+    if(!r) {
+        fprintf(stderr,"WARNING! Incorrect dissassembly is likely\n");
+    }
+    cs_free(insn,count);
+    return r;
+}
 
 // initialize capstone state for loaded fw
 int firmware_init_capstone(firmware *fw)
@@ -1241,6 +1285,7 @@ int firmware_init_capstone(firmware *fw)
     }
     cs_option(fw->cs_handle_thumb, CS_OPT_DETAIL, CS_OPT_ON);
     fw->is=disasm_iter_new(fw,0);
+    do_blx_check(fw);
     return 1;
 }
 
