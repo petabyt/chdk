@@ -161,6 +161,7 @@ void usage(void) {
                     " -noloc don't generate loc_xxx: labels and B loc_xxx\n"
                     " -nosub don't generate BL sub_xxx\n"
                     " -noconst don't generate LDR Rd,=0xFOO\n"
+                    " -nostr don't comments for string refs\n"
                     " -adrldr convert ADR Rd,#x and similar to LDR RD,=... (default with -f=chdk)\n"
                     " -noadrldr don't convert ADR Rd,#x and similar to LDR RD,=...\n"
               );
@@ -240,12 +241,90 @@ static void describe_insn_groups(csh handle, cs_insn *insn) {
     printf("\n");
 }
 
+#define COMMENT_LEN 255
+// if adr is a string, append possibly truncated version to comment
+// TODO assumes this is the last thing appended to comment
+// TODO should have code to check if adr is known function
+// TODO isASCIIstring currently rejects strings longer than 100
+static void describe_str(firmware *fw, char *comment, uint32_t adr)
+{
+    int plevel=1;
+    char *s=(char *)adr2ptr_with_data(fw,adr);
+    if(!s) {
+        //printf("s1 bad ptr 0x%08x\n",adr);
+        return;
+    }
+    if(!isASCIIstring(fw,adr)) {
+        //printf("s1 not ASCII 0x%08x\n",adr);
+        // not a string, check for valid pointer
+        uint32_t adr2=*(uint32_t *)s;
+        // 
+        s=(char *)adr2ptr_with_data(fw,adr2);
+        if(!s) {
+            //printf("s2 bad ptr 0x%08x\n",adr2);
+            return;
+        }
+        if(!isASCIIstring(fw,adr2)) {
+            //printf("s2 not ASCII 0x%08x\n",adr2);
+            return;
+        }
+        plevel++;
+    }
+    int l=strlen(comment);
+    // remaining space
+    // TODO might want to limit max string to a modest number of chars
+    int r=COMMENT_LEN - (l + 4 + plevel); // 4 for space, "" and possibly one inserted backslash
+    if(r < 1) {
+        return;
+    }
+    char *p=comment+l;
+    *p++=' ';
+    int i;
+    for(i=0;i<plevel;i++) {
+        *p++='*';
+    }
+    *p++='"';
+    char *e;
+    int trunc=0;
+    if(strlen(s) < r) {
+        e=p+strlen(s);
+    } else {
+        // not enough space for ellipsis, give up
+        if(r <= 3) {
+            *p++='"';
+            *p++=0;
+            return;
+        }
+        e=p+r - 3;
+        trunc=1;
+    }
+    while(p < e) {
+        if(*s == '\r') {
+            *p++='\\'; 
+            *p++='r';
+        } else if(*s == '\n') {
+            *p++='\\';
+            *p++='n';
+        } else {
+            *p++=*s;
+        }
+        s++;
+    }
+    if(trunc) {
+        strcpy(p,"...");
+        p+=3;
+    }
+    *p++='"';
+    *p++=0;
+}
+
 #define DIS_OPT_LABELS          0x00000001
 #define DIS_OPT_SUBS            0x00000002
 #define DIS_OPT_CONSTS          0x00000004
 #define DIS_OPT_FMT_CHDK        0x00000008
 #define DIS_OPT_FMT_OBJDUMP     0x00000010
 #define DIS_OPT_ADR_LDR         0x00000020
+#define DIS_OPT_STR             0x00000040
 
 #define DIS_OPT_DETAIL_GROUP    0x00010000
 #define DIS_OPT_DETAIL_OP       0x00020000
@@ -299,6 +378,9 @@ static void do_dis_insn(
                 // thumb2dis.pl style
                 sprintf(comment,"0x%08x: (%08x)",ad,*pv);
             }
+            if(dis_opts & DIS_OPT_STR) {
+                describe_str(fw,comment,ad);
+            }
         } else {
             sprintf(comment,"WARNING didn't convert PC rel to constant!");
             strcpy(ops,insn->op_str);
@@ -334,6 +416,9 @@ static void do_dis_insn(
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
                 }
             }
+            if(dis_opts & DIS_OPT_STR) {
+                describe_str(fw,comment,ad);
+            }
         } else {
             sprintf(comment,"WARNING didn't convert ADR to constant!");
             strcpy(ops,insn->op_str);
@@ -362,6 +447,9 @@ static void do_dis_insn(
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
                 }
             }
+            if(dis_opts & DIS_OPT_STR) {
+                describe_str(fw,comment,ad);
+            }
         } else {
             sprintf(comment,"WARNING didn't convert SUBW Rd, PC, #x to constant!");
             strcpy(ops,insn->op_str);
@@ -389,6 +477,9 @@ static void do_dis_insn(
                     // thumb2dis.pl style
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
                 }
+            }
+            if(dis_opts & DIS_OPT_STR) {
+                describe_str(fw,comment,ad);
             }
         } else {
             sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
@@ -465,7 +556,7 @@ static void do_dis_range(firmware *fw,
                 describe_insn_groups(is->cs_handle,is->insn);
             }
             // mnemonic and op size from capstone.h
-            char insn_mnemonic[32], insn_ops[160], comment[256];
+            char insn_mnemonic[32], insn_ops[160], comment[COMMENT_LEN+1];
             do_dis_insn(fw,is,dis_opts,insn_mnemonic,insn_ops,comment);
             if(dis_opts & DIS_OPT_FMT_CHDK) {
                 printf("\"");
@@ -541,7 +632,7 @@ int main(int argc, char** argv)
     unsigned dis_end=0;
     unsigned dis_count=0;
     int verbose=0;
-    unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS);
+    unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS|DIS_OPT_STR);
     int dis_arch=FW_ARCH_ARMv7;
     if(argc < 2) {
         usage();
@@ -588,6 +679,9 @@ int main(int argc, char** argv)
         }
         else if ( strcmp(argv[i],"-noconst") == 0 ) {
             dis_opts &= ~DIS_OPT_CONSTS;
+        }
+        else if ( strcmp(argv[i],"-nostr") == 0 ) {
+            dis_opts &= ~DIS_OPT_STR;
         }
         else if ( strcmp(argv[i],"-noadrldr") == 0 ) {
             dis_opts &= ~DIS_OPT_ADR_LDR;
