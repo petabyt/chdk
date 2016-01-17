@@ -172,7 +172,7 @@ finsig_thumb2.o: finsig_thumb2.c stubs_load.h firmware_load_ng.h
 	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $< 
 
 capdis.o: capdis.c stubs_load.h firmware_load_ng.h
-	@echo derp $< \-\> $@
+	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $<
 
 font_8x16_pack.o: font_8x16_pack.c ../lib/font/font_8x16_uni.h
