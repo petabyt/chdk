@@ -627,7 +627,7 @@ int main(int argc, char** argv)
 {
     char *dumpname=NULL;
     unsigned load_addr=0xFFFFFFFF;
-    unsigned offset=0;
+    unsigned offset=0xFFFFFFFF;
     unsigned dis_start=0;
     unsigned dis_end=0;
     unsigned dis_count=0;
@@ -733,7 +733,7 @@ int main(int argc, char** argv)
         fprintf(stderr,"missing load address\n");
         usage();
     }
-    if(offset) {
+    if(offset != 0xFFFFFFFF) {
         if(dis_start) {
             fprintf(stderr,"both start and and offset given\n");
             usage();
