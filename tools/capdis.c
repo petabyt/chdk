@@ -164,6 +164,7 @@ void usage(void) {
                     " -nostr don't comments for string refs\n"
                     " -adrldr convert ADR Rd,#x and similar to LDR RD,=... (default with -f=chdk)\n"
                     " -noadrldr don't convert ADR Rd,#x and similar to LDR RD,=...\n"
+                    " -nofwdata don't attempt to initialize firmware data ranges\n"
               );
     exit(1);
 }
@@ -631,6 +632,7 @@ int main(int argc, char** argv)
     unsigned dis_start=0;
     unsigned dis_end=0;
     unsigned dis_count=0;
+    int do_fw_data_init=1;
     int verbose=0;
     unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS|DIS_OPT_STR);
     int dis_arch=FW_ARCH_ARMv7;
@@ -685,6 +687,9 @@ int main(int argc, char** argv)
         }
         else if ( strcmp(argv[i],"-noadrldr") == 0 ) {
             dis_opts &= ~DIS_OPT_ADR_LDR;
+        }
+        else if ( strcmp(argv[i],"-nofwdata") == 0 ) {
+            do_fw_data_init = 0;
         }
         else if ( strcmp(argv[i],"-adrldr") == 0 ) {
             dis_opts |= DIS_OPT_ADR_LDR;
@@ -774,7 +779,9 @@ int main(int argc, char** argv)
     firmware fw;
     firmware_load(&fw,dumpname,load_addr,dis_arch); 
     firmware_init_capstone(&fw);
-    firmware_init_data_ranges(&fw);
+    if(do_fw_data_init) {
+        firmware_init_data_ranges(&fw);
+    }
 
     // check for RAM code address
     if(dis_start < fw.base) {
