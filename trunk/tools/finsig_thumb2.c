@@ -497,7 +497,7 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
 int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t adr=0;
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name); // fairly unique task name early in the dump
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_str_r0_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
@@ -1020,9 +1020,19 @@ void find_generic_funcs(firmware *fw) {
     match_fns[match_fn_count].adr=0;
     match_fns[match_fn_count].fn=NULL;
 
-    // TODO should search ram CODE
     disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default); // reset to start of fw
     fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
+
+    /*
+    // currently nothing useful
+    for(i=0;i<fw->adr_range_count;i++) {
+        if(fw->adr_ranges[i].type != ADR_RANGE_RAM_CODE) {
+            continue;
+        }
+        disasm_iter_init(fw,is,fw->adr_ranges[i].start | fw->thumb_default); // reset to start of fw
+        fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
+    }
+    */
 
     disasm_iter_free(is);
 }
