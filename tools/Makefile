@@ -89,7 +89,7 @@ finsig_thumb2$(EXE): finsig_thumb2.o stubs_load.o firmware_load_ng.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^ $(CAPSTONE_TOOLS_LINK)
 
-capdis$(EXE): capdis.o firmware_load_ng.o
+capdis$(EXE): capdis.o stubs_load.o firmware_load_ng.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^ $(CAPSTONE_TOOLS_LINK)
 
