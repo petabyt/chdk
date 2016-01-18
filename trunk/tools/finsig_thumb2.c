@@ -258,7 +258,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "task_RotaryEncoder", OPTIONAL },
     { "task_TouchPanel", OPTIONAL },
 
-//    { "hook_CreateTask" },
+    { "hook_CreateTask" },
 
     { "time" },
     { "vsprintf" },
@@ -658,13 +658,26 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_NAMED_JMP_SUB     1
 // use the target of the first BL, BLX
 #define SIG_NAMED_SUB         2
+#define SIG_NAMED_TYPE_MASK  0xFF
 
+#define SIG_NAMED_CLEARTHUMB 0x100
+#define SIG_NAMED_FLAG_MASK  0xFF00
+
+void sig_match_named_save_sig(const char *name, uint32_t adr, uint32_t flags)
+{
+    if(flags & SIG_NAMED_CLEARTHUMB) {
+        adr = ADR_CLEAR_THUMB(adr);
+    }
+    save_sig(name,adr);
+}
 // match already identified function found by name
 // if offset is 1, match the first called function with 20 insn instead (e.g. to avoid eventproc arg handling)
 // initial direct jumps (j_foo) assumed to have been handled
 int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     int i=find_saved_sig(rule->ref_name);
+    uint32_t sig_type = rule->param & SIG_NAMED_TYPE_MASK;
+    uint32_t sig_flags = rule->param & SIG_NAMED_FLAG_MASK;
     if(i==-1) {
         printf("sig_match_named: %s function not found\n",rule->ref_name);
         return 0;
@@ -676,17 +689,17 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     // no offset, just save match as is
     // TODO might want to validate anyway
-    if(rule->param == SIG_NAMED_ASIS) {
-        save_sig(rule->name,func_names[i].val); 
+    if(sig_type == SIG_NAMED_ASIS) {
+        sig_match_named_save_sig(rule->name,func_names[i].val,sig_flags); 
         return 1;
     }
     const insn_match_t *insn_match;
-    if(rule->param == SIG_NAMED_JMP_SUB) {
+    if(sig_type == SIG_NAMED_JMP_SUB) {
         insn_match = match_b_bl_blximm;
-    } else if(rule->param == SIG_NAMED_SUB) {
+    } else if(sig_type == SIG_NAMED_SUB) {
         insn_match = match_bl_blximm;
     } else {
-        printf("sig_match_named: %s invalid param %d\n",rule->ref_name, rule->param);
+        printf("sig_match_named: %s invalid type %d\n",rule->ref_name,sig_type);
         return 0;
     }
     // untested, warn
@@ -722,7 +735,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             } else {
                 printf("sig_match_named: disasm failed in j_ check at %s 0x%08x\n",rule->name,adr);
             }
-            save_sig(rule->name,adr); 
+            sig_match_named_save_sig(rule->name,adr,sig_flags); 
             return 1;
         } else {
             printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
@@ -821,6 +834,8 @@ sig_rule_t sig_rules_main[]={
 //{sig_match_named,   "task_MovieRecord",         "task_MovieRecord",},
 //{sig_match_named,   "task_PhySw",               "task_PhySw",},
 {sig_match_named, "PTM_GetCurrentItem",         "PTM_GetCurrentItem_FW",},
+// TODO assumes CreateTask is in RAM, doesn't currently check
+{sig_match_named, "hook_CreateTask",            "CreateTask",SIG_NAMED_CLEARTHUMB},
 {NULL},
 };
 
