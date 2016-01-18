@@ -151,6 +151,7 @@ void usage(void) {
                     " -o=<offset> start disassembling at <offset>. LSB controls ARM/thumb mode\n"
                     " -f=<chdk|objdump> format as CHDK inline ASM, or similar to objdump (default clean ASM)\n"
                     " -armv5 make firmware_load treat firmware as armv5\n"
+                    " -stubs[=dir] load / use stubs from dir (default .) for names\n"
                     " -v increase verbosity\n"
                     " -d-const add details about pc relative constant LDRs\n"
                     " -d-bin print instruction hex dump\n"
@@ -326,6 +327,8 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
 #define DIS_OPT_FMT_OBJDUMP     0x00000010
 #define DIS_OPT_ADR_LDR         0x00000020
 #define DIS_OPT_STR             0x00000040
+#define DIS_OPT_STUBS           0x00000080
+#define DIS_OPT_STUBS_LABEL     0x00000080
 
 #define DIS_OPT_DETAIL_GROUP    0x00010000
 #define DIS_OPT_DETAIL_OP       0x00020000
@@ -338,6 +341,80 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
                                     |DIS_OPT_DETAIL_BIN\
                                     |DIS_OPT_DETAIL_CONST)
 
+// if branch insn fill in / modify ops, comment as needed, return 1
+// TODO code common with do_dis_call should be refactored
+int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
+{
+    if(!(cs_insn_group(is->cs_handle,is->insn,CS_GRP_JUMP)
+       && is->insn->detail->arm.op_count == 1
+       && is->insn->detail->arm.operands[0].type == ARM_OP_IMM)) {
+        return 0;
+    }
+    uint32_t target = is->insn->detail->arm.operands[0].imm;
+    osig* ostub=NULL;
+    char *subname=NULL;
+    if(dis_opts & DIS_OPT_STUBS) {
+       // search for current thumb state (there is no BX imm, don't currently handle ldr pc,...)
+       ostub = find_sig_val(fw->sv->stubs,target|is->thumb);
+       if(ostub) {
+           if(ostub->is_comment) {
+               strcat(comment,ostub->nm);
+           } else {
+               subname=ostub->nm;
+           }
+       }
+    }
+    if(dis_opts & DIS_OPT_LABELS) {
+        if(subname) {
+            sprintf(ops,"_%s",subname);
+        } else {
+            sprintf(ops,"loc_%08x",target);
+        }
+    } else if (subname) {
+       strcat(comment,subname);
+    }
+    return 1;
+}
+
+// if function call insn fill in / modify ops, comment as needed, return 1
+int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
+{
+    if(!((is->insn->id == ARM_INS_BL || is->insn->id == ARM_INS_BLX) 
+            && is->insn->detail->arm.operands[0].type == ARM_OP_IMM)) {
+        return 0;
+    }
+
+    uint32_t target = is->insn->detail->arm.operands[0].imm;
+    osig* ostub=NULL;
+    char *subname=NULL;
+    if(dis_opts & DIS_OPT_STUBS) {
+       // blx from thumb, or bl from arm, don't include thumb bit
+       if((is->thumb && is->insn->id == ARM_INS_BLX) || (!is->thumb && is->insn->id != ARM_INS_BLX)) {
+           ostub = find_sig_val(fw->sv->stubs,target);
+       } else {
+           ostub = find_sig_val(fw->sv->stubs,ADR_SET_THUMB(target));
+       }
+       if(ostub) {
+           if(ostub->is_comment) {
+               strcat(comment,ostub->nm);
+           } else {
+               subname=ostub->nm;
+           }
+       }
+    }
+    if(dis_opts & DIS_OPT_SUBS) {
+        if(subname) {
+            sprintf(ops,"_%s",subname);
+        } else {
+            sprintf(ops,"sub_%08x",target);
+        }
+    } else if (subname) {
+       strcat(comment,subname);
+    }
+    return 1;
+}
+
+
 static void do_dis_insn(
                     firmware *fw,
                     iter_state_t *is,
@@ -349,18 +426,16 @@ static void do_dis_insn(
     cs_insn *insn=is->insn;
 
     strcpy(mnem,insn->mnemonic);
-    ops[0]=0;
+    strcpy(ops,insn->op_str);
+    //ops[0]=0;
     comment[0]=0;
-    if((dis_opts & DIS_OPT_LABELS) && cs_insn_group(is->cs_handle,insn,CS_GRP_JUMP)
-       && insn->detail->arm.op_count == 1
-       && insn->detail->arm.operands[0].type == ARM_OP_IMM) {
-        sprintf(ops,"loc_%08x",insn->detail->arm.operands[0].imm);
-    // capstone doesn't put bl in CS_GRP_CALL, so look for BL and BLX
-    } else if((dis_opts & DIS_OPT_SUBS) && (insn->id == ARM_INS_BL || insn->id == ARM_INS_BLX) 
-            && insn->detail->arm.operands[0].type == ARM_OP_IMM) {
-        sprintf(ops,"sub_%08x",insn->detail->arm.operands[0].imm);
-    // convert LDR Rd, [PC,#foo] to LDR Rd,=... or detail calculated address/value
-    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isLDR_PC(insn))  {
+    if(do_dis_branch(fw,is,dis_opts,mnem,ops,comment)) {
+        return;
+    }
+    if(do_dis_call(fw,is,dis_opts,mnem,ops,comment)) {
+        return;
+    }
+    if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isLDR_PC(insn))  {
         // get address for display, rather than LDR_PC2valptr directly
         uint32_t ad=LDR_PC2adr(fw,insn);
         uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
@@ -375,7 +450,7 @@ static void do_dis_insn(
                     sprintf(comment,"[pc, #%d] (0x%08x)",insn->detail->arm.operands[1].mem.disp,ad);
                 }
             } else if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                strcpy(ops,insn->op_str);
+                //strcpy(ops,insn->op_str);
                 // thumb2dis.pl style
                 sprintf(comment,"0x%08x: (%08x)",ad,*pv);
             }
@@ -384,7 +459,7 @@ static void do_dis_insn(
             }
         } else {
             sprintf(comment,"WARNING didn't convert PC rel to constant!");
-            strcpy(ops,insn->op_str);
+            //strcpy(ops,insn->op_str);
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && (insn->id == ARM_INS_ADR))  {
         uint32_t ad=ADR2adr(fw,insn);
@@ -410,7 +485,7 @@ static void do_dis_insn(
                             cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
                             insn->detail->arm.operands[1].imm);
                 } else {
-                    strcpy(ops,insn->op_str);
+                    //strcpy(ops,insn->op_str);
                 }
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // thumb2dis.pl style
@@ -422,7 +497,7 @@ static void do_dis_insn(
             }
         } else {
             sprintf(comment,"WARNING didn't convert ADR to constant!");
-            strcpy(ops,insn->op_str);
+            //strcpy(ops,insn->op_str);
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isSUBW_PC(insn))  {
         // it looks like subw is thubm only, so shouldn't need special case for arm?
@@ -442,7 +517,7 @@ static void do_dis_insn(
                             *pv);
                 }
             } else {
-                strcpy(ops,insn->op_str);
+                //strcpy(ops,insn->op_str);
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // thumb2dis.pl style
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
@@ -453,7 +528,7 @@ static void do_dis_insn(
             }
         } else {
             sprintf(comment,"WARNING didn't convert SUBW Rd, PC, #x to constant!");
-            strcpy(ops,insn->op_str);
+            //strcpy(ops,insn->op_str);
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADDW_PC(insn))  {
         // it looks like addw is thubm only, so shouldn't need special case for arm?
@@ -473,7 +548,7 @@ static void do_dis_insn(
                             *pv);
                 }
             } else {
-                strcpy(ops,insn->op_str);
+                //strcpy(ops,insn->op_str);
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // thumb2dis.pl style
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
@@ -484,13 +559,41 @@ static void do_dis_insn(
             }
         } else {
             sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
-            strcpy(ops,insn->op_str);
+            //strcpy(ops,insn->op_str);
         }
     } else {
-        strcpy(ops,insn->op_str);
+        //strcpy(ops,insn->op_str);
     }
 }
 
+void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, unsigned dis_opts)
+{
+
+    uint32_t adr=is->insn->address;
+    osig* ostub = NULL;
+
+    if(dis_opts & DIS_OPT_STUBS_LABEL) {
+       // assume stub was recorded with same thumb state we are disassembling
+       ostub = find_sig_val(fw->sv->stubs,adr|is->thumb);
+       // TODO just comment for now
+       if(ostub) {
+           printf("%s %s\n",comment_start,ostub->nm);
+       }
+    }
+    if(dis_opts & DIS_OPT_LABELS) {
+        struct lnode *label = l_search(branch_list,adr);
+        if(label) {
+            if(dis_opts & DIS_OPT_FMT_CHDK) {
+                printf("\"");
+            }
+            printf("loc_%08x:", label->address);
+            if(dis_opts & DIS_OPT_FMT_CHDK) {
+                printf("\\n\"");
+            }
+            printf("\n");
+        }
+    }
+}
 static void do_dis_range(firmware *fw,
                     unsigned dis_start,
                     unsigned dis_count,
@@ -523,19 +626,7 @@ static void do_dis_range(firmware *fw,
     disasm_iter_init(fw,is,dis_start);
     while(count < dis_count && is->adr < dis_end) {
         if(disasm_iter(fw,is)) {
-            if(dis_opts & DIS_OPT_LABELS) {
-                struct lnode *label = l_search(branch_list,is->insn->address);
-                if(label) {
-                    if(dis_opts & DIS_OPT_FMT_CHDK) {
-                        printf("\"");
-                    }
-                    printf("loc_%08x:", label->address);
-                    if(dis_opts & DIS_OPT_FMT_CHDK) {
-                        printf("\\n\"");
-                    }
-                    printf("\n");
-                }
-            }
+            do_adr_label(fw,branch_list,is,dis_opts);
             if(!(dis_opts & DIS_OPT_FMT_OBJDUMP) // objdump format puts these on same line as instruction
                 && (dis_opts & (DIS_OPT_DETAIL_ADDR | DIS_OPT_DETAIL_BIN))) {
                 printf(comment_start);
@@ -626,6 +717,7 @@ TODO most constants are decimal, while capstone defaults to hex
 
 int main(int argc, char** argv)
 {
+    char stubs_dir[256]="";
     char *dumpname=NULL;
     unsigned load_addr=0xFFFFFFFF;
     unsigned offset=0xFFFFFFFF;
@@ -666,6 +758,12 @@ int main(int argc, char** argv)
         }
         else if ( strcmp(argv[i],"-armv5") == 0 ) {
             dis_arch=FW_ARCH_ARMv5;
+        }
+        else if ( strcmp(argv[i],"-stubs") == 0 ) {
+            strcpy(stubs_dir,".");
+        }
+        else if ( strncmp(argv[i],"-stubs=",7) == 0 ) {
+            strcpy(stubs_dir,argv[i]+7);
         }
         else if ( strcmp(argv[i],"-v") == 0 ) {
             verbose++;
@@ -790,6 +888,17 @@ int main(int argc, char** argv)
             fprintf(stderr,"invalid start address 0x%08x\n",dis_start);
             return 1;
         }
+    }
+    if(stubs_dir[0]) {
+        dis_opts |= (DIS_OPT_STUBS|DIS_OPT_STUBS_LABEL); // TODO may want to split various places stubs names could be used
+        fw.sv = new_stub_values();
+        char stubs_path[300];
+        sprintf(stubs_path,"%s/%s",stubs_dir,"funcs_by_name.csv");
+        load_funcs(fw.sv, stubs_path);
+        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry.S");
+        load_stubs(fw.sv, stubs_path, 0);
+        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry_2.S");
+        load_stubs(fw.sv, stubs_path, 0);   // Load second so values override stubs_entry.S
     }
 
     if(verbose) {
