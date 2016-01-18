@@ -341,6 +341,31 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
                                     |DIS_OPT_DETAIL_BIN\
                                     |DIS_OPT_DETAIL_CONST)
 
+// add comments for adr if it is a ref known sub or strung
+void describe_const_op(firmware *fw, unsigned dis_opts, char *comment, uint32_t adr)
+{
+    osig* ostub=NULL;
+    if(dis_opts & DIS_OPT_STUBS) {
+        ostub = find_sig_val(fw->sv->stubs,adr);
+        if(!ostub) {
+            uint32_t *p=(uint32_t *)adr2ptr(fw,adr);
+            if(p) {
+                ostub = find_sig_val(fw->sv->stubs,*p);
+            }
+        }
+        if(ostub) {
+            // TODO overflow
+            strcat(comment," ");
+            strcat(comment,ostub->nm);
+            // don't bother trying to comment as string
+            return;
+        }
+    }
+    if(dis_opts & DIS_OPT_STR) {
+        describe_str(fw,comment,adr);
+    }
+}
+
 // if branch insn fill in / modify ops, comment as needed, return 1
 // TODO code common with do_dis_call should be refactored
 int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
@@ -454,9 +479,7 @@ static void do_dis_insn(
                 // thumb2dis.pl style
                 sprintf(comment,"0x%08x: (%08x)",ad,*pv);
             }
-            if(dis_opts & DIS_OPT_STR) {
-                describe_str(fw,comment,ad);
-            }
+            describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert PC rel to constant!");
             //strcpy(ops,insn->op_str);
@@ -492,9 +515,7 @@ static void do_dis_insn(
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
                 }
             }
-            if(dis_opts & DIS_OPT_STR) {
-                describe_str(fw,comment,ad);
-            }
+            describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert ADR to constant!");
             //strcpy(ops,insn->op_str);
@@ -523,9 +544,7 @@ static void do_dis_insn(
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
                 }
             }
-            if(dis_opts & DIS_OPT_STR) {
-                describe_str(fw,comment,ad);
-            }
+            describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert SUBW Rd, PC, #x to constant!");
             //strcpy(ops,insn->op_str);
@@ -554,9 +573,7 @@ static void do_dis_insn(
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
                 }
             }
-            if(dis_opts & DIS_OPT_STR) {
-                describe_str(fw,comment,ad);
-            }
+            describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
             //strcpy(ops,insn->op_str);
