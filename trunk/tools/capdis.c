@@ -680,11 +680,11 @@ TODO most constants are decimal, while capstone defaults to hex
 
             if(dis_opts & DIS_OPT_FMT_OBJDUMP) {// objdump format puts these on same line as instruction
                 if(dis_opts & DIS_OPT_DETAIL_ADDR) {
-                    printf("%"PRIx64": \t",is->insn->address);
+                    printf("%08"PRIx64": \t",is->insn->address);
                 }
                 if(dis_opts & DIS_OPT_DETAIL_BIN) {
                     if(is->insn->size == 2) {
-                        printf("%04x ",*(unsigned short *)is->insn->bytes);
+                        printf("%04x     ",*(unsigned short *)is->insn->bytes);
                     } else if(is->insn->size == 4) {
                         printf("%04x %04x",*(unsigned short *)is->insn->bytes,*(unsigned short *)(is->insn->bytes+2));
                     }
