@@ -502,6 +502,25 @@ uint32_t B_target(firmware *fw, cs_insn *insn)
 }
 
 
+// return the target of CBZ / CBNZ instruction, or 0 if current instruction isn't CBx
+uint32_t CBx_target(firmware *fw, cs_insn *insn)
+{
+    if(insn->id == ARM_INS_CBZ || insn->id == ARM_INS_CBNZ) {
+        return insn->detail->arm.operands[1].imm;
+    }
+    return 0; // TODO could be valid
+}
+
+// return the target of BLX instruction, or 0 if current instruction isn't BLX imm
+uint32_t BLXimm_target(firmware *fw, cs_insn *insn)
+{
+    if(insn->id == ARM_INS_BLX && insn->detail->arm.operands[0].type == ARM_OP_IMM) {
+        return insn->detail->arm.operands[0].imm;
+    }
+    return 0; // TODO could be valid
+}
+
+
 // return the target of BL instruction, or 0 if current instruction isn't BL
 uint32_t BL_target(firmware *fw, cs_insn *insn)
 {
@@ -519,6 +538,7 @@ uint32_t B_BL_target(firmware *fw, cs_insn *insn)
     }
     return 0; // TODO could be valid
 }
+
 //
 // as above, but also including BLX imm
 uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn)
@@ -958,6 +978,7 @@ starting from is_init, look for a direct jump, such as
 if found, return target address with thumb bit set appropriately
 NOTE does not check for conditional
 uses fw->is
+does not check CBx, since it would generally be part of a function not a veneer
 */
 uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
 {
@@ -1000,6 +1021,41 @@ uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
             && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_IP) {
             return adr;
         }
+    }
+    return 0;
+}
+
+/*
+return target of any single instruction branch or function call instruction, 
+with thumb bit set appropriately
+returns 0 if current instruction not branch/call
+*/
+uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is)
+{
+    uint32_t adr=B_BL_target(fw,is->insn);
+    if(adr) {
+        return (adr | is->thumb);
+    }
+    // CBx only exists in thumb
+    if(is->thumb) {
+        adr=CBx_target(fw,is->insn);
+        if(adr) {
+            return ADR_SET_THUMB(adr);
+        }
+    }
+
+    adr=BLXimm_target(fw,is->insn);
+    if(adr) {
+        if(is->thumb) {
+            return adr;
+        } else {
+            return adr | is->thumb;
+        }
+    }
+
+    adr=LDR_PC_PC_target(fw,is->insn);
+    if(adr) {
+        return adr;
     }
     return 0;
 }
