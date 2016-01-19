@@ -370,12 +370,15 @@ void describe_const_op(firmware *fw, unsigned dis_opts, char *comment, uint32_t 
 // TODO code common with do_dis_call should be refactored
 int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
 {
-    if(!(cs_insn_group(is->cs_handle,is->insn,CS_GRP_JUMP)
-       && is->insn->detail->arm.op_count == 1
-       && is->insn->detail->arm.operands[0].type == ARM_OP_IMM)) {
-        return 0;
+    uint32_t target = B_target(fw,is->insn);
+    char op_pfx[8]="";
+    if(!target) {
+        target = CBx_target(fw,is->insn);
+        if(!target) {
+            return 0;
+        }
+        sprintf(op_pfx,"%s, ",cs_reg_name(is->cs_handle,is->insn->detail->arm.operands[0].reg));
     }
-    uint32_t target = is->insn->detail->arm.operands[0].imm;
     osig* ostub=NULL;
     char *subname=NULL;
     if(dis_opts & DIS_OPT_STUBS) {
@@ -391,9 +394,9 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
     }
     if(dis_opts & DIS_OPT_LABELS) {
         if(subname) {
-            sprintf(ops,"_%s",subname);
+            sprintf(ops,"%s_%s",op_pfx,subname);
         } else {
-            sprintf(ops,"loc_%08x",target);
+            sprintf(ops,"%sloc_%08x",op_pfx,target);
         }
     } else if (subname) {
        strcat(comment,subname);
@@ -626,9 +629,10 @@ static void do_dis_range(firmware *fw,
         // TODO should use fw_search_insn, but doesn't easily support count
         while(count < dis_count &&  is->adr < dis_end) {
             if(disasm_iter(fw,is)) {
-                uint32_t b_tgt=B_BL_BLXimm_target(fw,is->insn);
+                uint32_t b_tgt=get_branch_call_insn_target(fw,is);
                 if(b_tgt) {
-                    l_insert(branch_list,b_tgt,0);
+                    // currently ignore thumb bit
+                    l_insert(branch_list,ADR_CLEAR_THUMB(b_tgt),0);
                 }
             } else {
                 if(!disasm_iter_init(fw,is,(is->adr+is->insn_min_size) | is->thumb)) {

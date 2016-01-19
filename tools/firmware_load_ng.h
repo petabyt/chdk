@@ -213,6 +213,12 @@ uint32_t LDR_PC2val(firmware *fw, cs_insn *insn);
 // thumbness must be determined from current state
 uint32_t B_target(firmware *fw, cs_insn *insn);
 
+// return the target of CBZ / CBNZ instruction, or 0 if current instruction isn't CBx
+uint32_t CBx_target(firmware *fw, cs_insn *insn);
+
+// return the target of BLX instruction, or 0 if current instruction isn't BLX imm
+uint32_t BLXimm_target(firmware *fw, cs_insn *insn);
+
 // return the target of BL instruction, or 0 if current instruction isn't BL
 // both ARM and thumb instructions will NOT have the thumb bit set,
 // thumbness must be determined from current state
@@ -339,8 +345,16 @@ starting from is_init, look for a direct jump, such as
 if found, return target address with thumb bit set appropriately
 NOTE does not check for conditional
 uses fw->is
+does not check CBx, since it would generally be part of a function not a veneer
 */
 uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init);
+
+/*
+return target of any single instruction branch or function call instruction, 
+with thumb bit set appropriately
+returns 0 if current instruction not branch/call
+*/
+uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is);
 
 // ****** utilities for matching instructions and instruction sequences ******
 
