@@ -1,4 +1,4 @@
-override OPT_EXMEM_MALLOC=1
+#override OPT_EXMEM_MALLOC=1
 #override OPT_CHDK_IN_EXMEM=1
 
 #PLATFORMID=0x3228
