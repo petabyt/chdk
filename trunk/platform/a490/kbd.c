@@ -76,32 +76,12 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 
 void my_kbd_read_keys()
 {
-	// If script are running, replace PRINT button with DISPLAY
-	if (camera_info.state.state_kbd_script_run) {
-		int i;
-		for (i=0; keymap[i].hackkey; i++) {
-			if (keymap[i].hackkey == KEY_PRINT) {
-				keymap[i].hackkey = KEY_DISPLAY;
-				break;
-			}
-		}
-	} else {
-		int i;
-		for (i=0; keymap[i].hackkey; i++) {
-			if (keymap[i].hackkey == KEY_DISPLAY) {
-				keymap[i].hackkey = KEY_PRINT;
-				break;
-			}
-		}
-	}
-	
 	kbd_prev_state[0] = kbd_new_state[0];
 	//kbd_prev_state[1] = kbd_new_state[1];
 	kbd_prev_state[2] = kbd_new_state[2];
-	
-	asm volatile(
-        "BL      _kbd_read_keys\n"
-	);
+
+    extern void _kbd_read_keys(void);
+    _kbd_read_keys();
 	
 	kbd_new_state[0] = physw_status[0];
 	kbd_new_state[1] = physw_status[1];
