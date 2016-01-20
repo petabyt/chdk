@@ -77,9 +77,8 @@ void my_kbd_read_keys()
 	//kbd_prev_state[1] = kbd_new_state[1];
 	kbd_prev_state[2] = kbd_new_state[2];
 	
-	asm volatile(
-        "BL      _kbd_read_keys\n"
-	);
+    extern void _kbd_read_keys(void);
+    _kbd_read_keys();
 	
 	kbd_new_state[0] = physw_status[0];
 	kbd_new_state[1] = physw_status[1];
