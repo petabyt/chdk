@@ -375,6 +375,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "GetAdChValue", OPTIONAL },
 
+    { "physw_run", STUBSMIN_DEF },
+    { "physw_sleep_delay", STUBSMIN_DEF },
+//    { "physw_status", STUBSMIN_DEF },
+
     {0,0,0},
 };
 
@@ -652,6 +656,88 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return (reg_evp_alt2 != 0);
 }
 
+// TODO this finds multiple values in PhySwTask main function
+int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig("task_PhySw");
+    if(i == -1) {
+        printf("sig_match_physw_misc: missing task_PhySw\n");
+        return 0;
+    }
+    // look for physw_run (first value in physw_task struct)
+    disasm_iter_init(fw,is,func_names[i].val);
+    uint32_t physw_run=0;
+    for(i=0; i<3; i++) {
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_physw_misc: disasm failed\n");
+            return 0;
+        }
+        physw_run=LDR_PC2val(fw,is->insn);
+        if(physw_run) {
+            if(adr_is_var(fw,physw_run)) {
+                save_sig("physw_run",physw_run);
+                break;
+            } else {
+                printf("sig_match_physw_misc: adr not data? 0x%08x\n",physw_run);
+                return 0;
+            }
+        }
+    }
+    if(!physw_run) {
+        return 0;
+    }
+
+    // look for physw_sleep_delay, offset from physw_run, loaded before SleepTask
+    if(!insn_match_find_next(fw,is,7,match_bl_blximm)) {
+        return 0;
+    }
+    i=find_saved_sig("SleepTask");
+    if(i==-1) {
+        printf("sig_match_physw_misc: missing SleepTask\n");
+        return 0;
+    }
+    uint32_t sleeptask=func_names[i].val;
+    uint32_t f=get_branch_call_insn_target(fw,is);
+
+    // call wasn't direct, check for veneer
+    if(f != sleeptask) {
+        fw_disasm_iter_single(fw,f);
+        f=get_direct_jump_target(fw,fw->is);
+        if(f != sleeptask) {
+            return 0;
+        }
+        // TODO sleeptask veneer is useful for xref
+    }
+    // rewind 1 for r0
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,1));
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_misc: disasm failed\n");
+        return 0;
+    }
+    // TODO could check base is same reg physw_run was loaded into
+    if(is->insn->id != ARM_INS_LDR
+        || is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+        return 0;
+    }
+    save_sig("physw_sleep_delay",physw_run + is->insn->detail->arm.operands[1].mem.disp);
+    // skip over sleeptask to next insn
+    disasm_iter(fw,is);
+    
+    // look for kbd_p1_f
+    if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig("kbd_p1_f",get_branch_call_insn_target(fw,is));
+
+    // look for kbd_p2_f
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig("kbd_p2_f",get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -836,6 +922,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named, "PTM_GetCurrentItem",         "PTM_GetCurrentItem_FW",},
 // TODO assumes CreateTask is in RAM, doesn't currently check
 {sig_match_named, "hook_CreateTask",            "CreateTask",SIG_NAMED_CLEARTHUMB},
+{sig_match_physw_misc, "physw_misc",},
 {NULL},
 };
 

@@ -219,6 +219,12 @@ const char* adr_range_type_str(int type)
     }
 }
 
+// return true if adr is in firmware DATA or BSS
+int adr_is_var(firmware *fw, uint32_t adr)
+{
+    return (adr > fw->data_start && adr < fw->memisostart);
+}
+
 
 /*
 return firmware address of 32 bit value, starting at address "start"
