@@ -377,7 +377,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "physw_run", STUBSMIN_DEF },
     { "physw_sleep_delay", STUBSMIN_DEF },
-//    { "physw_status", STUBSMIN_DEF },
+    { "physw_status", STUBSMIN_DEF },
 
     {0,0,0},
 };
@@ -721,7 +721,10 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     save_sig("physw_sleep_delay",physw_run + is->insn->detail->arm.operands[1].mem.disp);
     // skip over sleeptask to next insn
-    disasm_iter(fw,is);
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_misc: disasm failed\n");
+        return 0;
+    }
     
     // look for kbd_p1_f
     if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
@@ -736,7 +739,32 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_sig("kbd_p2_f",get_branch_call_insn_target(fw,is));
     return 1;
 }
-
+// TODO also finds p1_f_cont, physw_status
+int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig("kbd_p1_f");
+    if(i == -1) {
+        printf("sig_match_kbd_read_keys: missing kbd_p1_f\n");
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // look for kbd_read_keys
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig("kbd_read_keys",get_branch_call_insn_target(fw,is));
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_kbd_read_keys: disasm failed\n");
+        return 0;
+    }
+    uint32_t physw_status=LDR_PC2val(fw,is->insn);
+    if(physw_status) {
+        save_sig("physw_status",physw_status);
+        save_sig("kbd_p1_f_cont",(uint32_t)(is->insn->address) | is->thumb);
+        return 1;
+    }
+    return 0;
+}
 
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
@@ -923,6 +951,7 @@ sig_rule_t sig_rules_main[]={
 // TODO assumes CreateTask is in RAM, doesn't currently check
 {sig_match_named, "hook_CreateTask",            "CreateTask",SIG_NAMED_CLEARTHUMB},
 {sig_match_physw_misc, "physw_misc",},
+{sig_match_kbd_read_keys, "kbd_read_keys",},
 {NULL},
 };
 
