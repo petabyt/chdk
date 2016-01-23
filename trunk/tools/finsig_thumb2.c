@@ -766,6 +766,28 @@ int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// TODO also finds kbd_read_keys_r2
+int sig_match_get_kbd_state(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig("kbd_read_keys");
+    if(i == -1) {
+        printf("sig_match_get_kbd_state: missing kbd_read_keys\n");
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // look for GetKbdState
+    if(!insn_match_find_next(fw,is,11,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig("GetKbdState",get_branch_call_insn_target(fw,is));
+    // look for kbd_read_keys_r2
+    if(!insn_match_find_next(fw,is,5,match_b_bl_blximm)) {
+        return 0;
+    }
+    save_sig("kbd_read_keys_r2",get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -952,6 +974,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named, "hook_CreateTask",            "CreateTask",SIG_NAMED_CLEARTHUMB},
 {sig_match_physw_misc, "physw_misc",},
 {sig_match_kbd_read_keys, "kbd_read_keys",},
+{sig_match_get_kbd_state, "GetKbdState",},
 {NULL},
 };
 
