@@ -394,7 +394,11 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
     }
     if(dis_opts & DIS_OPT_LABELS) {
         if(subname) {
-            sprintf(ops,"%s_%s",op_pfx,subname);
+            if(dis_opts & DIS_OPT_FMT_CHDK) {
+                sprintf(ops,"%s_%s",op_pfx,subname);
+            } else {
+                sprintf(ops,"%s%s",op_pfx,subname);
+            }
         } else {
             sprintf(ops,"%sloc_%08x",op_pfx,target);
         }
@@ -432,7 +436,11 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
     }
     if(dis_opts & DIS_OPT_SUBS) {
         if(subname) {
-            sprintf(ops,"_%s",subname);
+            if(dis_opts & DIS_OPT_FMT_CHDK) {
+                sprintf(ops,"_%s",subname);
+            } else {
+                strcpy(ops,subname);
+            }
         } else {
             sprintf(ops,"sub_%08x",target);
         }
