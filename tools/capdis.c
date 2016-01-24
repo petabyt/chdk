@@ -453,10 +453,11 @@ static void do_dis_insn(
 
     cs_insn *insn=is->insn;
 
+    // default - use capstone disasm text as-is
     strcpy(mnem,insn->mnemonic);
     strcpy(ops,insn->op_str);
-    //ops[0]=0;
     comment[0]=0;
+    // handle special cases, naming etc
     if(do_dis_branch(fw,is,dis_opts,mnem,ops,comment)) {
         return;
     }
@@ -478,14 +479,12 @@ static void do_dis_insn(
                     sprintf(comment,"[pc, #%d] (0x%08x)",insn->detail->arm.operands[1].mem.disp,ad);
                 }
             } else if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                //strcpy(ops,insn->op_str);
                 // thumb2dis.pl style
                 sprintf(comment,"0x%08x: (%08x)",ad,*pv);
             }
             describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert PC rel to constant!");
-            //strcpy(ops,insn->op_str);
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && (insn->id == ARM_INS_ADR))  {
         uint32_t ad=ADR2adr(fw,insn);
@@ -521,7 +520,6 @@ static void do_dis_insn(
             describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert ADR to constant!");
-            //strcpy(ops,insn->op_str);
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isSUBW_PC(insn))  {
         // it looks like subw is thubm only, so shouldn't need special case for arm?
@@ -541,7 +539,6 @@ static void do_dis_insn(
                             *pv);
                 }
             } else {
-                //strcpy(ops,insn->op_str);
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // thumb2dis.pl style
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
@@ -550,7 +547,6 @@ static void do_dis_insn(
             describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert SUBW Rd, PC, #x to constant!");
-            //strcpy(ops,insn->op_str);
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADDW_PC(insn))  {
         // it looks like addw is thubm only, so shouldn't need special case for arm?
@@ -570,7 +566,6 @@ static void do_dis_insn(
                             *pv);
                 }
             } else {
-                //strcpy(ops,insn->op_str);
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // thumb2dis.pl style
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
@@ -579,11 +574,36 @@ static void do_dis_insn(
             describe_const_op(fw,dis_opts,comment,ad);
         } else {
             sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
-            //strcpy(ops,insn->op_str);
         }
-    } else {
-        //strcpy(ops,insn->op_str);
+    // capstone does ARM adr as add rd, pc,...
+    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADD_PC(insn))  {
+        unsigned ad=ADRx2adr(fw,insn);
+        uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
+        if(pv) {
+            if(dis_opts & DIS_OPT_ADR_LDR) {
+                strcpy(mnem,"ldr");
+                sprintf(ops,"%s, =0x%08x",
+                        cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg),
+                        ad);
+                if(dis_opts & DIS_OPT_DETAIL_CONST) {
+                    // show original subw
+                    sprintf(comment,"add %s, pc, #%x (0x%08x)",
+                            cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
+                            insn->detail->arm.operands[2].imm,
+                            *pv);
+                }
+            } else {
+                if(dis_opts & DIS_OPT_DETAIL_CONST) {
+                    // thumb2dis.pl style
+                    sprintf(comment,"0x%08x: (%08x)",ad,*pv);
+                }
+            }
+            describe_const_op(fw,dis_opts,comment,ad);
+        } else {
+            sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
+        }
     }
+    // else ... default disassembly
 }
 
 void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, unsigned dis_opts)
