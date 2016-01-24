@@ -900,9 +900,9 @@ int main(int argc, char** argv)
         sprintf(stubs_path,"%s/%s",stubs_dir,"funcs_by_name.csv");
         load_funcs(fw.sv, stubs_path);
         sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry.S");
-        load_stubs(fw.sv, stubs_path, 0);
+        load_stubs(fw.sv, stubs_path, 1);
         sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry_2.S");
-        load_stubs(fw.sv, stubs_path, 0);   // Load second so values override stubs_entry.S
+        load_stubs(fw.sv, stubs_path, 1);   // Load second so values override stubs_entry.S
     }
     if(dis_start_fn) {
         if(!stubs_dir[0]) {
