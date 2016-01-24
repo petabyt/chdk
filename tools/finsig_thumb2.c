@@ -378,6 +378,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "physw_run", STUBSMIN_DEF },
     { "physw_sleep_delay", STUBSMIN_DEF },
     { "physw_status", STUBSMIN_DEF },
+    { "fileio_semaphore", STUBSMIN_DEF },
 
     {0,0,0},
 };
@@ -812,6 +813,83 @@ int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+// TODO this actually finds a bunch of different stuff
+int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig("Fopen_Fut");
+    if(i == -1) {
+        printf("sig_match_take_semaphore_strict: missing Fopen_Fut\n");
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // find first function call
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // find second call
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // skip two calls
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        return 0;
+    }
+    // next one should be DebugAssert
+    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,"DebugAssert",get_branch_call_insn_target(fw,is));
+
+    // next should be TakeSemaphoreStrictly
+    if(!insn_match_find_next(fw,is,7,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,"TakeSemaphoreStrictly",get_branch_call_insn_target(fw,is));
+    arm_reg ptr_reg = ARM_REG_INVALID;
+    uint32_t sem_adr=0;
+    // iterate backwards looking for the value put in r0
+    for(i=1; i<7; i++) {
+        fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+        cs_insn *insn=fw->is->insn;
+        if(insn->id != ARM_INS_LDR) {
+            continue;
+        }
+        if(ptr_reg == ARM_REG_INVALID
+            && insn->detail->arm.operands[0].reg == ARM_REG_R0
+            && insn->detail->arm.operands[1].mem.base != ARM_REG_PC) {
+            ptr_reg = insn->detail->arm.operands[1].mem.base;
+            continue;
+        }
+        if(ptr_reg == ARM_REG_INVALID || !isLDR_PC(insn) || insn->detail->arm.operands[0].reg != ptr_reg) {
+            continue;
+        }
+        sem_adr=LDR_PC2val(fw,insn);
+        if(sem_adr) {
+            break;
+        }
+    }
+    if(!sem_adr) {
+        return 0;
+    }
+    save_sig("fileio_semaphore",sem_adr);
+    // look for next call: GetDrive_FreeClusters
+    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,"GetDrive_FreeClusters",get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -1000,6 +1078,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_kbd_read_keys, "kbd_read_keys",},
 {sig_match_get_kbd_state, "GetKbdState",},
 {sig_match_create_jumptable, "CreateJumptable",},
+{sig_match_take_semaphore_strict, "TakeSemaphoreStrictly",},
 {NULL},
 };
 
