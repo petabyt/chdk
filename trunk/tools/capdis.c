@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
@@ -146,7 +147,7 @@ void usage(void) {
     fprintf(stderr,"usage capdis [options] <file> <load address>\n"
                     "options:\n"
                     " -c=<count> disassemble at most <count> instructions\n"
-                    " -s=<address> start disassembling at <address>. LSB controls ARM/thumb mode\n"
+                    " -s=<address|stub name> start disassembling at <address>. LSB controls ARM/thumb mode\n"
                     " -e=<address> stop disassembling at <address>\n"
                     " -o=<offset> start disassembling at <offset>. LSB controls ARM/thumb mode\n"
                     " -f=<chdk|objdump> format as CHDK inline ASM, or similar to objdump (default clean ASM)\n"
@@ -625,7 +626,7 @@ void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, uns
        ostub = find_sig_val(fw->sv->stubs,adr|is->thumb);
        // TODO just comment for now
        if(ostub) {
-           printf("%s %s\n",comment_start,ostub->nm);
+           printf("%s %s 0x%08x\n",comment_start,ostub->nm,ostub->val);
        }
     }
     if(dis_opts & DIS_OPT_LABELS) {
@@ -771,6 +772,7 @@ int main(int argc, char** argv)
     unsigned load_addr=0xFFFFFFFF;
     unsigned offset=0xFFFFFFFF;
     unsigned dis_start=0;
+    const char *dis_start_fn=NULL;
     unsigned dis_end=0;
     unsigned dis_count=0;
     int do_fw_data_init=1;
@@ -789,7 +791,11 @@ int main(int argc, char** argv)
             offset=strtoul(argv[i]+3,NULL,0);
         }
         else if ( strncmp(argv[i],"-s=",3) == 0 ) {
-            dis_start=strtoul(argv[i]+3,NULL,0);
+            if(!isdigit(argv[i][3])) {
+                dis_start_fn = argv[i]+3;
+            } else {
+                dis_start=strtoul(argv[i]+3,NULL,0);
+            }
         }
         else if ( strncmp(argv[i],"-e=",3) == 0 ) {
             dis_end=strtoul(argv[i]+3,NULL,0);
@@ -885,6 +891,32 @@ int main(int argc, char** argv)
         fprintf(stderr,"missing load address\n");
         usage();
     }
+
+    firmware fw;
+    if(stubs_dir[0]) {
+        dis_opts |= (DIS_OPT_STUBS|DIS_OPT_STUBS_LABEL); // TODO may want to split various places stubs names could be used
+        fw.sv = new_stub_values();
+        char stubs_path[300];
+        sprintf(stubs_path,"%s/%s",stubs_dir,"funcs_by_name.csv");
+        load_funcs(fw.sv, stubs_path);
+        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry.S");
+        load_stubs(fw.sv, stubs_path, 0);
+        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry_2.S");
+        load_stubs(fw.sv, stubs_path, 0);   // Load second so values override stubs_entry.S
+    }
+    if(dis_start_fn) {
+        if(!stubs_dir[0]) {
+            fprintf(stderr,"-s with function name requires -stubs (did you forget an 0x?)\n");
+            usage();
+        }
+        osig *ostub=find_sig(fw.sv->stubs,dis_start_fn);
+        if(!ostub || !ostub->val) {
+            fprintf(stderr,"start function %s not found (did you forget an 0x?)\n",dis_start_fn);
+            return 1;
+        }
+        dis_start=ostub->val;
+    }
+
     if(offset != 0xFFFFFFFF) {
         if(dis_start) {
             fprintf(stderr,"both start and and offset given\n");
@@ -923,7 +955,6 @@ int main(int argc, char** argv)
         comment_start = "//";
     }
     
-    firmware fw;
     firmware_load(&fw,dumpname,load_addr,dis_arch); 
     firmware_init_capstone(&fw);
     if(do_fw_data_init) {
@@ -937,17 +968,6 @@ int main(int argc, char** argv)
             fprintf(stderr,"invalid start address 0x%08x\n",dis_start);
             return 1;
         }
-    }
-    if(stubs_dir[0]) {
-        dis_opts |= (DIS_OPT_STUBS|DIS_OPT_STUBS_LABEL); // TODO may want to split various places stubs names could be used
-        fw.sv = new_stub_values();
-        char stubs_path[300];
-        sprintf(stubs_path,"%s/%s",stubs_dir,"funcs_by_name.csv");
-        load_funcs(fw.sv, stubs_path);
-        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry.S");
-        load_stubs(fw.sv, stubs_path, 0);
-        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry_2.S");
-        load_stubs(fw.sv, stubs_path, 0);   // Load second so values override stubs_entry.S
     }
 
     if(verbose) {
