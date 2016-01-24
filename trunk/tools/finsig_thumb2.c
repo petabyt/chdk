@@ -788,6 +788,30 @@ int sig_match_get_kbd_state(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig("InitializeAdjustmentSystem_FW");
+    if(i == -1) {
+        printf("sig_match_create_jumptable: missing InitializeAdjustmentSystem_FW\n");
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // find second function call
+    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+        return 0;
+    }
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,15,match_bl_blximm)) {
+        return 0;
+    }
+    // TODO could verify it looks right (version string)
+    save_sig("CreateJumptable",get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -975,6 +999,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_physw_misc, "physw_misc",},
 {sig_match_kbd_read_keys, "kbd_read_keys",},
 {sig_match_get_kbd_state, "GetKbdState",},
+{sig_match_create_jumptable, "CreateJumptable",},
 {NULL},
 };
 
