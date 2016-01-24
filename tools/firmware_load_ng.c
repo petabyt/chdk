@@ -392,6 +392,40 @@ int isADD_PC(cs_insn *insn)
             && insn->detail->arm.operands[2].type == ARM_OP_IMM);
 }
 
+// does insn look like a function return?
+int isRETx(cs_insn *insn)
+{
+    // BX LR
+    if(insn->id == ARM_INS_BX
+            && insn->detail->arm.op_count == 1
+            && insn->detail->arm.operands[0].type == ARM_OP_REG
+            && insn->detail->arm.operands[0].reg == ARM_REG_LR) {
+        return 1;
+    }
+    
+    // TODO LDR pc, [sp], imm is somewhat common, but could also be function pointer call
+    
+    // POP. capstone translates LDMFD   SP!,... in arm code to pop
+    if(insn->id == ARM_INS_POP) {
+        int i;
+        for(i=0; i < insn->detail->arm.op_count; i++) {
+            if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+                && insn->detail->arm.operands[i].reg == ARM_REG_PC) {
+                return 1;
+            }
+        }
+    }
+    // MOV PC, LR (some tools translate this to RET)
+    if(insn->id == ARM_INS_MOV
+            && insn->detail->arm.operands[0].type == ARM_OP_REG
+            && insn->detail->arm.operands[0].reg == ARM_REG_PC
+            && insn->detail->arm.operands[1].type == ARM_OP_REG
+            && insn->detail->arm.operands[1].reg == ARM_REG_LR) {
+        return 1;
+    }
+    return 0;
+}
+
 /*
 int isADR(cs_insn *insn) {
     // objdump disassembles as add r0, pc, #x, 
