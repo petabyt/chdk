@@ -316,6 +316,7 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f,uint32_
 uint32_t search_disasm_const_ref(firmware *fw, iter_state_t *is, uint32_t val, void *unused);
 
 // search for calls/jumps to immediate addresses
+// thumb bit in address should be set appropriately 
 // returns 1 if found, address can be obtained from insn
 uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void *unused);
 
@@ -324,6 +325,7 @@ uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void 
 typedef int (*search_calls_multi_fn)(firmware *fw, iter_state_t *is, uint32_t adr);
 
 // structure used to define functions searched for, and functions to handle matches
+// fn should be address with thumb bit set appropriately 
 typedef struct {
     uint32_t adr;
     search_calls_multi_fn fn;

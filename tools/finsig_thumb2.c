@@ -494,7 +494,7 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
 
     search_calls_multi_data_t match_fns[3];
 
-    match_fns[0].adr=ADR_CLEAR_THUMB(func_names[i].val);
+    match_fns[0].adr=func_names[i].val;
     match_fns[0].fn=search_calls_multi_end;
     char veneer[128];
     sprintf(veneer,"j_%s",name);
@@ -502,7 +502,7 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
     if(i == -1) {
         match_fns[1].adr=0;
     } else {
-        match_fns[1].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[1].adr=func_names[i].val;
         match_fns[1].fn=search_calls_multi_end;
         match_fns[2].adr=0;
     }
@@ -1364,7 +1364,7 @@ void find_generic_funcs(firmware *fw) {
     if(i==-1) {
         printf("failed to find ExportToEventProcedure\n");
     } else {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_reg_eventproc_call;
         match_fn_count++;
     }
@@ -1373,7 +1373,7 @@ void find_generic_funcs(firmware *fw) {
     if(i==-1) {
         printf("failed to find RegisterEventProcedure_alt1\n");
     } else {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_reg_eventproc_call;
         match_fn_count++;
     }
@@ -1383,7 +1383,7 @@ void find_generic_funcs(firmware *fw) {
     if(i==-1) {
         printf("failed to find RegisterEventProcTable\n");
     } else {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_reg_eventproc_table_call;
         match_fn_count++;
     }
@@ -1392,7 +1392,7 @@ void find_generic_funcs(firmware *fw) {
     if(i==-1) {
         printf("failed to find RegisterEventProcedure_alt2\n");
     } else {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_reg_eventproc_call;
         match_fn_count++;
     }
@@ -1401,14 +1401,14 @@ void find_generic_funcs(firmware *fw) {
     if(i==-1) {
         printf("failed to find CreateTaskStrictly\n");
     } else {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_createtask_call;
         match_fn_count++;
     }
     // if veneer exists, use that too
     i=find_saved_sig("j_CreateTaskStrictly");
     if(i!=-1) {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_createtask_call;
         match_fn_count++;
     }
@@ -1416,14 +1416,14 @@ void find_generic_funcs(firmware *fw) {
     if(i==-1) {
         printf("failed to find CreateTask\n");
     } else {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_createtask_call;
         match_fn_count++;
     }
     // if veneer exists, use that too
     i=find_saved_sig("j_CreateTask");
     if(i!=-1) {
-        match_fns[match_fn_count].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[match_fn_count].adr=func_names[i].val;
         match_fns[match_fn_count].fn=process_createtask_call;
         match_fn_count++;
     }
