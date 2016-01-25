@@ -397,6 +397,23 @@ int find_saved_sig(const char *name)
     return -1;
 }
 
+// Return the array index of of function with given address
+int find_saved_sig_by_adr(uint32_t adr)
+{
+    if(!adr) {
+        return  -1;
+    }
+    int i;
+    for (i=0; func_names[i].name != 0; i++)
+    {
+        if (func_names[i].val == adr)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
 // Save the address value found for a function in the above array
 void save_sig(const char *name, uint32_t val)
 {
@@ -501,7 +518,6 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
 // bl=<our func>
 int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t adr=0;
     uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_str_r0_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
@@ -517,17 +533,14 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             // printf("sig_match_str_r0_call: %s ref str %s ref 0x%"PRIx64"\n",rule->name,rule->ref_name,is->insn->address);
             // TODO should check if intervening insn nuke r0
             if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
-                adr=is->insn->detail->arm.operands[0].imm;
-                if(is->insn->id != ARM_INS_BLX) {
-                    // if not a BLX, thumb address (TODO assumes search was on thumb code, currently valid)
-                    adr=ADR_SET_THUMB(adr);
-                }
+                uint32_t adr=get_branch_call_insn_target(fw,is);
                 // printf("sig_match_str_r0_call: thumb %s call 0x%08x\n",rule->name,adr);
                 save_sig_with_j(fw,rule->name,adr);
+                return 1;
             }
         }
     }
-    return (adr != 0);
+    return 0;
 }
 
 // find RegisterEventProcedure
@@ -890,6 +903,74 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     return 1;
 }
 
+// similar to sig_match_str_r0_call, but string also appears with Fopen_Fut
+int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_stat: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+            if(insn_match_find_next(fw,is,2,match_bl_blximm)) {
+                uint32_t adr=get_branch_call_insn_target(fw,is);
+                int i=find_saved_sig_by_adr(adr);
+                // not found, check for veneer
+                if(i==-1) {
+                    fw_disasm_iter_single(fw,adr);
+                    uint32_t adr2=get_direct_jump_target(fw,fw->is);
+                    if(adr2) {
+                        i=find_saved_sig_by_adr(adr2);
+                    }
+                }
+                // found something above
+                if(i!=-1) {
+                    // already have something with name we are looking for (shouldn't currently happen)
+                    if(strcmp(func_names[i].name,rule->name)==0) {
+                        return 0;
+                    }
+                    // otherwise, some other known function, ignore
+                    continue;
+                }
+                // TODO could check r1 not a const
+                save_sig_with_j(fw,rule->name,adr);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+// find low level open
+int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    static insn_match_t match_open[]={
+        // 3 reg / reg movs, followed by a call
+        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_REG,ARM_REG_INVALID}}},
+        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_REG,ARM_REG_INVALID}}},
+        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_REG,ARM_REG_INVALID}}},
+        {ARM_INS_BL,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+
+    int i=find_saved_sig(rule->ref_name);
+    if(i == -1) {
+        printf("sig_match_open: missing %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    if(!insn_match_find_next_seq(fw,is,48,match_open)) {
+        return 0;
+    }
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    save_sig_with_j(fw,rule->name,adr);
+    return 1;
+}
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -1003,6 +1084,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
+{sig_match_named,   "close",                    "Close",                SIG_NAMED_SUB},
 {sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "DoAFLock",                 "SS.DoAFLock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
@@ -1080,6 +1162,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_kbd_state, "GetKbdState",},
 {sig_match_create_jumptable, "CreateJumptable",},
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly",},
+{sig_match_stat, "stat","A/uartr.req"},
+{sig_match_open, "open","Open_FW"},
 {NULL},
 };
 
