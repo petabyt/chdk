@@ -405,6 +405,9 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
 // iterate as long as sequence of instructions matches sequence defined in match
 int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match);
 
+// find next matching sequence starting within max_insns
+int insn_match_find_next_seq(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match);
+
 // ****** utilities for non-disasm searching ******
 // Search the firmware for something. The desired matching is performed using the supplied 'func' function.
 // Continues searching until 'func' returns non-zero - then returns 1

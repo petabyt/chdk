@@ -1212,6 +1212,24 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
     return 0;
 }
 
+// find next matching sequence starting within max_insns
+int insn_match_find_next_seq(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match)
+{
+    int count=0;
+    while(count < max_insns) {
+        const insn_match_t *m=match;
+        //printf("%"PRIx64" insn_match_find_next_seq %s %s\n",is->insn->address,is->insn->mnemonic,is->insn->op_str);
+        while(m->id != ARM_INS_ENDING && disasm_iter(fw,is) && insn_match(is->insn,m)) {
+            m++;
+            count++;
+        }
+        if(m->id == ARM_INS_ENDING) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 
 // Search the firmware for something. The desired matching is performed using the supplied 'func' function.
 // Continues searching until 'func' returns non-zero - then returns 1
