@@ -402,6 +402,9 @@ int insn_match(cs_insn *insn, const insn_match_t *match);
 // iterate is until current instruction matches any of the provided matches or until limit reached
 int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match);
 
+// iterate is until current has matched any of the provided matches N times or until max_insns reached
+int insn_match_find_nth(firmware *fw, iter_state_t *is, int max_insns, int num_to_match, const insn_match_t *match);
+
 // iterate as long as sequence of instructions matches sequence defined in match
 int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match);
 
