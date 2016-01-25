@@ -881,11 +881,12 @@ uint32_t search_disasm_const_ref(firmware *fw, iter_state_t *is, uint32_t val, v
 }
 
 // search for calls/jumps to immediate addresses
+// thumb bit in address should be set appropriately 
 // returns 1 if found, address can be obtained from insn
 uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void *unused)
 {
     //printf("%"PRIx64" %s %s\n",is->insn->address,is->insn->mnemonic, is->insn->op_str);
-    uint32_t sub=B_BL_BLXimm_target(fw,is->insn);
+    uint32_t sub=get_branch_call_insn_target(fw,is);
     if(sub) {
         if(sub == val) {
             return 1;
@@ -906,7 +907,7 @@ int search_calls_multi_end(firmware *fw, iter_state_t *is, uint32_t adr) {
 uint32_t search_disasm_calls_multi(firmware *fw, iter_state_t *is, uint32_t unused, void *userdata)
 {
     search_calls_multi_data_t *data=(search_calls_multi_data_t *)userdata;
-    uint32_t sub=B_BL_BLXimm_target(fw,is->insn);
+    uint32_t sub=get_branch_call_insn_target(fw,is);
     if(sub) {
         while(data->adr) {
             if(data->adr == sub) {
