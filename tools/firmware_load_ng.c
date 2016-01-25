@@ -894,6 +894,12 @@ uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void 
     return 0;
 }
 
+// a search_calls_multi_fn that just returns 1
+int search_calls_multi_end(firmware *fw, iter_state_t *is, uint32_t adr) {
+    return 1;
+}
+
+
 // Search for calls to multiple functions (more efficient than multiple passes)
 // if adr is found in null terminated search_calls_multi_data array, returns fn return value
 // otherwise 0
