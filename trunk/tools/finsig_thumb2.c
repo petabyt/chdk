@@ -539,6 +539,29 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
     return 0;
 }
 
+// initialize iter stat using address from ref_name, printer error and return 0 if not found
+int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!rule->ref_name) {
+        printf("init_disasm_sig_ref: %s missing ref_name\n",rule->name);
+        return 0;
+    }
+    int i=find_saved_sig(rule->ref_name);
+    if(i == -1) {
+        printf("init_disasm_sig_ref: %s missing %s\n",rule->name,rule->ref_name);
+        return 0;
+    }
+    if(!func_names[i].val) {
+        printf("init_disasm_sig_ref: %s no address for %s\n",rule->name,rule->ref_name);
+        return 0;
+    }
+    if(!disasm_iter_init(fw,is,func_names[i].val)) {
+        printf("init_disasm_sig_ref: %s bad address 0x%08x for %s\n",rule->name,func_names[i].val,rule->ref_name);
+        return 0;
+    }
+    return 1;
+}
+
 // match 
 // r0=ref value
 //...
@@ -700,13 +723,10 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // TODO this finds multiple values in PhySwTask main function
 int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig("task_PhySw");
-    if(i == -1) {
-        printf("sig_match_physw_misc: missing task_PhySw\n");
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    // look for physw_run (first value in physw_task struct)
-    disasm_iter_init(fw,is,func_names[i].val);
+    int i;
     uint32_t physw_run=0;
     for(i=0; i<3; i++) {
         if(!disasm_iter(fw,is)) {
@@ -783,12 +803,9 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // TODO also finds p1_f_cont, physw_status
 int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig("kbd_p1_f");
-    if(i == -1) {
-        printf("sig_match_kbd_read_keys: missing kbd_p1_f\n");
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // look for kbd_read_keys
     if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
         return 0;
@@ -810,12 +827,9 @@ int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // TODO also finds kbd_read_keys_r2
 int sig_match_get_kbd_state(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig("kbd_read_keys");
-    if(i == -1) {
-        printf("sig_match_get_kbd_state: missing kbd_read_keys\n");
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // look for GetKbdState
     if(!insn_match_find_next(fw,is,11,match_bl_blximm)) {
         return 0;
@@ -831,16 +845,14 @@ int sig_match_get_kbd_state(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig("InitializeAdjustmentSystem_FW");
-    if(i == -1) {
-        printf("sig_match_create_jumptable: missing InitializeAdjustmentSystem_FW\n");
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // find second function call
     if(!insn_match_find_nth(fw,is,20,2,match_bl_blximm)) {
         return 0;
     }
+    // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     if(!insn_match_find_next(fw,is,15,match_bl_blximm)) {
         return 0;
@@ -853,12 +865,9 @@ int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // TODO this actually finds a bunch of different stuff
 int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig("Fopen_Fut");
-    if(i == -1) {
-        printf("sig_match_take_semaphore_strict: missing Fopen_Fut\n");
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // find first function call
     if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
         return 0;
@@ -884,6 +893,7 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     save_sig_with_j(fw,"TakeSemaphoreStrictly",get_branch_call_insn_target(fw,is));
     arm_reg ptr_reg = ARM_REG_INVALID;
     uint32_t sem_adr=0;
+    int i;
     // iterate backwards looking for the value put in r0
     for(i=1; i<7; i++) {
         fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
@@ -971,12 +981,9 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         {ARM_INS_ENDING}
     };
 
-    int i=find_saved_sig(rule->ref_name);
-    if(i == -1) {
-        printf("sig_match_open: missing %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     if(!insn_match_find_next_seq(fw,is,48,match_open)) {
         return 0;
     }
@@ -988,12 +995,9 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // AllocateUncacheableMemory
 int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i == -1) {
-        printf("sig_match_umalloc: missing %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // looking for 3rd call
     if(!insn_match_find_nth(fw,is,15,3,match_bl_blximm)) {
         return 0;
@@ -1011,12 +1015,9 @@ int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // FreeUncacheableMemory
 int sig_match_ufree(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i == -1) {
-        printf("sig_match_ufree: missing %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // find the first call to strcpy
     if(!find_next_sig_call(fw,is,60,"strcpy_FW")) {
         return 0;
@@ -1225,11 +1226,11 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "PTM_GetCurrentItem",       "PTM_GetCurrentItem_FW",},
 // TODO assumes CreateTask is in RAM, doesn't currently check
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
-{sig_match_physw_misc, "physw_misc",},
-{sig_match_kbd_read_keys, "kbd_read_keys",},
-{sig_match_get_kbd_state, "GetKbdState",},
-{sig_match_create_jumptable, "CreateJumptable",},
-{sig_match_take_semaphore_strict, "TakeSemaphoreStrictly",},
+{sig_match_physw_misc, "physw_misc",            "task_PhySw"},
+{sig_match_kbd_read_keys, "kbd_read_keys",      "kbd_p1_f"},
+{sig_match_get_kbd_state, "GetKbdState",        "kbd_read_keys"},
+{sig_match_create_jumptable, "CreateJumptable", "InitializeAdjustmentSystem_FW"},
+{sig_match_take_semaphore_strict, "TakeSemaphoreStrictly","Fopen_Fut"},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW"},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
