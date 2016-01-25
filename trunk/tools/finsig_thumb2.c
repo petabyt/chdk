@@ -481,6 +481,33 @@ void save_sig_with_j(firmware *fw, char *name, uint32_t adr)
     save_sig(name,adr);
 }
 
+// find next call to func named "name" or j_name, up to max_offset form the current is address
+// TODO should have a way of dealing with more than one veneer
+int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name)
+{
+    int i=find_saved_sig(name);
+
+    if(i == -1) {
+        printf("find_next_sig_call: missing %s\n",name);
+        return 0;
+    }
+
+    search_calls_multi_data_t match_fns[3];
+
+    match_fns[0].adr=ADR_CLEAR_THUMB(func_names[i].val);
+    match_fns[0].fn=search_calls_multi_end;
+    char veneer[128];
+    sprintf(veneer,"j_%s",name);
+    i=find_saved_sig(veneer);
+    if(i == -1) {
+        match_fns[1].adr=0;
+    } else {
+        match_fns[1].adr=ADR_CLEAR_THUMB(func_names[i].val);
+        match_fns[1].fn=search_calls_multi_end;
+        match_fns[2].adr=0;
+    }
+    return fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,is->adr + max_offset);
+}
 
 typedef struct sig_rule_s sig_rule_t;
 typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
@@ -811,10 +838,7 @@ int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     disasm_iter_init(fw,is,func_names[i].val);
     // find second function call
-    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
-        return 0;
-    }
-    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+    if(!insn_match_find_nth(fw,is,20,2,match_bl_blximm)) {
         return 0;
     }
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
@@ -842,23 +866,13 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     // find second call
-    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-        return 0;
-    }
-    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+    if(!insn_match_find_nth(fw,is,10,2,match_bl_blximm)) {
         return 0;
     }
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
-    // skip two calls
-    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-        return 0;
-    }
-    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-        return 0;
-    }
-    // next one should be DebugAssert
-    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+    // skip two calls, next should be DebugAssert
+    if(!insn_match_find_nth(fw,is,20,3,match_bl_blximm)) {
         return 0;
     }
     save_sig_with_j(fw,"DebugAssert",get_branch_call_insn_target(fw,is));
@@ -969,6 +983,60 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     uint32_t adr=get_branch_call_insn_target(fw,is);
     save_sig_with_j(fw,rule->name,adr);
     return 1;
+}
+
+// AllocateUncacheableMemory
+int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i == -1) {
+        printf("sig_match_umalloc: missing %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // looking for 3rd call
+    if(!insn_match_find_nth(fw,is,15,3,match_bl_blximm)) {
+        return 0;
+    }
+    //follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // looking for 3rd call again
+    if(!insn_match_find_nth(fw,is,14,3,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    return 0;
+}
+
+// FreeUncacheableMemory
+int sig_match_ufree(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i == -1) {
+        printf("sig_match_ufree: missing %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // find the first call to strcpy
+    if(!find_next_sig_call(fw,is,60,"strcpy_FW")) {
+        return 0;
+    }
+    // find 3rd call
+    if(!insn_match_find_nth(fw,is,12,3,match_bl_blximm)) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // Look for Close call
+    if(!find_next_sig_call(fw,is,40,"Close_FW")) {
+        return 0;
+    }
+    // next call should be FreeUncacheableMemory
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    return 0;
 }
 
 // default - use the named firmware function
@@ -1153,17 +1221,19 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "task_FileWrite",           "task_FileWriteTask",},
 //{sig_match_named,   "task_MovieRecord",         "task_MovieRecord",},
 //{sig_match_named,   "task_PhySw",               "task_PhySw",},
-{sig_match_named,   "vsprintf",                   "sprintf_FW",         SIG_NAMED_SUB},
-{sig_match_named, "PTM_GetCurrentItem",         "PTM_GetCurrentItem_FW",},
+{sig_match_named,   "vsprintf",                 "sprintf_FW",         SIG_NAMED_SUB},
+{sig_match_named,   "PTM_GetCurrentItem",       "PTM_GetCurrentItem_FW",},
 // TODO assumes CreateTask is in RAM, doesn't currently check
-{sig_match_named, "hook_CreateTask",            "CreateTask",           SIG_NAMED_CLEARTHUMB},
+{sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
 {sig_match_physw_misc, "physw_misc",},
 {sig_match_kbd_read_keys, "kbd_read_keys",},
 {sig_match_get_kbd_state, "GetKbdState",},
 {sig_match_create_jumptable, "CreateJumptable",},
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly",},
-{sig_match_stat, "stat","A/uartr.req"},
-{sig_match_open, "open","Open_FW"},
+{sig_match_stat,    "stat",                     "A/uartr.req"},
+{sig_match_open,    "open",                     "Open_FW"},
+{sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
+{sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {NULL},
 };
 
@@ -1409,6 +1479,23 @@ int find_ctypes(firmware *fw, int k)
     return 0;
 }
 
+uint32_t find_uncached_bit(firmware *fw)
+{
+    insn_match_t match_bic_r0[]={
+        {ARM_INS_BIC,3,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_REG,ARM_REG_R0},{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+    int i=find_saved_sig("FreeUncacheableMemory");
+    if(i==-1) {
+        return 0;
+    }
+    fw_disasm_iter_start(fw,func_names[i].val);
+    if(insn_match_find_next(fw,fw->is,4,match_bic_r0)) {
+        return fw->is->insn->detail->arm.operands[2].imm;
+    }
+    return 0;
+}
+
 
 void output_firmware_vals(firmware *fw)
 {
@@ -1471,7 +1558,23 @@ void output_firmware_vals(firmware *fw)
         }
     }
     add_blankline();
+}
 
+void output_platform_vals(firmware *fw) {
+    bprintf("// Values below go in 'platform_camera.h':\n");
+    bprintf("//#define CAM_DRYOS         1\n");
+    if (fw->dryos_ver >= 39)
+        bprintf("//#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher\n");
+    if (fw->dryos_ver >= 47)
+        bprintf("//#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher\n");
+
+    uint32_t uncached_bit = find_uncached_bit(fw);
+    if(uncached_bit && uncached_bit !=0x10000000) {
+        bprintf("//#undef  CAM_UNCACHED_BIT\n");
+        bprintf("//#define CAM_UNCACHED_BIT  0x%08x\n",uncached_bit);
+    }
+
+    add_blankline();
 }
 // copied from finsig_dryos
 int compare_func_names(const func_entry **p1, const func_entry **p2)
@@ -1721,6 +1824,9 @@ int main(int argc, char **argv)
     run_sig_rules(&fw,sig_rules_initial);
     find_generic_funcs(&fw);
     run_sig_rules(&fw,sig_rules_main);
+
+    output_platform_vals(&fw);
+
     write_stubs(&fw,max_find_func);
 
     write_output();
