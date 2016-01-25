@@ -1009,7 +1009,7 @@ int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-    return 0;
+    return 1;
 }
 
 // FreeUncacheableMemory
@@ -1037,6 +1037,41 @@ int sig_match_ufree(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
+int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_deletefile_fut: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // next call should be DeleteFile_Fut
+        if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+            continue;
+        }
+        // follow
+        uint32_t adr=get_branch_call_insn_target(fw,is);
+        if(!fw_disasm_iter_single(fw,adr)) {
+            printf("sig_match_deletefile_fut: disasm failed\n");
+            return 0;
+        }
+        insn_match_t match_mov_r1[]={
+            {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_IMM,ARM_REG_INVALID}}},
+            {ARM_INS_MOVS,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_IMM,ARM_REG_INVALID}}},
+            {ARM_INS_ENDING}
+        };
+
+        if(!insn_match(fw->is->insn,match_mov_r1)){
+            continue;
+        }
+        save_sig_with_j(fw,rule->name,adr);
+        return 1;
+    }
     return 0;
 }
 
@@ -1235,6 +1270,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_open,    "open",                     "Open_FW"},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
+{sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 {NULL},
 };
 
