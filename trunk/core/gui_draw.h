@@ -84,13 +84,16 @@ extern  unsigned char   *chdk_colors;
 //-------------------------------------------------------------------
 extern void draw_init();
 extern void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl));
+extern void update_draw_proc();
 
 extern void draw_set_guard();
 extern int draw_test_guard();
 
 extern color draw_get_pixel(coord x, coord y);
+extern color draw_get_pixel_unrotated(coord x, coord y);
 
 extern void draw_pixel(coord x, coord y, color cl);
+extern void draw_pixel_unrotated(coord x, coord y, color cl);
 
 extern void draw_line(coord x1, coord y1, coord x2, coord y2, color cl);
 extern void draw_hline(coord x, coord y, int len, color cl);

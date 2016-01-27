@@ -1677,6 +1677,11 @@ static CMenu touchscreen_submenu = {0x28,LANG_MENU_TOUCHSCREEN_VALUES, touchscre
 #endif
 
 //-------------------------------------------------------------------
+static void cb_change_rotate_osd()
+{
+    update_draw_proc();
+    gui_menu_erase_and_redraw();
+}
 
 #ifdef CAM_HAS_CMOS
     static const char* gui_temp_mode_modes[] =              { "Off", "Optical", "CMOS", "Battery", "all" };
@@ -1689,6 +1694,7 @@ static const char* gui_show_usb_info_modes[] =              { "Off", "Icon", "Te
 static CMenuItem osd_submenu_items[] = {
     MENU_ITEM(0x5c,LANG_MENU_OSD_SHOW,              MENUITEM_BOOL,          &conf.show_osd, 0 ),
     MENU_ENUM2(0x5c,LANG_MENU_OSD_HIDE_PLAYBACK,                            &conf.hide_osd, gui_hide_osd_modes ),
+    MENU_ITEM(0x5c,LANG_MENU_OSD_ROTATE,            MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.rotate_osd, (int)cb_change_rotate_osd ),
     MENU_ITEM(0x5f,LANG_MENU_OSD_SHOW_STATES,       MENUITEM_BOOL,          &conf.show_state, 0 ),
     MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_TEMP,                                &conf.show_temp, gui_temp_mode_modes ),
     MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,   MENUITEM_BOOL,          &conf.temperature_unit, 0 ),
@@ -2581,7 +2587,6 @@ void gui_chdk_draw(int force_redraw)
     }
     else if (clear_for_title)
     {
-        draw_restore() ;
         clear_for_title = 0;
     }
 

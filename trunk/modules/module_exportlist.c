@@ -131,8 +131,9 @@
             draw_string_scaled
             draw_line
             draw_char
-            draw_get_pixel
+            draw_get_pixel_unrotated
             draw_pixel
+            draw_pixel_unrotated
             draw_ellipse
             draw_set_draw_proc
             draw_restore

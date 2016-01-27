@@ -157,8 +157,8 @@ static void gui_space_draw_value(int force)
         else if (conf.space_mb_show)
         {
             unsigned int freemb = GetFreeCardSpaceKb()/1024;
-            if (freemb < 10000) sprintf(osd_buf+offset, "%4d%M\0",freemb);
-            else sprintf(osd_buf+offset, "%4d%G\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
+            if (freemb < 10000) sprintf(osd_buf+offset, "%4dM\0",freemb);
+            else sprintf(osd_buf+offset, "%4dG\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
         }
     }
 
