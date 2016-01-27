@@ -1195,6 +1195,19 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
     return 1;
 }
 
+// check if single insn matches any of the provided matches
+int insn_match_any(cs_insn *insn,const insn_match_t *match)
+{
+    const insn_match_t *m;
+    // check matches
+    for(m=match;m->id != ARM_INS_ENDING;m++) {
+        if(insn_match(insn,m)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 // iterate is until current instruction matches any of the provided matches or until limit reached
 int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match)
 {
@@ -1205,13 +1218,8 @@ int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const in
             return 0;
         }
         // printf("%"PRIx64" insn_match_find_next %s %s\n",is->insn->address,is->insn->mnemonic,is->insn->op_str);
-
-        const insn_match_t *m;
-        // check matches
-        for(m=match;m->id != ARM_INS_ENDING;m++) {
-            if(insn_match(is->insn,m)) {
-                return 1;
-            }
+        if(insn_match_any(is->insn,match)) {
+            return 1;
         }
         i++;
     }

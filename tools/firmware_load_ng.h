@@ -403,6 +403,9 @@ extern const insn_match_t match_bl_blximm[];
 // check if single insn matches values defined by match
 int insn_match(cs_insn *insn, const insn_match_t *match);
 
+// check if single insn matches any of the provided matches
+int insn_match_any(cs_insn *insn,const insn_match_t *match);
+
 // iterate is until current instruction matches any of the provided matches or until limit reached
 int insn_match_find_next(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match);
 
