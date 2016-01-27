@@ -30,6 +30,7 @@ struct fi2_rec_s {
 	uint32_t	fboot;		// Bootloader block flag
 	uint32_t	uf2;		// unknown flag 2
 	uint32_t	uf3;		// unknown flag 3 (new in DryOS 50)
+    uint32_t    uf4;        // unknown flag 4 (seen in a DryOS r55 file)
 } fi2_rec_s;
 
 // FI2 header (with size field)
@@ -85,7 +86,7 @@ static int get_hexstring( void *dst, const char *str, int len )
 		else if( c < 'G' && c >= 'A' ) c -= ('A' - 0x0A);
 		else if( c < 'g' && c >= 'a' ) c -= ('a' - 0x0A);
 		else {
-			printf("Non-nex character \'%c\' at %d in string %s\n", c, i+1, str );
+			printf("Non-hex character \'%c\' at %d in string %s\n", c, i+1, str );
 			return -1;
 		}
 		p[i/2] = i & 1 ? p[i/2] | c : c << 4;
@@ -96,13 +97,17 @@ static int get_hexstring( void *dst, const char *str, int len )
 static int fi2rec_size(uint32_t dryos_ver)
 {
     // return the correct size to use for the block record
-    if (dryos_ver >= 50)
+    if (dryos_ver >= 55)
     {
         return sizeof (fi2_rec_s);
     }
-    else
+    else if (dryos_ver >= 50)
     {
         return sizeof (fi2_rec_s) - 4; // exclude the new R50 extra value
+    }
+    else
+    {
+        return sizeof (fi2_rec_s) - 8; // exclude the new R55 extra value too
     }
 }
 
@@ -184,8 +189,8 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 	// process next block
 	// finalize header
   	i = 32 + fi2rec_size(dryos_ver);
+    i = align128(i); // header needs to be aligned
 	store32_be( &hdr.hlen_be, i - 4 );
-    i = align128(i);
 	hdr.nblk = 1;
 	hdr.datacs = cs;
 	buf = (unsigned char*)malloc( i );							// allocate buffer for encrypted header
