@@ -249,7 +249,7 @@ static int gui_menu_rows()
 
 //-------------------------------------------------------------------
 // Full screen erase and redraw of menu
-static void gui_menu_erase_and_redraw()
+void gui_menu_erase_and_redraw()
 {
     gui_menu_redraw = 2;
     gui_set_need_restore();

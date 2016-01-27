@@ -109,6 +109,7 @@ typedef struct
     int show_osd;
     int hide_osd;
     int show_osd_in_review;
+    int rotate_osd;
     int script_shoot_delay;
     int show_histo;
     int script_allow_lua_native_calls;

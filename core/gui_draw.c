@@ -8,6 +8,7 @@
 
 //-------------------------------------------------------------------
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
+void            (*draw_pixel_proc_norm)(unsigned int offset, color cl);
 
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 extern char* bitmap_buffer[];
@@ -80,9 +81,30 @@ static void draw_pixel_std(unsigned int offset, color cl)
 }
 
 //-------------------------------------------------------------------
+unsigned int rotate_base;
+
+void draw_pixel_proc_rotated(unsigned int offset, color cl)
+{
+    draw_pixel_proc_norm(rotate_base - offset, cl);
+}
+
 void draw_set_draw_proc(void (*pixel_proc)(unsigned int offset, color cl))
 {
-    draw_pixel_proc = (pixel_proc)?pixel_proc:draw_pixel_std;
+    draw_pixel_proc_norm = (pixel_proc)?pixel_proc:draw_pixel_std;
+    if (conf.rotate_osd)
+    {
+        rotate_base = (camera_screen.height - 1) * camera_screen.buffer_width + ASPECT_XCORRECTION(camera_screen.width) - 1;
+        draw_pixel_proc = draw_pixel_proc_rotated;
+    }
+    else
+    {
+        draw_pixel_proc = draw_pixel_proc_norm;
+    }
+}
+
+void update_draw_proc()
+{
+    draw_set_draw_proc(draw_pixel_proc_norm);
 }
 
 //-------------------------------------------------------------------
@@ -167,8 +189,48 @@ void draw_pixel(coord x, coord y, color cl)
    }
 }
 
+void draw_pixel_unrotated(coord x, coord y, color cl)
+{
+    // Make sure pixel is on screen. Skip top left pixel if screen erase detection is on to avoid triggering the detector.
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height) || ((x == 0) && (y == 0))) return;
+    else
+    {
+        register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
+        draw_pixel_proc_norm(offset,   cl);
+#if CAM_USES_ASPECT_CORRECTION
+        draw_pixel_proc_norm(offset+1, cl);  // Draw second pixel if screen scaling is needed
+#endif
+   }
+}
+
 //-------------------------------------------------------------------
 color draw_get_pixel(coord x, coord y)
+{
+#ifndef THUMB_FW
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
+    if (conf.rotate_osd)
+    {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+        return bitmap_buffer[0][rotate_base - (y * camera_screen.buffer_width + ASPECT_XCORRECTION(x))];
+#else
+        return frame_buffer[0][rotate_base - (y * camera_screen.buffer_width + ASPECT_XCORRECTION(x))];
+#endif
+    }
+    else
+    {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+        return bitmap_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
+#else
+        return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
+#endif
+    }
+#else
+    // DIGIC 6 not supported
+    return 0;
+#endif
+}
+
+color draw_get_pixel_unrotated(coord x, coord y)
 {
 #ifndef THUMB_FW
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;

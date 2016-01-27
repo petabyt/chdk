@@ -144,6 +144,7 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO(  3, conf.override_disable,                       CONF_DEF_VALUE, i:0),
     CONF_INFO(  4, conf.override_disable_all,                   CONF_DEF_VALUE, i:1),
     CONF_INFO(  5, conf.hide_osd,                               CONF_DEF_VALUE, i:1),
+    CONF_INFO(  6, conf.rotate_osd,                             CONF_DEF_VALUE, i:0),
 
     CONF_INFO2( 20, conf.histo_pos,                             CONF_OSD_POS,   45,CAM_SCREEN_HEIGHT-HISTO_HEIGHT-40),
     CONF_INFO2( 21, conf.dof_pos,                               CONF_OSD_POS,   90,45),
@@ -312,6 +313,9 @@ void osd_conf_info_func(unsigned short id)
 {
     switch (id)
     {
+    case 6:
+        update_draw_proc();
+        break;
     case 131: 
         rbf_load_from_file(conf.menu_rbf_file, FONT_CP_WIN);
         break;
@@ -615,7 +619,7 @@ static short conf_map_1_2[] =
     1020, // 2 conf.save_raw
     1050, // 3 conf.script_shoot_delay
     1060, // 4 conf.show_histo
-    0,
+    2006, // 5 conf.rotate_osd
     1052, // 6 conf.script_param_set
     2150, // 7 conf.show_dof
     2100, // 8 conf.batt_volts_max
