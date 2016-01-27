@@ -5835,10 +5835,12 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
             {
                 func_names[k].val = eadr;
                 func_names[k].flags |= EV_MATCH;
+                if (s != n) free(s);
                 return;
             }
             else if (func_names[k].val == eadr)     // same name, same address
             {
+                if (s != n) free(s);
                 return;
             }
         }

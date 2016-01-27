@@ -4811,6 +4811,7 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
                 func_names[k].val = eadr;
                 func_names[k].flags |= EV_MATCH;
             }
+            if (s != n) free(s);
             return;
         }
 
