@@ -1075,6 +1075,41 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// find first function call within param ins of string ref
+// TODO could allow Nth
+int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+    int offset=rule->param;
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // bactrack looking for preceding call
+        if(offset < 0) {
+            int i;
+            for(i=1; i<=-offset; i++) {
+                fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+                if(insn_match_any(fw->is->insn,match_bl_blximm)) {
+                    uint32_t adr=get_branch_call_insn_target(fw,fw->is);
+                    save_sig_with_j(fw,rule->name,adr);
+                    return 1;
+                }
+            }
+        } else {
+            if(insn_match_find_next(fw,is,offset,match_bl_blximm)) {
+                uint32_t adr=get_branch_call_insn_target(fw,is);
+                save_sig_with_j(fw,rule->name,adr);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS        0
 // use the target of the first B, BX, BL, BLX etc
@@ -1271,6 +1306,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
+{sig_match_near_str,"LocalTime",               "%Y-%m-%dT%H:%M:%S",-5},
+{sig_match_near_str,"strftime",                "%Y/%m/%d %H:%M:%S",3},
 {NULL},
 };
 
