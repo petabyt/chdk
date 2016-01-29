@@ -1089,7 +1089,6 @@ int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             continue;
         }
         if(insn_match_find_nth(fw,is,7,2,match_bl_blximm)) {
-            printf("bl match\n");
             save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
             return 1;
         }
@@ -1098,26 +1097,45 @@ int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 
 
-int sig_match_strrchr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+int sig_match_time(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
     if(!str_adr) {
-        printf("sig_match_strrchr: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        printf("sig_match_time: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
     }
+    uint32_t fadr=0;
     // TODO should handle multiple instances of string
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
-        if(insn_match_find_nth(fw,is,9,2,match_bl_blximm)) {
-            save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-            return 1;
+        // find second func after str ref
+        if(insn_match_find_nth(fw,is,6,2,match_bl_blximm)) {
+            fadr=get_branch_call_insn_target(fw,is);
+            break;
         }
+    }
+    if(!fadr) {
+        return 0;
+    }
+    // follow found func
+    disasm_iter_init(fw,is,fadr);
+    // find second call
+    if(insn_match_find_nth(fw,is,11,2,match_bl_blximm)) {
+        save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+        return 1;
     }
     return 0;
 }
 
-// find first function call within param ins of string ref
-// TODO could allow Nth
+#define SIG_NEAR_OFFSET_MASK 0x00FF
+#define SIG_NEAR_COUNT_MASK  0xFF00
+#define SIG_NEAR_COUNT_SHIFT 8
+#define SIG_NEAR_REV  0x10000
+#define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
+                                | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
+#define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
+                                
+// find Nth function call within max_insns ins of string ref
 int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
@@ -1125,23 +1143,29 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
     }
-    int offset=rule->param;
+    int max_insns=rule->param&SIG_NEAR_OFFSET_MASK;
+    int n=(rule->param&SIG_NEAR_COUNT_MASK)>>SIG_NEAR_COUNT_SHIFT;
+    //printf("sig_match_near_str: %s max_insns %d n %d %s\n",rule->name,max_insns,n,(rule->param & SIG_NEAR_REV)?"rev":"fwd");
     // TODO should handle multiple instances of string
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
         // bactrack looking for preceding call
-        if(offset < 0) {
+        if(rule->param & SIG_NEAR_REV) {
             int i;
-            for(i=1; i<=-offset; i++) {
+            int n_calls=0;
+            for(i=1; i<=max_insns; i++) {
                 fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
                 if(insn_match_any(fw->is->insn,match_bl_blximm)) {
+                    n_calls++;
+                }
+                if(n_calls == n) {
                     uint32_t adr=get_branch_call_insn_target(fw,fw->is);
                     save_sig_with_j(fw,rule->name,adr);
                     return 1;
                 }
             }
         } else {
-            if(insn_match_find_next(fw,is,offset,match_bl_blximm)) {
+            if(insn_match_find_nth(fw,is,max_insns,n,match_bl_blximm)) {
                 uint32_t adr=get_branch_call_insn_target(fw,is);
                 save_sig_with_j(fw,rule->name,adr);
                 return 1;
@@ -1347,12 +1371,15 @@ sig_rule_t sig_rules_main[]={
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
-{sig_match_near_str,"LocalTime",               "%Y-%m-%dT%H:%M:%S",-5},
-{sig_match_near_str,"strftime",                "%Y/%m/%d %H:%M:%S",3},
-{sig_match_near_str,"OpenFastDir",             "OpenFastDir_ERROR\n",-5},
-{sig_match_near_str,"ReadFastDir",             "ReadFast_ERROR\n",-5},
-{sig_match_closedir,"closedir",                "ReadFast_ERROR\n",},
-{sig_match_strrchr, "strrchr",                 "ReadFast_ERROR\n",},
+{sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
+{sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1)},
+{sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",},
+{sig_match_near_str,"strrchr",                  "ReadFast_ERROR\n",     SIG_NEAR_AFTER(9,2)},
+{sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
+{sig_match_near_str,"strcat",                   "String can't be displayed; no more space in buffer",SIG_NEAR_AFTER(5,2)},
+{sig_match_near_str,"strchr",                   "-._~",SIG_NEAR_AFTER(4,1)},
 {NULL},
 };
 
