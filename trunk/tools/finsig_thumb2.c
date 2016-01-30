@@ -369,6 +369,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
     { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
+    { "CalcSqrt", OPTIONAL|UNUSED }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1380,6 +1381,73 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_pow: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    insn_match_t match_ldrd_r0_r1[]={
+        {ARM_INS_LDRD,3,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_REG,ARM_REG_R1},{ARM_OP_INVALID,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+    // skip forward to first ldrd    r0, r1, [r...]
+    if(!insn_match_find_next(fw,is,50,match_ldrd_r0_r1)) {
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_pow: disasm failed\n");
+        return 0;
+    }
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,adr);
+    return 1;
+}
+
+int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_sqrt: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // third call
+    if(!insn_match_find_nth(fw,is,12,3,match_bl_blximm)) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_sqrt: disasm failed\n");
+        return 0;
+    }
+    uint32_t j_tgt=get_direct_jump_target(fw,is);
+    // veneer?
+    if(j_tgt) {
+        // follow
+        disasm_iter_init(fw,is,j_tgt);
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_sqrt: disasm failed\n");
+            return 0;
+        }
+    }
+    // second call/branch (seems to be bhs)
+    if(!insn_match_find_nth(fw,is,12,2,match_b_bl_blximm)) {
+        return 0;
+    }
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,adr);
+    return 1;
+}
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -1554,6 +1622,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcLog10",                "CalcLog10_FW",         SIG_NAMED_JMP_SUB},
+{sig_match_named,   "CalcSqrt",                 "CalcSqrt_FW",          SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
 {sig_match_named,   "close",                    "Close",                SIG_NAMED_SUB},
 {sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",       SIG_NAMED_JMP_SUB},
@@ -1656,6 +1725,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
 {sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
 {sig_match_log,     "_log",                     "_log10",},
+{sig_match_pow,     "_pow",                     "GetDefectTvAdj_FW",},
+{sig_match_sqrt,    "_sqrt",                    "CalcSqrt",},
 {NULL},
 };
 
