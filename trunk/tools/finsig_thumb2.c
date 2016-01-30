@@ -798,7 +798,7 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!unreg_evp_table) {
         return 0;
     }
-    save_sig_with_j(fw,"UnRegisterEventProcTable",unreg_evp_table);
+    save_sig_with_j(fw,rule->name,unreg_evp_table);
     return 1;
 }
 
@@ -1148,7 +1148,7 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             {ARM_INS_ENDING}
         };
 
-        if(!insn_match(fw->is->insn,match_mov_r1)){
+        if(!insn_match_any(fw->is->insn,match_mov_r1)){
             continue;
         }
         save_sig_with_j(fw,rule->name,adr);
@@ -1208,6 +1208,101 @@ int sig_match_time(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return 0;
 }
+
+int sig_match_strncpy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_strncpy: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    if(!find_next_sig_call(fw,is,60,"strcpy_FW")) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        return 0;
+    }
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,adr);
+    return 1;
+}
+
+int sig_match_strncmp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_strncmp: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+            continue;
+        }
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,4,regs)&6)==6) {
+            // sanity check we got the right string
+            if(regs[1]==str_adr &&  regs[2] == strlen(rule->ref_name)) {
+                save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_strtolx: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    if(!find_next_sig_call(fw,is,120,"strncpy")) {
+        return 0;
+    }
+    // find first call after strncpy
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        return 0;
+    }
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,adr);
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_strtolx: disasm failed\n");
+        return 0;
+    }
+    // expect
+    // mov r3, #0
+    // b ...
+    insn_match_t match_mov_r3_imm[]={
+        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R3},{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match(is->insn,match_mov_r3_imm)){
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_strtolx: disasm failed\n");
+        return 0;
+    }
+    adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,adr);
+    return 1;
+}
+
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -1464,6 +1559,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
 {sig_match_near_str,"strcat",                   "String can't be displayed; no more space in buffer",SIG_NEAR_AFTER(5,2)},
 {sig_match_near_str,"strchr",                   "-._~",SIG_NEAR_AFTER(4,1)},
+{sig_match_strncpy, "strncpy",                  "UnRegisterEventProcedure",},
+{sig_match_strncmp, "strncmp",                  "EXFAT   ",},
+{sig_match_strtolx, "strtolx",                  "CheckSumAll_FW",},
+{sig_match_near_str,"strtol",                   "prio <task ID> <priority>\n",SIG_NEAR_AFTER(7,1)},
 {NULL},
 };
 
