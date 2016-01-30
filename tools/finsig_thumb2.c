@@ -68,6 +68,8 @@ void write_output()
 #define LIST_ALWAYS    0x20
 // TODO doesn't really belong in funcs
 #define STUBSMIN_DEF   0x40
+// force an arm veneer (NHSTUB2)
+#define ARM_STUB       0x80
 
 typedef struct {
     char        *name;
@@ -110,7 +112,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "DoAELock" },
     { "DoAFLock" },
     { "EnterToCompensationEVF" },
-    { "ExecuteEventProcedure" },
+    { "ExecuteEventProcedure", ARM_STUB },
     { "ExitFromCompensationEVF" },
     { "ExitTask" },
     { "ExpCtrlTool_StartContiAE" },
@@ -2113,6 +2115,9 @@ void print_results(firmware *fw, const char *curr_name, int k)
     out_hdr = err;
 
     char *macro = "NHSTUB";
+    if (func_names[k].flags & ARM_STUB) {
+        macro = "NHSTUB2";
+    }
     if (strncmp(curr_name,"task_",5) == 0 ||
         strncmp(curr_name,"hook_",5) == 0) macro = "   DEF";
 
