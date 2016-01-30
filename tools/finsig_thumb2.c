@@ -1304,6 +1304,56 @@ int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 
 
+// find the version of ExecuteEventProcedure that doesn't assert evp isn't reg'd
+int sig_match_exec_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_exec_evp: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // search backwards for push {r0,...}
+        int i;
+        for(i=1; i<=18; i++) {
+            if(!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i))) {
+                break;
+            }
+            if(fw->is->insn->id == ARM_INS_PUSH && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+                // push should be start of func
+                uint32_t adr=(uint32_t)(fw->is->insn->address) | is->thumb;
+                // search forward in original iter_state for DebugAssert. If found, in the wrong ExecuteEventProcedure
+                if(find_next_sig_call(fw,is,28,"DebugAssert")) {
+                    break;
+                }
+                save_sig_with_j(fw,rule->name,adr);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int sig_match_fgets_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_strtolx: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    if(!find_next_sig_call(fw,is,16,"Fopen_Fut_FW")) {
+        return 0;
+    }
+    if(!insn_match_find_nth(fw,is,20,2,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
 #define SIG_NEAR_COUNT_SHIFT 8
@@ -1563,6 +1613,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_strncmp, "strncmp",                  "EXFAT   ",},
 {sig_match_strtolx, "strtolx",                  "CheckSumAll_FW",},
 {sig_match_near_str,"strtol",                   "prio <task ID> <priority>\n",SIG_NEAR_AFTER(7,1)},
+{sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
+{sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
 {NULL},
 };
 
