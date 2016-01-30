@@ -88,6 +88,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "RegisterEventProcedure_alt1", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure_alt2", UNUSED|DONT_EXPORT },
     { "RegisterEventProcTable", UNUSED|DONT_EXPORT },
+    { "UnRegisterEventProcTable", UNUSED|DONT_EXPORT },
+    { "UnRegisterEventProcedure", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly", UNUSED|DONT_EXPORT },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
@@ -628,9 +630,9 @@ int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     // ref to find RegisterEventProcTable
-    uint32_t str_adr = find_str_bytes(fw,"DispDev_EnableEventProc"); // note this string may appear more than once, assuming want first
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name); // note this string may appear more than once, assuming want first
     if(!str_adr) {
-        printf("sig_match_reg_evp_table: failed to find DispDev_EnableEventProc\n");
+        printf("sig_match_reg_evp_table: failed to find %s\n",rule->ref_name);
         return 0;
     }
     //printf("sig_match_reg_evp_table: DispDev_EnableEventProc 0x%08x\n",str_adr);
@@ -681,9 +683,9 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t reg_evp_alt2=0;
     // TODO could make this a param for different fw variants
-    uint32_t str_adr = find_str_bytes(fw,"EngApp.Delete");
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
     if(!str_adr) {
-        printf("sig_match_reg_evp_alt2: failed to find EngApp.Delete\n");
+        printf("sig_match_reg_evp_alt2: failed to find %s\n",rule->ref_name);
         return 0;
     }
     //printf("sig_match_reg_evp_alt2: EngApp.Delete 0x%08x\n",str_adr);
@@ -695,29 +697,109 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
-        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-            if(insn_match_find_next(fw,is,3,match_b_bl)) {
-                uint32_t regs[4];
-                // sanity check, constants in r0, r1 and r0 was the original thing we were looking for
-                if((get_call_const_args(fw,is,4,regs)&3)==3) {
-                    if(regs[0]==str_adr) {
-                        reg_evp_alt2=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                        // TODO could keep looking
-                        if(reg_evp_alt2 == reg_evp_alt1) {
-                            printf("RegisterEventProcedure_alt2 == _alt1 at %"PRIx64"\n",is->insn->address);
-                            reg_evp_alt2=0;
-                        } else {
-                            save_sig("RegisterEventProcedure_alt2",reg_evp_alt2);
-                           // printf("RegisterEventProcedure_alt2 found 0x%08x at %"PRIx64"\n",reg_evp_alt2,is->insn->address);
-                            // TODO could follow alt2 and make sure it matches expected mov r2,0, bl register..
-                        }
-                        break;
-                    }
+        if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+            continue;
+        }
+        if(!insn_match_find_next(fw,is,3,match_b_bl)) {
+            continue;
+        }
+        uint32_t regs[4];
+        // sanity check, constants in r0, r1 and r0 was the original thing we were looking for
+        if((get_call_const_args(fw,is,4,regs)&3)==3) {
+            if(regs[0]==str_adr) {
+                reg_evp_alt2=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+                // TODO could keep looking
+                if(reg_evp_alt2 == reg_evp_alt1) {
+                    printf("RegisterEventProcedure_alt2 == _alt1 at %"PRIx64"\n",is->insn->address);
+                    reg_evp_alt2=0;
+                } else {
+                    save_sig("RegisterEventProcedure_alt2",reg_evp_alt2);
+                   // printf("RegisterEventProcedure_alt2 found 0x%08x at %"PRIx64"\n",reg_evp_alt2,is->insn->address);
+                    // TODO could follow alt2 and make sure it matches expected mov r2,0, bl register..
                 }
+                break;
             }
         }
     }
     return (reg_evp_alt2 != 0);
+}
+
+// find UnRegisterEventProc (made up name) for reference, finding tables missed by reg_event_proc_table
+int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_unreg_evp_table: failed to find %s\n",rule->ref_name);
+        return 0;
+    }
+    // for checks
+    uint32_t reg_evp_alt1=0;
+    int i=find_saved_sig("RegisterEventProcedure_alt1");
+    if(i != -1) {
+        reg_evp_alt1=func_names[i].val;
+    }
+    uint32_t reg_evp_alt2=0;
+    i=find_saved_sig("RegisterEventProcedure_alt2");
+    if(i != -1) {
+        reg_evp_alt2=func_names[i].val;
+    }
+
+    uint32_t mecha_unreg=0;
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        //printf("sig_match_unreg_evp_table: found ref 0x%"PRIx64"\n",is->insn->address);
+        if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+            continue;
+        }
+        if(!insn_match_find_next(fw,is,3,match_b_bl)) {
+            continue;
+        }
+        uint32_t reg_call=get_branch_call_insn_target(fw,is);
+        // wasn't a registration call (could be unreg)
+        // TODO could check veneers
+        if(!reg_call || (reg_call != reg_evp_alt1 && reg_call != reg_evp_alt2)) {
+            continue;
+        }
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,4,regs)&3)==3) {
+            // sanity check we got the right string
+            if(regs[0]==str_adr) {
+                mecha_unreg=ADR_SET_THUMB(regs[1]);
+                break;
+            }
+        }
+    }
+    if(!mecha_unreg) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,mecha_unreg);
+    // find first func call
+    if(!insn_match_find_next(fw,is,7,match_b_bl)) {
+        return 0;
+    }
+    // now find next ldr. Could follow above func, but this way picks up veneer on many fw
+    insn_match_t match_ldr_r0[]={
+        {ARM_INS_LDR,2,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next(fw,is,18,match_ldr_r0)) {
+        return 0;
+    }
+    uint32_t tbl=LDR_PC2val(fw,is->insn);
+    if(!tbl) {
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_unreg_evp_table: disasm failed\n");
+        return 0;
+    }
+    uint32_t unreg_evp_table=get_branch_call_insn_target(fw,is);
+    if(!unreg_evp_table) {
+        return 0;
+    }
+    save_sig_with_j(fw,"UnRegisterEventProcTable",unreg_evp_table);
+    return 1;
 }
 
 // TODO this finds multiple values in PhySwTask main function
@@ -1274,10 +1356,11 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 sig_rule_t sig_rules_initial[]={
 // function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
 // NOTE _FW is in the CHDK column, because that's how it is in func_names
-{sig_match_str_r0_call, "ExportToEventProcedure_FW",   "ExportToEventProcedure"},
+{sig_match_str_r0_call, "ExportToEventProcedure_FW","ExportToEventProcedure"},
 {sig_match_reg_evp,     "RegisterEventProcedure",},
-{sig_match_reg_evp_table, "RegisterEventProcTable",},
-{sig_match_reg_evp_alt2, "RegisterEventProcedure_alt2",},
+{sig_match_reg_evp_table, "RegisterEventProcTable","DispDev_EnableEventProc"},
+{sig_match_reg_evp_alt2, "RegisterEventProcedure_alt2","EngApp.Delete"},
+{sig_match_unreg_evp_table,"UnRegisterEventProcTable","MechaUnRegisterEventProcedure"},
 {sig_match_str_r0_call,"CreateTaskStrictly",    "FileWriteTask",},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
 {NULL},
@@ -1338,6 +1421,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "UnlockAE",                 "SS.UnlockAE_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "UnlockAF",                 "SS.UnlockAF_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "UnlockMainPower",          "UnlockMainPower_FW",},
+{sig_match_named,   "UnRegisterEventProcedure", "UnRegisterEventProcTable", SIG_NAMED_SUB},
 //{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
 {sig_match_named,   "VbattGet",                 "VbattGet_FW",},
 {sig_match_named,   "Write",                    "Write_FW",},
@@ -1444,7 +1528,7 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
 }
 
 // process a call to event proc table registration
-int process_reg_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused) {
+int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused) {
     uint32_t regs[4];
     // get r0, backtracking up to 4 instructions
     if(get_call_const_args(fw,is,4,regs)&1) {
@@ -1468,10 +1552,10 @@ int process_reg_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unu
                 //add_func_name(nm,fn,NULL);
             }
         } else {
-            printf("failed to get RegisterEventProcTable arg 0x%08x at 0x%"PRIx64"\n",regs[0],is->insn->address);
+            printf("failed to get *EventProcTable arg 0x%08x at 0x%"PRIx64"\n",regs[0],is->insn->address);
         }
     } else {
-        printf("failed to get RegisterEventProcTable r0 at 0x%"PRIx64"\n",is->insn->address);
+        printf("failed to get *EventProcTable r0 at 0x%"PRIx64"\n",is->insn->address);
     }
     return 0;
 }
@@ -1501,7 +1585,7 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
 collect as many calls as possible of functions identified by name, whether or not listed in funcs to find
 */
 void find_generic_funcs(firmware *fw) {
-    search_calls_multi_data_t match_fns[10];
+    search_calls_multi_data_t match_fns[14];
 
     int match_fn_count=0;
 
@@ -1530,7 +1614,26 @@ void find_generic_funcs(firmware *fw) {
         printf("failed to find RegisterEventProcTable\n");
     } else {
         match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_reg_eventproc_table_call;
+        match_fns[match_fn_count].fn=process_eventproc_table_call;
+        match_fn_count++;
+    }
+
+    // unregister table calls can be handled exactly the same as reg
+    i=find_saved_sig("UnRegisterEventProcTable");
+
+    if(i==-1) {
+        printf("failed to find UnRegisterEventProcTable\n");
+    } else {
+        match_fns[match_fn_count].adr=func_names[i].val;
+        match_fns[match_fn_count].fn=process_eventproc_table_call;
+        match_fn_count++;
+    }
+
+    // veneer, if found
+    i=find_saved_sig("j_UnRegisterEventProcTable");
+    if(i!=-1) {
+        match_fns[match_fn_count].adr=func_names[i].val;
+        match_fns[match_fn_count].fn=process_eventproc_table_call;
         match_fn_count++;
     }
 
