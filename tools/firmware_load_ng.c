@@ -1075,7 +1075,8 @@ uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
         if(!(fw->is->insn->id == ARM_INS_MOVT
             && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_IP
             && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM)) {
-            fprintf(stderr,"get_direct_jump_target: disasm 1 failed at 0x%"PRIx64"\n",fw->is->insn->address);
+// doesn't match second two insn veneer, not really an arror
+//            fprintf(stderr,"get_direct_jump_target: not 2 insn ip veneer 0x%"PRIx64"\n",fw->is->insn->address);
             return 0;
         }
         // thumb set in loaded adr
