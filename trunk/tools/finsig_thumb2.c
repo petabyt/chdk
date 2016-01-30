@@ -1356,6 +1356,31 @@ int sig_match_fgets_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_log: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    insn_match_t match_pop[]={
+        {ARM_INS_POP,6,{{ARM_OP_REG,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+    // skip forward through 3x pop     {r4, r5, r6, r7, r8, lr}
+    if(!insn_match_find_nth(fw,is,38,3,match_pop)) {
+        return 0;
+    }
+    // third call
+    if(!insn_match_find_nth(fw,is,24,3,match_bl_blximm)) {
+        return 0;
+    }
+    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    return 1;
+}
+
+
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
 #define SIG_NEAR_COUNT_SHIFT 8
@@ -1405,15 +1430,21 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 
 // default - use the named firmware function
-#define SIG_NAMED_ASIS        0
+#define SIG_NAMED_ASIS          0x00000000
 // use the target of the first B, BX, BL, BLX etc
-#define SIG_NAMED_JMP_SUB     1
+#define SIG_NAMED_JMP_SUB       0x00000001
 // use the target of the first BL, BLX
-#define SIG_NAMED_SUB         2
-#define SIG_NAMED_TYPE_MASK  0xFF
+#define SIG_NAMED_SUB           0x00000002
+#define SIG_NAMED_TYPE_MASK     0x0000000F
 
-#define SIG_NAMED_CLEARTHUMB 0x100
-#define SIG_NAMED_FLAG_MASK  0xFF00
+#define SIG_NAMED_CLEARTHUMB    0x00000010
+#define SIG_NAMED_FLAG_MASK     0x000000F0
+
+#define SIG_NAMED_NTH_MASK      0x00000F00
+#define SIG_NAMED_NTH_SHIFT     8
+
+//#define SIG_NAMED_NTH(n,type)   ((SIG_NAMED_NTH_MASK&((n)<<SIG_NAMED_NTH_SHIFT)) | ((SIG_NAMED_##type)&SIG_NAME_TYPE_MASK))
+#define SIG_NAMED_NTH(n,type)   ((SIG_NAMED_NTH_MASK&((n)<<SIG_NAMED_NTH_SHIFT)) | (SIG_NAMED_##type))
 
 void sig_match_named_save_sig(const char *name, uint32_t adr, uint32_t flags)
 {
@@ -1430,6 +1461,10 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     int i=find_saved_sig(rule->ref_name);
     uint32_t sig_type = rule->param & SIG_NAMED_TYPE_MASK;
     uint32_t sig_flags = rule->param & SIG_NAMED_FLAG_MASK;
+    uint32_t sig_nth = (rule->param & SIG_NAMED_NTH_MASK)>>SIG_NAMED_NTH_SHIFT;
+    if(!sig_nth) {
+        sig_nth=1;
+    }
     if(i==-1) {
         printf("sig_match_named: %s function not found\n",rule->ref_name);
         return 0;
@@ -1460,7 +1495,8 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 //        return 0;
     }
     disasm_iter_init(fw,is,ref_adr);
-    if(insn_match_find_next(fw,is,20,insn_match)) {
+    // TODO max search is hardcoded
+    if(insn_match_find_nth(fw,is,15 + 5*sig_nth,sig_nth,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
             // BLX, set thumb bit 
@@ -1517,6 +1553,7 @@ sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
+{sig_match_named,   "CalcLog10",                "CalcLog10_FW",         SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
 {sig_match_named,   "close",                    "Close",                SIG_NAMED_SUB},
 {sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",       SIG_NAMED_JMP_SUB},
@@ -1576,6 +1613,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "free",                     "FreeMemory_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "lseek",                    "Lseek_FW",},
+{sig_match_named,   "_log10",                   "CalcLog10",            SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "malloc",                   "AllocateMemory_FW",    SIG_NAMED_JMP_SUB},
 {sig_match_named,   "memcmp",                   "memcmp_FW",},
 {sig_match_named,   "memcpy",                   "memcpy_FW",},
@@ -1617,6 +1655,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"strtol",                   "prio <task ID> <priority>\n",SIG_NEAR_AFTER(7,1)},
 {sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
 {sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
+{sig_match_log,     "_log",                     "_log10",},
 {NULL},
 };
 
