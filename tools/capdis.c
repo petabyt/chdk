@@ -354,7 +354,8 @@ void describe_const_op(firmware *fw, unsigned dis_opts, char *comment, uint32_t 
                 ostub = find_sig_val(fw->sv->stubs,*p);
             }
         }
-        if(ostub) {
+        // found, and not null
+        if(ostub && ostub->val) {
             // TODO overflow
             strcat(comment," ");
             strcat(comment,ostub->nm);
