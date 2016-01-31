@@ -315,6 +315,9 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f,uint32_
 // search for constant references
 uint32_t search_disasm_const_ref(firmware *fw, iter_state_t *is, uint32_t val, void *unused);
 
+// search for string ref
+uint32_t search_disasm_str_ref(firmware *fw, iter_state_t *is, uint32_t val, void *str);
+
 // search for calls/jumps to immediate addresses
 // thumb bit in address should be set appropriately 
 // returns 1 if found, address can be obtained from insn

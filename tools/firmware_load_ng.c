@@ -880,6 +880,31 @@ uint32_t search_disasm_const_ref(firmware *fw, iter_state_t *is, uint32_t val, v
     return 0;
 }
 
+// search for string ref
+uint32_t search_disasm_str_ref(firmware *fw, iter_state_t *is, uint32_t val, void *udata)
+{
+    const char *str=(const char *)udata;
+//    printf("%"PRIx64" %s %s\n",is->insn->address,is->insn->mnemonic, is->insn->op_str);
+    uint32_t av=ADRx2adr(fw,is->insn);
+    if(av) {
+//        printf("adr 0x%08x\n",av);
+        char *cmp=(char *)adr2ptr_with_data(fw,av);
+        if(cmp && (strcmp(cmp,str) == 0)) {
+            return (uint32_t)is->insn->address;
+        }
+        return 0;
+    }
+    uint32_t *pv=LDR_PC2valptr(fw,is->insn);
+    if(pv) {
+//        printf("ldr 0x%08x\n",*pv);
+        char *cmp=(char *)adr2ptr_with_data(fw,*pv);
+        if(cmp && (strcmp(cmp,str) == 0)) {
+            return (uint32_t)is->insn->address;
+        }
+    }
+    return 0;
+}
+
 // search for calls/jumps to immediate addresses
 // thumb bit in address should be set appropriately 
 // returns 1 if found, address can be obtained from insn
