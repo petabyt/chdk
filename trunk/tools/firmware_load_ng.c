@@ -1159,25 +1159,25 @@ uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is)
 
 // some common matches for insn_match_find_next
 const insn_match_t match_b[]={
-    {ARM_INS_B,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
+    {ARM_INS_B, -1,{MATCH_OP_ANY}},
     {ARM_INS_ENDING}
 };
 const insn_match_t match_b_bl[]={
-    {ARM_INS_B,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
-    {ARM_INS_BL,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
+    {ARM_INS_B, -1,{MATCH_OP_ANY}},
+    {ARM_INS_BL,-1,{MATCH_OP_ANY}},
     {ARM_INS_ENDING}
 };
 
 const insn_match_t match_b_bl_blximm[]={
-    {ARM_INS_B,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
-    {ARM_INS_BL,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
-    {ARM_INS_BLX,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+    {ARM_INS_B, -1,{MATCH_OP_ANY}},
+    {ARM_INS_BL,-1,{MATCH_OP_ANY}},
+    {ARM_INS_BLX,1,{MATCH_OP_IMM_ANY}},
     {ARM_INS_ENDING}
 };
 
 const insn_match_t match_bl_blximm[]={
-    {ARM_INS_BL,-1,{{ARM_OP_INVALID,ARM_REG_INVALID}}},
-    {ARM_INS_BLX,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+    {ARM_INS_BL,-1,{MATCH_OP_ANY}},
+    {ARM_INS_BLX,1,{MATCH_OP_IMM_ANY}},
     {ARM_INS_ENDING}
 };
 
@@ -1206,16 +1206,52 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
     }
     int i;
     // operands
-    for(i=0;i<4 && i < insn->detail->arm.op_count; i++) {
+    for(i=0;i<MATCH_MAX_OPS && i < insn->detail->arm.op_count; i++) {
         // specific type requested?
         if(match->operands[i].type != ARM_OP_INVALID && insn->detail->arm.operands[i].type != match->operands[i].type) {
             return 0;
         }
-        // specific register requested?
-        if((match->operands[i].reg != ARM_REG_INVALID)
-            && insn->detail->arm.operands[i].type == ARM_OP_REG
-            && insn->detail->arm.operands[i].reg != match->operands[i].reg) {
-            return 0;
+        // specific registers requested?
+        if(match->operands[i].reg1 != ARM_REG_INVALID) {
+            if(insn->detail->arm.operands[i].type == ARM_OP_REG) {
+                if(insn->detail->arm.operands[i].reg != match->operands[i].reg1) {
+                    return 0;
+                }
+            } else if(insn->detail->arm.operands[i].type == ARM_OP_MEM) {
+                if(insn->detail->arm.operands[i].mem.base != match->operands[i].reg1) {
+                    return 0;
+                }
+            } else {
+                fprintf(stderr,"insn_match: reg1 match requested on operand not reg or mem %d\n",
+                        insn->detail->arm.operands[i].type);
+            }
+        }
+        if(match->operands[i].reg2 != ARM_REG_INVALID) {
+            if(insn->detail->arm.operands[i].type == ARM_OP_MEM) {
+                if(insn->detail->arm.operands[i].mem.index != match->operands[i].reg2) {
+                    return 0;
+                }
+            } else {
+                fprintf(stderr,"insn_match: reg2 match requested on operand not reg or mem %d\n",
+                        insn->detail->arm.operands[i].type);
+            }
+        }
+        if(match->operands[i].flags & MATCH_OP_FL_IMM) {
+            if(insn->detail->arm.operands[i].type == ARM_OP_IMM) {
+                if(insn->detail->arm.operands[i].imm != match->operands[i].imm) {
+                    return  0;
+                }
+            } else if(insn->detail->arm.operands[i].type == ARM_OP_MEM) {
+                if(insn->detail->arm.operands[i].mem.disp != match->operands[i].imm) {
+                    return  0;
+                }
+            } else {
+                fprintf(stderr,"insn_match: imm match requested on operand not imm or mem %d\n",
+                        insn->detail->arm.operands[i].type);
+            }
+        }
+        if(match->operands[i].flags & MATCH_OP_FL_LAST) {
+            break;
         }
     }
     return 1;

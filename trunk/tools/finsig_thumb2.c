@@ -606,9 +606,9 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     static insn_match_t reg_evp_match[]={
-        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R2},{ARM_OP_REG,ARM_REG_R1}}},
-        {ARM_INS_LDR,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_MEM,ARM_REG_INVALID}}},
-        {ARM_INS_B,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_MOV,   2,  {MATCH_OP_REG(R2),  MATCH_OP_REG(R1)}},
+        {ARM_INS_LDR,   2,  {MATCH_OP_REG(R1),  MATCH_OP_MEM_ANY}},
+        {ARM_INS_B,     1,  {MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
 
@@ -787,9 +787,9 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next(fw,is,7,match_b_bl)) {
         return 0;
     }
-    // now find next ldr. Could follow above func, but this way picks up veneer on many fw
+    // now find next ldr pc. Could follow above func, but this way picks up veneer on many fw
     insn_match_t match_ldr_r0[]={
-        {ARM_INS_LDR,2,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_INVALID}}},
+        {ARM_INS_LDR,   2,  {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
         {ARM_INS_ENDING}
     };
     if(!insn_match_find_next(fw,is,18,match_ldr_r0)) {
@@ -1058,10 +1058,10 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     static insn_match_t match_open[]={
         // 3 reg / reg movs, followed by a call
-        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_REG,ARM_REG_INVALID}}},
-        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_REG,ARM_REG_INVALID}}},
-        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_REG,ARM_REG_INVALID}}},
-        {ARM_INS_BL,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_MOV,   2,  {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+        {ARM_INS_MOV,   2,  {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+        {ARM_INS_MOV,   2,  {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+        {ARM_INS_BL,    1,  {MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
 
@@ -1141,8 +1141,8 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             return 0;
         }
         insn_match_t match_mov_r1[]={
-            {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_IMM,ARM_REG_INVALID}}},
-            {ARM_INS_MOVS,2,{{ARM_OP_REG,ARM_REG_R1},{ARM_OP_IMM,ARM_REG_INVALID}}},
+            {ARM_INS_MOV,   2,  {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
+            {ARM_INS_MOVS,  2,  {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
             {ARM_INS_ENDING}
         };
 
@@ -1268,7 +1268,7 @@ int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // mov r3, #0
     // b ...
     insn_match_t match_mov_r3_imm[]={
-        {ARM_INS_MOV,2,{{ARM_OP_REG,ARM_REG_R3},{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_MOV,   2,  {MATCH_OP_REG(R3),  MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
     if(!insn_match(is->insn,match_mov_r3_imm)){
@@ -1331,12 +1331,12 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    insn_match_t match_pop[]={
-        {ARM_INS_POP,6,{{ARM_OP_REG,ARM_REG_INVALID}}},
+    insn_match_t match_pop6[]={
+        {ARM_INS_POP,   6,  {MATCH_OP_REST_ANY}},
         {ARM_INS_ENDING}
     };
     // skip forward through 3x pop     {r4, r5, r6, r7, r8, lr}
-    if(!insn_match_find_nth(fw,is,38,3,match_pop)) {
+    if(!insn_match_find_nth(fw,is,38,3,match_pop6)) {
         return 0;
     }
     // third call
@@ -1353,7 +1353,7 @@ int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     insn_match_t match_ldrd_r0_r1[]={
-        {ARM_INS_LDRD,3,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_REG,ARM_REG_R1},{ARM_OP_INVALID,ARM_REG_INVALID}}},
+        {ARM_INS_LDRD,  3,  {MATCH_OP_REG(R0), MATCH_OP_REG(R1),    MATCH_OP_ANY}},
         {ARM_INS_ENDING}
     };
     // skip forward to first ldrd    r0, r1, [r...]
@@ -1474,7 +1474,7 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             }
         }
         insn_match_t match_pop4[]={
-            {ARM_INS_POP,4,{{ARM_OP_REG,ARM_REG_INVALID}}},
+            {ARM_INS_POP,4,{MATCH_OP_REST_ANY}},
             {ARM_INS_ENDING}
         };
 
@@ -1499,8 +1499,8 @@ int sig_match_get_parameter_data(firmware *fw, iter_state_t *is, sig_rule_t *rul
         return 0;
     }
     insn_match_t match_cmp_b[]={
-        {ARM_INS_CMP,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_IMM,ARM_REG_INVALID}}},
-        {ARM_INS_B,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_CMP,   2,  {MATCH_OP_REG_ANY, MATCH_OP_IMM_ANY}},
+        {ARM_INS_B,     1,  {MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
     if(!insn_match_find_next_seq(fw,is,4,match_cmp_b)) {
@@ -2067,7 +2067,7 @@ int find_ctypes(firmware *fw, int k)
 uint32_t find_uncached_bit(firmware *fw)
 {
     insn_match_t match_bic_r0[]={
-        {ARM_INS_BIC,3,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_REG,ARM_REG_R0},{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_BIC,   3,  {MATCH_OP_REG(R0),  MATCH_OP_REG(R0),   MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
     int i=find_saved_sig("FreeUncacheableMemory");
