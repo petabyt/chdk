@@ -1159,25 +1159,25 @@ uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is)
 
 // some common matches for insn_match_find_next
 const insn_match_t match_b[]={
-    {ARM_INS_B, -1,{MATCH_OP_ANY}},
+    {MATCH_INS(B,   MATCH_OPCOUNT_IGNORE)},
     {ARM_INS_ENDING}
 };
 const insn_match_t match_b_bl[]={
-    {ARM_INS_B, -1,{MATCH_OP_ANY}},
-    {ARM_INS_BL,-1,{MATCH_OP_ANY}},
+    {MATCH_INS(B,   MATCH_OPCOUNT_IGNORE)},
+    {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
     {ARM_INS_ENDING}
 };
 
 const insn_match_t match_b_bl_blximm[]={
-    {ARM_INS_B, -1,{MATCH_OP_ANY}},
-    {ARM_INS_BL,-1,{MATCH_OP_ANY}},
-    {ARM_INS_BLX,1,{MATCH_OP_IMM_ANY}},
+    {MATCH_INS(B,   MATCH_OPCOUNT_IGNORE)},
+    {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+    {MATCH_INS(BLX, 1), {MATCH_OP_IMM_ANY}},
     {ARM_INS_ENDING}
 };
 
 const insn_match_t match_bl_blximm[]={
-    {ARM_INS_BL,-1,{MATCH_OP_ANY}},
-    {ARM_INS_BLX,1,{MATCH_OP_IMM_ANY}},
+    {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+    {MATCH_INS(BLX, 1), {MATCH_OP_IMM_ANY}},
     {ARM_INS_ENDING}
 };
 
@@ -1200,8 +1200,16 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
     if(match->id != ARM_INS_INVALID && insn->id != match->id) {
         return 0;
     }
+    // condition code requested, check
+    if(match->cc != ARM_CC_INVALID && insn->detail->arm.cc != match->cc) {
+        return 0;
+    }
+    // no op checks, done
+    if(match->op_count == MATCH_OPCOUNT_IGNORE) {
+        return 1;
+    }
     // operand count requested, check
-    if(match->op_count != -1 && insn->detail->arm.op_count != match->op_count) {
+    if(match->op_count >= 0 && insn->detail->arm.op_count != match->op_count) {
         return 0;
     }
     int i;

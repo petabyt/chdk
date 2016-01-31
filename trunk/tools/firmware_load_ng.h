@@ -401,10 +401,18 @@ typedef struct {
 #define MATCH_OP_MEM_REGS(rb,ri)    {ARM_OP_MEM,    ARM_REG_##rb,       0,                  0,      ARM_REG_#ri}
 
 #define MATCH_MAX_OPS 16
+
+#define MATCH_OPCOUNT_ANY       -1 // match any operands specified in operands, without checking count
+#define MATCH_OPCOUNT_IGNORE    -2 // don't check ops at all
+
+#define MATCH_INS(ins,opcount)          ARM_INS_##ins,(opcount),ARM_CC_INVALID
+#define MATCH_INS_CC(ins,cc,opcount)    ARM_INS_##ins,(opcount),ARM_CC_##cc
+
 // use id ARM_INS_INVALID for don't care, ARM_INS_ENDING to end list of matches
 typedef struct {
     arm_insn id;
-    int op_count; // -1 = don't care
+    int op_count; // negative = special values above
+    arm_cc cc; // match condition code _INVALID = don't care
     op_match_t operands[MATCH_MAX_OPS];
 } insn_match_t;
 
