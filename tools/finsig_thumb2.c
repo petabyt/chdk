@@ -605,7 +605,7 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find RegisterEventProcedure
 int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    static insn_match_t reg_evp_match[]={
+    const insn_match_t reg_evp_match[]={
         {MATCH_INS(MOV,   2),  {MATCH_OP_REG(R2),  MATCH_OP_REG(R1)}},
         {MATCH_INS(LDR,   2),  {MATCH_OP_REG(R1),  MATCH_OP_MEM_ANY}},
         {MATCH_INS(B,     MATCH_OPCOUNT_IGNORE)},
@@ -788,7 +788,7 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     // now find next ldr pc. Could follow above func, but this way picks up veneer on many fw
-    insn_match_t match_ldr_r0[]={
+    const insn_match_t match_ldr_r0[]={
         {MATCH_INS(LDR, 2),   {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
         {ARM_INS_ENDING}
     };
@@ -1056,7 +1056,7 @@ int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find low level open
 int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    static insn_match_t match_open[]={
+    const insn_match_t match_open[]={
         // 3 reg / reg movs, followed by a call
         {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
         {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
@@ -1140,7 +1140,7 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             printf("sig_match_deletefile_fut: disasm failed\n");
             return 0;
         }
-        insn_match_t match_mov_r1[]={
+        const insn_match_t match_mov_r1[]={
             {MATCH_INS(MOV,     2), {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
             {MATCH_INS(MOVS,    2), {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
             {ARM_INS_ENDING}
@@ -1267,7 +1267,7 @@ int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // expect
     // mov r3, #0
     // b ...
-    insn_match_t match_mov_r3_imm[]={
+    const insn_match_t match_mov_r3_imm[]={
         {MATCH_INS(MOV, 2), {MATCH_OP_REG(R3),  MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
@@ -1331,7 +1331,7 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    insn_match_t match_pop6[]={
+    const insn_match_t match_pop6[]={
         {MATCH_INS(POP, 6), {MATCH_OP_REST_ANY}},
         {ARM_INS_ENDING}
     };
@@ -1352,7 +1352,7 @@ int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    insn_match_t match_ldrd_r0_r1[]={
+    const insn_match_t match_ldrd_r0_r1[]={
         {MATCH_INS(LDRD,    3), {MATCH_OP_REG(R0), MATCH_OP_REG(R1),    MATCH_OP_ANY}},
         {ARM_INS_ENDING}
     };
@@ -1473,7 +1473,7 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 return 0;
             }
         }
-        insn_match_t match_pop4[]={
+        const insn_match_t match_pop4[]={
             {MATCH_INS(POP, 4), {MATCH_OP_REST_ANY}},
             {ARM_INS_ENDING}
         };
@@ -1498,7 +1498,7 @@ int sig_match_get_parameter_data(firmware *fw, iter_state_t *is, sig_rule_t *rul
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    insn_match_t match_cmp_bhs[]={
+    const insn_match_t match_cmp_bhs[]={
         {MATCH_INS(CMP, 2), {MATCH_OP_REG_ANY, MATCH_OP_IMM_ANY}},
         {MATCH_INS_CC(B,HS,MATCH_OPCOUNT_IGNORE)},
         {ARM_INS_ENDING}
@@ -2062,7 +2062,7 @@ int find_ctypes(firmware *fw, int k)
 
 uint32_t find_uncached_bit(firmware *fw)
 {
-    insn_match_t match_bic_r0[]={
+    const insn_match_t match_bic_r0[]={
         {MATCH_INS(BIC, 3), {MATCH_OP_REG(R0),  MATCH_OP_REG(R0),   MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
