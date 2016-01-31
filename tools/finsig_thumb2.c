@@ -1460,7 +1460,7 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // follow
         disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
         if(!disasm_iter(fw,is)) {
-            // printf("sig_match_mktime_ext: disasm failed\n");
+            printf("sig_match_mktime_ext: disasm failed\n");
             return 0;
         }
         uint32_t j_tgt=get_direct_jump_target(fw,is);
@@ -1490,6 +1490,34 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
     }
     return 0;
+}
+
+// could just do sig_match_named, 3rd b, but want more validation
+int sig_match_get_parameter_data(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    insn_match_t match_cmp_b[]={
+        {ARM_INS_CMP,2,{{ARM_OP_REG,ARM_REG_INVALID},{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_B,1,{{ARM_OP_IMM,ARM_REG_INVALID}}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,4,match_cmp_b)) {
+        // printf("sig_match_get_parameter_data: no match cmp, b\n");
+        return 0;
+    }
+    if(is->insn->detail->arm.cc != ARM_CC_HS) {
+        // printf("sig_match_get_parameter_data: no bhs\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,1,match_b)) {
+        // printf("sig_match_get_parameter_data: no match b\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
@@ -1770,6 +1798,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
 {sig_match_get_drive_cluster_size,"GetDrive_ClusterSize","OpLog.WriteToSD_FW",},
 {sig_match_mktime_ext,"mktime_ext",             "%04d%02d%02dT%02d%02d%02d.%01d",},
+//{sig_match_named,   "GetParameterData",         "PTM_RestoreUIProperty_FW",          SIG_NAMED_NTH(3,JMP_SUB)},
+{sig_match_get_parameter_data,"GetParameterData","PTM_RestoreUIProperty_FW",},
 {NULL},
 };
 
