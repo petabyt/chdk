@@ -549,7 +549,7 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
     return 0;
 }
 
-// initialize iter stat using address from ref_name, printer error and return 0 if not found
+// initialize iter stat using address from ref_name, print error and return 0 if not found
 int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!rule->ref_name) {
@@ -648,24 +648,26 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     uint32_t dd_enable_p=0;
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
-        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
-            if(insn_match_find_next(fw,is,2,match_b_bl)) {
-                reg_evp_alt1=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
-                //printf("RegisterEventProcedure_alt1 found 0x%08x at %"PRIx64"\n",reg_evp_alt1,is->insn->address);
-                save_sig("RegisterEventProcedure_alt1",reg_evp_alt1);
+        if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+            continue;
+        }
+        if(!insn_match_find_next(fw,is,2,match_b_bl)) {
+            continue;
+        }
+        reg_evp_alt1=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
+        //printf("RegisterEventProcedure_alt1 found 0x%08x at %"PRIx64"\n",reg_evp_alt1,is->insn->address);
+        save_sig("RegisterEventProcedure_alt1",reg_evp_alt1);
 
-                uint32_t regs[4];
+        uint32_t regs[4];
 
-                // get r0 and r1, backtracking up to 4 instructions
-                if((get_call_const_args(fw,is,4,regs)&3)==3) {
-                    // sanity check, arg0 was the original thing we were looking for
-                    if(regs[0]==str_adr) {
-                        dd_enable_p=regs[1]; // constant value should already have correct ARM/THUMB bit
-                        //printf("DispDev_EnableEventProc found 0x%08x at %"PRIx64"\n",dd_enable_p,is->insn->address);
-                        add_func_name("DispDev_EnableEventProc",dd_enable_p,NULL);
-                        break;
-                    }
-                }
+        // get r0 and r1, backtracking up to 4 instructions
+        if((get_call_const_args(fw,is,4,regs)&3)==3) {
+            // sanity check, arg0 was the original thing we were looking for
+            if(regs[0]==str_adr) {
+                dd_enable_p=regs[1]; // constant value should already have correct ARM/THUMB bit
+                //printf("DispDev_EnableEventProc found 0x%08x at %"PRIx64"\n",dd_enable_p,is->insn->address);
+                add_func_name("DispDev_EnableEventProc",dd_enable_p,NULL);
+                break;
             }
         }
     } 
@@ -1204,12 +1206,9 @@ int sig_match_time(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_strncpy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_strncpy: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     if(!find_next_sig_call(fw,is,60,"strcpy_FW")) {
         return 0;
     }
@@ -1245,12 +1244,9 @@ int sig_match_strncmp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_strtolx: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     if(!find_next_sig_call(fw,is,120,"strncpy")) {
         return 0;
     }
@@ -1318,12 +1314,9 @@ int sig_match_exec_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_fgets_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_strtolx: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     if(!find_next_sig_call(fw,is,16,"Fopen_Fut_FW")) {
         return 0;
     }
@@ -1335,12 +1328,9 @@ int sig_match_fgets_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_log: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     insn_match_t match_pop[]={
         {ARM_INS_POP,6,{{ARM_OP_REG,ARM_REG_INVALID}}},
         {ARM_INS_ENDING}
@@ -1359,12 +1349,9 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // TODO this only works on DryOS r52 cams
 int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_pow: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     insn_match_t match_ldrd_r0_r1[]={
         {ARM_INS_LDRD,3,{{ARM_OP_REG,ARM_REG_R0},{ARM_OP_REG,ARM_REG_R1},{ARM_OP_INVALID,ARM_REG_INVALID}}},
         {ARM_INS_ENDING}
@@ -1390,12 +1377,9 @@ int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_sqrt: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // third call
     if(!insn_match_find_nth(fw,is,12,3,match_bl_blximm)) {
         return 0;
@@ -1424,14 +1408,11 @@ int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
-    if(i==-1) {
-        printf("sig_match_get_drive_cluster_size: ref not found %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    disasm_iter_init(fw,is,func_names[i].val);
     // only handle first mach, don't expect multiple refs to string
-    if(fw_search_insn(fw,is,search_disasm_str_ref,0,"A/OpLogErr.txt",func_names[i].val+60)) {
+    if(fw_search_insn(fw,is,search_disasm_str_ref,0,"A/OpLogErr.txt",(uint32_t)is->adr+60)) {
         // find first call after string ref
         if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
             // printf("sig_match_get_drive_cluster_size: bl not found\n");
