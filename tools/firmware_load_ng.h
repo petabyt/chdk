@@ -379,15 +379,33 @@ uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is);
 
 // use XXX_INVALID (=0) for don't care
 typedef struct {
-    arm_op_type type;
-    arm_reg reg; // if type is REG, compare
+    arm_op_type type; // ARM_OP_... REG, IMM, MEM support additional tests
+    arm_reg reg1; // reg for register type operands, base for mem
+    uint32_t flags; // 
+    int32_t imm;  // immediate value for imm, disp for mem
+    arm_reg reg2; // index reg form mem
 } op_match_t;
+#define MATCH_OP_FL_IMM     0x0001 // use IMM value
+#define MATCH_OP_FL_LAST    0x0002 // ignore all following ops, only check count
+// macros for initializing above
+//                                  type            reg1                flags               imm     reg2
+#define MATCH_OP_ANY                {ARM_OP_INVALID,ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_REST_ANY           {ARM_OP_INVALID,ARM_REG_INVALID,    MATCH_OP_FL_LAST,   0,      ARM_REG_INVALID}
+#define MATCH_OP_REG_ANY            {ARM_OP_REG,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_REG(r)             {ARM_OP_REG,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_IMM_ANY            {ARM_OP_IMM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_IMM(imm)           {ARM_OP_IMM,    ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm)   ARM_REG_INVALID}
+#define MATCH_OP_MEM_ANY            {ARM_OP_MEM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_MEM(rb,ri,imm)     {ARM_OP_MEM,    ARM_REG_##rb,       MATCH_OP_FL_IMM,    (imm),  ARM_REG_#ri}
+#define MATCH_OP_MEM_BASE(r)        {ARM_OP_MEM,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_MEM_REGS(rb,ri)    {ARM_OP_MEM,    ARM_REG_##rb,       0,                  0,      ARM_REG_#ri}
 
+#define MATCH_MAX_OPS 16
 // use id ARM_INS_INVALID for don't care, ARM_INS_ENDING to end list of matches
 typedef struct {
     arm_insn id;
     int op_count; // -1 = don't care
-    op_match_t operands[4];
+    op_match_t operands[MATCH_MAX_OPS];
 } insn_match_t;
 
 // some common matches for insn_match_find_next
