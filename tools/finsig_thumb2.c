@@ -1437,6 +1437,61 @@ int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t 
     return 0;
 }
 
+int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_mktime_ext: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // expect sscanf after str
+        if(!find_next_sig_call(fw,is,12,"sscanf_FW")) {
+            // printf("sig_match_mktime_ext: no sscanf\n");
+            return 0;
+        }
+        // find next call
+        if(!insn_match_find_next(fw,is,22,match_bl_blximm)) {
+            // printf("sig_match_mktime_ext: no call\n");
+            return 0;
+        }
+        // follow
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        if(!disasm_iter(fw,is)) {
+            // printf("sig_match_mktime_ext: disasm failed\n");
+            return 0;
+        }
+        uint32_t j_tgt=get_direct_jump_target(fw,is);
+        // veneer?
+        if(j_tgt) {
+            // follow
+            disasm_iter_init(fw,is,j_tgt);
+            if(!disasm_iter(fw,is)) {
+                printf("sig_match_mktime_ext: disasm failed\n");
+                return 0;
+            }
+        }
+        insn_match_t match_pop4[]={
+            {ARM_INS_POP,4,{{ARM_OP_REG,ARM_REG_INVALID}}},
+            {ARM_INS_ENDING}
+        };
+
+        // find pop
+        if(!insn_match_find_next(fw,is,54,match_pop4)) {
+            // printf("sig_match_mktime_ext: no pop\n");
+            return 0;
+        }
+        if(!insn_match_find_next(fw,is,1,match_b)) {
+            // printf("sig_match_mktime_ext: no b\n");
+            return 0;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
+
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
 #define SIG_NEAR_COUNT_SHIFT 8
@@ -1714,6 +1769,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "get_fstype",               "OpenFastDir",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
 {sig_match_get_drive_cluster_size,"GetDrive_ClusterSize","OpLog.WriteToSD_FW",},
+{sig_match_mktime_ext,"mktime_ext",             "%04d%02d%02dT%02d%02d%02d.%01d",},
 {NULL},
 };
 
