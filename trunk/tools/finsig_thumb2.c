@@ -1381,6 +1381,7 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+// TODO this only works on DryOS r52 cams
 int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     int i=find_saved_sig(rule->ref_name);
@@ -1395,6 +1396,10 @@ int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     };
     // skip forward to first ldrd    r0, r1, [r...]
     if(!insn_match_find_next(fw,is,50,match_ldrd_r0_r1)) {
+        return 0;
+    }
+    // prevent false positive
+    if(is->insn->detail->arm.operands[2].mem.base == ARM_REG_SP) {
         return 0;
     }
     if(!disasm_iter(fw,is)) {
@@ -1727,6 +1732,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_log,     "_log",                     "_log10",},
 {sig_match_pow,     "_pow",                     "GetDefectTvAdj_FW",},
 {sig_match_sqrt,    "_sqrt",                    "CalcSqrt",},
+{sig_match_named,   "get_fstype",               "OpenFastDir",          SIG_NAMED_NTH(2,SUB)},
+{sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
 {NULL},
 };
 
