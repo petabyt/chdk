@@ -465,12 +465,16 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
 }
 
 // save sig, with up to one level veneer added as j_...
-void save_sig_with_j(firmware *fw, char *name, uint32_t adr)
+int save_sig_with_j(firmware *fw, char *name, uint32_t adr)
 {
+    if(!adr) {
+        printf("save_sig_with_j: %s null adr\n",name);
+        return 0;
+    }
     // attempt to disassemble target
     if(!fw_disasm_iter_single(fw,adr)) {
         printf("save_sig_with_j: %s disassembly failed at 0x%08x\n",name,adr);
-        return;
+        return 0;
     }
     // handle functions that immediately jump
     // only one level of jump for now, doesn't check for conditionals, but first insn shouldn't be conditional
@@ -484,6 +488,7 @@ void save_sig_with_j(firmware *fw, char *name, uint32_t adr)
         adr=b_adr; // thumb bit already handled by get_direct...
     }
     save_sig(name,adr);
+    return 1;
 }
 
 // find next call to func named "name" or j_name, up to max_offset form the current is address
@@ -590,8 +595,7 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
                 uint32_t adr=get_branch_call_insn_target(fw,is);
                 // printf("sig_match_str_r0_call: thumb %s call 0x%08x\n",rule->name,adr);
-                save_sig_with_j(fw,rule->name,adr);
-                return 1;
+                return save_sig_with_j(fw,rule->name,adr);
             }
         }
     }
@@ -797,12 +801,7 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_unreg_evp_table: disasm failed\n");
         return 0;
     }
-    uint32_t unreg_evp_table=get_branch_call_insn_target(fw,is);
-    if(!unreg_evp_table) {
-        return 0;
-    }
-    save_sig_with_j(fw,rule->name,unreg_evp_table);
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 // TODO this finds multiple values in PhySwTask main function
@@ -1008,8 +1007,7 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
         return 0;
     }
-    save_sig_with_j(fw,"GetDrive_FreeClusters",get_branch_call_insn_target(fw,is));
-    return 1;
+    return save_sig_with_j(fw,"GetDrive_FreeClusters",get_branch_call_insn_target(fw,is));
 }
 
 // similar to sig_match_str_r0_call, but string also appears with Fopen_Fut
@@ -1046,8 +1044,7 @@ int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                     continue;
                 }
                 // TODO could check r1 not a const
-                save_sig_with_j(fw,rule->name,adr);
-                return 1;
+                return save_sig_with_j(fw,rule->name,adr);
             }
         }
     }
@@ -1072,9 +1069,7 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next_seq(fw,is,48,match_open)) {
         return 0;
     }
-    uint32_t adr=get_branch_call_insn_target(fw,is);
-    save_sig_with_j(fw,rule->name,adr);
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 // AllocateUncacheableMemory
@@ -1093,8 +1088,7 @@ int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_nth(fw,is,14,3,match_bl_blximm)) {
         return 0;
     }
-    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 // FreeUncacheableMemory
@@ -1121,8 +1115,7 @@ int sig_match_ufree(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
         return 0;
     }
-    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1154,8 +1147,7 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         if(!insn_match_any(fw->is->insn,match_mov_r1)){
             continue;
         }
-        save_sig_with_j(fw,rule->name,adr);
-        return 1;
+        return save_sig_with_j(fw,rule->name,adr);
     }
     return 0;
 }
@@ -1174,8 +1166,7 @@ int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             continue;
         }
         if(insn_match_find_nth(fw,is,7,2,match_bl_blximm)) {
-            save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-            return 1;
+            return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
         }
     }
     return 0;
@@ -1206,8 +1197,7 @@ int sig_match_time(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     disasm_iter_init(fw,is,fadr);
     // find second call
     if(insn_match_find_nth(fw,is,11,2,match_bl_blximm)) {
-        save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-        return 1;
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
     }
     return 0;
 }
@@ -1226,12 +1216,7 @@ int sig_match_strncpy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
         return 0;
     }
-    uint32_t adr=get_branch_call_insn_target(fw,is);
-    if(!adr) {
-        return 0;
-    }
-    save_sig_with_j(fw,rule->name,adr);
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_strncmp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1251,8 +1236,7 @@ int sig_match_strncmp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         if((get_call_const_args(fw,is,4,regs)&6)==6) {
             // sanity check we got the right string
             if(regs[1]==str_adr &&  regs[2] == strlen(rule->ref_name)) {
-                save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-                return 1;
+                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
             }
         }
     }
@@ -1298,14 +1282,8 @@ int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_strtolx: disasm failed\n");
         return 0;
     }
-    adr=get_branch_call_insn_target(fw,is);
-    if(!adr) {
-        return 0;
-    }
-    save_sig_with_j(fw,rule->name,adr);
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
-
 
 // find the version of ExecuteEventProcedure that doesn't assert evp isn't reg'd
 int sig_match_exec_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1331,8 +1309,7 @@ int sig_match_exec_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 if(find_next_sig_call(fw,is,28,"DebugAssert")) {
                     break;
                 }
-                save_sig_with_j(fw,rule->name,adr);
-                return 1;
+                return save_sig_with_j(fw,rule->name,adr);
             }
         }
     }
@@ -1353,8 +1330,7 @@ int sig_match_fgets_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_nth(fw,is,20,2,match_bl_blximm)) {
         return 0;
     }
-    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1377,8 +1353,7 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_nth(fw,is,24,3,match_bl_blximm)) {
         return 0;
     }
-    save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 // TODO this only works on DryOS r52 cams
@@ -1410,8 +1385,7 @@ int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!adr) {
         return 0;
     }
-    save_sig_with_j(fw,rule->name,adr);
-    return 1;
+    return save_sig_with_j(fw,rule->name,adr);
 }
 
 int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1446,12 +1420,7 @@ int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_nth(fw,is,12,2,match_b_bl_blximm)) {
         return 0;
     }
-    uint32_t adr=get_branch_call_insn_target(fw,is);
-    if(!adr) {
-        return 0;
-    }
-    save_sig_with_j(fw,rule->name,adr);
-    return 1;
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -1482,12 +1451,7 @@ int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t 
             // printf("sig_match_get_drive_cluster_size: call 2 not found\n");
             return 0;
         }
-        uint32_t adr=get_branch_call_insn_target(fw,is);
-        if(!adr) {
-            return 0;
-        }
-        save_sig_with_j(fw,rule->name,adr);
-        return 1;
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
     }
     return 0;
 }
@@ -1524,16 +1488,12 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                     n_calls++;
                 }
                 if(n_calls == n) {
-                    uint32_t adr=get_branch_call_insn_target(fw,fw->is);
-                    save_sig_with_j(fw,rule->name,adr);
-                    return 1;
+                    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,fw->is));
                 }
             }
         } else {
             if(insn_match_find_nth(fw,is,max_insns,n,match_bl_blximm)) {
-                uint32_t adr=get_branch_call_insn_target(fw,is);
-                save_sig_with_j(fw,rule->name,adr);
-                return 1;
+                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
             }
         }
     }
