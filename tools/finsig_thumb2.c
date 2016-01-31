@@ -1453,6 +1453,44 @@ int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_sig_with_j(fw,rule->name,adr);
     return 1;
 }
+int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    int i=find_saved_sig(rule->ref_name);
+    if(i==-1) {
+        printf("sig_match_get_drive_cluster_size: ref not found %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,func_names[i].val);
+    // only handle first mach, don't expect multiple refs to string
+    if(fw_search_insn(fw,is,search_disasm_str_ref,0,"A/OpLogErr.txt",func_names[i].val+60)) {
+        // find first call after string ref
+        if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+            // printf("sig_match_get_drive_cluster_size: bl not found\n");
+            return 0;
+        }
+        // follow
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        // find second call
+        if(!insn_match_find_nth(fw,is,13,2,match_bl_blximm)) {
+            // printf("sig_match_get_drive_cluster_size: call 1 not found\n");
+            return 0;
+        }
+        // follow
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        // find next call
+        if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+            // printf("sig_match_get_drive_cluster_size: call 2 not found\n");
+            return 0;
+        }
+        uint32_t adr=get_branch_call_insn_target(fw,is);
+        if(!adr) {
+            return 0;
+        }
+        save_sig_with_j(fw,rule->name,adr);
+        return 1;
+    }
+    return 0;
+}
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -1734,6 +1772,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_sqrt,    "_sqrt",                    "CalcSqrt",},
 {sig_match_named,   "get_fstype",               "OpenFastDir",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
+{sig_match_get_drive_cluster_size,"GetDrive_ClusterSize","OpLog.WriteToSD_FW",},
 {NULL},
 };
 
