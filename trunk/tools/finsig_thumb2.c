@@ -1674,6 +1674,37 @@ int sig_match_add_ptp_handler(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return 0;
 }
+int sig_match_qsort(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,90,"DebugAssert")) {
+        // printf("sig_match_qsort: no DebugAssert\n");
+        return 0;
+    }
+    if(!insn_match_find_nth(fw,is,38,3,match_bl_blximm)) {
+        // printf("sig_match_qsort: no match bl\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // if call in first 4 insn, follow again (newer cams have an extra sub)
+    if(insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    }
+    if(!insn_match_find_next(fw,is,14,match_bl_blximm)) {
+        // printf("sig_match_qsort: no match bl (qsort)\n");
+        return 0;
+    }
+    // sanity check, expect r1-r3 to be const
+    uint32_t regs[4];
+    if((get_call_const_args(fw,is,5,regs)&0xe)!=0xe) {
+        // printf("sig_match_qsort: failed to get args\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -1961,6 +1992,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_prepdir_0,"PrepareDirectory_0",      "PrepareDirectory_1",},
 {sig_match_mkdir,   "MakeDirectory_Fut",        "PrepareDirectory_x",},
 {sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
+{sig_match_qsort,   "qsort",                    "task_MetaCtg",},
 {NULL},
 };
 
