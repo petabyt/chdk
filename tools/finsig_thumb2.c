@@ -1640,6 +1640,41 @@ int sig_match_mkdir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+int sig_match_add_ptp_handler(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_add_ptp_handler: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // expect CreateTaskStrictly
+        if(!find_next_sig_call(fw,is,8,"CreateTaskStrictly")) {
+            // printf("sig_match_add_ptp_handler: no CreateTaskStrictly\n");
+            continue;
+        }
+        // expect add_ptp_handler is 3rd call after CreateTask
+        if(!insn_match_find_nth(fw,is,13,3,match_bl_blximm)) {
+            // printf("sig_match_add_ptp_handler: no match bl\n");
+            return 0;
+        }
+        // sanity check, expect opcode, func, 0
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,5,regs)&7)!=7) {
+            // printf("sig_match_add_ptp_handler: failed to get args\n");
+            return 0;
+        }
+        if(regs[0] < 0x9000 || regs[0] > 0x10000 || !adr2ptr(fw,regs[1]) || regs[2] != 0) {
+            // printf("sig_match_add_ptp_handler: bad args 0x%08x 0x%08x 0x%08x\n",regs[0],regs[1],regs[2]);
+            return 0;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
+
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
 #define SIG_NEAR_COUNT_SHIFT 8
@@ -1925,6 +1960,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_prepdir_x,"PrepareDirectory_x",      "PrepareDirectory_1",},
 {sig_match_prepdir_0,"PrepareDirectory_0",      "PrepareDirectory_1",},
 {sig_match_mkdir,   "MakeDirectory_Fut",        "PrepareDirectory_x",},
+{sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
 {NULL},
 };
 
