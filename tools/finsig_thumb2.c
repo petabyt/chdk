@@ -1346,9 +1346,12 @@ int sig_match_log(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
-// TODO this only works on DryOS r52 cams
-int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+// this only works on DryOS r52 cams
+int sig_match_pow_dry_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
+    if (fw->dryos_ver != 52) {
+        return 0;
+    }
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
@@ -1373,6 +1376,44 @@ int sig_match_pow(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     return save_sig_with_j(fw,rule->name,adr);
+}
+
+// match for dryos > r52 cams
+int sig_match_pow_dry_gt_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if (fw->dryos_ver <= 52) {
+        return 0;
+    }
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t match1[]={
+        {MATCH_INS(LDRSH,   2), {MATCH_OP_REG(R0),  MATCH_OP_MEM(SP,INVALID,0x12)}},
+        {MATCH_INS(LDRD,    3), {MATCH_OP_REG(R2),  MATCH_OP_REG(R3), MATCH_OP_MEM(SP,INVALID,0x20)}},
+        {MATCH_INS(STR,     2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM(SP,INVALID,0)}},
+        {MATCH_INS(BL,      MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    // match above sequence
+    if(!insn_match_find_next_seq(fw,is,50,match1)) {
+        return 0;
+    }
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        return 0;
+    }
+    // follow bl
+    disasm_iter_init(fw,is,adr);
+    const insn_match_t match2[]={
+        {MATCH_INS(LDRD,3), {MATCH_OP_REG(R0),  MATCH_OP_REG(R1),   MATCH_OP_MEM_ANY}},
+        {MATCH_INS(BLX, 1), {MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    // match above sequence
+    if(!insn_match_find_next_seq(fw,is,15,match2)) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1788,7 +1829,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
 {sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
 {sig_match_log,     "_log",                     "_log10",},
-{sig_match_pow,     "_pow",                     "GetDefectTvAdj_FW",},
+{sig_match_pow_dry_52,"_pow",                   "GetDefectTvAdj_FW",},
+{sig_match_pow_dry_gt_52,"_pow",                "GetDefectTvAdj_FW",},
 {sig_match_sqrt,    "_sqrt",                    "CalcSqrt",},
 {sig_match_named,   "get_fstype",               "OpenFastDir",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
