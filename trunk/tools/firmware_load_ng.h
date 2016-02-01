@@ -394,11 +394,11 @@ typedef struct {
 #define MATCH_OP_REG_ANY            {ARM_OP_REG,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_REG(r)             {ARM_OP_REG,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_IMM_ANY            {ARM_OP_IMM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
-#define MATCH_OP_IMM(imm)           {ARM_OP_IMM,    ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm)   ARM_REG_INVALID}
+#define MATCH_OP_IMM(imm)           {ARM_OP_IMM,    ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm),  ARM_REG_INVALID}
 #define MATCH_OP_MEM_ANY            {ARM_OP_MEM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
-#define MATCH_OP_MEM(rb,ri,imm)     {ARM_OP_MEM,    ARM_REG_##rb,       MATCH_OP_FL_IMM,    (imm),  ARM_REG_#ri}
+#define MATCH_OP_MEM(rb,ri,imm)     {ARM_OP_MEM,    ARM_REG_##rb,       MATCH_OP_FL_IMM,    (imm),  ARM_REG_##ri}
 #define MATCH_OP_MEM_BASE(r)        {ARM_OP_MEM,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
-#define MATCH_OP_MEM_REGS(rb,ri)    {ARM_OP_MEM,    ARM_REG_##rb,       0,                  0,      ARM_REG_#ri}
+#define MATCH_OP_MEM_REGS(rb,ri)    {ARM_OP_MEM,    ARM_REG_##rb,       0,                  0,      ARM_REG_##ri}
 
 #define MATCH_MAX_OPS 16
 
