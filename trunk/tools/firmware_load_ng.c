@@ -1339,6 +1339,8 @@ int insn_match_find_next_seq(firmware *fw, iter_state_t *is, int max_insns, cons
         if(m->id == ARM_INS_ENDING) {
             return 1;
         }
+        // non-matching
+        count++;
     }
     return 0;
 }
