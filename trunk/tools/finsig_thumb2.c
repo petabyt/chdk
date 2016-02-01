@@ -92,6 +92,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "RegisterEventProcTable", UNUSED|DONT_EXPORT },
     { "UnRegisterEventProcTable", UNUSED|DONT_EXPORT },
     { "UnRegisterEventProcedure", UNUSED|DONT_EXPORT },
+    { "PrepareDirectory_1", UNUSED|DONT_EXPORT },
+    { "PrepareDirectory_x", UNUSED|DONT_EXPORT },
+    { "PrepareDirectory_0", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly", UNUSED|DONT_EXPORT },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
@@ -226,7 +229,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "memcmp" },
     { "memcpy" },
     { "memset" },
-    { "mkdir" },
+// identical to MakeDirectory_Fut for recent cams
+//    { "mkdir" },
     { "mktime_ext" },
     { "open" },
     { "OpenFastDir" },
@@ -1557,6 +1561,85 @@ int sig_match_get_parameter_data(firmware *fw, iter_state_t *is, sig_rule_t *rul
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+// PrepareDirectory (via string ref) points at something like
+// mov r1, 1
+// b PrepareDirectory_x
+int sig_match_prepdir_x(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t match_mov_r1_1[]={
+        {MATCH_INS(MOV,     2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(1)}},
+        {MATCH_INS(MOVS,    2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(1)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next(fw,is,1,match_mov_r1_1)) {
+        //printf("sig_match_prepdir_x: no match mov\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,1,match_b)) {
+        //printf("sig_match_prepdir_x: no match b\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+// assume this function is directly after the 2 instructions of ref
+int sig_match_prepdir_0(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    int i=find_saved_sig("PrepareDirectory_x");
+    if(i == -1 || func_names[i].val == 0) {
+        printf("sig_match_prepdir_0: missing PrepareDirectory_x\n");
+        return 0;
+    }
+    uint32_t ref_pdx=func_names[i].val;
+    // skip over, assume validated previously
+    disasm_iter(fw,is);
+    disasm_iter(fw,is);
+    // this should be the start address of our function
+    uint32_t adr=(uint32_t)is->adr|is->thumb;
+    const insn_match_t match_mov_r1_1[]={
+        {MATCH_INS(MOV,     2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(0)}},
+        {MATCH_INS(MOVS,    2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(0)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next(fw,is,1,match_mov_r1_1)) {
+        //printf("sig_match_prepdir_0: no match mov\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,1,match_b)) {
+        //printf("sig_match_prepdir_0: no match b\n");
+        return 0;
+    }
+    uint32_t pdx=get_branch_call_insn_target(fw,is);
+    if(pdx != ref_pdx) {
+        //printf("sig_match_prepdir_0: target 0x%08x != 0x%08x\n",pdx,ref_pdx);
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,adr);
+}
+int sig_match_mkdir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t match[]={
+        {MATCH_INS(STRB,2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_ANY}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_REG(SP)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R1),  MATCH_OP_MEM_BASE(SP)}},
+        {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,148,match)) {
+        //printf("sig_match_mkdir: no match\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
 #define SIG_NEAR_COUNT_SHIFT 8
@@ -1838,6 +1921,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_mktime_ext,"mktime_ext",             "%04d%02d%02dT%02d%02d%02d.%01d",},
 //{sig_match_named,   "GetParameterData",         "PTM_RestoreUIProperty_FW",          SIG_NAMED_NTH(3,JMP_SUB)},
 {sig_match_get_parameter_data,"GetParameterData","PTM_RestoreUIProperty_FW",},
+{sig_match_near_str,"PrepareDirectory_1",       "<OpenFileWithDir> PrepareDirectory NG\r\n",SIG_NEAR_BEFORE(7,2)},
+{sig_match_prepdir_x,"PrepareDirectory_x",      "PrepareDirectory_1",},
+{sig_match_prepdir_0,"PrepareDirectory_0",      "PrepareDirectory_1",},
+{sig_match_mkdir,   "MakeDirectory_Fut",        "PrepareDirectory_x",},
 {NULL},
 };
 
