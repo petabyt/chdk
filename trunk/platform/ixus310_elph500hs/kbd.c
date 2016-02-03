@@ -165,6 +165,11 @@ int chdk_process_touch()
     // Screen co-ordinate
     int sx = ((tx - 40) * 480) / 954;
     int sy = ((ty - 60) * 240) / 900;
+    if (conf.rotate_osd)
+    {
+        sx = 480 - sx;
+        sy = 240 - sy;
+    }
 
     // Search for CHDK on screen buttons matching co-ordinate
     int i;
@@ -200,7 +205,10 @@ static int draw_test_pixel(coord x, coord y, color c)
 {
     extern char* bitmap_buffer[];
     extern int active_bitmap_buffer;
-    return (bitmap_buffer[active_bitmap_buffer][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
+    if (conf.rotate_osd)
+        return (bitmap_buffer[active_bitmap_buffer][(240-y) * camera_screen.buffer_width + ASPECT_XCORRECTION(480-x) - 1] == c);
+    else
+        return (bitmap_buffer[active_bitmap_buffer][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)] == c);
 }
 
 void virtual_buttons()
