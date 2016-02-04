@@ -94,7 +94,7 @@ capdis$(EXE): capdis.o stubs_load.o firmware_load_ng.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^ $(CAPSTONE_TOOLS_LINK)
 
 clean:
-	rm -f *.o $(EXES) $(extras)
+	rm -f *.o $(EXES) $(EXTRA_EXES)
 
 distclean: clean
 
