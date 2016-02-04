@@ -497,6 +497,7 @@ int save_sig_with_j(firmware *fw, char *name, uint32_t adr)
 
 // find next call to func named "name" or j_name, up to max_offset form the current is address
 // TODO should have a way of dealing with more than one veneer
+// TODO max_offset is in bytes, unlike insn search functions that use insn counts
 int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name)
 {
     int i=find_saved_sig(name);
@@ -521,6 +522,32 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
         match_fns[2].adr=0;
     }
     return fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,is->adr + max_offset);
+}
+// is the insn pointed to by is a call to "name" or one of it's veneers?
+// not inefficient, should not be used for large searches
+int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
+{
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    // not a call at all
+    // TODO could check if unknown veneer
+    if(!adr) {
+        return 0;
+    }
+    int i=find_saved_sig(name);
+    if(i == -1) {
+        printf("is_sig_call: missing %s\n",name);
+        return 0;
+    }
+    if(adr == func_names[i].val) {
+        return 1;
+    }
+    char veneer[128];
+    sprintf(veneer,"j_%s",name);
+    i=find_saved_sig(veneer);
+    if(i == -1 || adr != func_names[i].val) {
+        return 0;
+    }
+    return 1;
 }
 
 typedef struct sig_rule_s sig_rule_t;
@@ -1705,6 +1732,61 @@ int sig_match_qsort(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
+// looks for sequence of calls near ref string RedEyeController.c
+// DeleteFile_Fut
+// ...
+// strcpy
+// ...
+// strchr
+// ...
+// DeleteDirectory_Fut
+int sig_match_deletedirectory_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_deletedirectory_fut: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO using larger than default "near" range, needed for sx710
+    // not looking for ref to string, just code near where the actual string is
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - 2048) | fw->thumb_default); // reset to a bit before where the string was found
+    uint32_t end_adr = ADR_ALIGN4(str_adr) + 2048;
+    while(find_next_sig_call(fw,is,end_adr - (uint32_t)is->adr,"DeleteFile_Fut")) {
+        if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+            printf("sig_match_deletedirectory_fut: no match bl strcpy\n");
+            continue;
+        }
+        if(!is_sig_call(fw,is,"strcpy")) {
+            printf("sig_match_deletedirectory_fut: bl not strcpy at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+            printf("sig_match_deletedirectory_fut: no match bl strrchr at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        if(!is_sig_call(fw,is,"strrchr")) {
+            printf("sig_match_deletedirectory_fut: bl not strrchr at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        // verify that arg1 to strrch is /
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,2,regs)&0x2)!=0x2) {
+            printf("sig_match_deletedirectory_fut: failed to get strrchr r1 at 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        if(regs[1] != '/') {
+            printf("sig_match_deletedirectory_fut: strrchr r1 not '/' at 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+            printf("sig_match_deletedirectory_fut: no match bl at 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    printf("sig_match_deletedirectory_fut: not found\n");
+    return 0;
+}
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -1993,6 +2075,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_mkdir,   "MakeDirectory_Fut",        "PrepareDirectory_x",},
 {sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
 {sig_match_qsort,   "qsort",                    "task_MetaCtg",},
+{sig_match_deletedirectory_fut,"DeleteDirectory_Fut","RedEyeController.c",},
 {NULL},
 };
 
