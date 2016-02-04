@@ -65,6 +65,7 @@
     // no separate erase button
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_DISP_BUTTON
+    #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
