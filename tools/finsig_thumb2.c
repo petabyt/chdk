@@ -1753,38 +1753,37 @@ int sig_match_deletedirectory_fut(firmware *fw, iter_state_t *is, sig_rule_t *ru
     uint32_t end_adr = ADR_ALIGN4(str_adr) + 2048;
     while(find_next_sig_call(fw,is,end_adr - (uint32_t)is->adr,"DeleteFile_Fut")) {
         if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
-            printf("sig_match_deletedirectory_fut: no match bl strcpy\n");
+            // printf("sig_match_deletedirectory_fut: no match bl strcpy\n");
             continue;
         }
         if(!is_sig_call(fw,is,"strcpy")) {
-            printf("sig_match_deletedirectory_fut: bl not strcpy at 0x%"PRIx64"\n",is->insn->address);
+            // printf("sig_match_deletedirectory_fut: bl not strcpy at 0x%"PRIx64"\n",is->insn->address);
             continue;
         }
         if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
-            printf("sig_match_deletedirectory_fut: no match bl strrchr at 0x%"PRIx64"\n",is->insn->address);
+            // printf("sig_match_deletedirectory_fut: no match bl strrchr at 0x%"PRIx64"\n",is->insn->address);
             continue;
         }
         if(!is_sig_call(fw,is,"strrchr")) {
-            printf("sig_match_deletedirectory_fut: bl not strrchr at 0x%"PRIx64"\n",is->insn->address);
+            // printf("sig_match_deletedirectory_fut: bl not strrchr at 0x%"PRIx64"\n",is->insn->address);
             continue;
         }
         // verify that arg1 to strrch is /
         uint32_t regs[4];
         if((get_call_const_args(fw,is,2,regs)&0x2)!=0x2) {
-            printf("sig_match_deletedirectory_fut: failed to get strrchr r1 at 0x%"PRIx64"\n",is->insn->address);
-            return 0;
+            // printf("sig_match_deletedirectory_fut: failed to get strrchr r1 at 0x%"PRIx64"\n",is->insn->address);
+            continue;
         }
         if(regs[1] != '/') {
-            printf("sig_match_deletedirectory_fut: strrchr r1 not '/' at 0x%"PRIx64"\n",is->insn->address);
-            return 0;
+            // printf("sig_match_deletedirectory_fut: strrchr r1 not '/' at 0x%"PRIx64"\n",is->insn->address);
+            continue;
         }
         if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-            printf("sig_match_deletedirectory_fut: no match bl at 0x%"PRIx64"\n",is->insn->address);
-            return 0;
+            // printf("sig_match_deletedirectory_fut: no match bl at 0x%"PRIx64"\n",is->insn->address);
+            continue;
         }
         return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
     }
-    printf("sig_match_deletedirectory_fut: not found\n");
     return 0;
 }
 
