@@ -388,6 +388,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "physw_sleep_delay", STUBSMIN_DEF },
     { "physw_status", STUBSMIN_DEF },
     { "fileio_semaphore", STUBSMIN_DEF },
+    { "levent_table", STUBSMIN_DEF },
 
     {0,0,0},
 };
@@ -1787,6 +1788,48 @@ int sig_match_deletedirectory_fut(firmware *fw, iter_state_t *is, sig_rule_t *ru
     return 0;
 }
 
+int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        // printf("sig_match_levent_table: no match bl 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+
+    // find first call of next function
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        // printf("sig_match_levent_table: no match bl 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+
+    // first instruction should load address
+    disasm_iter(fw,is);
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        // printf("sig_match_levent_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    uint32_t *p=(uint32_t *)adr2ptr(fw,adr);
+    if(!p) {
+        printf("sig_match_levent_table: 0x%08x not a ROM adr 0x%"PRIx64"\n",adr,is->insn->address);
+        return  0;
+    }
+    if(*(p+1) != 0x800) {
+        printf("sig_match_levent_table: expected 0x800 not 0x%x at 0x%08x ref 0x%"PRIx64"\n",*(p+1),adr,is->insn->address);
+        return  0;
+    }
+    // TODO saving the function might be useful for analysis
+    save_sig(rule->name,adr);
+    return 1;
+}
+
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
 #define SIG_NEAR_COUNT_SHIFT 8
@@ -2075,6 +2118,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
 {sig_match_qsort,   "qsort",                    "task_MetaCtg",},
 {sig_match_deletedirectory_fut,"DeleteDirectory_Fut","RedEyeController.c",},
+{sig_match_levent_table,"levent_table",         "ShowLogicalEventName_FW",},
 {NULL},
 };
 
