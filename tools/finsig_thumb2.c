@@ -389,6 +389,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "physw_status", STUBSMIN_DEF },
     { "fileio_semaphore", STUBSMIN_DEF },
     { "levent_table", STUBSMIN_DEF },
+    { "FlashParamsTable", STUBSMIN_DEF},
 
     {0,0,0},
 };
@@ -1829,6 +1830,62 @@ int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_sig(rule->name,adr);
     return 1;
 }
+int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // expect 3 asserts
+    if(!insn_match_find_next(fw,is,14,match_bl_blximm)) {
+        // printf("sig_match_flash_param_table: no match bl 1\n");
+        return 0;
+    }
+    if(!is_sig_call(fw,is,"DebugAssert")) {
+        // printf("sig_match_flash_param_table: bl 1 not DebugAssert at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,7,match_bl_blximm)) {
+        // printf("sig_match_flash_param_table: no match bl 2\n");
+        return 0;
+    }
+    if(!is_sig_call(fw,is,"DebugAssert")) {
+        // printf("sig_match_flash_param_table: bl 2 not DebugAssert at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,8,match_bl_blximm)) {
+        // printf("sig_match_flash_param_table: no match bl 3\n");
+        return 0;
+    }
+    if(!is_sig_call(fw,is,"DebugAssert")) {
+        // printf("sig_match_flash_param_table: bl 3 not DebugAssert at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // expect AcquireRecursiveLockStrictly, func
+    if(!insn_match_find_nth(fw,is,14,2,match_bl_blximm)) {
+        // printf("sig_match_flash_param_table: no match sub 1\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+
+    // first call
+    if(!insn_match_find_next(fw,is,8,match_bl_blximm)) {
+        // printf("sig_match_flash_param_table: no match sub 1 bl\n");
+        return 0;
+    }
+    
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // first instruction should load address
+    disasm_iter(fw,is);
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        // printf("sig_match_flash_param_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    save_sig(rule->name,adr);
+    return 1;
+}
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -2119,6 +2176,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_qsort,   "qsort",                    "task_MetaCtg",},
 {sig_match_deletedirectory_fut,"DeleteDirectory_Fut","RedEyeController.c",},
 {sig_match_levent_table,"levent_table",         "ShowLogicalEventName_FW",},
+{sig_match_flash_param_table,"FlashParamsTable","GetParameterData",},
 {NULL},
 };
 
