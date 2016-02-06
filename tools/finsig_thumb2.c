@@ -385,6 +385,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "GetAdChValue", OPTIONAL },
 
+    // stubs_min variables / constants
     { "physw_run", STUBSMIN_DEF },
     { "physw_sleep_delay", STUBSMIN_DEF },
     { "physw_status", STUBSMIN_DEF },
@@ -392,6 +393,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "levent_table", STUBSMIN_DEF },
     { "FlashParamsTable", STUBSMIN_DEF},
     { "playrec_mode", STUBSMIN_DEF},
+    { "jpeg_count_str", STUBSMIN_DEF},
 
     {0,0,0},
 };
@@ -1888,6 +1890,45 @@ int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
     save_sig(rule->name,adr);
     return 1;
 }
+int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_jpeg_count_str: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // printf("sig_match_jpeg_count_str: str match 0x%"PRIx64"\n",is->insn->address);
+        if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+            // printf("sig_match_jpeg_count_str: no match bl\n");
+            continue;
+        }
+        if(!is_sig_call(fw,is,"sprintf_FW")) {
+            // printf("sig_match_jpeg_count_str: not sprintf_FW at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        // expect ptr in r0, str in r1
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,5,regs)&0x3)!=0x3) {
+            // printf("sig_match_jpeg_count_str: failed to get sprintf args 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        if(regs[1] != str_adr) {
+            // printf("sig_match_jpeg_count_str: expected r1 == 0x%08x not 0x%08x at 0x%"PRIx64"\n",str_adr, regs[1],is->insn->address);
+            return 0;
+        }
+        if(!adr_is_var(fw,regs[0])) {
+            // printf("sig_match_jpeg_count_str: r0 == 0x%08x not var ptr at 0x%"PRIx64"\n",regs[0],is->insn->address);
+            return 0;
+        }
+        save_sig(rule->name,regs[0]);
+        return 1;
+    }
+    return 0;
+}
+
 // get the address used by a function that does something like
 // ldr rx =base
 // ldr r0 [rx, offset] (optional)
@@ -2227,6 +2268,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_flash_param_table,"FlashParamsTable","GetParameterData",},
 {sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
 {sig_match_var_struct_get,"playrec_mode",       "get_playrec_mode",},
+{sig_match_jpeg_count_str,"jpeg_count_str",     "9999",},
 {NULL},
 };
 
