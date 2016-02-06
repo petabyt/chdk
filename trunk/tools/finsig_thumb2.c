@@ -66,7 +66,6 @@ void write_output()
 #define BAD_MATCH      0x08
 #define EV_MATCH       0x10
 #define LIST_ALWAYS    0x20
-// TODO doesn't really belong in funcs
 #define STUBSMIN_DEF   0x40
 // force an arm veneer (NHSTUB2)
 #define ARM_STUB       0x80
@@ -75,13 +74,13 @@ typedef struct {
     char        *name;
     int         flags;
     uint32_t    val;
-} func_entry;
+} sig_entry_t;
 
-int next_func_entry = 0;
+int next_sig_entry = 0;
 
-#define MAX_FUNC_ENTRY  5000
+#define MAX_SIG_ENTRY  5000
 
-func_entry  func_names[MAX_FUNC_ENTRY] =
+sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 {
     // Do these first as they are needed to find others
     { "ctypes", STUBSMIN_DEF },
@@ -399,44 +398,94 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 };
 
 // Return the array index of a named function in the array above
-int find_saved_sig(const char *name)
+#if 0
+int find_saved_sig_index(const char *name)
 {
     int i;
-    for (i=0; func_names[i].name != 0; i++)
+    for (i=0; sig_names[i].name != 0; i++)
     {
-        if (strcmp(name,func_names[i].name) == 0)
+        if (strcmp(name,sig_names[i].name) == 0)
         {
             return i;
         }
     }
     return -1;
 }
+#endif
 
+sig_entry_t * find_saved_sig(const char *name)
+{
+    int i;
+    for (i=0; sig_names[i].name != 0; i++)
+    {
+        if (strcmp(name,sig_names[i].name) == 0)
+        {
+            return &sig_names[i];
+        }
+    }
+    return NULL;
+}
+
+// return value of saved sig, or 0 if not found / doesn't exist
+uint32_t get_saved_sig_val(const char *name)
+{
+    sig_entry_t *sig=find_saved_sig(name);
+    if(!sig) {
+        // printf("get_saved_sig_val: missing %s\n",name);
+        return 0;
+    }
+    return sig->val;
+}
+
+// unused for now
 // Return the array index of of function with given address
-int find_saved_sig_by_adr(uint32_t adr)
+#if 0
+int find_saved_sig_index_by_adr(uint32_t adr)
 {
     if(!adr) {
         return  -1;
     }
     int i;
-    for (i=0; func_names[i].name != 0; i++)
+    for (i=0; sig_names[i].name != 0; i++)
     {
-        if (func_names[i].val == adr)
+        if (sig_names[i].val == adr)
         {
             return i;
         }
     }
     return -1;
 }
+#endif
+#if 0
+sig_entry_t* find_saved_sig_by_val(uint32_t val)
+{
+    if(!val) {
+        return NULL;
+    }
+    int i;
+    for (i=0; sig_names[i].name != 0; i++)
+    {
+        if (sig_names[i].val == val)
+        {
+            return &sig_names[i];
+        }
+    }
+    return NULL;
+}
+#endif
 
 // Save the address value found for a function in the above array
 void save_sig(const char *name, uint32_t val)
 {
-    int i = find_saved_sig(name);
-    if (i >= 0)
+    sig_entry_t *sig = find_saved_sig(name);
+    if (!sig)
     {
-        func_names[i].val = val;
+        printf("save_sig: refusing to save unknown name %s\n",name);
     }
+    if(sig->val && sig->val != val) {
+        printf("save_sig: duplicate name %s existing 0x%08x != new 0x%08x\n",name,sig->val,val);
+    }
+    sig->val = val;
 }
 
 void add_func_name(char *n, uint32_t eadr, char *suffix)
@@ -450,28 +499,32 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
         sprintf(s, "%s%s", n, suffix);
     }
 
-    for (k=0; func_names[k].name != 0; k++)
+    for (k=0; sig_names[k].name != 0; k++)
     {
-        if (strcmp(func_names[k].name, s) == 0)
+        if (strcmp(sig_names[k].name, s) == 0)
         {
-            if (func_names[k].val == 0)             // same name, no address
+            if (sig_names[k].val == 0)             // same name, no address
             {
-                func_names[k].val = eadr;
-                func_names[k].flags |= EV_MATCH;
+                sig_names[k].val = eadr;
+                sig_names[k].flags |= EV_MATCH;
                 return;
             }
-            else if (func_names[k].val == eadr)     // same name, same address
+            else if (sig_names[k].val == eadr)     // same name, same address
             {
                 return;
+            }
+            else // same name, different address
+            {
+                printf("add_func_name: duplicate name %s existing 0x%08x != new 0x%08x\n",s, sig_names[k].val, eadr);
             }
         }
     }
 
-    func_names[next_func_entry].name = s;
-    func_names[next_func_entry].flags = OPTIONAL|UNUSED;
-    func_names[next_func_entry].val = eadr;
-    next_func_entry++;
-    func_names[next_func_entry].name = 0;
+    sig_names[next_sig_entry].name = s;
+    sig_names[next_sig_entry].flags = OPTIONAL|UNUSED;
+    sig_names[next_sig_entry].val = eadr;
+    next_sig_entry++;
+    sig_names[next_sig_entry].name = 0;
 }
 
 // save sig, with up to one level veneer added as j_...
@@ -506,24 +559,24 @@ int save_sig_with_j(firmware *fw, char *name, uint32_t adr)
 // TODO max_offset is in bytes, unlike insn search functions that use insn counts
 int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name)
 {
-    int i=find_saved_sig(name);
+    uint32_t adr=get_saved_sig_val(name);
 
-    if(i == -1) {
+    if(!adr) {
         printf("find_next_sig_call: missing %s\n",name);
         return 0;
     }
 
     search_calls_multi_data_t match_fns[3];
 
-    match_fns[0].adr=func_names[i].val;
+    match_fns[0].adr=adr;
     match_fns[0].fn=search_calls_multi_end;
     char veneer[128];
     sprintf(veneer,"j_%s",name);
-    i=find_saved_sig(veneer);
-    if(i == -1) {
+    adr=get_saved_sig_val(veneer);
+    if(!adr) {
         match_fns[1].adr=0;
     } else {
-        match_fns[1].adr=func_names[i].val;
+        match_fns[1].adr=adr;
         match_fns[1].fn=search_calls_multi_end;
         match_fns[2].adr=0;
     }
@@ -539,21 +592,21 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
     if(!adr) {
         return 0;
     }
-    int i=find_saved_sig(name);
-    if(i == -1) {
+    uint32_t sig_adr=get_saved_sig_val(name);
+    if(!sig_adr) {
         printf("is_sig_call: missing %s\n",name);
         return 0;
     }
-    if(adr == func_names[i].val) {
+    if(adr == sig_adr) {
         return 1;
     }
     char veneer[128];
     sprintf(veneer,"j_%s",name);
-    i=find_saved_sig(veneer);
-    if(i == -1 || adr != func_names[i].val) {
+    sig_adr=get_saved_sig_val(veneer);
+    if(!sig_adr) {
         return 0;
     }
-    return 1;
+    return (adr == sig_adr);
 }
 
 typedef struct sig_rule_s sig_rule_t;
@@ -593,17 +646,13 @@ int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("init_disasm_sig_ref: %s missing ref_name\n",rule->name);
         return 0;
     }
-    int i=find_saved_sig(rule->ref_name);
-    if(i == -1) {
+    uint32_t adr=get_saved_sig_val(rule->ref_name);
+    if(!adr) {
         printf("init_disasm_sig_ref: %s missing %s\n",rule->name,rule->ref_name);
         return 0;
     }
-    if(!func_names[i].val) {
-        printf("init_disasm_sig_ref: %s no address for %s\n",rule->name,rule->ref_name);
-        return 0;
-    }
-    if(!disasm_iter_init(fw,is,func_names[i].val)) {
-        printf("init_disasm_sig_ref: %s bad address 0x%08x for %s\n",rule->name,func_names[i].val,rule->ref_name);
+    if(!disasm_iter_init(fw,is,adr)) {
+        printf("init_disasm_sig_ref: %s bad address 0x%08x for %s\n",rule->name,adr,rule->ref_name);
         return 0;
     }
     return 1;
@@ -649,13 +698,11 @@ int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         {ARM_INS_ENDING}
     };
 
-    int i=find_saved_sig("ExportToEventProcedure_FW");
-
-    if(i==-1) {
+    uint32_t e_to_evp=get_saved_sig_val("ExportToEventProcedure_FW");
+    if(!e_to_evp) {
         printf("sig_match_reg_evp: failed to find ExportToEventProcedure, giving up\n");
         return 0;
     }
-    uint32_t e_to_evp=func_names[i].val;  
 
     //look for the underlying RegisterEventProcedure function (not currently used)
     uint32_t reg_evp=0;
@@ -735,11 +782,7 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     //printf("sig_match_reg_evp_alt2: EngApp.Delete 0x%08x\n",str_adr);
-    uint32_t reg_evp_alt1=0;
-    int i=find_saved_sig("RegisterEventProcedure_alt1");
-    if(i != -1) {
-        reg_evp_alt1=func_names[i].val;
-    }
+    uint32_t reg_evp_alt1=get_saved_sig_val("RegisterEventProcedure_alt1");
 
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
@@ -779,16 +822,8 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     // for checks
-    uint32_t reg_evp_alt1=0;
-    int i=find_saved_sig("RegisterEventProcedure_alt1");
-    if(i != -1) {
-        reg_evp_alt1=func_names[i].val;
-    }
-    uint32_t reg_evp_alt2=0;
-    i=find_saved_sig("RegisterEventProcedure_alt2");
-    if(i != -1) {
-        reg_evp_alt2=func_names[i].val;
-    }
+    uint32_t reg_evp_alt1=get_saved_sig_val("RegisterEventProcedure_alt1");
+    uint32_t reg_evp_alt2=get_saved_sig_val("RegisterEventProcedure_alt2");
 
     uint32_t mecha_unreg=0;
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
@@ -875,12 +910,11 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next(fw,is,7,match_bl_blximm)) {
         return 0;
     }
-    i=find_saved_sig("SleepTask");
-    if(i==-1) {
+    uint32_t sleeptask=get_saved_sig_val("SleepTask");
+    if(!sleeptask) {
         printf("sig_match_physw_misc: missing SleepTask\n");
         return 0;
     }
-    uint32_t sleeptask=func_names[i].val;
     uint32_t f=get_branch_call_insn_target(fw,is);
 
     // call wasn't direct, check for veneer
@@ -1064,22 +1098,8 @@ int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
             if(insn_match_find_next(fw,is,2,match_bl_blximm)) {
                 uint32_t adr=get_branch_call_insn_target(fw,is);
-                int i=find_saved_sig_by_adr(adr);
-                // not found, check for veneer
-                if(i==-1) {
-                    fw_disasm_iter_single(fw,adr);
-                    uint32_t adr2=get_direct_jump_target(fw,fw->is);
-                    if(adr2) {
-                        i=find_saved_sig_by_adr(adr2);
-                    }
-                }
-                // found something above
-                if(i!=-1) {
-                    // already have something with name we are looking for (shouldn't currently happen)
-                    if(strcmp(func_names[i].name,rule->name)==0) {
-                        return 0;
-                    }
-                    // otherwise, some other known function, ignore
+                // same string ref'd by Fopen
+                if(is_sig_call(fw,is,"Fopen_Fut_FW")) {
                     continue;
                 }
                 // TODO could check r1 not a const
@@ -1623,12 +1643,11 @@ int sig_match_prepdir_0(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    int i=find_saved_sig("PrepareDirectory_x");
-    if(i == -1 || func_names[i].val == 0) {
+    uint32_t ref_pdx=get_saved_sig_val("PrepareDirectory_x");
+    if(!ref_pdx) {
         printf("sig_match_prepdir_0: missing PrepareDirectory_x\n");
         return 0;
     }
-    uint32_t ref_pdx=func_names[i].val;
     // skip over, assume validated previously
     disasm_iter(fw,is);
     disasm_iter(fw,is);
@@ -2049,26 +2068,21 @@ void sig_match_named_save_sig(const char *name, uint32_t adr, uint32_t flags)
 // initial direct jumps (j_foo) assumed to have been handled
 int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    int i=find_saved_sig(rule->ref_name);
+    uint32_t ref_adr = get_saved_sig_val(rule->ref_name);
+    if(!ref_adr) {
+        printf("sig_match_named: missing %s\n",rule->ref_name);
+        return 0;
+    }
     uint32_t sig_type = rule->param & SIG_NAMED_TYPE_MASK;
     uint32_t sig_flags = rule->param & SIG_NAMED_FLAG_MASK;
     uint32_t sig_nth = (rule->param & SIG_NAMED_NTH_MASK)>>SIG_NAMED_NTH_SHIFT;
     if(!sig_nth) {
         sig_nth=1;
     }
-    if(i==-1) {
-        printf("sig_match_named: %s function not found\n",rule->ref_name);
-        return 0;
-    }
-    uint32_t ref_adr = func_names[i].val;
-    if(!ref_adr) {
-        printf("sig_match_named: %s address not found\n",rule->ref_name);
-        return 0;
-    }
     // no offset, just save match as is
     // TODO might want to validate anyway
     if(sig_type == SIG_NAMED_ASIS) {
-        sig_match_named_save_sig(rule->name,func_names[i].val,sig_flags); 
+        sig_match_named_save_sig(rule->name,ref_adr,sig_flags); 
         return 1;
     }
     const insn_match_t *insn_match;
@@ -2129,7 +2143,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // order is important
 sig_rule_t sig_rules_initial[]={
 // function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
-// NOTE _FW is in the CHDK column, because that's how it is in func_names
+// NOTE _FW is in the CHDK column, because that's how it is in sig_names
 {sig_match_str_r0_call, "ExportToEventProcedure_FW","ExportToEventProcedure"},
 {sig_match_reg_evp,     "RegisterEventProcedure",},
 {sig_match_reg_evp_table, "RegisterEventProcTable","DispDev_EnableEventProc"},
@@ -2386,107 +2400,60 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
     return 0;
 }
 
+int add_generic_func_match(search_calls_multi_data_t *match_fns,
+                            int *match_fn_count,
+                            int max_funcs,
+                            search_calls_multi_fn fn,
+                            uint32_t adr)
+{
+    if(*match_fn_count >= max_funcs-1) {
+        printf("add_generic_func_match: ERROR max_funcs %d reached\n",max_funcs);
+        match_fns[max_funcs-1].adr=0;
+        match_fns[max_funcs-1].fn=NULL;
+        return 0;
+    }
+    match_fns[*match_fn_count].adr=adr;
+    match_fns[*match_fn_count].fn=fn;
+    (*match_fn_count)++;
+    match_fns[*match_fn_count].adr=0;
+    match_fns[*match_fn_count].fn=NULL;
+    return 1;
+}
+#define MAX_GENERIC_FUNCS 16
+void add_generic_sig_match(search_calls_multi_data_t *match_fns,
+                                int *match_fn_count,
+                                search_calls_multi_fn fn,
+                                const char *name)
+{
+    uint32_t adr=get_saved_sig_val(name);
+    if(!adr) {
+        printf("add_generic_sig_match: missing %s\n",name);
+    }
+    add_generic_func_match(match_fns,match_fn_count,MAX_GENERIC_FUNCS,fn,adr);
+    char veneer[128];
+    sprintf(veneer,"j_%s",name);
+    adr=get_saved_sig_val(veneer);
+    if(adr) {
+        add_generic_func_match(match_fns,match_fn_count,MAX_GENERIC_FUNCS,fn,adr);
+    }
+}
 /*
 collect as many calls as possible of functions identified by name, whether or not listed in funcs to find
 */
 void find_generic_funcs(firmware *fw) {
-    search_calls_multi_data_t match_fns[14];
+    search_calls_multi_data_t match_fns[MAX_GENERIC_FUNCS];
 
     int match_fn_count=0;
 
-    int i=find_saved_sig("ExportToEventProcedure_FW");
-
-    if(i==-1) {
-        printf("failed to find ExportToEventProcedure\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_reg_eventproc_call;
-        match_fn_count++;
-    }
-    i=find_saved_sig("RegisterEventProcedure_alt1");
-
-    if(i==-1) {
-        printf("failed to find RegisterEventProcedure_alt1\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_reg_eventproc_call;
-        match_fn_count++;
-    }
-
-    i=find_saved_sig("RegisterEventProcTable");
-
-    if(i==-1) {
-        printf("failed to find RegisterEventProcTable\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_eventproc_table_call;
-        match_fn_count++;
-    }
-
-    // unregister table calls can be handled exactly the same as reg
-    i=find_saved_sig("UnRegisterEventProcTable");
-
-    if(i==-1) {
-        printf("failed to find UnRegisterEventProcTable\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_eventproc_table_call;
-        match_fn_count++;
-    }
-
-    // veneer, if found
-    i=find_saved_sig("j_UnRegisterEventProcTable");
-    if(i!=-1) {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_eventproc_table_call;
-        match_fn_count++;
-    }
-
-    i=find_saved_sig("RegisterEventProcedure_alt2");
-    if(i==-1) {
-        printf("failed to find RegisterEventProcedure_alt2\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_reg_eventproc_call;
-        match_fn_count++;
-    }
-
-    i=find_saved_sig("CreateTaskStrictly");
-    if(i==-1) {
-        printf("failed to find CreateTaskStrictly\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_createtask_call;
-        match_fn_count++;
-    }
-    // if veneer exists, use that too
-    i=find_saved_sig("j_CreateTaskStrictly");
-    if(i!=-1) {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_createtask_call;
-        match_fn_count++;
-    }
-    i=find_saved_sig("CreateTask");
-    if(i==-1) {
-        printf("failed to find CreateTask\n");
-    } else {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_createtask_call;
-        match_fn_count++;
-    }
-    // if veneer exists, use that too
-    i=find_saved_sig("j_CreateTask");
-    if(i!=-1) {
-        match_fns[match_fn_count].adr=func_names[i].val;
-        match_fns[match_fn_count].fn=process_createtask_call;
-        match_fn_count++;
-    }
+    add_generic_sig_match(match_fns,&match_fn_count,process_reg_eventproc_call,"ExportToEventProcedure_FW");
+    add_generic_sig_match(match_fns,&match_fn_count,process_reg_eventproc_call,"RegisterEventProcedure_alt1");
+    add_generic_sig_match(match_fns,&match_fn_count,process_reg_eventproc_call,"RegisterEventProcedure_alt2");
+    add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"RegisterEventProcTable");
+    add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"UnRegisterEventProcTable");
+    add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTaskStrictly");
+    add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTask");
 
     iter_state_t *is=disasm_iter_new(fw,0);
-
-    match_fns[match_fn_count].adr=0;
-    match_fns[match_fn_count].fn=NULL;
-
     disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default); // reset to start of fw
     fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
 
@@ -2539,11 +2506,11 @@ uint32_t find_uncached_bit(firmware *fw)
         {MATCH_INS(BIC, 3), {MATCH_OP_REG(R0),  MATCH_OP_REG(R0),   MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
-    int i=find_saved_sig("FreeUncacheableMemory");
-    if(i==-1) {
+    uint32_t ufree=get_saved_sig_val("FreeUncacheableMemory");
+    if(!ufree) {
         return 0;
     }
-    fw_disasm_iter_start(fw,func_names[i].val);
+    fw_disasm_iter_start(fw,ufree);
     if(insn_match_find_next(fw,fw->is,4,match_bic_r0)) {
         return fw->is->insn->detail->arm.operands[2].imm;
     }
@@ -2631,7 +2598,7 @@ void output_platform_vals(firmware *fw) {
     add_blankline();
 }
 // copied from finsig_dryos
-int compare_func_names(const func_entry **p1, const func_entry **p2)
+int compare_sig_names(const sig_entry_t **p1, const sig_entry_t **p2)
 {
     int rv = strcasecmp((*p1)->name, (*p2)->name);     // Case insensitive
     if (rv != 0)
@@ -2646,23 +2613,23 @@ int compare_func_names(const func_entry **p1, const func_entry **p2)
     return 0;
 }
 
-int compare_func_addresses(const func_entry **p1, const func_entry **p2)
+int compare_func_addresses(const sig_entry_t **p1, const sig_entry_t **p2)
 {
     if ((*p1)->val < (*p2)->val)
         return -1;
     else if ((*p1)->val > (*p2)->val)
         return 1;
-    return compare_func_names(p1,p2);
+    return compare_sig_names(p1,p2);
 }
 
-void write_funcs(firmware *fw, char *filename, func_entry *fns[], int (*compare)(const func_entry **p1, const func_entry **p2))
+void write_funcs(firmware *fw, char *filename, sig_entry_t *fns[], int (*compare)(const sig_entry_t **p1, const sig_entry_t **p2))
 {
     int k;
 
-    qsort(fns, next_func_entry, sizeof(func_entry*), (void*)compare);
+    qsort(fns, next_sig_entry, sizeof(sig_entry_t*), (void*)compare);
 
     FILE *out_fp = fopen(filename, "w");
-    for (k=0; k<next_func_entry; k++)
+    for (k=0; k<next_sig_entry; k++)
     {
         if(fns[k]->flags & STUBSMIN_DEF) {
             continue;
@@ -2693,30 +2660,30 @@ void write_funcs(firmware *fw, char *filename, func_entry *fns[], int (*compare)
 }
 // end copy finsig_dryos
 void write_func_lists(firmware *fw) {
-    func_entry *fns[MAX_FUNC_ENTRY];
+    sig_entry_t *fns[MAX_SIG_ENTRY];
     int k;
-    for (k=0; k<next_func_entry; k++)
-        fns[k] = &func_names[k];
+    for (k=0; k<next_sig_entry; k++)
+        fns[k] = &sig_names[k];
 
-    write_funcs(fw, "funcs_by_name.csv", fns, compare_func_names);
+    write_funcs(fw, "funcs_by_name.csv", fns, compare_sig_names);
     write_funcs(fw, "funcs_by_address.csv", fns, compare_func_addresses);
 }
 
 void print_stubs_min_def(firmware *fw, int k)
 {
-    if (!(func_names[k].flags & STUBSMIN_DEF)) {
+    if (!(sig_names[k].flags & STUBSMIN_DEF)) {
         return;
     }
     // find best match and report results
-    const char *curr_name = func_names[k].name;
+    const char *curr_name = sig_names[k].name;
     osig* ostub2=find_sig(fw->sv->stubs_min,curr_name);
     // TODO should be DEF_CONST for some
     const char *macro = "DEF";
     // TODO should save a ref address to print with stubs
     if (ostub2)
     {
-        bprintf("//%s(%-34s,0x%08x)",macro,curr_name,func_names[k].val);
-        if (func_names[k].val != ostub2->val)
+        bprintf("//%s(%-34s,0x%08x)",macro,curr_name,sig_names[k].val);
+        if (sig_names[k].val != ostub2->val)
         {
             bprintf(", ** != ** stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
         }
@@ -2727,65 +2694,65 @@ void print_stubs_min_def(firmware *fw, int k)
     }
     else
     {
-        bprintf("%s(%-34s,0x%08x)",macro,curr_name,func_names[k].val);
+        bprintf("%s(%-34s,0x%08x)",macro,curr_name,sig_names[k].val);
     }
     bprintf("\n");
 }
 
 // Output match results for function
-// matches stuff butchered out for now, just using value in func_names table
+// matches stuff butchered out for now, just using value in sig_names table
 void print_results(firmware *fw, const char *curr_name, int k)
 {
     int i;
     int err = 0;
     char line[500] = "";
 
-    if (func_names[k].flags & DONT_EXPORT) {
+    if (sig_names[k].flags & DONT_EXPORT) {
         return;
     }
 
     // listed separately 
-    if (func_names[k].flags & STUBSMIN_DEF) {
+    if (sig_names[k].flags & STUBSMIN_DEF) {
         return;
     }
 
     // find best match and report results
     osig* ostub2 = find_sig(fw->sv->stubs,curr_name);
 
-    if (ostub2 && (func_names[k].val != ostub2->val))
+    if (ostub2 && (sig_names[k].val != ostub2->val))
     {
         if (ostub2->type != TYPE_IGNORE)
             err = 1;
-        func_names[k].flags |= BAD_MATCH;
+        sig_names[k].flags |= BAD_MATCH;
     }
     else
     {
-        if (func_names[k].flags & UNUSED) return;
+        if (sig_names[k].flags & UNUSED) return;
     }
 
     // write to header (if error) or body buffer (no error)
     out_hdr = err;
 
     char *macro = "NHSTUB";
-    if (func_names[k].flags & ARM_STUB) {
+    if (sig_names[k].flags & ARM_STUB) {
         macro = "NHSTUB2";
     }
     if (strncmp(curr_name,"task_",5) == 0 ||
         strncmp(curr_name,"hook_",5) == 0) macro = "   DEF";
 
-    if (!func_names[k].val && !ostub2)
+    if (!sig_names[k].val && !ostub2)
     {
-        if (func_names[k].flags & OPTIONAL) return;
+        if (sig_names[k].flags & OPTIONAL) return;
         char fmt[50] = "";
         sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(curr_name)));
         sprintf(line+strlen(line), fmt, curr_name, "");
     }
     else
     {
-        if (ostub2 || (func_names[k].flags & UNUSED))
-            sprintf(line+strlen(line),"//%s(%-37s,0x%08x) //%3d ", macro, curr_name, func_names[k].val, 0);
+        if (ostub2 || (sig_names[k].flags & UNUSED))
+            sprintf(line+strlen(line),"//%s(%-37s,0x%08x) //%3d ", macro, curr_name, sig_names[k].val, 0);
         else
-            sprintf(line+strlen(line),"%s(%-39s,0x%08x) //%3d ", macro, curr_name, func_names[k].val, 0);
+            sprintf(line+strlen(line),"%s(%-39s,0x%08x) //%3d ", macro, curr_name, sig_names[k].val, 0);
 
         /*
         if (matches->fail > 0)
@@ -2799,7 +2766,7 @@ void print_results(firmware *fw, const char *curr_name, int k)
     {
         if (ostub2->type == TYPE_IGNORE)
             sprintf(line+strlen(line),"       Overridden");
-        else if (func_names[k].val == ostub2->val)
+        else if (sig_names[k].val == ostub2->val)
             sprintf(line+strlen(line),"       == 0x%08x    ",ostub2->val);
         else
             sprintf(line+strlen(line),"   *** != 0x%08x    ",ostub2->val);
@@ -2826,7 +2793,7 @@ void write_stubs(firmware *fw,int max_find_func) {
     bprintf("// Values below can be overridden in 'stubs_min.S':\n");
     for (k = 0; k < max_find_func; k++)
     {
-        if(func_names[k].flags & STUBSMIN_DEF) {
+        if(sig_names[k].flags & STUBSMIN_DEF) {
             print_stubs_min_def(fw,k);
         }
     }
@@ -2835,7 +2802,7 @@ void write_stubs(firmware *fw,int max_find_func) {
 
     for (k = 0; k < max_find_func; k++)
     {
-        const char *curr_name = func_names[k].name;
+        const char *curr_name = sig_names[k].name;
         print_results(fw,curr_name,k);
     }
 }
@@ -2851,8 +2818,8 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    for (next_func_entry = 0; func_names[next_func_entry].name != 0; next_func_entry++);
-    int max_find_func = next_func_entry;
+    for (next_sig_entry = 0; sig_names[next_sig_entry].name != 0; next_sig_entry++);
+    int max_find_sig = next_sig_entry;
 
     fw.sv = new_stub_values();
     load_stubs(fw.sv, "stubs_entry_2.S", 1);
@@ -2884,7 +2851,7 @@ int main(int argc, char **argv)
 
     output_platform_vals(&fw);
 
-    write_stubs(&fw,max_find_func);
+    write_stubs(&fw,max_find_sig);
 
     write_output();
     fclose(out_fp);
