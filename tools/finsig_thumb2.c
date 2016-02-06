@@ -2669,21 +2669,20 @@ void write_func_lists(firmware *fw) {
     write_funcs(fw, "funcs_by_address.csv", fns, compare_func_addresses);
 }
 
-void print_stubs_min_def(firmware *fw, int k)
+void print_stubs_min_def(firmware *fw, sig_entry_t *sig)
 {
-    if (!(sig_names[k].flags & STUBSMIN_DEF)) {
+    if (!(sig->flags & STUBSMIN_DEF)) {
         return;
     }
     // find best match and report results
-    const char *curr_name = sig_names[k].name;
-    osig* ostub2=find_sig(fw->sv->stubs_min,curr_name);
+    osig* ostub2=find_sig(fw->sv->stubs_min,sig->name);
     // TODO should be DEF_CONST for some
     const char *macro = "DEF";
     // TODO should save a ref address to print with stubs
     if (ostub2)
     {
-        bprintf("//%s(%-34s,0x%08x)",macro,curr_name,sig_names[k].val);
-        if (sig_names[k].val != ostub2->val)
+        bprintf("//%s(%-34s,0x%08x)",macro,sig->name,sig->val);
+        if (sig->val != ostub2->val)
         {
             bprintf(", ** != ** stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
         }
@@ -2694,65 +2693,65 @@ void print_stubs_min_def(firmware *fw, int k)
     }
     else
     {
-        bprintf("%s(%-34s,0x%08x)",macro,curr_name,sig_names[k].val);
+        bprintf("%s(%-34s,0x%08x)",macro,sig->name,sig->val);
     }
     bprintf("\n");
 }
 
 // Output match results for function
 // matches stuff butchered out for now, just using value in sig_names table
-void print_results(firmware *fw, const char *curr_name, int k)
+void print_results(firmware *fw, sig_entry_t *sig)
 {
     int i;
     int err = 0;
     char line[500] = "";
 
-    if (sig_names[k].flags & DONT_EXPORT) {
+    if (sig->flags & DONT_EXPORT) {
         return;
     }
 
     // listed separately 
-    if (sig_names[k].flags & STUBSMIN_DEF) {
+    if (sig->flags & STUBSMIN_DEF) {
         return;
     }
 
     // find best match and report results
-    osig* ostub2 = find_sig(fw->sv->stubs,curr_name);
+    osig* ostub2 = find_sig(fw->sv->stubs,sig->name);
 
-    if (ostub2 && (sig_names[k].val != ostub2->val))
+    if (ostub2 && (sig->val != ostub2->val))
     {
         if (ostub2->type != TYPE_IGNORE)
             err = 1;
-        sig_names[k].flags |= BAD_MATCH;
+       sig->flags |= BAD_MATCH;
     }
     else
     {
-        if (sig_names[k].flags & UNUSED) return;
+        if (sig->flags & UNUSED) return;
     }
 
     // write to header (if error) or body buffer (no error)
     out_hdr = err;
 
     char *macro = "NHSTUB";
-    if (sig_names[k].flags & ARM_STUB) {
+    if (sig->flags & ARM_STUB) {
         macro = "NHSTUB2";
     }
-    if (strncmp(curr_name,"task_",5) == 0 ||
-        strncmp(curr_name,"hook_",5) == 0) macro = "   DEF";
+    if (strncmp(sig->name,"task_",5) == 0 ||
+        strncmp(sig->name,"hook_",5) == 0) macro = "   DEF";
 
-    if (!sig_names[k].val && !ostub2)
+    if (!sig->val && !ostub2)
     {
-        if (sig_names[k].flags & OPTIONAL) return;
+        if (sig->flags & OPTIONAL) return;
         char fmt[50] = "";
-        sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(curr_name)));
-        sprintf(line+strlen(line), fmt, curr_name, "");
+        sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(sig->name)));
+        sprintf(line+strlen(line), fmt, sig->name, "");
     }
     else
     {
-        if (ostub2 || (sig_names[k].flags & UNUSED))
-            sprintf(line+strlen(line),"//%s(%-37s,0x%08x) //%3d ", macro, curr_name, sig_names[k].val, 0);
+        if (ostub2 || (sig->flags & UNUSED))
+            sprintf(line+strlen(line),"//%s(%-37s,0x%08x) //%3d ", macro, sig->name, sig->val, 0);
         else
-            sprintf(line+strlen(line),"%s(%-39s,0x%08x) //%3d ", macro, curr_name, sig_names[k].val, 0);
+            sprintf(line+strlen(line),"%s(%-39s,0x%08x) //%3d ", macro, sig->name, sig->val, 0);
 
         /*
         if (matches->fail > 0)
@@ -2766,7 +2765,7 @@ void print_results(firmware *fw, const char *curr_name, int k)
     {
         if (ostub2->type == TYPE_IGNORE)
             sprintf(line+strlen(line),"       Overridden");
-        else if (sig_names[k].val == ostub2->val)
+        else if (sig->val == ostub2->val)
             sprintf(line+strlen(line),"       == 0x%08x    ",ostub2->val);
         else
             sprintf(line+strlen(line),"   *** != 0x%08x    ",ostub2->val);
@@ -2794,7 +2793,7 @@ void write_stubs(firmware *fw,int max_find_func) {
     for (k = 0; k < max_find_func; k++)
     {
         if(sig_names[k].flags & STUBSMIN_DEF) {
-            print_stubs_min_def(fw,k);
+            print_stubs_min_def(fw,&sig_names[k]);
         }
     }
 
@@ -2802,8 +2801,7 @@ void write_stubs(firmware *fw,int max_find_func) {
 
     for (k = 0; k < max_find_func; k++)
     {
-        const char *curr_name = sig_names[k].name;
-        print_results(fw,curr_name,k);
+        print_results(fw,&sig_names[k]);
     }
 }
 
