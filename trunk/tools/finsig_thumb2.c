@@ -374,6 +374,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
     { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
     { "CalcSqrt", OPTIONAL|UNUSED }, // helper
+    { "get_playrec_mode", OPTIONAL|UNUSED }, // helper, made up name
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -390,6 +391,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "fileio_semaphore", STUBSMIN_DEF },
     { "levent_table", STUBSMIN_DEF },
     { "FlashParamsTable", STUBSMIN_DEF},
+    { "playrec_mode", STUBSMIN_DEF},
 
     {0,0,0},
 };
@@ -1886,6 +1888,52 @@ int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
     save_sig(rule->name,adr);
     return 1;
 }
+// get the address used by a function that does something like
+// ldr rx =base
+// ldr r0 [rx, offset] (optional)
+// bx lr
+int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_var_struct_get: disasm failed\n");
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        // printf("sig_match_var_struct_get: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    arm_reg reg_base = is->insn->detail->arm.operands[0].reg; // reg value was loaded into
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_var_struct_get: disasm failed\n");
+        return 0;
+    }
+    if(is->insn->id == ARM_INS_LDR) {
+        if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0
+            || is->insn->detail->arm.operands[1].mem.base != reg_base) {
+            // printf("sig_match_var_struct_get: no ldr match\n");
+            return 0;
+        }
+        adr += is->insn->detail->arm.operands[1].mem.disp;
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_var_struct_get: disasm failed\n");
+            return 0;
+        }
+    } else if(reg_base != ARM_REG_R0) {
+        // if no second LDR, first must be into R0
+        // printf("sig_match_var_struct_get: not r0\n");
+        return 0;
+    }
+    if(!insn_match(is->insn,match_bxlr)) {
+        // printf("sig_match_var_struct_get: no match BX LR\n");
+        return 0;
+    }
+    save_sig(rule->name,adr);
+    return 1;
+}
 
 #define SIG_NEAR_OFFSET_MASK 0x00FF
 #define SIG_NEAR_COUNT_MASK  0xFF00
@@ -2177,6 +2225,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_deletedirectory_fut,"DeleteDirectory_Fut","RedEyeController.c",},
 {sig_match_levent_table,"levent_table",         "ShowLogicalEventName_FW",},
 {sig_match_flash_param_table,"FlashParamsTable","GetParameterData",},
+{sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
+{sig_match_var_struct_get,"playrec_mode",       "get_playrec_mode",},
 {NULL},
 };
 

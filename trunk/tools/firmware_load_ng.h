@@ -429,6 +429,9 @@ extern const insn_match_t match_b_bl_blximm[];
 // match only calls: BL or BLX imm
 extern const insn_match_t match_bl_blximm[];
 
+// match BX LR
+extern const insn_match_t match_bxlr[];
+
 // check if single insn matches values defined by match
 int insn_match(cs_insn *insn, const insn_match_t *match);
 
