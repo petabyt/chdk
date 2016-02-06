@@ -1053,6 +1053,13 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
                 // pretend reg is not known
                 known_bits ^=rd_bit;
                 // do not set found bit here
+            } else if( (insn_id == ARM_INS_SUB || insn_id == ARM_INS_SUBS || insn_id == ARM_INS_SUBW) 
+                && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
+                res[rd_i] = (int)(res[rd_i]) - fw->is->insn->detail->arm.operands[1].imm;
+//                if(dbg_count) printf("found add r%d,#0x%08x\n",rd_i,res[rd_i]);
+                // pretend reg is not known
+                known_bits ^=rd_bit;
+                // do not set found bit here
             }/* else {
             }
             */
