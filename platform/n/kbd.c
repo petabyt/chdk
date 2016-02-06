@@ -176,6 +176,11 @@ int chdk_process_touch()
     unsigned short tx, ty;                                              // Touch co-ordinate
     tx = touch_screen_x * 360 / 0x2FF ;
     ty = touch_screen_y *  240 / 0x1FF ;
+    if (conf.rotate_osd)
+    {
+        tx = 360 - tx;
+        ty = 240 - ty;
+    }
 
     if ( touch_screen_active )                                          // Search for CHDK on screen buttons matching co-ordinate
     {
@@ -238,19 +243,19 @@ int ts_process_touch()
 }
 
 int redraw_buttons = 1;
-int menu_key_index = -1;
+// int menu_key_index = -1;
 
 void virtual_buttons()
 {
     int guiMode = gui_get_mode();
     char buf[30];
 
-    if(menu_key_index == -1)                                            // Check if border of CHDK button is corrupted, force redraw if so
-    {
-        int i;
-        for (i=0; keymap[i].hackkey != KEY_MENU; i++);
-        menu_key_index = i;
-    }
+    //if(menu_key_index == -1) 
+    //{
+    //    int i;
+    //    for (i=0; keymap[i].hackkey != KEY_MENU; i++);
+    //    menu_key_index = i;
+    //}
 
     if (redraw_buttons)
     {
