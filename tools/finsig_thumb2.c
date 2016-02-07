@@ -2263,6 +2263,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "PTM_GetCurrentItem",       "PTM_GetCurrentItem_FW",},
 // TODO assumes CreateTask is in RAM, doesn't currently check
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
+{sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_log_camera_event,"LogCameraEvent",   "task_StartupImage",},
 {sig_match_physw_misc, "physw_misc",            "task_PhySw"},
 {sig_match_kbd_read_keys, "kbd_read_keys",      "kbd_p1_f"},
