@@ -386,10 +386,12 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     {0,0,0},
 };
 
+// for values that don't get a DEF etc
+#define MISC_VAL_NO_STUB    1
 // variables and constants
 typedef struct {
     char        *name;
-//    int         flags; // not used yet, will want for DEF_CONST, maybe non-stubs values
+    int         flags; // not used yet, will want for DEF_CONST, maybe non-stubs values
     uint32_t    val;
     // informational values
     uint32_t    base; // if stub is found as ptr + offset, record
@@ -408,6 +410,7 @@ misc_val_t misc_vals[]={
     { "FlashParamsTable",   },
     { "playrec_mode",       },
     { "jpeg_count_str",     },
+    { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     {0,0,0},
 };
 
@@ -2013,6 +2016,23 @@ int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+int sig_match_cam_uncached_bit(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t match_bic_r0[]={
+        {MATCH_INS(BIC, 3), {MATCH_OP_REG(R0),  MATCH_OP_REG(R0),   MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(insn_match_find_next(fw,is,4,match_bic_r0)) {
+        save_misc_val(rule->name,is->insn->detail->arm.operands[2].imm,0,(uint32_t)is->insn->address);
+        return 1;
+    }
+    return 0;
+}
+
+
 // get the address used by a function that does something like
 // ldr rx =base
 // ldr r0 [rx, offset] (optional)
@@ -2316,6 +2336,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_open,    "open",                     "Open_FW"},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
+{sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 {sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
@@ -2571,24 +2592,6 @@ int find_ctypes(firmware *fw, int k)
     return 0;
 }
 
-uint32_t find_uncached_bit(firmware *fw)
-{
-    const insn_match_t match_bic_r0[]={
-        {MATCH_INS(BIC, 3), {MATCH_OP_REG(R0),  MATCH_OP_REG(R0),   MATCH_OP_IMM_ANY}},
-        {ARM_INS_ENDING}
-    };
-    uint32_t ufree=get_saved_sig_val("FreeUncacheableMemory");
-    if(!ufree) {
-        return 0;
-    }
-    fw_disasm_iter_start(fw,ufree);
-    if(insn_match_find_next(fw,fw->is,4,match_bic_r0)) {
-        return fw->is->insn->detail->arm.operands[2].imm;
-    }
-    return 0;
-}
-
-
 void output_firmware_vals(firmware *fw)
 {
     bprintf("// Camera info:\n");
@@ -2652,6 +2655,15 @@ void output_firmware_vals(firmware *fw)
     add_blankline();
 }
 
+// print platform.h define, if not default value
+void print_platform_misc_val_undef(const char *name, uint32_t def)
+{
+    misc_val_t *mv=get_misc_val(name);
+    if(mv->val && mv->val != def) {
+        bprintf("//#undef  %s\n",name);
+        bprintf("//#define %s  0x%08x // Found @0x%08x\n",name,mv->val,mv->ref_adr);
+    }
+}
 void output_platform_vals(firmware *fw) {
     bprintf("// Values below go in 'platform_camera.h':\n");
     bprintf("//#define CAM_DRYOS         1\n");
@@ -2660,11 +2672,7 @@ void output_platform_vals(firmware *fw) {
     if (fw->dryos_ver >= 47)
         bprintf("//#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher\n");
 
-    uint32_t uncached_bit = find_uncached_bit(fw);
-    if(uncached_bit && uncached_bit !=0x10000000) {
-        bprintf("//#undef  CAM_UNCACHED_BIT\n");
-        bprintf("//#define CAM_UNCACHED_BIT  0x%08x\n",uncached_bit);
-    }
+    print_platform_misc_val_undef("CAM_UNCACHED_BIT",0x10000000);
 
     add_blankline();
 }
@@ -2739,6 +2747,9 @@ void write_func_lists(firmware *fw) {
 
 void print_stubs_min_def(firmware *fw, misc_val_t *sig)
 {
+    if(sig->flags & MISC_VAL_NO_STUB) {
+        return;
+    }
     // find best match and report results
     osig* ostub2=find_sig(fw->sv->stubs_min,sig->name);
     // TODO should be DEF_CONST for some
@@ -2765,7 +2776,7 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
                 bprintf(" (0x%x+0x%x)",sig->base,sig->offset);
             }
             if(sig->ref_adr) {
-                bprintf(" @0x%08x",sig->ref_adr);
+                bprintf(" Found @0x%08x",sig->ref_adr);
             }
         }
     }
