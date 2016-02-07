@@ -482,6 +482,7 @@ void save_sig(const char *name, uint32_t val)
     if (!sig)
     {
         printf("save_sig: refusing to save unknown name %s\n",name);
+        return;
     }
     if(sig->val && sig->val != val) {
         printf("save_sig: duplicate name %s existing 0x%08x != new 0x%08x\n",name,sig->val,val);
