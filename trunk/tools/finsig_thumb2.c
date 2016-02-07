@@ -2549,16 +2549,15 @@ void find_generic_funcs(firmware *fw) {
     disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default); // reset to start of fw
     fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
 
-    /*
-    // currently nothing useful
+    // currently only finds SD1stInit task on a couple cams
+    int i;
     for(i=0;i<fw->adr_range_count;i++) {
         if(fw->adr_ranges[i].type != ADR_RANGE_RAM_CODE) {
             continue;
         }
-        disasm_iter_init(fw,is,fw->adr_ranges[i].start | fw->thumb_default); // reset to start of fw
+        disasm_iter_init(fw,is,fw->adr_ranges[i].start | fw->thumb_default); // reset to start of range
         fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
     }
-    */
 
     disasm_iter_free(is);
 }
