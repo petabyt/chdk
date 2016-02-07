@@ -66,7 +66,6 @@ void write_output()
 #define BAD_MATCH      0x08
 #define EV_MATCH       0x10
 #define LIST_ALWAYS    0x20
-#define STUBSMIN_DEF   0x40
 // force an arm veneer (NHSTUB2)
 #define ARM_STUB       0x80
 
@@ -82,8 +81,7 @@ int next_sig_entry = 0;
 
 sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 {
-    // Do these first as they are needed to find others
-    { "ctypes", STUBSMIN_DEF },
+    // Order here currently has no effect on search order, but mostly copied from finsig_dryos which did
     { "ExportToEventProcedure_FW", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure", UNUSED|DONT_EXPORT },
     { "RegisterEventProcedure_alt1", UNUSED|DONT_EXPORT },
@@ -385,18 +383,56 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 
     { "GetAdChValue", OPTIONAL },
 
-    // stubs_min variables / constants
-    { "physw_run", STUBSMIN_DEF },
-    { "physw_sleep_delay", STUBSMIN_DEF },
-    { "physw_status", STUBSMIN_DEF },
-    { "fileio_semaphore", STUBSMIN_DEF },
-    { "levent_table", STUBSMIN_DEF },
-    { "FlashParamsTable", STUBSMIN_DEF},
-    { "playrec_mode", STUBSMIN_DEF},
-    { "jpeg_count_str", STUBSMIN_DEF},
-
     {0,0,0},
 };
+
+// variables and constants
+typedef struct {
+    char        *name;
+//    int         flags; // not used yet, will want for DEF_CONST, maybe non-stubs values
+    uint32_t    val;
+    // informational values
+    uint32_t    base; // if stub is found as ptr + offset, record
+    uint32_t    offset;
+    uint32_t    ref_adr; // code address near where value found (TODO may want list)
+} misc_val_t;
+
+misc_val_t misc_vals[]={
+    // stubs_min variables / constants
+    { "ctypes",             },
+    { "physw_run",          },
+    { "physw_sleep_delay",  },
+    { "physw_status",       },
+    { "fileio_semaphore",   },
+    { "levent_table",       },
+    { "FlashParamsTable",   },
+    { "playrec_mode",       },
+    { "jpeg_count_str",     },
+    {0,0,0},
+};
+
+misc_val_t *get_misc_val(const char *name)
+{
+    misc_val_t *p=misc_vals;
+    while(p->name) {
+        if(strcmp(name,p->name) == 0) {
+            return p;
+        }
+        p++;
+    }
+    return NULL;
+}
+void save_misc_val(const char *name, uint32_t base, uint32_t offset, uint32_t ref_adr)
+{
+    misc_val_t *p=get_misc_val(name);
+    if(!p) {
+        return;
+    }
+    p->val = base + offset;
+    p->base = base;
+    p->offset = offset;
+    p->ref_adr = ref_adr;
+}
 
 // Return the array index of a named function in the array above
 #if 0
@@ -923,7 +959,7 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         physw_run=LDR_PC2val(fw,is->insn);
         if(physw_run) {
             if(adr_is_var(fw,physw_run)) {
-                save_sig("physw_run",physw_run);
+                save_misc_val("physw_run",physw_run,0,(uint32_t)is->insn->address);
                 break;
             } else {
                 printf("sig_match_physw_misc: adr not data? 0x%08x\n",physw_run);
@@ -966,7 +1002,7 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         || is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
         return 0;
     }
-    save_sig("physw_sleep_delay",physw_run + is->insn->detail->arm.operands[1].mem.disp);
+    save_misc_val("physw_sleep_delay",physw_run,is->insn->detail->arm.operands[1].mem.disp,(uint32_t)is->insn->address);
     // skip over sleeptask to next insn
     if(!disasm_iter(fw,is)) {
         printf("sig_match_physw_misc: disasm failed\n");
@@ -1003,7 +1039,7 @@ int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     uint32_t physw_status=LDR_PC2val(fw,is->insn);
     if(physw_status) {
-        save_sig("physw_status",physw_status);
+        save_misc_val("physw_status",physw_status,0,(uint32_t)is->insn->address);
         save_sig("kbd_p1_f_cont",(uint32_t)(is->insn->address) | is->thumb);
         return 1;
     }
@@ -1104,7 +1140,7 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     if(!sem_adr) {
         return 0;
     }
-    save_sig("fileio_semaphore",sem_adr);
+    save_misc_val("fileio_semaphore",sem_adr,0,(uint32_t)is->insn->address);
     // look for next call: GetDrive_FreeClusters
     if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
         return 0;
@@ -1879,7 +1915,7 @@ int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return  0;
     }
     // TODO saving the function might be useful for analysis
-    save_sig(rule->name,adr);
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
 }
 int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1935,7 +1971,7 @@ int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
         // printf("sig_match_flash_param_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
         return  0;
     }
-    save_sig(rule->name,adr);
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
 }
 int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1971,7 +2007,7 @@ int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             // printf("sig_match_jpeg_count_str: r0 == 0x%08x not var ptr at 0x%"PRIx64"\n",regs[0],is->insn->address);
             return 0;
         }
-        save_sig(rule->name,regs[0]);
+        save_misc_val(rule->name,regs[0],0,(uint32_t)is->insn->address);
         return 1;
     }
     return 0;
@@ -1986,6 +2022,7 @@ int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
+    uint32_t fadr=is->adr;
     if(!disasm_iter(fw,is)) {
         printf("sig_match_var_struct_get: disasm failed\n");
         return 0;
@@ -2000,13 +2037,14 @@ int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_var_struct_get: disasm failed\n");
         return 0;
     }
+    uint32_t disp=0;
     if(is->insn->id == ARM_INS_LDR) {
         if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0
             || is->insn->detail->arm.operands[1].mem.base != reg_base) {
             // printf("sig_match_var_struct_get: no ldr match\n");
             return 0;
         }
-        adr += is->insn->detail->arm.operands[1].mem.disp;
+        disp = is->insn->detail->arm.operands[1].mem.disp;
         if(!disasm_iter(fw,is)) {
             printf("sig_match_var_struct_get: disasm failed\n");
             return 0;
@@ -2016,11 +2054,12 @@ int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // printf("sig_match_var_struct_get: not r0\n");
         return 0;
     }
+    // TODO could check for other RET type instructions
     if(!insn_match(is->insn,match_bxlr)) {
         // printf("sig_match_var_struct_get: no match BX LR\n");
         return 0;
     }
-    save_sig(rule->name,adr);
+    save_misc_val(rule->name,adr,disp,fadr);
     return 1;
 }
 
@@ -2522,7 +2561,7 @@ int find_ctypes(firmware *fw, int k)
         if (memcmp(((char*)fw->buf8)+k,ctypes,sizeof(ctypes)) == 0)
         {
             //printf("found ctypes 0x%08x\n",fw->base + k);
-            save_sig("ctypes",fw->base + k); 
+            save_misc_val("ctypes",fw->base + k,0,0); 
             // use ctypes as max search address for non-copied / relocated code. 
             // seems to be true on current firmwares
             fw->rom_code_search_max_adr = fw->base + k;
@@ -2663,9 +2702,6 @@ void write_funcs(firmware *fw, char *filename, sig_entry_t *fns[], int (*compare
     FILE *out_fp = fopen(filename, "w");
     for (k=0; k<next_sig_entry; k++)
     {
-        if(fns[k]->flags & STUBSMIN_DEF) {
-            continue;
-        }
         if (strncmp(fns[k]->name,"hook_",5) == 0) {
             continue;
         }
@@ -2701,11 +2737,8 @@ void write_func_lists(firmware *fw) {
     write_funcs(fw, "funcs_by_address.csv", fns, compare_func_addresses);
 }
 
-void print_stubs_min_def(firmware *fw, sig_entry_t *sig)
+void print_stubs_min_def(firmware *fw, misc_val_t *sig)
 {
-    if (!(sig->flags & STUBSMIN_DEF)) {
-        return;
-    }
     // find best match and report results
     osig* ostub2=find_sig(fw->sv->stubs_min,sig->name);
     // TODO should be DEF_CONST for some
@@ -2726,6 +2759,15 @@ void print_stubs_min_def(firmware *fw, sig_entry_t *sig)
     else
     {
         bprintf("%s(%-34s,0x%08x)",macro,sig->name,sig->val);
+        if(sig->offset || sig->ref_adr) {
+            bprintf(" //");
+            if(sig->offset) {
+                bprintf(" (0x%x+0x%x)",sig->base,sig->offset);
+            }
+            if(sig->ref_adr) {
+                bprintf(" @0x%08x",sig->ref_adr);
+            }
+        }
     }
     bprintf("\n");
 }
@@ -2739,11 +2781,6 @@ void print_results(firmware *fw, sig_entry_t *sig)
     char line[500] = "";
 
     if (sig->flags & DONT_EXPORT) {
-        return;
-    }
-
-    // listed separately 
-    if (sig->flags & STUBSMIN_DEF) {
         return;
     }
 
@@ -2822,11 +2859,10 @@ void print_results(firmware *fw, sig_entry_t *sig)
 void write_stubs(firmware *fw,int max_find_func) {
     int k;
     bprintf("// Values below can be overridden in 'stubs_min.S':\n");
-    for (k = 0; k < max_find_func; k++)
-    {
-        if(sig_names[k].flags & STUBSMIN_DEF) {
-            print_stubs_min_def(fw,&sig_names[k]);
-        }
+    misc_val_t *stub_min=misc_vals;
+    while(stub_min->name) {
+        print_stubs_min_def(fw,stub_min);
+        stub_min++;
     }
 
     add_blankline();
