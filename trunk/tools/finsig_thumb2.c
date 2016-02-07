@@ -878,6 +878,33 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+// look for f(0x60,"_Simage") at start of task_StartupImage
+int sig_match_log_camera_event(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        // printf("sig_match_log_camera_event: bl match failed\n");
+        return 0;
+    }
+    uint32_t regs[4];
+    if((get_call_const_args(fw,is,4,regs)&3)!=3) {
+        // printf("sig_match_log_camera_event: get args failed\n");
+        return 0;
+    }
+    if(regs[0] != 0x60) {
+        // printf("sig_match_log_camera_event: bad r0 0x%x\n",regs[0]);
+        return 0;
+    }
+    const char *str=(char *)adr2ptr(fw,regs[1]);
+    if(!str || strcmp(str,"_SImage") != 0) {
+        // printf("sig_match_log_camera_event: bad r1 0x%x\n",regs[1]);
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 // TODO this finds multiple values in PhySwTask main function
 int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -2236,6 +2263,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "PTM_GetCurrentItem",       "PTM_GetCurrentItem_FW",},
 // TODO assumes CreateTask is in RAM, doesn't currently check
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
+{sig_match_log_camera_event,"LogCameraEvent",   "task_StartupImage",},
 {sig_match_physw_misc, "physw_misc",            "task_PhySw"},
 {sig_match_kbd_read_keys, "kbd_read_keys",      "kbd_p1_f"},
 {sig_match_get_kbd_state, "GetKbdState",        "kbd_read_keys"},
