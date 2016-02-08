@@ -1677,6 +1677,56 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// match call after ref to "_EnrySRec" because "AC:Rec2PB" ref before push in function, hard to be sure of start
+int sig_match_rec2pb(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_mktime_ext: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        const insn_match_t match_ldr_cbnz_r0[]={
+            {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0), MATCH_OP_MEM_ANY}},
+            {MATCH_INS(CBNZ, 2), {MATCH_OP_REG(R0), MATCH_OP_IMM_ANY}},
+            {ARM_INS_ENDING}
+        };
+        if(!insn_match_find_next_seq(fw,is,10,match_ldr_cbnz_r0)) {
+            // printf("sig_match_rec2pb: no cbnz\n");
+            continue;
+        }
+        // follow
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        if(!insn_match_find_next(fw,is,3,match_b_bl_blximm)) {
+            // printf("sig_match_rec2pb: no call\n");
+            // followed branch, doesn't make sense to keep searching
+            return 0;
+        }
+        uint32_t adr=(uint32_t)is->insn->address | is->thumb;
+        // follow for sanity check
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        if(!find_next_sig_call(fw,is,16,"LogCameraEvent")) {
+            // printf("sig_match_rec2pb: no LogCameraEvent call\n");
+            return 0;
+        }
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,4,regs)&3)!=3) {
+            // printf("sig_match_rec2pb: failed to get args\n");
+            return 0;
+        }
+        // sanity check starts with LogCameraEvent with expected number and string
+        if(regs[0]==0x60 && adr2ptr(fw,regs[1]) && (strcmp((const char *)adr2ptr(fw,regs[1]),"AC:Rec2PB")==0)) {
+            return save_sig_with_j(fw,rule->name,adr);
+        } else {
+            // printf("sig_match_rec2pb: bad args\n");
+            return 0;
+        }
+    }
+    return 0;
+}
+
 // could just do sig_match_named, 3rd b, but want more validation
 int sig_match_get_parameter_data(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -2076,49 +2126,6 @@ int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
     return 1;
 }
 
-// below based on GetSDProtect, but address is wrong (loads diff address, adjust in index add)
-#if 0
-int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    if(!init_disasm_sig_ref(fw,is,rule)) {
-        return 0;
-    }
-    // first instruction should load address
-    if(!disasm_iter(fw,is)) {
-        printf("sig_match_physw_event_table: disasm failed\n");
-        return 0;
-    }
-    uint32_t adr=LDR_PC2val(fw,is->insn);
-    // expect first load to be physw_status
-    if(!adr || adr != get_misc_val_value("physw_status")) {
-        printf("sig_match_physw_event_table: no match physw_status LDR PC 0x%"PRIx64"\n",is->insn->address);
-        return  0;
-    }
-    if(!disasm_iter(fw,is)) {
-        printf("sig_match_physw_event_table: disasm failed\n");
-        return 0;
-    }
-    adr=get_branch_call_insn_target(fw,is);
-    if(!adr) {
-        printf("sig_match_physw_event_table: no match bl\n");
-        return 0;
-    }
-    // follow
-    disasm_iter_init(fw,is,adr);
-    if(!disasm_iter(fw,is)) {
-        printf("sig_match_physw_event_table: disasm failed\n");
-        return 0;
-    }
-    adr=LDR_PC2val(fw,is->insn);
-    if(!adr) {
-        printf("sig_match_physw_event_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
-        return  0;
-    }
-    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
-    return 1;
-}
-#endif
-
 // get the address used by a function that does something like
 // ldr rx =base
 // ldr r0 [rx, offset] (optional)
@@ -2447,6 +2454,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
 {sig_match_get_drive_cluster_size,"GetDrive_ClusterSize","OpLog.WriteToSD_FW",},
 {sig_match_mktime_ext,"mktime_ext",             "%04d%02d%02dT%02d%02d%02d.%01d",},
+{sig_match_near_str,"PB2Rec",                   "AC:ActionP2R Fail",     SIG_NEAR_BEFORE(6,1)},
+{sig_match_rec2pb,  "Rec2PB",                   "_EnrySRec",},
 //{sig_match_named,   "GetParameterData",         "PTM_RestoreUIProperty_FW",          SIG_NAMED_NTH(3,JMP_SUB)},
 {sig_match_get_parameter_data,"GetParameterData","PTM_RestoreUIProperty_FW",},
 {sig_match_near_str,"PrepareDirectory_1",       "<OpenFileWithDir> PrepareDirectory NG\r\n",SIG_NEAR_BEFORE(7,2)},
@@ -2461,7 +2470,6 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
 {sig_match_var_struct_get,"playrec_mode",       "get_playrec_mode",},
 {sig_match_jpeg_count_str,"jpeg_count_str",     "9999",},
-//{sig_match_physw_event_table,"physw_event_table","GetSDProtect_FW",},
 {sig_match_physw_event_table,"physw_event_table","kbd_read_keys_r2",},
 {NULL},
 };
@@ -2887,30 +2895,6 @@ uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev,
     physw_table_entry_t v;
     get_physw_table_entry(fw,adr,&v);
 
-    /*
-    int tidx = adr2idx(fw,tadr);
-    int r, k, kval = 0;
-    uint32_t b = 0;
-    int inv = 0;
-    for (k=0; k<tlen; k+=tsiz)
-    {
-        if (fw->buf[tidx+k+1] == ev)
-        {
-            kval = fw->buf[tidx+k];
-            tadr = idx2adr(fw,tidx+k);
-            break;
-        }
-    }
-    if (kval > 0)
-    {
-        r = (kval >> 5) & 7;
-        b = (1 << (kval & 0x1F));
-        inv = ((kval&0xff0000)==0x10000)?0:1;
-
-        add_kinfo(r,b|xtra,name,tadr,ev,inv);
-    }
-    return b;
-    */
     add_kinfo(v.reg,v.bit|xtra,name,adr,v.ev,(v.no_invert)?0:1);
     return v.bit;
 }
@@ -2995,98 +2979,63 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
     add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
     add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0); // unverified
 
-    /*
-// sx280hs doesn't match non-d6 dry 52
-// below probably wrong for other cams
-// zoom in / zoom out are multi-level, don't have event number in table
-    add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
-    add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
-    add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
-    add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
-    add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
-    add_kmval(fw,tadr,tsiz,tlen,0xa,"KEY_SET",0);
-    add_kmval(fw,tadr,tsiz,tlen,0xb,"KEY_MENU",0);
-    add_kmval(fw,tadr,tsiz,tlen,0xc,"KEY_DISPLAY",0);
-    */
-        if (fw->dryos_ver == 52)  // unclear if this applies any other ver
-        {
-            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
-            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
-            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
-            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
-            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
-            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xB,"KEY_MENU",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xC,"KEY_DISPLAY",0);
-            add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_HELP",0);
-            add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_ERASE",0);
-            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
-        }
-        else if (fw->dryos_ver < 54)
-        {
-            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
-            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
-            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);
-            add_kmval(fw,tadr,tsiz,tlen,5,"KEY_DOWN",0);
-            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_LEFT",0);
-            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_RIGHT",0);
-            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
-            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
-        }
-        else if (fw->dryos_ver < 55)
-        {
-            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
-            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
-            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
-            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
-            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
-            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xE,"KEY_MENU",0);
-            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
-            //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
-        }
-        else
-        {
-            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
-            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
-            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
-            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
-            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
-            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
-            add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_MENU",0);
-            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
-            add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
-            //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
-        }
-        // Dry R52 lowest known D6
-        /*
-        if (fw->dryos_ver <= 47)
-        {
-            add_kmval(fw,tadr,tsiz,tlen,0x601,"KEY_PLAYBACK",0);
-            add_kmval(fw,tadr,tsiz,tlen,0x600,"KEY_POWER",0);
-            add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_VIDEO",0);
-        }
-        else
-        {
-            // above
-            add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
-            add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
-            if (fw->dryos_ver == 49)
-            {
-                add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_VIDEO",0);
-            }
-            else if(fw->dryos_ver == 50)
-            {
-                add_kmval(fw,tadr,tsiz,tlen,0x1A,"KEY_VIDEO",0);
-                add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_HELP",0);
-            }
-            */
-        //}
+    // TODO mostly copied from finsig_dryos, with < r52 stuff removed
+    // unverified for others
+    if (fw->dryos_ver == 52)  // unclear if this applies any other ver
+    {
+        add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+        add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+        add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+        add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+        add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+        add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xB,"KEY_MENU",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xC,"KEY_DISPLAY",0);
+        add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_HELP",0);
+        add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_ERASE",0);
+        add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+    }
+    else if (fw->dryos_ver < 54)
+    {
+        add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
+        add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
+        add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);
+        add_kmval(fw,tadr,tsiz,tlen,5,"KEY_DOWN",0);
+        add_kmval(fw,tadr,tsiz,tlen,6,"KEY_LEFT",0);
+        add_kmval(fw,tadr,tsiz,tlen,7,"KEY_RIGHT",0);
+        add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
+        add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
+    }
+    else if (fw->dryos_ver < 55)
+    {
+        add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+        add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+        add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+        add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+        add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+        add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xE,"KEY_MENU",0);
+        add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
+        //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+    }
+    else
+    {
+        add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+        add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+        add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+        add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+        add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+        add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+        add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_MENU",0);
+        add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
+        //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+    }
 
     bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
     bprintf("// WARNING: These values are only verified for sx280hs, likely wrong on non DryOS r52 cams!\n");
