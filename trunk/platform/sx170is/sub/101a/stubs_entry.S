@@ -73,17 +73,20 @@ DEF(jpeg_count_str                          ,0x000cb220) // Found @0xffa04ddc
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 1, KEY_DISPLAY         ,0x00000001 }, // Found @0xffbacb5c, levent 0x0a
+//    { 0, KEY_DISPLAY         ,0x80000000 }, // Found @0xffbacb54, levent 0x0c
+//    { 1, KEY_SET             ,0x00000001 }, // Found @0xffbacb5c, levent 0x0a
+//    { 1, KEY_MENU            ,0x00800000 }, // Found @0xffbacb74, levent 0x0b
+//    { 1, KEY_ERASE           ,0x08000000 }, // Found @0xffbacb7c, levent 0x19
 //    { 1, KEY_SHOOT_FULL      ,0x30000000 }, // Found @0xffbacb8c, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x20000000 }, // Found @0xffbacb8c, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x10000000 }, // Found @0xffbacb84, levent 0x00
-//    { 1, KEY_LEFT            ,0x40000000 }, // Found @0xffbacb94, levent 0x06
-//    { 1, KEY_RIGHT           ,0x80000000 }, // Found @0xffbacb9c, levent 0x07
-//    { 2, KEY_ZOOM_IN         ,0x00000001 }, // Found @0xffbacba4, levent 0x02
+//    { 1, KEY_UP              ,0x40000000 }, // Found @0xffbacb94, levent 0x06
+//    { 1, KEY_DOWN            ,0x80000000 }, // Found @0xffbacb9c, levent 0x07
+//    { 2, KEY_VIDEO           ,0x00000001 }, // Found @0xffbacba4, levent 0x02
 //    { 2, KEY_PLAYBACK        ,0x00000008 }, // Found @0xffbacbac, levent 0x101
 //    { 2, KEY_POWER           ,0x00000020 }, // Found @0xffbacbb4, levent 0x100
-//    { 2, KEY_MENU            ,0x00001000 }, // Found @0xffbacbdc, levent 0x09
-//    { 2, KEY_SET             ,0x00002000 }, // Found @0xffbacbe4, levent 0x08
+//    { 2, KEY_RIGHT           ,0x00001000 }, // Found @0xffbacbdc, levent 0x09
+//    { 2, KEY_LEFT            ,0x00002000 }, // Found @0xffbacbe4, levent 0x08
 //    { 0, 0, 0 }
 //};
 
