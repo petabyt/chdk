@@ -73,8 +73,8 @@ DEF(jpeg_count_str                          ,0x00220be0) // Found @0xff2c14cc
 //    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xff5bd690, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xff5bd690, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xff5bd688, levent 0x00
-//    { 2, KEY_UP              ,0x00000100 }, // Found @0xff5bd698, levent 0x04
-//    { 2, KEY_ZOOM_OUT        ,0x00000200 }, // Found @0xff5bd6a0, levent 0x03
+//    { 2, KEY_ZOOM_OUT        ,0x00000100 }, // Found @0xff5bd698, levent 0x04
+//    { 2, KEY_ZOOM_IN         ,0x00000200 }, // Found @0xff5bd6a0, levent 0x03
 //    { 2, KEY_PLAYBACK        ,0x00010000 }, // Found @0xff5bd6b0, levent 0x101
 //    { 0, 0, 0 }
 //};

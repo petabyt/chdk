@@ -81,14 +81,15 @@ DEF(jpeg_count_str                          ,0x00164144) // Found @0xff269ea4
 //    { 2, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xff4fba78, levent 0x01
 //    { 2, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xff4fba78, levent 0x01
 //    { 2, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xff4fba70, levent 0x00
-//    { 2, KEY_ZOOM_OUT        ,0x00000010 }, // Found @0xff4fba80, levent 0x03
-//    { 2, KEY_UP              ,0x00000040 }, // Found @0xff4fba88, levent 0x04
-//    { 2, KEY_LEFT            ,0x00000080 }, // Found @0xff4fba90, levent 0x06
-//    { 2, KEY_RIGHT           ,0x00000100 }, // Found @0xff4fba98, levent 0x07
-//    { 2, KEY_MENU            ,0x00000200 }, // Found @0xff4fbaa0, levent 0x09
-//    { 2, KEY_SET             ,0x00000400 }, // Found @0xff4fbaa8, levent 0x08
-//    { 2, KEY_DISPLAY         ,0x00001000 }, // Found @0xff4fbab0, levent 0x0a
-//    { 2, KEY_ZOOM_IN         ,0x00004000 }, // Found @0xff4fbac0, levent 0x02
+//    { 2, KEY_ZOOM_IN         ,0x00000010 }, // Found @0xff4fba80, levent 0x03
+//    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // Found @0xff4fba88, levent 0x04
+//    { 2, KEY_UP              ,0x00000080 }, // Found @0xff4fba90, levent 0x06
+//    { 2, KEY_DOWN            ,0x00000100 }, // Found @0xff4fba98, levent 0x07
+//    { 2, KEY_RIGHT           ,0x00000200 }, // Found @0xff4fbaa0, levent 0x09
+//    { 2, KEY_LEFT            ,0x00000400 }, // Found @0xff4fbaa8, levent 0x08
+//    { 2, KEY_SET             ,0x00001000 }, // Found @0xff4fbab0, levent 0x0a
+//    { 2, KEY_MENU            ,0x00002000 }, // Found @0xff4fbab8, levent 0x0b
+//    { 2, KEY_VIDEO           ,0x00004000 }, // Found @0xff4fbac0, levent 0x02
 //    { 0, 0, 0 }
 //};
 

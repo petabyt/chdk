@@ -77,17 +77,19 @@ DEF(jpeg_count_str                          ,0x000c86fc) // Found @0xff9d40b4
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
-//    { 0, KEY_UP              ,0x00001000 }, // Found @0xffb471e4, levent 0x04
-//    { 0, KEY_ZOOM_OUT        ,0x00002000 }, // Found @0xffb471ec, levent 0x03
+//    { 0, KEY_ZOOM_OUT        ,0x00001000 }, // Found @0xffb471e4, levent 0x04
+//    { 0, KEY_ZOOM_IN         ,0x00002000 }, // Found @0xffb471ec, levent 0x03
 //    { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xffb471fc, levent 0x01
 //    { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xffb471fc, levent 0x01
 //    { 1, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xffb471f4, levent 0x00
-//    { 1, KEY_LEFT            ,0x00400000 }, // Found @0xffb47204, levent 0x06
-//    { 1, KEY_RIGHT           ,0x00800000 }, // Found @0xffb4720c, levent 0x07
-//    { 1, KEY_MENU            ,0x01000000 }, // Found @0xffb47214, levent 0x09
-//    { 1, KEY_SET             ,0x02000000 }, // Found @0xffb4721c, levent 0x08
-//    { 1, KEY_DISPLAY         ,0x08000000 }, // Found @0xffb4722c, levent 0x0a
-//    { 1, KEY_ZOOM_IN         ,0x10000000 }, // Found @0xffb47234, levent 0x02
+//    { 1, KEY_UP              ,0x00400000 }, // Found @0xffb47204, levent 0x06
+//    { 1, KEY_DOWN            ,0x00800000 }, // Found @0xffb4720c, levent 0x07
+//    { 1, KEY_RIGHT           ,0x01000000 }, // Found @0xffb47214, levent 0x09
+//    { 1, KEY_LEFT            ,0x02000000 }, // Found @0xffb4721c, levent 0x08
+//    { 1, KEY_MENU            ,0x04000000 }, // Found @0xffb47224, levent 0x0b
+//    { 1, KEY_SET             ,0x08000000 }, // Found @0xffb4722c, levent 0x0a
+//    { 1, KEY_VIDEO           ,0x10000000 }, // Found @0xffb47234, levent 0x02
+//    { 1, KEY_HELP            ,0x20000000 }, // Found @0xffb4723c, levent 0x12
 //    { 1, KEY_POWER           ,0x40000000 }, // Found @0xffb47244, levent 0x100
 //    { 1, KEY_PLAYBACK        ,0x80000000 }, // Found @0xffb4724c, levent 0x101
 //    { 0, 0, 0 }
