@@ -411,6 +411,7 @@ misc_val_t misc_vals[]={
     { "playrec_mode",       },
     { "jpeg_count_str",     },
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
+    { "physw_event_table",  MISC_VAL_NO_STUB},
     {0,0,0},
 };
 
@@ -425,10 +426,22 @@ misc_val_t *get_misc_val(const char *name)
     }
     return NULL;
 }
+
+// get value of misc val, if set. Name :<
+uint32_t get_misc_val_value(const char *name)
+{
+    misc_val_t *p=get_misc_val(name);
+    if(!p) {
+        printf("get_misc_val_value: invalid name %s\n",name);
+        return 0;
+    }
+    return p->val;
+}
 void save_misc_val(const char *name, uint32_t base, uint32_t offset, uint32_t ref_adr)
 {
     misc_val_t *p=get_misc_val(name);
     if(!p) {
+        printf("save_misc_val: invalid name %s\n",name);
         return;
     }
     p->val = base + offset;
@@ -2032,6 +2045,73 @@ int sig_match_cam_uncached_bit(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // first instruction should be push
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_event_table: disasm failed\n");
+        return 0;
+    }
+    // next should be LDR PC
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_event_table: disasm failed\n");
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match_physw_event_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
+    return 1;
+}
+
+// below based on GetSDProtect, but address is wrong (loads diff address, adjust in index add)
+#if 0
+int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // first instruction should load address
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_event_table: disasm failed\n");
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    // expect first load to be physw_status
+    if(!adr || adr != get_misc_val_value("physw_status")) {
+        printf("sig_match_physw_event_table: no match physw_status LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_event_table: disasm failed\n");
+        return 0;
+    }
+    adr=get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        printf("sig_match_physw_event_table: no match bl\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,adr);
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_physw_event_table: disasm failed\n");
+        return 0;
+    }
+    adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match_physw_event_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
+    return 1;
+}
+#endif
 
 // get the address used by a function that does something like
 // ldr rx =base
@@ -2375,6 +2455,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
 {sig_match_var_struct_get,"playrec_mode",       "get_playrec_mode",},
 {sig_match_jpeg_count_str,"jpeg_count_str",     "9999",},
+//{sig_match_physw_event_table,"physw_event_table","GetSDProtect_FW",},
+{sig_match_physw_event_table,"physw_event_table","kbd_read_keys_r2",},
 {NULL},
 };
 
@@ -2663,6 +2745,7 @@ void print_platform_misc_val_undef(const char *name, uint32_t def)
         bprintf("//#define %s  0x%08x // Found @0x%08x\n",name,mv->val,mv->ref_adr);
     }
 }
+
 void output_platform_vals(firmware *fw) {
     bprintf("// Values below go in 'platform_camera.h':\n");
     bprintf("//#define CAM_DRYOS         1\n");
@@ -2672,6 +2755,352 @@ void output_platform_vals(firmware *fw) {
         bprintf("//#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher\n");
 
     print_platform_misc_val_undef("CAM_UNCACHED_BIT",0x10000000);
+
+    add_blankline();
+}
+
+void print_misc_val_comment(const char *name)
+{
+    misc_val_t *mv=get_misc_val(name);
+    if(!mv) {
+        return;
+    }
+    // TODO legitimate 0 values might be possible, if so can add found bit
+    if(!mv->val) {
+        bprintf("// %s not found\n",name);
+        return;
+    }
+    bprintf("// %s 0x%08x",name,mv->val);
+    if(mv->offset) {
+        bprintf(" (0x%x+0x%x)",mv->base,mv->offset);
+    }
+    if(mv->ref_adr) {
+        bprintf(" Found @0x%08x",mv->ref_adr);
+    }
+    bprintf("\n");
+}
+
+typedef struct {
+    int reg;
+    uint32_t bit;
+    uint32_t ev;
+    uint32_t raw_info;
+    int no_invert;
+} physw_table_entry_t;
+
+void get_physw_table_entry(firmware *fw, uint32_t adr, physw_table_entry_t *vals)
+{
+    uint32_t info=fw_u32(fw,adr);
+    vals->raw_info=info;
+    vals->ev=fw_u32(fw,adr+4);
+    // taken from finsig_dryos print_physw_raw_vals
+    vals->reg=(info >>5) & 7;
+    vals->bit=(1 << (info & 0x1f));
+    // vals->no_invert=(info >> 16) & 1;
+    vals->no_invert=((info&0xff0000)==0x10000)?1:0;
+}
+uint32_t find_physw_table_entry(firmware *fw, uint32_t tadr, int tcount, uint32_t ev)
+{
+    int i;
+    for(i=0; i<tcount; i++,tadr += 8) {
+        if(fw_u32(fw,tadr+4) == ev) {
+            return tadr;
+        }
+    }
+    return 0;
+}
+void write_physw_event_table_dump(firmware *fw, uint32_t tadr, int tcount)
+{
+    FILE *f=fopen("physw_bits.txt","w");
+    if(!f) {
+        return;
+    }
+    fprintf(f,"physw_event_table dump (%d entries printed, may not all be valid)\n",tcount);
+    fprintf(f,"address    info       event      index bit        non-inverted\n");
+    int i;
+    physw_table_entry_t v;
+
+    for(i=0; i<tcount; i++,tadr += 8) {
+        get_physw_table_entry(fw,tadr,&v);
+        fprintf(f,"0x%08x 0x%08x 0x%08x %-5d 0x%08x %d\n",tadr,v.raw_info,v.ev,v.reg,v.bit,v.no_invert);
+    }
+    fclose(f);
+}
+void print_kval(firmware *fw, uint32_t tadr, int tcount, uint32_t ev, const char *name, const char *sfx)
+{
+    uint32_t adr=find_physw_table_entry(fw,tadr,tcount,ev);
+    if(!adr) {
+        return;
+    }
+    physw_table_entry_t v;
+    get_physw_table_entry(fw,adr,&v);
+    
+    char fn[100], rn[100];
+    strcpy(fn,name); strcat(fn,sfx);
+    strcpy(rn,name); strcat(rn,"_IDX");
+
+    bprintf("//#define %-20s0x%08x // Found @0x%08x, levent 0x%x%s\n",fn,v.bit,adr,v.ev,v.no_invert?" (non-inverted logic)":"");
+    bprintf("//#define %-20s%d\n",rn,v.reg);
+
+}
+
+// key stuff copied from finsig_dryos.c
+typedef struct {
+    int         reg;
+    uint32_t    bits;
+    char        nm[32];
+    uint32_t    fadr;
+    uint32_t    ev;
+    int         inv;
+} kinfo;
+
+int     kmask[3];
+kinfo   key_info[100];
+int     kcount = 0;
+uint32_t kshutter_min_bits = 0xFFFFFFFF;
+
+void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev, int inv)
+{
+    key_info[kcount].reg = r;
+    key_info[kcount].bits = b;
+    strcpy(key_info[kcount].nm, nm);
+    key_info[kcount].fadr = adr;
+    key_info[kcount].ev = ev;
+    key_info[kcount].inv = inv;
+    kcount++;
+    kmask[r] |= b;
+    if ((ev <= 1) && (b < kshutter_min_bits)) kshutter_min_bits = b;
+}
+
+uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name, uint32_t xtra)
+{
+    uint32_t adr=find_physw_table_entry(fw,tadr,tlen,ev);
+    if(!adr) {
+        return 0;
+    }
+    physw_table_entry_t v;
+    get_physw_table_entry(fw,adr,&v);
+
+    /*
+    int tidx = adr2idx(fw,tadr);
+    int r, k, kval = 0;
+    uint32_t b = 0;
+    int inv = 0;
+    for (k=0; k<tlen; k+=tsiz)
+    {
+        if (fw->buf[tidx+k+1] == ev)
+        {
+            kval = fw->buf[tidx+k];
+            tadr = idx2adr(fw,tidx+k);
+            break;
+        }
+    }
+    if (kval > 0)
+    {
+        r = (kval >> 5) & 7;
+        b = (1 << (kval & 0x1F));
+        inv = ((kval&0xff0000)==0x10000)?0:1;
+
+        add_kinfo(r,b|xtra,name,tadr,ev,inv);
+    }
+    return b;
+    */
+    add_kinfo(v.reg,v.bit|xtra,name,adr,v.ev,(v.no_invert)?0:1);
+    return v.bit;
+}
+
+int kinfo_compare(const kinfo *p1, const kinfo *p2)
+{
+    if (p1->reg > p2->reg)
+    {
+        return 1;
+    }
+    else if (p1->reg < p2->reg)
+    {
+        return -1;
+    }
+    if ((p1->ev <= 1) && (p2->ev <= 1))    // output shutter entries in reverse order
+    {
+        if (p1->bits > p2->bits)
+        {
+            return -1;
+        }
+        else if (p1->bits < p2->bits)
+        {
+            return 1;
+        }
+    }
+    // if one entry is shutter then compare to min shutter bits
+    if (p1->ev <= 1)
+    {
+        if (kshutter_min_bits > p2->bits)
+        {
+            return 1;
+        }
+        else if (kshutter_min_bits < p2->bits)
+        {
+            return -1;
+        }
+    }
+    if (p2->ev <= 1)
+    {
+        if (p1->bits > kshutter_min_bits)
+        {
+            return 1;
+        }
+        else if (p1->bits < kshutter_min_bits)
+        {
+            return -1;
+        }
+    }
+    if (p1->bits > p2->bits)
+    {
+        return 1;
+    }
+    else if (p1->bits < p2->bits)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+void print_kmvals()
+{
+    qsort(key_info, kcount, sizeof(kinfo), (void*)kinfo_compare);
+
+    bprintf("//static KeyMap keymap[] = {\n");
+
+    int k;
+    for (k=0; k<kcount; k++)
+    {
+        bprintf("//    { %d, %-20s,0x%08x }, // Found @0x%08x, levent 0x%02x%s\n",key_info[k].reg,key_info[k].nm,key_info[k].bits,key_info[k].fadr,key_info[k].ev,(key_info[k].inv==0)?"":" (uses inverted logic in physw_status)");
+    }
+
+    bprintf("//    { 0, 0, 0 }\n//};\n");
+}
+
+void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
+{
+    uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
+    add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
+    add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
+    
+    add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
+    add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0); // unverified
+
+    /*
+// sx280hs doesn't match non-d6 dry 52
+// below probably wrong for other cams
+// zoom in / zoom out are multi-level, don't have event number in table
+    add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+    add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+    add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+    add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+    add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+    add_kmval(fw,tadr,tsiz,tlen,0xa,"KEY_SET",0);
+    add_kmval(fw,tadr,tsiz,tlen,0xb,"KEY_MENU",0);
+    add_kmval(fw,tadr,tsiz,tlen,0xc,"KEY_DISPLAY",0);
+    */
+        if (fw->dryos_ver == 52)  // unclear if this applies any other ver
+        {
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xB,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xC,"KEY_DISPLAY",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_HELP",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_ERASE",0);
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+        }
+        else if (fw->dryos_ver < 54)
+        {
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,5,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_DISPLAY",0);
+        }
+        else if (fw->dryos_ver < 55)
+        {
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xE,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
+            //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+        }
+        else
+        {
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
+            //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+        }
+        // Dry R52 lowest known D6
+        /*
+        if (fw->dryos_ver <= 47)
+        {
+            add_kmval(fw,tadr,tsiz,tlen,0x601,"KEY_PLAYBACK",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x600,"KEY_POWER",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_VIDEO",0);
+        }
+        else
+        {
+            // above
+            add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
+            if (fw->dryos_ver == 49)
+            {
+                add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_VIDEO",0);
+            }
+            else if(fw->dryos_ver == 50)
+            {
+                add_kmval(fw,tadr,tsiz,tlen,0x1A,"KEY_VIDEO",0);
+                add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_HELP",0);
+            }
+            */
+        //}
+
+    bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
+    bprintf("// WARNING: These values are only verified for sx280hs, likely wrong on non DryOS r52 cams!\n");
+    print_kmvals();
+}
+void output_physw_vals(firmware *fw) {
+    print_misc_val_comment("physw_event_table");
+    uint32_t physw_tbl=get_misc_val_value("physw_event_table");
+    if(!physw_tbl) {
+        return;
+    }
+    int physw_tbl_len=50; // not detected yet
+    write_physw_event_table_dump(fw,physw_tbl,physw_tbl_len);
+
+    bprintf("// Values below go in 'platform_kbd.h':\n");
+    print_kval(fw,physw_tbl,physw_tbl_len,0x20A,"SD_READONLY","_FLAG");
+    print_kval(fw,physw_tbl,physw_tbl_len,0x202,"USB","_MASK");
+    print_kval(fw,physw_tbl,physw_tbl_len,0x205,"BATTCOVER","_FLAG");
+    print_kval(fw,physw_tbl,physw_tbl_len,0x204,"HOTSHOE","_FLAG");
+    do_km_vals(fw,physw_tbl,2,physw_tbl_len);
 
     add_blankline();
 }
@@ -2926,6 +3355,7 @@ int main(int argc, char **argv)
     run_sig_rules(&fw,sig_rules_main);
 
     output_platform_vals(&fw);
+    output_physw_vals(&fw);
 
     write_stubs(&fw,max_find_sig);
 
