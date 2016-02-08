@@ -2382,6 +2382,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "SetAE_ShutterSpeed",       "SetAE_ShutterSpeed_FW",},
 {sig_match_named,   "SetAutoShutdownTime",      "SetAutoShutdownTime_FW",},
 {sig_match_named,   "SetCurrentCaptureModeType","SetCurrentCaptureModeType_FW",},
+{sig_match_named,   "SetLogicalEventActive",    "UiEvnt_SetLogicalEventActive_FW",},
 {sig_match_named,   "SetScriptMode",            "SetScriptMode_FW",},
 {sig_match_named,   "SleepTask",                "SleepTask_FW",},
 {sig_match_named,   "SetPropertyCase",          "SetPropertyCase_FW",   SIG_NAMED_SUB},
