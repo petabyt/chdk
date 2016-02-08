@@ -5730,7 +5730,22 @@ void find_key_vals(firmware *fw)
         add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
         add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
         
-        if (fw->dryos_ver < 54)
+        if (fw->dryos_ver == 52)  // unclear if this applies any other ver
+        {
+            add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+            add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+            add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+            add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+            add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+            add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xB,"KEY_MENU",0);
+            add_kmval(fw,tadr,tsiz,tlen,0xC,"KEY_DISPLAY",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_HELP",0);
+            add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_ERASE",0);
+            add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+        }
+        else if (fw->dryos_ver < 54)
         {
             add_kmval(fw,tadr,tsiz,tlen,2,"KEY_ZOOM_IN",0);
             add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_OUT",0);
