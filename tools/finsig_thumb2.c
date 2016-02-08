@@ -1068,16 +1068,22 @@ int sig_match_get_kbd_state(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    // look for GetKbdState
-    if(!insn_match_find_next(fw,is,11,match_bl_blximm)) {
+    // instructions that zero out physw_status
+    insn_match_t match[]={
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+
+    if(!insn_match_find_next_seq(fw,is,11,match)) {
         return 0;
     }
-    save_sig("GetKbdState",get_branch_call_insn_target(fw,is));
+    save_sig_with_j(fw,"GetKbdState",get_branch_call_insn_target(fw,is));
     // look for kbd_read_keys_r2
     if(!insn_match_find_next(fw,is,5,match_b_bl_blximm)) {
         return 0;
     }
-    save_sig("kbd_read_keys_r2",get_branch_call_insn_target(fw,is));
+    save_sig_with_j(fw,"kbd_read_keys_r2",get_branch_call_insn_target(fw,is));
     return 1;
 }
 
