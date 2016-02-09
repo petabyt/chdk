@@ -1949,6 +1949,47 @@ int sig_match_deletedirectory_fut(firmware *fw, iter_state_t *is, sig_rule_t *ru
     return 0;
 }
 
+/*
+match
+   ref "LogicalEvent:0x%04x:adr:%p,Para:%ld" (or "LogicalEvent:0x%08x:adr:%p,Para:%ld")
+   bl      LogCameraEvent
+   mov     r0, rN
+   bl      <some func>
+   bl      set_control_event (or veneer)
+same string is used elsewhere, so match specific sequence
+*/
+int sig_match_set_control_event(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        // not logged, two different ref strings so failing one is normal
+        // printf("sig_match_set_control_event: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+            // printf("sig_match_set_control_event: no match bl at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        if(!is_sig_call(fw,is,"LogCameraEvent")) {
+            // printf("sig_match_set_control_event: not LogCameraEvent at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        const insn_match_t match_seq[]={
+            {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_REG_ANY,}},
+            {MATCH_INS(BL, MATCH_OPCOUNT_IGNORE)},
+            {MATCH_INS(BL, MATCH_OPCOUNT_IGNORE)},
+            {ARM_INS_ENDING}
+        };
+        if(!insn_match_find_next_seq(fw,is,1,match_seq)) {
+            // printf("sig_match_set_control_event: no match seq\n");
+            continue;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -2466,6 +2507,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
 {sig_match_qsort,   "qsort",                    "task_MetaCtg",},
 {sig_match_deletedirectory_fut,"DeleteDirectory_Fut","RedEyeController.c",},
+{sig_match_set_control_event,"set_control_event","LogicalEvent:0x%04x:adr:%p,Para:%ld",},
+// newer cams use %08x
+{sig_match_set_control_event,"set_control_event","LogicalEvent:0x%08x:adr:%p,Para:%ld",},
 {sig_match_levent_table,"levent_table",         "ShowLogicalEventName_FW",},
 {sig_match_flash_param_table,"FlashParamsTable","GetParameterData",},
 {sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
