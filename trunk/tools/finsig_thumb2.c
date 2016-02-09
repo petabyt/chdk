@@ -388,6 +388,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 
 // for values that don't get a DEF etc
 #define MISC_VAL_NO_STUB    1
+// DEF_CONST instead of DEF
+#define MISC_VAL_DEF_CONST  2
 // variables and constants
 typedef struct {
     char        *name;
@@ -412,6 +414,7 @@ misc_val_t misc_vals[]={
     { "jpeg_count_str",     },
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
+    { "uiprop_count",       MISC_VAL_DEF_CONST},
     {0,0,0},
 };
 
@@ -2166,6 +2169,31 @@ int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
     save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
 }
+int sig_match_uiprop_count(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,38,"DebugAssert")) {
+        // printf("sig_match_uiprop_count: no DebugAssert 1\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,14,"DebugAssert")) {
+        // printf("sig_match_uiprop_count: no DebugAssert 2\n");
+        return 0;
+    }
+    const insn_match_t match_bic_cmp[]={
+        {MATCH_INS(BIC, 3), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY,   MATCH_OP_IMM(0x8000)}},
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG_ANY,  MATCH_OP_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,3,match_bic_cmp)) {
+        // printf("sig_match_uiprop_count: no bic,cmp\n");
+        return 0;
+    }
+    save_misc_val(rule->name,is->insn->detail->arm.operands[1].imm,0,(uint32_t)is->insn->address);
+    return 1;
+}
 
 // get the address used by a function that does something like
 // ldr rx =base
@@ -2516,6 +2544,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_var_struct_get,"playrec_mode",       "get_playrec_mode",},
 {sig_match_jpeg_count_str,"jpeg_count_str",     "9999",},
 {sig_match_physw_event_table,"physw_event_table","kbd_read_keys_r2",},
+{sig_match_uiprop_count,"uiprop_count",         "PTM_SetCurrentItem_FW",},
 {NULL},
 };
 
@@ -3180,8 +3209,11 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
     }
     // find best match and report results
     osig* ostub2=find_sig(fw->sv->stubs_min,sig->name);
-    // TODO should be DEF_CONST for some
+
     const char *macro = "DEF";
+    if(sig->flags & MISC_VAL_DEF_CONST) {
+        macro="DEF_CONST";
+    }
     // TODO should save a ref address to print with stubs
     if (ostub2)
     {
