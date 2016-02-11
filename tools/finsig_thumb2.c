@@ -208,6 +208,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "add_ptp_handler" },
     { "apex2us" },
     { "close" },
+    { "displaybusyonscreen", OPTIONAL },
     { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
     { "exmem_free", OPTIONAL|LIST_ALWAYS },
@@ -268,6 +269,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "time" },
     { "vsprintf" },
     { "write", UNUSED|OPTIONAL },
+    { "undisplaybusyonscreen", OPTIONAL },
 
     { "EngDrvIn", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "EngDrvOut", OPTIONAL|UNUSED|LIST_ALWAYS },
@@ -1993,6 +1995,69 @@ int sig_match_set_control_event(firmware *fw, iter_state_t *is, sig_rule_t *rule
     }
     return 0;
 }
+// find displaybusyonscreen for r52 cams, later uses different code
+int sig_match_displaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if (fw->dryos_ver != 52) {
+        return 0;
+    }
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_displaybusyonscreen: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+            // printf("sig_match_displaybusyonscreen: no match bl at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        if(!is_sig_call(fw,is,"LogCameraEvent")) {
+            // printf("sig_match_displaybusyonscreen: not LogCameraEvent at 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        if(!find_next_sig_call(fw,is,4,"GUISrv_StartGUISystem_FW")) {
+            // printf("sig_match_displaybusyonscreen: no match GUISrv_StartGUISystem_FW\n");
+            continue;
+        }
+        if(!insn_match_find_nth(fw,is,5,2,match_bl_blximm)) {
+            // printf("sig_match_displaybusyonscreen: no match bl 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
+// find undisplaybusyonscreen for r52 cams, later uses different code
+int sig_match_undisplaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if (fw->dryos_ver != 52) {
+        return 0;
+    }
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_undisplaybusyonscreen: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // assume same function display* was found in, skip to that
+        if(!find_next_sig_call(fw,is,24,"displaybusyonscreen")) {
+            // printf("sig_match_undisplaybusyonscreen: no match displaybusyonscreen\n");
+            continue;
+        }
+        if(!find_next_sig_call(fw,is,12,"GUISrv_StartGUISystem_FW")) {
+            // printf("sig_match_undisplaybusyonscreen: no match GUISrv_StartGUISystem_FW\n");
+            continue;
+        }
+        if(!insn_match_find_nth(fw,is,6,3,match_bl_blximm)) {
+            // printf("sig_match_undisplaybusyonscreen: no match bl 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -2538,6 +2603,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_set_control_event,"set_control_event","LogicalEvent:0x%04x:adr:%p,Para:%ld",},
 // newer cams use %08x
 {sig_match_set_control_event,"set_control_event","LogicalEvent:0x%08x:adr:%p,Para:%ld",},
+{sig_match_displaybusyonscreen_52,"displaybusyonscreen","_PBBusyScrn",},
+{sig_match_undisplaybusyonscreen_52,"undisplaybusyonscreen","_PBBusyScrn",},
 {sig_match_levent_table,"levent_table",         "ShowLogicalEventName_FW",},
 {sig_match_flash_param_table,"FlashParamsTable","GetParameterData",},
 {sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
