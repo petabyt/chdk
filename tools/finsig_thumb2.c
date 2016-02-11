@@ -936,6 +936,50 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
+int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // match specific instruction sequence instead of first call because g3x, g5x have different code
+    // not by dryos rev, sx710 has same code as earlier cams
+    const insn_match_t match_cmp_bne_bl[]={
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(0)}},
+        {MATCH_INS_CC(B,NE,MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,6,match_cmp_bne_bl)) {
+        // printf("sig_match_screenlock: match failed\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_screenunlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // look for ScreenLock call to verify right version of UIFS_DisplayFirmUpdateView
+    if(!find_next_sig_call(fw,is,14,"ScreenLock")) {
+        // printf("sig_match_screenunlock: no ScreenLock\n");
+        return 0;
+    }
+    
+    // expect tail call to ScreenUnlock
+    const insn_match_t match_end[]={
+        {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS_CC(B,AL,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,38,match_end)) {
+        // printf("sig_match_screenunlock: match failed\n");
+        return 0;
+    }
+    // TODO would be nice to have some validation
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
 
 // look for f(0x60,"_Simage") at start of task_StartupImage
 int sig_match_log_camera_event(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -2554,6 +2598,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
 {sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "DebugAssert2",             "malloc_strictly",      SIG_NAMED_NTH(3,SUB)},
+//{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
+{sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
+{sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_log_camera_event,"LogCameraEvent",   "task_StartupImage",},
 {sig_match_physw_misc, "physw_misc",            "task_PhySw"},
 {sig_match_kbd_read_keys, "kbd_read_keys",      "kbd_p1_f"},
