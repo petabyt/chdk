@@ -3147,7 +3147,7 @@ void print_kmvals()
 {
     qsort(key_info, kcount, sizeof(kinfo), (void*)kinfo_compare);
 
-    bprintf("//static KeyMap keymap[] = {\n");
+    bprintf("//KeyMap keymap[] = {\n");
 
     int k;
     for (k=0; k<kcount; k++)
