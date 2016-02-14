@@ -36,14 +36,6 @@ n_args
 .text
 .global call_func_ptr
 call_func_ptr:
-
-#ifdef THUMB_FW
-.syntax unified
-.code 16
-.align 2
-    BX      PC                  // switch to ARM mode
-.code 32
-#endif
     PUSH    {R4-R5,LR}
     MOV     R12, R0             // function to call
     MOV     R4, SP              // save SP
