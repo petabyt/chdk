@@ -1,0 +1,29 @@
+************************************
+G7x notes
+************************************
+This is an INCOMPLETE, NON-WORKING PORT.
+It may be of interest to developers, but it is not yet useful for photography!
+No shooting related features are implemented or tested.
+
+CHDK is a hack, use at your own risk!
+
+This camera has an adjustable aperture and ND filter.
+
+TESTED
+******
+
+NOT IMPLEMENTED
+***************
+capt_seq, movie_rec, exp_drv
+
+OTHER ISSUES
+************
+
+KNOWN BUGS
+**********
+
+
+THANKS
+******
+* srsa_4c for the sx280hs port, and doing all the hard work to support digic 6.
+* The anonymous donor who provided the camera.
