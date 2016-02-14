@@ -11,10 +11,13 @@ This camera has an adjustable aperture and ND filter.
 
 TESTED
 ******
+llibtst.lua
+chdkptp cam tests
+PTP play/rec switch
 
 NOT IMPLEMENTED
 ***************
-capt_seq, movie_rec, exp_drv
+capt_seq, movie_rec, exp_drv, mode map
 
 OTHER ISSUES
 ************
