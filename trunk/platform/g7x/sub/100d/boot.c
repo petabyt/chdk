@@ -1,9 +1,6 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-#include "dryos31.h"
-
-#define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 
 const char * const new_sa = &_end;
 
@@ -33,91 +30,11 @@ void CreateTask_spytask()
     _CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
 }
 
-#if 0
-void blinker(void) {
-    while(1) {
-        int i;
-        *(volatile int*)0xd20b0994 = 0x4d0002;
-        for(i=0;i<1000000;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-        *(volatile int*)0xd20b0994 = 0x4c0003;
-        for(i=0;i<1000000;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-    }
-}
-#endif
-
-unsigned rbval=0;
-void task_blinker()
-{
-#if 0
-    unsigned v=*(volatile unsigned *)(0x9808);
-    unsigned pat=0;
-    if(v & 0x80000){
-        pat |=1;
-    }
-    if(v & 0x100000){
-        pat |=2;
-    }
-    if(v & 0x200000){
-        pat |=4;
-    }
-    if(v & 0x400000){
-        pat |=8;
-    }
-    if(v & 0x800000){
-        pat |=0x10;
-    }
-    while(1) {
-        int i;
-        for(i=0;i<5;i++) {
-            *(volatile int*)0xd20b0994 = 0x4d0002;
-            if((pat >> i) & 1) {
-                msleep(1000);
-            } else {
-                msleep(250);
-            }
-            *(volatile int*)0xd20b0994 = 0x4c0003;
-            msleep(500);
-        }
-        msleep(5000);
-    }
-#endif
-#if 0
-    int delay=1000;
-    if(rbval == 0x12345678) {
-        delay=100;
-    }
-    while(1) {
-        *(volatile int*)0xd20b0994 = 0x4d0002;
-        msleep(delay);
-        *(volatile int*)0xd20b0994 = 0x4c0003;
-        msleep(delay);
-    }
-#endif
-    while(1) {
-        *(volatile int*)0xd20b0994 = 0x4d0002;
-        msleep(250);
-        *(volatile int*)0xd20b0994 = 0x4c0003;
-        msleep(250);
-    }
-}
-
-void CreateTask_blinker()
-{
-    _CreateTask("blinker", 0x19, 0x200, task_blinker, 0);
-}
-
 
 ///*----------------------------------------------------------------------
 // Pointer to stack location where jogdial task records previous and current
 // jogdial positions
+// TODO
 // short *jog_position;
 
 /*----------------------------------------------------------------------
@@ -238,21 +155,7 @@ asm volatile (
 }
 
 void __attribute__((naked,noinline)) sub_fc064300_my() {
-// not needed with 0x12345678 set, native fw handles long press
-// sx280 c&p fc04f194
-    /*
-    if (*(int*)(0xd20b0000 + 0x10 * 4) & 0x10000) {
-        // see sub_fc060338, sub_fc06082a
-        // GPIO 0x10 (aka ON/OFF button) is not pressed -> play
-        *(int*)(0x92a0+0x4) = 0x200000;
-    }
-    else {
-        // GPIO 0x10 is pressed -> rec
-        *(int*)(0x92a0+0x4) = 0x100000;
-    }
-    */
-// g7x
-    rbval=*(volatile unsigned *)(0x4ffc);
+// no GPIO checks needed with 0x12345678 set, native fw handles long press
     asm volatile (
 "    push    {r4, lr}\n"
 #if defined(CHDK_NOT_IN_CANON_HEAP)
@@ -410,8 +313,7 @@ void __attribute__((naked,noinline)) sub_fc064896_my() {
 "loc_fc0648ac:\n"
 "    movs    r0, #0\n"
 "loc_fc0648ae:\n"
-"    bl      sub_fc0781f4\n" // no override needed with 0x12345678 set
-//"    bl      sub_fc0781f4_my\n" // -> power-on mode handling & startupchecks here
+"    bl      sub_fc0781f4\n" // power-on mode handling & startupchecks here, no override needed with 0x12345678 set
 "    cbnz    r0, loc_fc0648ba\n"
 "    bl      sub_fc06499e\n"
 "loc_fc0648b8:\n"
@@ -437,59 +339,6 @@ void __attribute__((naked,noinline)) sub_fc064896_my() {
     );
 }
 
-#if 0
-void __attribute__((naked,noinline)) sub_fc0781f4_my() {
-    asm volatile (
-"    push.w  {r2, r3, r4, r5, r6, r7, r8, sb, sl, lr}\n"
-"    movs    r4, #0\n"
-"    mov     sl, r0\n"
-"    mov     r5, r4\n"
-"    mov     r7, r4\n"
-//"    bl      sub_fc075b52\n" nullsub
-"    movs    r0, #0x97\n"
-"    bl      sub_fc075142\n" // MMIO d20b0000 + r0*4...
-"    movs    r6, #1\n"
-"    bic.w   sb, r6, r0\n"
-"    movs    r0, #0x8a\n"
-"    bl      sub_fc075142\n" // MMIO
-"    bic.w   r8, r6, r0\n"
-"    movs    r0, #0\n"
-"    bl      sub_fc075b4e\n" // return 1
-"    cbz     r0, loc_fc07822c\n"
-"    movs    r0, #0x98\n"
-"    bl      sub_fc075142\n" // MMIO
-"    bic.w   r5, r6, r0\n"
-"loc_fc07822c:\n"
-"    movs    r0, #1\n"
-"    bl      sub_fc075b4e\n" // return 1
-"    cbz     r0, loc_fc07823e\n"
-"    movs    r0, #2\n"
-"    bl      sub_fc075142\n" // MMIO
-"    bic.w   r4, r6, r0\n"
-"loc_fc07823e:\n"
-"    cmp.w   sl, #0\n"
-"    beq     loc_fc07824e\n"
-"    orr.w   r0, sb, r8\n"
-"    orrs    r0, r5\n"
-"    orrs    r0, r4\n"
-"    beq     loc_fc078268\n" // note to disable based on sx280
-"loc_fc07824e:\n"
-"    bl      sub_fc0bda32\n" // checks for 0x12345678 @ 0x4ffc (reboot writes that there) 1=>present
-"    strd    r7, r4, [sp]\n" //  0, MMIO 1
-"    mov     r3, r5\n" // MMIO 0x98
-"    mov     r2, r0\n" // reboot => 1
-"    mov     r1, r8\n" // MMIO 0x 8a
-"    mov     r0, sb\n" // MMIO 0x97
-"    bl      sub_fc075b56\n"   // startup checks (diable based on sx280)
-//"    bl      sub_fc075b54\n" // nullsub
-"    movs    r0, #1\n"
-"loc_fc078268:\n"
-"    pop.w   {r2, r3, r4, r5, r6, r7, r8, sb, sl, pc}\n"
-    ".ltorg\n"
-    );
-}
-#endif
-
 void __attribute__((naked,noinline)) task_Startup_my() {
     asm volatile (
 "    push    {r4, lr}\n"
@@ -505,7 +354,6 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 "    bl      sub_fc0db602\n"
 "    bl      sub_fc0bd780\n"
 "    bl      sub_fc0db71e\n"
-//"    bl      CreateTask_blinker\n" 
 "    bl      sub_fc0780e6_my\n" // CreateTask PhySw
 "    bl      CreateTask_spytask\n" 
 "    bl      sub_fc282abc\n"
