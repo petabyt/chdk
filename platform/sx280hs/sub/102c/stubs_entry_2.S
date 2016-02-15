@@ -43,7 +43,6 @@ NHSTUB(_pow                                   ,0xfc251bb4) // arm
 NHSTUB(apex2us                                ,0xfc0a950f)
 NHSTUB(err_init_task                          ,0xfc04f3b9)
 NHSTUB(mkdir                                  ,0xfc2a53eb)
-NHSTUB(mktime_ext                             ,0xfc14a5dd)
 NHSTUB(rand                                   ,0xfc0d32c3)
 NHSTUB(realloc                                ,0xfc42ae41)
 NHSTUB(reboot_fw_update                       ,0xfc3352b1)
