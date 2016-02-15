@@ -1,4 +1,5 @@
 #include "stubs_asm.h"
+DEF(playrec_mode                            ,0x00003b60) // 0xff0a4118 
 
 DEF(file_counter_var,               0x00008c0c) // found by searching for "FileBackupProperty.c"
 
@@ -12,6 +13,7 @@ DEF(viewport_buffers,               0xff63dfe8) // by comparison to sx510hs
 
 //DEF(viewport_fb_d,                  0x00003438) // Found @0xff067204 (0x33e4) + @0xff067240 (0x54) 
 DEF(viewport_fb_d,                  0x000036ac) // Found @0xff067204 (0x3658) + @0xff08c634 (0x54) 
+//DEF(viewport_fb_d,                  0x0000ced80) // Found @0xff067204 (0x3658) + @0xff08c634 (0x54) 
 
 //DEF(bitmap_buffer,                  0x0000413c) //  @0xff08e1c4 - by comparison to ixus140
 //DEF(active_bitmap_buffer,           0x00004138) //  @0xff08e1c8 - by comparison to ixus140
@@ -19,4 +21,4 @@ DEF(viewport_fb_d,                  0x000036ac) // Found @0xff067204 (0x3658) + 
 DEF(recreview_hold,                 0x00002a2c+0x84) //@0xff06aa9c + 0x84 (offset used by A2500)
 
 //TODO
-//DEF(rear_dial_position,        0xC0240106)  //To do
+DEF(rear_dial_position,        0xC0240106)  //To do

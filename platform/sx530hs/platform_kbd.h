@@ -3,9 +3,9 @@
 // plaform specific keyboard defines, see core/kbd_common.c for documentation
 // override key and feather bits to avoid feather osd messing up chdk display in ALT mode
 
-#define KEYS_MASK0 (0x0000FD40) //Logic OR of group 0 Keymap values
+#define KEYS_MASK0 (0x0006FD40) //Logic OR of group 0 Keymap values
 #define KEYS_MASK1 (0x00000000) //Logic OR of group 1 Keymap values
-#define KEYS_MASK2 (0x000001E0) //Logic OR of group 2 Keymap values
+#define KEYS_MASK2 (0x00000160) //Logic OR of group 2 Keymap values
 
 #define SD_READONLY_FLAG    0x02000000 // Found @0xff63ef6c, levent 0x20a
 #define SD_READONLY_IDX     2

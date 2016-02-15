@@ -26,19 +26,21 @@
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff027438
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x00000000
-// ERROR: time is not found.                               //--- ---    *** != 0x00000000
+// ERROR: time is not found.                               //--- ---    *** != 0x006b917c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
+// Mode 32770 in firmware but not in current modemap (MODE_AV)
+// Mode 32772 in firmware but not in current modemap (MODE_P)
+// Mode 32771 in firmware but not in current modemap (MODE_TV)
 // Mode 32773 in firmware but not in current modemap
 // Mode 33345 in firmware but not in current modemap
 // Mode  8760 in firmware but not in current modemap
-// Mode  8759 in firmware but not in current modemap
 // Mode  8763 in firmware but not in current modemap
 // Mode  8767 in firmware but not in current modemap
+// Mode  8754 in firmware but not in current modemap
 // Mode  8755 in firmware but not in current modemap
 // Mode 16414 in firmware but not in current modemap
-// Mode 16406 in firmware but not in current modemap
 // Mode 16416 in firmware but not in current modemap
 // Mode 16394 in firmware but not in current modemap
 // Mode 16429 in firmware but not in current modemap
@@ -47,25 +49,11 @@
 // Mode 16949 in firmware but not in current modemap
 // Mode 33298 in firmware but not in current modemap
 // Mode 33299 in firmware but not in current modemap
-// Mode  2640 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_MOVIE_DIGEST  33340
-// Current modemap entry not found in firmware - MODE_LIVE                33339
-// Current modemap entry not found in firmware - MODE_NIGHT_SCENE         33331
-// Current modemap entry not found in firmware - MODE_DISCREET            32824
-// Current modemap entry not found in firmware - MODE_M                   32769
-// Current modemap entry not found in firmware - MODE_FIREWORK            16413
-// Current modemap entry not found in firmware - MODE_SNOW                16411
-// Current modemap entry not found in firmware - MODE_FACE_SELF_TIMER     16942
-// Current modemap entry not found in firmware - MODE_LOWLIGHT            16423
-// Current modemap entry not found in firmware - MODE_PORTRAIT            16403
-// Current modemap entry not found in firmware - MODE_HIGHSPEED_BURST     16392
-// Current modemap entry not found in firmware - MODE_MONOCHROME           8761
-// Current modemap entry not found in firmware - MODE_TOY_CAMERA           8757
-// Current modemap entry not found in firmware - MODE_FISHEYE              8753
-// Current modemap entry not found in firmware - MODE_POSTER_EFFECT        8749
-// Current modemap entry not found in firmware - MODE_SUPER_VIVID          8748
-// Current modemap entry not found in firmware - MODE_VIDEO_SUPER_SLOW     2638
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2633
+// Current modemap entry not found in firmware - MODE_LIVE                33191
+// Current modemap entry not found in firmware - MODE_P                   32763
+// Current modemap entry not found in firmware - MODE_TV                  32764
+// Current modemap entry not found in firmware - MODE_AV                  32765
+// Current modemap entry not found in firmware - MODE_M                   32766
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0001a644) // Found @0xff02bf9c
@@ -80,6 +68,10 @@ DEF(canon_menu_active                       ,0x000040e4) // Found @0xff0b8fcc
 DEF(canon_shoot_menu_active                 ,0x0000d829) // Found @0xff2d031c
 DEF(zoom_status                             ,0x0000fa04) // Found @0xff35b360
 DEF(some_flag_for_af_scan                   ,0x000281d4) // Found @0xff3d6dd0
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 2 int value(s), the first is the zoom focus length.
+// there are 201 entries in the table - set NUM_FL to 201
+DEF(focus_len_table                         ,0xfffee354) // Found @0xfffee354
 DEF(zoom_busy                               ,0x00003870) // Found @0xff0950f0
 DEF(focus_busy                              ,0x00009fcc) // Found @0xff2022a0
 // Palette colour tables  found @ 0xff69ee24
@@ -147,7 +139,7 @@ DEF(ctypes, 0xff63af10)
 NHSTUB(AllocateUncacheableMemory              ,0xff025c18) //112
 NHSTUB(Close                                  ,0xff026f9c) //120
 NHSTUB(CreateTask                             ,0x006b5658) //120
-//NHSTUB(DebugAssert                          ,0x006b5a04) //107            == 0x006b5a04
+NHSTUB(DebugAssert                            ,0x006b5a04) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff02699c) //116
 NHSTUB(DoAELock                               ,0xff0329d8) //120
 NHSTUB(DoAFLock                               ,0xff0325cc) //120
@@ -189,7 +181,7 @@ NHSTUB(IsStrobeChargeCompleted                ,0xff100250) //102
 NHSTUB(LEDDrive                               ,0xff21de6c) //120
 NHSTUB(LocalTime                              ,0x006b98e8) //115
 NHSTUB(LockMainPower                          ,0xff0b4bc8) //120
-//NHSTUB(MakeSDCardBootable                   ,0xff030e70) //105            == 0xff030e70
+NHSTUB(MakeSDCardBootable                     ,0xff030e70) //105
 NHSTUB(MoveFocusLensToDistance                ,0xff4d69f0) //102
 NHSTUB(MoveIrisWithAv                         ,0xff3d4d7c) //120
 NHSTUB(MoveZoomLensWithPoint                  ,0xff3d57f4) //120
@@ -206,7 +198,7 @@ NHSTUB(Read                                   ,0xff023ec4) //120
 NHSTUB(ReadFastDir                            ,0xff3b0c88) //115
 NHSTUB(Rec2PB                                 ,0xff05f054) //104
 NHSTUB(RenameFile_Fut                         ,0xff026894) //116
-//NHSTUB(Restart                              ,0xff037c88) //122            == 0xff037c88
+NHSTUB(Restart                                ,0xff037c88) //122
 NHSTUB(ScreenLock                             ,0xff0b87e0) //117
 NHSTUB(ScreenUnlock                           ,0xff0b8798) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xff4d1be0) //102
