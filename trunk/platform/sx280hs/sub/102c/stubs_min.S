@@ -32,7 +32,7 @@ DEF(focus_len_table                         ,0xfdf6ad20)
 DEF(zoom_busy                               ,0x00010814) // Found @0xfc1a0998
 DEF(focus_busy                              ,0x00010694) // Found @0xfc28b9ec
 DEF(recreview_hold                          ,0x00008DE4) // Found @0xfc2a2c9e
-DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090268
+//DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090268
 
 DEF(bitmap_buffer, 0xac18) // ?
 
