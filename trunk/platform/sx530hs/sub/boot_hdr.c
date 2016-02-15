@@ -36,7 +36,7 @@ void CreateTask_spytask()
 short *jog_position;
 
 #define GREEN_LED       0xC022D1FC
-#define AF_LED          0xC022D1FC
+#define AF_LED          0xC022D034
 //debug use only
 
 int debug_blink(int save_R0) {

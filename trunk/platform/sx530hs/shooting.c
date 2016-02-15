@@ -93,33 +93,6 @@ const ISOTable iso_table[] = {
     {  7,  3200,  "3200", -1},
 };
 
-//http://chdk.setepontos.com/index.php?topic=5051.msg77808#msg77808
-//PROP 49
-/*const CapturemodeMap modemap[] = {
-    { MODE_VIDEO_STD,            2633 },
-    { MODE_VIDEO_SUPER_SLOW,     2638 },
-    { MODE_SUPER_VIVID,          8748 },
-    { MODE_POSTER_EFFECT,        8749 },
-    { MODE_FISHEYE,              8753 },
-    { MODE_MINIATURE,            8754 },
-    { MODE_TOY_CAMERA,           8757 },
-    { MODE_MONOCHROME,           8761 },
-    { MODE_HIGHSPEED_BURST,     16392 },
-    { MODE_PORTRAIT,            16403 },
-    { MODE_LOWLIGHT,            16423 },
-    { MODE_FACE_SELF_TIMER,     16942 },
-    { MODE_SNOW,                16411 },
-    { MODE_FIREWORK,            16413 },
-    { MODE_AUTO,                32768 },
-    { MODE_M,                   32769 },
-    { MODE_AV,                  32770 },
-    { MODE_TV,                  32771 },
-    { MODE_P,                   32772 },
-    { MODE_DISCREET,            32824 },
-    { MODE_NIGHT_SCENE,         33331 }, // This mode is not listed in Canon menu
-    { MODE_LIVE,                33339 },
-    { MODE_VIDEO_MOVIE_DIGEST,  33340 },
-};*/
 
 const CapturemodeMap modemap[] = {
     { MODE_VIDEO_STD,            2640 },
@@ -147,24 +120,6 @@ const CapturemodeMap modemap[] = {
     //{ MODE_VIDEO_MOVIE_DIGEST,  33340 },
 };
 
-// Mode 32773 in firmware but not in current modemap
-// Mode 33345 in firmware but not in current modemap
-// Mode  8760 in firmware but not in current modemap
-// Mode  8759 in firmware but not in current modemap
-// Mode  8763 in firmware but not in current modemap
-// Mode  8767 in firmware but not in current modemap
-// Mode  8755 in firmware but not in current modemap
-// Mode 16414 in firmware but not in current modemap
-// Mode 16406 in firmware but not in current modemap
-// Mode 16416 in firmware but not in current modemap
-// Mode 16394 in firmware but not in current modemap
-// Mode 16429 in firmware but not in current modemap
-// Mode 16948 in firmware but not in current modemap
-// Mode 16950 in firmware but not in current modemap
-// Mode 16949 in firmware but not in current modemap
-// Mode 33298 in firmware but not in current modemap
-// Mode 33299 in firmware but not in current modemap
-// Mode  2640 in firmware but not in current modemap
 
 #include "../generic/shooting.c"
 

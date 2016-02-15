@@ -39,7 +39,7 @@ void CreateTask_spytask()
 short *jog_position;
 
 #define GREEN_LED       0xC022D1FC
-#define AF_LED          0xC022D1FC
+#define AF_LED          0xC022D034
 //debug use only
 
 int debug_blink(int save_R0) {
@@ -217,10 +217,13 @@ asm volatile (
 "    BEQ     exitHook\n"                // below compares not necessary if this check has found something.
 
 /*** INSTALL exp_drv_task() hook ***/
+// hook not fully implemented in capt_seq.c
+/*
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    BEQ     exitHook\n"
+*/
 
 /*** INSTALL filewrite() hook ***/
 //"    LDR     R0, =task_FileWrite\n"
@@ -229,10 +232,12 @@ asm volatile (
 //"    BEQ     exitHook\n"
 
 /*** INSTALL JogDial() hook ***/
-"    LDR     R0, =task_RotaryEncoder\n"
-"    CMP     R0, R3\n"
-"    LDREQ   R3, =JogDial_task_my\n"
-"    BEQ     exitHook\n"
+// was commented out in boot.c from http://chdk.setepontos.com/index.php?topic=12418.msg123489#msg123489
+// but not in codegen file
+//"    LDR     R0, =task_RotaryEncoder\n"
+//"    CMP     R0, R3\n"
+//"    LDREQ   R3, =JogDial_task_my\n"
+//"    BEQ     exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
 //"    LDR     R0, =task_MovieRecord\n"

@@ -33,7 +33,7 @@ void vid_bitmap_refresh()
 }
 
 #define LED_PR 0xC022D1FC
-#define AF_LED 0xC022D1FC
+#define AF_LED 0xC022D034
 void shutdown()
 {
     extern void _TurnOffE1(void);
@@ -68,19 +68,6 @@ extern void* viewport_buffers[];
     // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
 //    return 10;//viewport_buffers[0];//jeroynmo
 //}
-
-int next_buffer()
-{
-	static int indexBuffer = 0;
-	indexBuffer++;
-	
-	if(indexBuffer >= 3)
-	{
-		indexBuffer=0;
-	}
-
-	return indexBuffer;
-}
 
 void *vid_get_viewport_fb_d()
 {

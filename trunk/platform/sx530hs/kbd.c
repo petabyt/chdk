@@ -17,6 +17,8 @@ int get_usb_bit() {
 }
 
 KeyMap keymap[] = {
+    { 0, KEY_ERASE	         ,0x00040000 },  
+    { 0, KEY_VIDEO	         ,0x00020000 },  
     { 0, KEY_LEFT            ,0x00004000 }, // Found @0xff63eeb4, levent 0x06
     { 0, KEY_RIGHT           ,0x00002000 }, // Found @0xff63eebc, levent 0x07
 	{ 0, KEY_UP              ,0x00000400 }, //
@@ -29,7 +31,7 @@ KeyMap keymap[] = {
     { 2, KEY_SHOOT_FULL      ,0x00000060 }, // Found @0xff63ef1c, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000040 }, // Found @0xff63ef1c, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000020 }, // Found @0xff63ef14, levent 0x00
-    { 2, KEY_POWER           ,0x00000080 }, // Found @0xff63ef24, levent 0x100
+    //{ 2, KEY_POWER           ,0x00000080 }, // Found @0xff63ef24, levent 0x100
     { 2, KEY_PLAYBACK        ,0x00000100 }, // Found @0xff63ef2c, levent 0x101
     { 0, 0, 0 }
 };
@@ -65,7 +67,7 @@ void __attribute__((noinline)) mykbd_task() {
 // Pointer to stack location where jogdial task records previous and current
 // jogdial positions
 extern short* jog_position;
-//extern short rear_dial_position;//jeroymo
+extern short rear_dial_position;//jeroymo
 
 void jogdial_control(int n) {
     if (jogdial_stopped && !n) {
@@ -93,7 +95,7 @@ static short new_jogdial = 0, old_jogdial = 0;
 long get_jogdial_direction(void)
 {
     old_jogdial = new_jogdial;
-    //new_jogdial = rear_dial_position;//jeronymo
+    new_jogdial = rear_dial_position;//jeronymo
 
     if      (old_jogdial > new_jogdial)     return JOGDIAL_LEFT;
     else if (old_jogdial < new_jogdial)     return JOGDIAL_RIGHT;
