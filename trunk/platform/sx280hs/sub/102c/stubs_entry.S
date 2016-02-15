@@ -186,7 +186,7 @@ NHSTUB(malloc                                 ,0xfc2b7f31) //  0
 NHSTUB(memcmp                                 ,0xfc2b800f) //  0
 NHSTUB(memcpy                                 ,0xfc0d32e1) //  0
 NHSTUB(memset                                 ,0xfc2bea15) //  0
-//NHSTUB(mktime_ext                           ,0xfc14a5dd) //  0            == 0xfc14a5dd
+NHSTUB(mktime_ext                             ,0xfc14a5dd) //  0
 NHSTUB(open                                   ,0xfc0ba3ff) //  0
 NHSTUB(OpenFastDir                            ,0xfc108131) //  0
 NHSTUB(closedir                               ,0xfc1080f9) //  0
