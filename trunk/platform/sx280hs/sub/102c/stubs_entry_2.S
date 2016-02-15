@@ -48,7 +48,6 @@ NHSTUB(realloc                                ,0xfc42ae41)
 NHSTUB(reboot_fw_update                       ,0xfc3352b1)
 NHSTUB(srand                                  ,0xfc0d32bd)
 NHSTUB(strcmp                                 ,0xfc2b7e4d)
-   DEF(task_DvlpSeq                           ,0xfc1aa80f)
 NHSTUB(time                                   ,0xfc251d24) // arm
 NHSTUB(CancelHPTimer                          ,0xfc1423c9)
 NHSTUB(SetHPTimerAfterNow                     ,0xfc142331)
