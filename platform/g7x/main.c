@@ -49,14 +49,14 @@ int get_zoom_x(int zp) {
     return get_focal_length(zp)*10/focus_len_table[0];
 }
 
-// TODO
+
 long get_vbatt_min()
 {
-    return 3300;
+    return 3200; // shutdown around 3100
 }
 
 
 long get_vbatt_max()
 {
-    return 4168;  // 4168 original battery just charged ASM1989
+    return 4060;  // original battery just charged
 }
