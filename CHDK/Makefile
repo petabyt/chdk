@@ -8,7 +8,7 @@ else
 LOGO=logo_de.dat
 endif
 
-GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua LUALIB/GEN/propset4.lua LUALIB/GEN/propset5.lua LUALIB/GEN/propset6.lua \
+GENLUA=LUALIB/GEN/propset1.lua LUALIB/GEN/propset2.lua LUALIB/GEN/propset3.lua LUALIB/GEN/propset4.lua LUALIB/GEN/propset5.lua LUALIB/GEN/propset6.lua LUALIB/GEN/propset7.lua \
   	   LUALIB/GEN/modelist.lua \
        LUALIB/GEN/cnf_core.lua LUALIB/GEN/cnf_osd.lua LUALIB/GEN/cnf_user.lua LUALIB/GEN/cnf_gps.lua
        
