@@ -432,6 +432,9 @@ extern const insn_match_t match_bl_blximm[];
 // match BX LR
 extern const insn_match_t match_bxlr[];
 
+// match LDR rx [pc, ...]
+extern const insn_match_t match_ldr_pc[];
+
 // check if single insn matches values defined by match
 int insn_match(cs_insn *insn, const insn_match_t *match);
 

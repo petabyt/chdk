@@ -2261,21 +2261,19 @@ int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    // first instruction should be push
-    if(!disasm_iter(fw,is)) {
-        printf("sig_match_physw_event_table: disasm failed\n");
-        return 0;
-    }
-    // next should be LDR PC
-    if(!disasm_iter(fw,is)) {
-        printf("sig_match_physw_event_table: disasm failed\n");
+    // expect first LDR pc
+    if(!insn_match_find_next(fw,is,5,match_ldr_pc)) {
+        printf("sig_match_physw_event_table: match LDR PC failed\n");
         return 0;
     }
     uint32_t adr=LDR_PC2val(fw,is->insn);
-    adr=LDR_PC2val(fw,is->insn);
     if(!adr) {
         printf("sig_match_physw_event_table: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
-        return  0;
+        return 0;
+    }
+    if(!adr2ptr(fw,adr)) {
+        printf("sig_match_physw_event_table: adr not ROM 0x%08x at 0x%"PRIx64"\n",adr,is->insn->address);
+        return 0;
     }
     save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
@@ -3135,6 +3133,20 @@ uint32_t find_physw_table_entry(firmware *fw, uint32_t tadr, int tcount, uint32_
     }
     return 0;
 }
+// look for the first invalid looking entry
+uint32_t find_physw_table_max(firmware *fw, uint32_t tadr, int max_count)
+{
+    int i;
+    for(i=0; i<max_count; i++,tadr += 8) {
+        physw_table_entry_t v;
+        get_physw_table_entry(fw,tadr,&v);
+        if(v.raw_info == 0 || v.raw_info == 0xFFFFFFFF || v.reg > 2) {
+            return i;
+        }
+        // TODO could check that no event numbers (except -1) are repeated
+    }
+    return max_count;
+}
 void write_physw_event_table_dump(firmware *fw, uint32_t tadr, int tcount)
 {
     FILE *f=fopen("physw_bits.txt","w");
@@ -3350,7 +3362,7 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
     }
 
     bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
-    bprintf("// WARNING: These values are only verified for sx280hs, likely wrong on non DryOS r52 cams!\n");
+    bprintf("// WARNING: Values only verified on sx280hs (R52) and g7x (R55p6) errors likely on other cams!\n");
     print_kmvals();
 }
 void output_physw_vals(firmware *fw) {
@@ -3359,7 +3371,7 @@ void output_physw_vals(firmware *fw) {
     if(!physw_tbl) {
         return;
     }
-    int physw_tbl_len=50; // not detected yet
+    int physw_tbl_len=find_physw_table_max(fw,physw_tbl,50);
     write_physw_event_table_dump(fw,physw_tbl,physw_tbl_len);
 
     bprintf("// Values below go in 'platform_kbd.h':\n");

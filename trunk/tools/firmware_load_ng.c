@@ -1193,6 +1193,11 @@ const insn_match_t match_bxlr[]={
     {ARM_INS_ENDING}
 };
 
+const insn_match_t match_ldr_pc[]={
+    {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_BASE(PC)}},
+    {ARM_INS_ENDING}
+};
+
 // iterate as long as sequence of instructions matches sequence defined in match
 int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match)
 {
