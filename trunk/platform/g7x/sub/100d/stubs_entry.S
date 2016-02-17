@@ -33,7 +33,7 @@
 //#define BATTCOVER_IDX       2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
-// WARNING: These values are only verified for sx280hs, likely wrong on non DryOS r52 cams!
+// WARNING: Values only verified on sx280hs (R52) and g7x (R55p6) errors likely on other cams!
 //KeyMap keymap[] = {
 //    { 0, KEY_SHOOT_FULL      ,0x00040001 }, // Found @0xfc613714, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00040000 }, // Found @0xfc61378c, levent 0x00
