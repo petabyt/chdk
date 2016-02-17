@@ -373,6 +373,7 @@
 0xfc108207,j_closedir
 0xfc109baf,task_MechaNCTask
 0xfc10a54b,task_MovieTranscoder
+0xfc10ac11,get_canon_mode_list
 0xfc12dfb1,GetMemInfo
 0xfc12e807,task_BatteryTask
 0xfc12ec71,GetVBatVoltage_FW
