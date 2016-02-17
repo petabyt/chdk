@@ -375,6 +375,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "CalcSqrt", OPTIONAL|UNUSED }, // helper
     { "get_playrec_mode", OPTIONAL|UNUSED }, // helper, made up name
     { "DebugAssert2", OPTIONAL|UNUSED }, // helper, made up name, two arg form of DebugAssert
+    { "get_canon_mode_list", OPTIONAL|UNUSED }, // helper, made up name
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -417,6 +418,7 @@ misc_val_t misc_vals[]={
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
+    { "canon_mode_list",    MISC_VAL_NO_STUB},
     {0,0,0},
 };
 
@@ -2304,6 +2306,94 @@ int sig_match_uiprop_count(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_get_canon_mode_list: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    uint32_t adr=0;
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // printf("sig_match_get_canon_mode_list: str match 0x%"PRIx64"\n",is->insn->address);
+        if(!find_next_sig_call(fw,is,4,"LogCameraEvent")) {
+            // printf("sig_match_get_canon_mode_list: no LogCameraEvent\n");
+            continue;
+        }
+        // some cameras have a mov and an extra call
+        if(!disasm_iter(fw,is)) {
+            // printf("sig_match_var_struct_get: disasm failed\n");
+            return 0;
+        }
+        const insn_match_t match_mov_r0_1[]={
+            {MATCH_INS(MOVS, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(1)}},
+            {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(1)}},
+            {ARM_INS_ENDING}
+        };
+        if(insn_match_any(is->insn,match_mov_r0_1)) {
+            if(!insn_match_find_nth(fw,is,2,2,match_bl_blximm)) {
+                // printf("sig_match_get_canon_mode_list: no match bl 1x\n");
+                continue;
+            }
+        } else {
+            if(!insn_match_any(is->insn,match_bl_blximm)) {
+                // printf("sig_match_get_canon_mode_list: no match bl 1\n");
+                continue;
+            }
+        }
+        // found something to follow, break
+        adr=get_branch_call_insn_target(fw,is);
+        break;
+    }
+    if(!adr) {
+        return 0;
+    }
+    // printf("sig_match_get_canon_mode_list: sub 1 0x%08x\n",adr);
+    disasm_iter_init(fw,is,adr);
+    if(!find_next_sig_call(fw,is,40,"TakeSemaphoreStrictly")) {
+        // printf("sig_match_get_canon_mode_list: no TakeSemaphoreStrictly\n");
+        return 0;
+    }
+    // match second call
+    if(!insn_match_find_nth(fw,is,12,2,match_bl_blximm)) {
+        // printf("sig_match_get_canon_mode_list: no match bl 2\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    const insn_match_t match_loop[]={
+        {MATCH_INS(ADD, 3), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY,   MATCH_OP_IMM(1)}},
+        {MATCH_INS(UXTH, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG_ANY,  MATCH_OP_IMM_ANY}},
+        {MATCH_INS_CC(B,LO,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,40,match_loop)) {
+        // printf("sig_match_get_canon_mode_list: match 1 failed\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
+        // printf("sig_match_get_canon_mode_list: no match bl 3\n");
+        return 0;
+    }
+    // should be func
+    adr=get_branch_call_insn_target(fw,is);
+    // sanity check
+    disasm_iter_init(fw,is,adr);
+    const insn_match_t match_ldr_r0_ret[]={
+        {MATCH_INS(LDR, 2),   {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(BX, 1),   {MATCH_OP_REG(LR)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,1,match_ldr_r0_ret)) {
+        // printf("sig_match_get_canon_mode_list: match 2 failed\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,adr);
+} 
+
 // get the address used by a function that does something like
 // ldr rx =base
 // ldr r0 [rx, offset] (optional)
@@ -2351,6 +2441,38 @@ int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     save_misc_val(rule->name,adr,disp,fadr);
+    return 1;
+}
+
+int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t fadr=is->adr;
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_rom_ptr_get: disasm failed\n");
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match_rom_ptr_get: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return  0;
+    }
+    if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+        printf("sig_match_rom_ptr_get: not R0\n");
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_rom_ptr_get: disasm failed\n");
+        return 0;
+    }
+    // TODO could check for other RET type instructions
+    if(!insn_match(is->insn,match_bxlr)) {
+        printf("sig_match_rom_ptr_get: no match BX LR\n");
+        return 0;
+    }
+    save_misc_val(rule->name,adr,0,fadr);
     return 1;
 }
 
@@ -2659,6 +2781,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_jpeg_count_str,"jpeg_count_str",     "9999",},
 {sig_match_physw_event_table,"physw_event_table","kbd_read_keys_r2",},
 {sig_match_uiprop_count,"uiprop_count",         "PTM_SetCurrentItem_FW",},
+{sig_match_get_canon_mode_list,"get_canon_mode_list","AC:PTM_Init",},
+{sig_match_rom_ptr_get,"canon_mode_list",       "get_canon_mode_list",},
 {NULL},
 };
 
@@ -3247,6 +3371,29 @@ void output_physw_vals(firmware *fw) {
 
     add_blankline();
 }
+
+void output_modemap(firmware *fw) {
+    print_misc_val_comment("canon_mode_list");
+    misc_val_t *mv=get_misc_val("canon_mode_list");
+    if(!mv) {
+        add_blankline();
+        return;
+    }
+    int i;
+    uint32_t adr=mv->val;
+    for(i=0; i<50; i++,adr+=2) {
+        uint16_t *pv=(uint16_t*)adr2ptr(fw,adr);
+        if(!pv) {
+            break;
+        }
+        if(*pv==0xFFFF) {
+            break;
+        }
+        bprintf("// %5hu  0x%04hx\n",*pv,*pv);
+    }
+    add_blankline();
+}
+
 // copied from finsig_dryos
 int compare_sig_names(const sig_entry_t **p1, const sig_entry_t **p2)
 {
@@ -3502,6 +3649,7 @@ int main(int argc, char **argv)
 
     output_platform_vals(&fw);
     output_physw_vals(&fw);
+    output_modemap(&fw);
 
     write_stubs(&fw,max_find_sig);
 
