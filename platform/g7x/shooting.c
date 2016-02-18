@@ -83,42 +83,42 @@ const ISOTable iso_table[] = {
     {  6, 3200, "3200", -1},
 };
 
-// TODO sx280 C&P!
 const CapturemodeMap modemap[] = {
-{ MODE_VIDEO_STD             ,2628 },
-{ MODE_VIDEO_SUPER_SLOW      ,2633 },
-{ MODE_SUPER_VIVID           ,8748 },
-{ MODE_POSTER_EFFECT         ,8749 },
-{ MODE_FISHEYE               ,8753 },
-{ MODE_MINIATURE             ,8754 },
-{ MODE_TOY_CAMERA            ,8757 },
-{ MODE_SOFTFOCUS             ,8758 },
-{ MODE_MONOCHROME            ,8760 },
-{ MODE_HIGHSPEED_BURST      ,16393 }, // highspeed burst hq
-{ MODE_PORTRAIT             ,16403 },
-{ MODE_SNOW                 ,16411 },
-{ MODE_FIREWORK             ,16413 },
-{ MODE_UNDERWATER           ,16414 },
-{ MODE_FACE_SELF_TIMER      ,16942 }, // smart shutter, face self timer
-{ MODE_SMART_SHUTTER        ,16943 }, // smart shutter, smile detection
-{ MODE_WINK_SELF_TIMER      ,16944 }, // smart shutter, wink self timer
-{ MODE_NIGHT_SCENE          ,16947 }, // handheld night scene
+// note canon values for P, M etc have shifted by one 
 { MODE_AUTO                 ,32768 },
-{ MODE_M                    ,32769 },
-{ MODE_AV                   ,32770 },
-{ MODE_TV                   ,32771 },
-{ MODE_P                    ,32772 },
-{ MODE_HYBRID_AUTO          ,32784 },
-{ MODE_DISCREET             ,32823 },
-{ MODE_SPORTS               ,33287 },
-{ MODE_STITCH               ,33293 }, // stitch, unofficial, may crash
-//{                         ,  33295 }, // crash and lock up :(
-{ MODE_SMOOTH_SKIN          ,33300 }, // unofficial?
-{ MODE_COLOR_ACCENT         ,33315 }, // color accent
-{ MODE_COLOR_SWAP           ,33316 }, // color swap
-{ MODE_LIVE                 ,33338 },
-{ MODE_VIDEO_MOVIE_DIGEST   ,33339 }  // movie digest, unofficial (same functionality under hybrid auto)
-
+{ MODE_M                    ,32770 },
+{ MODE_AV                   ,32771 },
+{ MODE_TV                   ,32772 },
+{ MODE_P                    ,32773 },
+{ MODE_HDR                  ,8775 },
+{ MODE_NOSTALGIC            ,8753 },
+{ MODE_FISHEYE              ,8759 },
+{ MODE_MINIATURE            ,8760 },
+{ MODE_TOY_CAMERA           ,8763 },
+//{ MODE_BACKROUND_DEFOCUS    ,8764 },
+{ MODE_SOFTFOCUS            ,8765 },
+{ MODE_MONOCHROME           ,8767 },
+{ MODE_SUPER_VIVID          ,8754 },
+{ MODE_POSTER_EFFECT        ,8755 },
+{ MODE_PORTRAIT             ,16406 },
+{ MODE_FACE_SELF_TIMER      ,16948 },
+{ MODE_SMART_SHUTTER        ,16949 }, // smile detection
+{ MODE_WINK_SELF_TIMER      ,16950 },
+//{ MODE_STAR_PORTRAIT        ,16452 },
+//{ MODE_STAR_NIGHTSCAPE      ,16453 },
+//{ MODE_STAR_TRAILS          ,16454 },
+{ MODE_NIGHT_SCENE          ,16953 }, // handheld night scene
+{ MODE_UNDERWATER           ,16929 },
+{ MODE_SNOW                 ,16414 },
+{ MODE_FIREWORK             ,16416 },
+{ MODE_CREATIVE_EFFECT      ,33299 }, // Creative shot, various sub modes all use same number
+{ MODE_HYBRID_AUTO          ,33298 }, // like movie digest
+//{                         ,33297 }, // ???
+{ MODE_VIDEO_STD             ,2643 }, // standard video on dial, regardless of res or FPS
+{ MODE_VIDEO_IFRAME_MOVIE    ,2650 },
+//{ MODE_VIDEO_M               ,2651 }, // M video
+//{ MODE_VIDEO_STAR_TIME_LAPSE,16459 }, // VIDEO?
+//{                         ,4172 }, // C, in propcase 54
 };
 
 #include "../generic/shooting.c"
