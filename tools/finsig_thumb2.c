@@ -3384,8 +3384,43 @@ void output_physw_vals(firmware *fw) {
     add_blankline();
 }
 
+/*
+typedef struct
+{
+    uint16_t mode;
+    char *nm;
+} ModeMapName;
+
+
+// TODO numbers changed after g1xmk2
+// M=32770
+ModeMapName mmnames[] = {
+    { 32768,"MODE_AUTO" },
+    { 32769,"MODE_M" },
+    { 32770,"MODE_AV" },
+    { 32771,"MODE_TV" },
+    { 32772,"MODE_P" },
+
+    { 65535,"" }
+};
+
+char* mode_name(uint16_t v)
+{
+    int i;
+    for (i=0; mmnames[i].mode != 65535; i++)
+    {
+        if (mmnames[i].mode == v)
+            return mmnames[i].nm;
+    }
+
+    return "";
+}
+*/
+
+
 void output_modemap(firmware *fw) {
     print_misc_val_comment("canon_mode_list");
+    bprintf("// Check modemap values from 'platform/CAMERA/shooting.c':\n");
     misc_val_t *mv=get_misc_val("canon_mode_list");
     if(!mv) {
         add_blankline();
@@ -3393,6 +3428,7 @@ void output_modemap(firmware *fw) {
     }
     int i;
     uint32_t adr=mv->val;
+    int bad=0;
     for(i=0; i<50; i++,adr+=2) {
         uint16_t *pv=(uint16_t*)adr2ptr(fw,adr);
         if(!pv) {
@@ -3401,8 +3437,37 @@ void output_modemap(firmware *fw) {
         if(*pv==0xFFFF) {
             break;
         }
-        bprintf("// %5hu  0x%04hx\n",*pv,*pv);
+        osig *m = find_sig_val(fw->sv->modemap, *pv);
+        if (!m) {
+            bprintf("// %5hu  0x%04hx In firmware but not in current modemap",*pv,*pv);
+            /*
+            char *s = mode_name(*pv);
+            if (strcmp(s,"") != 0) {
+                bprintf(" (%s)",s);
+            }
+            */
+            bprintf("\n");
+            bad++;
+        } else {
+//            bprintf("// %5hu  0x%04hx %s\n", *pv,*pv,m->nm);
+            m->pct = 100;
+        }
     }
+    osig *m = fw->sv->modemap;
+    while (m)
+    {
+        if (m->pct != 100)    // not matched above?
+        {
+            bprintf("// Current modemap entry not found in firmware - %-24s %5d\n",m->nm,m->val);
+            bad++;
+        }
+        m = m->nxt;
+    }
+    if (bad == 0)
+    {
+        bprintf("// No problems found with modemap table.\n");
+    }
+
     add_blankline();
 }
 
@@ -3634,6 +3699,7 @@ int main(int argc, char **argv)
     fw.sv = new_stub_values();
     load_stubs(fw.sv, "stubs_entry_2.S", 1);
     load_stubs_min(fw.sv);
+    load_modemap(fw.sv);
 
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");
