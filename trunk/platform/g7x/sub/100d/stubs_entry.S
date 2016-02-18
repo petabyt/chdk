@@ -53,40 +53,15 @@
 //};
 
 // canon_mode_list 0xfc94b408 Found @0xfc118650
-// 32770  0x8002
-// 32772  0x8004
-// 32771  0x8003
-// 32773  0x8005
-// 16406  0x4016
-// 16949  0x4235
-// 16950  0x4236
-// 16948  0x4234
-// 16452  0x4044
-// 16453  0x4045
-// 16454  0x4046
-// 16459  0x404b
-// 16953  0x4239
-// 16929  0x4221
-// 16414  0x401e
-// 16416  0x4020
-//  8775  0x2247
-//  8753  0x2231
-//  8759  0x2237
-//  8760  0x2238
-//  8763  0x223b
-//  8764  0x223c
-//  8765  0x223d
-//  8767  0x223f
-//  8754  0x2232
-//  8755  0x2233
-// 33298  0x8212
-// 32768  0x8000
-// 33299  0x8213
-//  2643  0x0a53
-//  2651  0x0a5b
-//  2650  0x0a5a
-// 33297  0x8211
-//  4172  0x104c
+// Check modemap values from 'platform/CAMERA/shooting.c':
+// 16452  0x4044 In firmware but not in current modemap
+// 16453  0x4045 In firmware but not in current modemap
+// 16454  0x4046 In firmware but not in current modemap
+// 16459  0x404b In firmware but not in current modemap
+//  8764  0x223c In firmware but not in current modemap
+//  2651  0x0a5b In firmware but not in current modemap
+// 33297  0x8211 In firmware but not in current modemap
+//  4172  0x104c In firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(ctypes                            ,0xfc5bd39c)
