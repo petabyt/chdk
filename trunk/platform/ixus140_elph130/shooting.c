@@ -1,4 +1,4 @@
-// TODO this holds and exposure count of some kind, but it only updates when rebooting or switching to play!
+// TODO this holds an exposure count of some kind, but it only updates when rebooting or switching to play!
 #define PARAM_FILE_COUNTER      0x1
 
 #include "platform.h"
@@ -84,7 +84,7 @@ const ShutterSpeed shutter_speeds_table[] = {
 const ISOTable iso_table[] = {
 //    { -1,     1,    "HI", -1},
     {  0,     0,  "Auto", -1},
-    {  1,    80,    "80", -1}, // note, camera does not support 89
+    {  1,    80,    "80", -1}, // note, camera does not support 80
     {  2,   100,   "100", -1},
     {  3,   200,   "200", -1},
     {  4,   400,   "400", -1},
@@ -106,7 +106,6 @@ Shooting Modes
 
 canon mode list FF61C088 in 100a
 
-NOTE elph130 does not have "scene" modes, but the distinction is meaningless for chdk
 */
 const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,        32774 },
@@ -114,7 +113,7 @@ const CapturemodeMap modemap[] = {
     { MODE_STITCH,              33293 }, // either direction
     { MODE_MINIATURE,           33330 },
     { MODE_FISHEYE,             33329 },
-    { MODE_TOY_CAMERA,          33333 }, // not really a SCN mode
+    { MODE_TOY_CAMERA,          33333 },
     { MODE_LOWLIGHT,            32807 },
     { MODE_COLOR_ACCENT,        33315 },
     { MODE_COLOR_SWAP,          33316 },
@@ -128,7 +127,7 @@ const CapturemodeMap modemap[] = {
     { MODE_FACE_SELF_TIMER,     33326 },
     { MODE_SMART_SHUTTER,       33327 },
     { MODE_WINK_SELF_TIMER,     33328 },
-// TODO video
+// TODO - camera has no distinct video modes, current mode +1024 while recording
 };
 
 #include "../generic/shooting.c"
