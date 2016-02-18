@@ -7,7 +7,6 @@ NHSTUB(kbd_pwr_off,                   NULL_SUB)
 NHSTUB(kbd_pwr_on,                    NULL_SUB)
 NHSTUB(MakeDirectory_Fut,           0xff82d908) // mkdir. This requires #define MKDIR_RETURN_ONE_ON_SUCCESS
 NHSTUB(GetBatteryTemperature,         NULL_SUB) // Does not work in A1200, SX130, A800 & A810 (included dummy in sub/100c/lib.c)
-NHSTUB(Restart,                     0xff831200) // Untested
 
 // Additional
 NHSTUB(TurnOffE1,                   0xff830fa4) // for shutdown(), to complicated to emulate
