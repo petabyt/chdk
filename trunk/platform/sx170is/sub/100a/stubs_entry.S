@@ -245,7 +245,7 @@ NHSTUB(strrchr                                ,0xff8a2d18) //  1
 NHSTUB(strtol                                 ,0xff827608) //101
 NHSTUB(strtolx                                ,0xff82740c) //109
    DEF(task_CaptSeq                           ,0xff87a64c) //120
-//   DEF(task_DvlpSeqTask                     ,0xff99581c) //120            == 0xff99581c
+   DEF(task_DvlpSeqTask                       ,0xff99581c) //120
    DEF(task_ExpDrv                            ,0xff8cb99c) //120
    DEF(task_FileWrite                         ,0xffab5b20) //120
    DEF(task_InitFileModules                   ,0xff849e18) //120
@@ -257,8 +257,8 @@ NHSTUB(time                                   ,0x003f9210) //119
 NHSTUB(vsprintf                               ,0xff817d98) //115
 NHSTUB(EngDrvRead                             ,0xff81bfa0) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xff890ec8) //105
-//NHSTUB(CancelHPTimer                        ,0xff8877b8) //119            == 0xff8877b8
-//NHSTUB(SetHPTimerAfterNow                   ,0xff8876b0) //119            == 0xff8876b0
+NHSTUB(CancelHPTimer                          ,0xff8877b8) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff8876b0) //119
 NHSTUB(SS_MFOn                                ,0xff991c20) //120
 NHSTUB(SS_MFOff                               ,0xff991c30) //120
 NHSTUB(GetAdChValue                           ,0xff854f30) //120
