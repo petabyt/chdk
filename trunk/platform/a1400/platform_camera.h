@@ -65,6 +65,8 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1   //Camera doesn't actually have MOVIE_DIGEST_MOVIE, but this is required by is_video_recording.
+                                                //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
     #define CAM_CAN_MUTE_MICROPHONE         1
 
     #define DNG_VERT_RLE_BADPIXELS          1
@@ -121,6 +123,8 @@
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
+
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works    
 
     #undef  CAM_MARKET_ISO_BASE
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
