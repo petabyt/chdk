@@ -77,7 +77,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc325d21
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc325d49
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc357bfb
+//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc357bd7
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc31fdfd
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc320ebf
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc357f65
