@@ -67,25 +67,16 @@
 //DEF(jpeg_count_str                    ,0x000e4308),          stubs_min = 0x000e4308 (0x000e4308)
 DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 
-//NHSTUB(Close                                ,0xfc2a5101) //  0        *** != 0xfc2a5179
-//NHSTUB(DebugAssert                          ,0x010c5c3d) //  0        *** != 0xfc251d9c
 //NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc20decb
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc20df07
-//NHSTUB(ExitTask                             ,0x010c5369) //  0        *** != 0xfc251339
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc204fab
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc20508b
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc28ff61
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc28ff89
-//NHSTUB(GetBatteryTemperature                ,0xfc138e15) //  0        *** != 0xfc138f45
-//NHSTUB(GetCCDTemperature                    ,0xfc138db9) //  0        *** != 0xfc138f43
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc057747
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc28c8d7
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc25d561
-//NHSTUB(GetOpticalTemperature                ,0xfc138e6f) //  0        *** != 0xfc138f41
-//NHSTUB(GiveSemaphore                        ,0x010c5a6d) //  0        *** != 0xfc251cc4
-//NHSTUB(LocalTime                            ,0x010c6239) //  0        *** != 0xfc251bdc
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc2a4fe3
-//NHSTUB(Open                                 ,0xfc2a507d) //  0        *** != 0xfc2a5177
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc148f2d
 //NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0        *** != 0xfc143599
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc28fd11
@@ -93,32 +84,28 @@ DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc2a5395
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc2a534d
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc09089f
-//NHSTUB(SleepTask                            ,0x010c5179) //  0        *** != 0xfc251d3c
-//NHSTUB(TakeSemaphore                        ,0x010c59f9) //  0        *** != 0xfc251cac
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc0d2997
 //NHSTUB(TurnOnBackLight                      ,0x00000000) //  0        *** != 0xfc0d2985
-//NHSTUB(Write                                ,0xfc2a5139) //  0        *** != 0xfc2a521f
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfc19bb17
-//NHSTUB(_log10                               ,0x010dc328) //  0        *** != 0xfc251c04
-//NHSTUB(_pow                                 ,0x010dc490) //  0        *** != 0xfc251bb4
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc0a950f
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc04f3b9
 //NHSTUB(rand                                 ,0x00000000) //  0        *** != 0xfc0d32c3
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc42ae41
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3352b1
 //NHSTUB(srand                                ,0x00000000) //  0        *** != 0xfc0d32bd
-//NHSTUB(strcmp                               ,0xfc2b7e61) //  0        *** != 0xfc2b7e4d
-//NHSTUB(time                                 ,0x010c5ef1) //  0        *** != 0xfc251d24
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1423c9
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc142331
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc15a7e5) //  0
+NHSTUB(Close                                  ,0xfc2a5101) //  0
 NHSTUB(CreateTask                             ,0x010c51fd) //  0
+NHSTUB(DebugAssert                            ,0x010c5c3d) //  0
 NHSTUB(DeleteDirectory_Fut                    ,0xfc28fdbd) //  0
 NHSTUB(DeleteFile_Fut                         ,0xfc28fd73) //  0
 NHSTUB(DoAELock                               ,0xfc20df55) //  0
 NHSTUB(DoAFLock                               ,0xfc20dc5b) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc29ab95) //  0
+NHSTUB(ExitTask                               ,0x010c5369) //  0
 NHSTUB(Fclose_Fut                             ,0xfc28fe1f) //  0
 NHSTUB(Fgets_Fut                              ,0xfc28fefd) //  0
 NHSTUB(Fopen_Fut                              ,0xfc28fdf7) //  0
@@ -126,12 +113,15 @@ NHSTUB(Fread_Fut                              ,0xfc28fe91) //  0
 NHSTUB(FreeUncacheableMemory                  ,0xfc15a811) //  0
 NHSTUB(Fseek_Fut                              ,0xfc28ff2f) //  0
 NHSTUB(Fwrite_Fut                             ,0xfc28fec7) //  0
+NHSTUB(GetBatteryTemperature                  ,0xfc138e15) //  0
+NHSTUB(GetCCDTemperature                      ,0xfc138db9) //  0
 NHSTUB(GetCurrentAvValue                      ,0xfc19e9b9) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc2a46b3) //  0
 NHSTUB(GetDrive_FreeClusters                  ,0xfc2a4c07) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc28c613) //  0
 NHSTUB(GetKbdState                            ,0xfc05f577) //  0
 NHSTUB(GetMemInfo                             ,0xfc12dfb1) //  0
+NHSTUB(GetOpticalTemperature                  ,0xfc138e6f) //  0
 NHSTUB(GetParameterData                       ,0xfc09091f) //  0
 NHSTUB(GetPropertyCase                        ,0xfc2978b5) //  0
 NHSTUB(GetSystemTime                          ,0xfc3b989d) //  0
@@ -139,13 +129,16 @@ NHSTUB(GetVRAMHPixelsSize                     ,0xfc134981) //  0
 NHSTUB(GetVRAMVPixelsSize                     ,0xfc134989) //  0
 NHSTUB(GetZoomLensCurrentPoint                ,0xfc1a0c71) //  0
 NHSTUB(GetZoomLensCurrentPosition             ,0xfc1a0c05) //  0
+NHSTUB(GiveSemaphore                          ,0x010c5a6d) //  0
 NHSTUB(IsStrobeChargeCompleted                ,0xfc17196b) //  0
 NHSTUB(LEDDrive                               ,0xfc1a73ed) //  0
+NHSTUB(LocalTime                              ,0x010c6239) //  0
 NHSTUB(LockMainPower                          ,0xfc142d85) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc2a53eb) //  0
 NHSTUB(MoveFocusLensToDistance                ,0xfc3de41b) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc3b7e19) //  0
 NHSTUB(MoveZoomLensWithPoint                  ,0xfc3b859f) //  0
+NHSTUB(Open                                   ,0xfc2a507d) //  0
 NHSTUB(PB2Rec                                 ,0xfc0c0985) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc20d755) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc1a8291) //  0
@@ -164,6 +157,8 @@ NHSTUB(SetCurrentCaptureModeType              ,0xfc2766f5) //  0
 NHSTUB(SetLogicalEventActive                  ,0xfc2b0157) //  0
 NHSTUB(SetPropertyCase                        ,0xfc29778f) //  0
 NHSTUB(SetScriptMode                          ,0xfc2b018f) //  0
+NHSTUB(SleepTask                              ,0x010c5179) //  0
+NHSTUB(TakeSemaphore                          ,0x010c59f9) //  0
 NHSTUB(TurnOnDisplay                          ,0xfc136d45) //  0
 NHSTUB(TurnOffDisplay                         ,0xfc136d4f) //  0
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xfc1b1dd7) //  0
@@ -172,7 +167,10 @@ NHSTUB(UnlockAF                               ,0xfc20dc83) //  0
 NHSTUB(UnlockMainPower                        ,0xfc142d25) //  0
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc12ec71) //  0
+NHSTUB(Write                                  ,0xfc2a5139) //  0
 NHSTUB(_log                                   ,0x010dbe08) //  0
+NHSTUB(_log10                                 ,0x010dc328) //  0
+NHSTUB(_pow                                   ,0x010dc490) //  0
 NHSTUB(_sqrt                                  ,0x010de238) //  0
 NHSTUB(add_ptp_handler                        ,0xfc0df5c3) //  0
 NHSTUB(close                                  ,0xfc0ba46f) //  0
@@ -200,6 +198,7 @@ NHSTUB(set_control_event                      ,0xfc2afe9d) //  0
 NHSTUB(stat                                   ,0xfc2a5295) //  0
 NHSTUB(strcat                                 ,0xfc14a9c9) //  0
 NHSTUB(strchr                                 ,0xfc0d3375) //  0
+NHSTUB(strcmp                                 ,0xfc2b7e61) //  0
 NHSTUB(strcpy                                 ,0xfc2b7e95) //  0
 NHSTUB(strftime                               ,0xfc14a60d) //  0
 NHSTUB(strlen                                 ,0xfc2b7ea5) //  0
@@ -216,6 +215,7 @@ NHSTUB(strtolx                                ,0xfc09b4f9) //  0
    DEF(task_MovieRecord                       ,0xfc1a5d1d) //  0
    DEF(task_PhySw                             ,0xfc0601f5) //  0
    DEF(hook_CreateTask                        ,0x010c51fc) //  0
+NHSTUB(time                                   ,0x010c5ef1) //  0
 NHSTUB(vsprintf                               ,0xfc09b4cb) //  0
 NHSTUB(undisplaybusyonscreen                  ,0xfc14a27f) //  0
 NHSTUB(EngDrvRead                             ,0xfc2b7d27) //  0
