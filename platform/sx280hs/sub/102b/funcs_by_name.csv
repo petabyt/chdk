@@ -1,6 +1,6 @@
 0x010dbe08,_log
-0xfc251b7c,_log10,(stubs_entry_2.s)
-0xfc251b2c,_pow,(stubs_entry_2.s)
+0x010dc328,_log10
+0x010dc490,_pow
 0x010de238,_sqrt
 0xfc196e99,AbortAEIntegralValue_FW
 0xfc29e0b7,ActivateAdjLog_FW
@@ -133,7 +133,7 @@
 0xfc071a55,ClearWLANFactoryMode_FW
 0xfc3ad51b,ClearZoomCommonDriveParam_FW
 0xfc3ad01d,ClearZoomDriveParam_FW
-0xfc2a50fd,Close,(stubs_entry_2.s)
+0xfc2a5085,Close
 0xfc0ba46f,close
 0xfc2a5085,Close_FW
 0xfc0a4895,CloseConsole_FW
@@ -166,7 +166,7 @@
 0xfc142b3f,CtrlMan_ChangeZOrder_FW
 0xfc261a91,CzDebugPrint_FW
 0xfc261a9d,CzDebugPrintToFile_FW
-0xfc251d14,DebugAssert,(stubs_entry_2.s)
+0x010c5c3d,DebugAssert
 0x010c5c53,DebugAssert2
 0xfc142a49,DeleteController_FW
 0xfc28fd4d,DeleteDirectory_Fut
@@ -300,7 +300,7 @@
 0xfc0c9f61,ExecuteTestRecSD_FW
 0xfc0c9fab,ExecuteTestRecSw1_FW
 0xfc0c9f9b,ExecuteTestRecWithInteg_FW
-0xfc2512b1,ExitTask,(stubs_entry_2.s)
+0x010c5369,ExitTask
 0x010c5369,ExitTask_FW
 0xfc062771,ExMem.AllocCacheable_FW
 0xfc06253b,ExMem.AllocUncacheable_FW
@@ -359,12 +359,12 @@
 0xfc1a00d3,GetAutoPopupStrobeCurrentStatus_FW
 0xfc1a0553,GetAutoPopupStrobePiSectionTime_FW
 0xfc0604a1,GetBatteryCoverClose_FW
-0xfc138f45,GetBatteryTemperature,(stubs_entry_2.s)
+0xfc138e15,GetBatteryTemperature
 0xfc138e15,GetBatteryTemperature_FW
 0xfc1426ad,GetBuildDate_FW
 0xfc1426b1,GetBuildTime_FW
 0xfc3aca8b,GetCameraInformationData_FW
-0xfc138f43,GetCCDTemperature,(stubs_entry_2.s)
+0xfc138db9,GetCCDTemperature
 0xfc138db9,GetCCDTemperature_FW
 0xfc3dcd9b,GetCdsGainValue_FW
 0xfc3dce2f,GetCdsPreGainReg_FW
@@ -569,7 +569,7 @@
 0xfc134999,GetMovieJpegVRAMVPixelsSize_FW
 0xfc3dcdef,GetObClampValue_FW
 0xfc197351,GetOnlyAEIntegData_FW
-0xfc138f41,GetOpticalTemperature,(stubs_entry_2.s)
+0xfc138e6f,GetOpticalTemperature
 0xfc138e6f,GetOpticalTemperature_FW
 0xfc09091f,GetParameterData
 0xfc3e158f,GetPixelsOfViewangle_FW
@@ -626,7 +626,7 @@
 0xfc3ad427,GetZoomResetDriveParam_FW
 0xfc1a1e77,GetZoomResetSensorLevel_FW
 0xfc1a1031,GetZoomTelePoint_FW
-0xfc251c3c,GiveSemaphore,(stubs_entry_2.s)
+0x010c5a6d,GiveSemaphore
 0x010c5a6d,GiveSemaphore_FW
 0xfc0c3c43,GPS_AGPS_COLD_FW
 0xfc0c3c6f,GPS_AGPS_FCOLD_FW
@@ -993,7 +993,7 @@
 0xfc0a2245,LoadParamDataFromAdjTableBin_FW
 0xfc0d1e47,LoadScript_FW
 0xfc3e1de9,LoadSerialNumber_FW
-0xfc251b54,LocalTime,(stubs_entry_2.s)
+0x010c6239,LocalTime
 0xfc3aa307,LockHdmiState_FW
 0xfc142d85,LockMainPower
 0xfc142d85,LockMainPower_FW
@@ -1111,7 +1111,7 @@
 0xfc435957,OneShotWhigeBalance_FW
 0xfc435957,OneTypeWhiteBalance_FW
 0xfc1a7421,OnPrintPhySw_FW
-0xfc2a50fb,Open,(stubs_entry_2.s)
+0xfc2a5001,Open
 0xfc0ba3ff,open
 0xfc2a5001,Open_FW
 0xfc0a47db,OpenConsole_FW
@@ -1488,7 +1488,7 @@
 0xfc1a7439,ShowSDStatus_FW
 0xfc020fc9,ShowTransparentMemory_FW
 0xfc3e07e5,SleepAE_FW
-0xfc251cb4,SleepTask,(stubs_entry_2.s)
+0x010c5179,SleepTask
 0x010c5179,SleepTask_FW
 0xfc29eda9,SoundDevBeepGenGain_FW
 0xfc29e3e9,SoundDevClearPath_FW
@@ -1597,7 +1597,7 @@
 0xfc3ad225,StopZoomEmergency_FW
 0xfc14a9c9,strcat
 0xfc0d3375,strchr
-0xfc2b7dd1,strcmp,(stubs_entry_2.s)
+0xfc2b7de5,strcmp
 0xfc2b7de5,strcmp_FW
 0xfc2b7e19,strcpy
 0xfc2b7e19,strcpy_FW
@@ -1613,7 +1613,7 @@
 0xfc3e0a89,SwitchOnDisplay_FW
 0xfc1a7f1b,System.Create_FW
 0xfc1a7905,System.Delete_FW
-0xfc251c24,TakeSemaphore,(stubs_entry_2.s)
+0x010c59f9,TakeSemaphore
 0x010c59f9,TakeSemaphore_FW
 0x010c5b89,TakeSemaphoreStrictly
 0xfc0bb4e7,task__imageSensorTask
@@ -1762,7 +1762,7 @@
 0xfc021351,TerminateSoundRec_FW
 0xfc0c908d,TerminateTestRec_FW
 0xfc08134b,TerminateWLAN_FW
-0xfc251c9c,time,(stubs_entry_2.s)
+0x010c5ef1,time
 0xfc187c83,TryGPSforAdjustment_FW
 0xfc136d4f,TurnOffDisplay
 0xfc095a35,TurnOffE1_FW
@@ -1839,7 +1839,7 @@
 0xfc09b4cb,vsprintf
 0xfc1a78ed,Wait_FW
 0xfc3b8553,WaitMoveZoomLensComplete_FW
-0xfc2a51a3,Write,(stubs_entry_2.s)
+0xfc2a50bd,Write
 0xfc2a50bd,Write_FW
 0xfc0c5e35,WRITEADJTABLETOFROM_FW
 0xfc0c5e53,WRITEADJUSTMENTDATATOFROM_FW
