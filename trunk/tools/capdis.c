@@ -452,14 +452,14 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
     return 1;
 }
 
-
 static void do_dis_insn(
                     firmware *fw,
                     iter_state_t *is,
                     unsigned dis_opts,
                     char *mnem,
                     char *ops,
-                    char *comment) {
+                    char *comment,
+                    tbx_info_t *ti) {
 
     cs_insn *insn=is->insn;
 
@@ -612,6 +612,11 @@ static void do_dis_insn(
         } else {
             sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
         }
+    } else if(get_TBx_PC_info(fw,is,ti)) {
+        sprintf(comment+strlen(comment),
+                    "(jumptable r%d %d elements)",
+                    insn->detail->arm.operands[0].mem.index - ARM_REG_R0,
+                    ti->count);
     }
     // else ... default disassembly
 }
@@ -644,6 +649,119 @@ void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, uns
         }
     }
 }
+// TODO doesn't pay attention to various dis opts
+static void do_tbb_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+{
+    uint32_t adr=ti->start;
+    printf("branchtable_%08x:\n",adr);
+    int i=0;
+    while(i < ti->count) {
+        uint8_t *p=adr2ptr(fw,adr);
+        if(!p) {
+            fprintf(stderr,"do_tbb_data: jumptable outside of valid address range at 0x%08x\n",adr);
+            break;
+        }
+        uint32_t target = ti->start+2**p;
+        // shouldn't happen in normal code? may indicate problem?
+        if(target <= adr) {
+            if(dis_opts & DIS_OPT_FMT_CHDK) {
+                printf("\"    .byte 0x%02x\\n\" %s invalid juptable data?\n",*p,comment_start);
+            } else {
+                printf("    .byte 0x%02x ; invalid juptable data?\n",*p);
+            }
+            adr++;
+            continue;
+        }
+        if(dis_opts & DIS_OPT_FMT_CHDK) {
+            printf("\"    .byte((loc_%08x - branchtable_%08x) / 2)\\n\" %s (case %d)\n",target,ti->start,comment_start,i);
+        } else {
+            printf("    .byte 0x%02x %s jump to loc_%08x (case %d)\n",*p,comment_start,target,i);
+        }
+        // TODO probably belongs in first pass, but tbb/tbh can only jump forward
+        if(dis_opts & DIS_OPT_LABELS) {
+            l_insert(branch_list,target,0);
+        }
+        adr++;
+        i++;
+    }
+    if(dis_opts & DIS_OPT_FMT_CHDK) {
+// note, this is halfword aligned https://sourceware.org/binutils/docs/as/Align.html#Align
+// "For other systems, including ppc, i386 using a.out format, arm and strongarm, 
+// it is the number of low-order zero bits the location counter must have after advancement."
+        printf("\".align 1\\n\"\n");
+    }
+    // ensure final adr is halfword aligned
+    if(adr & 1) {
+        uint8_t *p=adr2ptr(fw,adr);
+        if(p) {
+            if(!(dis_opts & DIS_OPT_FMT_CHDK)) {
+                printf("    .byte 0x%02x\n",*p);
+            }
+        } else { 
+            fprintf(stderr,"do_tbb_data: jumptable outside of valid address range at 0x%08x\n",adr);
+        }
+        adr++;
+    }
+    // skip over jumptable
+    if(!disasm_iter_init(fw,is,adr | is->thumb)) {
+        fprintf(stderr,"do_tbb_data: disasm_iter_init failed\n");
+    }
+}
+
+// TODO
+// mostly copy/pasted from tbb
+// doesn't pay attention to various dis opts
+static void do_tbh_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+{
+    uint32_t adr=ti->start;
+    printf("branchtable_%08x:\n",adr);
+    int i=0;
+    while(i < ti->count) {
+        uint8_t *p=adr2ptr(fw,adr);
+        if(!p) {
+            fprintf(stderr,"do_tbh_data: jumptable outside of valid address range at 0x%08x\n",adr);
+            break;
+        }
+        uint32_t target = ti->start+2**p;
+        // shouldn't happen in normal code? may indicate problem?
+        if(target <= adr) {
+            if(dis_opts & DIS_OPT_FMT_CHDK) {
+                printf("\"    .short 0x%04x\\n\" %s invalid juptable data?\n",*p,comment_start);
+            } else {
+                printf("    .short 0x%04x ; invalid juptable data?\n",*p);
+            }
+            adr+=ti->bytes;
+            continue;
+        }
+        if(dis_opts & DIS_OPT_FMT_CHDK) {
+            printf("\"    .short((loc_%08x - branchtable_%08x) / 2)\\n\" %s (case %d)\n",target,ti->start,comment_start,i);
+        } else {
+            printf("    .short 0x%04x %s jump to loc_%08x (case %d)\n",*p,comment_start,target,i);
+        }
+        // TODO probably belongs in first pass, but tbb/tbh can only jump forward
+        if(dis_opts & DIS_OPT_LABELS) {
+            l_insert(branch_list,target,0);
+        }
+        adr+=ti->bytes;
+        i++;
+    }
+    // tbh shouldn't need any alignment fixup
+    // skip over jumptable
+    if(!disasm_iter_init(fw,is,adr | is->thumb)) {
+        fprintf(stderr,"do_tbh_data: disasm_iter_init failed\n");
+    }
+}
+
+// TODO should have a tbb to tbh mode for CHDK, to relax range limits
+static void do_tbx_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+{
+    if(ti->bytes==1) {
+        do_tbb_data(fw,is,branch_list,dis_opts,ti);
+    } else {
+        do_tbh_data(fw,is,branch_list,dis_opts,ti);
+    }
+}
+
 static void do_dis_range(firmware *fw,
                     unsigned dis_start,
                     unsigned dis_count,
@@ -653,6 +771,7 @@ static void do_dis_range(firmware *fw,
     iter_state_t *is=disasm_iter_new(fw,dis_start);
     size_t count=0;
     struct llist *branch_list = new_list();
+    tbx_info_t ti;
 
     // pre-scan for branches
     if(dis_opts & DIS_OPT_LABELS) {
@@ -664,6 +783,7 @@ static void do_dis_range(firmware *fw,
                     // currently ignore thumb bit
                     l_insert(branch_list,ADR_CLEAR_THUMB(b_tgt),0);
                 }
+                // TODO maybe handle / skip over tbx here, less chance of getting out of sync
             } else {
                 if(!disasm_iter_init(fw,is,(is->adr+is->insn_min_size) | is->thumb)) {
                     fprintf(stderr,"do_dis_range: disasm_iter_init failed\n");
@@ -700,7 +820,8 @@ static void do_dis_range(firmware *fw,
             }
             // mnemonic and op size from capstone.h
             char insn_mnemonic[32], insn_ops[160], comment[COMMENT_LEN+1];
-            do_dis_insn(fw,is,dis_opts,insn_mnemonic,insn_ops,comment);
+            ti.start=0; // flag so we can do jump table dump below
+            do_dis_insn(fw,is,dis_opts,insn_mnemonic,insn_ops,comment,&ti);
             if(dis_opts & DIS_OPT_FMT_CHDK) {
                 printf("\"");
             }
@@ -743,6 +864,9 @@ TODO most constants are decimal, while capstone defaults to hex
                 }
             }
             printf("\n");
+            if(ti.start) {
+                do_tbx_data(fw,is,branch_list,dis_opts,&ti);
+            }
         } else {
             uint16_t *pv=(uint16_t *)adr2ptr(fw,is->adr);
             // TODO optional data directives
