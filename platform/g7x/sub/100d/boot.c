@@ -102,7 +102,6 @@ void __attribute__((naked,noinline)) boot() {
 void __attribute__((naked,noinline)) CreateTask_my() {
 asm volatile (
 "    push   {r0}\n"
-/*
 //R3 = Pointer to task function to create
 "    ldr     r0, =task_CaptSeq\n"       // DryOS original code function ptr.
 "    cmp     r0, r3\n"                  // is the given taskptr equal to our searched function?
@@ -111,6 +110,7 @@ asm volatile (
 "    orreq   r3, #1\n"                  // make sure it's a thumb address (may not be needed?)
 "    beq     exitHook\n"                // below compares not necessary if this check has found something.
 
+/*
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
