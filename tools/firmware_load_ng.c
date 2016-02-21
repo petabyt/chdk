@@ -613,6 +613,102 @@ uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn)
     return 0; // TODO could be valid
 }
 
+// get the (likely) range of jumptable entries from a pc relative TBB or TBH instruction
+// returns 0 on error or if instruction is not TBB/TBH
+// returns 1 if instruction is TBB/TBH [PC,...] 
+int get_TBx_PC_info(firmware *fw,iter_state_t *is, tbx_info_t *ti)
+{
+    if(!(is->insn->id == ARM_INS_TBH || is->insn->id == ARM_INS_TBB) || is->insn->detail->arm.operands[0].mem.base != ARM_REG_PC) {
+        return 0;
+    }
+    ti->start=(uint32_t)is->adr; // after current instruction
+    ti->first_target=0;
+    ti->bytes=(is->insn->id == ARM_INS_TBH)?2:1;
+
+    uint32_t max_adr;
+    // max possible (assuming jumptable is contiguous)
+    if(ti->bytes==1) {
+        max_adr=ti->start+(2*255);
+    } else {
+        max_adr=ti->start+(2*65535);
+    }
+    arm_reg i_reg=is->insn->detail->arm.operands[0].mem.index;
+    // backtrack looking for
+    // cmp index reg,#imm
+    // ...
+    // bhs ...
+    int max_backtrack = 8;
+    if(is->ah.count - 1 < max_backtrack) {
+        max_backtrack = is->ah.count-1;
+    }
+
+    int max_count=0;
+    int found_bhs=0;
+    int i;
+    for(i=1;i<=max_backtrack;i++) {
+        fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i)); // thumb state comes from hist
+        if(fw->is->insn->id == ARM_INS_B && fw->is->insn->detail->arm.cc == ARM_CC_HS) {
+            found_bhs=1;
+            continue;
+        }
+        // TODO lots of other ways condition code or reg could be changed in between
+        if(found_bhs && fw->is->insn->id == ARM_INS_CMP) {
+            // cmp with correct operands, assume number of jumptable entries
+            if(fw->is->insn->detail->arm.operands[0].reg == i_reg 
+                || fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
+                max_count = fw->is->insn->detail->arm.operands[1].imm;
+            }
+            // otherwise, give up
+            break;
+        }
+    }
+    if(max_count) {
+        max_adr = ti->start+max_count*ti->bytes;
+        //printf("get_TBx_PC_info: max_count %d start 0x%08x max_adr=0x%08x\n",max_count,ti->start,max_adr);
+    }
+    uint32_t adr=ti->start;
+    while(adr < max_adr) {
+        uint8_t *p=adr2ptr(fw,adr);
+        if(!p) {
+            fprintf(stderr,"get_TBx_PC_info: jumptable outside of valid address range at 0x%08x\n",adr);
+            return 0;
+        }
+        uint16_t off;
+        if(ti->bytes==1) {
+            off=(uint16_t)*p;
+        } else {
+            off=*(uint16_t *)p;
+        }
+
+        // 0, probably padding at the end (could probably break here)
+        // note shouldn't be padding on tbh, since aligned for thumb
+        if(!off) {
+            break;
+        }
+        uint32_t target = ti->start+2*off;
+        // may indicate non-jumptable entry, if count not found, so don't increment adr
+        if(target <= adr) {
+            fprintf(stderr,"get_TBx_PC_info: jumptable target 0x%08x inside jumptable %d at 0x%08x\n",target,off,adr);
+            break;
+        }
+        if(!ti->first_target || target < ti->first_target) {
+            ti->first_target=target;
+            if(target < max_adr) {
+                max_adr=target; // assume jump table ends at/before first target
+            }
+        }
+        adr+=ti->bytes;
+    }
+    // if found count, assume it's right
+    if(max_count) {
+        ti->count=max_count;
+    } else {
+        // otherwise, use final address
+        ti->count=(adr-ti->start)/ti->bytes;
+    }
+    return 1;
+}
+
 // TODO should have variants of above including LDR pc, [pc, #x] for some of the above
 
 // ****** disassembly iterator utilities ******
