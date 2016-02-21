@@ -242,6 +242,17 @@ uint32_t B_BL_target(firmware *fw, cs_insn *insn);
 // as above, but also including BLX imm
 uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn);
 
+// results from get_TBx_PC_info
+typedef struct {
+    uint32_t start; // address of first jumptable entry
+    uint32_t count; // number of entries, from preceding cmp, first_target or first invalid value
+    uint32_t first_target; // lowest jumptable target address (presumably, >= end of jump table in normal code)
+    int bytes; // size of jump table entries: 1 = tbb, 2=tbh
+} tbx_info_t; // tbb/tbh info
+
+// get the (likely) range of jumptable entries from a pc relative TBB or TBH instruction
+// returns 0 on error or if instruction is not TBB/TBH, otherwise 1
+int get_TBx_PC_info(firmware *fw,iter_state_t *is, tbx_info_t *ti);
 
 // ****** disassembly iterator utilities ******
 // allocate a new iterator state, optionally initializing at adr (0/invalid OK)
