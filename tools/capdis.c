@@ -650,7 +650,7 @@ void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, uns
     }
 }
 // TODO doesn't pay attention to various dis opts
-static void do_tbb_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+static void do_tbb_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_info_t *ti)
 {
     uint32_t adr=ti->start;
     if(dis_opts & DIS_OPT_FMT_CHDK) {
@@ -680,10 +680,6 @@ static void do_tbb_data(firmware *fw, iter_state_t *is, struct llist *branch_lis
             printf("\"    .byte((loc_%08x - branchtable_%08x) / 2)\\n\" %s (case %d)\n",target,ti->start,comment_start,i);
         } else {
             printf("    .byte 0x%02x %s jump to loc_%08x (case %d)\n",*p,comment_start,target,i);
-        }
-        // TODO probably belongs in first pass, but tbb/tbh can only jump forward
-        if(dis_opts & DIS_OPT_LABELS) {
-            l_insert(branch_list,target,0);
         }
         adr++;
         i++;
@@ -715,7 +711,7 @@ static void do_tbb_data(firmware *fw, iter_state_t *is, struct llist *branch_lis
 // TODO
 // mostly copy/pasted from tbb
 // doesn't pay attention to various dis opts
-static void do_tbh_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+static void do_tbh_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_info_t *ti)
 {
     uint32_t adr=ti->start;
     if(dis_opts & DIS_OPT_FMT_CHDK) {
@@ -746,10 +742,6 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, struct llist *branch_lis
         } else {
             printf("    .short 0x%04x %s jump to loc_%08x (case %d)\n",*p,comment_start,target,i);
         }
-        // TODO probably belongs in first pass, but tbb/tbh can only jump forward
-        if(dis_opts & DIS_OPT_LABELS) {
-            l_insert(branch_list,target,0);
-        }
         adr+=ti->bytes;
         i++;
     }
@@ -760,13 +752,51 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, struct llist *branch_lis
     }
 }
 
+static void do_tbx_pass1(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+{
+    uint32_t adr=ti->start;
+    int i=0;
+    while(i < ti->count) {
+        uint8_t *p=adr2ptr(fw,adr);
+        if(!p) {
+            fprintf(stderr,"do_tbb_data: jumptable outside of valid address range at 0x%08x\n",adr);
+            break;
+        }
+        uint16_t off;
+        if(ti->bytes==1) {
+            off=(uint16_t)*p;
+        } else {
+            off=*(uint16_t *)p;
+        }
+        uint32_t target = ti->start+2*off;
+        // shouldn't happen in normal code? may indicate problem? don't add label
+        if(target <= adr) {
+            adr++;
+            continue;
+        }
+        if(dis_opts & DIS_OPT_LABELS) {
+            l_insert(branch_list,target,0);
+        }
+        adr+=ti->bytes;
+        i++;
+    }
+    // ensure final adr is halfword aligned (should only apply to tbb)
+    if(adr & 1) {
+        adr++;
+    }
+    // skip over jumptable data
+    if(!disasm_iter_init(fw,is,adr | is->thumb)) {
+        fprintf(stderr,"do_tbb_data: disasm_iter_init failed\n");
+    }
+}
+
 // TODO should have a tbb to tbh mode for CHDK, to relax range limits
-static void do_tbx_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+static void do_tbx_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_info_t *ti)
 {
     if(ti->bytes==1) {
-        do_tbb_data(fw,is,branch_list,dis_opts,ti);
+        do_tbb_data(fw,is,dis_opts,ti);
     } else {
-        do_tbh_data(fw,is,branch_list,dis_opts,ti);
+        do_tbh_data(fw,is,dis_opts,ti);
     }
 }
 
@@ -790,8 +820,11 @@ static void do_dis_range(firmware *fw,
                 if(b_tgt) {
                     // currently ignore thumb bit
                     l_insert(branch_list,ADR_CLEAR_THUMB(b_tgt),0);
+                } else if(get_TBx_PC_info(fw,is,&ti)) { 
+                    // handle tbx, so instruction counts will match,
+                    // less chance of spurious stuff from disassembling jumptable data
+                    do_tbx_pass1(fw,is,branch_list,dis_opts,&ti);
                 }
-                // TODO maybe handle / skip over tbx here, less chance of getting out of sync
             } else {
                 if(!disasm_iter_init(fw,is,(is->adr+is->insn_min_size) | is->thumb)) {
                     fprintf(stderr,"do_dis_range: disasm_iter_init failed\n");
@@ -873,7 +906,7 @@ TODO most constants are decimal, while capstone defaults to hex
             }
             printf("\n");
             if(ti.start) {
-                do_tbx_data(fw,is,branch_list,dis_opts,&ti);
+                do_tbx_data(fw,is,dis_opts,&ti);
             }
         } else {
             uint16_t *pv=(uint16_t *)adr2ptr(fw,is->adr);
