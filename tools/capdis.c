@@ -653,7 +653,11 @@ void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, uns
 static void do_tbb_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
 {
     uint32_t adr=ti->start;
-    printf("branchtable_%08x:\n",adr);
+    if(dis_opts & DIS_OPT_FMT_CHDK) {
+        printf("\"branchtable_%08x:\\n\"\n",adr);
+    } else {
+        printf("branchtable_%08x:\n",adr);
+    }
     int i=0;
     while(i < ti->count) {
         uint8_t *p=adr2ptr(fw,adr);
@@ -714,7 +718,11 @@ static void do_tbb_data(firmware *fw, iter_state_t *is, struct llist *branch_lis
 static void do_tbh_data(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
 {
     uint32_t adr=ti->start;
-    printf("branchtable_%08x:\n",adr);
+    if(dis_opts & DIS_OPT_FMT_CHDK) {
+        printf("\"branchtable_%08x:\\n\"\n",adr);
+    } else {
+        printf("branchtable_%08x:\n",adr);
+    }
     int i=0;
     while(i < ti->count) {
         uint8_t *p=adr2ptr(fw,adr);
