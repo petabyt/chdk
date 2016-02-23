@@ -73,7 +73,7 @@ DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc205077
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc28fef1
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc28ff19
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc057747
+//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc2a4b67
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc28c84f
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc25d4d9
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc2a4f67
