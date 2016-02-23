@@ -65,11 +65,34 @@ int task_id_list_get(int *idlist,int size)
 
 long get_property_case(long id, void *buf, long bufsize)
 {
+// workaround for missing PROPCASE_SHOOTING
+#if CAM_PROPSET == 7
+    if(id==PROPCASE_SHOOTING) {
+        int r=_GetPropertyCase(PROPCASE_SHOOTING_STATE, buf, bufsize);
+        // 1 50ms after half press, 2 after exp hook, 3 while shooting
+        // propset 6 has similar procase id 351, goes 3->0 when get_shooting goes false
+        // propset 4 and 5 id 352 is similar but only goes to 2
+        // (4 per https://chdk.setepontos.com/index.php?topic=11604.msg113712#msg113712)
+        if(*(char *)buf > 1) {
+            *(char *)buf = 1;
+        } else {
+            *(char *)buf = 0;
+        }
+        return r;
+    }
+#endif
     return _GetPropertyCase(id, buf, bufsize);
 }
 
 long set_property_case(long id, void *buf, long bufsize)
 {
+    // ignore set on fake prop
+#if CAM_PROPSET == 7
+    if(id==PROPCASE_SHOOTING) {
+        return 0;
+    }
+#endif
+
     return _SetPropertyCase(id, buf, bufsize);
 }
 

@@ -64,7 +64,6 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ND_FILTER_STATE                 201        // 0 = out, 1 = in
 #define PROPCASE_OPTICAL_ZOOM_POSITION           204 
 #define PROPCASE_EXPOSURE_LOCK                   215        // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
-#define PROPCASE_SHOOTING                        359        // TODO, not sure. Nothing matching old location
 #define PROPCASE_EV_CORRECTION_2                 216        // g7x ok, ps6 +6
 #define PROPCASE_IS_FLASH_READY                  217        // not certain
 #define PROPCASE_RESOLUTION                      227        // 0 = L, 2 = M1, 3 = M2, 5 = S
@@ -91,5 +90,9 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // TODO GPS guessed, ps6 + 8
 // #define PROPCASE_GPS                             365        // (CHDKLover, August 2011) - contains a 272 bytes long structure
 #define PROPCASE_TIMER_SHOTS                     384        // Number of shots for TIMER_MODE=Custom
+
+// 
+#define PROPCASE_SHOOTING_STATE                  359        // Goes to 1 soon after half press, 2 around when override hook called, 3 after shot start, back to 2 when shoot_full released, back to 0 when half released
+#define PROPCASE_SHOOTING                       1001        // fake, emulated by wrapper using SHOOTING_STATE
 
 #endif
