@@ -152,11 +152,15 @@
 0xfc0a4721,CPrintf_FW
 0xfc0a4759,CPutChar_FW
 0xfc0c5dbb,CreateAdjustmentTableMirror_FW
+0x010c5b3b,CreateBinarySemaphoreStrictly
 0xfc1429d7,CreateController_FW
 0x010c5957,CreateCountingSemaphore_FW
 0xfc0c5dc3,CreateDefectTableMirror_FW
+0x010c53b9,CreateEventFlag
 0xfc29dcab,CreateFADBGSingalID_FW
 0xfc3e22f5,CreateJumptable
+0x010c56b5,CreateMessageQueue
+0x010c5b07,CreateMessageQueueStrictly
 0xfc29b079,CreateProxyOfEventProcedure_FW
 0x010c51fd,CreateTask
 0x010c51fd,CreateTask_FW
@@ -731,6 +735,10 @@
 0xfc1a73c9,j_BeepDriveStop_FW
 0xfc2a50fd,j_Close_FW
 0xfc108207,j_closedir
+0xfc251c44,j_CreateBinarySemaphoreStrictly
+0xfc251ab4,j_CreateEventFlag
+0xfc2517ac,j_CreateMessageQueue
+0xfc251c04,j_CreateMessageQueueStrictly
 0xfc251904,j_CreateTask
 0xfc251c0c,j_CreateTaskStrictly
 0xfc0c5dcb,j_CreateUserSettingMirror_FW
@@ -889,6 +897,7 @@
 0xfc057859,j_PutsCameraLogEvent_FW
 0xfc2a519f,j_Read_FW
 0xfc0c1ca7,j_Rec2PB
+0xfc251bfc,j_ReceiveMessageQueue
 0xfc3e03c1,j_RegistColorMatrix_FW
 0xfc2afe51,j_set_control_event
 0xfc3e05c9,j_SetAE_CdsGainValue_FW
@@ -1191,6 +1200,7 @@
 0xfc1081d1,ReadFastDir
 0xfc0c09b7,Rec2PB
 0xfc3b825b,ReceiveMechaCircuitDataAll_FW
+0x010c5765,ReceiveMessageQueue
 0xfc3acc05,RecSoundForNCAdjEvent_FW
 0xfc0c5dbf,RefreshAdjustmentTableMirror_FW
 0xfc0c5dc7,RefreshDefectTableMirror_FW
@@ -1751,6 +1761,7 @@
 0xfc08ed71,task_WebServiceApp
 0xfc2467f5,task_ZoomActuatorSpeedCheck
 0xfc2468fd,task_ZoomEvent
+0xfc0a467b,taskcreate_LowConsole
 0xfc1a8365,TerminateAdjustmentSystem_FW
 0xfc0c985d,Terminatedccd_FW
 0xfc020d6b,TerminateDefectRec_FW
