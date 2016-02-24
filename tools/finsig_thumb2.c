@@ -376,6 +376,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "get_playrec_mode", OPTIONAL|UNUSED }, // helper, made up name
     { "DebugAssert2", OPTIONAL|UNUSED }, // helper, made up name, two arg form of DebugAssert
     { "get_canon_mode_list", OPTIONAL|UNUSED }, // helper, made up name
+    { "taskcreate_LowConsole", OPTIONAL|UNUSED }, // helper, made up name
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -2718,6 +2719,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
 {sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "DebugAssert2",             "malloc_strictly",      SIG_NAMED_NTH(3,SUB)},
+{sig_match_named,   "taskcreate_LowConsole",    "task_EvShel",          SIG_NAMED_SUB},
+{sig_match_named,   "CreateMessageQueueStrictly","taskcreate_LowConsole",SIG_NAMED_SUB},
+{sig_match_named,   "CreateBinarySemaphoreStrictly","taskcreate_LowConsole",SIG_NAMED_NTH(2,SUB)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
@@ -2733,6 +2737,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
+// not using Strictly, to pick up veneers
+{sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
+{sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1)},
+{sig_match_near_str,"ReceiveMessageQueue",      "ReceiveMessageQue:%d", SIG_NEAR_BEFORE(9,1)},
 {sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
