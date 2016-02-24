@@ -4,6 +4,9 @@
 0x010c51fd,CreateTask_FW
 0x010c5369,ExitTask
 0x010c5369,ExitTask_FW
+0x010c53b9,CreateEventFlag
+0x010c56b5,CreateMessageQueue
+0x010c5765,ReceiveMessageQueue
 0x010c5957,CreateCountingSemaphore_FW
 0x010c598f,DeleteSemaphore_FW
 0x010c59f9,TakeSemaphore
@@ -11,6 +14,8 @@
 0x010c5a6d,GiveSemaphore
 0x010c5a6d,GiveSemaphore_FW
 0x010c5ae5,CreateTaskStrictly
+0x010c5b07,CreateMessageQueueStrictly
+0x010c5b3b,CreateBinarySemaphoreStrictly
 0x010c5b89,TakeSemaphoreStrictly
 0x010c5c3d,DebugAssert
 0x010c5c53,DebugAssert2
@@ -216,6 +221,7 @@
 0xfc0a4245,task_ConsoleSvr
 0xfc0a45ad,RotateConsoleZOder_FW
 0xfc0a463b,task_LowConsole
+0xfc0a467b,taskcreate_LowConsole
 0xfc0a4721,CPrintf_FW
 0xfc0a4759,CPutChar_FW
 0xfc0a476f,GetCh_FW
@@ -791,12 +797,17 @@
 0xfc24758b,j_IsZoomActuatorResetSensorPlusSide_FW
 0xfc24759b,GetZoomActuatorCurrentPosition_FW
 0xfc251730,j_DebugAssert2
+0xfc2517ac,j_CreateMessageQueue
 0xfc251904,j_CreateTask
+0xfc251ab4,j_CreateEventFlag
 0xfc251b2c,j__pow
 0xfc251b54,j_LocalTime
 0xfc251b7c,j__log10
+0xfc251bfc,j_ReceiveMessageQueue
+0xfc251c04,j_CreateMessageQueueStrictly
 0xfc251c0c,j_CreateTaskStrictly
 0xfc251c2c,j_TakeSemaphoreStrictly
+0xfc251c44,j_CreateBinarySemaphoreStrictly
 0xfc251c9c,j_time
 0xfc251d14,j_DebugAssert
 0xfc25525b,task_FocusEvent
