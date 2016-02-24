@@ -2722,6 +2722,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "taskcreate_LowConsole",    "task_EvShel",          SIG_NAMED_SUB},
 {sig_match_named,   "CreateMessageQueueStrictly","taskcreate_LowConsole",SIG_NAMED_SUB},
 {sig_match_named,   "CreateBinarySemaphoreStrictly","taskcreate_LowConsole",SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "PostMessageQueue",         "GetCh_FW",              SIG_NAMED_NTH(2,SUB)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
