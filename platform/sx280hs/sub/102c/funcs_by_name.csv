@@ -885,6 +885,7 @@
 0xfc1a78f9,j_Peek16_FW
 0xfc1a78f5,j_Peek32_FW
 0xfc1a78fd,j_Peek8_FW
+0xfc251bf4,j_PostMessageQueue
 0xfc1a78a3,j_Printf_FW
 0xfc2b0303,j_PTM_AllReset_FW
 0xfc2b0751,j_PTM_BackupUIProperty_FW
@@ -1157,6 +1158,7 @@
 0xfc2a615d,PostLogicalEventForNotPowerType_FW
 0xfc2a6189,PostLogicalEventToUI
 0xfc2a6189,PostLogicalEventToUI_FW
+0x010c5825,PostMessageQueue
 0xfc3b3863,PowerOffStrobePopUpActuator_FW
 0xfc3b3853,PowerOnStrobePopUpActuator_FW
 0xfc3e071d,PreFixAE_FW

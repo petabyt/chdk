@@ -993,6 +993,7 @@
 0xfc1e28fb,j_Peek16_FW
 0xfc1e28f7,j_Peek32_FW
 0xfc1e28ff,j_Peek8_FW
+0xfc2ef87c,j_PostMessageQueue
 0xfc1e28af,j_Printf_FW
 0xfc34ade3,j_PTM_AllReset_FW
 0xfc34b325,j_PTM_BackupUIProperty_FW
@@ -1271,6 +1272,7 @@
 0xfc3594c9,PostLogicalEventForNotPowerType_FW
 0xfc3594f5,PostLogicalEventToUI
 0xfc3594f5,PostLogicalEventToUI_FW
+0x010e5849,PostMessageQueue
 0xfc4f044f,PreFixAE_FW
 0xfc35849f,PrepareDirectory_0
 0xfc35849b,PrepareDirectory_1
