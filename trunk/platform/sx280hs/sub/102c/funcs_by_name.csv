@@ -157,6 +157,7 @@
 0x010c5957,CreateCountingSemaphore_FW
 0xfc0c5dc3,CreateDefectTableMirror_FW
 0x010c53b9,CreateEventFlag
+0x010c5b21,CreateEventFlagStrictly
 0xfc29dd27,CreateFADBGSingalID_FW
 0xfc3e2385,CreateJumptable
 0x010c56b5,CreateMessageQueue
@@ -426,6 +427,7 @@
 0xfc2a4c07,GetDrive_FreeClusters
 0xfc187189,GetDriverInfoEvent_FW
 0xfc3aca03,GetEFuseData_FW
+0x010c55a1,GetEventFlagValue
 0xfc3e027f,GetExStrobeID_FW
 0xfc28b425,GetFaceAuthBinAddr_FW
 0xfc28b429,GetFaceAuthBinSize_FW
@@ -737,6 +739,7 @@
 0xfc108207,j_closedir
 0xfc251ccc,j_CreateBinarySemaphoreStrictly
 0xfc251b3c,j_CreateEventFlag
+0xfc251d54,j_CreateEventFlagStrictly
 0xfc251834,j_CreateMessageQueue
 0xfc251c8c,j_CreateMessageQueueStrictly
 0xfc25198c,j_CreateTask
@@ -790,6 +793,7 @@
 0xfc1a7469,j_GetDialEventId_FW
 0xfc3e3d83,j_GetDISModeParameter_FW
 0xfc1a7479,j_GetDriverInfoEvent_FW
+0xfc251bec,j_GetEventFlagValue
 0xfc3b905f,j_GetFixedPWMOutA_FW
 0xfc3b9063,j_GetFixedPWMOutB_FW
 0xfc3de1dd,j_GetFocusDefaultResetPosition_FW
@@ -905,6 +909,7 @@
 0xfc1a73e1,j_SetStereoSeparation_FW
 0xfc05784d,j_ShowCameraLog_FW
 0xfc057851,j_ShowCameraLogInfo_FW
+0xfc251d3c,j_SleepTask
 0xfc29ee2d,j_SoundDevClearPath_FW
 0xfc29edf1,j_SoundDevSetZoomNCProfile_FW
 0xfc29edf5,j_SoundDevZoomNCEffective_FW
@@ -941,6 +946,10 @@
 0xfc29b169,j_UnRegisterEventProcTable
 0xfc1a73e9,j_VbattGet_FW
 0xfc1a78af,j_VerifyByte_FW
+0xfc251bbc,j_WaitForAllEventFlag
+0xfc251bd4,j_WaitForAllEventFlagStrictly
+0xfc251d4c,j_WaitForAnyEventFlag
+0xfc251b8c,j_WaitForAnyEventFlagStrictly
 0xfc2a521f,j_Write_FW
 0xfc0c5e51,j_WRITEADJTABLETOFROM_FW
 0xfc3aca25,JoinWLANNetwork_FW
@@ -1851,6 +1860,10 @@
 0xfc3b94f1,VerifyByte_FW
 0xfc09b4cb,vsprintf
 0xfc1a7901,Wait_FW
+0x010c54ed,WaitForAllEventFlag
+0x010c5bf9,WaitForAllEventFlagStrictly
+0x010c546f,WaitForAnyEventFlag
+0x010c5bdd,WaitForAnyEventFlagStrictly
 0xfc3b85e3,WaitMoveZoomLensComplete_FW
 0xfc2a5139,Write
 0xfc2a5139,Write_FW
