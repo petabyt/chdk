@@ -1053,11 +1053,13 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // call wasn't direct, check for veneer
     if(f != sleeptask) {
         fw_disasm_iter_single(fw,f);
-        f=get_direct_jump_target(fw,fw->is);
-        if(f != sleeptask) {
+        uint32_t f2=get_direct_jump_target(fw,fw->is);
+        if(f2 != sleeptask) {
             return 0;
         }
-        // TODO sleeptask veneer is useful for xref
+        // sleeptask veneer is useful for xref
+        // re-adding existing won't hurt
+        save_sig_with_j(fw,"SleepTask",f);
     }
     // rewind 1 for r0
     disasm_iter_init(fw,is,adr_hist_get(&is->ah,1));
@@ -2105,6 +2107,31 @@ int sig_match_undisplaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_
     }
     return 0;
 }
+int sig_match_wait_all_eventflag_strict(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t str_adr = find_str_bytes(fw,"EFTool.c");
+    if(!str_adr) {
+        printf("sig_match_wait_all_eventflag_strict: failed to find ref EFTool.c\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,60,"SleepTask")) {
+        printf("sig_match_wait_all_eventflag_strict: failed to find SleepTask\n");
+        return 0;
+    }
+
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,is->adr + 60)) {
+        if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+            printf("sig_match_wait_all_eventflag_strict: no match bl 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
+
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -2722,7 +2749,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "taskcreate_LowConsole",    "task_EvShel",          SIG_NAMED_SUB},
 {sig_match_named,   "CreateMessageQueueStrictly","taskcreate_LowConsole",SIG_NAMED_SUB},
 {sig_match_named,   "CreateBinarySemaphoreStrictly","taskcreate_LowConsole",SIG_NAMED_NTH(2,SUB)},
-{sig_match_named,   "PostMessageQueue",         "GetCh_FW",              SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "PostMessageQueue",         "GetCh_FW",             SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "CreateEventFlagStrictly",  "task_CreateHeaderTask",SIG_NAMED_SUB},
+{sig_match_named,   "WaitForAnyEventFlag",      "task_CreateHeaderTask",SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "GetEventFlagValue",        "task_CreateHeaderTask",SIG_NAMED_NTH(3,SUB)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
@@ -2742,6 +2772,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"ReceiveMessageQueue",      "ReceiveMessageQue:%d", SIG_NEAR_BEFORE(9,1)},
+{sig_match_near_str,"WaitForAllEventFlag",      "Error WaitEvent PREPARE_TESTREC_EXECUTED.", SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"WaitForAnyEventFlagStrictly","_imageSensorTask",   SIG_NEAR_AFTER(10,2)},
+{sig_match_wait_all_eventflag_strict,"WaitForAllEventFlagStrictly","EF.StartInternalMainFlash_FW"},
 {sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
