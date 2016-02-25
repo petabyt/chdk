@@ -5,6 +5,9 @@
 0x010e526b,ExitTask
 0x010e526b,ExitTask_FW
 0x010e52b9,CreateEventFlag
+0x010e5399,WaitForAnyEventFlag
+0x010e541b,WaitForAllEventFlag
+0x010e54f9,GetEventFlagValue
 0x010e56ad,CreateMessageQueue
 0x010e5773,ReceiveMessageQueue
 0x010e5849,PostMessageQueue
@@ -16,8 +19,11 @@
 0x010e5ad1,GiveSemaphore_FW
 0x010e5b61,CreateTaskStrictly
 0x010e5b83,CreateMessageQueueStrictly
+0x010e5b9d,CreateEventFlagStrictly
 0x010e5bb7,CreateBinarySemaphoreStrictly
 0x010e5c05,TakeSemaphoreStrictly
+0x010e5c59,WaitForAnyEventFlagStrictly
+0x010e5c75,WaitForAllEventFlagStrictly
 0x010e5cb9,DebugAssert
 0x010e5ccf,DebugAssert2
 0x010e5e9b,time
@@ -870,6 +876,10 @@
 0xfc2ef5ac,j_CreateTask
 0xfc2ef744,j_CreateEventFlag
 0xfc2ef774,j_LocalTime
+0xfc2ef7a4,j_WaitForAnyEventFlagStrictly
+0xfc2ef7d4,j_WaitForAllEventFlagStrictly
+0xfc2ef7f4,j_WaitForAllEventFlag
+0xfc2ef7fc,j_GetEventFlagValue
 0xfc2ef854,j__log10
 0xfc2ef87c,j_PostMessageQueue
 0xfc2ef884,j_time
@@ -877,8 +887,11 @@
 0xfc2ef8ec,j_ReceiveMessageQueue
 0xfc2ef8f4,j_CreateMessageQueueStrictly
 0xfc2ef8fc,j_CreateTaskStrictly
+0xfc2ef914,j_WaitForAnyEventFlag
+0xfc2ef924,j_CreateEventFlagStrictly
 0xfc2ef94c,j__pow
 0xfc2ef964,j_CreateBinarySemaphoreStrictly
+0xfc2ef9d4,j_SleepTask
 0xfc2ef9e4,j_DebugAssert
 0xfc2f77eb,get_playrec_mode
 0xfc3053dd,task_IS_ActiveShadCompTask
