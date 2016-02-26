@@ -805,6 +805,7 @@
 0xfc24760f,j_GetZoomActuatorCurrentPosition_FW
 0xfc247613,j_IsZoomActuatorResetSensorPlusSide_FW
 0xfc247623,GetZoomActuatorCurrentPosition_FW
+0xfc2514b9,j_GiveSemaphore
 0xfc2517b8,j_DebugAssert2
 0xfc251834,j_CreateMessageQueue
 0xfc25198c,j_CreateTask
@@ -821,6 +822,7 @@
 0xfc251c84,j_ReceiveMessageQueue
 0xfc251c8c,j_CreateMessageQueueStrictly
 0xfc251c94,j_CreateTaskStrictly
+0xfc251cac,j_TakeSemaphore
 0xfc251cb4,j_TakeSemaphoreStrictly
 0xfc251cbc,j_DeleteSemaphore
 0xfc251ccc,j_CreateBinarySemaphoreStrictly
