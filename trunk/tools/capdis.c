@@ -673,6 +673,7 @@ static void do_tbb_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
             } else {
                 printf("    .byte 0x%02x ; invalid juptable data?\n",*p);
             }
+            i++;
             adr++;
             continue;
         }
@@ -734,6 +735,7 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
             } else {
                 printf("    .short 0x%04x ; invalid juptable data?\n",*p);
             }
+            i++;
             adr+=ti->bytes;
             continue;
         }
