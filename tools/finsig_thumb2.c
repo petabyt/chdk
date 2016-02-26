@@ -2546,6 +2546,85 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// match last function called by already matched sig, 
+// either the last bl/blximmg before pop {... pc}
+// or b after pop {... lr}
+// param defines min and max number of insns
+// doesn't work on functions that don't push/pop since can't tell if unconditional branch is last
+// TODO should probably be split into a general "find last call of current func"
+#define SIG_NAMED_LAST_MAX_MASK     0x00000FFF
+#define SIG_NAMED_LAST_MIN_MASK     0x00FFF000
+#define SIG_NAMED_LAST_MIN_SHIFT    12
+#define SIG_NAMED_LAST_RANGE(min,max)   ((SIG_NAMED_LAST_MIN_MASK&((min)<<SIG_NAMED_LAST_MIN_SHIFT)) \
+                                         | (SIG_NAMED_LAST_MAX_MASK&(max)))
+
+int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t ref_adr = get_saved_sig_val(rule->ref_name);
+    int min = (rule->param&SIG_NAMED_LAST_MIN_MASK)>>SIG_NAMED_LAST_MIN_SHIFT;
+    int max = (rule->param&SIG_NAMED_LAST_MAX_MASK);
+    if(!ref_adr) {
+        printf("sig_match_named_last: missing %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,ref_adr);
+    int push_found=0;
+    uint32_t last_adr=0;
+    int count;
+    for(count=0; count < max; count++) {
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_named_last: disasm failed %s 0x%"PRIx64"\n",rule->name,is->adr);
+            return 0;
+        }
+        if(isPUSH_LR(is->insn)) {
+            // already found a PUSH LR, probably in new function
+            if(push_found) {
+                return 0;
+            }
+            push_found=1;
+            continue;
+        }
+        // ignore everything before push (could be some mov/ldr, shoudln't be any calls)
+        if(!push_found) {
+            continue;
+        }
+        // found a potential call, store
+        if(insn_match_any(is->insn,match_bl_blximm) && count >= min) {
+            last_adr=get_branch_call_insn_target(fw,is);
+            continue;
+        }
+        // found pop PC, can only be stored call if present
+        if(isPOP_PC(is->insn)) {
+            if(last_adr) {
+                return save_sig_with_j(fw,rule->name,last_adr);
+            }
+            // no call found, or not found within min
+            return 0;
+        }
+        // found pop LR, check if next is unconditional B
+        if(isPOP_LR(is->insn)) {
+            // hit func end with less than min, no match
+            if(count < min) {
+                return 0;
+            }
+            if(!disasm_iter(fw,is)) {
+                printf("sig_match_named_last: disasm failed %s 0x%"PRIx64"\n",rule->name,is->adr);
+                return 0;
+            }
+            if(is->insn->id == ARM_INS_B && is->insn->detail->arm.cc == ARM_CC_AL) {
+                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+            }
+            // doen't go more than one insn after pop (could be more, but uncommon)
+            return 0;
+        }
+        // found another kind of ret, give up
+        if(isRETx(is->insn)) {
+            return 0;
+        }
+    }
+    return 0;
+}
+
 // default - use the named firmware function
 #define SIG_NAMED_ASIS          0x00000000
 // use the target of the first B, BX, BL, BLX etc
@@ -2754,6 +2833,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "WaitForAnyEventFlag",      "task_CreateHeaderTask",SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "GetEventFlagValue",        "task_CreateHeaderTask",SIG_NAMED_NTH(3,SUB)},
 {sig_match_named,   "CreateBinarySemaphore",    "task_UartLog",         SIG_NAMED_SUB},
+// Semaphore funcs found by eventproc match, but want veneers. Will warn if mismatched
+{sig_match_named,   "TakeSemaphore",            "task_Bye",             SIG_NAMED_SUB},
+{sig_match_named_last,"GiveSemaphore",          "TurnOnVideoOutMode_FW",SIG_NAMED_LAST_RANGE(10,24)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
