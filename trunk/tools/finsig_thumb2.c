@@ -2855,6 +2855,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"ReceiveMessageQueue",      "ReceiveMessageQue:%d", SIG_NEAR_BEFORE(9,1)},
+{sig_match_near_str,"TryTakeSemaphore",         "FileScheduleTask",     SIG_NEAR_AFTER(10,2)},
 {sig_match_near_str,"WaitForAllEventFlag",      "Error WaitEvent PREPARE_TESTREC_EXECUTED.", SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"WaitForAnyEventFlagStrictly","_imageSensorTask",   SIG_NEAR_AFTER(10,2)},
 {sig_match_wait_all_eventflag_strict,"WaitForAllEventFlagStrictly","EF.StartInternalMainFlash_FW"},
