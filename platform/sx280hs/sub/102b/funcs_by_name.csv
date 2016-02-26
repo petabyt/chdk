@@ -933,6 +933,7 @@
 0xfc0c9f4f,j_TerminateTestRec_FW
 0xfc3ac985,j_TerminateWLAN_FW
 0xfc251c9c,j_time
+0xfc251af4,j_TryTakeSemaphore
 0xfc392b21,j_UIFS_CancelStoreLensTimer_FW
 0xfc39290b,j_UIFS_Capture_FW
 0xfc39290f,j_UIFS_CaptureNoneStop_FW
@@ -1792,6 +1793,7 @@
 0xfc08134b,TerminateWLAN_FW
 0x010c5ef1,time
 0xfc187c83,TryGPSforAdjustment_FW
+0x010c59c5,TryTakeSemaphore
 0xfc136d4f,TurnOffDisplay
 0xfc095a35,TurnOffE1_FW
 0xfc2a061f,TurnOffVideoOutMode_FW
