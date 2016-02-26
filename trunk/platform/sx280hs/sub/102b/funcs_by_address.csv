@@ -15,6 +15,7 @@
 0x010c5957,CreateCountingSemaphore_FW
 0x010c598f,DeleteSemaphore
 0x010c598f,DeleteSemaphore_FW
+0x010c59c5,TryTakeSemaphore
 0x010c59f9,TakeSemaphore
 0x010c59f9,TakeSemaphore_FW
 0x010c5a6d,GiveSemaphore
@@ -810,6 +811,7 @@
 0xfc2517ac,j_CreateMessageQueue
 0xfc251904,j_CreateTask
 0xfc251ab4,j_CreateEventFlag
+0xfc251af4,j_TryTakeSemaphore
 0xfc251b04,j_WaitForAnyEventFlagStrictly
 0xfc251b2c,j__pow
 0xfc251b34,j_WaitForAllEventFlag

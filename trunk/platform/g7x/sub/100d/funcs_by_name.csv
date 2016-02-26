@@ -1045,6 +1045,7 @@
 0xfc1c008f,j_TouchPanelAdjustmentNextStep_FW
 0xfc0f83bf,j_TouchPanelStartPolling_FW
 0xfc0f83c3,j_TouchPanelStopPolling_FW
+0xfc2ef73c,j_TryTakeSemaphore
 0xfc4f1d0f,j_TurnOffCamera_FW
 0xfc1bf31d,j_TurnOffDispForTouchPanelAdj_FW
 0xfc46e2cb,j_UIFS_CancelStoreLensTimer_FW
@@ -1980,6 +1981,7 @@
 0xfc1c0389,TP_DumpCalibrationData_FW
 0xfc0e1db7,TP_FirmwareUpdate_FW
 0xfc0e1de9,TP_GetFirmwareVersion_FW
+0x010e5a29,TryTakeSemaphore
 0xfc0bd81d,TurnOffCamera_FW
 0xfc0cd2a3,TurnOffDispForTouchPanelAdj_FW
 0xfc32af87,TurnOffDisplay
