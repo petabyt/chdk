@@ -426,6 +426,54 @@ int isRETx(cs_insn *insn)
     return 0;
 }
 
+// does insn push LR (function start -ish)
+int isPUSH_LR(cs_insn *insn)
+{
+    if(insn->id != ARM_INS_PUSH) {
+        return 0;
+    }
+    int i;
+    for(i=0; i < insn->detail->arm.op_count; i++) {
+        if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+            && insn->detail->arm.operands[i].reg == ARM_REG_LR) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// does insn pop LR (func end before tail call)
+int isPOP_LR(cs_insn *insn)
+{
+    if(insn->id != ARM_INS_POP) {
+        return 0;
+    }
+    int i;
+    for(i=0; i < insn->detail->arm.op_count; i++) {
+        if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+            && insn->detail->arm.operands[i].reg == ARM_REG_LR) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// does insn pop PC
+int isPOP_PC(cs_insn *insn)
+{
+    if(insn->id != ARM_INS_POP) {
+        return 0;
+    }
+    int i;
+    for(i=0; i < insn->detail->arm.op_count; i++) {
+        if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+            && insn->detail->arm.operands[i].reg == ARM_REG_PC) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /*
 int isADR(cs_insn *insn) {
     // objdump disassembles as add r0, pc, #x, 
