@@ -722,7 +722,7 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
     }
     int i=0;
     while(i < ti->count) {
-        uint8_t *p=adr2ptr(fw,adr);
+        uint16_t *p=(uint16_t *)adr2ptr(fw,adr);
         if(!p) {
             fprintf(stderr,"do_tbh_data: jumptable outside of valid address range at 0x%08x\n",adr);
             break;
