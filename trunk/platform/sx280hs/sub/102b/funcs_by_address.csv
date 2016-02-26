@@ -11,7 +11,9 @@
 0x010c56b5,CreateMessageQueue
 0x010c5765,ReceiveMessageQueue
 0x010c5825,PostMessageQueue
+0x010c5915,CreateBinarySemaphore
 0x010c5957,CreateCountingSemaphore_FW
+0x010c598f,DeleteSemaphore
 0x010c598f,DeleteSemaphore_FW
 0x010c59f9,TakeSemaphore
 0x010c59f9,TakeSemaphore_FW
@@ -815,10 +817,12 @@
 0xfc251b64,j_GetEventFlagValue
 0xfc251b6c,j_PostMessageQueue
 0xfc251b7c,j__log10
+0xfc251bdc,j_CreateBinarySemaphore
 0xfc251bfc,j_ReceiveMessageQueue
 0xfc251c04,j_CreateMessageQueueStrictly
 0xfc251c0c,j_CreateTaskStrictly
 0xfc251c2c,j_TakeSemaphoreStrictly
+0xfc251c34,j_DeleteSemaphore
 0xfc251c44,j_CreateBinarySemaphoreStrictly
 0xfc251c9c,j_time
 0xfc251cb4,j_SleepTask

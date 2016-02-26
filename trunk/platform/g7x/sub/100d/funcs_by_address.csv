@@ -11,7 +11,9 @@
 0x010e56ad,CreateMessageQueue
 0x010e5773,ReceiveMessageQueue
 0x010e5849,PostMessageQueue
+0x010e5965,CreateBinarySemaphore
 0x010e59b1,CreateCountingSemaphore_FW
+0x010e59e9,DeleteSemaphore
 0x010e59e9,DeleteSemaphore_FW
 0x010e5a59,TakeSemaphore
 0x010e5a59,TakeSemaphore_FW
@@ -881,6 +883,7 @@
 0xfc2ef7f4,j_WaitForAllEventFlag
 0xfc2ef7fc,j_GetEventFlagValue
 0xfc2ef854,j__log10
+0xfc2ef85c,j_CreateBinarySemaphore
 0xfc2ef87c,j_PostMessageQueue
 0xfc2ef884,j_time
 0xfc2ef8b4,j_TakeSemaphoreStrictly
@@ -891,6 +894,7 @@
 0xfc2ef924,j_CreateEventFlagStrictly
 0xfc2ef94c,j__pow
 0xfc2ef964,j_CreateBinarySemaphoreStrictly
+0xfc2ef97c,j_DeleteSemaphore
 0xfc2ef9d4,j_SleepTask
 0xfc2ef9e4,j_DebugAssert
 0xfc2f77eb,get_playrec_mode
