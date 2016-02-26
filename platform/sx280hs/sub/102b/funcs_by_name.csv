@@ -152,6 +152,7 @@
 0xfc0a4721,CPrintf_FW
 0xfc0a4759,CPutChar_FW
 0xfc0c5dbb,CreateAdjustmentTableMirror_FW
+0x010c5915,CreateBinarySemaphore
 0x010c5b3b,CreateBinarySemaphoreStrictly
 0xfc1429d7,CreateController_FW
 0x010c5957,CreateCountingSemaphore_FW
@@ -177,6 +178,7 @@
 0xfc28fd4d,DeleteDirectory_Fut
 0xfc28fd03,DeleteFile_Fut
 0xfc29b0b1,DeleteProxyOfEventProcedure_FW
+0x010c598f,DeleteSemaphore
 0x010c598f,DeleteSemaphore_FW
 0xfc3e21b9,DevelopStillPicture_FW
 0xfc3a9c21,DevelopTool.DevelopTest_FW
@@ -737,6 +739,7 @@
 0xfc1a73c9,j_BeepDriveStop_FW
 0xfc2a50fd,j_Close_FW
 0xfc108207,j_closedir
+0xfc251bdc,j_CreateBinarySemaphore
 0xfc251c44,j_CreateBinarySemaphoreStrictly
 0xfc251ab4,j_CreateEventFlag
 0xfc251ccc,j_CreateEventFlagStrictly
@@ -747,6 +750,7 @@
 0xfc0c5dcb,j_CreateUserSettingMirror_FW
 0xfc251d14,j_DebugAssert
 0xfc251730,j_DebugAssert2
+0xfc251c34,j_DeleteSemaphore
 0xfc17dc2d,j_E2LatOn_FW
 0xfc2efab7,j_EF.IsChargeFull_FW
 0xfc1a78f7,j_exec_FW
