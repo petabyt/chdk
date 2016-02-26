@@ -864,6 +864,7 @@
 0xfc3b82bd,j_GetZoomPiSensorLevel_FW
 0xfc3acfd3,j_GetZoomResetSensorLevel_FW
 0xfc3acfcb,j_GetZoomTelePoint_FW
+0xfc2514b9,j_GiveSemaphore
 0xfc1a73e5,j_InitializeAudio_FW
 0xfc0ca311,j_Initializedccd_FW
 0xfc0ca311,j_InitializeDigicon_FW
@@ -924,6 +925,7 @@
 0xfc1975ef,j_StopAEIntegralService_FW
 0xfc057855,j_StopCameraLog_FW
 0xfc2b7e4d,j_strcmp_FW
+0xfc251cac,j_TakeSemaphore
 0xfc251cb4,j_TakeSemaphoreStrictly
 0xfc0ca315,j_Terminatedccd_FW
 0xfc0ca315,j_TerminateDigicon_FW

@@ -873,6 +873,7 @@
 0xfc2e9bcd,SetCzDebugSubjectDistance_FW
 0xfc2e9bd9,CzDebugPrintToFile_FW
 0xfc2ed557,UIFS_WirelessExecuteSendForever_FW
+0xfc2eef29,j_GiveSemaphore
 0xfc2ef40c,j_CreateMessageQueue
 0xfc2ef42c,j_DebugAssert2
 0xfc2ef5ac,j_CreateTask
@@ -894,6 +895,7 @@
 0xfc2ef924,j_CreateEventFlagStrictly
 0xfc2ef94c,j__pow
 0xfc2ef964,j_CreateBinarySemaphoreStrictly
+0xfc2ef974,j_TakeSemaphore
 0xfc2ef97c,j_DeleteSemaphore
 0xfc2ef9d4,j_SleepTask
 0xfc2ef9e4,j_DebugAssert
