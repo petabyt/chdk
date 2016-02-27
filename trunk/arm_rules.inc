@@ -114,6 +114,13 @@ ifdef OPT_DBG_LUA_ASSERT
 CFLAGS+=-DOPT_DBG_LUA_ASSERT
 endif
 
+# make sure this is either 0 or 1
+ifdef OPT_DISABLE_CAM_ERROR
+CFLAGS+=-DOPT_DISABLE_CAM_ERROR=1
+else
+CFLAGS+=-DOPT_DISABLE_CAM_ERROR=0
+endif
+
 ifdef OPT_WARNINGS
      ifeq ($(GCC_VERSION_MAJOR),3)
            CFLAGS+=-Wwrite-strings -Wsign-compare -Wunused -Wno-unused-parameter

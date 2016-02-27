@@ -119,6 +119,12 @@ void core_spytask()
     int gps_delay_timer = 200 ;
     int gps_state = -1 ;
 #endif
+#if (OPT_DISABLE_CAM_ERROR)
+    extern void DisableCamError();
+    int dce_cnt=0;
+    int dce_prevmode=0;
+    int dce_nowmode;
+#endif
     
     parse_version(&chdk_version, BUILD_NUMBER, BUILD_SVNREV);
 
@@ -213,6 +219,23 @@ void core_spytask()
 
         extern void set_palette();
         set_palette();
+
+#if (OPT_DISABLE_CAM_ERROR)
+        dce_nowmode = camera_info.state.mode_play;
+        if (dce_prevmode==dce_nowmode)
+        {                       //no mode change
+            dce_cnt++;          // overflow is not a concern here
+        }
+        else
+        {                       //mode has changed
+            dce_cnt=0;
+        }
+        if (dce_cnt==100)
+        {                       // 1..2s past play <-> rec mode change
+            DisableCamError();
+        }
+        dce_prevmode=dce_nowmode;
+#endif
 
         if ( memdmptick && (get_tick_count() >= memdmptick) )
         {
