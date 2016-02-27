@@ -2132,6 +2132,23 @@ int sig_match_wait_all_eventflag_strict(firmware *fw, iter_state_t *is, sig_rule
     return 0;
 }
 
+int sig_match_get_num_posted_messages(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,50,"TakeSemaphore")) {
+        printf("sig_match_get_num_posted_messages: failed to find TakeSemaphore\n");
+        return 0;
+    }
+    // find next call
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        printf("sig_match_get_num_posted_messages:  no match bl 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -2825,6 +2842,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
 {sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "DebugAssert2",             "malloc_strictly",      SIG_NAMED_NTH(3,SUB)},
+{sig_match_named,   "CheckAllEventFlag",        "ChargeStrobeForFA_FW", SIG_NAMED_SUB},
+{sig_match_named,   "ClearEventFlag",           "GetAEIntegralValueWithFix_FW",SIG_NAMED_SUB},
+{sig_match_named,   "CheckAnyEventFlag",        "task_SynchTask",       SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "taskcreate_LowConsole",    "task_EvShel",          SIG_NAMED_SUB},
 {sig_match_named,   "CreateMessageQueueStrictly","taskcreate_LowConsole",SIG_NAMED_SUB},
 {sig_match_named,   "CreateBinarySemaphoreStrictly","taskcreate_LowConsole",SIG_NAMED_NTH(2,SUB)},
@@ -2833,6 +2853,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "WaitForAnyEventFlag",      "task_CreateHeaderTask",SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "GetEventFlagValue",        "task_CreateHeaderTask",SIG_NAMED_NTH(3,SUB)},
 {sig_match_named,   "CreateBinarySemaphore",    "task_UartLog",         SIG_NAMED_SUB},
+{sig_match_named,   "PostMessageQueueStrictly", "EF.IsChargeFull_FW",   SIG_NAMED_SUB},
+{sig_match_named,   "SetEventFlag",             "StopStrobeChargeForFA_FW",SIG_NAMED_SUB},
+{sig_match_named,   "TryReceiveMessageQueue",   "task_DvlpSeqTask",     SIG_NAMED_NTH(3,SUB)},
 // Semaphore funcs found by eventproc match, but want veneers. Will warn if mismatched
 {sig_match_named,   "TakeSemaphore",            "task_Bye",             SIG_NAMED_SUB},
 {sig_match_named_last,"GiveSemaphore",          "TurnOnVideoOutMode_FW",SIG_NAMED_LAST_RANGE(10,24)},
@@ -2854,12 +2877,18 @@ sig_rule_t sig_rules_main[]={
 // not using Strictly, to pick up veneers
 {sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1)},
+{sig_match_near_str,"DeleteMessageQueue",       "DeleteMessageQueue(%d) is FAILURE",SIG_NEAR_BEFORE(10,1)},
+{sig_match_near_str,"DeleteEventFlag",          "DeleteEventFlag(%d) is FAILURE",SIG_NEAR_BEFORE(10,1)},
 {sig_match_near_str,"ReceiveMessageQueue",      "ReceiveMessageQue:%d", SIG_NEAR_BEFORE(9,1)},
+{sig_match_near_str,"TryPostMessageQueue",      "TryPostMessageQueue(%d)\n",SIG_NEAR_BEFORE(9,1)},
+// different string on cams newer than sx280
+{sig_match_near_str,"TryPostMessageQueue",      "[CWS]TryPostMessageQueue(%d) Failed\n",SIG_NEAR_BEFORE(9,1)},
 {sig_match_near_str,"TryTakeSemaphore",         "FileScheduleTask",     SIG_NEAR_AFTER(10,2)},
 {sig_match_near_str,"WaitForAllEventFlag",      "Error WaitEvent PREPARE_TESTREC_EXECUTED.", SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"WaitForAnyEventFlagStrictly","_imageSensorTask",   SIG_NEAR_AFTER(10,2)},
 {sig_match_wait_all_eventflag_strict,"WaitForAllEventFlagStrictly","EF.StartInternalMainFlash_FW"},
 {sig_match_near_str,"DeleteSemaphore",          "DeleteSemaphore passed",SIG_NEAR_BEFORE(3,1)},
+{sig_match_get_num_posted_messages,"GetNumberOfPostedMessages","task_CtgTotalTask"},
 {sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
