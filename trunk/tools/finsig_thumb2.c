@@ -2882,6 +2882,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 // not using Strictly, to pick up veneers
 {sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3)},
+{sig_match_near_str,"CreateCountingSemaphoreStrictly","DvlpSeqTask",    SIG_NEAR_BEFORE(18,3)},
 {sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateRecursiveLock",      "WdtInt",               SIG_NEAR_BEFORE(9,1)},
