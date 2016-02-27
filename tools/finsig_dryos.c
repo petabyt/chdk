@@ -399,6 +399,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "PTM_PrevItem", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "PTM_SetPropertyEnable", OPTIONAL|UNUSED|LIST_ALWAYS },
 
+    { "DisableISDriveError", OPTIONAL },
+
     // OS functions, mostly to aid firmware analysis. Order is important!
     { "_GetSystemTime", OPTIONAL|UNUSED|LIST_ALWAYS }, // only for locating timer functions
     { "SetTimerAfter", OPTIONAL|UNUSED|LIST_ALWAYS },
@@ -1604,6 +1606,7 @@ string_sig string_sigs[] =
     {20, "GetAdChValue", "GetAdChValue_FW", 0 },
     {20, "CalcLog10", "CalcLog10_FW", 4 },
     {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 1 },
+    {20, "DisableISDriveError", "DisableISDriveError_FW", 1},
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },

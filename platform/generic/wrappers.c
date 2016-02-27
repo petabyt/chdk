@@ -1764,3 +1764,13 @@ int CancelHPTimer(int handle)
 {
     return _CancelHPTimer(handle);
 }
+
+// disable camera error(s), E32 is the only error that can be handled at the moment (on newer 'IS' cameras)
+#if (OPT_DISABLE_CAM_ERROR)
+#warning OPT_DISABLE_CAM_ERROR enabled
+void DisableCamError(void)
+{
+    extern void _DisableISDriveError(void);
+    _DisableISDriveError();
+}
+#endif

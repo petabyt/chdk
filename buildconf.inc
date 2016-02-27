@@ -82,6 +82,10 @@ OPT_GEN_STUBS=1
 # on the default search path, -L/path/to/capstone is also required
 #CAPSTONE_TOOLS_LINK=-L/path/to/capstone -lcapstone
 
+# Define this to disable E32 error (caused by broken image stabilizer)
+# Only enable for newer cameras with optical image stabilizer, otherwise build will fail (due to missing fw function)
+#OPT_DISABLE_CAM_ERROR=1
+
 # ***please new entries above this line for protecting the chdk shell against errors***
 
 # Override the value below to compile a different default language into
