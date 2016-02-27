@@ -2845,6 +2845,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
 {sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "DebugAssert2",             "malloc_strictly",      SIG_NAMED_NTH(3,SUB)},
+{sig_match_named,   "AcquireRecursiveLockStrictly","StartWDT_FW",       SIG_NAMED_NTH(1,SUB)},
 {sig_match_named,   "CheckAllEventFlag",        "ChargeStrobeForFA_FW", SIG_NAMED_SUB},
 {sig_match_named,   "ClearEventFlag",           "GetAEIntegralValueWithFix_FW",SIG_NAMED_SUB},
 {sig_match_named,   "CheckAnyEventFlag",        "task_SynchTask",       SIG_NAMED_NTH(2,SUB)},
@@ -2862,6 +2863,8 @@ sig_rule_t sig_rules_main[]={
 // Semaphore funcs found by eventproc match, but want veneers. Will warn if mismatched
 {sig_match_named,   "TakeSemaphore",            "task_Bye",             SIG_NAMED_SUB},
 {sig_match_named_last,"GiveSemaphore",          "TurnOnVideoOutMode_FW",SIG_NAMED_LAST_RANGE(10,24)},
+// can't use last because func has early return POP
+{sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
@@ -2878,11 +2881,15 @@ sig_rule_t sig_rules_main[]={
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 // not using Strictly, to pick up veneers
+{sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3)},
 {sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1)},
+{sig_match_near_str,"CreateRecursiveLock",      "WdtInt",               SIG_NEAR_BEFORE(9,1)},
+{sig_match_near_str,"CreateRecursiveLockStrictly","LoadedScript",       SIG_NEAR_AFTER(6,2)},
 {sig_match_near_str,"DeleteMessageQueue",       "DeleteMessageQueue(%d) is FAILURE",SIG_NEAR_BEFORE(10,1)},
 {sig_match_near_str,"DeleteEventFlag",          "DeleteEventFlag(%d) is FAILURE",SIG_NEAR_BEFORE(10,1)},
 {sig_match_near_str,"ReceiveMessageQueue",      "ReceiveMessageQue:%d", SIG_NEAR_BEFORE(9,1)},
+{sig_match_near_str,"RegisterInterruptHandler", "WdtInt",               SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"TryPostMessageQueue",      "TryPostMessageQueue(%d)\n",SIG_NEAR_BEFORE(9,1)},
 // different string on cams newer than sx280
 {sig_match_near_str,"TryPostMessageQueue",      "[CWS]TryPostMessageQueue(%d) Failed\n",SIG_NEAR_BEFORE(9,1)},
