@@ -34,6 +34,7 @@
 0x010c5b07,CreateMessageQueueStrictly
 0x010c5b21,CreateEventFlagStrictly
 0x010c5b3b,CreateBinarySemaphoreStrictly
+0x010c5b55,CreateCountingSemaphoreStrictly
 0x010c5b6f,CreateRecursiveLockStrictly
 0x010c5b89,TakeSemaphoreStrictly
 0x010c5bc1,PostMessageQueueStrictly
@@ -824,6 +825,7 @@
 0xfc247623,GetZoomActuatorCurrentPosition_FW
 0xfc2514b9,j_GiveSemaphore
 0xfc2517b8,j_DebugAssert2
+0xfc2517fc,j_CreateCountingSemaphoreStrictly
 0xfc251834,j_CreateMessageQueue
 0xfc2518e4,j_CreateRecursiveLock
 0xfc25192c,j_AcquireRecursiveLock
