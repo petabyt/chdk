@@ -4,6 +4,8 @@
 0x0110ba18,_sqrt
 0xfc0a5951,_ToggleBatteryStatus_FW
 0xfc1ca2c1,AbortAEIntegralValue_FW
+0x010e6925,AcquireRecursiveLock
+0x010e5c91,AcquireRecursiveLockStrictly
 0xfc32d9a1,ActivateAdjLog_FW
 0xfc4ef1c9,ActivateImageDrive_FW
 0xfc1995df,ActivateImager_FW
@@ -201,6 +203,8 @@
 0x010e56ad,CreateMessageQueue
 0x010e5b83,CreateMessageQueueStrictly
 0xfc3265c5,CreateProxyOfEventProcedure_FW
+0x010e68b5,CreateRecursiveLock
+0x010e5beb,CreateRecursiveLockStrictly
 0x010e5089,CreateTask
 0x010e5089,CreateTask_FW
 0x010e5b61,CreateTaskStrictly
@@ -821,6 +825,8 @@
 0xfc2ef854,j__log10
 0xfc2ef94c,j__pow
 0xfc1ca2e5,j_AbortAEIntegralValue_FW
+0xfc2ef554,j_AcquireRecursiveLock
+0xfc2ef6bc,j_AcquireRecursiveLockStrictly
 0xfc1e2389,j_BeepDrive_FW
 0xfc1e238d,j_BeepDriveComp_FW
 0xfc1e2391,j_BeepDriveStop_FW
@@ -839,6 +845,8 @@
 0xfc2ef924,j_CreateEventFlagStrictly
 0xfc2ef40c,j_CreateMessageQueue
 0xfc2ef8f4,j_CreateMessageQueueStrictly
+0xfc2ef634,j_CreateRecursiveLock
+0xfc2ef69c,j_CreateRecursiveLockStrictly
 0xfc2ef5ac,j_CreateTask
 0xfc2ef8fc,j_CreateTaskStrictly
 0xfc0e4319,j_CreateUserSettingMirror_FW
@@ -1031,6 +1039,8 @@
 0xfc0e03df,j_Rec2PB
 0xfc2ef8ec,j_ReceiveMessageQueue
 0xfc4f0185,j_RegistColorMatrix_FW
+0xfc2ef8ac,j_RegisterInterruptHandler
+0xfc2ef6c4,j_ReleaseRecursiveLock
 0xfc489e4b,j_ResetNFCSystemArea_FW
 0xfc1e28bf,j_SDump_FW
 0xfc34b4c9,j_set_control_event
@@ -1365,9 +1375,11 @@
 0xfc32600b,RegisterEventProcedure_alt1
 0xfc32610f,RegisterEventProcedure_alt2
 0xfc326113,RegisterEventProcTable
+0x010e554d,RegisterInterruptHandler
 0xfc0cac4b,RegisterNotifyConnectPTPIP_FW
 0xfc0cac63,RegisterResponseConnectPTPIP_FW
 0xfc144563,RegistFirmScanNoticeCBR_FW
+0x010e69f3,ReleaseRecursiveLock
 0xfc4f54b9,ReloadAFAdjustment_FW
 0xfc4f3561,ReloadCdsAdjustment_FW
 0xfc4f00e7,ReloadColorAdjustment_FW
