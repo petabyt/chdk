@@ -183,6 +183,7 @@
 0xffe04db8,DisableFocusLensWaveLock_FW
 0xffe05184,DisableFocusPiCircuit_FW
 0xffe05de4,DisableISAutoGyroOffset_FW
+0xffe05dc4,DisableISDriveError
 0xffe05dc4,DisableISDriveError_FW
 0xffe05164,DisableMechaCircuit_FW
 0xffe051cc,DisableZoomEncoderCircuit_FW

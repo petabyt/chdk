@@ -225,6 +225,7 @@ NHSTUB(time                                   ,0x010e5e9b) //  0
 NHSTUB(vsprintf                               ,0xfc0c38cf) //  0
 NHSTUB(EngDrvRead                             ,0xfc360b25) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc34b29f) //  0
+NHSTUB(DisableISDriveError                    ,0xfc3d2a2d) //  0
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0            == 0x00000000
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0            == 0x00000000
 NHSTUB(PT_MFOn                                ,0xfc2849d9) //  0

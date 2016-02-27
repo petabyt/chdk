@@ -192,6 +192,7 @@
 0xffa8aecc,DisableIrisActuator_FW
 0xffa9af00,DisableIrisPiCircuit_FW
 0xffa9ba38,DisableISAutoGyroOffset_FW
+0xffa9ba18,DisableISDriveError
 0xffa9ba18,DisableISDriveError_FW
 0xffa9ae78,DisableMechaCircuit_FW
 0xffa9aee0,DisableZoomEncoderCircuit_FW

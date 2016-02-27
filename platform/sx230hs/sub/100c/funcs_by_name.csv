@@ -203,6 +203,7 @@
 0xff30db30,DisableIris_FW
 0xff2f651c,DisableIrisActuator_FW
 0xff30eb08,DisableISAutoGyroOffset_FW
+0xff30eae8,DisableISDriveError
 0xff30eae8,DisableISDriveError_FW
 0xff30dcd4,DisableLensError_FW
 0xff30dd4c,DisableMechaCircuit_FW

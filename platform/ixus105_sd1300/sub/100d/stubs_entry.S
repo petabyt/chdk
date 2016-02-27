@@ -255,6 +255,7 @@ NHSTUB(time                                   ,0xffc6a9e8) //109
 NHSTUB(vsprintf                               ,0xffc105d4) //115
 NHSTUB(EngDrvRead                             ,0xffc25444) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xffc74f38) //105
+NHSTUB(DisableISDriveError                    ,0xffe1991c) //120
 NHSTUB(CancelHPTimer                          ,0xffc6c5d8) //119
 NHSTUB(SetHPTimerAfterNow                     ,0xffc6c4d0) //119
 NHSTUB(PT_MFOn                                ,0xffc5d7fc) //120

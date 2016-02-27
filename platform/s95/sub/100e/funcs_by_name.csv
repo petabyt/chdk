@@ -193,6 +193,7 @@
 0xffae3240,DisableIrisActuator_FW
 0xffaf7658,DisableIrisPiCircuit_FW
 0xffaf81bc,DisableISAutoGyroOffset_FW
+0xffaf819c,DisableISDriveError
 0xffaf819c,DisableISDriveError_FW
 0xffaf755c,DisableLensError_FW
 0xffaf8544,DisableMacroIS_FW
