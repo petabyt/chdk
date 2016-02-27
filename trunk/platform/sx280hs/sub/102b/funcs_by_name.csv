@@ -117,10 +117,13 @@
 0xfc3b867d,ChangeZoomLensPointToMagnification_FW
 0xfc3e0247,ChargeStrobe_FW
 0xfc3e0269,ChargeStrobeForFA_FW
+0x010c5447,CheckAllEventFlag
+0x010c541f,CheckAnyEventFlag
 0xfc3ac909,CheckAvs_FW
 0xfc142753,CheckSumAll_FW
 0xfc071ef5,ClearDUIDFixFlag_FW
 0xfc071ea5,ClearDurianMode_FW
+0x010c5583,ClearEventFlag
 0xfc071faf,ClearFactoryMasterFlag_FW
 0xfc071fbb,ClearFactoryMasterROMProtection_FW
 0xfc071ea5,ClearFactoryMode_FW
@@ -176,7 +179,9 @@
 0x010c5c53,DebugAssert2
 0xfc142a49,DeleteController_FW
 0xfc28fd4d,DeleteDirectory_Fut
+0x010c53f1,DeleteEventFlag
 0xfc28fd03,DeleteFile_Fut
+0x010c570f,DeleteMessageQueue
 0xfc29b0b1,DeleteProxyOfEventProcedure_FW
 0x010c598f,DeleteSemaphore
 0x010c598f,DeleteSemaphore_FW
@@ -575,6 +580,7 @@
 0xfc3e1b2f,GetMonth_FW
 0xfc134991,GetMovieJpegVRAMHPixelsSize_FW
 0xfc134999,GetMovieJpegVRAMVPixelsSize_FW
+0x010c58c1,GetNumberOfPostedMessages
 0xfc3dcdef,GetObClampValue_FW
 0xfc197351,GetOnlyAEIntegData_FW
 0xfc138e6f,GetOpticalTemperature
@@ -737,6 +743,9 @@
 0xfc1a73c1,j_BeepDrive_FW
 0xfc1a73c5,j_BeepDriveComp_FW
 0xfc1a73c9,j_BeepDriveStop_FW
+0xfc251a3c,j_CheckAllEventFlag
+0xfc251acc,j_CheckAnyEventFlag
+0xfc251b94,j_ClearEventFlag
 0xfc2a50fd,j_Close_FW
 0xfc108207,j_closedir
 0xfc251bdc,j_CreateBinarySemaphore
@@ -750,6 +759,8 @@
 0xfc0c5dcb,j_CreateUserSettingMirror_FW
 0xfc251d14,j_DebugAssert
 0xfc251730,j_DebugAssert2
+0xfc251b8c,j_DeleteEventFlag
+0xfc251bd4,j_DeleteMessageQueue
 0xfc251c34,j_DeleteSemaphore
 0xfc17dc2d,j_E2LatOn_FW
 0xfc2efab7,j_EF.IsChargeFull_FW
@@ -841,6 +852,7 @@
 0xfc3b840f,j_GetMechaShutterStatus_FW
 0xfc3e164b,j_GetMovieJpegVRAMHPixelsSize_FW
 0xfc3e1653,j_GetMovieJpegVRAMVPixelsSize_FW
+0xfc251bf4,j_GetNumberOfPostedMessages
 0xfc138f41,j_GetOpticalTemperature_FW
 0xfc1a7443,j_GetSDDetect_FW
 0xfc1a7447,j_GetSDProtect_FW
@@ -895,6 +907,7 @@
 0xfc1a78e1,j_Peek32_FW
 0xfc1a78e9,j_Peek8_FW
 0xfc251b6c,j_PostMessageQueue
+0xfc251afc,j_PostMessageQueueStrictly
 0xfc1a788f,j_Printf_FW
 0xfc2b0287,j_PTM_AllReset_FW
 0xfc2b06d5,j_PTM_BackupUIProperty_FW
@@ -911,6 +924,7 @@
 0xfc3e03c1,j_RegistColorMatrix_FW
 0xfc2afe51,j_set_control_event
 0xfc3e05c9,j_SetAE_CdsGainValue_FW
+0xfc251c14,j_SetEventFlag
 0xfc1a73cd,j_SetStereoSeparation_FW
 0xfc05784d,j_ShowCameraLog_FW
 0xfc057851,j_ShowCameraLogInfo_FW
@@ -933,6 +947,8 @@
 0xfc0c9f4f,j_TerminateTestRec_FW
 0xfc3ac985,j_TerminateWLAN_FW
 0xfc251c9c,j_time
+0xfc251b5c,j_TryPostMessageQueue
+0xfc251aec,j_TryReceiveMessageQueue
 0xfc251af4,j_TryTakeSemaphore
 0xfc392b21,j_UIFS_CancelStoreLensTimer_FW
 0xfc39290b,j_UIFS_Capture_FW
@@ -1175,6 +1191,7 @@
 0xfc2a610d,PostLogicalEventToUI
 0xfc2a610d,PostLogicalEventToUI_FW
 0x010c5825,PostMessageQueue
+0x010c5bc1,PostMessageQueueStrictly
 0xfc3b37d3,PowerOffStrobePopUpActuator_FW
 0xfc3b37c3,PowerOnStrobePopUpActuator_FW
 0xfc3e068d,PreFixAE_FW
@@ -1333,6 +1350,7 @@
 0xfc3e3cd7,SetDISModeParameter_FW
 0xfc071f19,SetDUIDFixFlag_FW
 0xfc071e7d,SetDurianMode_FW
+0x010c5569,SetEventFlag
 0xfc3e01fd,SetExStrobeMode_FW
 0xfc071fb5,SetFactoryMasterFlag_FW
 0xfc071fd1,SetFactoryMasterROMProtection_FW
@@ -1793,6 +1811,8 @@
 0xfc08134b,TerminateWLAN_FW
 0x010c5ef1,time
 0xfc187c83,TryGPSforAdjustment_FW
+0x010c589f,TryPostMessageQueue
+0x010c57ed,TryReceiveMessageQueue
 0x010c59c5,TryTakeSemaphore
 0xfc136d4f,TurnOffDisplay
 0xfc095a35,TurnOffE1_FW

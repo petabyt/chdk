@@ -143,6 +143,8 @@
 0xfc3d25f7,ChangeZoomLensPointToMagnification_FW
 0xfc4f000b,ChargeStrobe_FW
 0xfc4f002d,ChargeStrobeForFA_FW
+0x010e5363,CheckAllEventFlag
+0x010e532d,CheckAnyEventFlag
 0xfc489849,CheckAvs_FW
 0xfc1590bb,CheckSumAll_FW
 0xfc489507,CheckTouchPanelAdjustStatus_FW
@@ -152,6 +154,7 @@
 0xfc021017,ClearDefectTurnTable_FW
 0xfc078e9b,ClearDUIDFixFlag_FW
 0xfc078e4b,ClearDurianMode_FW
+0x010e54c9,ClearEventFlag
 0xfc078f55,ClearFactoryMasterFlag_FW
 0xfc078f61,ClearFactoryMasterROMProtection_FW
 0xfc078e4b,ClearFactoryMode_FW
@@ -211,7 +214,9 @@
 0x010e5ccf,DebugAssert2
 0xfc3473cb,DeleteController_FW
 0xfc325b7d,DeleteDirectory_Fut
+0x010e52f1,DeleteEventFlag
 0xfc325b33,DeleteFile_Fut
+0x010e5711,DeleteMessageQueue
 0xfc3265fd,DeleteProxyOfEventProcedure_FW
 0x010e59e9,DeleteSemaphore
 0x010e59e9,DeleteSemaphore_FW
@@ -667,6 +672,7 @@
 0xfc3cf7ff,GetNdMoveTime_FW
 0xfc489e99,GetNFCSystemAreaData_FW
 0xfc489eef,GetNFCUserAreaData_FW
+0x010e58fd,GetNumberOfPostedMessages
 0xfc4f356f,GetObClampValue_FW
 0xfc1ca761,GetOnlyAEIntegData_FW
 0xfc140453,GetOpticalTemperature
@@ -818,7 +824,10 @@
 0xfc1e238d,j_BeepDriveComp_FW
 0xfc1e2391,j_BeepDriveStop_FW
 0xfc3b449b,j_CecRegDump_FW
+0xfc2ef6a4,j_CheckAllEventFlag
+0xfc2ef71c,j_CheckAnyEventFlag
 0xfc48950b,j_CheckTouchPanelCheckStatus_FW
+0xfc2ef91c,j_ClearEventFlag
 0xfc4ef21f,j_ClearImageDrive_FW
 0xfc489e15,j_ClearNFCSystemArea_FW
 0xfc3580fd,j_Close_FW
@@ -834,6 +843,8 @@
 0xfc0e4319,j_CreateUserSettingMirror_FW
 0xfc2ef9e4,j_DebugAssert
 0xfc2ef42c,j_DebugAssert2
+0xfc2ef92c,j_DeleteEventFlag
+0xfc2ef8d4,j_DeleteMessageQueue
 0xfc2ef97c,j_DeleteSemaphore
 0xfc1997fb,j_E2LatOn_FW
 0xfc38f7c7,j_EF.GetEFModExamDriveType_FW
@@ -938,6 +949,7 @@
 0xfc4f1479,j_GetMovieJpegVRAMVPixelsSize_FW
 0xfc4f2127,j_GetMShutterStatus_FW
 0xfc3d2371,j_GetNdMoveTime_FW
+0xfc2ef8e4,j_GetNumberOfPostedMessages
 0xfc14055d,j_GetOpticalTemperature_FW
 0xfc1e244f,j_GetPopupOpen_FW
 0xfc1e240b,j_GetSDDetect_FW
@@ -1003,6 +1015,7 @@
 0xfc1e28f7,j_Peek32_FW
 0xfc1e28ff,j_Peek8_FW
 0xfc2ef87c,j_PostMessageQueue
+0xfc2ef6f4,j_PostMessageQueueStrictly
 0xfc1e28af,j_Printf_FW
 0xfc34ade3,j_PTM_AllReset_FW
 0xfc34b325,j_PTM_BackupUIProperty_FW
@@ -1020,6 +1033,7 @@
 0xfc489e4b,j_ResetNFCSystemArea_FW
 0xfc1e28bf,j_SDump_FW
 0xfc34b4c9,j_set_control_event
+0xfc2ef84c,j_SetEventFlag
 0xfc1e2395,j_SetStereoSeparation_FW
 0xfc06f90d,j_ShowCameraLog_FW
 0xfc06f911,j_ShowCameraLogInfo_FW
@@ -1045,6 +1059,8 @@
 0xfc1c008f,j_TouchPanelAdjustmentNextStep_FW
 0xfc0f83bf,j_TouchPanelStartPolling_FW
 0xfc0f83c3,j_TouchPanelStopPolling_FW
+0xfc2ef7bc,j_TryPostMessageQueue
+0xfc2ef70c,j_TryReceiveMessageQueue
 0xfc2ef73c,j_TryTakeSemaphore
 0xfc4f1d0f,j_TurnOffCamera_FW
 0xfc1bf31d,j_TurnOffDispForTouchPanelAdj_FW
@@ -1289,6 +1305,7 @@
 0xfc3594f5,PostLogicalEventToUI
 0xfc3594f5,PostLogicalEventToUI_FW
 0x010e5849,PostMessageQueue
+0x010e5c3d,PostMessageQueueStrictly
 0xfc4f044f,PreFixAE_FW
 0xfc35849f,PrepareDirectory_0
 0xfc35849b,PrepareDirectory_1
@@ -1458,6 +1475,7 @@
 0xfc4f611b,SetDISModeParameter_FW
 0xfc078ebf,SetDUIDFixFlag_FW
 0xfc078e23,SetDurianMode_FW
+0x010e549b,SetEventFlag
 0xfc4effd1,SetExStrobeMode_FW
 0xfc078f5b,SetFactoryMasterFlag_FW
 0xfc078f77,SetFactoryMasterROMProtection_FW
@@ -1981,6 +1999,8 @@
 0xfc1c0389,TP_DumpCalibrationData_FW
 0xfc0e1db7,TP_FirmwareUpdate_FW
 0xfc0e1de9,TP_GetFirmwareVersion_FW
+0x010e58c7,TryPostMessageQueue
+0x010e57ff,TryReceiveMessageQueue
 0x010e5a29,TryTakeSemaphore
 0xfc0bd81d,TurnOffCamera_FW
 0xfc0cd2a3,TurnOffDispForTouchPanelAdj_FW
