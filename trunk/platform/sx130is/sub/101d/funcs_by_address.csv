@@ -1171,6 +1171,7 @@
 0xffaaf258,SetISLPFAaxis_FW
 0xffaaf26c,SetISLPFBaxis_FW
 0xffaaf280,EnableISDriveError_FW
+0xffaaf290,DisableISDriveError
 0xffaaf290,DisableISDriveError_FW
 0xffaaf2a0,EnableISAutoGyroOffset_FW
 0xffaaf2b0,DisableISAutoGyroOffset_FW

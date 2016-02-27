@@ -220,6 +220,7 @@ NHSTUB(vsprintf                               ,0xfc09b4cb) //  0
 NHSTUB(undisplaybusyonscreen                  ,0xfc14a27f) //  0
 NHSTUB(EngDrvRead                             ,0xfc2b7cab) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc2b064f) //  0
+NHSTUB(DisableISDriveError                    ,0xfc3b8a9d) //  0
 NHSTUB(PT_MFOn                                ,0xfc20ee17) //  0
 NHSTUB(PT_MFOff                               ,0xfc20ee47) //  0
 NHSTUB(GetAdChValue                           ,0xfc0c33c7) //  0

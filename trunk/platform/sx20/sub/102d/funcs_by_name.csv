@@ -194,6 +194,7 @@
 0xffa97364,DisableIris_FW
 0xffa8a528,DisableIrisActuator_FW
 0xffa9987c,DisableISAutoGyroOffset_FW
+0xffa9985c,DisableISDriveError
 0xffa9985c,DisableISDriveError_FW
 0xffa97498,DisableMechaCircuit_FW
 0xff955cb0,DisableUsmEncErrorDetect_FW

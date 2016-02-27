@@ -212,6 +212,7 @@
 0xff31e6f4,DisableFocusLensWaveLock_FW
 0xff31ebc8,DisableFocusPiCircuit_FW
 0xff31fb04,DisableISAutoGyroOffset_FW
+0xff31fae4,DisableISDriveError
 0xff31fae4,DisableISDriveError_FW
 0xff31eb20,DisableLensError_FW
 0xff31fe20,DisableMacroIS_FW

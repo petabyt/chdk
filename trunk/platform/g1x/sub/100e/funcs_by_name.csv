@@ -220,6 +220,7 @@
 0xff370f00,DisableIris_FW
 0xff35b050,DisableIrisActuator_FW
 0xff3720ec,DisableISAutoGyroOffset_FW
+0xff3720cc,DisableISDriveError
 0xff3720cc,DisableISDriveError_FW
 0xff37110c,DisableLensError_FW
 0xff372528,DisableMacroIS_FW

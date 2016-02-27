@@ -222,6 +222,7 @@
 0xff3e4a48,DisableFocusPiCircuit_FW
 0xff0621d0,DisableHvUpdate_FW
 0xff3e5984,DisableISAutoGyroOffset_FW
+0xff3e5964,DisableISDriveError
 0xff3e5964,DisableISDriveError_FW
 0xff3e49a0,DisableLensError_FW
 0xff3e5ca0,DisableMacroIS_FW
