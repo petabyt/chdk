@@ -195,6 +195,7 @@
 0x010e5bb7,CreateBinarySemaphoreStrictly
 0xfc347345,CreateController_FW
 0x010e59b1,CreateCountingSemaphore_FW
+0x010e5bd1,CreateCountingSemaphoreStrictly
 0xfc0e42d1,CreateDefectTableMirror_FW
 0x010e52b9,CreateEventFlag
 0x010e5b9d,CreateEventFlagStrictly
@@ -841,6 +842,7 @@
 0xfc11851f,j_closedir
 0xfc2ef85c,j_CreateBinarySemaphore
 0xfc2ef964,j_CreateBinarySemaphoreStrictly
+0xfc2ef4ec,j_CreateCountingSemaphoreStrictly
 0xfc2ef744,j_CreateEventFlag
 0xfc2ef924,j_CreateEventFlagStrictly
 0xfc2ef40c,j_CreateMessageQueue
