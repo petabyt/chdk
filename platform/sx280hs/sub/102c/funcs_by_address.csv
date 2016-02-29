@@ -30,6 +30,7 @@
 0x010c59f9,TakeSemaphore_FW
 0x010c5a6d,GiveSemaphore
 0x010c5a6d,GiveSemaphore_FW
+0x010c5a91,GetSemaphoreValue
 0x010c5ae5,CreateTaskStrictly
 0x010c5b07,CreateMessageQueueStrictly
 0x010c5b21,CreateEventFlagStrictly
@@ -828,6 +829,7 @@
 0xfc2517fc,j_CreateCountingSemaphoreStrictly
 0xfc251834,j_CreateMessageQueue
 0xfc2518e4,j_CreateRecursiveLock
+0xfc2518f4,j_GetSemaphoreValue
 0xfc25192c,j_AcquireRecursiveLock
 0xfc251984,j_CreateRecursiveLockStrictly
 0xfc25198c,j_CreateTask
