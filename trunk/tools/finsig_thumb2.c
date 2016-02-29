@@ -1226,6 +1226,46 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     return save_sig_with_j(fw,"GetDrive_FreeClusters",get_branch_call_insn_target(fw,is));
 }
 
+int sig_match_get_semaphore_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_get_semaphore_value: failed to find ref %s\n",rule->ref_name);
+        return 0;
+    }
+
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    // assume first / only ref
+    if(!fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // printf("sig_get_semaphore_value: failed to find code ref to %s\n",rule->ref_name);
+        return 0;
+    }
+    // search backwards for func call
+    uint32_t fadr=0;
+    int i;
+    for(i=1; i<=5; i++) {
+        if(!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i))) {
+            // printf("sig_get_semaphore_value: disasm failed\n");
+            return 0;
+        }
+        if(insn_match_any(fw->is->insn,match_bl_blximm)){
+            fadr=get_branch_call_insn_target(fw,fw->is);
+            break;
+        }
+    }
+    if(!fadr) {
+        // printf("sig_get_semaphore_value: failed to find bl 1\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,fadr);
+    // look for first call
+    if(!insn_match_find_next(fw,is,9,match_bl_blximm)) {
+        // printf("sig_get_semaphore_value: failed to find bl 2\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
 // similar to sig_match_str_r0_call, but string also appears with Fopen_Fut
 int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -2874,6 +2914,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_kbd_state, "GetKbdState",        "kbd_read_keys"},
 {sig_match_create_jumptable, "CreateJumptable", "InitializeAdjustmentSystem_FW"},
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly","Fopen_Fut"},
+{sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]"},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW"},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
