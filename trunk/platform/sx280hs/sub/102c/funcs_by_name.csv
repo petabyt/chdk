@@ -601,6 +601,7 @@
 0xfc060489,GetSDProtect_FW
 0xfc3e1c19,GetSecond_FW
 0xfc142b8f,GetSelfControllerHandle_FW
+0x010c5a91,GetSemaphoreValue
 0xfc3dcecd,GetSensorPreGain_FW
 0xfc3dd8db,GetShutterSpeedRegularMaxLimit_FW
 0xfc3dd8ed,GetShutterSpeedRegularMinLimit_FW
@@ -867,6 +868,7 @@
 0xfc138f41,j_GetOpticalTemperature_FW
 0xfc1a7457,j_GetSDDetect_FW
 0xfc1a745b,j_GetSDProtect_FW
+0xfc2518f4,j_GetSemaphoreValue
 0xfc3dd8eb,j_GetShutterSpeedRegularMaxLimit_FW
 0xfc3dd8fd,j_GetShutterSpeedRegularMinLimit_FW
 0xfc3b37f9,j_GetStrobePopUpActuatorCurrentState_FW
