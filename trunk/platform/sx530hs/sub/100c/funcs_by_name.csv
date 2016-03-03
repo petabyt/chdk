@@ -2036,6 +2036,7 @@
 0xff392de0,TerminateSoundRec_FW
 0xff08429c,TerminateTestRec_FW
 0xff05beb0,TerminateWLAN_FW
+0x006b917c,time
 0x006b86c4,TryPostMessageQueue
 0x006b8590,TryReceiveMessageQueue
 0x006b79e8,TryTakeSemaphore

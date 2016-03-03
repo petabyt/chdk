@@ -26,7 +26,6 @@
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff027438
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x00000000
-// ERROR: time is not found.                               //--- ---    *** != 0x006b917c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
@@ -276,6 +275,7 @@ NHSTUB(strtolx                                ,0xff038428) //109
    DEF(task_PhySw                             ,0xff02ba34) //120
    DEF(task_RotaryEncoder                     ,0xff0748a0) //120
    DEF(hook_CreateTask                        ,0x006b5658) //105
+//NHSTUB(time                                 ,0x006b917c) //119            == 0x006b917c
 NHSTUB(vsprintf                               ,0xff027af0) //115
 NHSTUB(EngDrvRead                             ,0xff02c0bc) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xff0b6780) //105
