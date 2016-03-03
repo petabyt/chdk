@@ -160,6 +160,7 @@
 0xff82a380,ReleaseRecursiveLock
 0xff82a760,SleepTask
 0xff82a760,SleepTask_FW
+0xff82ab10,time
 0xff82abc4,GetTimeOfSystem_FW
 0xff82b490,task_StartupImage
 0xff82c5c8,task_BatteryTask

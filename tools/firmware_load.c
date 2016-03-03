@@ -989,6 +989,10 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFFE0170:0xFFFF0170);
                 fw->pid_adr = (fw->base==0xFF010000)?0xFFFE0040:0xFFFF0040;
                 break;
+            case 58:
+                fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFFE03A0:0xFFFF03A0);
+                fw->pid_adr = (fw->base==0xFF010000)?0xFFFE0270:0xFFFF0270;
+                break;
         }
     }
     else

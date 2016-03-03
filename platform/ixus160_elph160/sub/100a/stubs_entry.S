@@ -25,7 +25,6 @@
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff98df94) //  3 90%        == 0xff98df94
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff827fb4
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-// ERROR: time is not found.                               //--- ---    *** != 0xffa1b39c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffadd0bc -> ffcb2584
@@ -251,6 +250,7 @@ NHSTUB(strtolx                                ,0xff838c04) //109
    DEF(task_MovieRecord                       ,0xff995d5c) //120
    DEF(task_PhySw                             ,0xff82d7c4) //120
    DEF(hook_CreateTask                        ,0xff824a30) //105
+NHSTUB(time                                   ,0xff82ab10) //119
 NHSTUB(vsprintf                               ,0xff82866c) //115
 NHSTUB(EngDrvRead                             ,0xff82ddf8) //102
 NHSTUB(PTM_GetCurrentItem                     ,0xff8a1464) //105

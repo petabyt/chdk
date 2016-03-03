@@ -1541,6 +1541,7 @@
 0xff996710,TerminateMechaUnitExeTest_FW
 0xffaa8c88,TerminateSoundRec_FW
 0xff87a524,TerminateTestRec_FW
+0xff82ab10,time
 0xff82a058,TryPostMessageQueue
 0xff829f24,TryReceiveMessageQueue
 0xff826424,TryTakeSemaphore

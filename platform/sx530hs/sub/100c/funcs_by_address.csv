@@ -54,6 +54,7 @@
 0x006b89ec,ReleaseRecursiveLock
 0x006b8dcc,SleepTask
 0x006b8dcc,SleepTask_FW
+0x006b917c,time
 0x006b9230,GetTimeOfSystem_FW
 0x006b98e8,LocalTime
 0x006dac28,_divmod_signed_int

@@ -7,15 +7,6 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens, 0xff98df94)
 
 NHSTUB(MakeDirectory_Fut,0xff827fb4) // mkdir. This required #define MKDIR_RETURN_ONE_ON_SUCCESS
 
-// Try from loc_ff8369cc
-// or sub_ff99ee7c
-// loc_FF99EEAC looks interesting
-// in sub_FF894F98 references to 0x6B...
-// try 0x6B21D8
-// or sub_ff825374
-// 0xff826964
-NHSTUB(time, 0xffa1b39c)
-
 // Knowing that
 //NHSTUB(_log        ,0x006bb388) //111
 //NHSTUB(_pow        ,0x006bba40) //121
