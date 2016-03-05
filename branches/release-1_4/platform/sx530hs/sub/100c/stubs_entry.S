@@ -26,7 +26,7 @@
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff027438
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x00000000
-// ERROR: time is not found.                               //--- ---    *** != 0x00000000
+//NHSTUB(time                                 ,0x006b917c) //119        *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
