@@ -149,6 +149,7 @@ typedef struct
     int show_values;
     int show_values_in_video;
     int show_overexp;
+    int show_hiddenfiles;
 
     int histo_mode;
     int histo_auto_ajust;

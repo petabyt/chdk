@@ -145,6 +145,7 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO(  4, conf.override_disable_all,                   CONF_DEF_VALUE, i:1),
     CONF_INFO(  5, conf.hide_osd,                               CONF_DEF_VALUE, i:1),
     CONF_INFO(  6, conf.rotate_osd,                             CONF_DEF_VALUE, i:0),
+    CONF_INFO(  7, conf.show_hiddenfiles,                       CONF_DEF_VALUE, i:0),
 
     CONF_INFO2( 20, conf.histo_pos,                             CONF_OSD_POS,   45,CAM_SCREEN_HEIGHT-HISTO_HEIGHT-40),
     CONF_INFO2( 21, conf.dof_pos,                               CONF_OSD_POS,   90,45),
