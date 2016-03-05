@@ -455,6 +455,7 @@ typedef struct
     unsigned char   isparent;       // parent directory (..)?
     unsigned char   iscurrent;      // current directory (.)?
     unsigned char   isvalid;        // stat() call succeeded
+    unsigned char   ishidden;       // hidden attribute?
 } fs_dirent;
 
 // Custom readdir - populates extra info about the file or directory
@@ -474,6 +475,7 @@ static int fs_readdir(DIR *d, fs_dirent *de, const char* path)
     de->iscurrent = 0;
     de->isdir = 0;
     de->isvalid = 0;
+    de->ishidden = 0;
 
     if (de->de)
     {
@@ -499,6 +501,7 @@ static int fs_readdir(DIR *d, fs_dirent *de, const char* path)
                 de->mtime = st.st_mtime;
                 de->isvalid = 1;
                 de->isdir = ((st.st_attrib & DOS_ATTR_DIRECTORY) != 0);
+                de->ishidden = ((st.st_attrib & DOS_ATTR_HIDDEN) != 0);
             }
         }
 
@@ -628,7 +631,7 @@ static void gui_fselect_read_dir()
     {
         while (fs_readdir(d, &de, items.dir))
         {
-            if (!de.deleted && !de.iscurrent)
+            if (!de.deleted && !de.iscurrent && (conf.show_hiddenfiles || !de.ishidden))
             {
                 add_item(&items, de.de->d_name, de.size, de.mtime, 0, de.isdir, de.isparent, de.isvalid);
                 if (de.isparent)

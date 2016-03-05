@@ -1706,6 +1706,7 @@ static CMenuItem osd_submenu_items[] = {
     MENU_ITEM(0x33,LANG_MENU_OSD_SPACE_PARAMS,      MENUITEM_SUBMENU,       &space_submenu, 0 ),
     MENU_ITEM(0x34,LANG_MENU_OSD_CLOCK_PARAMS,	 	MENUITEM_SUBMENU,       &clock_submenu, 0 ),
     MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_IN_REVIEW,    MENUITEM_BOOL,          &conf.show_osd_in_review, 0 ),
+    MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_HIDDENFILES,  MENUITEM_BOOL,          &conf.show_hiddenfiles, 0 ),
 #ifdef  CAM_TOUCHSCREEN_UI
     MENU_ITEM   (0x22,LANG_MENU_TOUCHSCREEN_VALUES,         MENUITEM_SUBMENU,   &touchscreen_submenu,       0 ),
 #endif
