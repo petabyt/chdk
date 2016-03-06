@@ -91,14 +91,26 @@ void JogDial_CCW(void) {
 }
 
 extern  int     active_raw_buffer;
-extern  char*   raw_buffers[];
+extern  char*   raw_buffers_canon_raw[];
+extern  char*   raw_buffers_jpeg[];
 
 char *hook_raw_image_addr()
 {
-    return (char *)0x4427bfa0; // CRAW BUF @fc4f1ff6, TODO unverified, probably multiple
-//    return raw_buffers[(active_raw_buffer&1)];
+    // observed values 0-2, 3 would index something that doesn't look like a raw fb in the jpeg case
+    int i=active_raw_buffer&3;
+    if(i>2) {
+        i=0;
+    }
+    // canon raw disabled - uses up to 3 raw buffers
+    if(shooting_get_prop(PROPCASE_IMAGE_FORMAT) == 1) {
+        return raw_buffers_jpeg[i];
+    } else {
+        // canon raw enabled - different address, not clear if it ever uses multiple buffers
+        return raw_buffers_canon_raw[i];
+    }
 }
 
+// TODO
 /*
 char *hook_alt_raw_image_addr()
 {

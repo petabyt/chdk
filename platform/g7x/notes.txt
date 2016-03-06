@@ -2,8 +2,8 @@
 G7x notes
 ************************************
 This is an INCOMPLETE, NON-WORKING PORT.
-It may be of interest to developers, but it is not yet useful for photography!
-No shooting related features are implemented or tested.
+It may be of interest to developers, but it is not yet very useful for photography!
+Many shooting related features not implemented or not tested.
 
 CHDK is a hack, use at your own risk!
 
@@ -17,13 +17,18 @@ PTP play/rec switch
 
 NOT IMPLEMENTED
 ***************
-capt_seq, movie_rec, exp_drv, mode map
+remote hook
+dark frame control
+movie_rec and exp_drv tasks
 
 OTHER ISSUES
 ************
+display updating is ugly
+functions that depend on live view (zebra, histogram, edge, PTP live view) won't work
 
 KNOWN BUGS
 **********
+DNG crashes
 
 
 THANKS
