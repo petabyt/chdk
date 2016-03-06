@@ -21,6 +21,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens,		0xfc31fdfd) // call at 0xfc305ef0 s
 NHSTUB(GetImageFolder,							0xfc320ebf)
 NHSTUB(apex2us,									0xfc382687) // Shutter.c asserts in sub_fc16e57e, similar to sx280 sub_fc2a63d6
 NHSTUB(GetDrive_TotalClusters,					0xfc357bd7) // function immediately before GetDrive_FreeClusters in ROM
+NHSTUB(LogCameraEvent,							0xfc36000b) // debugging, from func csv
 
 // TODO temp for compile
 NHSTUB(EnterToCompensationEVF,NULL_SUB)

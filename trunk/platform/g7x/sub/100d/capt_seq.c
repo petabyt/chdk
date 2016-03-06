@@ -8,6 +8,44 @@ static long *nrflag=&fake_nrflag;
 // NOTE sx280hs had
 //#define NR_AUTO (0) // not needed (in fact, it makes the camera crash)
 
+extern int active_raw_buffer;
+// debug
+extern void _LogCameraEvent(int id,const char *fmt,...);
+
+extern char *hook_raw_image_addr(void);
+
+void log_capt_seq(int m)
+{
+    _LogCameraEvent(0x60,"cs m:%d arb:%d rb:0x%08x i:%04d",
+                    m,
+                    active_raw_buffer,
+                    hook_raw_image_addr(),
+                    get_exposure_counter());
+}
+void log_capt_seq2(int m)
+{
+    _LogCameraEvent(0x60,"cs end m:%d arb:%d rb:0x%08x i:%04d",
+                    m,
+                    active_raw_buffer,
+                    hook_raw_image_addr(),
+                    get_exposure_counter());
+}
+void log_capt_seq_override(void)
+{
+    _LogCameraEvent(0x60,"cs override arb:%d rb:0x%08x i:%04d",
+                    active_raw_buffer,
+                    hook_raw_image_addr(),
+                    get_exposure_counter());
+}
+
+void log_capt_seq_raw(void)
+{
+    _LogCameraEvent(0x60,"cs rh arb:%d rb:0x%08x i:%04d",
+                    active_raw_buffer,
+                    hook_raw_image_addr(),
+                    get_exposure_counter());
+}
+
 #include "../../../generic/capt_seq.c"
 //-s=task_CaptSeq -c=173 -f=chdk
 // task_CaptSeq 0xfc1501d9
@@ -21,7 +59,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    movs    r2, #0\n"
 "    mov     r1, sp\n"
 "    ldr     r0, [r5, #8]\n"
-"    blx     sub_fc2ef8ec\n"
+"    blx     sub_fc2ef8ec\n" // j_ReceiveMessageQueue
 "    lsls    r0, r0, #0x1f\n"
 "    beq     loc_fc150202\n"
 "    movw    r2, #0x449\n"
@@ -43,6 +81,10 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    beq     loc_fc15021a\n"
 "    bl      sub_fc1e67ac\n"
 "loc_fc15021a:\n"
+// debug message
+"ldr     r0, [sp]\n"
+"ldr     r0, [r0]\n"
+"bl log_capt_seq\n"
 "    ldr     r0, [sp]\n"
 "    ldr     r1, [r0]\n"
 "    cmp     r1, #0x2b\n"
@@ -93,9 +135,10 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    .byte((loc_fc15038e - branchtable_fc150226) / 2)\n" // (case 41)
 "    .byte((loc_fc1503ba - branchtable_fc150226) / 2)\n" // (case 42)
 ".align 1\n"
-"loc_fc150252:\n"
+"loc_fc150252:\n" // case 0: preshoot, short press shoot(?)
 "    ldr     r0, [r0, #0xc]\n"
 "    bl      sub_fc15073a\n"
+"bl log_capt_seq_override\n"
 "    BL      shooting_expo_param_override\n" // +
 "    bl      sub_fc14dc2e\n"
 "    ldr     r0, [r4, #0x28]\n"
@@ -104,9 +147,11 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    bl      sub_fc1e58d8\n" // -> nr, remote hook ? (no short press)
 "loc_fc150266:\n"
 "    b       loc_fc1503ba\n"
-"loc_fc150268:\n"
+"loc_fc150268:\n" // case 1: (normal shoot)
 "    ldr     r0, [r0, #0x10]\n"
 "    bl      sub_fc1e56a6\n" // -> nr, remote hook ?
+"bl log_capt_seq_raw\n"
+"    BL      capt_seq_hook_raw_here\n" // test
 "    b       loc_fc1503ba\n"
 "loc_fc150270:\n"
 "    movs    r0, #1\n"
@@ -276,10 +321,14 @@ bd84 0000
 "    movs    r0, #0\n"
 "    blx     sub_fc2ef9e4\n" // j_DebugAssert
 "loc_fc1503ba:\n"
+// debug after message handled
+"ldr     r0, [sp]\n"
+"ldr     r0, [r0]\n"
+"bl log_capt_seq2\n"
 "    ldr     r0, [sp]\n"
 "    ldr     r1, [r0, #4]\n"
 "    ldr     r0, [r5, #4]\n"
-"    blx     sub_fc2ef84c\n"
+"    blx     sub_fc2ef84c\n" // j_SetEventFlag
 "    ldr     r7, [sp]\n"
 "    ldr     r0, [r7, #8]\n"
 "    cbnz    r0, loc_fc1503d8\n"
@@ -605,6 +654,189 @@ void __attribute__((naked,noinline)) sub_fc1e56a6_my() {
 "    movs    r0, #0\n"
 "    str     r0, [r5, #0x28]\n"
 "    pop.w   {r2, r3, r4, r5, r6, r7, r8, pc}\n"
+    );
+}
+#endif
+
+// not using DvlpSeq, multiple shots may be taken before task runs, out of sync with file counter
+#if 0
+void log_dvlp_seq(int m,int m2)
+{
+    _LogCameraEvent(0x60,"dvlp m:%d m2:0x%x arb:%d rb:0x%08x i:%04d",
+                    m,
+                    m2,
+                    active_raw_buffer,
+                    hook_raw_image_addr(),
+                    get_exposure_counter());
+
+}
+void log_dvlp_raw_hook(int m)
+{
+    _LogCameraEvent(0x60,"dvlp rh m:%d arb:%d rb:0x%08x i:%04d",
+                    m,
+                    active_raw_buffer,
+                    hook_raw_image_addr(),
+                    get_exposure_counter());
+}
+void log_dvlp_seq_1(void)
+{
+    _LogCameraEvent(0x60,"dvlp seq loop");
+}
+void log_dvlp_seq_start(void)
+{
+    _LogCameraEvent(0x60,"dvlp seq start");
+}
+// -s=task_DvlpSeqTask -c=100 -f=chdk
+// task_DvlpSeqTask 0xfc1e6837
+void __attribute__((naked,noinline)) developseq_task() {
+    asm volatile (
+"    push.w  {r2, r3, r4, r5, r6, r7, r8, lr}\n"
+"bl log_dvlp_seq_start\n"
+"    ldr     r7, =0x0003fad4\n"
+"    movs    r5, #0\n"
+"    ldr     r6, =0x00014780\n"
+"loc_fc1e6840:\n"
+"bl log_dvlp_seq_1\n"
+"    movs    r2, #0\n"
+"    ldr     r1, [r6, #0x10]\n"
+"    ldr     r0, [r6, #8]\n"
+"    blx     sub_fc2ef87c\n" // j_PostMessageQueue
+"    ldr     r0, [r6, #4]\n"
+"    movs    r2, #0\n"
+"    add     r1, sp, #4\n"
+"    blx     sub_fc2ef8ec\n" // j_ReceiveMessageQueue
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc1e685e\n"
+"    movw    r2, #0x1c4\n"
+"    b       loc_fc1e686e\n"
+"loc_fc1e685e:\n"
+"    ldr     r0, [r6, #8]\n"
+"    mov     r1, sp\n"
+"    blx     sub_fc2ef70c\n" // j_TryReceiveMessageQueue
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc1e687e\n"
+"    movw    r2, #0x1ca\n"
+"loc_fc1e686e:\n"
+"    movs    r0, #0\n"
+"    ldr     r1, =0xfc1e6bd8\n" //  *"SsDvlpSeq.c"
+"    blx     sub_fc2ef9e4\n" // j_DebugAssert
+"    blx     sub_fc2ef90c\n"
+"    pop.w   {r2, r3, r4, r5, r6, r7, r8, pc}\n"
+"loc_fc1e687e:\n"
+"    ldr.w   r0, [r7, #0x18c]\n"
+"    cbz     r0, loc_fc1e688c\n"
+"    ldr     r0, [sp, #4]\n"
+"    ldr     r0, [r0]\n"
+"    cmp     r0, #5\n"
+"    bne     loc_fc1e6898\n"
+"loc_fc1e688c:\n"
+"    bl      sub_fc3d4f92\n"
+"    bl      sub_fc1524bc\n"
+"    bl      sub_fc1e8680\n"
+"loc_fc1e6898:\n"
+"ldr     r0, [sp, #4]\n"
+"ldr     r0, [r0]\n"
+"ldr     r1, [sp]\n"
+"bl      log_dvlp_seq\n"
+"    ldr     r0, [sp, #4]\n"
+"    ldr     r1, [r0]\n"
+"    cmp     r1, #6\n"
+"    bhs     loc_fc1e691e\n"
+"    tbb     [pc, r1]\n" // (jumptable r1 6 elements)
+"branchtable_fc1e68a4:\n"
+"    .byte((loc_fc1e68aa - branchtable_fc1e68a4) / 2)\n" // (case 0)
+"    .byte((loc_fc1e68b2 - branchtable_fc1e68a4) / 2)\n" // (case 1)
+"    .byte((loc_fc1e68b8 - branchtable_fc1e68a4) / 2)\n" // (case 2)
+"    .byte((loc_fc1e68dc - branchtable_fc1e68a4) / 2)\n" // (case 3)
+"    .byte((loc_fc1e690e - branchtable_fc1e68a4) / 2)\n" // (case 4)
+"    .byte((loc_fc1e6914 - branchtable_fc1e68a4) / 2)\n" // (case 5)
+".align 1\n"
+"loc_fc1e68aa:\n" // case 0
+"ldr     r0, [sp, #4]\n"
+"ldr     r0, [r0]\n"
+"bl      log_dvlp_raw_hook\n"
+//"    BL      capt_seq_hook_raw_here\n" // test
+"ldr     r0, [sp, #4]\n"
+"ldr     r1, [r0]\n"
+"    ldr     r0, [r0, #8]\n"
+"    bl      sub_fc1e7a2a\n"
+"    b       loc_fc1e691e\n"
+"loc_fc1e68b2:\n"
+"    bl      sub_fc3d5050\n"
+"    b       loc_fc1e691e\n"
+"loc_fc1e68b8:\n"
+"    ldr     r2, [r0, #8]\n"
+"    movs    r1, #1\n"
+"    str.w   r1, [r2, #0x108]\n"
+"    ldr     r0, [r0, #8]\n"
+"    bl      sub_fc1e783a\n"
+"    ldr     r0, [sp, #4]\n"
+"    ldr     r0, [r0, #8]\n"
+"    str.w   r5, [r0, #0x108]\n"
+"    ldr     r0, [r6, #0xc]\n"
+"    blx     sub_fc2ef96c\n"
+"    ldr     r0, [sp, #4]\n"
+"    movs    r1, #0xd\n"
+"    ldr     r2, [r0, #8]\n"
+"    b       loc_fc1e6918\n"
+"loc_fc1e68dc:\n"
+"    ldr.w   r1, [r7, #0xc0]\n"
+"    cbz     r1, loc_fc1e68f8\n"
+"    ldr     r0, [r0, #8]\n"
+"    ldr.w   r1, [r0, #0xfc]\n"
+"    cmp     r1, #1\n"
+"    bne     loc_fc1e68f0\n"
+"loc_fc1e68ec:\n"
+"    movs    r1, #1\n"
+"    b       loc_fc1e68f2\n"
+"loc_fc1e68f0:\n"
+"    movs    r1, #0\n"
+"loc_fc1e68f2:\n"
+"    bl      sub_fc1e75fa\n"
+"    b       loc_fc1e691e\n"
+"loc_fc1e68f8:\n"
+"    ldr.w   r1, [r7, #0x1cc]\n"
+"    cbz     r1, loc_fc1e690a\n"
+"    ldrh.w  r1, [r7, #0x1ec]\n"
+"    cmp     r1, #1\n"
+"    beq     loc_fc1e690a\n"
+"    ldr     r0, [r0, #8]\n"
+"    b       loc_fc1e68f0\n"
+"loc_fc1e690a:\n"
+"    ldr     r0, [r0, #8]\n"
+"    b       loc_fc1e68ec\n"
+"loc_fc1e690e:\n"
+"    bl      sub_fc1515f6\n"
+"    b       loc_fc1e691e\n"
+"loc_fc1e6914:\n"
+"    movs    r2, #0\n"
+"    movs    r1, #0x12\n"
+"loc_fc1e6918:\n"
+"    movs    r0, #0\n"
+"    bl      sub_fc14e934\n"
+"loc_fc1e691e:\n"
+/*
+"ldr     r0, [sp, #4]\n"
+"ldr     r0, [r0]\n"
+"bl      log_dvlp_raw_hook\n"
+"    BL      capt_seq_hook_raw_here\n" // test
+*/
+"    ldr     r4, [sp, #4]\n"
+"    ldr     r0, [r4, #4]\n"
+"    cbnz    r0, loc_fc1e692e\n"
+"    movs    r2, #0x86\n"
+"    movs    r0, #0\n"
+"    ldr     r1, =0xfc1e6bd8\n" //  *"SsDvlpSeq.c"
+"    blx     sub_fc2ef9e4\n" // j_DebugAssert
+"loc_fc1e692e:\n"
+"    str     r5, [r4, #4]\n"
+"    add     r1, sp, #4\n"
+"    ldr     r0, [r6, #4]\n"
+"    blx     sub_fc2ef70c\n" // j_TryReceiveMessageQueue
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc1e687e\n"
+"    b       loc_fc1e6840\n"
+".ltorg\n"
     );
 }
 #endif

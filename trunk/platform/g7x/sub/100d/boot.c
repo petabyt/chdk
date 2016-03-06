@@ -118,7 +118,7 @@ asm volatile (
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
 
-"    LDR     R0, =task_DvlpSeq\n"
+"    LDR     R0, =task_DvlpSeqTask\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
 "    LDREQ   R3, =developseq_task\n"

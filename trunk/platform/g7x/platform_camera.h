@@ -20,6 +20,8 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
+    #define CAM_PROPSET                         7
+
 // TODO copied from sx280
     /*
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
@@ -47,8 +49,6 @@
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
-
-    #define CAM_PROPSET                         7
 
     #define CAM_RAW_ROWPIX                      5632
     #define CAM_RAW_ROWS                        3710

@@ -1,6 +1,11 @@
 #include "stubs_asm.h"
-
 DEF(file_counter_var,              0x0001385c) // found @fc1d0ff4 by searching for "FileBackupProperty.c", similar to sx280hs 
+// first raw buffer when canon raw enabled 0x4427bfa0, possibly 0x46063fa0, more?
+DEF(raw_buffers_canon_raw         ,0xfc66e8e0) // Found @fc184334, near DevelopAddress.c assert, after GetPropertyCase similar to sx280hs
+// canon raw disabled, uses 0x435ee300 0x453d6300 0x471be300
+DEF(raw_buffers_jpeg              ,0xfc66ed78) // Found based on partial image in raw enabled buffer, refs @fc184cf6, fc14c6be
+DEF(active_raw_buffer             ,0x0000be08+0xc) // Found @fc152724, similar to sx280hs 0xffffffff when uninited, seems valid range 0-2
+
 FAKEDEF(movie_status,0)
 FAKEDEF(video_compression_rate, 1)
 FAKEDEF(canon_menu_active,	0)
