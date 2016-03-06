@@ -28,7 +28,6 @@ functions that depend on live view (zebra, histogram, edge, PTP live view) won't
 
 KNOWN BUGS
 **********
-DNG crashes
 
 
 THANKS
