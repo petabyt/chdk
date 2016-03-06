@@ -66,6 +66,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_EXPOSURE_LOCK                   215        // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
 #define PROPCASE_EV_CORRECTION_2                 216        // g7x ok, ps6 +6
 #define PROPCASE_IS_FLASH_READY                  217        // not certain
+#define PROPCASE_IMAGE_FORMAT                    219        // 0 = RAW, 1 = JPEG, 2 = RAW+JPEG (g7x)
 #define PROPCASE_RESOLUTION                      227        // 0 = L, 2 = M1, 3 = M2, 5 = S
 #define PROPCASE_ORIENTATION_SENSOR              228
 #define PROPCASE_TIMER_MODE                      232        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom
