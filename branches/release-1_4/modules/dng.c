@@ -289,6 +289,7 @@ int get_type_size(int type)
 #define IFD_EXIF    3
 #define IFD_GPS     4
 #define IFD_SKIP    0x200       // Set this flag to prevent saving entry to file (used to block GPS if not needed)
+#define IFD_TYPE_MASK 0xF       // to mask out skip flag 
 
 typedef struct
 {
@@ -312,7 +313,7 @@ static ifd_entry* get_ifd(int type)
     int i;
     for (i = 0; ifd_list[i].entry != 0; i++)
     {
-        if (ifd_list[i].type == type)
+        if ((ifd_list[i].type & IFD_TYPE_MASK) == type)
             return &ifd_list[i];
     }
     return 0;
