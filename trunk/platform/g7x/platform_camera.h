@@ -75,7 +75,7 @@
 
 // OK
     #define CAM_DNG_LENS_INFO                   { 88,10,368,10,18,10,28,10 }
-// TODO
+// OK
     #define cam_CFAPattern                      0x02010100
 
 // TODO sx280 c&p
@@ -89,7 +89,7 @@
     #define CAM_JPEG_WIDTH                      5472
     #define CAM_JPEG_HEIGHT                     3648
 
-// TODO - from crw
+// TODO - from cr2
     #define CAM_ACTIVE_AREA_X1                  132
     #define CAM_ACTIVE_AREA_Y1                  40
     #define CAM_ACTIVE_AREA_X2                  5604

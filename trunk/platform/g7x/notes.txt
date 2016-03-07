@@ -14,12 +14,13 @@ TESTED
 llibtst.lua
 chdkptp cam tests
 PTP play/rec switch
+raw and remote hooks (in normal shooting modes, probably borken in star timelapse, hdr etc)
 
 NOT IMPLEMENTED
 ***************
-remote hook
 dark frame control
 movie_rec and exp_drv tasks
+jogdial support
 
 OTHER ISSUES
 ************
