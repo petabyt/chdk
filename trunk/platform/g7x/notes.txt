@@ -1,7 +1,7 @@
 ************************************
 G7x notes
 ************************************
-This is an INCOMPLETE, NON-WORKING PORT.
+This is an INCOMPLETE, MOSTLY UNTESTED PORT.
 It may be of interest to developers, but it is not yet very useful for photography!
 Many shooting related features not implemented or not tested.
 
@@ -9,12 +9,18 @@ CHDK is a hack, use at your own risk!
 
 This camera has an adjustable aperture and ND filter.
 
+SD override does not work in AF, only MF or AF lock.
+
+Default alt button is PLAY
+
 TESTED
 ******
 llibtst.lua
 chdkptp cam tests
 PTP play/rec switch
-raw and remote hooks (in normal shooting modes, probably borken in star timelapse, hdr etc)
+raw and remote hooks (in normal shooting modes, probably broken in star timelapse, hdr etc)
+ND override
+SD override
 
 NOT IMPLEMENTED
 ***************
