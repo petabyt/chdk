@@ -356,6 +356,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 "    bl      sub_fc0db71e\n"
 "    bl      sub_fc0780e6_my\n" // CreateTask PhySw
 "    bl      CreateTask_spytask\n" 
+"    bl      init_required_fw_features\n" // added
 "    bl      sub_fc282abc\n"
 "    bl      sub_fc0db734\n"
 "    bl      sub_fc0bd718\n"
@@ -426,6 +427,22 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
 "    pop     {r4, r5, r6, pc}\n"
     ".ltorg\n"
     );
+}
+/*
+    *** TEMPORARY? workaround ***
+    Init stuff to avoid asserts on cameras running DryOS r54+
+    https://chdk.setepontos.com/index.php?topic=12516.0
+    Execute this only once
+ */
+void init_required_fw_features(void) {
+    extern void _init_focus_eventflag();
+    extern void _init_nd_eventflag();
+//    extern void _init_nd_semaphore();
+    //extern void _init_zoom_semaphore(); // for MoveZoomLensWithPoint
+
+    _init_focus_eventflag();
+    _init_nd_eventflag();
+//    _init_nd_semaphore();
 }
 
 // TODO sx280 c&p jogdial stuff

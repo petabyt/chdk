@@ -36,10 +36,10 @@
 //    #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
-/*
+
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
-*/
+
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
     // TODO should add wifi key
     #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", }
@@ -151,7 +151,7 @@
 
 //    #define CAM_HAS_MOVIE_DIGEST_MODE           1 
 
-// TODO - not checked
+// TODO - haven't checked default values, these seem to work
     #define CAM_USE_ALT_SET_ZOOM_POINT          1           // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1           // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #define CAM_NEED_SET_ZOOM_DELAY             300
@@ -161,8 +161,9 @@
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
  
-// TODO
-//    #define CAM_SD_OVER_IN_AF  1
-//    #define CAM_SD_OVER_IN_MF  1
+// crashes with ASSERT!! FocusLensController.c Line 1106 on shoot
+//    #define CAM_SD_OVER_IN_AF                   1
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
  
 //--------------------------------------------------

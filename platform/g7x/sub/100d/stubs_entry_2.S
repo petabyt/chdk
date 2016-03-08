@@ -23,6 +23,12 @@ NHSTUB(apex2us,									0xfc382687) // Shutter.c asserts in sub_fc16e57e, simila
 NHSTUB(GetDrive_TotalClusters,					0xfc357bd7) // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(LogCameraEvent,							0xfc36000b) // debugging, from func csv
 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// see https://chdk.setepontos.com/index.php?topic=12516.0
+NHSTUB(init_focus_eventflag,	0xfc4f3bd7) // InitializeAdjustmentSystem->fc3d31c4->fc4f3bd6 event flag matches MoveFocusLensToDistance
+NHSTUB(init_nd_eventflag,		0xfc4f3ce9) // InitializeAdjustmentSystem->fc3d31c4->fc4f3ce8 event flag matches PutInNdFilter
+
+
 // TODO temp for compile
 NHSTUB(EnterToCompensationEVF,NULL_SUB)
 NHSTUB(ExitFromCompensationEVF,NULL_SUB)
