@@ -5,6 +5,7 @@ DEF(raw_buffers_canon_raw         ,0xfc66e8e0) // Found @fc184334, near DevelopA
 // canon raw disabled, uses 0x435ee300 0x453d6300 0x471be300
 DEF(raw_buffers_jpeg              ,0xfc66ed78) // Found based on partial image in raw enabled buffer, refs @fc184cf6, fc14c6be
 DEF(active_raw_buffer             ,0x0000be08+0xc) // Found @fc152724, similar to sx280hs 0xffffffff when uninited, seems valid range 0-2
+DEF(focus_busy                    ,0x00013ba8+0x8) // Found @fc31eedc, last func called by MoveFocusLensToTerminate
 
 FAKEDEF(movie_status,1)
 FAKEDEF(video_compression_rate, 1)
@@ -13,7 +14,6 @@ FAKEDEF(canon_shoot_menu_active, 1)
 FAKEDEF(full_screen_refresh, 1)
 DEF(zoom_status                             ,0x0000fdb0+4) // Found @0xfc1b5116, unclear which offset should be used
 FAKEDEF(zoom_busy                               ,1)
-FAKEDEF(focus_busy                              ,1)
 FAKEDEF(recreview_hold                          ,1)
 // based on search for 8800 100
 // 101 entries, 2 words each, first is fl
