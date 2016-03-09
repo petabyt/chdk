@@ -105,6 +105,14 @@ enum {
     MODE_VIDEO_TIME_LAPSE   ,
 
     MODE_HYBRID_AUTO        , // sx280
+    MODE_BACKGROUND_DEFOCUS , // g7x
+    MODE_STAR_PORTRAIT      , // g7x
+    MODE_STAR_NIGHTSCAPE    , // g7x
+    MODE_STAR_TRAILS        , // g7x
+
+    MODE_VIDEO_M            , // g7x manual video
+    MODE_VIDEO_STAR_TIME_LAPSE, // g7x not clear if this should be VIDEO
+
 };
 
 #endif
