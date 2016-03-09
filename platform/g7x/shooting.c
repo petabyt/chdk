@@ -95,7 +95,7 @@ const CapturemodeMap modemap[] = {
 { MODE_FISHEYE              ,8759 },
 { MODE_MINIATURE            ,8760 },
 { MODE_TOY_CAMERA           ,8763 },
-//{ MODE_BACKROUND_DEFOCUS    ,8764 },
+{ MODE_BACKGROUND_DEFOCUS   ,8764 },
 { MODE_SOFTFOCUS            ,8765 },
 { MODE_MONOCHROME           ,8767 },
 { MODE_SUPER_VIVID          ,8754 },
@@ -104,9 +104,9 @@ const CapturemodeMap modemap[] = {
 { MODE_FACE_SELF_TIMER      ,16948 },
 { MODE_SMART_SHUTTER        ,16949 }, // smile detection
 { MODE_WINK_SELF_TIMER      ,16950 },
-//{ MODE_STAR_PORTRAIT        ,16452 },
-//{ MODE_STAR_NIGHTSCAPE      ,16453 },
-//{ MODE_STAR_TRAILS          ,16454 },
+{ MODE_STAR_PORTRAIT        ,16452 },
+{ MODE_STAR_NIGHTSCAPE      ,16453 },
+{ MODE_STAR_TRAILS          ,16454 },
 { MODE_NIGHT_SCENE          ,16953 }, // handheld night scene
 { MODE_UNDERWATER           ,16929 },
 { MODE_SNOW                 ,16414 },
@@ -116,8 +116,8 @@ const CapturemodeMap modemap[] = {
 //{                         ,33297 }, // ???
 { MODE_VIDEO_STD             ,2643 }, // standard video on dial, regardless of res or FPS
 { MODE_VIDEO_IFRAME_MOVIE    ,2650 },
-//{ MODE_VIDEO_M               ,2651 }, // M video
-//{ MODE_VIDEO_STAR_TIME_LAPSE,16459 }, // VIDEO?
+{ MODE_VIDEO_M               ,2651 }, // M video
+{ MODE_VIDEO_STAR_TIME_LAPSE,16459 }, // VIDEO?
 //{                         ,4172 }, // C, in propcase 54
 };
 
