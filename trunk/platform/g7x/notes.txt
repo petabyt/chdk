@@ -21,6 +21,10 @@ PTP play/rec switch
 raw and remote hooks (in normal shooting modes, probably broken in star timelapse, hdr etc)
 ND override
 SD override
+setmode.lua - crashes with default 10ms delay, works with 100ms
+ubtest.bas
+hooktest.lua
+isobase.lua
 
 NOT IMPLEMENTED
 ***************
@@ -35,7 +39,7 @@ functions that depend on live view (zebra, histogram, edge, PTP live view) won't
 
 KNOWN BUGS
 **********
-
+current CHDK raw hook is often called after jpeg creation, so things that modify raw buffer do not affect jpeg
 
 THANKS
 ******
