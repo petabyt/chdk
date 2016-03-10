@@ -2,7 +2,6 @@
 G7x notes
 ************************************
 This is an INCOMPLETE, MOSTLY UNTESTED PORT.
-It may be of interest to developers, but it is not yet very useful for photography!
 Many shooting related features not implemented or not tested.
 
 CHDK is a hack, use at your own risk!
@@ -12,6 +11,8 @@ This camera has an adjustable aperture and ND filter.
 SD override does not work in AF, only MF or AF lock.
 
 Default alt button is PLAY
+
+Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
 
 TESTED
 ******
