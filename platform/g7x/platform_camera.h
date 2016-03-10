@@ -81,13 +81,30 @@
 // OK
     #define cam_CFAPattern                      0x02010100
 
-// TODO sx280 c&p
-    #define CAM_COLORMATRIX1                            \
-    544808, 1000000, -174047, 1000000, -80399, 1000000, \
-    -75055, 1000000,  440444, 1000000,  11367, 1000000, \
-     -5801, 1000000,   71589, 1000000, 118914, 1000000
-
     #define cam_CalibrationIlluminant1          17
+
+    // from CR2 converted to DNG with adobe DNG converter
+    #define CAM_COLORMATRIX1 \
+    11125, 10000, -5937, 10000,  355, 10000, \
+    -2979, 10000, 10926, 10000, 2360, 10000, \
+     -116, 10000,   835, 10000, 6064, 10000
+
+    #define cam_CalibrationIlluminant2          21      // D65
+
+    #define CAM_COLORMATRIX2 \
+     9602, 10000, -3823, 10000, -937, 10000, \
+    -2984, 10000, 11495, 10000, 1675, 10000, \
+     -407, 10000,  1415, 10000, 5049, 10000,
+
+    #define CAM_FORWARDMATRIX1 \
+     4264, 10000, 4193, 10000, 1187, 10000, \
+     1832, 10000, 7811, 10000,  357, 10000, \
+      854, 10000,   16, 10000, 7381, 10000
+
+    #define CAM_FORWARDMATRIX2 \
+	 4036, 10000, 4056, 10000, 1551, 10000, \
+     1780, 10000, 7757, 10000,  463, 10000, \
+      764, 10000,    1, 10000, 7487, 10000
 
     #define CAM_JPEG_WIDTH                      5472
     #define CAM_JPEG_HEIGHT                     3648
@@ -144,11 +161,10 @@
 
     #define CAM_ZEBRA_NOBUF                     1
 
-// TODO sx280 c&p
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     100         // Override min subject distance
+    #define CAMERA_MIN_DIST                     50         // Override min subject distance, min get_focus() value using MF
     #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
+    #define CAMERA_MAX_DIST                     177552     // Override max subject distance, max get_focus() value at max zoom using MF before it goes to -1
 
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
