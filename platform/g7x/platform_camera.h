@@ -73,6 +73,9 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000
 
+    #undef  CAM_CIRCLE_OF_CONFUSION
+    #define CAM_CIRCLE_OF_CONFUSION             11  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+
 // OK
     #define CAM_DNG_LENS_INFO                   { 88,10,368,10,18,10,28,10 }
 // OK
@@ -101,6 +104,10 @@
     #define CAM_FILE_COUNTER_IS_VAR             1     // file counter is variable file_counter_var in stubs, not a param
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
+
+    // black level appears to be ~512 in normal shooting (ISO125 P or M)
+    #undef CAM_BLACK_LEVEL
+    #define CAM_BLACK_LEVEL                     511
 
 // TODO not implemented, camera does multi-minute exposures natively
 //    #define CAM_EXT_TV_RANGE                    1
