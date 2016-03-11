@@ -7,6 +7,8 @@ NHSTUB(RefreshPhysicalScreen, NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie, NULL_SUB)
 
+NHSTUB(TurnOffE1, 0xff8363ec)
+
 // temporary measure
 NHSTUB(init_focus_eventflag, 0xFFB59A7C)
 NHSTUB(init_nd_eventflag, 0xFFA921D4)
