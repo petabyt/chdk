@@ -19,7 +19,7 @@ TESTED
 llibtst.lua
 chdkptp cam tests
 PTP play/rec switch
-raw and remote hooks (in normal shooting modes, probably broken in star timelapse, hdr etc)
+raw and remote hooks (in normal shooting modes, broken hdr, star trails, star timelapse etc)
 ND override
 SD override
 setmode.lua - crashes with default 10ms delay, works with 100ms
@@ -41,8 +41,6 @@ functions that depend on live view (zebra, histogram, edge, PTP live view) won't
 
 KNOWN BUGS
 **********
-current CHDK raw hook is often called after canon image saving starts, which can corrupt
-canon raw/jpeg, or cause changes made in the raw buffer to not affect the canon files
 
 THANKS
 ******

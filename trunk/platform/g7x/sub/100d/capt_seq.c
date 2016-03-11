@@ -38,14 +38,6 @@ void log_capt_seq_override(void)
                     get_exposure_counter());
 }
 
-void log_capt_seq_raw(void)
-{
-    _LogCameraEvent(0x60,"cs rh arb:%d rb:0x%08x i:%04d",
-                    active_raw_buffer,
-                    hook_raw_image_addr(),
-                    get_exposure_counter());
-}
-
 #include "../../../generic/capt_seq.c"
 //-s=task_CaptSeq -c=173 -f=chdk
 // task_CaptSeq 0xfc1501d9
@@ -144,14 +136,12 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    ldr     r0, [r4, #0x28]\n"
 "    cmp     r0, #0\n"
 "    beq     loc_fc150266\n"
-"    bl      sub_fc1e58d8_my\n" // -> remote hook, nr? (quick, no half press)
+"    bl      sub_fc1e58d8_my\n" // -> nr?, remote hook, raw hook (quick, no half press)
 "loc_fc150266:\n"
 "    b       loc_fc1503ba\n"
 "loc_fc150268:\n" // case 1: (normal shoot)
 "    ldr     r0, [r0, #0x10]\n"
-"    bl      sub_fc1e56a6_my\n" // -> remote hook, nr?
-"bl log_capt_seq_raw\n"
-"    BL      capt_seq_hook_raw_here\n" // seems to work here in normal shooting modes
+"    bl      sub_fc1e56a6_my\n" // ->  nr?, remote hook, raw hook
 "    b       loc_fc1503ba\n"
 "loc_fc150270:\n"
 "    movs    r0, #1\n"
@@ -395,7 +385,7 @@ void __attribute__((naked,noinline)) sub_fc1e58d8_my() {
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5450\n"
 "    mov     r0, r4\n"
-"    bl      sub_fc3d3872_my\n" // -> remote hook
+"    bl      sub_fc3d3872_my\n" // -> remote hook, raw hook
 "    lsls    r0, r0, #0x1f\n"
 "    beq     loc_fc1e5974\n"
 "loc_fc1e5972:\n"
@@ -631,7 +621,7 @@ void __attribute__((naked,noinline)) sub_fc1e56a6_my() {
 "    bl      sub_fc3d49d0\n" // SsStarTailsCaptureSeq.c
 "    b       loc_fc1e58ae\n"
 "loc_fc1e58aa:\n"
-"    bl      sub_fc3d3872_my\n" // SsStandardCaptureSeq.c -> hook for remote, nr?
+"    bl      sub_fc3d3872_my\n" // SsStandardCaptureSeq.c -> hook for remote, nr?, raw
 "loc_fc1e58ae:\n"
 "    ldr.w   r0, [r5, #0x1cc]\n"
 "    cbz     r0, loc_fc1e58d0\n"
@@ -655,9 +645,40 @@ void __attribute__((naked,noinline)) sub_fc1e56a6_my() {
     );
 }
 
-void log_remote_hook(void) {
-    _LogCameraEvent(0x60,"");
+/*
+void log_nr_call(void) {
+    _LogCameraEvent(0x60,"nr call");
 }
+*/
+void log_remote_hook(void) {
+    _LogCameraEvent(0x60,"remote hook");
+}
+void log_rh(void) {
+    _LogCameraEvent(0x60,"raw hook");
+}
+/*
+void log_p1(void) {
+    _LogCameraEvent(0x60,"p1");
+}
+void log_p2(void) {
+    _LogCameraEvent(0x60,"p2");
+}
+void log_t1(void) {
+    _LogCameraEvent(0x60,"t1");
+}
+void log_t2(void) {
+    _LogCameraEvent(0x60,"t2");
+}
+void log_t3(void) {
+    _LogCameraEvent(0x60,"t3");
+}
+void log_t4(void) {
+    _LogCameraEvent(0x60,"t4");
+}
+void log_t5(void) {
+    _LogCameraEvent(0x60,"t5");
+}
+*/
 // -s=0xfc3d3873 -e=0xfc3d3ac8 -f=chdk
 void __attribute__((naked,noinline)) sub_fc3d3872_my() {
     asm volatile (
@@ -718,11 +739,9 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "loc_fc3d38f2:\n"
 "    movs    r0, #0\n"
 "    bl      sub_fc15405e\n"
+//"bl log_nr_call\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5500\n" // to nrtable stuff, DFS control could go here?
-"    BL      wait_until_remote_button_is_released\n" // + remote hook
-// Could probaby go later, somewhere after loc_fc3d393a, before call to sub_fc1e5582?
-"bl log_remote_hook\n"
 "    ldr     r1, =0x00027eec\n"
 "    movs    r2, #4\n"
 "    movs    r0, #0x90\n"
@@ -740,6 +759,9 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    mov     r0, r4\n"
 "    bl      sub_fc3d382a\n"
 "    mov     r6, r0\n"
+"    BL      wait_until_remote_button_is_released\n" // + remote hook
+// Could probaby go later, somewhere after loc_fc3d393a, before call to sub_fc1e5582?
+"bl log_remote_hook\n"
 "    ldr     r0, [sp, #4]\n"
 "    ubfx    r0, r0, #8, #8\n"
 "    cmp     r0, #6\n"
@@ -819,10 +841,12 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    blx     sub_fc2ef9e4\n" // j_DebugAssert
 "    movs    r5, #0x1d\n"
 "loc_fc3d39d8:\n"
+//"bl log_p1\n"
 "    bl      sub_fc171488\n"
 "    cbz     r0, loc_fc3d39e0\n"
 "    movs    r5, #1\n"
 "loc_fc3d39e0:\n"
+//"bl log_p2\n"
 "    bl      sub_fc1e5596\n"
 "    ldr.w   r8, =0xfc3d3829\n"
 "    lsls    r0, r5, #0x1f\n"
@@ -851,10 +875,15 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    ldr     r1, =0xfc3d3c38\n" //  *"SsStandardCaptureSeq.c"
 "    blx     sub_fc2ef9e4\n" // j_DebugAssert
 "loc_fc3d3a26:\n"
+"bl log_rh\n"
+"    BL      capt_seq_hook_raw_here\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5582\n"
+//"bl log_t1\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5556\n"
+//"bl log_t2\n"
+"    mov     r0, r4\n"
 "    cmp     r6, r8\n"
 "    beq     loc_fc3d3a5a\n"
 "    bl      sub_fc1e5fb2\n"
@@ -870,11 +899,13 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    ldr     r1, =0xfc3d3c38\n" //  *"SsStandardCaptureSeq.c"
 "    blx     sub_fc2ef9e4\n" // j_DebugAssert
 "loc_fc3d3a5a:\n"
+//"bl log_t3\n"
 "    ldrh    r0, [r7]\n"
 "    sub.w   r1, r0, #0x4000\n"
 "    subs    r1, #0x44\n"
 "    bne     loc_fc3d3a7c\n"
 "    bl      sub_fc1e5fb2\n"
+//"bl log_t4\n"
 "    movw    r1, #0x8000\n"
 "    blx     sub_fc2ef91c\n" // j_ClearEventFlag
 "    ldr     r0, =0xfc3d3861\n"
@@ -882,6 +913,7 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    bl      sub_fc284ae8\n"
 "    bl      sub_fc284ada\n"
 "loc_fc3d3a7c:\n"
+//"bl log_t5\n"
 "    ldr.w   r0, [r7, #0x18c]\n"
 "    cbz     r0, loc_fc3d3a8c\n"
 "    movs    r2, #1\n"
