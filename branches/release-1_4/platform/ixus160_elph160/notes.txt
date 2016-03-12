@@ -32,6 +32,7 @@ exmem support
 
 KNOWN BUGS
 **********
+Dark frame control: changes to this setting only take effect _after_ the next shot
 
  
 THANKS

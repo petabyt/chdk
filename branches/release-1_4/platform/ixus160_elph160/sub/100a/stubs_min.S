@@ -6,8 +6,8 @@ DEF(recreview_hold, 0x000027E4)
 // 0xff883c54 (0x32d4), 0xff883c90 (0x54); see ixus140 0xff0a7858, 0xff0a7890
 DEF(viewport_fb_d, 0x00003328)
 
-// guessed from sub_FF99A728 ShutterSoundTask
-DEF(_nrflag, 0x75F4)
+// see NRTBL.SetDarkSubType, ineffective for the next photo (it 'lags')
+DEF(_nrflag, 0xa4c8)
 
 // guessed by comparing with a2500 and ixus140
 DEF(active_viewport_buffer, 0x2108)
