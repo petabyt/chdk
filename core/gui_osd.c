@@ -935,8 +935,8 @@ static int gui_std_kbd_process()
 #endif
     {
         short x;
-        get_property_case(PROPCASE_DIGITAL_ZOOM_STATE, &x, sizeof(x));
-        if (x)
+        // state = 1 => digital zoom standard
+        if (shooting_get_digital_zoom_state())
         {
             get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
 #if defined(CAM_USE_OPTICAL_MAX_ZOOM_STATUS)

@@ -193,13 +193,11 @@ void lens_set_zoom_point(long newpt)
 
 	if (lens_get_zoom_point() != newpt)
 	{
-		// Get current digital zoom mode & state
-		// state == 1 && mode == 0 --> Digital Zoom Standard
-		int digizoom_mode, digizoom_state, digizoom_pos;
-		get_property_case(PROPCASE_DIGITAL_ZOOM_MODE,&digizoom_mode,sizeof(digizoom_mode));
-		get_property_case(PROPCASE_DIGITAL_ZOOM_STATE,&digizoom_state,sizeof(digizoom_state));
+		int digizoom_pos;
 		get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION,&digizoom_pos,sizeof(digizoom_pos));
-		if ((digizoom_state == 1) && (digizoom_mode == 0) && (digizoom_pos != 0))
+		// check current digital zoom mode & state
+		// state == 1 && mode == 0 --> Digital Zoom Standard
+		if ((shooting_get_digital_zoom_state() == 1) && (shooting_get_digital_zoom_mode() == 0) && (digizoom_pos != 0))
 		{
 			// reset digital zoom in case camera is in this zoom range
 			extern void _PT_MoveDigitalZoomToWide();
