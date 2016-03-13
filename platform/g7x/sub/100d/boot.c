@@ -442,6 +442,10 @@ void init_required_fw_features(void) {
 
     _init_focus_eventflag();
     _init_nd_eventflag();
+    // for MoveIrisWithAv, based on fc3d1a74 (but without registers eventprocs)
+    extern int av_override_semaphore;
+    extern int _CreateBinarySemaphoreStrictly(int x, int y);
+    av_override_semaphore = _CreateBinarySemaphoreStrictly(0,0);
 //    _init_nd_semaphore();
 }
 

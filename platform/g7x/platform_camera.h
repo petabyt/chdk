@@ -33,7 +33,7 @@
     */
 
 // TODO unknown
-//    #define CAM_AV_OVERRIDE_IRIS_FIX            1
+    #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
 

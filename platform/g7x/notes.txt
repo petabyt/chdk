@@ -1,8 +1,8 @@
 ************************************
 G7x notes
 ************************************
-This is an INCOMPLETE, MOSTLY UNTESTED PORT.
-Many shooting related features not implemented or not tested.
+This is an INCOMPLETE, UNFINISHED PORT.
+Many features and combinations of Canon settings have not been tested.
 
 CHDK is a hack, use at your own risk!
 
@@ -14,33 +14,62 @@ Default alt button is PLAY
 
 Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
 
+G7x uses propset 7
+
 TESTED
 ******
 llibtst.lua
 chdkptp cam tests
 PTP play/rec switch
-raw and remote hooks (in normal shooting modes, broken hdr, star trails, star timelapse etc)
+raw and remote hooks (in normal still shooting modes, broken some special modes)
 ND override
 SD override
+Tv, Av and bracketing
+ISO overrides and bracketing
+ - may have issues, full range not tested, some unexpected results in cont mode.
 setmode.lua - crashes with default 10ms delay, works with 100ms
 ubtest.bas
 hooktest.lua
 isobase.lua
-USB remote
+USB remote - plug test / remote hook only
+CHDK raw / DNG (in P, M, Tv, Av modes. AUTO not well tested, many others broken)
 
 NOT IMPLEMENTED
 ***************
 dark frame control
-movie_rec and exp_drv tasks
+ - canon firmware enables darkframe for exposures over 30 sec
+video controls (movie_rec task)
+movie_status
+extra long exposures (exp_drv task)
+ - canon firmware supports up to 250 sec
 jogdial support
+ptp remote shoot / filewrite
+reboot with firmware update file
+script hard shutdown (shut_down(1))
 
 OTHER ISSUES
 ************
-display updating is ugly
-functions that depend on live view (zebra, histogram, edge, PTP live view) won't work
+display updating is ugly. Below from sx280hs also applies to g7x
+- framebuffer related features do not work, including
+ - zebra
+ - histogram
+ - edge overlay
+ - custom auto iso overexposure protection
+ - ptp live view
+- CHDK UI is erased / flashes every time low battery icons
+
+PROPCASE_RESOLUTION values differ from previous models
+- 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
 
 KNOWN BUGS
 **********
+- CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
+  This means script shoot() calls, scripts that use shoot hooks and synced remote do not function
+  correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
+- CHDK raw address not correct in most special effect / scene modes
+  Using CHDK DNG in modes with an incorrect raw address may result in memory corruption and
+  potentially even hardware damage.
+- When booted with FI2 update, switching to hybrid auto causes a crash
 
 THANKS
 ******
