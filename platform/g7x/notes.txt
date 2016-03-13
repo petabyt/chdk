@@ -68,6 +68,11 @@ display updating is ugly. Below from sx280hs also applies to G7 X
 PROPCASE_RESOLUTION values differ from previous models
 - 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
 
+Occasional "SD card error" messages after boot seen in testing.
+Unclear if CHDK related, has gone away after reboot.
+
+Occasional very slow uploads with chdkptp.
+
 KNOWN BUGS
 **********
 - CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
