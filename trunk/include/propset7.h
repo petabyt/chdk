@@ -37,8 +37,8 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // ps6 + 6
 // TODO maybe different from older cams (off / standard are different)
 #define PROPCASE_DIGITAL_ZOOM_MODE               97         // Digital Zoom Mode/State 0 = off, 1=standard, 2 = 1.5x, 3 = 2.0x
-// TODO not found
-#define PROPCASE_DIGITAL_ZOOM_STATE              97         // Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
+// TODO does not seem to exist in ps7, combined with _MODE
+// #define PROPCASE_DIGITAL_ZOOM_STATE           
 #define PROPCASE_DIGITAL_ZOOM_POSITION           101        // also 269?
 #define PROPCASE_DRIVE_MODE                      108        // 0 = single, 1 = cont, 2 = cont AF
 #define PROPCASE_OVEREXPOSURE                    109        // TODO guessed

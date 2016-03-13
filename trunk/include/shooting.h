@@ -106,6 +106,11 @@ extern void shooting_set_zoom(int v);
 extern void shooting_set_zoom_rel(int v);
 extern void shooting_set_zoom_speed(int v);
 
+// mode: 0 = off or standard, 2 or 3 digital tele
+int shooting_get_digital_zoom_mode(void);
+// state: 0 = off or digital tele, 1 = standard
+int shooting_get_digital_zoom_state(void);
+
 /******************************************************************/
 
 extern void shooting_set_focus(int v, short is_now);
