@@ -19,9 +19,11 @@ SD override does not work in AF, only MF or AF lock.
 
 Default alt button is PLAY, VIDEO and WIFI may also be used
 
+To start in shooting mode or wifi connect, hold down the corresponding button
+
 Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
 
-G7 X uses propset 7
+G7 X uses propset 7. The values used in some propcases have changed.
 
 TESTED
 ******
