@@ -63,6 +63,9 @@
 //S90/S95/S100/S110
 #define KEY_RING_FUNC       42
 
+// dedicated wifi connect button (G7x)
+#define KEY_WIFI            43
+
 #define JOGDIAL_LEFT        100
 #define JOGDIAL_RIGHT       101
 #define FRONTDIAL_LEFT      102
