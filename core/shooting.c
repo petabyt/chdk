@@ -94,6 +94,8 @@ int   shooting_in_progress()                    { return shooting_get_prop_int(P
 
 // translate digital zoom propcase values to match pre-propset 7 values
 // mode: 0 = off or standard digital zoom, 2 or 3 digital tele
+// PROPCASE_DIGITAL_ZOOM_MODE not defined for propset 1, ports configured to not need these functions
+#if CAM_PROPSET > 1
 int shooting_get_digital_zoom_mode(void)
 {
     int x=shooting_get_prop(PROPCASE_DIGITAL_ZOOM_MODE);
@@ -104,6 +106,7 @@ int shooting_get_digital_zoom_mode(void)
 #endif
     return x;
 }
+#endif // CAM_PROPSET > 1
 // state: 0 = off or digital tele, 1 = standard
 int shooting_get_digital_zoom_state(void)
 {
