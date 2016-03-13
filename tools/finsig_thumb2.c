@@ -676,7 +676,7 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
 typedef struct sig_rule_s sig_rule_t;
 typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 // signature matching structure
-typedef struct sig_rule_s {
+struct sig_rule_s {
     sig_match_fn    match_fn;       // function to locate function
     char        *name;              // function name used in CHDK
     char        *ref_name;          // event / other name to match in the firmware
@@ -687,7 +687,7 @@ typedef struct sig_rule_s {
     int         dryos55_param;
     int         dryos57_param;
     int         dryos58_param;
-} sig_rule_t;
+};
 
 // Get DryOS version specific param
 int dryos_param(firmware *fw, sig_rule_t *sig)
