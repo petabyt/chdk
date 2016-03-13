@@ -32,7 +32,7 @@ KeyMap keymap[] = {
     { 0, KEY_SET             ,0x00000200 }, // Found @0xfc61375c, levent 0x0a
     { 0, KEY_ERASE           ,0x00000400 }, // ring func / erase, from watching  physw
     { 0, KEY_PLAYBACK        ,0x00000800 }, // Found @0xfc61376c, levent 0x101
-//    { 0, KEY_WIFI           ,0x00010000 }, // wifi button, from watching physw
+    { 0, KEY_WIFI            ,0x00010000 }, // wifi button, from watching physw
 //    { 0, KEY_POWER           ,0x00020000 }, // Found @0xfc613784, levent 0x100
     { 0, 0, 0 }
 };

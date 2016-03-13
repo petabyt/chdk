@@ -1,20 +1,27 @@
 ************************************
-G7x notes
+G7 X notes
 ************************************
 This is an INCOMPLETE, UNFINISHED PORT.
 Many features and combinations of Canon settings have not been tested.
 
 CHDK is a hack, use at your own risk!
+This is a new port for a model with many hardware differences from previously
+supported models, so it is probably higher risk than most.
 
-This camera has an adjustable aperture and ND filter.
+The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
+version, use ACID or the firminfo Canon Basic script.
+
+General camera and CHDK port information
+****************************************
+G7 X has an adjustable aperture and ND filter.
 
 SD override does not work in AF, only MF or AF lock.
 
-Default alt button is PLAY
+Default alt button is PLAY, VIDEO and WIFI may also be used
 
 Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
 
-G7x uses propset 7
+G7 X uses propset 7
 
 TESTED
 ******
@@ -49,7 +56,7 @@ script hard shutdown (shut_down(1))
 
 OTHER ISSUES
 ************
-display updating is ugly. Below from sx280hs also applies to g7x
+display updating is ugly. Below from sx280hs also applies to G7 X
 - framebuffer related features do not work, including
  - zebra
  - histogram
