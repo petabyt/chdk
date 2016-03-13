@@ -126,8 +126,13 @@
     #undef CAM_BLACK_LEVEL
     #define CAM_BLACK_LEVEL                     511
 
-// TODO not implemented, camera does multi-minute exposures natively
-//    #define CAM_EXT_TV_RANGE                    1
+// TODO expdrv not implemented, but camera does multi-minute exposures natively
+// this allows > 60s in overrid (untested)
+    #define CAM_EXT_TV_RANGE                    1
+
+    // TODO actual range untested
+    // #undef CAM_EXT_AV_RANGE
+    // #define CAM_EXT_AV_RANGE                    ?   // Number of 1/3 stop increments to extend the Av range beyond the Canon default smallest aperture
 
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
