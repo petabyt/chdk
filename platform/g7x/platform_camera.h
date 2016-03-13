@@ -32,8 +32,7 @@
     #define CAM_DISABLE_RAW_IN_SPORTS           1 // sports mode seems to use a no-yet-found code path and corrupts JPEG/DNG
     */
 
-// TODO unknown
-    #define CAM_AV_OVERRIDE_IRIS_FIX            1
+    #define CAM_AV_OVERRIDE_IRIS_FIX            1   // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
 
@@ -41,9 +40,9 @@
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    // TODO should add wifi key
-    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, }
+
+    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Wifi" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_WIFI}
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #define CAM_DRYOS                           1
@@ -55,6 +54,7 @@
 
     #define CAM_HAS_CMOS                        1
 
+    // unlocked by default, not needed
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
 
