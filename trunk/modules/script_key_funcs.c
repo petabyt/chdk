@@ -55,6 +55,7 @@ static const struct Keynames {
     { KEY_PLAYBACK,         "playback"   },
     { KEY_HELP,             "help"       },
     { KEY_MODE,             "mode"       },
+    { KEY_WIFI,             "wifi"       },
     { 0xFF,                 "remote"     },
     { 0xFFFF,               "no_key"     },
 };
