@@ -27,6 +27,7 @@ NHSTUB(LogCameraEvent,							0xfc36000b) // debugging, from func csv
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,	0xfc4f3bd7) // InitializeAdjustmentSystem->fc3d31c4->fc4f3bd6 event flag matches MoveFocusLensToDistance
 NHSTUB(init_nd_eventflag,		0xfc4f3ce9) // InitializeAdjustmentSystem->fc3d31c4->fc4f3ce8 event flag matches PutInNdFilter
+NHSTUB(CreateBinarySemaphoreStrictly,0x010e5bb7) // for av_override_semaphore
 
 
 // TODO temp for compile

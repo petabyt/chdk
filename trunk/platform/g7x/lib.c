@@ -101,13 +101,17 @@ char *hook_raw_image_addr()
     if(i>2) {
         i=0;
     }
+    if( camera_info.state.mode_shooting == MODE_AUTO) {
+        // AUTO mode (canon raw can't be enabled in AUTO)
+        return (char *)0x46f04300; // TODO unclear if this is only buffer, or if used in all AUTO sub modes
+    }else if(shooting_get_prop(PROPCASE_IMAGE_FORMAT) == 1) {
     // canon raw disabled - uses up to 3 raw buffers
-    if(shooting_get_prop(PROPCASE_IMAGE_FORMAT) == 1) {
         return raw_buffers_jpeg[i];
     } else {
         // canon raw enabled - different address, not clear if it ever uses multiple buffers
         return raw_buffers_canon_raw[i];
     }
+    // TODO most scene modes seem to use different addresse(s)
 }
 
 // TODO
