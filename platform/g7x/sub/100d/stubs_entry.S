@@ -54,12 +54,6 @@
 
 // canon_mode_list 0xfc94b408 Found @0xfc118650
 // Check modemap values from 'platform/CAMERA/shooting.c':
-// 16452  0x4044 In firmware but not in current modemap
-// 16453  0x4045 In firmware but not in current modemap
-// 16454  0x4046 In firmware but not in current modemap
-// 16459  0x404b In firmware but not in current modemap
-//  8764  0x223c In firmware but not in current modemap
-//  2651  0x0a5b In firmware but not in current modemap
 // 33297  0x8211 In firmware but not in current modemap
 //  4172  0x104c In firmware but not in current modemap
 
@@ -73,6 +67,7 @@ DEF(levent_table                      ,0xfc6deb34) // Found @0xfc0d09b4
 DEF(FlashParamsTable                  ,0xfc94b76c) // Found @0xfc118664
 DEF(playrec_mode                      ,0x0000bec4) // (0xbec0+0x4) Found @0xfc2f77ea
 DEF(jpeg_count_str                    ,0x0015d630) // Found @0xfc103a94
+DEF(zoom_busy                         ,0x00013e18) // (0x13df8+0x20) Found @0xfc1dac7e
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc325d21

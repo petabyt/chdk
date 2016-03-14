@@ -14,7 +14,6 @@ FAKEDEF(canon_menu_active,    1)
 FAKEDEF(canon_shoot_menu_active, 1)
 FAKEDEF(full_screen_refresh, 1)
 DEF(zoom_status                             ,0x0000fdb0+4) // Found @0xfc1b5116, unclear which offset should be used
-FAKEDEF(zoom_busy                               ,1)
 FAKEDEF(recreview_hold                          ,1)
 // based on search for 8800 100
 // 101 entries, 2 words each, first is fl
