@@ -419,6 +419,7 @@ misc_val_t misc_vals[]={
     { "playrec_mode",       },
     { "jpeg_count_str",     },
     { "zoom_busy",          },
+    { "focus_busy",         },
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -2487,14 +2488,14 @@ int sig_match_zoom_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     // first call
     if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-        printf("sig_match_zoom_busy: no match bl\n");
+        // printf("sig_match_zoom_busy: no match bl\n");
         return 0;
     }
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     // get base address from first LDR PC
     if(!insn_match_find_next(fw,is,5,match_ldr_pc)) {
-        printf("sig_match_zoom_busy: match LDR PC failed\n");
+        // printf("sig_match_zoom_busy: match LDR PC failed\n");
         return 0;
     }
     uint32_t base=LDR_PC2val(fw,is->insn);
@@ -2502,18 +2503,66 @@ int sig_match_zoom_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     
     // look for first TakeSemaphoreStrictly
     if(!find_next_sig_call(fw,is,40,"TakeSemaphoreStrictly")) {
-        printf("sig_match_zoom_busy: no match TakeSemaphoreStrictly\n");
+        // printf("sig_match_zoom_busy: no match TakeSemaphoreStrictly\n");
         return 0;
     }
     if(!disasm_iter(fw,is)) {
-        printf("sig_match_zoom_busy: disasm failed\n");
+        // printf("sig_match_zoom_busy: disasm failed\n");
         return 0;
     }
     // assume next instruction is ldr
     if(is->insn->id != ARM_INS_LDR 
         || is->insn->detail->arm.operands[0].reg != ARM_REG_R0
         || is->insn->detail->arm.operands[1].mem.base != rb) {
-        printf("sig_match_zoom_busy: no match LDR\n");
+        // printf("sig_match_zoom_busy: no match LDR\n");
+        return 0;
+    }
+    save_misc_val(rule->name,base,is->insn->detail->arm.operands[1].mem.disp,(uint32_t)is->insn->address);
+    return 1;
+}
+
+int sig_match_focus_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // look for first TakeSemaphore
+    if(!find_next_sig_call(fw,is,40,"TakeSemaphore")) {
+        // printf("sig_match_focus_busy: no match TakeSemaphore\n");
+        return 0;
+    }
+    // next call
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        // printf("sig_match_focus_busy: no match bl\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // get base address from first LDR PC
+    if(!insn_match_find_next(fw,is,5,match_ldr_pc)) {
+        // printf("sig_match_focus_busy: match LDR PC failed\n");
+        return 0;
+    }
+    uint32_t base=LDR_PC2val(fw,is->insn);
+    arm_reg rb=is->insn->detail->arm.operands[0].reg;
+    
+    // look for first TakeSemaphoreStrictly
+    if(!find_next_sig_call(fw,is,50,"TakeSemaphoreStrictly")) {
+        // printf("sig_match_focus_busy: no match TakeSemaphoreStrictly\n");
+        return 0;
+    }
+    const insn_match_t match_ldr[]={
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0), MATCH_OP_MEM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next(fw,is,7,match_ldr)) {
+        // printf("sig_match_focus_busy: no match LDR\n");
+        return 0;
+    }
+
+    // check LDR 
+    if(is->insn->detail->arm.operands[1].mem.base != rb) {
+        // printf("sig_match_focus_busy: no match LDR base\n");
         return 0;
     }
     save_misc_val(rule->name,base,is->insn->detail->arm.operands[1].mem.disp,(uint32_t)is->insn->address);
@@ -3030,6 +3079,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_canon_mode_list,"get_canon_mode_list","AC:PTM_Init",},
 {sig_match_rom_ptr_get,"canon_mode_list",       "get_canon_mode_list",},
 {sig_match_zoom_busy,"zoom_busy",               "ResetZoomLens_FW",},
+{sig_match_focus_busy,"focus_busy",             "MoveFocusLensToTerminate_FW",},
 {NULL},
 };
 
@@ -3801,7 +3851,7 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
     if(sig->flags & MISC_VAL_DEF_CONST) {
         macro="DEF_CONST";
     }
-    // TODO should save a ref address to print with stubs
+
     if (ostub2)
     {
         bprintf("//%s(%-34s,0x%08x)",macro,sig->name,sig->val);
