@@ -66,6 +66,7 @@
 //DEF(playrec_mode                      ,0x0000a140),          stubs_min = 0x0000a140 (0x0000a140)
 //DEF(jpeg_count_str                    ,0x000e4308),          stubs_min = 0x000e4308 (0x000e4308)
 //DEF(zoom_busy                         ,0x00010814),          stubs_min = 0x00010814 (0x00010814)
+//DEF(focus_busy                        ,0x00010694),          stubs_min = 0x00010694 (0x00010694)
 DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 
 //NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc20deb7
