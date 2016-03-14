@@ -418,6 +418,7 @@ misc_val_t misc_vals[]={
     { "FlashParamsTable",   },
     { "playrec_mode",       },
     { "jpeg_count_str",     },
+    { "zoom_busy",          },
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -2479,6 +2480,45 @@ int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *ru
     return save_sig_with_j(fw,rule->name,adr);
 } 
 
+int sig_match_zoom_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // first call
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        printf("sig_match_zoom_busy: no match bl\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // get base address from first LDR PC
+    if(!insn_match_find_next(fw,is,5,match_ldr_pc)) {
+        printf("sig_match_zoom_busy: match LDR PC failed\n");
+        return 0;
+    }
+    uint32_t base=LDR_PC2val(fw,is->insn);
+    arm_reg rb=is->insn->detail->arm.operands[0].reg;
+    
+    // look for first TakeSemaphoreStrictly
+    if(!find_next_sig_call(fw,is,40,"TakeSemaphoreStrictly")) {
+        printf("sig_match_zoom_busy: no match TakeSemaphoreStrictly\n");
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_zoom_busy: disasm failed\n");
+        return 0;
+    }
+    // assume next instruction is ldr
+    if(is->insn->id != ARM_INS_LDR 
+        || is->insn->detail->arm.operands[0].reg != ARM_REG_R0
+        || is->insn->detail->arm.operands[1].mem.base != rb) {
+        printf("sig_match_zoom_busy: no match LDR\n");
+        return 0;
+    }
+    save_misc_val(rule->name,base,is->insn->detail->arm.operands[1].mem.disp,(uint32_t)is->insn->address);
+    return 1;
+}
 // get the address used by a function that does something like
 // ldr rx =base
 // ldr r0 [rx, offset] (optional)
@@ -2989,6 +3029,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_uiprop_count,"uiprop_count",         "PTM_SetCurrentItem_FW",},
 {sig_match_get_canon_mode_list,"get_canon_mode_list","AC:PTM_Init",},
 {sig_match_rom_ptr_get,"canon_mode_list",       "get_canon_mode_list",},
+{sig_match_zoom_busy,"zoom_busy",               "ResetZoomLens_FW",},
 {NULL},
 };
 
@@ -3773,7 +3814,7 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
             bprintf(",          stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
         }
     }
-    else
+    else if(sig->base || sig->offset)
     {
         bprintf("%s(%-34s,0x%08x)",macro,sig->name,sig->val);
         if(sig->offset || sig->ref_adr) {
@@ -3785,6 +3826,10 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
                 bprintf(" Found @0x%08x",sig->ref_adr);
             }
         }
+    }
+    else 
+    {
+        bprintf("// %s not found",sig->name);
     }
     bprintf("\n");
 }
