@@ -29,30 +29,10 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
-// Mode 32770 in firmware but not in current modemap (MODE_AV)
-// Mode 32772 in firmware but not in current modemap (MODE_P)
-// Mode 32771 in firmware but not in current modemap (MODE_TV)
-// Mode 32773 in firmware but not in current modemap
-// Mode 33345 in firmware but not in current modemap
-// Mode  8760 in firmware but not in current modemap
-// Mode  8763 in firmware but not in current modemap
-// Mode  8767 in firmware but not in current modemap
-// Mode  8754 in firmware but not in current modemap
-// Mode  8755 in firmware but not in current modemap
-// Mode 16414 in firmware but not in current modemap
-// Mode 16416 in firmware but not in current modemap
 // Mode 16394 in firmware but not in current modemap
 // Mode 16429 in firmware but not in current modemap
 // Mode 16948 in firmware but not in current modemap
 // Mode 16950 in firmware but not in current modemap
-// Mode 16949 in firmware but not in current modemap
-// Mode 33298 in firmware but not in current modemap
-// Mode 33299 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_LIVE                33191
-// Current modemap entry not found in firmware - MODE_P                   32763
-// Current modemap entry not found in firmware - MODE_TV                  32764
-// Current modemap entry not found in firmware - MODE_AV                  32765
-// Current modemap entry not found in firmware - MODE_M                   32766
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0001a644) // Found @0xff02bf9c
