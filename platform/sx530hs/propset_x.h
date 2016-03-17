@@ -12,12 +12,12 @@ The build uses tools/gen_propset_lua.sed to generate propset6.lua from this file
 DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 */
 
-#define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked
-#define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled
+#define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked-----blackhole
+#define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled-----blackhole
 #define PROPCASE_REAL_FOCUS_MODE                 6          //??? WIKI|Propcase focus_mode
-#define PROPCASE_AF_FRAME                        8          // 1 = FlexiZone, 2 = Face AiAF / Tracking AF
+#define PROPCASE_AF_FRAME                        8          // 1 = Center, 2 = Face AiAF / Tracking AF----blackhole
 #define PROPCASE_AF_LOCK                         11         // 0 = AF not locked, 1 = AF locked
-#define PROPCASE_CONTINUOUS_AF                   12         // 0 = Continuous AF off, 1 = Continuous AF on
+#define PROPCASE_CONTINUOUS_AF                   12         // 0 = Continuous AF off, 1 = Continuous AF on-----blackhole
 #define PROPCASE_FOCUS_STATE                     18         //???
 #define PROPCASE_AV2                             22         // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_AV                              26         // This values causes the actual aperture value to be overriden jeronymo
@@ -48,7 +48,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_FLASH_MODE                      146        // 0 = Auto, 1 = ON, 2 = OFF
 #define PROPCASE_IS_MODE                         145        // 0 = Continuous, 2 = only Shoot, 4 = OFF
 #define PROPCASE_ISO_MODE                        152        // jeronymo
-#define PROPCASE_METERING_MODE                   157        // 0 = Evaluative, 1 = Spot, 2 = Center weighted avg
+#define PROPCASE_METERING_MODE                   160        // 0 = Evaluative, 1 = Spot, 2 = Center weighted avg----blackhole
 
 #define PROPCASE_CUSTOM_BLUE                     176        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_GREEN                    177        // Canon Menu slide bar values: 255, 254, 0, 1, 2
@@ -63,7 +63,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_IS_FLASH_READY                  211
 #define PROPCASE_RESOLUTION                      222        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light jeronymo
 #define PROPCASE_ORIENTATION_SENSOR              222
-#define PROPCASE_TIMER_MODE                      226        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom
+#define PROPCASE_TIMER_MODE                      229        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom-----blackhole
 #define PROPCASE_TIMER_DELAY                     227        // timer delay in msec
 #define PROPCASE_CUSTOM_SHARPNESS                228        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_STITCH_DIRECTION                236        // 0=left>right, 1=right>left. Some cams have more
@@ -73,10 +73,10 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_TV2                             264        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_TV                              265        // Need to set this value for overrides to work correctly
 #define PROPCASE_USER_TV                         267
-#define PROPCASE_WB_MODE                         271        // 0 = Auto, 1 = Daylight, 2 = Cloudy, 3 = Tungsten, 4 = Fluorescent, 5 = Fluorescent H, 7 = Custom
+#define PROPCASE_WB_MODE                         276        // 0 = Auto, 1 = Daylight, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 6 = Fluorescent H, 8 = Custom-----blackhole
 #define PROPCASE_WB_ADJ                          272
-#define PROPCASE_SERVO_AF                        298        // 0 = Servo AF off, 1 = Servo AF on
-#define PROPCASE_ASPECT_RATIO                    299        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+#define PROPCASE_SERVO_AF                        303        // 0 = Servo AF off, 1 = Servo AF on-----blackhole
+#define PROPCASE_ASPECT_RATIO                    304        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1------blackhole
 #define PROPCASE_SV                              346        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_GPS                             357        // (CHDKLover, August 2011) - contains a 272 bytes long structure
 #define PROPCASE_TIMER_SHOTS                     376        // Number of shots for TIMER_MODE=Custom
