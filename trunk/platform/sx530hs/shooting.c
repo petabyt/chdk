@@ -96,28 +96,26 @@ const ISOTable iso_table[] = {
 
 const CapturemodeMap modemap[] = {
     { MODE_VIDEO_STD,            2640 },
-    //{ MODE_VIDEO_SUPER_SLOW,     2638 },
-    //{ MODE_SUPER_VIVID,          8748 },
-    //{ MODE_POSTER_EFFECT,        8749 },
+    { MODE_SUPER_VIVID,          8754 },
+    { MODE_POSTER_EFFECT,        8755 },
     { MODE_FISHEYE,              8759 },
-    //{ MODE_MINIATURE,            8754 },
-    //{ MODE_TOY_CAMERA,           8757 },
-    //{ MODE_MONOCHROME,           8761 },
-    //{ MODE_HIGHSPEED_BURST,     16392 },
+    { MODE_MINIATURE,            8760 },
+    { MODE_TOY_CAMERA,           8763 },
+    { MODE_MONOCHROME,           8767 },
     { MODE_PORTRAIT,            16406 },
-    //{ MODE_LOWLIGHT,            16423 },
-    //{ MODE_FACE_SELF_TIMER,     16942 },
-    //{ MODE_SNOW,                16411 },
-    //{ MODE_FIREWORK,            16413 },
+//    { MODE_HIGH_SPEED_BURST,    16394 },
+//    { MODE_LOW_LIGHT,           16429 },
+    { MODE_SNOW,                16414 },
+    { MODE_FIREWORK,            16416 },
+    { MODE_SMART_SHUTTER,       16949 },
     { MODE_AUTO,                32768 },
-    { MODE_M,                   32766 },
-    { MODE_AV,                  32765 },
-    { MODE_TV,                  32764 },
-    { MODE_P,                   32763 },
-    //{ MODE_DISCREET,            32824 },
-    //{ MODE_NIGHT_SCENE,         33331 }, // This mode is not listed in Canon menu
-    { MODE_LIVE,                33191 },
-    //{ MODE_VIDEO_MOVIE_DIGEST,  33340 },
+    { MODE_M,                   32770 },
+    { MODE_AV,                  32771 },
+    { MODE_TV,                  32772 },
+    { MODE_P,                   32773 },
+    { MODE_HYBRID_AUTO,         33298 }, // Like movie digest
+    { MODE_CREATIVE_EFFECT,     33299 }, // Creative shot, various sub modes all use same number
+    { MODE_LIVE,                33345 },
 };
 
 
