@@ -375,6 +375,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
     { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
     { "CalcSqrt", OPTIONAL|UNUSED }, // helper
+    { "bzero", OPTIONAL|UNUSED }, // helper
+    { "dry_memcpy", OPTIONAL|UNUSED }, // helper, memcpy-like function in dryos kernel code
     { "get_playrec_mode", OPTIONAL|UNUSED }, // helper, made up name
     { "DebugAssert2", OPTIONAL|UNUSED }, // helper, made up name, two arg form of DebugAssert
     { "get_canon_mode_list", OPTIONAL|UNUSED }, // helper, made up name
@@ -2950,6 +2952,8 @@ sig_rule_t sig_rules_main[]={
 //{sig_match_named,   "UnsetZoomForMovie",        "UnsetZoomForMovie_FW",},
 {sig_match_named,   "VbattGet",                 "VbattGet_FW",},
 {sig_match_named,   "Write",                    "Write_FW",},
+{sig_match_named,   "bzero",                    "exec_FW",              SIG_NAMED_SUB},
+{sig_match_named,   "dry_memcpy",               "task__tgTask",         SIG_NAMED_SUB},
 {sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "free",                     "FreeMemory_FW",        SIG_NAMED_JMP_SUB},
