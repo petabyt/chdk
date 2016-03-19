@@ -51,6 +51,8 @@
 0x010c781f,AcquireRecursiveLock
 0x010c78d5,ReleaseRecursiveLock
 0x010d0809,j_mktime_ext
+0x010da178,dry_memcpy
+0x010da260,bzero
 0x010dbe08,_log
 0x010dc328,_log10
 0x010dc490,_pow
@@ -869,6 +871,8 @@
 0xfc251d4c,j_WaitForAnyEventFlag
 0xfc251d54,j_CreateEventFlagStrictly
 0xfc251d9c,j_DebugAssert
+0xfc251dc4,j_dry_memcpy
+0xfc251dcc,j_bzero
 0xfc2552e3,task_FocusEvent
 0xfc25b483,GetFocusLensResetPosition_FW
 0xfc25b48f,GetFocusLensResetDefaultPosition_FW
