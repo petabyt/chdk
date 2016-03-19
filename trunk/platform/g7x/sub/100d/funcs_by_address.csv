@@ -53,6 +53,8 @@
 0x010e69f3,ReleaseRecursiveLock
 0x010e790b,ChangeSDPortVoltage_FW
 0x010f7905,j_mktime_ext
+0x01106a74,dry_memcpy
+0x01106b5c,bzero
 0x01109310,_log
 0x01109830,_log10
 0x01109998,_pow
@@ -937,6 +939,8 @@
 0xfc2ef97c,j_DeleteSemaphore
 0xfc2ef9d4,j_SleepTask
 0xfc2ef9e4,j_DebugAssert
+0xfc2efa1c,j_dry_memcpy
+0xfc2efa24,j_bzero
 0xfc2f77eb,get_playrec_mode
 0xfc3053dd,task_IS_ActiveShadCompTask
 0xfc305a2f,task_ISMainTask

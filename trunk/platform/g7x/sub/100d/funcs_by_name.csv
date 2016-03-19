@@ -59,6 +59,7 @@
 0xfc29176b,BeepDrive_FW
 0xfc29177f,BeepDriveComp_FW
 0xfc291793,BeepDriveStop_FW
+0x01106b5c,bzero
 0xfc45750f,CalcAccelerometerAtanAngle_FW
 0xfc4efafb,CalcLog10
 0xfc4efb27,CalcLog10_FW
@@ -282,6 +283,7 @@
 0xfc4ef22b,DoMemToMemDarkSubtraction_FW
 0xfc1e2453,Driver.Create_FW
 0xfc1e2453,Driver_EnableEventProc_FW
+0x01106a74,dry_memcpy
 0xfc075151,drysh_FW
 0xfc0789c7,DummyUSBConnection_FW
 0xfc1e28cd,Dump32_FW
@@ -832,6 +834,7 @@
 0xfc1e2389,j_BeepDrive_FW
 0xfc1e238d,j_BeepDriveComp_FW
 0xfc1e2391,j_BeepDriveStop_FW
+0xfc2efa24,j_bzero
 0xfc3b449b,j_CecRegDump_FW
 0xfc2ef6a4,j_CheckAllEventFlag
 0xfc2ef71c,j_CheckAnyEventFlag
@@ -858,6 +861,7 @@
 0xfc2ef92c,j_DeleteEventFlag
 0xfc2ef8d4,j_DeleteMessageQueue
 0xfc2ef97c,j_DeleteSemaphore
+0xfc2efa1c,j_dry_memcpy
 0xfc1997fb,j_E2LatOn_FW
 0xfc38f7c7,j_EF.GetEFModExamDriveType_FW
 0xfc38f87f,j_EF.IsChargeFull_FW
