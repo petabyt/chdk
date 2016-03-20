@@ -79,7 +79,6 @@ DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc28c8d7
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc25d561
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc2a4fe3
-//NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc148f2d
 //NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0        *** != 0xfc143599
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc28fd11
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc095c41
@@ -142,6 +141,7 @@ NHSTUB(Open                                   ,0xfc2a507d) //  0
 NHSTUB(PB2Rec                                 ,0xfc0c0985) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc20d755) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc1a8291) //  0
+//NHSTUB(PT_PlaySound                         ,0xfc148f2d) //  0            == 0xfc148f2d
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc2a615d) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc2a6189) //  0
 NHSTUB(PutInNdFilter                          ,0xfc3dd989) //  0

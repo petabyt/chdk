@@ -1107,6 +1107,7 @@
 0xfc3594f5,PostLogicalEventToUI_FW
 0xfc3595db,PostEventShootSeqToUI_FW
 0xfc359613,ShowLogicalEventName_FW
+0xfc35980d,PT_PlaySound
 0xfc35c76f,UIFS_GetNumberOfDisplayedImage_FW
 0xfc35fecd,PutsCameraLogEvent_FW
 0xfc35fefd,ShowCameraLogInfo_FW
