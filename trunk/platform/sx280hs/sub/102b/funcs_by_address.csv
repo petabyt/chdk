@@ -467,6 +467,7 @@
 0xfc138f4b,j_IsBatteryTemperature_FW
 0xfc13a603,task_EdetSBJTask
 0xfc13d64f,task_MovieInit
+0xfc142331,SetHPTimerAfterNow
 0xfc1424b3,task_WdtPrint
 0xfc142525,task_WdtReset
 0xfc1425a1,StartWDT_FW

@@ -484,6 +484,7 @@
 0xfc156c59,SSFS_ShootPicture_FW
 0xfc156d25,task_SsTask
 0xfc15858d,ExecuteShutDownPropertyService_FW
+0xfc158d8d,SetHPTimerAfterNow
 0xfc158ff5,GetBuildDate_FW
 0xfc158ff9,PrintBuildDate_FW
 0xfc159001,GetBuildTime_FW

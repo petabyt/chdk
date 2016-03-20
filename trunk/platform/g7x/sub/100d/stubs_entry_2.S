@@ -42,7 +42,6 @@ NHSTUB(TurnOnBackLight,NULL_SUB)
 NHSTUB(WriteSDCard,NULL_SUB)
 NHSTUB(reboot_fw_update,NULL_SUB)
 NHSTUB(CancelHPTimer,NULL_SUB)
-NHSTUB(SetHPTimerAfterNow,NULL_SUB)
 
 // from sx280 These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
