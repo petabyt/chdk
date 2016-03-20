@@ -38,8 +38,6 @@ NHSTUB(ExpCtrlTool_StopContiAE,NULL_SUB)
 NHSTUB(RefreshPhysicalScreen,NULL_SUB)
 NHSTUB(Restart,NULL_SUB)
 NHSTUB(SetParameterData,NULL_SUB)
-NHSTUB(TurnOffBackLight,NULL_SUB)
-NHSTUB(TurnOnBackLight,NULL_SUB)
 NHSTUB(WriteSDCard,NULL_SUB)
 NHSTUB(reboot_fw_update,NULL_SUB)
 

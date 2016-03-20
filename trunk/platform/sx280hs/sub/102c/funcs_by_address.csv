@@ -398,6 +398,8 @@
 0xfc0e740f,TerminatePTPIPTransportResponder_FW
 0xfc0e7469,InitializePTPIPTransportResponder_FW
 0xfc0e78c7,task_SelectFuncController
+0xfc0eb6b5,TurnOnDisplay
+0xfc0eb6c7,TurnOffDisplay
 0xfc0ed78f,SetDefaultRecParameter_FW
 0xfc0ef30f,task_dccdCalcTask
 0xfc0f0869,task_DPOFTask
@@ -429,6 +431,8 @@
 0xfc134999,GetMovieJpegVRAMVPixelsSize_FW
 0xfc135671,UIFS_StartMovieRecord_FW
 0xfc135687,UIFS_StopMovieRecord_FW
+0xfc0d2985,TurnOnBackLight,(stubs_entry_2.s)
+0xfc0d2997,TurnOffBackLight,(stubs_entry_2.s)
 0xfc13691d,DispCon_ShowColorBar_FW
 0xfc13697b,DispCon_ShowFiveStep_FW
 0xfc136a37,DispCon_ShowWhiteChart_FW
@@ -440,9 +444,7 @@
 0xfc136b49,DispCon_ShowWhiteLine_FW
 0xfc136ca7,DispCon_ShowNStepsChart_FW
 0xfc136d45,DispCon_TurnOnDisplay_FW
-0xfc136d45,TurnOnDisplay
 0xfc136d4f,DispCon_TurnOffDisplay_FW
-0xfc136d4f,TurnOffDisplay
 0xfc136d59,DispCon_TurnOnBackLight_FW
 0xfc136d63,DispCon_TurnOffBackLight_FW
 0xfc136d6d,DispCon_SetMaxBackLightBrightness_FW

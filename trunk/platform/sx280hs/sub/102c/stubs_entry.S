@@ -85,8 +85,8 @@ DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc2a5395
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc2a534d
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc09089f
-//NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc0d2997
-//NHSTUB(TurnOnBackLight                      ,0x00000000) //  0        *** != 0xfc0d2985
+//NHSTUB(TurnOffBackLight                     ,0xfc136705) //  0        *** != 0xfc0d2997
+//NHSTUB(TurnOnBackLight                      ,0xfc1366c7) //  0        *** != 0xfc0d2985
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfc19bb17
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc0a950f
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc04f3b9
@@ -158,8 +158,8 @@ NHSTUB(SetPropertyCase                        ,0xfc29778f) //  0
 NHSTUB(SetScriptMode                          ,0xfc2b018f) //  0
 NHSTUB(SleepTask                              ,0x010c5179) //  0
 NHSTUB(TakeSemaphore                          ,0x010c59f9) //  0
-NHSTUB(TurnOnDisplay                          ,0xfc136d45) //  0
-NHSTUB(TurnOffDisplay                         ,0xfc136d4f) //  0
+NHSTUB(TurnOnDisplay                          ,0xfc0eb6b5) //  0
+NHSTUB(TurnOffDisplay                         ,0xfc0eb6c7) //  0
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xfc1b1dd7) //  0
 NHSTUB(UnlockAE                               ,0xfc20df73) //  0
 NHSTUB(UnlockAF                               ,0xfc20dc83) //  0

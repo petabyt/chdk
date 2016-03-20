@@ -255,7 +255,9 @@
 0xfc0cca07,LcdCon_GetLcdBackLightParameter_FW
 0xfc0cca31,LcdCon_ShowLcdBackLightParameter_FW
 0xfc0cca55,LcdCon_SaveLcdBackLightParameter_FW
+0xfc0cd291,TurnOnDisplay
 0xfc0cd2a3,TurnOffDispForTouchPanelAdj_FW
+0xfc0cd2a3,TurnOffDisplay
 0xfc0cf421,LoadParamDataFromAdjTableBin_FW
 0xfc0cf4b9,LoadDataFromAdjTableBin_FW
 0xfc0cf53f,DeviceUniqueIDCheckSum_FW
@@ -1000,6 +1002,8 @@
 0xfc3265c5,CreateProxyOfEventProcedure_FW
 0xfc3265fd,DeleteProxyOfEventProcedure_FW
 0xfc326639,j_UnRegisterEventProcTable
+0xfc32a7e9,TurnOnBackLight
+0xfc32a827,TurnOffBackLight
 0xfc32ab33,DispCon_ShowColorBar_FW
 0xfc32ab93,DispCon_ShowFiveStep_FW
 0xfc32ac55,DispCon_ShowWhiteChart_FW
@@ -1011,9 +1015,7 @@
 0xfc32ad99,DispCon_ShowWhiteLine_FW
 0xfc32aecd,DispCon_ShowNStepsChart_FW
 0xfc32af7d,DispCon_TurnOnDisplay_FW
-0xfc32af7d,TurnOnDisplay
 0xfc32af87,DispCon_TurnOffDisplay_FW
-0xfc32af87,TurnOffDisplay
 0xfc32af91,DispCon_TurnOnBackLight_FW
 0xfc32af9b,DispCon_TurnOffBackLight_FW
 0xfc32afa5,DispCon_SetMaxBackLightBrightness_FW
