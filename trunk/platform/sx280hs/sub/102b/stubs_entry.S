@@ -141,7 +141,7 @@ NHSTUB(Open                                   ,0xfc2a5001) //  0
 NHSTUB(PB2Rec                                 ,0xfc0c0985) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc20d741) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc1a827d) //  0
-//NHSTUB(PT_PlaySound                         ,0xfc148f2d) //  0            == 0xfc148f2d
+NHSTUB(PT_PlaySound                           ,0xfc148f2d) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc2a60e1) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc2a610d) //  0
 NHSTUB(PutInNdFilter                          ,0xfc3dd8f9) //  0
@@ -194,9 +194,9 @@ NHSTUB(OpenFastDir                            ,0xfc108131) //  0
 NHSTUB(closedir                               ,0xfc1080f9) //  0
 NHSTUB(get_fstype                             ,0xfc2a45d1) //  0
 NHSTUB(qsort                                  ,0xfc2be953) //  0
-//NHSTUB(rand                                 ,0xfc0d32c3) //  0            == 0xfc0d32c3
+NHSTUB(rand                                   ,0xfc0d32c3) //  0
 NHSTUB(set_control_event                      ,0xfc2afe21) //  0
-//NHSTUB(srand                                ,0xfc0d32bd) //  0            == 0xfc0d32bd
+NHSTUB(srand                                  ,0xfc0d32bd) //  0
 NHSTUB(stat                                   ,0xfc2a5219) //  0
 NHSTUB(strcat                                 ,0xfc14a9c9) //  0
 NHSTUB(strchr                                 ,0xfc0d3375) //  0
