@@ -726,6 +726,8 @@ int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule);
+
 // match 
 // r0=ref value
 //...
@@ -2153,6 +2155,15 @@ int sig_match_undisplaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_
     }
     return 0;
 }
+int sig_match_pt_playsound(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // function looks different on dry >= 57, may be OK but will need wrapper changes
+    if (fw->dryos_ver >= 57) {
+        return 0;
+    }
+    return sig_match_near_str(fw,is,rule);
+}
+
 int sig_match_wait_all_eventflag_strict(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -2657,6 +2668,7 @@ int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_NEAR_COUNT_SHIFT    8
 #define SIG_NEAR_REV            0x10000
 #define SIG_NEAR_INDIRECT       0x20000
+#define SIG_NEAR_JMP_SUB        0x40000
 #define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
                                 | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
 #define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
@@ -2681,6 +2693,13 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
         // printf("sig_match_near_str: %s indirect 0x%08x\n",rule->name,search_adr);
     }
+    const insn_match_t *insn_match;
+    if(rule->param & SIG_NEAR_JMP_SUB) {
+        insn_match = match_b_bl_blximm;
+    } else {
+        insn_match = match_bl_blximm;
+    }
+
     int max_insns=rule->param&SIG_NEAR_OFFSET_MASK;
     int n=(rule->param&SIG_NEAR_COUNT_MASK)>>SIG_NEAR_COUNT_SHIFT;
     //printf("sig_match_near_str: %s max_insns %d n %d %s\n",rule->name,max_insns,n,(rule->param & SIG_NEAR_REV)?"rev":"fwd");
@@ -2693,7 +2712,7 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             int n_calls=0;
             for(i=1; i<=max_insns; i++) {
                 fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
-                if(insn_match_any(fw->is->insn,match_bl_blximm)) {
+                if(insn_match_any(fw->is->insn,insn_match)) {
                     n_calls++;
                 }
                 if(n_calls == n) {
@@ -2701,7 +2720,7 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 }
             }
         } else {
-            if(insn_match_find_nth(fw,is,max_insns,n,match_bl_blximm)) {
+            if(insn_match_find_nth(fw,is,max_insns,n,insn_match)) {
                 return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
             }
         }
@@ -3052,6 +3071,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1)},
+// this matches using sig_match_near_str, but function for dryos >=57 takes additional param so disabling for those versions
+{sig_match_pt_playsound,"PT_PlaySound",         "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB},
 {sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",},
 {sig_match_near_str,"strrchr",                  "ReadFast_ERROR\n",     SIG_NEAR_AFTER(9,2)},
 {sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
