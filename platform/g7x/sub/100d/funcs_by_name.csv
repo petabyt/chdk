@@ -1345,6 +1345,7 @@
 0xfc2849d9,PT_MFOn
 0xfc282fd3,PT_MoveDigitalZoomToWide
 0xfc1e32d5,PT_MoveOpticalZoomAt
+0xfc35980d,PT_PlaySound
 0xfc0af15f,PTM_AllReset_FW
 0xfc34add7,PTM_AllResetToFactorySetting_FW
 0xfc0afd8d,PTM_BackupUIProperty_FW
