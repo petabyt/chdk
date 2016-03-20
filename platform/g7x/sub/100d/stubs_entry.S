@@ -156,10 +156,10 @@ NHSTUB(SetPropertyCase                        ,0xfc34a643) //  0
 NHSTUB(SetScriptMode                          ,0xfc34b757) //  0
 NHSTUB(SleepTask                              ,0x010e4ff1) //  0
 NHSTUB(TakeSemaphore                          ,0x010e5a59) //  0
-//NHSTUB(TurnOffBackLight                     ,0x00000000) //  0            == 0x00000000
-//NHSTUB(TurnOnBackLight                      ,0x00000000) //  0            == 0x00000000
-NHSTUB(TurnOnDisplay                          ,0xfc32af7d) //  0
-NHSTUB(TurnOffDisplay                         ,0xfc32af87) //  0
+NHSTUB(TurnOffBackLight                       ,0xfc32a827) //  0
+NHSTUB(TurnOnBackLight                        ,0xfc32a7e9) //  0
+NHSTUB(TurnOnDisplay                          ,0xfc0cd291) //  0
+NHSTUB(TurnOffDisplay                         ,0xfc0cd2a3) //  0
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xfc1f6e87) //  0
 NHSTUB(UnlockAE                               ,0xfc283967) //  0
 NHSTUB(UnlockAF                               ,0xfc2835df) //  0

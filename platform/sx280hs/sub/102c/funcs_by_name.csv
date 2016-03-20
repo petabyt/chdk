@@ -1839,10 +1839,12 @@
 0x010c589f,TryPostMessageQueue
 0x010c57ed,TryReceiveMessageQueue
 0x010c59c5,TryTakeSemaphore
-0xfc136d4f,TurnOffDisplay
+0xfc0d2997,TurnOffBackLight,(stubs_entry_2.s)
+0xfc0eb6c7,TurnOffDisplay
 0xfc095a35,TurnOffE1_FW
 0xfc2a069b,TurnOffVideoOutMode_FW
-0xfc136d45,TurnOnDisplay
+0xfc0d2985,TurnOnBackLight,(stubs_entry_2.s)
+0xfc0eb6b5,TurnOnDisplay
 0xfc2a066b,TurnOnVideoOutMode_FW
 0xfc393643,UI.Create_FW
 0xfc392bb9,UI.CreatePublic_FW
