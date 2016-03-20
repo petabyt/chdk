@@ -1366,6 +1366,7 @@
 0xfc248dd9,qsort
 0xfc4ef1fb,QuietImageDrive_FW
 0xfc1996cd,QuietImager_FW
+0xfc161a83,rand
 0xfc134541,Read
 0xfc134541,Read_FW
 0xfc1184e9,ReadFastDir
@@ -1717,6 +1718,7 @@
 0xfc28fea9,SoundDevStopRecMusic_FW
 0xfc1bc49f,SoundDevZoomNCEffective_FW
 0xfc36255f,sprintf_FW
+0xfc161a7d,srand
 0xfc1e3319,SS.ChangeZoomSpeed_FW
 0xfc1e3361,SS.Create_FW
 0xfc1e3339,SS.DoAELock_FW

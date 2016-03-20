@@ -91,10 +91,8 @@ DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfc19bb17
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc0a950f
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc04f3b9
-//NHSTUB(rand                                 ,0x00000000) //  0        *** != 0xfc0d32c3
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc42ae41
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3352b1
-//NHSTUB(srand                                ,0x00000000) //  0        *** != 0xfc0d32bd
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1423c9
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc142331
 
@@ -196,7 +194,9 @@ NHSTUB(OpenFastDir                            ,0xfc108131) //  0
 NHSTUB(closedir                               ,0xfc1080f9) //  0
 NHSTUB(get_fstype                             ,0xfc2a464d) //  0
 NHSTUB(qsort                                  ,0xfc2be9cf) //  0
+//NHSTUB(rand                                 ,0xfc0d32c3) //  0            == 0xfc0d32c3
 NHSTUB(set_control_event                      ,0xfc2afe9d) //  0
+//NHSTUB(srand                                ,0xfc0d32bd) //  0            == 0xfc0d32bd
 NHSTUB(stat                                   ,0xfc2a5295) //  0
 NHSTUB(strcat                                 ,0xfc14a9c9) //  0
 NHSTUB(strchr                                 ,0xfc0d3375) //  0
