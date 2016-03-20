@@ -93,7 +93,6 @@ DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc42adb1
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc335235
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1423c9
-//NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc142331
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc15a7e5) //  0
 NHSTUB(Close                                  ,0xfc2a5085) //  0
@@ -223,6 +222,7 @@ NHSTUB(undisplaybusyonscreen                  ,0xfc14a27f) //  0
 NHSTUB(EngDrvRead                             ,0xfc2b7cab) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc2b064f) //  0
 NHSTUB(DisableISDriveError                    ,0xfc3b8a9d) //  0
+//NHSTUB(SetHPTimerAfterNow                   ,0xfc142331) //  0            == 0xfc142331
 NHSTUB(PT_MFOn                                ,0xfc20ee17) //  0
 NHSTUB(PT_MFOff                               ,0xfc20ee47) //  0
 NHSTUB(GetAdChValue                           ,0xfc0c33c7) //  0

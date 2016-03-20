@@ -223,7 +223,7 @@ NHSTUB(EngDrvRead                             ,0xfc360b25) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc34b29f) //  0
 NHSTUB(DisableISDriveError                    ,0xfc3d2a2d) //  0
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0            == 0x00000000
-//NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0            == 0x00000000
+NHSTUB(SetHPTimerAfterNow                     ,0xfc158d8d) //  0
 NHSTUB(PT_MFOn                                ,0xfc2849d9) //  0
 NHSTUB(PT_MFOff                               ,0xfc284a0d) //  0
 NHSTUB(GetAdChValue                           ,0xfc0e103b) //  0
