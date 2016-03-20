@@ -192,10 +192,10 @@ NHSTUB(OpenFastDir                            ,0xfc118449) //  0
 NHSTUB(closedir                               ,0xfc118411) //  0
 NHSTUB(get_fstype                             ,0xfc357691) //  0
 NHSTUB(qsort                                  ,0xfc248dd9) //  0
-//NHSTUB(rand                                 ,0x00000000) //  0            == 0x00000000
+NHSTUB(rand                                   ,0xfc161a83) //  0
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0            == 0x00000000
 NHSTUB(set_control_event                      ,0xfc34b499) //  0
-//NHSTUB(srand                                ,0x00000000) //  0            == 0x00000000
+NHSTUB(srand                                  ,0xfc161a7d) //  0
 NHSTUB(stat                                   ,0xfc358219) //  0
 NHSTUB(strcat                                 ,0xfc362421) //  0
 NHSTUB(strchr                                 ,0xfc161af5) //  0

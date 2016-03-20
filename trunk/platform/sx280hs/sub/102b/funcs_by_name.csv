@@ -1249,6 +1249,7 @@
 0xfc2afab1,PutsCameraLogEvent_FW
 0xfc2be953,qsort
 0xfc17db2f,QuietImager_FW
+0xfc0d32c3,rand
 0xfc0ba575,Read
 0xfc0ba575,Read_FW
 0xfc1081d1,ReadFastDir
@@ -1578,6 +1579,7 @@
 0xfc29edfb,SoundDevStopRecMusic_FW
 0xfc188c29,SoundDevZoomNCEffective_FW
 0xfc2b7f81,sprintf_FW
+0xfc0d32bd,srand
 0xfc1a82c1,SS.ChangeZoomSpeed_FW
 0xfc1a8309,SS.Create_FW
 0xfc1a82e1,SS.DoAELock_FW

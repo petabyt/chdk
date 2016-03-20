@@ -372,6 +372,8 @@
 0xfc0d1e3d,Printf_FW
 0xfc0d1e47,LoadScript_FW
 0xfc0d26cd,GUISrv_StartGUISystem_FW
+0xfc0d32bd,srand
+0xfc0d32c3,rand
 0xfc0d32e1,memcpy
 0xfc0d32e1,memcpy_FW
 0xfc0d3375,strchr

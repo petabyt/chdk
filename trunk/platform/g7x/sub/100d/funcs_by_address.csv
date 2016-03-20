@@ -506,6 +506,8 @@
 0xfc1618b5,sscanf_FW
 0xfc16192d,strtolx
 0xfc161a6f,strtol
+0xfc161a7d,srand
+0xfc161a83,rand
 0xfc161acb,strncmp
 0xfc161af5,strchr
 0xfc163e33,task_AprocMainTask
