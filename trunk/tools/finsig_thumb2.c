@@ -2206,6 +2206,39 @@ int sig_match_get_num_posted_messages(firmware *fw, iter_state_t *is, sig_rule_t
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_set_hp_timer_after_now: failed to find ref %s\n",rule->ref_name);
+        return 0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        if(!find_next_sig_call(fw,is,20,"ClearEventFlag")) {
+            // printf("sig_match_set_hp_timer_after_now: failed to find ClearEventFlag\n");
+            continue;
+        }
+        // find 3rd call
+        if(!insn_match_find_nth(fw,is,13,3,match_bl_blximm)) {
+            // printf("sig_match_set_hp_timer_after_now: no match bl 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        // check call args, expect r0 = 70000
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,6,regs)&0x1)!=0x1) {
+            // printf("sig_match_set_hp_timer_after_now: failed to get args 0x%"PRIx64"\n",is->insn->address);
+            continue;
+        }
+        // r1, r2 should be func pointers but may involve reg-reg moves that get_call_const_args doesn't track
+        if(regs[0] != 70000) {
+            // printf("sig_match_set_hp_timer_after_now: args mismatch 0x%08x 0x%08x 0x%"PRIx64"\n",regs[0],regs[1],is->insn->address);
+            continue;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3110,6 +3143,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_undisplaybusyonscreen_52,"undisplaybusyonscreen","_PBBusyScrn",},
 {sig_match_near_str,"srand",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(14,4)|SIG_NEAR_INDIRECT},
 {sig_match_near_str,"rand",                     "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(15,5)|SIG_NEAR_INDIRECT},
+{sig_match_set_hp_timer_after_now,"SetHPTimerAfterNow","MechaNC.c",},
 {sig_match_levent_table,"levent_table",         "ShowLogicalEventName_FW",},
 {sig_match_flash_param_table,"FlashParamsTable","GetParameterData",},
 {sig_match_named,   "get_playrec_mode",         "task_SsStartupTask",   SIG_NAMED_SUB},
