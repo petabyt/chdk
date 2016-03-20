@@ -83,6 +83,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc382687
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc34586d
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc345905
+//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc158e24
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc0ef0cd) //  0
 NHSTUB(Close                                  ,0xfc358085) //  0
@@ -222,7 +223,6 @@ NHSTUB(vsprintf                               ,0xfc0c38cf) //  0
 NHSTUB(EngDrvRead                             ,0xfc360b25) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc34b29f) //  0
 NHSTUB(DisableISDriveError                    ,0xfc3d2a2d) //  0
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetHPTimerAfterNow                     ,0xfc158d8d) //  0
 NHSTUB(PT_MFOn                                ,0xfc2849d9) //  0
 NHSTUB(PT_MFOff                               ,0xfc284a0d) //  0
