@@ -39,6 +39,8 @@
     #define CAM_VIDEO_QUALITY_ONLY              1
 	#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 	
+    #define CAM_HAS_SPORTS_MODE                 1
+
     #define CAM_BRACKETING                      1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_HAS_JOGDIAL                     1
