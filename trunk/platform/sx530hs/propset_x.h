@@ -14,7 +14,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked-----blackhole
 #define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled-----blackhole
-#define PROPCASE_REAL_FOCUS_MODE                 6          //??? WIKI|Propcase focus_mode 0-Normal 1-Macro 4-Manual -----blackhole
+#define PROPCASE_REAL_FOCUS_MODE                 6          // Propcase focus_mode 0-Normal 1-Macro 4-Manual -----blackhole
 #define PROPCASE_AF_FRAME                        8          // 1 = Center, 2 = Face AiAF / Tracking AF----blackhole
 #define PROPCASE_AF_LOCK                         11         // 0 = AF not locked, 1 = AF locked
 #define PROPCASE_CONTINUOUS_AF                   12         // 0 = Continuous AF off, 1 = Continuous AF on-----blackhole
@@ -30,20 +30,20 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_QUALITY                         59         //blackhole
 #define PROPCASE_CUSTOM_CONTRAST                 61         // Canon Menu slide bar values: 254, 255, 0, 1, 2-----blackhole
 #define PROPCASE_FLASH_SYNC_CURTAIN              64
-#define PROPCASE_SUBJECT_DIST2                   65
+#define PROPCASE_SUBJECT_DIST2                   67         //-----blackhole        
 #define PROPCASE_DATE_STAMP                      68         // 0 = Off, 1 = Date, 2 = Date & Time----blackhole
-#define PROPCASE_DELTA_SV                        79
+#define PROPCASE_DELTA_SV                        81         //??? 88 or 89 ???-----blackhole
 #define PROPCASE_DIGITAL_ZOOM_MODE               94         // Digital Zoom Mode/State 0 = off/standard, 2 = 1.5x, 3 = 2.0x----blackhole
 //#define PROPCASE_DIGITAL_ZOOM_STATE            94         // Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on
 #define PROPCASE_DIGITAL_ZOOM_POSITION           98         //0-6-----blackhole
 #define PROPCASE_DRIVE_MODE                      105        //blackhole
 #define PROPCASE_OVEREXPOSURE                    103
-//#define PROPCASE_DISPLAY_MODE                    105 TODO
+#define PROPCASE_DISPLAY_MODE                    108        //blackhole
 #define PROPCASE_EV_CORRECTION_1                 110        //blackhole
 #define PROPCASE_FLASH_ADJUST_MODE               121
-#define PROPCASE_FLASH_FIRE                      122
-#define PROPCASE_FLASH_EXP_COMP                  127    // APEX96 units
-#define PROPCASE_FOCUS_MODE                      133
+#define PROPCASE_FLASH_FIRE                      125        //blackhole
+#define PROPCASE_FLASH_EXP_COMP                  130        //1=96 APEX96 units-----blackhole
+#define PROPCASE_FOCUS_MODE                      136        //0=AF 1=MF-----blackhole
 #define PROPCASE_FLASH_MANUAL_OUTPUT             141        // !not sure, but required for compile; from propset4
 #define PROPCASE_FLASH_MODE                      146        // 0 = Auto, 1 = ON, 2 = OFF-----blackhole
 #define PROPCASE_IS_MODE                         148        // 0 = Continuous, 1 = only Shoot, 2 = OFF-----blackhole
@@ -56,30 +56,30 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SKIN_TONE                182        // Canon Menu slide bar values: 254, 255, 0, 1, 2----blackhole
 #define PROPCASE_MY_COLORS                       190        // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color----blackhole
 #define PROPCASE_ND_FILTER_STATE                 195        // 0 = out, 1 = in
-#define PROPCASE_OPTICAL_ZOOM_POSITION           198 
-#define PROPCASE_EXPOSURE_LOCK                   209     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
+#define PROPCASE_OPTICAL_ZOOM_POSITION           201        //blackhole
+#define PROPCASE_EXPOSURE_LOCK                   212     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed---blackhole
 #define PROPCASE_SHOOTING                        307     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot----blackhole
 #define PROPCASE_EV_CORRECTION_2                 210
-#define PROPCASE_IS_FLASH_READY                  211
+#define PROPCASE_IS_FLASH_READY                  214        //blackhole
 #define PROPCASE_RESOLUTION                      222        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light jeronymo
-#define PROPCASE_ORIENTATION_SENSOR              222
+#define PROPCASE_ORIENTATION_SENSOR              225        //blackhole
 #define PROPCASE_TIMER_MODE                      229        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom-----blackhole
-#define PROPCASE_TIMER_DELAY                     227        // timer delay in msec
+#define PROPCASE_TIMER_DELAY                     230        // timer delay in msec----blackhole
 #define PROPCASE_CUSTOM_SHARPNESS                231        // Canon Menu slide bar values: 254, 255, 0, 1, 2----blackhole
 #define PROPCASE_STITCH_DIRECTION                236        // 0=left>right, 1=right>left. Some cams have more
 #define PROPCASE_STITCH_SEQUENCE                 241        // counts shots in stitch sequence, positive=left>right, negative=right>left
-#define PROPCASE_SUBJECT_DIST1                   248
+#define PROPCASE_SUBJECT_DIST1                   251        //same as 67 & 259-----blackhole
 #define PROPCASE_SV_MARKET                       252        //blackhole 253 is same value as PROPCASE_SV 252:253=672:603 ISO400 
 #define PROPCASE_TV2                             268        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD---blackhole
 #define PROPCASE_TV                              269        // Need to set this value for overrides to work correctly----blackhole
 #define PROPCASE_USER_TV                         271        //----blackhole
 #define PROPCASE_WB_MODE                         276        // 0 = Auto, 1 = Daylight, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 6 = Fluorescent H, 8 = Custom-----blackhole
-#define PROPCASE_WB_ADJ                          272
+#define PROPCASE_WB_ADJ                          276        //blackhole
 #define PROPCASE_SERVO_AF                        303        // 0 = Servo AF off, 1 = Servo AF on-----blackhole
 #define PROPCASE_ASPECT_RATIO                    304        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1------blackhole
 #define PROPCASE_SV                              351       // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD---blackhole???
 #define PROPCASE_GPS                             357        // (CHDKLover, August 2011) - contains a 272 bytes long structure
-#define PROPCASE_TIMER_SHOTS                     376        // Number of shots for TIMER_MODE=Custom
+#define PROPCASE_TIMER_SHOTS                     381        // Number of shots for TIMER_MODE=Custom----blackhole
 
 // !not sure
 //#define PROPCASE_DIGITAL_ZOOM_MODE               91         // Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
