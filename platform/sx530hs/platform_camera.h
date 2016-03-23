@@ -21,11 +21,8 @@
 // don't override them again in here.
 
 
-// This camera needs a new propset. A partial propsetN.h file can be found in platform/sx530hs/propset_x.h
-// a propset number can be assigned when some goes through and confirms the majority of IDs
-// for development, just pick a free number and update includes/properties.h accordingly
-#error "verify propcase IDs and assign a number"
-//    #define CAM_PROPSET                     ???
+// propset 8, new for this camera. See development thread https://chdk.setepontos.com/index.php?topic=12418.msg127109#msg127109
+    #define CAM_PROPSET                     8
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
