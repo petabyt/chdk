@@ -151,51 +151,11 @@ int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
 
-#ifdef CAM_LOAD_CUSTOM_COLORS
 void *vid_get_bitmap_active_palette()
 {
-    //extern int active_palette_buffer;
-    //extern int** palette_buffer_ptr;jeronymo
-    //int *p = palette_buffer_ptr[active_palette_buffer];jeronymo
-    // active_palette_buffer can point at null when
-    // func and menu are opened for the first time
-    //if(!p) {jeronymo
-    //    p = palette_buffer_ptr[0]; // rec mode buffer appears to always be initialized
-    //}
-    return 10;//(p+1);jeronymo
+return (void *)*(unsigned int*)(0x7280+0x2C);//FF191A20 blackhole
 }
 
-// Function to load CHDK custom colors into active Canon palette
-void load_chdk_palette()
-{
-    /*extern int active_palette_buffer;jeronymo
-    // Only load for the standard record and playback palettes
-    if ((active_palette_buffer == 0) || (active_palette_buffer == 5))
-    {
-        int *pal = (int*)vid_get_bitmap_active_palette();
-        if (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62)
-        {
-            pal[CHDK_COLOR_BASE+0]  = 0x3F3ADF62;  // Red
-            pal[CHDK_COLOR_BASE+1]  = 0x3F26EA40;  // Dark Red
-            pal[CHDK_COLOR_BASE+2]  = 0x3F4CD57F;  // Light Red
-            pal[CHDK_COLOR_BASE+5]  = 0x3F73BFAE;  // Green
-            pal[CHDK_COLOR_BASE+6]  = 0x3F4BD6CA;  // Dark Green
-            pal[CHDK_COLOR_BASE+7]  = 0x3F95AB95;  // Light Green
-            pal[CHDK_COLOR_BASE+8]  = 0x3F4766F0;  // Blue
-            pal[CHDK_COLOR_BASE+9]  = 0x3F1250F3;  // Dark Blue
-            pal[CHDK_COLOR_BASE+10] = 0x3F7F408F;  // Cyan
-            pal[CHDK_COLOR_BASE+11] = 0x3F512D5B;  // Magenta
-            pal[CHDK_COLOR_BASE+12] = 0x3FA9A917;  // Yellow
-            pal[CHDK_COLOR_BASE+13] = 0x3F819137;  // Dark Yellow
-            pal[CHDK_COLOR_BASE+14] = 0x3FDED115;  // Light Yellow
-
-            //extern char palette_control;jeronymo
-            //palette_control = 1;jeronymo
-            vid_bitmap_refresh();
-        }
-    }*/
-}
-#endif
 
 void JogDial_CW(void)
 {
