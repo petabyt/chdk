@@ -3,37 +3,22 @@
 
 #include "platform.h"
 
-// TODO:Taken from ixus140
 // These F-numbers are the "mock" values shown by the cam.
 // They're linked to FL (zoom) and ND filter.
 // aperture_sizes_table[].id is just a serial number.
 // note av96 varies continously with zoom, the following values are just representative
 const ApertureSize aperture_sizes_table[] = { // PROPCASE 23
-    {  9, 328, "3.2" },
-    { 10, 331, "3.5" }, 
-    { 11, 379, "4.0" }, 
-    { 12, 425, "4.5" },
-    { 13, 463, "5.0" },
-    { 14, 474, "5.6" },
-    { 15, 502, "6.3" },
-    { 16, 541, "6.9" },
-
-// The rest are the same physical apertures as above, but with ND:
-    { 17, 604, "9.0" },
-    { 18, 613, "10.0" },
-    { 19, 657, "11.0" },
-    { 20, 687, "13.0" },
-    { 21, 710, "14.0" },
-    { 22, 750, "16.0" },
-    { 23, 790, "18.0" },
-    { 24, 817, "20.0" },
+    {  9, 352, "3.4" },
+    { 10, 384, "4.0" }, 
+    { 11, 416, "4.5" }, 
+    { 12, 448, "5.0" },
+    { 13, 480, "5.6" },
+    { 14, 512, "6.3" },
+    { 15, 544, "7.1" },
+    { 16, 576, "8.0" },
 };
 
-// OLD copied comment! Taken from ixus140
-// TODO copied from 850
-// Another set of "mock" values, which can probably
-// be derived from the table found at FFB4E258 in FW.
-// At the moment, I see no reason to amend it.
+
 const ShutterSpeed shutter_speeds_table[] = {
     { -12, -384, "15", 15000000 },
     { -11, -352, "13", 13000000 },
@@ -80,17 +65,17 @@ const ShutterSpeed shutter_speeds_table[] = {
     {  30,  960, "1/1000", 1000 },
     {  31,  992, "1/1250",  800 },
     {  32, 1021, "1/1600",  625 },
+	{  33, 1056, "1/2000",  500 },
 };
 
 const ISOTable iso_table[] = {
     {  0,     0,  "Auto", -1},
-    {  1,    80,    "80", -1},
-    {  2,   100,   "100", -1},
-    {  3,   200,   "200", -1},
-    {  4,   400,   "400", -1},
-    {  5,   800,   "800", -1},
-    {  6,  1600,  "1600", -1},
-    {  7,  3200,  "3200", -1},
+    {  1,   100,   "100", -1},
+    {  2,   200,   "200", -1},
+    {  3,   400,   "400", -1},
+    {  4,   800,   "800", -1},
+    {  5,  1600,  "1600", -1},
+    {  6,  3200,  "3200", -1},
 };
 
 
@@ -141,3 +126,4 @@ long get_target_dir_num()
     return 0;
 }
 #endif
+

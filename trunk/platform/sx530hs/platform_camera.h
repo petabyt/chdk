@@ -36,14 +36,15 @@
     #define CAM_RAW_ROWPIX                  4768 // Found @0xff196e7c
     #define CAM_RAW_ROWS                    3516 // Found @0xff196e88
 
-    // INCORRECT, cam is 16 MP!
-    #define CAM_JPEG_WIDTH                  4000 // from canon specs
-    #define CAM_JPEG_HEIGHT                 3000 
+	
+    #define CAM_JPEG_WIDTH                  4678 // from canon specs
+    #define CAM_JPEG_HEIGHT                 3516 
 
-    #define CAM_ACTIVE_AREA_X1              96
-    #define CAM_ACTIVE_AREA_Y1              18 // there are values at 17 but keep even to avoid CFA issues
-    #define CAM_ACTIVE_AREA_X2              4168 // active all the way to the edge
-    #define CAM_ACTIVE_AREA_Y2              3062 // active all the way to the bottom
+	//TODO
+    #define CAM_ACTIVE_AREA_X1              24
+    #define CAM_ACTIVE_AREA_Y1              0 // there are values at 17 but keep even to avoid CFA issues
+    #define CAM_ACTIVE_AREA_X2              4768 // active all the way to the edge
+    #define CAM_ACTIVE_AREA_Y2              3516 // active all the way to the bottom
 
     #undef CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff025c5c
@@ -148,3 +149,9 @@
     #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
     
 //----------------------------------------------------------
+    #undef  CAM_DEFAULT_MENU_CURSOR_BG
+    #undef  CAM_DEFAULT_MENU_CURSOR_FG
+    #define CAM_DEFAULT_MENU_CURSOR_BG  IDX_COLOR_RED      // Override menu cursor colors
+    #define CAM_DEFAULT_MENU_CURSOR_FG  IDX_COLOR_WHITE    // Override menu cursor colors
+	
+	
