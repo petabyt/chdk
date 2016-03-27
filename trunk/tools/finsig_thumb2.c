@@ -2762,6 +2762,26 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// check if func is a nullsub or mov r0, x ; ret
+// to prevent sig_named* matches from going off the end of dummy funcs
+int is_immediate_ret_sub(firmware *fw,iter_state_t *is_init)
+{
+    fw_disasm_iter_single(fw,is_init->adr | is_init->thumb);
+    const insn_match_t match_mov_r0_imm[]={
+        {MATCH_INS(MOV,   2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM_ANY}},
+        {MATCH_INS(MOVS,  2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    // if it's a MOV, check if next is ret
+    if(insn_match_any(fw->is->insn,match_mov_r0_imm)) {
+        fw_disasm_iter(fw);
+    }
+    if(isRETx(fw->is->insn)) {
+        return 1;
+    }
+    return 0;
+}
+
 // match last function called by already matched sig, 
 // either the last bl/blximmg before pop {... pc}
 // or b after pop {... lr}
@@ -2780,10 +2800,14 @@ int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     int min = (rule->param&SIG_NAMED_LAST_MIN_MASK)>>SIG_NAMED_LAST_MIN_SHIFT;
     int max = (rule->param&SIG_NAMED_LAST_MAX_MASK);
     if(!ref_adr) {
-        printf("sig_match_named_last: missing %s\n",rule->ref_name);
+        printf("sig_match_named_last: %s missing %s\n",rule->name,rule->ref_name);
         return 0;
     }
     disasm_iter_init(fw,is,ref_adr);
+    if(is_immediate_ret_sub(fw,is)) {
+        printf("sig_match_named_last: immediate return %s\n",rule->name);
+        return 0;
+    }
     int push_found=0;
     uint32_t last_adr=0;
     int count;
@@ -2902,6 +2926,11 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 //        return 0;
     }
     disasm_iter_init(fw,is,ref_adr);
+    // TODO for eventprocs, may just want to use the original
+    if(is_immediate_ret_sub(fw,is)) {
+        printf("sig_match_named: immediate return %s\n",rule->name);
+        return 0;
+    }
     // TODO max search is hardcoded
     if(insn_match_find_nth(fw,is,15 + 5*sig_nth,sig_nth,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
