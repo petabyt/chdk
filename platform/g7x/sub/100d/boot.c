@@ -5,14 +5,14 @@
 const char * const new_sa = &_end;
 
 // Forward declarations
-extern volatile int jogdial_stopped;
-void JogDial_task_my(void);
 
 extern void task_CaptSeq();
 extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+
+extern void handle_jogdial();
 
 /*----------------------------------------------------------------------
     spytask
@@ -30,12 +30,6 @@ void CreateTask_spytask()
     _CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
 }
 
-
-///*----------------------------------------------------------------------
-// Pointer to stack location where jogdial task records previous and current
-// jogdial positions
-// TODO
-// short *jog_position;
 
 /*----------------------------------------------------------------------
     boot()
@@ -449,121 +443,128 @@ void init_required_fw_features(void) {
 //    _init_nd_semaphore();
 }
 
-// TODO sx280 c&p jogdial stuff
-#if 0
-void __attribute__((naked,noinline)) kbd_p2_f_my() { // 0xfc05ffc0
+// jogdial override code called from kbd task
+// -f=chdk -s=kbd_p2_f -c=77
+// kbd_p2_f 0xfc077e8d
+void __attribute__((naked,noinline)) kbd_p2_f_my() {
     asm volatile(
-"    stmdb   sp!, {r4, r5, r6, r7, r8, lr}\n"
-"    ldr     r6, =0x2ae94\n"
+"    push.w  {r4, r5, r6, r7, r8, lr}\n"
+"    ldr     r6, =0x00036c34\n"
 "    sub     sp, #0x18\n"
 "    add     r7, sp, #8\n"
 "    subs    r6, #0xc\n"
-"    b.n     loc_fc060002\n"
-"loc_fc05ffce:\n"
-"    ldr     r1, =0x2ae94\n"
+"    b       loc_fc077ece\n"
+"loc_fc077e9a:\n"
+"    ldr     r1, =0x00036c34\n"
 "    add     r3, sp, #8\n"
 "    ldrb.w  r0, [sp, #4]\n"
 "    add     r2, sp, #0x14\n"
 "    subs    r1, #0x18\n"
-"    bl      sub_fc060ca4\n"
-"    cbnz    r0, loc_fc05ffe8\n"
+"    bl      sub_fc0760c4\n"
+"    cbnz    r0, loc_fc077eb4\n"
 "    ldr     r1, [sp, #0x14]\n"
 "    movs    r0, #0\n"
-"    bl      sub_fc05ff32\n"
-"loc_fc05ffe8:\n"
+"    bl      sub_fc077dfe\n"
+"loc_fc077eb4:\n"
 "    movs    r0, #2\n"
-"loc_fc05ffea:\n"
+"loc_fc077eb6:\n"
 "    ldr.w   r1, [r7, r0, lsl #2]\n"
-"    cbz     r1, loc_fc05fffa\n"
+"    cbz     r1, loc_fc077ec6\n"
 "    ldr.w   r2, [r6, r0, lsl #2]\n"
 "    bics    r2, r1\n"
 "    str.w   r2, [r6, r0, lsl #2]\n"
-"loc_fc05fffa:\n"
+"loc_fc077ec6:\n"
 "    subs    r0, r0, #1\n"
 "    sxtb    r0, r0\n"
 "    cmp     r0, #0\n"
-"    bge.n   loc_fc05ffea\n"
-"loc_fc060002:\n"
-"    ldr     r0, =0x2ae94\n"
+"    bge     loc_fc077eb6\n"
+"loc_fc077ece:\n"
+"    ldr     r0, =0x00036c34\n"
 "    add     r1, sp, #4\n"
 "    subs    r0, #0xc\n"
-"    bl      sub_fc0609d6\n"
+"    bl      sub_fc075dc4\n"
 "    cmp     r0, #0\n"
-"    bne.n   loc_fc05ffce\n"
-"    ldr     r8, =0x2ae94\n"
+"    bne     loc_fc077e9a\n"
+"    ldr.w   r8, =0x00036c34\n"
 "    movs    r4, #0\n"
-"loc_fc060016:\n"
+"loc_fc077ee2:\n"
 "    movs    r5, #0\n"
 "    ldr.w   r0, [r6, r4, lsl #2]\n"
 "    ldr.w   r1, [r8, r4, lsl #2]\n"
 "    ands    r0, r1\n"
 "    str.w   r0, [r6, r4, lsl #2]\n"
-"    b.n     loc_fc06006e\n"
-"loc_fc060028:\n"
+"    b       loc_fc077f3a\n"
+"loc_fc077ef4:\n"
 "    lsrs    r0, r5\n"
 "    lsls    r0, r0, #0x1f\n"
-"    beq.n   loc_fc060066\n"
-"    ldr     r1, =0x2ae94\n"
+"    beq     loc_fc077f32\n"
+"    ldr     r1, =0x00036c34\n"
 "    add.w   r0, r5, r4, lsl #5\n"
 "    add     r3, sp, #8\n"
 "    subs    r1, #0x18\n"
 "    add     r2, sp, #0x14\n"
 "    uxtb    r0, r0\n"
-"    bl      sub_fc060ca4\n"
-"    cbnz    r0, loc_fc06004a\n"
+"    bl      sub_fc0760c4\n"
+"    cbnz    r0, loc_fc077f16\n"
 "    ldr     r1, [sp, #0x14]\n"
 "    movs    r0, #1\n"
-"    bl      sub_fc05ff32\n"
-"loc_fc06004a:\n"
+"    bl      sub_fc077dfe\n"
+"loc_fc077f16:\n"
 "    mov     r0, r4\n"
-"    b.n     loc_fc060062\n"
-"loc_fc06004e:\n"
+"    b       loc_fc077f2e\n"
+"loc_fc077f1a:\n"
 "    ldr.w   r1, [r7, r0, lsl #2]\n"
-"    cbz     r1, loc_fc06005e\n"
+"    cbz     r1, loc_fc077f2a\n"
 "    ldr.w   r2, [r6, r0, lsl #2]\n"
 "    bics    r2, r1\n"
 "    str.w   r2, [r6, r0, lsl #2]\n"
-"loc_fc06005e:\n"
+"loc_fc077f2a:\n"
 "    adds    r0, r0, #1\n"
 "    sxtb    r0, r0\n"
-"loc_fc060062:\n"
+"loc_fc077f2e:\n"
 "    cmp     r0, #3\n"
-"    blt.n   loc_fc06004e\n"
-"loc_fc060066:\n"
+"    blt     loc_fc077f1a\n"
+"loc_fc077f32:\n"
 "    ldr.w   r0, [r6, r4, lsl #2]\n"
 "    adds    r5, r5, #1\n"
 "    uxtb    r5, r5\n"
-"loc_fc06006e:\n"
+"loc_fc077f3a:\n"
 "    cmp     r0, #0\n"
-"    bne.n   loc_fc060028\n"
+"    bne     loc_fc077ef4\n"
 "    adds    r4, r4, #1\n"
 "    sxtb    r4, r4\n"
 "    cmp     r4, #3\n"
-"    blt.n   loc_fc060016\n"
-"    bl      sub_fc060900_my\n"     // ->
+"    blt     loc_fc077ee2\n"
+"    bl      sub_fc075c6e_my\n" // ->
 "    add     sp, #0x18\n"
-"    ldmia.w sp!, {r4, r5, r6, r7, r8, pc}\n"
+"    pop.w   {r4, r5, r6, r7, r8, pc}\n"
 ".ltorg\n"
     );
 }
 
-void __attribute__((naked,noinline)) sub_fc060900_my() {
+//  -f=chdk -s=0xfc075c6f -c=13
+void __attribute__((naked,noinline)) sub_fc075c6e_my() {
     asm volatile(
 "    push    {r4, lr}\n"
-"    ldr     r4, =0x92a0\n"
-"    ldr     r0, [r4, #8]\n"
-"    bl      sub_fc0629f4\n"
-"    bl      sub_fc0a0fa0\n"
-"    ldr     r0, [r4, #12]\n"
-"    bl      sub_fc062910\n"
-//"    ldmia.w sp!, {r4, lr}\n" // - (reordered below)
-//"    b.w     loc_fc05cbf6\n"  // - (reordered below)
+"    ldr     r4, =0x00009800\n"
+"    ldr     r0, [r4, #0xc]\n"
+"    bl      sub_fc0771f0\n"
+"    ldr     r0, [r4, #0x10]\n"
+"    bl      sub_fc07727a\n"
+"    bl      sub_fc0f8224\n"
+"    ldr     r0, [r4, #0x14]\n"
+"    bl      sub_fc07710c\n"
+"    ldr     r0, [r4, #0x18]\n"
+"    bl      sub_fc07710c\n"
+// re-ordered
+//"    pop.w   {r4, lr}\n"
+//"    b.w     loc_fc0774e4\n"
 "    bl      handle_jogdial\n"  // +
 "    cmp     r0, #0\n"          // +
 "    beq     no_scroll\n"       // +
-"    bl      sub_fc05cbf6\n"    // handles scrollwheel(s), void function, no args
+"    bl      sub_fc0774e4\n"    // handles scrollwheel(s), void function, no args
 "no_scroll:\n"                  // +
 "    pop     {r4, pc}\n"        // +
+".ltorg\n"
     );
 }
-#endif

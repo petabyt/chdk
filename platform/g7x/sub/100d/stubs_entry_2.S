@@ -23,6 +23,8 @@ NHSTUB(GetDrive_TotalClusters,					0xfc357bd7) // function immediately before Ge
 NHSTUB(LogCameraEvent,							0xfc36000b) // debugging, from func csv
 NHSTUB(CancelHPTimer,							0xfc158e24) // At 0xfc0cd6b0, following LcdSequence, TakeSemaphoreStrictly calls similar to sx280
 
+NHSTUB(get_dial_hw_position,					0xfc491e7d) // kbd_p1_f_cont->fc077438->fc075c1c->func 4=rear dial, 5=front dial
+
 // required because DryOS >=54 functions assert on unitialized event flag, sem etc 
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,	0xfc4f3bd7) // InitializeAdjustmentSystem->fc3d31c4->fc4f3bd6 event flag matches MoveFocusLensToDistance
