@@ -7,6 +7,11 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include "../lib/lang/lang_str_conditions.h"
+
+int cond_count = sizeof(lstrc_list) / sizeof(lstr_condition);
+
+char* is_conditional(int id);
 char* load_from_file(const char* filename);
 void lang_load_from_mem(char *buf);
 
@@ -74,7 +79,7 @@ int main( int argc, char **argv )
     s = strrchr(buf,'.');
     if (s) *s = 0;
 
-	printf("static char* gui_lang_default = \\\n");
+	printf("static char* gui_lang_default = \n");
 	
 	for ( i=1; i<=num_lines; i++ )
 	{
@@ -98,9 +103,19 @@ int main( int argc, char **argv )
 				from++;
 			}
 			*to=0;
-		  }	
-		  printf("/*%3d*/ \"%s\\0\"\n",i,buf);
-		  
+		  }
+		  char *iscond = is_conditional(i);
+		  if (iscond)
+		  {
+		      if (iscond[0] == '!')
+		          printf("#ifndef %s\n/*%3d*/ \"%s\"\n#endif\n        \"\\0\"\n", iscond+1, i, buf);
+		      else
+		          printf("#ifdef %s\n/*%3d*/ \"%s\"\n#endif\n        \"\\0\"\n", iscond, i, buf);
+		  }
+		  else
+		  {
+		      printf("/*%3d*/ \"%s\\0\"\n",i,buf);
+		  }
 		}
 	}
 
@@ -112,6 +127,10 @@ int main( int argc, char **argv )
     printf("//Sanity check of GUI_LANG_ITEMS\n");
     printf("#if (GUI_LANG_ITEMS != %d)\n",num_lines);
     printf("#error GUI_LANG_ITEMS value have to be %d. Please fix at gui_lang.h\n", num_lines);
+    printf("#endif\n");
+    printf("#if (GUI_LANG_ITEMS != %d)\n",cond_count-1);
+    printf("#error The number of language string conditions does not match the number of language strings. \\\n");
+    printf("Please update lib/lang/lang_str_conditions.h\n");
     printf("#endif\n");
 	
     return 0;
@@ -176,7 +195,7 @@ char* load_from_file(const char *filename)
     if (f>=0) {
         size = (stat((char*)filename, &st)==0)?st.st_size:0;
         if (size) {
-            buf = (char*)malloc(size+1);
+            buf = malloc(size+1);
             if (buf) {
                 size = read(f, buf, size);
                 buf[size]=0;
@@ -185,4 +204,18 @@ char* load_from_file(const char *filename)
         close(f);
     }
     return buf;
+}
+
+//-------------------------------------------------------------------
+
+char* is_conditional(int id)
+{
+    if ((id>=1) && (id<cond_count))
+    {
+        if ((lstrc_list[id].cond) && strlen(lstrc_list[id].cond)>0)
+        {
+            return lstrc_list[id].cond;
+        }
+    }
+    return 0;
 }

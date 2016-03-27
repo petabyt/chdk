@@ -2,6 +2,7 @@
 #include "conf.h"
 #include "lang.h"
 #include "gui_lang.h"
+#include "platform.h"
 
 //-------------------------------------------------------------------
 // String list now is generated automatically from .lng files

@@ -87,7 +87,7 @@ static void lang_add_string(int num, const char *str) {
 // buf - source array (content of file.lng )
 //-------------------------------------------------------------------
 int lang_parse_from_mem(char *buf, int size) {
-    char *p, *s, *e;
+    char *p, *s, *e, *b;
     int i, langbufneed;
     char** pstrtmp;
 
@@ -126,8 +126,16 @@ int lang_parse_from_mem(char *buf, int size) {
 
             // store string address and add its length to total
             if ((i > 0) && (i<count)) {
-                langbufneed += strlen(s) + 1;
-                pstrtmp[i] = s;
+                // ignore string IDs that have zero length built-in string
+                // rationale: built-in strings are always complete (have English fallback),
+                // except for IDs that are disabled for the port
+                //
+                // lang_str() only returns built-in strings at this point
+                b = lang_str(i);
+                if (b && b[0]!=0) {
+                    langbufneed += strlen(s) + 1;
+                    pstrtmp[i] = s;
+                }
             }
         } else { //skip invalid line
             e = strpbrk(p, "\r\n");
