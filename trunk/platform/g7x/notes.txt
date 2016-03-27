@@ -51,7 +51,6 @@ video controls (movie_rec task)
 movie_status
 extra long exposures (exp_drv task)
  - canon firmware supports up to 250 sec
-jogdial support
 ptp remote shoot / filewrite
 reboot with firmware update file
 script hard shutdown (shut_down(1))

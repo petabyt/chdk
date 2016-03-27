@@ -19,11 +19,11 @@ FAKEDEF(recreview_hold                          ,1)
 DEF(focus_len_table                         ,0xfdf2deb4)
 DEF(bitmap_buffer, 0xca3c) // struct starts @ 0xca04, from sub @0xfc361a75
 DEF(active_bitmap_buffer, 0xca34) // guess, based on similarity to sx280
+DEF(dial_positions,0x00010320) // from sub_fc0774e4, Jogdial at 0x00010320 0x00010328, front dial at 0x00010324 0x0001032c
 
 // TODO sx280 C&P
 //DEF(led_table,)
 //DEF(error_table                             ,0xfc512234) // Found @0xfc1abf24
-// DEF(jog_position,                           0xdb48) // 0xdb34 +0x14, +0x18
 // DEF(jog_hw_pos,                             0xd9854004) // found by browsing the 0xd985xxxx range...
 //FAKEDEF(enabled_refresh_physical_screen,    1)
 //DEF(displaytype,                            0x8eb8) //0x8ea4 + 0x14, found  @ fc135f2a (GetDisplayType)

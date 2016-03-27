@@ -59,51 +59,51 @@ void __attribute__((noinline)) mykbd_task() {
     while (physw_run) {
         _SleepTask(physw_sleep_delay);
 
-        if (wrap_kbd_p1_f() == 1) {             // autorepeat ?
-            _kbd_p2_f();
-// TODO SX280
-//            kbd_p2_f_my();                      // replacement of _kbd_p2_f (in sub/<fwver>/boot.c)
+        if (wrap_kbd_p1_f() == 1) {
+            kbd_p2_f_my();                      // replacement of _kbd_p2_f (in sub/<fwver>/boot.c)
         }
     }
 
     _ExitTask();
 }
 
-// TODO
-#if 0
-// sx280 jogdial hw counter (19 bits) 0xd9854004
+// g7x jogdial hw counters (19 bits) are at 0xd9854004 and 0xd9855004, use fw func to read + sign extend them
 // 0x7fff8 .. 0x7fffc .. 0 (start pos) .. 4
 // intermediate positions are also available, but they are ignored by the fw for a good reason
-
+extern int _get_dial_hw_position(int dial);
+#define DIAL_HW_REAR  4
+#define DIAL_HW_FRONT 5
+int get_dial_hw_position(int dial)
+{
+    // mask low bits
+    return _get_dial_hw_position(dial)&~3;
+}
 int jogdial_stopped=0;
 
-extern long jog_position[2];
-extern long jog_hw_pos;
-
-int get_jogdial_counter() {
-    int p;
-    p = jog_hw_pos & 0x7fffc;
-    if (p > 0x3fffc) {
-        p |= 0xfff80000;
-    }
-    return p;
-}
+extern long dial_positions[4];
 
 long get_jogdial_direction(void) {
-    static int new_jogdial=0, old_jogdial=0;
+    static int new_jogdial=0, old_jogdial=0, new_frontdial=0, old_frontdial=0;
     
     old_jogdial=new_jogdial;
-    new_jogdial=get_jogdial_counter();
+    new_jogdial=get_dial_hw_position(DIAL_HW_REAR);
+
+    old_frontdial=new_frontdial;
+    new_frontdial=get_dial_hw_position(DIAL_HW_FRONT);
+
     if (old_jogdial>new_jogdial) return JOGDIAL_LEFT; 
     else if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
+    if (old_frontdial>new_frontdial) return FRONTDIAL_LEFT; 
+    else if (old_frontdial<new_frontdial) return FRONTDIAL_RIGHT;
     else return 0;
 }
 
 int handle_jogdial() {
-    // return 0 to prevent fw jogdial handler
+    // return 0 to prevent fw dial handler
     if (jogdial_stopped) {
-        // update jog position in RAM
-        jog_position[0] = jog_position[1] = get_jogdial_counter();
+        // update positions in RAM
+        dial_positions[0] = dial_positions[2] = get_dial_hw_position(DIAL_HW_REAR);
+        dial_positions[1] = dial_positions[3] = get_dial_hw_position(DIAL_HW_FRONT);
         return 0;
     }
     return 1;
@@ -112,7 +112,6 @@ int handle_jogdial() {
 void jogdial_control(int c) {
     jogdial_stopped = c;
 }
-#endif
 
 void my_kbd_read_keys() {
     kbd_update_key_state();
