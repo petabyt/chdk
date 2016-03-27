@@ -685,15 +685,20 @@ struct sig_rule_s {
     char        *name;              // function name used in CHDK
     char        *ref_name;          // event / other name to match in the firmware
     int         param;              // function specific param/offset
-    // DryOS version specific params / offsets
+    int         dryos_min;          // minimum dryos rel (0 = any)
+    int         dryos_max;          // max dryos rel to apply this sig to (0 = any)
+    // DryOS version specific params / offsets - not used yet
+    /*
     int         dryos52_param; // ***** UPDATE for new DryOS version *****
     int         dryos54_param;
     int         dryos55_param;
     int         dryos57_param;
     int         dryos58_param;
+    */
 };
 
 // Get DryOS version specific param
+/*
 int dryos_param(firmware *fw, sig_rule_t *sig)
 {
     switch (fw->dryos_ver)
@@ -706,6 +711,7 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
     }
     return 0;
 }
+*/
 
 // initialize iter stat using address from ref_name, print error and return 0 if not found
 int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -2970,10 +2976,13 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+#define SIG_DRY_MIN(min_rel) (min_rel),0
+#define SIG_DRY_MAX(max_rel) 0,(max_rel)
+#define SIG_DRY_RANGE(min_rel,max_rel) (min_rel),(max_rel)
 // bootstrap sigs
 // order is important
 sig_rule_t sig_rules_initial[]={
-// function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
+// function         CHDK name                   ref name/string         func param          dry rel
 // NOTE _FW is in the CHDK column, because that's how it is in sig_names
 {sig_match_str_r0_call, "ExportToEventProcedure_FW","ExportToEventProcedure"},
 {sig_match_reg_evp,     "RegisterEventProcedure",},
@@ -2986,13 +2995,13 @@ sig_rule_t sig_rules_initial[]={
 };
 
 sig_rule_t sig_rules_main[]={
-// function         CHDK name                   ref name/string         func param  dry52   dry54   dry55   dry57   dry58
+// function         CHDK name                   ref name/string         func param          dry rel
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcLog10",                "CalcLog10_FW",         SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcSqrt",                 "CalcSqrt_FW",          SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
-{sig_match_named,   "close",                    "Close",                SIG_NAMED_SUB},
+{sig_match_named,   "close",                    "Close",                SIG_NAMED_SUB,      SIG_DRY_MAX(57)},
 {sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "DoAFLock",                 "SS.DoAFLock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
@@ -3136,7 +3145,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1)},
 // this matches using sig_match_near_str, but function for dryos >=57 takes additional param so disabling for those versions
-{sig_match_pt_playsound,"PT_PlaySound",         "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB},
+{sig_match_pt_playsound,"PT_PlaySound",         "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB, SIG_DRY_MAX(56)},
 {sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",},
 {sig_match_near_str,"strrchr",                  "ReadFast_ERROR\n",     SIG_NEAR_AFTER(9,2)},
 {sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
@@ -3149,8 +3158,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
 {sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
 {sig_match_log,     "_log",                     "_log10",},
-{sig_match_pow_dry_52,"_pow",                   "GetDefectTvAdj_FW",},
-{sig_match_pow_dry_gt_52,"_pow",                "GetDefectTvAdj_FW",},
+{sig_match_pow_dry_52,"_pow",                   "GetDefectTvAdj_FW",                            SIG_DRY_MAX(52)},
+{sig_match_pow_dry_gt_52,"_pow",                "GetDefectTvAdj_FW",                            SIG_DRY_MIN(53)},
 {sig_match_sqrt,    "_sqrt",                    "CalcSqrt",},
 {sig_match_named,   "get_fstype",               "OpenFastDir",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
@@ -3170,8 +3179,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_set_control_event,"set_control_event","LogicalEvent:0x%04x:adr:%p,Para:%ld",},
 // newer cams use %08x
 {sig_match_set_control_event,"set_control_event","LogicalEvent:0x%08x:adr:%p,Para:%ld",},
-{sig_match_displaybusyonscreen_52,"displaybusyonscreen","_PBBusyScrn",},
-{sig_match_undisplaybusyonscreen_52,"undisplaybusyonscreen","_PBBusyScrn",},
+{sig_match_displaybusyonscreen_52,"displaybusyonscreen","_PBBusyScrn",                          SIG_DRY_MAX(52)},
+{sig_match_undisplaybusyonscreen_52,"undisplaybusyonscreen","_PBBusyScrn",                      SIG_DRY_MAX(52)},
 {sig_match_near_str,"srand",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(14,4)|SIG_NEAR_INDIRECT},
 {sig_match_near_str,"rand",                     "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(15,5)|SIG_NEAR_INDIRECT},
 {sig_match_set_hp_timer_after_now,"SetHPTimerAfterNow","MechaNC.c",},
@@ -3195,6 +3204,11 @@ void run_sig_rules(firmware *fw, sig_rule_t *sig_rules)
     // for convenience, pass an iter_state to match fns so they don't have to manage
     iter_state_t *is=disasm_iter_new(fw,0);
     while(rule->match_fn) {
+        if((rule->dryos_min && fw->dryos_ver < rule->dryos_min)
+            || (rule->dryos_max && fw->dryos_ver > rule->dryos_max)) {
+            rule++;
+            continue;
+        }
 //        printf("rule: %s ",rule->name);
         //int r=rule->match_fn(fw,is,rule);
         rule->match_fn(fw,is,rule);
