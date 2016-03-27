@@ -77,6 +77,8 @@ makelang$(EXE): makelang.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
+makelang.o: $(llang)/lang_str_conditions.h
+
 code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o chdk_dasm.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
