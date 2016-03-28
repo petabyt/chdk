@@ -1326,6 +1326,24 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+// find low level close for dryos >= 58
+// TODO not verified it works as expected
+int sig_match_close_gt_57(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,34,"TakeSemaphoreStrictly")) {
+        return 0;
+    }
+    // looking for next call
+    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+
 // AllocateUncacheableMemory
 int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -3116,6 +3134,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]"},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW"},
+// match close for dryos 58 and later
+{sig_match_close_gt_57,"close",                 "Close_FW",                             SIG_DRY_MIN(58)},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
