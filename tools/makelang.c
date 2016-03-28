@@ -7,10 +7,10 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "../lib/lang/lang_str_conditions.h"
+#include "../core/gui_lang.h"
 
-int cond_count = sizeof(lstrc_list) / sizeof(lstr_condition);
-
+char **lang_conditions;
+void load_conditions(char *file);
 char* is_conditional(int id);
 char* load_from_file(const char* filename);
 void lang_load_from_mem(char *buf);
@@ -23,35 +23,35 @@ char** langfile = 0;
 //
 // @tsv - Utility to create preparsed gui_lang.c (from concatenation gui_lang.c with .lng file)
 //
-// USAGE:   make_gui_lang path_to_english.lng [path_to_secondary.lng] > gui_lang_str.h
+// USAGE:   makelang path_to_gui_lang.h path_to_english.lng [path_to_secondary.lng] > lang_str.h
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv )
 {
 	int i;
 
-	if ( argc < 2 )
+	if ( argc < 3 )
 	{
-		printf("#error No arguments for language file parser. gui_lang_string.h creation was failed\n");
+		printf("#error No arguments for language file parser. lang_str.h creation was failed\n");
 		exit(-1);
 	}
 
 	num_lines=0;
 
+	load_conditions(argv[1]);
 
-	char* file1 = load_from_file( argv[1]);
+	char* file1 = load_from_file(argv[2]);
 	char* file2 = 0;
-	if ( argc > 2 )
-	  file2 = load_from_file( argv[2]);
+	if ( argc > 3 )
+	  file2 = load_from_file(argv[3]);
 
 	// Do calculation num of lang strings
 	lang_load_from_mem ( file1 );
 	lang_load_from_mem ( file2 );
 
-
 	if ( num_lines <= 0 )
 	{
-		printf("#error No strings found by language file parser. gui_lang_string.h creation was failed\n");
+		printf("#error No strings found by language file parser. lang_str.h creation was failed\n");
 		exit(-1);
 	}
 
@@ -128,10 +128,6 @@ int main( int argc, char **argv )
     printf("#if (GUI_LANG_ITEMS != %d)\n",num_lines);
     printf("#error GUI_LANG_ITEMS value have to be %d. Please fix at gui_lang.h\n", num_lines);
     printf("#endif\n");
-    printf("#if (GUI_LANG_ITEMS != %d)\n",cond_count-1);
-    printf("#error The number of language string conditions does not match the number of language strings. \\\n");
-    printf("Please update lib/lang/lang_str_conditions.h\n");
-    printf("#endif\n");
 	
     return 0;
 }
@@ -207,15 +203,79 @@ char* load_from_file(const char *filename)
 }
 
 //-------------------------------------------------------------------
+// Conditional entries
+char* skip_space(char *p)
+{
+    while (*p && ((*p == ' ') || (*p == '\t'))) p++;
+    return p;
+}
+
+char* next_token(char *p, char* buf)
+{
+    *buf = 0;
+    p = skip_space(p);
+    if ((*p == '\r') || (*p == '\n')) return 0;
+    while (*p && (*p != ' ') && (*p != '\t') && (*p != '\r') && (*p != '\n')) *buf++ = *p++;
+    *buf = 0;
+    return p;
+}
+
+void load_conditions(char *file)
+{
+    lang_conditions = 0;
+
+    char *buf = load_from_file(file);
+
+    if (!buf)
+        return;
+
+    lang_conditions = malloc(sizeof(char*) * (GUI_LANG_ITEMS+1));
+    memset(lang_conditions, 0, sizeof(char*) * (GUI_LANG_ITEMS+1));
+
+    char *p, *e;
+    char name[500];
+    char index[20];
+    char cond[200];
+    int i;
+
+    e = buf;
+    while (e && *e)
+    {
+        p = e;
+        if (strncmp(p, "#define", 7) == 0)
+        {
+            p = next_token(p+7, name);
+            if (p)
+            {
+                p = next_token(p, index);
+                if (p)
+                {
+                    p = next_token(p, cond);
+                    if (p && (strcmp(cond, "//CONDITIONAL:") == 0))
+                    {
+                        p = next_token(p, cond);
+                        if (p)
+                        {
+                            i = atoi(index);
+                            lang_conditions[i] = malloc(strlen(cond)+1);
+                            strcpy(lang_conditions[i], cond);
+                        }
+                    }
+                }
+            }
+        }
+        e = strpbrk(e, "\n");
+        if (e) e++;
+    }
+
+    free(buf);
+}
 
 char* is_conditional(int id)
 {
-    if ((id>=1) && (id<cond_count))
+    if (lang_conditions && (id>=1) && (id<=GUI_LANG_ITEMS) && lang_conditions[id])
     {
-        if ((lstrc_list[id].cond) && strlen(lstrc_list[id].cond)>0)
-        {
-            return lstrc_list[id].cond;
-        }
+        return lang_conditions[id];
     }
     return 0;
 }
