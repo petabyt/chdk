@@ -1304,23 +1304,46 @@ int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return 0;
 }
+static const insn_match_t match_open_mov_call[]={
+    // 3 reg / reg movs, followed by a call
+    {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+    {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+    {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+    {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+    {ARM_INS_ENDING}
+};
+
 
 // find low level open
 int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    const insn_match_t match_open[]={
-        // 3 reg / reg movs, followed by a call
-        {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
-        {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
-        {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
-        {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
-        {ARM_INS_ENDING}
-    };
-
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    if(!insn_match_find_next_seq(fw,is,48,match_open)) {
+    if(!insn_match_find_next_seq(fw,is,48,match_open_mov_call)) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+// find low level open for dryos >= 58
+// TODO not verified it works as expected
+int sig_match_open_gt_57(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,38,"TakeSemaphoreStrictly")) {
+        return 0;
+    }
+    // looking for next call
+    // this should be equivalent to previous versions Open, without the extra semaphore wrapper
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // match same pattern as normal
+    if(!insn_match_find_next_seq(fw,is,48,match_open_mov_call)) {
         return 0;
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
@@ -1337,6 +1360,13 @@ int sig_match_close_gt_57(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     // looking for next call
+    // this should be equivalent to previous versions Close, without the extra semaphore wrapper
+    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // first call
     if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
         return 0;
     }
@@ -3133,9 +3163,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly","Fopen_Fut"},
 {sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]"},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
-{sig_match_open,    "open",                     "Open_FW"},
+{sig_match_open,    "open",                     "Open_FW",              0,              SIG_DRY_MAX(57)},
+{sig_match_open_gt_57,"open",                   "Open_FW",              0,              SIG_DRY_MIN(58)},
 // match close for dryos 58 and later
-{sig_match_close_gt_57,"close",                 "Close_FW",                             SIG_DRY_MIN(58)},
+{sig_match_close_gt_57,"close",                 "Close_FW",             0,              SIG_DRY_MIN(58)},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
@@ -3178,8 +3209,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
 {sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
 {sig_match_log,     "_log",                     "_log10",},
-{sig_match_pow_dry_52,"_pow",                   "GetDefectTvAdj_FW",                            SIG_DRY_MAX(52)},
-{sig_match_pow_dry_gt_52,"_pow",                "GetDefectTvAdj_FW",                            SIG_DRY_MIN(53)},
+{sig_match_pow_dry_52,"_pow",                   "GetDefectTvAdj_FW",    0,                  SIG_DRY_MAX(52)},
+{sig_match_pow_dry_gt_52,"_pow",                "GetDefectTvAdj_FW",    0,                  SIG_DRY_MIN(53)},
 {sig_match_sqrt,    "_sqrt",                    "CalcSqrt",},
 {sig_match_named,   "get_fstype",               "OpenFastDir",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_near_str,"GetMemInfo",               " -- refusing to print malloc information.\n",SIG_NEAR_AFTER(7,2)},
@@ -3199,8 +3230,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_set_control_event,"set_control_event","LogicalEvent:0x%04x:adr:%p,Para:%ld",},
 // newer cams use %08x
 {sig_match_set_control_event,"set_control_event","LogicalEvent:0x%08x:adr:%p,Para:%ld",},
-{sig_match_displaybusyonscreen_52,"displaybusyonscreen","_PBBusyScrn",                          SIG_DRY_MAX(52)},
-{sig_match_undisplaybusyonscreen_52,"undisplaybusyonscreen","_PBBusyScrn",                      SIG_DRY_MAX(52)},
+{sig_match_displaybusyonscreen_52,"displaybusyonscreen","_PBBusyScrn",  0,                  SIG_DRY_MAX(52)},
+{sig_match_undisplaybusyonscreen_52,"undisplaybusyonscreen","_PBBusyScrn",0,                SIG_DRY_MAX(52)},
 {sig_match_near_str,"srand",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(14,4)|SIG_NEAR_INDIRECT},
 {sig_match_near_str,"rand",                     "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(15,5)|SIG_NEAR_INDIRECT},
 {sig_match_set_hp_timer_after_now,"SetHPTimerAfterNow","MechaNC.c",},
