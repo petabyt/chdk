@@ -83,7 +83,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc382687
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc34586d
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc345905
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc158e24
+//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc158e25
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc0ef0cd) //  0
 NHSTUB(Close                                  ,0xfc358085) //  0
