@@ -21,7 +21,7 @@ NHSTUB(GetImageFolder,							0xfc320ebf)
 NHSTUB(apex2us,									0xfc382687) // Shutter.c asserts in sub_fc16e57e, similar to sx280 sub_fc2a63d6
 NHSTUB(GetDrive_TotalClusters,					0xfc357bd7) // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(LogCameraEvent,							0xfc36000b) // debugging, from func csv
-NHSTUB(CancelHPTimer,							0xfc158e24) // At 0xfc0cd6b0, following LcdSequence, TakeSemaphoreStrictly calls similar to sx280
+NHSTUB(CancelHPTimer,							0xfc158e25) // At 0xfc0cd6b0, following LcdSequence, TakeSemaphoreStrictly calls similar to sx280
 
 NHSTUB(get_dial_hw_position,					0xfc491e7d) // kbd_p1_f_cont->fc077438->fc075c1c->func 4=rear dial, 5=front dial
 
