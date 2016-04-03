@@ -26,6 +26,14 @@ NEED_ENCODED_DISKBOOT=14
 # mandatory for DIGIC 6
 MEMBASEADDR=0x8000
 
+# values for ARAM, from sig finder
+ARAM_HEAP_START=0x006ce000
+ARAM_HEAP_SIZE=0x00022000
+
+# Force ARAM on, but don't load CHDK in ARAM, because size is marginal for core
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=
+
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfff20040
 # below 2 commented lines are used by tools/compatbuilder.sh
