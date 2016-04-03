@@ -426,6 +426,8 @@ misc_val_t misc_vals[]={
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
     { "canon_mode_list",    MISC_VAL_NO_STUB},
+    { "ARAM_HEAP_START",    MISC_VAL_NO_STUB},
+    { "ARAM_HEAP_SIZE",     MISC_VAL_NO_STUB},
     {0,0,0},
 };
 
@@ -2668,6 +2670,59 @@ int sig_match_focus_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_misc_val(rule->name,base,is->insn->detail->arm.operands[1].mem.disp,(uint32_t)is->insn->address);
     return 1;
 }
+int sig_match_aram_size(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        printf("sig_match_aram_size: missing ref\n");
+        return 0;
+    }
+    const insn_match_t match_ldr_r0_sp_cmp[]={
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),MATCH_OP_MEM(SP,INVALID,0xc)}},
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG(R0),MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,15,match_ldr_r0_sp_cmp)) {
+        printf("sig_match_aram_size: no match LDR\n");
+        return 0;
+    }
+    uint32_t val=is->insn->detail->arm.operands[1].imm;
+    if(val != 0x22000 && val != 0x32000) {
+        printf("sig_match_aram_size: unexpected ARAM size 0x%08x\n",val);
+    }
+    save_misc_val(rule->name,val,0,(uint32_t)is->insn->address);
+    return 1;
+}
+
+int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        printf("sig_match_aram_start: missing ref\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,46,"DebugAssert")) {
+        printf("sig_aram_start: no match DebugAssert\n");
+        return 0;
+    }
+    const insn_match_t match_cmp_bne_ldr[]={
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG(R1),MATCH_OP_IMM(0)}},
+        {MATCH_INS_CC(B,NE,MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(PC)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,15,match_cmp_bne_ldr)) {
+        printf("sig_match_aram_start: no match CMP\n");
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match_aram_start: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // could sanity check that it looks like a RAM address
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
+    return 1;
+}
+
 // get the address used by a function that does something like
 // ldr rx =base
 // ldr r0 [rx, offset] (optional)
@@ -3246,6 +3301,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_rom_ptr_get,"canon_mode_list",       "get_canon_mode_list",},
 {sig_match_zoom_busy,"zoom_busy",               "ResetZoomLens_FW",},
 {sig_match_focus_busy,"focus_busy",             "MoveFocusLensToTerminate_FW",},
+{sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",},
+{sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
 {NULL},
 };
 
@@ -3467,6 +3524,28 @@ int find_ctypes(firmware *fw, int k)
     return 0;
 }
 
+void print_misc_val_makefile(const char *name)
+{
+    misc_val_t *mv=get_misc_val(name);
+    if(!mv) {
+        return;
+    }
+    // TODO legitimate 0 values might be possible, if so can add found bit
+    if(!mv->val) {
+        bprintf("// %s not found\n",name);
+        return;
+    }
+    bprintf("//   %s = 0x%08x # ",name,mv->val);
+    if(mv->offset) {
+        bprintf(" (0x%x+0x%x)",mv->base,mv->offset);
+    }
+    if(mv->ref_adr) {
+        bprintf(" Found @0x%08x",mv->ref_adr);
+    }
+    bprintf("\n");
+}
+
+
 void output_firmware_vals(firmware *fw)
 {
     bprintf("// Camera info:\n");
@@ -3508,6 +3587,8 @@ void output_firmware_vals(firmware *fw)
     {
         bprintf("//   MEMBASEADDR = 0x%x\n",fw->data_start);
     }
+    print_misc_val_makefile("ARAM_HEAP_START");
+    print_misc_val_makefile("ARAM_HEAP_SIZE");
 
     bprintf("\n// Detected address ranges:\n");
     int i;
@@ -4190,7 +4271,6 @@ int main(int argc, char **argv)
         exit(1);
     }
     
-    output_firmware_vals(&fw);
 
     // find ctypes - used for code search limit
     fw_search_bytes(&fw, find_ctypes);
@@ -4198,6 +4278,8 @@ int main(int argc, char **argv)
     run_sig_rules(&fw,sig_rules_initial);
     find_generic_funcs(&fw);
     run_sig_rules(&fw,sig_rules_main);
+
+    output_firmware_vals(&fw);
 
     output_platform_vals(&fw);
     output_physw_vals(&fw);
