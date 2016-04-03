@@ -14,7 +14,6 @@ NHSTUB(SetFileTimeStamp,						0xfc3582d1) // from ref to 0x12cea600 @0xfc3582e4,
 NHSTUB(SetFileAttributes,						0xfc358319) // function following SetFileTimeStamp in ROM
 NHSTUB(RenameFile_Fut,							0xfc325ad1) // from ref to ".RPC" @0xfc11019a, similar to sx280hs
 NHSTUB(MakeSDCardBootable,						0xfc357f65) // in function before ref to "SCRIPT" @0xfc357b78
-// TODO unverfied
 NHSTUB(GetFocusLensSubjectDistanceFromLens,		0xfc31fdfd) // call at 0xfc305ef0 similar to sx280 0xfc26ea22, from earlier ISDriver.c assert
 // based on ref to fc32190b -> sub_fc469ee2, which refs  "___%02d" and "_%02d%02d"
 NHSTUB(GetImageFolder,							0xfc320ebf)
