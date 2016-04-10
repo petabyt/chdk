@@ -63,13 +63,16 @@ void __attribute__((naked,noinline)) boot() {
 "    ldrcc.w r2, [r0], #4\n"
 "    strcc.w r2, [r1], #4\n"
 "    bcc.n   loc_fc020024\n" // copy dryos kernel to RAM
-
-        // Install CreateTask patch
-        "adr     r0, patch_CreateTask\n"    // Patch data
-        "ldm     r0, {r1,r2}\n"             // Get two patch instructions
-        "ldr     r0, =orig_CreateTask\n"    // Address to patch
-        "bic     r0, #1\n"                  // clear thumb bit
-        "stm     r0, {r1,r2}\n"             // Store patch instructions
+// Install CreateTask patch
+// use half words in case source or destination not word aligned
+        "adr     r0, patch_CreateTask\n"    // src: Patch data
+        "ldr     r1, =hook_CreateTask\n"    // dest: Address to patch (hook_ has thumb bit off)
+        "add     r2, r0, #8\n" // two words
+"task_hook_loop:\n"
+        "ldrh   r3, [r0],#2\n"
+        "strh   r3, [r1],#2\n"
+        "cmp    r0,r2\n"
+        "blo    task_hook_loop\n"
 
 "    ldr     r0, =0x010c1000\n"
 "    ldr     r1, =0x0001f3c4\n"
@@ -150,7 +153,7 @@ asm volatile (
 "    stmdb   sp!, {r1, r2, r3, r4, r5, r6, r7, r8, r9, lr}\n"
 "    mov     r4, r0\n"
 "    ldr     r0, =0x8154\n"
-"    ldr.w   pc, =(orig_CreateTask + 8) \n"  // Continue in firmware
+"    ldr.w   pc, =(hook_CreateTask + 8 + 1) \n"  // Continue in firmware, thumb bit set
 ".ltorg\n"
 );
 }
