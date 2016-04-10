@@ -4200,8 +4200,24 @@ void print_results(firmware *fw, sig_entry_t *sig)
             sprintf(line+strlen(line),"       Overridden");
         else if (sig->val == ostub2->val)
             sprintf(line+strlen(line),"       == 0x%08x    ",ostub2->val);
-        else
-            sprintf(line+strlen(line),"   *** != 0x%08x    ",ostub2->val);
+        else {
+            // if both have some value check if differs only by veneer
+            if(sig->val && ostub2->val) {
+                fw_disasm_iter_single(fw,ostub2->val);
+                if(get_direct_jump_target(fw,fw->is) == sig->val) {
+                    sprintf(line+strlen(line)," <-veneer 0x%08x    ",ostub2->val);
+                } else {
+                    fw_disasm_iter_single(fw,sig->val);
+                    if(get_direct_jump_target(fw,fw->is) == ostub2->val) {
+                        sprintf(line+strlen(line)," veneer-> 0x%08x    ",ostub2->val);
+                    } else {
+                        sprintf(line+strlen(line),"   *** != 0x%08x    ",ostub2->val);
+                    }
+                }
+            } else {
+                sprintf(line+strlen(line),"   *** != 0x%08x    ",ostub2->val);
+            }
+        }
     }
     else
         sprintf(line+strlen(line),"                        ");
