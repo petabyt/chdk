@@ -57,13 +57,16 @@ void __attribute__((naked,noinline)) boot() {
 "    ldrlo   r2, [r0], #4\n"
 "    strlo   r2, [r1], #4\n"
 "    blo     loc_fc02002a\n"
-        
-        // Install CreateTask patch
-        "adr     r0, patch_CreateTask\n"    // Patch data
-        "ldm     r0, {r1,r2}\n"             // Get two patch instructions
-        "ldr     r0, =hook_CreateTask\n"    // Address to patch (hook_ has thumb bit off)
-        "stm     r0, {r1,r2}\n"             // Store patch instructions
-
+// Install CreateTask patch
+// use half words in case source or destination not word aligned
+        "adr     r0, patch_CreateTask\n"    // src: Patch data
+        "ldr     r1, =hook_CreateTask\n"    // dest: Address to patch (hook_ has thumb bit off)
+        "add     r2, r0, #8\n" // two words
+"task_hook_loop:\n"
+        "ldrh   r3, [r0],#2\n"
+        "strh   r3, [r1],#2\n"
+        "cmp    r0,r2\n"
+        "blo    task_hook_loop\n"
 "    ldr     r0, =0x010e1000\n"
 "    ldr     r1, =0x0002cc1c\n"
 "    bl      sub_fc133dae\n" // cache stuff, function used in loader
@@ -140,6 +143,8 @@ asm volatile (
 // restore overwritten register(s)
 "    pop    {r0}\n"
 // Execute overwritten instructions from original code, then jump to firmware
+// NOTE number of instructions duplicated here depends on size of original ROM code
+// instructions. Must replace 8 bytes!
 "    stmdb   sp!, {r1, r2, r3, r4, r5, r6, r7, r8, r9, lr}\n"
 "    mov     r4, r0\n"
 "    ldr     r0, =0x8160\n"

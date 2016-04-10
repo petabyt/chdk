@@ -5,7 +5,6 @@
 #define NULL_SUB 0xfc021059 // bx lr
 
 //NHSTUB(CreateTaskStrictly                   ,0x010c5ae5) // 0xfc251c94 is the ARM veneer
-DEF(orig_CreateTask                           ,0x010c51fd)
 NHSTUB(EnterToCompensationEVF                 ,0xfc20decb)
 NHSTUB(ExitFromCompensationEVF                ,0xfc20df07)
 NHSTUB(ExpCtrlTool_StartContiAE               ,0xfc204fab)
