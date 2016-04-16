@@ -153,8 +153,8 @@ ixus135_elph120,100b,ALPHA,,
 ixus140_elph130,100a,,,
 ixus140_elph130,100b,,100a,
 ixus150_elph140,100c,ALPHA,,
-ixus160_elph160,100a,ALPHA,,SKIP_AUTOBUILD
-ixus160_elph160,100b,ALPHA,100a,SKIP_AUTOBUILD
+ixus160_elph160,100a,ALPHA,,
+ixus160_elph160,100b,ALPHA,100a,
 ixus200_sd980,100c,,,
 ixus200_sd980,101c,,,
 ixus200_sd980,101d,,,
