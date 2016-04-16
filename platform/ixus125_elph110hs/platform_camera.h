@@ -122,8 +122,5 @@
 
     #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
 
-    #undef  CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
-
 
 //--------------------------------------------------

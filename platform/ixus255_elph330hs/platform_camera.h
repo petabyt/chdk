@@ -138,9 +138,6 @@
     #undef  CAM_AF_LED
     #define CAM_AF_LED                      1
 
-    #undef CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE             200 // UNTESTED, see https://chdk.setepontos.com/index.php?topic=10822.msg126774#msg126774
-
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN 1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #define CAM_DISABLE_RAW_IN_HQ_BURST                 // For cameras with 'HQ Burst' mode that does not work with raw define this
 

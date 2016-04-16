@@ -107,9 +107,6 @@
 //    #define REMOTE_SYNC_STATUS_LED     0xC0220130        // TODO specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_SD_OVER_IN_AF               1
-
-    #undef  CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value, from isobase.lua
     #define CAM_HAS_FILEWRITETASK_HOOK      1
     #define CAM_FILEWRITETASK_SEEKS         1
 
