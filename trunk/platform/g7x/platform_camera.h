@@ -197,9 +197,6 @@
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
  
-    #undef  CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
- 
     // "real" to "market" conversion definitions
     #define SV96_MARKET_OFFSET                  0   // market and real appear to be identical on this cam
     #define ISO_MARKET_TO_REAL_MULT         1

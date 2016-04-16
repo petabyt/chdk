@@ -108,9 +108,6 @@
     // #define CAM_VIDEO_QUALITY_ONLY          1       // ineffective even in VGA mode with current source
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #define CAM_IS_VID_REC_WORKS            1       // TODO
-
-    #undef  CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE             200     // Override base 'market' ISO value, from isobase.lua
     
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
