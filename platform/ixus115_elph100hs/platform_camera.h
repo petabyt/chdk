@@ -68,6 +68,8 @@
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
     #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video", "Set+ZoomIn" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO, KEY_SET | KEY_ZOOM_IN }
+    #define CAM_DISP_BUTTON_NAME            "Video"
+    #define SHORTCUT_TOGGLE_RAW             KEY_VIDEO
 
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  DNG_BADPIXEL_VALUE_LIMIT
