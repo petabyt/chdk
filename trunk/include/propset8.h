@@ -58,6 +58,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SHOOTING                        307     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot----blackhole
 #define PROPCASE_EV_CORRECTION_2                 213        // TODO guessed ps6+3
 #define PROPCASE_IS_FLASH_READY                  214        //blackhole
+#define PROPCASE_IMAGE_FORMAT                    216        // 0 = RAW, 1 = JPEG, 2 = RAW+JPEG (sx60)
 #define PROPCASE_RESOLUTION                      222        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light jeronymo
 #define PROPCASE_ORIENTATION_SENSOR              225        //blackhole
 #define PROPCASE_TIMER_MODE                      229        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom-----blackhole
