@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "string.h"
 #include "../lib/font/font_8x16_uni.h"
 #include "../lib/font/codepages.h"
 
@@ -17,6 +18,69 @@
 unsigned char font_data[16384];
 unsigned short char_codes[4096];    // List of used charcodes
 unsigned short font_offsets[4096];  // Offsets into font_data for each charcode
+unsigned char fontdata_lookup[256]; // Lookup table (bytes actually used in font data)
+int fontdata_ltlength = 0;
+
+//-------------------------------------------------------------------
+// Helper
+unsigned char fdata_usage[256];
+
+//-------------------------------------------------------------------
+static int font_make_lookuptable()
+{
+    int i, j;
+    unsigned char k;
+
+    memset(fdata_usage,0,256);
+
+    // determine if a byte is used
+    for (i=0; orig_font_data[i].charcode != -1; i++)
+    {
+        if (orig_font_data[i].isUsed > 0)
+        {
+            for (j=0; j<16; j++)
+            {
+                k = orig_font_data[i].data[j];
+                fdata_usage[k] = 1;
+            }
+        }
+    }
+
+    memset(fontdata_lookup, 0, 256);
+    for (i=0, j=0; j<256; j++)
+    {
+        if (fdata_usage[j] != 0)
+        {
+            fontdata_lookup[i] = j;
+            fdata_usage[j] = i; // store index
+            i++;
+        }
+    }
+
+    fontdata_ltlength = i;
+    return i;
+}
+
+//-------------------------------------------------------------------
+static unsigned short font_find_matching_glyph(int index)
+{
+    int i;
+    int j;
+
+    for (i=0; orig_font_data[i].charcode != -1; i++)
+    {
+        if (i >= index)
+        {
+            break;
+        }
+        j = memcmp(&orig_font_data[i].data[0], &orig_font_data[index].data[0], 16);
+        if ((j == 0) && (orig_font_data[i].isUsed))
+        {
+            return i;
+        }
+    }
+    return 0xffff;
+}
 
 //-------------------------------------------------------------------
 static unsigned short font_find_offset(unsigned short charcode)
@@ -68,10 +132,14 @@ static void check_used(unsigned short *cp)
 
 int main(int argc, char **argv)
 {
-    int i, j, f = 0, cc = 0;
+    int i, j, f = 0, cc = 0, r;
+    unsigned char uc;
+    unsigned short matches;
 
     int ncp = sizeof(codepages)/(sizeof(unsigned short*));
-    
+
+    int lte = 0; // encoding via lookup-table, if true
+
     // Check if chars in font are used in any codepages
     check_used(cp_common);
     for (j=0; j<ncp; j++)
@@ -79,6 +147,10 @@ int main(int argc, char **argv)
         check_used(codepages[j]);
     }
 
+    // make lookup-table, return number of distinct bytes in font data
+    lte = (font_make_lookuptable() < 128);
+
+    printf("#ifndef GET_FONT_COMPRESSION_MODE\n\n");
     printf("// This is a compressed version of font_8x16_uni.h produced by the tools/font_8x16_pack program\n\n");
     printf("// Format of each character is 'FontData' structure, followed by FontData.size bytes of character data.\n\n");
     printf("static unsigned char font_data[] = {\n");
@@ -101,14 +173,49 @@ int main(int argc, char **argv)
             char_codes[cc] = orig_font_data[i].charcode;
             font_offsets[cc] = f;
             cc++;
-
-            font_data[f++] = (top << 4) | bottom;
-
-            printf("/*%04x*/ 0x%02x,", orig_font_data[i].charcode, (top << 4) | bottom);
-            for (j=top; j<16-bottom; j++)
+            matches = font_find_matching_glyph(i);
+            if (matches != 65535)
             {
-                font_data[f++] = orig_font_data[i].data[j] & 0xFF;
-                printf(" 0x%02x,",orig_font_data[i].data[j] & 0xFF);
+                printf("/*%04x == %04x*/", orig_font_data[i].charcode, orig_font_data[matches].charcode);
+                font_offsets[cc-1] = font_find_offset(orig_font_data[matches].charcode);
+            }
+            else
+            {
+
+                font_data[f++] = (top << 4) | bottom;
+
+                printf("/*%04x*/ 0x%02x,", orig_font_data[i].charcode, (top << 4) | bottom);
+                r = f;
+                for (j=top; j<16-bottom; j++)
+                {
+                    if (!lte)
+                    {
+                        font_data[f++] = orig_font_data[i].data[j] & 0xFF;
+                        printf(" 0x%02x,",orig_font_data[i].data[j] & 0xFF);
+                    }
+                    else
+                    {
+                        // lookup-table based encoding
+                        uc = orig_font_data[i].data[j] & 0xFF;
+                        font_data[f] = fdata_usage[uc]; // byte's index in lookup table
+                        if ( (j > top) && (font_data[f] == font_data[f-1]) )
+                        {
+                            // repetition found inside glyph data, set bit7 of previous byte
+                            font_data[f-1] = font_data[f-1] | 0x80;
+                        }
+                        else
+                        {
+                            f++;
+                        }
+                    }
+                }
+                if (lte)
+                {
+                    for (j=r; j<f; j++)
+                    {
+                        printf(" 0x%02x,",font_data[j]);
+                    }
+                }
             }
             printf("\n");
         }
@@ -117,6 +224,34 @@ int main(int argc, char **argv)
     char_codes[cc] = 0xFFFF;
 
     printf("};\n\n");
+    printf("// font_data length: %d bytes\n", f);
+
+    if (lte)
+    {
+        printf("unsigned char fontdata_lookup[] = {\n    ");
+        for (i=0; i<fontdata_ltlength; i++)
+        {
+            printf("0x%02x,", fontdata_lookup[i]);
+            if ( ((i+1) & 0xf) == 0 )
+            {
+                printf("\n    ");
+            }
+        }
+        printf("};\n");
+        printf("// lookup table length: %d bytes\n\n", fontdata_ltlength);
+#if 0
+        printf("    /* font data byte distribution\n    ");
+        for (i=0; i<256; i++)
+        {
+            printf("0x%02x,", fdata_usage[i]);
+            if ( ((i+1) & 0xf) == 0 )
+            {
+                printf("\n    ");
+            }
+        }
+        printf("*/\n\n");
+#endif
+    }
 
     // Set up codepage entries, and save to file
     font_init_data(cp_common, 0, 128);
@@ -159,7 +294,13 @@ int main(int argc, char **argv)
     {
         printf("    \"Win%s\",\n", cp_names[j]);
     }
-    printf("};\n");
+    printf("};\n\n");
+    printf("#endif // !GET_FONT_COMPRESSION_MODE\n\n");
+
+    if (lte)
+    {
+        printf("#define BUILTIN_FONT_RLE_COMPRESSED 1\n\n");
+    }
 
     return 0;
 }

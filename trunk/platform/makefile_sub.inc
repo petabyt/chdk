@@ -22,6 +22,10 @@ OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o kbd_common.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
      shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o lang_str.thm.o
 
+gui_draw.thm.o: $(core)/gui_draw.c $(lfont)/font_8x16_uni_packed.h
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -mthumb -c -o $@ $<
+
 lang_str.thm.o: $(llang)/lang_str.c $(llang)/lang_str.h
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -mthumb -c -o $@ $<
