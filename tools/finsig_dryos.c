@@ -479,6 +479,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "malloc_strictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up
     { "GetCurrentMachineTime", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
     { "HwOcReadICAPCounter", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
+    { "get_self_task_id", OPTIONAL|UNUSED|LIST_ALWAYS }, // gets ID of own task
+    { "get_task_properties", OPTIONAL|UNUSED|LIST_ALWAYS }, // gets copy of task's data (different struct, not the real TCB)
+    { "get_self_task_errno_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // gets pointer to own task's errno
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1486,6 +1489,42 @@ int find_get_string_by_id(firmware *fw)
     return 0;
 }
 
+int find_get_self_task_errno_pointer(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"malloc");
+    int f2 = get_saved_sig(fw,"close");
+    if ((f1<0) && (f2<0))
+        return 0;
+    f1 = adr2idx(fw, func_names[f1].val);
+    f1 = find_inst(fw, isLDMFD_PC, f1, 24);
+    if (f1>0)
+    {
+        f1 = find_inst_rev(fw, isBL, f1, 6);
+        if (f1>0)
+        {
+            if (fwval(fw,f1+2) == 0xe5801000) // str r1, [r0]
+            {
+                f1 = idxFollowBranch(fw,f1,0x01000001);
+                fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+                return 1;
+            }
+        }
+    }
+    // older cams don't set errno on malloc failure
+    f1 = adr2idx(fw, func_names[f2].val);
+    f1 = find_Nth_inst(fw, isBL, f1, 8, 2); // second BL
+    if (f1>0)
+    {
+        if (fwval(fw,f1+2) == 0xe5801000) // str r1, [r0]
+        {
+            f1 = idxFollowBranch(fw,f1,0x01000001);
+            fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int find_getcurrentmachinetime(firmware *fw)
 {
     int f1 = get_saved_sig(fw,"SetHPTimerAfterTimeout");
@@ -1909,8 +1948,10 @@ string_sig string_sigs[] =
     { 15, "realloc", "fatal error - scanner input buffer overflow", 0x01000001 },
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001 },
+    { 15, "get_self_task_id", "ASSERT!! %s Line %d\n", 0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0001, 0x0007, 0x0007, 0x0007, 0x0007 },
+    { 15, "get_task_properties", "Task ID: %d\n", 0x01000001,                    0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003 }, // string not unique!
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -2024,6 +2065,7 @@ string_sig string_sigs[] =
     { 22, "malloc_strictly", (char*)find_malloc_strictly, 0 },
     { 22, "SetHPTimerAfterTimeout", (char*)find_sethptimeraftertimeout, 0},
     { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
+    { 22, "get_self_task_errno_pointer", (char*)find_get_self_task_errno_pointer, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
@@ -5438,6 +5480,101 @@ int find_leds(firmware *fw)
     return 0;
 }
 
+int find_task_related_info(firmware *fw)
+{
+    int i = get_saved_sig(fw,"get_self_task_id");
+    uint32_t u, v;
+    if (i < 0)
+    {
+        return 0;
+    }
+    i = adr2idx(fw, func_names[i].val);
+    if ( (fwval(fw,i)&0xffff0000)==0xe59f0000 ) // ldr r0, [pc, #imm]
+    {
+        // "interrupt service routine" flag
+        u = LDR2val(fw, i);
+        if ( (fwval(fw,i+3)&0xffff0000)==0x059f0000 ) // ldreq r0, [pc, #imm]
+        {
+            // pointer to current task's control block
+            v = LDR2val(fw, i+3);
+            bprintf("// ISR flag: 0x%x, pointer to current task's control block: 0x%x\n",u, v);
+        }
+    }
+    // part 2, find the TCB area
+    int j, k, n, fnd;
+    int m = 0;
+    i = find_str(fw, "DRYOS version 2.3, release ");
+    j = find_nxt_str_ref(fw, i, -1);
+    if (j == -1)
+    {
+        // special case: some r50 cams have the string in RAM and all references point there
+        u = idx2adr(fw,i);
+        if ( (u > fw->base_copied) && ((u-fw->base_copied)/4 < fw->size2))
+        {
+            i = adr2idx(fw, fw->base2 + (u-fw->base_copied));
+            j = find_nxt_str_ref(fw, i, -1);
+        }
+    }
+    fnd = 0;
+    while (!fnd) {
+        if (j != -1)
+        {
+            k = find_nxt_str_ref(fw, i, j+1);
+            if (k != -1)
+            {
+                if (k-j>5)
+                {
+                    // refs too far, try again
+                    j = k;
+                }
+                else
+                {
+                    m = find_inst_rev(fw, isSTMFD_LR, j, 42);
+                    if (j-m>24)
+                    {
+                        fnd = 1;
+                    }
+                }
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    u = 0;
+    if (fnd)
+    {
+        n = find_Nth_inst(fw, isBL, m, 6, 2);
+        if (n != -1)
+        {
+            n = idxFollowBranch(fw,n,0x01000001);
+            n = find_inst(fw, isSTR, n, 8);
+            if (n != -1)
+            {
+                m = fwRn(fw, n);    // this register holds the base address pointer of TCB area
+                n = find_inst_rev(fw, isLDR_PC, n-1, 4);
+                if (n != -1)
+                {
+                    if (fwRd(fw, n) != m)
+                    {
+                        n = find_inst_rev(fw, isLDR_PC, n-1, 3);
+                        if ((n != -1) && (fwRd(fw, n) == m))
+                        {
+                            u = LDR2val(fw, n);
+                            v = idx2adr(fw, n);
+                            bprintf("// pointer to TCB area: 0x%x, found @ 0x%x\n",u,v);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    return 0;
+}
+
 void find_AdditionAgent_RAM(firmware *fw)
 {
     int i = get_saved_sig(fw,"AdditionAgentRAM_FW");
@@ -5495,6 +5632,9 @@ void find_other_vals(firmware *fw)
     {
         bprintf("//DEF(ctypes, *** Not Found ***)\n");
     }
+
+    add_blankline();
+    find_task_related_info(fw);
     find_leds(fw);
 
     // Look for nrflag (for capt_seq.c)
