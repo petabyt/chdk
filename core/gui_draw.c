@@ -6,6 +6,10 @@
 #include "lang.h"
 #include "gui_draw.h"
 
+#define GET_FONT_COMPRESSION_MODE 1
+#include "../lib/font/font_8x16_uni_packed.h"
+#undef  GET_FONT_COMPRESSION_MODE
+
 //-------------------------------------------------------------------
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 void            (*draw_pixel_proc_norm)(unsigned int offset, color cl);
@@ -396,13 +400,51 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
 
     // Now draw character data
+
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
+    int j;
+    for (j=i; i<size;)
+    {
+        unsigned int dsym;
+        int rep;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+        rep = sym[j] & 0x80;
+#if 0 // size optimized (-16 bytes...)
+        while (rep >= 0)
+        {
+            for (ii=0; ii<FONT_WIDTH; ii++)
+            {
+                draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
+            }
+            rep -= 0x80;
+            i++;
+        }
+#else // little faster
+        for (ii=0; ii<FONT_WIDTH; ii++)
+        {
+            draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
+        }
+        if (rep)
+        {
+            i++;
+            for (ii=0; ii<FONT_WIDTH; ii++)
+            {
+                draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
+            }
+        }
+        i++;
+#endif
+        j++;
+    }
+#else
     for (; i<size; i++)
     {
-	    for (ii=0; ii<FONT_WIDTH; ii++)
+        for (ii=0; ii<FONT_WIDTH; ii++)
         {
             draw_pixel(x+ii, y+i, (sym[i] & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
-	    }
+        }
     }
+#endif // BUILTIN_FONT_RLE_COMPRESSED
 
     // Last draw blank lines at bottom
     for (; i<FONT_HEIGHT; i++)
@@ -424,9 +466,43 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
+    int j;
+    for (j=i=offset; i<size;)
+    {
+        unsigned int dsym;
+        int rep;
+        unsigned int last;
+        int len;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+        rep = sym[j] & 0x80;
+        while (rep >= 0)
+        {
+            last = dsym & 0x80;
+            len = 1;
+            for (ii=1; ii<FONT_WIDTH; ii++)
+            {
+                if (((dsym << ii) & 0x80) != last)
+                {
+                    draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+                    last = (dsym << ii) & 0x80;
+                    len = 1;
+                }
+                else
+                {
+                    len++;
+                }
+            }
+            draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+            i++;
+            rep -= 0x80;
+        }
+        j++;
+    }
+#else
     for (i=offset; i<size; i++)
     {
-        unsigned char last = sym[i] & 0x80;
+        unsigned int last = sym[i] & 0x80;
         int len = 1;
         for (ii=1; ii<FONT_WIDTH; ii++)
         {
@@ -443,6 +519,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         }
         draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
     }
+#endif // BUILTIN_FONT_RLE_COMPRESSED
 
     // Last draw blank lines at bottom
     if (i < FONT_HEIGHT)

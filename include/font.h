@@ -21,6 +21,8 @@
 extern void font_set(int codepage);
 extern unsigned char *get_current_font_data(unsigned char ch);
 
+extern unsigned char fontdata_lookup[];
+
 extern int rbf_load_symbol(char *file);
 extern void rbf_load_from_file(char *file, int codepage);
 extern int rbf_font_height();
