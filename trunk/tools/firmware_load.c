@@ -737,7 +737,7 @@ int find_strptr_ref(firmware *fw, char *str)
 int find_str_ref(firmware *fw, char *str)
 {
     int k = find_str(fw, str);
-    if (k >= 0)
+    if (k >= fw->lowest_idx)
     {
         uint32_t sadr = idx2adr(fw,k);        // string address
         for (k=0; k<fw->size; k++)
@@ -758,7 +758,7 @@ int find_str_ref(firmware *fw, char *str)
 // Finds the next reference to a string
 int find_nxt_str_ref(firmware *fw, int str_adr, int ofst)
 {
-    if (str_adr >= 0)
+    if (str_adr >= fw->lowest_idx)
     {
         int k;
         uint32_t sadr = idx2adr(fw,str_adr);        // string address
@@ -1236,6 +1236,8 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
 
     int dx = 3;
 
+    fw->lowest_idx = 0;
+
     // DryOS R50/R51/R52 etc. copies a block of ROM to RAM and then uses that copy
     // Need to allow for this in finding addresses
     // Seen on SX260HS
@@ -1259,6 +1261,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                     fw->base2 = dadr;
                     fw->base_copied = fadr;
                     fw->size2 = (eadr - dadr) / 4;
+                    fw->lowest_idx = adr2idx(fw,fw->base2);
                     dx = i+3;
                     break;
                 }

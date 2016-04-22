@@ -68,6 +68,7 @@ typedef struct {
     uint32_t        base2;          // RAM address copied to
     uint32_t        base_copied;    // ROM address copied from
     int             size2;          // Block size copied (in words)
+    int             lowest_idx;     // Lowest valid index
 
     // Alt copy of ROM (DryOS R51 - only seen on S110 so far)
     uint32_t        alt_base;       // Alternative base address
