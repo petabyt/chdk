@@ -372,7 +372,10 @@
 0xff020c7c,Fwrite_Fut_FW
 0xff05ddd0,get_fstype
 0xff0739fc,get_resource_pointer
+0xff005038,get_self_task_errno_pointer
+0x00471bac,get_self_task_id
 0xff226314,get_string_by_id
+0x00472da0,get_task_properties
 0xff048790,GetAccelerometerDataWithCorrect_FW
 0xff2ea374,GetAccelX_atMechaCpu_FW
 0xff2ea390,GetAccelY_atMechaCpu_FW

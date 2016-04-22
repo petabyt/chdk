@@ -402,7 +402,10 @@
 0xff825010,Fwrite_Fut
 0xff825010,Fwrite_Fut_FW
 0xff86a654,get_resource_pointer
+0xff8137ac,get_self_task_errno_pointer
+0xff8121c0,get_self_task_id
 0xff9b9a40,get_string_by_id
+0xff8133b4,get_task_properties
 0xff84682c,GetAdChValue
 0xff84682c,GetAdChValue_FW
 0xff84d994,GetAdjTableMapVersion_FW

@@ -392,7 +392,10 @@
 0xff8276b0,Fwrite_Fut_FW
 0xff83169c,get_fstype
 0xff898164,get_resource_pointer
+0xff823390,get_self_task_errno_pointer
+0x006b1b94,get_self_task_id
 0xff9b7c74,get_string_by_id
+0x006b21d8,get_task_properties
 0xff8678ec,GetAdChValue
 0xff8678ec,GetAdChValue_FW
 0xffb7feb0,GetAdjAFInteg_FW

@@ -439,7 +439,10 @@
 0xff026b34,Fwrite_Fut_FW
 0xff030214,get_fstype
 0xff0ab54c,get_resource_pointer
+0xff023398,get_self_task_errno_pointer
+0x006b1b94,get_self_task_id
 0xff23dad0,get_string_by_id
+0x006b21d8,get_task_properties
 0xff06fdbc,GetAdChValue
 0xff06fdbc,GetAdChValue_FW
 0xff4d843c,GetAdjAFInteg_FW

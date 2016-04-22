@@ -407,7 +407,10 @@
 0xf8023e90,Fwrite_Fut_FW
 0xf8093890,get_fstype
 0xf80d0348,get_resource_pointer
+0xf8005314,get_self_task_errno_pointer
+0x00685c1c,get_self_task_id
 0xf828132c,get_string_by_id
+0x00686e10,get_task_properties
 0xf8077b44,GetAccelerometerDataWithCorrect_FW
 0xf83ea0e4,GetAccelerometerTemperature_FW
 0xf84540ec,GetAccelX_atMechaCpu_FW

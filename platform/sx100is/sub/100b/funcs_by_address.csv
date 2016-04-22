@@ -1,3 +1,6 @@
+0xffc021c0,get_self_task_id
+0xffc033b4,get_task_properties
+0xffc037ac,get_self_task_errno_pointer
 0xffc039dc,malloc
 0xffc03ab0,free
 0xffc03b90,realloc

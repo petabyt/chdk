@@ -330,7 +330,10 @@
 0xff8365c8,Fwrite_Fut_FW
 0xff86f344,get_fstype
 0xff882d8c,get_resource_pointer
+0xff819dd0,get_self_task_errno_pointer
+0xff812b38,get_self_task_id
 0xffa004f4,get_string_by_id
+0xff813af4,get_task_properties
 0xff85cd20,GetAdChValue
 0xff85cd20,GetAdChValue_FW
 0xffb16294,GetAdjAFInteg_FW

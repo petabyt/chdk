@@ -360,7 +360,10 @@
 0xff837c54,Fwrite_Fut_FW
 0xff875840,get_fstype
 0xff88ebb4,get_resource_pointer
+0xff819d94,get_self_task_errno_pointer
+0xff812b2c,get_self_task_id
 0xffa2b850,get_string_by_id
+0xff813aec,get_task_properties
 0xff85ee34,GetAdChValue
 0xff85ee34,GetAdChValue_FW
 0xffb4a39c,GetAdjAFInteg_FW

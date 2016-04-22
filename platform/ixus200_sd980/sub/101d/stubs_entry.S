@@ -102,6 +102,9 @@ DEF(jpeg_count_str                          ,0x00084ca4) // Found @0xff9e8c64
 // Misc stuff
 DEF(ctypes, 0xffb3ecfa)
 
+// ISR flag: 0x1964, pointer to current task's control block: 0x1960
+// pointer to TCB area: 0x19f0, found @ 0xff81683c
+
 // LED table init @ 0xff8fc208
 // LED #1: 0xc0220130, offset 0x4
 // LED #2: 0xc0220134, offset 0x44

@@ -289,7 +289,10 @@
 0xff82397c,Fwrite_Fut
 0xff82397c,Fwrite_Fut_FW
 0xff865950,get_resource_pointer
+0xff813794,get_self_task_errno_pointer
+0xff8121a8,get_self_task_id
 0xff9a73b8,get_string_by_id
+0xff81339c,get_task_properties
 0xff84054c,GetAdChValue
 0xff84054c,GetAdChValue_FW
 0xffa7db1c,GetAdjAFInteg_FW

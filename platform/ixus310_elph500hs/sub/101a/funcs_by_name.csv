@@ -375,7 +375,10 @@
 0xff027224,Fwrite_Fut_FW
 0xff068150,get_fstype
 0xff080af0,get_resource_pointer
+0xff009dd0,get_self_task_errno_pointer
+0xff002b38,get_self_task_id
 0xff244474,get_string_by_id
+0xff003af4,get_task_properties
 0xff051d74,GetAccelerometerDataWithCorrect_FW
 0xff051000,GetAdChValue
 0xff051000,GetAdChValue_FW

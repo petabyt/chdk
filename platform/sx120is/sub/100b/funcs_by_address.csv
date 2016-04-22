@@ -1,10 +1,13 @@
 0x0004e3fc,task_AdditionAgent
 0xffc00bf4,memShow_FW
+0xffc021b4,get_self_task_id
+0xffc03174,get_task_properties
 0xffc03740,malloc
 0xffc0379c,free
 0xffc04bc8,drysh_FW
 0xffc04c44,err_init_task
 0xffc04d94,task_ClockSave
+0xffc088d8,get_self_task_errno_pointer
 0xffc08d8c,GetMemInfo
 0xffc095fc,open
 0xffc096ac,close

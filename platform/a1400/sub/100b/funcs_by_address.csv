@@ -1,4 +1,6 @@
 0x000c3654,task_AdditionAgent
+0x003f1c1c,get_self_task_id
+0x003f2e10,get_task_properties
 0x003f6848,RegisterInterruptHandler
 0x003f686c,UnregisterInterruptHandler
 0x003f6884,GetSRAndDisableInterrupt
@@ -95,6 +97,7 @@
 0xff814230,drysh_FW
 0xff8142ac,err_init_task
 0xff814408,task_ClockSave
+0xff814f68,get_self_task_errno_pointer
 0xff814fcc,GetMemInfo
 0xff815834,open
 0xff8158e4,close

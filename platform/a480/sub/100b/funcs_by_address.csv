@@ -1,5 +1,7 @@
 0x00028c88,task_AdditionAgent
 0xffc00bf8,memShow_FW
+0xffc021b8,get_self_task_id
+0xffc033b4,get_task_properties
 0xffc0396c,malloc
 0xffc03a40,free
 0xffc03b20,realloc
@@ -7,6 +9,7 @@
 0xffc04db4,drysh_FW
 0xffc04e30,err_init_task
 0xffc0504c,task_ClockSave
+0xffc09374,get_self_task_errno_pointer
 0xffc09f84,open
 0xffc0a034,close
 0xffc0a21c,Read

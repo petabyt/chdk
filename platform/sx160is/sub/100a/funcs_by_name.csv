@@ -384,7 +384,10 @@
 0xff82b530,Fwrite_Fut_FW
 0xff878c24,get_fstype
 0xff88e8a4,get_resource_pointer
+0xff814fc0,get_self_task_errno_pointer
+0x00431c1c,get_self_task_id
 0xff9ac620,get_string_by_id
+0x00432e10,get_task_properties
 0xffae1234,GetAccelX_atMechaCpu_FW
 0xffae1250,GetAccelY_atMechaCpu_FW
 0xffae126c,GetAccelZ_atMechaCpu_FW
