@@ -380,7 +380,10 @@
 0xff033d74,Fwrite_Fut_FW
 0xff0a5708,get_fstype
 0xff0bbe74,get_resource_pointer
+0xff005008,get_self_task_errno_pointer
+0x00671c1c,get_self_task_id
 0xff20e8c0,get_string_by_id
+0x00672e10,get_task_properties
 0xff08cac8,GetAdChValue
 0xff08cac8,GetAdChValue_FW
 0xff40f80c,GetAdjAFInteg_FW

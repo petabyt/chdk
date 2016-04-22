@@ -319,7 +319,10 @@
 0xffc13764,Fwrite_Fut
 0xffc13764,Fwrite_Fut_FW
 0xffc534f4,get_resource_pointer
+0xffc08c3c,get_self_task_errno_pointer
+0xffc021b4,get_self_task_id
 0xffd5fa80,get_string_by_id
+0xffc033b0,get_task_properties
 0xffc2e44c,GetAdChValue
 0xffc2e44c,GetAdChValue_FW
 0xffe36048,GetAdjAFInteg_FW

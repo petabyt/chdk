@@ -340,7 +340,10 @@
 0xff824aac,Fwrite_Fut
 0xff824aac,Fwrite_Fut_FW
 0xff8646e0,get_resource_pointer
+0xff8137ac,get_self_task_errno_pointer
+0xff8121c0,get_self_task_id
 0xff99cdb0,get_string_by_id
+0xff8133b4,get_task_properties
 0xff841b74,GetAdChValue
 0xff841b74,GetAdChValue_FW
 0xff9f0528,GetAdjAFInteg_FW

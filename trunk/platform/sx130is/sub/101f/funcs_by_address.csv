@@ -1,5 +1,7 @@
 0x000ae4b0,task_AdditionAgent
 0xff810dc8,memShow_FW
+0xff812b2c,get_self_task_id
+0xff813aec,get_task_properties
 0xff81402c,strncpy
 0xff814068,strncmp
 0xff8140b4,strchr
@@ -11,6 +13,7 @@
 0xff815f58,drysh_FW
 0xff815fd4,err_init_task
 0xff816124,task_ClockSave
+0xff819d94,get_self_task_errno_pointer
 0xff81a264,GetMemInfo
 0xff81aadc,open
 0xff81ab8c,close

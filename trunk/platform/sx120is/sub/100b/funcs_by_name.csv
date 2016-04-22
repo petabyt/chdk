@@ -337,7 +337,10 @@
 0xffc133b8,Fwrite_Fut
 0xffc133b8,Fwrite_Fut_FW
 0xffc59ea4,get_resource_pointer
+0xffc088d8,get_self_task_errno_pointer
+0xffc021b4,get_self_task_id
 0xffd8e3ac,get_string_by_id
+0xffc03174,get_task_properties
 0xffc33f98,GetAdChValue
 0xffc33f98,GetAdChValue_FW
 0xffe63ebc,GetAdjAFInteg_FW

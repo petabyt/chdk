@@ -338,7 +338,10 @@
 0xff824b10,Fwrite_Fut
 0xff824b10,Fwrite_Fut_FW
 0xff86435c,get_resource_pointer
+0xff8137ac,get_self_task_errno_pointer
+0xff8121c0,get_self_task_id
 0xff99a480,get_string_by_id
+0xff8133b4,get_task_properties
 0xff841998,GetAdChValue
 0xff841998,GetAdChValue_FW
 0xff848ae0,GetAdjTableMapVersion_FW

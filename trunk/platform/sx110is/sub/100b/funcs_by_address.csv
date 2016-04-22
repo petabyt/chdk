@@ -1,5 +1,8 @@
 0x00043aa8,task_AdditionAgent
 0xffc00bc8,memShow_FW
+0xffc02188,get_self_task_id
+0xffc03384,get_task_properties
+0xffc0377c,get_self_task_errno_pointer
 0xffc039ac,malloc
 0xffc03a80,free
 0xffc03b60,realloc

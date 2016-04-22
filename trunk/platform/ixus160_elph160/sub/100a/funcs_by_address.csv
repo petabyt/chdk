@@ -1,4 +1,6 @@
 0x000d245c,task_AdditionAgent
+0x006b1b94,get_self_task_id
+0x006b21d8,get_task_properties
 0x006bab48,_divmod_signed_int
 0x006bafe0,_divmod_unsigned_int
 0x006bb388,_log
@@ -27,6 +29,7 @@
 0x006be550,_scalbn
 0xff820b68,memShow_FW
 0xff8229dc,task_ClockSave
+0xff823390,get_self_task_errno_pointer
 0xff823400,GetMemInfo
 0xff823c68,open
 0xff823d18,close

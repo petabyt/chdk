@@ -446,7 +446,10 @@
 0xff027178,Fwrite_Fut_FW
 0xff06a684,get_fstype
 0xff089bc4,get_resource_pointer
+0xff009dc8,get_self_task_errno_pointer
+0xff002b44,get_self_task_id
 0xff2910f8,get_string_by_id
+0xff003b00,get_task_properties
 0xff053648,GetAdChValue
 0xff053648,GetAdChValue_FW
 0xff3de214,GetAdjAFInteg_FW

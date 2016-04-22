@@ -388,7 +388,10 @@
 0xff155424,Get_AcceleTemperature_FW
 0xff06cc64,get_fstype
 0xff0885b4,get_resource_pointer
+0xff009dc8,get_self_task_errno_pointer
+0xff002b44,get_self_task_id
 0xff29a7fc,get_string_by_id
+0xff003b00,get_task_properties
 0xff053028,GetAccelerometerDataWithCorrect_FW
 0xff052e54,GetAccelerometerTemperature_FW
 0xff051d90,GetAdChValue

@@ -319,7 +319,10 @@
 0xff825870,Fwrite_Fut
 0xff825870,Fwrite_Fut_FW
 0xff86f7b0,get_resource_pointer
+0xff8137c0,get_self_task_errno_pointer
+0xff8121d4,get_self_task_id
 0xff9c6eb8,get_string_by_id
+0xff8133cc,get_task_properties
 0xff821354,GetAdChValue
 0xff821354,GetAdChValue_FW
 0xff85200c,GetAdjTableMapVersion_FW

@@ -310,7 +310,10 @@
 0xff82361c,Fwrite_Fut
 0xff82361c,Fwrite_Fut_FW
 0xff86a4fc,get_resource_pointer
+0xff813778,get_self_task_errno_pointer
+0xff812184,get_self_task_id
 0xff9b3f44,get_string_by_id
+0xff813380,get_task_properties
 0xff843b78,GetAdChValue
 0xff843b78,GetAdChValue_FW
 0xffa9f7f4,GetAdjAFInteg_FW

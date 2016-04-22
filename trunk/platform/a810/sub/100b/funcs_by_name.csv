@@ -336,7 +336,10 @@
 0xff82fc0c,Fwrite_Fut_FW
 0xff8665b4,get_fstype
 0xff878004,get_resource_pointer
+0xff815068,get_self_task_errno_pointer
+0x003f1bac,get_self_task_id
 0xff9d1ce8,get_string_by_id
+0x003f2da0,get_task_properties
 0xff85396c,GetAdChValue
 0xff85396c,GetAdChValue_FW
 0xffadb5f0,GetAdjAFInteg_FW

@@ -288,7 +288,10 @@
 0xff8238b8,Fwrite_Fut
 0xff8238b8,Fwrite_Fut_FW
 0xff865b5c,get_resource_pointer
+0xff813794,get_self_task_errno_pointer
+0xff8121a8,get_self_task_id
 0xff9ada14,get_string_by_id
+0xff81339c,get_task_properties
 0xff84038c,GetAdChValue
 0xff84038c,GetAdChValue_FW
 0xffa86884,GetAdjAFInteg_FW
