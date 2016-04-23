@@ -22,8 +22,8 @@ void startup()
     boot();
 }
 
-// Focus length table in firmware @ 0xfff4ad54
-#define NUM_FL      127 // 127 zoom steps
+// Focus length table in firmware @ 0xfffee354
+#define NUM_FL      201 // 200 zoom steps
 #define NUM_DATA    2   // 2 words each entry, FL in MM*1000, 100
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
@@ -31,7 +31,7 @@ extern int focus_len_table[NUM_FL*NUM_DATA];
 // lens      35mm     CF
 // ----      ----     --
 // 4.3         24      ( 24/4.3) * 43 = 240  (min FL)
-// 129        720      (720/129) * 43 = 240  (max FL)
+// 215        1200    (1200/214) * 43 = 240  (max FL)
 #define CF_EFL      240
 #define CF_EFL_DIV  43
 
@@ -49,7 +49,7 @@ int get_zoom_x(int zp) {
     return get_focal_length(zp)*10/focus_len_table[0];
 }
 
-// uses NB-11L, should be similar to other single cell li-ion
+// uses NB-6LH
 long get_vbatt_min()
 {
     return 3250;
@@ -57,5 +57,5 @@ long get_vbatt_min()
 
 long get_vbatt_max()
 {
-    return 4000;
+    return 4065;
 }

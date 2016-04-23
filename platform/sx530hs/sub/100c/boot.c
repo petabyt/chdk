@@ -217,7 +217,7 @@ asm volatile (
 "    BEQ     exitHook\n"                // below compares not necessary if this check has found something.
 
 /*** INSTALL exp_drv_task() hook ***/
-// hook not fully implemented in capt_seq.c
+// hook not fully implemented in capt_seq.c - reyalp
 /*
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
@@ -233,7 +233,7 @@ asm volatile (
 
 /*** INSTALL JogDial() hook ***/
 // was commented out in boot.c from http://chdk.setepontos.com/index.php?topic=12418.msg123489#msg123489
-// but not in codegen file
+// but not in codegen file - reyalp
 //"    LDR     R0, =task_RotaryEncoder\n"
 //"    CMP     R0, R3\n"
 //"    LDREQ   R3, =JogDial_task_my\n"
@@ -265,12 +265,10 @@ asm volatile (
 void __attribute__((naked,noinline)) sub_FF0203C4_my() {
 
     //Replacement of sub_ for correct power-on.
-    //(short press = playback mode, long press = record mode)
-
-    // look at power-on switch sub_FF00BD98
-    // value and pointer from sub_FF04EAFC
-    //*(int*)(0x2cf4+0x8) = (*(int*)0xC0220104)&1 ? 0x200000 : 0x100000;
-    *(int*)(0x2cf4+0x8) = 0x400000;
+    //(short press on ON/OFF button = playback mode, long press = record mode)
+    // see sub_ff02bbc0 and sub_ff073c68 (100c)
+    // NOTE this might break other startup modes (such as NFC)
+    *(int*)(0x2cf4+0x8) = (*(int*)0xc022f48c) & 0x80000 ? 0x400000 : 0x200000;
 
 asm volatile (
 "    LDR     R0, =0xFF02043C \n"
@@ -548,6 +546,7 @@ asm volatile (
 "    BL      sub_FF038308 \n"
 "    BL      CreateTask_spytask\n" // added
 "    BL      taskcreatePhySw_my \n"  // --> Patched. Old value = 0xFF02BA68.
+"    BL      init_required_fw_features\n" // added
 "    BL      sub_FF0314D8 \n"
 "    BL      sub_FF0C74B4 \n"
 "    BL      sub_FF028E34 \n"
@@ -842,4 +841,15 @@ asm volatile (
 "    STR     R1, [R0, #0x108] \n"
 "    B       loc_FF0748F0 \n"
 );
+}
+/*
+    *** TEMPORARY workaround ***
+    Init stuff to avoid asserts on cameras running DryOS r54+
+    Execute this only once
+ */
+void init_required_fw_features(void) {
+    extern void _init_focus_eventflag();
+    //extern void _init_zoom_semaphore(); // for MoveZoomLensWithPoint
+
+    _init_focus_eventflag();
 }

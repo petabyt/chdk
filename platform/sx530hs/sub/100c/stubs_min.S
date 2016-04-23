@@ -20,5 +20,8 @@ DEF(viewport_fb_d,                  0x000036ac) // Found @0xff067204 (0x3658) + 
 
 DEF(recreview_hold,                 0x00002a2c+0x84) //@0xff06aa9c + 0x84 (offset used by A2500)
 
+// see NRTBL.SetDarkSubType, ineffective for the next photo (it 'lags') 0xec68 + 0x4
+DEF(_nrflag, 0xEC6C)
+
 //TODO
 DEF(rear_dial_position,        0xC0240106)  //To do
