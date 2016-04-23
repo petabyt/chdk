@@ -44,12 +44,10 @@ FUNC ref=0 length=29
 >>>
 
     //Replacement of sub_ for correct power-on.
-    //(short press = playback mode, long press = record mode)
-
-    // look at power-on switch sub_FF00BD98
-    // value and pointer from sub_FF04EAFC
-    //*(int*)(0x2cf4+0x8) = (*(int*)0xC0220104)&1 ? 0x200000 : 0x100000;
-    *(int*)(0x2cf4+0x8) = 0x400000;
+    //(short press on ON/OFF button = playback mode, long press = record mode)
+    // see sub_ff02bbc0 and sub_ff073c68 (100c)
+    // NOTE this might break other startup modes (such as NFC)
+    *(int*)(0x2cf4+0x8) = (*(int*)0xc022f48c) & 0x80000 ? 0x400000 : 0x200000;
 
 <<<
 ASM
@@ -128,6 +126,9 @@ FW 6
 "    BL      CreateTask_spytask\n" // added
 <<<
 PATCHSUB ref=0 name=taskcreatePhySw_my
+>>>
+"    BL      init_required_fw_features\n" // added
+<<<
 FW $
 ENDASM
 ENDFUNC
@@ -187,6 +188,20 @@ FW 42
 FW $
 ENDASM
 ENDFUNC
+
+>>>
+/*
+    *** TEMPORARY workaround ***
+    Init stuff to avoid asserts on cameras running DryOS r54+
+    Execute this only once
+ */
+void init_required_fw_features(void) {
+    extern void _init_focus_eventflag();
+    //extern void _init_zoom_semaphore(); // for MoveZoomLensWithPoint
+
+    _init_focus_eventflag();
+}
+<<<
 
 ENDFILE
 

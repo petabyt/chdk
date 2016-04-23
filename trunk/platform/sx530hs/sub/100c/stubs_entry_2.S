@@ -6,12 +6,12 @@ NHSTUB(DeleteFile_Fut                       ,0xff026928) //  1 90%    *** != 0xf
 NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff203998) //  3 90%    *** != 0xff1c481c
 NHSTUB(MakeDirectory_Fut                    ,0xff027438) //0xff007728 0xff027438 used from mkdir NHSTUB
 NHSTUB(RefreshPhysicalScreen                ,NULLSUB)    //--- ---    *** != 0x00000000
-NHSTUB(WriteSDCard                          ,NULLSUB)    //--- ---    *** != 0xff06506c
+NHSTUB(WriteSDCard                          ,0x6ba7ec)
 NHSTUB(time                                 ,0x006b917c) //0xFF147904
 // Additional
 NHSTUB(TurnOffE1,NULLSUB)
 NHSTUB(SetZoomActuatorSpeedPercent,NULLSUB)
-
+NHSTUB(init_focus_eventflag, 0xff4d70f0)
 
 
 // Not needed

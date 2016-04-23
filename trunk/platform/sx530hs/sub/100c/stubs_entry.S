@@ -25,7 +25,7 @@
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff203998) //  3 90%        == 0xff203998
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff027438
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-// ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x00000000
+// ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x006ba7ec
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
