@@ -119,8 +119,8 @@
     #define CAM_ACTIVE_AREA_Y2                  3688
 
     #define PARAM_CAMERA_NAME                   3
-// TODO 
-    #define CAM_DATE_FOLDER_NAMING              0x400
+// found by calling GetImageFolder with single bits sets
+    #define CAM_DATE_FOLDER_NAMING              0x80
     #define CAM_FILE_COUNTER_IS_VAR             1     // file counter is variable file_counter_var in stubs, not a param
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12

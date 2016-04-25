@@ -164,15 +164,25 @@ long get_file_next_counter() {
 long get_target_file_num() {
     return get_exposure_counter();
 }
+/*
+CAM_DATE_FOLDER_NAMING values
+0x000   A/DCIM/1nn___nn/MRK_nnnn.MRK
+0x001   A/DCIM/1nn___nn/ETC_nnnn.TMP
+0x002   A/DCIM/1nn___nn/IMG_nnnn.JPG
+0x004   A/DCIM/1nn___nn/MVI_nnnn.THM
+0x008   A/DCIM/1nn___nn/SND_nnnn.WAV
+0x010   A/DCIM/1nn___nn/IMG_nnnn.CR2
+0x020   A/DCIM/1nn___nn/MVI_nnnn.MOV
+0x040   A/DCIM/1nn___nn/MVI_nnnn.MP4
+0x080   A/DCIM/1nn___nn
+0x100   A/DCIM/1nn___nn/ETC_nnnn.TMP
+larger values and multiple bits also seem to be ETC_nnnn.TMP
+*/
 #if defined(CAM_DATE_FOLDER_NAMING)
-// TODO check CAM_DATE_FOLDER_NAMING, string len hack
 void get_target_dir_name(char *out)
 {
-    static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
-    strncpy(out,buf,15);
-    out[15] = 0;
+    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
 }
 #else
 long get_target_dir_num() 
