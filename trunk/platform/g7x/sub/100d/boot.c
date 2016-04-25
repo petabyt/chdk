@@ -121,13 +121,16 @@ asm volatile (
 "    LDREQ   R3, =developseq_task\n"
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
+*/
 
+"    ldr     r0, =task_FileWrite\n"
+"    cmp     r0, r3\n"
+"    itt     eq\n"
+"    ldreq   r3, =filewritetask\n"
+"    orreq   r3, #1\n"
+"    beq     exitHook\n"
 
-"    LDR     R0, =task_FileWrite\n"
-"    CMP     R0, R3\n"
-"    LDREQ   R3, =filewritetask\n"
-"    BEQ     exitHook\n"
-
+/*
 "    LDR     R0, =task_MovieRecord\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =movie_record_task\n"
