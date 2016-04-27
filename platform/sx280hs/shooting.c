@@ -172,13 +172,14 @@ long get_target_file_num() {
     return get_exposure_counter();
 }
 #if defined(CAM_DATE_FOLDER_NAMING)
+/*
+  CAM_DATE_FOLDER_NAMING should be 0x80, otherwise various filenames are returned
+  this _GetImageFolder version only seems to take 3 arguments, but it doesn't hurt if a 4th one is provided
+*/
 void get_target_dir_name(char *out)
 {
-    static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
-    strncpy(out,buf,15);
-    out[15] = 0;
+    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
 }
 #else
 long get_target_dir_num() 
