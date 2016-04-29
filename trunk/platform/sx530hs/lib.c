@@ -156,7 +156,17 @@ void *vid_get_bitmap_active_palette()
 return (void *)*(unsigned int*)(0x7280+0x2C);//FF191A20 blackhole
 }
 
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
 
+void *vid_get_bitmap_active_buffer() {
+    return bitmap_buffer[active_bitmap_buffer&1];
+}
+
+
+
+
+//TODO-----------------------------------------------------------------------------------
 void JogDial_CW(void)
 {
     _PostLogicalEventToUI(0x872, 1);  // RotateJogDialRight (in table @ ????, fw 1.01a)
