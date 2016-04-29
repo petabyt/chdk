@@ -4,8 +4,8 @@ SX530 Notes
 To enter CHDK <ALT> mode use the [>] Play button.
 
 This is an early, incomplete alpha port, use at your own risk!
-
-Propset needs to be corrected, see propset_x.h
+The camera does not work for now with all SD cards. If you encounter a problem with the SD card, try using 'Firmware update method' or run CHDK pressing the POWER button longer than one second,using 'Bootable SD card method'.
+Video features are not supported for now.
 
 Porting thread 
 http://chdk.setepontos.com/index.php?topic=12418.0

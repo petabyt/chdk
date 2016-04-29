@@ -29,8 +29,6 @@
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
-// Mode 16394 in firmware but not in current modemap
-// Mode 16429 in firmware but not in current modemap
 // Mode 16948 in firmware but not in current modemap
 // Mode 16950 in firmware but not in current modemap
 
