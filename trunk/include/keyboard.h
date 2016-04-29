@@ -66,6 +66,9 @@
 // dedicated wifi connect button (G7x)
 #define KEY_WIFI            43
 
+//SX530 - Framing Assist Lock feature to help reduce camera shake on the telephoto end.
+#define KEY_FRAMING_ASSIST  44
+
 #define JOGDIAL_LEFT        100
 #define JOGDIAL_RIGHT       101
 #define FRONTDIAL_LEFT      102
