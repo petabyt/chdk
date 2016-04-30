@@ -45,8 +45,8 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_IS_MODE                         148        // 0 = Continuous, 1 = only Shoot, 2 = OFF-----blackhole
 #define PROPCASE_ISO_MODE                        152        // jeronymo
 #define PROPCASE_METERING_MODE                   160        // 0 = Evaluative, 1 = Spot, 2 = Center weighted avg----blackhole
-//#define PROPCASE_VIDEO_FRAMERATE                 ???        // TODO
-//#define PROPCASE_VIDEO_RESOLUTION                ???        // TODO
+#define PROPCASE_VIDEO_FRAMERATE                 170        // 7 = 60 FPS, 5 = 120 FPS, 4 = 240 FPS 0 = 30 FPS (sx60hs)
+#define PROPCASE_VIDEO_RESOLUTION                173        // 5 = 1920x1080, 4 = 1280x720, 2 = 640x480, 1 = 320x240 (sx60hs)
 #define PROPCASE_CUSTOM_BLUE                     179        // Canon Menu slide bar values: 254, 255, 0, 1, 2----blackhole
 #define PROPCASE_CUSTOM_GREEN                    180        // Canon Menu slide bar values: 254, 255, 0, 1, 2----blackhole
 #define PROPCASE_CUSTOM_RED                      181        // Canon Menu slide bar values: 254, 255, 0, 1, 2----blackhole
@@ -59,7 +59,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_EV_CORRECTION_2                 213        // TODO guessed ps6+3
 #define PROPCASE_IS_FLASH_READY                  214        //blackhole
 #define PROPCASE_IMAGE_FORMAT                    216        // 0 = RAW, 1 = JPEG, 2 = RAW+JPEG (sx60)
-#define PROPCASE_RESOLUTION                      222        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light jeronymo
+#define PROPCASE_RESOLUTION                      224        // 0 = L, 2 = M1, 3 = M2, 5 = S (sx60)
 #define PROPCASE_ORIENTATION_SENSOR              225        //blackhole
 #define PROPCASE_TIMER_MODE                      229        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom-----blackhole
 #define PROPCASE_TIMER_DELAY                     230        // timer delay in msec----blackhole
@@ -74,7 +74,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_WB_MODE                         276        // 0 = Auto, 1 = Daylight, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 6 = Fluorescent H, 8 = Custom-----blackhole
 #define PROPCASE_WB_ADJ                          276        //blackhole
 #define PROPCASE_SERVO_AF                        303        // 0 = Servo AF off, 1 = Servo AF on-----blackhole
-#define PROPCASE_ASPECT_RATIO                    304        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1------blackhole
+#define PROPCASE_ASPECT_RATIO                    304        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1 (sx530hs) 4 = 4:5 (sx60hs)
 #define PROPCASE_SV                              351       // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD---blackhole???
 // #define PROPCASE_GPS                             362        // TODO guessed, ps6+5 (CHDKLover, August 2011) - contains a 272 bytes long structure
 #define PROPCASE_TIMER_SHOTS                     381        // Number of shots for TIMER_MODE=Custom----blackhole
