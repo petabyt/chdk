@@ -78,8 +78,10 @@ canon raw only
 
 new directory
 11 seek_flag = 0x100
-before m 12 for shot, after raw hook
+before m 12 for shot, after raw hook in capt_seq but before
+spytask calls remotecap_raw_available due to sleep loops
 
+bypassing PrepareDirectory_0 seems to cause hang on switch to play mode
 */
 
 #include "../../../generic/filewrite.c"
@@ -146,7 +148,7 @@ asm volatile (
 "loc_fc06b358:\n"   // case 8 - calls close, not seen in normal shooting
 "    bl      sub_fc06b50a\n"
 "    b       loc_fc06b328\n"
-"loc_fc06b35e:\n"   // case 11 - create dir
+"loc_fc06b35e:\n"   // case 11 - create dir, TODO not patched
 "    bl      sub_fc06b556\n"
 "    b       loc_fc06b328\n"
 "loc_fc06b364:\n"   // case 12 - patch for open, main hoook
@@ -233,9 +235,9 @@ asm volatile (
 "loc_fc06b562:\n"
 "    add.w   r0, r4, #0x5c\n"
 "    mov     r6, r0\n"
-"    bl      sub_fc357e84\n"
+"    bl      sub_fc357e84\n" // mounter.c
 "    movs    r1, #0\n"
-"    bl      sub_fc073bd6\n"
+"    bl      sub_fc073bd6\n" // fileio semaphore
 "    movs    r1, #0\n"
 "    movs    r0, #0x47\n"
 "    bl      sub_fc351f1c\n" // DSIC:0x47,0
@@ -354,7 +356,7 @@ asm volatile (
 "    bne     loc_fc06b1a6\n"
 "    movs    r1, #0\n"
 "    movs    r0, #0x48\n"
-"    bl      sub_fc351f1c\n"
+"    bl      sub_fc351f1c\n" // "DSIC:0x48,0"
 "    mov     r0, r8\n"
 "    bl      sub_fc357e84\n"
 "    ldr     r1, [r7, #0x1c]\n"
@@ -371,7 +373,7 @@ asm volatile (
 "    movs    r2, #0x20\n"
 "    mov     r1, r8\n"
 "    blx     sub_fc2efa1c\n" // j_dry_memcpy
-// TODO looks equivalent to elph130, not verified
+// TODO looks equivalent to elph130, not verified that it's required
 //mod start
 "    LDR R3, =current_write_ignored\n"
 "    LDR R3, [R3]\n"
