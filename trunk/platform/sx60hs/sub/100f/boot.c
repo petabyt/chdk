@@ -421,6 +421,8 @@ void __attribute__((naked,noinline)) sub_fc05f456_my() {
     );
 }
 
+// override not needed
+#if 0
 void __attribute__((naked,noinline)) sub_fc07319c_my() {
     asm volatile (
     "stmdb   sp!, {r2, r3, r4, r5, r6, r7, r8, lr}\n"
@@ -453,6 +455,7 @@ void __attribute__((naked,noinline)) sub_fc07319c_my() {
     ".ltorg\n"
     );
 }
+#endif
 
 
 // task_Startup

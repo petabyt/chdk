@@ -14,5 +14,4 @@
 #define BATTCOVER_IDX       2
 #define HOTSHOE_FLAG        0x00000800 // Found @0xfc5cfbf4, levent 0x204
 #define HOTSHOE_IDX         1
-#undef  KEY_DISPLAY
 #endif

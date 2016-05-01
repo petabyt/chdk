@@ -150,5 +150,3 @@ long get_target_dir_num()
     return 0;
 }
 #endif
-
-int circle_of_confusion = 5; //verified for sx60hs
