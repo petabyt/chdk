@@ -81,6 +81,7 @@
 #elif (NEED_ENCODED_DISKBOOT == 13)
 { 12970,3,0xc022d1fc,0xffff0040 }, // ixus160_elph160
 #elif (NEED_ENCODED_DISKBOOT == 14)
+{ 12954,4,0xd20b0994,0xfff20040 }, // sx60hs
 { 12957,4,0xd20b0994,0xfff20040 }, // g7x
 { 12959,3,0xc022d1fc,0xfffe0040 }, // sx530hs
 #elif (NEED_ENCODED_DISKBOOT == 2)
