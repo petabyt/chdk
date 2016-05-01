@@ -1,7 +1,3 @@
-# No Digic6 finsig utility in trunk yet
-#override OPT_GEN_STUBS=
-#override FORCE_GEN_STUBS=
-
 # 0x329D
 PLATFORMID=12957
 
@@ -18,7 +14,7 @@ ROMBASEADDR=0xFC000000
 # TODO
 # MAXRAMADDR = 0x0fffffff
 
-# TODO "update file error"
+# works, but crashes in hybrid auto
 KEYSYS=d4h
 # OK
 NEED_ENCODED_DISKBOOT=14
