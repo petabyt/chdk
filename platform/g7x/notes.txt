@@ -86,6 +86,7 @@ KNOWN BUGS
   Using CHDK DNG in modes with an incorrect raw address may result in memory corruption and
   potentially even hardware damage.
 - When booted with FI2 update, switching to hybrid auto causes a crash
+- When using remote shoot, DCIM directories will be created even if no files are saved
 
 THANKS
 ******
