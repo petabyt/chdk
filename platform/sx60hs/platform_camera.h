@@ -26,8 +26,9 @@
     #define CAM_DISABLE_RAW_IN_AUTO             1
     #define CAM_DISABLE_RAW_IN_SPORTS           1
 */
+// allows CHDK raw exception in sports mode
+    #define CAM_HAS_SPORTS_MODE                 1
 
-//    #define DNG_VERT_RLE_BADPIXELS              1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
 
     #undef CAM_HAS_ND_FILTER                                // Camera has built-in ND filter (in addition to iris)
@@ -40,6 +41,7 @@
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_WIFI }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
+    // zebra and histo don't currently work, make shortcuts do nothing
     #define SHORTCUT_TOGGLE_HISTO               KEY_DUMMY
     #define SHORTCUT_TOGGLE_ZEBRA               KEY_DUMMY
 
@@ -67,7 +69,6 @@
     #undef  CAM_VIDEO_CONTROL
 
     #define CAM_HAS_JOGDIAL                     1
-    #undef  CAM_USE_ZOOM_FOR_MF
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000
@@ -75,10 +76,8 @@
     #undef  CAM_CIRCLE_OF_CONFUSION
     #define CAM_CIRCLE_OF_CONFUSION             5  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
 
-//g7x  #define CAM_DNG_LENS_INFO                   { 88,10,368,10,18,10,28,10 }
-
-//    #define CAM_DNG_LENS_INFO                   { 45,10,900,10,35,10,68,10 }
-    #define CAM_DNG_LENS_INFO                   { 380,100,24700,100,0,0,0,0 }
+    
+    #define CAM_DNG_LENS_INFO                   { 38,10,2470,10,34,10,65,10 } // 3.8 - 247 mm, f3.4 - f6.5
     #define cam_CFAPattern                      0x02010100
 
    #define cam_CalibrationIlluminant1          17
@@ -145,9 +144,6 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
 
-    #define CAM_STARTUP_CRASH_FILE_OPEN_FIX     1           // enable workaround for camera crash at startup when opening the conf / font files
-                                                            // see http://chdk.setepontos.com/index.php?topic=6179.0
-
     //#define CAM_HAS_FILEWRITETASK_HOOK          1
     //#define CAM_FILEWRITETASK_SEEKS             1
 
@@ -164,8 +160,6 @@
     #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
 
     #undef CAM_HAS_GPS
-
-    #define CAM_USE_SUNRISE                     1
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
@@ -190,8 +184,3 @@
  
 //		#define CAM_IS_VID_REC_WORKS 1
 //--------------------------------------------------
-    #undef  CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE                 200 // Override base 'market' ISO value
-
-
-

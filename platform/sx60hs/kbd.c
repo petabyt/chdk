@@ -61,22 +61,16 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
     return 0;
 }
 
-static void __attribute__((noinline)) mykbd_task_proceed() {
-
+// no stack manipulation needed here, since we create the task directly
+void __attribute__((noinline)) mykbd_task() {
     extern void kbd_p2_f_my();
-
     while (physw_run) {
         _SleepTask(physw_sleep_delay);
 
-        if (wrap_kbd_p1_f() == 1) {             // autorepeat ?
+        if (wrap_kbd_p1_f() == 1) {
             kbd_p2_f_my();                      // replacement of _kbd_p2_f (in sub/<fwver>/boot.c)
         }
     }
-}
-
-// no stack manipulation needed here, since we create the task directly
-void __attribute__((naked,noinline)) mykbd_task() {
-    mykbd_task_proceed();
 
     _ExitTask();
 }
@@ -142,8 +136,7 @@ void kbd_fetch_data(long *dst)
 {
     _GetKbdState(dst);
     _kbd_read_keys_r2(dst);
-     if (dst[0] != 0x10077fff || dst[1] != 0x20c08030 || dst[2] != 0x1480043e ) {
-
+//     if (dst[0] != 0x10077fff || dst[1] != 0x20c08030 || dst[2] != 0x1480043e ) {
 //      _LogCameraEvent(0x20,"kb: %08x %08x %08x",  dst[0], dst[1], dst[2]);
-     } 
+ //    } 
 }
