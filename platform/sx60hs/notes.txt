@@ -1,0 +1,74 @@
+******************************
+SX60 HS notes
+******************************
+This is an INCOMPLETE, UNFINISHED PORT.
+Many features and combinations of Canon settings have not been tested.
+
+CHDK is a hack, use at your own risk!
+This is a new port for a model with many hardware differences from previously
+supported models, so it is probably higher risk than most.
+
+The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
+version, use ACID or the firminfo Canon Basic script.
+
+General camera and CHDK port information
+****************************************
+SX60 HS has an adjustable aperture, and no ND filter.
+
+Default alt button is PLAY, VIDEO and WIFI may also be used
+
+To start in shooting mode or wifi connect, hold down the corresponding button
+
+Raw blacklevel appears to be ~128.
+
+SX60 HS uses propset 8.  The values in some propcases have changed.
+
+TESTED
+******
+llibtst.lua 
+mftest.lua
+setmode.lua - crashes with default 10ms delay, works with 100ms
+ubtest.bas
+hooktest.lua
+isobase.lua
+USB remote - plug test  remote hook only
+CHDK raw / DNG (in P, M, Tv, Av modes). 
+AUTO mode suppresses Canon RAW and CHDK RAW/DNG
+CHDK ISO Bracketing in Av, Tv, 
+     Aperture and Exposure bracketing
+
+PTP remote shoot with JPEG / CHDK DNG directly downloaded to PC
+ JPEG remote button in GUI CHDKPTP is not supported
+ DNG button downloads IMG_xxxxx.dng 
+
+ shut_down(1) shutdowns the camera after a 5-10 second delay
+
+NOT IMPLEMENTED
+***************
+video controls (movie record task)
+
+extra long or extra short exposures
+
+darkframe control, Canon firmware automatically does a darkframe for exposures longer 
+than 1 second
+
+OTHER ISSUES
+************
+display updating is ugly. Below from sx280hs also applies to G7 X
+- framebuffer related features do not work, including
+ - zebra
+ - histogram
+ - edge overlay
+ - custom auto iso overexposure protection
+ - ptp live view
+- CHDK UI is erased / flashes every time low battery icons
+PROPCASE_RESOLUTION values differ in propset8 0=L 2=M1 3=M2 5=S
+
+KNOWN BUGS
+**********
+- CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc) This means script shoot() calls, scripts that use shoot hooks and synced remote do not function correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
+- CHDK raw address not correct in most special effect / scene modes
+  Using CHDK DNG in modes with an incorrect raw address may result in memory corruption and
+  potentially even hardware damage.
+-if booted from the firmware update (PS.FI2) method, switching to Hybrid Auto results in a crash.
+
