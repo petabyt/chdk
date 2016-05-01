@@ -87,40 +87,36 @@ const ISOTable iso_table[] = {
 };
 //verified for sx60 from stubs_entry.S
 const CapturemodeMap modemap[] = {
-// note canon values for P, M etc have shifted by one 
+// note canon values for P, M etc have shifted by one compared to earlier dryos revs (e.g. M = 32769)
 { MODE_AUTO                 ,32768 },
 { MODE_M                    ,32770 },
 { MODE_AV                   ,32771 },
 { MODE_TV                   ,32772 },
 { MODE_P                    ,32773 },
 { MODE_HDR                  ,8775 },
-//{ MODE_NOSTALGIC            ,8753 },
 { MODE_FISHEYE              ,8759 },
 { MODE_MINIATURE            ,8760 },
 { MODE_TOY_CAMERA           ,8763 },
-//{ MODE_BACKGROUND_DEFOCUS   ,8764 },
 { MODE_SOFTFOCUS            ,8765 },
 { MODE_MONOCHROME           ,8767 },
 { MODE_SUPER_VIVID          ,8754 },
 { MODE_POSTER_EFFECT        ,8755 },
 { MODE_PORTRAIT             ,16406 },
+{ MODE_LOWLIGHT             ,16429 },
 { MODE_FACE_SELF_TIMER      ,16948 },
 { MODE_SMART_SHUTTER        ,16949 }, // smile detection
 { MODE_WINK_SELF_TIMER      ,16950 },
-//{ MODE_STAR_PORTRAIT        ,16452 },
-//{ MODE_STAR_NIGHTSCAPE      ,16453 },
-//{ MODE_STAR_TRAILS          ,16454 },
 { MODE_NIGHT_SCENE          ,16953 }, // handheld night scene
-//{ MODE_UNDERWATER           ,16929 },
 { MODE_SNOW                 ,16414 },
 { MODE_FIREWORK             ,16416 },
+{ MODE_SPORTS               ,33288 },
 { MODE_CREATIVE_EFFECT      ,33299 }, // Creative shot, various sub modes all use same number
 { MODE_HYBRID_AUTO          ,33298 }, // like movie digest
-//{                         ,33297 }, // ???
+//{                         ,33297 }, // ??? shows something about "adding to registry", possibly face recognition related?
 { MODE_VIDEO_STD             ,2643 }, // standard video on dial, regardless of res or FPS
 { MODE_VIDEO_IFRAME_MOVIE    ,2650 },
 { MODE_VIDEO_M               ,2651 }, // M video
-{ MODE_VIDEO_STAR_TIME_LAPSE,16459 }, // VIDEO?
+//{                          ,2648 }, // Another M video?
 //{                         ,4173 }, // C 
 //{                         ,4174 }, // C
 };
