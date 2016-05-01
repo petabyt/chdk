@@ -56,13 +56,10 @@
 
 // canon_mode_list 0xfc901e98 Found @0xfc1198c8
 // Check modemap values from 'platform/CAMERA/shooting.c':
-// 16429  0x402d In firmware but not in current modemap
-// 33288  0x8208 In firmware but not in current modemap
 //  2648  0x0a58 In firmware but not in current modemap
 // 33297  0x8211 In firmware but not in current modemap
 //  4173  0x104d In firmware but not in current modemap
 //  4174  0x104e In firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_STAR_TIME_LAPSE 16459
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(ctypes                            ,0xfc57bf28)
