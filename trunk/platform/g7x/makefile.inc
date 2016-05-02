@@ -11,8 +11,9 @@ PLATFORMOSVER=55
 # start of firmware
 ROMBASEADDR=0xFC000000
 
-# TODO
-# MAXRAMADDR = 0x0fffffff
+# appears to be 512 MB of RAM
+# contents @ 0x20008000 match 0x00008000, not 0x10008000
+MAXRAMADDR=0x1fffffff
 
 # works, but crashes in hybrid auto
 KEYSYS=d4h
