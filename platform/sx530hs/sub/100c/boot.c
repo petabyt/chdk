@@ -590,6 +590,13 @@ asm volatile (
 );
 }
 
+// Workaround for cards becoming read-only in camera when diskboot'ing to playback mode.
+// The following flag is checked by the function that calls WriteSDCard (sub_ff0300dc)
+// See the porting thread for related discussions. https://chdk.setepontos.com/index.php?topic=12418
+void fix_writable_media_flag() {
+    *(int*)0x1d60 = 1;
+}
+
 /*************************************************************/
 //** init_file_modules_task @ 0xFF061C70 - 0xFF061CA4, length=14
 void __attribute__((naked,noinline)) init_file_modules_task() {
@@ -602,6 +609,7 @@ asm volatile (
 "    MOVNE   R0, R5 \n"
 "    BLNE    _PostLogicalEventToUI \n"
 "    BL      sub_FF0B0B84 \n"
+"    BL      fix_writable_media_flag\n" // port specific hack
 "    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
 "    CMP     R4, #0 \n"
 "    LDMNEFD SP!, {R4-R6,PC} \n"
