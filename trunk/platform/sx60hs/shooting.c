@@ -131,13 +131,10 @@ long get_target_file_num() {
     return get_exposure_counter();
 }
 #if defined(CAM_DATE_FOLDER_NAMING)
-// TODO check CAM_DATE_FOLDER_NAMING, string len hack
 void get_target_dir_name(char *out)
 {
-    static char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
-    _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
-    strncpy(out,buf,15);
+    _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
     out[15] = 0;
 }
 #else

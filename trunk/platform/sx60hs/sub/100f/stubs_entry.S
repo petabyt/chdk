@@ -75,7 +75,7 @@ DEF(zoom_busy                         ,0x0000b85c) // (0xb840+0x1c) Found @0xfc2
 DEF(focus_busy                        ,0x00013488) // (0x13480+0x8) Found @0xfc2f9df6
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
 
-//NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc2766c4
+//NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc2766c5
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc2766ff
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc264e5b
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f47
@@ -93,7 +93,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfcd1d6b7
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc3468bb
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc319671
-//NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3a1175
+//NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3a1177
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc319709
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc15bbfd
 

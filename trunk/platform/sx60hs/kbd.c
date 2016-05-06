@@ -38,6 +38,10 @@ KeyMap keymap[] = {
     { 0, KEY_SET             ,0x00000200 }, // Found @0xfc5cfb84, levent 0x0a
     { 0, KEY_ERASE           ,0x00000400 }, //found by testing 
     { 0, KEY_WIFI            ,0x00002000 }, // found by testing 
+    { 0, KEY_FACE            ,0x00000800 },
+    { 0, KEY_PRINT           ,0x00004000 },
+//    { 0, KEY_FRAMING_ASSIST  ,0x00040003 },
+//    { 0, KEY_ZOOM_ASSIST     ,0x00040007 },
     { 0, KEY_PLAYBACK        ,0x00010000 }, // Found @0xfc5cfbb4, levent 0x101
 //    { 0, KEY_POWER           ,0x00020000 }, // Found @0xfc5cfbbc, levent 0x100
     { 2, KEY_ZOOM_OUT        ,0x00000008 }, // full speed

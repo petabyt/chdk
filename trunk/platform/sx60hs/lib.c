@@ -203,7 +203,7 @@ int vid_get_viewport_yscale() {
 static long vp_xo[4] = { 0, 0, 0, 44 };        // should all be even values for edge overlay
 
 int vid_get_viewport_yoffset() {
-    int m = mode_get();
+/*    int m = mode_get();
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
     if ((m & MODE_MASK) != MODE_PLAY) {
@@ -211,11 +211,13 @@ int vid_get_viewport_yoffset() {
     }
     else
         return 0;
+*/
+return 0;
 }
 
 
 int vid_get_viewport_display_xoffset() {
-
+/*
     int m = mode_get();
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
@@ -224,7 +226,7 @@ int vid_get_viewport_display_xoffset() {
     }
     else
         return 0;
-
+*/
     return 0;
 }
 
