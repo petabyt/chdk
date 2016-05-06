@@ -33,7 +33,7 @@ hooktest.lua
 isobase.lua
 USB remote - plug test  remote hook only
 CHDK raw / DNG (in P, M, Tv, Av modes). 
-AUTO mode suppresses Canon RAW and CHDK RAW/DNG
+AUTO mode suppresses Canon RAW, however CHDK RAW/DNG is created.
 CHDK ISO Bracketing in Av, Tv, 
      Aperture and Exposure bracketing
 

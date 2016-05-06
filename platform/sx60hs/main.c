@@ -32,8 +32,8 @@ int screen_rotated(void) {
 }
 
 
-#define NUM_FL      101
-#define NUM_DATA    2   // 2 words each entry, first is FL
+#define NUM_FL      201
+#define NUM_DATA    1   // 1 entry per FL  
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
 // Conversion factor lens FL --> 35mm equiv
