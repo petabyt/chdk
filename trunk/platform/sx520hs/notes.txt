@@ -1,0 +1,24 @@
+************************************
+SX520 Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+
+This is an early, incomplete alpha port, use at your own risk!
+
+Video features are not supported for now.
+
+Developer notes
+
+This port is a copy of the SX530HS port. The 1.00c versions of SX520HS and SX530HS firmwares are virtually identical.
+Any future changes to the original port should probably be reflected here too.
+'SX530' references are kept in source in order to keep differences at a minimum.
+
+Known differences:
+- No wifi and NFC
+- Long end of zoom is limited (most likely in software)
+- The 'mobile device connection' button is labelled as 'drive mode' button
+- Different PLATFORMID
+
+SX530 porting thread 
+http://chdk.setepontos.com/index.php?topic=12418.0
+
