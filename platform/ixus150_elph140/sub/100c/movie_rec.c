@@ -3,11 +3,36 @@
  */
 #include "conf.h"
 
-void change_video_tables(int a, int b){
+static int bitrate_multiplier = 4; // unit: factory rate / 4
+static int bitrate_changed = 0;
+extern int video_target_framesize;
+extern int video_target_framesize2;
+
+
+static int orig_bitrate[2]; // original bitrates, saved at beginning of recording
+
+void change_video_tables(int a, int b) {
+    bitrate_multiplier = (a<<2)/b;
+    bitrate_changed = 1;
 }
 
+// firmware: -12 (best) ... +20 (worst)
 void  set_quality(int *x){ // -17 highest; +12 lowest
  if (conf.video_mode) *x=12-((conf.video_quality-1)*(12+17)/(99-1));
+}
+
+void save_original_bitrates() {
+    orig_bitrate[0] = video_target_framesize;
+    orig_bitrate[1] = video_target_framesize2;
+    bitrate_changed = 1;
+}
+
+void modify_bitrate() {
+    if (bitrate_changed) {
+        bitrate_changed = 0;
+        video_target_framesize = (orig_bitrate[0] * bitrate_multiplier) >> 2;
+        video_target_framesize2 = (orig_bitrate[1] * bitrate_multiplier) >> 2;
+    }
 }
 
 
@@ -84,14 +109,16 @@ asm volatile (
 
 "loc_FF993598:\n"
 "    BL      sub_FF992DAC \n"
+"    BL      save_original_bitrates \n"      // + (executed at recording start)
 "    B       loc_FF993624 \n"
 
 "loc_FF9935A0:\n"
 "    LDR     R1, [R4, #0xB0] \n"
 "    BLX     R1 \n"
-//begin patch
-"    LDR     R0, =video_compression_rate \n" // added
-"    BL      set_quality \n"                 // added
+//begin patch (only effective in VGA mode)
+"    LDR     R0, =video_compression_rate \n" // +
+"    BL      set_quality \n"                 // +
+"    BL      modify_bitrate \n"              // + (modifies target bitrate if requested)
 //end patch
 "    B       loc_FF993624 \n"
 
@@ -150,5 +177,162 @@ asm volatile (
 "    MOV     R2, R10 \n"
 "    BL      sub_006B7CF4 /*_PostMessageQueueStrictly*/ \n"
 "    B       loc_FF9934D0 \n"
+);
+}
+
+/*************************************************************/
+//** liveimage_task @ 0xFF91B5B8 - 0xFF91B648, length=37
+void __attribute__((naked,noinline)) liveimage_task() {
+asm volatile (
+"    STMFD   SP!, {R3-R5,LR} \n"
+"    LDR     R4, =0x5640 \n"
+
+"loc_FF91B5C0:\n"
+"    MOV     R2, #0 \n"
+"    LDR     R0, [R4, #8] \n"
+"    MOV     R1, SP \n"
+"    BL      sub_006B8458 /*_ReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF91B5F0 \n"
+"    MOV     R2, #0x78 \n"
+"    LDR     R1, =0xFF91B7F0 /*'LiveImageTask.c'*/ \n"
+"    MOV     R0, #0 \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
+"    LDMFD   SP!, {R3-R5,PC} \n"
+
+"loc_FF91B5F0:\n"
+"    LDR     R1, [SP] \n"
+"    LDR     R0, [R1] \n"
+"    CMP     R0, #0 \n"
+"    BEQ     loc_FF91B624 \n"
+"    CMP     R0, #1 \n"
+"    MOVEQ   R1, #1 \n"
+"    BEQ     loc_FF91B618 \n"
+"    CMP     R0, #2 \n"
+"    BNE     loc_FF91B638 \n"
+"    MOV     R1, #2 \n"
+
+"loc_FF91B618:\n"
+"    LDR     R0, [R4, #0xC] \n"
+"    BL      sub_006B81EC /*_SetEventFlag*/ \n"
+"    B       loc_FF91B5C0 \n"
+
+"loc_FF91B624:\n"
+"    LDR     R0, [R4, #4] \n"
+"    CMP     R0, #1 \n"
+"    ADDNE   R0, R1, #4 \n"
+"    BLNE    sub_FF91B824_my \n"  // --> Patched. Old value = 0xFF91B824.
+"    B       loc_FF91B5C0 \n"
+
+"loc_FF91B638:\n"
+"    MOV     R2, #0x97 \n"
+"    LDR     R1, =0xFF91B7F0 /*'LiveImageTask.c'*/ \n"
+"    MOV     R0, #0 \n"
+"    BL      _DebugAssert \n"
+"    B       loc_FF91B5C0 \n"
+);
+}
+
+/*************************************************************/
+//** sub_FF91B824_my @ 0xFF91B824 - 0xFF91B8D4, length=45
+void __attribute__((naked,noinline)) sub_FF91B824_my() {
+asm volatile (
+"    LDR     R1, [R0] \n"
+"    CMP     R1, #0x1A \n"
+"    ADDCC   PC, PC, R1, LSL#2 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       sub_FF919DB8 \n"
+"    B       sub_FF919F08 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B89C \n"
+"    B       sub_FF91A74C \n"
+"    B       sub_FF91A948 \n"
+"    B       sub_FF91ACB8 \n"
+"    B       sub_FF919DB8 \n"
+"    B       sub_FF91A534 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B89C \n"
+"    B       sub_FF91B030 \n"
+"    B       sub_FF91B030 \n"
+"    B       loc_FF91B8C8 \n"
+"    BX      LR \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    B       loc_FF91B8C8 \n"
+"    BX      LR \n"
+
+"loc_FF91B89C:\n"
+// HD movie codepath
+"    LDR     R1, [R0, #0x64] \n"
+"    CMP     R1, #1 \n"
+"    BNE     sub_FF91A2D0_my \n"  // --> Patched. Old value = 0xFF91A2D0.
+"    BEQ     sub_FF91A0EC_my \n"  // --> Patched. Old value = 0xFF91A0EC.
+
+"loc_FF91B8AC:\n"
+"    B       sub_FF919F08 \n"
+
+"loc_FF91B8B0:\n"
+"    B       sub_FF91A74C \n"
+
+"loc_FF91B8B4:\n"
+"    B       sub_FF919DB8 \n"
+
+"loc_FF91B8B8:\n"
+"    B       sub_FF91A948 \n"
+
+"loc_FF91B8BC:\n"
+"    B       sub_FF91A534 \n"
+
+"loc_FF91B8C0:\n"
+"    B       sub_FF91ACB8 \n"
+
+"loc_FF91B8C4:\n"
+"    B       sub_FF91B030 \n"
+
+"loc_FF91B8C8:\n"
+"    MOV     R2, #0x69 \n"
+"    LDR     R1, =0xFF91B7F0 /*'LiveImageTask.c'*/ \n"
+"    MOV     R0, #0 \n"
+"    B       _DebugAssert \n"
+);
+}
+
+/*************************************************************/
+//** sub_FF91A2D0_my @ 0xFF91A2D0 - 0xFF91A530, length=153
+void __attribute__((naked,noinline)) sub_FF91A2D0_my() {
+asm volatile (
+// Need to execute our code after the firmware subroutine
+// it's more complicated here than usual
+"    PUSH    {LR} \n"                        // +
+"    MOV     LR, PC \n"                      // +
+"    LDR     PC, =0xFF91A2D0 \n"  // Continue in firmware
+"    LDR     R0, =video_compression_rate \n" // +
+"    BL      set_quality \n"                 // +
+"    BL      modify_bitrate \n"              // + (modifies target bitrate if requested)
+"    POP     {PC} \n"                        // +
+);
+}
+
+/*************************************************************/
+//** sub_FF91A0EC_my @ 0xFF91A0EC - 0xFF91A2CC, length=121
+void __attribute__((naked,noinline)) sub_FF91A0EC_my() {
+asm volatile (
+// Need to execute our code after the firmware subroutine
+// it's more complicated here than usual
+"    PUSH    {LR} \n"                        // +
+"    MOV     LR, PC \n"                      // +
+"    LDR     PC, =0xFF91A0EC \n"  // Continue in firmware
+"    LDR     R0, =video_compression_rate \n" // +
+"    BL      set_quality \n"                 // +
+"    BL      modify_bitrate \n"              // + (modifies target bitrate if requested)
+"    POP     {PC} \n"                        // +
 );
 }

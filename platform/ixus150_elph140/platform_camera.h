@@ -105,8 +105,9 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1
 
-    // #define CAM_VIDEO_QUALITY_ONLY          1       // ineffective even in VGA mode with current source
-    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    //#define CAM_VIDEO_QUALITY_ONLY          1
+    #undef  CAM_VIDEO_CONTROL
+    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // it's unlocked by default
     #define CAM_IS_VID_REC_WORKS            1       // TODO
     
     #undef  CAM_USB_EVENTID
