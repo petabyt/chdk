@@ -69,6 +69,9 @@
 //SX530 - Framing Assist Lock feature to help reduce camera shake on the telephoto end.
 #define KEY_FRAMING_ASSIST  44
 
+//SX520 - drive mode button
+#define KEY_DRIVE_MODE      45
+
 #define JOGDIAL_LEFT        100
 #define JOGDIAL_RIGHT       101
 #define FRONTDIAL_LEFT      102
