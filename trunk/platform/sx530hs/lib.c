@@ -43,8 +43,12 @@ void shutdown()
 void *vid_get_bitmap_fb()        { return (void*)0x40711000; }             // Found @0xff06e5f8
 int get_flash_params_count(void) { return 0xdc; }                          // Found @0xff23513c
 void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             // Found @0xff4d2e04
-char *camera_jpeg_count_str()    { return (char*)0x0018b064; }             // Found @0xff2aff5c
 
+char *camera_jpeg_count_str()
+{
+    extern char jpeg_count_str[];
+    return jpeg_count_str;
+}
 
 void debug_led(int state)
 {
@@ -150,11 +154,6 @@ int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
-
-void *vid_get_bitmap_active_palette()
-{
-return (void *)*(unsigned int*)(0x7280+0x2C);//FF191A20 blackhole
-}
 
 extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];

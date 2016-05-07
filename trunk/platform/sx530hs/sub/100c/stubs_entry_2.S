@@ -7,7 +7,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff203998) //  3 90%    *** != 0xf
 NHSTUB(MakeDirectory_Fut                    ,0xff027438) //0xff007728 0xff027438 used from mkdir NHSTUB
 NHSTUB(RefreshPhysicalScreen                ,NULLSUB)    //--- ---    *** != 0x00000000
 NHSTUB(WriteSDCard                          ,0x6ba7ec)
-NHSTUB(time                                 ,0x006b917c) //0xFF147904
+
 // Additional
 NHSTUB(TurnOffE1,NULLSUB)
 NHSTUB(SetZoomActuatorSpeedPercent,NULLSUB)
