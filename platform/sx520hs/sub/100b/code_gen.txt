@@ -417,5 +417,94 @@ ENDFILE
 
 
 
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+
+FILE movie_rec.c
+
+>>> file=../movie_rec_hdr.c
+
+//////////////////////////////////////////////////////////////
+// movie_record_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_MovieRecord name=movie_record_task
+ASM
+FW 64
+>>>
+"    BL      save_original_bitrates \n"      // + (executed at recording start)
+<<<
+FW 23
+>>>
+//begin patch (only effective in VGA mode)
+"    LDR     R0, =video_compression_rate \n" // +
+"    BL      set_quality \n"                 // +
+"    BL      modify_bitrate \n"              // + (modifies target bitrate if requested)
+//end patch
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// liveimage task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_LiveImageTask name=liveimage_task
+ASM
+FW 36
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=45
+ASM
+FW 29
+>>>
+// HD movie codepath
+<<<
+FW 2
+PATCHSUB ref=0
+PATCHSUB ref=1
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+>>>
+// Need to execute our code after the firmware subroutine
+// it's more complicated here than usual
+"    PUSH    {LR} \n"                        // +
+"    MOV     LR, PC \n"                      // +
+<<<
+->FW
+>>>
+"    LDR     R0, =video_compression_rate \n" // +
+"    BL      set_quality \n"                 // +
+"    BL      modify_bitrate \n"              // + (modifies target bitrate if requested)
+"    POP     {PC} \n"                        // +
+<<<
+ENDASM
+ENDFUNC
+
+FUNC ref=1
+ASM
+>>>
+// Need to execute our code after the firmware subroutine
+// it's more complicated here than usual
+"    PUSH    {LR} \n"                        // +
+"    MOV     LR, PC \n"                      // +
+<<<
+->FW
+>>>
+"    LDR     R0, =video_compression_rate \n" // +
+"    BL      set_quality \n"                 // +
+"    BL      modify_bitrate \n"              // + (modifies target bitrate if requested)
+"    POP     {PC} \n"                        // +
+<<<
+ENDASM
+ENDFUNC
+
+ENDFILE
+
 
 

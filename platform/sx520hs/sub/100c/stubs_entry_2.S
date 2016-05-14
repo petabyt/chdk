@@ -13,6 +13,7 @@ NHSTUB(TurnOffE1,NULLSUB)
 NHSTUB(SetZoomActuatorSpeedPercent,NULLSUB)
 NHSTUB(init_focus_eventflag, 0xff4d70f0)
 
+DEF(task_LiveImageTask, 0xff13499c)
 
 // Not needed
 

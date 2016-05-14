@@ -20,3 +20,11 @@ DEF(_nrflag, 0xEC6C)
 
 //TODO
 DEF(rear_dial_position,        0xC0240106)  //To do
+
+
+DEF(video_compression_rate, 0xa588+0x7c) // found at 0xFF215E8C
+
+DEF(video_target_framesize, 0x11074+0x2c) // found in sub_FF3CA70C
+DEF(video_target_framesize2, 0x11074+0x28) // approx. 2*video_target_framesize (for intraframes?), found in sub_FF3CA70C
+//DEF(video_framesize, 0xa588+0x104) // most recent frame's compressed size, found at 0xFF215E88
+//DEF(video_frame_data, 0xa588+0x108) // most recent frame's RAM address
