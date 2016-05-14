@@ -3,6 +3,8 @@ DEF(playrec_mode                            ,0x00003b58) // 0xff0a40f4
 
 DEF(file_counter_var,               0x00008c04) // found by searching for "FileBackupProperty.c"
 
+DEF(palette_buffer_ptr,             0x7278+0x2C)
+
 DEF(active_viewport_buffer,         0x000022d08) // 0xff0503fc 0x22ccc + 0xff050890  0x3c = 0x22d08  search for "LiveImage.c"
 DEF(viewport_buffers,               0xff63df84) // by comparison to sx510hs
 

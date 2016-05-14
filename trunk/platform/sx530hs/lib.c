@@ -67,12 +67,6 @@ void camera_set_led(int led, int state, int bright) {
 extern char active_viewport_buffer;
 extern void* viewport_buffers[];
 
-//void *vid_get_viewport_fb()
-//{
-    // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
-//    return 10;//viewport_buffers[0];//jeroynmo
-//}
-
 void *vid_get_viewport_fb_d()
 {
     extern char *viewport_fb_d;
@@ -87,8 +81,6 @@ void *vid_get_viewport_live_fb()
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     // verified -1 gives best response
     return viewport_buffers[(active_viewport_buffer-1)&3];
-    //return viewport_buffers[next_buffer()];
-    //return viewport_buffers[2];
 }
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
@@ -106,11 +98,6 @@ int vid_get_viewport_width()
     return _GetVRAMHPixelsSize() >> 1;
 }
 
-int vid_get_viewport_fulllscreen_width()
-{
-    return 360;
-}
-
 long vid_get_viewport_height()
 {
 
@@ -118,16 +105,16 @@ long vid_get_viewport_height()
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
     if (MODE_IS_VIDEO(m) || is_video_recording())
-        return 480;
+        return 240;
 
     if ((m & MODE_MASK) != MODE_PLAY) 
     {
         // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
         if (aspect_ratio==1 || aspect_ratio==2)
-            return 480;
+            return 240;
     }
     extern int _GetVRAMVPixelsSize();    
-    return ((m & MODE_MASK) == MODE_PLAY)?480:_GetVRAMVPixelsSize();
+    return ((m & MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize()>>1;
 }
 
 // viewport width offset table for each aspect ratio
@@ -154,6 +141,11 @@ int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
+void *vid_get_bitmap_active_palette()
+{
+    extern void *palette_buffer_ptr;
+    return palette_buffer_ptr;
+}
 
 extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];
