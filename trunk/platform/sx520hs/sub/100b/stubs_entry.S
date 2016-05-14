@@ -39,7 +39,7 @@ DEF(physw_sleep_delay                       ,0x00001ca8) // Found @0xff02ba38
 DEF(levent_table                            ,0xff6980ec) // Found @0xff6980ec
 DEF(FlashParamsTable                        ,0xff7ddea8) // Found @0xff7ddea8
 DEF(movie_status                            ,0x0000a5cc) // Found @0xff2136b8
-DEF(video_compression_rate                  ,0x0000a57c) // Found @0xff214120
+//DEF(video_compression_rate                  ,0x0000a57c) // Found @0xff214120, ** != ** stubs_min = 0x0000a5fc (0xa580+0x7c)
 DEF(full_screen_refresh                     ,0x0000b5b4) // Found @0xff23ea34
 DEF(canon_menu_active                       ,0x000040dc) // Found @0xff0b8fa8
 DEF(canon_shoot_menu_active                 ,0x0000d821) // Found @0xff2d02f8

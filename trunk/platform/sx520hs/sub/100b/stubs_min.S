@@ -20,3 +20,11 @@ DEF(_nrflag, 0xEC64)
 
 //TODO
 DEF(rear_dial_position,        0xC0240106)  //To do
+
+
+DEF(video_compression_rate, 0xa580+0x7c)
+
+DEF(video_target_framesize, 0x1106c+0x2c)
+DEF(video_target_framesize2, 0x1106c+0x28)
+//DEF(video_framesize, 0xa580+0x104)
+//DEF(video_frame_data, 0xa580+0x108)
