@@ -34,8 +34,8 @@
     #define CAM_RAW_ROWS                    3516 // Found @0xff196e88
 
 
-    #define CAM_JPEG_WIDTH                  4678 // from canon specs
-    #define CAM_JPEG_HEIGHT                 3516
+    #define CAM_JPEG_WIDTH                  4608 // from canon specs
+    #define CAM_JPEG_HEIGHT                 3456
 
     //TODO
     #define CAM_ACTIVE_AREA_X1              24
@@ -86,6 +86,8 @@
     #undef CAM_AF_SCAN_DURING_VIDEO_RECORD
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  // unlocked in canon firmware by default
+
+    #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS
