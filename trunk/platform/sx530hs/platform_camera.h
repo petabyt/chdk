@@ -37,9 +37,8 @@
     #define CAM_JPEG_WIDTH                  4608 // from canon specs
     #define CAM_JPEG_HEIGHT                 3456
 
-    //TODO
-    #define CAM_ACTIVE_AREA_X1              24
-    #define CAM_ACTIVE_AREA_Y1              0 // there are values at 17 but keep even to avoid CFA issues
+    #define CAM_ACTIVE_AREA_X1              96
+    #define CAM_ACTIVE_AREA_Y1              16
     #define CAM_ACTIVE_AREA_X2              4768 // active all the way to the edge
     #define CAM_ACTIVE_AREA_Y2              3516 // active all the way to the bottom
 
