@@ -6,10 +6,10 @@ DEF(raw_buffers_canon_raw         ,0xfc66e8e0) // Found @fc184334, near DevelopA
 DEF(raw_buffers_jpeg              ,0xfc66ed78) // Found based on partial image in raw enabled buffer, refs @fc184cf6, fc14c6be
 DEF(active_raw_buffer             ,0x0000be08+0xc) // Found @fc152724, similar to sx280hs 0xffffffff when uninited, seems valid range 0-2
 DEF(av_override_semaphore         ,0x0002708c) // Found in MoveIrisWithAv 0xfc3d1aed, required for bracketing Created by Mecha.Create in fc3d1a74
+DEF(canon_menu_active             ,0x0000ca70+0x8) // found @fc31dda4, via call to sub_fc31dd9e, near ref to "MviCon_ClrEvt" @fc33a80e
 
 FAKEDEF(movie_status,1)
 FAKEDEF(video_compression_rate, 1)
-FAKEDEF(canon_menu_active,    1)
 FAKEDEF(canon_shoot_menu_active, 1)
 FAKEDEF(full_screen_refresh, 1)
 DEF(zoom_status                             ,0x0000fdb0+4) // Found @0xfc1b5116, unclear which offset should be used
