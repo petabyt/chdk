@@ -528,18 +528,16 @@ int fw_closedir(void *d)
 }
 
 #if defined(CAM_DRYOS)
-    int __attribute__((weak)) _get_fstype(int drive_id)
-    {
-        // replacement function for early DryOS cameras
-        return 0;
-    }
-
     int get_fstype(void)
     {
+#ifdef CAM_DRYOS_2_3_R39
         // fw function returns 1..3 for FAT 12-16-32, 4 for exFAT
         // TODO: fix this if any supported camera gets more than 1 drive OR the returned values change
         extern int _get_fstype(int);
         return _get_fstype(0);
+#else
+        return 0;
+#endif
     }
 
     void *fw_opendir(const char* name)
