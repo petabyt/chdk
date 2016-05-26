@@ -81,8 +81,8 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f57
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc301dc1
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc301de9
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc33246f
-//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fab3f
+//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3324ff
+//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fabd5
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba07
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc33280d
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b71
@@ -92,7 +92,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc322ae3
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfcd1d6a7
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc3468cf
-//NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc3187cd
+//NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc319685
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3a118b
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc31971d
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc15bbfd

@@ -117,7 +117,7 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-  //  #define CAM_EXT_TV_RANGE                    1
+    #define CAM_EXT_TV_RANGE                    1
 
     #define  CAM_HAS_ERASE_BUTTON               1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
@@ -144,7 +144,7 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
 
-    //#define CAM_HAS_FILEWRITETASK_HOOK          1
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
     //#define CAM_FILEWRITETASK_SEEKS             1
 
     #undef  CAM_BITMAP_PALETTE

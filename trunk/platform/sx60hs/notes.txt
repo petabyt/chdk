@@ -39,16 +39,21 @@ CHDK ISO Bracketing in Av, Tv,
 
  shut_down(1) shutdowns the camera after a 5-10 second delay
 
+darkframe control: require (ON) or suppress darkframe (OFF), 
+                   or leave up to Canon (AUTO)
+
+short exposures: 0.0001 seconds
+long exporures: 30 seconds
+
+filewrite: directly shoot a picture using chdkptp, and save to PC.
+           note: if Canon RAW is enabled, the saved JPEG will contain the Canon
+                 '.CR2' image.
+CHDK OSD is enabled in shoot mode.
+
 NOT IMPLEMENTED
 ***************
 video controls (movie record task)
 
-extra long or extra short exposures
-
-darkframe control, Canon firmware automatically does a darkframe for exposures longer 
-than 1 second
-
-jpeg remote shoot / filewrite hook
 
 OTHER ISSUES
 ************
