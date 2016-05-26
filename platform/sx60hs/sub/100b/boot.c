@@ -138,14 +138,14 @@ asm volatile (
 "    ldreq   r3, =capt_seq_task\n"      // if so replace with our task function base ptr.
 "    orreq   r3, #1\n"                  // make sure it's a thumb address (may not be needed?)
 "    beq     exitHook\n"                // below compares not necessary if this check has found something.
-/*
+
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
-
+/*
 "    LDR     R0, =task_DvlpSeqTask\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
@@ -153,7 +153,7 @@ asm volatile (
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
 
-
+*/
 
 "    LDR     R0, =task_FileWrite\n"
 "    CMP     R0, R3\n"
@@ -161,7 +161,7 @@ asm volatile (
 "    LDREQ   R3, =filewritetask\n"
 "   orreq    r3, #1\n"
 "    BEQ     exitHook\n"
-
+/*
 "    LDR     R0, =task_MovieRecord\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =movie_record_task\n"

@@ -135,7 +135,6 @@ void get_target_dir_name(char *out)
 {
     extern void _GetImageFolder(char*,int,int,int);
     _GetImageFolder(out,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
-    out[15] = 0;
 }
 #else
 long get_target_dir_num() 

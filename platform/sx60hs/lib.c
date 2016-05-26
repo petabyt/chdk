@@ -254,13 +254,13 @@ int vid_get_viewport_height_proper()            { return vid_get_viewport_height
 int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
-/*
+
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
-*/
+
 // the opacity buffer defines opacity for the bitmap overlay's pixels
-// found near BmpDDev.c line 215 assert fc0f7b58
+// found near BmpDDev.c line 215 assert fc0f873c
 volatile char *opacity_buffer[2] = {(char*)0x4163b400, (void*)0x416b9d00};
 //volatile char *opacity_buffer[2] = {(char *)0xDEADBEEF, (void*)0xDEADBEEF};
 

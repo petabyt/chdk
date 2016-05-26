@@ -5,7 +5,7 @@
 #define NULL_SUB 0xfc0008fb // bx lr
 #DEF(orig_CreateTask                           ,0x010E5089)
 NHSTUB(LogCameraEvent                        ,0xfc3362cb) //x
-NHSTUB(displaybusyonscreen                   , 0xfc3187cd) //x
+NHSTUB(displaybusyonscreen                   , 0xfc319685) //x
 NHSTUB(undisplaybusyonscreen                   ,0xfc31971d)//x
 NHSTUB(SetZoomActuatorSpeedPercent                   , NULL_SUB)
 NHSTUB(MakeSDCardBootable                   , 0xfc33280d) //x
@@ -17,10 +17,10 @@ NHSTUB(ExpCtrlTool_StopContiAE               ,0xFC264f57) //x
 NHSTUB(Feof_Fut                              ,0xFC301Dc1) //x
 NHSTUB(Fflush_Fut                            ,0xFC301De9) //x
 NHSTUB(get_dial_hw_position                  ,0xfc119805) //x same as 100f
-NHSTUB(GetDrive_TotalClusters               ,0xfc33246f) //x
+NHSTUB(GetDrive_TotalClusters               ,0xfc3324ff) //x
 //NHSTUB(GetFocusLensSubjectDistance          ,0xfc4b4a73)
 //NHSTUB(GetFocusLensSubjectDistance          ,0xfc2fa8df) //stubs_entry.S
-NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xFC2FAB3f) //x
+NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xFC2FABd5) //x
 //NHSTUB(PT_PlaySound                         ,0xFC333df1)
 NHSTUB(RefreshPhysicalScreen                  ,NULL_SUB) // NOT FOUND put to null, original in sx280 102b was 0xfc143599 
 NHSTUB(RenameFile_Fut                       ,0xFC301B71) //x

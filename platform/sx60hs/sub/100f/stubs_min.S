@@ -23,8 +23,7 @@ DEF(av_override_semaphore                     ,0x0002569c) //x found at 0xfc39d5
 FAKEDEF(movie_status                       ,1)
 FAKEDEF(video_compression_rate             ,1)
 FAKEDEF(full_screen_refresh                ,1)    // ,0x00014BD4) // xFound @0xFC333f00
-//DEF(canon_menu_active                       ,0x0000C242) // xFhound @0xFC2F54b8 
-FAKEDEF(canon_menu_active                  ,1)
+DEF(canon_menu_active                       ,0x0000c238 + 0x8) // found at 0xfc255c8 
 FAKEDEF(canon_shoot_menu_active             ,1) // ??? not found
 //DEF(playrec_mode                            ,0x0000BB84) //x Found @0xFC2D79ba
 DEF(zoom_status                             ,0x00021C66) //x or 21C80-24 Found @0xFC3752d4
@@ -35,7 +34,8 @@ DEF(focus_len_table                         ,0xfdf317ec)
 //FAKEDEF(focus_len_table                       ,0)
 //DEF(zoom_busy                               ,0x0000B85C) // xFound @0xFC2EDA2c
 //DEF(focus_busy                              ,0x00013488) //x Found @0xFC2F9DDe
-DEF(recreview_hold                          ,0x000091d4) //x or 91dc Found @0xFC31B670
+//DEF(recreview_hold                          ,0x000091d4) //x or 91dc Found @0xFC31B670
+DEF(recreview_hold                          ,0x0000914c) //x found @0xFC31B670 above ShtCon_Shut
 //FAKEDEF(zoom_busy                             ,0)
 //FAKEDEF(focus_busy                            ,0)
 //FAKEDEF(recreview_hold                        ,0)

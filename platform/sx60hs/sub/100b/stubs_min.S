@@ -8,7 +8,7 @@ DEF(av_override_semaphore                     ,0x0002569c) //x found at 0xfc39d5
 FAKEDEF(movie_status                       ,1)
 FAKEDEF(video_compression_rate             ,1)
 FAKEDEF(full_screen_refresh                ,1)    // ,0x00014BD4) // xFound @0xFC333f00
-FAKEDEF(canon_menu_active                  ,1)
+DEF(canon_menu_active                  ,0x0000c238 + 0x8) //found at 0xfc2f5560
 FAKEDEF(canon_shoot_menu_active             ,1) // ??? not found
 DEF(zoom_status                             ,0x00021C66) //x could be wrong in both 100f and 100b shoud be 21C80-24 Found @0xFC3752e8 or g7x wildly different
 

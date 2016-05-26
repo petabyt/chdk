@@ -4,6 +4,7 @@
 
 #define NULL_SUB 0xfc0008fb // bx lr
 #DEF(orig_CreateTask                           ,0x010E5089)
+NHSTUB(nrflag                                ,0x0001e854)
 NHSTUB(LogCameraEvent                        ,0xfc3362b7)
 NHSTUB(displaybusyonscreen                   , 0xfc319671) //0xfc31987d?
 NHSTUB(undisplaybusyonscreen                   ,0xfc319709)//0xfc3198fb ?
