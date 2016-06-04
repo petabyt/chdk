@@ -245,6 +245,7 @@ void camera_info_init()
 
     camera_info.perf.af_led.min = 0xFFFFFFFF;
     camera_info.state.osd_title_line = 1 ;
+    camera_info.state.gui_mode_none = 1 ; // default state before gui initialized
 }
 
 //==========================================================
