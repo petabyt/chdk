@@ -142,6 +142,9 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
+    #define CAM_MIN_ISO_OVERRIDE            100     // https://chdk.setepontos.com/index.php?topic=12314.msg128518#msg128518
+    #define CAM_MAX_ISO_OVERRIDE            3200    // https://chdk.setepontos.com/index.php?topic=12314.msg128683#msg128683
+
 
     #undef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY  //jeronymo
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1

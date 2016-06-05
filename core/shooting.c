@@ -304,6 +304,11 @@ short shooting_get_iso_override_value()
     // Some cameras will crash if flash used and ISO set lower than this value (most easily tested in AUTO mode)
     if ((iso > 0) && (iso < CAM_MIN_ISO_OVERRIDE)) iso = CAM_MIN_ISO_OVERRIDE;
 #endif
+#ifdef CAM_MAX_ISO_OVERRIDE
+    // Limit max ISO
+    // Some cameras will crash if ISO set higher than this value (dependence on flash is unclear)
+    if (iso > CAM_MAX_ISO_OVERRIDE) iso = CAM_MAX_ISO_OVERRIDE;
+#endif
     return shooting_iso_market_to_real(iso);    // return real value (after limits applied)
 }
 
@@ -415,6 +420,10 @@ void shooting_set_iso_real(short iso, short is_now)
 #ifdef CAM_MIN_ISO_OVERRIDE
             // Limit min (non-zero) ISO
             if ((iso > 0) && (iso < ISO_MARKET_TO_REAL(CAM_MIN_ISO_OVERRIDE))) iso = ISO_MARKET_TO_REAL(CAM_MIN_ISO_OVERRIDE);
+#endif
+#ifdef CAM_MAX_ISO_OVERRIDE
+            // Limit max ISO
+            if (iso > ISO_MARKET_TO_REAL(CAM_MAX_ISO_OVERRIDE)) iso = ISO_MARKET_TO_REAL(CAM_MAX_ISO_OVERRIDE);
 #endif
             shooting_set_sv96(shooting_get_sv96_from_iso(iso), is_now);
         }

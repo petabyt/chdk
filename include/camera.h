@@ -207,6 +207,7 @@
     #undef  CAM_DISABLE_RAW_IN_DIGITAL_IS       // For cameras with 'Digital IS' mode that does not work with raw define this    
     #undef  CAM_DISABLE_RAW_IN_SPORTS           // For cameras that corrupt DNG/JPEG in Sports mode
     #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max 'market' ISO override value for HQ Burst mode (higher values crash camera)
+    #undef  CAM_MAX_ISO_OVERRIDE                // Defines max 'market' (non-zero) ISO override value - higher value may crash
     #undef  CAM_MIN_ISO_OVERRIDE                // Defines min 'market' (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed]
     
     #undef  CAM_HAS_GPS                         // for cameras with GPS reseiver: includes the GPS coordinates in in DNG file
