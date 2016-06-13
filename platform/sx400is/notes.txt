@@ -1,0 +1,27 @@
+************************************
+SX400IS Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options
+
+This is an early alpha port, use at your own risk!
+
+Ported by nafraf
+
+TESTED
+******
+- Liveview in play and REC mode.
+
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
+
+
+KNOWN BUGS
+**********
+- Zebra test → Shows red rectangles in upper and lower part of display and covers the wiew. Indicator is offset.
+  Reported by astol: https://chdk.setepontos.com/index.php?topic=12836.msg128873#msg128873
+- DNG color matrix is copy+paste from D10
+
+
