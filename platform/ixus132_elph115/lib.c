@@ -63,7 +63,7 @@ void *vid_get_viewport_live_fb()
     extern void* viewport_buffers[];
 
     // no distinct video mode
-    if (/*mode_is_video(mode_get())*/ movie_status == VIDEO_RECORD_IN_PROGRESS)
+    if (/*mode_is_video(mode_get())*/ get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     // verified -1 gives best response

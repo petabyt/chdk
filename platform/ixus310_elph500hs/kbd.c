@@ -157,7 +157,7 @@ int chdk_process_touch()
     // If in canon menu, let the firmware have all the touch events.
     if (!show_virtual_buttons()) return 0;
 
-    int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
+    int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
     // Touch co-ordinate
     unsigned int tx = ((touch_screen_x & 0x7FFF) >> 5) ^ 0x3FF;
@@ -226,7 +226,7 @@ void virtual_buttons()
         //ts_redraw_cnt++;
 
         int i, x1, y1, x2, y2, ofst, sc, xo, yo;
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
         color c1 = MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE);
         color c2 = MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_GREEN);
@@ -277,7 +277,7 @@ int ts_process_touch()
 
     if (touch_panel_state != 0xFFFFFFFF)
     {
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
         //ts_proc_cnt++;
 

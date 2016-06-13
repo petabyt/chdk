@@ -1418,9 +1418,55 @@ int captseq_hack_override_active()
     return 0;
 }
 
+#ifdef CAM_SIMPLE_MOVIE_STATUS
+extern int simple_movie_status;
+#else
+extern int movie_status;
+#endif
+
+void set_movie_status(int status)
+{
+#ifndef CAM_SIMPLE_MOVIE_STATUS
+    switch(status)
+    {
+        case 1:
+            if (movie_status == VIDEO_RECORD_IN_PROGRESS)
+            {
+                movie_status = VIDEO_RECORD_STOPPED;
+            }
+            break;
+        case 2:
+            if (movie_status == VIDEO_RECORD_STOPPED)
+            {
+                movie_status = VIDEO_RECORD_IN_PROGRESS;
+            }
+            break;
+        case 3:
+            if (movie_status == VIDEO_RECORD_STOPPED || movie_status == VIDEO_RECORD_IN_PROGRESS)
+            {
+                movie_status = VIDEO_RECORD_STOPPING;
+            }
+            break;
+    }
+#else // CAM_SIMPLE_MOVIE_STATUS
+      // no known way to control the recording process
+#endif
+}
+
+int get_movie_status()
+{
+#ifndef CAM_SIMPLE_MOVIE_STATUS
+    return movie_status;
+#else
+    // firmware movie_status interpreted as: zero - not recording, nonzero - recording
+    return simple_movie_status?VIDEO_RECORD_IN_PROGRESS:VIDEO_RECORD_STOPPED;
+#endif
+}
+
 // Return whether video is being recorded
 int is_video_recording()
 {
+#ifndef CAM_SIMPLE_MOVIE_STATUS
 #if defined(CAM_HAS_MOVIE_DIGEST_MODE)
     // If camera has movie digest mode then movie_status values are different than previous models
     // 'movie_status' values
@@ -1437,6 +1483,9 @@ int is_video_recording()
     //      4 - movie recording in progress
     //      5 - movie recording stopping
     return (movie_status > 1);
+#endif
+#else // CAM_SIMPLE_MOVIE_STATUS
+    return (simple_movie_status!=0);
 #endif
 }
 

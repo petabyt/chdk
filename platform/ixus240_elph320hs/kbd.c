@@ -382,7 +382,7 @@ int chdk_process_touch()
     if (!show_virtual_buttons()) return 0;
 
     int guiMode = gui_get_mode();
-    int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+    int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
     // Touch co-ordinate
     unsigned short tx, ty;
@@ -444,7 +444,7 @@ void virtual_buttons()
         //ts_redraw_cnt++;
 
         int i, x1, y1, x2, y2, ofst;
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
         //color c1 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_BLACK, COLOR_WHITE);
         //color c2 = MAKE_COLOR((camMode&MODE_VID)?COLOR_TRANSPARENT:COLOR_RED, (camMode&MODE_VID)?COLOR_RED:COLOR_WHITE);
@@ -504,7 +504,7 @@ int ts_process_touch()
     if (touch_panel_state != 0xFFFFFFFF)
     {
         int guiMode = gui_get_mode();
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
         //ts_proc_cnt++;
 

@@ -1373,29 +1373,13 @@ static int luaCB_print_screen( lua_State* L )
 
 static int luaCB_get_movie_status( lua_State* L )
 {
-  lua_pushnumber( L, movie_status );
+  lua_pushnumber( L, get_movie_status() );
   return 1;
 }
 
 static int luaCB_set_movie_status( lua_State* L )
 {
-  switch(luaL_checknumber( L, 1 )) {
-    case 1:
-      if (movie_status == 4) {
-        movie_status = 1;
-      }
-    break;
-    case 2:
-      if (movie_status == 1) {
-        movie_status = 4;
-      }
-    break;
-    case 3:
-      if (movie_status == 1 || movie_status == 4) {
-        movie_status = 5;
-      }
-    break;
-  }
+  set_movie_status( luaL_checknumber( L, 1 ) );
   return 0;
 }
 
