@@ -180,7 +180,7 @@ static int vp_yoffset(int stitch)
     {
         return stitch;
     }
-    else if (mode_is_video(m) || movie_status == VIDEO_RECORD_IN_PROGRESS)
+    else if (mode_is_video(m) || get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
     {
         return 30;
     }

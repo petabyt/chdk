@@ -138,7 +138,7 @@ void _MakeAFScan(int *a, int b) {
 }
 
 void state_check_for_movie_af() {
-    if ((movie_status != VIDEO_RECORD_IN_PROGRESS) && af_locked_in_movierec) {
+    if ((get_movie_status() != VIDEO_RECORD_IN_PROGRESS) && af_locked_in_movierec) {
         af_locked_in_movierec = 0;
         _UnlockAF();
     }

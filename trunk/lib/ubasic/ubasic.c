@@ -368,7 +368,7 @@ static int factor(void)
   break;
   case TOKENIZER_GET_MOVIE_STATUS:
     accept(TOKENIZER_GET_MOVIE_STATUS);
-    r = movie_status;
+    r = get_movie_status();
     break;
   case TOKENIZER_GET_PLATFORM_ID:
     accept(TOKENIZER_GET_PLATFORM_ID);
@@ -1787,24 +1787,8 @@ static void set_ev_statement()
 
 static void set_movie_status_statement()
 {
-    int to;
     accept(TOKENIZER_SET_MOVIE_STATUS);
-    to = expr();
-    if (to==1) {
-        if (movie_status == 4) {
-            movie_status = 1;
-        }
-    }
-    if (to==2) {
-        if (movie_status == 1) {
-            movie_status = 4;
-        }
-    }
-    if (to==3) {
-        if (movie_status == 1 || 4) {
-            movie_status = 5;
-        }
-    }
+    set_movie_status(expr());
     accept_cr();
 }
 

@@ -208,9 +208,11 @@ int get_zoom_x(int zp);
 /******************************************************************/
 
 // Video recording current status constants, see movie_status variable 
+// values actually used in pre-DIGIC 6 firmware
 #define VIDEO_RECORD_NEVER_STARTED  0  
 #define VIDEO_RECORD_STOPPED        1  
 #define VIDEO_RECORD_IN_PROGRESS    4
+#define VIDEO_RECORD_STOPPING       5
 
 //Optical & digital zoom status constants, see zoom_status variable 
 #define ZOOM_OPTICAL_MIN            1
@@ -228,11 +230,15 @@ int get_zoom_x(int zp);
 
 // return whether video is actually being recorded
 extern int is_video_recording();
+// set movie status, not effective on CAM_SIMPLE_MOVIE_STATUS cams
+extern void set_movie_status(int status);
+// get movie status, emulated on CAM_SIMPLE_MOVIE_STATUS cams
+extern int get_movie_status();
+
 
 extern void change_video_tables(int a, int b);
 extern void shooting_video_bitrate_change(int v);
 
-extern int movie_status;
 extern int zoom_status;
 extern const int zoom_points;
 extern int recreview_hold;

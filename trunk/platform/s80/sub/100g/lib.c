@@ -98,7 +98,7 @@ void _MoveFocusLensToDistance(short *dist)
     _GetPropertyCase(PROPCASE_AF_LOCK, &afl, 4);
     if (shmode == 19) // MODE_VIDEO_STD
     {
-        if (movie_status != 4) return; // only allow during recording when in movie mode
+        if (get_movie_status() != 4) return; // only allow during recording when in movie mode
     }
     else if (!afl) // if not movie mode, AFL has to be active
     {

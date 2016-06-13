@@ -67,7 +67,7 @@ int vid_get_viewport_byte_width() {
 
 int vid_get_viewport_width()
 {
-    if (movie_status > 1){return 480;}
+    if (get_movie_status() > 1){return 480;}
     if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1 ) // on 16:9 shoot mode its 1.switch to video is 100
         return 480;
     else
@@ -76,7 +76,7 @@ int vid_get_viewport_width()
 
 int vid_get_viewport_display_xoffset()
 {
-    if (movie_status > 1){return 0;}
+    if (get_movie_status() > 1){return 0;}
     if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1  || ((mode_get()&MODE_MASK)== 100 ))
        return 0;
     else

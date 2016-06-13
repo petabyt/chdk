@@ -824,7 +824,7 @@ static int kbd_use_up_down_left_right_as_fast_switch()
     {
         if (kbd_is_key_pressed(KEY_LEFT) && is_video_recording())
         {
-            movie_status = VIDEO_RECORD_STOPPED;
+            set_movie_status(1); // set to stop
             key_pressed = KEY_LEFT;
             return 1;
         }
@@ -832,9 +832,9 @@ static int kbd_use_up_down_left_right_as_fast_switch()
     	// reyalp - HACK for cams that can do video in any mode
 	    // note that this means this will probably run whenever you press right
         // BUG this doesn't know whether recording was stopped or paused.
-        if (kbd_is_key_pressed(KEY_RIGHT) && (movie_status == VIDEO_RECORD_STOPPED))
+        if (kbd_is_key_pressed(KEY_RIGHT) && (get_movie_status() == VIDEO_RECORD_STOPPED))
         {
-            movie_status = VIDEO_RECORD_IN_PROGRESS;
+            set_movie_status(2); // resume
             movie_reset = 1;
             key_pressed = KEY_RIGHT;
             return 1;

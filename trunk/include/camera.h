@@ -94,6 +94,7 @@
     #define CAM_VIDEO_CONTROL               1   // pause / unpause video recordings
     #undef  CAM_VIDEO_QUALITY_ONLY              // Override Video Bitrate is not supported
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME         // Camera can override time limit of video record -> sx220/230
+    #undef  CAM_SIMPLE_MOVIE_STATUS             // Firmware movie_status nonzero when recording, zero when not - makes CAM_VIDEO_CONTROL ineffective
     #undef  CAM_HAS_MOVIE_DIGEST_MODE           // The values in the 'movie_status' variable change if the camera has this mode (see is_video_recording())
     #undef  CAM_HAS_SPORTS_MODE                 // Define to enable the RAW exception override control for SPORTS mode (s3is, sx30, sx40, etc)
 
@@ -333,6 +334,10 @@
 #if !defined(CAM_FILEIO_SEM_TIMEOUT_VID)
     #define CAM_FILEIO_SEM_TIMEOUT_VID      200     // TakeSemaphore timeout - is_video_recording() == true
 #endif
+#endif
+
+#if defined(CAM_VIDEO_CONTROL) && defined(CAM_SIMPLE_MOVIE_STATUS)
+    #error "CAM_VIDEO_CONTROL and CAM_SIMPLE_MOVIE_STATUS are mutually exclusive"
 #endif
 
 // sanity check platform_camera.h defined values for some common errors

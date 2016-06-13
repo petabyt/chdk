@@ -67,7 +67,7 @@ static const char* simulate_playback_press(int change, int arg)
     void levent_set_record(void) ;
     if ( change ) 
     {
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
         if (camMode) levent_set_play(); else levent_set_record() ;
     }
     return 0; 
@@ -171,7 +171,7 @@ int show_virtual_buttons()
 int chdk_process_touch()
 {
     int guiMode = gui_get_mode();
-    int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+    int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
     
     unsigned short tx, ty;                                              // Touch co-ordinate
     tx = touch_screen_x * 360 / 0x2FF ;
@@ -221,7 +221,7 @@ int ts_process_touch()
     if (touch_panel_state != 0xFFFFFFFF)
     {
         int guiMode = gui_get_mode();
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
         for (i=0; keymap[i].hackkey; i++)
         {
@@ -260,7 +260,7 @@ void virtual_buttons()
     if (redraw_buttons)
     {
         int i, x1, y1, x2, y2, ofst;
-        int camMode = (movie_status==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
+        int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
         twoColors c1 = MAKE_COLOR(COLOR_RED_DK,COLOR_WHITE);        // ALT exit button
         twoColors c2 = MAKE_COLOR(COLOR_WHITE, COLOR_BLUE_DK);      // Right side keys

@@ -38,7 +38,6 @@
             &camera_sensor
             &conf
             &zoom_points
-            &movie_status
             &recreview_hold
             &root_menu
             &user_submenu
@@ -258,6 +257,8 @@
             shooting_get_shutter_speed_from_tv96
             shooting_can_focus
             is_video_recording
+            get_movie_status
+            set_movie_status
 
             rbf_char_width
             rbf_font_height
