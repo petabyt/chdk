@@ -124,6 +124,8 @@ fc134986:   4770        bx  lr
 */
     extern int _GetVRAMHPixelsSize();
 // TODO: this is the actual width, pixel format is uyvy (16bpp)
+    if (camera_info.state.mode_play)
+        return camera_screen.physical_width;
     return _GetVRAMHPixelsSize();
 }
 
@@ -136,6 +138,8 @@ fc13498e:   4770        bx  lr
 */
     extern int _GetVRAMVPixelsSize();
 // return half height
+    if (camera_info.state.mode_play)
+        return camera_screen.buffer_height;
     return _GetVRAMVPixelsSize();
 }
 
@@ -169,10 +173,11 @@ void *vid_get_bitmap_fb() {
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width(); }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
-int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_palette_type()                      { return 3; }
-int vid_get_palette_size()                      { return 256 * 4; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() /** 2*/; }
+int vid_get_viewport_fullscreen_height()        { return camera_screen.height; } // may not be always ok
+int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
+int vid_get_palette_type()                      { return -1; }
+int vid_get_palette_size()                      { return 0; }
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];

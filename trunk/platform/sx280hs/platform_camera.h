@@ -46,9 +46,10 @@
 
     #define CAM_HAS_CMOS                        1
 
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
-    #define CAM_VIDEO_QUALITY_ONLY              1
+    //#define CAM_VIDEO_QUALITY_ONLY              1
 
     #undef  CAM_VIDEO_CONTROL
 
@@ -125,6 +126,7 @@
     //#define CAM_HAS_GPS                         1
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
+    #define CAM_SIMPLE_MOVIE_STATUS             1
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
