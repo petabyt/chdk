@@ -574,8 +574,8 @@ static void gui_osd_draw_movie_time_left()
         {
             card_used = init_space - GetFreeCardSpaceKb();
             elapsed = (int) ( get_tick_count() - init_time ) / 1000;
-            avg_use = card_used / elapsed;  // running average Kb/sec
-            time_left = (GetFreeCardSpaceKb() / avg_use);
+            avg_use = elapsed?(card_used / elapsed):1;  // running average Kb/sec (avoids division by zero)
+            time_left = avg_use?(GetFreeCardSpaceKb() / avg_use):1; // (avoids division by zero)
             hour = time_left / 3600;
             min = (time_left % 3600) / 60;
             sec = (time_left % 3600) % 60;
