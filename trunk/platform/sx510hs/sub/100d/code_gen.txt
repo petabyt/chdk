@@ -248,9 +248,6 @@ FUNC ref=1
 ASM
 FW 78
 PATCHSUB ref=0
->>>
-"    BL      capt_seq_hook_raw_here \n"         // added
-<<<
 FW $
 ENDASM
 ENDFUNC
@@ -270,6 +267,27 @@ FW 1
 ENDASM
 ENDFUNC
 
+//////////////////////////////////////////////////////////////
+// task_developseq
+//////////////////////////////////////////////////////////////
+FUNC sig=task_DvlpSeqTask name=task_developseq_my
+ASM
+FW 36
+FW comment=" message from queue 2"
+FW
+FW comment=" 2nd msg after shoot"
+FW
+FW comment=" 1st msg after shoot"
+FW 14
+>>>
+"    BL      capt_seq_hook_raw_here\n"    // +
+<<<
+FW $
+>>>
+"    .ltorg\n"
+<<<
+ENDASM
+ENDFUNC
 
 //////////////////////////////////////////////////////////////
 // exp_drv_task

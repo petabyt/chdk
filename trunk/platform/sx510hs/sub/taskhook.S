@@ -7,6 +7,12 @@
 "    LDREQ   R3, =capt_seq_task\n"      // if so replace with our task function base ptr.
 "    BEQ     exitHook\n"                // below compares not necessary if this check has found something.
 
+/*** INSTALL task_developseq() hook ***/
+"    LDR     R0, =task_DvlpSeqTask\n"
+"    CMP     R0, R3\n"
+"    LDREQ   R3, =task_developseq_my\n"
+"    BEQ     exitHook\n"
+
 /*** INSTALL exp_drv_task() hook ***/
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"

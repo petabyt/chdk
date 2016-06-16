@@ -7,7 +7,6 @@
 
 #define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
 static long *nrflag = (long*)(0xCF68+0xC); // sx510 101a Found @ 0xff2adfe4 (0xcf68) & 0xff2adfe8 (+0xC)
-#define PAUSE_FOR_FILE_COUNTER 350  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
 
@@ -470,7 +469,6 @@ asm volatile (
 "loc_FF1D9B34:\n"
 "    MOV     R0, R5 \n"
 "    BL      sub_FF371D20_my \n"  // --> Patched. Old value = 0xFF371D20.
-"    BL      capt_seq_hook_raw_here \n"         // added
 "    B       loc_FF1D9B5C \n"
 
 "loc_FF1D9B40:\n"
@@ -555,6 +553,104 @@ asm volatile (
 "    BL      capt_seq_hook_set_nr\n"                 // added
 "    MOV     R0, R4 \n"
 "    LDR     PC, =0xFF371DEC \n"  // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** task_developseq_my @ 0xFF1DB420 - 0xFF1DB540, length=73
+void __attribute__((naked,noinline)) task_developseq_my() {
+asm volatile (
+"    STMFD   SP!, {R2-R8,LR} \n"
+"    LDR     R7, =0x96DC \n"
+
+"loc_FF1DB428:\n"
+"    MOV     R2, #0 \n"
+"    LDR     R0, [R7, #8] \n"
+"    LDR     R1, [R7, #0x10] \n"
+"    BL      sub_006B860C /*_PostMessageQueue*/ \n"
+"    LDR     R0, [R7, #4] \n"
+"    MOV     R2, #0 \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_006B84B8 /*_ReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    LDRNE   R2, =0x1C6 \n"
+"    BNE     loc_FF1DB474 \n"
+"    LDR     R0, [R7, #8] \n"
+"    MOV     R1, SP \n"
+"    BL      sub_006B85B0 /*_TryReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    LDREQ   R5, =0x2401C \n"
+"    MOVEQ   R6, #0 \n"
+"    BEQ     loc_FF1DB488 \n"
+"    MOV     R2, #0x1CC \n"
+
+"loc_FF1DB474:\n"
+"    LDR     R1, =0xFF1DB5D0 /*'SsDvlpSeq.c'*/ \n"
+"    MOV     R0, #0 \n"
+"    BL      _DebugAssert \n"
+"    BL      _ExitTask \n"
+"    LDMFD   SP!, {R2-R8,PC} \n"
+
+"loc_FF1DB488:\n"
+"    LDR     R0, [R5, #0x19C] \n"
+"    CMP     R0, #0 \n"
+"    LDRNE   R0, [SP, #4] \n"
+"    LDRNE   R0, [R0] \n"
+"    CMPNE   R0, #5 \n"
+"    BNE     loc_FF1DB4AC \n"
+"    BL      sub_FF373150 \n"
+"    BL      sub_FF373894 \n"
+"    BL      sub_FF37431C \n"
+
+"loc_FF1DB4AC:\n"
+"    LDR     R1, [SP, #4] \n"
+"    LDR     R0, [R1] \n"  //  message from queue 2
+"    CMP     R0, #0 \n"
+"    BEQ     loc_FF1DB4E4 \n"  //  2nd msg after shoot
+"    CMP     R0, #3 \n"
+"    BEQ     loc_FF1DB4F0 \n"  //  1st msg after shoot
+"    CMP     R0, #4 \n"
+"    BEQ     loc_FF1DB50C \n"
+"    CMP     R0, #5 \n"
+"    MOVEQ   R2, #0 \n"
+"    MOVEQ   R1, #0x11 \n"
+"    MOVEQ   R0, R2 \n"
+"    BLEQ    sub_FF070E2C \n"
+"    B       loc_FF1DB510 \n"
+
+"loc_FF1DB4E4:\n"
+"    LDR     R0, [R1, #8] \n"
+"    BL      sub_FF372924 \n"
+"    B       loc_FF1DB510 \n"
+
+"loc_FF1DB4F0:\n"
+"    LDR     R0, [R1, #8] \n"
+"    MOV     R1, #1 \n"
+"    BL      sub_FF372BFC \n"
+"    BL      capt_seq_hook_raw_here\n"    // +
+"    LDR     R0, [SP, #4] \n"
+"    LDR     R0, [R0, #8] \n"
+"    BL      sub_FF3722D8 \n"
+"    B       loc_FF1DB510 \n"
+
+"loc_FF1DB50C:\n"
+"    BL      sub_FF074978 \n"
+
+"loc_FF1DB510:\n"
+"    LDR     R4, [SP, #4] \n"
+"    LDR     R0, [R4, #4] \n"
+"    CMP     R0, #0 \n"
+"    MOVEQ   R2, #0x82 \n"
+"    LDREQ   R1, =0xFF1DB5D0 /*'SsDvlpSeq.c'*/ \n"
+"    BLEQ    _DebugAssert \n"
+"    STR     R6, [R4, #4] \n"
+"    LDR     R0, [R7, #4] \n"
+"    ADD     R1, SP, #4 \n"
+"    BL      sub_006B85B0 /*_TryReceiveMessageQueue*/ \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF1DB488 \n"
+"    B       loc_FF1DB428 \n"
+"    .ltorg\n"
 );
 }
 
