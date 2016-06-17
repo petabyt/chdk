@@ -205,6 +205,7 @@
     #undef  CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
     #undef  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
     #undef  CAM_DISABLE_RAW_IN_HYBRID_AUTO      // For cameras that lock up while saving raw in "Hybrid Auto" mode
+    #undef  CAM_DISABLE_RAW_IN_MOVIE_DIGEST     // For cameras that lock up while saving raw in "Movie Digest" mode
     #undef  CAM_DISABLE_RAW_IN_DIGITAL_IS       // For cameras with 'Digital IS' mode that does not work with raw define this    
     #undef  CAM_DISABLE_RAW_IN_SPORTS           // For cameras that corrupt DNG/JPEG in Sports mode
     #undef  CAM_ISO_LIMIT_IN_HQ_BURST           // Defines max 'market' ISO override value for HQ Burst mode (higher values crash camera)
