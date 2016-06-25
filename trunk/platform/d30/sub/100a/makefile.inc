@@ -3,6 +3,12 @@ PLATFORMOS=dryos
 PLATFORMOSVER=50
 
 ROMBASEADDR=0xFF000000
+# Force ARAM on for d30; but do not load CHDK in ARAM (not enough memory)
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=
+
+ARAM_HEAP_START=0x3ce000
+ARAM_HEAP_SIZE=0x22000
 
 # TODO
 # Set up size variables for EXMEM
