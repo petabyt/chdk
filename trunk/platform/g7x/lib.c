@@ -132,20 +132,71 @@ void *vid_get_viewport_fb() {
     //return (void*)0x43115100; // uyvy buffers with signed(?) chroma components
     // return (void*)0x4b25fc00; // uyvy buffers (more than 4), pixel format compatible with earlier DIGIC uyvy
 }
-void *vid_get_viewport_fb_d()    { return (void*)0x43334300; } // TODO
+/*
+playback viewport
+binview uyvy_d6 format
+TODO - 3 buffers 0x5e608000 0x5ea08000 0x5ee08000
+initially found by RAM dumping
+0x5e608000 ref sub_fc1ba3f0 "ImgDDev.c" 
+0x5ee08000 ref DispCon_ShowColorBar and other DispCon_* functions
+*/
+void *vid_get_viewport_fb_d()    {
+    return (void*)0x5e608000;
+} 
 
+/*
+live buffers
+binview uyvy_d6 format
+0x43334300 (from VRAM Address above)
+found by RAM dumping
+0x433e2b00 first plus 0xAE800, or 736*480*2=0xAC800 + 0x2000
+0x43491300
+0x4353fb00
+buffer list pointer at 0x398b4 (0x00039878 + 0x3c)->fc612b8, via sub fc13b7f2
+active index not found
+
+lower res uyvy_old format
+360x240
+0x5a3adc00
+0x5a3ed080
+0x5a42c500
+0x5a46b980
+0x5a4aae00
+0x5a4ea280
+0x5a529700
+0x5a568b80
+
+640x426
+0x5a5a8000
+0x5a63e000
+0x5a6d4000
+0x5a76a000
+0x5a800000
+0x5a896000
+0x5a92c000
+0x5a9c2000
+
+*/
 void *vid_get_viewport_live_fb() {
     return 0; //TODO
 }
 
 int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
+    if (camera_info.state.mode_play)
+    {
+        return 720;
+    }
 // TODO: this is the actual width, pixel format is uyvy (16bpp)
     return _GetVRAMHPixelsSize();
 }
 
 long vid_get_viewport_height() {
     extern int _GetVRAMVPixelsSize();
+    if (camera_info.state.mode_play)
+    {
+        return 480;
+    }
 // TODO return half height?
     return _GetVRAMVPixelsSize();
 }
@@ -188,6 +239,12 @@ int vid_get_palette_size()                      { return 256 * 4; }
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
+/*
+note RGBA bitmap buffer, 640x480 on 960x480 buffer
+0x42541000
+0x42703000
+doesn't seem to be a simple double buffer, UI shows up in first focus box shows up in second
+*/
 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
 // found near BmpDDev.c line 215 assert fc0f7b58
