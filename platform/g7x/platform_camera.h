@@ -72,6 +72,8 @@
 // minimal recording or not only
     #define CAM_SIMPLE_MOVIE_STATUS             1
 
+    #define  CAM_IS_VID_REC_WORKS               1 // Define if the 'is_video_recording()' function works
+
     #define CAM_HAS_JOGDIAL                     1
     #undef  CAM_USE_ZOOM_FOR_MF
 
