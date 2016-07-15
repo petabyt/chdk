@@ -7,12 +7,12 @@ extern  char*   raw_buffers[];
 
 char *hook_raw_image_addr()
 {
-    return raw_buffers[active_raw_buffer];
+    return raw_buffers[active_raw_buffer & 1];
 }
 
 char *hook_alt_raw_image_addr()
 {
-    return raw_buffers[(active_raw_buffer^1)];
+    return raw_buffers[((active_raw_buffer & 1)^1)];
 }
 
 //char *camera_jpeg_count_str() jeronymo
