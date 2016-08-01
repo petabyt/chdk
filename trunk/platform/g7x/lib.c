@@ -226,6 +226,10 @@ void *vid_get_bitmap_fb() {
     return (void *)0x41441000; // from sub_fc0f7c21, alt 4153e200
 }
 
+int vid_get_viewport_byte_width() {
+    return 736*2;     // buffer is 736 wide (720 image pixels) UYVY
+}
+
 // TODO
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
