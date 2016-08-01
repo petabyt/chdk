@@ -212,4 +212,8 @@
     #define ISO_REAL_TO_MARKET_SHIFT        0
     #define ISO_REAL_TO_MARKET_ROUND        0
 
+// AF led, for MD test code
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                      1
+
 //--------------------------------------------------
