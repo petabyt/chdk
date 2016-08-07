@@ -52,8 +52,6 @@ int get_flash_params_count(void){
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
 
-int vid_get_viewport_buffer_width() { return 360; }
-
 int vid_get_viewport_width()
 {
 	// viewport width table for each image size

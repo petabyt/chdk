@@ -68,8 +68,6 @@ void *vid_get_viewport_live_fb()
     return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
-int vid_get_viewport_buffer_width() { return 360; }
-
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
 	return 2;               // ixus230/ixus3310 viewport is 480 pixels high
