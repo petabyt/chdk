@@ -49,11 +49,6 @@ long vid_get_viewport_height()
     return 240;
 }
 
-long vid_is_bitmap_shown()
-{
-    return 1;
-}
-
 char *camera_jpeg_count_str()
 {
     return (char*)0x80A90;
