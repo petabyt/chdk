@@ -122,9 +122,6 @@ char *hook_alt_raw_image_addr()
 }
 */
 
-extern char active_viewport_buffer;
-extern void* viewport_buffers[];
-
 void *vid_get_viewport_fb() {
     return (void*)0x43334300; // "first" viewport adr, "VRAM Address  : %p", contains d6 uyvy
 // TODO sx280 values
@@ -177,8 +174,19 @@ lower res uyvy_old format
 0x5a9c2000
 
 */
-void *vid_get_viewport_live_fb() {
-    return 0; //TODO
+extern void* viewport_buffers[];
+extern void *current_viewport_buffer;
+
+void *vid_get_viewport_live_fb()
+{
+// current_viewport_buffer doesn't seem to be most recent
+    int i;
+    for(i=0;i<4;i++) {
+        if(current_viewport_buffer == viewport_buffers[i]) {
+            return viewport_buffers[(i+1)&3];
+        }
+    }
+    return 0;
 }
 
 int vid_get_viewport_width() {
