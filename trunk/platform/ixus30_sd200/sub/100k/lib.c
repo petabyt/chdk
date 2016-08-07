@@ -83,11 +83,6 @@ int vid_get_viewport_width() //in both rec and play modes, 352 while tv-out is a
     return 360;
 }
 
-int vid_get_viewport_buffer_width()
-{
-    return 360;
-}
-
 char *camera_jpeg_count_str()
 {
     return "0000"; //TODO
