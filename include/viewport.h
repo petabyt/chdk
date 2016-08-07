@@ -8,7 +8,6 @@
 
 /******************************************************************/
 
-extern long vid_is_bitmap_shown();
 extern void *vid_get_bitmap_fb();
 
 extern void *vid_get_viewport_fb();
