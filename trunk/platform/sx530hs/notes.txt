@@ -3,9 +3,16 @@ SX530 Notes
 ************************************
 To enter CHDK <ALT> mode use the [>] Play button.
 
-This is an early, incomplete alpha port, use at your own risk!
+This is an incomplete alpha port, use at your own risk!
 
-Video features are not supported for now.
+Known issues
+
+The camera's "front dial" (scrollwheel on the top) is not supported by CHDK.
+The back dial can be used to scroll in the CHDK menu, but its scroll events go through the Canon UI and may change settings inadvertently.
+
+Developer notes
+
+The scrollwheel issues need either a developer or a reliable tester, see "JogDial_task_my" in boot.c.
 
 Porting thread 
 http://chdk.setepontos.com/index.php?topic=12418.0

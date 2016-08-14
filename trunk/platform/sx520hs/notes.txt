@@ -3,15 +3,20 @@ SX520 Notes
 ************************************
 To enter CHDK <ALT> mode use the [>] Play button.
 
-This is an early, incomplete alpha port, use at your own risk!
+This is an incomplete alpha port, use at your own risk!
 
-Video features are not supported for now.
+Known issues
+
+The camera's "front dial" (scrollwheel on the top) is not supported by CHDK.
+The back dial can be used to scroll in the CHDK menu, but its scroll events go through the Canon UI and may change settings inadvertently.
 
 Developer notes
 
 This port is a copy of the SX530HS port. The 1.00c versions of SX520HS and SX530HS firmwares are virtually identical.
 Any future changes to the original port should probably be reflected here too.
 'SX530' references are kept in source in order to keep differences at a minimum.
+
+The scrollwheel issues need either a developer or a reliable tester, see "JogDial_task_my" in boot.c.
 
 Known differences:
 - No wifi and NFC
