@@ -195,7 +195,8 @@ int vid_get_viewport_width() {
     {
         return 720;
     }
-// TODO: this is the actual width, pixel format is uyvy (16bpp)
+// TODO: currently using actual width rather than half width used on pre d6
+// pixel format is uyvy (16bpp)
     return _GetVRAMHPixelsSize();
 }
 
@@ -205,25 +206,56 @@ long vid_get_viewport_height() {
     {
         return 480;
     }
-// TODO return half height?
+// TODO: currently using actual height rather than 240 used on pre d6
     return _GetVRAMVPixelsSize();
 }
 
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+// Y multiplier for cameras with 480 pixel high viewports (pre d6 CHDK code assumes 240)
 int vid_get_viewport_yscale() {
-    return 2;
+    return 1;
 }
 
 int vid_get_viewport_yoffset() {
     // this seems to be always 0, buffer always begins with actual display data (widescreen or not)
     return 0;
 }
+//
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+static long vp_xo[5] = { 40, 0, 0, 120, 168 };				// should all be even values for edge overlay
 
 int vid_get_viewport_display_xoffset() {
-    return 0;
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    // video, ignore still res propcase
+    if(camera_info.state.mode_video || is_video_recording()) {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
+            return 40;// 4:3 video
+        } else {
+            return 0; // 16:9 video, no x offset
+        }
+    }
+    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 int vid_get_viewport_display_yoffset() {
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    // video, ignore still res propcase
+    if(camera_info.state.mode_video || is_video_recording()) {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
+            return 0; // 4:3 video, no Y offset
+        } else {
+            return 36; // 16:9 video
+        }
+    }
+    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)
+    {
+        return 36;
+    }
     return 0;
 }
 
@@ -238,16 +270,18 @@ int vid_get_viewport_byte_width() {
     return 736*2;     // buffer is 736 wide (720 image pixels) UYVY
 }
 
-// TODO
 // Functions for PTP Live View system
-int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
-int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width(); }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
+int vid_get_viewport_fullscreen_width()         { return 720; }
 int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_palette_type()                      { return 3; }
-int vid_get_palette_size()                      { return 256 * 4; }
-
+int vid_get_viewport_buffer_width_proper()      { return 736; }
+int vid_get_palette_type()                      { return -1; }
+int vid_get_palette_size()                      { return 0; }
+// TODO needs lv protocol support
+//int vid_get_aspect_ratio()                      { return 2; }       // 0 = 4:3, 1 = 16:9 LCD Aspect Ratio, 2 = 3:2
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
