@@ -86,7 +86,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_WB_MODE                         279        // 0 = Auto, 1 = Daylight, 2 = Shade, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 7 = flash, 11 = under water, 6 = Fluorescent H, 9 = Custom 1, 10 = custom 2
 #define PROPCASE_WB_ADJ                          280
 #define PROPCASE_SERVO_AF                        306        // 0 = Servo AF off, 1 = Servo AF on
-#define PROPCASE_ASPECT_RATIO                    207        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+#define PROPCASE_ASPECT_RATIO                    307        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
 #define PROPCASE_SV                              354        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 // TODO GPS guessed, ps6 + 8
 // #define PROPCASE_GPS                             365        // (CHDKLover, August 2011) - contains a 272 bytes long structure
