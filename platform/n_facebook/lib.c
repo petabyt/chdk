@@ -45,8 +45,13 @@ void debug_led(int state)
     if ( state == 1 ) *(int*)0xc022c30c = ( (*(int*)0xc022c30c) & 0xffffffcf ) | 0x20 ;
     else              *(int*)0xc022c30c = ( (*(int*)0xc022c30c) & 0xffffffcf )        ;
 }
-void camera_set_led(int led, int state, int bright) { debug_led(state) ; }
 
+// powershot N has one LED - on the power button - and a focus assist / camera lamp on the front of the camera
+void camera_set_led(int led, int state, int bright)
+{
+    static char led_table[3]={0,6,11};  // 0=green power button LED, 6=focus assist lamp (dim), 11=flash LED (bright)
+    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
+}
 
 // Bitmap values 
 void *vid_get_bitmap_fb()   { return (void*)0x406c5000; }        // Found @0xff08d5d8
