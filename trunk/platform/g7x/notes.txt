@@ -49,6 +49,8 @@ PTP remote shoot with JPEG / CHDK DNG
  - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
  - If Canon raw + jpeg is enabled, the jpeg will be written to the card
  - May fail in special scene modes (not extensively tested)
+Motion detection - preliminary
+PTP live view - preliminary, requires updated client with live view proto 2.2 support
 
 NOT IMPLEMENTED
 ***************
@@ -68,7 +70,6 @@ display updating is ugly. Below from sx280hs also applies to G7 X
  - histogram
  - edge overlay
  - custom auto iso overexposure protection
- - ptp live view
 - CHDK UI is erased / flashes every time low battery icons
 
 PROPCASE_RESOLUTION values differ from previous models
