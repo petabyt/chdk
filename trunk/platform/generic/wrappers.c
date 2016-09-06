@@ -7,6 +7,7 @@
 #include "levent.h"
 #include "stdlib.h"
 #include "ptp_chdk.h"
+#include "live_view.h"
 
 //----------------------------------------------------------------------------
 // Char Wrappers (VxWorks - ARM stubs)
@@ -1509,6 +1510,14 @@ int __attribute__((weak)) vid_get_viewport_display_yoffset() {
 	return vid_get_viewport_yoffset();
 }
 
+// format of live view viewport
+#ifndef THUMB_FW
+int vid_get_viewport_type() {
+	return LV_FB_YUV8;
+}
+// D6 cameras must define
+#endif
+
 // for cameras with two (or more?) RAW buffers this can be used to speed up DNG creation by
 // calling reverse_bytes_order only once. Override in platform/sub/lib.c
 char __attribute__((weak)) *hook_alt_raw_image_addr() {
@@ -1635,7 +1644,7 @@ int __attribute__((weak)) vid_get_viewport_fullscreen_width()          { return 
 int __attribute__((weak)) vid_get_palette_type()                    { return 0; }       // 0 = no palette into, 1 = 16 x 4 byte AYUV values, 
                                                                                         // 2 = 16 x 4 byte AYUV (A = 0..3), 3 = 256 x 4 byte AYUV (A = 0..3)
 int __attribute__((weak)) vid_get_palette_size()                    { return 0; }
-int __attribute__((weak)) vid_get_aspect_ratio()                    { return 0; }       // 0 = 4:3, 1 = 16:9 LCD Aspect Ratio
+int __attribute__((weak)) vid_get_aspect_ratio()                    { return 0; }       // 0 = 4:3, 1 = 16:9 LCD Aspect Ratio, 2 = 3:2
 
 void __attribute__((weak)) *vid_get_bitmap_active_buffer()
 {

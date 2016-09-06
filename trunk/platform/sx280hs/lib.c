@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
+#include "live_view.h"
 
 static char* frame_buffer[2];
 
@@ -145,7 +146,7 @@ fc13498e:   4770        bx  lr
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
-    return 2;
+    return 1;
 }
 
 int vid_get_viewport_yoffset() {
@@ -170,14 +171,18 @@ void *vid_get_bitmap_fb() {
 }
 
 // Functions for PTP Live View system
-int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
-int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width(); }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() /** 2*/; }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; } // may not be always ok
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
-int vid_get_palette_type()                      { return -1; }
-int vid_get_palette_size()                      { return 0; }
+
+int vid_get_viewport_type() {
+    if (camera_info.state.mode_play)
+        return LV_FB_YUV8B;
+    return LV_FB_YUV8C;
+}
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
@@ -188,6 +193,10 @@ volatile char *opacity_buffer[2] = {(char*)0x41718600, (void*)0x41796f00};
 
 void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
+}
+
+void *vid_get_opacity_active_buffer() {
+    return (void *)opacity_buffer[active_bitmap_buffer&1];
 }
 
 #ifdef CAM_SUPPORT_BITMAP_RES_CHANGE

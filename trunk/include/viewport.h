@@ -43,11 +43,13 @@ extern int vid_get_viewport_fullscreen_height();           // Height of screen i
 extern int vid_get_viewport_buffer_width_proper();      // Physical viewport buffer width in pixels
 extern int vid_get_palette_type();                      // Palette type (0 - 3)
 extern int vid_get_palette_size();                      // Palette size (in bytes)
-extern int vid_get_aspect_ratio();                      // LCD aspect ratio (0 = 4:3 or 1 = 16:9)
+extern int vid_get_aspect_ratio();                      // LCD aspect ratio (0 = 4:3 or 1 = 16:9, 2 = 3:2)
+extern int vid_get_viewport_type();                     // Viewport format (uses live_view.h defines)
 
 extern void *vid_get_viewport_active_buffer();          // Return active live viewport memory address
 extern void *vid_get_bitmap_active_buffer();            // Return current active bitmap memory address
 extern void *vid_get_bitmap_active_palette();           // Return current palette memory address
+extern void *vid_get_opacity_active_buffer();           // Return current active bitmap opacity memory address
 
 /******************************************************************/
 
