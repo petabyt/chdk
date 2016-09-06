@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
+#include "live_view.h"
 
 static char* frame_buffer[2];
 
@@ -278,10 +279,11 @@ int vid_get_viewport_height_proper()            { return vid_get_viewport_height
 int vid_get_viewport_fullscreen_width()         { return 720; }
 int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_viewport_buffer_width_proper()      { return 736; }
-int vid_get_palette_type()                      { return -1; }
-int vid_get_palette_size()                      { return 0; }
+/*int vid_get_palette_type()                      { return -1; }// no palette */
+//int vid_get_palette_size()                      { return 0; }
+int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 // TODO needs lv protocol support
-//int vid_get_aspect_ratio()                      { return 2; }       // 0 = 4:3, 1 = 16:9 LCD Aspect Ratio, 2 = 3:2
+int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
@@ -295,6 +297,10 @@ doesn't seem to be a simple double buffer, UI shows up in first focus box shows 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
 // found near BmpDDev.c line 215 assert fc0f7b58
 volatile char *opacity_buffer[2] = {(char*)0x4163b400, (void*)0x416b9d00};
+
+void *vid_get_opacity_active_buffer() {
+    return (void *)opacity_buffer[active_bitmap_buffer&1];
+}
 
 void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
