@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
+#include "live_view.h"
 
 static char* frame_buffer[2];
 
@@ -255,6 +256,8 @@ int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
+int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
+
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
@@ -263,6 +266,9 @@ void *vid_get_bitmap_active_buffer() {
 // found near BmpDDev.c line 215 assert fc0f873c
 volatile char *opacity_buffer[2] = {(char*)0x4163b400, (void*)0x416b9d00};
 //volatile char *opacity_buffer[2] = {(char *)0xDEADBEEF, (void*)0xDEADBEEF};
+void *vid_get_opacity_active_buffer() {
+    return (void *)opacity_buffer[active_bitmap_buffer&1];
+}
 
 void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
