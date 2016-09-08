@@ -13,7 +13,7 @@ version, use ACID or the firminfo Canon Basic script.
 
 General camera and CHDK port information
 ****************************************
-SX60 HS has an adjustable aperture, and no ND filter.
+SX60 HS has an adjustable aperture as well as an internal ND filter .
 
 Default alt button is PLAY, VIDEO and WIFI may also be used
 
@@ -22,6 +22,10 @@ To start in shooting mode or wifi connect, hold down the corresponding button
 Raw blacklevel appears to be ~128.
 
 SX60 HS uses propset 8.  The values in some propcases have changed.
+
+Preliminary support for PTP Live View (using CHDKPTP client r712)
+(Windows CHDKPTP Live View Client binary at
+  https://chdk.setepontos.com/index.php?action=dlattach;topic=6231.0;attach=13436 )
 
 TESTED
 ******
@@ -63,7 +67,6 @@ display updating is ugly. Below from sx280hs also applies to sx60hs
  - histogram
  - edge overlay
  - custom auto iso overexposure protection
- - ptp live view
 - CHDK UI is erased / flashes every time low battery icons
 PROPCASE_RESOLUTION values differ in propset8 0=L 2=M1 3=M2 5=S
 

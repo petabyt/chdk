@@ -4,7 +4,7 @@
 
 static char* frame_buffer[2];
 
-  extern int displaytype;//for test
+extern int displaytype;
 extern void _LogCameraEvent(int id, const char *fmt,...);
 extern int active_bitmap_buffer;
 extern void* bitmap_buffer[];
@@ -52,6 +52,7 @@ void vid_bitmap_refresh() {
 
     //DisplayPhysicalScreenCBR NG
     //Window_EmergencyRefresh NG crash
+
 }
 
 void shutdown() {
@@ -107,10 +108,11 @@ char *hook_raw_image_addr()
 {
     // observed values 0-2, 3 would index something that doesn't look like a raw fb in the jpeg case
     int i=active_raw_buffer&3;
-/*    _LogCameraEvent(0x20,"lc: hria: %i %i %08x %i",i, camera_info.state.mode_shooting,
+/*
+    _LogCameraEvent(0x20,"lc: hria: %i %i %08x %i",i, camera_info.state.mode_shooting,
                                               camera_info.state.mode_shooting,
                                               shooting_get_prop(PROPCASE_IMAGE_FORMAT));
-*/
+*/ 
     if(i>2) {
         i=0;
     }
@@ -127,18 +129,20 @@ char *hook_raw_image_addr()
     // TODO most scene modes seem to use different addresse(s)
 }
 
-/*
+/* 
 char *hook_raw_image_addr()
 {
-      return raw_buffers[(active_raw_buffer&1)];
+      return raw_buffers_jpeg[(active_raw_buffer&1)];
 }
-
 
 char *hook_alt_raw_image_addr()
 {
-    return raw_buffers[((active_raw_buffer&1)^1)];
+    return raw_buffers_jpeg[((active_raw_buffer&1)^1)];
 }
 */
+
+
+
 
 
 void *vid_get_viewport_fb() {
@@ -149,11 +153,33 @@ void *vid_get_viewport_fb() {
     // return (void*)0x4b25fc00; // uyvy buffers (more than 4), pixel format compatible with earlier DIGIC uyvy
 }
 
-void *vid_get_viewport_fb_d()    { return (void*)0x43334300; } 
+void *vid_get_viewport_fb_d()    { return (void*)0x5e878000; } //by comparison with g7x
+//void *vid_get_viewport_fb_d()    { return (void*)0x43334300; } 
+//void *vid_get_viewport_fb_d()    { return (void*)0x465ebb40; } 
+/* live buffers the list is found at 0xfc5cf054 on 100f and at 0xfc5cf040 on 100b
+  first at 0x43334000 
+strangely these increment like the g7x (by 0xae800)  case which has higher rez
+  640*2*480 = 0x96000 + 0x18800 ae800
+ 0x43334300
+ 0x433e2b00
+ 0x43491300
+ 0x4353fb00
+*/
+extern void* viewport_buffers[];
+extern void *current_viewport_buffer;
 
-void *vid_get_viewport_live_fb() {
-    return bitmap_buffer[(active_bitmap_buffer -1 )&3];
+void *vid_get_viewport_live_fb()
+{
+// current_viewport_buffer doesn't seem to be most recent
+    int i;
+    for(i=0;i<4;i++) {
+        if(current_viewport_buffer == viewport_buffers[i]) {
+            return viewport_buffers[(i+1)&3];
+        }
+    }
+    return 0;
 }
+
 
 int vid_get_viewport_width() {
 /*
@@ -164,7 +190,8 @@ fc134986:   4770        bx  lr
 */
    if (camera_info.state.mode_play)
    { 
-      return 360; //todo
+     return camera_screen.physical_width; 
+//     return 360; //todo
    }
     extern int _GetVRAMHPixelsSize();
     return _GetVRAMHPixelsSize();
@@ -177,7 +204,7 @@ fc134988:   487b        ldr r0, [pc, #492]  ; 0xfc134b78: (0002ca18)
 fc13498a:   f8d0 00b0   ldr.w   r0, [r0, #176]  ; 0xb0
 fc13498e:   4770        bx  lr
 */
-
+/*
     int m = mode_get();
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
@@ -190,35 +217,27 @@ fc13498e:   4770        bx  lr
         if (aspect_ratio==1 || aspect_ratio==2)
             return 480;
     }
+    
     extern int _GetVRAMVPixelsSize();
     return ((m & MODE_MASK) == MODE_PLAY)?480:_GetVRAMVPixelsSize();
+*/
+       extern int _GetVRAMVPixelsSize();
+// return half height
+    if (camera_info.state.mode_play)
+        return camera_screen.buffer_height;
+    return _GetVRAMVPixelsSize();
 }
 
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
-    return 2;
+    return 1; //for digic 6
 }
 // viewport width offset table for each aspect ratio
 // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
 static long vp_xo[4] = { 0, 0, 0, 44 };        // should all be even values for edge overlay
 
 int vid_get_viewport_yoffset() {
-/*    int m = mode_get();
-    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
-
-    if ((m & MODE_MASK) != MODE_PLAY) {
-        return (vp_xo[aspect_ratio]);
-    }
-    else
-        return 0;
-*/
-return 0;
-}
-
-
-int vid_get_viewport_display_xoffset() {
-/*
     int m = mode_get();
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
@@ -227,7 +246,22 @@ int vid_get_viewport_display_xoffset() {
     }
     else
         return 0;
-*/
+
+return 0;
+}
+
+
+int vid_get_viewport_display_xoffset() {
+
+    int m = mode_get();
+    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
+
+    if ((m & MODE_MASK) != MODE_PLAY) {
+        return (vp_xo[aspect_ratio]);
+    }
+    else
+        return 0;
+
     return 0;
 }
 
@@ -241,7 +275,8 @@ int vid_get_viewport_display_yoffset() {
 //extern char* bitmap_buffer[];
 
 void *vid_get_bitmap_fb() {
-    return (void *)0x41441000; //  from sub_fc0f8804, alt 4153e200
+//    return (void *)0x41441000; //  from sub_fc0f8804, alt 4153e200
+      return bitmap_buffer[0];
 }
 
 // TODO
@@ -250,12 +285,16 @@ int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_displa
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
 //int vid_get_viewport_width_proper()             { return 1280; }
 //int vid_get_viewport_height_proper()            { return 640; }
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
-int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_palette_type()                      { return 3; }
-int vid_get_palette_size()                      { return 256 * 4; }
-
+int vid_get_viewport_byte_width() {
+// digic 6 uYvY    2 pixels per 4 bytes
+  return (640 * 2);
+}
+int vid_get_viewport_width_proper()             { return vid_get_viewport_width() ; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() ; }
+int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
+int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
+int vid_get_palette_type()                      { return -1; }
+int vid_get_palette_size()                      { return 0; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 
 void *vid_get_bitmap_active_buffer() {
@@ -278,4 +317,54 @@ char *camera_jpeg_count_str()
     extern char jpeg_count_str[];
         return jpeg_count_str;
 }
+#ifdef CAM_SUPPORT_BITMAP_RES_CHANGE
+/*
+ * needed because bitmap buffer resolutions change when an external display is used
+ * an extra screen erase doesn't seem to be needed
+ */
+void update_screen_dimensions() {
+    extern int displaytype;
+    static int old_displaytype = -1;
+
+    if (old_displaytype == displaytype) {
+        return;
+    }
+ 
+    _LogCameraEvent(0x60,"lc: odt: %d dt: %d csw: %d csh: %d css: %d",
+                old_displaytype, displaytype, camera_screen.width,
+                 camera_screen.height, camera_screen.size);
+    camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 640;
+    camera_screen.height = camera_screen.buffer_height = 480;
+    camera_screen.size = camera_screen.buffer_size = 640*480;
+    old_displaytype = displaytype;
+    switch(displaytype) {
+        case 0:
+        case 3:
+        case 4:
+            // lcd
+            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 640;
+            camera_screen.height = camera_screen.buffer_height = 480;
+            camera_screen.size = camera_screen.buffer_size = 640*480;
+            break;
+        case 5:
+        case 1:
+        case 2:
+        case 8:
+        case 9:
+            // tv-out
+            camera_screen.width = 720;
+            camera_screen.physical_width = camera_screen.buffer_width = 736;
+            camera_screen.height = camera_screen.buffer_height = 480;
+            camera_screen.size = 720*480;
+            camera_screen.buffer_size = 736*480;
+            break;
+        case 6:
+            // hdmi
+            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 960;
+            camera_screen.height = camera_screen.buffer_height = 540;
+            camera_screen.size = camera_screen.buffer_size = 960*540;
+            break;
+    }
+}
+#endif
 

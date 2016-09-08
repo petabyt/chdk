@@ -20,6 +20,8 @@ DEF(av_override_semaphore                     ,0x0002569c) //x found at 0xfc39d5
 //DEF(levent_table                            ,0xFC66AA18) // xFound @0xFC0CC574
 //DEF(FlashParamsTable                        ,0xFC9021f4) // xFound at FC1198DC
 //DEF(movie_status                            ,0x00013a60) // xFund at fc1d4fc6
+DEF(current_viewport_buffer                ,0x8810) //found by searching near 0x875a
+DEF(viewport_buffers                       ,0xfc5cf054)//memory search refs to fc5cf03c
 FAKEDEF(movie_status                       ,1)
 FAKEDEF(video_compression_rate             ,1)
 FAKEDEF(full_screen_refresh                ,1)    // ,0x00014BD4) // xFound @0xFC333f00
@@ -61,5 +63,4 @@ DEF(jog_position,                           0xfc8c) //
 DEF(jog_hw_pos,                             0xd9854004) // todo found by browsing the 0xd985xxxx range...
 
 //FAKEDEF(enabled_refresh_physical_screen,    1)
-//DEF(displaytype,                            0x95dc) //0x95c8 + 0x14, found  @ fc135f2a (GetDisplayType)
-DEF(displaytype,                            0x95e4)//  (GetDisplayType)
+DEF(displaytype,                              0x9284) // 0x923c + 0x48 found @0xfc304708 (42 refs)
