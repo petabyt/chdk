@@ -5,6 +5,10 @@ DEF(active_raw_buffer                       ,0x0000babc) // xFound @0xFC154b5c, 
 DEF(raw_buffers_canon_raw                   ,0xfc631850) // found @fc177ede
 DEF(raw_buffers_jpeg                         ,0xfc631be0) //near DevelopPipeline.c at fc178752 
 DEF(av_override_semaphore                     ,0x0002569c) //x found at 0xfc39d52a near aIrisCoeafficient
+
+DEF(current_viewport_buffer                ,0x8810) //found by searching near 0x875a
+DEF(viewport_buffers                       ,0xfc5cf040)//memory search refs to fc5cf028
+
 FAKEDEF(movie_status                       ,1)
 FAKEDEF(video_compression_rate             ,1)
 FAKEDEF(full_screen_refresh                ,1)    // ,0x00014BD4) // xFound @0xFC333f00
@@ -36,4 +40,4 @@ DEF(jog_hw_pos,                             0xd9854004) // todo found by browsin
 
 //FAKEDEF(enabled_refresh_physical_screen,    1)
 //DEF(displaytype,                            0x95dc) //0x95c8 + 0x14, found  @ fc135f2a (GetDisplayType)
-DEF(displaytype,                            0x95e4)//  (GetDisplayType)
+DEF(displaytype,                            0x9284)//  (GetDisplayType)

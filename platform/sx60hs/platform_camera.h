@@ -135,8 +135,8 @@
     #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows
     #define CAM_SCREEN_WIDTH                    640// Width of bitmap screen in CHDK co-ordinates (360 or 480)
     #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
-//    #define CAM_SUPPORT_BITMAP_RES_CHANGE         1
-    #undef CAM_SUPPORT_BITMAP_RES_CHANGE      
+    #define CAM_SUPPORT_BITMAP_RES_CHANGE         1
+//    #undef CAM_SUPPORT_BITMAP_RES_CHANGE      
     
     #undef  CAM_VIEWPORT_PIXEL_FORMAT
     #define CAM_VIEWPORT_PIXEL_FORMAT           2   // mandatory on DIGIC6, pixel format is YUY2 (uyvy)
@@ -181,6 +181,7 @@
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_AFL  1
     #define CAM_SD_OVER_IN_MF  1
- 
+    #undef  CAM_AF_LED 
+    #define CAM_AF_LED     1
 //		#define CAM_IS_VID_REC_WORKS 1
 //--------------------------------------------------
