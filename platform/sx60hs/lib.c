@@ -293,8 +293,6 @@ int vid_get_viewport_width_proper()             { return vid_get_viewport_width(
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() ; }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
-int vid_get_palette_type()                      { return -1; }
-int vid_get_palette_size()                      { return 0; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 
 void *vid_get_bitmap_active_buffer() {
