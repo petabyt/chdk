@@ -5,6 +5,12 @@ To enter CHDK <ALT> mode use the [>] Play button.
 This may be changed to Video in the options
 
 This is an early alpha port, use at your own risk!
-Scripts generally do not work.
+Porting thread
+https://chdk.setepontos.com/index.php?topic=12948
 
+Scripts generally do not work, due to keyboard related problems, see
+https://chdk.setepontos.com/index.php?topic=12948.msg129624#msg129624
+
+This camera appears to have a real iris, even though Canon firmware does not
+have manual mode or Av controls.
 
