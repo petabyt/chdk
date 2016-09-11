@@ -1,0 +1,10 @@
+************************************
+SX410IS Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options
+
+This is an early alpha port, use at your own risk!
+Scripts generally do not work.
+
+
