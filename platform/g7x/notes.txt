@@ -50,7 +50,8 @@ PTP remote shoot with JPEG / CHDK DNG
  - If Canon raw + jpeg is enabled, the jpeg will be written to the card
  - May fail in special scene modes (not extensively tested)
 Motion detection - preliminary
-PTP live view - preliminary, requires updated client with live view proto 2.2 support
+PTP live view - preliminary, requires client with live view proto 2.2 support
+ (chdkptp r712 or later)
 
 NOT IMPLEMENTED
 ***************
