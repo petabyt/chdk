@@ -2,8 +2,6 @@
 #include "lolevel.h"
 #include "live_view.h"
 
-static char* frame_buffer[2];
-
 void vid_bitmap_refresh() {
     extern int full_screen_refresh;
     extern void _ScreenUnlock();
@@ -134,6 +132,7 @@ void *vid_get_viewport_fb() {
 playback viewport
 binview uyvy_d6 format
 TODO - 3 buffers 0x5e608000 0x5ea08000 0x5ee08000
+also 0x5e208000
 initially found by RAM dumping
 0x5e608000 ref sub_fc1ba3f0 "ImgDDev.c" 
 0x5ee08000 ref DispCon_ShowColorBar and other DispCon_* functions
@@ -279,10 +278,7 @@ int vid_get_viewport_height_proper()            { return vid_get_viewport_height
 int vid_get_viewport_fullscreen_width()         { return 720; }
 int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_viewport_buffer_width_proper()      { return 736; }
-/*int vid_get_palette_type()                      { return -1; }// no palette */
-//int vid_get_palette_size()                      { return 0; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
-// TODO needs lv protocol support
 int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
