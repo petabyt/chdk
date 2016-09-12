@@ -23,9 +23,7 @@ Raw blacklevel appears to be ~128.
 
 SX60 HS uses propset 8.  The values in some propcases have changed.
 
-Preliminary support for PTP Live View (using CHDKPTP client r712)
-(Windows CHDKPTP Live View Client binary at
-  https://chdk.setepontos.com/index.php?action=dlattach;topic=6231.0;attach=13436 )
+Preliminary support for PTP Live View, using chdkptp client r712 or later.
 
 TESTED
 ******
