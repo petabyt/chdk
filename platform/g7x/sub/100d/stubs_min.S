@@ -11,6 +11,7 @@ DEF(canon_menu_active             ,0x0000ca70+0x8) // found @fc31dda4, via call 
 // Contains viewport address that updates at ~30fps in rec mode, 0 or last rec value in pb
 DEF(current_viewport_buffer       ,0x000087f0)
 DEF(viewport_buffers              ,0xfc612b84) // from memory search, refs to fc612b74
+DEF(current_fb_d                  ,0x00010140) // https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
 //FAKEDEF(movie_status,1)
 DEF(simple_movie_status,0xbbb4) // 0x0000bae8 + 0x80 + 0x4c found @fc14a03c sub_fc14a00c via task_MovieRecord. 1 when recording or busy after, 0 otherwise
 FAKEDEF(video_compression_rate, 1)
