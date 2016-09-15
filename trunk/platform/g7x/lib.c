@@ -138,7 +138,18 @@ initially found by RAM dumping
 0x5ee08000 ref DispCon_ShowColorBar and other DispCon_* functions
 */
 void *vid_get_viewport_fb_d()    {
+    // alternates between the 5e* buffers, but isn't correct when video selected
+    // and doesn't do animated transitions
+    /*
+    void *p=*(void **)(0xa804);
+    if(p) {
+        return p;
+    }
     return (void*)0x5e608000;
+    */
+    // based on suggestion from 62ndidiot in https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
+    extern void *current_fb_d;
+    return current_fb_d;
 } 
 
 /*
@@ -294,6 +305,7 @@ doesn't seem to be a simple double buffer, UI shows up in first focus box shows 
 // found near BmpDDev.c line 215 assert fc0f7b58
 volatile char *opacity_buffer[2] = {(char*)0x4163b400, (void*)0x416b9d00};
 
+// 0x10108 also appears to contain the active buffer
 void *vid_get_opacity_active_buffer() {
     return (void *)opacity_buffer[active_bitmap_buffer&1];
 }
