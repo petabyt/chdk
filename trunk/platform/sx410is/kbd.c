@@ -20,8 +20,11 @@ extern void _GetKbdState(long*);
     { 0, KEY_RIGHT           ,0x00000400 }, // Found @0xffbf9028, levent 0x09
     { 0, KEY_DOWN            ,0x00000800 }, // Found @0xffbf9030, levent 0x07
     { 0, KEY_LEFT            ,0x00001000 }, // Found @0xffbf9038, levent 0x08
+	{ 0, KEY_DISPLAY	     ,0x00004000 },
     { 0, KEY_MENU            ,0x00008000 }, // Found @0xffbf9050, levent 0x14
-//    { 2, KEY_AUTO            ,0x00000200 }, // 
+//    { 2, KEY_AUTO            ,0x00000200 }, //
+    { 2, KEY_ZOOM_IN         ,0x00000020 },
+    { 2, KEY_ZOOM_OUT        ,0x00000010 },
     { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffbf9060, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffbf9060, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffbf9058, levent 0x00

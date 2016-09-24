@@ -235,7 +235,7 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_FF9154D4_my @ 0xFF9154D4 - 0xFF915584, length=45
+//** sub_FF9154D4_my @ 0xFF9154D4 - 0xFF91557C, length=43
 void __attribute__((naked,noinline)) sub_FF9154D4_my() {
 asm volatile (
 "    LDR     R1, [R0] \n"
@@ -300,8 +300,6 @@ asm volatile (
 "    LDR     R1, =0xFF9154A0 /*'LiveImageTask.c'*/ \n"
 "    MOV     R0, #0 \n"
 "    B       _DebugAssert \n"
-//"    STMFD   SP!, {R4,R5} \n"
-//"    LDR     R5, =0xFFC0CC8C \n"
 );
 }
 
