@@ -113,6 +113,8 @@
 
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60  // delay after a press - Required by zoom_in/zoom_out buttons
+	
+    #define SHORTCUT_TOGGLE_ZEBRA               KEY_MENU
 
     #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1

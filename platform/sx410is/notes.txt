@@ -8,8 +8,6 @@ This is an early alpha port, use at your own risk!
 Porting thread
 https://chdk.setepontos.com/index.php?topic=12948
 
-Scripts generally do not work, due to keyboard related problems, see
-https://chdk.setepontos.com/index.php?topic=12948.msg129624#msg129624
 
 This camera appears to have a real iris, even though Canon firmware does not
 have manual mode or Av controls.

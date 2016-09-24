@@ -320,7 +320,7 @@ FW $
 ENDASM
 ENDFUNC
 
-FUNC ref=0 length=45
+FUNC ref=0 length=43
 ASM
 FW 28
 >>>

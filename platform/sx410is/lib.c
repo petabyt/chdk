@@ -2,6 +2,14 @@
 #include "platform_palette.h"
 #include "lolevel.h"
 
+#define LED_PR 0xc022f1fc
+#define LED_AF 0xc022d200
+
+void debug_led(int state)
+{
+	*(int*)LED_PR=state ? 0x93d800 : 0x83dc00;
+}
+
 char *hook_raw_image_addr()
 {
     return (char*)0x452bbf40; 
@@ -25,8 +33,7 @@ void vid_bitmap_refresh()
     _ScreenUnlock();
 }
 
-#define LED_PR 0xC022302C
-#define AF_LED 0xC0223030
+
 void shutdown()
 {
     extern void _TurnOffE1(void);
@@ -37,14 +44,6 @@ void shutdown()
 
 int get_flash_params_count(void) { return 0xd4; }
 
-void debug_led(int state)
-{
-    volatile long *p=(void*)LED_PR;
-    if (state)
-        p[0]=0x46;
-    else
-        p[0]=0x44;
-}
 
 
 void camera_set_led(int led, int state, int bright) {
