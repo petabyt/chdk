@@ -1,6 +1,6 @@
 // Camera - sx410is - platform_camera.h
 
-// This file contains the various settings values specific to the sx400is camera.
+// This file contains the various settings values specific to the sx410is camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -86,7 +86,6 @@
     #define CAM_ALT_BUTTON_NAMES                { "Playback", "Disp", "Video" }
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_DISPLAY, KEY_VIDEO }
 
-    // TODO
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
@@ -97,8 +96,8 @@
 
     #define CAM_FILE_COUNTER_IS_VAR             1 // file counter is variable file_counter_var in stubs, not a param
 
-   // #define  CAM_HAS_FILEWRITETASK_HOOK         1 // FileWriteTask hook is available (local file write can be prevented)
-   // #define  CAM_FILEWRITETASK_SEEKS            1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+    #define  CAM_HAS_FILEWRITETASK_HOOK         1 // FileWriteTask hook is available (local file write can be prevented)
+    #define  CAM_FILEWRITETASK_SEEKS            1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_NEED_SET_ZOOM_DELAY             500     // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS     1       // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom
@@ -115,6 +114,7 @@
     #define CAM_KEY_PRESS_DELAY                 60  // delay after a press - Required by zoom_in/zoom_out buttons
 	
     #define SHORTCUT_TOGGLE_ZEBRA               KEY_MENU
+	#define SHORTCUT_TOGGLE_HISTO               KEY_DISPLAY
 
     #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1

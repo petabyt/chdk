@@ -12,3 +12,7 @@ https://chdk.setepontos.com/index.php?topic=12948
 This camera appears to have a real iris, even though Canon firmware does not
 have manual mode or Av controls.
 
+Default CHDK shortcuts for ZEBRA and the HISTOGRAM are changed to:
+Half Shutter + Display -  Histogram on/off
+Half Shutter + Menu    -  Zebra on/off
+

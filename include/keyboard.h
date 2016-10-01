@@ -72,6 +72,9 @@
 //SX520 - drive mode button
 #define KEY_DRIVE_MODE      45
 
+//SX400/SX410 - Switching from the AUTO mode to another mode and vice versa.
+#define KEY_AUTO            46
+
 #define JOGDIAL_LEFT        100
 #define JOGDIAL_RIGHT       101
 #define FRONTDIAL_LEFT      102
