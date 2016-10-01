@@ -56,7 +56,6 @@ static const struct Keynames {
     { KEY_HELP,             "help"       },
     { KEY_MODE,             "mode"       },
     { KEY_WIFI,             "wifi"       },
-    { KEY_WIFI,             "wifi"       },
     { KEY_FRAMING_ASSIST,   "framing_assist" },
 	{ KEY_AUTO,             "auto"       },
     { 0xFF,                 "remote"     },
