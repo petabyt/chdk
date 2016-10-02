@@ -883,7 +883,6 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5556\n"
 //"bl log_t2\n"
-"    mov     r0, r4\n"
 "    cmp     r6, r8\n"
 "    beq     loc_fc3d3a5a\n"
 "    bl      sub_fc1e5fb2\n"
