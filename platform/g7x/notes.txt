@@ -11,6 +11,9 @@ supported models, so it is probably higher risk than most.
 The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
 version, use ACID or the firminfo Canon Basic script.
 
+It is STRONGLY RECOMMENDED that you not use the "firmware update" method
+for anything other than making cards bootable, see known bugs below.
+
 General camera and CHDK port information
 ****************************************
 G7 X has an adjustable aperture and ND filter.
@@ -49,7 +52,7 @@ PTP remote shoot with JPEG / CHDK DNG
  - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
  - If Canon raw + jpeg is enabled, the jpeg will be written to the card
  - May fail in special scene modes (not extensively tested)
-Motion detection - preliminary
+Motion detection - preliminary, see known bugs below
 PTP live view - preliminary, requires client with live view proto 2.2 support
  (chdkptp r712 or later)
 
@@ -83,6 +86,9 @@ Occasional very slow uploads with chdkptp.
 
 KNOWN BUGS
 **********
+- If motion detection is used with IS (image stabilization) enabled in the Canon UI, the camera
+  crashes when powering of or switching to playback. Turning off IS before powering off or
+  switching to playback avoids the issue.
 - CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
   This means script shoot() calls, scripts that use shoot hooks and synced remote do not function
   correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
