@@ -36,6 +36,10 @@
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
+    // zebra and histo don't currently work, and default zebra shortcut conflicts with canon AF lock
+    #define SHORTCUT_TOGGLE_HISTO               KEY_DUMMY
+    #define SHORTCUT_TOGGLE_ZEBRA               KEY_DUMMY
+
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
@@ -142,6 +146,10 @@
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
  
+// AF led, for MD test code
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                          1
+
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_MF  1
  

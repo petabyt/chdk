@@ -40,8 +40,11 @@ DEF(bitmap_buffer, 0xac18) // ?
 
 
 DEF(active_bitmap_buffer, 0xac10) // or 0xac14? just a guess
-// FAKEDEF(viewport_buffers, 1) // ?
 // FAKEDEF(active_viewport_buffer, 1) // ?
+DEF(current_fb_d                            ,0x0000d960) // 0xd940 + 0x20, found @0xfc186624 (102c), similar to 0xfc1ba452 in g7x 100d
+DEF(current_viewport_buffer                 ,0x000087b4) // Contains viewport address that updates at ~30fps in rec mode, 0 or last rec value in pb
+DEF(viewport_buffers                        ,0xfc4d35fc)
+
 DEF(jog_position,                           0xdb48) // 0xdb34 +0x14, +0x18
 DEF(jog_hw_pos,                             0xd9854004) // found by browsing the 0xd985xxxx range...
 
