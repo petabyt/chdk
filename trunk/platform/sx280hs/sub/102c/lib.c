@@ -4,9 +4,7 @@ char *camera_jpeg_current_filename() {
      return (void*)0xD922C;                 //TODO: incorrect
 }
 
-void *vid_get_viewport_fb_d()    { return (void*)0x4f368000; } // 0x4eb68000, 0x4ef68000, 0x4f368000
 char *camera_jpeg_count_str()    { return (char*)0x000e4308; }
-long hook_raw_size()             { return 0x124AB50; }
 
 #ifdef CAM_HAS_GPS // TODO
 char * camera_jpeg_current_latitude() {     //asm1989 way to calculate it is camera_jpeg_current_filename  + 0x78

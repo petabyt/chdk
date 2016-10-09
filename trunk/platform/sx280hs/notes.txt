@@ -2,15 +2,12 @@ Issues
 
 - CHDK overlay drawing is slow
 - many GUI modules don't respect screen resolution
-- framebuffer related features do not work, including
+- most framebuffer related features do not work, including
  - zebra
  - histogram
  - edge overlay
  - custom auto iso overexposure protection
- - ptp live view
 - movie features are not supported
-- movie_status is wrong
-- CPUINFO module is not yet compatible and crashes the camera
 - when booting with .fi2, switching the cam to hybrid auto mode results in an immediate err 9 (JPEGTimeOut)...
 
 

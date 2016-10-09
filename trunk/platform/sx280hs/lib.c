@@ -103,17 +103,50 @@ char *hook_alt_raw_image_addr()
     return raw_buffers[((active_raw_buffer&1)^1)];
 }
 
-extern char active_viewport_buffer;
+/*
+    Playback mode framebuffers (uyvy_d6)
+    resolution according to output device (HDMI case unknown, there's space for full HD)
+    0x4eb68000, 0x4ef68000, 0x4f368000
+    @ 0xfc937e04 (0080364F 01000000 00000000 0080F64E 01000000 00000000 0080B64E 01000000 00000000)
+    aka 0xd990 in RAM (102b)
+*/
+void *vid_get_viewport_fb_d() {
+    extern void *current_fb_d;
+    return current_fb_d;    // method from the sx60 and g7x ports
+}
+
 extern void* viewport_buffers[];
+extern void *current_viewport_buffer;
 
 void *vid_get_viewport_fb() {
     // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
-    //return (void*)0x43115100; // uyvy buffers with signed(?) chroma components
-    return (void*)0x4b25fc00; // uyvy buffers (more than 4), pixel format compatible with earlier DIGIC uyvy
+    return viewport_buffers[0]; // 1st of 4 uyvy_d6 buffers
+    //return (void*)0x4b25fc00; // uyvy buffers (more than 4), pixel format compatible with earlier DIGIC uyvy
 }
 
 void *vid_get_viewport_live_fb() {
-    return 0; //TODO
+    /*
+    1)  4 live buffers starting @ 0x43115100, change dimensions when changing output device, uyvy_d6
+        size of 1 buffer is 0xae800 bytes (not enough for HDMI 960x540, but there's no live view through HDMI anyway)
+        address list @ 0xfc4d3568 (102b)
+    2)  8 live buffers starting @ 0x4B25FC00, fixed 640x480, old uyvy
+        size of 1 buffer is 0x96000 bytes (640*480*2)
+        address list @ 0xfc4d3578, listed in reverse order (102b)
+    3)  3 live buffers (probably only active when half shooting) starting @ 0x4B70FC00, 1280x960, old uyvy
+        size of 1 buffer is 0x26ac00 bytes (1280x990)
+        address list @ 0xfc4d35d8, listed in reverse order (102b)
+    */
+
+    // implementation is from the g7x port, including the comment
+
+    // current_viewport_buffer doesn't seem to be most recent
+    int i;
+    for(i=0;i<4;i++) {
+        if(current_viewport_buffer == viewport_buffers[i]) {
+            return viewport_buffers[(i+1)&3];
+        }
+    }
+    return 0;
 }
 
 int vid_get_viewport_width() {
@@ -177,11 +210,15 @@ int vid_get_viewport_width_proper()             { return vid_get_viewport_width(
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() /** 2*/; }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; } // may not be always ok
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
+int vid_get_viewport_byte_width()               { return camera_screen.buffer_width * 2; } // may not be always ok
 
 int vid_get_viewport_type() {
+    /*
+    // no longer needed, other viewports are used instead
     if (camera_info.state.mode_play)
         return LV_FB_YUV8B;
-    return LV_FB_YUV8C;
+    */
+    return LV_FB_YUV8B;
 }
 
 void *vid_get_bitmap_active_buffer() {
