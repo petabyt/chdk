@@ -74,34 +74,26 @@ void *vid_get_viewport_live_fb()
     return 2;
 }*/
 
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+
+//taken from n
 int vid_get_viewport_width()
 {
-    if (camera_info.state.mode_play)
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
     {
         return 360;
     }
-    extern int _GetVRAMHPixelsSize();
     return _GetVRAMHPixelsSize() >> 1;
 }
-
-
+// taken from n
 long vid_get_viewport_height()
 {
-
-    int m = mode_get();
-    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
-
-    if (MODE_IS_VIDEO(m) || is_video_recording())
-        return 240;
-
-    if ((m & MODE_MASK) != MODE_PLAY)
-    {
-        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-        if (aspect_ratio==1 || aspect_ratio==2)
-            return 240;
-    }
-    extern int _GetVRAMVPixelsSize();    
-    return ((m & MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize()>>1;
+  if ((mode_get() & MODE_MASK) == MODE_PLAY)
+  {
+       return 240;
+  }
+  return _GetVRAMVPixelsSize();
 }
 
 // viewport width offset table for each aspect ratio

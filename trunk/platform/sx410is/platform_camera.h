@@ -79,7 +79,8 @@
     #define CAM_USES_ASPECT_CORRECTION          1
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                    720   // Actual width of bitmap screen in bytes
-
+    #undef  CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_HEIGHT                   360   
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
 
