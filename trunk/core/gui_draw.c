@@ -40,46 +40,46 @@ static void draw_pixel_std(unsigned int offset, color cl)
 
     register int cli = cl ^ 0xffffffff;
     extern volatile char *opacity_buffer[];
-    //extern int active_bitmap_buffer;
+    int active_buffer_index =  active_bitmap_buffer & 1;
     static unsigned int prev_offs = 0xffffffff;
     register unsigned int offs2 = (offset>>1)<<2;
     if (cli != 0xffffffff)
     {
         if (prev_offs != offs2)
         {
-            bitmap_buffer[active_bitmap_buffer][offs2+2] = 0x80-((((int)cli)<<5)&0xe0);    // U?
-            bitmap_buffer[active_bitmap_buffer][offs2+0] = 0x80-((((int)cli)<<2)&0xe0);    // V?
+            bitmap_buffer[active_buffer_index][offs2+2] = 0x80-((((int)cli)<<5)&0xe0);    // U?
+            bitmap_buffer[active_buffer_index][offs2+0] = 0x80-((((int)cli)<<2)&0xe0);    // V?
             prev_offs = offs2;
         }
         if (offset&1) // x is odd
         {
-            bitmap_buffer[active_bitmap_buffer][offs2+3] = (cli&0xc0);    // Y
+            bitmap_buffer[active_buffer_index][offs2+3] = (cli&0xc0);    // Y
         }
         else // x is even
         {
-            bitmap_buffer[active_bitmap_buffer][offs2+1] = (cli&0xc0);    // Y
+            bitmap_buffer[active_buffer_index][offs2+1] = (cli&0xc0);    // Y
         }
         // simple transparency
-        opacity_buffer[active_bitmap_buffer][offset] = (cli&16)?0x60:0xff;
+        opacity_buffer[active_buffer_index][offset] = (cli&16)?0x60:0xff;
     }
     else // color==0, black, fully transparent
     {
         if (prev_offs != offs2)
         {
-            bitmap_buffer[active_bitmap_buffer][offs2+2] = 0x80;    // U?
-            bitmap_buffer[active_bitmap_buffer][offs2+0] = 0x80;    // V?
+            bitmap_buffer[active_buffer_index][offs2+2] = 0x80;    // U?
+            bitmap_buffer[active_buffer_index][offs2+0] = 0x80;    // V?
             prev_offs = offs2;
         }
         if (offset&1) // x is odd
         {
-            bitmap_buffer[active_bitmap_buffer][offs2+3] = 0;    // Y
+            bitmap_buffer[active_buffer_index][offs2+3] = 0;    // Y
         }
         else // x is even
         {
-            bitmap_buffer[active_bitmap_buffer][offs2+1] = 0;    // Y
+            bitmap_buffer[active_buffer_index][offs2+1] = 0;    // Y
         }
         // fully transparent
-        opacity_buffer[active_bitmap_buffer][offset] = 0;
+        opacity_buffer[active_buffer_index][offset] = 0;
     }
 #endif
 }
