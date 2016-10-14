@@ -26,10 +26,16 @@
 "    BEQ     exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
-//"    LDR     R1, =task_MovieRecord\n"
-//"    CMP     R1, R0\n"
-//"    LDREQ   R0, =movie_record_task\n"
-//"    BEQ exitHook\n"
+"    LDR     R1, =task_MovieRecord\n"
+"    CMP     R1, R0\n"
+"    LDREQ   R0, =movie_record_task\n"
+"    BEQ exitHook\n"
+
+/*** INSTALL liveimage_task() hook ***/
+"    LDR     R1, =task_LiveImageTask\n"
+"    CMP     R1, R0\n"
+"    LDREQ   R0, =liveimage_task\n"
+"    BEQ     exitHook\n"
 
 /*** INSTALL init_file_modules_task() hook ***/
 "   LDR     R1, =task_InitFileModules\n"

@@ -69,12 +69,12 @@
     #undef  CAM_VIDEO_CONTROL
 
 // not working
-    #undef CAM_CHDK_HAS_EXT_VIDEO_MENU
+//    #undef CAM_CHDK_HAS_EXT_VIDEO_MENU
 //    #define CAM_VIDEO_QUALITY_ONLY            1
 //    #define CAM_CHDK_HAS_EXT_VIDEO_MENU       1
 
-    // TODO
-//    #define CAM_AF_SCAN_DURING_VIDEO_RECORD   1
+
+    #define CAM_AF_SCAN_DURING_VIDEO_RECORD   1
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  // unlocked in canon firmware by default
 
@@ -86,6 +86,8 @@
     #define CAM_USES_ASPECT_CORRECTION          1
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                    720   // Actual width of bitmap screen in bytes
+    #undef  CAM_BITMAP_HEIGHT
+    #define CAM_BITMAP_HEIGHT               	360     
 
     #define CAM_LOAD_CUSTOM_COLORS              1     // Enable loading CHDK colors into the camera palette memory/hardware
 
