@@ -9,7 +9,8 @@ DEF(palette_buffer_ptr,             0x8414+0xC)     // Found @0xff9d15ac or 0xff
 DEF(palette_buffer,                 0x106330)       // Found @0xff9d1bf4 check this!!
                                     
 //DEF(active_viewport_buffer,         0x1af0c)        // By comparison to sx510hs, used near to LiveImage.c string
-DEF(active_viewport_buffer,         0x2108) //@ff84f438  By comparison to a2500
+//DEF(active_viewport_buffer,         0x2108) //@ff84f438  By comparison to a2500
+DEF(active_viewport_buffer,         0x1af0c+0x3c)  //@ff84f478 + @ff84fda8, by comparison to sx410
 
 DEF(viewport_buffers,               0xffbf409c)     // ????
 
@@ -18,5 +19,12 @@ DEF(viewport_fb_d,                  0x3420+0x54)    // Found @0xff8831ec (0x3420
 DEF(bitmap_buffer,                  0x3b18+0x24)    // Found @0xff8a73bc - by comparison to ixus140
 DEF(active_bitmap_buffer,           0x3b18+0x20)    // Found @0xff8a73b0 - by comparison to ixus140
 
-DEF(recreview_hold,                 0x3121+0x84)    //@0xff862668 + 0x84 (offset used by A2500)
+DEF(recreview_hold,                 0x9288+0x1C)   //@sub 0xffa0aaf0
 
+DEF(video_compression_rate, 0x75AC) // @ff9a8770: 0x7530+0x80-0x4 by comparison to sx410 100c 
+DEF(video_target_framesize, 0xCD44+0x2C) // found in sub_ffafc2f4 by comparison to sx410 100c
+DEF(video_target_framesize2, 0xCD44+0x28) // approx. 2*video_target_framesize (for intraframes?), found in sub_ffafc2f4 by comparison to sx410 100c
+
+// the original some_flag_for_af_scan should not be used, as the fw's MakeAFScan function is not called
+.globl some_flag_for_af_scan
+some_flag_for_af_scan: .long 0

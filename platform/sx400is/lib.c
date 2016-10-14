@@ -33,9 +33,8 @@ void shutdown()
     while(1);
 }
 
-void *vid_get_bitmap_fb()        { return (void*)0x406f1000; }             // Found @0xff049118
-int get_flash_params_count(void) { return 0x99; }                          // Found @0xff1eb3e4
-
+void *vid_get_bitmap_fb()        { return (void*)0x40711000; }             // Found @0xff865754
+int get_flash_params_count(void) { return 0xd4; }                          // Found @0xff9c7eb4
 
 void debug_led(int state)
 {
@@ -76,14 +75,14 @@ void *vid_get_viewport_live_fb()
     return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+// Y multiplier for cameras with 480 pixel heigh viewports (CHDK code assumes 240)
 /*int vid_get_viewport_yscale() {
     return 2;
 }*/
 
 int vid_get_viewport_width()
 {
-    if (camera_info.state.mode_play)
+    if ((mode_get() & MODE_MASK) == MODE_PLAY)
     {
         return 360;
     }
@@ -181,10 +180,25 @@ void load_chdk_palette()
             pal[CHDK_COLOR_BASE+13] = 0x3F819137;  // Dark Yellow
             pal[CHDK_COLOR_BASE+14] = 0x3FDED115;  // Light Yellow
             pal[CHDK_COLOR_BASE+15] = 0x00090000;  // Transparent dark grey
-            
+
             extern char palette_control;
             palette_control = 1;
             vid_bitmap_refresh();
         }
+    }
+}
+
+// following routines help preventing the "invisible af lock" caused by the movie af scan hack
+static int af_locked_in_movierec = 0;
+
+void _MakeAFScan(int *a, int b) {
+    _DoAFLock();
+    af_locked_in_movierec = 1;
+}
+
+void state_check_for_movie_af() {
+    if ((get_movie_status() != VIDEO_RECORD_IN_PROGRESS) && af_locked_in_movierec) {
+        af_locked_in_movierec = 0;
+        _UnlockAF();
     }
 }

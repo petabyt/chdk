@@ -21,3 +21,7 @@ NHSTUB(SetZoomActuatorSpeedPercent,         NULLSUB)
 NHSTUB(init_focus_eventflag,                0xffba5c18)
 NHSTUB(init_nd_eventflag,                   0xffba5da8)
 NHSTUB(init_nd_semaphore,                   0xffaff000)
+
+DEF(task_LiveImageTask,                     0xff914f9c)
+
+IGNORE(MakeAFScan)  // Custom version in lib.c, ignore firmware version
