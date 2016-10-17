@@ -20,6 +20,7 @@ DEF(av_override_semaphore                     ,0x0002569c) //x found at 0xfc39d5
 //DEF(levent_table                            ,0xFC66AA18) // xFound @0xFC0CC574
 //DEF(FlashParamsTable                        ,0xFC9021f4) // xFound at FC1198DC
 //DEF(movie_status                            ,0x00013a60) // xFund at fc1d4fc6
+DEF(current_fb_d                           ,0xfa9c) // found by searching near fa78
 DEF(current_viewport_buffer                ,0x8810) //found by searching near 0x875a
 DEF(viewport_buffers                       ,0xfc5cf054)//memory search refs to fc5cf03c
 FAKEDEF(movie_status                       ,1)
@@ -37,7 +38,8 @@ DEF(focus_len_table                         ,0xfdf317ec)
 //DEF(zoom_busy                               ,0x0000B85C) // xFound @0xFC2EDA2c
 //DEF(focus_busy                              ,0x00013488) //x Found @0xFC2F9DDe
 //DEF(recreview_hold                          ,0x000091d4) //x or 91dc Found @0xFC31B670
-DEF(recreview_hold                          ,0x0000914c) //x found @0xFC31B670 above ShtCon_Shut
+DEF(recreview_hold                          ,0x000091f0) //x found @0xFC31B670 above ShtCon_Shut xxx
+//above found by using     rmem -i32 0x9100 64 (near 914c)
 //FAKEDEF(zoom_busy                             ,0)
 //FAKEDEF(focus_busy                            ,0)
 //FAKEDEF(recreview_hold                        ,0)
@@ -64,3 +66,4 @@ DEF(jog_hw_pos,                             0xd9854004) // todo found by browsin
 
 //FAKEDEF(enabled_refresh_physical_screen,    1)
 DEF(displaytype,                              0x9284) // 0x923c + 0x48 found @0xfc304708 (42 refs)
+DEF(simple_movie_status, 0x13b18) // using rmem from looking at addresses in task-movie-re

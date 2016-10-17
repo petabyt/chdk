@@ -24,6 +24,8 @@ Raw blacklevel appears to be ~128.
 SX60 HS uses propset 8.  The values in some propcases have changed.
 
 Preliminary support for PTP Live View, using chdkptp client r712 or later.
+- live buffer is found for motion detection
+- playback viewport buffer(s) for live view video clips are implemented 
 
 TESTED
 ******
@@ -51,6 +53,8 @@ filewrite: directly shoot a picture using chdkptp, and save to PC.
            note: if Canon RAW is enabled, the saved JPEG will contain the Canon
                  '.CR2' image.
 CHDK OSD is enabled in shoot mode.
+
+RecReviewHold is now implemented.
 
 NOT IMPLEMENTED
 ***************

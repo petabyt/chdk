@@ -16,7 +16,7 @@ PLATFORMOSVER=55
 ROMBASEADDR=0xFC000000
 
 # TODO
-MAXRAMADDR = 0x0fffffff
+MAXRAMADDR=0x1fffffff
 
 # works, but crashes in hybrid auto
 KEYSYS=d4h
