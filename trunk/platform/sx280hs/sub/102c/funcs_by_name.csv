@@ -173,6 +173,7 @@
 0xfc29b0f5,CreateProxyOfEventProcedure_FW
 0x010c77bd,CreateRecursiveLock
 0x010c5b6f,CreateRecursiveLockStrictly
+0x010c283d,createsemaphore_low
 0x010c51fd,CreateTask
 0x010c51fd,CreateTask_FW
 0x010c5ae5,CreateTaskStrictly
@@ -651,6 +652,7 @@
 0xfc1a1031,GetZoomTelePoint_FW
 0x010c5a6d,GiveSemaphore
 0x010c5a6d,GiveSemaphore_FW
+0x010c2923,givesemaphore_low
 0xfc0c3c43,GPS_AGPS_COLD_FW
 0xfc0c3c6f,GPS_AGPS_FCOLD_FW
 0xfc0c3beb,GPS_AGPS_HOT_FW
@@ -769,6 +771,7 @@
 0xfc251c8c,j_CreateMessageQueueStrictly
 0xfc2518e4,j_CreateRecursiveLock
 0xfc251984,j_CreateRecursiveLockStrictly
+0xfc251cd4,j_createsemaphore_low
 0xfc25198c,j_CreateTask
 0xfc251c94,j_CreateTaskStrictly
 0xfc0c5dcb,j_CreateUserSettingMirror_FW
