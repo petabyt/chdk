@@ -199,6 +199,7 @@
 0xfc302665,CreateProxyOfEventProcedure_FW
 0x010e6881,CreateRecursiveLock
 0x010e5bbf,CreateRecursiveLockStrictly
+0x010e27c5,createsemaphore_low
 0x010e5089,CreateTask
 0x010e5089,CreateTask_FW
 0x010e5b35,CreateTaskStrictly
@@ -836,6 +837,7 @@
 0xfc2ee16d,GetZoomTelePoint_FW
 0x010e5aa5,GiveSemaphore
 0x010e5aa5,GiveSemaphore_FW
+0x010e288b,givesemaphore_low
 0xfc15d6bd,GUISrv_StartGUISystem_FW
 0xfc08da87,HardwareDefect_FW
 0xfc08da57,HardwareDefectWithRestart_FW
@@ -931,6 +933,7 @@
 0xfc2cf34c,j_CreateMessageQueueStrictly
 0xfc2cefcc,j_CreateRecursiveLock
 0xfc2cf034,j_CreateRecursiveLockStrictly
+0xfc2cf3d4,j_createsemaphore_low
 0xfc2cf02c,j_CreateTask
 0xfc2cf354,j_CreateTaskStrictly
 0xfc0e3b81,j_CreateUserSettingMirror_FW

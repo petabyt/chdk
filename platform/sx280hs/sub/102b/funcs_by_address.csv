@@ -1,3 +1,5 @@
+0x010c283d,createsemaphore_low
+0x010c2923,givesemaphore_low
 0x010c5179,SleepTask
 0x010c5179,SleepTask_FW
 0x010c51fd,CreateTask
@@ -872,6 +874,7 @@
 0xfc251c2c,j_TakeSemaphoreStrictly
 0xfc251c34,j_DeleteSemaphore
 0xfc251c44,j_CreateBinarySemaphoreStrictly
+0xfc251c4c,j_createsemaphore_low
 0xfc251c9c,j_time
 0xfc251cb4,j_SleepTask
 0xfc251cc4,j_WaitForAnyEventFlag
