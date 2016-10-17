@@ -363,6 +363,11 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetCurrentMachineTime", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
     { "HwOcReadICAPCounter", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
 
+    { "createsemaphore_low", OPTIONAL|UNUSED },
+//    { "deletesemaphore_low", UNUSED },
+    { "givesemaphore_low", OPTIONAL|UNUSED}, // OPT_CONSOLE_REDIR_ENABLED
+//    { "takesemaphore_low", OPTIONAL|UNUSED },
+
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
     { "DispCon_ShowBitmapColorBar", UNUSED },
@@ -3205,6 +3210,10 @@ sig_rule_t sig_rules_main[]={
 // Semaphore funcs found by eventproc match, but want veneers. Will warn if mismatched
 {sig_match_named,   "TakeSemaphore",            "task_Bye",             SIG_NAMED_SUB},
 {sig_match_named_last,"GiveSemaphore",          "TurnOnVideoOutMode_FW",SIG_NAMED_LAST_RANGE(10,24)},
+// TODO finding through veneers would be better for disassembly
+{sig_match_named,   "givesemaphore_low",        "GiveSemaphore",        SIG_NAMED_SUB,      SIG_DRY_MAX(52)}, // first call on dry <=52
+{sig_match_named,   "givesemaphore_low",        "GiveSemaphore",        SIG_NAMED_NTH(2,SUB),SIG_DRY_MIN(53)}, // 2nd call on dry <=52
+
 // can't use last because func has early return POP
 {sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
@@ -3226,6 +3235,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
+{sig_match_near_str,"createsemaphore_low",      "intr_sem",            SIG_NEAR_AFTER(3,1)},
 // not using Strictly, to pick up veneers
 {sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3)},
 {sig_match_near_str,"CreateCountingSemaphoreStrictly","DvlpSeqTask",    SIG_NEAR_BEFORE(18,3)},
