@@ -63,7 +63,6 @@
     #define CAM_HAS_VIDEO_BUTTON                  1
  //   #define CAM_VIDEO_QUALITY_ONLY                1
     #undef  CAM_HAS_DISP_BUTTON
-    #undef  CAM_USE_ZOOM_FOR_MF
 
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_VIDEO_CONTROL
@@ -183,5 +182,6 @@
     #define CAM_SD_OVER_IN_MF  1
     #undef  CAM_AF_LED 
     #define CAM_AF_LED     1
-//		#define CAM_IS_VID_REC_WORKS 1
+    #define CAM_SIMPLE_MOVIE_STATUS 1
+    #define CAM_IS_VID_REC_WORKS 1
 //--------------------------------------------------

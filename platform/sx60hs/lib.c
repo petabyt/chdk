@@ -153,7 +153,11 @@ void *vid_get_viewport_fb() {
     // return (void*)0x4b25fc00; // uyvy buffers (more than 4), pixel format compatible with earlier DIGIC uyvy
 }
 
-void *vid_get_viewport_fb_d()    { return (void*)0x5e878000; } //by comparison with g7x
+//void *vid_get_viewport_fb_d()    { return (void*)0x5e878000; } //by comparison with g7x
+void *vid_get_viewport_fb_d()    { 
+  extern void *current_fb_d;
+  return current_fb_d;
+ } 
 //void *vid_get_viewport_fb_d()    { return (void*)0x43334300; } 
 //void *vid_get_viewport_fb_d()    { return (void*)0x465ebb40; } 
 /* live buffers the list is found at 0xfc5cf054 on 100f and at 0xfc5cf040 on 100b
@@ -190,7 +194,7 @@ fc134986:   4770        bx  lr
 */
    if (camera_info.state.mode_play)
    { 
-     return camera_screen.physical_width; 
+       return camera_screen.physical_width; 
 //     return 360; //todo
    }
     extern int _GetVRAMHPixelsSize();
@@ -234,33 +238,41 @@ int vid_get_viewport_yscale() {
     return 1; //for digic 6
 }
 // viewport width offset table for each aspect ratio
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-static long vp_xo[4] = { 0, 0, 0, 44 };        // should all be even values for edge overlay
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1 4 = 4:5
+static long vp_xo[5] = { 0, 0, 0, 80, 128 };// should all be even values for edge overlay
+static long vp_yo[5] = {0, 60, 28, 0, 0};
 
 int vid_get_viewport_yoffset() {
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
-    if (!camera_info.state.mode_play) {
-        return (vp_xo[aspect_ratio]);
-    }
-    else
         return 0;
 }
 
 
 int vid_get_viewport_display_xoffset() {
 
-    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
-
-    if (!camera_info.state.mode_play) {
-        return (vp_xo[aspect_ratio]);
-    }
-    else
+    if (camera_info.state.mode_play) {
         return 0;
+    }
+    // video, ignore still res propcase
+    if(camera_info.state.mode_video || is_video_recording()) {
+            return 0; //all video modes for now
+    }
+    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+
 }
 
 int vid_get_viewport_display_yoffset() {
-    return 0;
+    if (camera_info.state.mode_play) {
+        return 0;
+    }
+    else {
+        if(camera_info.state.mode_video || is_video_recording()) {
+                return 0; //all video modes
+        }
+    } 
+    return (vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)]);
+
 }
 
 
@@ -275,10 +287,8 @@ void *vid_get_bitmap_fb() {
 
 // TODO
 // Functions for PTP Live View system
-int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
-int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
-//int vid_get_viewport_width_proper()             { return 1280; }
-//int vid_get_viewport_height_proper()            { return 640; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() ; }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() ; }
 int vid_get_viewport_byte_width() {
 // digic 6 uYvY    2 pixels per 4 bytes
   return (640 * 2);

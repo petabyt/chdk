@@ -17,7 +17,8 @@ FAKEDEF(canon_shoot_menu_active             ,1) // ??? not found
 DEF(zoom_status                             ,0x00021C66) //x could be wrong in both 100f and 100b shoud be 21C80-24 Found @0xFC3752e8 or g7x wildly different
 
 DEF(focus_len_table                         ,0xfdf317ec) // looks good 380 mmm
-DEF(recreview_hold                          ,0x0000914c) //100f looks wrong @fc31b68e
+DEF(recreview_hold                          ,0x000091f0) 
+//above found using rmem -i32 0x9100 64 near 0x914c
 
 DEF(bitmap_buffer, 0xc204) // look at 0xfc33702e  must be some math 0000c1cc
 DEF(active_bitmap_buffer, 0xc1fc) // subtract 8
@@ -41,3 +42,6 @@ DEF(jog_hw_pos,                             0xd9854004) // todo found by browsin
 //FAKEDEF(enabled_refresh_physical_screen,    1)
 //DEF(displaytype,                            0x95dc) //0x95c8 + 0x14, found  @ fc135f2a (GetDisplayType)
 DEF(displaytype,                            0x9284)//  (GetDisplayType)
+DEF(current_fb_d                           ,0xfa9c) // found by searching near fa78
+DEF(simple_movie_status, 0x13b18) // using rmem from looking at addresses in task-movie-re
+
