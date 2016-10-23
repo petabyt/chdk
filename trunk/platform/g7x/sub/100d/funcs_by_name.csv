@@ -1071,6 +1071,7 @@
 0xfc06f915,j_StopCameraLog_FW
 0xfc3624d9,j_strcmp_FW
 0xfc2ef974,j_TakeSemaphore
+0xfc2ef9ec,j_takesemaphore_low
 0xfc2ef8b4,j_TakeSemaphoreStrictly
 0xfc14454b,j_Terminatedccd_FW
 0xfc14454b,j_TerminateDigicon_FW
@@ -1830,6 +1831,7 @@
 0xfc1e291b,System.Delete_FW
 0x010e5a59,TakeSemaphore
 0x010e5a59,TakeSemaphore_FW
+0x010e28b3,takesemaphore_low
 0x010e5c05,TakeSemaphoreStrictly
 0xfc1397b9,task__imageSensorTask
 0xfc19ee1d,task__tgTask
