@@ -366,7 +366,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
     { "givesemaphore_low", OPTIONAL|UNUSED}, // OPT_CONSOLE_REDIR_ENABLED
-//    { "takesemaphore_low", OPTIONAL|UNUSED },
+    { "takesemaphore_low", OPTIONAL|UNUSED },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -3235,7 +3235,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
-{sig_match_near_str,"createsemaphore_low",      "intr_sem",            SIG_NEAR_AFTER(3,1)},
+{sig_match_near_str,"createsemaphore_low",      "intr_sem",             SIG_NEAR_AFTER(3,1)},
+// probably only matched on cameras with wifi code in firmware, but catches veneers
+{sig_match_near_str,"takesemaphore_low",        "sem_test_callback",    SIG_NEAR_AFTER(12,2)},
 // not using Strictly, to pick up veneers
 {sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3)},
 {sig_match_near_str,"CreateCountingSemaphoreStrictly","DvlpSeqTask",    SIG_NEAR_BEFORE(18,3)},
@@ -3251,6 +3253,8 @@ sig_rule_t sig_rules_main[]={
 // different string on cams newer than sx280
 {sig_match_near_str,"TryPostMessageQueue",      "[CWS]TryPostMessageQueue(%d) Failed\n",SIG_NEAR_BEFORE(9,1)},
 {sig_match_near_str,"TryTakeSemaphore",         "FileScheduleTask",     SIG_NEAR_AFTER(10,2)},
+// pick up takesemaphore_low from TryTakeSemaphore in case not matched by earlier rule
+{sig_match_named,   "takesemaphore_low",        "TryTakeSemaphore",     SIG_NAMED_SUB},
 {sig_match_near_str,"WaitForAllEventFlag",      "Error WaitEvent PREPARE_TESTREC_EXECUTED.", SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"WaitForAnyEventFlagStrictly","_imageSensorTask",   SIG_NEAR_AFTER(10,2)},
 {sig_match_wait_all_eventflag_strict,"WaitForAllEventFlagStrictly","EF.StartInternalMainFlash_FW"},
