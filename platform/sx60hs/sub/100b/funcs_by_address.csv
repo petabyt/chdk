@@ -1,5 +1,6 @@
 0x010e27c5,createsemaphore_low
 0x010e288b,givesemaphore_low
+0x010e28b3,takesemaphore_low
 0x010e4ff1,SleepTask
 0x010e4ff1,SleepTask_FW
 0x010e5089,CreateTask
@@ -1037,6 +1038,7 @@
 0xfc2cf3dc,j_CreateEventFlagStrictly
 0xfc2cf3e4,j_WaitForAnyEventFlag
 0xfc2cf3ec,j_ClearEventFlag
+0xfc2cf40c,j_takesemaphore_low
 0xfc2cf41c,j_DebugAssert
 0xfc2cf444,j_dry_memcpy
 0xfc2cf44c,j_bzero

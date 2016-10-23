@@ -1,5 +1,6 @@
 0x010e27c5,createsemaphore_low
 0x010e288b,givesemaphore_low
+0x010e28b3,takesemaphore_low
 0x010e4ff1,SleepTask
 0x010e4ff1,SleepTask_FW
 0x010e5089,CreateTask
@@ -947,6 +948,7 @@
 0xfc2ef9bc,j_createsemaphore_low
 0xfc2ef9d4,j_SleepTask
 0xfc2ef9e4,j_DebugAssert
+0xfc2ef9ec,j_takesemaphore_low
 0xfc2efa1c,j_dry_memcpy
 0xfc2efa24,j_bzero
 0xfc2f77eb,get_playrec_mode
