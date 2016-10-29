@@ -46,7 +46,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ISO_MODE                        149
 #define PROPCASE_METERING_MODE                   157
 #define PROPCASE_VIDEO_FRAMERATE                 168        // 1=25 0=30, miniature mode 9=5x 10=10x 11=20x (sx160)  may crash if doesn't match what canon uses for current resolution
-#define PROPCASE_VIDEO_RESOLUTION                170        // 5=1920x1080, 4=1280x720, 2=640x480, 1=320x240 
+#define PROPCASE_VIDEO_RESOLUTION                171        // 5=1920x1080, 4=1280x720, 2=640x480, 1=320x240 
 #define PROPCASE_CUSTOM_BLUE                     177        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_GREEN                    178        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_RED                      179        // Canon Menu slide bar values: 255, 254, 0, 1, 2
