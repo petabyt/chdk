@@ -65,6 +65,11 @@ void camera_set_led(int led, int state, int bright) {
 
 // Viewport and Bitmap values that shouldn't change across firmware versions.
 // Values that may change are in lib.c for each firmware version.
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+    return viewport_fb_d;
+}
 
 // Defined in stubs_entry.S
 extern char active_viewport_buffer;
@@ -78,22 +83,43 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
-    if (MODE_IS_VIDEO(mode_get()))
+    if (camera_info.state.mode_video || get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
+// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+int vid_get_viewport_yscale() {
+    return 2;
+}
+
 int vid_get_viewport_width()
 {
-    return 360;
+    if (camera_info.state.mode_play)
+    {
+        return 360;
+    }
+    extern int _GetVRAMHPixelsSize();
+    return _GetVRAMHPixelsSize() >> 1;
 }
 
 long vid_get_viewport_height()
 {
-    return 240;
+    if (camera_info.state.mode_play)
+    {
+        return 240;
+    }
+    extern int _GetVRAMVPixelsSize();
+    return _GetVRAMVPixelsSize() >> 1;
 }
+
+// TODO offsets for various aspect ratios
+
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
+int vid_get_viewport_fullscreen_height()        { return 480; }
 
 void vid_bitmap_refresh() {
 
