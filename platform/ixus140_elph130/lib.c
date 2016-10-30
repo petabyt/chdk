@@ -61,7 +61,7 @@ void *vid_get_viewport_live_fb()
     extern void* viewport_buffers[];
 
     // no distinct video mode
-    if (/*mode_is_video(mode_get())*/ get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
+    if (/*mode_is_video(mode_get())*/ is_video_recording())
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     // verified -1 gives best response
@@ -149,7 +149,7 @@ int vid_get_viewport_yoffset()
         return 0;
     }
     // no distinct video mode
-    else if (/*mode_is_video(m)*/ get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
+    else if (/*mode_is_video(m)*/ is_video_recording())
     {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
             return 0;// 4:3 video, no offset
@@ -173,7 +173,7 @@ int vid_get_viewport_display_yoffset()
     {
         return 72;
     }
-    else if (/*mode_is_video(m)*/ get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
+    else if (/*mode_is_video(m)*/ is_video_recording())
     {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
             return 0;// 4:3 video, no offset
