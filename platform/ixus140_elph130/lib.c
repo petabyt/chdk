@@ -81,7 +81,7 @@ int vid_get_viewport_yscale() {
 
 int vid_get_viewport_width()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 360;
     }
@@ -91,7 +91,7 @@ int vid_get_viewport_width()
 
 long vid_get_viewport_height()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 240;
     }
@@ -111,12 +111,11 @@ int vid_get_viewport_xoffset()
 
 int vid_get_viewport_display_xoffset()
 {
-    int m = mode_get();
-    if ((m & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
-    else if ((m & MODE_SHOOTING_MASK) == MODE_STITCH)
+    else if (camera_info.state.mode_shooting == MODE_STITCH)
     {
         if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
             if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
@@ -141,19 +140,22 @@ static long vp_yo[5] = { 0, 30, 13, 0 };
 
 int vid_get_viewport_yoffset()
 {
-    int m = mode_get();
-    if ((m & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
-    else if ((m & MODE_SHOOTING_MASK) == MODE_STITCH)
+    else if (camera_info.state.mode_shooting == MODE_STITCH)
     {
         return 0;
     }
     // no distinct video mode
     else if (/*mode_is_video(m)*/ get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
     {
-        return 30;
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
     }
     else
     {
@@ -163,18 +165,21 @@ int vid_get_viewport_yoffset()
 
 int vid_get_viewport_display_yoffset()
 {
-    int m = mode_get();
-    if ((m & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
-    else if ((m & MODE_SHOOTING_MASK) == MODE_STITCH)
+    else if (camera_info.state.mode_shooting == MODE_STITCH)
     {
         return 72;
     }
     else if (/*mode_is_video(m)*/ get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
     {
-        return 30;
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
     }
     else
     {
@@ -210,7 +215,6 @@ void *vid_get_bitmap_active_palette()
     return (p+1);
 }
 
-// TODO void load_chdk_palette(), palette_control not found
 // Function to load CHDK custom colors into active Canon palette
 void load_chdk_palette()
 {
