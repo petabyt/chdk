@@ -2,6 +2,12 @@
 #include "platform_palette.h"
 #include "lolevel.h"
 
+char *hook_raw_image_addr() {
+    return (char*) 0x420F6420; //Found @0xffb5a2f4  search for "BJPEG BUFF"
+}
+
+// no battery temp
+int _GetBatteryTemperature()     { return -99;}
 
 char *camera_jpeg_count_str()
 {
@@ -48,7 +54,7 @@ void JogDial_CCW(void)
 
 int vid_get_viewport_width()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 360;
     }
@@ -58,13 +64,30 @@ int vid_get_viewport_width()
 
 long vid_get_viewport_height()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 240;
     }
     extern int _GetVRAMVPixelsSize();
     return _GetVRAMVPixelsSize();
 
+}
+
+// only X offset appears to be required, for 1:1
+// buffer and display
+int vid_get_viewport_xoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    if (camera_info.state.mode_video || is_video_recording()) {
+        return 0;
+    }
+    if(shooting_get_prop(PROPCASE_ASPECT_RATIO) == 3) { // 1:1 appears to use X offset
+        return 44;
+    }
+    return 0;
 }
 
 // Viewport and Bitmap values that shouldn't change across firmware versions.
@@ -80,7 +103,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
-    if (MODE_IS_VIDEO(mode_get()) || is_video_recording())
+    if (camera_info.state.mode_video || is_video_recording())
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
