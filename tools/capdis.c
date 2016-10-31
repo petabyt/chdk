@@ -392,7 +392,19 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
            } else {
                subname=ostub->nm;
            }
-       }
+       } else {
+           // check for veneer to known function
+            if(fw_disasm_iter_single(fw,target|is->thumb)) {
+                uint32_t j_target=get_direct_jump_target(fw,fw->is);
+                if(j_target) {
+                    ostub = find_sig_val(fw->sv->stubs,j_target);
+                    if(ostub) {
+                        strcat(comment,"-> ");
+                        strcat(comment,ostub->nm);
+                    }
+                }
+            }
+        }
     }
     if(dis_opts & DIS_OPT_LABELS) {
         if(subname) {
@@ -418,22 +430,30 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
         return 0;
     }
 
-    uint32_t target = is->insn->detail->arm.operands[0].imm;
+    uint32_t target = get_branch_call_insn_target(fw,is); // target with thumb bit set appropriately
     osig* ostub=NULL;
     char *subname=NULL;
     if(dis_opts & DIS_OPT_STUBS) {
-       // blx from thumb, or bl from arm, don't include thumb bit
-       if((is->thumb && is->insn->id == ARM_INS_BLX) || (!is->thumb && is->insn->id != ARM_INS_BLX)) {
-           ostub = find_sig_val(fw->sv->stubs,target);
-       } else {
-           ostub = find_sig_val(fw->sv->stubs,ADR_SET_THUMB(target));
-       }
+       ostub = find_sig_val(fw->sv->stubs,target);
        if(ostub) {
            if(ostub->is_comment) {
                strcat(comment,ostub->nm);
            } else {
                subname=ostub->nm;
            }
+       } else {
+           // check for veneer to known function
+            if(fw_disasm_iter_single(fw,target)) {
+                uint32_t j_target=get_direct_jump_target(fw,fw->is);
+                if(j_target) {
+                    ostub = find_sig_val(fw->sv->stubs,j_target);
+                    if(ostub) {
+                        // TODO could translate directly into sub call, but need to resolve BL vs BLX
+                        strcat(comment,"-> ");
+                        strcat(comment,ostub->nm);
+                    }
+                }
+            }
        }
     }
     if(dis_opts & DIS_OPT_SUBS) {
@@ -444,7 +464,7 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
                 strcpy(ops,subname);
             }
         } else {
-            sprintf(ops,"sub_%08x",target);
+            sprintf(ops,"sub_%08x",ADR_CLEAR_THUMB(target));
         }
     } else if (subname) {
        strcat(comment,subname);
