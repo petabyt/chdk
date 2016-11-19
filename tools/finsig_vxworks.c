@@ -12,6 +12,7 @@
 //------------------------------------------------------------------------------------------------------------
 // #define DEBUG_PRINT_ALL_FUNC_NAMES 1 // enable debug output on stderr for development
 // #define LIST_IMPORTANT_FUNCTIONS   1 // always list functions with 'LIST_ALWAYS' flag, even when not found
+// #define PRINT_LEVENT_TABLE 1         // print all levents to file
 //------------------------------------------------------------------------------------------------------------
 
 // Buffer output into header and body sections
@@ -3330,6 +3331,11 @@ int match_levent_table(firmware *fw, int k, uint32_t v1, uint32_t v2)
     if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00000800) && (fw->buf[k+2] == 0x00000002))
     {
         print_stubs_min(fw,"levent_table",idx2adr(fw,k),idx2adr(fw,k));
+#ifdef PRINT_LEVENT_TABLE
+        uint32_t levent_tbl = idx2adr(fw,k);
+        void write_levent_table_dump(firmware*, uint32_t);
+        write_levent_table_dump(fw, levent_tbl);
+#endif
     }
     return 0;
 }
@@ -5027,6 +5033,34 @@ void find_builddate(firmware *fw)
     }
     else
         fw->fw_build_time = 0;
+}
+
+void write_levent_table_dump(firmware *fw, uint32_t tadr)
+{
+    char *str;
+    uint32_t lid = 0;
+    uint32_t val;
+    if (!tadr) {
+        return;
+    }
+    FILE *f=fopen("levent_table.txt","w");
+    if(!f) {
+        return;
+    }
+    fprintf(f,"address    ID     (unknown)  name\n");
+
+    for(;;tadr += 12) {
+        val = *(uint32_t*)adr2ptr(fw, tadr);
+        if ((val == 0xffffffff) || (val == 0) || (*(uint32_t*)adr2ptr(fw, tadr+4) < lid)) {
+            break;
+        }
+        lid = *(uint32_t*)adr2ptr(fw, tadr+4);
+        str = (char*)adr2ptr(fw,val);
+        if (str) {
+            fprintf(f,"0x%08x 0x%04x 0x%08x %s\n",tadr,lid,*(uint32_t*)adr2ptr(fw, tadr+8),str);
+        }
+    }
+    fclose(f);
 }
 
 //------------------------------------------------------------------------------------------------------------
