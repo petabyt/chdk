@@ -7,6 +7,13 @@ Only for firmware version 1.0.1 (GM1.01A (1.0.1.0))
 Please post bug reports and patches in the porting thread
 https://chdk.setepontos.com/index.php?topic=12542.0
 
+Keys
+- M-Fn is the default alt button, and is assigned to PRINT in CHDK code.
+- Video and Info (Display) may also be used for alt
+- Info assigned to Display for CHDK keyboard input and script.
+- AE Lock and AF Adjust are assigned to zoom out and zoom in
+  respectively. They do not control the lens zoom
+
 Issues:
 
 - CHDK overlay drawing is slow
