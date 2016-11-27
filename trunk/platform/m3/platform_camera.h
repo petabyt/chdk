@@ -156,6 +156,5 @@
 // #define OPT_RUN_WITH_BATT_COVER_OPEN 1
 #undef CAM_AF_LED
 #define CAM_AF_LED 							1
-#define OPT_MD_DEBUG						1
 //#define OPT_DEBUGGING						1
 //--------------------------------------------------
