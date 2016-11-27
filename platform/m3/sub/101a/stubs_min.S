@@ -26,7 +26,7 @@ DEF(full_screen_refresh                     ,0x00012a94) // Found @0xfc2b0f5c
 DEF(canon_menu_active                       ,0x0000C18C) //@ Found @0xfc27d0bc
 FAKEDEF(canon_shoot_menu_active, 1) // ??? not found
 DEF(playrec_mode                            ,0x0000B454) //@ Found @0xfc27937e
-FAKEDEF(zoom_status                             ,0) // Found @0xfc30e61c
+FAKEDEF(zoom_status                             ,1) // Found @0xfc30e61c
 //DEF(zoom_status                             ,0x00018b04) // Found @0xfc30e61c
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
@@ -35,8 +35,8 @@ DEF(focus_len_table                         ,0xfdf6ad20)
 //DEF(zoom_busy                               ,0x00010814) // Found @0xfc1a0998
 //DEF(focus_busy                              ,0x00010694) // Found @0xfc28b964
 DEF(recreview_hold                          ,0x000097B8) //@ Found @FC34B82A      0xfc2a2c22
-FAKEDEF(zoom_busy                               ,0)
-FAKEDEF(focus_busy                              ,0)
+FAKEDEF(zoom_busy                               ,1)
+FAKEDEF(focus_busy                              ,1)
 // sx280 c&p?
 //DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090268
 
