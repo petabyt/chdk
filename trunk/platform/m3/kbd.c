@@ -47,8 +47,8 @@ KeyMap keymap[] = {
     { 1, KEY_SHOOT_FULL      ,0x00040001 },
     { 1, KEY_SHOOT_FULL_ONLY ,0x00000001 },
     { 1, KEY_SHOOT_HALF      ,0x00040000 },
-    { 1, KEY_ZOOM_OUT        ,0x00001000 }, // full speed
-    { 1, KEY_ZOOM_IN         ,0x00000800 }, // low speed
+    { 1, KEY_ZOOM_OUT        ,0x00001000 }, // AE Lock / Index (playback zoom out)
+    { 1, KEY_ZOOM_IN         ,0x00000800 }, // AF Adjust / Magnify (playback zoom in)
     { 1, KEY_VIDEO           ,0x00000008 },
     { 1, KEY_MENU            ,0x00000010 },
     { 1, KEY_DISPLAY         ,0x00000400 },
