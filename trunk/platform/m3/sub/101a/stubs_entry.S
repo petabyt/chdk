@@ -96,8 +96,8 @@
 //DEF(FlashParamsTable                  ,0xfc747db8),          stubs_min = 0xfc747db8 (0xFC747DB8)
 //DEF(playrec_mode                      ,0x0000b454),          stubs_min = 0x0000b454 (0x0000B454)
 //DEF(jpeg_count_str                    ,0x0016cc64),          stubs_min = 0x0016cc64 (0x0016CC64)
-//DEF(zoom_busy                         ,0x00000000),          stubs_min = 0x00000000 (0)
-//DEF(focus_busy                        ,0x00000000),          stubs_min = 0x00000000 (0)
+//DEF(zoom_busy                         ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
+//DEF(focus_busy                        ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
 
 //NHSTUB(Close                                ,0xfc37a501) //  0      <-veneer 0xfc37a579
