@@ -4,6 +4,9 @@ This is an INCOMPLETE, UNFINISHED PORT.
 Many features and combinations of Canon settings have not been tested.
 Only for firmware version 1.0.1 (GM1.01A (1.0.1.0))
 
+Please post bug reports and patches in the porting thread
+https://chdk.setepontos.com/index.php?topic=12542.0
+
 Issues:
 
 - CHDK overlay drawing is slow
@@ -12,6 +15,7 @@ Issues:
  - zebra
  - histogram
  - custom auto iso overexposure protection
+ - Edge overlay (preliminary code exists in Ant's branch)
 - movie features are not supported
 - movie_status is wrong
 
@@ -26,8 +30,7 @@ PTP remote shoot with JPEG / CHDK DNG
  - If Canon raw + jpeg is enabled, the jpeg will be written to the card
  - May fail in special scene modes (not extensively tested)
 Motion detection - preliminary
-Edge overlay - preliminary
-PTP live view - preliminary, requires updated client with live view proto 2.2 support
+PTP live view - preliminary, requires client with live view protocol 2.2 (chdkptp r723 or later)
 
 NOT IMPLEMENTED:
 
