@@ -251,16 +251,13 @@ int vid_get_viewport_byte_width() 				{ return (camera_screen.buffer_width * 2);
 
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() ; } // *2
 int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_palette_type()                      { return -1; } //3
-int vid_get_palette_size()                      { return 0; }
-int vid_get_aspect_ratio()                    	{ return 2; } //shooting_get_prop(PROPCASE_ASPECT_RATIO); }
+int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
 
 
 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
 //volatile char *opacity_buffer[2] = {(char*)0x41718600, (void*)0x41796f00};
 volatile char *opacity_buffer[2] = {(char*)0x41741000, (void*)0x41801000};
-volatile char *stencil_buffer[2] = {(char*)0x41741000, (void*)0x41801000};
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
@@ -270,18 +267,6 @@ void *vid_get_opacity_active_buffer() {
     return (void *)opacity_buffer[active_bitmap_buffer&1];
 }
 
-
-
-
-void *vid_get_bitmap_active_stencil() { // no longer needed?
-    if (active_bitmap_buffer&1) {
-        return (void*)0x41801000;
-    }
-    else {
-        return (void*)0x41741000;
-		
-    }
-}
 
 void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
