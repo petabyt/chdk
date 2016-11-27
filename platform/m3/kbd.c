@@ -16,30 +16,6 @@ int get_usb_bit() {
     return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ;
 }
 
-/* KeyMap keymap[] = {
-    { 0, KEY_PLAYBACK        ,0x00000002 }, //
-    { 0, KEY_SHOOT_FULL      ,0x0000000c },
-    { 0, KEY_SHOOT_FULL_ONLY ,0x00000008 },
-    { 0, KEY_SHOOT_HALF      ,0x00000004 },
-    { 1, KEY_ZOOM_OUT        ,0x00000008 }, // full speed
-    { 1, KEY_ZOOM_OUT        ,0x00000018 }, // middle speed
-    { 1, KEY_ZOOM_OUT        ,0x00000010 }, // low speed
-    { 1, KEY_ZOOM_IN         ,0x00000002 }, // full speed
-    { 1, KEY_ZOOM_IN         ,0x00000006 }, // middle speed
-    { 1, KEY_ZOOM_IN         ,0x00000004 }, // low speed
-    { 0, KEY_VIDEO           ,0x00000100 },
-    { 0, KEY_MENU            ,0x00000200 },
-    { 0, KEY_DISPLAY         ,0x00002000 },
-    { 0, KEY_UP              ,0x00004000 },
-    { 0, KEY_DOWN            ,0x00008000 },
-    { 0, KEY_RIGHT           ,0x00010000 },
-    { 0, KEY_LEFT            ,0x00020000 },
-    { 0, KEY_SET             ,0x00040000 },
-    { 0, 0, 0 }
-};
- */
-
-
 
 //EOS M3  addr = 0xD20BF4A0
 KeyMap keymap[] = {
@@ -51,7 +27,7 @@ KeyMap keymap[] = {
     { 1, KEY_ZOOM_IN         ,0x00000800 }, // AF Adjust / Magnify (playback zoom in)
     { 1, KEY_VIDEO           ,0x00000008 },
     { 1, KEY_MENU            ,0x00000010 },
-    { 1, KEY_DISPLAY         ,0x00000400 },
+    { 1, KEY_DISPLAY         ,0x00000400 }, // INFO button (lower left)
     { 1, KEY_UP              ,0x00000020 },
     { 1, KEY_DOWN            ,0x00000040 },
     { 1, KEY_RIGHT           ,0x00000080 },
@@ -67,14 +43,6 @@ KeyMap keymap[] = {
 };
 
 
-
-
-
-
-// NOP
-void kbd_set_alt_mode_key_mask(long key)
-{
-}
 
 /* void __attribute__((naked,noinline)) my2_kbd_read_keys() {
 
