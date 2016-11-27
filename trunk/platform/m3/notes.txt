@@ -1,0 +1,38 @@
+EOS M3 notes
+
+This is an INCOMPLETE, UNFINISHED PORT.
+Many features and combinations of Canon settings have not been tested.
+Only for firmware version 1.0.1 (GM1.01A (1.0.1.0))
+
+Issues:
+
+- CHDK overlay drawing is slow
+- many GUI modules don't respect screen resolution
+- some framebuffer related features do not work, including
+ - zebra
+ - histogram
+ - custom auto iso overexposure protection
+- movie features are not supported
+- movie_status is wrong
+
+TESTED:
+
+PTP play/rec switch
+raw and remote hooks (in normal still shooting modes, broken some special modes)
+USB remote - plug test / remote hook only
+CHDK raw / DNG (in P, M, Tv, Av modes. AUTO not well tested, many others broken)
+PTP remote shoot with JPEG / CHDK DNG
+ - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
+ - If Canon raw + jpeg is enabled, the jpeg will be written to the card
+ - May fail in special scene modes (not extensively tested)
+Motion detection - preliminary
+Edge overlay - preliminary
+PTP live view - preliminary, requires updated client with live view proto 2.2 support
+
+NOT IMPLEMENTED:
+
+dark frame control
+video controls (movie_rec task)
+reboot with firmware update file
+script hard shutdown (shut_down(1))
+booting with .fi2, camera crashes
