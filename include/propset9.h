@@ -4,7 +4,7 @@
 /*
 constants for propset 9
 WARNING:
-The build uses tools/gen_propset_lua.sed to generate propset63.lua from this file
+The build uses tools/gen_propset_lua.sed to generate propset9.lua from this file
 DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 */
 
