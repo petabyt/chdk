@@ -37,7 +37,8 @@ DEF(focus_len_table                         ,0xfdf6ad20)
 DEF(recreview_hold                          ,0x000097B8) //@ Found @FC34B82A      0xfc2a2c22
 FAKEDEF(zoom_busy                               ,0)
 FAKEDEF(focus_busy                              ,0)
-DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090268
+// sx280 c&p?
+//DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090268
 
 DEF(bitmap_buffer, 0xC154) //@ 0xac18) // ?, struct starts @ 0xabdc
 
