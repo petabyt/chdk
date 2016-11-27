@@ -202,7 +202,7 @@ static void load_stubs_file(char *name, int exclude_comments, osig **hdr)
         if (s == 0) { off = 7; s = strstr(line, "IGNORE("); typ = TYPE_IGNORE; }
         if (s == 0) { off = 6; s = strstr(line, "NSTUB("); }
         if (s == 0) { off = 4; s = strstr(line, "DEF("); typ = TYPE_DEF; }
-        if (s == 0) { off = 9; s = strstr(line, "DEF_CONST("); typ = TYPE_CONST; }
+        if (s == 0) { off = 10; s = strstr(line, "DEF_CONST("); typ = TYPE_CONST; }
         if (s != 0)
         {
             char *c = strstr(line, "//");
