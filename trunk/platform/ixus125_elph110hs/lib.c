@@ -83,7 +83,7 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
-    if (camera_info.state.mode_video || get_movie_status() == VIDEO_RECORD_IN_PROGRESS)
+    if (camera_info.state.mode_video || is_video_recording())
         return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
@@ -115,7 +115,95 @@ long vid_get_viewport_height()
     return _GetVRAMVPixelsSize() >> 1;
 }
 
-// TODO offsets for various aspect ratios
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_xo[5] = { 0, 0, 0, 44 };				// should all be even values for edge overlay
+
+// guessed same as elph130
+int vid_get_viewport_xoffset()
+{
+    return 0;
+}
+
+int vid_get_viewport_display_xoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    else if (camera_info.state.mode_shooting == MODE_STITCH) // guessed based on elph130
+    {
+        if (shooting_get_prop(PROPCASE_STITCH_DIRECTION) == 0)      // Direction check
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 40;
+            else
+                return 140;
+        else
+            if (shooting_get_prop(PROPCASE_STITCH_SEQUENCE) == 0)   // Shot already taken?
+                return 140;
+            else
+                return 40;
+    }
+    else if (camera_info.state.mode_video || is_video_recording()) {
+        return 0;
+    }
+    else
+    {
+	    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+// viewport height offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_yo[5] = { 0, 30, 13, 0 };
+
+int vid_get_viewport_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    else if (camera_info.state.mode_shooting == MODE_STITCH) // guessed based on elph130
+    {
+        return 0;
+    }
+    else if (camera_info.state.mode_video || is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
+    }
+    else
+    {
+	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    else if (camera_info.state.mode_shooting == MODE_STITCH) // guessed based on elph130
+    {
+        return 72;
+    }
+    else if (camera_info.state.mode_video || is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
+    }
+    else
+    {
+	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
 
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
