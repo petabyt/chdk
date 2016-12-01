@@ -23,7 +23,7 @@ void startup() {
 
 #define NUM_FL      101
 #define NUM_DATA    2   // 2 words each entry, first is FL
-extern int focus_len_table[NUM_FL*NUM_DATA];
+//extern int focus_len_table[NUM_FL*NUM_DATA];
 
 //asm1989 done for sx260
 // Conversion factor lens FL --> 35mm equiv
