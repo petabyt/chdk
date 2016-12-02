@@ -5,10 +5,8 @@ DEF(jpeg_count_str,                0x0016CC64) //@ Found @0xFC1A0A2C
 DEF(file_counter_var,              0x00012460) //@ found by searching for "FileBackupProperty.c"
 DEF(ctypes, 0xFC5E29F4)		//@ me
 
-// Camera has 2 RAW buffers @ 0x44000000 & 0x4adb54a0
-//DEF(raw_buffers                   ,0xFC607634) //@ FC6CB874 ??? Found @0xFC158B60
-DEF(raw_buffers_canon_raw                   ,0xFC6CB874) //@ FC607634
-DEF(raw_buffers_jpeg                         ,0xFC6CB874) //@
+// Camera has 3 RAW buffers @ 0x4464F8C8, 0x46FB98A8, 0x49923888
+DEF(raw_buffers                   ,0xFC6CB874) // Found @0xFC4071F8 & 0xFC407080
 DEF(active_raw_buffer             ,0x0000B3B4) //@ ??? , 0xffffffff when uninited...
 DEF(fileio_semaphore              ,0x000125AC) //@ Found @0xFC06E186
 

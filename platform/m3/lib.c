@@ -106,24 +106,9 @@ char *hook_raw_image_addr()
 //    return raw_buffers[(active_raw_buffer&3)];
     // observed values 0-2, 3 would index something that doesn't look like a raw fb in the jpeg case
     int i=active_raw_buffer&3;
-/*    _LogCameraEvent(0x20,"lc: hria: %i %i %08x %i",i, camera_info.state.mode_shooting,
-                                              camera_info.state.mode_shooting,
-                                              shooting_get_prop(PROPCASE_IMAGE_FORMAT));
-*/
-    // if(i>2) {
-        // i=0;
-    // }
-    if( camera_info.state.mode_shooting == MODE_AUTO) {
-        // AUTO mode (canon raw can't be enabled in AUTO)
-        return (char *)0x435ee300; // TODO unclear if this is only buffer, or if used in all AUTO sub modes
-    }else if(shooting_get_prop(PROPCASE_IMAGE_FORMAT) == 1) {
-    // canon raw disabled - uses up to 3 raw buffers
-        return raw_buffers_jpeg[i];
-    } else {
-        // canon raw enabled - different address, not clear if it ever uses multiple buffers
-        return raw_buffers_canon_raw[i];
-    }
-    // TODO most scene modes seem to use different addresse(s)
+    if(i>2) i=0;
+    return raw_buffers[i];
+        // TODO most scene modes seem to use different addresse(s)
 }
 
 /* char *hook_alt_raw_image_addr()
