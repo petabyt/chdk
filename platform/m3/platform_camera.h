@@ -24,12 +24,11 @@
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
     #define CAM_DISABLE_RAW_IN_HQ_BURST         1 // raw wouldn't make any sense in this mode either
     #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
-    #define CAM_DISABLE_RAW_IN_AUTO             1 // disabled due to wrong raw buffer selection at quick shutter press
     #define CAM_DISABLE_RAW_IN_SPORTS           1 // sports mode seems to use a no-yet-found code path and corrupts JPEG/DNG
 
     #define DNG_VERT_RLE_BADPIXELS              1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
-    #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
+    #undef CAM_HAS_ND_FILTER                             // Camera does not have built-in ND filter
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
@@ -53,7 +52,7 @@
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_VIDEO_CONTROL
 
-    #define CAM_HAS_JOGDIAL                     0 // 1 by me
+    #undef  CAM_HAS_JOGDIAL                     // jogdial support not implemented
     #undef  CAM_USE_ZOOM_FOR_MF
 
     #undef  CAM_UNCACHED_BIT
