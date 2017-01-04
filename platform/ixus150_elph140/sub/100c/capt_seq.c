@@ -465,8 +465,10 @@ asm volatile (
 "    MOVNE   R1, R4 \n"
 "    MOVEQ   R1, #0 \n"
 "    BL      sub_FF8CB528 \n"
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
 "    MOV     R0, R4 \n"
-"    BL      sub_FFAC1894_my \n"  // --> Patched. Old value = 0xFFAC1894.
+"    BL      sub_FFAC1894 \n"
 "    LDR     R1, =0xCB4C \n"
 "    MOV     R2, #4 \n"
 "    MOV     R0, #0x8A \n"
@@ -608,35 +610,6 @@ asm volatile (
 "    MOV     R0, R5 \n"
 "    LDMFD   SP!, {R2-R8,PC} \n"
 "    .ltorg\n"         // added
-);
-}
-
-/*************************************************************/
-//** sub_FFAC1894_my @ 0xFFAC1894 - 0xFFAC18D4, length=17
-void __attribute__((naked,noinline)) sub_FFAC1894_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, =0x1CD30 \n"
-"    LDR     R5, =0xCB44 \n"
-"    LDR     R0, [R0, #0xEC] \n"
-"    CMP     R0, #0 \n"
-"    LDRNE   R0, =0x1CE30 \n"
-"    LDRNEH  R0, [R0, #0x8E] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FFAC18D4 \n"
-"    LDR     R1, [R4, #0x1C] \n"
-"    MOV     R0, #0 \n"
-"    BL      sub_FFA24354 \n"
-"    STR     R0, [R5] \n"
-
-"loc_FFAC18D4:\n"
-"    BL      wait_until_remote_button_is_released\n" // added
-"    BL      capt_seq_hook_set_nr\n"                 // added
-"    LDR     R0, [R4, #0x20] \n"
-"    LDR     PC, =0xFFAC18D8 \n"  // Continue in firmware
 );
 }
 
