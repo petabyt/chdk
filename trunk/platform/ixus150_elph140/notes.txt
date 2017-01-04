@@ -19,7 +19,7 @@ llibtst.lua
 shutter, iso and ND override (not comprehensively)
 ptp control, rec/play switching
 zebra, histogram
-dark frame control - note issue below
+dark frame control
 current bitmap buffer
 PTP live view (some modes such as fisheye may not work)
 fast live view buffer
@@ -35,7 +35,6 @@ exmem support (note, camera has ~3 mb regular heap free on startup with CHDK)
 
 OTHER ISSUES
 ************
-Dark frame control: changes to this setting only take effect _after_ the next shot
 The hide OSD when pressing DISP in half shoot shortcut is not available, since the camera has no DISP key
 
 KNOWN BUGS
