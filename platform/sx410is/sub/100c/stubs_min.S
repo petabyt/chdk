@@ -20,7 +20,7 @@ DEF(active_bitmap_buffer,           0x3B38+0x1C)    // 0x3B38 + 0x1C  @FF8A6D6C 
 
 DEF(recreview_hold,                 0x92D0+0x1C)   //@sub_FFA0CBE8
 
-// see NRTBL.SetDarkSubType, ineffective for the next photo (it 'lags') 0xB034 + 0x4  @FFA4F6B8 blackhole
+// see NRTBL.SetDarkSubType, 0xB034 + 0x4  @FFA4F6B8 blackhole
 DEF(_nrflag, 0xB038)
 
 DEF(focus_len_table,                0xffffae7c)     // Found @0xffffae7c blackhole

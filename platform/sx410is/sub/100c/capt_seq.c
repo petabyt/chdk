@@ -547,8 +547,10 @@ asm volatile (
 "    BLNE    sub_FF9B48BC \n"
 "    MOV     R0, #0 \n"
 //"  BL      _sub_FF8938AC \n"  // --> Nullsub call removed.
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
 "    MOV     R0, R4 \n"
-"    BL      sub_FF9B4AF8_my \n"  // --> Patched. Old value = 0xFF9B4AF8.
+"    BL      sub_FF9B4AF8 \n"
 "    LDR     R1, =0xDC20 \n"
 "    MOV     R2, #4 \n"
 "    MOV     R0, #0x8A \n"
@@ -690,35 +692,6 @@ asm volatile (
 "    MOV     R0, R5 \n"
 "    LDMFD   SP!, {R2-R10,PC} \n"
 "    .ltorg\n"         // added
-);
-}
-
-/*************************************************************/
-//** sub_FF9B4AF8_my @ 0xFF9B4AF8 - 0xFF9B4B38, length=17
-void __attribute__((naked,noinline)) sub_FF9B4AF8_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, =0x1F514 \n"
-"    LDR     R5, =0x7D74 \n"
-"    LDR     R0, [R0, #0xF4] \n"
-"    CMP     R0, #0 \n"
-"    LDRNE   R0, =0x1F614 \n"
-"    LDRNEH  R0, [R0, #0x9A] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FF9B4B38 \n"
-"    LDR     R1, [R4, #0x1C] \n"
-"    MOV     R0, #0 \n"
-"    BL      sub_FFA4F79C \n"
-"    STR     R0, [R5] \n"
-
-"loc_FF9B4B38:\n"
-"    BL      wait_until_remote_button_is_released\n" // added
-"    BL      capt_seq_hook_set_nr\n"                 // added
-"    LDR     R0, [R4, #0x20] \n"
-"    LDR     PC, =0xFF9B4B3C \n"  // Continue in firmware
 );
 }
 
