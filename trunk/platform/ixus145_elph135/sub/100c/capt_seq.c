@@ -6,7 +6,7 @@
 #include "core.h"
 
 #define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
-static long *nrflag = (long*)(0xA0DC+0xC); // ixus145 100c Found @ 0xffa1efb0 (0xA0DC) & 0xffa1efb4 (0xC) 
+static long *nrflag = (long*)(0xa0e0); // found by trial and error near 0xa0dc referenced near 0xffa1efb4 (0xa0dc + 0x4)
 //#define PAUSE_FOR_FILE_COUNTER 200  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
@@ -500,8 +500,10 @@ asm volatile (
 "    MOVNE   R1, R4 \n"
 "    MOVEQ   R1, #0 \n"
 "    BL      sub_FF8C8870 \n"
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
 "    MOV     R0, R4 \n"
-"    BL      sub_FFAC7FE8_my \n"  // --> Patched. Old value = 0xFFAC7FE8.
+"    BL      sub_FFAC7FE8 \n"
 "    LDR     R1, =0xC54C \n"
 "    MOV     R2, #4 \n"
 "    MOV     R0, #0x8A \n"
@@ -643,35 +645,6 @@ asm volatile (
 "    MOV     R0, R5 \n"
 "    LDMFD   SP!, {R2-R8,PC} \n"
 "    .ltorg\n"         // added
-);
-}
-
-/*************************************************************/
-//** sub_FFAC7FE8_my @ 0xFFAC7FE8 - 0xFFAC8028, length=17
-void __attribute__((naked,noinline)) sub_FFAC7FE8_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, =0x1C3E4 \n"
-"    LDR     R5, =0xC544 \n"
-"    LDR     R0, [R0, #0xEC] \n"
-"    CMP     R0, #0 \n"
-"    LDRNE   R0, =0x1C4E4 \n"
-"    LDRNEH  R0, [R0, #0x8E] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FFAC8028 \n"
-"    LDR     R1, [R4, #0x1C] \n"
-"    MOV     R0, #0 \n"
-"    BL      sub_FFA1EEE0 \n"
-"    STR     R0, [R5] \n"
-
-"loc_FFAC8028:\n"
-"    BL      wait_until_remote_button_is_released\n" // added
-"    BL      capt_seq_hook_set_nr\n"                 // added
-"    LDR     R0, [R4, #0x20] \n"
-"    LDR     PC, =0xFFAC802C \n"  // Continue in firmware
 );
 }
 
