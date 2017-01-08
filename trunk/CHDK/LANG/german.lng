@@ -337,6 +337,7 @@
 
 272 "OSD bei Rückschau an/aus"
 273 "Task-List-Start"
+274 "Zeige versteckte Dateien"
 
 275 "Lösche Beträge bei Neustart"
 
@@ -784,3 +785,5 @@
 635 "Log"
 636 "SD-Test"
 637 "Textausgabe       :"
+
+638 "RAW-Tastaturkürzel-Optionen"
