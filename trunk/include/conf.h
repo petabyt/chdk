@@ -78,7 +78,7 @@ typedef struct {
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
 // making the modules camera/platform independent
 
-#define CONF_VERSION            {3,0}       // Version for Conf structure
+#define CONF_VERSION            {3,1}       // Version for Conf structure
 
 typedef struct
 {
@@ -456,6 +456,8 @@ typedef struct
 
     int disable_lfn_parser_ui;     // 0 = use built-in opendir functions for long filenames in filebrowser on dryos,
                                    // 1 = only use firmware opendir
+
+    int enable_raw_shortcut;    // enable RAW state toggle keyboard shortcut, 0=no, 1=yes, 2=yes with RAW OSD enabled
 
 } Conf;
 
