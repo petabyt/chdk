@@ -1770,9 +1770,13 @@ static void cb_change_dng()
 
 static void cb_change_save_raw()
 {
-    conf.save_raw = !conf.save_raw;
-    cb_change_dng();
-    gui_set_need_restore();
+    if ( conf.enable_raw_shortcut )
+    {
+        conf.save_raw = !conf.save_raw;
+        cb_change_dng();
+        gui_set_need_restore();
+        if ( conf.enable_raw_shortcut == 2 ) conf.show_raw_state = conf.save_raw;
+    }
 }
 
 static const char* gui_dng_version(int change, int arg)
@@ -2051,6 +2055,15 @@ static const char* gui_extra_button_enum(int change, int arg)
 }
 #endif //CAM_OPTIONAL_EXTRA_BUTTON
 
+static const char* gui_raw_toggle_enum(int change, int arg)
+{
+    static const char* raw_toggle[]={ "Off", "On", "On+OSD" };
+
+    gui_enum_value_change(&conf.enable_raw_shortcut,change,sizeof(raw_toggle)/sizeof(raw_toggle[0]));
+
+    return raw_toggle[conf.enable_raw_shortcut];
+}
+
 static const char* gui_alt_power_enum(int change, int arg)
 {
 // Script option is retained even if scripting is disabled, otherwise conf values will change
@@ -2088,6 +2101,7 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_MISC_ENABLE_SHORTCUTS,      MENUITEM_BOOL,      &conf.enable_shortcuts, 0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_MISC_ENABLE_RAW_SHORTCUT,   MENUITEM_ENUM,      gui_raw_toggle_enum, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_MISC_SHOW_SPLASH,           MENUITEM_BOOL,      &conf.splash_show, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_MISC_START_SOUND,           MENUITEM_BOOL,      &conf.start_sound, 0 ),
 #if CAM_USE_ZOOM_FOR_MF

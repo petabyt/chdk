@@ -307,6 +307,8 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO2( 295, conf.ev_video_scale,                          CONF_OSD_POS, 1,1  ),
     CONF_INFO2( 296, conf.usb_info_scale,                          CONF_OSD_POS, 0,0  ),
 
+    CONF_INFO( 297, conf.enable_raw_shortcut,                      CONF_DEF_VALUE, i:0),
+
     {0,0,0,0,{0}}
 };
 
@@ -917,6 +919,7 @@ static short conf_map_1_2[] =
     1231, // 299 conf.memdmp_size
     1214, // 300 conf.flash_exp_comp
     1215, // 301 conf.flash_enable_exp_comp
+    2297, // 302 conf.enable_raw_shortcut
 };
 
 //-------------------------------------------------------------------

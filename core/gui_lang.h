@@ -766,7 +766,9 @@
 #define LANG_BENCH_SDTEST                       636
 #define LANG_BENCH_TEXTOUT                      637
 
-#define GUI_LANG_ITEMS                          637
+#define LANG_MENU_MISC_ENABLE_RAW_SHORTCUT      638
+
+#define GUI_LANG_ITEMS                          638
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
