@@ -5,8 +5,8 @@
 #include "platform.h"
 #include "core.h"
 
+#define USE_STUBS_NRFLAG 1          // see stubs_min.S
 #define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
-static long *nrflag = (long*)(0xcf68+0xC); // sx510 101a Found @ 0xff2adfe4 (0xcf68) & 0xff2adfe8 (+0xC)
 #define PAUSE_FOR_FILE_COUNTER 350  // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
@@ -547,8 +547,10 @@ asm volatile (
 "    BLNE    sub_FF9B281C \n"
 "    MOV     R0, #0 \n"
 //"  BL      _sub_FF89328C \n"  // --> Nullsub call removed.
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
 "    MOV     R0, R4 \n"
-"    BL      sub_FF9B2A58_my \n"  // --> Patched. Old value = 0xFF9B2A58.
+"    BL      sub_FF9B2A58 \n"
 "    LDR     R1, =0xDBC8 \n"
 "    MOV     R2, #4 \n"
 "    MOV     R0, #0x8A \n"
@@ -690,35 +692,6 @@ asm volatile (
 "    MOV     R0, R5 \n"
 "    LDMFD   SP!, {R2-R10,PC} \n"
 "    .ltorg\n"         // added
-);
-}
-
-/*************************************************************/
-//** sub_FF9B2A58_my @ 0xFF9B2A58 - 0xFF9B2A98, length=17
-void __attribute__((naked,noinline)) sub_FF9B2A58_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, =0x1F46C \n"
-"    LDR     R5, =0x7D2C \n"
-"    LDR     R0, [R0, #0xF4] \n"
-"    CMP     R0, #0 \n"
-"    LDRNE   R0, =0x1F56C \n"
-"    LDRNEH  R0, [R0, #0x9A] \n"
-"    CMPNE   R0, #3 \n"
-"    LDRNE   R0, [R4, #8] \n"
-"    CMPNE   R0, #1 \n"
-"    BHI     loc_FF9B2A98 \n"
-"    LDR     R1, [R4, #0x1C] \n"
-"    MOV     R0, #0 \n"
-"    BL      sub_FFA4D78C \n"
-"    STR     R0, [R5] \n"
-
-"loc_FF9B2A98:\n"
-"    BL      wait_until_remote_button_is_released\n" // added
-"    BL      capt_seq_hook_set_nr\n"                 // added
-"    LDR     R0, [R4, #0x20] \n"
-"    LDR     PC, =0xFF9B2A9C \n"  // Continue in firmware
 );
 }
 
