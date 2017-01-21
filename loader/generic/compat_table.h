@@ -79,6 +79,7 @@
 #elif (NEED_ENCODED_DISKBOOT == 12)
 { 12935,3,0xc022d1fc,0xffff0040 }, // ixus150_elph140
 #elif (NEED_ENCODED_DISKBOOT == 13)
+{ 12960,4,0xd20b0994,0xfff20270 }, // m10
 { 12970,3,0xc022d1fc,0xffff0040 }, // ixus160_elph160
 { 12973,0,0,0xffff0040 }, // sx410is
 #elif (NEED_ENCODED_DISKBOOT == 14)
