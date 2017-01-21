@@ -1,0 +1,57 @@
+EOS M10 notes
+
+Default ALT button is the playback button.
+
+
+Issues
+
+- To start the cam with the playback button, hold down the button a little longer
+
+- CHDK overlay drawing is slow, default font is tiny
+- many GUI modules don't respect screen resolution
+- most framebuffer related features do not work, including
+    - zebra
+    - histogram (camera has a native one though)
+    - edge overlay
+    - custom auto iso overexposure protection
+- booting with .fi2 is untested, but most likely makes the camera unstable
+- CHDK dark frame subtraction control only seems effective when Canon setting is on AUTO
+
+Tested (using 15-45 kit lens)
+
+- Exposure overrides in (semi-)manual modes (not very extensively)
+- CHDK RAW/DNG in (semi-)manual modes (Av, Tv, M, P) (not very extensively)
+- PTP play/rec switch
+- llibtst.lua
+- setmode.lua - one failure with default 10ms delay, works with 100ms
+- ubtest.bas
+- hooktest.lua (Av, Tv, M, P)
+- isobase.lua
+- PTP live view (has problems with overlay dimensions, only 3:2 aspect ratio tested)
+- Motion detection (reaction time not tested)
+- USB remote - plug test
+- chdkptp cam tests
+
+Untested
+
+- RAW/DNG, overrides in scene/auto modes
+
+Not implemented
+
+- CHDK touchscreen functionality
+- CHDK mirrorless camera support is not complete
+    - Zoom related functionality is missing (except for focal length display)
+    - Most focus related functions are not working and are untested
+- Movie features are missing
+- Filewritetask is not currently supported
+
+Developer notes
+
+- [WORKED AROUND] Camera crashes with "Vector 0x37" (??) exception if spytask starts too soon (??).
+    Guesses: 
+        - too early use of the busyonscreen functions ?
+          Worked around, using a flag from "GUISrv_StartGUISystem_FW".
+          Does not help. Works if _GetLogToFile() is called prior to shooting_init() in spytask.
+        - spytask calls something else too early
+
+
