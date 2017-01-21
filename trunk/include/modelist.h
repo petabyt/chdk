@@ -113,6 +113,12 @@ enum {
     MODE_VIDEO_M            , // g7x manual video
     MODE_VIDEO_STAR_TIME_LAPSE, // g7x not clear if this should be VIDEO
 
+    MODE_ART_BOLD           , // art bold, m10
+    MODE_WATERPAINTING      , // water painting, m10
+    MODE_CLOSEUP            , // close-up, m10
+    MODE_FOOD               , // food, m10
+    MODE_SELFIE             , // self portrait, m10
+
 };
 
 #endif
