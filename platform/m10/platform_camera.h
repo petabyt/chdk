@@ -95,10 +95,11 @@
 //Sensor Right Border             : 5267
 //Sensor Bottom Border            : 3517
 
-    #define CAM_ACTIVE_AREA_X1                  0
-    #define CAM_ACTIVE_AREA_Y1                  0
-    #define CAM_ACTIVE_AREA_X2                  5280
-    #define CAM_ACTIVE_AREA_Y2                  3528
+    // below is more relaxed than the values reported by Exiftool, but still cuts off a few usable pixels
+    #define CAM_ACTIVE_AREA_X1                  76
+    #define CAM_ACTIVE_AREA_Y1                  52
+    #define CAM_ACTIVE_AREA_X2                  5272
+    #define CAM_ACTIVE_AREA_Y2                  3522
 
     #define PARAM_CAMERA_NAME                   3
     #define CAM_DATE_FOLDER_NAMING              0x80

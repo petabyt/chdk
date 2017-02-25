@@ -84,7 +84,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_WB_ADJ                          282        // [m10:untested]
 #define PROPCASE_SERVO_AF                        308        // 0 = Servo AF off, 1 = Servo AF on
 #define PROPCASE_ASPECT_RATIO                    309        // also 404, 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-#define PROPCASE_SV                              356        // [m10:untested] (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
+#define PROPCASE_SV                              356        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 // TODO no GPS on M10
 // #define PROPCASE_GPS
 #define PROPCASE_TIMER_SHOTS                     386        // Number of shots for TIMER_MODE=Custom

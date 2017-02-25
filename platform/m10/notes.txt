@@ -6,6 +6,7 @@ Default ALT button is the playback button.
 Issues
 
 - To start the cam with the playback button, hold down the button a little longer
+- To select a digit in a CHDK menu numeric field, press the shutter halfway
 
 - CHDK overlay drawing is slow, default font is tiny
 - many GUI modules don't respect screen resolution
@@ -38,6 +39,7 @@ Untested
 
 Not implemented
 
+- Extra long exposures (firmware limit is 30 seconds)
 - CHDK touchscreen functionality
 - CHDK mirrorless camera support is not complete
     - Zoom related functionality is missing (except for focal length display)
