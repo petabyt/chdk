@@ -242,8 +242,8 @@ void update_screen_dimensions() {
         case 8:
         case 9:
             // tv-out (not implemented in hw)
-            camera_screen.width = 720;
-            camera_screen.physical_width = camera_screen.buffer_width = 736;
+            camera_screen.physical_width = camera_screen.width = 720;
+            camera_screen.buffer_width = 736;
             camera_screen.height = camera_screen.buffer_height = 480;
             camera_screen.size = 720*480;
             camera_screen.buffer_size = 736*480;
@@ -257,8 +257,8 @@ void update_screen_dimensions() {
             break;
         case 10:
             // lcd (the real one)
-            camera_screen.width = 720;
-            camera_screen.physical_width = camera_screen.buffer_width = 736;
+            camera_screen.physical_width = camera_screen.width = 720;
+            camera_screen.buffer_width = 736;
             camera_screen.height = camera_screen.buffer_height = 480;
             camera_screen.size = 720*480;
             camera_screen.buffer_size = 736*480;
@@ -271,8 +271,8 @@ void update_screen_dimensions() {
             break;
         case 12:
             // lcd ? (invalid, buffer would overflow)
-            camera_screen.width = 900;
-            camera_screen.physical_width = camera_screen.buffer_width = 928;
+            camera_screen.physical_width = camera_screen.width = 900;
+            camera_screen.buffer_width = 928;
             camera_screen.height = camera_screen.buffer_height = 600;
             camera_screen.size = 900*600;
             camera_screen.buffer_size = 928*600;
