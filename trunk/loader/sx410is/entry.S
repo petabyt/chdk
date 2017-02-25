@@ -1,5 +1,8 @@
     .section .entry
 
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 // ordinary startup...
 
     MOV     SP, #0x1900

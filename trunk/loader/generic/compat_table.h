@@ -78,15 +78,16 @@
 { 12919,1,0xc022302c,0xfff40040 }, // sx510hs
 #elif (NEED_ENCODED_DISKBOOT == 12)
 { 12935,3,0xc022d1fc,0xffff0040 }, // ixus150_elph140
+{ 12936,3,0xc022d1fc,0xffff0040 }, // ixus145_elph135
 #elif (NEED_ENCODED_DISKBOOT == 13)
 { 12960,4,0xd20b0994,0xfff20270 }, // m10
 { 12970,3,0xc022d1fc,0xffff0040 }, // ixus160_elph160
-{ 12973,0,0,0xffff0040 }, // sx410is
+{ 12973,3,0xc022d1fc,0xffff0040 }, // sx410is
 #elif (NEED_ENCODED_DISKBOOT == 14)
 { 12953,4,0xd20b0994,0xfff20040 }, // m3
 { 12954,4,0xd20b0884,0xfff20040 }, // sx60hs
 { 12955,3,0xc022d1fc,0xfffe0040 }, // sx520hs
-{ 12956,0,0,0xffff0040 }, // sx400is
+{ 12956,3,0xc022d1fc,0xffff0040 }, // sx400is
 { 12957,4,0xd20b0994,0xfff20040 }, // g7x
 { 12959,3,0xc022d1fc,0xfffe0040 }, // sx530hs
 #elif (NEED_ENCODED_DISKBOOT == 2)
