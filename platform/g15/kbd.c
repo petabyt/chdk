@@ -19,6 +19,7 @@ int get_usb_bit()
 
 KeyMap keymap[] = {
     { 0, KEY_METERING        ,0x00000400 }, 
+    { 0, KEY_ERASE           ,0x00010000 }, 
     { 0, KEY_AE_LOCK         ,0x00020000 }, 
     { 0, KEY_SET             ,0x00000800 }, // Found @0xff4a0d2c, levent 0x08
     { 0, KEY_RIGHT           ,0x00001000 }, // Found @0xff4a0d34, levent 0x07
@@ -29,9 +30,9 @@ KeyMap keymap[] = {
     { 0, KEY_ZOOM_IN         ,0x00100000 }, // Found @0xff4a0d74, levent 0x02
     { 0, KEY_ZOOM_OUT        ,0x00200000 }, // Found @0xff4a0d7c, levent 0x03
     { 0, KEY_VIDEO           ,0x00080000 },
+    { 1, KEY_PRINT           ,0x00800000 }, // Shortcut button
     { 2, KEY_POWER           ,0x00000800 }, // Found @0xff4a0dc4, levent 0x100
     { 2, KEY_PLAYBACK        ,0x00008000 }, // Found @0xff4a0dcc, levent 0x101
-    { 2, KEY_PRINT           ,0x00008000 }, // ALT button
     { 2, KEY_SHOOT_FULL      ,0x000c0000 }, // Found @0xff4a0ddc, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00080000 }, // Found @0xff4a0ddc, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00040000 }, // Found @0xff4a0dd4, levent 0x00
