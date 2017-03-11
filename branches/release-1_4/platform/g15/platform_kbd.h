@@ -1,8 +1,8 @@
 #ifndef PLATFORM_KBD_H
 #define PLATFORM_KBD_H
 // plaform specific keyboard defines, see core/kbd_common.c for documentation
-#define KEYS_MASK0 (0x003EFC00)
-#define KEYS_MASK1 (0x00000000)
+#define KEYS_MASK0 (0x003FFC00)
+#define KEYS_MASK1 (0x00800000)
 #define KEYS_MASK2 (0x000C8800)
 
 #define SD_READONLY_FLAG    0x00000002 // Found @0xff4a0da4, levent 0x20a
