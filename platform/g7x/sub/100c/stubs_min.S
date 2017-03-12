@@ -10,7 +10,7 @@ DEF(canon_menu_active             ,0x0000ca70+0x8) // unchanged from 100d - foun
 // unchanged from 100d - via sub_fc13b3da, struct ref'd by 0x880c-0x58 near start.
 // Contains viewport address that updates at ~30fps in rec mode, 0 or last rec value in pb
 DEF(current_viewport_buffer       ,0x000087f0)
-DEF(viewport_buffers              ,0xfc612b54) // via fc13b25c ref to fc612b48 vs 100d ref to fc612b74, assume x+0x10
+DEF(viewport_buffers              ,0xfc612b58) // via fc13b25c ref to fc612b48 vs 100d ref to fc612b74, assume x+0x10
 DEF(current_fb_d                  ,0x00010140) // assumed same as 100d - https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
 //FAKEDEF(movie_status,1)
 DEF(simple_movie_status,0xbbb4) // unchanged from 100d - 0x0000bae8 + 0x80 + 0x4c found @fc14a03c sub_fc14a00c via task_MovieRecord. 1 when recording or busy after, 0 otherwise
