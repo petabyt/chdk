@@ -9,6 +9,8 @@ To enter CHDK <ALT> mode use the Playback [>] button.
 
 This port also supports the IXUS127
 
+CHDK RAW/DNG is not available in auto mode
+
 KNOWN BUGS
 **********
 
