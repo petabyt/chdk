@@ -93,8 +93,8 @@ long get_jogdial_direction(void) {
 
     if (old_jogdial>new_jogdial) return JOGDIAL_LEFT; 
     else if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
-    if (old_frontdial>new_frontdial) return FRONTDIAL_LEFT; 
-    else if (old_frontdial<new_frontdial) return FRONTDIAL_RIGHT;
+    if (old_frontdial<new_frontdial) return FRONTDIAL_LEFT;  // counter clockwise with camera aimed away from you
+    else if (old_frontdial>new_frontdial) return FRONTDIAL_RIGHT;
     else return 0;
 }
 
