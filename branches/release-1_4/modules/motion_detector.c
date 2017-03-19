@@ -469,7 +469,9 @@ static int md_detect_motion(void)
     }
 #endif
 
-	img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
+    motion_detector.detected_cells = 0;
+
+    img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
 
 	int vp_h = vid_get_viewport_height();
     int vp_w = vid_get_viewport_width();
