@@ -198,11 +198,10 @@ void __attribute__((naked,noinline)) sub_FF8203C4_my() {
 
     //Replacement of sub_ for correct power-on.
     //(short press = playback mode, long press = record mode)
-
-    // look at power-on switch sub_
+    // Similar to ixus160: http://chdk.setepontos.com/index.php?topic=12321.msg123724#msg123724
+    // look at power-on switch sub_ff8686ac (ff8663d8) => *(0xffba8ce4 + 0x48*8) = 0xC022F48C
     // value and pointer from sub_ff868100
-    *(int*)(0x29D4+0x4) = (*(int*)0xC0220018)&1 ? 0x200000 : 0x400000;
-
+    *(int*)(0x29D4+0x4) = (*(int*)0xC022F48C)&0x100000 ? 0x200000 : 0x100000;
 asm volatile (
 "    LDR     R0, =0xFF82043C \n"
 "    MOV     R1, #0 \n"
