@@ -9,8 +9,7 @@ Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
 KNOWN BUGS
 **********
--Remoteshot capture result in too dark images
--RAW/DNG does not work
+-
 
 For Developers
 **************
