@@ -1403,6 +1403,7 @@
 0xfc20199d,memcpy_FW
 0xfc443547,MemoryChecker_FW
 0xfc1a7cf5,memset
+0x01100b78,memset32
 0xfc1a7cf5,memset_FW
 0xfc1eb7d9,memShow_FW
 0xfc020765,MergeAndConvertDefect_FW

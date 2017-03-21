@@ -255,6 +255,8 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
 //NHSTUB(EngDrvRead                           ,0xfc37ff31) //  0            == 0xfc37ff31
 //NHSTUB(PTM_GetCurrentItem                   ,0xfc36e567) //  0            == 0xfc36e567
 NHSTUB(DisableISDriveError                    ,0xfc44da2d) //  0
+NHSTUB(bzero                                  ,0x01100410) //  0
+NHSTUB(memset32                               ,0x01100414) //  0
 //NHSTUB(PT_MFOn                              ,0xfc0ab61d) //  0            == 0xfc0ab61d
 //NHSTUB(PT_MFOff                             ,0xfc0ab651) //  0            == 0xfc0ab651
 //NHSTUB(GetAdChValue                         ,0xfc1f3577) //  0            == 0xfc1f3577

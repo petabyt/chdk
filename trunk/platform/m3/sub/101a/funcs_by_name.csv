@@ -1432,6 +1432,7 @@
 0xfc200331,memcpy_FW
 0xfc450713,MemoryChecker_FW
 0xfc1159e5,memset
+0x01100414,memset32
 0xfc1159e5,memset_FW
 0xfc1ede2d,memShow_FW
 0xfc020759,MergeAndConvertDefect_FW

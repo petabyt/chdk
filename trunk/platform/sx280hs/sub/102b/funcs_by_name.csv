@@ -1083,6 +1083,7 @@
 0xfc0d32e1,memcpy_FW
 0xfc3b9437,MemoryChecker_FW
 0xfc2be999,memset
+0x010da264,memset32
 0xfc2be999,memset_FW
 0xfc38e929,memShow_FW
 0xfc0204e5,MergeAndConvertDefect_FW
