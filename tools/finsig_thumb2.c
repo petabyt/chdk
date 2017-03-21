@@ -367,6 +367,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 //    { "deletesemaphore_low", UNUSED },
     { "givesemaphore_low", OPTIONAL|UNUSED}, // OPT_CONSOLE_REDIR_ENABLED
     { "takesemaphore_low", OPTIONAL|UNUSED },
+    { "bzero" }, // 
+    { "memset32" }, // actually jump to 2nd instruction of bzero 
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -380,7 +382,6 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
     { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
     { "CalcSqrt", OPTIONAL|UNUSED }, // helper
-    { "bzero", OPTIONAL|UNUSED }, // helper
     { "dry_memcpy", OPTIONAL|UNUSED }, // helper, memcpy-like function in dryos kernel code
     { "get_playrec_mode", OPTIONAL|UNUSED }, // helper, made up name
     { "DebugAssert2", OPTIONAL|UNUSED }, // helper, made up name, two arg form of DebugAssert
@@ -2985,6 +2986,8 @@ int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_NAMED_JMP_SUB       0x00000001
 // use the target of the first BL, BLX
 #define SIG_NAMED_SUB           0x00000002
+// match address of Nth instruction in named sub
+#define SIG_NAMED_INSN          0x00000003
 #define SIG_NAMED_TYPE_MASK     0x0000000F
 
 #define SIG_NAMED_CLEARTHUMB    0x00000010
@@ -3030,21 +3033,32 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         insn_match = match_b_bl_blximm;
     } else if(sig_type == SIG_NAMED_SUB) {
         insn_match = match_bl_blximm;
+    } else if(sig_type == SIG_NAMED_INSN) {
+        insn_match = NULL;
     } else {
         printf("sig_match_named: %s invalid type %d\n",rule->ref_name,sig_type);
         return 0;
     }
-    // untested, warn
-    if(!ADR_IS_THUMB(ref_adr)) {
-        printf("sig_match_named: %s is ARM 0x%08x\n",rule->ref_name, ref_adr);
-//        return 0;
-    }
+
     disasm_iter_init(fw,is,ref_adr);
     // TODO for eventprocs, may just want to use the original
     if(is_immediate_ret_sub(fw,is)) {
         printf("sig_match_named: immediate return %s\n",rule->name);
         return 0;
     }
+    if(sig_type == SIG_NAMED_INSN) {
+        int i;
+        // iter starts on the address given to init
+        for(i=0;i<=sig_nth;i++) {
+            if(!disasm_iter(fw,is)) {
+                printf("sig_match_named: disasm failed %s 0x%08x\n",rule->name,(uint32_t)is->insn->address);
+                return 0;
+            }
+        }
+        sig_match_named_save_sig(rule->name,(uint32_t)is->insn->address | is->thumb,sig_flags); 
+        return 1;
+    }
+
     // TODO max search is hardcoded
     if(insn_match_find_nth(fw,is,15 + 5*sig_nth,sig_nth,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
@@ -3167,6 +3181,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "VbattGet",                 "VbattGet_FW",},
 {sig_match_named,   "Write",                    "Write_FW",},
 {sig_match_named,   "bzero",                    "exec_FW",              SIG_NAMED_SUB},
+{sig_match_named,   "memset32",                 "bzero",                SIG_NAMED_NTH(1,INSN)},
 {sig_match_named,   "dry_memcpy",               "task__tgTask",         SIG_NAMED_SUB},
 {sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",SIG_NAMED_JMP_SUB},
