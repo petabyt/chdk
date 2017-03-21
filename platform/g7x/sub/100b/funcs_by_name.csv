@@ -1200,6 +1200,7 @@
 0xfc0e7d41,memcpy_FW
 0xfc3d56ef,MemoryChecker_FW
 0xfc1096fd,memset
+0x01106b60,memset32
 0xfc1096fd,memset_FW
 0xfc133edd,memShow_FW
 0xfc0206e9,MergeAndConvertDefect_FW

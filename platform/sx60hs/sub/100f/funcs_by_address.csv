@@ -58,6 +58,7 @@
 0x010f78c5,j_mktime_ext
 0x01106a34,dry_memcpy
 0x01106b1c,bzero
+0x01106b20,memset32
 0x01109198,_log
 0x011096b8,_log10
 0x01109820,_pow
