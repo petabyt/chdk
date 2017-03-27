@@ -18,8 +18,25 @@
 // This module is used in AutoISO2 mechanizm.
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-// Define how many viewport blocks to step in each loop iteration. Each block is 6 bytes (UYVYYY) or 4 image pixels
+
+
+#ifdef THUMB_FW
+// Define how many viewport blocks to step in each loop iteration.
+// digic use 2x larger to keep overall number similar to older cams
+#define	HISTO_STEP_SIZE	12
+// Digic 6: Each block is 4 bytes (UYVY) 2 Y values
+#define HISTO_BLOCK_BYTES 4
+#else
+// Define how many viewport blocks to step in each loop iteration.
 #define	HISTO_STEP_SIZE	6
+// Each block is 6 bytes (UYVYYY) / 4 Y values
+#define HISTO_BLOCK_BYTES 6
+#endif
+
+// Coincidentally same value for both digic 6 and earlier
+// D6 viewport_width* is specified as the number of Y values, each block 2 Y values
+// pre-D6, width is half the number of Y values, each block contains 4 y values
+#define HISTO_BLOCK_SCALE 2
 
 static unsigned short live_histogram_proc[256]; // Buffer for histogram
 
@@ -35,7 +52,7 @@ int live_histogram_read_y(unsigned short *h)
     int vp_height = vid_get_viewport_height();
     int vp_offset = vid_get_viewport_row_offset();
 
-    total = (vp_width * vp_height) / (HISTO_STEP_SIZE * 2);
+    total = (vp_width * vp_height) / (HISTO_STEP_SIZE * HISTO_BLOCK_SCALE);
     memset(h, 0, sizeof(unsigned short)*256);
 
     unsigned char *img = vid_get_viewport_active_buffer();
@@ -47,7 +64,7 @@ int live_histogram_read_y(unsigned short *h)
     for (y=0; y<vp_height; y++, img += vp_offset)
     {
         int x;
-        for (x=0; x<vp_width; x += HISTO_STEP_SIZE*2, img+=HISTO_STEP_SIZE*6)
+        for (x=0; x<vp_width; x += HISTO_STEP_SIZE*HISTO_BLOCK_SCALE, img+=HISTO_STEP_SIZE*HISTO_BLOCK_BYTES)
         {
             ++h[*img];
         }
