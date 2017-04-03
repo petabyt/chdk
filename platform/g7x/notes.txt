@@ -55,34 +55,28 @@ PTP remote shoot with JPEG / CHDK DNG
 Motion detection - preliminary, see known bugs below
 PTP live view - preliminary, requires client with live view proto 2.2 support
  (chdkptp r712 or later)
+Zebra and histogram - with limitations, see other issues below.
 
 NOT IMPLEMENTED
 ***************
 dark frame control
- - canon firmware enables darkframe for exposures over 30 sec
+ - Canon firmware enables darkframe for exposures over 30 sec
 video controls (movie_rec task)
 extra long exposures (exp_drv task)
- - canon firmware supports up to 250 sec
+ - Canon firmware supports up to 250 sec
 reboot with firmware update file
 script hard shutdown (shut_down(1))
 
 OTHER ISSUES
 ************
-display updating is ugly. Below from sx280hs also applies to G7 X
-- framebuffer related features do not work, including
- - zebra
- - histogram
- - edge overlay
- - custom auto iso overexposure protection
+display updating is ugly
 - CHDK UI is erased / flashes every time low battery icons
+- Edge overlay does not work
+- Zebra "Draw Over Zebra" and Restore options are non-functional
 
 PROPCASE_RESOLUTION values differ from previous models
 - 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
 
-Occasional "SD card error" messages after boot seen in testing.
-Unclear if CHDK related, has gone away after reboot.
-
-Occasional very slow uploads with chdkptp.
 
 KNOWN BUGS
 **********
@@ -99,6 +93,9 @@ KNOWN BUGS
  - switching to hybrid auto causes a crash
  - orientation sensor value alternates between 0 and 90
 - When using remote shoot, DCIM directories will be created even if no files are saved
+- Occasional "SD card error" + missing modules messages after boot
+ - usually goes away after reboot.
+- Occasional very slow uploads and crashes while uploading using chdkptp.
 
 THANKS
 ******
