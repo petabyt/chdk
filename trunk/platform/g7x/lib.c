@@ -310,10 +310,6 @@ void *vid_get_opacity_active_buffer() {
     return (void *)opacity_buffer[active_bitmap_buffer&1];
 }
 
-void *vid_get_bitmap_active_palette() {
-    return (void*)0x8000; // just to return something valid, no palette needed on this cam
-}
-
 #if 0
 #ifdef CAM_SUPPORT_BITMAP_RES_CHANGE
 /*

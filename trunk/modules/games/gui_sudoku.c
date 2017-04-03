@@ -999,7 +999,14 @@ int gui_sudoku_init()
     xMenuPos = camera_screen.disp_right - FONT_WIDTH*15 + 1;
 	xPos=4;
 	yPos=4;
-	fieldLineDistance=(camera_screen.height-yFieldBorder*2)/9;
+    if (camera_screen.height-yFieldBorder*2 > xMenuPos-xFieldBorder)
+    {
+        fieldLineDistance=(xMenuPos-xFieldBorder)/9;
+    }
+    else
+    {
+        fieldLineDistance=(camera_screen.height-yFieldBorder*2)/9;
+    }
 	fieldLineLength=fieldLineDistance*9;
 	mode=MODE_VIEW;
 	menuPos=0;

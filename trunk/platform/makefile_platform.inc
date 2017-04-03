@@ -12,6 +12,12 @@ ifdef OPT_USE_GCC_EABI
     endif
 endif
 
+ifdef THUMB_FW
+    PALETTE_FILES=../generic/palette.c
+else
+    PALETTE_FILES=platform_palette.c platform_palette.h
+endif
+
 OBJS=main.o lib.o wrappers.o kbd.o shooting.o platform_palette.o
 
 libplatform.a: $(OBJS)
@@ -23,7 +29,11 @@ lib.o: lib.c
 main.o: main.c
 shooting.o: shooting.c ../generic/shooting.c
 wrappers.o: wrappers.c ../generic/wrappers.c
-platform_palette.o: platform_palette.c platform_palette.h
+
+platform_palette.o: $(PALETTE_FILES)
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
+
 
 clean:
 	rm -f *.o *.a

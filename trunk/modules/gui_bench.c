@@ -14,6 +14,7 @@
 
 // draw_txt_string no longer exported, replace it with a macro
 #define draw_txt_string(x,y,s,c) draw_string((x)*FONT_WIDTH,(y)*FONT_HEIGHT,s,c)
+#define draw_txt_stringnonalign(x,y,s,c) draw_string((x)*FONT_WIDTH+1,(y)*FONT_HEIGHT,s,c)
 
 void gui_bench_draw();
 void gui_module_menu_kbd_process();
@@ -36,6 +37,7 @@ static struct {
     int disk_write_mem_bps;
     int cpu_ips;
     int text_cps;
+    int textnonalign_cps;
 } bench;
 
 static char buf[48];
@@ -78,6 +80,7 @@ void gui_bench_init() {
     bench.disk_write_mem_bps=-1;
     bench.cpu_ips=-1;
     bench.text_cps=-1;
+    bench.textnonalign_cps=-1;
     bench_to_run = 0;
     bench_mode = 0;
     bench_to_draw = 1;
@@ -130,11 +133,12 @@ static void gui_bench_draw_results_cpu(int pos, int value) {
 
 //-------------------------------------------------------------------
 
-static void gui_bench_draw_results_text(int pos, int value, int ss) {
+static void gui_bench_draw_results_text(int pos, int value, int valuen, int ss) {
     if (value!=-1) {
         if (value) {
                 int s=(ss==0)?0:FONT_WIDTH*FONT_HEIGHT*value/ss;
-                sprintf(buf, "%7d char/s  %2d FPS", value, s);
+                int sn=(ss==0)?0:FONT_WIDTH*FONT_HEIGHT*valuen/ss;
+                sprintf(buf, " %d, %d c/s %d, %d FPS", value, valuen, s, sn);
             }
         else
             strcpy(buf, clearline);
@@ -276,7 +280,7 @@ void gui_bench_draw() {
             gui_bench_draw_results_memory(8, bench.memory_read_bps, bench.memory_read_uc_bps);
             add_to_log(log_run,"Memory read     :",buf);
 
-            gui_bench_draw_results_text(9, bench.text_cps, camera_screen.width * camera_screen.height);
+            gui_bench_draw_results_text(9, bench.text_cps, bench.textnonalign_cps, camera_screen.width * camera_screen.height);
             add_to_log(log_run,"Text drawing    :",buf);
             buf[0] = 0; // empty buffer before optional tests to avoid confusing output when those are not enabled
 
@@ -452,13 +456,26 @@ static void bench_measure_text_write() {
         for (c=0; c<16; c++) {
             // draw 80 chars
             draw_txt_string(1, 1,  "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_+", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
-            draw_txt_string(1, 1,  "abcdefghijklmnopqrstuvwxyz0123456789.-_+", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_string(1, 1,  "abcdefghijklmnopqrstuvwxyz0123456789.-_+", MAKE_COLOR(COLOR_GREEN, COLOR_RED));
         };
         t = get_usec_diff(t);
         msleep(10);
         if (t < best) best = t;
     }
     bench.text_cps = (best==0)?0:16*80*1000000/best;
+    best = 0xffffffff;
+    for (d=0; d<4; d++) {
+        t = getcurrentmachinetime();
+        for (c=0; c<16; c++) {
+            // draw 80 chars
+            draw_txt_stringnonalign(1, 1,  "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_+", MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
+            draw_txt_stringnonalign(1, 1,  "abcdefghijklmnopqrstuvwxyz0123456789.-_+", MAKE_COLOR(COLOR_GREEN, COLOR_RED));
+        };
+        t = get_usec_diff(t);
+        msleep(10);
+        if (t < best) best = t;
+    }
+    bench.textnonalign_cps = (best==0)?0:16*80*1000000/best;
 }
 
 //-------------------------------------------------------------------

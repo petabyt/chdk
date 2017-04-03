@@ -1073,7 +1073,7 @@ static void gui_debug_draw_tasklist(void)
             name = "(unknown)";
         }
         sprintf(osd_buf,"%10s %8X",name,tasklist[show_start+i]);
-        draw_string(64,16+16*i,osd_buf, user_color(conf.osd_color));
+        draw_string(64,FONT_HEIGHT+FONT_HEIGHT*i,osd_buf, user_color(conf.osd_color));
     }
 }
 #endif //CAM_DRYOS
@@ -1167,7 +1167,7 @@ void gui_draw_debug_vals_osd()
                 get_property_case(p, &r, 4);
                 sprintf(osd_buf, "%3d: %d              ", p, r);
                 osd_buf[20]=0;
-                draw_string(64,16+16*i,osd_buf, col);
+                draw_string(64,FONT_HEIGHT+FONT_HEIGHT*i,osd_buf, col);
             }
         }
 
@@ -1193,7 +1193,7 @@ void gui_draw_debug_vals_osd()
                         sprintf(osd_buf, "%3d: %30s :%2d ", p, s,len);
                     }
                 }
-                draw_string(16,16+16*i,osd_buf, col);
+                draw_string(16,FONT_HEIGHT+FONT_HEIGHT*i,osd_buf, col);
             }
         }
         if (conf.debug_display == DEBUG_DISPLAY_UIPROPS){
@@ -1207,7 +1207,7 @@ void gui_draw_debug_vals_osd()
                     sprintf(osd_buf, "%3d: %hi               ", p, r);
     }
                 osd_buf[20]=0;
-                draw_string(64,16+16*i,osd_buf, col);
+                draw_string(64,FONT_HEIGHT+FONT_HEIGHT*i,osd_buf, col);
             }
         }
     }

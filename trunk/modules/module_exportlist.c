@@ -139,6 +139,11 @@
             draw_button
             draw_rectangle
 
+            // special functions for yuv overlay (DIGIC 6)
+            set_transparent
+            draw_dblpixel_raw
+            color_to_rawpx
+
             chdkColorToCanonColor
             user_color
             get_script_color

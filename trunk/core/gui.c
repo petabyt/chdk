@@ -290,21 +290,21 @@ static void gui_compare_props(int arg)
 			{
 				++c;
 				sprintf(buf,"%4d is %8d was %8d",i,p,props[i]);
-				draw_string(16,16*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+				draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 			}
 			props[i] = p;
 			if( c == 12 )
 			{
 				++c;
 				sprintf(buf,"%s","Waiting 15 Seconds");
-				draw_string(16,16*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+				draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 				msleep(15000);
 				c = 0;
 			}
 		}
 		++c;
 		sprintf(buf,"%s","Press <ALT> to leave");
-		draw_string(16,16*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+		draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
 	}
 	else
 	{

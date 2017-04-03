@@ -226,11 +226,7 @@ void *vid_get_bitmap_active_buffer() {
 }
 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
-volatile char *opacity_buffer[2] = {(char*)0x41718600, (void*)0x41796f00};
-
-void *vid_get_bitmap_active_palette() {
-    return (void*)0x8000; // just to return something valid, no palette needed on this cam
-}
+volatile char *opacity_buffer[2] = {(char*)0x41718600, (char*)0x41796f00};
 
 void *vid_get_opacity_active_buffer() {
     return (void *)opacity_buffer[active_bitmap_buffer&1];
