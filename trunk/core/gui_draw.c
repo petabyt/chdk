@@ -290,7 +290,14 @@ void draw_hline(coord x, coord y, int len, color cl)
     if ((y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
     if (x < 0) { len += x; x = 0; }
     if ((x + len) > camera_screen.width) len = camera_screen.width - x;
-    if ((x == 0) && (y == 0)) { x++; len--; }   // Skip guard pixel
+    if (conf.rotate_osd)
+    {
+        if ((y == camera_screen.height-1) && ((x+len) >= camera_screen.width-1)) { x--; len--; }   // Skip guard pixel
+    }
+    else
+    {
+        if ((y == 0) && (x == 0)) { x++; len--; }   // Skip guard pixel
+    }
     register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
     len = ASPECT_XCORRECTION(len);      // Scale the line length if needed
     for (; len>0; len--, offset++)
