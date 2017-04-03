@@ -11,6 +11,10 @@
 #include "histogram.h"
 
 //-------------------------------------------------------------------
+//  modify for digic 6
+// 62ndidiot. 2016.02.07
+// double histogram width height for better visibility...should not affect performance
+// since we no longer have to sum pairs of histogram channels
 
 #define HISTOGRAM_IDLE_STAGE        6
 
@@ -34,9 +38,13 @@
 #define OSD_HISTO_LAYOUT_Y_argb     5
 #define OSD_HISTO_LAYOUT_BLEND      6
 #define OSD_HISTO_LAYOUT_BLEND_Y    7
-
+#ifndef THUMB_FW
 // Define how many viewport blocks to step in each loop iteration. Each block is 6 bytes (UYVYYY) or 4 image pixels
 #define	HISTO_STEP_SIZE	6
+#else
+// Define how many viewport blocks to step in each loop iteration. Each block is 4 bytes (UYVY) or 2 image pixels
+#define	HISTO_STEP_SIZE	4
+#endif
 
 static unsigned char histogram[5][HISTO_WIDTH];             // RGBYG
 static unsigned short *histogram_proc[5] = { 0,0,0,0,0 };   // RGBYG (unsigned short is large enough provided HISTO_STEP_SIZE >= 3)
@@ -83,7 +91,7 @@ static void histogram_alloc()
 void histogram_process()
 {
     static unsigned char *img;
-    static int viewport_size, viewport_width, viewport_row_offset;
+    static int viewport_size, viewport_width, viewport_row_offset, viewport_height, viewport_byte_width;
 
     register int x, i, hi;
     int y, v, u, c;
@@ -127,7 +135,9 @@ void histogram_process()
             if (!img) return;
 
             img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
-            viewport_size = vid_get_viewport_height() * vid_get_viewport_byte_width() * vid_get_viewport_yscale();
+            viewport_height = vid_get_viewport_height();
+            viewport_byte_width = vid_get_viewport_byte_width();
+            viewport_size = viewport_height * viewport_byte_width * vid_get_viewport_yscale();
             viewport_width = vid_get_viewport_width();
             viewport_row_offset = vid_get_viewport_row_offset();
             for (c=0; c<5; ++c) {
@@ -142,11 +152,36 @@ void histogram_process()
         case 2:
         case 3:
             x = 0;  // count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
+#ifndef THUMB_FW
+
             for (i=(histogram_stage-1)*6; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
+#else
+
+//digic 6
+// 16:9     f:8 vh:360 vw:640 vbw:1280 vxo:0 vyo:60
+//1x1        f:8 vh:480 vw:480 vbw:1280 vxo:80 vyo:0
+            int  yp;
+//for yp=0,3,6...
+//then yp=1,4,7...
+//then yp=2,5,8....
+
+            for (yp=(histogram_stage - 1); yp< viewport_height;yp+=3) {
+              for (x=0;x<viewport_width*2 ;x+=HISTO_STEP_SIZE*4) {
+               i = x + yp * viewport_byte_width;
+#endif
+
+#ifndef THUMB_FW
                 y = img[i+1];
                 u = *(signed char*)(&img[i]);
                 //if (u&0x00000080) u|=0xFFFFFF00;  // Compiler should handle the unsigned -> signed conversion
                 v = *(signed char*)(&img[i+2]);
+#else
+                unsigned int ibuf = *(unsigned int*)(&img[i&0xfffffffc]);
+                u =(signed char)((ibuf&0xff)-128);
+                v =(signed char)(((ibuf>>16)&0xff)-128);
+                y = (unsigned char)((ibuf>>8)&0xff);
+
+#endif
                 //if (v&0x00000080) v|=0xFFFFFF00;  // Compiler should handle the unsigned -> signed conversion
 
                 ++histogram_proc[HISTO_Y][y];                       // Y
@@ -157,6 +192,8 @@ void histogram_process()
                 hi = clip(((y<<12) + u*7258          + 2048)>>12);  // B
                 ++histogram_proc[HISTO_B][hi];
 
+
+#ifndef THUMB_FW
                 // Handle case where viewport memory buffer is wider than the actual buffer.
                 x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
                 if (x == viewport_width)
@@ -164,7 +201,13 @@ void histogram_process()
                     i += viewport_row_offset;
                     x = 0;
                 }
+            } //loop i
+#else
+              }
             }
+#endif
+
+
 
             ++histogram_stage;
             break;
@@ -173,10 +216,12 @@ void histogram_process()
             for (i=0, c=0; i<HISTO_WIDTH; ++i, c+=2) { // G
                 // Merge each pair of values into a single value (for width = 128)
                 // Warning: this is optimised for HISTO_WIDTH = 128, don't change the width unless you re-write this code as well.
+#ifndef THUMB_FW
                 histogram_proc[HISTO_Y][i] = histogram_proc[HISTO_Y][c] + histogram_proc[HISTO_Y][c+1];
                 histogram_proc[HISTO_R][i] = histogram_proc[HISTO_R][c] + histogram_proc[HISTO_R][c+1];
                 histogram_proc[HISTO_G][i] = histogram_proc[HISTO_G][c] + histogram_proc[HISTO_G][c+1];
                 histogram_proc[HISTO_B][i] = histogram_proc[HISTO_B][c] + histogram_proc[HISTO_B][c+1];
+#endif
                 // Calc combined RGB totals
                 histogram_proc[HISTO_RGB][i] = histogram_proc[HISTO_R][i] + histogram_proc[HISTO_G][i] + histogram_proc[HISTO_B][i];
             }

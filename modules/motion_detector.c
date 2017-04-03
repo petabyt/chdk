@@ -19,6 +19,7 @@ Sity: Kharkiv
                     need vid_get_viewport_byte_width() properly defined in lib.c to
                     override the non-digic 6 one in generic/wrappers.c
                     so correct width for 640x480 lcd in digic6 is 1280 bytes not 1080...
+20170207 62ndidiot: fix RGB calculation for Digic6
 
 */
 
@@ -433,6 +434,199 @@ static int md_running()
 }
 
 
+#ifndef THUMB_FW
+// pre-digic 6 implementation
+// much duplication, be sure to update else case if logic is changed!
+static int md_detect_motion(void)
+{
+    int idx, tick, rv;
+    int val, cy, cv, cu;
+
+    register int col, row, x, y;
+
+    if(!md_running())
+    {
+        return 0;
+    }
+
+    tick = get_tick_count();
+    rv = 1;
+
+#ifdef OPT_MD_DEBUG
+    if(motion_detector.comp_calls_cnt < MD_REC_CALLS_CNT)
+    {
+        motion_detector.comp_calls[motion_detector.comp_calls_cnt]=tick;
+    }
+    motion_detector.comp_calls_cnt++;
+#endif
+
+    if(motion_detector.start_time + motion_detector.timeout < tick )
+    {
+        md_save_calls_history();
+        motion_detector.running = 0;
+        return 0;
+    }
+
+    if(motion_detector.last_measure_time + motion_detector.measure_interval > tick)
+    {
+        // wait for the next time
+        return 1;
+    }
+
+    motion_detector.last_measure_time = tick;
+
+    unsigned char* img = vid_get_viewport_active_buffer();
+    if (!img) return 0;
+
+#ifdef OPT_MD_DEBUG
+    if(motion_detector.comp_calls_cnt==50 && (motion_detector.parameters & MD_MAKE_RAM_DUMP_FILE) != 0 )
+    {
+        mx_dump_memory((char*)img);
+    }
+#endif
+
+    motion_detector.detected_cells = 0;
+
+    img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
+
+	int vp_h = vid_get_viewport_height();
+    int vp_w = vid_get_viewport_width();
+	int vp_bw = vid_get_viewport_byte_width() * vid_get_viewport_yscale();
+
+	int x_step = motion_detector.pixels_step * 3;
+	int y_step = motion_detector.pixels_step * vp_bw;
+
+    for (idx=0, row=0; row < motion_detector.rows; row++)
+    {
+        // Calc img y start and end offsets (use same height for all cells so 'points' is consistent)
+        int y_start = ((row * vp_h) / motion_detector.rows) * vp_bw;
+        int y_end = y_start + ((vp_h / motion_detector.rows) * vp_bw);
+
+        for (col=0; col < motion_detector.columns; col++, idx++)
+        {
+            int in_clipping_region=0;
+
+            if (col+1 >= motion_detector.clipping_region_column1 &&
+                col+1 <= motion_detector.clipping_region_column2 &&
+                row+1 >= motion_detector.clipping_region_row1 &&
+                row+1 <= motion_detector.clipping_region_row2)
+            {
+                in_clipping_region=1;
+            }
+
+            int curr = 0;
+            int diff = 0;
+
+            if (
+                (motion_detector.clipping_region_mode==MD_REGION_NONE) ||
+                (motion_detector.clipping_region_mode==MD_REGION_EXCLUDE && in_clipping_region==0) ||
+                (motion_detector.clipping_region_mode==MD_REGION_INCLUDE && in_clipping_region==1)
+               )
+            {
+                // Calc img x start and end offsets (use same width for all cells so 'points' is consistent)
+                int x_start = ((col * vp_w) / motion_detector.columns) * 3;
+                int x_end = x_start + ((vp_w / motion_detector.columns) * 3);
+
+                int points = 0;
+
+                for (y=y_start; y<y_end; y+=y_step)
+                {
+                    for (x=x_start; x<x_end; x+=x_step)
+                    {
+                        // ARRAY of UYVYYY values
+                        // 6 bytes - 4 pixels
+
+                        if (motion_detector.pixel_measure_mode == MD_MEASURE_MODE_Y)
+                        {
+                            val = img[y + x + 1];				                        //Y
+                        }
+                        else
+                        {
+                            // Calc offset to UYV component
+                            int uvx = x;
+                            if (uvx & 1) uvx -= 3;
+
+                            switch(motion_detector.pixel_measure_mode)
+                            {
+                            case MD_MEASURE_MODE_U:
+                                val = (signed char)img[y + uvx];		                //U
+                                break;
+
+                            case MD_MEASURE_MODE_V:
+                                val = (signed char)img[y + uvx + 2];	                //V
+                                break;
+
+                            case MD_MEASURE_MODE_R:
+                                cy = img[y + x + 1];
+                                cv = (signed char)img[y + uvx + 2];
+                                val = clip(((cy<<12)           + cv*5743 + 2048)>>12); // R
+                                break;
+
+                            case MD_MEASURE_MODE_G:
+                                cy = img[y + x + 1];
+                                cu = (signed char)img[y + uvx];
+                                cv = (signed char)img[y + uvx + 2];
+                                val = clip(((cy<<12) - cu*1411 - cv*2925 + 2048)>>12); // G
+                                break;
+
+                            case MD_MEASURE_MODE_B:
+                                cy = img[y + x + 1];
+                                cu = (signed char)img[y + uvx];
+                                val = clip(((cy<<12) + cu*7258           + 2048)>>12); // B
+                                break;
+
+                            default:
+                                val = 0;    // Stop compiler warning
+                                break;
+                            }
+                        }
+
+                        curr += val;
+                        points++;
+                    }
+                }
+                motion_detector.points = points ;
+                diff = (curr - motion_detector.prev[idx]) / points;
+                if (diff < 0) diff = -diff;
+                if ((diff > motion_detector.threshold) &&
+                    (motion_detector.start_time+motion_detector.msecs_before_trigger < tick))
+                {
+                    motion_detector.detected_cells++;
+                }
+            }
+
+            motion_detector.diff[idx] = diff;
+            motion_detector.prev[idx] = curr;
+	}
+    }
+
+    if (motion_detector.previous_picture_is_ready == 0)
+    {
+        motion_detector.previous_picture_is_ready = 1;
+        motion_detector.start_time = get_tick_count();
+        motion_detector.last_measure_time = motion_detector.start_time - motion_detector.measure_interval;
+    }
+    else if ( motion_detector.detected_cells > 0 )
+    {
+        if (motion_detector.start_time+motion_detector.msecs_before_trigger < tick)
+        {
+            motion_detector.running=0;
+            motion_detector.return_value = motion_detector.detected_cells;
+
+            if ((motion_detector.parameters&MD_DO_IMMEDIATE_SHOOT) != 0)
+            {
+                //make shoot
+                md_kbd_sched_immediate_shoot(motion_detector.parameters&MD_NO_SHUTTER_RELEASE_ON_SHOOT);
+            }
+            rv = 0;
+        }
+    }
+
+    return rv;
+}
+
+#else // ndef THUMB_FW
+// DIGIC 6
 static int md_detect_motion(void)
 {
     int idx, tick, rv;
@@ -487,7 +681,7 @@ static int md_detect_motion(void)
 
     int vp_h = vid_get_viewport_height();
     int vp_w = vid_get_viewport_width();
-#ifdef THUMB_FW
+
     int vp_bw = vid_get_viewport_byte_width();
     int x_step = motion_detector.pixels_step * 2; // so actually pixels-step = 1 will
                                //give a step of 2 bytes, no pixels will be skipped
@@ -495,11 +689,6 @@ static int md_detect_motion(void)
          (motion_detector.pixel_measure_mode == MD_MEASURE_MODE_V) ) && (x_step < 4) ){
        x_step =  4; //uv is sampled every 4 bytes in X, prevent double counting
     }
-#else
-	int vp_bw = vid_get_viewport_byte_width() * vid_get_viewport_yscale();
-	int x_step = motion_detector.pixels_step * 3; //this will skip every
-                                      //second pixel if pixels-step = 1..uYvyYy
-#endif
 
 	int y_step = motion_detector.pixels_step * vp_bw;
 
@@ -531,7 +720,6 @@ static int md_detect_motion(void)
                )
             {
                 // Calc img x start and end offsets (use same width for all cells so 'points' is consistent)
-#ifdef THUMB_FW
 //                int x_start = ((col * vp_bw) / motion_detector.columns); //first byte of col
                 int x_start = ((col * vp_w * 2) / motion_detector.columns); //first byte of col
 //                int x_end = x_start + ((vp_bw / motion_detector.columns)); //last byte
@@ -541,19 +729,13 @@ static int md_detect_motion(void)
 // can result in bad alignment
 // eg xstart = 111, xstart % xs = 1 (for xs = 2)
                 x_start  +=    x_start % xs;
-#else
-                int x_start = ((col * vp_w) / motion_detector.columns) * 3;
-                int x_end = x_start + ((vp_w / motion_detector.columns) * 3);
-#endif
                 int points = 0;
 
                 for (y=y_start; y<y_end; y+=y_step)
                 {
                     for (x=x_start; x<x_end; x+=x_step)
                     {
-#ifdef THUMB_FW
                        if (x_start + xs >= x_end) { break;}
-#endif
                         // ARRAY of UYVYYY values or UYVY
                         // 6 bytes - 4 pixels       4 bytes - 2 pixels
 
@@ -565,56 +747,39 @@ static int md_detect_motion(void)
                         {
                             // Calc offset to UYV component
                             int uvx = x;
-#ifndef THUMB_FW
-                            if (uvx & 1) uvx -= 3;
-#else
 // check move backwards to find u value if necessary
 // eg x=111 x%4 = 3 uvx=108
 // actually this will always be zero or 2
 //e.g. component U   Y   V   Y
 //     byte #   108 109 110 111
                            uvx -= x % 4;
-#endif
+                           unsigned int ibuf = *(unsigned int*)(&img[(y+uvx)&0xfffffffc]);
+                           cu =(signed char)((ibuf&0xff)-128);
+                           cv =(signed char)(((ibuf>>16)&0xff)-128);
+                           cy = (unsigned char)((ibuf>>8)&0xff);
 
                             switch(motion_detector.pixel_measure_mode)
                             {
                             case MD_MEASURE_MODE_U:
-                                val = (signed char)img[y + uvx]; //U
+                                val = cu; //U
                                 break;
 
                             case MD_MEASURE_MODE_V:
-                                val = (signed char)img[y + uvx + 2]; //V
+                                val = cv; //V
                                 break;
 
                             case MD_MEASURE_MODE_R:
-                                cy = img[y + x + 1];
-#ifndef THUMB_FW
-                                cv = (signed char)img[y + uvx + 2];
-#else
-                                cv = (signed char)img[y + uvx + 2] - 128;
-#endif
+
                                 val = clip(((cy<<12)           + cv*5743 + 2048)>>12); // R
                                 break;
 
                             case MD_MEASURE_MODE_G:
-                                cy = img[y + x + 1];
-#ifndef THUMB_FW
-                                cu = (signed char)img[y + uvx];
-                                cv = (signed char)img[y + uvx + 2];
-#else
-                                cu = (signed char)img[y + uvx] - 128;
-                                cv = (signed char)img[y + uvx + 2] -128;
-#endif
+
                                 val = clip(((cy<<12) - cu*1411 - cv*2925 + 2048)>>12); // G
                                 break;
 
                             case MD_MEASURE_MODE_B:
-                                cy = img[y + x + 1];
-#ifndef THUMB_FW
-                                cu = (signed char)img[y + uvx];
-#else
-                                cu = (signed char)img[y + uvx] - 128;
-#endif
+
                                 val = clip(((cy<<12) + cu*7258           + 2048)>>12); // B
                                 break;
 
@@ -667,6 +832,7 @@ static int md_detect_motion(void)
 
     return rv;
 }
+#endif
 
 int md_get_cell_val(int column, int row)
 {

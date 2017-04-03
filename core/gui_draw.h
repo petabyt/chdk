@@ -53,9 +53,24 @@ extern  unsigned char   *chdk_colors;
 #define COLOR_CYAN              (chdk_colors[IDX_COLOR_CYAN])
 
 //-------------------------------------------------------------------
+#define FONT_REAL_WIDTH         8
+#define FONT_REAL_HEIGHT        16
+
+#ifndef THUMB_FW
 
 #define FONT_WIDTH              8
 #define FONT_HEIGHT             16
+// Name of default symbol file (for reset)
+#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
+
+#else // THUMB_FW
+
+#define FONT_WIDTH              14
+#define FONT_HEIGHT             32
+// Name of default symbol file (for reset)
+#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_16.rbf"
+
+#endif // THUMB_FW
 
 // Text justification & options
 #define TEXT_LEFT               0
@@ -94,6 +109,10 @@ extern color draw_get_pixel_unrotated(coord x, coord y);
 
 extern void draw_pixel(coord x, coord y, color cl);
 extern void draw_pixel_unrotated(coord x, coord y, color cl);
+
+extern void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op);
+extern void set_transparent(unsigned int offset, int n_pixel);
+extern unsigned int color_to_rawpx(color cl, unsigned int *op);
 
 extern void draw_line(coord x1, coord y1, coord x2, coord y2, color cl);
 extern void draw_hline(coord x, coord y, int len, color cl);

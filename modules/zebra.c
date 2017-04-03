@@ -111,6 +111,7 @@ static color cl_under, cl_over;
 
 unsigned char clip8(signed short x){ if (x<0) x=0; else if (x>255) x=255; return x; }
 
+#ifndef THUMB_FW
 //-------------------------------------------------------------------
 // free and NULL zebra buffers. free(NULL) is always OK.
 static void gui_osd_zebra_free()
@@ -124,7 +125,6 @@ static void gui_osd_zebra_free()
     free(cur_buf_bot);
     cur_buf_bot = NULL;
 }
-
 // prepare zebra resources, or free them
 // returns 1 if zebra should be drawn
 static int gui_osd_zebra_init(int show)
@@ -508,7 +508,298 @@ int gui_osd_draw_zebra(int show)
     else
         return draw_zebra_no_aspect_adjust(camera_info.state.mode_rec,f,cls); // For older cameras with 360/480 pixel wide screen
 }
+#else // THUMB_FW
+//digic 6 code below here
 
+typedef struct
+{
+    unsigned int yuv;
+    unsigned int op;
+} rawcolor_s;
+
+rawcolor_s clr[8];
+
+rawcolor_s rawcl_overunder[3];
+
+// D6 version draws directly, no allocs
+static void gui_osd_zebra_free()
+{
+    buf = NULL;
+}
+
+// prepare zebra resources, or free them
+// returns 1 if zebra should be drawn
+static int gui_osd_zebra_init(int show)
+{
+    color cls[] =
+    {
+        COLOR_TRANSPARENT,
+        COLOR_BLUE,
+        COLOR_GREEN,
+        COLOR_CYAN,
+        COLOR_RED,
+        COLOR_MAGENTA,
+        COLOR_YELLOW,
+        COLOR_BLACK
+    };
+
+    cl_under = BG_COLOR(user_color(conf.zebra_color));
+    cl_over = FG_COLOR(user_color(conf.zebra_color));
+
+    if (show)
+    {
+        if (!buf)
+        {
+            timer = 0;
+            scr_buf = vid_get_bitmap_fb();
+            buf = scr_buf;
+        }
+        int f;
+        for (f=0; f<8; f++)
+        {
+            clr[f].yuv = color_to_rawpx(cls[f], &(clr[f].op));
+        }
+        rawcl_overunder[1].yuv = color_to_rawpx(cl_under, &(rawcl_overunder[1].op));
+        rawcl_overunder[0].yuv = color_to_rawpx(cl_over, &(rawcl_overunder[0].op));
+        rawcl_overunder[2].yuv = color_to_rawpx(COLOR_TRANSPARENT, &(rawcl_overunder[2].op));
+    }
+    else
+    {
+        if (buf) // if zebra was previously on, restore
+        {
+            gui_set_need_restore();
+        }
+        gui_osd_zebra_free();
+    }
+    return (buf != NULL);
+}
+
+ 
+
+//-------------------------------------------------------------------
+int draw_guard_pixel() {
+    unsigned char* buffer1 = vid_get_bitmap_fb()+camera_screen.buffer_size/2;
+    unsigned char* buffer2 = buffer1+camera_screen.buffer_size;
+    int has_disappeared=0;
+
+    if (*buffer1!=COLOR_GREEN) has_disappeared=1;
+    if (*buffer2!=COLOR_GREEN) has_disappeared=2;
+    *buffer1 = *buffer2 = COLOR_GREEN;
+    return has_disappeared;
+}
+
+//-------------------------------------------------------------------
+// neither OSD nor histogram can be drawn over zebra
+// draw_set_draw_proc() is not respected by the current D6 drawing code anyway
+static void gui_osd_draw_zebra_osd() {
+    switch (conf.zebra_draw_osd) {
+        case ZEBRA_DRAW_NONE:
+            break;
+        case ZEBRA_DRAW_OSD:
+            if (conf.show_osd) {
+                //draw_set_draw_proc(draw_dblpixel_raw);
+               // gui_draw_osd_elements(0,1);
+                //draw_set_draw_proc(NULL);
+            }
+            /* no break here */
+        case ZEBRA_DRAW_HISTO:
+        default:
+            //draw_set_draw_proc(draw_dblpixel_raw);
+            //libhisto->gui_osd_draw_histo(0);
+            //draw_set_draw_proc(NULL);
+            break;
+    }
+}
+
+//-------------------------------------------------------------------
+static void disp_zebra()
+{
+    // draw CHDK osd and histogram to buf[] (if enabled in config)
+
+    gui_osd_draw_zebra_osd();
+}
+
+//-------------------------------------------------------------------
+// CHDK uses a virtual screen size of 360 x 240 pixels (480x240 for wide screen models)
+static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
+{
+    unsigned int v, s, x, y, over, bitmap_byte;
+    static int need_restore=0;
+    int viewport_height;
+    int viewport_width; 
+    int viewport_byte_width;
+
+    int viewport_xoffset;    // used when image size != viewport size
+    int viewport_yoffset;    // used when image size != viewport size
+    int zebra_drawn=0;
+    int fd;
+    int fd2;
+    int ll;
+    char bl[80];
+    static int d_cnt =0;
+    static int d_wrt =0;
+    d_cnt++;
+
+    viewport_height = vid_get_viewport_height();
+    viewport_width = vid_get_viewport_width(); 
+    viewport_byte_width = vid_get_viewport_byte_width();
+    viewport_xoffset = vid_get_viewport_display_xoffset(); //columns
+    viewport_yoffset = vid_get_viewport_display_yoffset();
+    int  vo=vid_get_viewport_image_offset();
+
+    // if not in no-zebra phase of blink mode zebra, draw zebra  
+    if (f)
+    {
+
+        if (viewport_yoffset > 0)
+        {
+            // clear top & bottom areas of buffer if image height if smaller than viewport
+        }
+        int step_x, step_v;
+        over = 255-conf.zebra_over;
+    // start with all transparent, set the whole LCD causes too much blink
+    //    set_transparent(0,buffer_size/2); 
+        step_x = 2; //anything larger makes solid consist of alternating columns...
+
+        for (y=0; y<viewport_height ; ++y)
+        {
+//e.g. on SX60hs LCD is 640x480
+// 
+// 16:9     f:8 vh:360 vw:640 vbw:1280 vxo:0 vyo:60
+//1x1        f:8 vh:480 vw:480 vbw:1280 vxo:80 vyo:0
+            //this can be made more efficient, but for now want clarity 
+            for (x=0; x<viewport_width; x+=step_x)
+            {
+                register int y1,  uu, vv;
+                v = y*(viewport_byte_width)  + x + x ; //v is the byte number in img-buf  0...480,480+320...960,
+                bitmap_byte = (y + viewport_yoffset) * viewport_byte_width + 2*(x + viewport_xoffset);
+                unsigned int ibuf = *(unsigned int*)(&img_buf[v&0xfffffffc]);
+                vv =(signed char)((ibuf&0xff)-128);
+                uu =(signed char)(((ibuf>>16)&0xff)-128);
+                y1 = (unsigned char)((ibuf>>8)&0xff);
+
+                int sel = 0;
+                if (conf.zebra_multichannel)
+                {
+                    // for simplicity check only first pixel y1
+                    sel = 0;
+                    if (!((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
+                    {
+                        if (clip8(((y1<<12) +           vv*5743 + 2048)>>12)>over) sel  = 4; // R
+                        if (clip8(((y1<<12) - uu*1411 - vv*2925 + 2048)>>12)>over) sel |= 2; // G
+                        if (clip8(((y1<<12) + uu*7258           + 2048)>>12)>over) sel |= 1; // B
+                    }
+                    //set two pixels (4 bytes ) to color sel
+                    if (sel > 0 )
+                    {
+                        draw_dblpixel_raw(bitmap_byte,  clr[sel].yuv, clr[sel].op);
+                        zebra_drawn = 1;
+                    }
+                    else
+                    {
+                        draw_dblpixel_raw(bitmap_byte, 0x800080, 0);
+                    }
+                }
+                else if (((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
+                {
+                    // set two pixels transparent 
+                    draw_dblpixel_raw(bitmap_byte, 0x800080, 0); 
+                }
+                else
+                {
+                    // if y1 is over or under
+                    // set two pixels to under color
+                    sel = (y1>over)?0:(y1<conf.zebra_under)?1:2;
+                     //set two pixels (4 bytes ) to either overexposed, underexposed or transparent color
+                    draw_dblpixel_raw(bitmap_byte, rawcl_overunder[sel].yuv, rawcl_overunder[sel].op);
+                    if (sel < 2) {
+                        zebra_drawn = 1;
+                    }
+                }
+            }
+        }
+        if (!zebra_drawn) f=0;
+    }
+    // if blink mode is in no-zebra phase OR if there was no over/underexposed pixels to draw zebra on
+    if (!f)
+    {
+        // if zebra was drawn during previous call of this function
+        if (need_restore)
+        {
+            if (conf.zebra_restore_screen || conf.zebra_restore_osd)
+            {
+                gui_set_need_restore();
+            }
+            else
+            {
+                // clear buf[] of zebra, only leave Canon OSD
+                if (!mrec)
+                {
+                    // Not REC mode
+                    set_transparent(0, buffer_size/2);  //blink
+                }
+                disp_zebra();
+            }
+            need_restore=0;
+        }
+        return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
+        // if zebra was drawn
+    }
+    else
+    {
+        disp_zebra();
+        need_restore=1;
+        return 1;
+    }
+    return 0;
+}
+
+//-------------------------------------------------------------------
+int gui_osd_draw_zebra(int show)
+{
+    unsigned int f;
+
+    if (!gui_osd_zebra_init(show))
+        return 0;
+
+    img_buf = vid_get_viewport_active_buffer();
+    if (!img_buf) return 0;
+    // img_buf += vid_get_viewport_image_offset(); //always zero anyway
+
+    if (timer==0)
+    {
+        draw_guard_pixel();
+        timer = 1;
+        return 0;
+    }
+
+    if (timer==1)
+    {
+        int ready;
+        static int n=0;
+        if (!camera_info.state.mode_rec) ready=1;
+        else get_property_case(camera_info.props.shooting, &ready, 4);
+        n=draw_guard_pixel(); // will be 0 in PLAY mode, should be 1 or 2 in REC mode.
+        if(!ready) return 0;
+
+    }
+    ++timer;
+
+    switch (conf.zebra_mode)
+    {
+        case ZEBRA_MODE_ZEBRA_1:    f = 4;          break;
+        case ZEBRA_MODE_ZEBRA_2:    f = 8;          break;
+        case ZEBRA_MODE_SOLID:      f = 1;          break;
+        case ZEBRA_MODE_BLINKED_1:  f = timer&1;    break;
+        case ZEBRA_MODE_BLINKED_3:  f = timer&4;    break;
+        case ZEBRA_MODE_BLINKED_2:  
+        default:                    f = timer&2;    break;
+    }
+
+    return draw_zebra_no_aspect_adjust(camera_info.state.mode_rec,f);
+}
+
+#endif // THUMB_FW
 
 // =========  MODULE INIT =================
 

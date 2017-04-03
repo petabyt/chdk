@@ -10,6 +10,33 @@
 #include "../lib/font/font_8x16_uni_packed.h"
 #undef  GET_FONT_COMPRESSION_MODE
 
+#ifdef THUMB_FW
+// macros for computing palette from a single byte color value
+#define CALC_YUV_LUMA_OPACITY_FOR_COLOR(color,luma,opacity) \
+    { \
+        luma = ((color-1)^0xffffffff)&0xf0; \
+        opacity = (color&0xf)?255:color; \
+    }
+
+#define CALC_YUV_CHROMA_FOR_COLOR(color,u,v) \
+    { \
+        v = color; \
+        u = (v+1); \
+        if (!(u&2)) \
+        { \
+            u = 128; \
+            v = 128; \
+        } \
+        else \
+        { \
+            u *= 3; \
+            v <<= 3; \
+        } \
+    }
+
+extern volatile char *opacity_buffer[];
+
+#endif
 //-------------------------------------------------------------------
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 void            (*draw_pixel_proc_norm)(unsigned int offset, color cl);
@@ -38,51 +65,90 @@ static void draw_pixel_std(unsigned int offset, color cl)
 #error DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY is required for DIGIC 6 ports
 #endif
 
-    register int cli = cl ^ 0xffffffff;
-    extern volatile char *opacity_buffer[];
     int active_buffer_index =  active_bitmap_buffer & 1;
-    static unsigned int prev_offs = 0xffffffff;
+    unsigned char *obu = (unsigned char *)(&opacity_buffer[active_buffer_index][0]);
+    unsigned char *bbu = (unsigned char *)(&bitmap_buffer[active_buffer_index][0]);
+    unsigned int y;
+    unsigned int o;
+    CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,y,o);
+    obu[offset] = o;
     register unsigned int offs2 = (offset>>1)<<2;
-    if (cli != 0xffffffff)
+    if (offset&1) // x is odd
     {
-        if (prev_offs != offs2)
-        {
-            bitmap_buffer[active_buffer_index][offs2+2] = 0x80-((((int)cli)<<5)&0xe0);    // U?
-            bitmap_buffer[active_buffer_index][offs2+0] = 0x80-((((int)cli)<<2)&0xe0);    // V?
-            prev_offs = offs2;
-        }
-        if (offset&1) // x is odd
-        {
-            bitmap_buffer[active_buffer_index][offs2+3] = (cli&0xc0);    // Y
-        }
-        else // x is even
-        {
-            bitmap_buffer[active_buffer_index][offs2+1] = (cli&0xc0);    // Y
-        }
-        // simple transparency
-        opacity_buffer[active_buffer_index][offset] = (cli&16)?0x60:0xff;
+        bbu[offs2+3] = y; // Y
     }
-    else // color==0, black, fully transparent
+    else // x is even
     {
-        if (prev_offs != offs2)
-        {
-            bitmap_buffer[active_buffer_index][offs2+2] = 0x80;    // U?
-            bitmap_buffer[active_buffer_index][offs2+0] = 0x80;    // V?
-            prev_offs = offs2;
-        }
-        if (offset&1) // x is odd
-        {
-            bitmap_buffer[active_buffer_index][offs2+3] = 0;    // Y
-        }
-        else // x is even
-        {
-            bitmap_buffer[active_buffer_index][offs2+1] = 0;    // Y
-        }
-        // fully transparent
-        opacity_buffer[active_buffer_index][offset] = 0;
+        unsigned int u;
+        unsigned int v;
+        CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
+        bbu[offs2+1] = y; // Y
+        bbu[offs2+0] = u; // U?
+        bbu[offs2+2] = v; // V?
+
     }
 #endif
 }
+//-------------------------------------------------------------------
+#ifdef THUMB_FW
+// direct drawing functions for YUV overlay, currently used by the zebra module
+// ATTENTION: these functions do not support guard pixels or rotation
+
+// function for setting part of the overlay transparent (DIGIC 6 only), used in zebra module
+// n_pixel is the number of pixels to set
+// offst is the byte offset in bitmap_buffer, 2 bytes per pixel
+void set_transparent(unsigned int offst, int n_pixel)
+{
+    extern void _bzero(char *s, int n);
+    extern void _memset32(char *s, int n, unsigned int pattern);
+    //offset is the byte (same as pixel) offset in the opacity buffer
+    unsigned int offset = offst>>2;
+    unsigned int w_pattern = 0x00800080;
+
+    int active_buffer_index = active_bitmap_buffer & 1;
+
+    _memset32(&bitmap_buffer[active_buffer_index][offst], n_pixel<<1, w_pattern);
+    _bzero((char*)&opacity_buffer[active_buffer_index][offset], n_pixel);
+
+}
+
+// translate single byte CHDK color to a whole yuv unit (2 pixels)
+// opacity is returned via the second argument
+unsigned int color_to_rawpx(color cl, unsigned int *op)
+{
+    unsigned int y,u,v,o;
+    CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
+    CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,y,o);
+    if (op) *op = o;
+    return (u&255)+((y&255)<<8)+((v&255)<<16)+(y<<24);
+}
+
+// function for drawing a whole yuv unit (2 pixels, aligned)
+// opacity is a single byte, used for both pixels
+// drawing offset is pixel offset, calculated by caller
+void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
+{
+    int active_buffer_index =  active_bitmap_buffer & 1;
+    offset >>= 2;
+    unsigned short * opbuf = (unsigned short*)(opacity_buffer[active_buffer_index]);
+    unsigned int * bmbuf = (unsigned int*)(bitmap_buffer[active_buffer_index]);
+    bmbuf[offset] = px;
+    opbuf[offset] = op | (op<<8);
+}
+
+#else // !THUMB_FW
+// not implemented for earlier DIGICs
+unsigned int color_to_rawpx(color cl, unsigned int *op)
+{
+    return 0;
+}
+void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
+{
+}
+void set_transparent(unsigned int offst, int n_pixel)
+{
+}
+#endif // THUMB_FW
 
 //-------------------------------------------------------------------
 unsigned int rotate_base;
@@ -112,6 +178,173 @@ void update_draw_proc()
 }
 
 //-------------------------------------------------------------------
+#ifdef THUMB_FW
+// pixel drawing functions for YUV, meant to be optimized for greater speed
+// drawing is done directly, drawing function replacement is not supported
+// OSD rotation is respected
+
+static unsigned char *current_opacity_buf;
+static unsigned char *current_bitmap_buf;
+static unsigned char yuvclr[8]; // order of bytes: background u,y,v,opacity; foreground u,y,v,opacity
+
+// sets up decoded colors and buffer addresses for the following drawing operation
+static void draw_pixel_simple_start(twoColors tc)
+{
+    color cl;
+    int active_buffer_index =  active_bitmap_buffer & 1;
+    current_opacity_buf = (unsigned char *)(&opacity_buffer[active_buffer_index][0]);
+    current_bitmap_buf = (unsigned char *)(&bitmap_buffer[active_buffer_index][0]);
+    cl = BG_COLOR(tc);
+    CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,yuvclr[1],yuvclr[3]);
+    CALC_YUV_CHROMA_FOR_COLOR(cl,yuvclr[0],yuvclr[2]);
+    cl = FG_COLOR(tc);
+    CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,yuvclr[5],yuvclr[7]);
+    CALC_YUV_CHROMA_FOR_COLOR(cl,yuvclr[4],yuvclr[6]);
+}
+
+// px: bit0 unset for background, set for foreground
+static void draw_1pixel_simple(coord x, coord y, int px, int vrepeat)
+{
+    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y+vrepeat >= camera_screen.height)/* || ((x == 0) && (y == 0))*/) return;
+    unsigned char *obu = current_opacity_buf;
+    unsigned char *bbu = current_bitmap_buf;
+    unsigned int offset = y * camera_screen.buffer_width + x;
+    int plus = camera_screen.buffer_width;
+    if (conf.rotate_osd)
+    {
+        offset = rotate_base - offset;
+        plus = -plus;
+    }
+
+    if (!offset) return; // skip guard pixel
+
+    int fg = px<<2;
+    register unsigned int offs2 = (offset>>1)<<2;
+    
+    if (offset&1) // x is odd
+    {
+        while (1)
+        {
+            obu[offset] = yuvclr[fg+3];
+            bbu[offs2+3] = yuvclr[fg+1]; // Y
+            if (!vrepeat) return;
+            vrepeat--;
+            offset += plus;
+            offs2 += (plus<<1);
+        }
+    }
+    else // x is even
+    {
+        while (1)
+        {
+            obu[offset] = yuvclr[fg+3];
+            bbu[offs2+1] = yuvclr[fg+1]; // Y
+            bbu[offs2+0] = yuvclr[fg]; // U
+            bbu[offs2+2] = yuvclr[fg+2]; // V
+            if (!vrepeat) return;
+            vrepeat--;
+            offset += plus;
+            offs2 += (plus<<1);
+        }
+    }
+
+}
+
+// px: 2 bits, describing 2 pixels (foreground when set, background when not), LSB is the second pixel
+// first pixel specifies chroma
+static void draw_2pixels_simple(coord x, coord y, int px, int vrepeat)
+{
+    if ((x < 0) || (y < 0) || (x+1 >= camera_screen.width) || (y+vrepeat >= camera_screen.height)/* || ((x == 0) && (y == 0))*/) return;
+    unsigned int y1, y2;
+    unsigned int offset = (y * camera_screen.buffer_width + x)>>1;
+    int plus;
+    unsigned short co;
+    unsigned int yuv;
+    if (conf.rotate_osd)
+    {
+        offset = (rotate_base>>1) - offset;
+        plus = -(camera_screen.buffer_width>>1);
+        y1 = px&1?4:0;
+        y2 = px&2?4+1:0+1;
+    }
+    else
+    {
+        plus = camera_screen.buffer_width>>1;
+        y1 = px&2?4:0;
+        y2 = px&1?4+1:0+1;
+    }
+
+    if (!offset) return; // skip guard pixel
+
+    co = yuvclr[y1+3]+(yuvclr[y1+3]<<8);
+    yuv = (*(unsigned int*)(&yuvclr[y1]) & 0xffffff) + (yuvclr[y2]<<24);
+    unsigned short *obu = (unsigned short *)current_opacity_buf;
+    unsigned int *bbu = (unsigned int *)current_bitmap_buf;
+    while (1)
+    {
+        obu[offset] = co;
+        bbu[offset] = yuv;
+        if (!vrepeat) return;
+        vrepeat--;
+        offset += plus;
+    }
+
+}
+
+void draw_hline_simple(coord x, coord y, int len, int px)
+{
+    if ((y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
+    if (x < 0) { len += x; x = 0; }
+    if ((x + len) > camera_screen.width) len = camera_screen.width - x;
+    /*if ((x == 0) && (y == 0)) { x++; len--; }   // Skip guard pixel*/
+
+    register unsigned int offset = y * camera_screen.buffer_width + (x);
+    if (conf.rotate_osd)
+    {
+        offset = rotate_base - offset - len;
+    }
+
+    // Skip guard pixel
+    if (!offset)
+    {
+        offset++;
+        len--;
+    }
+
+    int fg = px<<2;
+    if (offset & 1)
+    {
+        unsigned char *obu = current_opacity_buf;
+        unsigned char *bbu = current_bitmap_buf;
+        register unsigned int offs2 = (offset>>1)<<2;
+        obu[offset] = yuvclr[fg+3];
+        bbu[offs2+3] = yuvclr[fg+1]; // Y
+        offset++;
+        len--;
+    }
+    unsigned short co = yuvclr[fg+3]+(yuvclr[fg+3]<<8);
+    unsigned int yuv = (*(unsigned int*)(&yuvclr[fg]) & 0xffffff) + (yuvclr[fg+1]<<24);
+    unsigned short *obud = (unsigned short *)current_opacity_buf;
+    unsigned int *bbud = (unsigned int *)current_bitmap_buf;
+    for (; len>0; len-=2, offset+=2)
+    {
+        obud[offset>>1] = co;
+        bbud[offset>>1] = yuv;
+    }
+    if (len == -1)
+    {
+        offset--;
+        unsigned char *obu = current_opacity_buf;
+        unsigned char *bbu = current_bitmap_buf;
+        register unsigned int offs2 = (offset>>1)<<2;
+        obu[offset] = yuvclr[fg+3];
+        bbu[offs2+3] = yuvclr[fg+1]; // Y
+    }
+}
+
+
+#endif // THUMB_FW
+//-------------------------------------------------------------------
 #ifndef THUMB_FW
 
 #define GUARD_VAL   COLOR_GREY_DK
@@ -139,8 +372,6 @@ int draw_test_guard()
 }
 
 #else // DIGIC 6
-
-extern volatile char *opacity_buffer[];
 
 void draw_set_guard()
 {
@@ -395,6 +626,8 @@ static unsigned char* get_cdata(unsigned int *offset, unsigned int *size, const 
     return (unsigned char*)f + sizeof(FontData) - *offset;
 }
 
+#ifndef THUMB_FW
+// DIGIC II...5
 void draw_char(coord x, coord y, const char ch, twoColors cl)
 {
     int i, ii;
@@ -408,25 +641,18 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 
     // Now draw character data
 
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
     int j;
     for (j=i; i<size;)
     {
         unsigned int dsym;
         int rep;
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
         dsym = fontdata_lookup[sym[j] & 0x7f];
         rep = sym[j] & 0x80;
-#if 0 // size optimized (-16 bytes...)
-        while (rep >= 0)
-        {
-            for (ii=0; ii<FONT_WIDTH; ii++)
-            {
-                draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
-            }
-            rep -= 0x80;
-            i++;
-        }
-#else // little faster
+#else
+        dsym = sym[j];
+        rep = 0;
+#endif
         for (ii=0; ii<FONT_WIDTH; ii++)
         {
             draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
@@ -440,24 +666,171 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
             }
         }
         i++;
-#endif
         j++;
     }
-#else
-    for (; i<size; i++)
-    {
-        for (ii=0; ii<FONT_WIDTH; ii++)
-        {
-            draw_pixel(x+ii, y+i, (sym[i] & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
-        }
-    }
-#endif // BUILTIN_FONT_RLE_COMPRESSED
 
     // Last draw blank lines at bottom
     for (; i<FONT_HEIGHT; i++)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
 }
+#endif
 
+#ifdef THUMB_FW
+// DIGIC 6: "optimizations" to improve speed
+void draw_char(coord x, coord y, const char ch, twoColors cl)
+{
+    int i, ii;
+
+    unsigned int offset, size;
+    unsigned char *sym = get_cdata(&offset, &size, ch);
+    color fg = FG_COLOR(cl);
+    color bg = BG_COLOR(cl);
+    unsigned int fw = FONT_WIDTH;
+
+    draw_pixel_simple_start(cl);
+
+    // First draw blank lines at top
+    for (i=0; i<offset; i++)
+    {
+        int j;
+        j = i<<1;
+        draw_hline_simple(x, y+j, fw, 0);
+        draw_hline_simple(x, y+j+1, fw, 0);
+    }
+
+    // Now draw character data
+
+    int j;
+    for (j=i; i<size;)
+    {
+        unsigned int dsym;
+        int rep;
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+        rep = sym[j] & 0x80;
+#else
+        dsym = sym[j];
+        rep = 0;
+#endif
+        {
+            // upscaling 8 pixels to 14
+            ii = 0;
+            ii += (dsym&1)?3:0;
+            ii += (dsym&2)?4:0;
+            ii += (dsym&4)?0x18:0;
+            ii += (dsym&8)?0x60:0;
+            ii += (dsym&16)?0x180:0;
+            ii += (dsym&32)?0x600:0;
+            ii += (dsym&64)?0x1800:0;
+            ii += (dsym&128)?0x2000:0;
+            dsym = ii;
+        }
+
+        while (rep >= 0)
+        {
+            unsigned int px;
+            unsigned int yt = y+(i<<1);
+            ii = 0;
+            if (x&1)
+            {
+                draw_1pixel_simple(x+ii, yt, dsym>>(fw-1), 1);
+                ii++;
+            }
+            for (; ii<fw; ii+=2)
+            {
+                px = (dsym & ((3<<(fw-2))>>ii))>>(fw-2-ii);
+                draw_2pixels_simple(x+ii, yt, px, 1);
+            }
+            if (x&1)
+            {
+                draw_1pixel_simple(x+ii-1, yt, dsym&1, 1);
+            }
+            rep -= 0x80;
+            i++;
+        }
+
+        j++;
+    }
+
+    // Last draw blank lines at bottom
+    for (; i<FONT_REAL_HEIGHT; i++)
+    {
+        int j;
+        j = i<<1;
+        draw_hline_simple(x, y+j, fw, 0);
+        draw_hline_simple(x, y+j+1, fw, 0);
+    }
+}
+
+void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
+{
+    int i, ii;
+
+    unsigned int offset, size;
+    unsigned char *sym = get_cdata(&offset, &size, ch);
+    color fg = FG_COLOR(cl);
+    color bg = BG_COLOR(cl);
+    unsigned int fw = FONT_REAL_WIDTH;
+
+    draw_pixel_simple_start(cl);
+
+    // First draw blank lines at top
+    for (i=0; i<offset; i++)
+    {
+        draw_hline_simple(x, y+i, fw, 0);
+    }
+
+    // Now draw character data
+
+    int j;
+    for (j=i; i<size;)
+    {
+        unsigned int dsym;
+        int rep;
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+        rep = sym[j] & 0x80;
+#else
+        dsym = sym[j];
+        rep = 0;
+#endif
+
+        while (rep >= 0)
+        {
+            unsigned int px;
+            unsigned int yt = y+(i);
+            ii = 0;
+            if (x&1)
+            {
+                draw_1pixel_simple(x+ii, yt, dsym>>(fw-1), 0);
+                ii++;
+            }
+            for (; ii<fw; ii+=2)
+            {
+                px = (dsym & ((3<<(fw-2))>>ii))>>(fw-2-ii);
+                draw_2pixels_simple(x+ii, yt, px, 0);
+            }
+            if (x&1)
+            {
+                draw_1pixel_simple(x+ii-1, yt, dsym&1, 0);
+            }
+            rep -= 0x80;
+            i++;
+        }
+
+        j++;
+    }
+
+    // Last draw blank lines at bottom
+    for (; i<FONT_REAL_HEIGHT; i++)
+    {
+        draw_hline_simple(x, y+i, fw, 0);
+    }
+}
+
+#endif // THUMB_FW
+
+#ifndef THUMB_FW
 void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
 {
     int i, ii;
@@ -473,7 +846,6 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
     int j;
     for (j=i=offset; i<size;)
     {
@@ -481,8 +853,13 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         int rep;
         unsigned int last;
         int len;
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
         dsym = fontdata_lookup[sym[j] & 0x7f];
         rep = sym[j] & 0x80;
+#else
+        dsym = sym[j];
+        rep = 0;
+#endif
         while (rep >= 0)
         {
             last = dsym & 0x80;
@@ -506,33 +883,88 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         }
         j++;
     }
-#else
-    for (i=offset; i<size; i++)
-    {
-        unsigned int last = sym[i] & 0x80;
-        int len = 1;
-        for (ii=1; ii<FONT_WIDTH; ii++)
-        {
-            if (((sym[i] << ii) & 0x80) != last)
-            {
-                draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-                last = (sym[i] << ii) & 0x80;
-                len = 1;
-            }
-            else
-            {
-                len++;
-            }
-        }
-        draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-    }
-#endif // BUILTIN_FONT_RLE_COMPRESSED
 
     // Last draw blank lines at bottom
     if (i < FONT_HEIGHT)
         draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 }
+#endif // !THUMB_FW
 
+#ifdef THUMB_FW
+void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
+{
+    int i, ii;
+
+    twoColors clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
+    twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
+
+    unsigned int offset, size;
+    unsigned char *sym = get_cdata(&offset, &size, ch);
+
+    ysize <<= 1;
+
+    // First draw blank lines at top
+    if (offset > 0)
+        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+
+    // Now draw character data
+    int j;
+    for (j=i=offset; i<size;)
+    {
+        unsigned int dsym;
+        int rep;
+        unsigned int last;
+        int len;
+        unsigned int lastmask = 1 << (FONT_WIDTH-1);
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+        rep = sym[j] & 0x80;
+#else
+        dsym = sym[j];
+        rep = 0;
+#endif
+        {
+            // upscaling 8 pixels to 14
+            ii = 0;
+            ii += (dsym&1)?3:0;
+            ii += (dsym&2)?4:0;
+            ii += (dsym&4)?0x18:0;
+            ii += (dsym&8)?0x60:0;
+            ii += (dsym&16)?0x180:0;
+            ii += (dsym&32)?0x600:0;
+            ii += (dsym&64)?0x1800:0;
+            ii += (dsym&128)?0x2000:0;
+            dsym = ii;
+        }
+        while (rep >= 0)
+        {
+            last = dsym & lastmask;
+            len = 1;
+            for (ii=1; ii<FONT_WIDTH; ii++)
+            {
+                if (((dsym << ii) & lastmask) != last)
+                {
+                    draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+                    last = (dsym << ii) & lastmask;
+                    len = 1;
+                }
+                else
+                {
+                    len++;
+                }
+            }
+            draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+            i++;
+            rep -= 0x80;
+        }
+        j++;
+    }
+
+    // Last draw blank lines at bottom
+    if (i < FONT_REAL_HEIGHT)
+        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_REAL_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+}
+#endif // THUMB_FW
 //-------------------------------------------------------------------
 // String & text functions
 
@@ -656,22 +1088,59 @@ int draw_text_justified(coord x, coord y, const char *s, twoColors cl, int max_c
 }
 
 // Draw single line string, with optiona X and Y scaling
+#ifndef THUMB_FW
 void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize)
 {
     while (*s && (*s != '\n'))
     {
-	    draw_char_scaled(x, y, *s, cl, xsize, ysize);
-	    s++;
-	    x+=FONT_WIDTH*xsize;
-	    if ((x>=camera_screen.width) && (*s))
+        draw_char_scaled(x, y, *s, cl, xsize, ysize);
+        s++;
+        x+=FONT_WIDTH*xsize;
+        if ((x>=camera_screen.width) && (*s))
         {
-	        draw_char_scaled(x-FONT_WIDTH*xsize,y, '>', cl, xsize, ysize);
-	        break;
-	    }
+            draw_char_scaled(x-FONT_WIDTH*xsize,y, '>', cl, xsize, ysize);
+            break;
+        }
     }
 }
+#endif
+
+#ifdef THUMB_FW
+void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize)
+{
+    if ((xsize==0) || (ysize==0))
+    {
+        while (*s && (*s != '\n'))
+        {
+            draw_char_unscaled(x, y, *s, cl);
+            s++;
+            x+=FONT_REAL_WIDTH;
+            if ((x>=camera_screen.width) && (*s))
+            {
+                draw_char_unscaled(x-FONT_REAL_WIDTH,y, '>', cl);
+                break;
+            }
+        }
+    }
+    else
+    {
+        while (*s && (*s != '\n'))
+        {
+            draw_char_scaled(x, y, *s, cl, xsize, ysize);
+            s++;
+            x+=FONT_WIDTH*xsize;
+            if ((x>=camera_screen.width) && (*s))
+            {
+                draw_char_scaled(x-FONT_WIDTH*xsize,y, '>', cl, xsize, ysize);
+                break;
+            }
+        }
+    }
+}
+#endif
 
 // Draw CHDK OSD string at user defined position and scale
+#ifndef THUMB_FW
 void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale)
 {
     if ((scale.x == 0) || (scale.y == 0) || ((scale.x == 1) && (scale.y == 1)))
@@ -679,6 +1148,25 @@ void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scal
     else
         draw_string_scaled(pos.x+(xo*scale.x), pos.y+(yo*scale.y), s, c, scale.x, scale.y);
 }
+#endif
+
+#ifdef THUMB_FW
+void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale)
+{
+    if ((scale.x == 1) && (scale.y == 1))
+    {
+        draw_string(pos.x+xo, pos.y+yo, s, c);
+    }
+    else if ((scale.x == 0) || (scale.y == 0))
+    {
+        draw_string_scaled(pos.x+(xo>>1), pos.y+(yo>>1), s, c, scale.x, scale.y);
+    }
+    else
+    {
+        draw_string_scaled(pos.x+(xo*scale.x), pos.y+(yo*scale.y), s, c, scale.x, scale.y);
+    }
+}
+#endif
 
 //-------------------------------------------------------------------
 // Draw single line string at 'character' screen position (row, col)
@@ -817,8 +1305,23 @@ void draw_button(int x, int y, int w, int str_id, int active)
 // Draw an OSD icon from an array of actions
 void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
 {
+    int x1, y1, x2, y2;
     while (1)
     {
+        if (FONT_HEIGHT > 16)
+        {
+            x1 = cmds->x1<<1;
+            y1 = cmds->y1<<1;
+            x2 = cmds->x2<<1;
+            y2 = cmds->y2<<1;
+        }
+        else
+        {
+            x1 = cmds->x1;
+            y1 = cmds->y1;
+            x2 = cmds->x2;
+            y2 = cmds->y2;
+        }
         color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
         color cb = chdk_colors[cmds->cb];
         switch (cmds->action)
@@ -827,25 +1330,25 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
         case IA_END:
             return;
         case IA_HLINE:
-            draw_hline(x+cmds->x1, y+cmds->y1, cmds->x2, cb);
+            draw_hline(x+x1, y+y1, x2, cb);
             break;
         case IA_VLINE:
-            draw_vline(x+cmds->x1, y+cmds->y1, cmds->y2, cb);
+            draw_vline(x+x1, y+y1, y2, cb);
             break;
         case IA_LINE:
-            draw_line(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, cb);
+            draw_line(x+x1, y+y1, x+x2, y+y2, cb);
             break;
         case IA_RECT:
-            draw_rectangle(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, MAKE_COLOR(cb,cf), RECT_BORDER1);
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1);
             break;
         case IA_FILLED_RECT:
-            draw_rectangle(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, MAKE_COLOR(cb,cf), RECT_BORDER1|DRAW_FILLED);
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1|DRAW_FILLED);
             break;
         case IA_ROUND_RECT:
-            draw_rectangle(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, MAKE_COLOR(cb,cf), RECT_BORDER1|RECT_ROUND_CORNERS);
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1|RECT_ROUND_CORNERS);
             break;
         case IA_FILLED_ROUND_RECT:
-            draw_rectangle(x+cmds->x1, y+cmds->y1, x+cmds->x2, y+cmds->y2, MAKE_COLOR(cb,cf), RECT_BORDER1|DRAW_FILLED|RECT_ROUND_CORNERS);
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1|DRAW_FILLED|RECT_ROUND_CORNERS);
             break;
         }
         cmds++;
@@ -861,10 +1364,12 @@ unsigned char *chdk_colors = ply_colors;
 
 void set_palette()
 {
+#ifndef THUMB_FW
     if (camera_info.state.mode_rec)
         chdk_colors = rec_colors;
     else
         chdk_colors = ply_colors;
+#endif
 }
 
 color get_script_color(int cl)

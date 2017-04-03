@@ -338,7 +338,13 @@ int gui_sokoban_init() {
     else if(sconf.sokoban_level >= num_levels) {
         sconf.sokoban_level = 0;
     }
-    cell_size = camera_screen.height/FIELD_HEIGHT;
+    if (camera_screen.height*3 > camera_screen.width*2) {
+        // worst case scenario (640x480)
+        cell_size = 8*camera_screen.height/(9*FIELD_HEIGHT);
+    }
+    else {
+        cell_size = camera_screen.height/FIELD_HEIGHT;
+    }
     sokoban_set_level(sconf.sokoban_level);
 	// if the file is no longer readable, set_level will set this
     if(!num_levels) {

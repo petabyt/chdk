@@ -30,9 +30,6 @@
 // Pointer to struct containing item count, item size and pointer to items
 #define CONF_STRUCT_PTR     6
 
-// Name of default symbol file (for reset)
-#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
-
 typedef struct {
     unsigned short  x, y;
 } OSD_pos;

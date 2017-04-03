@@ -85,7 +85,12 @@ void init_fonts()
 void alloc_cTable(font *f) {
 
     // Calculate additional values for font
-    f->width = 8 * f->hdr.charSize / f->hdr.height;
+    if (f->usingFont8x16) {
+        f->width = FONT_WIDTH;
+    }
+    else {
+        f->width = 8 * f->hdr.charSize / f->hdr.height;
+    }
     f->charCount = f->hdr.charLast - f->hdr.charFirst + 1;
 
     // set width table to default value
@@ -243,9 +248,9 @@ void rbf_load_from_file(char *file, int codepage)
     if (!rbf_font_load(file, rbf_font, 0))
     {
         // Reset back to built in font, file load failed
-        rbf_font->hdr.charSize  = 16;
-        rbf_font->hdr.height    = 16;
-        rbf_font->hdr.maxWidth  = 8;
+        rbf_font->hdr.charSize  = FONT_HEIGHT;
+        rbf_font->hdr.height    = FONT_HEIGHT;
+        rbf_font->hdr.maxWidth  = FONT_WIDTH;
         rbf_font->hdr.charFirst = 0;
         rbf_font->hdr.charLast  = 255;
 
