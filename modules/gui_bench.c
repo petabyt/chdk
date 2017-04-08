@@ -31,10 +31,10 @@ static struct {
     int memory_read_uc_bps;
     int memory_write_bps;
     int memory_write_uc_bps;
-    int disk_read_buf_bps;
-    int disk_write_buf_bps;
-    int disk_write_raw_bps;
-    int disk_write_mem_bps;
+    int disk_read_buf_kbps;
+    int disk_write_buf_kbps;
+    int disk_write_raw_kbps;
+    int disk_write_mem_kbps;
     int cpu_ips;
     int text_cps;
     int textnonalign_cps;
@@ -74,10 +74,10 @@ void gui_bench_init() {
     bench.memory_read_uc_bps=-1;
     bench.memory_write_bps=-1;
     bench.memory_write_uc_bps=-1;
-    bench.disk_read_buf_bps=-1;
-    bench.disk_write_buf_bps=-1;
-    bench.disk_write_raw_bps=-1;
-    bench.disk_write_mem_bps=-1;
+    bench.disk_read_buf_kbps=-1;
+    bench.disk_write_buf_kbps=-1;
+    bench.disk_write_raw_kbps=-1;
+    bench.disk_write_mem_kbps=-1;
     bench.cpu_ips=-1;
     bench.text_cps=-1;
     bench.textnonalign_cps=-1;
@@ -112,7 +112,7 @@ static void gui_bench_draw_results_memory(int pos, int value, int value_uc) {
 static void gui_bench_draw_results(int pos, int value) {
     if (value!=-1) {
         if (value)
-            sprintf(buf, "%7d Kb/s      ", value/1024);
+            sprintf(buf, "%7d Kb/s      ", value);
         else
             strcpy(buf, clearline);
         draw_txt_string(17, pos, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
@@ -284,13 +284,13 @@ void gui_bench_draw() {
             add_to_log(log_run,"Text drawing    :",buf);
             buf[0] = 0; // empty buffer before optional tests to avoid confusing output when those are not enabled
 
-            gui_bench_draw_results(11, bench.disk_write_raw_bps);
+            gui_bench_draw_results(11, bench.disk_write_raw_kbps);
             add_to_log(log_run,"Card write (RAW):",buf);
-            gui_bench_draw_results(12, bench.disk_write_mem_bps);
+            gui_bench_draw_results(12, bench.disk_write_mem_kbps);
             add_to_log(log_run,"Card write (MEM):",buf);
-            gui_bench_draw_results(13, bench.disk_write_buf_bps);
+            gui_bench_draw_results(13, bench.disk_write_buf_kbps);
             add_to_log(log_run,"Card write (64k):",buf);
-            gui_bench_draw_results(14, bench.disk_read_buf_bps);
+            gui_bench_draw_results(14, bench.disk_read_buf_kbps);
             add_to_log(log_run,"Card read  (64k):",buf);
 
             write_log(log_run);
@@ -557,7 +557,7 @@ static void run_test(int num) {
         case 6:
             bench_measure_text_write();
             if (bench_mode!=BENCH_NOCARD) {
-                bench.disk_write_raw_bps = 0;
+                bench.disk_write_raw_kbps = 0;
             }
             bench_to_draw = 1;
             break;
@@ -565,24 +565,24 @@ static void run_test(int num) {
             x = open(BENCHTMP, O_WRONLY|O_CREAT, 0777);
             if (x>=0) {
                 t = get_tick_count();
-                s=write(x, hook_raw_image_addr(), camera_sensor.raw_size);
+                s=write(x, hook_raw_image_addr(), camera_sensor.raw_size)/1024;
                 t = get_tick_count() - t;
                 close(x);
-                bench.disk_write_raw_bps = (t==0)?0:s*100 / (t/10);
+                bench.disk_write_raw_kbps = (t==0)?0:s*100 / (t/10);
             }
-            bench.disk_write_mem_bps = 0;
+            bench.disk_write_mem_kbps = 0;
             bench_to_draw = 2;
             break;
         case 8:
             x = open(BENCHTMP, O_WRONLY|O_CREAT, 0777);
             if (x>=0) {
                 t = get_tick_count();
-                s=write(x, (void*)0x10000, 0xC00000);
+                s=write(x, (void*)0x10000, 0xC00000)/1024;
                 t = get_tick_count() - t;
                 close(x);
-                bench.disk_write_mem_bps = (t==0)?0:s*100 / (t/10);
+                bench.disk_write_mem_kbps = (t==0)?0:s*100 / (t/10);
             }
-            bench.disk_write_buf_bps = 0;
+            bench.disk_write_buf_kbps = 0;
             bench_to_draw = 2;
             break;
         case 9:
@@ -594,11 +594,12 @@ static void run_test(int num) {
                     for (n=0; n<256; ++n)
                         s+=write(x, benchbuf, 0x10000);
                     t = get_tick_count() - t;
+                    s = s / 1024;
                     close(x);
-                    bench.disk_write_buf_bps = (t==0)?0:s*100 / (t/10);
+                    bench.disk_write_buf_kbps = (t==0)?0:s*100 / (t/10);
                 }
             }
-            bench.disk_read_buf_bps = 0;
+            bench.disk_read_buf_kbps = 0;
             bench_to_draw = 2;
             break;
         case 10:
@@ -610,8 +611,9 @@ static void run_test(int num) {
                     for (n=0; n<256; ++n)
                         s+=read(x, benchbuf, 0x10000);
                     t = get_tick_count() - t;
+                    s = s / 1024;
                     close(x);
-                    bench.disk_read_buf_bps = (t==0)?0:s*100 / (t/10);
+                    bench.disk_read_buf_kbps = (t==0)?0:s*100 / (t/10);
                 }
             }
             bench_to_draw = 2;
