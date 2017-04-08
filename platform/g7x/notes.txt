@@ -55,7 +55,7 @@ PTP remote shoot with JPEG / CHDK DNG
 Motion detection - preliminary, see known bugs below
 PTP live view - preliminary, requires client with live view proto 2.2 support
  (chdkptp r712 or later)
-Zebra and histogram - with limitations, see other issues below.
+Zebra, histogram and Edge overlay - with limitations, see Other Issues below.
 
 NOT IMPLEMENTED
 ***************
@@ -71,7 +71,7 @@ OTHER ISSUES
 ************
 display updating is ugly
 - CHDK UI is erased / flashes every time low battery icons
-- Edge overlay does not work
+- Edge overlay does not erase properly when shown line
 - Zebra "Draw Over Zebra" and Restore options are non-functional
 
 PROPCASE_RESOLUTION values differ from previous models
