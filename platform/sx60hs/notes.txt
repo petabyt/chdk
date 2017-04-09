@@ -64,9 +64,7 @@ video controls (movie record task)
 OTHER ISSUES
 ************
 display updating is ugly. Below from sx280hs also applies to sx60hs
-- framebuffer related features do not work, including
- - zebra
- - histogram
+- some framebuffer related features do not work properly, including
  - edge overlay
  - custom auto iso overexposure protection
 - CHDK UI is erased / flashes every time low battery icons

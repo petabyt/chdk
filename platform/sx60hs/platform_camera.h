@@ -37,8 +37,8 @@
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Shrtcut" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_PRINT }
+    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "WiFi", "Shrtcut" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_WIFI, KEY_PRINT }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     // zebra and histo don't currently work, make shortcuts do nothing
@@ -61,7 +61,7 @@
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                  1
- //   #define CAM_VIDEO_QUALITY_ONLY                1
+    #define CAM_VIDEO_QUALITY_ONLY                1
     #undef  CAM_HAS_DISP_BUTTON
 
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
@@ -151,7 +151,7 @@
 
     #define CAM_ZEBRA_NOBUF                     1
 
-    //#define CAM_QUALITY_OVERRIDE                1
+    #define CAM_QUALITY_OVERRIDE                1
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                     100         // Override min subject distance

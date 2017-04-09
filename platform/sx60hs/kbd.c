@@ -111,8 +111,8 @@ long get_jogdial_direction(void) {
     new_jogdial=get_jogdial_counter();
 
 //    _LogCameraEvent(0x20,"gjdd:  f:%08x %08x", old_jogdial, new_jogdial );
-    if (old_jogdial>new_jogdial) return JOGDIAL_LEFT;
-    else if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
+    if (old_jogdial>new_jogdial) return JOGDIAL_RIGHT;
+    else if (old_jogdial<new_jogdial) return JOGDIAL_LEFT;
     else return 0;
 }
 int handle_jogdial() {
