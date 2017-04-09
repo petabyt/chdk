@@ -14,7 +14,7 @@ endif
 all: $(EXES)
 
 # not needed by batch builds, not built by default
-EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE)
+EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE) extract_error_table$(exe)
 ifeq ($(OPT_CAPSTONE_TOOLS),1)
 EXTRA_EXES+=capdis$(EXE)
 endif
@@ -62,6 +62,10 @@ yuvconvert$(EXE): yuvconvert.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 find_levent$(EXE): find_levent.o dumputil.o
+	@echo $^ \-\> $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+extract_error_table$(EXE): extract_error_table.o dumputil.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
