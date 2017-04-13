@@ -42,7 +42,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_FOCUS_MODE                      133
 #define PROPCASE_FLASH_MANUAL_OUTPUT             141        // !not sure, but required for compile; from propset4
 #define PROPCASE_FLASH_MODE                      143        // 0 = Auto, 1 = ON, 2 = OFF
-#define PROPCASE_IS_MODE                         145        // 0 = Continuous, 2 = only Shoot, 4 = OFF
+#define PROPCASE_IS_MODE                         145        // 0 = Continuous, 1 = only Shoot, 2 = OFF (elph130)
 #define PROPCASE_ISO_MODE                        149
 #define PROPCASE_METERING_MODE                   157        // 0 = Evaluative, 1 = Spot, 2 = Center weighted avg
 #define PROPCASE_VIDEO_FRAMERATE                 167        // 1=25, 0=30 (elph130), may crash if doesn't match what canon uses for current resolution
