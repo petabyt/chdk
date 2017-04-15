@@ -929,7 +929,7 @@
 0xfc44d161,GetZoomLensDriveAmpereDac_FW
 0xfc186223,GetZoomLensMechaEdgePosition_FW
 0xfc18619f,GetZoomLensTelePoint_FW
-0xfc302310,GiveSemaphore,(stubs_entry_2.s)
+0xbfe15479,GiveSemaphore
 0xbfe15479,GiveSemaphore_FW
 0xbfe1208b,givesemaphore_low
 0xfc1454c9,GUISrv_StartGUISystem_FW
@@ -2112,7 +2112,7 @@
 0xfc5a5569,SwitchOnDisplay_FW
 0xfc189ae5,System.Create_FW
 0xfc189507,System.Delete_FW
-0xfc302318,TakeSemaphore,(stubs_entry_2.s)
+0xbfe15401,TakeSemaphore
 0xbfe15401,TakeSemaphore_FW
 0xbfe120b3,takesemaphore_low
 0xbfe155ad,TakeSemaphoreStrictly
