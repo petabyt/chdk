@@ -18,11 +18,9 @@ Issues:
 
 - CHDK overlay drawing is slow
 - many GUI modules don't respect screen resolution
-- some framebuffer related features do not work, including
- - zebra
- - histogram
- - custom auto iso overexposure protection
- - Edge overlay (preliminary code exists in Ant's branch)
+- Edge overlay does not erase properly when shown live
+- Zebra "Draw Over Zebra" and Restore options are non-functional
+- Some games don't draw correctly
 - movie features are not supported
 - movie_status is wrong
 
