@@ -31,27 +31,28 @@ void startup() {
 // ----      ----     --
 // 4.5       25       ( 25/ 4.5) * 45 = 250  (min FL)
 // 90.0      500      (500/90.0) * 45 = 250  (max FL)
-#define CF_EFL      250
-#define CF_EFL_DIV  45
+// #define CF_EFL      250
+// #define CF_EFL_DIV  45
 
 const int zoom_points = NUM_FL;
-extern int EFLensComGetFocalLength_my (void);
+extern unsigned int _GetLensFocalLengthAll(unsigned int*, unsigned int*, unsigned int*);
 
 int get_effective_focal_length(int zp) {
-//    return (CF_EFL*get_focal_length(zp))/CF_EFL_DIV;
-	return (EFLensComGetFocalLength_my() * 1600);
+	unsigned int focal [3];
+	_GetLensFocalLengthAll(&focal[0], &focal[1], &focal[2]);
+	return ( (unsigned short)(focal[0]) * 1600  ) ;
 }
 
 int get_focal_length(int zp) {
-    if (zp < 0) zp = 0;
-    else if (zp >= NUM_FL) zp = NUM_FL-1;
-//    return focus_len_table[zp*NUM_DATA];
-	return (EFLensComGetFocalLength_my() * 1000);
+	unsigned int focal [3];
+	_GetLensFocalLengthAll(&focal[0], &focal[1], &focal[2]);
+	return ((unsigned short)(focal[0]) * 1000);	
 }
-
+        
 int get_zoom_x(int zp) {
-    //return get_focal_length(zp)*10/focus_len_table[0];
-	return 1;
+	unsigned int focal [3];
+	_GetLensFocalLengthAll(&focal[0], &focal[1], &focal[2]);
+	return (unsigned short)(focal[0]) * 10 / (unsigned short)(focal[1]) ;
 }
 
 long get_vbatt_min()

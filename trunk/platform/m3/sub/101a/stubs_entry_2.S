@@ -48,7 +48,7 @@ NHSTUB(GetVRAMHPixelsSize                     ,0xFC133D9D)
 NHSTUB(GetVRAMVPixelsSize                     ,0xFC133DA5)
 NHSTUB(GetZoomLensCurrentPoint                ,0xFC1861CF)
 NHSTUB(GetZoomLensCurrentPosition             ,0xFC186183)
-NHSTUB(GiveSemaphore                          ,0xFC302310) // arm
+NHSTUB(GiveSemaphore                          ,0xBFE15479) //FC302310) // arm
 NHSTUB(IsStrobeChargeCompleted                ,0xFC4F3041)
 NHSTUB(LEDDrive                               ,0xFC188F59)
 NHSTUB(LocalTime                              ,0xFCCAC3FD) // ??? !arm -> thumb
@@ -85,7 +85,7 @@ NHSTUB(SetParameterData                       ,0xFC2784BD)
 NHSTUB(SetPropertyCase                        ,0xFC373347)
 NHSTUB(SetScriptMode                          ,0xFC3634A9)
 NHSTUB(SleepTask                              ,0xFC3022E0) // arm
-NHSTUB(TakeSemaphore                          ,0xFC302318) // arm
+NHSTUB(TakeSemaphore                          ,0xBFE15401) //0xFC302318) // arm
 NHSTUB(TurnOffBackLight                       ,0xFC14B9E7)
 NHSTUB(TurnOnBackLight                        ,0xFC14B9D5)
 NHSTUB(TurnOnDisplay                          ,0xFC14B9AD)
@@ -164,12 +164,18 @@ NHSTUB(get_fstype                             ,0xFC379A79)
 NHSTUB(displaybusyonscreen,                    0xFC332FF7)
 NHSTUB(undisplaybusyonscreen,                  0xFC33308D)
 
+NHSTUB(CreateBinarySemaphore                  ,0xBFE1530D) //0xFCCBECDC)
+//NHSTUB(TakeSemaphore                          ,0xFC3018B3)
+NHSTUB(TryTakeSemaphore                       ,0xBFE153D1) // FC3017BB)
+
 NHSTUB(LogCameraEvent,			       0xFC361A33)  
 
 NHSTUB(LCDMsg_Create				,0xFC51F6CB)
 NHSTUB(LCDMsg_SetStr				,0xFC51F3FF)
 //NHSTUB(System.Create				,0xFC189AE3)
 //NHSTUB(sprintf 						,0xFC380163)
+
+NHSTUB(GetLensFocalLengthAll                  ,0xFC25D0BF)
 
 // trial
 NHSTUB(refresh_bitmap_buf_from,                0xfc143435)

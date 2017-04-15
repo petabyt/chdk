@@ -67,6 +67,8 @@
 	-743, 10000, 1857, 10000, 5635, 10000
  
     #define cam_CalibrationIlluminant1          17
+    #undef CAM_BLACK_LEVEL
+    #define CAM_BLACK_LEVEL                     2047    // not tested under all conditions	
 
     #define CAM_JPEG_WIDTH                      6000
     #define CAM_JPEG_HEIGHT                     4000
@@ -157,3 +159,11 @@
 #define CAM_AF_LED 							1
 //#define OPT_DEBUGGING						1
 //--------------------------------------------------
+// "real" to "market" conversion definitions
+#define SV96_MARKET_OFFSET                  0
+#define ISO_MARKET_TO_REAL_MULT             1
+#define ISO_MARKET_TO_REAL_SHIFT            0
+#define ISO_MARKET_TO_REAL_ROUND            0
+#define ISO_REAL_TO_MARKET_MULT             1
+#define ISO_REAL_TO_MARKET_SHIFT            0
+#define ISO_REAL_TO_MARKET_ROUND            0

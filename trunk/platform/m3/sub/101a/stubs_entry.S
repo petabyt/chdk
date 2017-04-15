@@ -118,7 +118,6 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc303c41
 //NHSTUB(GetKbdState                          ,0xfc075053) //  0      <-veneer 0xfc07425b
 //NHSTUB(GetOpticalTemperature                ,0xfc1f6157) //  0      <-veneer 0xfc1f625d
-//NHSTUB(GiveSemaphore                        ,0xbfe15479) //  0      <-veneer 0xfc302310
 //NHSTUB(LocalTime                            ,0x010e1515) //  0        *** != 0xfccac3fd
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc37a34d
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc44b80d
@@ -133,7 +132,6 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc37a74d
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2784bd
 //NHSTUB(SleepTask                            ,0xbfe14999) //  0      <-veneer 0xfc3022e0
-//NHSTUB(TakeSemaphore                        ,0xbfe15401) //  0      <-veneer 0xfc302318
 //NHSTUB(TurnOffBackLight                     ,0xfc35e73f) //  0        *** != 0xfc14b9e7
 //NHSTUB(TurnOnBackLight                      ,0xfc35e6eb) //  0        *** != 0xfc14b9d5
 //NHSTUB(TurnOnDisplay                        ,0xfc177ccd) //  0        *** != 0xfc14b9ad
@@ -179,6 +177,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
 //NHSTUB(GetVRAMVPixelsSize                   ,0xfc133da5) //  0            == 0xfc133da5
 //NHSTUB(GetZoomLensCurrentPoint              ,0xfc1861cf) //  0            == 0xfc1861cf
 //NHSTUB(GetZoomLensCurrentPosition           ,0xfc186183) //  0            == 0xfc186183
+//NHSTUB(GiveSemaphore                        ,0xbfe15479) //  0            == 0xbfe15479
 //NHSTUB(IsStrobeChargeCompleted              ,0xfc4f3041) //  0            == 0xfc4f3041
 //NHSTUB(LEDDrive                             ,0xfc188f59) //  0            == 0xfc188f59
 //NHSTUB(LockMainPower                        ,0xfc1fd09f) //  0            == 0xfc1fd09f
@@ -201,6 +200,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
 //NHSTUB(SetLogicalEventActive                ,0xfc363471) //  0            == 0xfc363471
 //NHSTUB(SetPropertyCase                      ,0xfc373347) //  0            == 0xfc373347
 //NHSTUB(SetScriptMode                        ,0xfc3634a9) //  0            == 0xfc3634a9
+//NHSTUB(TakeSemaphore                        ,0xbfe15401) //  0            == 0xbfe15401
 //NHSTUB(UIFS_WriteFirmInfoToFile             ,0xfc38b533) //  0            == 0xfc38b533
 //NHSTUB(UnlockAE                             ,0xfc0aa85d) //  0            == 0xfc0aa85d
 //NHSTUB(UnlockAF                             ,0xfc0aa4d1) //  0            == 0xfc0aa4d1
