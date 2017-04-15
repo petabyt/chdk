@@ -14,7 +14,7 @@ endif
 all: $(EXES)
 
 # not needed by batch builds, not built by default
-EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE) extract_error_table$(exe)
+EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE) extract_error_table$(EXE)
 ifeq ($(OPT_CAPSTONE_TOOLS),1)
 EXTRA_EXES+=capdis$(EXE)
 endif
