@@ -71,18 +71,18 @@ OTHER ISSUES
 ************
 display updating is ugly
 - CHDK UI is erased / flashes every time low battery icons
-- Edge overlay does not erase properly when shown line
+- Edge overlay does not erase properly when shown live
 - Zebra "Draw Over Zebra" and Restore options are non-functional
+- Some games don't draw correctly
 
 PROPCASE_RESOLUTION values differ from previous models
 - 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
-
+PROPCASE_IS_MODE values differ from some previous
+- 0=Continuous, 1=Shoot Only, 2=Off.
+  Setting other values (as done by mdfb2013.lua) causes crash on shutdown.
 
 KNOWN BUGS
 **********
-- If motion detection is used with IS (image stabilization) enabled in the Canon UI, the camera
-  crashes when powering of or switching to playback. Turning off IS before powering off or
-  switching to playback avoids the issue.
 - CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
   This means script shoot() calls, scripts that use shoot hooks and synced remote do not function
   correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
@@ -100,4 +100,5 @@ KNOWN BUGS
 THANKS
 ******
 * srsa_4c for the sx280hs port, and doing all the hard work to support digic 6.
+* 62ndidiot and Ant for solving many generic digic 6 display issues
 * The anonymous donor who provided the camera.
