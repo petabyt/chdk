@@ -2,15 +2,18 @@
 #include "platform.h"
 #include "core.h"
 
+// debug
+//#define CAPTSEQ_DEBUG_LOG 1
+extern void _LogCameraEvent(int id,const char *fmt,...);
+
 // TODO dummy
 static long fake_nrflag=0;
 static long *nrflag=&fake_nrflag;
 // NOTE sx280hs had
 //#define NR_AUTO (0) // not needed (in fact, it makes the camera crash)
 
+#ifdef CAPTSEQ_DEBUG_LOG
 extern int active_raw_buffer;
-// debug
-extern void _LogCameraEvent(int id,const char *fmt,...);
 
 extern char *hook_raw_image_addr(void);
 
@@ -37,6 +40,7 @@ void log_capt_seq_override(void)
                     hook_raw_image_addr(),
                     get_exposure_counter());
 }
+#endif
 
 #include "../../../generic/capt_seq.c"
 //-s=task_CaptSeq -c=173 -f=chdk
@@ -73,10 +77,12 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    beq     loc_fc15021a\n"
 "    bl      sub_fc1e67ac\n"
 "loc_fc15021a:\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 // debug message
 "ldr     r0, [sp]\n"
 "ldr     r0, [r0]\n"
 "bl log_capt_seq\n"
+#endif
 "    ldr     r0, [sp]\n"
 "    ldr     r1, [r0]\n"
 "    cmp     r1, #0x2b\n"
@@ -130,7 +136,9 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "loc_fc150252:\n" // case 0: preshoot, quick press shoot
 "    ldr     r0, [r0, #0xc]\n"
 "    bl      sub_fc15073a\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_capt_seq_override\n"
+#endif
 "    BL      shooting_expo_param_override\n" // +
 "    bl      sub_fc14dc2e\n"
 "    ldr     r0, [r4, #0x28]\n"
@@ -312,9 +320,11 @@ bd84 0000
 "    blx     sub_fc2ef9e4\n" // j_DebugAssert
 "loc_fc1503ba:\n"
 // debug after message handled
+#ifdef CAPTSEQ_DEBUG_LOG
 "ldr     r0, [sp]\n"
 "ldr     r0, [r0]\n"
 "bl log_capt_seq2\n"
+#endif
 "    ldr     r0, [sp]\n"
 "    ldr     r1, [r0, #4]\n"
 "    ldr     r0, [r5, #4]\n"
@@ -645,6 +655,7 @@ void __attribute__((naked,noinline)) sub_fc1e56a6_my() {
     );
 }
 
+#ifdef CAPTSEQ_DEBUG_LOG
 /*
 void log_nr_call(void) {
     _LogCameraEvent(0x60,"nr call");
@@ -654,7 +665,7 @@ void log_remote_hook(void) {
     _LogCameraEvent(0x60,"remote hook");
 }
 void log_rh(void) {
-    _LogCameraEvent(0x60,"raw hook");
+    _LogCameraEvent(0x60,"raw hook arb:%d rb:0x%08x rbx:0x%08x",active_raw_buffer,hook_raw_image_addr(),raw_addr_new);
 }
 /*
 void log_p1(void) {
@@ -679,6 +690,8 @@ void log_t5(void) {
     _LogCameraEvent(0x60,"t5");
 }
 */
+#endif
+
 // -s=0xfc3d3873 -e=0xfc3d3ac8 -f=chdk
 void __attribute__((naked,noinline)) sub_fc3d3872_my() {
     asm volatile (
@@ -761,7 +774,9 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    mov     r6, r0\n"
 "    BL      wait_until_remote_button_is_released\n" // + remote hook
 // Could probaby go later, somewhere after loc_fc3d393a, before call to sub_fc1e5582?
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_remote_hook\n"
+#endif
 "    ldr     r0, [sp, #4]\n"
 "    ubfx    r0, r0, #8, #8\n"
 "    cmp     r0, #6\n"
@@ -875,7 +890,9 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "    ldr     r1, =0xfc3d3c38\n" //  *"SsStandardCaptureSeq.c"
 "    blx     sub_fc2ef9e4\n" // j_DebugAssert
 "loc_fc3d3a26:\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_rh\n"
+#endif
 "    BL      capt_seq_hook_raw_here\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5582\n"
