@@ -22,7 +22,8 @@ Issues:
 - Zebra "Draw Over Zebra" and Restore options are non-functional
 - Some games don't draw correctly
 - movie features are not supported
-- movie_status is wrong
+- Only simple_movie_status is implemented, so features or scripts that rely on
+direct access to the movie_status variable do not work
 
 TESTED:
 

@@ -18,7 +18,7 @@ DEF(physw_sleep_delay                       ,0x000082D4) //@ Found @0xFC083BC6
 
 DEF(levent_table                            ,0xFC63846C) //@ Found @0xFC113158
 DEF(FlashParamsTable                        ,0xFC747DB8) //@ 0xFC0E15C4-> 0xFC746944
-DEF(movie_status                            ,0x00010b08) // or 0x10a88
+DEF(simple_movie_status                     ,0x0000b170) // 0x0000b088 + 0x80 + 0x68 @ fc13faf8, via sub_fc13fac8 from task_MovieRecord
 FAKEDEF(video_compression_rate, 1)
 DEF(full_screen_refresh                     ,0x00012a94) // Found @0xfc2b0f5c
 DEF(canon_menu_active                       ,0x0000C18C) //@ Found @0xFC32DD9C
