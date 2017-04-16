@@ -40,7 +40,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // TODO does not seem to exist in ps7, combined with _MODE
 // #define PROPCASE_DIGITAL_ZOOM_STATE           
 #define PROPCASE_DIGITAL_ZOOM_POSITION           101        // also 269?
-#define PROPCASE_DRIVE_MODE                      108        // 0 = single, 1 = cont, 2 = cont AF
+#define PROPCASE_DRIVE_MODE                      108        // 0 = single, 1 = cont, 2 = cont AF, 3 = "Auto Drive"
 #define PROPCASE_OVEREXPOSURE                    109        // TODO guessed
 #define PROPCASE_DISPLAY_MODE                    111
 #define PROPCASE_EV_CORRECTION_1                 113
