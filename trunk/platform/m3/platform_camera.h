@@ -167,3 +167,6 @@
 #define ISO_REAL_TO_MARKET_MULT             1
 #define ISO_REAL_TO_MARKET_SHIFT            0
 #define ISO_REAL_TO_MARKET_ROUND            0
+
+    #define CAM_SIMPLE_MOVIE_STATUS             1
+
