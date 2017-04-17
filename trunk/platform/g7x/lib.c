@@ -89,12 +89,21 @@ void JogDial_CCW(void) {
     _PostLogicalEventToUI(0x873, 1);    //RotateJogDialLeft
 }
 
+// old method, incorrect in many cases
 extern  int     active_raw_buffer;
 extern  char*   raw_buffers_canon_raw[];
 extern  char*   raw_buffers_jpeg[];
 
+// updated by using function in capt_seq, valid between shot start and raw hook end
+extern  char*   current_raw_addr;
+
 char *hook_raw_image_addr()
 {
+    if(current_raw_addr) {
+        return current_raw_addr;
+    }
+    // TODO... fall back to old code.
+    // Wron in many cases, but some code like benchmark assumes it get a raw buffer outside of shooting
     // observed values 0-2, 3 would index something that doesn't look like a raw fb in the jpeg case
     int i=active_raw_buffer&3;
     if(i>2) {
@@ -102,7 +111,7 @@ char *hook_raw_image_addr()
     }
     if( camera_info.state.mode_shooting == MODE_AUTO) {
         // AUTO mode (canon raw can't be enabled in AUTO)
-        return (char *)0x46f04300; // TODO unclear if this is only buffer, or if used in all AUTO sub modes
+        return (char *)0x46f04300; // TODO continuous shooting uses different buffers
     }else if(shooting_get_prop(PROPCASE_IMAGE_FORMAT) == 1) {
     // canon raw disabled - uses up to 3 raw buffers
         return raw_buffers_jpeg[i];

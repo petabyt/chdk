@@ -26,7 +26,8 @@ To start in shooting mode or wifi connect, hold down the corresponding button
 
 Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
 
-G7 X uses propset 7. The values used in some propcases have changed.
+G7 X uses propset 7. The values used in some propcases have changed, which
+can break compatibility with scripts.
 
 Only simple_movie_status is implemented, so features or scripts that rely on
 direct access to the movie_status variable do not work
@@ -47,13 +48,14 @@ ubtest.bas
 hooktest.lua
 isobase.lua
 USB remote - plug test / remote hook only
-CHDK raw / DNG (in P, M, Tv, Av modes. AUTO not well tested, many others broken)
+CHDK raw / DNG - In most still modes that take a single exposure, see Known Bugs below
 PTP remote shoot with JPEG / CHDK DNG
  - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
  - If Canon raw + jpeg is enabled, the jpeg will be written to the card
- - May fail in special scene modes (not extensively tested)
-Motion detection - preliminary, see known bugs below
-PTP live view - preliminary, requires client with live view proto 2.2 support
+ - Fails in modes that take multiple exposures: Canon firmware bracketing,
+   HDR, Creative shot etc
+Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
+PTP live view - Requires client with live view proto 2.2 support
  (chdkptp r712 or later)
 Zebra, histogram and Edge overlay - with limitations, see Other Issues below.
 
@@ -70,7 +72,8 @@ script hard shutdown (shut_down(1))
 OTHER ISSUES
 ************
 display updating is ugly
-- CHDK UI is erased / flashes every time low battery icons
+- CHDK UI is erased / flashes every time Canon UI updates, including
+  focus boxes, low battery icon etc.
 - Edge overlay does not erase properly when shown live
 - Zebra "Draw Over Zebra" and Restore options are non-functional
 - Some games don't draw correctly
@@ -79,16 +82,15 @@ PROPCASE_RESOLUTION values differ from previous models
 - 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
 PROPCASE_IS_MODE values differ from some previous
 - 0=Continuous, 1=Shoot Only, 2=Off.
-  Setting other values (as done by mdfb2013.lua) causes crash on shutdown.
+  Setting other values (as done by mdfb2013.lua up to 1.1a) causes crash on shutdown.
 
 KNOWN BUGS
 **********
+- Occasional crashes, particularly when changing between playback and record.
 - CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
   This means script shoot() calls, scripts that use shoot hooks and synced remote do not function
   correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
-- CHDK raw address not correct in most special effect / scene modes
-  Using CHDK DNG in modes with an incorrect raw address may result in memory corruption and
-  potentially even hardware damage.
+- CHDK raw / DNG may not work correctly in some other special scene modes
 - When booted with FI2 update
  - switching to hybrid auto causes a crash
  - orientation sensor value alternates between 0 and 90

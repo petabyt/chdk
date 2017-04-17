@@ -43,6 +43,24 @@ void log_capt_seq_override(void)
 #endif
 
 #include "../../../generic/capt_seq.c"
+
+// first paramter matches active_raw_buffer
+// second is pointer to structure
+extern int _captseq_raw_addr_init(int raw_index, char **ptr);
+char *current_raw_addr;
+
+void captseq_raw_addr_init_my(int raw_index,char **ptr) {
+    _captseq_raw_addr_init(raw_index,ptr);
+    current_raw_addr=*(ptr + 0x5c/4); // @0xfc1527b2, ptr+0x5c
+#ifdef CAPTSEQ_DEBUG_LOG
+    _LogCameraEvent(0x60,"rawinit i:0x%x p:0x%x v:0x%x",raw_index,ptr,current_raw_addr);
+#endif
+}
+
+void clear_current_raw_addr(void) {
+    current_raw_addr=NULL;
+}
+
 //-s=task_CaptSeq -c=173 -f=chdk
 // task_CaptSeq 0xfc1501d9
 void __attribute__((naked,noinline)) capt_seq_task() {
@@ -139,6 +157,7 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 #ifdef CAPTSEQ_DEBUG_LOG
 "bl log_capt_seq_override\n"
 #endif
+"    BL      clear_current_raw_addr\n" // +
 "    BL      shooting_expo_param_override\n" // +
 "    bl      sub_fc14dc2e\n"
 "    ldr     r0, [r4, #0x28]\n"
@@ -376,7 +395,8 @@ void __attribute__((naked,noinline)) sub_fc1e58d8_my() {
 "    bl      sub_fc15072e\n"
 "    bl      sub_fc152724\n"
 "    mov     r1, r4\n"
-"    bl      sub_fc152772\n"
+//"    bl      sub_fc152772\n"
+"bl captseq_raw_addr_init_my\n"
 "    movs    r2, #4\n"
 "    movw    r0, #0x116\n"
 "    add.w   r1, r4, #0x58\n"
@@ -435,7 +455,8 @@ void __attribute__((naked,noinline)) sub_fc1e56a6_my() {
 "loc_fc1e56d0:\n"
 "    bl      sub_fc152724\n"
 "    mov     r1, r4\n"
-"    bl      sub_fc152772\n"
+//"    bl      sub_fc152772\n"
+"bl captseq_raw_addr_init_my\n"
 "    movw    r7, #0x116\n"
 "    movs    r2, #4\n"
 "    mov     r0, r7\n"
@@ -665,7 +686,7 @@ void log_remote_hook(void) {
     _LogCameraEvent(0x60,"remote hook");
 }
 void log_rh(void) {
-    _LogCameraEvent(0x60,"raw hook");
+    _LogCameraEvent(0x60,"raw hook arb:%d rb:0x%08x rbc:0x%08x",active_raw_buffer,hook_raw_image_addr(),current_raw_addr);
 }
 /*
 void log_p1(void) {
@@ -891,6 +912,7 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "bl log_rh\n"
 #endif
 "    BL      capt_seq_hook_raw_here\n"
+"    BL      clear_current_raw_addr\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1e5582\n"
 "    mov     r0, r4\n"
@@ -965,6 +987,7 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 ".ltorg\n"
     );
 }
+
 // below from 100d, not checked
 // not using DvlpSeq, multiple shots may be taken before task runs, out of sync with file counter
 #if 0

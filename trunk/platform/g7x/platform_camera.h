@@ -22,15 +22,10 @@
 
     #define CAM_PROPSET                         7
 
-// TODO copied from sx280
-    /*
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
-    #define CAM_DISABLE_RAW_IN_HQ_BURST         1 // raw wouldn't make any sense in this mode either
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
-    #define CAM_DISABLE_RAW_IN_AUTO             1 // disabled due to wrong raw buffer selection at quick shutter press
-    #define CAM_DISABLE_RAW_IN_SPORTS           1 // sports mode seems to use a no-yet-found code path and corrupts JPEG/DNG
-    */
+    // this actually works if you enable "unsafe IO", otherwise hangs
+    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
+    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw hook not currently called, probably doesn't make sense
+    #define CAM_DISABLE_RAW_IN_HDR              1 // raw hook not currently called, probably doesn't make sense
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1   // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
