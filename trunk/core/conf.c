@@ -1594,6 +1594,9 @@ int is_raw_possible() {
 #if defined(CAM_DISABLE_RAW_IN_SPORTS)
        || (m == MODE_SPORTS)            // True if Sports mode (SX280HS, multiple issues with raw buffer; storing raw makes little sense in this mode anyway)
 #endif
+#if defined(CAM_DISABLE_RAW_IN_HDR)
+       || (m == MODE_HDR)            // True if HDR mode (G7X)
+#endif
     );
 }
 
