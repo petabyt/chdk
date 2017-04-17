@@ -30,6 +30,9 @@ NHSTUB(init_focus_eventflag,	0xfc4f3bef) // InitializeAdjustmentSystem->fc3d31d0
 NHSTUB(init_nd_eventflag,		0xfc4f3d01) // InitializeAdjustmentSystem->fc3d31d0->fc4f3d00 event flag matches PutInNdFilter
 NHSTUB(CreateBinarySemaphoreStrictly,0x010e5bb7) // for av_override_semaphore
 
+// gets raw address and other stuff for next shot, stores in structure pointed to by r1 
+// via sub_fc1e58d8, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc184310 to get raw address
+NHSTUB(captseq_raw_addr_init,0xfc152773)
 
 // TODO temp for compile
 NHSTUB(EnterToCompensationEVF,NULL_SUB)
