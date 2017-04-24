@@ -118,6 +118,51 @@ static int send_ptp_data(ptp_data *data, const char *buf, int size)
   return 1;
 }
 
+/*
+send data buffered, for regions which cannot be directly used by DMA (MMIO, some TCMs)
+copy_fn should behave like memcpy.
+A function that does word by word copy rather than LDM/STM might be more correct for MMIO, but memcpy seems to work
+*/
+static int send_ptp_data_buffered(ptp_data *data, void * (*copy_fn)(void *d, const void *s, long sz), const char *src, char *buf, int size)
+{
+    int tmpsize = size;
+    int send_size;
+    while ( size > 0 )
+    {
+        if(size > buf_size) {
+            send_size = buf_size;
+        } else {
+            send_size = size;
+        }
+        // src inside buf ?
+        if(src >= buf && src < buf + send_size) {
+            // send whatever is in buffer without attempting to copy
+            if(src + size < buf + buf_size) {
+                // all remainder is in buf
+                send_size = size;
+            } else {
+                // send up to end of buffer
+                send_size = buf_size - (src - buf);
+            }
+        } else {
+            // full copy size would overlap
+            if(src < buf && src + send_size > buf) {
+                // copy up to start of buf
+                send_size = buf - src;
+            }
+            copy_fn(buf,src,send_size);
+        }
+        if ( data->send_data(data->handle,buf,send_size,tmpsize,0,0,0) )
+        {
+            return 0;
+        }
+        tmpsize = 0;
+        size -= send_size;
+        src += send_size;
+    }
+    return 1;
+}
+
 // TODO this could be a generic ring buffer of words
 #define PTP_SCRIPT_MSG_Q_LEN 16
 typedef struct {
@@ -305,18 +350,61 @@ static int handle_ptp(
       ptp.param1 |= (!script_msg_q_empty(&msg_q_out))?PTP_CHDK_SCRIPT_STATUS_MSG:0;
       break;
     case PTP_CHDK_GetMemory:
-      if ( param2 == 0 || param3 < 1 ) // null pointer or invalid size?
+    {
+      char *src=(char *)param2;
+      int size=param3;
+      int result=0;
+      if ( size < 1 ) // invalid size? NULL is accepted
       {
         ptp.code = PTP_RC_GeneralError;
         break;
       }
 
-      if ( !send_ptp_data(data,(char *) param2,param3) )
+      if (param4 == PTP_CHDK_GETMEM_MODE_DIRECT) {
+        int total_size = size;
+        // canon data->send_data fails on NULL, send first word separately
+        // DMA from addresses occupied by TCM is suspect but seems to work on many cams
+        // can't directly check NULL https://chdk.setepontos.com/index.php?topic=13101.0
+        if((unsigned)param2 < 4 ) {
+            char x[4];
+            int send_size = 4 - param2;
+            if(send_size > size) {
+                send_size = size;
+            }
+            memcpy(x,src,send_size);
+
+            // 0 is success
+            if(data->send_data(data->handle,x,send_size,total_size,0,0,0) != 0) {
+                ptp.code = PTP_RC_GeneralError;
+                break;
+            }
+            // that was all, done
+            if(size == send_size) {
+                break;
+            }
+            size -= send_size;
+            // total only sent on first send
+            total_size = 0;
+            src+=send_size;
+        }
+        // no need to send through send_ptp, faster with one call
+        if(data->send_data(data->handle,src,size,total_size,0,0,0) == 0) {
+            result = 1;
+        }
+      } else if(param4 == PTP_CHDK_GETMEM_MODE_BUFFER) {
+        int chunk_size = (size > buf_size) ? buf_size:size;
+        char *buf=malloc(chunk_size);
+        if(buf) {
+          result = send_ptp_data_buffered(data,memcpy,src,buf,size);
+          free(buf);
+        }
+      } // else error
+      if(!result)
       {
         ptp.code = PTP_RC_GeneralError;
       }
       break;
-      
+    }
     case PTP_CHDK_SetMemory:
       if ( param2 == 0 || param3 < 1 ) // null pointer or invalid size?
       {
