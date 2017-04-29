@@ -8,15 +8,20 @@ Issues
 - To start the cam with the playback button, hold down the button a little longer
 - To select a digit in a CHDK menu numeric field, press the shutter halfway
 
-- CHDK overlay drawing is slow, default font is tiny
-- many GUI modules don't respect screen resolution
-- most framebuffer related features do not work, including
-    - zebra
-    - histogram (camera has a native one though)
-    - edge overlay
-    - custom auto iso overexposure protection
+- CHDK overlay drawing is slow, can blink excessively when the Canon OSD is updated
+- some games don't display correcly
+- some framebuffer related features do not work properly
+    - zebra (some menu options are ignored)
+    - edge overlay (drawings accumulate)
 - booting with .fi2 is untested, but most likely makes the camera unstable
 - CHDK dark frame subtraction control only seems effective when Canon setting is on AUTO
+
+- Exposure overrides may fail to apply when shutter is held halfway down for a while
+    - this does not happen when an AF lens is attached and auto focus succeeds
+    - does not happen in M mode
+    - does not happen when AE is locked using the Canon controls (asterisk on the 4-way controller)
+
+- Card speed is limited to 20...21 MB/s due to a CHDK issue affecting DIGIC 6 cameras
 
 Tested (using 15-45 kit lens)
 
@@ -39,7 +44,6 @@ Untested
 
 Not implemented
 
-- Extra long exposures (firmware limit is 30 seconds)
 - CHDK touchscreen functionality
 - CHDK mirrorless camera support is not complete
     - Zoom related functionality is missing (except for focal length display)
