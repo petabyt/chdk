@@ -865,6 +865,11 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         usage("firmware open");
     }
 
+    // these are used regardless of camera generation, have to be initialized here
+    fw->buf2 = 0;
+    fw->base2 = 0;
+    fw->size2 = 0;
+
     fw->os_type = os_type;
 
     // File length
@@ -903,13 +908,13 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         }
     }
     // Get DRYOS version
-    fw->dryos_ver = 0;
+    fw->real_dryos_ver = fw->dryos_ver = 0;
     if (os_type == OS_DRYOS)
     {
         k = find_str(fw, "DRYOS version 2.3, release #");
         if (k != -1)
         {
-            fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
+            fw->real_dryos_ver = fw->dryos_ver = atoi(((char*)&fw->buf[k])+28);
             fw->dryos_ver_str = (char*)&fw->buf[k];
         }
     }
@@ -943,6 +948,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     fw->pid = 0;
     if (os_type == OS_DRYOS)
     {
+        if (fw->dryos_ver > 59) fw->dryos_ver = 59; // UPDATE when support is added for higher DryOS versions
         switch (fw->dryos_ver)
         {
             case 20:
@@ -990,6 +996,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 fw->pid_adr = (fw->base==0xFF010000)?0xFFFE0040:0xFFFF0040;
                 break;
             case 58:
+            case 59:
                 fw->cam_idx = adr2idx(fw,(fw->base==0xFF010000)?0xFFFE03A0:0xFFFF03A0);
                 fw->pid_adr = (fw->base==0xFF010000)?0xFFFE0270:0xFFFF0270;
                 break;
@@ -1243,9 +1250,6 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
     // Seen on SX260HS
     if (fw->dryos_ver >= 50)
     {
-        fw->buf2 = 0;
-        fw->base2 = 0;
-        fw->size2 = 0;
 
         // Try and find ROM address copied, and location copied to
         for (i=3 + fw->main_offs; i<(100 + fw->main_offs); i++)
