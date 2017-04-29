@@ -25,7 +25,6 @@
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff203998) //  3 90%        == 0xff203998
 // ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff027438
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
-// ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x006ba7ec
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3dd620 -> ff7ddbc0
@@ -202,6 +201,7 @@ NHSTUB(UnlockAF                               ,0xff0325fc) //120
 NHSTUB(UnlockMainPower                        ,0xff0b4b20) //120
 NHSTUB(VbattGet                               ,0xff02ab3c) //120
 NHSTUB(Write                                  ,0xff026ff0) //120
+NHSTUB(WriteSDCard                            ,0x006ba7ec) //108
 NHSTUB(_log                                   ,0x006ddca0) //111
 NHSTUB(_log10                                 ,0x006de1e0) //112
 NHSTUB(_pow                                   ,0x006de358) //121
