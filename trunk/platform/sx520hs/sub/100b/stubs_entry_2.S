@@ -6,7 +6,6 @@ NHSTUB(DeleteFile_Fut                       ,0xff026928)
 NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xff203974)
 NHSTUB(MakeDirectory_Fut                    ,0xff027438)
 NHSTUB(RefreshPhysicalScreen                ,NULLSUB)
-NHSTUB(WriteSDCard                          ,0x6ba7ec)
 
 // Additional
 NHSTUB(TurnOffE1,NULLSUB)

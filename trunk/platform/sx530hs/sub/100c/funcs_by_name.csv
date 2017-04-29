@@ -2139,6 +2139,7 @@
 0xff14bd1c,WriteNFCUserArea_FW
 0xff3911a0,WriteNFCUserAreaWithInitNFCAdj_FW
 0xff4da658,WritePWMAdjustment_FW
+0x006ba7ec,WriteSDCard
 0xff074e68,WriteToRom_FW
 0xff07f750,WRITEUSERSETTINGDATATOFROM_FW
 0xff390c44,WriteWLANMACAddressToFROM_FW
