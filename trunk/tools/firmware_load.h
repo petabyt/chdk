@@ -44,7 +44,8 @@ typedef struct {
     int             fsize;              // Size of the firmware (as determined from the start address)
     int             cam_idx;            // Index of the camera name in the firmware
     uint32_t        pid_adr;            // Address of the camera ID in the firmware
-	int			    dryos_ver;          // DryOS version number
+	int			    dryos_ver;          // DryOS version number (capped at the highest known revision)
+    int             real_dryos_ver;     // DryOS version number (the real one, warn if not equal to dryos_ver)
     char            *dryos_ver_str;     // DryOS version string
     char            *firmware_ver_str;  // Camera firmware version string
     char            *fw_build_date;     // Firmware build date
