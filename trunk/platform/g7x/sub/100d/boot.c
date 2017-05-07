@@ -348,6 +348,8 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 "    bl      sub_fc06497c\n" // posixSetup etc
 //"    bl      sub_fc064b10\n" // ->nullsub
 "    bl      sub_fc0db5c4\n" // StartWDT ...
+// added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
+"bl sub_010e638b\n" // ref in sub_010e647c following SD1stInit create
 //"    bl      sub_fc064b66\n" // StartDiskboot
 "    bl      sub_fc091b6e\n"
 "    bl      sub_fc0db718\n"
