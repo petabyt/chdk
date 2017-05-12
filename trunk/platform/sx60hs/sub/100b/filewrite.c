@@ -170,7 +170,7 @@ asm volatile (
 "    bl      sub_fc066056\n"
 "    b       loc_fc065dd2\n"
 "loc_fc065e36:\n"     // case 0-6  - write stage
-"    bl      sub_fc0660ae\n"
+"    bl      sub_fc0660ae_my\n"
 "    b       loc_fc065dd2\n"
 "loc_fc065e3c:\n"  // case 7 - close stage
 "    bl      sub_fc065ca2_my\n"
@@ -261,7 +261,8 @@ asm volatile (
 "    mov     r2, sb\n"
 "    mov     r1, r5\n"
 "    mov     r0, r8\n"
-"    bl      sub_fc3329f6\n" // j_Open_FW this is not Open 0xfc3328fd
+//"    bl      sub_fc3329f6\n" // j_Open_FW this is not Open 0xfc3328fd
+"    bl      _Open\n" // j_Open_FW
 "loc_fc065c2a:\n"
 "    mov     r5, r0\n"
 "    str     r0, [r7, #4]\n"

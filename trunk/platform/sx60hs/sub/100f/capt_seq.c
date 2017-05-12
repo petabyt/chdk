@@ -37,6 +37,20 @@ void log_capt_seq_override(void)
 
 
 #include "../../../generic/capt_seq.c"
+extern int _captseq_raw_addr_init(int raw_index, char **ptr) ;
+char *current_raw_addr;
+
+void captseq_raw_addr_init_my(int raw_index,char **ptr) {
+    _captseq_raw_addr_init(raw_index,ptr);
+    current_raw_addr=*(ptr + 0x5c/4); // fc154c5a: 65e0  str   r0, [r4, #92]
+#ifdef CAPTSEQ_DEBUG_LOG
+    _LogCameraEvent(0x60,"rawinit i:0x%x p:0x%x v:0x%x",raw_index,ptr,current_raw_addr);
+#endif
+}
+
+void clear_current_raw_addr(void) {
+    current_raw_addr=NULL;
+}
 //-s=task_CaptSeq -c=117 -f=chdk
 // task_CaptSeq 0xfc15275f
 void __attribute__((naked,noinline)) capt_seq_task() {
@@ -121,11 +135,14 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    .byte((loc_fc15294c - branchtable_fc1527ac) / 2)\n" // (case 41)
 "    .byte((loc_fc152966 - branchtable_fc1527ac) / 2)\n" // (case 42)
 ".align 1\n"
-"loc_fc1527d8:\n"
+"loc_fc1527d8:\n" // case 0: preshoot, quick press shoot
 "    ldr     r0, [r0, #0xc]\n"
 "    uxtb    r0, r0\n"
 "    bl      sub_fc152cfa\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_capt_seq_override\n"
+#endif
+"    BL      clear_current_raw_addr\n" // +
 "    BL      shooting_expo_param_override\n" //sx280
 "    bl      sub_fc150454\n"
 "    ldr     r0, [r4, #0x28]\n"
@@ -389,7 +406,8 @@ void __attribute__((naked,noinline)) sub_fc1dcaa8_my() {
 "    bl      sub_fc152cee\n"
 "    bl      sub_fc154bcc\n"
 "    mov     r1, r4\n"
-"    bl      sub_fc154c1a\n"
+//"    bl      sub_fc154c1a\n"
+"bl captseq_raw_addr_init_my\n"
 "    movs    r2, #4\n"
 "    movw    r0, #0x113\n"
 "    add.w   r1, r4, #0x58\n"
@@ -451,9 +469,10 @@ void __attribute__((naked,noinline)) sub_fc1dc8d2_my() {
 "    bl      sub_fc1dd7d6\n"
 "    b       loc_fc1dcaa2\n"
 "loc_fc1dc8fa:\n"
-"    bl      sub_fc154bcc\n"
+"    bl      sub_fc154bcc\n" // gets active raw buffer
 "    mov     r1, r4\n"
-"    bl      sub_fc154c1a\n"
+//"    bl      sub_fc154c1a\n"
+"bl captseq_raw_addr_init_my\n"
 "    movs    r2, #4\n"
 "    movw    r0, #0x113\n"
 "    add.w   r1, r4, #0x58\n"
@@ -809,8 +828,11 @@ void __attribute__((naked,noinline)) sub_fc39ff78_my() {
 "    ldr     r1, =0xfc3a0328\n" //  *"SsStandardCaptureSeq.c"
 "    blx     sub_fc2cf408\n" // j_DebugAssert
 "loc_fc3a0100:\n"
-"bl log_rh\n"
+#ifdef CAPTSEQ_DEBUG_LOG
+ "bl log_rh\n"
+#endif
 "BL capt_seq_hook_raw_here\n"
+"BL clear_current_raw_addr\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1dc7b0\n"
 "    mov     r0, r4\n"

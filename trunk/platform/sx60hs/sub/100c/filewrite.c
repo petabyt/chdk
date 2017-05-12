@@ -168,10 +168,10 @@ asm volatile (
 "    bl      sub_fc066056\n"
 "    b       loc_fc065dd2\n"
 "loc_fc065e36:\n"     // case 0-6  - write stage
-"    bl      sub_fc0660ae\n"
+"    bl      sub_fc0660ae_my\n"
 "    b       loc_fc065dd2\n"
 "loc_fc065e3c:\n"  // case 7 - close stage
-"    bl      sub_fc065ca2\n"
+"    bl      sub_fc065ca2_my\n"
 "    b       loc_fc065dd2\n"
 ".ltorg\n"
     );

@@ -61,7 +61,7 @@
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                  1
-    #define CAM_VIDEO_QUALITY_ONLY                1
+//    #define CAM_VIDEO_QUALITY_ONLY                1
     #undef  CAM_HAS_DISP_BUTTON
 
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU

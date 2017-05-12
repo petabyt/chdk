@@ -455,10 +455,11 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 //    *(int*)0xd20b0884 = 0x4d0002;
     asm volatile (
 "    push    {r4, lr}\n"
-"    bl      sub_fc137ad4\n"
-"    bl      sub_fc05f53c\n"
+"    bl      sub_fc137ad4\n" // CreateTask ClockSave
+"    bl      sub_fc05f53c\n" // posixSetup etc
 //"    bl      sub_fc05f6bc\n"
-"    bl      sub_fc0daedc\n"
+"    bl      sub_fc0daedc\n" // StartWDT ...
+"bl sub_010e6355\n" //see 0x010e63cc task_SD1stInit in RAMCODE.dis
 //"    bl      sub_fc05f712\n"
 "    bl      sub_fc08da46\n"
 "    bl      sub_fc0db028\n"
