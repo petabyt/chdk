@@ -37,6 +37,20 @@ void log_capt_seq_override(void)
 
 
 #include "../../../generic/capt_seq.c"
+extern int _captseq_raw_addr_init(int raw_index, char **ptr) ;
+char *current_raw_addr;
+
+void captseq_raw_addr_init_my(int raw_index,char **ptr) {
+    _captseq_raw_addr_init(raw_index,ptr);
+    current_raw_addr=*(ptr + 0x5c/4); // fc154c5a: 65e0  str   r0, [r4, #92]
+#ifdef CAPTSEQ_DEBUG_LOG
+    _LogCameraEvent(0x60,"rawinit i:0x%x p:0x%x v:0x%x",raw_index,ptr,current_raw_addr);
+#endif
+}
+
+void clear_current_raw_addr(void) {
+    current_raw_addr=NULL;
+}
 //-s=task_CaptSeq -c=117 -f=chdk
 // task_CaptSeq 0xfc15275f
 void __attribute__((naked,noinline)) capt_seq_task() {
@@ -126,7 +140,10 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "    ldr     r0, [r0, #0xc]\n"
 "    uxtb    r0, r0\n"
 "    bl      sub_fc152cfa\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_capt_seq_override\n"
+#endif
+"    BL      clear_current_raw_addr\n" // +
 "    BL      shooting_expo_param_override\n" //sx280
 "    bl      sub_fc150454\n"
 "    ldr     r0, [r4, #0x28]\n"
@@ -378,7 +395,8 @@ void __attribute__((naked,noinline)) sub_fc1dcaa8_my() {
 "    bl      sub_fc152cee\n"
 "    bl      sub_fc154bcc\n"
 "    mov     r1, r4\n"
-"    bl      sub_fc154c1a\n"
+//"    bl      sub_fc154c1a\n"
+"bl captseq_raw_addr_init_my\n"
 "    movs    r2, #4\n"
 "    movw    r0, #0x113\n"
 "    add.w   r1, r4, #0x58\n"
@@ -437,7 +455,8 @@ void __attribute__((naked,noinline)) sub_fc1dc8d2_my() {
 "loc_fc1dc8fa:\n"
 "    bl      sub_fc154bcc\n"
 "    mov     r1, r4\n"
-"    bl      sub_fc154c1a\n"
+//"    bl      sub_fc154c1a\n"
+"bl captseq_raw_addr_init_my\n"
 "    movs    r2, #4\n"
 "    movw    r0, #0x113\n"
 "    add.w   r1, r4, #0x58\n"
@@ -793,6 +812,7 @@ void __attribute__((naked,noinline)) sub_fc39ff7c_my() {
 "loc_fc3a0104:\n"
 "bl log_rh\n"
 "BL capt_seq_hook_raw_here\n"
+"BL clear_current_raw_addr\n"
 "    mov     r0, r4\n"
 "    bl      sub_fc1dc7b0\n"
 "    mov     r0, r4\n"

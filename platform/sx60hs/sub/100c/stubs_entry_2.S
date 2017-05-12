@@ -43,5 +43,5 @@ NHSTUB(CancelHPTimer                        ,0xFC15BBFD)
 NHSTUB(init_focus_eventflag,    0xfc4b54e7 + 0x4) // InitializeAdjustmentSystem->fc39f870->fc4b54e6 event flag matches MoveFocusLensToDistance
 NHSTUB(init_nd_eventflag,               0xfc4b55c9 + 0x4) // InitializeAdjustmentSystem->fc3d31c4->fc4b55c8 event flag matches PutInNdFilter
 NHSTUB(CreateBinarySemaphoreStrictly,0x010e5b8b) // for av_override_semaphore
-
+NHSTUB(captseq_raw_addr_init, 0xfc154c1b); //compare to g7x fc152772 + 1
 

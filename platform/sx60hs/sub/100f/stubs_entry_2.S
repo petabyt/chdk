@@ -43,5 +43,24 @@ NHSTUB(CancelHPTimer                        ,0xFC15BBFD)
 NHSTUB(init_focus_eventflag,    0xfc4b54e7) // InitializeAdjustmentSystem->fc39f870->fc4b54e6 event flag matches MoveFocusLensToDistance
 NHSTUB(init_nd_eventflag,               0xfc4b55c9) // InitializeAdjustmentSystem->fc3d31c4->fc4b55c8 event flag matches PutInNdFilter
 NHSTUB(CreateBinarySemaphoreStrictly,0x010e5b8b) // for av_override_semaphore
-
-
+NHSTUB(CreateBinarySemaphore,0x010e5939)
+//NHSTUB(bzero,           0x01106b1c)//zero memory 
+//NHSTUB(memset32,		0x01106b20)//entry point in bzero to take 4 byte pattern
+NHSTUB(j_PostMessageQueueStrictly,          0xfc2cf220);
+NHSTUB(j_CreateMessageQueueStrictly,          0xfc2cf338);
+NHSTUB(j_CreateBinarySemaphoreStrictly,       0xfc2cf368);
+NHSTUB(j_CreateEventFlagStrictly,             0xfc2cf3c8);
+NHSTUB(captseq_raw_addr_init, 0xfc154c1b); //compare to g7x fc152772 + 1
+DEF(task_LiveImageTask,                    0xfc198165);
+DEF(EngDrvOut, 0xfc337d9e);
+DEF(EngDrvBits, 0xfc337dd8);
+DEF(EngDrvOuts, 0xfc337dee);
+DEF(shamen_read, 0xfc337dcc);
+DEF(ConnectReadEDmac, 0xfc328c78);
+DEF(ConnectWriteEDmac, 0xfc328c66);
+DEF(RegisterEDmacCompleteCBR, 0xfc328caa);
+DEF(StartEDmac, 0xfc32831a);
+DEF(edmac_set_flags_0x7, 0xfc32837a);
+DEF(edmac_set_addr, 0xfc3283f0);
+DEF(edmac_set_size, 0xfc32841a);
+DEF(edmac_set_flags_0x40000000, 0xfc3285ee);

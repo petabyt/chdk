@@ -95,6 +95,8 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc319671
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3a1177
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc319709
+//NHSTUB(EngDrvOut                            ,0x00000000) //  0        *** != 0xfc337d9e
+//NHSTUB(EngDrvBits                           ,0x00000000) //  0        *** != 0xfc337dd8
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc15bbfd
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc16cb81) //  0

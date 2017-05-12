@@ -103,9 +103,14 @@ void JogDial_CCW(void) {
 }
 
 extern  int     active_raw_buffer;
+extern  char*   current_raw_addr;
 //extern  char*   raw_buffers[];
 char *hook_raw_image_addr()
 {
+    if (current_raw_addr) {
+         return current_raw_addr;
+    }
+// fall back to old code which will be wrong in many cases.....
     // observed values 0-2, 3 would index something that doesn't look like a raw fb in the jpeg case
     int i=active_raw_buffer&3;
 /*
@@ -295,6 +300,7 @@ int vid_get_viewport_byte_width() {
 }
 int vid_get_viewport_width_proper()             { return vid_get_viewport_width() ; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() ; }
+int vid_get_viewport_fullscreen_width()         { return camera_screen.width; }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
@@ -306,14 +312,13 @@ void *vid_get_bitmap_active_buffer() {
 // the opacity buffer defines opacity for the bitmap overlay's pixels
 // found near BmpDDev.c line 215 assert fc0f873c
 volatile char *opacity_buffer[2] = {(char*)0x4163b400, (void*)0x416b9d00};
-//volatile char *opacity_buffer[2] = {(char *)0xDEADBEEF, (void*)0xDEADBEEF};
 void *vid_get_opacity_active_buffer() {
     return (void *)opacity_buffer[active_bitmap_buffer&1];
 }
-
-void *vid_get_bitmap_active_palette() {
-    return (void*)0x8000; // just to return something valid, no palette needed on this cam
-}
+// now in platform_palette.c
+//void *vid_get_bitmap_active_palette() {
+//    return (void*)0x8000; // just to return something valid, no palette needed on this cam
+//}
 char *camera_jpeg_count_str()
 {
     extern char jpeg_count_str[];
