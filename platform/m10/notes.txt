@@ -21,7 +21,9 @@ Issues
     - does not happen in M mode
     - does not happen when AE is locked using the Canon controls (asterisk on the 4-way controller)
 
-- Card speed is limited to 20...21 MB/s due to a CHDK issue affecting DIGIC 6 cameras
+- To achieve card speeds greater than 20MB/s, card is now powered off during CHDK start.
+  This may result in additional startup delay, depending on card. Reports about card issues
+  are welcome in the forum: https://chdk.setepontos.com/index.php?topic=13089.0
 
 Tested (using 15-45 kit lens)
 

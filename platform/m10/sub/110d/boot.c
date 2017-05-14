@@ -358,6 +358,9 @@ void __attribute__((naked,noinline)) sub_fc06ca35_my() {
 "    bl      sub_fc06cccc\n"        // nothing
 "    bl      sub_fc0f947c\n"        // HWIC/OC, ... , ADC
 //"    bl      sub_fc06cd28\n"      // - startdiskboot
+
+"    bl      sub_10e173c\n"         // + switch off card, trial
+
 "    bl      sub_fc37252a\n"        // creates a semaphore
 "    bl      sub_fc0f95d4\n"        // cam error related setup
 "    bl      sub_fc06ce1c\n"        // writes 0xd601xxxx
