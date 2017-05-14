@@ -358,6 +358,9 @@ void __attribute__((naked,noinline)) sub_fc06ca35_my() {
 "    bl      sub_fc06cccc\n"
 "    bl      sub_fc0f947c\n"
 //"    bl      sub_fc06cd28\n"      // - startdiskboot
+
+"    bl      sub_10e173c\n"         // + switch off card, trial
+
 "    bl      sub_fc37255e\n"
 "    bl      sub_fc0f95d4\n"
 "    bl      sub_fc06ce1c\n"
