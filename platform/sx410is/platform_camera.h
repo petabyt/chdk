@@ -120,6 +120,10 @@
     #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
+	
+    #define CAM_MIN_ISO_OVERRIDE            100  // crashes if set lower with flash enabled, down to ~90 shows change in exposure
+                                                 // https://chdk.setepontos.com/index.php?topic=12948.msg132652#msg132652
+    #define CAM_MAX_ISO_OVERRIDE            1600
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
     
