@@ -18,11 +18,11 @@ langs={
 	FRENCH		={font_cp=2,hint="CHDK language changed to french"},
 	DUTCH		={font_cp=2,hint="CHDK language changed to dutch"},
 	ITALIAN		={font_cp=2,hint="CHDK language changed to italian"},
-	UKRAINIAN	={font_cp=1,hint="CHDK language changed to ukrainian"},
+	UKRAINIAN	={font_cp=1,hint="Мову CHDK змінено на україньску"},
 	INDONESIAN	={font_cp=2,hint="CHDK language changed to indonesian"},
 	FINNISH		={font_cp=2,hint="CHDK language changed to finnish"},
 	SPANISH		={font_cp=2,hint="CHDK language changed to spanish"},
-	RUSSIAN		={font_cp=1,hint="CHDK language changed to russian"},
+	RUSSIAN		={font_cp=1,hint="Язык CHDK изменен на русский"},
 	PORTUGUESE	={font_cp=2,hint="CHDK language changed to portuguese"},
 	GREEK		={font_cp=3,hint="CHDK language changed to greek"},
 	POLISH		={font_cp=0,hint="CHDK language changed to polish"},
@@ -36,6 +36,7 @@ langs={
 	ESTONIAN	={font_cp=5,hint="CHDK language changed to estonian"},
 	SLOVAK		={font_cp=0,hint="CHDK language changed to slovak"},
 }
+
 -- propcase id and value = language name for supported propsets
 prop_langs={
 	[1]={prop=196,[0]='ENGLISH',[1]='GERMAN',[2]='FRENCH',[3]='DUTCH',[5]='FINNISH',[6]='ITALIAN',[9]='SPANISH',[11]='RUSSIAN',[12]='PORTUGUESE',[13]='GREEK',[14]='POLISH',[15]='CZECH',[16]='HUNGARIAN',[17]='TURKISH',},
