@@ -1693,7 +1693,7 @@ static const uint8_t code[]=
 
 
     if(!r) {
-        fprintf(stderr,"WARNING! Incorrect dissassembly is likely\n");
+        fprintf(stderr,"WARNING! Incorrect disassembly is likely\n");
     }
     cs_free(insn,count);
     return r;
