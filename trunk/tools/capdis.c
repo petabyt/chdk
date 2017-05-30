@@ -139,6 +139,46 @@ void l_remove(struct llist *ls, t_address addr)
     }
 }
  
+#define ADDR_HASH_BITS 20
+#define ADDR_HASH_BUCKETS   (1<<ADDR_HASH_BITS)
+#define ADDR_HASH_MASK   (ADDR_HASH_BUCKETS-1)
+#define ADDR_HASH(addr) (((unsigned)(addr) >> 2) & ADDR_HASH_MASK)
+struct llist ** addr_hash_new() {
+    struct llist **addr_hash = malloc(ADDR_HASH_BUCKETS*sizeof(struct llist *));
+    if(!addr_hash) {
+        fprintf(stderr,"addr_hash_now: malloc failed\n");
+        exit(1);
+    }
+    memset(addr_hash,0,ADDR_HASH_BUCKETS*sizeof(struct llist *));
+    return addr_hash;
+}
+
+void addr_hash_free(struct llist **addr_hash) {
+    int i;
+    for(i=0;i<ADDR_HASH_BUCKETS; i++) {
+        if(addr_hash[i]) {
+            free_list(addr_hash[i]);
+        }
+    }
+    free(addr_hash);
+}
+struct lnode * addr_hash_get(struct llist **addr_hash,t_address addr) {
+    unsigned key = ADDR_HASH(addr);
+    if(!addr_hash[key]) {
+        return NULL;
+    }
+    return l_search(addr_hash[key],addr);
+}
+
+void addr_hash_add(struct llist **addr_hash,t_address addr) {
+    unsigned key = ADDR_HASH(addr);
+    if(!addr_hash[key]) {
+        addr_hash[key] = new_list();
+    }
+    l_insert(addr_hash[key],addr,0);
+}
+
+
 /* -----------------------------------------------------------------
  *  Create Linked Lists
  * ----------------------------------------------------------------- */
@@ -641,7 +681,7 @@ static void do_dis_insn(
     // else ... default disassembly
 }
 
-void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, unsigned dis_opts)
+void do_adr_label(firmware *fw, struct llist **branch_list, iter_state_t *is, unsigned dis_opts)
 {
 
     uint32_t adr=is->insn->address;
@@ -656,7 +696,7 @@ void do_adr_label(firmware *fw, struct llist *branch_list, iter_state_t *is, uns
        }
     }
     if(dis_opts & DIS_OPT_LABELS) {
-        struct lnode *label = l_search(branch_list,adr);
+        struct lnode *label = addr_hash_get(branch_list,adr);
         if(label) {
             if(dis_opts & DIS_OPT_FMT_CHDK) {
                 printf("\"");
@@ -774,7 +814,7 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
     }
 }
 
-static void do_tbx_pass1(firmware *fw, iter_state_t *is, struct llist *branch_list, unsigned dis_opts, tbx_info_t *ti)
+static void do_tbx_pass1(firmware *fw, iter_state_t *is, struct llist **branch_list, unsigned dis_opts, tbx_info_t *ti)
 {
     uint32_t adr=ti->start;
     int i=0;
@@ -797,7 +837,7 @@ static void do_tbx_pass1(firmware *fw, iter_state_t *is, struct llist *branch_li
             continue;
         }
         if(dis_opts & DIS_OPT_LABELS) {
-            l_insert(branch_list,target,0);
+            addr_hash_add(branch_list,target);
         }
         adr+=ti->bytes;
         i++;
@@ -830,7 +870,7 @@ static void do_dis_range(firmware *fw,
 {
     iter_state_t *is=disasm_iter_new(fw,dis_start);
     size_t count=0;
-    struct llist *branch_list = new_list();
+    struct llist **branch_list = addr_hash_new();
     tbx_info_t ti;
 
     // pre-scan for branches
@@ -841,7 +881,7 @@ static void do_dis_range(firmware *fw,
                 uint32_t b_tgt=get_branch_call_insn_target(fw,is);
                 if(b_tgt) {
                     // currently ignore thumb bit
-                    l_insert(branch_list,ADR_CLEAR_THUMB(b_tgt),0);
+                    addr_hash_add(branch_list,ADR_CLEAR_THUMB(b_tgt));
                 } else if(get_TBx_PC_info(fw,is,&ti)) { 
                     // handle tbx, so instruction counts will match,
                     // less chance of spurious stuff from disassembling jumptable data
@@ -949,8 +989,7 @@ TODO most constants are decimal, while capstone defaults to hex
         }
         count++;
     }
-    free_list(branch_list);
-
+    addr_hash_free(branch_list);
 }
 
 int main(int argc, char** argv)
