@@ -868,18 +868,29 @@ static void gui_draw_fselect(int arg)
     libfselect->file_select(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 }
 
-static void gui_show_build_info(int arg)
-{
-    static char comp[64];
+#define _XSTR(x) #x
+#define STR(x) _XSTR(x)
 
+static const char *text[] =
+{
+    "CHDK Version '" HDK_VERSION " " BUILD_NUMBER "-" BUILD_SVNREV "'" ,
+    "Build: " __DATE__ " " __TIME__ ,
+    "Camera: " PLATFORM " - " PLATFORMSUB ,
+// gcc version string defined at compile time rather than using sprintf to allow tools like CHIMP to indentify in binary
 #ifdef __GNUC__
 # ifndef __GNUC_PATCHLEVEL__
 # define __GNUC_PATCHLEVEL 0
 # endif
-    sprintf(comp, "GCC %d.%d.%d", __GNUC__ ,__GNUC_MINOR__,__GNUC_PATCHLEVEL__ );
+    "GCC " STR(__GNUC__) "." STR(__GNUC_MINOR__) "." STR(__GNUC_PATCHLEVEL__)
 #else
-    sprintf(comp, "UNKNOWN" );
+    "UNKNOWN"
 #endif
+};
+
+static void gui_show_build_info(int arg)
+{
+    int comp_text_index = sizeof(text) / sizeof(text[0]) - 1;
+    const char *comp = text[comp_text_index];
     sprintf(buf, lang_str(LANG_MSG_BUILD_INFO_TEXT), camera_info.chdk_ver, camera_info.build_number, camera_info.build_svnrev, camera_info.build_date, camera_info.build_time, camera_info.platform, camera_info.platformsub, comp);
     gui_mbox_init(LANG_MSG_BUILD_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 }
@@ -2205,13 +2216,6 @@ static int gui_splash;
 static char *logo = NULL;
 static int logo_size, logo_text_width, logo_text_height;
 
-static const char *text[] =
-{
-    "CHDK Version '" HDK_VERSION " " BUILD_NUMBER "-" BUILD_SVNREV "'" , 
-    "Build: " __DATE__ " " __TIME__ ,
-    "Camera: " PLATFORM " - " PLATFORMSUB
-};
-
 static void init_splash()
 {
     gui_splash = (conf.splash_show) ? SPLASH_TIME : 0;
@@ -2225,7 +2229,7 @@ static void init_splash()
 #endif
         logo = load_file(logo_name, &logo_size, 0);
 
-        logo_text_height = sizeof(text)/sizeof(text[0]);
+        logo_text_height = sizeof(text)/sizeof(text[0]) - 1;
         logo_text_width = 0;
 
         int i;
