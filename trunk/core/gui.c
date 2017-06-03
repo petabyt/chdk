@@ -2266,7 +2266,7 @@ static void gui_draw_splash()
     y = ((camera_screen.height-logo_text_height)>>1) + 20;
 
     draw_rectangle(x, y, x+logo_text_width, y+logo_text_height, MAKE_COLOR(COLOR_RED, COLOR_RED), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
-    for (i=0; i<sizeof(text)/sizeof(text[0]); ++i)
+    for (i=0; i<sizeof(text)/sizeof(text[0])-1; ++i)
     {
         draw_string(x+((logo_text_width-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
     }
