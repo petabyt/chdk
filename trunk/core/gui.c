@@ -871,11 +871,11 @@ static void gui_draw_fselect(int arg)
 #define _XSTR(x) #x
 #define STR(x) _XSTR(x)
 
-static const char *text[] =
+static const char text_raw[] =
 {
-    "CHDK Version '" HDK_VERSION " " BUILD_NUMBER "-" BUILD_SVNREV "'" ,
-    "Build: " __DATE__ " " __TIME__ ,
-    "Camera: " PLATFORM " - " PLATFORMSUB ,
+    "CHDK Version '" HDK_VERSION " " BUILD_NUMBER "-" BUILD_SVNREV "'\0"
+    "Build: " __DATE__ " " __TIME__ "\0"
+    "Camera: " PLATFORM " - " PLATFORMSUB "\0"
 // gcc version string defined at compile time rather than using sprintf to allow tools like CHIMP to indentify in binary
 #ifdef __GNUC__
 # ifndef __GNUC_PATCHLEVEL__
@@ -887,9 +887,13 @@ static const char *text[] =
 #endif
 };
 
+#define TEXT_COUNT 4
+
+static const char* text[TEXT_COUNT];
+
 static void gui_show_build_info(int arg)
 {
-    int comp_text_index = sizeof(text) / sizeof(text[0]) - 1;
+    int comp_text_index = TEXT_COUNT - 1;
     const char *comp = text[comp_text_index];
     sprintf(buf, lang_str(LANG_MSG_BUILD_INFO_TEXT), camera_info.chdk_ver, camera_info.build_number, camera_info.build_svnrev, camera_info.build_date, camera_info.build_time, camera_info.platform, camera_info.platformsub, comp);
     gui_mbox_init(LANG_MSG_BUILD_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
@@ -2218,6 +2222,13 @@ static int logo_size, logo_text_width, logo_text_height;
 
 static void init_splash()
 {
+    int i = 0, index = 0;
+    while (index < sizeof(text_raw))
+    {
+        text[i++] = &text_raw[index];
+        while (text_raw[index++]) ;
+    }
+
     gui_splash = (conf.splash_show) ? SPLASH_TIME : 0;
 
     if (gui_splash)
@@ -2229,7 +2240,7 @@ static void init_splash()
 #endif
         logo = load_file(logo_name, &logo_size, 0);
 
-        logo_text_height = sizeof(text)/sizeof(text[0]) - 1;
+        logo_text_height = TEXT_COUNT - 1;
         logo_text_width = 0;
 
         int i;
@@ -2266,7 +2277,7 @@ static void gui_draw_splash()
     y = ((camera_screen.height-logo_text_height)>>1) + 20;
 
     draw_rectangle(x, y, x+logo_text_width, y+logo_text_height, MAKE_COLOR(COLOR_RED, COLOR_RED), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
-    for (i=0; i<sizeof(text)/sizeof(text[0])-1; ++i)
+    for (i=0; i<TEXT_COUNT-1; ++i)
     {
         draw_string(x+((logo_text_width-strlen(text[i])*FONT_WIDTH)>>1), y+i*FONT_HEIGHT+4, text[i], cl);
     }
