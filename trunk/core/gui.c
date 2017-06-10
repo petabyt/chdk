@@ -2292,7 +2292,11 @@ static void gui_draw_splash()
         int mx = 0;
         int my = 0;
         int offset_x = (camera_screen.width-LOGO_WIDTH)>>1;
-        int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 42;
+#ifdef THUMB_FW
+        int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 66 ;
+#else
+        int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 42 ;
+#endif
         for (pos=0; pos<logo_size; pos++)
         {
             char data = logo[pos];
