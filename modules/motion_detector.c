@@ -42,6 +42,7 @@ Sity: Kharkiv
 
 #include "motion_detector.h"
 #include "module_def.h"
+#include "gui_lang.h"
 // going to replace this with something more elegant
 #ifndef THUMB_FW
    int xs=6; //bytes per 4 pixel grouping
@@ -975,7 +976,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"Motion Detect",
+    -LANG_MODULE_MOTION_DETECT, // Module name
     MTYPE_EXTENSION,
 
     &_libmotiondetect.base,

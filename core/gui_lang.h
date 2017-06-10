@@ -768,7 +768,34 @@
 
 #define LANG_MENU_MISC_ENABLE_RAW_SHORTCUT      638
 
-#define GUI_LANG_ITEMS                          638
+#define LANG_MENU_DEBUG_CPU_INFO                639
+#define LANG_CPUINFO_WROTE                      640
+
+#define LANG_MENU_GAMES_SUDOKU                  641
+#define LANG_SUDOKU_MENU_START                  642
+
+#define LANG_SUDOKU_CONGRATULATIONS             650
+#define LANG_SUDOKU_YOU_DID_IT                  651
+#define LANG_SUDOKU_EVERYTHINGS_CORRECT         652
+#define LANG_SUDOKU_TADA                        653
+#define LANG_SUDOKU_0_MISTAKES                  654
+#define LANG_SUDOKU_INFO                        655
+#define LANG_SUDOKU_NUMBER_OCCURS_TWICE         656
+#define LANG_SUDOKU_SOLVED                      657
+#define LANG_SUDOKU_NOT_COMPLETE                658
+#define LANG_SUDOKU_NOT_SOLVABLE                659
+#define LANG_SUDOKU_COULDNT_FIND_MISTAKE        660
+#define LANG_SUDOKU_SOMETHING_WRONG             661
+
+#define LANG_MENU_GAMES_SNAKE                   662
+#define LANG_SNAKE_POINTS                       663
+
+#define LANG_MODULE_UBASIC                      664
+#define LANG_MODULE_LUA                         665
+#define LANG_MODULE_MOTION_DETECT               666
+#define LANG_MODULE_POPUP_MENU                  667
+
+#define GUI_LANG_ITEMS                          667
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

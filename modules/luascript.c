@@ -3004,7 +3004,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,   // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"Lua",
+    -LANG_MODULE_LUA,           // Module name
     MTYPE_SCRIPT_LANG,          //Run Lua Scripts
 
     &_liblua.base,

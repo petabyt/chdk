@@ -6,6 +6,7 @@
 
 #include "script_api.h"
 #include "module_def.h"
+#include "gui_lang.h"
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -83,7 +84,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"uBasic",
+    -LANG_MODULE_UBASIC,        // Module name
     MTYPE_SCRIPT_LANG,          //Run uBasic Scripts
 
     &_libubasic.base,

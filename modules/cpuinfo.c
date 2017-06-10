@@ -1,6 +1,8 @@
 #include "stdlib.h"
 #include "gui_mbox.h"
 #include "gui.h"
+#include "gui_lang.h"
+#include "lang.h"
 
 struct cpuinfo_bitfield_desc_s {
     unsigned bits;
@@ -82,7 +84,8 @@ void cpuinfo_write_file(void) {
         }
     }
     fclose(finfo);
-    gui_mbox_init((int)"CPUINFO",(int)"Wrote A/CPUINFO.TXT",MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, cpuinfo_finish);
+    sprintf(buf, lang_str(LANG_CPUINFO_WROTE), "A/CPUINFO.TXT");
+    gui_mbox_init(LANG_MENU_DEBUG_CPU_INFO,(int)buf,MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, cpuinfo_finish);
 }
 
 int basic_module_init() {
@@ -104,7 +107,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"CPU INFO",
+    -LANG_MENU_DEBUG_CPU_INFO,  // Module name
     MTYPE_TOOL,             //Read CPU and cache information from CP15
 
     &_librun.base,

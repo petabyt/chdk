@@ -229,7 +229,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"Popup menu module",
+    -LANG_MODULE_POPUP_MENU,    // Module name
     MTYPE_EXTENSION,
 
     &_libmpopup.base,

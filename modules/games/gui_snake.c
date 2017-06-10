@@ -294,7 +294,7 @@ static void snake_start(){
 
 static void game_over(){
     draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
-    sprintf(str_buf,"Points: %d",points);
+    sprintf(str_buf,lang_str(LANG_SNAKE_POINTS),points);
     draw_string(camera_screen.disp_left,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     msleep(3000);
     snake_start();
@@ -416,7 +416,7 @@ void gui_snake_draw() {
     }
     if(draw_points){
       draw_points = 0;
-      sprintf(str_buf,"Points: %d",points);
+      sprintf(str_buf,lang_str(LANG_SNAKE_POINTS),points);
       draw_string(camera_screen.disp_left + 10,220,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
     }
 }
@@ -445,7 +445,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,         // Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
-    (int32_t)"Snake",           // Module name
+    -LANG_MENU_GAMES_SNAKE,     // Module name
     MTYPE_GAME,
 
     &_librun.base,

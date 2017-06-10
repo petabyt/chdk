@@ -764,3 +764,42 @@
 
 638 "Enable RAW Toggle Shortcut Key"
 
+// CPU Info
+639 "CPU Info"
+640 "Wrote %s"
+
+// Sudoku
+641 "Sudoku"
+
+// Sudoku menu (15 chars max)
+642 " Check sudoku "
+643 " Solve sudoku "
+644 " New sudoku "
+645 " Enter sudoku "
+646 " Info "
+647 " Exit "
+648 " Save and Exit "
+649 " Del save game "
+
+650 "Congratulations!"
+651 "You did it!"
+652 "Everything's correct!"
+653 "Tada!"
+654 "0 mistakes!"
+655 "Info"
+656 "A number occurs twice"
+657 "Solved"
+658 "Not complete"
+659 "Not solvable"
+660 "Couldn't find a mistake"
+661 "There's something wrong here..."
+
+// Snake
+662 "Snake"
+663 "Points: %d"
+
+// Module names
+664 "uBASIC Scripting"
+665 "Lua Scripting"
+666 "Motion Detection"
+667 "Popup Menu"

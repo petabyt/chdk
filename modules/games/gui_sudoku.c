@@ -188,20 +188,10 @@ void set_pad_num(int number)
 void draw_menu()
 {
 	int i;
-	static char *str[] = {
-	    " Check sudoku ",
-	    " Solve sudoku ",
-	    " New sudoku ",
-	    " Enter sudoku ",
-	    " Info ",
-        " Exit ",
-	    " Save and Exit ",
-	    " Del save game "
-	};
 
 	for (i=0; i<MENU_ELEMENTS; i++)
 	{
-	    draw_string(xMenuPos, FONT_HEIGHT*i+4, str[i], (menuPos==i && mode==MODE_MENU) ? MARKER_TEXT_COLOR : TEXT_COLOR);
+		draw_string(xMenuPos, FONT_HEIGHT*i+4, lang_str(LANG_SUDOKU_MENU_START+i), (menuPos==i && mode==MODE_MENU) ? MARKER_TEXT_COLOR : TEXT_COLOR);
 	}
 }
 
@@ -811,23 +801,23 @@ void sudoku_menu_execute()
 	switch (menuPos)
 	{
 		case 0:	//check Sudoku
-			if (sudoku_follows_rules(&user[0][0]))	gui_mbox_init((int)"Tada!", (int)"0 mistakes!", MBOX_TEXT_CENTER, NULL);
-			else gui_mbox_init((int)"Info", (int)"A number occurs twice", MBOX_TEXT_CENTER, NULL);
+			if (sudoku_follows_rules(&user[0][0]))	gui_mbox_init(LANG_SUDOKU_TADA, LANG_SUDOKU_0_MISTAKES, MBOX_TEXT_CENTER, NULL);
+			else gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_NUMBER_OCCURS_TWICE, MBOX_TEXT_CENTER, NULL);
 			break;
 		case 1:	//solve Sudoku
 			switch (sudoku_solve(&user[0][0]))
 			{
 				case 1:
-					gui_mbox_init((int)"Info", (int)"Solved", MBOX_TEXT_CENTER, NULL);
+					gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_SOLVED, MBOX_TEXT_CENTER, NULL);
 					memcpy(user, mess, sizeof(user));	//copies mess[][] in user[][]
 					break;
 				case 0:
-					gui_mbox_init((int)"Info", (int)"Not complete", MBOX_TEXT_CENTER, NULL);
+					gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_NOT_COMPLETE, MBOX_TEXT_CENTER, NULL);
 					//copy only known numbers
 					for (y=0; y<9; y++)	for (x=0; x<9; x++)	if (is_one_num(mess[y][x]))user[y][x]=mess[y][x];
 					break;
 				case -1:
-					gui_mbox_init((int)"Info", (int)"Not solvable", MBOX_TEXT_CENTER, NULL);
+					gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_NOT_SOLVABLE, MBOX_TEXT_CENTER, NULL);
 					for (y=0; y<9; y++)	for (x=0; x<9; x++)	if (is_one_num(mess[y][x]))user[y][x]=mess[y][x];
 					break;
 			}
@@ -846,7 +836,7 @@ void sudoku_menu_execute()
 			}
 			break;
 		case 4:	//Info
-			gui_mbox_init((int)"Info", (int)("(c)Frank, 2012, V 0.5"), MBOX_TEXT_CENTER, NULL);
+			gui_mbox_init(LANG_SUDOKU_INFO, (int)("(c)Frank, 2012, V 0.5"), MBOX_TEXT_CENTER, NULL);
 			break;
         case 5:
             exit_sudoku(0); //exit without save
@@ -896,9 +886,9 @@ int gui_sudoku_kbd_process()
 			break;
 
 		case KEY_DISPLAY:
-			if (sudoku_follows_rules(*user) & sudoku_finished(*user)) gui_mbox_init((int)"Congratulations!", (int)"You did it!", MBOX_TEXT_CENTER, NULL);
-			else if (sudoku_follows_rules(*user)) gui_mbox_init((int)"Info", (int)"Couldn't find a mistake", MBOX_TEXT_CENTER, NULL);
-			else gui_mbox_init((int)"Info", (int)"There's something wrong here...", MBOX_TEXT_CENTER, NULL);
+			if (sudoku_follows_rules(*user) & sudoku_finished(*user)) gui_mbox_init(LANG_SUDOKU_CONGRATULATIONS, LANG_SUDOKU_YOU_DID_IT, MBOX_TEXT_CENTER, NULL);
+			else if (sudoku_follows_rules(*user)) gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_COULDNT_FIND_MISTAKE, MBOX_TEXT_CENTER, NULL);
+			else gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_SOMETHING_WRONG, MBOX_TEXT_CENTER, NULL);
 			draw|=BG;
 			break;
 	}
@@ -957,9 +947,9 @@ int gui_sudoku_kbd_process()
 				yPosPad=1;
 				if (sudoku_finished(&user[0][0])){
 					if (sudoku_follows_rules(&user[0][0]))
-						gui_mbox_init((int)"Congratulations!", (int)"Everything's correct!", MBOX_TEXT_CENTER, NULL);
+						gui_mbox_init(LANG_SUDOKU_CONGRATULATIONS, LANG_SUDOKU_EVERYTHINGS_CORRECT, MBOX_TEXT_CENTER, NULL);
 					else
-						gui_mbox_init((int)"Info", (int)"There's something wrong here...", MBOX_TEXT_CENTER, NULL);
+						gui_mbox_init(LANG_SUDOKU_INFO, LANG_SUDOKU_SOMETHING_WRONG, MBOX_TEXT_CENTER, NULL);
 					draw|=BG;
 				}
 			}
@@ -1032,7 +1022,7 @@ int gui_sudoku_init()
         sudoku_new();
         memcpy(user, field, sizeof(user));	//copies field[][] in user[][]
 	}
-	gui_mbox_init((int)"Congratulations!", (int)"Everything's correct!", MBOX_TEXT_CENTER, NULL);
+	gui_mbox_init(LANG_SUDOKU_CONGRATULATIONS, LANG_SUDOKU_EVERYTHINGS_CORRECT, MBOX_TEXT_CENTER, NULL);
 	draw|=FIELD;
 	gui_sudoku_draw(0);
 	gui_set_mode(&GUI_MODE_SUDOKU);
@@ -1114,7 +1104,7 @@ ModuleInfo _module_info =
     ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
     ANY_PLATFORM_ALLOWED,		// Specify platform dependency
 
-    (int32_t)"Sudoku",			// Module name
+    -LANG_MENU_GAMES_SUDOKU,    // Module name
     MTYPE_GAME,
 
     &_librun.base,
