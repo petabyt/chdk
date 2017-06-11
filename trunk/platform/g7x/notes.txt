@@ -22,6 +22,10 @@ SD override does not work in AF, only MF or AF lock.
 
 Default alt button is PLAY, VIDEO and WIFI may also be used
 
+The RING FUNC key is identified as ERASE in scripting and CHDK shortcuts
+
+The half press zebra shortcut keys is MENU
+
 To start in shooting mode or wifi connect, hold down the corresponding button
 
 Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
@@ -95,9 +99,6 @@ KNOWN BUGS
  - switching to hybrid auto causes a crash
  - orientation sensor value alternates between 0 and 90
 - When using remote shoot, DCIM directories will be created even if no files are saved
-- Occasional "SD card error" + missing modules messages after boot
- - usually goes away after reboot.
-- Occasional very slow uploads and crashes while uploading using chdkptp.
 
 THANKS
 ******
