@@ -1,3 +1,5 @@
+# force FI2 off because FI2 of issues with orientation sensor and crashing when hybrid auto is enabled
+override OPT_FI2=
 # 0x329D
 PLATFORMID=12957
 

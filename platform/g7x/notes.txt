@@ -1,26 +1,29 @@
 ************************************
 G7 X notes
 ************************************
-This is an INCOMPLETE, UNFINISHED PORT.
-Many features and combinations of Canon settings have not been tested.
-
 CHDK is a hack, use at your own risk!
-This is a new port for a model with many hardware differences from previously
-supported models, so it is probably higher risk than most.
+
+This is an ALPHA port. It has some known bugs, and many features and
+combinations of Canon settings have not been tested thoroughly.
+
+Additionally, Digic 6 has significant differences from previously 
+supported models, which means some features are not fully implemented
+and the risk of unforeseen side effects is higher than ports for
+previous Digic versions.
 
 The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
 version, use ACID or the firminfo Canon Basic script.
 
-It is STRONGLY RECOMMENDED that you not use the "firmware update" method
-for anything other than making cards bootable, see known bugs below.
+No "firmware update" file is included in the autobuild, you must used
+bootable SD card to load. See known bugs below.
 
 General camera and CHDK port information
 ****************************************
-G7 X has an adjustable aperture and ND filter.
+G7 X has an adjustable aperture and ND filter
 
-SD override does not work in AF, only MF or AF lock.
+SD override does not work in AF, only MF or AF lock
 
-Default alt button is PLAY, VIDEO and WIFI may also be used
+Default alt button is PLAY. VIDEO and WIFI may also be used
 
 The RING FUNC key is identified as ERASE in scripting and CHDK shortcuts
 
