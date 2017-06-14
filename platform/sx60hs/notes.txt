@@ -11,6 +11,12 @@ supported models, so it is probably higher risk than most.
 The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
 version, use ACID or the firminfo Canon Basic script.
 
+No "firmware update" file is included in the autobuild, you must used
+bootable SD card to load. See known bugs below.
+
+Bugs should be reported in the porthing thread
+https://chdk.setepontos.com/index.php?topic=12532.0
+
 General camera and CHDK port information
 ****************************************
 SX60 HS has an adjustable aperture as well as an internal ND filter .
