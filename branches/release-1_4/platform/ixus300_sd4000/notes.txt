@@ -22,9 +22,7 @@ Thanks to reyalp, asm1989 and some other guys for their support.
 
 
 --- CHDK ALT Mode ---------------------------------------------------
-Camera has a user defined <ALT> key.  Default is a short press on the Playback button. Alternative is tp
-press LEFT + UP on JogDial (Camera has no special button like Print for CHDK).
-
+Alt button is the PLAYBACK button, long press for original function
 
 --- Links -----------------------------------------------------------
 * http://chdk.wikia.com/
