@@ -1,8 +1,6 @@
-# No Digic6 finsig utility in trunk yet
-#override OPT_GEN_STUBS=
-#override FORCE_GEN_STUBS=
-
-# 0x329D
+# force FI2 off because FI2 of issues with orientation sensor and crashing when hybrid auto is enabled
+override OPT_FI2=
+# 0x329A
 PLATFORMID=12954
 
 # mandatory for DIGIC 6
