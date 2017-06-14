@@ -27,7 +27,7 @@
 //NHSTUB(ScreenLock                           ,0xffa13354) //117        *** != 0xffa1356c
 //NHSTUB(SetScriptMode                        ,0xff895904) //120        *** != 0xff810f6c
 //NHSTUB(UnlockAF                             ,0xff83831c) //120        *** != 0xff87a920
-//NHSTUB(kbd_pwr_off                          ,0xff861a14) //  2 60%    *** != 0x00000000
+NHSTUB(kbd_pwr_off                            ,0xff861a14) //  2 60%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffac969c -> ffc0041c

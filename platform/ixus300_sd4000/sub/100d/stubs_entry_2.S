@@ -11,8 +11,6 @@ NHSTUB(PutOutNdFilter,              0xFFB205A4)
 NHSTUB(ScreenLock,                  0xFFA1356C)
 NHSTUB(SetScriptMode,               0xFF810F6C)
 NHSTUB(UnlockAF,                    0xFF87A920)
-NHSTUB(kbd_pwr_off,                 NULL_SUB)
-NHSTUB(kbd_pwr_on,                  NULL_SUB)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

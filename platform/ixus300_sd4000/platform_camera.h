@@ -46,9 +46,9 @@
     #define CAM_MULTIPART                   1        // ToDo: test if its working
     #define CAM_DATE_FOLDER_NAMING          0x100
     //#define CAM_DRAW_EXPOSITION             1      // not required because Canon Firmware does always show it on Shutter half press
-    #define CAM_ADJUSTABLE_ALT_BUTTON       1
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Up + Left" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_UP | KEY_LEFT }
+    #undef CAM_DEFAULT_ALT_BUTTON
+    #define CAM_DEFAULT_ALT_BUTTON  KEY_PLAYBACK   // alt button for cameras without adjustable alt
+
     #undef  CAM_HAS_DISP_BUTTON
 
     #undef  DNG_BADPIXEL_VALUE_LIMIT
@@ -103,7 +103,6 @@
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
     #define PARAM_CAMERA_NAME               4       // parameter number (index) for GetParameterData to get Camera Name
-    #define DNG_EXT_FROM                    ".CR2"
 
     // everthing below is ToDo !!!!!!!!!!!!!!!!
 

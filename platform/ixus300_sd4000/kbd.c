@@ -23,7 +23,6 @@ KeyMap keymap[] = {
     { 0, KEY_RIGHT      , 0x00000002 },
     { 0, KEY_POWER      , 0x00000010 },
     { 0, KEY_PLAYBACK   , 0x00004000 },    
-    { 0, KEY_PRINT      , 0x00004000 },   // ALT Key = PLAYBACK - other workaround: KEY_UP + KEY_LEFT (camera has no print key)
     { 0, KEY_SHOOT_FULL , 0x00000900 },   // 0x00000800 (KEY_SHOOT_FULL_ONLY) + 0x00000100 (KEY_SHOOT_HALF)
     { 0, KEY_SHOOT_FULL_ONLY, 0x00000800 },
     { 0, KEY_SHOOT_HALF , 0x00000100 },
