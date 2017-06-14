@@ -31,5 +31,3 @@ DEF(led_table,                          0x24AC) // R0 -> 0x24A4 + 0x8
 // ROM:FFA1358C                 BL      sub_FF8ABEF8
 DEF(enabled_refresh_physical_screen,    0x92CC) // ROM:FFA1339C or ROM:FFA13570, 0x92AC + 0x20 = 0x92CC
 
-DEF(some_f_for_dng,                     0xDEAD) // ??? TODO NOT FOUND!
-DEF(second_ext_for_dng,                 0xDEAD) // ??? TODO NOT FOUND!
