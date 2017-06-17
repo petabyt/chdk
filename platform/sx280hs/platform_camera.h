@@ -36,9 +36,8 @@
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_DISPLAY }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
-    // zebra and histo don't currently work, and default zebra shortcut conflicts with canon AF lock
-    #define SHORTCUT_TOGGLE_HISTO               KEY_DUMMY
-    #define SHORTCUT_TOGGLE_ZEBRA               KEY_DUMMY
+    // default zebra shortcut (LEFT) conflicts with canon AF lock
+    #define SHORTCUT_TOGGLE_ZEBRA               KEY_MENU
 
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
