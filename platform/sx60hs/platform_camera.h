@@ -37,8 +37,8 @@
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "WiFi", "Shrtcut" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_WIFI, KEY_PRINT }
+    #define CAM_ALT_BUTTON_NAMES                {  "Playback", "Video", "WiFi"}
+    #define CAM_ALT_BUTTON_OPTIONS              {  KEY_PLAYBACK,   KEY_VIDEO, KEY_WIFI }
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     // zebra and histo don't currently work, make shortcuts do nothing
