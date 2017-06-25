@@ -1,6 +1,6 @@
 0x01102bc8,_log
-0xfc302380,_log10,(stubs_entry_2.s)
-0xfc3017a8,_pow,(stubs_entry_2.s)
+0x011030e8,_log10
+0x01103250,_pow
 0x011052d0,_sqrt
 0xfc180395,AbortAEIntegralValue_FW
 0xbfe1598d,AcquireRecursiveLock
@@ -178,7 +178,7 @@
 0xfc102187,ClearNFCSystemArea_FW
 0xfc1bfa93,ClearSoundDevForRecEvent_FW
 0xfc077951,ClearWLANFactoryMode_FW
-0xfc37a579,Close,(stubs_entry_2.s)
+0xfc37a501,Close
 0xfc1ee3af,close
 0xfc37a501,Close_FW
 0xfc0dca79,CloseConsole_FW
@@ -237,7 +237,7 @@
 0xfc020995,CrossDefDetect_FW
 0xfc020999,CrossPickUpDetect_FW
 0xfc36d95f,CtrlMan_ChangeZOrder_FW
-0xfc302410,DebugAssert,(stubs_entry_2.s)
+0x010e1001,DebugAssert
 0x010e1017,DebugAssert2
 0xfc2a014d,debugOvserverNotify_FW
 0xfc2a011b,debugPrintOvserver_FW
@@ -491,7 +491,7 @@
 0xfc10af05,ExEVFDrvWriteData_FW
 0xfc1c0041,ExEVFDrvWriteRomData_FW
 0xfc1c012b,ExEVFDrvWriteRomDataWithPolling_FW
-0xfc3022c8,ExitTask,(stubs_entry_2.s)
+0xbfe14c13,ExitTask
 0xbfe14c13,ExitTask_FW
 0xfc078d9b,ExMem.AllocCacheable_FW
 0xfc078c9b,ExMem.AllocUncacheable_FW
@@ -571,14 +571,14 @@
 0xfc1f425b,GetAoriAccelerationData_FW
 0xfc24601d,GetAoriAngle_FW
 0xfc083e5d,GetBatteryCoverClose_FW
-0xfc1f6261,GetBatteryTemperature,(stubs_entry_2.s)
+0xfc1f60fd,GetBatteryTemperature
 0xfc1f60fd,GetBatteryTemperature_FW
 0xfc1c028f,GetBatteryVoltage_FW
 0xfc1fcc79,GetBuildDate_FW
 0xfc1fcc85,GetBuildTime_FW
 0xfc18132f,GetCafBpTableDataSize_FW
 0xfc1bf783,GetCameraInformationData_FW
-0xfc1f625f,GetCCDTemperature,(stubs_entry_2.s)
+0xfc1f60a1,GetCCDTemperature
 0xfc1f60a1,GetCCDTemperature_FW
 0xfc549445,GetCdsGaindBValue_FW
 0xfc549429,GetCdsGainValue_FW
@@ -808,7 +808,7 @@
 0xfc5a9be9,GetISShiftLensPitchPosition_FW
 0xfc5a9bed,GetISShiftLensYawPosition_FW
 0xfc5a9bdd,GetISYawPWM_FW
-0xfc07425b,GetKbdState,(stubs_entry_2.s)
+0xfc075053,GetKbdState
 0xfc5a69cf,GetLastVBatADLevel_FW
 0xfc17b2b5,GetLatestHVPosition_FW
 0xfc083e59,GetLcdPosition_FW
@@ -859,7 +859,7 @@
 0xfc1c0245,GetNFCUserAreaData_FW
 0xbfe152a5,GetNumberOfPostedMessages
 0xfc18091b,GetOnlyAEIntegData_FW
-0xfc1f625d,GetOpticalTemperature,(stubs_entry_2.s)
+0xfc1f6157,GetOpticalTemperature
 0xfc1f6157,GetOpticalTemperature_FW
 0xfc278531,GetParameterData
 0xfc5a60d1,GetPixelsOfViewangle_FW
@@ -1405,7 +1405,7 @@
 0xfc181355,LoadParamDataFromAdjTableBin_FW
 0xfc0bf14b,LoadScript_FW
 0xfc5a695d,LoadSerialNumber_FW
-0xfccac3fd,LocalTime,(stubs_entry_2.s)
+0x010e1515,LocalTime
 0xfc431879,LockHdmiState_FW
 0xfc1fd09f,LockMainPower
 0xfc1fd09f,LockMainPower_FW
@@ -1516,7 +1516,7 @@
 0xfc5dda55,OneShotWhigeBalance_FW
 0xfc5dda55,OneTypeWhiteBalance_FW
 0xfc188fa1,OnPrintPhySw_FW
-0xfc37a577,Open,(stubs_entry_2.s)
+0xfc37a47d,Open
 0xfc1ee33f,open
 0xfc37a47d,Open_FW
 0xfc0dc9bf,OpenConsole_FW
@@ -1964,7 +1964,7 @@
 0xfc1bf1fd,ShowTouchPanelCheckDisplay_FW
 0xfc021161,ShowTransparentMemory_FW
 0xfc5a52c1,SleepAE_FW
-0xfc3022e0,SleepTask,(stubs_entry_2.s)
+0xbfe14999,SleepTask
 0xbfe14999,SleepTask_FW
 0xfc29f9e9,SoundDevBeepGenGain_FW
 0xfc29f007,SoundDevClearPath_FW
@@ -2093,7 +2093,7 @@
 0xfc144f45,StopWDT_FW
 0xfc37febd,strcat
 0xfc200419,strchr
-0xfc37fff1,strcmp,(stubs_entry_2.s)
+0xfc380005,strcmp
 0xfc380005,strcmp_FW
 0xfc37fedf,strcpy
 0xfc37fedf,strcpy_FW
@@ -2288,7 +2288,7 @@
 0xfc08e6fb,TerminateTestRec_FW
 0xfc08405f,TerminateWLAN_FW
 0xfc44ccd9,TestMechaShutter_FW
-0xfc302048,time,(stubs_entry_2.s)
+0x010e11e3,time
 0xfc2504b1,TouchPanelAdjustmentCheck_FW
 0xfc250437,TouchPanelAdjustmentNextStep_FW
 0xfc25046f,TouchPanelAdjustmentStart_FW
@@ -2318,19 +2318,19 @@
 0xbfe1526f,TryPostMessageQueue
 0xbfe151a7,TryReceiveMessageQueue
 0xbfe153d1,TryTakeSemaphore
-0xfc14b9e7,TurnOffBackLight,(stubs_entry_2.s)
+0xfc35e73f,TurnOffBackLight
 0xfc5a76cf,TurnOffCamera_FW
 0xfc177cdf,TurnOffDispForTouchPanelAdj_FW
-0xfc14b9c3,TurnOffDisplay,(stubs_entry_2.s)
+0xfc177cdf,TurnOffDisplay
 0xfc130fe5,TurnOffE1_FW
 0xfc44cecb,TurnOffNdFilter_FW
 0xfc44cf0b,TurnOffNdFilterWithTiming_FW
 0xfc13c339,TurnOffTouchPanel_FW
 0xfc2a1ae7,TurnOffVideoOutMode_FW
-0xfc14b9d5,TurnOnBackLight,(stubs_entry_2.s)
+0xfc35e6eb,TurnOnBackLight
 0xfc24f75d,TurnOnDispForTouchPanelAdj_FW
 0xfc24f773,TurnOnDispForTouchPanelAdjCheck_FW
-0xfc14b9ad,TurnOnDisplay,(stubs_entry_2.s)
+0xfc177ccd,TurnOnDisplay
 0xfc44ceb1,TurnOnNdFilter_FW
 0xfc44cee5,TurnOnNdFilterWithTiming_FW
 0xfc13c335,TurnOnTouchPanel_FW
@@ -2406,7 +2406,7 @@
 0xfc1f4461,UnRegisterElecLevelInfoNotifyCBR_FW
 0xfc327c6f,UnRegisterEventProcedure
 0xfc327d89,UnRegisterEventProcTable
-0xfc188f55,VbattGet,(stubs_entry_2.s)
+0xfc130beb,VbattGet
 0xfc130beb,VbattGet_FW
 0xfc45074d,VerifyByte_FW
 0xfc0d7383,vsprintf
@@ -2415,7 +2415,7 @@
 0xbfe1561d,WaitForAllEventFlagStrictly
 0xbfe14d41,WaitForAnyEventFlag
 0xfc44d08d,WaitMoveZoomLensComplete_FW
-0xfc37a61f,Write,(stubs_entry_2.s)
+0xfc37a539,Write
 0xfc37a539,Write_FW
 0xfc1f8ba7,WRITEADJTABLETOFROM_FW
 0xfc1f8bc5,WRITEADJUSTMENTDATATOFROM_FW
