@@ -1681,7 +1681,7 @@ void init_gps_compass_task(int stop_request){               // called from gui.c
 }
 
 
-int init_gps_navigate_to_home(stop_request){               // called from gui.c when navigate home selected from GUI
+int init_gps_navigate_to_home(int stop_request){            // called from gui.c when navigate home selected from GUI
 
     exit_compass_task = stop_request ;
     if ( stop_request == 0 )
