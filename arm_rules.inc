@@ -35,11 +35,14 @@ CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 ifndef THUMB_FW
     ifeq ($(GCC_VERSION_MAJOR),3)
         CFLAGS+=-march=armv5te
-    else
-        ifeq ($(GCC_VERSION_MAJOR),4)
-            # TODO should be -mcpu, but breaks things ATM
-            CFLAGS+=-mtune=arm946e-s $(ARCH)
-        endif
+    endif
+    ifeq ($(GCC_VERSION_MAJOR),4)
+        # TODO should be -mcpu, but breaks things ATM
+        CFLAGS+=-mtune=arm946e-s $(ARCH)
+    endif
+    ifeq ($(GCC_VERSION_MAJOR),5)
+        # TODO should be -mcpu, but breaks things ATM
+        CFLAGS+=-mtune=arm946e-s $(ARCH)
     endif
 else
     CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW
@@ -127,6 +130,9 @@ ifdef OPT_WARNINGS
      endif
      ifeq ($(GCC_VERSION_MAJOR),4)
            CFLAGS+=-Wextra -fdiagnostics-show-option -Wno-missing-field-initializers -Wunused -Wno-unused-parameter
+     endif
+     ifeq ($(GCC_VERSION_MAJOR),5)
+           CFLAGS+=-Wextra -fdiagnostics-show-option -Wunused
      endif
 endif
 
