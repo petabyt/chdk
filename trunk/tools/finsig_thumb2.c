@@ -404,10 +404,11 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 #define MISC_VAL_NO_STUB    1
 // DEF_CONST instead of DEF
 #define MISC_VAL_DEF_CONST  2
+#define MISC_VAL_OPTIONAL   4
 // variables and constants
 typedef struct {
     char        *name;
-    int         flags; // not used yet, will want for DEF_CONST, maybe non-stubs values
+    int         flags;
     uint32_t    val;
     // informational values
     uint32_t    base; // if stub is found as ptr + offset, record
@@ -428,6 +429,7 @@ misc_val_t misc_vals[]={
     { "jpeg_count_str",     },
     { "zoom_busy",          },
     { "focus_busy",         },
+    { "_nrflag",            MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -2728,6 +2730,63 @@ int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
 }
+int sig_match__nrflag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t fadr=is->adr;
+    // find range check on input arg
+    const insn_match_t match_cmp_b[]={
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG(R0),MATCH_OP_IMM_ANY}},
+        {MATCH_INS(B,MATCH_OPCOUNT_IGNORE)}, // blo or blt may be used, so don't include cond
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,4,match_cmp_b) || is->insn->detail->arm.cc == ARM_CC_AL) {
+        printf("sig_match__nrflag: no match CMP\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match__nrflag: disasm failed\n");
+        return 0;
+    }
+    // assume next is base addres
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match__nrflag: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    arm_reg reg_base = is->insn->detail->arm.operands[0].reg; // reg value was loaded into
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match__nrflag: disasm failed\n");
+        return 0;
+    }
+    // firmware may use add/sub to get actual firmware base address
+    if(isADDx_imm(is->insn) || isSUBx_imm(is->insn)) {
+        if(is->insn->detail->arm.operands[0].reg != reg_base) {
+            printf("sig_match__nrflag: no match ADD/SUB\n");
+            return 0;
+        }
+        if(isADDx_imm(is->insn)) {
+            adr+=is->insn->detail->arm.operands[1].imm;
+        } else {
+            adr-=is->insn->detail->arm.operands[1].imm;
+        }
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match__nrflag: disasm failed\n");
+            return 0;
+        }
+    }
+    if(is->insn->id != ARM_INS_STR || is->insn->detail->arm.operands[1].reg != reg_base) {
+        printf("sig_match__nrflag: no match STR\n");
+        return 0;
+    }
+    uint32_t disp = is->insn->detail->arm.operands[1].mem.disp;
+    save_misc_val(rule->name,adr,disp,fadr);
+    return 1;
+}
 
 // get the address used by a function that does something like
 // ldr rx =base
@@ -3332,6 +3391,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_focus_busy,"focus_busy",             "MoveFocusLensToTerminate_FW",},
 {sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
+{sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
 {NULL},
 };
 
@@ -4160,6 +4220,7 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
     }
     else 
     {
+        if (sig->flags & MISC_VAL_OPTIONAL) return;
         bprintf("// %s not found",sig->name);
     }
     bprintf("\n");
