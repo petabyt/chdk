@@ -65,11 +65,11 @@ Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
 PTP live view - Requires client with live view proto 2.2 support
  (chdkptp r712 or later)
 Zebra, histogram and Edge overlay - with limitations, see Other Issues below.
+Dark frame control
+ - If set to auto Canon firmware uses DFS for tv 5-30 sec, depending on ISO and temperature
 
 NOT IMPLEMENTED
 ***************
-dark frame control
- - Canon firmware enables darkframe for exposures over 30 sec
 video controls (movie_rec task)
 extra long exposures (exp_drv task)
  - Canon firmware supports up to 250 sec

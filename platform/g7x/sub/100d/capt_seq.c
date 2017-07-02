@@ -6,11 +6,8 @@
 //#define CAPTSEQ_DEBUG_LOG 1
 extern void _LogCameraEvent(int id,const char *fmt,...);
 
-// TODO dummy
-static long fake_nrflag=0;
-static long *nrflag=&fake_nrflag;
-// NOTE sx280hs had
-//#define NR_AUTO (0) // not needed (in fact, it makes the camera crash)
+#define USE_STUBS_NRFLAG 1
+#define NR_AUTO (-1) // default value if NRTBL.SetDarkSubType not used is -1 (0 probalby works the same), set to enable auto
 
 #ifdef CAPTSEQ_DEBUG_LOG
 extern int active_raw_buffer;
@@ -677,11 +674,9 @@ void __attribute__((naked,noinline)) sub_fc1e56a6_my() {
 }
 
 #ifdef CAPTSEQ_DEBUG_LOG
-/*
 void log_nr_call(void) {
-    _LogCameraEvent(0x60,"nr call");
+    _LogCameraEvent(0x60,"nr hook %d",_nrflag);
 }
-*/
 void log_remote_hook(void) {
     _LogCameraEvent(0x60,"remote hook");
 }
@@ -773,9 +768,12 @@ void __attribute__((naked,noinline)) sub_fc3d3872_my() {
 "loc_fc3d38f2:\n"
 "    movs    r0, #0\n"
 "    bl      sub_fc15405e\n"
-//"bl log_nr_call\n"
+"bl capt_seq_hook_set_nr\n"
+#ifdef CAPTSEQ_DEBUG_LOG
+"bl log_nr_call\n"
+#endif
 "    mov     r0, r4\n"
-"    bl      sub_fc1e5500\n" // to nrtable stuff, DFS control could go here?
+"    bl      sub_fc1e5500\n" // sets up final dfs flag 0x14744 (0 = no dfs, 1 = yes)
 "    ldr     r1, =0x00027eec\n"
 "    movs    r2, #4\n"
 "    movs    r0, #0x90\n"
