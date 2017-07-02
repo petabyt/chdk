@@ -67,6 +67,7 @@ DEF(playrec_mode                      ,0x0000b2f4) // (0xb2f0+0x4) Found @0xfc33
 DEF(jpeg_count_str                    ,0x00190ac0) // Found @0xfc1a15f6
 //DEF(zoom_busy                         ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 //DEF(focus_busy                        ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
+//DEF(_nrflag                           ,0x00029c00),          stubs_min = 0x00029c00 (0x29c00)
 DEF_CONST(uiprop_count                      ,0x000000d1) // Found @0xfc27de04
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc38a185

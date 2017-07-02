@@ -71,6 +71,7 @@ DEF(playrec_mode                      ,0x0000bec4) // (0xbec0+0x4) Found @0xfc2f
 DEF(jpeg_count_str                    ,0x0015d630) // Found @0xfc103a94
 DEF(zoom_busy                         ,0x00013e18) // (0x13df8+0x20) Found @0xfc1dac7e
 DEF(focus_busy                        ,0x00013bb0) // (0x13ba8+0x8) Found @0xfc31ef22
+DEF(_nrflag                           ,0x0001fa4c) // (0x1fa48+0x4) Found @0xfc383b7c
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc325d2d

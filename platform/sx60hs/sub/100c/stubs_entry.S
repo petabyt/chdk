@@ -73,6 +73,7 @@ DEF(playrec_mode                      ,0x0000bb84) // (0xbb80+0x4) Found @0xfc2d
 DEF(jpeg_count_str                    ,0x0019b134) // Found @0xfc10379a
 DEF(zoom_busy                         ,0x0000b85c) // (0xb840+0x1c) Found @0xfc2edaa4
 DEF(focus_busy                        ,0x00013488) // (0x13480+0x8) Found @0xfc2f9dfa
+DEF(_nrflag                           ,0x0001e858) // (0x1e854+0x4) Found @0xfc347a30
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
 
 //NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc2766c5
