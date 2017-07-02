@@ -474,6 +474,16 @@ int isPOP_PC(cs_insn *insn)
     return 0;
 }
 
+// is the instruction ADD* rx, imm
+int isADDx_imm(cs_insn *insn)
+{
+    return ((insn->id == ARM_INS_ADD || insn->id == ARM_INS_ADDW) && insn->detail->arm.operands[1].type == ARM_OP_IMM);
+}
+// is the instruction SUB* rx, imm
+int isSUBx_imm(cs_insn *insn)
+{
+    return ((insn->id == ARM_INS_SUB || insn->id == ARM_INS_SUBW || insn->id == ARM_INS_SUBS) && insn->detail->arm.operands[1].type == ARM_OP_IMM);
+}
 /*
 int isADR(cs_insn *insn) {
     // objdump disassembles as add r0, pc, #x, 
@@ -1190,15 +1200,13 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
                 res[rd_i] += fw->is->insn->detail->arm.operands[1].imm;
 //                if(dbg_count) printf("found move r%d,#0x%08x\n",rd_i,res[rd_i]);
                 found_bits |=rd_bit;
-            } else if( (insn_id == ARM_INS_ADD || insn_id == ARM_INS_ADDW) 
-                && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
+            } else if(isADDx_imm(fw->is->insn)) {
                 res[rd_i] += fw->is->insn->detail->arm.operands[1].imm;
 //                if(dbg_count) printf("found add r%d,#0x%08x\n",rd_i,res[rd_i]);
                 // pretend reg is not known
                 known_bits ^=rd_bit;
                 // do not set found bit here
-            } else if( (insn_id == ARM_INS_SUB || insn_id == ARM_INS_SUBS || insn_id == ARM_INS_SUBW) 
-                && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
+            } else if(isSUBx_imm(fw->is->insn)) {
                 res[rd_i] = (int)(res[rd_i]) - fw->is->insn->detail->arm.operands[1].imm;
 //                if(dbg_count) printf("found add r%d,#0x%08x\n",rd_i,res[rd_i]);
                 // pretend reg is not known
