@@ -100,8 +100,6 @@
 
     #define CAM_HAS_GPS                         1
 
-    #define CAM_USE_SUNRISE                     1
-
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #define CAM_LOAD_CUSTOM_COLORS              1           // Enable loading CHDK colors into the camera palette memory/hardware

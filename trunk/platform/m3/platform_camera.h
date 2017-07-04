@@ -129,8 +129,6 @@
 
     //#define CAM_HAS_GPS                         1
 
-    #define CAM_USE_SUNRISE                     1
-
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #undef  CAM_USB_EVENTID
