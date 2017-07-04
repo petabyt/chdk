@@ -43,8 +43,6 @@
     #define CAM_ACTIVE_AREA_Y1              56        //
     #define CAM_ACTIVE_AREA_X2              4416    //    a3200 found @ffb20c48
     #define CAM_ACTIVE_AREA_Y2              3296    //    a3200 found @ffb20c50
-
-    #define DNG_VERT_RLE_BADPIXELS          1
     #define CAM_DNG_LENS_INFO               { 50,10, 250,10, 28,10, 59,10 } // See comments in camera.h   a3300is
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL

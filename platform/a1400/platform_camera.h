@@ -69,8 +69,6 @@
                                                 //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
     #define CAM_CAN_MUTE_MICROPHONE         1
 
-    #define DNG_VERT_RLE_BADPIXELS          1
-
     #define CAM_DATE_FOLDER_NAMING          0x80
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1

@@ -65,8 +65,6 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE       1       // camera doesn't actually have digest mode, this is needed by is_video_recording
     #define CAM_IS_VID_REC_WORKS            1
 
-    #define DNG_VERT_RLE_BADPIXELS          1
-
     #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1

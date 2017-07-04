@@ -63,8 +63,6 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-    #define DNG_VERT_RLE_BADPIXELS          1
-
     #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1

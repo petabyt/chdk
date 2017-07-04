@@ -89,7 +89,6 @@
     #define cam_CalibrationIlluminant1      1       // Look into updating
 
     #define PARAM_CAMERA_NAME               4       // parameter number for GetParameterData
-    //#define DNG_VERT_RLE_BADPIXELS        1       // verify
     #define CAM_DNG_LENS_INFO               { 50,10, 400,10, 30,10, 59,10 } // See comments in camera.h // 5.0 - 40.0
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220130  // specifies an LED that turns on while camera waits for USB remote to sync

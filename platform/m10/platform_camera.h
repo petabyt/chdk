@@ -25,8 +25,6 @@
     #define CAM_DISABLE_RAW_IN_HQ_BURST         1
     #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
     #define CAM_DISABLE_RAW_IN_SPORTS           1
-
-    #define DNG_VERT_RLE_BADPIXELS              1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #undef CAM_HAS_ND_FILTER                             // Camera does not have built-in ND filter, obviously
     #undef  CAM_KEY_PRESS_DELAY
