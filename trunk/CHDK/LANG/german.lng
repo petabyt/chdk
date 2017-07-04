@@ -787,3 +787,43 @@
 637 "Textausgabe       :"
 
 638 "RAW-Tastaturkürzel-Optionen"
+
+// CPU Info
+639 "CPU-Info"
+640 "Schrieb %s"
+
+// Sudoku
+641 "Sudoku"
+
+// Sudoku menu (15 chars max)
+642 " Check Sudoku "
+643 " Sudoku gelöst "
+644 " Neues Sudoku "
+645 " Starte Sudoku "
+646 " Info "
+647 " Ende "
+648 " Speichern&Ende"
+649 "Entf.ges. Spiel"
+
+650 "Glückwunsch!"
+651 "Du hast es!"
+652 "Alles korrekt!"
+653 "Tada!"
+654 "0 Fehler!"
+655 "Info"
+656 "Eine Zahl ist doppel"
+657 "gelöst"
+658 "Nicht komplett"
+659 "Unlösbar"
+660 "Konnte keine Fehler finden"
+661 "Etwas ist falsch..."
+
+// Snake
+662 "Snake"
+663 "Punkte: %d"
+
+// Module names
+664 "uBASIC-Scripting"
+665 "Lua-Scripting"
+666 "Bewegungserkennung"
+667 "Popup-Menü"
