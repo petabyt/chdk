@@ -122,7 +122,6 @@
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
     //#undef  CAM_USES_ASPECT_CORRECTION
     //#define CAM_USES_ASPECT_CORRECTION          1
-    #define DRAW_ON_YUV_OVERLAY                 1
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
