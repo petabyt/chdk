@@ -78,8 +78,6 @@
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
 
-    #define DNG_VERT_RLE_BADPIXELS          1
-
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_IS                              // Camera does not have an image stabilizer
