@@ -98,8 +98,6 @@
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                     100         // Override min subject distance
 
-    #define CAM_USE_SUNRISE                     1
-
     #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #define CAM_LOAD_CUSTOM_COLORS              1           // Enable loading CHDK colors into the camera palette memory/hardware
