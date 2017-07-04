@@ -87,7 +87,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_WB_ADJ                          280
 #define PROPCASE_SERVO_AF                        306        // 0 = Servo AF off, 1 = Servo AF on
 #define PROPCASE_ASPECT_RATIO                    307        // and 402 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-#define PROPCASE_SV                              256        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
+#define PROPCASE_SV                              354        // used for exif / UI. 256 appears similar but does not update exif
 // TODO GPS guessed, ps6 + 8
 // #define PROPCASE_GPS                             365        // (CHDKLover, August 2011) - contains a 272 bytes long structure
 #define PROPCASE_TIMER_SHOTS                     	384        // Number of shots for TIMER_MODE=Custom
