@@ -124,7 +124,6 @@
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
    // #undef  CAM_USES_ASPECT_CORRECTION
     //#define CAM_USES_ASPECT_CORRECTION          1
-    #define DRAW_ON_YUV_OVERLAY                 1
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
@@ -137,8 +136,6 @@
     #define CAM_SUPPORT_BITMAP_RES_CHANGE         1
 //    #undef CAM_SUPPORT_BITMAP_RES_CHANGE      
     
-    #undef  CAM_VIEWPORT_PIXEL_FORMAT
-    #define CAM_VIEWPORT_PIXEL_FORMAT           2   // mandatory on DIGIC6, pixel format is YUY2 (uyvy)
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
