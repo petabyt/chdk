@@ -21,7 +21,6 @@
 // don't override them again in here.
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
-    #define DNG_VERT_RLE_BADPIXELS              1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #define CAM_HAS_ND_FILTER                   1 // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY
