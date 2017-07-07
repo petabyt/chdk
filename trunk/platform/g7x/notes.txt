@@ -102,6 +102,10 @@ KNOWN BUGS
  - switching to hybrid auto causes a crash
  - orientation sensor value alternates between 0 and 90
 - When using remote shoot, DCIM directories will be created even if no files are saved
+- Key presses sent using PTP may be ignored or result in the Canon firmware acting like
+  the key is held down. Putting the camera into alt mode before sending key presses reduces
+  the chance of this happening.
+
 
 THANKS
 ******
