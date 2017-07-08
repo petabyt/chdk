@@ -10,6 +10,14 @@
 
 #include "../../../generic/capt_seq.c"
 
+void __attribute__((naked,noinline)) block_sv_cooking()
+{
+    // On G1X (possibly others), when Tv >= 1s and ISO >= 400, then the camera shoots at 1/2 ISO and cooks the JPG/CR2 image data to compensate
+    // Setting this property blocks the firmware from doing this.
+    static short v = 1;
+    set_property_case(77, &v, sizeof(v));
+}
+
 /*************************************************************/
 //** dvlp_seq_task @ 0xFF07D4F8 - 0xFF07D5CC, length=54
 void __attribute__((naked,noinline)) dvlp_seq_task() {
@@ -155,8 +163,10 @@ asm volatile (
 
 "loc_FF07B454:\n"
 "    BL      shooting_expo_iso_override\n"      // added
+"    BL      block_sv_cooking\n"                // added
 "    BL      sub_FF07BC74 \n"
 "    BL      shooting_expo_param_override\n"    // added
+"    BL      block_sv_cooking\n"                // added
 "    BL      sub_FF07864C \n"
 "    MOV     R0, #0\n"                          // added
 "    STR     R0, [R4,#0x2C]\n"                  // added, fixes overrides  behavior at short shutter press (from S95)
