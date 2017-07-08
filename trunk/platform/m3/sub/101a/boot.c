@@ -436,6 +436,7 @@ void __attribute__((naked,noinline)) sub_fc06347d_my() {
 "                 bl      sub_fc06375c\n"
 "                 bl      sub_fc0f41f0\n"
 //"                 bl      sub_fc0637b2\n"  // - startdiskboot
+"                  bl       sub_010e16c8\n" // + Switch off SD power/
 "                 bl      sub_fc1ee6da\n"
 "                 bl      sub_fc0f4348\n"
 "                 bl      sub_fc0638a4\n"
