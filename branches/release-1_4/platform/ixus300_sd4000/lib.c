@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "platform_palette.h"
 #include "lolevel.h"
 
 void shutdown() {
@@ -208,3 +209,43 @@ int vid_get_viewport_yoffset() {
     return 0;
 }
 */
+
+// Functions for PTP Live View system
+int vid_get_palette_type()                      { return 3 ; }          // 1,2,3,4,or 5
+int vid_get_palette_size()                      { return 256 * 4 ; }    // 16*4 or 256*4
+
+extern char** palette_buffer_ptr;
+extern int active_palette_buffer;
+
+void* vid_get_bitmap_active_palette()
+{  
+    return palette_buffer_ptr[active_palette_buffer]+8;  
+}
+
+void load_chdk_palette()
+{ 
+    if ((active_palette_buffer == 0) || (active_palette_buffer == 4) || (active_palette_buffer == 7))  //00=rec  04=play  07=menu  03=setmenu (don't override in setmenu as it has no non-overlapping blank palette areas)
+    {
+        int *pal = (int *)vid_get_bitmap_active_palette();
+        if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
+        {
+            pal[CHDK_COLOR_BASE+0]  = 0x033ADF62;  // Red
+            pal[CHDK_COLOR_BASE+1]  = 0x0326EA40;  // Dark Red
+            pal[CHDK_COLOR_BASE+2]  = 0x034CD57F;  // Light Red
+            pal[CHDK_COLOR_BASE+3]  = 0x0373BFAE;  // Green
+            pal[CHDK_COLOR_BASE+4]  = 0x034BD6CA;  // Dark Green
+            pal[CHDK_COLOR_BASE+5]  = 0x0395AB95;  // Light Green
+            pal[CHDK_COLOR_BASE+6]  = 0x034766F0;  // Blue
+            pal[CHDK_COLOR_BASE+7]  = 0x031250F3;  // Dark Blue
+            pal[CHDK_COLOR_BASE+8]  = 0x037F408F;  // Cyan
+            pal[CHDK_COLOR_BASE+9]  = 0x03512D5B;  // Magenta
+            pal[CHDK_COLOR_BASE+10] = 0x03A9A917;  // Yellow
+            pal[CHDK_COLOR_BASE+11] = 0x03819137;  // Dark Yellow
+            pal[CHDK_COLOR_BASE+12] = 0x03DED115;  // Light Yellow
+            pal[CHDK_COLOR_BASE+13] = 0x00090000;  // Transparent dark grey
+
+            vid_bitmap_refresh();
+        }
+    }
+}
+
