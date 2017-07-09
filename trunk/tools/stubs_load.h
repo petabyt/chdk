@@ -25,6 +25,7 @@ typedef struct _stubs
     osig    *stubs_min;
     osig    *modemap;
     osig    *makevals;
+    osig    *propcases;
 
     int     min_focus_len;
     int     max_focus_len;
@@ -44,4 +45,5 @@ void load_stubs(stub_values *sv, char *name, int exclude_comments);
 void load_stubs_min(stub_values *sv);
 void load_modemap(stub_values *sv);
 void load_platform(stub_values *sv);
+void load_propcases(stub_values *sv, char *name);
 void load_makefile(stub_values *sv);
