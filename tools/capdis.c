@@ -178,6 +178,10 @@ void addr_hash_add(struct llist **addr_hash,t_address addr) {
     l_insert(addr_hash[key],addr,0);
 }
 
+// function address for prop call annotation
+// TODO should have a more generalized "recognize function arugments" system
+static t_address set_prop; 
+static t_address get_prop; 
 
 void usage(void) {
     fprintf(stderr,"usage capdis [options] <file> <load address>\n"
@@ -365,7 +369,8 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
 #define DIS_OPT_ADR_LDR         0x00000020
 #define DIS_OPT_STR             0x00000040
 #define DIS_OPT_STUBS           0x00000080
-#define DIS_OPT_STUBS_LABEL     0x00000080
+#define DIS_OPT_STUBS_LABEL     0x00000100
+#define DIS_OPT_PROPS           0x00000200
 
 #define DIS_OPT_DETAIL_GROUP    0x00010000
 #define DIS_OPT_DETAIL_OP       0x00020000
@@ -378,7 +383,7 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
                                     |DIS_OPT_DETAIL_BIN\
                                     |DIS_OPT_DETAIL_CONST)
 
-// add comments for adr if it is a ref known sub or strung
+// add comments for adr if it is a ref known sub or string
 void describe_const_op(firmware *fw, unsigned dis_opts, char *comment, uint32_t adr)
 {
     osig* ostub=NULL;
@@ -404,6 +409,23 @@ void describe_const_op(firmware *fw, unsigned dis_opts, char *comment, uint32_t 
     }
 }
 
+void describe_prop_call(firmware *fw,iter_state_t *is, unsigned dis_opts, char *comment, uint32_t target)
+{
+    if(!(dis_opts & DIS_OPT_PROPS) || (target != get_prop && target != set_prop)) {
+        return;
+    }
+
+    uint32_t regs[4];
+    // backtrack up to 6 instructions, looking for r0 (propcase ID)
+    if((get_call_const_args(fw,is,6,regs)&1)!=1) {
+        return;
+    }
+    osig* ostub = find_sig_val(fw->sv->propcases,regs[0]);
+    if(ostub && ostub->val) {
+        sprintf(comment+strlen(comment)," %s (%d) ",ostub->nm,ostub->val);
+    }
+}
+
 // if branch insn fill in / modify ops, comment as needed, return 1
 // TODO code common with do_dis_call should be refactored
 int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
@@ -419,6 +441,7 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
     }
     osig* ostub=NULL;
     char *subname=NULL;
+    uint32_t j_target=0;
     if(dis_opts & DIS_OPT_STUBS) {
        // search for current thumb state (there is no BX imm, don't currently handle ldr pc,...)
        ostub = find_sig_val(fw->sv->stubs,target|is->thumb);
@@ -431,7 +454,7 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
        } else {
            // check for veneer to known function
             if(fw_disasm_iter_single(fw,target|is->thumb)) {
-                uint32_t j_target=get_direct_jump_target(fw,fw->is);
+                j_target=get_direct_jump_target(fw,fw->is);
                 if(j_target) {
                     ostub = find_sig_val(fw->sv->stubs,j_target);
                     if(ostub) {
@@ -455,6 +478,11 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
     } else if (subname) {
        strcat(comment,subname);
     }
+    if(j_target) {
+        describe_prop_call(fw,is,dis_opts,comment,j_target|is->thumb);
+    } else {
+        describe_prop_call(fw,is,dis_opts,comment,target|is->thumb);
+    }
     return 1;
 }
 
@@ -469,6 +497,7 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
     uint32_t target = get_branch_call_insn_target(fw,is); // target with thumb bit set appropriately
     osig* ostub=NULL;
     char *subname=NULL;
+    uint32_t j_target=0;
     if(dis_opts & DIS_OPT_STUBS) {
        ostub = find_sig_val(fw->sv->stubs,target);
        if(ostub) {
@@ -480,7 +509,7 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
        } else {
            // check for veneer to known function
             if(fw_disasm_iter_single(fw,target)) {
-                uint32_t j_target=get_direct_jump_target(fw,fw->is);
+                j_target=get_direct_jump_target(fw,fw->is);
                 if(j_target) {
                     ostub = find_sig_val(fw->sv->stubs,j_target);
                     if(ostub) {
@@ -504,6 +533,11 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
         }
     } else if (subname) {
        strcat(comment,subname);
+    }
+    if(j_target) {
+        describe_prop_call(fw,is,dis_opts,comment,j_target);
+    } else {
+        describe_prop_call(fw,is,dis_opts,comment,target);
     }
     return 1;
 }
@@ -1002,6 +1036,7 @@ int main(int argc, char** argv)
     int verbose=0;
     unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS|DIS_OPT_STR);
     int dis_arch=FW_ARCH_ARMv7;
+    int do_propset=0;
     if(argc < 2) {
         usage();
     }
@@ -1042,6 +1077,9 @@ int main(int argc, char** argv)
         }
         else if ( strncmp(argv[i],"-stubs=",7) == 0 ) {
             strcpy(stubs_dir,argv[i]+7);
+        }
+        else if ( strncmp(argv[i],"-props=",7) == 0 ) {
+            do_propset=strtoul(argv[i]+7,NULL,0);
         }
         else if ( strcmp(argv[i],"-v") == 0 ) {
             verbose++;
@@ -1126,6 +1164,34 @@ int main(int argc, char** argv)
         load_stubs(fw.sv, stubs_path, 1);
         sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry_2.S");
         load_stubs(fw.sv, stubs_path, 1);   // Load second so values override stubs_entry.S
+    }
+    if(do_propset) {
+        fw.sv->propcases = NULL;
+        if(!(dis_opts & DIS_OPT_STUBS)) {
+            fprintf(stderr,"-props requires -stubs\n");
+            usage();
+        }
+        char props_path[300];
+        sprintf(props_path,"%s/../../../../include/propset%d.h",stubs_dir,do_propset);
+        // printf("load props %s %d\n",props_path,do_propset);
+        load_propcases(fw.sv, props_path);
+        if(!fw.sv->propcases) {
+            fprintf(stderr,"propset %d load failed\n",do_propset);
+            exit(1);
+        }
+        osig *ostub=find_sig(fw.sv->stubs,"SetPropertyCase");
+        if(!ostub || !ostub->val) {
+            fprintf(stderr,"SetPropertyCase not found\n");
+            exit(1);
+        }
+        set_prop = ostub->val;
+        ostub=find_sig(fw.sv->stubs,"GetPropertyCase");
+        if(!ostub || !ostub->val) {
+            fprintf(stderr,"GetPropertyCase not found\n");
+            exit(1);
+        }
+        get_prop = ostub->val;
+        dis_opts |= DIS_OPT_PROPS;
     }
     if(dis_start_fn) {
         if(!stubs_dir[0]) {
