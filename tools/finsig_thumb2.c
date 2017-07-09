@@ -723,7 +723,7 @@ int dryos_param(firmware *fw, sig_rule_t *sig)
 }
 */
 
-// initialize iter stat using address from ref_name, print error and return 0 if not found
+// initialize iter state using address from ref_name, print error and return 0 if not found
 int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!rule->ref_name) {
