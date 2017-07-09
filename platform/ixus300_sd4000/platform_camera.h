@@ -104,7 +104,9 @@
 
     #define PARAM_CAMERA_NAME               4       // parameter number (index) for GetParameterData to get Camera Name
 
-    // everthing below is ToDo !!!!!!!!!!!!!!!!
+    #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
+    
+// screen / bitmaps stuff below is ToDo !!!!!!!!!!!!!!!!
 
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
@@ -126,10 +128,9 @@
                                                     // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_QUALITY_OVERRIDE            1       // enable 'super fine' override
-
-    // Warning : SD override for this camera with these values has not been tested
-    #define CAM_CAN_SD_OVERRIDE_UNKNOWN_STATUS 1
-    #define CAM_SD_OVER_IN_AFL              1
-    #define CAM_SD_OVER_IN_MF               1
+ 
+    #undef  CAM_SD_OVER_IN_AF                       // crashed trying to MF if MF or AFL not set
+    #define CAM_SD_OVER_IN_AFL              1       // 
+    #define CAM_SD_OVER_IN_MF               1       //
 
 //--------------------------------------------------

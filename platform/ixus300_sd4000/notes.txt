@@ -52,18 +52,22 @@ Alt button is the PLAYBACK button, long press for original function
 * 15.02.2011 - Beta v10 is available
 * 31.05.2011 - Beta v11 is available
 * 01.06.2011 - Source added to SVN at Revision #1196
-
+* 13.06.2017 - Keymap issues fixed by reyalp - <ALT> key is only the Playback key
+* 08.07.2017 - add custom color palette
+             - fixed SD override code 
+             - fixed dual partition support
+             - rolled in latest sig finder 
+             - changes by waterwings
 
 --- Troubleshoot -----------------------------------------------------
-* Check SD-Card filesystem
 * Reformat your SD-Card and copy fresh CHDK files to avoid strange error / crash / shutdown
 * Delete CHDK config file or use "Reset options to default".
 
 
 --- ToDo ------------------------------------------------------------
-* Multi Partition Support (Autoboot CHDK with 2 Partitions on SD-Card)
-* "Debug Parameters -> Create card with two partitions" does cause shutdown (WriteSDCard address wrong?)
-* tweak Color Palette (CAM_BITMAP_PALETTE), CHDK OSD Colors does not fit and are different in playback/record mode
+* (fixed 08.07.2017) Multi Partition Support (Autoboot CHDK with 2 Partitions on SD-Card)
+* (fixed 08.07.2017)  "Debug Parameters -> Create card with two partitions" does cause shutdown (WriteSDCard address wrong?)
+*  (fixed 08.07.2017) tweak Color Palette (CAM_BITMAP_PALETTE), CHDK OSD Colors does not fit and are different in playback/record mode
 * Check Propcase, at least one Propcase has changed (maybe it time for propcase4.h)
 * os.remove() does delete files but fail to delete directory (like SX210, G11 and other new cameras too), tested with llibtst.lua
 * only Video Quality Override does work, Video Bitrate Override does nothing (affects more DryOS Cameras?)
@@ -75,9 +79,9 @@ Alt button is the PLAYBACK button, long press for original function
 * sometimes Exception (Vector 0x04) on exiting ALT Mode after script execution
 * Problems with some Scripts (probaly fixed since Stack Size commit)
 * Aperture Override aperture not working ?
-* ND Filter State not working ?
+*  (fixed 08.07.2017) ND Filter State not working ?
 * Remote Function does continuous mode only after second "Remote Shutter" (what is correct behavior on other Cameras?)
-* Override Subj. Dist. Value (MF) not working ?
+*  (fixed 08.07.2017) Override Subj. Dist. Value (MF) not working ?
 
 * probably more stuff to fix ;-)
 
@@ -86,6 +90,7 @@ Alt button is the PLAYBACK button, long press for original function
 * CHDK PTP with ptpcam
   * Mode Switch (Playback / Record) does work
   * All functions seems to work
+  * live view not supported
 * create badpixel for DNG without script does work
 * Quality Override "super fine" does work (bigger filesize, less JPG artifacts, correct EXIF)
 * "Make card bootable" does work

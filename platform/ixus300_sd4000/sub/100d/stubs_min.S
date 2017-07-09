@@ -1,10 +1,7 @@
 #include "stubs_asm.h"
 
-// ROM:FFACC8B4, search for "ZoomCon_EnterCaptModeChange"
-DEF(zoom_status,                        0x315B) // ?!?
-
-// ROM:FF99D340
-DEF(recreview_hold, 0x780E)   // 0x780C + 2 ?!?
+DEF(active_palette_buffer,      0x00009274)     // found at 0xffa11498
+DEF(palette_buffer_ptr,         0x0000927c)     // found at 0xffa11160
 
 // ROM:FF860864                 LDR     R0, =0x24A4 <---
 // ROM:FF860868                 STMFD   SP!, {R4,LR}

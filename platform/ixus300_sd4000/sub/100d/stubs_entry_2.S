@@ -1,17 +1,6 @@
 #include "stubs_asm.h"
 #define NULL_SUB 0xFF810B1C
 
-// Override stubs_entry.S
-NHSTUB(DoAFLock,                    0xFF87A910)
-NHSTUB(GetDrive_FreeClusters,       0xFF871E90)
-NHSTUB(GetImageFolder,              0xFF94337C)
-NHSTUB(MoveFocusLensToDistance,     0xFFB2289C)
-NHSTUB(PutInNdFilter,               0xFFB2056C)
-NHSTUB(PutOutNdFilter,              0xFFB205A4)
-NHSTUB(ScreenLock,                  0xFFA1356C)
-NHSTUB(SetScriptMode,               0xFF810F6C)
-NHSTUB(UnlockAF,                    0xFF87A920)
-
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)

@@ -19,14 +19,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(DoAFLock                             ,0xff8382e4) //120        *** != 0xff87a910
-//NHSTUB(GetImageFolder                       ,0xff94345c) //122        *** != 0xff94337c
-//NHSTUB(MoveFocusLensToDistance              ,0xffb228b0) //102        *** != 0xffb2289c
-//NHSTUB(PutInNdFilter                        ,0xffab69c8) //102        *** != 0xffb2056c
-//NHSTUB(PutOutNdFilter                       ,0xffab69ec) //102        *** != 0xffb205a4
-//NHSTUB(ScreenLock                           ,0xffa13354) //117        *** != 0xffa1356c
-//NHSTUB(SetScriptMode                        ,0xff895904) //120        *** != 0xff810f6c
-//NHSTUB(UnlockAF                             ,0xff83831c) //120        *** != 0xff87a920
 NHSTUB(kbd_pwr_off                            ,0xff861a14) //  2 60%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
@@ -51,7 +43,7 @@ DEF(full_screen_refresh                     ,0x0000926c) // Found @0xffa11520
 DEF(canon_menu_active                       ,0x00003040) // Found @0xff890234
 DEF(canon_shoot_menu_active                 ,0x00007b5d) // Found @0xff9abd94
 DEF(playrec_mode                            ,0x00002d78) // Found @0xff882334
-//DEF(zoom_status                             ,0x0000cea4) // Found @0xffaccb94, ** != ** stubs_min = 0x0000315b (0x315B)
+DEF(zoom_status                             ,0x0000cea4) // Found @0xffaccb94
 DEF(some_flag_for_af_scan                   ,0x00006dd8) // Found @0xff96e984
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 3 int value(s), the first is the zoom focus length.
@@ -59,7 +51,7 @@ DEF(some_flag_for_af_scan                   ,0x00006dd8) // Found @0xff96e984
 DEF(focus_len_table                         ,0xfffe9718) // Found @0xfffe9718
 DEF(zoom_busy                               ,0x00006908) // Found @0xff965a0c
 DEF(focus_busy                              ,0x000067f0) // Found @0xff961d44
-//DEF(recreview_hold                          ,0x00003a20) // Found @0xff8a10dc, ** != ** stubs_min = 0x0000780e (0x780E)
+DEF(recreview_hold                          ,0x00003a20) // Found @0xff8a10dc
 DEF(viewport_buffers                        ,0xffb5e7b8) // Found @0xff84ff60
 DEF(active_viewport_buffer                  ,0x0000204c) // Found @0xff84fcfc
 // Camera has 2 RAW buffers @ 0x4132c0a0 & 0x46000000
@@ -139,6 +131,7 @@ NHSTUB(DebugAssert                            ,0xff81eb14) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff836814) //116
 NHSTUB(DeleteFile_Fut                         ,0xff836730) //112
 NHSTUB(DoAELock                               ,0xff8384dc) //120
+NHSTUB(DoAFLock                               ,0xff8382e4) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff8383e4) //104
 NHSTUB(ExecuteEventProcedure                  ,0xff88b948) //104
 NHSTUB(ExitFromCompensationEVF                ,0xff838428) //104
@@ -158,10 +151,11 @@ NHSTUB(GetBatteryTemperature                  ,0xff8652a0) //102
 NHSTUB(GetCCDTemperature                      ,0xff86522c) //102
 NHSTUB(GetCurrentAvValue                      ,0xff9644f8) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff871e30) //122
-//NHSTUB(GetDrive_FreeClusters                ,0xff871e90) //  4            == 0xff871e90
+NHSTUB(GetDrive_FreeClusters                  ,0xff871e90) //  4
 NHSTUB(GetDrive_TotalClusters                 ,0xff871e64) //  3
 NHSTUB(GetFocusLensSubjectDistance            ,0xff9629b8) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff962d40) //  3
+NHSTUB(GetImageFolder                         ,0xff94345c) //122
 NHSTUB(GetKbdState                            ,0xff861908) //109
 NHSTUB(GetMemInfo                             ,0xff81a16c) //115
 NHSTUB(GetOpticalTemperature                  ,0xff865314) //120
@@ -178,6 +172,7 @@ NHSTUB(LEDDrive                               ,0xff860c6c) //120
 NHSTUB(LocalTime                              ,0xff88923c) //115
 NHSTUB(LockMainPower                          ,0xff895b78) //120
 NHSTUB(MakeDirectory_Fut                      ,0xff8367a4) //116
+NHSTUB(MoveFocusLensToDistance                ,0xffb228b0) //102
 NHSTUB(MoveIrisWithAv                         ,0xffab6408) //120
 NHSTUB(MoveZoomLensWithPoint                  ,0xffab6b64) //120
 NHSTUB(Open                                   ,0xff836d4c) //120
@@ -187,12 +182,15 @@ NHSTUB(PT_MoveOpticalZoomAt                   ,0xff87a898) //120
 NHSTUB(PT_PlaySound                           ,0xff8840b8) //122
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff893948) //120
 NHSTUB(PostLogicalEventToUI                   ,0xff893994) //120
+NHSTUB(PutInNdFilter                          ,0xffab69c8) //102
+NHSTUB(PutOutNdFilter                         ,0xffab69ec) //102
 NHSTUB(Read                                   ,0xff81ac7c) //120
 NHSTUB(ReadFastDir                            ,0xffa95de4) //  4
 NHSTUB(Rec2PB                                 ,0xff897590) //104
 NHSTUB(RefreshPhysicalScreen                  ,0xffa12124) //104
 NHSTUB(RenameFile_Fut                         ,0xff83669c) //116
 NHSTUB(Restart                                ,0xff83bbfc) //122
+NHSTUB(ScreenLock                             ,0xffa13354) //117
 NHSTUB(ScreenUnlock                           ,0xffa13398) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xffb2504c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff895bec) //120
@@ -202,6 +200,7 @@ NHSTUB(SetFileTimeStamp                       ,0xff837054) //  4
 NHSTUB(SetLogicalEventActive                  ,0xff8958b4) //120
 NHSTUB(SetParameterData                       ,0xff997564) //101
 NHSTUB(SetPropertyCase                        ,0xff88f530) //102
+NHSTUB(SetScriptMode                          ,0xff895904) //120
 NHSTUB(SleepTask                              ,0xff83a0a0) //120
 NHSTUB(TakeSemaphore                          ,0xff839d68) //120
 NHSTUB(TurnOffBackLight                       ,0xff8a4980) //104
@@ -210,6 +209,7 @@ NHSTUB(TurnOnDisplay                          ,0xff85b4e8) //120
 NHSTUB(TurnOffDisplay                         ,0xff85b4f8) //120
 NHSTUB(UIFS_WriteFirmInfoToFile               ,0xff984ab4) //120
 NHSTUB(UnlockAE                               ,0xff838500) //120
+NHSTUB(UnlockAF                               ,0xff83831c) //120
 NHSTUB(UnlockMainPower                        ,0xff895acc) //120
 NHSTUB(UpdateMBROnFlash                       ,0xff871cb0) //105
 NHSTUB(VbattGet                               ,0xff8330d8) //120

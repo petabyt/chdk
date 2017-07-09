@@ -228,7 +228,7 @@
 0xffa0eb90,DisplayDialogBox
 0xff835934,DisplayFactoryMode_FW
 0xff8384dc,DoAELock
-0xff87a910,DoAFLock,(stubs_entry_2.s)
+0xff8382e4,DoAFLock
 0xff96c7f8,Driver.Create_FW
 0xff96c7f8,Driver_EnableEventProc_FW
 0xff815ed0,drysh_FW
@@ -444,7 +444,7 @@
 0xff879ad0,GetGyroHPFINYaw_FW
 0xffb26f50,GetHour_FW
 0xffa7a1ec,getImageDirName
-0xff94337c,GetImageFolder,(stubs_entry_2.s)
+0xff94345c,GetImageFolder
 0xff9644f8,GetIrisAv_FW
 0xff964740,GetIrisCurrentPosition_FW
 0xff9650cc,GetIrisPiSensorLevel_FW
@@ -902,7 +902,7 @@
 0xffb3fa28,MoveDCMotorCW_FW
 0xffab5b0c,MoveFocusActuator_FW
 0xffb228b0,MoveFocusDistance_FW
-0xffb2289c,MoveFocusLensToDistance,(stubs_entry_2.s)
+0xffb228b0,MoveFocusLensToDistance
 0xffb228b0,MoveFocusLensToDistance_FW
 0xffb22798,MoveFocusLensToPosition_FW
 0xffb2267c,MoveFocusLensToPositionWithMaxSpeed_FW
@@ -1062,9 +1062,9 @@
 0xff996bb4,PTM_SetCurrentItem_FW
 0xff997250,PTM_SetPropertyEnable
 0xff997250,PTM_SetProprietyEnable_FW
-0xffb2056c,PutInNdFilter,(stubs_entry_2.s)
+0xffab69c8,PutInNdFilter
 0xffb2056c,PutInNdFilter_FW
-0xffb205a4,PutOutNdFilter,(stubs_entry_2.s)
+0xffab69ec,PutOutNdFilter
 0xffb205a4,PutOutNdFilter_FW
 0xff88c5fc,PutsCameraLogEvent_FW
 0xffb0b1f8,qsort
@@ -1136,7 +1136,7 @@
 0xffb273d8,SavePaletteData_FW
 0xff920374,Scene.ForbidContiSceneDetect_FW
 0xff9203a0,Scene.TestSunset_FW
-0xffa1356c,ScreenLock,(stubs_entry_2.s)
+0xffa13354,ScreenLock
 0xffa13398,ScreenUnlock
 0xffab8ac8,SDump_FW
 0xff879780,SearchBCentralPosition_FW
@@ -1276,7 +1276,7 @@
 0xffb21248,SetReferenceWBGainForCalibration_FW
 0xffb233b8,SetScanLensIndex_FW
 0xffb234c0,SetScanWindowMode_FW
-0xff810f6c,SetScriptMode,(stubs_entry_2.s)
+0xff895904,SetScriptMode
 0xff895904,SetScriptMode_FW
 0xff96c73c,SetSDPwrPort_FW
 0xffb26e68,SetSecond_FW
@@ -1574,7 +1574,7 @@
 0xff835940,UndisplayFactoryMode_FW
 0xff888920,UnLoadScript_FW
 0xff838500,UnlockAE
-0xff87a920,UnlockAF,(stubs_entry_2.s)
+0xff83831c,UnlockAF
 0xff895acc,UnlockMainPower
 0xff895acc,UnlockMainPower_FW
 0xffb24e88,UnregistColorMatrix_FW
