@@ -179,10 +179,6 @@ void addr_hash_add(struct llist **addr_hash,t_address addr) {
 }
 
 
-/* -----------------------------------------------------------------
- *  Create Linked Lists
- * ----------------------------------------------------------------- */
- 
 void usage(void) {
     fprintf(stderr,"usage capdis [options] <file> <load address>\n"
                     "options:\n"
