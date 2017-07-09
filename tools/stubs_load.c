@@ -23,6 +23,7 @@ stub_values* new_stub_values()
     p->makevals = 0;
     p->min_focus_len = 0;
     p->max_focus_len = 0;
+    p->propcases = 0;
     return p;
 }
 
@@ -307,6 +308,48 @@ void load_platform(stub_values *sv)
                 sv->max_focus_len = (v * 1000) / d;
 			}
 		}
+    }
+    fclose(f);
+}
+
+// Load procase values from propcaseN.h.
+void load_propcases(stub_values *sv,char *fn)
+{
+    FILE *f = fopen(fn, "rb");
+
+    if (f == NULL) return;
+
+    char line[500];
+    char *s;
+
+    while (read_line(f,line))
+    {
+        s = strstr(line, "#define");
+        if (s == 0)
+        {
+            continue;
+        }
+        char *c = strstr(line, "//");
+        if (c && c < s)
+        {
+            continue;
+        }
+        char *nm = strtok(s+strlen("#define")," \t");
+        if(!nm) 
+        {
+            continue;
+        }
+        if(strncmp(nm,"PROPCASE_",9) != 0)
+        {
+            continue;
+        }
+        char *val = strtok(NULL," \t");
+        if(!val) 
+        {
+            continue;
+        }
+
+        add_sig(nm, val, &sv->propcases, 0);
     }
     fclose(f);
 }
