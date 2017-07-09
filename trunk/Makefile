@@ -230,6 +230,7 @@ rebuild-stubs_auto: platformcheck
 	$(MAKE) -C $(camfw) stubs_auto.S ;\
 
 run-code-gen: platformcheck
+	echo code_gen $(PLATFORM) $(PLATFORMSUB)
 	$(MAKE) -C tools code_gen$(EXE)
 	$(MAKE) -C $(camfw) run-code-gen
 
