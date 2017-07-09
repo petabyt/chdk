@@ -131,8 +131,8 @@
 0xff837334,j_ExMem.FreeCacheable_FW
 0xff837338,ExMem_FW
 0xff838098,PT_GetDigitalZoomPosition_FW
-0xff87a910,DoAFLock,(stubs_entry_2.s)
-0xff87a920,UnlockAF,(stubs_entry_2.s)
+0xff8382e4,DoAFLock
+0xff83831c,UnlockAF
 0xff8383e4,EnterToCompensationEVF
 0xff838428,ExitFromCompensationEVF
 0xff8384dc,DoAELock
@@ -507,7 +507,7 @@
 0xff895844,IsControlEventActive_FW
 0xff8958b4,SetLogicalEventActive
 0xff8958b4,UiEvnt_SetLogicalEventActive_FW
-0xff810f6c,SetScriptMode,(stubs_entry_2.s)
+0xff895904,SetScriptMode
 0xff895904,SetScriptMode_FW
 0xff895938,UiEvnt_StartDisguiseCradleStatus_FW
 0xff895948,UiEvnt_StopDisguiseCradleStatus_FW
@@ -684,7 +684,7 @@
 0xff93f518,EnableDebugLogMode_FW
 0xff93f52c,DisableDebugLogMode_FW
 0xff94151c,task_dccdCalcTask
-0xff94337c,GetImageFolder,(stubs_entry_2.s)
+0xff94345c,GetImageFolder
 0xff9444a4,task_MetaCtg
 0xff949e58,task_DPOFTask
 0xff94d604,task_FileManMarkAllTask
@@ -882,7 +882,7 @@
 0xffa10634,add_ui_to_dialog
 0xffa10d74,get_string_by_id
 0xffa12124,RefreshPhysicalScreen
-0xffa1356c,ScreenLock,(stubs_entry_2.s)
+0xffa13354,ScreenLock
 0xffa13398,ScreenUnlock
 0xffa15ddc,memset
 0xffa15ddc,memset_FW
@@ -1112,9 +1112,9 @@
 0xffab6940,SetMechaShutterWaitTimeSetting_FW
 0xffab6954,j_GetMechaShutterStatus_FW
 0xffab6958,j_GetMechaShutterMoveTime_FW
-0xffb2056c,PutInNdFilter,(stubs_entry_2.s)
+0xffab69c8,PutInNdFilter
 0xffab69c8,TurnOnNdFilter_FW
-0xffb205a4,PutOutNdFilter,(stubs_entry_2.s)
+0xffab69ec,PutOutNdFilter
 0xffab69ec,TurnOffNdFilter_FW
 0xffab6a10,SetNdDacSetting_FW
 0xffab6a34,EnableZoomLensEncoderPowerControl_FW
@@ -1363,7 +1363,7 @@
 0xffb22798,MoveFocusLensToPosition_FW
 0xffb227e8,MoveFocusPosition_FW
 0xffb228b0,MoveFocusDistance_FW
-0xffb2289c,MoveFocusLensToDistance,(stubs_entry_2.s)
+0xffb228b0,MoveFocusLensToDistance
 0xffb228b0,MoveFocusLensToDistance_FW
 0xffb22918,ResetFocus_FW
 0xffb22ae8,j_IsFocusLensOutSidePosition_FW
