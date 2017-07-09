@@ -8,4 +8,7 @@ CHDK for G1X.
 Development notes:
 ---
 Known issues:
-    - CHDK native RAW image format will be 14 bits-per-pixel which nothing supports (not recommended for use)
+    - CHDK native RAW (not DNG) image format will be 14 bits-per-pixel which nothing supports (not recommended for use)
+    - The G1X firmware will shoot at 1/2 ISO and cook the output JPG/CR2 images to compensate, under the following
+      conditions - Auto ISO mode, Shutter speed >= 1 second, and chosen ISO >= 400.
+      From SVN revision 4853, CHDK disables this 'feature'.
