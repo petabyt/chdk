@@ -2,6 +2,9 @@
 #include "platform.h"
 #include "core.h"
 
+// debug
+//#define CAPTSEQ_DEBUG_LOG 1
+
 // TODO dummy
 static long fake_nrflag=0;
 static long *nrflag=&fake_nrflag;
@@ -12,6 +15,7 @@ extern int active_raw_buffer;
 // debug
 extern void _LogCameraEvent(int id,const char *fmt,...);
 
+#ifdef CAPTSEQ_DEBUG_LOG
 extern char *hook_raw_image_addr(void);
 
 void log_capt_seq(int m)
@@ -37,6 +41,7 @@ void log_capt_seq_override(void)
                     hook_raw_image_addr(),
                     get_exposure_counter());
 }
+#endif
 
 #include "../../../generic/capt_seq.c"
 //-s=task_CaptSeq -c=173 -f=chdk
@@ -73,10 +78,12 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "       beq     loc_fc0bd948\n"
 "       bl      sub_FC18B492\n"
 "loc_fc0bd948:\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 // debug message
 "ldr     r0, [sp]\n"
 "ldr     r0, [r0]\n"
 "bl log_capt_seq\n"
+#endif
 "       ldr     r0, [sp]\n"
 "       ldr     r1, [r0]\n"
 "       cmp     r1, #0x2f\n"
@@ -134,7 +141,9 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "loc_fc0bd984:\n" // case 0: preshoot, quick press shoot
 "       ldr     r0, [r0,#0xc]\n"
 "       bl      sub_fc0d47f2\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_capt_seq_override\n"
+#endif
 "bl shooting_expo_param_override\n" // +
 "       bl      sub_fc0d36ac\n"
 "       ldr     r0, [r4,#0x28]\n"
@@ -338,10 +347,12 @@ void __attribute__((naked,noinline)) capt_seq_task() {
 "       movs    r0, #0\n"
 "       blx     sub_FC302434\n" // j_DebugAssert
 "loc_fc0bdb28:\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 // debug after message handled
 "ldr     r0, [sp]\n"
 "ldr     r0, [r0]\n"
 "bl log_capt_seq2\n"
+#endif
 "       ldr     r0, [sp]\n"
 "       ldr     r1, [r0,#4]\n"
 "       ldr     r0, [r5,#4]\n"
@@ -587,7 +598,9 @@ void __attribute__((naked,noinline)) sub_fc11d806_my() {
 "       blx     sub_fc302434\n"
 " loc_fc11d850:\n"
 "    BL      wait_until_remote_button_is_released\n" // + remote hook
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_remote_hook\n"
+#endif
 "       ldr     r0, [sp,#4]\n"
 "       ubfx.w  r0, r0, #8, #8\n"
 "       cmp     r0, #6\n"
@@ -721,7 +734,9 @@ void __attribute__((naked,noinline)) sub_fc11d806_my() {
 " loc_fc11d984:\n"
 "       b       loc_fc11d9ba\n"
 " loc_fc11d986:\n"
+#ifdef CAPTSEQ_DEBUG_LOG
 "bl log_rh\n"
+#endif
 "BL capt_seq_hook_raw_here\n" //----------------------------------- ???? ----------
 "       mov     r0, r5\n"
 "       bl      sub_fc18ae24\n"
@@ -786,13 +801,14 @@ void __attribute__((naked,noinline)) sub_fc11d806_my() {
     );
 }	
 
+#ifdef CAPTSEQ_DEBUG_LOG
 void log_remote_hook(void) {
     _LogCameraEvent(0x60,"remote hook");
 }
 void log_rh(void) {
     _LogCameraEvent(0x60,"raw hook");
 }
-
+#endif
 //exp_drv_task  -s=task_ExpDrv -c=428 -f=chdk
 
 void __attribute__((naked,noinline)) exp_drv_task() {
