@@ -90,7 +90,7 @@ static void __attribute__((noinline)) mykbd_task_proceed() {
 
     while (physw_run) {
         _SleepTask(physw_sleep_delay);
-		if ( wrap_kbd_p1_f() == 1) {             // autorepeat ?
+		if ( wrap_kbd_p1_f() == 1) {
 //            kbd_p2_f_my();                      // replacement of _kbd_p2_f (in sub/<fwver>/boot.c)
 	          _kbd_p2_f();                      // replacement of _kbd_p2_f (in sub/<fwver>/boot.c)
         }

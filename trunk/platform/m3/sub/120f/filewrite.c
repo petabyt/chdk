@@ -1,6 +1,9 @@
 #include "lolevel.h"
 #include "platform.h"
 // all of this copied and adjusted from g7x coding by reyalp
+
+// debug
+//#define FILEWRITE_DEBUG_LOG 1
 extern void _LogCameraEvent(int id,const char *fmt,...);
 
 typedef struct {
@@ -86,6 +89,7 @@ bypassing PrepareDirectory_0 seems to cause hang on switch to play mode
 
 #include "../../../generic/filewrite.c"
 
+#ifdef FILEWRITE_DEBUG_LOG
 void log_fwt_msg(fwt_data_struct *fwd)
 {
     int m=fwd->unkn1;
@@ -101,6 +105,7 @@ void log_fwt_start(void)
 {
     _LogCameraEvent(0x60,"fw start");
 }
+#endif
 /*************************************************************/
 // // task_FileWrite 0xfc065dc7  -s=task_FileWrite -c=43 -f=chdk
 void __attribute__((naked,noinline)) filewritetask() {
@@ -122,8 +127,10 @@ asm volatile (
 "       ldr     r1, =0xfc068c54\n" //  *"dwFWrite.c"
 "       blx     sub_FC302434\n" // j_DebugAssert
 " loc_fc068baa:\n"
+#ifdef FILEWRITE_DEBUG_LOG
 "       ldr     r0, [sp]\n"
 "bl log_fwt_msg\n"
+#endif
 "    ldr     r0, [sp]\n"
 "       ldr     r1, [r0]\n"
 "       cmp     r1, #0xd\n"
