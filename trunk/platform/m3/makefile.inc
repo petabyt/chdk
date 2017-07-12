@@ -1,3 +1,5 @@
+# force FI2 off because FI2 of hardware initialization issues 
+override OPT_FI2=
 # mandatory for DIGIC 6
 THUMB_FW=1
 
