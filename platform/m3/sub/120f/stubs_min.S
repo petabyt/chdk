@@ -21,6 +21,7 @@ DEF(bitmap_buffer                 ,0xc174) //@ active_bitmap_buffer + 8
 DEF(active_bitmap_buffer          ,0xC16C) // Found @0xFC37F0E8
 DEF(current_viewport_buffer       ,0x0000889C) // Found @FC133ECA
 DEF(viewport_buffers              ,0xfc5f9320) //from memory search
+DEF(current_fb_d                  ,0x0000FA20) //@ Found at 0xFC178644
 
 DEF(jog_position                  ,0xdb48) // 0xdb34 +0x14, +0x18
 DEF(jog_hw_pos                    ,0xd9854004) // found by browsing the 0xd985xxxx range...
