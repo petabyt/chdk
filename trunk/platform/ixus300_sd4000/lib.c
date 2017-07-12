@@ -26,7 +26,7 @@ void shutdown() {
 
 
 void debug_led(int state) {
-    
+
     volatile long *p=(void*)LED_DEBUG2;
 
     if (state)
@@ -45,17 +45,10 @@ void camera_set_led(int led, int state, int bright) {  // camera has three LED's
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
-char *camera_jpeg_count_str() {
-    return (char*)0xA15B8;
-}
-
 int get_flash_params_count(void) {
     return 148;     // 0x94 = 148
 }
 
-char *hook_raw_image_addr() {
-    return (char*) (*(int*)(0x2CCC + 0xC)? 0x46000000 : 0x4132C0A0);    // looks like every RAW is valid
-}
 
 void JogDial_CW(void) {
     _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialRight at levent_table
@@ -105,10 +98,10 @@ void vid_bitmap_refresh() {
         // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
         // Note that this camera only seems to use 3 buffers (vs 4 on other models). 
         // ToDo :  test that returning one buffer back from the current value of active_viewport_buffer works best for motion detect.
-        
+
         vp = active_viewport_buffer ;
         return viewport_buffers[ (vp == 0) ? 2 : vp-1 ];
-        
+
     }
 
     void *vid_get_viewport_fb()   /* redefined */
