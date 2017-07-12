@@ -125,6 +125,11 @@ void *vid_get_viewport_fb() {
     return (void*)0x4367AF00; // 0x43A6F700 0x4b25fc00; uyvy buffers (more than 4), pixel format compatible with earlier DIGIC uyvy
 }
 
+void *vid_get_viewport_fb_d()    {
+    // based on suggestion from 62ndidiot in https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
+    extern void *current_fb_d;
+    return current_fb_d;
+} 
 
 extern void* viewport_buffers[];
 extern void *current_viewport_buffer;
