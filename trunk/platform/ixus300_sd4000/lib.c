@@ -18,15 +18,16 @@ void shutdown() {
     while(1);
 }
 
-//#define LED_DEBUG 0xC0220130    // Green Led (backside)
-#define LED_DEBUG 0xc0220134    // Red Led (backside)
-//#define LED_DEBUG 0xC0223030    // Red AF Led (front)
-
+#define LED_DEBUG1 0xC0220130      // Green Led (backside)
+#define LED_DEBUG2 0xc0220134      // Red Led (backside)
+#define LED_DEBUG3 0xC0223030      // Red AF Led (front)
+#define LED_AF 0xC0223030
 #define DEBUG_LED_DELAY 2500000    // use beforce change CPU speed in boot.c
-//#define DEBUG_LED_DELAY 50000000    // use after change CPU speed in boot.c
+
 
 void debug_led(int state) {
-    volatile long *p=(void*)LED_DEBUG;
+    
+    volatile long *p=(void*)LED_DEBUG2;
 
     if (state)
         p[0]=0x46;
@@ -39,61 +40,34 @@ void debug_led(int state) {
         asm("nop\n nop\n");
 }
 
-#define LED_AF 0xC0223030
+void camera_set_led(int led, int state, int bright) {  // camera has three LED's (focus assist lamp & and a green/orange combo LED)
+    static char led_table[3]={0,1,9};
+    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
+}
 
-// ROM:FF997634 near PropertyTableManagerCore (from SD990) ?!?
-//ROM:FF997624                 LDREQ   R0, =aPropertytablemanagerco ; "PropertyTableManagerCore.c"
-//ROM:FF997628                 MOVEQ   R1, R6
-//ROM:FF99762C                 BLEQ    DebugAssert
-//ROM:FF997630                 BIC     R4, R4, #0x4000
-//ROM:FF997634                 CMP     R4, #0x94 <---
+char *camera_jpeg_count_str() {
+    return (char*)0xA15B8;
+}
+
 int get_flash_params_count(void) {
     return 148;     // 0x94 = 148
 }
 
-/*
-// redraw issus, Canon Menu does not show and display does not refresh properly
-void vid_bitmap_refresh() {
-    extern int enabled_refresh_physical_screen;
-
-    _ScreenLock();
-    enabled_refresh_physical_screen=1;
-    // *(int*)0x926C=3;    // ROM:FFA114FC, like SX210
-    // *(int*)0x926C=2;    // ?!?
-    *(int*)0x926C=1;    // better than 3
-    _RefreshPhysicalScreen(1);
+char *hook_raw_image_addr() {
+    return (char*) (*(int*)(0x2CCC + 0xC)? 0x46000000 : 0x4132C0A0);    // looks like every RAW is valid
 }
-*/
 
-/*
-// like ixus870_sd880, cause massiv redraw issus
-void vid_bitmap_refresh() {
-    extern int enabled_refresh_physical_screen; // screen lock counter
-    int old_val = enabled_refresh_physical_screen;
-    if ( old_val == 0 ) {
-        _ScreenLock(); // make sure code is called at least once
-    } else {
-        enabled_refresh_physical_screen=1; // forces actual redraw
-    }
-    _RefreshPhysicalScreen(1); // unlock/refresh
-
-    // restore original situation
-    if ( old_val > 0 ) {
-        _ScreenLock();
-        enabled_refresh_physical_screen = old_val;
-    }
+void JogDial_CW(void) {
+    _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialRight at levent_table
 }
-*/
 
-// Force Screen to refresh like original Firmware
-// from SX210, thanks asm1989
+void JogDial_CCW(void) {
+    _PostLogicalEventForNotPowerType(0x877, 1);  // RotateJogDialLeft at levent_table
+}
+
 void vid_bitmap_refresh() {
     extern int enabled_refresh_physical_screen;
     extern int full_screen_refresh;
-
-    // asm1989: i've tried refreshphysical screen (screen unlock) and that caused the canon and
-    // function menu to not display at all. This seems to work and is called in a similar
-    // way in other places where original OSD should be refreshed.
     extern void _LockAndRefresh();   // wrapper function for screen lock
     extern void _UnlockAndRefresh();   // wrapper function for screen unlock
 
@@ -105,125 +79,114 @@ void vid_bitmap_refresh() {
     _UnlockAndRefresh();
 }
 
-/*
-// make redraw issus worse
-void vid_turn_off_updates() {
-    //_ScreenLock();
-    _LockAndRefresh();
-}
-*/
 
-/*
-// make redraw issus worse
-void vid_turn_on_updates() {
-    //_RefreshPhysicalScreen(1);
-    _UnlockAndRefresh(1);
-}
-*/
+// Canon UI Buffers for LiveView
 
-// ROM:FFB9FA10 DCD aRotatejogdialright ; "RotateJogDialRight"
-// ROM:FFB9FA14 DCD 0x876
-// ROM:FFB9FA18 DCD 2
-void JogDial_CW(void) {
-    _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialRight at levent_table
-}
+    extern int   active_bitmap_buffer;   // in stub_min.S for ixus300
+    extern char* bitmap_buffer[];        // in stub_min.S for ixus300
 
-// ROM:FFB9FA1C DCD aRotatejogdialleft  ; "RotateJogDialLeft"
-// ROM:FFB9FA20 DCD 0x877
-// ROM:FFB9FA24 DCD 2
-void JogDial_CCW(void) {
-    _PostLogicalEventForNotPowerType(0x877, 1);  // RotateJogDialLeft at levent_table
-}
+    void *vid_get_bitmap_fb()
+    {
+        // Return first bitmap buffer address
+        return bitmap_buffer[0];
+    }
 
-// ToDo
-void camera_set_led(int led, int state, int bright) {
-    static char led_table[7]={0,1,2,3,9,14,15};
-    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
-}
+// Canon Viewport buffers for LiveView, histogram, edgeoverlay, zebra , motion detect
 
-// Bitmap Pixel Size
-// ROM:FF919AC4   0x3C0 = 960 pixel
-// ROM:FF919AC0   0x10E = 270 pixel
-// ROM:FF9013D8   0x2D0 = 720 pixel
-// ROM:FF9013E0   0xF0  = 240 pixel
-// ROM:FF85B138 #240
-// ROM:FF85B148 #480
-// ROM:FF85B160 #720
-// ROM:FF85B174 #960
+    extern char  active_viewport_buffer; // in stub_entry.S for ixus300
+    extern void* viewport_buffers[];     // in stub_entry.S for ixus300
 
-// http://chdk.setepontos.com/index.php?topic=3410.msg32043#msg32043
+    void *vid_get_viewport_live_fb()
+    {
+        char vp ;
+        if (camera_info.state.mode_video || (get_movie_status()==VIDEO_RECORD_IN_PROGRESS))
+            return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
 
-// Viewport and Bitmap values that shouldn't change across firmware versions.
-// Values that may change are in lib.c for each firmware version.
+        // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
+        // Note that this camera only seems to use 3 buffers (vs 4 on other models). 
+        // ToDo :  test that returning one buffer back from the current value of active_viewport_buffer works best for motion detect.
+        
+        vp = active_viewport_buffer ;
+        return viewport_buffers[ (vp == 0) ? 2 : vp-1 ];
+        
+    }
 
-/*
-int vid_get_viewport_width() {
-    //return 360;    // viewport is still 360, even though live view is 720 (from SD990)
-    return 480;
-    //return ((mode_get()&MODE_MASK) == MODE_PLAY)?480:360;     // return different width in PLAYBACK/RECORD mode
-}
-*/
+    void *vid_get_viewport_fb()   /* redefined */
+    {
+        // Return first viewport buffer - for case when vid_get_viewport_live_fb not defined
+        // Offset the return value because the viewport is left justified instead of centered on this camera
+        return viewport_buffers[0];
+    }
 
-// http://chdk.setepontos.com/index.php?topic=6037.msg62190#msg62190
-int vid_get_viewport_width() {
-    //if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 0)    // On 16:9 (Widescreen) resolution PROPCASE_ASPECT_RATIO = 0
-    //    return 480;
-    //else
-        return 360;
-}
+    void *vid_get_viewport_fb_d() /* redefined */
+    {
+        extern char *viewport_fb_d;
+        return viewport_fb_d;
+    }
 
-/*
-int vid_get_viewport_xoffset() {
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 0)
-        return 0;
-    else
-        return 60;
-}
+    // Physical width of viewport row in bytes
+    int vid_get_viewport_byte_width() {
+        return 960 * 6 / 4;     // IXUS 300 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+    }
 
-int vid_get_viewport_image_offset() {
-    return (vid_get_viewport_yoffset() * vid_get_viewport_buffer_width() + vid_get_viewport_xoffset()) * 3;
-}
+    // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+    int vid_get_viewport_yscale() {
+        return 1 ;               // IXUS 300 viewport is 240 pixels high
+    }
 
-int vid_get_viewport_row_offset() {
-    return (vid_get_viewport_buffer_width() - vid_get_viewport_width()) * 3;
-}
-*/
+    int vid_get_viewport_width()
+    {
+        if (camera_info.state.mode_play)
+        {
+            return 480 ;
+        }
+        extern int _GetVRAMHPixelsSize();
+        return _GetVRAMHPixelsSize() >> 1;
+    }
 
-long vid_get_viewport_height() {
-    //return 240;
-    return 270;
-}
+    int vid_get_viewport_display_xoffset()
+    {
+        if (camera_info.state.mode_play)
+        {
+            return 0;
+        }
+        else
+        {
+            // viewport width offset table for each image size 
+            // ixus300 has six sizes :  3648x2736 (4:3)   2816x2112 (4:3)    2272x1702 (4:3)  1600x1200  (4:3)  640x480  (4:3)  3648x2048 (16:9)
+            //   PROPCASE_RESOLUTION :  0                 1                  2                3                 4                8
+            if (shooting_get_prop(PROPCASE_RESOLUTION ) ==  8 ) return 0 ;      // wide screen mode
+            return 60 ;                                                         // all other modes
+        }
+    }
 
-/*
-// from SX30, suggested by philmoz
-long vid_get_viewport_height() {
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)    // Wide screen top & bottom 30 pixels not used in viewport
-        return 180;
-    return 240;
-}
+   long vid_get_viewport_height(){ return 240; } 
 
-// from SX30, suggested by philmoz
-int vid_get_viewport_yoffset() {
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)    // Wide screen top & bottom 30 pixels not used in viewport
-        return 30;
-    return 0;
-}
-*/
 
-// Functions for PTP Live View system
-int vid_get_palette_type()                      { return 3 ; }          // 1,2,3,4,or 5
-int vid_get_palette_size()                      { return 256 * 4 ; }    // 16*4 or 256*4
+// Additional Functions for PTP Live View system
+
+    int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2 ; }
+    int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2 ; }
+    int vid_get_viewport_height_proper()            { return 240; }
+    int vid_get_viewport_buffer_width_proper()      { return 960; }
+    int vid_get_viewport_fullscreen_height()        { return 240; }
+    int vid_get_palette_type()                      { return 3; }
+    int vid_get_palette_size()                      { return 256 * 4; }
+    int vid_get_aspect_ratio()                      { return 1; }
+
+
+// ** Custom Color Palette **
 
 extern char** palette_buffer_ptr;
 extern int active_palette_buffer;
 
 void* vid_get_bitmap_active_palette()
-{  
-    return palette_buffer_ptr[active_palette_buffer]+8;  
+{
+    return palette_buffer_ptr[active_palette_buffer]+8;
 }
 
 void load_chdk_palette()
-{ 
+{
     if ((active_palette_buffer == 0) || (active_palette_buffer == 4) || (active_palette_buffer == 7))  //00=rec  04=play  07=menu  03=setmenu (don't override in setmenu as it has no non-overlapping blank palette areas)
     {
         int *pal = (int *)vid_get_bitmap_active_palette();
