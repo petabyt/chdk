@@ -20,35 +20,31 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                     3       // ToDo
+    #define CAM_PROPSET                     3       
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1       // ROM:FFB5E1C0, actually its DRYOS version 2.3, release #0043
 
     #define CAM_HAS_CMOS                    1
 
-    #undef  CAM_UNCACHED_BIT                        // shut up compiler
+    #undef  CAM_UNCACHED_BIT                             // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000   // ROM:FF88A248 via ExMem.FreeCacheable()
 
     #undef  CAM_HAS_ERASE_BUTTON
-    #define CAM_HAS_ND_FILTER               1       // ToDo: does camera have ND ?
+    
+    #define CAM_HAS_ND_FILTER               1
 
-    //#undef  CAM_HAS_MANUAL_FOCUS                  // ToDo: test if its working
-    //#undef  CAM_USE_ZOOM_FOR_MF                   // ToDo: test if its working
+    #undef  CAM_HAS_MANUAL_FOCUS
 
-    //#define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // canon firmware allow optical zoom while recording movie
-    //#define CAM_EV_IN_VIDEO                 1
-
+    
     #define CAM_VIDEO_QUALITY_ONLY          1        // ToDo: Video Bitrate override cause crash
     #define CAM_HAS_JOGDIAL                 1
     #define CAM_FEATURE_FEATHER             1
-    //#define CAM_SHOW_OSD_IN_SHOOT_MENU      1         // not required anymore, workaround to force CHDK to display OSD in record mode while canon_shoot_menu_active was wrong
-    #define CAM_MULTIPART                   1        // ToDo: test if its working
+    #define CAM_MULTIPART                   1 
     #define CAM_DATE_FOLDER_NAMING          0x100
-    //#define CAM_DRAW_EXPOSITION             1      // not required because Canon Firmware does always show it on Shutter half press
+
     #undef CAM_DEFAULT_ALT_BUTTON
     #define CAM_DEFAULT_ALT_BUTTON  KEY_PLAYBACK   // alt button for cameras without adjustable alt
-
     #undef  CAM_HAS_DISP_BUTTON
 
     #undef  DNG_BADPIXEL_VALUE_LIMIT
@@ -59,7 +55,6 @@
     // colors are messed up in DNG if not correct
     #define cam_CFAPattern                  0x02010100            // Red  Green  Green  Blue, OK
 
-    // ToDo
     #define CAM_COLORMATRIX1                               \
       640019, 1000000, -220031, 1000000, -96241, 1000000,  \
      -77419,  1000000, 639766,  1000000,  44009, 1000000,  \
@@ -73,31 +68,10 @@
     #define CAM_JPEG_WIDTH                  3648     // JPEG Exif data or ROM:FFB28EFC
     #define CAM_JPEG_HEIGHT                 2736     // JPEG Exif data or ROM:FFB28F04
 
-    // http://chdk.setepontos.com/index.php?topic=6122.0
-    // use exiftool -activearea="24 120 2764 3784" to change values till DNG fit
-    // use even numbers!
-
-    // without Dark Frame
     #define CAM_ACTIVE_AREA_X1              120      // x offset (right)
     #define CAM_ACTIVE_AREA_Y1              24       // y offset (down)
     #define CAM_ACTIVE_AREA_X2              3784
     #define CAM_ACTIVE_AREA_Y2              2764
-
-    /*
-    // with Dark Frame
-    #define CAM_ACTIVE_AREA_X1          92       // x offset (right)
-    #define CAM_ACTIVE_AREA_Y1          4        // y offset (down)
-    #define CAM_ACTIVE_AREA_X2          3812
-    #define CAM_ACTIVE_AREA_Y2          2784
-    */
-
-    /*
-    // Test values to messure correct "crop" Values
-    #define CAM_ACTIVE_AREA_X1          0
-    #define CAM_ACTIVE_AREA_Y1          0
-    #define CAM_ACTIVE_AREA_X2          3816
-    #define CAM_ACTIVE_AREA_Y2          2784
-    */
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
@@ -106,8 +80,6 @@
 
     #define CAM_LOAD_CUSTOM_COLORS          1      // Enable loading CHDK colors into the camera palette memory/hardware
     
-// screen / bitmaps stuff below is ToDo !!!!!!!!!!!!!!!!
-
     #undef CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_SCREEN_WIDTH
@@ -117,19 +89,13 @@
     #define CAM_BITMAP_WIDTH                960     // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT               270     // Actual height of bitmap screen in rows
 
-    // Not required
-    //#undef EDGE_HMARGIN
-    //#define EDGE_HMARGIN 10    // 10 fits video mode of sx210
-
-//    #define REMOTE_SYNC_STATUS_LED     0xC0xxyyyy        // specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED          0xc0220134  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1       // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
-                                                    // Used to enabled bracketing in custom timer, required on many recent cameras
-                                                    // see http://chdk.setepontos.com/index.php/topic,3994.405.html
 
     #define CAM_QUALITY_OVERRIDE            1       // enable 'super fine' override
  
-    #undef  CAM_SD_OVER_IN_AF                       // crashed trying to MF if MF or AFL not set
+    #undef  CAM_SD_OVER_IN_AF                       // crashes trying to use Subject Distance Overrides if MF or AFL not set
     #define CAM_SD_OVER_IN_AFL              1       // 
     #define CAM_SD_OVER_IN_MF               1       //
 
