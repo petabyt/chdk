@@ -21,6 +21,13 @@ extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
 
+//----------------------------------------------------------------------
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+
+short *jog_position;
+
+
 // almost the same as SX30 / G12
 
 void taskHook(context_t **context) {
@@ -395,8 +402,13 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
         "ADD     R3, SP, #0x18\n"
         "ADD     R10, SP, #0xC\n"
         "ADD     R8, SP, #0x10\n"
+
+        // Save pointer for kbd.c routine
+        "LDR     R3, =jog_position\n"
+        "STR     R8, [R3]\n"        
+        
         "MOV     R7, #0\n"
-        "loc_FF861B94:\n"
+    "loc_FF861B94:\n"
         "ADD     R3, SP, #0x18\n"
         "ADD     R12, R3, R0,LSL#1\n"
         "ADD     R2, SP, #0x14\n"
@@ -420,7 +432,7 @@ void __attribute__((naked,noinline)) JogDial_task_my() {
         "LDRNE   R0, =0xFF861E8C\n"          // compiler does not like ADRNE
         "BLNE    sub_FF81EB14\n"             // DebugAssert()
 
-        // disable JodDial Task in ALT mode
+        // disable JogDial Task in ALT mode
         // like G11
         //------------------  added code ---------------------
         "labelA:\n"

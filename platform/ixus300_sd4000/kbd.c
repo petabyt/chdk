@@ -43,8 +43,6 @@ int get_usb_bit()
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
 
-int jogdial_stopped=0;
-
 long __attribute__((naked)) wrap_kbd_p1_f();
 
 // no stack manipulation needed here, since we create the task directly
@@ -82,37 +80,30 @@ void kbd_fetch_data(long *dst)
     _kbd_read_keys_r2(dst);
 }
 
+int jogdial_stopped=0;
+extern short* jog_position;
+extern short rear_dial_position;
 
 void jogdial_control(int n) {
-    // this camera did not have jog_position defined
-    /*
+   
     if (jogdial_stopped && !n) {
         // If re-enabling jogdial set the task code current & previous positions to the actual
         // dial positions so that the change won't get processed by the firmware
-        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
+        jog_position[2] = jog_position[4] = rear_dial_position;   // Rear dial
     }
-    */
+    
     jogdial_stopped = n;
 }
 
-// ROM:FF861F98
-int Get_JogDial(void) {
-    return (*(int*)0xC0240104)>>16;     // 0xC0240000 + 0x104
-}
 
 static int new_jogdial=0, old_jogdial=0;
 
 long get_jogdial_direction(void) {
+    
     old_jogdial=new_jogdial;
-    new_jogdial=Get_JogDial();
+    new_jogdial=rear_dial_position; // Get_JogDial();
 
-    if (old_jogdial<new_jogdial) {
-        //return JOGDIAL_LEFT;
-        return JOGDIAL_RIGHT;
-    } else if (old_jogdial>new_jogdial) {
-        return JOGDIAL_LEFT;
-        //return JOGDIAL_RIGHT;
-    } else {
-        return 0;
-    }
+    if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
+    if (old_jogdial>new_jogdial) return JOGDIAL_LEFT;
+    return 0;
 }

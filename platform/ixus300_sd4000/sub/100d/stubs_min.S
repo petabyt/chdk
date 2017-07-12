@@ -3,6 +3,11 @@
 DEF(active_palette_buffer,      0x00009274)     // found at 0xffa11498
 DEF(palette_buffer_ptr,         0x0000927c)     // found at 0xffa11160
 
+DEF(active_bitmap_buffer,       0x00004044)     // 0xff8abb44 & 0xff8abb4c  (0x4030 + 0x0014 = 0x4044)
+DEF(bitmap_buffer,              0x00004054)     // found at ff8abc10
+
+DEF(rear_dial_position,         0xC0240106)
+
 // ROM:FF860864                 LDR     R0, =0x24A4 <---
 // ROM:FF860868                 STMFD   SP!, {R4,LR}
 // ROM:FF86086C                 LDR     R0, [R0,#8] <---
