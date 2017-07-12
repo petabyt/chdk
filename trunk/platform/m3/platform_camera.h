@@ -137,8 +137,10 @@
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
  
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
+    // subject distance override currently not available
+    #undef CAM_SD_OVER_IN_AFL
+    #undef CAM_SD_OVER_IN_AF
+    #undef CAM_SD_OVER_IN_MF
 
 // ------- MY -----------
 //    #define CAM_TOUCHSCREEN_UI	1
