@@ -23,10 +23,9 @@ const ApertureSize aperture_sizes_table[] = {
     {  9, 480, "5.6" },
     { 10, 512, "6.3" },
     { 11, 544, "7.1" },
-    { 12, 576, "8.0" },
+    { 12, 576, "8.0" }
 };
 
-// ToDo
 // ROM:FFC15ED0
 const ShutterSpeed shutter_speeds_table[] = {
     // id, prop_id, name, usec
@@ -75,8 +74,8 @@ const ShutterSpeed shutter_speeds_table[] = {
     {  30,  960, "1/1000", 1000 },
     {  31,  992, "1/1250",  800 },
     {  32, 1021, "1/1600",  625 },
-    {  33, 1053, "1/2000",  500 },   // Canon Website says max. 1/2000
-    //{  34, ????, "1/2500",  ??? },   // Manual says max. 1/2500 ?!?
+    {  33, 1053, "1/2000",  500 },
+    {  34, 1088, "1/2500",  400 }
 };
 
 // Propertycase 149
@@ -88,7 +87,7 @@ const ISOTable iso_table[] = {
     {  3,  400,  "400", -1},
     {  4,  800,  "800", -1},
     {  5, 1600, "1600", -1},
-    {  6, 3200, "3200", -1},
+    {  6, 3200, "3200", -1}
 };
 
 /*
@@ -100,8 +99,9 @@ Movie: 1280 x 720(30 fps), 640 x 480 (30 fps/), 320 x 240 (30 fps), 320 x 240 (2
 
 // PROPCASE 49
 // Mapping between camera mode and PROPCASE_SHOOTING_MODE (modelist.h)
-// finsig2 found 33324, 33323, 33320, 33322, 33321, 33288, 33289 in firmware but not in modemap
+// finsig found 33289 in firmware but camera setting that enables it not found
 // ROM:FFC0041C Table with Data Words
+
 const CapturemodeMap modemap[] = {
     { MODE_AUTO,               32768 },
     { MODE_P,                  32772 },
@@ -119,13 +119,14 @@ const CapturemodeMap modemap[] = {
     { MODE_LOWLIGHT,           32801 },
     { MODE_COLOR_ACCENT,       33309 },
     { MODE_COLOR_SWAP,         33310 },
-    //{ MODE_SMART_SHUTTER,      33321 }, // mode does not exist in chdk
-    //{ MODE_FISHEYE,            33323 }, // mode does not exist in chdk
-    //{ MODE_MINIATURE,          33324 },
-    //{ MODE_HIGHSPEED_BURST,    32288 }, // mode does not exist in chdk
+    { MODE_SMART_SHUTTER,      33321 },
+    { MODE_WINK_SELF_TIMER,    33322 },
+    { MODE_FACE_SELF_TIMER,    33320 },
+    { MODE_FISHEYE,            33323 },
+    { MODE_MINIATURE,          33324 },
+    { MODE_HIGHSPEED_BURST,    33288 },
     { MODE_VIDEO_STD,          2612  },
-    //{ MODE_VIDEO_SLOWMOTION,   2617  },
-    { MODE_VIDEO_SPEED,        2617  }, // "Super Slow Motion Movie"
+    { MODE_VIDEO_SUPER_SLOW,   2617  },
     { MODE_VIDEO_COLOR_SWAP,   2611  },
     { MODE_VIDEO_COLOR_ACCENT, 2610  },
 };

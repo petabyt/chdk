@@ -144,13 +144,13 @@ void __attribute__((naked,noinline)) boot() {    //#fs
 
 
 void __attribute__((naked,noinline)) sub_FF810354_my() {    //#fs
+
     // Hook Canon Firmware Tasks, http://chdk.setepontos.com/index.php/topic,4194.0.html
-    // ToDo: verify all Hooks are working, is hooking to Software IRQ's required like other cameras?
     //*(int*)0x1930=(int)taskHook;               // does not work
-    //*(int*)0x1934=(int)taskHook;                 // 0x1934 not used in firmware
+    //*(int*)0x1934=(int)taskHook;               // 0x1934 not used in firmware
     *(int*)0x1938=(int)taskHook;                 // ROM:FF810698
     // 0x1938=taskHook and 0x193C=taskHook together cause ASSERT in SpyTask on CHDK autostart
-    *(int*)0x193C=(int)taskHook;               // ROM:FF8106D8
+    *(int*)0x193C=(int)taskHook;                 // ROM:FF8106D8
     //*(int*)0x19A0=(int)taskHook;               // maybe correct IRQ is 0x19A0 (ROM:FF816634) ?
 
     // Power Button detection (short press = playback mode, long press = record mode)
@@ -191,8 +191,8 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {    //#fs
         //"BL      sub_FF811198\n"           // original
         "BL      sub_FF811198_my\n"          // +
 
-        // ToDo: shouldn't we continue with original function ?!? Most other Port does not...
-        //asm volatile ("B      sub_FF8103CC\n");
+        // Shouldn't we continue with original function ?!? Most other Port do not...
+        // asm volatile ("B      sub_FF8103CC\n");
     );
 }    //#fe
 
@@ -205,9 +205,8 @@ void __attribute__((naked,noinline)) sub_FF811198_my() { //#fs
         "BL      sub_FFB59A1C\n"
         "MOV     R0, #0x53000\n"
         "STR     R0, [SP,#4]\n"
-#if defined(CHDK_NOT_IN_CANON_HEAP)                 // use original heap offset since CHDK is loaded in high memory
+#if defined(CHDK_NOT_IN_CANON_HEAP)            // use original heap offset since CHDK is loaded in high memory
         "LDR     R0, =0x14B394\n"              // original
-                                               // ToDo: change address to put chdk into EXMEM
 #else                                          // otherwise use patched value
         "LDR     R0, =new_sa\n"                // +
         "LDR     R0, [R0]\n"                   // +
