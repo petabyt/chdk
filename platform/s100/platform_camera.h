@@ -47,7 +47,7 @@
     #define CAM_HAS_VIDEO_BUTTON            1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
-    #define CAM_HAS_MOVIE_DIGEST_MODE       1 
+    #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
 
     #define CAM_HAS_ND_FILTER               1
@@ -70,18 +70,21 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                    2
 
-    #define CAM_DNG_LENS_INFO               { 52,10, 260,10, 20,10, 59,10 }
-
-    // From G15 native RAW file as converted to DNG using Adobe DNG Converter
-    // http://www.adobe.com/support/downloads/product.jsp?product=106&platform=Windows
-    // Matrices from converted DNG's EXIF data
-// CFA adjusted for active area
-//    #define cam_CFAPattern                  0x02010100 // = [Red,Green][Green,Blue]
+/*
+  from exif date in Adobe DNG Converted image applied to Canon CR2 file
+    Unique Camera Model             : Canon PowerShot S100
+    Color Matrix 1                  : 0.9118 -0.3882 -0.0248 -0.2564 0.9818 0.3218 0.0349 0.0317 0.4547
+    Color Matrix 2                  : 0.7968 -0.2565 -0.0636 -0.2873 1.0697 0.2513 0.018 0.0667 0.4211
+    Calibration Illuminant 1        : Standard Light A (17)
+    Calibration Illuminant 2        : D65 (21)
+    Forward Matrix 1                : 0.6196 0.243 0.1018 0.1505 0.9964 -0.147 -0.1633 -0.3155 1.304
+    Forward Matrix 2                : 0.6242 0.4092 -0.0691 0.188 1.1431 -0.3312 -0.042 -0.1341 1.0012
+*/
     #define cam_CFAPattern                  0x01000201 // = [Green,Blue][Red,Green]
-    #define cam_CalibrationIlluminant1      17      // Standard Light A
-    #define cam_CalibrationIlluminant2      21      // D65
+    #define cam_CalibrationIlluminant1      17         // Standard Light A
+    #define cam_CalibrationIlluminant2      21         // D65
     #define CAM_COLORMATRIX1    \
-      9188, 10000,  -3882, 10000,   -248, 10000, \
+      9118, 10000,  -3882, 10000,   -248, 10000, \
      -2564, 10000,   9818, 10000,   3218, 10000, \
        349, 10000,    317, 10000,   4547, 10000
     #define CAM_COLORMATRIX2    \
@@ -96,7 +99,8 @@
       6242, 10000,   4092, 10000,   -691, 10000, \
       1880, 10000,  11431, 10000,  -3312, 10000, \
       -420, 10000,  -1341, 10000,  10012, 10000
-    #define CAM_DNG_EXPOSURE_BIAS 0,1
+    #define CAM_DNG_EXPOSURE_BIAS           0,1
+    #define CAM_DNG_LENS_INFO               { 52,10, 260,10, 20,10, 59,10 }
 
     // actual large jpeg 4000 x 3000
     #define CAM_JPEG_WIDTH                  4048
@@ -120,7 +124,7 @@
     #define CAM_HAS_GPS                     1
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    
+
     #define  CAM_USE_ALT_SET_ZOOM_POINT     1
     #define  CAM_NEED_SET_ZOOM_DELAY        150
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1      // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
@@ -128,7 +132,7 @@
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
-    
+
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
 
 //--------------------------------------------------

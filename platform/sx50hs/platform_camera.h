@@ -37,8 +37,8 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_VIDEO_QUALITY_ONLY              1
-	#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
-	
+    #define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
+
     #define CAM_HAS_SPORTS_MODE                 1
 
     #define CAM_BRACKETING                      1
@@ -48,25 +48,43 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #undef DEFAULT_RAW_EXT
-    #define DEFAULT_RAW_EXT                     2   // use .CR2 
+    #define DEFAULT_RAW_EXT                     2   // use .CR2
 
-    // bayer sensor pattern
-    #define cam_CFAPattern                      0x02010100 // Red  Green  Green  Blue
-
-    #define CAM_DNG_EXPOSURE_BIAS               0,1     // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
-
-    #define CAM_DNG_LENS_INFO                   { 43,10, 2150,10, 34,10, 65,10 }    // See comments in camera.h
-
-    //need fixing *****************************************************
-    #define cam_CalibrationIlluminant1  1
+/*
+  from exif date in Adobe DNG Converted image applied to Canon CR2 file
+    Unique Camera Model             : Canon PowerShot SX50 HS
+    Color Matrix 1                  : 1.3587 -0.6819 0.06 -0.1159 0.855 0.3112 0.0241 0.0672 0.5343
+    Color Matrix 2                  : 1.2432 -0.4753 -0.1247 -0.211 1.0691 0.1629 -0.0412 0.1623 0.4926
+    Calibration Illuminant 1        : Standard Light A (17)
+    Calibration Illuminant 2        : D65 (21)
+    Forward Matrix 1                : 0.5599 0.352 0.0525 0.0388 1.1348 -0.1736 -0.0815 -0.4851 1.3917
+    Forward Matrix 2                : 0.5188 0.4576 -0.0121 0.1105 1.1149 -0.2254 0.0039 -0.2338 1.055
+*/
+    #define cam_CFAPattern                      0x02010100  // Red  Green  Green  Blue
+    #define cam_CalibrationIlluminant1          17          // Standard Light A
+    #define cam_CalibrationIlluminant2          21          // D65
     #define CAM_COLORMATRIX1    \
-    544808, 100000, -174047, 100000, -80399, 100000, \
-    -75055, 100000,  440444, 100000,  11367, 100000, \
-     -5801, 100000,   71589, 100000, 118914, 100000
+      13587, 10000, -6819, 10000,   600, 10000, \
+      -1159, 10000,  8550, 10000,  3112, 10000, \
+        241, 10000,   672, 10000,  5343, 10000
+    #define CAM_COLORMATRIX2    \
+      12432, 10000, -4753, 10000, -1247, 10000, \
+      -2110, 10000, 10691, 10000,  1629, 10000, \
+       -412, 10000,  1623, 10000,  4926, 10000
+    #define CAM_FORWARDMATRIX1    \
+       5599, 10000,  3520, 10000,   525, 10000, \
+        388, 10000, 11348, 10000, -1736, 10000, \
+       -815, 10000, -4851, 10000, 13917, 10000
+    #define CAM_FORWARDMATRIX2    \
+      5188, 10000,  4576, 10000,  -121, 10000, \
+      1105, 10000, 11149, 10000, -2254, 10000, \
+        39, 10000, -2338, 10000, 10550, 10000
+    #define CAM_DNG_EXPOSURE_BIAS               0,1        // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
+    #define CAM_DNG_LENS_INFO                   { 43,10, 2150,10, 34,10, 65,10 }
 
     // Sensor size, DNG image size & cropping
-	#define CAM_RAW_ROWPIX    4176 // Found @0xff1ae73c
-	#define CAM_RAW_ROWS      3062 // Found @0xff1ae748
+    #define CAM_RAW_ROWPIX    4176 // Found @0xff1ae73c
+    #define CAM_RAW_ROWS      3062 // Found @0xff1ae748
 
     #define CAM_JPEG_WIDTH                      4072
     #define CAM_JPEG_HEIGHT                     3044
@@ -87,13 +105,13 @@
 
     // copied from the SX200 which has the same video buffer size
     #undef CAM_USES_ASPECT_CORRECTION
-    #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #define CAM_USES_ASPECT_CORRECTION          1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
     #undef CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_WIDTH                    960 // Actual width of bitmap screen in bytes
     #define CAM_BITMAP_HEIGHT                   270 // Actual height of bitmap screen in rows
 
-  
+
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN 2
 
@@ -118,7 +136,7 @@
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
- 
+
 //  #define REMOTE_SYNC_STATUS_LED  0xC0xxyyyy  // specifies an LED that turns on while camera waits for USB remote to sync
 
     #define CAM_HAS_CMOS                        1
