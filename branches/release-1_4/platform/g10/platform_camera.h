@@ -72,27 +72,48 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
 
-    #undef  CAM_USES_ASPECT_CORRECTION   
-    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized 
+    #undef  CAM_USES_ASPECT_CORRECTION
+    #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef  CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
 
-    #undef  EDGE_HMARGIN 
+    #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN 28
 
-    #define CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 } // See comments in camera.h
-    // G10 pattern
-    #define cam_CFAPattern                  0x01000201   // 0x01000201 = Green Blue Red Green    
-                                                        // 0x02010100 = Red  Green  Green  Blue   
 
-    // G10 color - values from dcraw for G10 Canon RAW files
-    #define cam_CalibrationIlluminant1      17 // standard light A   
-    #define CAM_COLORMATRIX1 \
-        11093,  1000000,    -3906,  1000000,    -1028,  1000000, \
-        -5047,  1000000,    12492,  1000000,     2879,  1000000, \
-        -1003,  1000000,     1750,  1000000,     5561,  1000000
+/*
+  from exif date in Adobe DNG Converted image applied to Canon CR2 file
+    Unique Camera Model             : Canon PowerShot G10
+    Color Matrix 1                  : 1.3591 -0.6592 0.0324 -0.344 1.0533 0.3374 -0.0169 0.1008 0.5612
+    Color Matrix 2                  : 1.1093 -0.3906 -0.1028 -0.5047 1.2492 0.2879 -0.1003 0.175 0.5561
+    Calibration Illuminant 1        : Standard Light A (17)
+    Calibration Illuminant 2        : D65 (21)
+    Forward Matrix 1                : 0.6117 0.4074 -0.0548 0.2413 1.0772 -0.3185 0.0231 -0.1931 0.995
+    Forward Matrix 2                : 0.6117 0.4074 -0.0548 0.2413 1.0772 -0.3185 0.0231 -0.1931 0.995
+*/
+    #define cam_CFAPattern                  0x01000201   // 0x01000201 = Green Blue Red Green
+    #define cam_CalibrationIlluminant1      17           // Standard Light A
+    #define cam_CalibrationIlluminant2      21           // D65
+    #define CAM_COLORMATRIX1    \
+      13591, 10000, -6592, 10000,   324, 10000, \
+      -3440, 10000, 10533, 10000,  3374, 10000, \
+        169, 10000,  1008, 10000,  5612, 10000
+    #define CAM_COLORMATRIX2    \
+      11093, 10000, -3906, 10000, -1028, 10000, \
+      -5047, 10000, 12492, 10000,  2879, 10000, \
+      -1003, 10000,  1750, 10000,  5561, 10000
+    #define CAM_FORWARDMATRIX1    \
+       6117, 10000,  4074, 10000,  -548, 10000, \
+       2413, 10000, 10772, 10000, -3185, 10000, \
+        231, 10000, -1931, 10000,  9950, 10000
+    #define CAM_FORWARDMATRIX2    \
+       6117, 10000,  4074, 10000,  -548, 10000, \
+       2413, 10000, 10772, 10000, -3185, 10000, \
+        231, 10000, -1931, 10000,  9950, 10000
+    #define CAM_DNG_EXPOSURE_BIAS           0,1          // Specify DNG exposure bias value to 0 (to override default of -0.5 in the dng.c code)
+    #define CAM_DNG_LENS_INFO               { 61,10, 305,10, 28,10, 45,10 }
 
-    // zebra 
+    // zebra
     #define CAM_ZEBRA_NOBUF                 1
 
     #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
