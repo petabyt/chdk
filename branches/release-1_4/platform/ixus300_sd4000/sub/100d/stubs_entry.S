@@ -23,12 +23,6 @@ NHSTUB(kbd_pwr_off                            ,0xff861a14) //  2 60%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffac969c -> ffc0041c
-// Mode 33324 in firmware but not in current modemap
-// Mode 33323 in firmware but not in current modemap
-// Mode 33320 in firmware but not in current modemap
-// Mode 33322 in firmware but not in current modemap
-// Mode 33321 in firmware but not in current modemap
-// Mode 33288 in firmware but not in current modemap
 // Mode 33289 in firmware but not in current modemap
 
 // Values below can be overridden in 'stubs_min.S':

@@ -51,8 +51,6 @@
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16
 
     #define CAM_DNG_LENS_INFO               { 49,10, 186,10, 20,10, 53,10 } // See comments in camera.h
-
-    // colors are messed up in DNG if not correct
     #define cam_CFAPattern                  0x02010100            // Red  Green  Green  Blue, OK
 
     #define CAM_COLORMATRIX1                               \
@@ -60,7 +58,7 @@
      -77419,  1000000, 639766,  1000000,  44009, 1000000,  \
       17965,  1000000, 78396,   1000000, 231868, 1000000
 
-    #define cam_CalibrationIlluminant1      1        // ToDo: Daylight ?
+    #define cam_CalibrationIlluminant1      1        // Daylight
 
     #define CAM_RAW_ROWPIX                  3816     // ROM:FFB28EEC
     #define CAM_RAW_ROWS                    2784     // ROM:FFB28EF4
@@ -98,5 +96,8 @@
     #undef  CAM_SD_OVER_IN_AF                       // crashes trying to use Subject Distance Overrides if MF or AFL not set
     #define CAM_SD_OVER_IN_AFL              1       // 
     #define CAM_SD_OVER_IN_MF               1       //
+    
+    #undef  CAM_AF_LED 
+    #define CAM_AF_LED                      2       // index of AF led in camera_set_led function
 
 //--------------------------------------------------

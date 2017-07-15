@@ -60,20 +60,13 @@ int get_zoom_x(int zp) {
     return get_focal_length(zp)*10/focus_len_table[0];
 }
 
-/*
-int rec_switch_state(void) {
-    return (physw_status[1] & 0x02000000);
-}
-*/
-
 // Battery default min. Voltage
 long get_vbatt_min() {
-    return 3200;    // ToDo: use real value, this is just a guess
+    return 3200;
 }
 
 // Battery default max. Voltage
 long get_vbatt_max() {
-    return 4100;    // ToDo: use real value, this is just a guess
+    return 4100;
 }
 
-// NEXT: platform/ixus300_sd4000/sub/100d/boot.c boot()

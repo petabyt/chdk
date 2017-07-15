@@ -97,11 +97,10 @@ void vid_bitmap_refresh() {
 
         // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
         // Note that this camera only seems to use 3 buffers (vs 4 on other models). 
-        // ToDo :  test that returning one buffer back from the current value of active_viewport_buffer works best for motion detect.
+        // Tests with MD_tune.bas show that returning one buffer back from the current value of active_viewport_buffer works best for motion detect
 
         vp = active_viewport_buffer ;
         return viewport_buffers[ (vp == 0) ? 2 : vp-1 ];
-
     }
 
     void *vid_get_viewport_fb()   /* redefined */
