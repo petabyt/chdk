@@ -30,7 +30,7 @@ gui_handler GUI_MODE_4WINS =
 #define P1_COLOR	 COLOR_BLUE
 #define P2_COLOR	 COLOR_GREEN
 #define BK_COLOR	 COLOR_GREY
-#define FIELD_COLOR	 MAKE_COLOR(COLOR_GREY_LT,COLOR_GREY_LT)//(fï¿½llfarbe,rand)
+#define FIELD_COLOR	 MAKE_COLOR(COLOR_GREY_LT,COLOR_GREY_LT)//(füllfarbe,rand)
 #define TEXT_COLOR   MAKE_COLOR(COLOR_GREY, COLOR_WHITE)
 #define INFO_COLOR   COLOR_GREY_LT
 #define INFO_TEXT_COLOR   MAKE_COLOR(INFO_COLOR, COLOR_WHITE)
@@ -81,7 +81,7 @@ char ki_isBadColumn(int column){
 
 char ki_3(char player) {
   int i,j;
-  //waagerecht und Diagonal (ï¿½ber Anstieg)
+  //waagerecht und Diagonal (über Anstieg)
   for(i=0;i<=3;i++){		// column
     for(j=1;j<=6;j++){		//row 
       if(field[i][j]==player&&field[i+1][j]==player&&field[i+2][j]==player&&field[i+3][j]==0&&field[i+3][j-1]) return i+4;	//***-
@@ -115,26 +115,26 @@ char ki_3(char player) {
 
 char ki_2(char player) {
   int i,j;
-  //waagerecht und Diagonal ï¿½ber Anstieg
+  //waagerecht und Diagonal über Anstieg
   for(i=0;i<=3;i++){		//column
     for(j=1;j<=6;j++){		//row 
-      if(field[i][j]==player&&field[i+1][j]==player&&field[i+2][j]==0&&field[i+3][j]==0&&(field[i+2][j-1]||field[i+3][j-1])&&!ki_isBadColumn(i+3)) return i+3;	//**-- return und if ï¿½ndern
+      if(field[i][j]==player&&field[i+1][j]==player&&field[i+2][j]==0&&field[i+3][j]==0&&(field[i+2][j-1]||field[i+3][j-1])&&!ki_isBadColumn(i+3)) return i+3;	//**-- return und if ändern
       if(field[i][j]==player&&field[i+1][j]==0&&field[i+2][j]==0&&field[i+3][j]==player&&(field[i+1][j-1]||field[i+2][j-1])&&!ki_isBadColumn(i+2)) return i+2;	//*--* (i+3 geht auch)
       if(field[i][j]==0&&field[i+1][j]==0&&field[i+2][j]==player&&field[i+3][j]==player&&(field[i][j-1]||field[i+1][j-1])&&!ki_isBadColumn(i+2)) return i+2;	//--**
       if(field[i][j]==0&&field[i+1][j]==player&&field[i+2][j]==0&&field[i+3][j]==player&&(field[i][j-1]||field[i+2][j-1])&&!ki_isBadColumn(i+3)) return i+3;	//-*-*
       if(field[i][j]==player&&field[i+1][j]==0&&field[i+2][j]==player&&field[i+3][j]==0&&(field[i+1][j-1]||field[i+3][j-1])&&!ki_isBadColumn(i+2)) return i+2;	//*-*-
     }
     for(j=1;j<=3;j++){
-      if(field[i][j]==player&&field[i+1][j+1]==player&&field[i+2][j+2]==0&&field[i+3][j+3]==0&&field[i+2][j+2-1]&&!ki_isBadColumn(i+3)) return i+3;	//**-- return und if ï¿½ndern
-      if(field[i][j]==player&&field[i+1][j+1]==player&&field[i+2][j+2]==0&&field[i+3][j+3]==0&&field[i+3][j+3-1]&&!ki_isBadColumn(i+3)) return i+4;	//**-- return und if ï¿½ndern
+      if(field[i][j]==player&&field[i+1][j+1]==player&&field[i+2][j+2]==0&&field[i+3][j+3]==0&&field[i+2][j+2-1]&&!ki_isBadColumn(i+3)) return i+3;	//**-- return und if ändern
+      if(field[i][j]==player&&field[i+1][j+1]==player&&field[i+2][j+2]==0&&field[i+3][j+3]==0&&field[i+3][j+3-1]&&!ki_isBadColumn(i+3)) return i+4;	//**-- return und if ändern
       if(field[i][j]==player&&field[i+1][j+1]==0&&field[i+2][j+2]==0&&field[i+3][j+3]==player&&(field[i+1][j+1-1]||field[i+2][j+2-1])&&!ki_isBadColumn(i+2)) return i+2;	//*--* (i+3 geht auch)
       if(field[i][j]==0&&field[i+1][j+1]==0&&field[i+2][j+2]==player&&field[i+3][j+3]==player&&(field[i][j-1]||field[i+1][j+1-1])&&!ki_isBadColumn(i+2)) return i+2;	//--**
       if(field[i][j]==0&&field[i+1][j+1]==player&&field[i+2][j+2]==0&&field[i+3][j+3]==player&&(field[i][j-1]||field[i+2][j+2-1])&&!ki_isBadColumn(i+3)) return i+3;	//-*-*
       if(field[i][j]==player&&field[i+1][j+1]==0&&field[i+2][j+2]==player&&field[i+3][j+3]==0&&(field[i+1][j+1-1]||field[i+3][j+3-1])&&!ki_isBadColumn(i+2)) return i+2;	//*-*-
     }
     for(j=4;j<=6;j++){
-      if(field[i][j]==player&&field[i+1][j-1]==player&&field[i+2][j-2]==0&&field[i+3][j-3]==0&&field[i+2][j-2-1]&&!ki_isBadColumn(i+3)) return i+3;	//**-- return und if ï¿½ndern
-      if(field[i][j]==player&&field[i+1][j-1]==player&&field[i+2][j-2]==0&&field[i+3][j-3]==0&&field[i+3][j-3-1]&&!ki_isBadColumn(i+3)) return i+4;	//**-- return und if ï¿½ndern
+      if(field[i][j]==player&&field[i+1][j-1]==player&&field[i+2][j-2]==0&&field[i+3][j-3]==0&&field[i+2][j-2-1]&&!ki_isBadColumn(i+3)) return i+3;	//**-- return und if ändern
+      if(field[i][j]==player&&field[i+1][j-1]==player&&field[i+2][j-2]==0&&field[i+3][j-3]==0&&field[i+3][j-3-1]&&!ki_isBadColumn(i+3)) return i+4;	//**-- return und if ändern
       if(field[i][j]==player&&field[i+1][j-1]==0&&field[i+2][j-2]==0&&field[i+3][j-3]==player&&(field[i+1][j-1-1]||field[i+2][j-2-1])&&!ki_isBadColumn(i+2)) return i+2;	//*--* (i+3 geht auch)
       if(field[i][j]==0&&field[i+1][j-1]==0&&field[i+2][j-2]==player&&field[i+3][j-3]==player&&(field[i][j-1]||field[i+1][j-1-1])&&!ki_isBadColumn(i+2)) return i+2;	//--**
       if(field[i][j]==0&&field[i+1][j-1]==player&&field[i+2][j-2]==0&&field[i+3][j-3]==player&&(field[i][j-1]||field[i+2][j-2-1])&&!ki_isBadColumn(i+3)) return i+3;	//-*-*
@@ -153,17 +153,17 @@ char ki_findColumn(char mode, char player) {							//player = 1|2
   case 'b':
   case 1: erg=ki_3(cam);												//ich3
           if(!erg&&mode!='b') erg=ki_3(otherplayer); else break;		//du3
-          if(!erg) {													//ungï¿½nstige Spalten ermitteln
+          if(!erg) {													//ungünstige Spalten ermitteln
             for(i=1;i<=7;i++) {
               if(!isFull(i)) {
                 set_stone(i,9,0);										//Stein setzen 9=irgendwas
-                badColumns[i-1]=ki_findColumn('b',otherplayer);			//ungï¿½nstige Spalten ermitteln b=bad
+                badColumns[i-1]=ki_findColumn('b',otherplayer);			//ungünstige Spalten ermitteln b=bad
                 if(!badColumns[i-1]) badColumns[i-1]=ki_findColumn('b',cam);
                 unset_stone(i);
               } else badColumns[i-1]=9;								//9=full
             }
           } else break;
-          erg=ki_2(cam);												//ich2 (fï¿½r passivere Methode vertauschen)
+          erg=ki_2(cam);												//ich2 (für passivere Methode vertauschen)
           if(!erg) erg=ki_2(otherplayer); else break;					//du2
           if(!erg) erg=(!isFull(4)&&!ki_isBadColumn(4))?4:0; else break;//mitte
           if(!erg) do erg=(rand()%7)+1; while((isFull(erg)||erg==0||ki_isBadColumn(erg))&&counter++<100);	//zufall
