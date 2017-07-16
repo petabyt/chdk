@@ -71,7 +71,7 @@ static char set_stone(int column, char player, char visible)
 static void unset_stone(int column)
 {
   int i;
-  for(i=1;field[column-1][i]&&i<=6;i++);			//1 ist wichtig (0=Fundament)
+  for(i=1;(i<=6)&&field[column-1][i];i++);			//1 ist wichtig (0=Fundament)
   field[column-1][i-1]=0;
 }
 
