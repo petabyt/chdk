@@ -3,8 +3,11 @@
 #include "core.h"
 
 static long *nrflag = (long*)0x6DB0;    // ROM:FF970AA0 at taskcreate_ShutterSoundTask(), above String "ShutterSoundTask"
+#define PAUSE_FOR_FILE_COUNTER 250          // Enable delay in capt_seq_hook_raw_here to ensure file counter is updated
 
 #include "../../../generic/capt_seq.c"
+
+
 
 // ROM:FF87D2D8 task_CaptSeqTask()
 void __attribute__((naked,noinline)) capt_seq_task() {
