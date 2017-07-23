@@ -362,6 +362,12 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "malloc_strictly", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up
     { "GetCurrentMachineTime", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
     { "HwOcReadICAPCounter", OPTIONAL|UNUSED|LIST_ALWAYS }, // reads usec counter, name from ixus30
+    { "transfer_src_overlay_helper",UNUSED}, // helper for other related functions
+    { "transfer_src_overlay" },
+    { "GraphicSystemCoreFinish_helper", OPTIONAL|UNUSED }, // function that calls GraphicSystemCoreFinish
+    { "GraphicSystemCoreFinish", OPTIONAL|UNUSED }, // used to identify mzrm message functions
+    { "mzrm_createmsg", OPTIONAL|UNUSED },
+    { "mzrm_sendmsg", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -369,7 +375,6 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "takesemaphore_low", OPTIONAL|UNUSED },
     { "bzero" }, // 
     { "memset32" }, // actually jump to 2nd instruction of bzero 
-    { "transfer_src_overlay" },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -2306,35 +2311,9 @@ int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t 
     return 0;
 }
 int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *rule) {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
-    if(!str_adr) {
-        printf("sig_match_transfer_src_overlay: failed to find ref %s\n",rule->ref_name);
-        return  0;
-    }
-    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-    // assume first / only ref
-    if(!fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
-        printf("sig_match_transfer_src_overlay: failed to find code ref to %s\n",rule->ref_name);
+    if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    // search backwards for func call
-    uint32_t fadr=0;
-    int i;
-    for(i=1; i<=5; i++) {
-        if(!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i))) {
-            printf("sig_match_transfer_src_overlay: disasm failed\n");
-            return 0;
-        }
-        if(insn_match_any(fw->is->insn,match_bl_blximm)){
-            fadr=get_branch_call_insn_target(fw,fw->is);
-            break;
-        }
-    }
-    if(!fadr) {
-        printf("sig_match_transfer_src_overlay: failed to find bl1\n");
-    }
-    // follow
-    disasm_iter_init(fw,is,fadr);
     // skip to debugassert
     if(!find_next_sig_call(fw,is,32,"DebugAssert")) {
         printf("sig_match_transfer_src_overlay: no match DebugAssert\n");
@@ -2351,7 +2330,7 @@ int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *r
         return 0;
     }
     // adding active_bitmap_buffer here
-    // note 4 different from value used on many ports, but the value nromally sent to transfer_src_overlay
+    // note 4 bytes after value used on many ports, but the value normally sent to transfer_src_overlay
     save_misc_val("active_bitmap_buffer",desc.adr_adj,desc.off,(uint32_t)is->insn->address);
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
@@ -3423,7 +3402,14 @@ sig_rule_t sig_rules_main[]={
 {sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
 {sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
-{sig_match_transfer_src_overlay,"transfer_src_overlay","Window_EmergencyRefreshPhysicalScreen",},
+{sig_match_near_str,"transfer_src_overlay_helper","Window_EmergencyRefreshPhysicalScreen",SIG_NEAR_BEFORE(6,1)},
+{sig_match_transfer_src_overlay,"transfer_src_overlay","transfer_src_overlay_helper",},
+{sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(3,SUB),SIG_DRY_MAX(52)},
+{sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(4,SUB),SIG_DRY_RANGE(53,57)},// VTMReduuce fails on M10
+{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduuce"/*sic*/,SIG_NEAR_BEFORE(6,1),SIG_DRY_MIN(58)}, 
+{sig_match_named,"GraphicSystemCoreFinish","GraphicSystemCoreFinish_helper",SIG_NAMED_SUB},
+{sig_match_named,"mzrm_createmsg","GraphicSystemCoreFinish",SIG_NAMED_SUB},
+{sig_match_named_last,"mzrm_sendmsg","GraphicSystemCoreFinish",SIG_NAMED_LAST_RANGE(10,16)},
 {NULL},
 };
 
