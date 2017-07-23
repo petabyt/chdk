@@ -495,6 +495,7 @@
 0xfc142d85,LockMainPower_FW
 0xfc142dd1,SetAutoShutdownTime
 0xfc142dd1,SetAutoShutdownTime_FW
+0xfc143345,transfer_src_overlay
 0xfc143bd3,ScreenLock
 0xfc143c0b,ScreenUnlock
 0xfc147775,task_FaceFrame

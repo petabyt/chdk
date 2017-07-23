@@ -1129,6 +1129,7 @@
 0xfc36025d,malloc_strictly
 0xfc360b25,EngDrvRead
 0xfc360e41,task_CtrlSrv
+0xfc36168b,transfer_src_overlay
 0xfc361fc3,ScreenLock
 0xfc362001,ScreenUnlock
 0xfc3623b9,malloc

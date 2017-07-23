@@ -2316,6 +2316,7 @@
 0xfc13bda7,TP_FirmwareChecksum_FW
 0xfc13bd47,TP_FirmwareUpdate_FW
 0xfc13bd79,TP_GetFirmwareVersion_FW
+0xfc37f013,transfer_src_overlay
 0xbfe1526f,TryPostMessageQueue
 0xbfe151a7,TryReceiveMessageQueue
 0xbfe153d1,TryTakeSemaphore

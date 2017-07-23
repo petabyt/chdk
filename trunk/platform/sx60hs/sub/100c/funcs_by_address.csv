@@ -1246,6 +1246,7 @@
 0xfc336509,j_free
 0xfc33650d,malloc_strictly
 0xfc336681,task_CtrlSrv
+0xfc33708d,transfer_src_overlay
 0xfc3379d9,ScreenLock
 0xfc337a17,ScreenUnlock
 0xfc337dd1,EngDrvRead

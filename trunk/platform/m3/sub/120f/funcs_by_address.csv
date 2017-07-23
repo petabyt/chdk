@@ -1381,6 +1381,7 @@
 0xfc37eba5,PostLogicalEventToUI_FW
 0xfc37eca3,PostEventShootSeqToUI_FW
 0xfc37ecdb,ShowLogicalEventName_FW
+0xfc37f013,transfer_src_overlay
 0xfc37f94b,ScreenLock
 0xfc3801c5,malloc
 0xfc3801fb,free

@@ -1370,6 +1370,7 @@
 0xfc38b251,EpilogFile_FW
 0xfc38b26d,task_Epilog
 0xfc38b297,EpilogMenu_FW
+0xfc38ba7d,transfer_src_overlay
 0xfc38cd29,j_malloc
 0xfc38cd2d,j_free
 0xfc38cd31,malloc_strictly
