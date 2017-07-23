@@ -93,7 +93,6 @@ PROPCASE_IS_MODE values differ from some previous
 
 KNOWN BUGS
 **********
-- Occasional crashes, particularly when changing between playback and record.
 - CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
   This means script shoot() calls, scripts that use shoot hooks and synced remote do not function
   correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
@@ -101,10 +100,8 @@ KNOWN BUGS
 - When booted with FI2 update
  - switching to hybrid auto causes a crash
  - orientation sensor value alternates between 0 and 90
+ Because of these issues, an FI2 file is not included in the autobuild
 - When using remote shoot, DCIM directories will be created even if no files are saved
-- Key presses sent using PTP may be ignored or result in the Canon firmware acting like
-  the key is held down. Putting the camera into alt mode before sending key presses reduces
-  the chance of this happening.
 
 
 THANKS
