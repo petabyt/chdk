@@ -334,6 +334,7 @@
 0xfc0e7d9d,memcpy
 0xfc0e7d9d,memcpy_FW
 0xfc0e7e31,strrchr
+0xfc0eef13,GraphicSystemCoreFinish_helper
 0xfc0f0421,E2LatOn_FW
 0xfc0f238b,ClearNFCSystemArea_FW
 0xfc0f2493,ResetNFCSystemArea_FW
@@ -1108,6 +1109,8 @@
 0xfc2fe137,GetCurrentCaptureModeType_FW
 0xfc2ff7b7,UIFS_GetNumOfOptZoomPos_FW
 0xfc2ff83f,UIFS_MoveZoomTo_FW
+0xfc2fff35,mzrm_createmsg
+0xfc300029,mzrm_sendmsg
 0xfc301bbf,DeleteFile_Fut
 0xfc301c09,DeleteDirectory_Fut
 0xfc301c43,Fopen_Fut
@@ -1249,6 +1252,7 @@
 0xfc337089,transfer_src_overlay
 0xfc3379d5,ScreenLock
 0xfc337a13,ScreenUnlock
+0xfc337a2b,transfer_src_overlay_helper
 0xfc337dcd,EngDrvRead
 0xfc337f05,malloc
 0xfc337f3b,free
@@ -1265,6 +1269,7 @@
 0xfc3380bd,memcmp
 0xfc3380bd,memcmp_FW
 0xfc3411cd,task_FmidTask
+0xfc344dab,GraphicSystemCoreFinish
 0xfc347a2d,NRTBL.SetDarkSubType_FW
 0xfc347a3f,NRTBL.SetDefectCorrectType_FW
 0xfc347a51,NRTBL.SetTassenType_FW

@@ -912,6 +912,7 @@
 0xfc201a2b,task_AprocBpGenTask
 0xfc207369,task_DetSeqT
 0xfc207875,task_DetSeqSadT
+0xfc20b393,GraphicSystemCoreFinish_helper
 0xfc20f82f,ExpCtrlTool.SetExpMode_FW
 0xfc20f861,ExpCtrlTool.SoundDevTest_FW
 0xfc211fcb,task_DetectMoveTask
@@ -1145,6 +1146,8 @@
 0xfc2f3b25,EFLensCom.UpdateStatus_FW
 0xfc2f461f,IsEFLensMFSwOn_FW
 0xfc2f4b07,task_Cave2PbTask
+0xfc2fd721,mzrm_createmsg
+0xfc2fd815,mzrm_sendmsg
 0xfc3018eb,j_GiveSemaphore
 0xfc301df0,j_DebugAssert2
 0xfc301f28,j_CreateCountingSemaphoreStrictly
@@ -1382,6 +1385,7 @@
 0xfc37e96b,ShowLogicalEventName_FW
 0xfc37eca3,transfer_src_overlay
 0xfc37f5db,ScreenLock
+0xfc37f631,transfer_src_overlay_helper
 0xfc37fe55,malloc
 0xfc37fe8b,free
 0xfc37febd,strcat
@@ -1402,6 +1406,7 @@
 0xfc38df71,UIFS_DisplayFirmUpdateView_FW
 0xfc3c86ad,qsort
 0xfc3e7b3d,task_FmidTask
+0xfc3f11e3,GraphicSystemCoreFinish
 0xfc3f3e61,CheckSafShadingData_FW
 0xfc3f3e6f,CheckFpgaLastVer_FW
 0xfc3f3e8b,Capture.SetGainAdjustmentMode_FW

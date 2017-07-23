@@ -838,6 +838,8 @@
 0x010e5aa5,GiveSemaphore
 0x010e5aa5,GiveSemaphore_FW
 0x010e288b,givesemaphore_low
+0xfc344dab,GraphicSystemCoreFinish
+0xfc0eef13,GraphicSystemCoreFinish_helper
 0xfc15d6bd,GUISrv_StartGUISystem_FW
 0xfc08da87,HardwareDefect_FW
 0xfc08da57,HardwareDefectWithRestart_FW
@@ -1411,6 +1413,8 @@
 0xfc39ddaf,MoveZoomLensWithPosition_FW
 0xfc45cb6b,MoveZoomPoint_FW
 0xfc45cb45,MoveZoomPosition_FW
+0xfc2fff35,mzrm_createmsg
+0xfc300029,mzrm_sendmsg
 0xfc09768b,NewTaskShell_FW
 0xfc0ba827,NFCEvt.Create_FW
 0xfc40146b,NotifyISMacroDistance_FW
@@ -2185,6 +2189,7 @@
 0xfc0851b7,TerminateWLAN_FW
 0x010e5e6f,time
 0xfc337089,transfer_src_overlay
+0xfc337a2b,transfer_src_overlay_helper
 0x010e589b,TryPostMessageQueue
 0x010e57d3,TryReceiveMessageQueue
 0x010e59fd,TryTakeSemaphore

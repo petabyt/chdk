@@ -221,9 +221,9 @@ NHSTUB(time                                   ,0x010e11eb) //  0
 NHSTUB(vsprintf                               ,0xfc1049bf) //  0
 NHSTUB(EngDrvRead                             ,0xfc38d2b9) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc37210d) //  0
+NHSTUB(transfer_src_overlay                   ,0xfc38ba49) //  0
 NHSTUB(bzero                                  ,0x01100b74) //  0
 NHSTUB(memset32                               ,0x01100b78) //  0
-NHSTUB(transfer_src_overlay                   ,0xfc38ba49) //  0
 NHSTUB(PT_MFOn                                ,0xfc2a6ee9) //  0
 NHSTUB(PT_MFOff                               ,0xfc2a6f19) //  0
 NHSTUB(GetAdChValue                           ,0xfc1f1c83) //  0

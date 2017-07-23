@@ -938,6 +938,7 @@
 0xfc203cff,task_AprocVaif3Task
 0xfc209a97,task_DetSeqT
 0xfc209fa1,task_DetSeqSadT
+0xfc20da5b,GraphicSystemCoreFinish_helper
 0xfc211833,task_BrtMsrTask
 0xfc212841,task_ExpEventTask
 0xfc212917,ExpCtrlTool.SetExpMode_FW
@@ -1226,6 +1227,8 @@
 0xfc314dec,j_DebugAssert
 0xfc314dfc,j_bzero
 0xfc314e04,j_dry_memcpy
+0xfc314f49,mzrm_createmsg
+0xfc31503d,mzrm_sendmsg
 0xfc3396ab,PowerOffIris_FW
 0xfc3398a1,GetIrisAv_FW
 0xfc3398cd,GetIrisCurrentAv_FW
@@ -1371,6 +1374,7 @@
 0xfc38b239,task_Epilog
 0xfc38b263,EpilogMenu_FW
 0xfc38ba49,transfer_src_overlay
+0xfc38c553,transfer_src_overlay_helper
 0xfc38ccf5,j_malloc
 0xfc38ccf9,j_free
 0xfc38ccfd,malloc_strictly
@@ -1393,6 +1397,7 @@
 0xfc3aa5b1,UIFS_StartMoviePlay_FW
 0xfc3c5e35,qsort
 0xfc3e3b59,task_FmidTask
+0xfc3eb657,GraphicSystemCoreFinish
 0xfc3ee655,CheckSafShadingData_FW
 0xfc3ee663,CheckFpgaLastVer_FW
 0xfc3ee67f,Capture.SetGainAdjustmentMode_FW
