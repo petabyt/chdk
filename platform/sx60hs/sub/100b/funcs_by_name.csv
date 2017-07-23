@@ -2184,6 +2184,7 @@
 0xfc1493e3,TerminateTestRec_FW
 0xfc0851b7,TerminateWLAN_FW
 0x010e5e6f,time
+0xfc33709d,transfer_src_overlay
 0x010e589b,TryPostMessageQueue
 0x010e57d3,TryReceiveMessageQueue
 0x010e59fd,TryTakeSemaphore

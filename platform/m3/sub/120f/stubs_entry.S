@@ -99,6 +99,7 @@ DEF(jpeg_count_str                    ,0x0016cc9c) // Found @0xfc1a0b60
 //DEF(zoom_busy                         ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 //DEF(focus_busy                        ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 DEF(_nrflag                           ,0x000287dc) // (0x287d4+0x8) Found @0xfc3f574e
+//DEF(active_bitmap_buffer              ,0x0000c170), ** != ** stubs_min = 0x0000c16c (0xC16C)
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277b06
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc374285
@@ -258,6 +259,7 @@ NHSTUB(PTM_GetCurrentItem                     ,0xfc36e8d7) //  0
 NHSTUB(DisableISDriveError                    ,0xfc44ddbd) //  0
 NHSTUB(bzero                                  ,0x01100410) //  0
 NHSTUB(memset32                               ,0x01100414) //  0
+NHSTUB(transfer_src_overlay                   ,0xfc37f013) //  0
 NHSTUB(PT_MFOn                                ,0xfc0ab61d) //  0
 NHSTUB(PT_MFOff                               ,0xfc0ab651) //  0
 NHSTUB(GetAdChValue                           ,0xfc1f35e7) //  0

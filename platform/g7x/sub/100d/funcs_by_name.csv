@@ -2030,6 +2030,7 @@
 0xfc1c0389,TP_DumpCalibrationData_FW
 0xfc0e1db7,TP_FirmwareUpdate_FW
 0xfc0e1de9,TP_GetFirmwareVersion_FW
+0xfc36168b,transfer_src_overlay
 0x010e58c7,TryPostMessageQueue
 0x010e57ff,TryReceiveMessageQueue
 0x010e5a29,TryTakeSemaphore

@@ -1841,6 +1841,7 @@
 0xfc0c908d,TerminateTestRec_FW
 0xfc08134b,TerminateWLAN_FW
 0x010c5ef1,time
+0xfc143345,transfer_src_overlay
 0xfc187c83,TryGPSforAdjustment_FW
 0x010c589f,TryPostMessageQueue
 0x010c57ed,TryReceiveMessageQueue

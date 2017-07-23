@@ -72,6 +72,7 @@ DEF(jpeg_count_str                    ,0x0015d630) // Found @0xfc103a94
 DEF(zoom_busy                         ,0x00013e18) // (0x13df8+0x20) Found @0xfc1dac7e
 DEF(focus_busy                        ,0x00013bb0) // (0x13ba8+0x8) Found @0xfc31ef16
 DEF(_nrflag                           ,0x0001fa4c) // (0x1fa48+0x4) Found @0xfc383b70
+//DEF(active_bitmap_buffer              ,0x0000ca38), ** != ** stubs_min = 0x0000ca34 (0xca34)
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc325d21
@@ -229,6 +230,7 @@ NHSTUB(DisableISDriveError                    ,0xfc3d2a2d) //  0
 NHSTUB(SetHPTimerAfterNow                     ,0xfc158d8d) //  0
 NHSTUB(bzero                                  ,0x01106b5c) //  0
 NHSTUB(memset32                               ,0x01106b60) //  0
+NHSTUB(transfer_src_overlay                   ,0xfc36168b) //  0
 NHSTUB(PT_MFOn                                ,0xfc2849d9) //  0
 NHSTUB(PT_MFOff                               ,0xfc284a0d) //  0
 NHSTUB(GetAdChValue                           ,0xfc0e103b) //  0
