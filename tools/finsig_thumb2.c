@@ -369,6 +369,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "takesemaphore_low", OPTIONAL|UNUSED },
     { "bzero" }, // 
     { "memset32" }, // actually jump to 2nd instruction of bzero 
+    { "transfer_src_overlay" },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -430,6 +431,7 @@ misc_val_t misc_vals[]={
     { "zoom_busy",          },
     { "focus_busy",         },
     { "_nrflag",            MISC_VAL_OPTIONAL},
+    { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -2303,6 +2305,58 @@ int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t 
     }
     return 0;
 }
+int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *rule) {
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_transfer_src_overlay: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    // assume first / only ref
+    if(!fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        printf("sig_match_transfer_src_overlay: failed to find code ref to %s\n",rule->ref_name);
+        return 0;
+    }
+    // search backwards for func call
+    uint32_t fadr=0;
+    int i;
+    for(i=1; i<=5; i++) {
+        if(!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i))) {
+            printf("sig_match_transfer_src_overlay: disasm failed\n");
+            return 0;
+        }
+        if(insn_match_any(fw->is->insn,match_bl_blximm)){
+            fadr=get_branch_call_insn_target(fw,fw->is);
+            break;
+        }
+    }
+    if(!fadr) {
+        printf("sig_match_transfer_src_overlay: failed to find bl1\n");
+    }
+    // follow
+    disasm_iter_init(fw,is,fadr);
+    // skip to debugassert
+    if(!find_next_sig_call(fw,is,32,"DebugAssert")) {
+        printf("sig_match_transfer_src_overlay: no match DebugAssert\n");
+        return 0;
+    }
+    var_ldr_desc_t desc;
+    if(!find_and_get_var_ldr(fw, is, 20, ARM_REG_R0, &desc)) {
+        printf("sig_match_transfer_src_overlay: no match ldr\n");
+        return 0;
+    }
+    // following should be call
+    if(!insn_match_find_next(fw,is,1,match_bl_blximm)) {
+        printf("sig_match_transfer_src_overlay: no match bl 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // adding active_bitmap_buffer here
+    // note 4 different from value used on many ports, but the value nromally sent to transfer_src_overlay
+    save_misc_val("active_bitmap_buffer",desc.adr_adj,desc.off,(uint32_t)is->insn->address);
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -2521,7 +2575,7 @@ int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *ru
         }
         // some cameras have a mov and an extra call
         if(!disasm_iter(fw,is)) {
-            // printf("sig_match_var_struct_get: disasm failed\n");
+            // printf("sig_match_get_canon_mode_list: disasm failed\n");
             return 0;
         }
         const insn_match_t match_mov_r0_1[]={
@@ -2787,10 +2841,9 @@ int sig_match__nrflag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_misc_val(rule->name,adr,disp,fadr);
     return 1;
 }
-
 // get the address used by a function that does something like
 // ldr rx =base
-// ldr r0 [rx, offset] (optional)
+// ldr r0 [rx, offset]
 // bx lr
 int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -2798,43 +2851,21 @@ int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     uint32_t fadr=is->adr;
-    if(!disasm_iter(fw,is)) {
-        printf("sig_match_var_struct_get: disasm failed\n");
+    var_ldr_desc_t desc;
+    if(!find_and_get_var_ldr(fw, is, 1, ARM_REG_R0, &desc)) {
+        printf("sig_match_var_struct_get: no match ldr\n");
         return 0;
     }
-    uint32_t adr=LDR_PC2val(fw,is->insn);
-    if(!adr) {
-        // printf("sig_match_var_struct_get: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
-        return  0;
-    }
-    arm_reg reg_base = is->insn->detail->arm.operands[0].reg; // reg value was loaded into
     if(!disasm_iter(fw,is)) {
         printf("sig_match_var_struct_get: disasm failed\n");
-        return 0;
-    }
-    uint32_t disp=0;
-    if(is->insn->id == ARM_INS_LDR) {
-        if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0
-            || is->insn->detail->arm.operands[1].mem.base != reg_base) {
-            // printf("sig_match_var_struct_get: no ldr match\n");
-            return 0;
-        }
-        disp = is->insn->detail->arm.operands[1].mem.disp;
-        if(!disasm_iter(fw,is)) {
-            printf("sig_match_var_struct_get: disasm failed\n");
-            return 0;
-        }
-    } else if(reg_base != ARM_REG_R0) {
-        // if no second LDR, first must be into R0
-        // printf("sig_match_var_struct_get: not r0\n");
         return 0;
     }
     // TODO could check for other RET type instructions
     if(!insn_match(is->insn,match_bxlr)) {
-        // printf("sig_match_var_struct_get: no match BX LR\n");
+        printf("sig_match_var_struct_get: no match BX LR\n");
         return 0;
     }
-    save_misc_val(rule->name,adr,disp,fadr);
+    save_misc_val(rule->name,desc.adr_adj,desc.off,fadr);
     return 1;
 }
 
@@ -3392,6 +3423,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
 {sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
+{sig_match_transfer_src_overlay,"transfer_src_overlay","Window_EmergencyRefreshPhysicalScreen",},
 {NULL},
 };
 

@@ -1314,6 +1314,72 @@ uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is)
     return 0;
 }
 
+/*
+advance is up to max_insns looking for the start of a sequence like
+LDR Rbase,=adr
+SUB Rbase,#adj // optional, may be any add/sub variant
+LDR Rval,[Rbase + #off]
+returns 1 if found, 0 if not
+stores registers and constants in *result if successful
+
+TODO similar code for STR would be useful, but in many cases would have to handle load or move into reg_val
+*/
+int find_and_get_var_ldr(firmware *fw,
+                            iter_state_t *is,
+                            int max_insns,
+                            arm_reg match_val_reg, // ARM_REG_INVALID for any
+                            var_ldr_desc_t *result)
+
+{
+    var_ldr_desc_t r;
+    int i=0;
+    while(i < max_insns) {
+        // disassembly failed, no match (could ignore..)
+        if(!disasm_iter(fw,is)) {
+            return 0;
+        }
+        if(!isLDR_PC(is->insn)) {
+            continue;
+        }
+        r.reg_base=is->insn->detail->arm.operands[0].reg;
+        r.adr_base=LDR_PC2val(fw,is->insn);
+        if(!disasm_iter(fw,is)) {
+            return 0;
+        }
+        i++;
+        // firmware may use add/sub to get actual firmware base address
+        if(isADDx_imm(is->insn) || isSUBx_imm(is->insn)) {
+            if(is->insn->detail->arm.operands[0].reg != r.reg_base) {
+                continue;
+            }
+            if(isADDx_imm(is->insn)) {
+                r.adj=is->insn->detail->arm.operands[1].imm;
+            } else {
+                r.adj=-is->insn->detail->arm.operands[1].imm;
+            }
+            if(!disasm_iter(fw,is)) {
+                return 0;
+            }
+            i++;
+        } else {
+            r.adj=0;
+        }
+        if(is->insn->id != ARM_INS_LDR || is->insn->detail->arm.operands[1].reg != r.reg_base) {
+            continue;
+        }
+        r.reg_val = is->insn->detail->arm.operands[0].reg;
+        if(match_val_reg != ARM_REG_INVALID && (r.reg_val != match_val_reg)) {
+            continue;
+        }
+        r.off = is->insn->detail->arm.operands[1].mem.disp;
+        r.adr_adj = r.adr_base + r.adj;
+        r.adr_final = r.adr_adj + r.off;
+        memcpy(result,&r,sizeof(r));
+        return 1;
+    }
+    return 0;
+}
+
 // ****** utilities for matching instructions and instruction sequences ******
 
 // some common matches for insn_match_find_next

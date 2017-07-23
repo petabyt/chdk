@@ -401,6 +401,33 @@ returns 0 if current instruction not branch/call
 */
 uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is);
 
+/*
+advance is up to max_insns looking for the start of a sequence like
+LDR Rbase,=adr
+SUB Rbase,#adj // optional, may be any add/sub variant
+LDR Rval,[Rbase + #off]
+returns 1 if found, 0 if not
+stores registers and constants in *result if successful
+
+TODO similar code for STR would be useful, but in many cases would have to handle load or move into reg_val
+*/
+typedef struct {
+    arm_reg reg_base;
+    arm_reg reg_val;
+    uint32_t adr_base; // address from original LDR 
+    uint32_t adr_adj; // address adjusted by adj if present, normally struct address useful for stubs comments
+    uint32_t adr_final; // full address
+    // offsets are guaranteed to be small
+    int adj;
+    int off;
+} var_ldr_desc_t;
+int find_and_get_var_ldr(firmware *fw,
+                            iter_state_t *is,
+                            int max_insns,
+                            arm_reg match_val_reg, // ARM_REG_INVALID for any
+                            var_ldr_desc_t *result);
+
+
 // ****** utilities for matching instructions and instruction sequences ******
 
 // use XXX_INVALID (=0) for don't care
