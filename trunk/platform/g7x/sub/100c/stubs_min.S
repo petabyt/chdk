@@ -27,7 +27,6 @@ DEF(recreview_hold                ,0x9194)
 // unchanged from 100d - 101 entries, 2 words each, first is fl
 DEF(focus_len_table                         ,0xfdf2deb4)
 DEF(bitmap_buffer, 0xca3c) // equivalent to 100d - struct starts @ 0xca04, from sub @0xfc361a75
-DEF(active_bitmap_buffer, 0xca34) // assumed same as 100d - guess, based on similarity to sx280
 DEF(dial_positions,0x00010320) //  equivalent to 100d - from sub_fc0774e4, Jogdial at 0x00010320 0x00010328, front dial at 0x00010324 0x0001032c
 
 // to hook asserts for debugging
