@@ -498,6 +498,7 @@
 0xfc143345,transfer_src_overlay
 0xfc143bd3,ScreenLock
 0xfc143c0b,ScreenUnlock
+0xfc143c3f,transfer_src_overlay_helper
 0xfc147775,task_FaceFrame
 0xfc148f2d,PT_PlaySound
 0xfc14a149,displaybusyonscreen
@@ -511,6 +512,7 @@
 0xfc14d819,task_AprocBpGenTask
 0xfc1511e7,task_DetSeqT
 0xfc151823,task_DetSeqSadT
+0xfc1598ab,GraphicSystemCoreFinish_helper
 0xfc15a7e5,AllocateUncacheableMemory
 0xfc15a811,FreeUncacheableMemory
 0xfc15e241,task_WBIntegTask
@@ -886,6 +888,8 @@
 0xfc251d14,j_DebugAssert
 0xfc251d3c,j_dry_memcpy
 0xfc251d44,j_bzero
+0xfc254691,mzrm_createmsg
+0xfc25476d,mzrm_sendmsg
 0xfc25525b,task_FocusEvent
 0xfc25b3fb,GetFocusLensResetPosition_FW
 0xfc25b407,GetFocusLensResetDefaultPosition_FW
@@ -1088,6 +1092,7 @@
 0xfc2be953,qsort
 0xfc2be999,memset
 0xfc2be999,memset_FW
+0xfc2dc521,GraphicSystemCoreFinish
 0xfc2ef9cd,EF.StartEFCharge_FW
 0xfc2ef9fb,EF.StopEFCharge_FW
 0xfc2efa05,EF.SetEFChargeTimeOut_FW

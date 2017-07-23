@@ -754,6 +754,8 @@
 0x010e5ad1,GiveSemaphore
 0x010e5ad1,GiveSemaphore_FW
 0x010e288b,givesemaphore_low
+0xfc3807c7,GraphicSystemCoreFinish
+0xfc0eef4f,GraphicSystemCoreFinish_helper
 0xfc15a94d,GUISrv_StartGUISystem_FW
 0xfc091baf,HardwareDefect_FW
 0xfc091b7f,HardwareDefectWithRestart_FW
@@ -1282,6 +1284,8 @@
 0xfc3d24f7,MoveZoomLensWithPosition_FW
 0xfc48a705,MoveZoomPoint_FW
 0xfc48a6df,MoveZoomPosition_FW
+0xfc3253d1,mzrm_createmsg
+0xfc3254c5,mzrm_sendmsg
 0xfc099dc7,NewTaskShell_FW
 0xfc0beb1b,NFCEvt.Create_FW
 0xfc4f61c3,NotifyISMacroDistance_FW
@@ -2031,6 +2035,7 @@
 0xfc0e1db7,TP_FirmwareUpdate_FW
 0xfc0e1de9,TP_GetFirmwareVersion_FW
 0xfc361697,transfer_src_overlay
+0xfc362025,transfer_src_overlay_helper
 0x010e58c7,TryPostMessageQueue
 0x010e57ff,TryReceiveMessageQueue
 0x010e5a29,TryTakeSemaphore

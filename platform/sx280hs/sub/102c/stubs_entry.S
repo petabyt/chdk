@@ -226,9 +226,9 @@ NHSTUB(EngDrvRead                             ,0xfc2b7d27) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc2b06cb) //  0
 NHSTUB(DisableISDriveError                    ,0xfc3b8b2d) //  0
 //NHSTUB(SetHPTimerAfterNow                   ,0xfc142331) //  0            == 0xfc142331
+NHSTUB(transfer_src_overlay                   ,0xfc143345) //  0
 NHSTUB(bzero                                  ,0x010da260) //  0
 NHSTUB(memset32                               ,0x010da264) //  0
-NHSTUB(transfer_src_overlay                   ,0xfc143345) //  0
 NHSTUB(PT_MFOn                                ,0xfc20ee2b) //  0
 NHSTUB(PT_MFOff                               ,0xfc20ee5b) //  0
 NHSTUB(GetAdChValue                           ,0xfc0c33c7) //  0

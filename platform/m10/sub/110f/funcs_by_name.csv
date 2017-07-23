@@ -916,6 +916,8 @@
 0xbfe1545d,GiveSemaphore
 0xbfe1545d,GiveSemaphore_FW
 0xbfe1208b,givesemaphore_low
+0xfc3eb68b,GraphicSystemCoreFinish
+0xfc20da5b,GraphicSystemCoreFinish_helper
 0xfc138f01,GUISrv_StartGUISystem_FW
 0xfc37256f,HardwareDefect_FW
 0xfc422fcd,HdmiAudioSampleFreq_FW
@@ -1481,6 +1483,8 @@
 0xfc4402f5,MoveZoomLensWithPoint_FW
 0xfc440327,MoveZoomLensWithPointImmediateReturn_FW
 0xfc440357,MoveZoomLensWithPosition_FW
+0xfc314f7d,mzrm_createmsg
+0xfc315071,mzrm_sendmsg
 0xfc0be817,NewTaskShell_FW
 0xfc0d22af,NFCEvt.Create_FW
 0xfc0d17b1,NFCEvt.IsNfcStart_FW
@@ -2290,6 +2294,7 @@
 0xfc132f4b,TP_FirmwareUpdate_FW
 0xfc132f7d,TP_GetFirmwareVersion_FW
 0xfc38ba7d,transfer_src_overlay
+0xfc38c587,transfer_src_overlay_helper
 0xbfe15253,TryPostMessageQueue
 0xbfe1518b,TryReceiveMessageQueue
 0xbfe153b5,TryTakeSemaphore

@@ -356,6 +356,7 @@
 0xfc0e7d41,memcpy
 0xfc0e7d41,memcpy_FW
 0xfc0e7dd5,strrchr
+0xfc0eef4f,GraphicSystemCoreFinish_helper
 0xfc0ef0cd,AllocateUncacheableMemory
 0xfc0ef0f9,FreeUncacheableMemory
 0xfc0ef2c9,E2LatOn_FW
@@ -983,6 +984,8 @@
 0xfc31ff07,IsFocusLensOutSidePosition_FW
 0xfc31ff25,GetFocusResetPosition_FW
 0xfc31ff7f,GetFocusDefaultResetPosition_FW
+0xfc3253d1,mzrm_createmsg
+0xfc3254c5,mzrm_sendmsg
 0xfc325b3f,DeleteFile_Fut
 0xfc325b89,DeleteDirectory_Fut
 0xfc325bc3,Fopen_Fut
@@ -1132,6 +1135,7 @@
 0xfc361697,transfer_src_overlay
 0xfc361fcf,ScreenLock
 0xfc36200d,ScreenUnlock
+0xfc362025,transfer_src_overlay_helper
 0xfc3623c5,malloc
 0xfc3623fb,free
 0xfc36242d,strcat
@@ -1147,6 +1151,7 @@
 0xfc36257d,memcmp
 0xfc36257d,memcmp_FW
 0xfc37a525,task_FmidTask
+0xfc3807c7,GraphicSystemCoreFinish
 0xfc383b7d,NRTBL.SetDarkSubType_FW
 0xfc383b8f,NRTBL.SetDefectCorrectType_FW
 0xfc383ba1,NRTBL.SetTassenType_FW

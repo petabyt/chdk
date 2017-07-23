@@ -675,6 +675,8 @@
 0xfc1882f5,GPS_TIMER_LOW_FW
 0xfc187c83,GPS_TRY_FOR_ADJ_FW
 0xfc0c3b85,GPS_WARM_START_FW
+0xfc2dc521,GraphicSystemCoreFinish
+0xfc1598ab,GraphicSystemCoreFinish_helper
 0xfc0d26cd,GUISrv_StartGUISystem_FW
 0xfc07b033,HardwareDefect_FW
 0xfc07b003,HardwareDefectWithRestart_FW
@@ -1164,6 +1166,8 @@
 0xfc3b8571,MoveZoomLensWithPosition_FW
 0xfc3ad2eb,MoveZoomPoint_FW
 0xfc3ad2c5,MoveZoomPosition_FW
+0xfc254691,mzrm_createmsg
+0xfc25476d,mzrm_sendmsg
 0xfc081b9b,NewTaskShell_FW
 0xfc3e3d67,NotifyISMacroDistance_FW
 0xfc0225a5,NR_SetDoubleNRType_FW
@@ -1842,6 +1846,7 @@
 0xfc08134b,TerminateWLAN_FW
 0x010c5ef1,time
 0xfc143345,transfer_src_overlay
+0xfc143c3f,transfer_src_overlay_helper
 0xfc187c83,TryGPSforAdjustment_FW
 0x010c589f,TryPostMessageQueue
 0x010c57ed,TryReceiveMessageQueue
