@@ -193,6 +193,7 @@ void usage(void) {
                     " -f=<chdk|objdump> format as CHDK inline ASM, or similar to objdump (default clean ASM)\n"
                     " -armv5 make firmware_load treat firmware as armv5\n"
                     " -stubs[=dir] load / use stubs from dir (default .) for names\n"
+                    " -props=<n> load propset<n>.h and identify propcases in calls. Requires -stubs\n"
                     " -v increase verbosity\n"
                     " -d-const add details about pc relative constant LDRs\n"
                     " -d-bin print instruction hex dump\n"
