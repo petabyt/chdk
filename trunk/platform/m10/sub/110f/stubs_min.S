@@ -24,8 +24,6 @@ FAKEDEF(focus_busy ,1)
 
 DEF(bitmap_buffer                               ,0xb968) // buffers in reverse order
 
-DEF(active_bitmap_buffer                        ,0xb960) // 0xb968 - 8, guess
-
 // FAKEDEF(active_viewport_buffer, 1) // ?
 DEF(current_viewport_buffer                     ,0x00008810) // found @fc12a516, 0x8754 + 0x80 + 0x3c
 // 42CF6A00 430EB200 434DFA00 438D4200, 720x480 in 736x480 buffer when using LCD, there's space for 1920x1080 uyvy

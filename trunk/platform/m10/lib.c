@@ -2,15 +2,10 @@
 #include "lolevel.h"
 #include "live_view.h"
 
-static char* frame_buffer[2];
-
 void vid_bitmap_refresh() {
-    extern void _displaybusyonscreen();
-    extern void _undisplaybusyonscreen();
-
-    // clears perfectly but blinks and is asynchronous
-    _displaybusyonscreen();
-    _undisplaybusyonscreen();
+    extern void _transfer_src_overlay(int);
+    _transfer_src_overlay(0);
+    _transfer_src_overlay(1);
 }
 
 void shutdown() {
