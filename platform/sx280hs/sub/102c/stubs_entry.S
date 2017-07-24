@@ -69,7 +69,7 @@
 //DEF(jpeg_count_str                    ,0x000e4308),          stubs_min = 0x000e4308 (0x000e4308)
 //DEF(zoom_busy                         ,0x00010814),          stubs_min = 0x00010814 (0x00010814)
 //DEF(focus_busy                        ,0x00010694),          stubs_min = 0x00010694 (0x00010694)
-//DEF(active_bitmap_buffer              ,0x0000ac14), ** != ** stubs_min = 0x0000ac10 (0xac10)
+DEF(active_bitmap_buffer              ,0x0000ac14) // (0xabdc+0x38) Found @0xfc143c7e
 DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
 
 //NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc20decb
