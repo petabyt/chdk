@@ -68,7 +68,7 @@ DEF(jpeg_count_str                    ,0x00190ac0) // Found @0xfc1a15f6
 //DEF(zoom_busy                         ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 //DEF(focus_busy                        ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 //DEF(_nrflag                           ,0x00029c00),          stubs_min = 0x00029c00 (0x29c00)
-//DEF(active_bitmap_buffer              ,0x0000b964), ** != ** stubs_min = 0x0000b960 (0xb960)
+DEF(active_bitmap_buffer              ,0x0000b964) // (0xb924+0x40) Found @0xfc38c582
 DEF_CONST(uiprop_count                      ,0x000000d1) // Found @0xfc27de04
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc38a185

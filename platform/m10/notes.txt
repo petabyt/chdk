@@ -2,6 +2,9 @@ EOS M10 notes
 
 Default ALT button is the playback button.
 
+The half press zebra shortcut button is "UP" on the 4-way controller.
+
+The RAW shortcut (and generic shortcut) button is the VIDEO button.
 
 Issues
 
@@ -13,7 +16,7 @@ Issues
 - some framebuffer related features do not work properly
     - zebra (some menu options are ignored)
     - edge overlay (drawings accumulate)
-- booting with .fi2 is untested, but most likely makes the camera unstable
+- booting with .fi2 does not work (update file error)
 - CHDK dark frame subtraction control only seems effective when Canon setting is on AUTO
 
 - Exposure overrides may fail to apply when shutter is held halfway down for a while

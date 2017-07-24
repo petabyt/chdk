@@ -40,9 +40,9 @@
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
-    // zebra and histo don't currently work
+    // half press shortcuts (zebra assigned to a non-conflicting button, CHDK histogram makes no sense)
     #define SHORTCUT_TOGGLE_HISTO               KEY_DUMMY
-    #define SHORTCUT_TOGGLE_ZEBRA               KEY_DUMMY
+    #define SHORTCUT_TOGGLE_ZEBRA               KEY_UP
 
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
