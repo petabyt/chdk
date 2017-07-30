@@ -424,6 +424,8 @@ void describe_prop_call(firmware *fw,iter_state_t *is, unsigned dis_opts, char *
     osig* ostub = find_sig_val(fw->sv->propcases,regs[0]);
     if(ostub && ostub->val) {
         sprintf(comment+strlen(comment)," %s (%d) ",ostub->nm,ostub->val);
+    } else {
+        sprintf(comment+strlen(comment)," (%d) ",regs[0]); // print number on propcase call line for easier searching
     }
 }
 
