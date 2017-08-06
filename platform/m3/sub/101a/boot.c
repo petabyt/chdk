@@ -484,19 +484,6 @@ void __attribute__((naked,noinline)) sub_fc083bea_my() {
 "                 ldr     r0, =0xfc083f2c\n" // "PhySw"
 "                 movw    r2, #0x2000\n"	 // original value 0x800
 "                 blx     sub_fc3022c0\n"
-
-        "MOV    R1, #7\n"
-        "MCR    p15, 0, R1,c6,c2,0\n" // region 7
-
-        "LDR    R1, =0xA0000000\n"
-        "MCR    p15, 0, R1,c6,c1,0\n" // MPU region base register
-
-        "LDR    R1, =0x0000002D\n"        
-        "MCR    p15, 0, R1,c6,c1,2\n" // MPU Region Size and Enable Register
-
-        "LDR    R1, =0x00000324\n"        
-        "MCR    p15, 0, R1,c6,c1,4\n" // MPU Region Access Control Register
-
 "                 str     r0, [r4,#4]\n"
 " locret_fc083c16:\n"
 				"pop     {r3, r4, r5, pc}\n"

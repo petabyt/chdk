@@ -5,15 +5,12 @@
 // debug
 //#define CAPTSEQ_DEBUG_LOG 1
 
-// TODO dummy
-static long fake_nrflag=0;
-static long *nrflag=&fake_nrflag;
-// NOTE sx280hs had
-//#define NR_AUTO (0) // not needed (in fact, it makes the camera crash)
-
 extern int active_raw_buffer;
 // debug
 extern void _LogCameraEvent(int id,const char *fmt,...);
+
+#define USE_STUBS_NRFLAG 1
+#define NR_AUTO (-1) // default value if NRTBL.SetDarkSubType not used is -1 (0 probalby works the same), set to enable auto
 
 #ifdef CAPTSEQ_DEBUG_LOG
 extern char *hook_raw_image_addr(void);
@@ -624,14 +621,18 @@ void __attribute__((naked,noinline)) sub_fc11d71e_my() {
 "       mov     r4, r0\n"
 "       lsls    r0, r0, #0x1f\n"
 "       bne     loc_fc11d89c\n"
+"bl capt_seq_hook_set_nr\n"
+#ifdef CAPTSEQ_DEBUG_LOG
+"bl log_nr_call\n"
+#endif
 "       mov     r0, r5\n"
-"       bl      sub_fc18ac72\n"
+"       bl      sub_fc18ac72\n" // NR evaluation
 "       mov     r0, r5\n"
 "       bl      sub_fc11103c\n"
 "       ldr     r1, =0x03ee78\n"
 "       movs    r2, #4\n"
 "       movs    r0, #0x90\n"
-"       bl      sub_fc373498\n"
+"       bl      sub_fc373498\n" // GetPropertyCase
 "       lsls    r0, r0, #0x1f\n"
 "       beq     loc_fc11d7c4\n"
 "       movs    r0, #0\n"
@@ -802,6 +803,9 @@ void __attribute__((naked,noinline)) sub_fc11d71e_my() {
 }	
 
 #ifdef CAPTSEQ_DEBUG_LOG
+void log_nr_call(void) {
+    _LogCameraEvent(0x60,"nr hook %d",_nrflag);
+}
 void log_remote_hook(void) {
     _LogCameraEvent(0x60,"remote hook");
 }
