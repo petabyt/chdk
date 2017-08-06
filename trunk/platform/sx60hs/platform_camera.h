@@ -181,4 +181,5 @@
     #define CAM_AF_LED     1
     #define CAM_SIMPLE_MOVIE_STATUS 1
     #define CAM_IS_VID_REC_WORKS 1
+    #define CAM_HOTSHOE_OVERRIDE 1
 //--------------------------------------------------

@@ -12,47 +12,11 @@ extern char* raw_buffers_canon_raw[];
 extern char* raw_buffers_jpeg[];
 
 void vid_bitmap_refresh() {
-    extern int full_screen_refresh;
-    extern void _ScreenUnlock();
-    extern void _ScreenLock();
-    extern void _displaybusyonscreen();
-    extern void _undisplaybusyonscreen();
 
-    
-    // clears perfectly but blinks and is asynchronous
-    _displaybusyonscreen();
-    _undisplaybusyonscreen();
-/*    _LogCameraEvent(0x20,"lc  avb:%d gdt:%d ",
-                   active_bitmap_buffer,
-                   displaytype 
-                   );
-*/     
-    // stuff commented on sx280
-    /*
-    // completely ineffective
-    extern void _refresh_bitmap_buf_from(int, int);
-    _refresh_bitmap_buf_from(0,0);
-    */
-
-    /*
-    // flips the active buffer but doesn't erase areas not occupied by the canon osd
-    _ScreenLock();
-    full_screen_refresh |= 3;
-    _ScreenUnlock();
-    */
-
-    /*
-    //ineffective, like screenlock/unlock, crashed movie rec once
-    extern void _RefreshPhysicalScreen();
-    int saved_abdcplus4c = *(int*)(0xabdc+0x4c);
-    *(int*)(0xabdc+0x4c) = 0;
-    _RefreshPhysicalScreen(0);
-    *(int*)(0xabdc+0x4c) = saved_abdcplus4c;
-    */
-
-    //DisplayPhysicalScreenCBR NG
-    //Window_EmergencyRefresh NG crash
-
+    extern int active_bitmap_buffer;
+    extern void _transfer_src_overlay(int);
+    _transfer_src_overlay(0);
+    _transfer_src_overlay(1);
 }
 
 void shutdown() {

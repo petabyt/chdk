@@ -20,6 +20,7 @@ int get_usb_bit() {
 }
 /* some other keys
   shortcut 0x4000 bit 14
+
   AvExpress/Trash 0x400 bit 10
   AFFrame 0x800 bit 11
   Assist  0x2 bit 1
@@ -140,7 +141,7 @@ void kbd_fetch_data(long *dst)
 {
     _GetKbdState(dst);
     _kbd_read_keys_r2(dst);
-//     if (dst[0] != 0x10077fff || dst[1] != 0x20c08030 || dst[2] != 0x1480043e ) {
-//      _LogCameraEvent(0x20,"kb: %08x %08x %08x",  dst[0], dst[1], dst[2]);
- //    } 
+//     if (dst[0] != 0x00077fff || dst[1] != 0x20808030 || dst[2] != 0x1480043e ) {
+ //     _LogCameraEvent(0x20,"kb: %08x %08x %08x",  dst[0], dst[1], dst[2]);
+  //  } 
 }
