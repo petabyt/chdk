@@ -2176,6 +2176,8 @@
 0xfc45ffdd,GetFocusLensCurrentPositionWithMotor_FW
 0xfc468e21,task_ReadMultiConTask
 0xfc477fa3,task_Raw2Ss2YuvTask
+0xfc4a5919,zicokick_start
+0xfc4a5995,zicokick_copy
 0xfc4a7101,EF.GetEFModExamDriveType_FW
 0xfc4a710d,EF.IsIrisTypeKosaiShibori_FW
 0xfc4aadb1,Bat_Calc_FW

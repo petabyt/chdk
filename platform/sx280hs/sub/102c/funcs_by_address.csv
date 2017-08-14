@@ -1620,6 +1620,8 @@
 0xfc3b9971,MakeBootDisk_FW
 0xfc3b997d,MakeScriptDisk_FW
 0xfc3bc66b,task_Raw2Ss2YuvTask
+0xfc3d8f05,zicokick_start
+0xfc3d8f79,zicokick_copy
 0xfc3dcd81,Bat_Calc_FW
 0xfc3dcd81,CalculateBatSenseOffset_FW
 0xfc3dce2b,GetCdsGainValue_FW
