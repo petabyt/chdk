@@ -2011,6 +2011,8 @@
 0xfc512219,task_ImgPlyTask
 0xfc512325,task_ImgPlyLowTask
 0xfc523f03,task_Raw2Ss2YuvTask
+0xfc53809d,zicokick_start
+0xfc538119,zicokick_copy
 0xfc53dcc1,EF.GetEFModExamDriveType_FW
 0xfc53dccd,EF.IsIrisTypeKosaiShibori_FW
 0xfc542451,saf_setcontrolmode_FW

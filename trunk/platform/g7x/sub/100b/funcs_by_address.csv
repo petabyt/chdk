@@ -1804,6 +1804,8 @@
 0xfc497333,task_Cave2RecTask
 0xfc4982e9,task_TricDecVTask
 0xfc4ace93,task_Raw2Ss2YuvTask
+0xfc4e214d,zicokick_start
+0xfc4e21c9,zicokick_copy
 0xfc4e30bd,task_DvlpCs
 0xfc4e342d,EF.GetEFModExamDriveType_FW
 0xfc4e3439,EF.IsIrisTypeKosaiShibori_FW

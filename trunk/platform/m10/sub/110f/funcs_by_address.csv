@@ -1962,6 +1962,8 @@
 0xfc515929,LiveImageTool.Dister_FW
 0xfc5228e1,task_ImgPlyDC
 0xfc5229ed,task_ImgPlyDCLow
+0xfc541fd1,zicokick_start
+0xfc54204d,zicokick_copy
 0xfc542ee5,FPGA.Update_FW
 0xfc542ee9,FPGA.Ver_FW
 0xfc542eed,FPGA.Bypass_FW

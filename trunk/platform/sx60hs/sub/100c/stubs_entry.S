@@ -18,6 +18,11 @@
 // RAM code 0x010e1000 - 0x0110daa4 copied from 0xfcd16b64 ( 182948 bytes)
 // RAM data 0x00008000 - 0x0003260c copied from 0xfccec558 ( 173580 bytes)
 
+// Zico Xtensa blobs:
+// zico_0 0xbff20000 - 0xbff277b8 copied from 0xfcad2aa0 (  30648 bytes)
+// zico_1 0xbff00000 - 0xbff04ad0 copied from 0xfcada260 (  19152 bytes)
+// zico_2 0x80a00000 - 0x80b060f0 copied from 0xfcaded38 (1073392 bytes)
+
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
 //#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher

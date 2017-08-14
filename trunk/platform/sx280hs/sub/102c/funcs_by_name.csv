@@ -1943,3 +1943,5 @@
 0xfc3e3b0d,WritePWMAdjustment_FW
 0xfc0d1ae9,WriteToRom_FW
 0xfc0c5e71,WRITEUSERSETTINGDATATOFROM_FW
+0xfc3d8f79,zicokick_copy
+0xfc3d8f05,zicokick_start

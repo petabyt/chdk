@@ -2306,3 +2306,5 @@
 0xfc0e2163,WriteToRom_FW
 0xfc0e3d6d,WRITEUSERSETTINGDATATOFROM_FW
 0xfc382bb7,WriteWLANMACAddressToFROM_FW
+0xfc4a5999,zicokick_copy
+0xfc4a591d,zicokick_start
