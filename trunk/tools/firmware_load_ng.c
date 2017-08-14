@@ -1889,7 +1889,7 @@ void firmware_init_data_ranges(firmware *fw)
             fw->data_start=dst_start;
             fw->data_len=dst_end-dst_start;
             fw_add_adr_range(fw,dst_start,dst_end,src_start, ADR_RANGE_INIT_DATA);
-        } else if(dst_start < 0x08000000) { /// highest known first copied ram code 0x010c1000
+        } else if(dst_start < 0x08000000) { /// highest known first copied ram code 0x01900000
             // fprintf(stderr,"code1? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
             if(base2_found) {
                 fprintf(stderr,"firmware_init_data_ranges: base2 already found, unexpected start 0x%08x src 0x%08x end 0x%08x\n",
@@ -1905,7 +1905,8 @@ void firmware_init_data_ranges(firmware *fw)
                 dst_start != 0x00671000 && 
                 dst_start != 0x006b1000 && 
                 dst_start != 0x010c1000 &&
-                dst_start != 0x010e1000) {
+                dst_start != 0x010e1000 &&
+                dst_start != 0x01900000) {
                 fprintf(stderr,"firmware_init_data_ranges: guess unknown base2 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
             }
@@ -1918,7 +1919,8 @@ void firmware_init_data_ranges(firmware *fw)
                 continue;
             }
             base3_found=1;
-            if(dst_start != 0xbfe10800) { // known value (g5x)
+            if(dst_start != 0xbfe10800 && // known digic 6 value (g5x)
+               dst_start != 0xdffc4900) { // known digic 7 value (m5)
                 fprintf(stderr,"firmware_init_data_ranges: guess unknown base3 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
             }
