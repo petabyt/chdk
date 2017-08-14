@@ -3832,7 +3832,8 @@ int find_ctypes(firmware *fw, int k)
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0x10, 0x10, 0x10, 0x10, 0x20
     };
 
-    if (k < (fw->size8 - sizeof(ctypes)))
+    // > main_offs because d7 firmwares have another ctypes before main firmware
+    if ((k < (fw->size8 - sizeof(ctypes)) && (k > fw->main_offs)))
     {
         if (memcmp(((char*)fw->buf8)+k,ctypes,sizeof(ctypes)) == 0)
         {
