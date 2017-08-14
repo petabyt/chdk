@@ -368,6 +368,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GraphicSystemCoreFinish", OPTIONAL|UNUSED }, // used to identify mzrm message functions
     { "mzrm_createmsg", OPTIONAL|UNUSED },
     { "mzrm_sendmsg", OPTIONAL|UNUSED },
+    { "zicokick_start", OPTIONAL|UNUSED }, // used to identify Zico core Xtensa blobs
+    { "zicokick_copy", OPTIONAL|UNUSED }, // used to identify Zico core Xtensa blobs
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -406,6 +408,16 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     {0,0,0},
 };
 
+#define MISC_BLOB_XTENSA_MAX    5
+#define MISC_BLOB_TYPE_NONE     0
+#define MISC_BLOB_TYPE_XTENSA   1
+typedef struct {
+    int         type;
+    uint32_t    rom_adr; // location of data in ROM, if copied
+    uint32_t    ram_adr; // location of data in RAM
+    uint32_t    size;
+} misc_blob_t;
+
 // for values that don't get a DEF etc
 #define MISC_VAL_NO_STUB    1
 // DEF_CONST instead of DEF
@@ -420,6 +432,7 @@ typedef struct {
     uint32_t    base; // if stub is found as ptr + offset, record
     uint32_t    offset;
     uint32_t    ref_adr; // code address near where value found (TODO may want list)
+    misc_blob_t *blobs; // malloc'd array of blobs if this is a blob type value, terminated with flags = 0
 } misc_val_t;
 
 misc_val_t misc_vals[]={
@@ -443,6 +456,7 @@ misc_val_t misc_vals[]={
     { "canon_mode_list",    MISC_VAL_NO_STUB},
     { "ARAM_HEAP_START",    MISC_VAL_NO_STUB},
     { "ARAM_HEAP_SIZE",     MISC_VAL_NO_STUB},
+    { "zicokick_values",    MISC_VAL_NO_STUB}, // used to identify Zico core Xtensa blobs (dummy for now)
     {0,0,0},
 };
 
@@ -479,6 +493,18 @@ void save_misc_val(const char *name, uint32_t base, uint32_t offset, uint32_t re
     p->base = base;
     p->offset = offset;
     p->ref_adr = ref_adr;
+    p->blobs = NULL;
+}
+void save_misc_val_blobs(const char *name, misc_blob_t *blobs, uint32_t ref_adr)
+{
+    misc_val_t *p=get_misc_val(name);
+    if(!p) {
+        printf("save_misc_val: invalid name %s\n",name);
+        return;
+    }
+    p->val = p->base = p->offset = 0;
+    p->ref_adr = ref_adr;
+    p->blobs = blobs;
 }
 
 // Return the array index of a named function in the array above
@@ -2335,6 +2361,192 @@ int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *r
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+// find function that copies Zico Xtensa blobs to their destination (dryos 52)
+int sig_match_zicokick_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_zicokick_52: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    
+    // search for string ref
+    if(!fw_search_insn(fw,is,search_disasm_str_ref,0,rule->ref_name,(uint32_t)is->adr+SEARCH_NEAR_REF_RANGE)) {
+        printf("sig_match_zicokick_52: failed to find insn ref %s\n",rule->ref_name);
+        return 0;
+    }
+    // check preceding instruction
+    if(!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,1))) {
+        printf("sig_match_zicokick_52: disasm failed\n");
+        return 0;
+    }
+    if (!(isLDR_PC(fw->is->insn) && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R0)) {
+        printf("sig_match_zicokick_52: match ldr r0 failed\n");
+        return 0;
+    }
+    // save backtracked address
+    uint32_t adr=(uint32_t)(fw->is->insn->address) | is->thumb;
+    // step forward one from string ref
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_zicokick_52: disasm failed\n");
+        return 0;
+    }
+    if (is->insn->id == ARM_INS_PUSH && is->insn->detail->arm.operands[0].reg == ARM_REG_R4) {
+        return save_sig_with_j(fw,rule->name,adr);
+    }
+    return 0;
+}
+// find function that copies Zico Xtensa blobs to their destination (dryos >52)
+int sig_match_zicokick_gt52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_zicokick_gt52: failed to find ref %s\n",rule->ref_name);
+        return  0;
+    }
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    
+    // search for string ref
+    if(!fw_search_insn(fw,is,search_disasm_str_ref,0,rule->ref_name,(uint32_t)is->adr+SEARCH_NEAR_REF_RANGE)) {
+        printf("sig_match_zicokick_gt52: failed to find insn ref %s\n",rule->ref_name);
+        return 0;
+    }
+    int i;
+    // search backward for
+    // ldr r0,...
+    // push r4,...
+    for(i=1; i<=8; i++) {
+        if (!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i))) {
+            printf("sig_match_zicokick_gt52: disasm failed\n");
+            return 0;
+        }
+        if (fw->is->insn->id == ARM_INS_PUSH && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R4) {
+            if (!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i+1))) {
+                printf("sig_match_zicokick_gt52: disasm failed\n");
+                return 0;
+            }
+            if (isLDR_PC(fw->is->insn) && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+                return save_sig_with_j(fw,rule->name,(uint32_t)(fw->is->insn->address) | is->thumb);
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+int sig_match_zicokick_copy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // TODO could be less strict on regs, 5 LDRs in a row is rare
+    const insn_match_t match_ldrs_bl[]={
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R1),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R2),  MATCH_OP_MEM_BASE(R0)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(R0)}},
+        {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,30,match_ldrs_bl)) {
+        printf("sig_match_zicokick_copy no match ldr\n");
+        return 0;
+    }
+    // TODO could sanity check bl target
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_zicokick_values(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+// get_call_const_args doesn't currently handle ldr sequence
+#if 0
+    // first call is further from function start
+    if(!find_next_sig_call(fw,is,64,"zicokick_copy")) {
+        printf("sig_match_zicokick_values: no zicokick_copy 1\n");
+        return 0;
+    }
+    while(1) {
+        uint32_t regs[4];
+        if((get_call_const_args(fw,is,7,regs)&0x7)==0x7) {
+            printf("xtensa blob @ 0x%08x, loads to 0x%08x, size 0x%08x\n",regs[1],regs[0],regs[2]);
+        } else {
+            printf("sig_match_zicokick_values: failed to get regs\n");
+        }
+        if(!find_next_sig_call(fw,is,8,"zicokick_copy")) {
+            break;
+        }
+    }
+    return 1;
+#endif
+    int i;
+    uint32_t uv[3] = {0,0,0};
+    int uvi = 0;
+    misc_blob_t *blobs=malloc((MISC_BLOB_XTENSA_MAX + 1)*sizeof(misc_blob_t));
+    int n_blobs = 0;
+
+    for(i=1; i<=64; i++) {
+        if (!disasm_iter(fw,is)) {
+            return 0;
+        }
+        if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].type == ARM_OP_MEM) {
+            uint32_t u = LDR_PC2val(fw,is->insn);
+            if ((u<fw->base+fw->size8) && (u>fw->rom_code_search_max_adr)) {
+                // address outside the main fw
+                if (uvi<3) {
+                    uv[uvi] = u;
+                    uvi++;
+                }
+            }
+        }
+        else if (is->insn->id == ARM_INS_BL) {
+            if (uvi==3) {
+                // func call, all 3 addresses are in collection
+                uint32_t bsize, bloadedto, badr, u;
+                int j;
+                badr = MAX(MAX(uv[0],uv[1]),uv[2]);
+                for (j=0; j<3; j++) {
+                    if (uv[j]!=badr) {
+                        u = fw_u32(fw, uv[j]);
+                        if (u<1024*1024*2) {
+                            bsize = u;
+                        }
+                        else {
+                            bloadedto = u;
+                        }
+                    }
+                }
+                if (bsize) {
+                    if(n_blobs == MISC_BLOB_XTENSA_MAX) {
+                        printf("sig_match_zicokick_values: ignoring xtensa blobs > %d\n",MISC_BLOB_XTENSA_MAX);
+                        blobs[n_blobs].type = MISC_BLOB_TYPE_NONE;
+                        break;
+                    }
+                    // printf("xtensa blob @ 0x%08x, loads to 0x%08x, size 0x%08x\n",badr,bloadedto,bsize);
+                    blobs[n_blobs].type = MISC_BLOB_TYPE_XTENSA;
+                    blobs[n_blobs].rom_adr = badr;
+                    blobs[n_blobs].ram_adr = bloadedto;
+                    blobs[n_blobs].size = bsize;
+                    n_blobs++;
+                }
+            }
+            uvi = 0;
+        }
+        else if (is->insn->id == ARM_INS_POP) {
+            break;
+        }
+    }
+    if(n_blobs > 0) {
+        save_misc_val_blobs("zicokick_values",blobs,0);
+        return 1;
+    } else {
+        free(blobs);
+        return 0;
+    }
+}
 
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -3410,6 +3622,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,"GraphicSystemCoreFinish","GraphicSystemCoreFinish_helper",SIG_NAMED_SUB},
 {sig_match_named,"mzrm_createmsg","GraphicSystemCoreFinish",SIG_NAMED_SUB},
 {sig_match_named_last,"mzrm_sendmsg","GraphicSystemCoreFinish",SIG_NAMED_LAST_RANGE(10,16)},
+{sig_match_zicokick_52,"zicokick_start",        "ZicoKick Start\n",0,SIG_DRY_MAX(52)},
+{sig_match_zicokick_gt52,"zicokick_start",      "ZicoKick Start\n",0,SIG_DRY_MIN(53)},
+{sig_match_zicokick_copy,"zicokick_copy",       "zicokick_start"},
+{sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
 {NULL},
 };
 
@@ -3714,6 +3930,19 @@ void output_firmware_vals(firmware *fw)
                     fw->adr_ranges[i].src_start,
                     fw->adr_ranges[i].bytes);
         }
+    }
+    misc_val_t *mv=get_misc_val("zicokick_values");
+    if(mv->blobs) {
+        bprintf("\n// Zico Xtensa blobs:\n");
+        for(i=0;mv->blobs[i].type != MISC_BLOB_TYPE_NONE;i++) {
+            bprintf("// zico_%d 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n",
+                    i,
+                    mv->blobs[i].ram_adr,
+                    mv->blobs[i].ram_adr+mv->blobs[i].size,
+                    mv->blobs[i].rom_adr,
+                    mv->blobs[i].size);
+        }
+
     }
     add_blankline();
 }

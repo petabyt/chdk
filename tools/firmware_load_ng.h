@@ -1,5 +1,9 @@
 #ifndef FIRMWARE_LOAD_NG_H
 #define FIRMWARE_LOAD_NG_H
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+
 // Digic 2-5+ (ignoring S1)
 #define FW_ARCH_ARMv5       1
 // Digic 6
