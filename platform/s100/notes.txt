@@ -8,5 +8,3 @@ adjustable, default is the play button. Hold for 1/2 second for original functio
 - The 'ring func' button is treated as the 'ERASE' button in CHDK shortcuts and scripting.
 - The 'video' button is treated as the 'DISP.' button in CHDK shortcuts and scripting.
 
-CAMERA TODO/KNOWN ISSUES:
-- manual loading with "firm update" loading crashes (confirmed on 100d and 101a), so PS.FI2 is not included in the autobuild.
