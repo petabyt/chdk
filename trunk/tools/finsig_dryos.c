@@ -6560,13 +6560,22 @@ void output_firmware_vals(firmware *fw)
         }
     }
 
-    if ((fw->dryos_ver >= 50) && (fw->base2 != 0))
-    {
-        bprintf("\n// Note, ROM copied to RAM :- from 0x%08x, to 0x%08x, len %d words.\n",fw->base_copied,fw->base2,fw->size2);
-    }
-
     find_AdditionAgent_RAM(fw);
     
+    bprintf("\n");
+
+    uint32_t u = fw->base+fw->fsize*4;
+    // make it fit in 32bits
+    if (u == 0)
+        u = 0xffffffff;
+    bprintf("// Detected address ranges:\n");
+    bprintf("// %-8s 0x%08x - 0x%08x (%7d bytes)\n","ROM",fw->base,u,fw->fsize*4);
+    if ((fw->dryos_ver >= 50) && (fw->base2 != 0))
+    {
+        bprintf("// %-8s 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n","RAM code",fw->base2,fw->base2+fw->size2*4,fw->base_copied,fw->size2*4);
+    }
+    bprintf("// %-8s 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n","RAM data",fw->data_start,fw->data_start+fw->data_len*4,fw->data_init_start,fw->data_len*4);
+
     bprintf("\n");
 }
 
