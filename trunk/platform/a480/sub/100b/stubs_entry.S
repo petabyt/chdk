@@ -17,6 +17,10 @@
 //   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffcf0d10
 //   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffcf0cd0
 
+// Detected address ranges:
+// ROM      0xffc00000 - 0xffffffff (4194304 bytes)
+// RAM data 0x00001900 - 0x0000ba68 copied from 0xffe88e20 (  41320 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(GetBatteryTemperature                ,0xffc2e964) //102        *** != 0xffc2eb38

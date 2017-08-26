@@ -17,6 +17,10 @@
 //   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa2d9c4
 //   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa2d984
 
+// Detected address ranges:
+// ROM      0xff810000 - 0xffffffff (8323072 bytes)
+// RAM data 0x00001900 - 0x0000f134 copied from 0xffb1cddc (  55348 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(PutInNdFilter                        ,0xffa299b0) //102        *** != 0xffa82744

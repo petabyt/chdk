@@ -14,6 +14,10 @@
 //   MEMISOSTART = 0x0009f498
 //   KEYSYS = d3                 // Found @ 0xffff1a04
 
+// Detected address ranges:
+// ROM      0xffc00000 - 0xffffffff (4194304 bytes)
+// RAM data 0x00001900 - 0x0000f6c4 copied from 0xffebe418 (  56772 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(GetZoomLensCurrentPosition           ,0xffdeac68) //102        *** != 0xffd0e36c

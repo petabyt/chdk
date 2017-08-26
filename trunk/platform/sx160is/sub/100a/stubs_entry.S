@@ -14,10 +14,13 @@
 //   MEMISOSTART = 0x001639d4
 //   KEYSYS = d4c                // Found @ 0xffff1d50
 //   NEED_ENCODED_DISKBOOT = 9   // Found @ 0xffff1d60
-
-// Note, ROM copied to RAM :- from 0xffcd8b18, to 0x00431000, len 15719 words.
 //   ARAM_HEAP_START = 0x38e000  // Found @ 0xff9a0530
 //   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9a04f4
+
+// Detected address ranges:
+// ROM      0xff810000 - 0xffffffff (8323072 bytes)
+// RAM code 0x00431000 - 0x0044059c copied from 0xffcd8b18 (  62876 bytes)
+// RAM data 0x00001900 - 0x0000f92c copied from 0xffccaaec (  57388 bytes)
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S

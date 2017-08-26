@@ -11,6 +11,10 @@
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x00072d40
 
+// Detected address ranges:
+// ROM      0xff810000 - 0xffffffff (8323072 bytes)
+// RAM data 0x00001900 - 0x000103e0 copied from 0xffad74a0 (  60128 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff815288) //  1 65%
@@ -103,7 +107,6 @@ DEF_CONST(uiprop_count                      ,0x00000037) // Found @0xff959abc
 // Values below go in 'platform_camera.h':
 
 // Misc stuff
-// canon_data_src: 0xffad74a0, canon_data_len: 0xeae0
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
