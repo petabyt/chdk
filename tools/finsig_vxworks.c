@@ -4486,14 +4486,6 @@ void find_other_vals(firmware *fw)
 
     bprintf("// Misc stuff\n");
     find_leds(fw);
-/*
-    if (!search_fw_bytes(fw, find_ctypes))
-    {
-        bprintf("//DEF(ctypes, *** Not Found ***)\n");
-    }
-*/   
-    bprintf("// canon_data_src: 0x%x, canon_data_len: 0x%x\n",fw->data_init_start,fw->data_len*4);
-
 
     // Look for nrflag (for capt_seq.c)
     search_saved_sig(fw, "NR_GetDarkSubType", match_nrflag2, 0, 0, 20);
@@ -5128,6 +5120,16 @@ void output_firmware_vals(firmware *fw)
         else
             bprintf("//   MEMISOSTART = 0x%08x  (*** DOES NOT MATCH MAKEFILE VALUE 0x%08x***)\n",fw->memisostart,(o)?o->val:0);
     }
+
+    bprintf("\n");
+
+    uint32_t u = fw->base+fw->fsize*4;
+    // make it fit in 32bits
+    if (u == 0)
+        u = 0xffffffff;
+    bprintf("// Detected address ranges:\n");
+    bprintf("// %-8s 0x%08x - 0x%08x (%7d bytes)\n","ROM",fw->base,u,fw->fsize*4);
+    bprintf("// %-8s 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n","RAM data",fw->data_start,fw->data_start+fw->data_len*4,fw->data_init_start,fw->data_len*4);
 
     bprintf("\n");
 }
