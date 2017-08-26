@@ -11,6 +11,10 @@
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009c6b0
 
+// Detected address ranges:
+// ROM      0xff810000 - 0xffffffff (8323072 bytes)
+// RAM data 0x00001900 - 0x0000d6e0 copied from 0xffb29580 (  48608 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 // ERROR: EnterToCompensationEVF is not found.             //--- ---    *** != 0x00000000
@@ -75,8 +79,6 @@ DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff97791c
 // LED #3: 0xc0220098, offset 0xc4
 // LED #4: 0xc0220084, offset 0x204
 // LED #5: 0xc0220080, offset 0x244
-
-// canon_data_src: 0xffb29580, canon_data_len: 0xbde0
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

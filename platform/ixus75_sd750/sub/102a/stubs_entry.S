@@ -12,6 +12,10 @@
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000bf650
 
+// Detected address ranges:
+// ROM      0xff810000 - 0xffffffff (8323072 bytes)
+// RAM data 0x00001900 - 0x0000e4f0 copied from 0xffb95410 (  52208 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(EnterToCompensationEVF                 ,0xffb065fc) //  3 96%
@@ -74,8 +78,6 @@ DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffb44a90
 // LED #2: 0xc02200c8, offset 0x44
 // LED #3: 0xc02200c4, offset 0x204
 // LED #4: 0xc02200c0, offset 0x244
-
-// canon_data_src: 0xffb95410, canon_data_len: 0xcbf0
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S

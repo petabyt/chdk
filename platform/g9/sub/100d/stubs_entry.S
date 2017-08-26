@@ -14,6 +14,10 @@
 //   MEMISOSTART = 0x000b0b68
 //   KEYSYS = d3                 // Found @ 0xffff31f0
 
+// Detected address ranges:
+// ROM      0xff810000 - 0xffffffff (8323072 bytes)
+// RAM data 0x00001900 - 0x000140e4 copied from 0xffb2e384 (  75748 bytes)
+
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 //NHSTUB(PutInNdFilter                        ,0xff938468) //102        *** != 0xffa0c4e0
