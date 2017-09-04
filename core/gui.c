@@ -1577,7 +1577,12 @@ static CMenu edge_overlay_submenu = {0x7f,LANG_MENU_EDGE_OVERLAY_TITLE, edge_ove
 static void gui_grid_lines_load_selected(const char *fn)
 {
     if (fn)
+    {
+        int tmp = conf.show_grid_lines ;
+        conf.show_grid_lines = 1 ;              // prevent grid module unload while parsing grid file
         libgrids->grid_lines_load(fn);
+        conf.show_grid_lines = tmp;
+    }
 }
 
 static void gui_grid_lines_load(int arg)
