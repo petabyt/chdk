@@ -29,6 +29,7 @@ struct gline {
     struct gline        *next;
 };
 
+static int grid_loading = 0;
 static int interval = GRID_REDRAW_INTERVAL;
 static struct gline *head=NULL, *top=NULL;
 static const char *grid_default =
@@ -96,6 +97,8 @@ static void process_element(const char *str, int n, grid_elem_type type) {
 //-------------------------------------------------------------------
 static int parse_grid_file(char *ptr, int size)
 {
+    conf.grid_title[0]=0;
+
     if (size > 0)
     {
         grid_lines_free_data();
@@ -136,14 +139,18 @@ static int parse_grid_file(char *ptr, int size)
 //-------------------------------------------------------------------
 void grid_lines_load(const char *fn)
 {
-    if (process_file(fn, parse_grid_file, 1) > 0)
+    grid_loading = 1;
+    if (process_file(fn, parse_grid_file, 1) > 0)  // non-zero length file found?
     {
-        char* c = strrchr(fn, '/');
-        strncpy(conf.grid_title, (c)?c+1:fn, sizeof(conf.grid_title));
-        conf.grid_title[sizeof(conf.grid_title)-1] = 0;
-
+        if (conf.grid_title[0]==0)                 // use filename if no @title string found
+        {
+            char* c = strrchr(fn, '/');
+            strncpy(conf.grid_title, (c)?c+1:fn, sizeof(conf.grid_title));
+            conf.grid_title[sizeof(conf.grid_title)-1] = 0;
+        }
         strcpy(conf.grid_lines_file, fn);
     }
+    grid_loading = 0;
 }
 
 //-------------------------------------------------------------------
@@ -207,7 +214,7 @@ int _module_unloader()
 
 int _module_can_unload()
 {
-    return conf.show_grid_lines == 0;
+    return (conf.show_grid_lines == 0 && !grid_loading);
 }
 
 /******************** Module Information structure ******************/
