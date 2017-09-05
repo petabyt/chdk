@@ -9,7 +9,7 @@
   2 "Impostazioni RAW (negativi digitali)"
   3 "Impostazioni OSD"
   4 "Istogramma /grafico esposizione)"
-  5 "Zebra (visaulziza sopra e sottoe esposizione)
+  5 "Zebra (sopra e sotto esposizione)
   6 "Script (programma la canera)"
   7 "Impostazioni colori"
   8 "Impostazione varie"
@@ -457,7 +457,7 @@
 369 "Seleziona file curve"
 
 370 "Forzatura margine"
-371 "Forzatura margine 8strumento panorama)"
+371 "Forzatura margine (strumento panorama)"
 
 372 "Abilita forzatura margine"
 373 "Soglia forzatura margine"
