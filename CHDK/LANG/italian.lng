@@ -9,7 +9,7 @@
   2 "Impostazioni RAW (negativi digitali)"
   3 "Impostazioni OSD"
   4 "Istogramma /grafico esposizione)"
-  5 "Zebra (visaulziza sopra e sottoe esposizione)
+  5 "Zebra (sopra e sotto esposizione))
   6 "Script (programma la canera)"
   7 "Impostazioni colori"
   8 "Impostazione varie"
@@ -457,7 +457,7 @@
 369 "Seleziona file curve"
 
 370 "Forzatura margine"
-371 "Forzatura margine 8strumento panorama)"
+371 "Forzatura margine (strumento panorama)"
 
 372 "Abilita forzatura margine"
 373 "Soglia forzatura margine"
@@ -776,20 +776,20 @@
 646 " Info "
 647 " Esci "
 648 " Salva ed esci "
-649 " Elimina salv. gioco "
+649 " Elim.salv.gioco "
 
 650 "Congratulazioni!"
-651 "L'hai completato!"
+651 "Sudoku completato!"
 652 "Tutto OK!"
 653 "Tada!"
 654 "0 errori!"
 655 "Info"
-656 "Numero presente due volte"
+656 "Numero già presente"
 657 "Risolto"
 658 "Non completato"
 659 "Non risolto"
-660 "Non ci sono errori"
-661 "C'è qualcosa di sbagliato qui..."
+660 "Nessun errore"
+661 "Ci sono errori..."
 
 // Snake
 662 "Snake"
