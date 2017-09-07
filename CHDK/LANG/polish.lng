@@ -1,6 +1,7 @@
 // Translation by hADeSik http://www.hadesik.waw.pl : February 4, 2009
 // Uwagi i poprawki do tlumaczenia: http://chdk.wikia.com/wiki/Talk:Language:_Polish i http://chdk.wikia.com/wiki/Language:_Polish
-// Podziekowania dla [OSO], winiarro, AndrzejM i wszystkich tych, którzy pomagali przy powstaniu tego tlumaczenia
+// Podziekowania dla [OSO], winiarro, AndrzejM i wszystkich tych, którzy pomagali przy powstaniu tego tlumaczenia.
+// Ostatnie poprawki: Outslider.
 // Plik jezykowy dla CHDK
 // Format:
 // <id> "<tekst>"
@@ -94,8 +95,8 @@
  70 "Czytnik plików tekstowych"
  71 "Gry"
  72 "Funkcja latarki"
- 73 "Pokaz obraz startowy przy ladowaniu"
- 74 "Zoom ustawia ostrosc (w trybie MF)"
+ 73 "Pokaz obraz startowy"
+ 74 "Zoom ustawia ostrosc (tryb MF)"
  75 "Przycisk trybu <ALT>"
  76 "Rysuj palete kolorów"
  77 "Pokaz informacje o wersji"
@@ -322,12 +323,13 @@
 256 "Automatyczny start"
 257 "Zdalne sterowanie przez USB"
 
-//258 "Kontrola ekspozycji (bez flasha)"
-//259 "Kontrola ekspozycji (bez flasha)"
-//260 "Przelicz ekspozycje"
-//261 "Kolejnosc przeliczania ekspozycji TV"
-//262 "Kolejnosc przeliczania ekspozycji AV"
-//263 "Kolejnosc przeliczania ekspozycji ISO"
+258 "Wlaczenie Lua Native Calls \numozliwia uszkodzenie aparatu.\nJesli nie jestes pewien\nNIE WLACZAJ TEJ OPCJI.\nJestes pewien, aby wlaczyc Native Calls?"
+259 "Wlaczyc Lua Native Calls?"
+260 "*** ZAKONCZONO ***"
+261 "*** Autostart ***"
+
+262 "Uruchomic 'unsafe IO'?"
+263 "Uruchamianie 'unsafe IO' pozwala\nCHDK na wykonywanie operacji IO\npodczas nagrywania wideo. To moze zawiesic\nlub wylaczyc aparat.\n\nChcesz wlaczyc 'unsafe IO'?"
 
 264 "Wyczysc wymuszane opcje@start"
 
@@ -336,15 +338,16 @@
 266 "'Wywolaj' RAW i zapisz jako JPG"
 267 "Prosze przelaczyc aparat w tryb\nfotografowania i wykonac\n'puste' zdjecie, aby utworzyc plik JPG."
 268 "Wybierz plik RAW"
-269 "Sumowanie RAW’ów"
-270 "Usrednianie RAW’ów"
+269 "Sumowanie RAWów"
+270 "Usrednianie RAWów"
 271 "Za malo miejsca na karcie pamieci:\n%dM wymagane, %dM dostepne."
 
 272 "Pokaz OSD w trybie przegladania"
 //273 "Pokaz parametry"
 273 "Lista zadan na starcie"
+274 "Pokaz ukryte pliki"
 
-	
+
 275 "Wyczysc ustaw. Bracketingu przy starcie"
 
 276 "Utwórz 2 partycje na karcie pamieci"
@@ -378,7 +381,7 @@
 298 "Metoda zmiany szyb.migawki Tv"
 299 "Aktywuj menu uzytkownika"
 300 "Menu uzytkownika"
-301 " "
+301 "Edytuj User Menu"
 
 302 "Skala konwert.obiektywu, 100=1x"
 303 "Pokaz pasek wolnej pamieci"
@@ -509,7 +512,7 @@
 417 "Laduj pokrywanie krawedzi"
 418 "Zapisz pokrywanie krawedzi"
 419 "Wlacz w trybie przegladarki"
-421 "Laduj+ustaw powiekszenie (Load+Set Zoom)"
+421 "Laduj i ustaw powiekszenie"
 422 "Blokuj pokrywanie krawedzi"
 423 "Synchronizacja blysku na zamkniecie migawki"
 424 "Format DNG"
@@ -574,3 +577,232 @@
 480 "Wpisz nowa nazwe pliku:"
 481 "Usun katalog"
 
+482 "Obecna wlasna krzywa"
+483 "Tetris"
+484 "Pokaz numer partycji"
+485 "Wideo bez limitu czasu"
+486 "Matryca moze sie przegrzewac przy dlugim nagrywaniu!"
+
+//GPS Start---------------------------------
+487 "Ustawienia GPS"
+488 "Nawiguj do obecnego zdjecia"
+489 "Pokaz kompas"
+490 "Pokaz wspólrzegne geograficzne"
+491 "Wysokosc"
+492 "Zapisz waypoint do kazdego JPG"
+493 "GPX-Track - Time Interval"
+494 "Zacznij rejestrowanie GPX-TRACK"
+495 "Zatrzymaj rejestrowanie GPX-TRACK"
+496 "Nie pokazuj kompasu"
+497 "Wylacz nawigowanie do zdjecia"
+498 "Czas oczekiwania na sygnal GPS"
+499 "Kompas     - interwal próbek"
+500 "Nawigacja  - interwal próbek"
+501 "Czas do zmiany w tryb podgladu"
+502 "Czas do wylaczenia podswietlenia"
+503 "Wspólne    - ustanienia"
+504 "GPS wait sampling interval"
+505 "Oslabienie kompasu"
+506 "Zapisz log - Ustawienia"
+507 "Tagowanie  - Ustawienia"
+508 "Nawigacja  - Ustawienia"
+509 "Wylacz przy poziomie baterii w %"
+510 "Opóznione tagowanie - krótki tekst"
+511 "0 - 2D-3D Fix"
+512 "Mrugaj dioda przy opóznionym tagowaniu"
+513 "Przejdz w tryb podgladu"
+514 "Wylacz podswietlenie"
+515 "Przejdz w tryb podgladu"
+516 "Wylacz podswietlenie"
+517 "Czas do przejscia w tr. podgladu"
+518 "Czas do wylaczenia podswietlenia"
+519 "Pokaz status GPS"
+520 "Ostrzegaj o niskim poziomie baterii"
+521 "Ustaw polozenie jako dom" 
+522 "Nawiguj do domu"
+523 "Ustaw polozenie jako strefe czasowa"
+524 "Pokaz ikone rejestrowania polozenia"
+525 "Wylacz nawogowanie do domu"
+526 "Sprawdz zmiany strefy czasowej"
+527 "Ostrzezenia audio         "
+528 "Wlacz funkcje GPS"
+529	"Brak GPS!"
+530	"Zmieniono strefe czasowa!"
+531	"Niski stan baterii!"
+532	"Aparat zostanie wylaczony \n za %02d sekund!"
+533	"Anulowano automatyczne wylaczenie!"
+534	"Oczekiwanie na GPS przez %01d:%02d"
+535	"Nawigowanie do domu\n nie jest mozliwe!"
+536	"Nie mozna nawigowac do zdjecia: %s!"
+537	"Odleglosc:   = %i m"
+538	"Czas trwania:= %i:%i:%i"
+539	"Tempo:       = %s km/h"
+540	"Kierunek:    = %i°"
+541	"Cel:         = %i°"
+542	"Rozpoczeto nawigowanie do zdjecia %s"
+543	"lat=%s - long=%s "
+544	"cel = %i°"
+545	"Rozpoczeto nawigowanie do domu"
+//GPS End-----------------------------------------
+
+546 "Awaryjna min. szybkosc migawki"
+547 "Awaryjne Max ISO"
+548 "Kompensacja przeswietlen"
+549 "% przeswietlonych pikseli"
+
+550 "Aby anulowac [Press half]"
+
+551 "Wlacz uruchamianie skrytpu"
+
+552 "Zablokuj przycisk Zoom Assist"
+
+553 "Wersja DNG"
+554 "Ustawienia Menu"
+555 "Pokaz pomoc trybu <ALT>"
+556 "  Opóznienie pomocy"
+557 "Ustawienia CHDK"
+
+// <ALT> mode help screen text
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "Skrót <ALT>"                           // Len must be <= first string in header format (20)
+560 "Shutter Half Press +"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK Menu"                        // Len must be <= second string in header format (14)
+562 "MENU=User Menu"                        // Len must be <= second string in header format (14)
+563 "SET=Script Menu, SHUTTER=Run Script"   // Len must be <= 35
+564 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
+565 "Manual Focus"
+566 "Ukryj CHDK OSD gdy wcisnieto"
+567 "  * - niedostepne w trybie <ALT>"   // Len must be <= 35
+
+568 "'%s'\ndodano do User Menu"
+569 "User Menu pelne!"
+
+570 "Karta SD"
+571 "Jezyk i fonty"
+
+572 "Dodaj skrypt do User Menu"
+
+573 "Ostrosc na nieskonczonosc"
+574 "Chg Focus Factor"
+
+575 "Przycisk ON/OFF w trybie <ALT>"
+
+576 "Moduly"
+577 "Inspektor modulów"
+578 "Wlacz zapisywanie logów"
+579 "Skasuj logi"
+
+580 "Wlacz skróty z Half-Press"
+581 "<< Skróty wylaczone  >>"
+
+582 "Konsola"
+583 "Pokaz konsole gdy "
+584 "Ukryj po N sekundach od zmiany"
+585 "Resetuj konsole"
+586 "Pokaz ostatnia konsole"
+587 "Resetuj polozenie i rozmiar"
+
+588 "Ustawienia zrzutu RAMu"
+589 "Adres poczatkowy"
+590 "Rozmiar zrzutu (0 = caly RAM)"
+591 "Opóznienie zrzutu (s)"
+
+592 "Brak miejsca by uruchomic modul\n'%s'"
+593 "Modul\n'%s'\nnie wspiera trybu 'simple'"
+
+594 "Dodac\n%s\ndo User Menu?"
+595 "Usunac\n%s\nz User Menu?"
+596 "Dudaj/usun wpisy Menu"
+597 "Dodaj modul do User Menu"
+598 "Usun ten wpis z User Menu"
+
+599 "Konfiguracja EyeFi"
+600 "Operacje EyeFi"
+601 "Dostepne sieci"
+602 "Skonfigurowane sieci"
+603 "Niepowodzenie"
+604 "Powodzenie"
+605 "Zle haslo?"
+606 "Dodano siec"
+607 "Problem z dodawaniem sieci"
+608 "Dodaj siec"
+609 "Testowac siec?"
+610 "Haslo"
+611 "Blad uruchamiania EyeFi"
+612 "Brak wystarczajacej pamieci"
+613 "Nie znaleziono karty EyeFi"
+614 "Nie mozna usunac sieci"
+615 "Siec usunieta"
+616 "Jestes pewien?"
+617 "Wlaczono EyeFi wlan"	
+618 "Wylaczono Eyefi wlan"
+619 "Wymus wlaczenie EyeFi wlan"
+620 "Wymus wylaczenie EyeFi wlan""
+621 "Nie mozna znalezc sieci"
+622 "Nie znaleziono sieci"
+
+623 "Kanal wejsciowy"
+624 "BlaD: BRAKUJaCY MODUl"
+
+625 "Rozmiar przyciecia DNG"
+
+626 "Nadpisz stan stopki Hotshoe"
+627 "W uzyciu"
+628 "Pusta"
+629 "Wylaczona"
+
+630 "Test kolorów CHDK"
+
+631 "Resetuj wszystkie kolory"
+632 "Na pewno chcesz zresetowac\nwszystkie kolory do domyslnych?"
+
+633 "Wylacz wsparcie dlugich nazw plików"
+
+// additional benchmark module strings
+// Combined length of next 3 must be less than 31 characters
+634 "START"
+635 "Log"
+636 "Testuj karte SD"
+637 "Text output   :"
+
+638 "Wlacz skrot RAW"
+
+// CPU Info
+639 "Info o procesorze"
+640 "Zapisano %s"
+
+// Sudoku
+641 "Sudoku"
+
+// Sudoku menu (15 chars max)
+642 " Sprawdz "
+643 " Rozwiaz "
+644 " Nowe sudoku "
+645 " Wlasne sudoku "
+646 " Info "
+647 " Wyjdz "
+648 " Zapisz i wyjdz "
+649 " Skasuj zapis "
+
+650 "Gratulacje!"
+651 "Rozwiazales!"
+652 "Wszystko jest OK!"
+653 "Tada!"
+654 "0 bledów!"
+655 "Info"
+656 "Powt. liczby"
+657 "Rozwiazane"
+658 "Nie ukonczone"
+659 "Nie mozna rozw."
+660 "Nie ma bledow"
+661 "Cos tu jest nie tak"
+
+// Snake
+662 "Snake"
+663 "Punkty: %d"
+
+// Module names
+664 "Skrypty uBASIC"
+665 "Skrypty LUA"
+666 "Wykrywacz ruchu"
+667 "Popup Menu"
