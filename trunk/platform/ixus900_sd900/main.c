@@ -8,9 +8,9 @@ long get_vbatt_max() {
     return 4100;
 }
 
-static const int fl_tbl[] = {4600, 6140, 7560, 9110, 10830, 12670, 14690, 17300};   // EXIF value for each zoom step (3x zoom lens)
+static const int fl_tbl[] = {7700, 9000, 10500, 12500, 15600, 18800, 23100};   // EXIF value for each zoom step 
 #define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
-#define CF_EFL 47946   // 60345 for 1/2.5" sensor, 47946 for 1/1.8" sensor
+#define CF_EFL 48052   // 37/7.7 * 10000
 
 const int zoom_points = NUM_FL;
 
