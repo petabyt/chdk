@@ -102,7 +102,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "AllocateMemory", UNUSED|LIST_ALWAYS },
     { "AllocateUncacheableMemory" },
     { "Close" },
-    { "CreateBinarySemaphore", UNUSED|LIST_ALWAYS },
+    { "CreateBinarySemaphore" },
     { "CreateCountingSemaphore", UNUSED|LIST_ALWAYS },
     { "CreateTask" },
     { "DebugAssert", OPTIONAL|LIST_ALWAYS },
