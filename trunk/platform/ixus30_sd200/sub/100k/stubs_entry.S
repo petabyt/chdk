@@ -110,6 +110,7 @@ DEF_CONST(uiprop_count                      ,0x00000037) // Found @0xff959abc
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
+NHSTUB(CreateBinarySemaphore                  ,0xff822b58) //115
 NHSTUB(CreateTask                             ,0xff823784) //120
 NHSTUB(DebugAssert                            ,0xff814c10) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff8699b4) //  1

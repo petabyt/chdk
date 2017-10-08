@@ -96,6 +96,7 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc0ef0cd) //  0
 NHSTUB(Close                                  ,0xfc358091) //  0
+NHSTUB(CreateBinarySemaphore                  ,0x010e5965) //  0
 NHSTUB(CreateTask                             ,0x010e5089) //  0
 NHSTUB(DebugAssert                            ,0x010e5cb9) //  0
 NHSTUB(DeleteDirectory_Fut                    ,0xfc325b89) //  0

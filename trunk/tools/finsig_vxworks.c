@@ -226,7 +226,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
     { "Close" },
-    { "CreateBinarySemaphore", UNUSED|DONT_EXPORT },
+    { "CreateBinarySemaphore" },
     { "CreateCountingSemaphore", UNUSED|DONT_EXPORT },
     { "CreateTask" },
     { "DebugAssert", OPTIONAL },

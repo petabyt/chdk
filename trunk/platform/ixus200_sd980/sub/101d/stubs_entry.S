@@ -121,6 +121,7 @@ DEF(_nrflag,0x6cb0) // Found @ ff9500c0 (0x6cb8) & ff9500e0 (-0x08)
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff8389d8) //112
 NHSTUB(Close                                  ,0xff835408) //120
+NHSTUB(CreateBinarySemaphore                  ,0xff8381b8) //115
 NHSTUB(CreateTask                             ,0xff81e5b4) //120
 NHSTUB(DebugAssert                            ,0xff81e88c) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff834e78) //116
