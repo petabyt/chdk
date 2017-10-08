@@ -231,4 +231,15 @@ extern time_t mktime(struct tm *timp);
 
 extern int abs( int v );
 
+//---------------------------------------------------------------
+// Semaphore & Assert
+
+extern void DebugAssert(char*, int);
+
+extern int CreateBinarySemaphore(char* name, int init);
+extern int TakeSemaphore(int sem, int timeout);
+extern void GiveSemaphore(int sem);
+
+//---------------------------------------------------------------
+
 #endif
