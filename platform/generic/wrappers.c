@@ -1779,3 +1779,30 @@ void DisableCamError(void)
     _DisableISDriveError();
 }
 #endif
+
+//---------------------------------------------------------------
+// Semaphore & Assert
+
+void DebugAssert(char *err, int line)
+{
+    extern void _DebugAssert(char*, int);
+    _DebugAssert(err, line);
+}
+
+int CreateBinarySemaphore(char *name, int init)
+{
+    extern int _CreateBinarySemaphore(char*, int);
+    return _CreateBinarySemaphore(name, init);
+}
+
+int TakeSemaphore(int sem, int timeout)
+{
+    return _TakeSemaphore(sem, timeout);
+}
+
+void GiveSemaphore(int sem)
+{
+    _GiveSemaphore(sem);
+}
+
+//---------------------------------------------------------------
