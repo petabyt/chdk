@@ -255,10 +255,12 @@ ASM
 FW 59
 >>>
 "    BL      shooting_expo_iso_override\n"      // added
+"    BL      block_sv_cooking\n"                // added
 <<<
 FW
 >>>
 "    BL      shooting_expo_param_override\n"    // added
+"    BL      block_sv_cooking\n"                // added
 <<<
 FW
 >>>
