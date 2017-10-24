@@ -1785,8 +1785,13 @@ void DisableCamError(void)
 
 void DebugAssert(char *err, int line)
 {
+#if CAM_3ARG_DebugAssert
+    extern void _DebugAssert(int, char*, int);
+    _DebugAssert(0, err, line);
+#else
     extern void _DebugAssert(char*, int);
     _DebugAssert(err, line);
+#endif
 }
 
 int CreateBinarySemaphore(char *name, int init)

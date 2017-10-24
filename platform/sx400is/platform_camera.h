@@ -126,4 +126,6 @@
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
 
+    #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
+
 //----------------------------------------------------------

@@ -126,6 +126,8 @@
     #define CAM_MAX_ISO_OVERRIDE            1600
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
+
+    #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
     
 //----------------------------------------------------------
     #undef  CAM_DEFAULT_MENU_CURSOR_BG
