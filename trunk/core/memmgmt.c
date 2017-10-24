@@ -7,7 +7,7 @@
 //----------------------------------------------------------------------------
 // Memory wrappers
 
-extern void *suba_init(void *heap, unsigned size, unsigned rst, unsigned mincell);
+extern void *suba_init(void *heap, unsigned size, unsigned mincell, char *name);
 extern void *suba_alloc(void *heap, unsigned size, unsigned zero);
 extern int suba_free(void *heap, void *p);
 
@@ -29,7 +29,7 @@ static void chdk_heap_init(chdk_heap *h)
     h->size = 0;
 }
 
-static void chdk_heap_create(chdk_heap *h, void *mem, int size, int chdk_in_heap, int heap_testing)
+static void chdk_heap_create(chdk_heap *h, void *mem, int size, int chdk_in_heap, int heap_testing, char *name)
 {
     if (h)
     {
@@ -64,7 +64,7 @@ static void chdk_heap_create(chdk_heap *h, void *mem, int size, int chdk_in_heap
         else
         {
     		// Normal operation, use the suba allocation system to manage the memory block
-	    	h->heap = suba_init(h->start,h->size,1,8);
+	    	h->heap = suba_init(h->start,h->size,8,name);
         }
     }
 }
@@ -182,7 +182,7 @@ void exmem_malloc_init()
 	void *mem = exmem_alloc(0,EXMEM_HEAP_SIZE,0,0);
 	if (mem)
     {
-        chdk_heap_create(&exmem_heap, mem, EXMEM_BUFFER_SIZE, OPT_CHDK_IN_EXMEM, OPT_EXMEM_TESTING);
+        chdk_heap_create(&exmem_heap, mem, EXMEM_BUFFER_SIZE, OPT_CHDK_IN_EXMEM, OPT_EXMEM_TESTING, "exmem_suba");
 	}
 #endif
 }
@@ -214,7 +214,7 @@ void aram_malloc_init()
 #ifndef OPT_ARAM_TESTING
 #define OPT_ARAM_TESTING 0
 #endif
-    chdk_heap_create(&aram_heap, (void*)ARAM_HEAP_START, ARAM_HEAP_SIZE, OPT_CHDK_IN_ARAM, OPT_ARAM_TESTING);
+    chdk_heap_create(&aram_heap, (void*)ARAM_HEAP_START, ARAM_HEAP_SIZE, OPT_CHDK_IN_ARAM, OPT_ARAM_TESTING, "aram_suba");
 #endif
 }
 
