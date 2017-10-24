@@ -100,6 +100,7 @@ DEF(jpeg_count_str                          ,0x0010aed8) // Found @0xffa24808
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff826238
 //#define CAM_DATE_FOLDER_NAMING 0x080 // Found @0xffacb490 (pass as 3rd param to GetImageFolder)
 //#define PARAM_CAMERA_NAME 3 // Found @0xffd008c4
+//#define CAM_3ARG_DebugAssert 1
 
 // Misc stuff
 DEF(ctypes, 0xffbf5da4)

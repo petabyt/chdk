@@ -119,4 +119,6 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
+    #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
+
 //----------------------------------------------------------

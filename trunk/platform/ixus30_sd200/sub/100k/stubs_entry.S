@@ -105,6 +105,7 @@ DEF_CONST(uiprop_count                      ,0x00000037) // Found @0xff959abc
 // Values below go in 'lib.c':
 
 // Values below go in 'platform_camera.h':
+//#define CAM_3ARG_DebugAssert 1
 
 // Misc stuff
 
