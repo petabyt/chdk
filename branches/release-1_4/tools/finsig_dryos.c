@@ -222,7 +222,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "AllocateMemory", UNUSED|LIST_ALWAYS },
     { "AllocateUncacheableMemory" },
     { "Close" },
-    { "CreateBinarySemaphore", UNUSED|LIST_ALWAYS },
+    { "CreateBinarySemaphore" },
     { "CreateCountingSemaphore", UNUSED|LIST_ALWAYS },
     { "CreateTask" },
     { "DebugAssert", OPTIONAL|LIST_ALWAYS },
@@ -266,7 +266,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GetVRAMVPixelsSize" },
     { "GetZoomLensCurrentPoint" },
     { "GetZoomLensCurrentPosition" },
-    { "GiveSemaphore", OPTIONAL|LIST_ALWAYS },
+    { "GiveSemaphore" },
     { "IsStrobeChargeCompleted" },
     { "LEDDrive", OPTIONAL },
     { "LocalTime" },
@@ -3406,6 +3406,20 @@ int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
     return 0;
 }
 
+int find_DebugAssert_argcount(firmware *fw)
+{
+    int s1 = find_str_ref(fw, "CameraLog.c");
+    if (s1 < 0)
+        return 0;
+    int k = isADR_PC_cond(fw, s1);
+    if (!k)
+        return 0;
+    k = fwRd(fw, s1);
+    if (k > 0)
+        bprintf("//#define CAM_3ARG_DebugAssert 1\n");
+    return 1;
+}
+
 // Search for things that go in 'platform_camera.h'
 void find_platform_vals(firmware *fw)
 {
@@ -3622,6 +3636,8 @@ void find_platform_vals(firmware *fw)
             }
         }
     }
+
+    find_DebugAssert_argcount(fw);
 }
 
 //------------------------------------------------------------------------------------------------------------

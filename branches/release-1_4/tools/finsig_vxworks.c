@@ -225,7 +225,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "AllocateMemory", UNUSED },
     { "AllocateUncacheableMemory" },
     { "Close" },
-    { "CreateBinarySemaphore", UNUSED|DONT_EXPORT },
+    { "CreateBinarySemaphore" },
     { "CreateCountingSemaphore", UNUSED|DONT_EXPORT },
     { "CreateTask" },
     { "DebugAssert", OPTIONAL },
@@ -2902,6 +2902,20 @@ int find_FileAccessSem(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
+int find_DebugAssert_argcount(firmware *fw)
+{
+    int s1 = find_str_ref(fw, "Memory.c");
+    if (s1 < 0)
+        return 0;
+    int k = isLDR_PC(fw, s1);
+    if (!k)
+        return 0;
+    k = fwRd(fw, s1);
+    if (k > 0)
+        bprintf("//#define CAM_3ARG_DebugAssert 1\n");
+    return 1;
+}
+
 /*
 int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
 {
@@ -3091,6 +3105,8 @@ void find_platform_vals(firmware *fw)
             }
         }
     }
+
+    find_DebugAssert_argcount(fw);
 }
 
 //------------------------------------------------------------------------------------------------------------

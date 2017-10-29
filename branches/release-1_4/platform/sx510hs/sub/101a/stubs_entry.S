@@ -101,6 +101,7 @@ DEF(jpeg_count_str                          ,0x000ef918) // Found @0xff257784
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff005f4c
 //#define CAM_DATE_FOLDER_NAMING 0x080 // Found @0xff32f684 (pass as 3rd param to GetImageFolder)
 //#define PARAM_CAMERA_NAME 3 // Found @0xff63ea74
+//#define CAM_3ARG_DebugAssert 1
 
 // Misc stuff
 DEF(ctypes, 0xff567b4c)
@@ -117,6 +118,7 @@ DEF(_nrflag,0xcf68) // Found @ ff2adf48 (0xcf70) & ff2adf60 (-0x08)
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff005f08) //112
 NHSTUB(Close                                  ,0xff00728c) //120
+NHSTUB(CreateBinarySemaphore                  ,0x006b7968) //115
 NHSTUB(CreateTask                             ,0x006b5778) //120
 //NHSTUB(DebugAssert                          ,0x006b5a58) //107            == 0x006b5a58
 NHSTUB(DeleteDirectory_Fut                    ,0xff006c8c) //116

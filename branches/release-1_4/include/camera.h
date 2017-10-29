@@ -451,6 +451,17 @@
 #endif
 
 //==========================================================
+
+// DebugAssert
+#ifndef CAM_3ARG_DebugAssert
+    #ifdef THUMB_FW
+        #define CAM_3ARG_DebugAssert        1   // Digic6 - default is 3 arg version of DebugAssert
+    #else
+        #define CAM_3ARG_DebugAssert        0   // All others default is 2 arg version
+    #endif
+#endif
+
+//==========================================================
 #include "camera_info.h"
 //==========================================================
 

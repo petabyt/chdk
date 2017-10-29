@@ -6,6 +6,7 @@
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc15a7e5)
 NHSTUB(Close                                  ,0xfc2a5179)
+NHSTUB(CreateBinarySemaphore                  ,0x010c5915) //  0
 //NHSTUB(CreateTaskStrictly                   ,0x010c5ae5) // 0xfc251c94 is the ARM veneer
 NHSTUB(CreateTask                             ,0x010c51fd) // 0xfc25198c is the ARM veneer
 DEF(orig_CreateTask                           ,0x010c51fd)

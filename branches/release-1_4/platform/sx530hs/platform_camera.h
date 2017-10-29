@@ -133,4 +133,7 @@
 //    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY 1
 	#undef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY  //jeronymo
     
+
+    #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
+
 //----------------------------------------------------------

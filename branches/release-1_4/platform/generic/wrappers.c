@@ -1739,3 +1739,45 @@ int CancelHPTimer(int handle)
 {
     return _CancelHPTimer(handle);
 }
+
+// disable camera error(s), E32 is the only error that can be handled at the moment (on newer 'IS' cameras)
+#if (OPT_DISABLE_CAM_ERROR)
+#warning OPT_DISABLE_CAM_ERROR enabled
+void DisableCamError(void)
+{
+    extern void _DisableISDriveError(void);
+    _DisableISDriveError();
+}
+#endif
+
+//---------------------------------------------------------------
+// Semaphore & Assert
+
+void DebugAssert(char *err, int line)
+{
+#if CAM_3ARG_DebugAssert
+    extern void _DebugAssert(int, char*, int);
+    _DebugAssert(0, err, line);
+#else
+    extern void _DebugAssert(char*, int);
+    _DebugAssert(err, line);
+#endif
+}
+
+int CreateBinarySemaphore(char *name, int init)
+{
+    extern int _CreateBinarySemaphore(char*, int);
+    return _CreateBinarySemaphore(name, init);
+}
+
+int TakeSemaphore(int sem, int timeout)
+{
+    return _TakeSemaphore(sem, timeout);
+}
+
+void GiveSemaphore(int sem)
+{
+    _GiveSemaphore(sem);
+}
+
+//---------------------------------------------------------------

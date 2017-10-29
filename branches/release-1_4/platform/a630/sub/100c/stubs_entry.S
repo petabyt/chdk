@@ -60,6 +60,7 @@ DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xffd6c6b4
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xffc04b00) //  1
 NHSTUB(Close                                  ,0xffc614e8) //120
+NHSTUB(CreateBinarySemaphore                  ,0xffc1110c) //115
 NHSTUB(CreateTask                             ,0xffc11abc) //120
 NHSTUB(DebugAssert                            ,0xffc03cf8) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffc5a398) //  1
