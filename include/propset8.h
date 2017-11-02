@@ -72,7 +72,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_TV                              269        // Need to set this value for overrides to work correctly----blackhole
 #define PROPCASE_USER_TV                         271        //----blackhole
 #define PROPCASE_WB_MODE                         276        // 0 = Auto, 1 = Daylight, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 6 = Fluorescent H, 8 = Custom-----blackhole
-#define PROPCASE_WB_ADJ                          276        //blackhole
+#define PROPCASE_WB_ADJ                          277        //(philmoz, Nov 2017) - fixed White Balance for DNG files.
 #define PROPCASE_SERVO_AF                        303        // 0 = Servo AF off, 1 = Servo AF on-----blackhole
 #define PROPCASE_ASPECT_RATIO                    304        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1 (sx530hs) 4 = 4:5 (sx60hs)
 #define PROPCASE_SV                              351       // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD---blackhole???
