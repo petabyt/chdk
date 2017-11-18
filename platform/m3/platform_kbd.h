@@ -10,4 +10,6 @@
 #define USB_IDX             2
 #define BATTCOVER_FLAG      0x01000000 // Found @0xFC4D3F04, levent 0x205
 #define BATTCOVER_IDX       0
+#define HOTSHOE_FLAG        0x00010000 // Found @0xfc5f9af0, levent 0x204
+#define HOTSHOE_IDX         2
 #endif

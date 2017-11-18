@@ -142,6 +142,8 @@
     #undef CAM_SD_OVER_IN_AF
     #undef CAM_SD_OVER_IN_MF
 
+    #define CAM_HOTSHOE_OVERRIDE                1
+
 // ------- MY -----------
 //    #define CAM_TOUCHSCREEN_UI	1
 //    #undef CAM_CHDK_PTP
