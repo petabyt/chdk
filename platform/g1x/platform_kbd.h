@@ -15,6 +15,9 @@
 #define BATTCOVER_FLAG      0x00000100 // Found @0xff464d24, levent 0x205
 #define BATTCOVER_IDX       2
 
+#define HOTSHOE_FLAG        0x00000400 // Found @0xff464d2c, levent 0x204
+#define HOTSHOE_IDX         2
+
 #define CAM_HAS_JOGDIAL     1
 
 #endif
