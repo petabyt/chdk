@@ -168,7 +168,6 @@ NHSTUB(SleepTask                              ,0x010c5179) //  0
 NHSTUB(TakeSemaphore                          ,0x010c59f9) //  0
 NHSTUB(TurnOnDisplay                          ,0xfc0eb6b5) //  0
 NHSTUB(TurnOffDisplay                         ,0xfc0eb6c7) //  0
-NHSTUB(UIFS_WriteFirmInfoToFile               ,0xfc1b1dd7) //  0
 NHSTUB(UnlockAE                               ,0xfc20df73) //  0
 NHSTUB(UnlockAF                               ,0xfc20dc83) //  0
 NHSTUB(UnlockMainPower                        ,0xfc142d25) //  0
