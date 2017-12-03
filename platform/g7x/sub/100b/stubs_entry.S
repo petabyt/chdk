@@ -170,7 +170,6 @@ NHSTUB(TurnOffBackLight                       ,0xfc32a833) //  0
 NHSTUB(TurnOnBackLight                        ,0xfc32a7f5) //  0
 NHSTUB(TurnOnDisplay                          ,0xfc0cd291) //  0
 NHSTUB(TurnOffDisplay                         ,0xfc0cd2a3) //  0
-NHSTUB(UIFS_WriteFirmInfoToFile               ,0xfc1f6e87) //  0
 NHSTUB(UnlockAE                               ,0xfc283973) //  0
 NHSTUB(UnlockAF                               ,0xfc2835eb) //  0
 NHSTUB(UnlockMainPower                        ,0xfc1593bb) //  0
