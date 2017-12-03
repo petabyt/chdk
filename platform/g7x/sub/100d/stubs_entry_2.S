@@ -8,8 +8,9 @@
 
 NHSTUB(Feof_Fut,								0xfc325d21) // from CreateJumptable, after Fseek
 NHSTUB(Fflush_Fut,								0xfc325d49) // directly after Feof_Fut in ROM
-NHSTUB(displaybusyonscreen,                   	0xfc34586d) // 0xfc356638 ref _PBBusyScrn
-NHSTUB(undisplaybusyonscreen,                 	0xfc345905) // near display* above
+// unused with current display method
+//NHSTUB(displaybusyonscreen,                   	0xfc34586d) // 0xfc356638 ref _PBBusyScrn
+//NHSTUB(undisplaybusyonscreen,                 	0xfc345905) // near display* above
 NHSTUB(SetFileTimeStamp,						0xfc3582d1) // from ref to 0x12cea600 @0xfc3582e4, similar to sx280hs
 NHSTUB(SetFileAttributes,						0xfc358319) // function following SetFileTimeStamp in ROM
 NHSTUB(RenameFile_Fut,							0xfc325ad1) // from ref to ".RPC" @0xfc11019a, similar to sx280hs

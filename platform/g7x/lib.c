@@ -6,8 +6,8 @@ extern int active_bitmap_buffer;
 
 void vid_bitmap_refresh() {
     // clears perfectly but blinks and is asynchronous
-    extern void _displaybusyonscreen();
-    extern void _undisplaybusyonscreen();
+//    extern void _displaybusyonscreen();
+//    extern void _undisplaybusyonscreen();
 //    _displaybusyonscreen();
 //    _undisplaybusyonscreen();
 

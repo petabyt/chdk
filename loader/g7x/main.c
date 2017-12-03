@@ -45,9 +45,6 @@ void __attribute__((noreturn)) my_restart()
     "mov     r0, %0\n"
     "ldr     r2, =0xfc133daf\n" // based on sx280, identical in 100b, 100c and 100d. function called in startup after ROM->RAM code copy
     "blx     r2\n"              // doesn't appear to flush/clean instruction cache?
-    "mov     r0, %0\n"
-    "add     r0, r0, #1\n"
-    "bx      r0\n"
     
     // start execution at MEMISOSTART in thumb mode
     "mov     r0, %0\n"
