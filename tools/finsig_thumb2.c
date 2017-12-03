@@ -191,7 +191,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "TurnOnBackLight" },
     { "TurnOnDisplay" },
     { "TurnOffDisplay" },
-    { "UIFS_WriteFirmInfoToFile" },
+    { "UIFS_WriteFirmInfoToFile", OPTIONAL|UNUSED},
     { "UnlockAE" },
     { "UnlockAF" },
     { "UnlockMainPower" },
