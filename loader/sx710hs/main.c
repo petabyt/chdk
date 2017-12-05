@@ -34,16 +34,15 @@ void __attribute__((noreturn)) my_restart()
     }
     */
 
-    // TODO from G7X allows boot on short press without fiddling variables in startup code
-    // not clear why not set after DISKBOOT.BIN reboot
-    *(volatile unsigned *)(0x4ffc)=0x12345678;
-    // based on g7x
+    // on G7X allows boot on short press without fiddling variables in startup code
+    // does not appear to have any effect on sx710
+//    *(volatile unsigned *)(0x4ffc)=0x12345678;
     asm volatile ( 
     "mov     r1, %1\n"
     "mov     r0, %0\n"
     "ldr     r2, =0xfc11f607\n" // function called in startup after ROM->RAM code copy, sx710 101a
     "blx     r2\n"
-    
+
     // start execution at MEMISOSTART in thumb mode
     "mov     r0, %0\n"
     "add     r0, r0, #1\n"
