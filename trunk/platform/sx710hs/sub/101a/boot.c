@@ -388,7 +388,7 @@ void __attribute__((naked,noinline)) sub_fc055e2e_my() {
 "    push    {r3, lr}\n"
 "    bl      sub_fc055f34\n"
 "    bl      sub_fc078bfc\n" // IsNormalCameraMode_FW
-"    bl      sub_fc0cf0ee\n" // startup checks equivalent of g7x fc0781f4, but doesn't seem affected by *(0x4ffc)=0x12345678
+"    bl      sub_fc0cf0ee_my\n" // startup checks equivalent of g7x fc0781f4, but doesn't seem affected by *(0x4ffc)=0x12345678
 "    cbnz    r0, loc_fc055e44\n"
 "    bl      sub_fc055f22\n"
 "loc_fc055e42:\n"
@@ -409,6 +409,59 @@ void __attribute__((naked,noinline)) sub_fc055e2e_my() {
 //"    blx     sub_fc2c79b0\n" // j_CreateTask
 "    movs    r0, #0\n"
 "    pop     {r3, pc}\n"
+    ".ltorg\n"
+    );
+}
+// -f=chdk -s=0xfc0cf0ef -c=40
+void __attribute__((naked,noinline)) sub_fc0cf0ee_my() {
+    asm volatile (
+"    push.w  {r3, r4, r5, r6, r7, r8, sb, sl, fp, lr}\n"
+"    movs    r4, #0\n"
+"    mov     sl, r0\n"
+"    mov     r5, r4\n"
+"    mov     sb, r4\n"
+//"    bl      sub_fc086a00\n" // nullsub
+"    movs    r0, #0x10\n"
+"    bl      sub_fc0847ea\n"
+"    movs    r6, #1\n"
+"    bic.w   r8, r6, r0\n"
+"    movs    r0, #0xf\n"
+"    bl      sub_fc0847ea\n"
+"    bic.w   r7, r6, r0\n"
+"    movs    r0, #0\n"
+"    bl      sub_fc0869fc\n" // ret 1
+"    cbz     r0, loc_fc0cf126\n"
+"    movs    r0, #0x17\n"
+"    bl      sub_fc0847ea\n"
+"    bic.w   r5, r6, r0\n"
+"loc_fc0cf126:\n"
+"    movs    r0, #1\n"
+"    bl      sub_fc0869fc\n" // ret 1
+"    cbz     r0, loc_fc0cf13a\n"
+"    movw    r0, #0x1d8\n"
+"    bl      sub_fc0847ea\n"
+"    bic.w   r4, r6, r0\n"
+"loc_fc0cf13a:\n"
+"    cmp.w   sl, #0\n" 
+"    beq     loc_fc0cf14a\n"// skips checks if not IsNormalCameraMode
+"    orr.w   r0, r8, r7\n"
+"    orrs    r0, r5\n"
+"    orrs    r0, r4\n" // check all hardware related bits checked above
+//"    beq     loc_fc0cf15e\n" // old behavior, skip to return if none set
+"    bne     loc_fc0cf14a\n" // new behavior, go to final code if any set
+// otherwise, act as if play was held
+    "mov  r7, #1\n"
+"loc_fc0cf14a:\n"
+"    mov     r3, sb\n"
+"    mov     r2, r5\n"
+"    mov     r1, r7\n"
+"    mov     r0, r8\n"
+"    str     r4, [sp]\n"
+"    bl      sub_fc086a04\n"
+//"    bl      sub_fc086a02\n" // nullsub
+"    movs    r0, #1\n"
+//"loc_fc0cf15e:\n"
+"    pop.w   {r3, r4, r5, r6, r7, r8, sb, sl, fp, pc}\n"
     ".ltorg\n"
     );
 }
