@@ -20,7 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                         10 // TODO guessed based on M10, but wrong
+    #define CAM_PROPSET                         9 // TODO may not be a complete match
 
     // g7x RAW in hybrid auto actually works if you enable "unsafe IO", otherwise hangs
     #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
@@ -126,7 +126,6 @@
 // SX710 OK
     #define PARAM_CAMERA_NAME                   3
 
-//TODO
 // found by calling GetImageFolder with single bits sets
     #define CAM_DATE_FOLDER_NAMING              0x80
 
