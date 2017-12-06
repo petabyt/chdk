@@ -33,10 +33,10 @@ KeyMap keymap[] = {
     { 1, KEY_SET             ,0x00000008 }, // Found @0xfc5bfad0, levent 0x0a
     { 1, KEY_WIFI            ,0x00000020 },
     { 1, KEY_FRAMING_ASSIST  ,0x00000400 },
-    { 2, KEY_ZOOM_OUT        ,0x00000002 }, // full speed
-    { 2, KEY_ZOOM_OUT        ,0x00000004 }, // low speed
-    { 2, KEY_ZOOM_IN         ,0x00000008 }, // full speed
-    { 2, KEY_ZOOM_IN         ,0x00000010 }, // low speed
+    { 2, KEY_ZOOM_IN         ,0x00000002 }, // full speed
+    { 2, KEY_ZOOM_IN         ,0x00000004 }, // low speed
+    { 2, KEY_ZOOM_OUT        ,0x00000008 }, // full speed
+    { 2, KEY_ZOOM_OUT        ,0x00000010 }, // low speed
     { 0, 0, 0 }
 };
 

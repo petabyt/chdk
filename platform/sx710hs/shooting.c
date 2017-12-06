@@ -124,7 +124,6 @@ long get_file_next_counter() {
 long get_target_file_num() {
     return get_exposure_counter();
 }
-// TODO verify
 /*
 CAM_DATE_FOLDER_NAMING values
 0x000   A/DCIM/1nn___nn/MRK_nnnn.MRK
