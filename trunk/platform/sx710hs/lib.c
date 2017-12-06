@@ -173,31 +173,25 @@ int vid_get_viewport_yoffset() {
     return 0;
 }
 // TODO
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-//static long vp_xo[5] = { 40, 0, 0, 120, 168 };				// should all be even values for edge overlay
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_xo[4] = { 0, 0, 0, 80 };				// should all be even values for edge overlay
 
 int vid_get_viewport_display_xoffset() {
-    return 0;
-#if 0
     if (camera_info.state.mode_play)
     {
         return 0;
     }
     // video, ignore still res propcase
     if(camera_info.state.mode_video || is_video_recording()) {
-        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
-            return 40;// 4:3 video
-        } else {
-            return 0; // 16:9 video, no x offset
-        }
+        return 0; //neither 4:3 nor 16:9 video have x offset
     }
     return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
-#endif
 }
 
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_yo[4] = { 0, 60, 28, 0 };
+
 int vid_get_viewport_display_yoffset() {
-    return 0;
-#if 0
     if (camera_info.state.mode_play)
     {
         return 0;
@@ -207,15 +201,10 @@ int vid_get_viewport_display_yoffset() {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
             return 0; // 4:3 video, no Y offset
         } else {
-            return 36; // 16:9 video
+            return 60; // 16:9 video
         }
     }
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)
-    {
-        return 36;
-    }
-    return 0;
-#endif
+    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 extern char* bitmap_buffer[];
@@ -225,8 +214,7 @@ void *vid_get_bitmap_fb() {
 }
 
 int vid_get_viewport_byte_width() {
-    return 640*2; // TODO
-//    return 736*2;     // buffer is 736 wide (720 image pixels) UYVY
+    return 640*2;
 }
 
 // Functions for PTP Live View system
@@ -238,6 +226,7 @@ int vid_get_viewport_fullscreen_width()         { return 640; }
 int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_viewport_buffer_width_proper()      { return 640; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
+// default aspect ratio
 //int vid_get_aspect_ratio()                      { return LV_ASPECT_4_3; }
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
