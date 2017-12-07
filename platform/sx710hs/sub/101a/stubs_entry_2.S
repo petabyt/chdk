@@ -28,10 +28,8 @@ NHSTUB(init_focus_eventflag,	0xfc54dd2b) // InitializeAdjustmentSystem->fc542300
 NHSTUB(init_nd_eventflag,		0xfc54de35) // InitializeAdjustmentSystem->fc542300->fc54de34 event flag matches PutInNdFilter
 NHSTUB(CreateBinarySemaphoreStrictly,           0xbfe1553f) // from csv
 
-// TODO G7x C&P
-// gets raw address and other stuff for next shot, stores in structure pointed to by r1 
-// via sub_fc1e58d8, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc184310 to get raw address
-NHSTUB(captseq_raw_addr_init,NULL_SUB)
+// via func fc07b6ba hooked in preshoot case, similar to g7x
+NHSTUB(captseq_raw_addr_init,					0xfc0821d3)
 
 
 // not implemented

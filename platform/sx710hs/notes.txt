@@ -4,7 +4,7 @@ SX710 HS notes
 CHDK is a hack, use at your own risk!
 
 This is an in development PREALPHA port. Most CHDK features have not been
-implemented.
+tested, and many have not been implemented
 
 Additionally, Digic 6 has significant differences from previously 
 supported models, which means some features are not fully implemented
@@ -24,12 +24,13 @@ direct access to the movie_status variable do not work
 
 TESTED
 ******
-PTP play/rec switch
+Basic PTP: file transfer, play/rec, live view
 script LED control
+Script shoot
+DNG in P mode
 
 NOT IMPLEMENTED
 ***************
-all overrides and shooting releated functions (capt_seq task)
 usb remote capture (filewrite task)
 video controls (movie_rec task)
 extra long exposures (exp_drv task)
@@ -45,5 +46,5 @@ display updating is ugly
 
 KNOWN BUGS
 **********
-Propset is incorrect
 FI2 loading is not supported
+DNG color matrix is incorrect

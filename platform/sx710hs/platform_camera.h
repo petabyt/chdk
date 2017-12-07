@@ -47,10 +47,6 @@
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
 
-    // TODO
-    #define CAM_RAW_ROWPIX                      5632
-    #define CAM_RAW_ROWS                        3710
-
     #define CAM_HAS_CMOS                        1
 
     // unlocked by default, not needed
@@ -78,24 +74,24 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000
 
-// TODO
     #undef  CAM_CIRCLE_OF_CONFUSION
-    #define CAM_CIRCLE_OF_CONFUSION             11  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+    #define CAM_CIRCLE_OF_CONFUSION             5  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
 
 // SX710 OK
     #define CAM_DNG_LENS_INFO                   { 45,10,7500,10,32,10,69,10 }
-// TODO
+// OK
     #define cam_CFAPattern                      0x02010100
 
-// TODO DNG stuff c&p from G7x
+// TODO DNG c&p from G7x
     #define cam_CalibrationIlluminant1          17
 
-    // from CR2 converted to DNG with adobe DNG converter
+// TODO DNG c&p from G7x
     #define CAM_COLORMATRIX1 \
     11125, 10000, -5937, 10000,  355, 10000, \
     -2979, 10000, 10926, 10000, 2360, 10000, \
      -116, 10000,   835, 10000, 6064, 10000
 
+/*
     #define cam_CalibrationIlluminant2          21      // D65
 
     #define CAM_COLORMATRIX2 \
@@ -112,16 +108,20 @@
 	 4036, 10000, 4056, 10000, 1551, 10000, \
      1780, 10000, 7757, 10000,  463, 10000, \
       764, 10000,    1, 10000, 7487, 10000
+*/
+
+    #define CAM_RAW_ROWPIX                      5344
+    #define CAM_RAW_ROWS                        3950
 
 // SX710 OK
     #define CAM_JPEG_WIDTH                      5184
     #define CAM_JPEG_HEIGHT                     3456
 
 // TODO
-    #define CAM_ACTIVE_AREA_X1                  132
-    #define CAM_ACTIVE_AREA_Y1                  40
-    #define CAM_ACTIVE_AREA_X2                  5604
-    #define CAM_ACTIVE_AREA_Y2                  3688
+    #define CAM_ACTIVE_AREA_X1                  96 // normal level at 120
+    #define CAM_ACTIVE_AREA_Y1                  18 // visible pixels start at 17, 18 to keep even, normal level at 22
+    #define CAM_ACTIVE_AREA_X2                  5344 // active area extends to right
+    #define CAM_ACTIVE_AREA_Y2                  3950 // active area extends to bottom of image
 
 // SX710 OK
     #define PARAM_CAMERA_NAME                   3
@@ -135,10 +135,9 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-//TODO g7x C&P
-    // black level appears to be ~512 in normal shooting (ISO125 P or M)
-    #undef CAM_BLACK_LEVEL
-    #define CAM_BLACK_LEVEL                     511
+//TODO
+//    #undef CAM_BLACK_LEVEL
+//    #define CAM_BLACK_LEVEL                     127
 
 // TODO expdrv not implemented
 //    #define CAM_EXT_TV_RANGE                    1

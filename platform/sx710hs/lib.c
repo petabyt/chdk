@@ -61,47 +61,23 @@ void JogDial_CCW(void) {
     _PostLogicalEventToUI(0x873, 1);    //RotateJogDialLeft
 }
 
-// old method, incorrect in many cases
-#if 0
-extern  int     active_raw_buffer;
-extern  char*   raw_buffers_canon_raw[];
-extern  char*   raw_buffers_jpeg[];
-
 // updated by using function in capt_seq, valid between shot start and raw hook end
 extern  char*   current_raw_addr;
-#endif
-
 char *hook_raw_image_addr()
 {
-    return  (char *)0x41574352; // CRAW BUF = *fc56898c
-#if 0
-    /*
     if(current_raw_addr) {
         return current_raw_addr;
     }
-    */
-    // TODO... fall back to old code.
-    // Wron in many cases, but some code like benchmark assumes it get a raw buffer outside of shooting
-    // observed values 0-2, 3 would index something that doesn't look like a raw fb in the jpeg case
-    int i=active_raw_buffer&3;
-    if(i>2) {
-        i=0;
-    }
-    if( camera_info.state.mode_shooting == MODE_AUTO) {
-        // AUTO mode (canon raw can't be enabled in AUTO)
-        return (char *)0x46f04300; // TODO continuous shooting uses different buffers
-    }else if(shooting_get_prop(PROPCASE_IMAGE_FORMAT) == 1) {
-    // canon raw disabled - uses up to 3 raw buffers
-        return raw_buffers_jpeg[i];
-    } else {
-        // canon raw enabled - different address, not clear if it ever uses multiple buffers
-        return raw_buffers_canon_raw[i];
-    }
-    // TODO most scene modes seem to use different addresse(s)
-#endif
+    // TODO fallback if current_raw_addr not set. Would be better to fail, but calling code doesn't check
+    return  (char *)0x41574352; // CRAW BUF = *fc56898c
 }
 
-// TODO
+// TODO - camera has at least 3 raw buffers
+/*
+0x42f69e00
+0x44da0100
+0x46bd6400
+*/
 /*
 char *hook_alt_raw_image_addr()
 {
