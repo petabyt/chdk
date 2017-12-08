@@ -21,7 +21,7 @@ void startup() {
     boot();
 }
 
-#define NUM_FL      226 // TODO?
+#define NUM_FL      112 // 
 #define NUM_DATA    2   // 2 words each entry, first is FL
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
