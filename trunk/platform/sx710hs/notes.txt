@@ -3,8 +3,8 @@ SX710 HS notes
 ************************************
 CHDK is a hack, use at your own risk!
 
-This is an in development PREALPHA port. Most CHDK features have not been
-tested, and many have not been implemented
+This is an in development PREALPHA port. SOme CHDK features have not been
+tested, and some have not been implemented
 
 Additionally, Digic 6 has significant differences from previously 
 supported models, which means some features are not fully implemented
@@ -15,19 +15,34 @@ The VER.REQ method works to obtain the Canon firmware. VERS.REQ does not
 
 General camera and CHDK port information
 ****************************************
-SX710 has an adjustable aperture (ND filter TBD)
+SX710 has an adjustable aperture, and a "hidden" ND filter not
+accessible through the Canon UI
 
 Default alt button is PLAY. VIDEO and WIFI may also be used
+
+Subject distance (focus) override is available only when MF or AF lock is set
 
 Only simple_movie_status is implemented, so features or scripts that rely on
 direct access to the movie_status variable do not work
 
+When running a script ~500k of RAM is available to CHDK.
+
 TESTED
 ******
+Tv and Av overrides, bracketing in continuous
+ND control
+Dark frame subtraction control
+llibtst.lua
 Basic PTP: file transfer, play/rec, live view
+chdkptp camtests, excluding remoteshoot
 script LED control
 Script shoot
-DNG in P mode
+Script zoom control
+DNG, in P and M modes. May be broken in special scene modes
+script shooting hooks
+ISO override
+Subject distance override
+video status
 
 NOT IMPLEMENTED
 ***************

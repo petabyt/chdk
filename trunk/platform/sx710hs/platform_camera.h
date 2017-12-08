@@ -26,9 +26,9 @@
     #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // probably doesn't make sense
 
-    #define CAM_AV_OVERRIDE_IRIS_FIX            1   // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
-    // TODO hidden ND?
-    #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
+    #define CAM_AV_OVERRIDE_IRIS_FIX            1  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
+
+    #define CAM_HAS_ND_FILTER                   1  // Camera has a "hidden" built-in ND filter (in addition to iris)
 
     // TODO not checked
     #undef  CAM_KEY_PRESS_DELAY
@@ -74,8 +74,8 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                    0x40000000
 
-    #undef  CAM_CIRCLE_OF_CONFUSION
-    #define CAM_CIRCLE_OF_CONFUSION             5  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
+// default
+//    #define CAM_CIRCLE_OF_CONFUSION             5  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
 
 // SX710 OK
     #define CAM_DNG_LENS_INFO                   { 45,10,7500,10,32,10,69,10 }
@@ -131,13 +131,8 @@
 
     #define CAM_FILE_COUNTER_IS_VAR             1     // file counter is variable file_counter_var in stubs, not a param
 
-//TODO
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
-
-//TODO
-//    #undef CAM_BLACK_LEVEL
-//    #define CAM_BLACK_LEVEL                     127
 
 // TODO expdrv not implemented
 //    #define CAM_EXT_TV_RANGE                    1
@@ -203,20 +198,11 @@
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
  
-// TODO
-    #define CAM_SD_OVER_IN_AF                   1
+// camera crashes if sd override used in AF
+//    #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
  
-    // TODO "real" to "market" conversion definitions
-    #define SV96_MARKET_OFFSET                  0   // market and real appear to be identical on this cam
-    #define ISO_MARKET_TO_REAL_MULT         1
-    #define ISO_MARKET_TO_REAL_SHIFT        0
-    #define ISO_MARKET_TO_REAL_ROUND        0
-    #define ISO_REAL_TO_MARKET_MULT         1
-    #define ISO_REAL_TO_MARKET_SHIFT        0
-    #define ISO_REAL_TO_MARKET_ROUND        0
-
 // AF led, for MD test code
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1
