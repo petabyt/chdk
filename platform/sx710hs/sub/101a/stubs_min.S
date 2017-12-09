@@ -19,17 +19,12 @@ FAKEDEF(video_compression_rate, 1)
 FAKEDEF(canon_shoot_menu_active, 1)
 DEF(zoom_status                             ,0x0001d094+0x4) // Found @fc1f0898 via "TerminateDeliverToZoomController", unclear which offset should be used
 
-// TODO g7x C&P
-// below is 1 for both timed review and hold 0xfc33be5e "StartRecReviewTimer", goes to 0 when time expires even if button held
-//DEF(recreview_hold              ,0x91D4) 
-// 0xfc33aea0 "ShtCon_StopReview" originally from https://chdk.setepontos.com/index.php?topic=12692.msg130261#msg130261 
-// 1 for both timed review and hold 0xfc33be5e "StartRecReviewTimer", stays 1 after time expires if shutter held
-//DEF(recreview_hold                ,0x9194)
-FAKEDEF(recreview_hold                ,1)
+// fc33aea0 via "ShtCon_StopReview", similar to g7x https://chdk.setepontos.com/index.php?topic=12692.msg130261#msg130261
+DEF(recreview_hold                ,0x9090+0x50)
 
 // SX710
 // based on search for 4500 100
-// 226 entries?, 2 words each, first is fl
+// 112 entries, 2 words each, first is fl
 DEF(focus_len_table                ,0xfdf3167c)
 DEF(bitmap_buffer, 0xc62c+0x3c) // struct starts @ 0xc62c, from sub @0xfc309cd4 after "VTM SW", +0x3c @fc309d6e
 DEF(dial_positions,0x0000fe84) // from sub_fc08b6f6, Jogdial at 0x0000fe84 0x0000fe88
