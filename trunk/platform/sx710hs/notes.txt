@@ -13,6 +13,10 @@ previous Digic versions.
 
 The VER.REQ method works to obtain the Canon firmware. VERS.REQ does not
 
+No "firmware update" file is included in the autobuild, you must used
+bootable SD card to load. See known bugs below.
+
+
 General camera and CHDK port information
 ****************************************
 SX710 has an adjustable aperture, and a "hidden" ND filter not
@@ -62,5 +66,7 @@ display updating is ugly
 
 KNOWN BUGS
 **********
-FI2 loading is not supported
+- When booted with FI2 update
+ - switching to hybrid auto causes a crash
+ Because of this issue, an FI2 file is not included in the autobuild
 DNG color matrix is incorrect
