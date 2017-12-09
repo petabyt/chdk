@@ -112,7 +112,7 @@ const CapturemodeMap modemap[] = {
 //{                         ,33297 }, // ? seems to be related to face ID
 { MODE_VIDEO_STD             ,2643 }, // standard video on dial
 { MODE_VIDEO_IFRAME_MOVIE    ,2650 },
-//{ MODE_VIDEO_SHORT_CLIP    ,2652 }, // TODO
+{ MODE_VIDEO_SHORT_CLIP     ,2652 },
 };
 
 #include "../generic/shooting.c"
