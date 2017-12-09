@@ -119,6 +119,8 @@ enum {
     MODE_FOOD               , // food, m10
     MODE_SELFIE             , // self portrait, m10
 
+    MODE_VIDEO_SHORT_CLIP   , // sx710 (short clips with special effects like slomo, individual effects don't get their own mode)
+
 };
 
 #endif
