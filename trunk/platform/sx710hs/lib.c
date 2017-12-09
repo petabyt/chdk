@@ -97,17 +97,19 @@ void *vid_get_viewport_fb_d()    {
     return current_fb_d;
 } 
 
-// TODO
-void *vid_get_viewport_live_fb() {
-    return NULL;
-}
-#if 0
 extern void* viewport_buffers[];
-extern void *current_viewport_buffer;
+/*
+four viewport buffers @0xfc5befd8
+0x42cafe00
+0x42d5e600
+0x42e0ce00
+0x42ebb600
+*/
 
+extern void *current_viewport_buffer;
 void *vid_get_viewport_live_fb()
 {
-// current_viewport_buffer doesn't seem to be most recent
+// current_viewport_buffer assummed not most recent, like g7x
     int i;
     for(i=0;i<4;i++) {
         if(current_viewport_buffer == viewport_buffers[i]) {
@@ -116,7 +118,6 @@ void *vid_get_viewport_live_fb()
     }
     return 0;
 }
-#endif
 
 int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();

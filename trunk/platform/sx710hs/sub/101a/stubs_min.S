@@ -12,11 +12,10 @@ DEF(file_counter_var,              0x00013398) // found @fc16e6d4 by searching f
 DEF(av_override_semaphore         ,0x00020bdc) // Found in MoveIrisWithAv, required for bracketing Created by Mecha.Create in fc54057c
 DEF(canon_menu_active             ,0x0000c690+0x4) // found @fc2d1e88, via call to sub_fc2d1e82, near ref to "MviCon_ClrEvt" @fc2ff64a, just after PT_PlaySound call
 
-// TODO g7x C&P
-// via sub_fc13b3da, struct ref'd by 0x880c-0x58 near start.
+// via fc0d1ce4 (similar g7x fc13b3da), searching mem near 0x86de for known vp buffer 0x42cafe00
 // Contains viewport address that updates at ~30fps in rec mode, 0 or last rec value in pb
-//DEF(current_viewport_buffer       ,0x000087f0)
-//DEF(viewport_buffers              ,0xfc612b84) // from memory search, refs to fc612b74
+DEF(current_viewport_buffer       ,0x00008794)
+DEF(viewport_buffers              ,0xfc5befd8) // from search 0xfc500000-0xfc800000 for values seen in current_*
 
 // SX710
 // originally by searching https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
