@@ -43,6 +43,7 @@ script shooting hooks
 ISO override
 Subject distance override
 video status
+Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
 
 NOT IMPLEMENTED
 ***************
