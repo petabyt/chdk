@@ -30,9 +30,9 @@
 
     #define CAM_HAS_ND_FILTER                   1  // Camera has a "hidden" built-in ND filter (in addition to iris)
 
-    // TODO not checked
-    #undef  CAM_KEY_PRESS_DELAY
-    #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
+    // doesn't seem to needed
+//    #undef  CAM_KEY_PRESS_DELAY
+//    #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
 
@@ -77,9 +77,7 @@
 // default
 //    #define CAM_CIRCLE_OF_CONFUSION             5  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
 
-// SX710 OK
     #define CAM_DNG_LENS_INFO                   { 45,10,7500,10,32,10,69,10 }
-// OK
     #define cam_CFAPattern                      0x02010100
 
 // TODO DNG c&p from G7x
@@ -113,17 +111,14 @@
     #define CAM_RAW_ROWPIX                      5344
     #define CAM_RAW_ROWS                        3950
 
-// SX710 OK
     #define CAM_JPEG_WIDTH                      5184
     #define CAM_JPEG_HEIGHT                     3456
 
-// TODO
     #define CAM_ACTIVE_AREA_X1                  96 // normal level at 120
     #define CAM_ACTIVE_AREA_Y1                  18 // visible pixels start at 17, 18 to keep even, normal level at 22
     #define CAM_ACTIVE_AREA_X2                  5344 // active area extends to right
     #define CAM_ACTIVE_AREA_Y2                  3950 // active area extends to bottom of image
 
-// SX710 OK
     #define PARAM_CAMERA_NAME                   3
 
 // found by calling GetImageFolder with single bits sets
@@ -136,9 +131,9 @@
 
     #define CAM_EXT_TV_RANGE                    1
 
-    // TODO actual range untested
-    // #undef CAM_EXT_AV_RANGE
-    // #define CAM_EXT_AV_RANGE                    ?   // Number of 1/3 stop increments to extend the Av range beyond the Canon default smallest aperture
+    #undef CAM_EXT_AV_RANGE
+    // up to APEX 864 F22.6 at max zoom,  657 F 10 at wide
+    #define CAM_EXT_AV_RANGE                    9   // Number of 1/3 stop increments to extend the Av range beyond the Canon default smallest aperture
 
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
@@ -151,8 +146,8 @@
     #undef  CAM_SCREEN_HEIGHT
     #define CAM_BITMAP_WIDTH                    640 // Actual width of bitmap screen in <s>bytes</s> pixels
     #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows
-    #define CAM_SCREEN_WIDTH                    640 // Width of bitmap screen in CHDK co-ordinates (360 or 480)
-    #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
+    #define CAM_SCREEN_WIDTH                    640 // Width of bitmap screen in CHDK co-ordinates (360 or 480 pre digic 6, actual width for digic 6)
+    #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 pre digic 6, actual height for digic 6)
 // TODO
 //    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1
     
@@ -170,17 +165,13 @@
 
     #define CAM_ZEBRA_NOBUF                     1
 
-// TODO
-/*
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     50         // Override min subject distance, min get_focus() value using MF
+    #define CAMERA_MIN_DIST                     10         // Override min subject distance, min get_focus() value using MF
     #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     177552     // Override max subject distance, max get_focus() value at max zoom using MF before it goes to -1
-*/
+    #define CAMERA_MAX_DIST                     1562414     // Override max subject distance, max get_focus() value at max zoom using MF before it goes to -1
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
-// SX710 OK
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 

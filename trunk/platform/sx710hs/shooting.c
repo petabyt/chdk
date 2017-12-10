@@ -9,17 +9,18 @@
 
 #define PARAM_FILE_COUNTER      0x1        // see comments in ixus140 port
 
-// aperture values recorded at wide angle
+// aperture values recorded at wide angle, using propcase AV after half press 
+// propcase USER_AV slightly different
 const ApertureSize aperture_sizes_table[] = {
-    { 9,  330, "3.2" },
-    { 10, 352, "3.5" },
-    { 11, 384, "4.0" },
-    { 12, 416, "4.5" },
-    { 13, 448, "5.0" },
-    { 14, 480, "5.6" },
-    { 15, 512, "6.3" },
-    { 16, 544, "7.1" },
-    { 17, 576, "8.0" },
+    { 9,  336, "3.2" },
+    { 10, 368, "3.5" },
+    { 11, 400, "4.0" },
+    { 12, 432, "4.5" },
+    { 13, 464, "5.0" },
+    { 14, 496, "5.6" },
+    { 15, 528, "6.3" },
+    { 16, 549, "7.1" },
+    { 17, 561, "8.0" },
 };
 
 const ShutterSpeed shutter_speeds_table[] = {
