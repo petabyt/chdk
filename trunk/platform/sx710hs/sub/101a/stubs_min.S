@@ -1,7 +1,6 @@
 #include "stubs_asm.h"
 DEF(file_counter_var,              0x00013398) // found @fc16e6d4 by searching for "FileBackupProperty.c", similar to g7x 
 
-// SX710
 DEF(av_override_semaphore         ,0x00020bdc) // Found in MoveIrisWithAv, required for bracketing Created by Mecha.Create in fc54057c
 DEF(canon_menu_active             ,0x0000c690+0x4) // found @fc2d1e88, via call to sub_fc2d1e82, near ref to "MviCon_ClrEvt" @fc2ff64a, just after PT_PlaySound call
 
@@ -10,19 +9,17 @@ DEF(canon_menu_active             ,0x0000c690+0x4) // found @fc2d1e88, via call 
 DEF(current_viewport_buffer       ,0x00008794)
 DEF(viewport_buffers              ,0xfc5befd8) // from search 0xfc500000-0xfc800000 for values seen in current_*
 
-// SX710
 // originally by searching https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
 // fc0f11a6 from "ImgDDev.c", similar to g7x
 DEF(current_fb_d                  ,0x0000fd4c+0x24) 
-DEF(simple_movie_status           ,0x13da4) // 0x00013cd8 + 0x80 + 0x4c found @fc0a09fe sub_fc0a09e4 via task_MovieRecord fc0a38ea. TODO verify 1 when recording or busy after, 0 otherwise
+DEF(simple_movie_status           ,0x13da4) // 0x00013cd8 + 0x80 + 0x4c found @fc0a09fe sub_fc0a09e4 via task_MovieRecord fc0a38ea
 FAKEDEF(video_compression_rate, 1)
 FAKEDEF(canon_shoot_menu_active, 1)
 DEF(zoom_status                             ,0x0001d094+0x4) // Found @fc1f0898 via "TerminateDeliverToZoomController", unclear which offset should be used
 
-// fc33aea0 via "ShtCon_StopReview", similar to g7x https://chdk.setepontos.com/index.php?topic=12692.msg130261#msg130261
+// fc2fc470 via "ShtCon_StopReview", similar to g7x https://chdk.setepontos.com/index.php?topic=12692.msg130261#msg130261
 DEF(recreview_hold                ,0x9090+0x50)
 
-// SX710
 // based on search for 4500 100
 // 112 entries, 2 words each, first is fl
 DEF(focus_len_table                ,0xfdf3167c)
