@@ -47,26 +47,26 @@ script shooting hooks
 ISO override
 Subject distance override
 video status
-Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
+Motion detection - Note version of mdfb2013.lua up before 1.3 is not compatible
 PTP remote shoot
+Extra long exposures (>64 sec), tested up to 10 min
 
 NOT IMPLEMENTED
 ***************
 video controls (movie_rec task)
-extra long exposures (exp_drv task)
 reboot with firmware update file
 script hard shutdown (shut_down(1))
 
 OTHER ISSUES
 ************
-display updating is ugly
+display updating is ugly / has usual Digic 6 limitations
 - Edge overlay does not erase properly when shown live
 - Zebra "Draw Over Zebra" and Restore options are non-functional
 - Some games don't draw correctly
+DNG color matrix is incorrect (copied from g7x) but not unusable
 
 KNOWN BUGS
 **********
 - When booted with FI2 update
  - switching to hybrid auto causes a crash
  Because of this issue, an FI2 file is not included in the autobuild
-DNG color matrix is incorrect
