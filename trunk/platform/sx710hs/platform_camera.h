@@ -134,8 +134,7 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-// TODO expdrv not implemented
-//    #define CAM_EXT_TV_RANGE                    1
+    #define CAM_EXT_TV_RANGE                    1
 
     // TODO actual range untested
     // #undef CAM_EXT_AV_RANGE
