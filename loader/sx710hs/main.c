@@ -40,7 +40,7 @@ void __attribute__((noreturn)) my_restart()
     asm volatile ( 
     "mov     r1, %1\n"
     "mov     r0, %0\n"
-    "ldr     r2, =0xfc11f607\n" // function called in startup after ROM->RAM code copy, sx710 101a
+    "ldr     r2, =0xfc11f607\n" // function called in startup after ROM->RAM code copy, sx710 100a and 101a
     "blx     r2\n"
 
     // start execution at MEMISOSTART in thumb mode
