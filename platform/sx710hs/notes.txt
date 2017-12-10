@@ -38,7 +38,7 @@ ND control
 Dark frame subtraction control
 llibtst.lua
 Basic PTP: file transfer, play/rec, live view
-chdkptp camtests, excluding remoteshoot
+chdkptp camtests
 script LED control
 Script shoot
 Script zoom control
@@ -48,10 +48,10 @@ ISO override
 Subject distance override
 video status
 Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
+PTP remote shoot
 
 NOT IMPLEMENTED
 ***************
-usb remote capture (filewrite task)
 video controls (movie_rec task)
 extra long exposures (exp_drv task)
 reboot with firmware update file
