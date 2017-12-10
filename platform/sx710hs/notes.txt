@@ -33,7 +33,8 @@ When running a script ~500k of RAM is available to CHDK.
 
 TESTED
 ******
-Tv and Av overrides, bracketing in continuous
+Tv and Av overrides, bracketing in continuous.
+AV override works up to F11 at wide, F22 at max zoom
 ND control
 Dark frame subtraction control
 llibtst.lua
