@@ -231,7 +231,7 @@ asm volatile (
 
 // -f=chdk -s=0xfc055895 -c=60
 void __attribute__((naked,noinline)) sub_fc055894_my() {
-// no GPIO checks needed with 0x12345678 set, native fw handles long press
+// startup key checks handled in sub_fc0cf0ee_my
     asm volatile (
 "    push    {r4, lr}\n"
 #if defined(CHDK_NOT_IN_CANON_HEAP)
@@ -461,6 +461,7 @@ void __attribute__((naked,noinline)) sub_fc0cf0ee_my() {
     );
 }
 
+// -f=chdk -s=task_Startup -c=26
 void __attribute__((naked,noinline)) task_Startup_my() {
     asm volatile (
 "    push    {r4, lr}\n"
@@ -469,7 +470,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 //"    bl      sub_fc056060\n" // ->nullsub
 "    bl      sub_fc38d978\n" // ??
 // added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
-"bl sub_010e173f\n" // ref in sub_010e182c following SD1stInit create TODO test with CBBENCH
+"bl sub_010e173f\n" // ref in sub_010e182c following SD1stInit create
 //"    bl      sub_fc0560b6\n" StartDiskboot
 //"    bl      CreateTask_blinker\n"
 "    bl      sub_fc0b337a\n"
@@ -569,7 +570,7 @@ void init_required_fw_features(void) {
 
     _init_focus_eventflag();
     _init_nd_eventflag();
-    // for MoveIrisWithAv, based on fc3d1a74 (but without registering eventprocs)
+    // for MoveIrisWithAv, based on fc54057c from Mecha.Create (but without registering eventprocs)
     extern int av_override_semaphore;
     extern int _CreateBinarySemaphoreStrictly(int x, int y);
     av_override_semaphore = _CreateBinarySemaphoreStrictly(0,0);
