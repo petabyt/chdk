@@ -29,7 +29,7 @@ Subject distance (focus) override is available only when MF or AF lock is set
 Only simple_movie_status is implemented, so features or scripts that rely on
 direct access to the movie_status variable do not work
 
-When running a script ~500k of RAM is available to CHDK.
+When running a script ~600k of RAM is available to CHDK.
 
 TESTED
 ******
