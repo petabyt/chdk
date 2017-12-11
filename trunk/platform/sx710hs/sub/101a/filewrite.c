@@ -121,7 +121,7 @@ asm volatile (
 "loc_fc3f7cda:\n"   // case 11 - create dir, TODO not patched
 "    bl      sub_fc3f7ed2\n"
 "    b       loc_fc3f7ca4\n"
-"loc_fc3f7ce0:\n"  // case 12 - patch for open, main hoook
+"loc_fc3f7ce0:\n"  // case 12 - patch for open, main hook
 "    bl      sub_fc3f7a14_my\n"
 "    b       loc_fc3f7ca4\n"
 "loc_fc3f7ce6:\n"   // case 9 - not seen in normal shooting (g7x)
