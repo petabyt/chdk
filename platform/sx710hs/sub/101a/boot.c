@@ -122,9 +122,10 @@ void __attribute__((naked,noinline)) boot() {
 "    blo     loc_fc02002a\n"
 "    ldr     r0, =0x010e1000\n"
 "    ldr     r1, =0x00026bd0\n"
-"    bl      sub_fc11f606\n" // cache stuff for RAM code
+"    bl      sub_fc11f606\n"    // cache stuff for RAM code
 "    ldr     r0, =0xfcd6dffc\n" // code copied from ROM
 "    ldr     r1, =0xbfe10800\n" // to TCM
+"    ldr     r3, =0xbfe17419\n"
 "loc_fc020046:\n"
 "    cmp     r1, r3\n"
 "    itt     lo\n"
