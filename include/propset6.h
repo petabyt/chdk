@@ -55,9 +55,9 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ND_FILTER_STATE                 195        // 0 = out, 1 = in
 #define PROPCASE_OPTICAL_ZOOM_POSITION           198 
 #define PROPCASE_EXPOSURE_LOCK                   209     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
-#define PROPCASE_SHOOTING                        302     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
 #define PROPCASE_EV_CORRECTION_2                 210
 #define PROPCASE_IS_FLASH_READY                  211
+#define PROPCASE_IMAGE_FORMAT                    213        // 0 = RAW, 1 = JPEG, 2 = RAW+JPEG (G16)
 #define PROPCASE_RESOLUTION                      221        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light
 #define PROPCASE_ORIENTATION_SENSOR              222
 #define PROPCASE_TIMER_MODE                      226        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom
@@ -74,6 +74,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_WB_ADJ                          272
 #define PROPCASE_SERVO_AF                        298        // 0 = Servo AF off, 1 = Servo AF on
 #define PROPCASE_ASPECT_RATIO                    299        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+#define PROPCASE_SHOOTING                        302        // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
 #define PROPCASE_SV                              346        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_GPS                             357        // (CHDKLover, August 2011) - contains a 272 bytes long structure
 #define PROPCASE_TIMER_SHOTS                     376        // Number of shots for TIMER_MODE=Custom

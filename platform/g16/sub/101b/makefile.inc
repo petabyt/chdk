@@ -1,0 +1,21 @@
+# Camera info:
+#   Main firmware start: 0xfc020000
+#   DRYOS R52 (DRYOS version 2.3, release #0052)
+#   Firmware Ver GM1.01B   // Found "GM1.01B" @ 0xfc1588de
+
+PLATFORMID=12916
+PLATFORMOSVER=52
+PLATFORMOS=dryos
+
+NEED_ENCODED_DISKBOOT=11
+KEYSYS=d4e
+
+MEMISOSTART=0x3077e0
+ROMBASEADDR=0xFC000000
+MAXRAMADDR =0x0fffffff
+MEMBASEADDR=0x8000
+ARAM_HEAP_START = 0x006ce000 #  Found @0xfc111ed4
+ARAM_HEAP_SIZE = 0x00022000  #  Found @0xfc111eae
+
+# 1.01B done
+
