@@ -74,6 +74,7 @@
 { 12925,0,0,0xfff40040 }, // ixus132_elph115
 { 12939,2,0xc022c30c,0xfff40040 }, // n_facebook
 #elif (NEED_ENCODED_DISKBOOT == 11)
+{ 12916,4,0xd20b0994,0xfff20040 }, // g16
 { 12918,1,0xc0220120,0xfffe0040 }, // sx170is
 { 12919,1,0xc022302c,0xfff40040 }, // sx510hs
 #elif (NEED_ENCODED_DISKBOOT == 12)
