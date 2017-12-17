@@ -58,11 +58,11 @@ char *camera_jpeg_count_str()
 
 void JogDial_CW(void)
 {
-    _PostLogicalEventToUI(0x872, 1);    //RotateJogDialRight FIXME : not checked
+    _PostLogicalEventToUI(0x872, 1);    //RotateJogDialRight
 }
 
 void JogDial_CCW(void) {
-    _PostLogicalEventToUI(0x873, 1);    //RotateJogDialLeft FIXME : not checked
+    _PostLogicalEventToUI(0x873, 1);    //RotateJogDialLeft
 }
 
 

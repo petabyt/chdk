@@ -34,80 +34,80 @@ void CreateTask_spytask()
     _CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
 }
 
-// ASM_SAFE("BL xblinker\n")
-#define LED_PR     0xd20b0994       // G16 green LED on OVF bezel   
-#define LED_PWR    0xd20b0884       // G16 green LED on power button
-#define LED_ORANGE 0xd20b0888       // G16 orange LED on OVF bezel   
-#define XDELAY 4000000 
+#ifdef DEBUG_BLINKING
 
-void xblinker() 
-{
-    int j = 2;
-    while(j-- > 0) {
-        int i;
-        *(volatile int*)LED_ORANGE = 0x4d0002;
-        for(i=0;i<XDELAY/10;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-        *(volatile int*)LED_ORANGE = 0x4c0003;
-        for(i=0;i<XDELAY;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-    }
-}
+    // ASM_SAFE("BL xblinker\n")
+    #define LED_PR     0xd20b0994       // G16 green LED on OVF bezel   
+    #define LED_PWR    0xd20b0884       // G16 green LED on power button
+    #define LED_ORANGE 0xd20b0888       // G16 orange LED on OVF bezel   
+    #define XDELAY 4000000 
 
-//#define BLINKER 1
-/*----------------------------------------------------------------------
-  blinker
------------------------------------------------------------------------*/
-#ifdef BLINKER
-
-void draw_pixel_std(unsigned int , unsigned short );
-
-void __attribute__((naked,noinline)) blinker() {
-
-    int led_count = 50 ;
-    unsigned int pxl;
-
-    _SleepTask(2000);
-
-    while(1)
+    void xblinker() 
     {
-        switch led_count
-        {
-            case 3 :
-                *(volatile int*)0xd20b0994 = 0x4d0002;
-                break ;
-            case 2 :
-                *(volatile int*)0xd20b0994 = 0x4c0003;
-                break ;
-            case 1 :
-                *(volatile int*)0xd20b0994 = 0x4d0002;
-                break ;
-            case 0 :
-               led_count = 21 ;
-               *(volatile int*)0xd20b0994 = 0x4c0003;
-
-                for (pxl=0 ; pxl<0x3FFF ; pxl++)
-                {
-                    draw_pixel_std(pxl, MAKE_COLOR(COLOR_GREEN,COLOR_GREEN)) ;
-                }
-                break ;
-            default :
-                break ;
+        int j = 2;
+        while(j-- > 0) {
+            int i;
+            *(volatile int*)LED_ORANGE = 0x4d0002;
+            for(i=0;i<XDELAY/10;i++) {
+                asm volatile(
+                "nop\n"
+                );
+            }
+            *(volatile int*)LED_ORANGE = 0x4c0003;
+            for(i=0;i<XDELAY;i++) {
+                asm volatile(
+                "nop\n"
+                );
+            }
         }
-        led_count-- ;
-        _SleepTask(100);
     }
-};
 
-void CreateTask_blinker() {
-        _CreateTask("Blinker", 0x1, 0x200, blinker, 0);
-};
+    /*----------------------------------------------------------------------
+      blinker
+    -----------------------------------------------------------------------*/
+
+    void draw_pixel_std(unsigned int , unsigned short );
+
+    void __attribute__((naked,noinline)) blinker() {
+
+        int led_count = 50 ;
+        unsigned int pxl;
+
+        _SleepTask(2000);
+
+        while(1)
+        {
+            switch led_count
+            {
+                case 3 :
+                    *(volatile int*)0xd20b0994 = 0x4d0002;
+                    break ;
+                case 2 :
+                    *(volatile int*)0xd20b0994 = 0x4c0003;
+                    break ;
+                case 1 :
+                    *(volatile int*)0xd20b0994 = 0x4d0002;
+                    break ;
+                case 0 :
+                   led_count = 21 ;
+                   *(volatile int*)0xd20b0994 = 0x4c0003;
+
+                    for (pxl=0 ; pxl<0x3FFF ; pxl++)
+                    {
+                        draw_pixel_std(pxl, MAKE_COLOR(COLOR_GREEN,COLOR_GREEN)) ;
+                    }
+                    break ;
+                default :
+                    break ;
+            }
+            led_count-- ;
+            _SleepTask(100);
+        }
+    };
+
+    void CreateTask_blinker() {
+            _CreateTask("Blinker", 0x1, 0x200, blinker, 0);
+    };
 #endif
 
 
@@ -120,7 +120,11 @@ void CreateTask_blinker() {
 void __attribute__((naked,noinline)) boot() {
     asm volatile (
 "    ldr.w   sp, =0x80010000\n"
-ASM_SAFE("BL xblinker\n")
+
+    #ifdef DEBUG_BLINKING
+    ASM_SAFE("BL xblinker\n")
+    #endif
+
 "    bl      sub_fc020064\n"
 "    ldr     r2, =0xc0242010\n"
 "    ldr     r1, [r2]\n"
@@ -452,8 +456,8 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 "    BNE     batt_delay\n"
 #endif
 "    bl      CreateTask_spytask\n"
-"    bl      init_required_fw_features\n" // added
-#ifdef BLINKER
+//"    bl      init_required_fw_features\n" // added
+#ifdef DEBUG_BLINKING
 "    bl      CreateTask_blinker\n"
 #endif
 
@@ -536,8 +540,9 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
     Stuff to avoid asserts on cameras running DryOS r54+
     Note : G16 runs DryOS r52 so this hooked but not needed. See : https://chdk.setepontos.com/index.php?topic=12516.0
 */
-void init_required_fw_features(void) {
 /* FIXME
+void init_required_fw_features(void) {
+
     extern void _init_focus_eventflag();
     _init_focus_eventflag();
 
@@ -549,8 +554,8 @@ void init_required_fw_features(void) {
     extern int av_override_semaphore;
     extern int _CreateBinarySemaphoreStrictly(int x, int y);
     av_override_semaphore = _CreateBinarySemaphoreStrictly(0,0);
-*/
 }
+*/
 
 // G16 1.00h  0xfc070b31 77
 void __attribute__((naked,noinline)) kbd_p2_f_my() {

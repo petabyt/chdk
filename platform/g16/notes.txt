@@ -5,6 +5,4 @@ G16 P-ID 0x3274 (12916)	G16	DIGIC VI DRYOS 2.3 release #0052 2013
 - movie features are not supported
 - RAW/DNG in the various scene modes not tested
 - recreview_hold is just "review mode" - see note in stubs_min.S
-- value for focus_len_table in stubs_min.S found for 1.01c by memory search - assumed valid for other f/w versions - FIXME?
-
 

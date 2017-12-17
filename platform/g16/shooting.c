@@ -107,6 +107,13 @@ const ISOTable iso_table[] = {
     { 24,12800, "12800", -1},
 };
 
+// Unknown values from canon_mode_list 0xfc7f8a3c Found @0xfc124510
+// 32830  0x803e In firmware but not in current modemap 
+// 32777  0x8009 In firmware but not in current modemap
+// 33332  0x8234 In firmware but not in current modemap
+// 33295  0x820f In firmware but not in current modemap
+//  4163  0x1043 In firmware but not in current modemap  <- invokes C1 when written to PROPCASE_SHOOTING_MODE 
+//  4164  0x1044 In firmware but not in current modemap  <- invokes C2 when written to PROPCASE_SHOOTING_MODE
 
 const CapturemodeMap modemap[] = {
 
@@ -120,7 +127,9 @@ const CapturemodeMap modemap[] = {
 { MODE_TOY_CAMERA            ,8757 }, //
 { MODE_BACKGROUND_DEFOCUS    ,8758 }, //
 { MODE_SOFTFOCUS             ,8759 }, //
+{ MODE_MONOCHROME            ,8761 }, //
 { MODE_HDR                   ,8769 }, //
+
 
 { MODE_PORTRAIT             ,16403 }, //
 { MODE_SNOW                 ,16411 }, //

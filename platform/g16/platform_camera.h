@@ -46,6 +46,8 @@
 
     #define CAM_HAS_CMOS                        1
 
+    #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
+
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1

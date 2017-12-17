@@ -63,7 +63,6 @@
 
 // canon_mode_list 0xfc7f8a3c Found @0xfc124510
 // Check modemap values from 'platform/CAMERA/shooting.c':
-//  8761  0x2239 In firmware but not in current modemap
 // 32830  0x803e In firmware but not in current modemap
 // 32777  0x8009 In firmware but not in current modemap
 // 33332  0x8234 In firmware but not in current modemap
