@@ -3,8 +3,7 @@ SX710 HS notes
 ************************************
 CHDK is a hack, use at your own risk!
 
-This is an in development PREALPHA port. SOme CHDK features have not been
-tested, and some have not been implemented
+This is an ALPHA port. Some CHDK features have not been tested.
 
 Additionally, Digic 6 has significant differences from previously 
 supported models, which means some features are not fully implemented
@@ -64,7 +63,7 @@ display updating is ugly / has usual Digic 6 limitations
 - Edge overlay does not erase properly when shown live
 - Zebra "Draw Over Zebra" and Restore options are non-functional
 - Some games don't draw correctly
-DNG color matrix is incorrect (copied from g7x) but not unusable
+DNG color matrix is incorrect (copied from sx60hs) but unusable
 
 KNOWN BUGS
 **********
