@@ -42,6 +42,7 @@ Tested (using 15-45 kit lens)
 - Motion detection (reaction time not tested)
 - USB remote - plug test
 - chdkptp cam tests
+- bracketing in continuous mode - Tv, ISO works, Av also seems to work
 
 Untested
 
