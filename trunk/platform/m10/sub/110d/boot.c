@@ -371,6 +371,7 @@ void __attribute__((naked,noinline)) sub_fc06ca35_my() {
 //"    bl      sub_fc08c8ee\n"      // -
 "    bl      sub_fc08c8ee_my\n"     // -> taskcreate_physw
 "    bl      CreateTask_spytask\n"  // +
+"    bl      init_required_fw_features\n" // +
 "    bl      sub_fc2a516e\n"        // SsTask, CaptSeqTask, ...
 "    bl      sub_fc0f95f0\n"        // creates a recursive lock
 "    bl      sub_fc0d1748\n"        // cobj, ...
@@ -388,6 +389,19 @@ void __attribute__((naked,noinline)) sub_fc06ca35_my() {
     );
 }
 
+/*
+    *** workaround ***
+    Init stuff to avoid asserts on cameras running DryOS r54+
+    Execute this only once
+ */
+void init_required_fw_features(void) {
+    extern int _CreateBinarySemaphore(int, int);
+
+    // aperture related semaphore
+    *(int*)0x2E804 = _CreateBinarySemaphore(0, 0);
+    // focuslens related semaphore (may not be needed as sd override does not work)
+    *(int*)(0x2E7E0+0xC) = _CreateBinarySemaphore(0, 0);
+}
 
 //taskcreate_physw
 void __attribute__((naked,noinline)) sub_fc08c8ee_my() {
@@ -627,4 +641,3 @@ void __attribute__((naked,noinline)) sub_fc08c6e8_my() {
 "    b       sub_fc08c6f4\n"            // jump back to ROM
     );
 }
-
