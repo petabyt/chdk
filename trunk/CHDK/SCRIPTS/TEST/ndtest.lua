@@ -204,6 +204,7 @@ function log:close()
 end
 -- end log module
 
+saved_iso_mode=get_prop(props.ISO_MODE)
 function restore()
 	set_iso_mode(saved_iso_mode)
 	set_nd_filter(0)
@@ -360,7 +361,7 @@ function run()
 	-- ND only, check if ND was in on auto exposure
 	if get_nd_present() == 1 and get_prop(props.AV) ~= get_prop(props.MIN_AV) then
 		error('AE used ND, try darker scene')
-	elseif get_nd_present() == 2 and get_prop(props.ND_FILTER_STATE) == 1 then
+	elseif get_nd_present() == 2 and props.ND_FILTER_STATE and get_prop(props.ND_FILTER_STATE) == 1 then
 		error('ND on in Canon UI')
 	end
 
@@ -476,7 +477,7 @@ function run()
 		if i == shots then
 			calc_results(nond_vals,nd_vals)
 			-- clear ND prop so it doesn't confuse Canon UI check in later runs
-			if get_nd_present() == 2 then 
+			if props.ND_FILTER_STATE and get_nd_present() == 2 then 
 				set_prop(props.ND_FILTER_STATE,0)
 			end
 
