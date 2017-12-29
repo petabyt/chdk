@@ -28,8 +28,6 @@
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
-    #define CAM_HAS_ND_FILTER                   1  // Camera has a "hidden" built-in ND filter (in addition to iris)
-
     // doesn't seem to needed
 //    #undef  CAM_KEY_PRESS_DELAY
 //    #define CAM_KEY_PRESS_DELAY                 60          // delay after a press

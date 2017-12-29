@@ -18,9 +18,6 @@ bootable SD card to load. See known bugs below.
 
 General camera and CHDK port information
 ****************************************
-SX710 has an adjustable aperture, and a "hidden" ND filter not
-accessible through the Canon UI
-
 Default alt button is PLAY. VIDEO and WIFI may also be used
 
 Subject distance (focus) override is available only when MF or AF lock is set
@@ -34,7 +31,6 @@ TESTED
 ******
 Tv and Av overrides, bracketing in continuous.
 AV override works up to F11 at wide, F22 at max zoom
-ND control
 Dark frame subtraction control
 llibtst.lua
 Basic PTP: file transfer, play/rec, live view
