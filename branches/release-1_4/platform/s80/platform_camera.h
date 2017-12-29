@@ -40,6 +40,8 @@
     //#undef CAM_AF_SCAN_DURING_VIDEO_RECORD        // always crashes
     #undef  CAM_VIDEO_CONTROL
 
+    #undef  CAM_USE_ZOOM_FOR_MF                 // not usable on this cam, MF only adjustable by jogdial
+
     #define CAM_DNG_LENS_INFO                   { 58,10, 207,10, 28,10, 53,10 } // See comments in camera.h
     // pattern
     #define cam_CFAPattern 0x02010100 // Red  Green  Green  Blue

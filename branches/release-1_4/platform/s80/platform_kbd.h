@@ -11,5 +11,4 @@
 #define USB_MASK (0x20)
 #define USB_IDX  2
 
-#define KBD_ZOOM_FOR_MF_USE_MF_KEY 1
 #endif
