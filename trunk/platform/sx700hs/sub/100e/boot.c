@@ -438,15 +438,14 @@ void __attribute__((naked,noinline)) sub_fc05d1e0_my() {
 "loc_fc05d26c:\n"
 "    pop.w   {r4, lr}\n"
 //"    b.w     sub_fc05d5e6\n"
-//    "b.w     sub_fc05d5e6_my\n" // -> continue (taskcreate_startup)
-    "b.w     sub_fc05d274_my\n" // -> continue (taskcreate_startup)
+    "b.w     sub_fc05d5e6_my\n" // -> continue (taskcreate_startup)
     ".ltorg\n"
 
     );
 }
 
 // -f=chdk -s=0xfc05d5e7 -c=27
-void __attribute__((naked,noinline)) sub_fc05d274_my() {
+void __attribute__((naked,noinline)) sub_fc05d5e6_my() {
 
 //*(int*)0xd20b0994 = 0x4d0002;
        
@@ -568,9 +567,6 @@ void __attribute__((naked,noinline)) sub_fc07a1f0_my() {
 }
 #endif
 
-void __attribute__((naked,noinline)) sub_fc05d5e6_my() {
-*(int*)0xd20b0994 = 0x4d0002;
-}
 // Done till here
 
 // task_Startup
