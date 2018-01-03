@@ -39,7 +39,7 @@ DEF(current_viewport_buffer       ,0x00008788+0x38) // sx700v100e found @0xfc120
 // 0xfc568a64: 0x43312300 0x433c0b00 0x4346f300 0x4351db00
 DEF(viewport_buffers              ,0xfc568a64) // sx700v100e found @0xfc11f37c 0xfc568a4c + 0x10 + 0x8 similar to G16
 
-DEF(dial_positions,0x0000fdd4) // sx700v100e found from sub_fc06beac similar to G16
+DEF(dial_positions                ,0x0000fcf0)
 
 // Search for ActionStopRecordMovie, then go till next branchtable
 DEF(displaytype,                              0x8f98) // sx700v100e Similar to sx280 0x8f54 + 0x44 found @0xfc120a38  (GetDisplayType)
