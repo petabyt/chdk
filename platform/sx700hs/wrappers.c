@@ -15,12 +15,6 @@ long lens_get_target_distance()
 	return _GetCurrentTargetDistance();
 }
 
-#ifdef CAM_HAS_GPS
-void GPS_UpdateData() {
-    _GPS_UpdateData();
-}
-#endif
- 
  //--------------------------------------------------
  // DoMFLock : use _MFOn/_MFOff  or  _PT_MFOn/_PT_MFOff  or _SS_MFOn/_SS_MFOff if defined in stubs_entry.S
  //            otherwise use PostLogicalEventForNotPowerType(levent_id_for_name(PressSW1andMF),0); (see sx500hs for an example)

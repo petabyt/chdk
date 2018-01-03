@@ -24,16 +24,6 @@ void startup() {
     boot();
 }
 
-/* Screen is not articulated
-int screen_opened(void) {
-        return (physw_status[2] & 0x00000200);
-}
-
-int screen_rotated(void) {
-        return !(physw_status[2] & 0x00000100);
-}
-*/
-
 #define NUM_FL      113 // From physw_status
 #define NUM_DATA    2   // 2 words each entry, first is FL
 extern int focus_len_table[NUM_FL*NUM_DATA];
