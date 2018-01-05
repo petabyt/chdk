@@ -893,6 +893,8 @@ void __attribute__((naked,noinline)) sub_fc083ab0_my() {
     );
 }
 
+// exp_drv not needed for extended exposure, probably works up to 1024s
+#if 0
 // -f=chdk -s=task_ExpDrv -c=428
 // note, breaks on literal pool around fc2867ea-fc286814
 // task_ExpDrv 0xfc28653b
@@ -1575,4 +1577,4 @@ asm volatile (
 ".ltorg\n"
     );
 }
-
+#endif
