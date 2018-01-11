@@ -1,7 +1,7 @@
 #include "lolevel.h"
 #include "platform.h"
 // debug
-#define FILEWRITE_DEBUG_LOG 1
+//#define FILEWRITE_DEBUG_LOG 1
 extern void _LogCameraEvent(int id,const char *fmt,...);
 
 typedef struct {
