@@ -88,6 +88,7 @@
 
    #define cam_CalibrationIlluminant1          17
 
+    // colormatrix copied from SX60
     // from CR2 converted to DNG with adobe DNG converter
     #define CAM_COLORMATRIX1 \
     15686, 10000, -8326, 10000, -246, 10000, \
