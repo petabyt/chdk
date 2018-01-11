@@ -1,7 +1,7 @@
 #include "lolevel.h"
 #include "platform.h"
 
-extern void _LogCameraEvent(int id,const char *fmt,...);
+//#define FILEWRITE_DEBUG_LOG 1
 
 typedef struct {
     unsigned int address;
@@ -30,6 +30,9 @@ typedef struct
 
 #include "../../../generic/filewrite.c"
 
+
+#ifdef FILEWRITE_DEBUG_LOG
+extern void _LogCameraEvent(int id,const char *fmt,...);
 void log_fwt_msg(fwt_data_struct *fwd)
 {
     int m=fwd->unkn1;
@@ -45,6 +48,7 @@ void log_fwt_start(void)
 {
     _LogCameraEvent(0x60,"fw start");
 }
+#endif
 
 /*************************************************************/
 // sx700v100e   -f=chdk -s=task_FileWrite -c=73
