@@ -3689,7 +3689,68 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
             printf("eventproc name not string at 0x%"PRIx64"\n",is->insn->address);
         }
     } else {
-        printf("failed to get export/register eventproc args at 0x%"PRIx64"\n",is->insn->address);
+        // check for special case: one of the 2 arg eventprocs is used in loop to register a table
+
+        // using the existing 'is' iterator
+        // first, address is backed up
+        uint64_t adr = is->insn->address;
+        uint32_t adr_thumb = is->thumb;
+        uint32_t tbla = 0;
+        int ar = -1;
+        int found = 0;
+        // go back a 10 instructions
+        disasm_iter_init(fw,is,adr_hist_get(&is->ah,10));
+        // search for ldr reg, =address where address is higher in ROM (supposed to be the eventproc table)
+        while(1) {
+            if (!disasm_iter(fw,is)) break;
+            if (is->insn->address >= adr) break;
+            if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].type == ARM_OP_MEM) {
+                uint32_t u = LDR_PC2val(fw,is->insn);
+                if ((u<fw->base+fw->size8) && (u>adr) && (!isASCIIstring(fw,u))) {
+                    ar = is->insn->detail->arm.operands[0].reg;
+                    tbla = u;
+                    break;
+                }
+            }
+        }
+        // search for found register appearing later in an add instruction
+        while(ar >= 0) {
+            if (!disasm_iter(fw,is)) break;
+            if (is->insn->address >= adr) break;
+            if (is->insn->id == ARM_INS_ADD && is->insn->detail->arm.operands[1].reg == ar) {
+                found = 1;
+                //printf("found loop eventproc table at 0x%"PRIx64"\n",is->insn->address);
+                break;
+            }
+        }
+        if (found) {
+            // following is taken from process_eventproc_table_call
+            uint32_t *p=(uint32_t*)adr2ptr_with_data(fw,tbla);
+            if(p) {
+                while(*p) {
+                    uint32_t nm_adr=*p;
+                    // NULL name = end of table
+                    if (!nm_adr) break;
+                    if(!isASCIIstring(fw,nm_adr)) {
+                        printf("eventproc name not string tbl2 0x%08x 0x%08x\n",tbla,nm_adr);
+                        break;
+                    }
+                    char *nm=(char *)adr2ptr(fw,nm_adr);
+                    p++;
+                    uint32_t fn=*p;
+                    p++;
+                    add_event_proc(fw,nm,fn);
+                }
+            } else {
+                printf("eventproc tbl2 not table 0x%08x\n",tbla);
+            }
+        }
+        else {
+            printf("failed to get export/register eventproc args at 0x%"PRIx64"\n",adr);
+        }
+        // restore address in 'is' to avoid infinite loop
+        disasm_iter_init(fw,is,adr | adr_thumb);
+        disasm_iter(fw,is);
     }
     return 0; // always keep looking
 }
