@@ -4854,6 +4854,7 @@ void add_func_name2(firmware *fw, uint32_t nadr, uint32_t eadr, char *suffix)
 
 int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
+    int j = k;
     if (isBorBL(fw,k))
     {
         uint32_t adr = followBranch(fw,idx2adr(fw,k),0x01000001);
@@ -4878,6 +4879,60 @@ int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
             if ((nadr != 0) && (eadr != 0))
             {
                 add_func_name2(fw, nadr, eadr, "_FW");
+            }
+            else
+            {
+                // find spec case (when used in a loop)
+                k = j;
+                int c = 1;
+                int fnd = 0;
+                while (c<4)
+                {
+                    int k1 = find_Nth_inst_rev(fw, isLDR_PC, k, 15, c);
+                    if (k1 > 0)
+                    {
+                        uint32_t k2 = LDR2val(fw,k1);
+                        if ((k2 > fw->base) && (k2 < (fw->base + fw->size*4 - 1)))
+                        {
+                            int k3 = k;
+                            int hit = 0;
+                            while (k3 > k-4)
+                            {
+                                if ((fwval(fw,k3) & 0xfff0fff0) == 0xe7901000) // ldr r1, [ry, rz]
+                                {
+                                    hit += 1;
+                                }
+                                if ((fwval(fw,k3) & 0xfff0fff0) == 0xe7900000) // ldr r0, [ry, rz]
+                                {
+                                    hit += 0x1000;
+                                }
+                                k3--;
+                            }
+                            if ((fwval(fw,k-1) & 0xfff00000) == 0xe2800000) // add
+                            {
+                                hit += 0x100000;
+                            }
+                            if (hit == 0x101001)
+                            {
+                                // code pattern confirmed, process what is supposed to be the table
+                                k1 = adr2idx(fw,k2);
+                                //printf(" tbl %x\n",k2);
+                                while (fwval(fw,k1) != 0)
+                                {
+                                    // check both pointers' validity as these tables do not usually have NULL as last entry
+                                    if (!idx_valid(fw,adr2idx(fw,fwval(fw,k1)))) break;
+                                    if (!idx_valid(fw,adr2idx(fw,fwval(fw,k1+1)))) break;
+                                    add_func_name2(fw, fwval(fw,k1), fwval(fw,k1+1), "_FW");
+                                    k1 += 2;
+                                }
+                                fnd = 1;
+                                break;
+                            }
+                        }
+                    }
+                    c++;
+                    if (fnd) break;
+                }
             }
         }
     }

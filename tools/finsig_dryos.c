@@ -6171,6 +6171,7 @@ int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 
 int match_registerproc2(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
+    int j = k;
     if (isBorBL(fw,k))
     {
         uint32_t adr = followBranch(fw,idx2adr(fw,k),0x01000001);
@@ -6201,6 +6202,36 @@ int match_registerproc2(firmware *fw, int k, uint32_t fadr, uint32_t v2)
             if ((nadr != 0) && (eadr != 0))
             {
                 add_func_name2(fw, nadr, eadr, "_FW");
+            }
+            else
+            {
+                // find spec case (when used in a loop)
+                k = j;
+                int k1 = find_inst_rev(fw, isLDR_PC, k, 8);
+                if (k1 > 0)
+                {
+                    uint32_t k2 = LDR2val(fw,k1);
+                    if ((k2 > fw->base) && (k2 < (fw->base + fw->size*4 - 1)))
+                    {
+                        int k3 = k;
+                        while (k3 > k-4)
+                        {
+                            if ( ((fwval(fw,k3) & 0xfff00ff0) == 0xe0800180) && // add rx, ry, rz, lsl #3
+                               ((fwval(fw,k3) & 0x000f0000)>>16) == (fwRd(fw,k1)) ) // check register match
+                            {
+                                // table confirmed, process it
+                                k1 = adr2idx(fw,k2);
+                                while (fwval(fw,k1) != 0)
+                                {
+                                    add_func_name2(fw, fwval(fw,k1), fwval(fw,k1+1), "_FW");
+                                    k1 += 2;
+                                }
+                                break;
+                            }
+                            k3--;
+                        }
+                    }
+                }
             }
         }
     }
