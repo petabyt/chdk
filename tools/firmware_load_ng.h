@@ -50,6 +50,8 @@ typedef struct {
 typedef struct {
     const uint8_t *code; // pointer into buffer for code
     uint64_t adr; // firmware address - must be 64 bit for capstone iter, never has thumb bit set
+                  // points to the next instruction to disassemble, insn->address gives the most 
+                  // recently disassembled address
     size_t size; // remaining code size
     cs_insn *insn; // cached instruction
     uint32_t thumb; // thumb state
