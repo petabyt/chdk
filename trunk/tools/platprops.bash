@@ -74,7 +74,7 @@ prop=`svn pg svn:ignore platform/d10/sub/100a`
 find platform/$plat/sub/* -maxdepth 0 -type d -exec $svn ps svn:ignore "$prop" {} \;
 
 find loader/$plat -name '*.[chSs]' -type f -exec $svn ps svn:eol-style native {} \;
-find platform/$plat \( -name '*.[chSs]' -o -name '*.csv' -o -name 'code_gen.txt' \) -type f -exec $svn ps svn:eol-style native {} \;
+find platform/$plat \( -name '*.[chSs]' -o -name '*.csv' -o -name 'code_gen.txt' -o -name 'physw_bits.txt' \) -type f -exec $svn ps svn:eol-style native {} \;
 
 find loader/$plat -name '[Mm]ake*' -type f \! -iwholename '*/.svn*' -exec $svn ps svn:eol-style LF {} \;
 find platform/$plat -name '[Mm]ake*' -type f \! -iwholename '*/.svn*' -exec $svn ps svn:eol-style LF {} \;
