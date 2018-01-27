@@ -266,7 +266,7 @@ asm volatile (
 // instructions. Must replace 8 bytes!
 "    stmdb   sp!, {r1, r2, r3, r4, r5, r6, r7, r8, r9, lr}\n"
 "    mov     r4, r0\n"
-"    ldr     r0, =0x0815\n" //at fc05d340
+"    ldr     r0, =0x0000815c\n"
 "    ldr.w   pc, =(hook_CreateTask + 8 + 1) \n"  // Continue in firmware
 ".ltorg\n"
 );
