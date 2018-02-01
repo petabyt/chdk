@@ -94,4 +94,6 @@
 
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works    
 
+    #define CAM_QUALITY_OVERRIDE            1   // https://chdk.setepontos.com/index.php?topic=13342
+
 //--------------------------------------------------
