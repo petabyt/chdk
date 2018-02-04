@@ -468,6 +468,12 @@ asm volatile (
 "    LDMFD   SP!, {R3-R5,PC} \n"
 );
 }
+// Workaround for cards becoming read-only in camera when diskboot'ing to playback mode.
+// The following flag is checked by the function that calls WriteSDCard (sub_ff8317dc)
+// See sx530 porting thread for related discussions. https://chdk.setepontos.com/index.php?topic=12418
+void fix_writable_media_flag() {
+    *(int*)0x1d38 = 1;
+}
 
 /*************************************************************/
 //** init_file_modules_task @ 0xFF85B9DC - 0xFF85BA10, length=14
@@ -481,6 +487,7 @@ asm volatile (
 "    MOVNE   R0, R5 \n"
 "    BLNE    _PostLogicalEventToUI \n"
 "    BL      sub_FF8A181C \n"
+"    BL      fix_writable_media_flag\n" // SD card startup fix
 "    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
 "    CMP     R4, #0 \n"
 "    LDMNEFD SP!, {R4-R6,PC} \n"
