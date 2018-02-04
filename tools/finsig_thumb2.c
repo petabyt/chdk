@@ -3413,7 +3413,8 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_DRY_MIN(min_rel) (min_rel),0
 #define SIG_DRY_MAX(max_rel) 0,(max_rel)
 #define SIG_DRY_RANGE(min_rel,max_rel) (min_rel),(max_rel)
-// bootstrap sigs
+// bootstrap sigs:
+// Used to find the minimum needed to for find_generic_funcs to get generic task and eventproc matches 
 // order is important
 sig_rule_t sig_rules_initial[]={
 // function         CHDK name                   ref name/string         func param          dry rel
@@ -3431,6 +3432,8 @@ sig_rule_t sig_rules_initial[]={
 {NULL},
 };
 
+// main sigs:
+// Run after find_generic_funcs. Order is important
 sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param          dry rel
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
@@ -3812,7 +3815,7 @@ int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused)
             foundr0 = get_call_const_args(fw,is,8-2,regs) & 2;
             if (foundr0) {
                 regs[0] = regs[1];
-                printf("eventproc table case1 0x%x found table 0x%x\n",ca,regs[1]);
+                // printf("eventproc table case1 0x%x found table 0x%x\n",ca,regs[1]);
             }
         }
         // restore iter address
@@ -3908,6 +3911,7 @@ void add_generic_sig_match(search_calls_multi_data_t *match_fns,
 }
 /*
 collect as many calls as possible of functions identified by name, whether or not listed in funcs to find
+this does a full disassembly of the entire firmware, which is slow
 */
 void find_generic_funcs(firmware *fw) {
     search_calls_multi_data_t match_fns[MAX_GENERIC_FUNCS];
