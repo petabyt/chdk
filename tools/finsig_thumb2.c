@@ -996,6 +996,37 @@ int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
+// find some veneers of RegisterEventProcTable/UnRegisterEventProcTable
+// expects b <something else>, b <ref_name>
+// TODO should be a generic find veneer near?
+int sig_match_evp_table_veneer(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t ref_adr = get_saved_sig_val(rule->ref_name);
+    int prevb = 0;
+    uint32_t cadr;
+    // following should probably be done using fw_search_insn
+    // both veneers consist of a single b instruction, always preceded by another b instruction
+    disasm_iter_init(fw,is,ref_adr); // start at our known function
+    while (is->adr < (ref_adr+0x800)) {
+        cadr = is->adr;
+        if (!disasm_iter(fw,is)) {
+            disasm_iter_set(fw,is,(is->adr+2) | fw->thumb_default);
+        }
+        else {
+            if (is->insn->id == ARM_INS_B) {
+                uint32_t b_adr = get_branch_call_insn_target(fw,is);
+                if (prevb && (b_adr == ref_adr)) {
+                    // this doesn't use _with_j since we want identify the veneer
+                    add_func_name(rule->name,cadr | is->thumb,NULL);
+                    return 1;
+                }
+                prevb = 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3392,8 +3423,11 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_reg_evp_table, "RegisterEventProcTable","DispDev_EnableEventProc"},
 {sig_match_reg_evp_alt2, "RegisterEventProcedure_alt2","EngApp.Delete"},
 {sig_match_unreg_evp_table,"UnRegisterEventProcTable","MechaUnRegisterEventProcedure"},
+{sig_match_evp_table_veneer,"RegisterEventProcTable_alt","RegisterEventProcTable"},
+{sig_match_evp_table_veneer,"UnRegisterEventProcTable_alt","UnRegisterEventProcTable"},
 {sig_match_str_r0_call,"CreateTaskStrictly",    "FileWriteTask",},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
+{sig_match_near_str,   "dry_memcpy",            "EP Slot%d",            SIG_NEAR_BEFORE(4,1)},
 {NULL},
 };
 
@@ -3463,7 +3497,6 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "Write",                    "Write_FW",},
 {sig_match_named,   "bzero",                    "exec_FW",              SIG_NAMED_SUB},
 {sig_match_named,   "memset32",                 "bzero",                SIG_NAMED_NTH(1,INSN)},
-{sig_match_named,   "dry_memcpy",               "task__tgTask",         SIG_NAMED_SUB},
 {sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "free",                     "FreeMemory_FW",        SIG_NAMED_JMP_SUB},
@@ -3758,8 +3791,35 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
 // process a call to event proc table registration
 int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused) {
     uint32_t regs[4];
+    int foundr0 = 0;
     // get r0, backtracking up to 4 instructions
-    if(get_call_const_args(fw,is,4,regs)&1) {
+    foundr0 = get_call_const_args(fw,is,4,regs) & 1;
+    if (!foundr0) {
+        // case 1: table memcpy'd onto stack
+        uint32_t ca = is->insn->address | is->thumb;
+        uint32_t sa = adr_hist_get(&is->ah,2);
+        uint32_t ta = adr_hist_get(&is->ah,8);
+        disasm_iter_set(fw,is,ta);
+        int n = 0;
+        while(++n<=(8-2))
+        {
+            disasm_iter(fw,is);
+        }
+        fw_disasm_iter_single(fw,sa);
+        uint32_t adr1 = get_saved_sig_val("j_dry_memcpy");
+        uint32_t adr2 = get_branch_call_insn_target(fw,fw->is);
+        if (fw->is->insn->id == ARM_INS_BLX && adr1 == adr2) {
+            foundr0 = get_call_const_args(fw,is,8-2,regs) & 2;
+            if (foundr0) {
+                regs[0] = regs[1];
+                printf("eventproc table case1 0x%x found table 0x%x\n",ca,regs[1]);
+            }
+        }
+        // restore iter address
+        disasm_iter_init(fw,is,ca);
+        disasm_iter(fw,is);
+    }
+    if(foundr0) {
         // include tables in RAM data
         uint32_t *p=(uint32_t*)adr2ptr_with_data(fw,regs[0]);
         //printf("found eventproc table 0x%08x\n",regs[0]);
@@ -3861,6 +3921,8 @@ void find_generic_funcs(firmware *fw) {
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"UnRegisterEventProcTable");
     add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTaskStrictly");
     add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTask");
+    add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"RegisterEventProcTable_alt");
+    add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"UnRegisterEventProcTable_alt");
 
     iter_state_t *is=disasm_iter_new(fw,0);
     disasm_iter_init(fw,is,fw->rom_code_search_min_adr | fw->thumb_default); // reset to start of fw
