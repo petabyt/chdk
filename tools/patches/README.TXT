@@ -1,3 +1,9 @@
+* capstone-3.0.4-blx-align.patch
+	required for digic6 sigfinder finsig_thumb2, see https://chdk.setepontos.com/index.php?topic=12714.msg126341#msg126341
+
+
+WARNING: The items below are EXTREMELY OLD and probably not useful!
+
 * libptp2-1.1.0-canon-upload.diff
     Added ability to libptp2-1.1.0 to upload files to
     Canon cameras. WARNING: still very buggy - damages
