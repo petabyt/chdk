@@ -1,0 +1,15 @@
+--- ARMInstPrinter.c.orig	2015-07-15 00:44:42 -0700
++++ ARMInstPrinter.c	2016-01-11 22:41:15 -0800
+@@ -723,9 +723,12 @@
+ 				imm += (int32_t)MI->address + 4;
+ 				if (ARM_blx_to_arm_mode(MI->csh, opc)) {
+ 					// here need to align down to the nearest 4-byte address
++					imm &=~3;
++					/*
+ #define _ALIGN_DOWN(v, align_width) ((v/align_width)*align_width)
+ 					imm = _ALIGN_DOWN(imm, 4);
+ #undef _ALIGN_DOWN
++					*/
+ 				}
+ 			} else {
+ 				imm += (int32_t)MI->address + 8;
