@@ -203,9 +203,9 @@ ifeq ($(OPT_CAPSTONE_TOOLS),1)
 endif
 
 rebuild-stubs: platformcheck
-	if [ -s $(TARGET_PRIMARY) ] ; then \
-		if [ "$(THUMB_FW)" == "1" ] ; then \
-			if [ "$(OPT_CAPSTONE_TOOLS)" == "1" ] ; then \
+	if [ -s "$(TARGET_PRIMARY)" ] ; then \
+		if [ "$(THUMB_FW)" = "1" ] ; then \
+			if [ "$(OPT_CAPSTONE_TOOLS)" = "1" ] ; then \
 				$(MAKE) -C tools finsig_thumb2$(EXE) ;\
 				echo "rebuild stubs for $(PLATFORM)-$(PLATFORMSUB)" ;\
 				rm -f $(camfw)/stubs_entry.S ;\
