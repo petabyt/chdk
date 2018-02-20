@@ -755,8 +755,10 @@
 0xfc1c10ab,MoveIrisMechaPositionWithBacklash_FW
 0xfc1c10d1,MoveIrisMechaPositionWithoutBacklash_FW
 0xfc1c10f7,MoveIrisToAvWithoutBacklash_FW
+0xfc1c1121,GetUsableMinAv
 0xfc1c1121,GetUsableMinAv_FW
 0xfc1c1131,j_GetUsableMinAv_FW
+0xfc1c1133,GetUsableMaxAv
 0xfc1c1133,GetUsableMaxAv_FW
 0xfc1c1143,j_GetUsableMaxAv_FW
 0xfc1c2e49,File.ClearExifInfo_FW

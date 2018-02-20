@@ -709,8 +709,10 @@
 0xff150dfc,MoveIrisMechaPositionWithBacklash_FW
 0xff150e3c,MoveIrisMechaPositionWithoutBacklash_FW
 0xff150e7c,MoveIrisToAvWithoutBacklash_FW
+0xff150ec8,GetUsableMinAv
 0xff150ec8,GetUsableMinAv_FW
 0xff150ee0,j_GetUsableMinAv_FW
+0xff150ee4,GetUsableMaxAv
 0xff150ee4,GetUsableMaxAv_FW
 0xff150efc,j_GetUsableMaxAv_FW
 0xff150f44,LoadParamDataFromAdjTableBin_FW

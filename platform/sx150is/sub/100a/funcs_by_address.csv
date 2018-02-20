@@ -1406,7 +1406,9 @@
 0xffb46f14,MoveIrisMechaPositionWithBacklash_FW
 0xffb46f50,MoveIrisMechaPositionWithoutBacklash_FW
 0xffb46f8c,MoveIrisToAvWithoutBacklash_FW
+0xffb46fd8,GetUsableMinAv
 0xffb46fd8,GetUsableMinAv_FW
+0xffb46ff0,GetUsableMaxAv
 0xffb46ff0,GetUsableMaxAv_FW
 0xffb4704c,ReloadNdFilterAdjustment_FW
 0xffb47064,PutInNdFilter

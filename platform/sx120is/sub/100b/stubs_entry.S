@@ -157,6 +157,8 @@ NHSTUB(Fwrite_Fut                             ,0xffc133b8) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc394d8) //102
 NHSTUB(GetCCDTemperature                      ,0xffc39464) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd0e010) //120
+NHSTUB(GetUsableMaxAv                         ,0xffe607bc) //120
+NHSTUB(GetUsableMinAv                         ,0xffe607a4) //120
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd0c5f0) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffd0ca40) //  3
 NHSTUB(GetImageFolder                         ,0xffcec100) //122

@@ -117,6 +117,8 @@ NHSTUB(Fwrite_Fut                             ,0xfc326a77) //  0
 NHSTUB(GetBatteryTemperature                  ,0xfc396c05) //  0
 NHSTUB(GetCCDTemperature                      ,0xfc396ba9) //  0
 NHSTUB(GetCurrentAvValue                      ,0xfc0d8029) //  0
+NHSTUB(GetUsableMaxAv                         ,0xfc53a771) //  0
+NHSTUB(GetUsableMinAv                         ,0xfc53a75f) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc316877) //  0
 NHSTUB(GetDrive_FreeClusters                  ,0xfc316d7b) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc327eb7) //  0

@@ -89,6 +89,8 @@ NHSTUB(Fwrite_Fut                             ,0xffe423b0) //120
 NHSTUB(GetBatteryTemperature                  ,0xffdeac78) //102
 NHSTUB(GetCCDTemperature                      ,0xffdeac64) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe05c74) //120
+NHSTUB(GetUsableMaxAv                         ,0xffe05f30) //120
+NHSTUB(GetUsableMinAv                         ,0xffe05f0c) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffe46344) //119
 NHSTUB(GetDrive_FreeClusters                  ,0xffe463bc) //1103
 NHSTUB(GetDrive_TotalClusters                 ,0xffe46380) //119

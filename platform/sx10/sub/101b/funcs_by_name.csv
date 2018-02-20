@@ -521,7 +521,9 @@
 0xffa30bb8,GetTransparentMemoryPosition_FW
 0xffa30b60,GetTransparentMemorySize_FW
 0xffad3834,GetUnpackCrwIntegralValue_FW
+0xffacb980,GetUsableMaxAv
 0xffacb980,GetUsableMaxAv_FW
+0xffacb968,GetUsableMinAv
 0xffacb968,GetUsableMinAv_FW
 0xffacb574,GetUserSetShutterSPeed_FW
 0xff940398,GetUsmCurrentPosition_FW

@@ -152,6 +152,8 @@ NHSTUB(Fseek_Fut                              ,0xff836990) //120
 NHSTUB(Fwrite_Fut                             ,0xff8368f0) //120
 NHSTUB(GetCCDTemperature                      ,0xff862fdc) //102
 NHSTUB(GetCurrentAvValue                      ,0xff9625c0) //120
+NHSTUB(GetUsableMaxAv                         ,0xffb075c0) //120
+NHSTUB(GetUsableMinAv                         ,0xffb075a8) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff8709b8) //122
 NHSTUB(GetDrive_FreeClusters                  ,0xff870a18) //119
 NHSTUB(GetDrive_TotalClusters                 ,0xff8709ec) //119

@@ -422,7 +422,9 @@
 0xffe81394,GetTransparentMemory_FW
 0xffe813ec,GetTransparentMemoryPosition_FW
 0xffe81374,GetTransparentMemorySize_FW
+0xffe7821c,GetUsableMaxAv
 0xffe7821c,GetUsableMaxAv_FW
+0xffe781f8,GetUsableMinAv
 0xffe781f8,GetUsableMinAv_FW
 0xffe77d78,GetUserSetShutterSPeed_FW
 0xffe7dee8,GetVideoOutType_FW

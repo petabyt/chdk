@@ -573,7 +573,9 @@
 0xffb4f8f0,GetUnpackCrwIntegralValue_FW
 0xffb4fb78,GetUnpackCrwIntegralValueForColorShading_FW
 0xffb4f910,GetUnpackCrwIntegralValueForShading_FW
+0xffb464bc,GetUsableMaxAv
 0xffb464bc,GetUsableMaxAv_FW
+0xffb464a4,GetUsableMinAv
 0xffb464a4,GetUsableMinAv_FW
 0xffb46048,GetUserSetShutterSPeed_FW
 0xff833308,GetVBatVoltage_FW

@@ -803,8 +803,10 @@
 0xfc1c1be9,MoveIrisMechaPositionWithBacklash_FW
 0xfc1c1c0f,MoveIrisMechaPositionWithoutBacklash_FW
 0xfc1c1c35,MoveIrisToAvWithoutBacklash_FW
+0xfc1c1c5f,GetUsableMinAv
 0xfc1c1c5f,GetUsableMinAv_FW
 0xfc1c1c6f,j_GetUsableMinAv_FW
+0xfc1c1c71,GetUsableMaxAv
 0xfc1c1c71,GetUsableMaxAv_FW
 0xfc1c1c81,j_GetUsableMaxAv_FW
 0xfc1c1c87,j_GetCurrentIrisPosition_FW
