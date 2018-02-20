@@ -724,6 +724,30 @@ static int luaCB_get_user_av96( lua_State* L )
   return 1;
 }
 
+// get minimum valid av96 value (widest aperture), or nil if in playback or no iris
+static int luaCB_get_min_av96( lua_State* L )
+{
+  short av=shooting_get_min_av96(); 
+  if(av < 0) { // -1 = Av not available
+    lua_pushnil(L);
+  } else {
+    lua_pushnumber( L, av );
+  }
+  return 1;
+}
+
+// get maximum valid av96 value (smallest aperture), or nil if in playback or no iris
+static int luaCB_get_max_av96( lua_State* L )
+{
+  short av=shooting_get_max_av96(); 
+  if(av < 0) { // -1 = Av not available
+    lua_pushnil(L);
+  } else {
+    lua_pushnumber( L, av );
+  }
+  return 1;
+}
+
 static int luaCB_get_user_tv_id( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_user_tv_id() );
@@ -2700,6 +2724,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_image_dir)
     FUNC(get_flash_params_count)
     FUNC(get_parameter_data)
+    FUNC(get_min_av96)
+    FUNC(get_max_av96)
 
     FUNC(set_av96_direct)
     FUNC(set_av96)
