@@ -332,6 +332,17 @@ long GetCurrentAvValue()            { return _GetCurrentAvValue(); }
 long IsStrobeChargeCompleted()      { return _IsStrobeChargeCompleted(); }
 void SetCurrentCaptureModeType()    { _SetCurrentCaptureModeType(); }
 
+#if CAM_HAS_IRIS_DIAPHRAGM
+// returns available Av range in AV96 on cameras with iris.
+// Function exists on a few later cameras without iris, behavior unknown.
+// Appears to be the full range, including smaller (higher F/ number) than available in Canon UI.
+// Note Min = smallest physical aperture = largest Av96 value
+extern short _GetUsableMinAv(void);
+short GetUsableMinAv(void) { return _GetUsableMinAv(); }
+extern short _GetUsableMaxAv(void);
+short GetUsableMaxAv(void) { return _GetUsableMaxAv(); }
+#endif
+
 #if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 void UnsetZoomForMovie()            { _UnsetZoomForMovie(); }
 #endif

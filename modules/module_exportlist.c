@@ -212,6 +212,8 @@
             shooting_get_iso_market
             shooting_get_iso_mode
             shooting_get_iso_real
+            shooting_get_max_av96
+            shooting_get_min_av96
             shooting_get_prop
             shooting_get_real_focus_mode
             shooting_get_resolution

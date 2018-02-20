@@ -810,6 +810,39 @@ void shooting_set_nd_filter_state(short v, short is_now)
 #endif
 }
 
+
+// get usable Av range (iris only)
+// Appears to be the full range, including smaller (higher F/ number) than available in Canon UI.
+// NOTE canon functions Min and Max refer to aperture size, CHDK refer to av96 values
+// returns -1 if unavailable (0 is a valid Av = F/1.0)
+short shooting_get_min_av96()
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    extern short GetUsableMaxAv(void);
+    if (camera_info.state.mode_play)
+    {
+        return -1;
+    }
+    return GetUsableMaxAv();
+#else
+    return -1;
+#endif
+}
+
+short shooting_get_max_av96()
+{
+#if CAM_HAS_IRIS_DIAPHRAGM
+    extern short GetUsableMinAv(void);
+    if (camera_info.state.mode_play)
+    {
+        return -1;
+    }
+    return GetUsableMinAv();
+#else
+    return -1;
+#endif
+}
+
 //-------------------------------------------------------------------
 // Av section - end
 //-------------------------------------------------------------------
