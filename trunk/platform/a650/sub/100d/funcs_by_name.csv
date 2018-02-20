@@ -520,7 +520,9 @@
 0xffdbbc38,GetTransparentMemoryPosition_FW
 0xffdbbbe0,GetTransparentMemorySize_FW
 0xffdb9b98,GetUnpackCrwIntegralValue_FW
+0xffdb3058,GetUsableMaxAv
 0xffdb3058,GetUsableMaxAv_FW
+0xffdb3040,GetUsableMinAv
 0xffdb3040,GetUsableMinAv_FW
 0xffdb2c40,GetUserSetShutterSPeed_FW
 0xffc1189c,GetVBatVoltage_FW

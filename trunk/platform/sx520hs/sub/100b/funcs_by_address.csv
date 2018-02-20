@@ -826,8 +826,10 @@
 0xff1d3c9c,MoveIrisMechaPositionWithBacklash_FW
 0xff1d3cdc,MoveIrisMechaPositionWithoutBacklash_FW
 0xff1d3d1c,MoveIrisToAvWithoutBacklash_FW
+0xff1d3d68,GetUsableMinAv
 0xff1d3d68,GetUsableMinAv_FW
 0xff1d3d80,j_GetUsableMinAv_FW
+0xff1d3d84,GetUsableMaxAv
 0xff1d3d84,GetUsableMaxAv_FW
 0xff1d3d9c,j_GetUsableMaxAv_FW
 0xff1d3da4,j_GetCurrentIrisPosition_FW

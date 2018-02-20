@@ -942,7 +942,9 @@
 0xfc021215,GetTransparentMemoryPosition_FW
 0xfc0211e7,GetTransparentMemorySize_FW
 0xfc25e95f,GetTRIPODModeFlagbyIS_FW
+0xfc181251,GetUsableMaxAv
 0xfc181251,GetUsableMaxAv_FW
+0xfc18123f,GetUsableMinAv
 0xfc18123f,GetUsableMinAv_FW
 0xfc547bab,GetUserSetShutterSPeed_FW
 0xfc130beb,GetVBatVoltage_FW

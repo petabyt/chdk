@@ -1733,8 +1733,10 @@
 0xfc469d39,MoveIrisMechaPositionWithBacklash_FW
 0xfc469d5f,MoveIrisMechaPositionWithoutBacklash_FW
 0xfc469d85,MoveIrisToAvWithoutBacklash_FW
+0xfc469daf,GetUsableMinAv
 0xfc469daf,GetUsableMinAv_FW
 0xfc469dbf,j_GetUsableMinAv_FW
+0xfc469dc1,GetUsableMaxAv
 0xfc469dc1,GetUsableMaxAv_FW
 0xfc469dd1,j_GetUsableMaxAv_FW
 0xfc469dd7,j_GetCurrentIrisPosition_FW

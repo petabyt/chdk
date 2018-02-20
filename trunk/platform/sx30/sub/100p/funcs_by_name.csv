@@ -585,7 +585,9 @@
 0xffb599b8,GetUnpackCrwIntegralValue_FW
 0xffb59c40,GetUnpackCrwIntegralValueForColorShading_FW
 0xffb599d8,GetUnpackCrwIntegralValueForShading_FW
+0xffb50c24,GetUsableMaxAv
 0xffb50c24,GetUsableMaxAv_FW
+0xffb50c0c,GetUsableMinAv
 0xffb50c0c,GetUsableMinAv_FW
 0xffb507b0,GetUserSetShutterSPeed_FW
 0xff984a40,GetUsmCurrentPosition_FW

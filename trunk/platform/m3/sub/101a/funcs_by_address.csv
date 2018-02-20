@@ -627,8 +627,10 @@
 0xfc1811c9,MoveIrisMechaPositionWithBacklash_FW
 0xfc1811ef,MoveIrisMechaPositionWithoutBacklash_FW
 0xfc181215,MoveIrisToAvWithoutBacklash_FW
+0xfc18123f,GetUsableMinAv
 0xfc18123f,GetUsableMinAv_FW
 0xfc18124f,j_GetUsableMinAv_FW
+0xfc181251,GetUsableMaxAv
 0xfc181251,GetUsableMaxAv_FW
 0xfc181261,j_GetUsableMaxAv_FW
 0xfc18130b,GetSafOffsetPTableDataSize_FW

@@ -526,7 +526,9 @@
 0xffde913c,GetTransparentMemorySize_FW
 0xffe6844c,GetUnpackCrwIntegralValue_FW
 0xffe68524,GetUnpackCrwIntegralValueForShading_FW
+0xffe607bc,GetUsableMaxAv
 0xffe607bc,GetUsableMaxAv_FW
+0xffe607a4,GetUsableMinAv
 0xffe607a4,GetUsableMinAv_FW
 0xffe603b0,GetUserSetShutterSPeed_FW
 0xffc10314,GetVBatVoltage_FW
