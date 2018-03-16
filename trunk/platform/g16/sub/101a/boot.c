@@ -436,7 +436,11 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 "    bl      sub_fc05e670\n"
 "    bl      sub_fc05e7e4\n"
 "    bl      sub_fc0e47ac\n"
-//"    bl      sub_fc05e83a\n"              //  startdiskboot commented out to avoid infinite boot loop
+//"  bl      sub_fc05e83a\n"              //  startdiskboot commented out to avoid infinite boot loop
+
+// added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
+"    bl      sub_fc08f5b8\n"             // + switch off card per m10 and g7x ports
+
 "    bl      sub_fc0895ae\n"
 "    bl      sub_fc0e48f0\n"
 "    bl      sub_fc05e948\n"
