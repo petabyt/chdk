@@ -270,18 +270,6 @@ asm volatile (
 
 // -f=chdk -s=0xfc05d051 -c=60
 void __attribute__((naked,noinline)) sub_fc05d050_my() {
-//*(int*)0xd20b0994 = 0x4d0002;
-
-/* no gpio checks needed    if (*(int*)(0xd20b0000 + 0x10 * 4) & 0x10000) {
-        // see sub_fc060338, sub_fc06082a
-        // GPIO 0x10 (aka ON/OFF button) is not pressed -> play
-        *(int*)(0x970c+0x4) = 0x200000;
-    }
-    else {
-        // GPIO 0x10 is pressed -> rec
-        *(int*)(0x970c+0x4) = 0x100000;
-    }
-*/
     asm volatile (
 "    push    {r4, lr}\n"
 #if defined(CHDK_NOT_IN_CANON_HEAP)
@@ -361,8 +349,6 @@ void __attribute__((naked,noinline)) sub_fc05d050_my() {
 
 //fc04f324?  -f=chdk -s=0xfc05d1e1 -c=54
 void __attribute__((naked,noinline)) sub_fc05d1e0_my() {
-
-//*(int*)0xd20b0994 = 0x4d0002;
     asm volatile (
 "    push    {r4, lr}\n"
 "    ldr     r4, =0xfc05d28c\n" //  *"/_term"
@@ -435,9 +421,6 @@ void __attribute__((naked,noinline)) sub_fc05d1e0_my() {
 
 // -f=chdk -s=0xfc05d5e7 -c=27
 void __attribute__((naked,noinline)) sub_fc05d5e6_my() {
-
-//*(int*)0xd20b0994 = 0x4d0002;
-       
     asm volatile (
 "    push    {r3, lr}\n"
 "    bl      sub_fc05d700\n"
@@ -479,84 +462,10 @@ void __attribute__((naked,noinline)) sub_fc05d5e6_my() {
 
 
 
-// TODO unused c&p from 100e
-// Search for NotifyMask
-// override not needed
-// -f=chdk -s=0xfc07a1f1 -c=28
-#if 0
-void __attribute__((naked,noinline)) sub_fc07a1f0_my() {
-    asm volatile (
-/*
-    "stmdb   sp!, {r2, r3, r4, r5, r6, r7, r8, lr}\n"
-    "mov.w   r8, #0\n"
-    "mov     r7, r0\n"
-    "mov     r6, r8\n"
-    "bl      sub_fc0705ee\n" // nullsub
-    "movs    r0, #16\n"
-    "bl      sub_fc06fbde\n"
-    "movs    r4, #1\n"
-    "bic.w   r5, r4, r0\n"
-    "movs    r0, #15\n"  
-    "bl      sub_fc06fbde\n"    // reads GPIO (15)
-    "bics    r4, r0\n"
-    "cbz     r7, loc_fc0731f6\n"
-    "orrs.w  r0, r5, r4\n"
-    //"beq.n   loc_fc06037e\n"  // - this check fails and results in shutdown
-    "loc_fc0731f6:\n"
-    "bl      sub_fc0b9738\n"
-    "movs    r3, #0\n"
-    "mov     r2, r0\n"
-    "strd    r8, r6, [sp]\n"
-    "mov     r1, r4\n"
-    "mov     r0, r5\n"
-    //"bl      sub_fc06082a\n"  // - startupchecks
-    //"bl      sub_fc060828\n"  // - nullsub
-    "movs    r0, #1\n"
-    "loc_fc073210:\n"
-    "ldmia.w sp!, {r2, r3, r4, r5, r6, r7, r8, pc}\n"
-*/
-"    push.w  {r2, r3, r4, r5, r6, r7, r8, lr}\n"
-"    mov     r7, r0\n"
-"    mov.w   r8, #0\n"
-"    bl      sub_fc06e01e\n"
-"    movs    r0, #0x10\n"
-"    bl      sub_fc06e6ea\n"
-"    movs    r4, #1\n"
-"    bic.w   r5, r4, r0\n"
-"    movs    r0, #0xf\n"
-"    bl      sub_fc06e6ea\n"
-"    bic.w   r6, r4, r0\n"
-"    movs    r0, #0x17\n"
-"    bl      sub_fc06e6ea\n"
-"    bics    r4, r0\n"
-"    cbz     r7, loc_fc07a226\n"
-"    orr.w   r0, r5, r6\n"
-"    orrs    r0, r4\n"
-//"    beq     loc_fc07a240\n"
-"loc_fc07a226:\n"
-"    bl      sub_fc0a6ee4\n"
-"    movs    r3, #0\n"
-"    mov     r2, r0\n"
-"    strd    r4, r8, [sp]\n"
-"    mov     r1, r6\n"
-"    mov     r0, r5\n"
-//"    bl      sub_fc06e022\n"
-//"    bl      sub_fc06e020\n"
-"    movs    r0, #1\n"
-"loc_fc07a240:\n"
-"    pop.w   {r2, r3, r4, r5, r6, r7, r8, pc}\n"
-    ".ltorg\n"
-    );
-}
-#endif
-
-// Done till here
-
 // task_Startup
 //  -f=chdk -s=task_Startup -c=26
 //"    ldr     r3, =0xfc05f3f1\n" //  task_Startup
 void __attribute__((naked,noinline)) task_Startup_my() {
-//    *(int*)0xd20b0994 = 0x4d0002;
     asm volatile (
 "    push    {r4, lr}\n"
 "    bl      sub_fc11a940\n"

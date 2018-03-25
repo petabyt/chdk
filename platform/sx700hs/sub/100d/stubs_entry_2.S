@@ -1,13 +1,11 @@
 #include "stubs_asm.h"
 
 // BEWARE: thumb functions NEED the thumb bit in the below list
-// Found for sx700v100e
 
 #define NULL_SUB	0xfc02041d	// bx lr
 #define RET1		0xfc02042b	// mov r0, #1 ; bx lr
 #define RET0		0xfc02041f	// mov r0, #0 ; bx lr
 
-// *** FOUND for sx700v100e ***
 NHSTUB(Feof_Fut,	0xfc2d7e91) // sx700v100d from CreateJumptable, after Fgets and Fseek @fc45bdce
 
 NHSTUB(Fflush_Fut,	0xfc2d7eb9) //  sx700v100d Found directly after Feof_Fut in ROM
@@ -45,7 +43,7 @@ NHSTUB(init_nd_eventflag,	0xfc45d701) //0xfc45d591// sx700v100d InitializeAdjust
 NHSTUB(CreateBinarySemaphoreStrictly,           0x010c5b6b) // from csv // sx700v100e
 
 // unused
-//NHSTUB(captseq_raw_addr_init,			NULL_SUB) //0xfc12fedf // sx700v100e (via sx60hs) via func fc07b6ba hooked in preshoot case, similar to g7x
+//NHSTUB(captseq_raw_addr_init,			NULL_SUB) //100e was 0xfc12fedf // sx700v100e (via sx60hs) via func fc07b6ba hooked in preshoot case, similar to g7x
 
 NHSTUB(EnterToCompensationEVF,		0xfc25c275) // sx700v100d search for "ExpOn"
 
