@@ -403,7 +403,7 @@ asm volatile (
 "    b       loc_fc054fce\n"
 "loc_fc054fca:\n"
 "loc_fwtc1:\n"                              // +
-"    bl      sub_fc2a5178\n"                // - j_Close_FW
+//"    bl      sub_fc2a5178\n"                // - j_Close_FW
 "    bl      fwt_close\n"                   // +
 "loc_fc054fce:\n"
 "    cbz     r0, loc_fc054fd2\n"
