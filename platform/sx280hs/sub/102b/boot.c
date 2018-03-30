@@ -128,6 +128,13 @@ asm volatile (
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
 
+"    LDR     R0, =task_TricInitTask\n"
+"    CMP     R0, R3\n"
+"    itt     eq\n"
+"    LDREQ   R3, =tricinittask\n"
+"    orreq   r3, #1\n"
+"    BEQ     exitHook\n"
+
 "    LDR     R0, =task_FileWrite\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
@@ -592,3 +599,57 @@ void __attribute__((naked,noinline)) sub_fc060900_my() {
 }
 
 
+// following is for supporting "firmware update" boot
+void __attribute__((naked,noinline)) tricinittask() {
+    asm volatile(
+// capdis -f=chdk -s=task_TricInitTask -c=35 -stubs PRIMARY.BIN 0xfc000000
+// task_TricInitTask 0xfc373d31
+"    push.w  {r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, lr}\n"
+"    blx     sub_fc251a4c\n"
+"    movs    r0, #8\n"
+"    ldr     r1, =0xfc373f80\n" //  *"InitTskStart"
+"    bl      sub_fc28b766\n"
+"    ldr.w   fp, =0x0001bf74\n"
+"    movw    sl, #0x1000\n"
+"    ldr     r4, =0x0001bf70\n"
+"    movs    r2, #0\n"
+"    ldr     r1, =0x0003830f\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc251cc4\n" // j_WaitForAnyEventFlag
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc373d6a\n"
+"    movs    r0, #8\n"
+"    ldr     r1, =0xfc373f98\n" //  *"ER IniTskWait"
+"    bl      sub_fc28b7c2\n"
+"    ldr     r1, =0x0001bf5c\n"
+"    movs    r0, #0\n"
+"    str     r0, [r1]\n"
+"    pop.w   {r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, pc}\n"
+"loc_fc373d6a:\n"
+"    ldr     r4, =0x0001bf70\n"
+"    add     r1, sp, #8\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc251b64\n" // j_GetEventFlagValue
+"    ldr     r1, [sp, #8]\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc251b94\n" // j_ClearEventFlag
+"    ldr     r6, [sp, #8]\n"
+"    lsls    r0, r6, #0x1e\n"
+"    beq     sub_fc373e42\n" // loc -> sub
+"    lsls    r0, r6, #0x1f\n"
+"    beq     sub_fc373d8c\n" // loc -> sub
+
+"    ldr     r0, =0xd2020074\n" // +
+"    ldr     r0, [r0]\n"        // + nonzero when core already running
+"    subs    r0, #0\n"          // +
+"    beq     tric1\n"           // +
+"    ldr     r0, [r4]\n"        // +
+"    mov     r1, #0x80\n"       // +
+"    bl      _SetEventFlag\n"   // + core already initialized, set the SmacIdleCmp eventflag here
+"tric1:\n"                      // +
+
+"    bl      sub_fc3740d0\n"
+//"    b       loc_fc373dce\n" // -
+"    ldr     pc, =0xfc373dcf\n" // -> continue in rom
+    );
+}

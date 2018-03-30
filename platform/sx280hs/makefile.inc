@@ -1,9 +1,6 @@
 # mandatory for DIGIC 6
 THUMB_FW=1
 
-# disable FI2 due to stability issues
-override OPT_FI2=
-
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfff60040
 # below 2 commented lines are used by tools/compatbuilder.sh

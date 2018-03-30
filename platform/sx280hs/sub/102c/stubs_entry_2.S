@@ -31,6 +31,9 @@ NHSTUB(reboot_fw_update                       ,0xfc3352b1)
 NHSTUB(CancelHPTimer                          ,0xfc1423c9)
 NHSTUB(SetHPTimerAfterNow                     ,0xfc142331)
 
+NHSTUB(SetEventFlag                           ,0x010c5569)
+DEF(task_TricInitTask                         ,0xfc373dc1)
+
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)

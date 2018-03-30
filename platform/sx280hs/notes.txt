@@ -13,9 +13,6 @@ previous Digic versions.
 Firmware version information can be obtained using the VER.REQ method,
 or by using ACID / STICK / exiftool or the firminfo Canon Basic script.
 
-No "firmware update" (FI2) file is included in the autobuild, bootable
-SD card is needed to load CHDK.
-
 
 General camera and CHDK port information
 
@@ -29,7 +26,10 @@ General camera and CHDK port information
 
 - Only simple_movie_status is implemented, so features or scripts that rely on
   direct access to the movie_status variable do not work
-  
+
+- Using CHDK started via the "firmware update" method has not been fully tested.
+  Report any problems in the porting thread.
+
 - Porting thread: https://chdk.setepontos.com/index.php?topic=11550
 
 Issues
@@ -37,7 +37,6 @@ Issues
 - CHDK overlay drawing is slow, Canon display updates make the CHDK OSD blink
 - some games do not display correctly
 - movie features are not supported
-- when booting with .fi2, switching the cam to hybrid auto mode results in an immediate err 9 (JPEGTimeOut)...
 - PTP remote shoot can misbehave in certain shooting modes (sports mode, high speed burst mode, ...):
   when using continuous shooting (rs -cont or rs -quick in chdkptp), the number of actual shots
   may be larger than the requested number, the last shot from such a series may end up on card
