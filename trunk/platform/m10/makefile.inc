@@ -21,6 +21,9 @@ PLATFORMOSVER=57
 # mandatory for DIGIC 6
 MEMBASEADDR=0x8000
 
+# force FI2 off because of various issues
+override OPT_FI2=
+
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfff20270
 # below 2 commented lines are used by tools/compatbuilder.sh
