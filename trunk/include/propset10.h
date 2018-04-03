@@ -76,10 +76,9 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 //#define PROPCASE_STITCH_SEQUENCE                 249        // [m10:untested] counts shots in stitch sequence, positive=left>right, negative=right>left
 #define PROPCASE_SUBJECT_DIST1                   256        // [m10:zero]
 #define PROPCASE_SV_MARKET                       257
-// TV vs TV2 not verified
-#define PROPCASE_TV2                             273        // [m10:untested] (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
-#define PROPCASE_TV                              274        // [m10:untested] Need to set this value for overrides to work correctly
-#define PROPCASE_USER_TV                         276        // [m10:untested]
+#define PROPCASE_TV2                             273        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
+#define PROPCASE_TV                              274        // Need to set this value for overrides to work correctly
+#define PROPCASE_USER_TV                         276        // 
 #define PROPCASE_WB_MODE                         281        // 0 = Auto, 1 = Daylight, 2 = Shade, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 7 = flash, 11 = under water, 6 = Fluorescent H, 9 = Custom 1, 10 = custom 2
 #define PROPCASE_WB_ADJ                          282        // [m10:untested]
 #define PROPCASE_SERVO_AF                        308        // 0 = Servo AF off, 1 = Servo AF on

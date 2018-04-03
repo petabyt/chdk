@@ -36,7 +36,6 @@ const ApertureSize aperture_sizes_table[] = {
     { 31, 864, "22.0" },
 };
 
-// note camera supports up to 250s shutter
 const ShutterSpeed shutter_speeds_table[] = {
     { -24, -768, "250", 250000000 },
     { -23, -736, "200", 200000000 },

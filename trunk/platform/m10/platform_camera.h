@@ -114,7 +114,7 @@
     #define ISO_REAL_TO_MARKET_SHIFT            0
     #define ISO_REAL_TO_MARKET_ROUND            0
 
-    //#define CAM_EXT_TV_RANGE                    1
+    #define CAM_EXT_TV_RANGE                    1 // note: exp_drv_task not implemented
 
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1

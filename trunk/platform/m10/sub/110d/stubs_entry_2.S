@@ -25,7 +25,7 @@ NHSTUB(SetFileAttributes,                      0xfc389b19)
 NHSTUB(SetFileTimeStamp,                       0xfc389ad1)
 NHSTUB(SetParameterData,                       0xfc27e64f) // PTM_BackupUIProperty_FW
 NHSTUB(WriteSDCard,                            0x10e2c9d)  // found @ fc388a84
-NHSTUB(apex2us, NULL_SUB) // todo
+NHSTUB(apex2us,                                0xFC1B1D07)
 NHSTUB(reboot_fw_update, NULL_SUB) // todo
 NHSTUB(strtolx,                                0xfc13b209)
 NHSTUB(CancelHPTimer,                          0xfc1faa7d)
