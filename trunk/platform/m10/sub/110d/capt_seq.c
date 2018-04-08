@@ -2,7 +2,8 @@
 #include "platform.h"
 #include "core.h"
 
-#define CAPTSEQ_DEBUG 1
+//#define CAPTSEQ_DEBUG 1
+#undef CAPTSEQ_DEBUG
 
 #define USE_STUBS_NRFLAG 1
 #define NR_AUTO (0)                 // have to explictly reset value back to 0 to enable auto
