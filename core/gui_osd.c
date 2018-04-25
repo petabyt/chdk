@@ -518,7 +518,15 @@ static void gui_osd_draw_movie_time_left()
 
     twoColors col = user_color(conf.osd_color);
 
-    if ((conf.show_movie_time > 0) && (camera_info.state.mode_video || is_video_recording()) && !camera_info.state.mode_play)
+    if (is_video_recording())
+        record_running = 1;
+    else
+    {
+        record_running = 0;
+        init = 0;
+    }
+
+    if ((conf.show_movie_time > 0) && (camera_info.state.mode_video || record_running) && !camera_info.state.mode_play)
     {
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
         if (camera_info.state.mode_video || is_video_recording())
@@ -540,10 +548,8 @@ static void gui_osd_draw_movie_time_left()
                 draw_osd_string(conf.mode_video_pos, 0, 3*FONT_HEIGHT, osd_buf, col, conf.mode_video_scale);
             }
             // everything else is for when recording
-            if (!is_video_recording())
+            if (!record_running)
             {
-                record_running = 0;
-                init = 0;
                 return;
             }
         }
@@ -553,14 +559,6 @@ static void gui_osd_draw_movie_time_left()
         {
             init = 0;
             movie_reset = 0;
-        }
-
-        if (is_video_recording())
-            record_running = 1;
-        else
-        {
-            record_running = 0;
-            init = 0;
         }
 
         if (record_running == 1 && init == 0)
