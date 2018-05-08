@@ -241,6 +241,12 @@ extern int get_movie_status();
 extern void change_video_tables(int a, int b);
 extern void shooting_video_bitrate_change(int v);
 
+// for CAM_MOVIEREC_NEWSTYLE:
+void shooting_video_minbitrate_change(int);
+unsigned int shooting_get_video_recorded_size_kb();
+extern void change_video_minbitrate(int, int);
+extern unsigned int get_video_recorded_size_kb();
+
 extern int zoom_status;
 extern const int zoom_points;
 extern int recreview_hold;

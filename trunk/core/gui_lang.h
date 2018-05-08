@@ -795,7 +795,9 @@
 #define LANG_MODULE_MOTION_DETECT               666
 #define LANG_MODULE_POPUP_MENU                  667
 
-#define GUI_LANG_ITEMS                          667
+#define LANG_MENU_VIDEO_VBR_MIN                 668     //CONDITIONAL: CAM_MOVIEREC_NEWSTYLE
+
+#define GUI_LANG_ITEMS                          668
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

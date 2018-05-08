@@ -514,11 +514,6 @@ extern Conf conf;
 #define SCRIPT_AUTOSTART_ONCE             2
 #define SCRIPT_AUTOSTART_ALT              3
 
-// video quality defaults. Ideally, these should match the camera default settings
-#define VIDEO_DEFAULT_QUALITY   84  // ? where does 84 come from
-#define VIDEO_MAX_QUALITY       99
-#define VIDEO_DEFAULT_BITRATE   3   // should be 1 for all cams
-
 extern void conf_save();
 extern void conf_restore();
 extern void conf_load_defaults();

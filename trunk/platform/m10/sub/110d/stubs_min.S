@@ -35,7 +35,7 @@ DEF(displaytype                                 ,0x9740) // 0x96f0 + 0x50, GetDi
 
 DEF(current_fb_d                                ,0xF564) // @fc177872, 0xf53c + 0x28
 
-FAKEDEF(simple_movie_status, 1)
+DEF(simple_movie_status                         ,0xb000) // 0xaf10 + 0x80 + 0x70 @FC0FDA32
 
 DEF(jog_position                                ,0xf6dc)
 DEF(jog_hw_pos                                  ,0xd9855004) // see GetRotaryEncPulseCounter_FW

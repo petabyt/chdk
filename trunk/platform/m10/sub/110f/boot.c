@@ -154,6 +154,14 @@ asm volatile (
 "    LDREQ   R3, =filewritetask\n"
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
+*/
+
+"    LDR     R0, =0xFC255E7B\n" // TskCocoa0
+"    CMP     R0, R3\n"
+"    itt     eq\n"
+"    LDREQ   R3, =task_cocoa0\n"
+"    orreq   r3, #1\n"
+"    BEQ     exitHook\n"
 
 "    LDR     R0, =task_MovieRecord\n"
 "    CMP     R0, R3\n"
@@ -161,7 +169,6 @@ asm volatile (
 "    LDREQ   R3, =movie_record_task\n"
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
-*/
 
 "    ldr     r0, =task_InitFileModules\n"
 "    cmp     r0, r3\n"

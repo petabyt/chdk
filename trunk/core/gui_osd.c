@@ -19,6 +19,7 @@
 //-------------------------------------------------------------------
 
 extern const char* gui_video_bitrate_enum(int change, int arg);
+extern const char* gui_video_min_bitrate_enum(int change, int arg);
 
 //-------------------------------------------------------------------
 static char osd_buf[64];
@@ -533,6 +534,7 @@ static void gui_osd_draw_movie_time_left()
         {
             // if manual adjust, show the field item to be adjusted
             // if any value overriden, show the override value
+#ifndef CAM_MOVIEREC_NEWSTYLE
 #if !CAM_VIDEO_QUALITY_ONLY
             if ((conf.video_mode == 0 && conf.fast_movie_quality_control==1) || conf.video_bitrate != VIDEO_DEFAULT_BITRATE)
             {
@@ -547,6 +549,20 @@ static void gui_osd_draw_movie_time_left()
                 sprintf(osd_buf, "Qual:%2i",conf.video_quality);
                 draw_osd_string(conf.mode_video_pos, 0, 3*FONT_HEIGHT, osd_buf, col, conf.mode_video_scale);
             }
+#else // CAM_MOVIEREC_NEWSTYLE
+            if ((conf.video_bitrate != VIDEO_DEFAULT_BITRATE) || (conf.video_quality != VIDEO_DEFAULT_QUALITY)) {
+                if (conf.video_mode == 1) // CBR, see gui.c
+                {
+                    sprintf(osd_buf, "CBR %5s",gui_video_bitrate_enum(0,0));
+                    draw_osd_string(conf.mode_video_pos, 0, 2*FONT_HEIGHT, osd_buf, col, conf.mode_video_scale);
+                }
+                else if (conf.video_mode > 1) // VBR, see gui.c
+                {
+                    sprintf(osd_buf, "VBR %5s / %s",gui_video_bitrate_enum(0,0),gui_video_min_bitrate_enum(0,0));
+                    draw_osd_string(conf.mode_video_pos, 0, 2*FONT_HEIGHT, osd_buf, col, conf.mode_video_scale);
+                }
+            }
+#endif // CAM_MOVIEREC_NEWSTYLE
             // everything else is for when recording
             if (!record_running)
             {
@@ -570,10 +586,18 @@ static void gui_osd_draw_movie_time_left()
 
         if (init == 1)
         {
+#ifndef CAM_MOVIEREC_NEWSTYLE
             card_used = init_space - GetFreeCardSpaceKb();
             elapsed = (int) ( get_tick_count() - init_time ) / 1000;
             avg_use = elapsed?(card_used / elapsed):1;  // running average Kb/sec (avoids division by zero)
             time_left = avg_use?(GetFreeCardSpaceKb() / avg_use):1; // (avoids division by zero)
+#else
+            // D6: filesystem related info is not updated during recording
+            card_used = shooting_get_video_recorded_size_kb();
+            elapsed = (int) ( get_tick_count() - init_time ) / 1000;
+            avg_use = elapsed?(card_used / elapsed):1;  // running average Kb/sec (avoids division by zero)
+            time_left = avg_use?((init_space - card_used) / avg_use):1; // (avoids division by zero)
+#endif
             hour = time_left / 3600;
             min = (time_left % 3600) / 60;
             sec = (time_left % 3600) % 60;
@@ -765,6 +789,7 @@ static int kbd_use_up_down_left_right_as_fast_switch()
     } 
 
     // Adjust video quality/bitrate if 'Video Quality Control?' option is set
+#ifndef CAM_MOVIEREC_NEWSTYLE
     if (conf.fast_movie_quality_control && key_pressed == 0 && is_video_recording())
     {
         if (kbd_is_key_pressed(KEY_UP))
@@ -810,7 +835,8 @@ static int kbd_use_up_down_left_right_as_fast_switch()
             key_pressed = KEY_DOWN;
             return 1;
         }
-    } 
+    }
+#endif // !CAM_MOVIEREC_NEWSTYLE
     
 #if CAM_VIDEO_CONTROL
     // Pause / unpause video if 'Fast Movie Control' option is set

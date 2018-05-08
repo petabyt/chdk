@@ -1142,7 +1142,18 @@ const char* gui_video_bitrate_enum(int change, int arg)
     return modes[conf.video_bitrate];
 }
 #endif
- 
+#ifdef CAM_MOVIEREC_NEWSTYLE
+const char* gui_video_min_bitrate_enum(int change, int arg)
+{
+    gui_enum_value_change(&conf.video_quality,change,10);
+
+    if (change)
+        shooting_video_minbitrate_change(conf.video_quality);
+
+    sprintf(buf, "%d%%", (conf.video_quality+1)*10);
+    return buf;
+}
+#endif
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD
 static const char* gui_video_af_key_enum(int change, int arg)
 {
@@ -1169,7 +1180,11 @@ static const char* gui_video_af_key_enum(int change, int arg)
 
 static const char* gui_show_movie_time_modes[] =            { "Don't", "hh:mm:ss", "KB/s","both"};
 #if !CAM_VIDEO_QUALITY_ONLY
-    static const char* gui_video_mode_modes[] =             { "Bitrate", "Quality"};
+    #ifndef CAM_MOVIEREC_NEWSTYLE
+        static const char* gui_video_mode_modes[] =             { "Bitrate", "Quality"};
+    #else
+        static const char* gui_video_mode_modes[] =             { "Default", "CBR", "VBR HI", "VBR MID", "VBR LOW"};
+    #endif
 #else
     static const char* gui_video_mode_modes[] =             { "Default", "Quality"};
 #endif
@@ -1180,7 +1195,11 @@ static CMenuItem video_submenu_items[] = {
 #if !CAM_VIDEO_QUALITY_ONLY
     MENU_ITEM   (0x5e,LANG_MENU_VIDEO_BITRATE,              MENUITEM_ENUM,          gui_video_bitrate_enum,             0 ),
 #endif
+#ifndef CAM_MOVIEREC_NEWSTYLE
     MENU_ITEM   (0x60,LANG_MENU_VIDEO_QUALITY,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.video_quality, MENU_MINMAX(1, 99) ),
+#else
+    MENU_ITEM   (0x60,LANG_MENU_VIDEO_VBR_MIN,              MENUITEM_ENUM,          gui_video_min_bitrate_enum,         0 ),
+#endif
 #if CAM_CHDK_HAS_EXT_VIDEO_TIME
     MENU_ITEM   (0x5c,LANG_MENU_VIDEO_EXT_TIME,             MENUITEM_BOOL,          &conf.ext_video_time,               0 ),
 #endif
@@ -1189,7 +1208,7 @@ static CMenuItem video_submenu_items[] = {
 #if CAM_VIDEO_CONTROL
     MENU_ITEM   (0x5c,LANG_MENU_FAST_SWITCH_VIDEO,          MENUITEM_BOOL,          &conf.fast_movie_control,           0 ),
 #endif
-#if CAM_CHDK_HAS_EXT_VIDEO_MENU
+#if CAM_CHDK_HAS_EXT_VIDEO_MENU && !defined(CAM_MOVIEREC_NEWSTYLE)
     MENU_ITEM   (0x5c,LANG_MENU_FAST_SWITCH_QUALITY_VIDEO,  MENUITEM_BOOL,          &conf.fast_movie_quality_control,   0 ),
 #endif
 #if CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO

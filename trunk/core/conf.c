@@ -82,6 +82,15 @@ void clear_values()
         conf.zoom_scale = 100;
         conf.platformid = PLATFORMID;
         conf.flash_video_override = 0;
+
+        // video related entries are interpreted differently on D6 cameras
+        conf.video_mode = 0;
+        conf.video_quality = VIDEO_DEFAULT_QUALITY;
+        conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
+        shooting_video_bitrate_change(conf.video_bitrate);
+#ifdef CAM_MOVIEREC_NEWSTYLE
+        shooting_video_minbitrate_change(conf.video_quality);
+#endif
     }
 
     if (conf.clear_override)
@@ -108,6 +117,9 @@ void clear_values()
         conf.video_quality = VIDEO_DEFAULT_QUALITY;
         conf.video_bitrate = VIDEO_DEFAULT_BITRATE;
         shooting_video_bitrate_change(conf.video_bitrate);
+#ifdef CAM_MOVIEREC_NEWSTYLE
+        shooting_video_minbitrate_change(conf.video_quality);
+#endif
     }
     //conf.edge_overlay_pano = 0; // reset it because otherwise this feature cant be used at startup (when buffer is empty) - needs workaround other than this!
 }
@@ -522,6 +534,11 @@ void conf_info_func(unsigned short id)
     case  54:
         script_load(conf.script_file);
         break;
+#ifdef CAM_MOVIEREC_NEWSTYLE
+    case  81:
+        shooting_video_minbitrate_change(conf.video_quality);
+        break;
+#endif
     case  82: 
         shooting_video_bitrate_change(conf.video_bitrate);
         break;

@@ -1236,6 +1236,19 @@ void shooting_video_bitrate_change(int v)
     change_video_tables(m[v],4);
 #endif
 }
+#ifdef CAM_MOVIEREC_NEWSTYLE
+void shooting_video_minbitrate_change(int v)
+{
+    char m[]={1,2,3,4,5,6,7,8,9,10};  // m[v]/10 = bitrate*1x
+    if (v>=(sizeof(m)/sizeof(m[0])))
+        v=(sizeof(m)/sizeof(m[0]))-1;
+    change_video_minbitrate(m[v],10);
+}
+unsigned int shooting_get_video_recorded_size_kb()
+{
+    return get_video_recorded_size_kb();
+}
+#endif
 
 //-------------------------------------------------------------------
 

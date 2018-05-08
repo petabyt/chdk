@@ -56,7 +56,8 @@
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 
-    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    //#undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    #define CAM_MOVIEREC_NEWSTYLE               1
     #undef  CAM_VIDEO_CONTROL
     #define CAM_SIMPLE_MOVIE_STATUS             1
 
