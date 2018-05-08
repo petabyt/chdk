@@ -95,6 +95,7 @@
     #undef  CAM_VIDEO_QUALITY_ONLY              // Override Video Bitrate is not supported
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME         // Camera can override time limit of video record -> sx220/230
     #undef  CAM_SIMPLE_MOVIE_STATUS             // Firmware movie_status nonzero when recording, zero when not - makes CAM_VIDEO_CONTROL ineffective
+    #undef  CAM_MOVIEREC_NEWSTYLE               // Define for new style video recording code in fw (DIGIC 6)
     #undef  CAM_HAS_MOVIE_DIGEST_MODE           // The values in the 'movie_status' variable change if the camera has this mode (see is_video_recording())
     #undef  CAM_HAS_SPORTS_MODE                 // Define to enable the RAW exception override control for SPORTS mode (s3is, sx30, sx40, etc)
 
@@ -340,6 +341,21 @@
 
 #if defined(CAM_VIDEO_CONTROL) && defined(CAM_SIMPLE_MOVIE_STATUS)
     #error "CAM_VIDEO_CONTROL and CAM_SIMPLE_MOVIE_STATUS are mutually exclusive"
+#endif
+
+// video quality/bitrate defaults, moved here from conf.h
+#ifdef CAM_MOVIEREC_NEWSTYLE
+    // video defaults.for D6
+    #define VIDEO_DEFAULT_QUALITY   9   // VBR relative min bitrate, 9 = CBR
+    #define VIDEO_MAX_QUALITY       9   // 0..9
+    #define VIDEO_DEFAULT_BITRATE   3   // 3 = fw default
+
+    #undef  CAM_VIDEO_QUALITY_ONLY
+#else
+    // video quality defaults. Ideally, these should match the camera default settings
+    #define VIDEO_DEFAULT_QUALITY   84  // ? where does 84 come from
+    #define VIDEO_MAX_QUALITY       99
+    #define VIDEO_DEFAULT_BITRATE   3   // should be 1 for all cams
 #endif
 
 // sanity check platform_camera.h defined values for some common errors

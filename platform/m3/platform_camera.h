@@ -47,7 +47,8 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON                1
 
-    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    //#undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    #define CAM_MOVIEREC_NEWSTYLE               1
     #undef  CAM_VIDEO_CONTROL
 
     #undef  CAM_HAS_JOGDIAL                     // jogdial support not implemented
