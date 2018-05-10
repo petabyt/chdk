@@ -44,8 +44,6 @@
 
     #define CAM_HAS_CMOS                    1
 
-    #define CAM_HAS_ND_FILTER               1
-
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1

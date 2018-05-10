@@ -57,7 +57,6 @@
     #define cam_CalibrationIlluminant1      21      // D65
 
     #undef  CAM_USE_ZOOM_FOR_MF
-    #define CAM_HAS_ND_FILTER               1
 
     #define CAM_HAS_VIDEO_BUTTON            1
 

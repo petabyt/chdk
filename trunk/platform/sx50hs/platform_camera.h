@@ -29,7 +29,6 @@
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff020984
 
-    #define CAM_HAS_ND_FILTER                   1
     #define CAM_SWIVEL_SCREEN                   1
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #define CAM_ALT_BUTTON_NAMES                { "Shrtcut", "Flash", "Video" }

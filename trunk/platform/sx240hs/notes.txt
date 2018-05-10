@@ -17,7 +17,7 @@ Shortcut Keys
  TOGGLE OSD                RIGHT Key
  TOGGLE DISABLE OVERRIDES  LEFT Key
 
-Camera has both an iris and an ND filter
+Camera only has an iris, not ND filter
 
 Known bugs
 **********
