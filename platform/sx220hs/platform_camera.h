@@ -43,7 +43,6 @@
     #define CAM_RAW_ROWS                        3060 // actual size from fw 12754080pix at FF375484 -> 19131120/12*8
 
     #define CAM_HAS_CMOS                        1
-    #define CAM_HAS_ND_FILTER                   1
     #define CAM_HAS_JOGDIAL                     1
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_HAS_MOVIE_DIGEST_MODE           1

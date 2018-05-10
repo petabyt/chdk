@@ -57,7 +57,6 @@
     #define cam_CalibrationIlluminant1      1       // Daylight
 
     #undef  CAM_USE_ZOOM_FOR_MF
-    #define CAM_HAS_ND_FILTER                   1
 
     #define CAM_HAS_VIDEO_BUTTON                1
     #define CAM_HAS_MOVIE_DIGEST_MODE           1   // camera doesn't actually have digest mode, this is needed by is_video_recording

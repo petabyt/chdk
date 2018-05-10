@@ -19,7 +19,7 @@ https://chdk.setepontos.com/index.php?topic=12532.0
 
 General camera and CHDK port information
 ****************************************
-SX60 HS has an adjustable aperture as well as an internal ND filter .
+SX60 HS has an adjustable aperture only, not an ND filter.
 
 Default alt button is PLAY, VIDEO and WIFI may also be used
 
