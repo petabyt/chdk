@@ -9,7 +9,19 @@ reverse_bytes_order2:
 	ldr	r12, =0xFF00FF		// r12 = mask, r0 = from, r1 = to, r2 = count
 loop:
 	ldmia	r0!, {r4-r11}		// load 8 words and increment
-	
+// digic 6 have rev instruction
+// TODO could do more registers per iteration, but need to handle rounding
+// if bytes per iteration doesn't match dng chunk size
+#ifdef THUMB_FW
+	rev16 r4,r4
+	rev16 r5,r5
+	rev16 r6,r6
+	rev16 r7,r7
+	rev16 r8,r8
+	rev16 r9,r9
+	rev16 r10,r10
+	rev16 r11,r11
+#else
 	// out = ((in>>8) & 0xFF00FF) | ((in&0xFF00FF) << 8);
 	and	r3, r12, r4, lsr #8		// r3 = 0xFF00FF & (in >> 8)
 	and	r4, r4, r12				// r4 = in & 0xFF00FF
@@ -42,7 +54,7 @@ loop:
 	and	r3, r12, r11, lsr #8
 	and	r11, r11, r12
 	orr	r11, r3, r11, asl #8
-
+#endif
 	stmia	r1!, {r4-r11}	// store and increment
 
 	subs	r2, r2, #32
