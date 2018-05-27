@@ -201,7 +201,16 @@ FW 75
 >>>
 "    BL      shooting_expo_param_override\n"    // added
 <<<
-FW 3
+FW 1
+>>>
+//To do: Check if this is needed.
+//"    MOV     R0, #0\n"                          // added
+//"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+<<<
+//REM "above patch makes these three lines redundant"
+//REM
+//REM
+FW 2
 // hook fast click function for dfs and remote - not needed if using hack above
 PATCHSUB ref=0
 FW 2
@@ -217,6 +226,9 @@ FUNC ref=0
 ASM
 FW 47
 PATCHSUB
+>>>
+//"    BL      capt_seq_hook_raw_here \n"         // added
+<<<
 FW $
 ENDASM
 ENDFUNC
@@ -227,10 +239,15 @@ ENDFUNC
 FUNC ref=1
 ASM
 FW 20
+//PATCHSUB ref=1
+//FW 1
+//FW 2
 PATCHSUB ref=0
 FW 13
 ENDASM
 ENDFUNC
+
+
 
 //////////////////////////////////////////////////////////////
 // 
@@ -239,6 +256,9 @@ FUNC ref=0
 ASM
 FW 122
 PATCHSUB ref 0
+>>>
+//"    BL      capt_seq_hook_raw_here \n"         // added
+<<<
 FW $
 ENDASM
 ENDFUNC
@@ -248,9 +268,13 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=0
 ASM
-FW 47
-PATCHSUB ref=0
-FW 85
+FW 46
+>>>
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
+<<<
+
+FW 87
 >>> prelabel
 "    BL      capt_seq_hook_raw_here \n"         // added
 <<<
@@ -258,54 +282,6 @@ FW $
 >>>
 "    .ltorg\n"         // added
 <<<
-ENDASM
-ENDFUNC
-
-//////////////////////////////////////////////////////////////
-// 
-//////////////////////////////////////////////////////////////
-FUNC ref=0
-ASM
-FW 17
->>> 
-"    BL      wait_until_remote_button_is_released\n" // added
-"    BL      capt_seq_hook_set_nr\n"                 // added
-<<<
-FW 1
-->FW
-ENDASM
-ENDFUNC
-
-//////////////////////////////////////////////////////////////
-// exp_drv_task
-//////////////////////////////////////////////////////////////
-FUNC sig=task_ExpDrv name=exp_drv_task
-ASM
-FW 277
-PATCHSUB ref=0
-FW $
-ENDASM
-ENDFUNC
-
-//////////////////////////////////////////////////////////////
-// exp_drv_task -> ref=0
-//////////////////////////////////////////////////////////////
-FUNC ref=0
-ASM
-FW 49
-PATCHSUB ref=0
-->FW
-ENDASM
-ENDFUNC
-
-//////////////////////////////////////////////////////////////
-// exp_drv_task -> ref=0 -> ref=0
-//////////////////////////////////////////////////////////////
-FUNC ref=0
-ASM
-FW 18
-PATCHSUB name=apex2us
-FW $
 ENDASM
 ENDFUNC
 
@@ -499,45 +475,4 @@ ENDFUNC
 
 
 ENDFILE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
