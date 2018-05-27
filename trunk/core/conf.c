@@ -83,6 +83,10 @@ void clear_values()
         conf.platformid = PLATFORMID;
         conf.flash_video_override = 0;
 
+        // battery voltages are camera dependent
+        conf.batt_volts_max = get_vbatt_max();
+        conf.batt_volts_min = get_vbatt_min();
+
         // video related entries are interpreted differently on D6 cameras
         conf.video_mode = 0;
         conf.video_quality = VIDEO_DEFAULT_QUALITY;
