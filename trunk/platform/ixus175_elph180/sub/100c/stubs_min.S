@@ -8,7 +8,7 @@ DEF(_nrflag, 0x9A58) //0x9A54+4 plus 4 like reference port ixus 145,160
 
 // found by searching RAM
 DEF(active_viewport_buffer, 0x179DC) // 0x179A4 (@0xFF84CE94) + 0x38 (@FF84D1F4) 
-DEF(viewport_buffers, 0xFFBE2D88) //guess with ixus 150
+DEF(viewport_buffers, 0xFFBE2D90) //guess with ixus 150 blackhole
 
 // search for "Window_EmergencyRefresh" (compare to ixus160)
 DEF(bitmap_buffer, 0x3CE4) // @0xFF8A5C28 (0x3CB8) + @0xFF8A5C38 (0x2c)

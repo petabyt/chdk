@@ -4,6 +4,6 @@ IXUS175/ELPH180 Notes
 
 Unfinished port, status uncertain
 Original code from tsamma in https://chdk.setepontos.com/index.php?topic=13063.msg133207#msg133207
-
+Additional code from blackhole in https://chdk.setepontos.com/index.php?topic=13063.msg133875#msg133875
 
 Porting thread https://chdk.setepontos.com/index.php?topic=13063.0

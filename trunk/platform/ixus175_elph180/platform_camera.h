@@ -1,6 +1,6 @@
 // Camera - ixus175_elph180 - platform_camera.h
 
-// This file contains the various settings values specific to the A2500 camera.
+// This file contains the various settings values specific to the ixus175_elph180 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -19,15 +19,7 @@
 // When porting CHDK to a new camera, check the documentation in 'include/camera.h'
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
-//#define CAM_DRYOS         1
-//#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
-//#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
-//#define CAM_RAW_ROWPIX    5248 // Found @0xff97c21c
-//#define CAM_RAW_ROWS      3920 // Found @0xff97c224
-//#undef  CAM_UNCACHED_BIT
-//#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff825d74
-//#define CAM_DATE_FOLDER_NAMING 0x080 // Found @0xffaba86c (pass as 3rd param to GetImageFolder)
-//#define PARAM_CAMERA_NAME 3 // Found @0xffce41a8
+
 
     #define CAM_PROPSET                     10
     #define CAM_DRYOS                       1
@@ -42,8 +34,8 @@
     
     #define CAM_ACTIVE_AREA_X1              0
     #define CAM_ACTIVE_AREA_Y1              0
-    #define CAM_ACTIVE_AREA_X2              5192
-    #define CAM_ACTIVE_AREA_Y2              3900
+    #define CAM_ACTIVE_AREA_X2              5248
+    #define CAM_ACTIVE_AREA_Y2              3920
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff825d74
@@ -69,16 +61,16 @@
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS     1
 
-    #define CAM_HAS_FILEWRITETASK_HOOK      1       // FileWriteTask hook is available (local file write can be prevented)
-    #define CAM_FILEWRITETASK_SEEKS         1       // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+//    #define CAM_HAS_FILEWRITETASK_HOOK      1       // FileWriteTask hook is available (local file write can be prevented)
+//    #define CAM_FILEWRITETASK_SEEKS         1       // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_FILE_COUNTER_IS_VAR         1       // file counter is variable file_counter_var in stubs, not a param
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
-    #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s
+ //   #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s
 
-    #define CAM_QUALITY_OVERRIDE            1       // enable JPEG quality override
+//    #define CAM_QUALITY_OVERRIDE            1       // enable JPEG quality override
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
@@ -93,8 +85,8 @@
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
 
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_HELP }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Erase" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_ERASE }
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
 
@@ -102,9 +94,9 @@
 
     #define CAM_USE_ALT_SET_ZOOM_POINT          1   // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1   // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-    #define CAM_NEED_SET_ZOOM_DELAY             100 // Define to add a delay after setting the zoom position
+    #define CAM_NEED_SET_ZOOM_DELAY             500 // Define to add a delay after setting the zoom position
     
-    #undef  CAM_HAS_ERASE_BUTTON
+//    #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_DISP_BUTTON
     #undef  CAM_DEFAULT_ALT_BUTTON
     #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
@@ -121,8 +113,9 @@
 	#undef CAM_AF_LED
     #define CAM_AF_LED                      1
     //#define CAM_VIDEO_QUALITY_ONLY          1
-//    #undef  CAM_VIDEO_CONTROL
-//    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // it's unlocked by default
+    #undef  CAM_VIDEO_CONTROL
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // it's unlocked by default
 //    #define CAM_IS_VID_REC_WORKS            1       // TODO
     
    

@@ -8,22 +8,25 @@
 "    BEQ     exitHook\n"                // below compares not necessary if this check has found something.
 
 /*** INSTALL exp_drv_task() hook ***/
-"    LDR     R0, =task_ExpDrv\n"
+/*"    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    BEQ     exitHook\n"
+*/
 
 /*** INSTALL filewrite() hook ***/
-"    LDR     R0, =task_FileWrite\n"
+/*"    LDR     R0, =task_FileWrite\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =filewritetask\n"
 "    BEQ     exitHook\n"
+*/
 
 /*** INSTALL movie_record_task() hook ***/
-"    LDR     R0, =task_MovieRecord\n"
+/*"    LDR     R0, =task_MovieRecord\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =movie_record_task\n"
 "    BEQ     exitHook\n"
+*/
 
 /*** INSTALL liveimage_task() hook ***/
 /*"    LDR     R0, =task_LiveImageTask\n"
@@ -31,6 +34,7 @@
 "    LDREQ   R3, =liveimage_task\n"
 "    BEQ     exitHook\n"
 */
+
 /*** INSTALL init_file_modules_task() hook ***/
 "    LDR     R0, =task_InitFileModules\n"
 "    CMP     R0, R3\n"
