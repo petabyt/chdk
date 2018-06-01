@@ -189,7 +189,7 @@ void __attribute__((naked,noinline)) sub_FF810354_my() { // ASM1989 -> In sx200 
 	   	 "MOV R0, #0xD3\n"
 	   	 "MSR CPSR_cxsf, R0\n"
 	   	 "MOV SP, #0x1000\n"
-	   	 "LDR R0, =0x6C4\n"  // in 100D was: diferent  "LDR R0, =0xFF8103C0\n"
+	   	 "LDR R0, =0x6C4\n"
 	   	 "LDR R2, =0xEEEEEEEE\n"
 	   	 "MOV R3, #0x1000\n"
 "loc_FF8103B0:\n"
@@ -251,9 +251,13 @@ void __attribute__((naked,noinline)) sub_FF811198_my() {
 
                  "MOV     R0, #0x53000\n"
                  "STR     R0, [SP,#4]\n"
-                 "LDR     R0, =new_sa\n"        // +
-                 "LDR     R0, [R0]\n"           // +
-                 //"LDR     R2, =0x172BF8\n"
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+"    LDR     R0, =0x172BF8 \n"
+#else
+"    LDR     R0, =new_sa\n"   // otherwise use patched value
+"    LDR     R0, [R0]\n"      // 
+#endif
+                 //"LDR     R0, =0x172BF8\n"
                  "LDR     R1, =0x379C00\n"
                  "STR     R0, [SP,#8]\n"
                  //"SUB     R0, R1, R0\n"
