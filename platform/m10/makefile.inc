@@ -16,6 +16,9 @@ NEED_ENCODED_DISKBOOT=13
 # Found @
 KEYSYS=d4g
 
+# generated FI2 needs word-based checksum
+FI2FLAGS=W
+
 PLATFORMOSVER=57
 
 # mandatory for DIGIC 6

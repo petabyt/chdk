@@ -11,7 +11,10 @@
 #include "aes128.h"
 
 static const char *g_str_err_malloc = "memory allocation error (requested %d bytes)\n";
-static const char *g_str_shorthelp = "Usage: fi2encdec [-p PID] [-key KEY -iv IV] in.file out.file\n";
+static const char *g_str_shorthelp = "Usage: fi2encdec [-p PID] [-key KEY -iv IV] [-x FLAGS] in.file out.file\n"
+                                     "    FLAGS: one or more of the following letters\n"
+                                     "           W: checksum is word based (on new models)\n"
+                                     "\n";
 
 char *_strlwr(char *moep) {
      char *tmp = moep;
@@ -111,7 +114,8 @@ static int fi2rec_size(uint32_t dryos_ver)
     }
 }
 
-static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , uint32_t pid, uint32_t dryos_ver)
+static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , uint32_t pid, uint32_t dryos_ver,
+                   int32_t cs_words)
 {
 	unsigned long i;
 	size_t flen;
@@ -184,7 +188,14 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 	// encrypt data block
 	aes128_cbc_encrypt( buf, exkey, iv, fi2rec.len );
 	pblk = buf;									
-	for( i = 0; i < (int)fi2rec.len; i++) cs += buf[i];	// update block checksum
+    if (cs_words) {
+        uint32_t *wbuf = (uint32_t*)buf;
+        for( i = 0; i < (int)fi2rec.len/4; i++) cs += wbuf[i];	// update block checksum
+    }
+    else {
+        for( i = 0; i < (int)fi2rec.len; i++) cs += buf[i];	// update block checksum
+    }
+
 	free( upkbuf ); upkbuf = NULL;
 	// process next block
 	// finalize header
@@ -237,6 +248,8 @@ int main( int argc, char **argv )
 	char *fni = NULL, *fno = NULL;
 	uint32_t pid=0;
     uint32_t dryos_ver=0;
+    char *flags = NULL;
+    int32_t cs_words = 0;
 
 	// parse command line
 	for( i = 1; i < argc; i++){
@@ -260,6 +273,9 @@ int main( int argc, char **argv )
 			        dryos_ver = strtoul(argv[++i], &err, 0);
 				if (*err) return -1;
 			}
+			else if( !strcmp( "x", _strlwr(argv[i]+1) ) ){ // extra flags, single string without spaces
+			        flags = argv[++i];
+			}
 			else {
 				printf("Unexpected option: %s\n", argv[i]);
 				return -1;
@@ -277,8 +293,13 @@ int main( int argc, char **argv )
 		fputs( g_str_shorthelp, stdout );
 		return -1;
 	}
+    if (flags) {
+        if ( strstr(flags, "W") ) {
+            cs_words = 1;
+        }
+    }
 	for( i = 0; i < 4; i ++ )  key[i] = read32_be( key+i );
-        i = fi2enc( fni, fno, key, iv , pid, dryos_ver);
+        i = fi2enc( fni, fno, key, iv , pid, dryos_ver, cs_words);
 	if ( !i ) printf( "Done\n" );	else printf( "Failed!\n" );
 	return i;
 }

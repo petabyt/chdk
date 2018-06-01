@@ -97,6 +97,12 @@ ifdef PLATFORMOS
     endif
 endif
 
+ifdef FI2FLAGS
+    FI2FLAG=-x $(FI2FLAGS)
+else
+    FI2FLAG=
+endif
+
 
 .PHONY: toolchaincheck
 toolchaincheck:
@@ -127,7 +133,7 @@ firsub: toolchaincheck platformcheck all
 			$(PAKWIF) $(FW_UPD_FILE) $(bin)/main.bin $(TARGET_PID) 0x01000101
         endif
         ifeq ($(PLATFORMOS),dryos)
-			$(PAKFI2) $(bin)/main.bin -p $(TARGET_PID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(FW_UPD_FILE)
+			$(PAKFI2) $(bin)/main.bin -p $(TARGET_PID) -pv $(PLATFORMOSVER) -key $(FI2KEY) -iv $(FI2IV) $(FI2FLAG) $(FW_UPD_FILE)
         endif
     endif
     ifdef NEED_ENCODED_DISKBOOT

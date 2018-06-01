@@ -19,3 +19,6 @@ KEYSYS = d4i
 # type of diskboot encoding
 NEED_ENCODED_DISKBOOT = 16
 
+# generated FI2 needs word-based checksum
+FI2FLAGS=W
+
