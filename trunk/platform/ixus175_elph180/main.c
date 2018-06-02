@@ -58,7 +58,7 @@ int get_zoom_x(int zp) {
 long get_vbatt_min()
 {
 
-    return 3250; // tested
+    return 3250; // shutdown around 3.1
 }
 
 long get_vbatt_max()

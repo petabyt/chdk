@@ -32,10 +32,10 @@
     #define CAM_JPEG_WIDTH                  5152
     #define CAM_JPEG_HEIGHT                 3864
     
-    #define CAM_ACTIVE_AREA_X1              0
-    #define CAM_ACTIVE_AREA_Y1              0
-    #define CAM_ACTIVE_AREA_X2              5248
-    #define CAM_ACTIVE_AREA_Y2              3920
+    #define CAM_ACTIVE_AREA_X1              8 // or 16
+    #define CAM_ACTIVE_AREA_Y1              16 // or 26
+    #define CAM_ACTIVE_AREA_X2              5182 // or 5184
+    #define CAM_ACTIVE_AREA_Y2              3904 // or 3894
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000 // Found @0xff825d74
@@ -68,9 +68,9 @@
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
- //   #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s
+    #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s (up to 1024s without exp_drv)
 
-//    #define CAM_QUALITY_OVERRIDE            1       // enable JPEG quality override
+    #define CAM_QUALITY_OVERRIDE            1       // enable JPEG quality override
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       // camera uses the modified graphics primitives to map screens an viewports to buffers more sized
@@ -85,8 +85,8 @@
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
 
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Erase" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_ERASE }
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Erase", "Video" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_ERASE, KEY_VIDEO }
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
 
@@ -116,7 +116,7 @@
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // it's unlocked by default
-//    #define CAM_IS_VID_REC_WORKS            1       // TODO
+    #define CAM_IS_VID_REC_WORKS            1
     
    
 
