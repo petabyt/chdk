@@ -160,7 +160,7 @@ ixus145_elph135,100c,BETA,,
 ixus150_elph140,100c,ALPHA,,
 ixus160_elph160,100a,ALPHA,,
 ixus160_elph160,100b,ALPHA,100a,
-ixus175_elph180,100c,PREALPHA,,SKIP_AUTOBUILD
+ixus175_elph180,100c,ALPHA,,
 ixus200_sd980,100c,,,
 ixus200_sd980,101c,,,
 ixus200_sd980,101d,,,

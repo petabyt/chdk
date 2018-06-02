@@ -1,9 +1,54 @@
 ************************************
 IXUS175/ELPH180 Notes 
 ************************************
+CHDK is a hack, use at your own risk!
 
-Unfinished port, status uncertain
+This is an ALPHA port. Some CHDK features are not implemented and
+many have not been fully tested.
+
+Porting thread https://chdk.setepontos.com/index.php?topic=13063.0
+
 Original code from tsamma in https://chdk.setepontos.com/index.php?topic=13063.msg133207#msg133207
 Additional code from blackhole in https://chdk.setepontos.com/index.php?topic=13063.msg133875#msg133875
 
-Porting thread https://chdk.setepontos.com/index.php?topic=13063.0
+General camera and CHDK port information
+****************************************
+Default alt button is PLAY. ERASE and VIDEO may also be used, but will
+conflict with some CHDK shortcuts
+
+Raw shortcut key is VIDEO
+
+Has ND filter, does NOT have adjustable aperture
+
+~3MB of RAM is available to CHDK
+
+Neither VER.REQ nore VERS.REQ work to obtain the Canon firmware. Use
+a tool such as ACID to obtain the correct firmware version
+
+Runs with battery door open, no override required.
+
+TESTED
+******
+llibtst.lua
+Extra long exposures (>64 sec), tested up to 300 sec.
+ NOTE: exp_drv not implemented, < 1024s probably works without
+Basic PTP: file transfer, play/rec, live view
+script shooting hooks
+Script zoom control
+zebra - Thresholds must be ~1-2
+Firmware update boot
+raw/DNG - In P and AUTO, some special scene modes may be broken
+jpeg quality override - Note this camera does not allow setting quality in 
+ Canon UI. Default appears to be "fine"
+script LED control - 0 = green power LED, 1 = AF lamp
+SD override - Works in AF, MF and AFL
+vidtest.lua
+
+NOT IMPLEMENTED
+***************
+video controls (movie_rec task)
+PTP remote shoot (filewrite task)
+
+OTHER ISSUES
+************
+DNG color matrix is copied from another cam, but unusable
