@@ -156,6 +156,13 @@ asm volatile (
 "    BEQ     exitHook\n"
 */
 
+"    LDR     R0, =0xfc56075d\n" // task_TricInitTask
+"    CMP     R0, R3\n"
+"    itt     eq\n"
+"    LDREQ   R3, =task_TricInitTask_my\n"
+"    orreq   r3, #1\n"
+"    BEQ     exitHook\n"
+
 "    LDR     R0, =0xFC255E7B\n" // TskCocoa0
 "    CMP     R0, R3\n"
 "    itt     eq\n"
@@ -372,7 +379,7 @@ void __attribute__((naked,noinline)) sub_fc06ca35_my() {
 "    bl      sub_fc0f95d4\n"        // cam error related setup
 "    bl      sub_fc06ce1c\n"        // writes 0xd601xxxx
 "    bl      sub_fc06cc5c\n"        // InitExDrivers
-"    bl      sub_fc0f94ae\n"        // long func, StartWDT, StartSwitchCheck, many others
+"    bl      sub_fc0f94ae_my\n"     // -> long func, StartWDT, StartSwitchCheck, many others
 "    bl      sub_fc1ebfec\n"        // errLogTask, etc...
 "    bl      sub_fc0f95da\n"        // UIMemory (600000 bytes), StartEventExchanger, CtrlMan, Autoshut
 //"    bl      sub_fc08c8ee\n"      // -
@@ -396,6 +403,58 @@ void __attribute__((naked,noinline)) sub_fc06ca35_my() {
     );
 }
 
+void __attribute__((naked,noinline)) sub_fc0f94ae_my() {
+    asm volatile (
+// capdis -f=chdk -s=0xFC0F94AF -c=26 -stubs PRIMARY.BIN 0xfc000000
+"    push    {r4, lr}\n"
+"    bl      sub_fc1fb2d0\n"
+"    movs    r1, #4\n"
+"    movs    r0, #2\n"
+"    bl      sub_fc1fabf4\n"
+"    bl      sub_fc1fac54\n" // StartWDT_FW
+"    bl      sub_fc33e3be\n"
+"    bl      sub_fc1fa1b0\n"
+"    bl      sub_fc138d8e\n"
+"    bl      sub_fc130b44\n"
+"    bl      sub_fc131f6c\n"
+"    bl      sub_fc08d11c\n" // StartSwitchCheck_FW
+"    bl      sub_fc1f36fc\n"
+"    bl      sub_fc1f2b7c\n"
+"    bl      sub_fc1fae2c\n"
+"    ldr     r2, =0x12cea600\n"
+"    ldr     r1, =0x7fe8177f\n"
+"    blx     sub_fc3145c0\n"
+"    bl      sub_fc1f349a\n"
+"    bl      sub_fc07eac8\n"
+"    bl      sub_fc136fe2\n"
+"    bl      sub_fc130a14\n"
+"    bl      sub_fc07ea92\n" // IsNormalCameraMode_FW
+"    cbz     r0, loc_fc0f9506\n"
+"    bl      sub_fc1309bc\n"
+"loc_fc0f9506:\n"
+"    bl      sub_fc08c4b8_my\n" // ->
+"    ldr     pc, =0xFC0F950B\n" // -> continue in fw
+    );
+}
+
+void __attribute__((naked,noinline)) sub_fc08c4b8_my() {
+    asm volatile (
+// capdis -f=chdk -s=0xFC08C4B9 -c=10 -stubs PRIMARY.BIN 0xfc000000
+"    push    {r4, r5, r6, r7, lr}\n"
+"    ldr     r6, =0x000082cc\n" //  physw_run
+"    sub     sp, #0x84\n"
+"    ldr     r0, [r6]\n"
+"    cmp     r0, #1\n"
+"    beq     sub_fc08c55e\n"    // loc -> sub
+"    ldr     r0, =0x00056c10\n"
+"    bl      sub_fc07eb8c\n"
+"    bl      sub_fc07d624\n"
+"    bl      sub_fc07ed70\n"
+"bl support_fi2_boot\n"         // +
+"    ldr     pc, =0xFC08C4D3\n" // -> continue in fw
+    );
+}
+
 /*
     *** workaround ***
     Init stuff to avoid asserts on cameras running DryOS r54+
@@ -408,6 +467,14 @@ void init_required_fw_features(void) {
     *(int*)0x2E804 = _CreateBinarySemaphore(0, 0);
     // focuslens related semaphore (may not be needed as sd override does not work)
     *(int*)(0x2E7E0+0xC) = _CreateBinarySemaphore(0, 0);
+}
+
+void support_fi2_boot(void) {
+    // following is for FI2 boot, see sub_FC07ED70
+    // 0x9bbc stores the reason of startup, which is read from the subcpu
+    // when booting with fi2, 0x9bbc remains zero, resulting in immediate shutdown
+    // let's start in playback mode instead
+    if (*(int*)0x9bbc == 0) *(int*)0x9bbc = 0x8000000; // playback
 }
 
 //taskcreate_physw
@@ -649,3 +716,56 @@ void __attribute__((naked,noinline)) sub_fc08c6e8_my() {
     );
 }
 
+
+void __attribute__((naked,noinline)) task_TricInitTask_my() {
+    asm volatile(
+// capdis -f=chdk -s=task_TricInitTask -c=35 -stubs PRIMARY.BIN 0xfc000000
+// task_TricInitTask 0xfc56075d
+"    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}\n"
+"    movs    r0, #8\n"
+"    ldr     r1, =0xfc560988\n" //  *"InitTskStart"
+"    bl      sub_fc37fa52\n"
+"    ldr.w   sl, =0x0002e7d8\n"
+"    movw    fp, #0x1000\n"
+"    ldr     r4, =0x0002e7d4\n"
+"    movs    r2, #0\n"
+"    ldr     r1, =0x0703870f\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc314de4\n" // j_WaitForAnyEventFlag
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc560792\n"
+"    movs    r0, #8\n"
+"    ldr     r1, =0xfc5609a0\n" //  *"ER IniTskWait"
+"    bl      sub_fc37fab2\n"
+"    ldr     r1, =0x0002e7c0\n"
+"    movs    r0, #0\n"
+"    str     r0, [r1]\n"
+"    pop.w   {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, pc}\n"
+"loc_fc560792:\n"
+"    ldr     r4, =0x0002e7d4\n"
+"    add     r1, sp, #0xc\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc314b44\n" // j_GetEventFlagValue
+"    ldr     r1, [sp, #0xc]\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc314d3c\n" // j_ClearEventFlag
+"    ldr     r0, =0x02000003\n"
+"    ldr     r7, [sp, #0xc]\n"
+"    tst     r7, r0\n"
+"    beq     sub_fc560896\n"    // loc -> sub
+"    lsls    r0, r7, #0x1f\n"
+"    beq     sub_fc5607b6\n"    // loc -> sub
+
+"    ldr     r0, =0xd2020074\n" // +
+"    ldr     r0, [r0]\n"        // + nonzero when core already running
+"    subs    r0, #0\n"          // +
+"    beq     tric1\n"           // +
+"    ldr     r0, [r4]\n"        // +
+"    mov     r1, #0x80\n"       // +
+"    bl      _SetEventFlag\n"   // + core already initialized, set the SmacIdleCmp eventflag here
+"tric1:\n"                      // +
+
+"    bl      sub_fc560c3a\n"
+"    b       sub_fc560822\n"    // loc -> sub
+    );
+}
