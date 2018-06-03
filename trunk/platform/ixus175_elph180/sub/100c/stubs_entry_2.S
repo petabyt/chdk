@@ -22,7 +22,7 @@ NHSTUB(init_nd_semaphore,                   0xFFAE6424)
 
 //DEF(hook_DebugAssert ,0x006b59c0)
 
-//NHSTUB(LogCameraEvent ,0xff834340)
+NHSTUB(LogCameraEvent ,0xff834994)
 
 
 NHSTUB(TurnOffBackLight, NULL_SUB)
