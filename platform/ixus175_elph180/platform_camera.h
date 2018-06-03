@@ -61,8 +61,9 @@
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS     1
 
-//    #define CAM_HAS_FILEWRITETASK_HOOK      1       // FileWriteTask hook is available (local file write can be prevented)
-//    #define CAM_FILEWRITETASK_SEEKS         1       // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
+    // doesn't appear to use complicated multi pass or seek in normal cases
+    #define CAM_HAS_FILEWRITETASK_HOOK      1       // FileWriteTask hook is available (local file write can be prevented)
+//    #define CAM_FILEWRITETASK_SEEKS         1       // Camera's FileWriteTask can do Lseek() - doesn't seem to be required
 
     #define CAM_FILE_COUNTER_IS_VAR         1       // file counter is variable file_counter_var in stubs, not a param
 

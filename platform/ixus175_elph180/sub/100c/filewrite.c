@@ -4,6 +4,10 @@
 #include "lolevel.h"
 #include "platform.h"
 
+// debug
+//#define FILEWRITE_DEBUG_LOG 1
+extern void _LogCameraEvent(int id,const char *fmt,...);
+
 typedef struct {
     unsigned int address;
     unsigned int length;
@@ -15,30 +19,57 @@ typedef struct {
 /*
  * fwt_data_struct: defined here as it's camera dependent
  * unneeded members are designated with unkn
- * file_offset, full_size, seek_flag only needs to be defined for DryOS>=r50 generation cameras
+ * file_offset, full_size, seek_flag only needs to be defined for cameras with CAM_FILEWRITETASK_SEEK/CAM_FILEWRITETASK_MULTIPASS
  * pdc is always required
  * name is not currently used
  */
 typedef struct
 {
-    int unkn1;
+    int unkn1; // message number
     int file_offset;
-    int full_size;
+    int maybe_full_size; // maybe, on g7x wasn't always full size
     int unkn2, unkn3;
+    int unkn4;
     cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
-    int seek_flag;      // offset from start 0x4c = 76 bytes = 19 words
-    int unkn4, unkn5;
-    char name[32];      // offset from start 0x58 = 88 bytes = 22 words
+    int maybe_seek_flag;      // 0x2083 jpeg, 0x100 create dir, 0x200 CacheFlush
+    int unkn5, unkn6;
+    char name[32];      // offset from start 0x5c, from Open case
 } fwt_data_struct;
-// seek_flag is different:
-// seek state is activated (from state 0xc, open) when
-// (word at 0x4c) AND 0x40
-// OR
-// write offset is not 0
-#define FWT_MUSTSEEK    0x40   // value of the masked seek_flag indicating seek is required
-#define FWT_SEEKMASK    0x40   // masks out unneeded bits of seek_flag
+/*
+observed message sequences
+JPEG
+12 maybe_full_size = 0x004437ac (=actual size), seek_flag = 0x2083
+ 0 chunk 0-0x004437ac
+ 1 chunk 0-0
+ 7 close
+
+new directory
+11 seek_flag = 0x100
+before m 12 for shot, after raw hook in capt_seq
+
+after shot
+10 A/ seek_flag 0x200
+*/
 
 #include "../../../generic/filewrite.c"
+
+#ifdef FILEWRITE_DEBUG_LOG
+void log_fwt_msg(fwt_data_struct *fwd)
+{
+    int m=fwd->unkn1;
+    _LogCameraEvent(0x60,"fw m:%d o:0x%08x fs:0x%08x sf:0x%x",m,fwd->file_offset,fwd->maybe_full_size,fwd->maybe_seek_flag);
+    _LogCameraEvent(0x60,"fw %s",fwd->name);
+    if(m >= 0 && m <=6) {
+        _LogCameraEvent(0x60,"fw chunk adr:0x%08x l:0x%08x",fwd->pdc[m].address,fwd->pdc[m].length);
+    }
+    _LogCameraEvent(0x60,"fw u %08x %08x %08x %08x %08x %08x",fwd->unkn2,fwd->unkn3,fwd->unkn4,fwd->unkn5,fwd->unkn6);
+}
+
+void log_fwt_start(void)
+{
+    _LogCameraEvent(0x60,"fw start");
+}
+#endif
 
 
 /*************************************************************/
@@ -46,6 +77,9 @@ typedef struct
 void __attribute__((naked,noinline)) filewritetask() {
 asm volatile (
 "    STMFD   SP!, {R1-R5,LR} \n"
+#ifdef FILEWRITE_DEBUG_LOG
+"bl log_fwt_start\n"
+#endif
 "    LDR     R5, =0xAE3C \n"
 
 "loc_FFAC8BC0:\n"
@@ -58,6 +92,10 @@ asm volatile (
 "    LDRNE   R1, =0xFFAC8D2C /*'dwFWrite.c'*/ \n"
 "    MOVNE   R0, #0 \n"
 "    BLNE    _DebugAssert \n"
+#ifdef FILEWRITE_DEBUG_LOG
+"ldr     r0, [sp,#8]\n"
+"bl log_fwt_msg\n"
+#endif
 "    LDR     R0, [SP, #8] \n"
 "    LDR     R1, [R0] \n"
 "    CMP     R1, #0xD \n"
@@ -99,7 +137,7 @@ asm volatile (
 "    MOV     R4, R5 \n"
 "    CMN     R0, #1 \n"
 "    BEQ     loc_FFAC8C98 \n"
-"    BL      fwt_close \n"  // --> Patched. Old value = _Close.
+"    BL      _Close \n"
 "    MVN     R0, #0 \n"
 "    STR     R0, [R4, #8] \n"
 "    MOV     R1, #0 \n"
@@ -116,11 +154,11 @@ asm volatile (
 "    B       loc_FFAC8BC0 \n"
 
 "loc_FFAC8CA4:\n"
-"    BL      sub_FFAC8F4C_my \n"  // --> Patched. Old value = 0xFFAC8F4C. Unknown1
+"    BL      sub_FFAC8F4C \n"
 "    B       loc_FFAC8BC0 \n"
 
 "loc_FFAC8CAC:\n"
-"    BL      sub_FFAC87E0_my \n"  // --> Patched. Old value = 0xFFAC87E0. Open stage
+"    BL      sub_FFAC87E0_my \n"  // --> Patched. Old value = 0xFFAC87E0. msg 12 - open, main hook
 "    B       loc_FFAC8BC0 \n"
 
 "loc_FFAC8CB4:\n"
@@ -128,7 +166,7 @@ asm volatile (
 "    MOV     R4, R0 \n"
 "    LDR     R0, [R5, #8] \n"
 "    MOV     R2, #0 \n"
-"    BL      fwt_lseek \n"  // --> Patched. Old value = _lseek.
+"    BL      _lseek \n"
 "    CMN     R0, #1 \n"
 "    LDREQ   R0, =0x9200013 \n"
 "    MOVEQ   R1, R4 \n"
@@ -138,15 +176,15 @@ asm volatile (
 "    B       loc_FFAC8BC0 \n"
 
 "loc_FFAC8CE4:\n"
-"    BL      sub_FFAC8FEC_my \n"  // --> Patched. Old value = 0xFFAC8FEC. Unknown2
+"    BL      sub_FFAC8FEC \n"
 "    B       loc_FFAC8BC0 \n"
 
 "loc_FFAC8CEC:\n"
-"    BL      sub_FFAC9088_my \n"  // --> Patched. Old value = 0xFFAC9088. Write stage
+"    BL      sub_FFAC9088_my \n"  // --> Patched. Old value = 0xFFAC9088. msg 0-6 - write chunk
 "    B       loc_FFAC8BC0 \n"
 
 "loc_FFAC8CF4:\n"
-"    BL      sub_FFAC89B8_my \n"  // --> Patched. Old value = 0xFFAC89B8. Close stage
+"    BL      sub_FFAC89B8_my \n"  // --> Patched. Old value = 0xFFAC89B8. msg 0-7 - close
 "    B       loc_FFAC8BC0 \n"
 );
 }
@@ -157,13 +195,10 @@ void __attribute__((naked,noinline)) sub_FFAC87E0_my() {
 asm volatile (
 "    STMFD   SP!, {R4-R9,LR} \n"
 "    MOV     R4, R0 \n"
-
 //hook placed here to avoid conditional branch a few instructions below (watch out for registers!)
-"    MOV   R0, R4\n"      //data block start, commented out as R0 is already holding what we need
+//"  MOV   R0, R4\n"      //data block start, commented out as R0 is already holding what we need
 "    BL filewrite_main_hook\n"
 "    MOV     R0, R4\n"      //restore register(s)
-//hook end
-
 "    LDR     R0, [R0, #0x50] \n"
 "    LDR     R7, =0xAE3C \n"
 "    TST     R0, #5 \n"
@@ -236,7 +271,7 @@ asm volatile (
 "    MOV     R2, R9 \n"
 "    MOV     R1, R5 \n"
 "    MOV     R0, R8 \n"
-"    BL      fwt_open \n"  // --> Patched. Old value = _Open.
+"    BL      _Open \n"
 
 "loc_FFAC88EC:\n"
 "    CMN     R0, #1 \n"
@@ -268,14 +303,10 @@ asm volatile (
 "    MOV     R2, #0x20 \n"
 "    ADD     R1, R4, #0x5C \n"
 "    BL      sub_006BD1C8 \n"
-
-//mod start
 "    LDR R3, =current_write_ignored\n"
 "    LDR R3, [R3]\n"
 "    CMP R3, #0\n"
 "    BNE loc_C\n" // jump over the next block
-//mod end
-
 "    LDR     R0, [R4, #0x50] \n"
 "    TST     R0, #0x80 \n"
 "    BEQ     loc_FFAC8988 \n"
@@ -384,7 +415,6 @@ asm volatile (
 "loc_FFAC9168:\n"
 "    LDMFD   SP!, {R4-R10,LR} \n"
 "    B       sub_FFAC8718 \n"
-"    .ltorg\n" //+
 );
 }
 
@@ -428,14 +458,11 @@ asm volatile (
 "    LDR     R1, [R4, #0x58] \n"
 "    LDR     R6, =0x9200003 \n"
 "    CMP     R1, #1 \n"
-"    BNE     loc_FFAC8A4C \n"
-//mod start
 "    LDR R3, =current_write_ignored\n"
 "    LDR R3, [R3]\n"
 "    CMP R3, #0\n"
 "    BNE loc_D\n" // jump over the next block
-//mod end
-
+"    BNE     loc_FFAC8A4C \n"
 "    BL      sub_FF827264 \n"
 "    B       sub_FFAC8A50 \n"
 
@@ -443,70 +470,5 @@ asm volatile (
 "loc_D:\n"
 "    BL      fwt_close \n"  // --> Patched. Old value = _Close.
 "    LDR     PC, =0xFFAC8A50 \n"  // Continue in firmware
-);
-}
-
-/*************************************************************/
-//** sub_FFAC8F4C_my @ 0xFFAC8F4C - 0xFFAC8F84, length=15
-void __attribute__((naked,noinline)) sub_FFAC8F4C_my() {
-asm volatile (
-"    STMFD   SP!, {R4-R6,LR} \n"
-"    LDR     R5, =0xAE3C \n"
-"    MOV     R4, R0 \n"
-"    LDR     R0, [R5, #0x1C] \n"
-"    CMP     R0, #0 \n"
-"    BLXNE   R0 \n"
-"    ADD     R0, R4, #0x5C \n"
-"    BL      sub_FF830778 \n"
-"    MOV     R1, #0 \n"
-"    BL      sub_FF82E4B8 \n"
-"    MOV     R1, #0 \n"
-"    MOV     R0, #0x47 \n"
-"    BL      sub_FF8B394C \n"
-"    LDR     R0, [R4, #0x10] \n"
-"    BL      sub_FF82D538 \n"
-//mod start
-"    LDR R3, =ignore_current_write\n" // !!
-"    LDR R3, [R3]\n"
-"    CMP R3, #0\n"
-"    BNE loc_A\n" // skip creating directory
-//mod end
-"    LDR     PC, =0xFFAC8F88 \n"  // Continue in firmware
-);
-}
-
-/*************************************************************/
-//** sub_FFAC8FEC_my @ 0xFFAC8FEC - 0xFFAC9038, length=20
-void __attribute__((naked,noinline)) sub_FFAC8FEC_my() {
-asm volatile (
-"    STMFD   SP!, {R3-R9,LR} \n"
-"    MOV     R4, R0 \n"
-"    LDRSB   R0, [R0, #0x5C] \n"
-"    CMP     R0, #0 \n"
-"    BEQ     sub_FFAC9084 \n"
-"    STRB    R0, [SP] \n"
-"    LDR     R6, =0xAE3C \n"
-"    MOV     R0, #0 \n"
-"    STRB    R0, [SP, #1] \n"
-"    LDR     R0, [R6, #0x1C] \n"
-"    CMP     R0, #0 \n"
-"    BLXNE   R0 \n"
-"    ADD     R0, R4, #0x5C \n"
-"    BL      sub_FF830778 \n"
-"    MOV     R1, #0 \n"
-"    BL      sub_FF82E4B8 \n"
-//mod start
-"    LDR R3, =ignore_current_write\n" // !!
-"    LDR R3, [R3]\n"
-"    CMP R3, #0\n"
-"    BNE loc_B\n" // skip flushing the cache
-//mod end
-"    MOV     R0, SP \n"
-"    BL      sub_FF82D550 \n"
-"    MOV     R7, R0 \n"
-"loc_B:\n"
-"    ADD     R0, R4, #0x5C \n"
-"loc_A:\n"
-"    LDR     PC, =0xFFAC903C \n"  // Continue in firmware
 );
 }

@@ -43,11 +43,12 @@ jpeg quality override - Note this camera does not allow setting quality in
 script LED control - 0 = green power LED, 1 = AF lamp
 SD override - Works in AF, MF and AFL
 vidtest.lua
+PTP remote shoot - Works in cont mode, does not crash when switchinbg to play
+chdkptp camtests
 
 NOT IMPLEMENTED
 ***************
 video controls (movie_rec task)
-PTP remote shoot (filewrite task)
 
 OTHER ISSUES
 ************
