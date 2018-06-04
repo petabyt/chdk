@@ -93,6 +93,8 @@
 { 12956,3,0xc022d1fc,0xffff0040 }, // sx400is
 { 12957,4,0xd20b0994,0xfff20040 }, // g7x
 { 12959,3,0xc022d1fc,0xfffe0040 }, // sx530hs
+#elif (NEED_ENCODED_DISKBOOT == 16)
+{ 12993,3,0xc022d1fc,0xffff0270 }, // ixus175_elph180
 #elif (NEED_ENCODED_DISKBOOT == 2)
 { 12732,1,0xc0220134,0xfffe0130 }, // d10
 { 12733,1,0xc0220130,0xfffe0130 }, // ixus110_sd960
