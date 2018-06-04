@@ -52,4 +52,4 @@ video controls (movie_rec task)
 
 OTHER ISSUES
 ************
-DNG color matrix is copied from another cam, but unusable
+DNG color matrix is copied from another cam, but usable

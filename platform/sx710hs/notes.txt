@@ -63,7 +63,7 @@ display updating is ugly / has usual Digic 6 limitations
 - Edge overlay does not erase properly when shown live
 - Zebra "Draw Over Zebra" and Restore options are non-functional
 - Some games don't draw correctly
-DNG color matrix is incorrect (copied from sx60hs) but unusable
+DNG color matrix is incorrect (copied from sx60hs) but usable
 
 KNOWN BUGS
 **********
