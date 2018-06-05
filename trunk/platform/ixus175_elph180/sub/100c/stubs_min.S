@@ -6,8 +6,8 @@ DEF(recreview_hold, 0x000029b4)
 // see NRTBL.SetDarkSubType_FW (this will likely "lag")
 DEF(_nrflag, 0x9A58) //0x9A54+4 plus 4 like reference port ixus 145,160
 
-// found by searching RAM
-DEF(active_viewport_buffer, 0x179DC) // 0x179A4 (@0xFF84CE94) + 0x38 (@FF84D1F4) 
+// found by searching RAM, observed values 0-3, 0x179A4+0x3C in liveimg.c @FF84D24C
+DEF(active_viewport_buffer, 0x179E0) 
 DEF(viewport_buffers, 0xFFBE2D90) //guess with ixus 150 blackhole
 
 // search for "Window_EmergencyRefresh" (compare to ixus160)

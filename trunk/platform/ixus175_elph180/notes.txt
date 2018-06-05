@@ -45,6 +45,7 @@ SD override - Works in AF, MF and AFL
 vidtest.lua
 PTP remote shoot - Works in cont mode, does not crash when switchinbg to play
 chdkptp camtests
+Motion detection - 50-80ms response, average 61
 
 NOT IMPLEMENTED
 ***************
