@@ -69,10 +69,17 @@ asm volatile (
 
 "loc_FF85E084:\n"
 "    BL      sub_FF93C3B8 \n"
+// only do quick press hack if overrides are active
+"    BL      captseq_hack_override_active\n"      // returns 1 if tv or sv override in effect
+"    STR     R0,[SP,#-4]!\n" // push return value
 "    BL      shooting_expo_param_override\n"      // added
 "    BL      sub_FF85C148 \n"
-"    LDR     R0, [R6, #0x24] \n"
-"    CMP     R0, #0 \n"
+"    LDR     R0,[SP],#4\n" // pop override hack
+"    CMP     R0, #1\n"     // +
+"    MOVEQ   R0, #0\n"     // +
+"    STREQ   R0, [R6,#0x24]\n"  // fixes overrides behavior at short shutter press
+"    LDRNE   R0, [R6,#0x24]\n" // modified NE
+"    CMPNE   R0, #0\n"         // modified NE
 "    BEQ     loc_FF85E22C \n"
 "    BL      sub_FF85D968 \n"
 "    MOV     R4, R0 \n"
