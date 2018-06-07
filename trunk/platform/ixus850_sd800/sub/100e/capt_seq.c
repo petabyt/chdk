@@ -188,11 +188,18 @@ void __attribute__((naked,noinline)) capt_seq_task()
                 ".long loc_FF998F90\n"
  "loc_FF998E9C:\n"
 				"BL      sub_FF9994A8\n" // ; jumptable FF998E3C case 0
+// only do quick press hack if overrides are active
+"                BL      captseq_hack_override_active\n" // returns 1 if tv or sv override in effect
+"                STR     R0,[SP,#-4]!\n" // push return value
 				"BL      shooting_expo_param_override\n"   // +
 				"BL      sub_FF996C88\n"
 				"LDR     R3, =0xB7CA0\n"
-				"LDR     R2, [R3,#0x28]\n"
-                "CMP     R2, #0\n"
+"                LDR     R0,[SP],#4\n" // pop override hack
+"                CMP     R0, #1\n"     // +
+"                MOVEQ   R0, #0\n"     // +
+"                STREQ   R0, [R3,#0x28]\n"  // fixes overrides behavior at short shutter press
+"                LDRNE   R0, [R3,#0x28]\n" // modified NE
+"                CMPNE   R0, #0\n"         // modified NE
 				"BEQ     loc_FF998F8C\n"
 				"BL      sub_FF998A50_my\n"  //--------->
 				"B       loc_FF998F8C\n"
