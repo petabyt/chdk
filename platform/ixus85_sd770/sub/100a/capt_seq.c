@@ -124,10 +124,19 @@ void __attribute__((naked,noinline)) capt_seq_task() // OK
 		"loc_FF85DEF4:\n"
 		// jumptable FF85DE7C entry 0
 		"BL      sub_FF939B34\n" // LOCATION: SsPrepareSeq.c:0
+		// only do quick press hack if overrides are active
+		"BL      captseq_hack_override_active\n"      // returns 1 if tv or sv override in effect
+		"STR     R0,[SP,#-4]!\n" // push return value
 		"BL      shooting_expo_param_override\n" // +
 		"BL      sub_FF85BFB8\n"
-		"LDR     R0, [R6,#0x24]\n"
-		"CMP     R0, #0\n"
+		"LDR     R0,[SP],#4\n" // pop override hack
+		"CMP     R0, #1\n"     // +
+		"MOVEQ   R0, #0\n"     // +
+		"STREQ   R0, [R6,#0x24]\n" // fixes overrides behavior at short shutter press
+		"LDRNE   R0, [R6,#0x24]\n" // modified NE
+		"CMPNE   R0, #0\n"         // modified NE
+//		"LDR     R0, [R6,#0x24]\n"  // above patch makes these lines redundant
+//		"CMP     R0, #0\n"
 		"BEQ     loc_FF85E09C\n"
 		"BL      sub_FF85D7D8\n"
 		"MOV     R4, R0\n"
