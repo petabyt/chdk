@@ -75,10 +75,19 @@ asm volatile (
 "loc_FF87AB5C:\n"
 "    BL      shooting_expo_iso_override\n"      // added
 "    BL      sub_FF87B26C \n"
+// only do quick press hack if overrides are active
+"    BL      captseq_hack_override_active\n"      // returns 1 if tv or sv override in effect
+"    STR     R0,[SP,#-4]!\n" // push return value
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF8786B8 \n"
-"    LDR     R0, [R5, #0x28] \n"
-"    CMP     R0, #0 \n"
+"    LDR     R0,[SP],#4\n" // pop override hack
+"    CMP     R0, #1\n"     // +
+"    MOVEQ   R0, #0\n"     // +
+"    STREQ   R0, [R5,#0x28]\n" // fixes overrides behavior at short shutter press
+"    LDRNE   R0, [R5,#0x28]\n" // modified NE
+"    CMPNE   R0, #0\n"         // modified NE
+//"    LDR     R0, [R5, #0x28] \n"  // above patch makes these lines redundant
+//"    CMP     R0, #0 \n"
 "    BLNE    sub_FF96E9FC \n"
 "    B       loc_FF87ACF4 \n"
 
