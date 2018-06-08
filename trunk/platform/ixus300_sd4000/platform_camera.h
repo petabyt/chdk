@@ -106,4 +106,6 @@
  
     #define CAM_MIN_ISO_OVERRIDE            (125+1) // Defines min market (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed] (+1 due to rounding issues)
 
+    #define CAM_HAS_FILEWRITETASK_HOOK      1
+
 //--------------------------------------------------
