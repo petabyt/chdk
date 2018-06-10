@@ -266,6 +266,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "task_PhySw", OPTIONAL },
     { "task_RotaryEncoder", OPTIONAL },
     { "task_TouchPanel", OPTIONAL },
+    { "task_TricInitTask", OPTIONAL },
 
     { "hook_CreateTask" },
 
@@ -323,7 +324,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "WaitForAnyEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "WaitForAllEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "ClearEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
-    { "SetEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
+    { "SetEventFlag", OPTIONAL|LIST_ALWAYS },
     { "GetEventFlagValue", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "CreateEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "DeleteEventFlag", OPTIONAL|UNUSED|LIST_ALWAYS },
