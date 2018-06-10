@@ -224,6 +224,7 @@ NHSTUB(strtolx                                ,0xfc09b4f9) //  0
    DEF(task_InitFileModules                   ,0xfc088221) //  0
    DEF(task_MovieRecord                       ,0xfc1a5d1d) //  0
    DEF(task_PhySw                             ,0xfc0601f5) //  0
+   DEF(task_TricInitTask                      ,0xfc373dc1) //  0
    DEF(hook_CreateTask                        ,0x010c51fc) //  0
 NHSTUB(time                                   ,0x010c5ef1) //  0
 NHSTUB(vsprintf                               ,0xfc09b4cb) //  0
@@ -232,6 +233,7 @@ NHSTUB(EngDrvRead                             ,0xfc2b7d27) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc2b06cb) //  0
 NHSTUB(DisableISDriveError                    ,0xfc3b8b2d) //  0
 //NHSTUB(SetHPTimerAfterNow                   ,0xfc142331) //  0            == 0xfc142331
+NHSTUB(SetEventFlag                           ,0x010c5569) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc143345) //  0
 NHSTUB(bzero                                  ,0x010da260) //  0
 NHSTUB(memset32                               ,0x010da264) //  0

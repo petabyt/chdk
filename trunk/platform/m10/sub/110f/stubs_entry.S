@@ -223,11 +223,13 @@ NHSTUB(strtol                                 ,0xfc13b34b) //  0
    DEF(task_MovieRecord                       ,0xfc100c55) //  0
    DEF(task_PhySw                             ,0xfc08c8c9) //  0
    DEF(task_TouchPanel                        ,0xfc133401) //  0
+   DEF(task_TricInitTask                      ,0xfc560791) //  0
    DEF(hook_CreateTask                        ,0xbfe14a40) //  0
 NHSTUB(time                                   ,0x010e11eb) //  0
 NHSTUB(vsprintf                               ,0xfc1049bf) //  0
 NHSTUB(EngDrvRead                             ,0xfc38d2ed) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc372141) //  0
+NHSTUB(SetEventFlag                           ,0xbfe14e53) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc38ba7d) //  0
 NHSTUB(bzero                                  ,0x01100b74) //  0
 NHSTUB(memset32                               ,0x01100b78) //  0

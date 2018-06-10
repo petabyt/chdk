@@ -33,7 +33,6 @@ NHSTUB(SetHPTimerAfterNow,                     0xfc1fa9e5)
 //SetHPTimerAfterTimeout 0xfc1faa2b
 
 // additional
-NHSTUB(SetEventFlag,                           0xBFE14E53)
 NHSTUB(displaybusyonscreen,                    0xfc3273d3)
 NHSTUB(undisplaybusyonscreen,                  0xfc327469)
 NHSTUB(MakeSDCardBootable,                     0xfc3896e9)
