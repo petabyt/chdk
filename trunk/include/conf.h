@@ -75,7 +75,7 @@ typedef struct {
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
 // making the modules camera/platform independent
 
-#define CONF_VERSION            {3,1}       // Version for Conf structure
+#define CONF_VERSION            {3,2}       // Version for Conf structure
 
 typedef struct
 {
@@ -455,6 +455,8 @@ typedef struct
                                    // 1 = only use firmware opendir
 
     int enable_raw_shortcut;    // enable RAW state toggle keyboard shortcut, 0=no, 1=yes, 2=yes with RAW OSD enabled
+
+    int osd_platformid; // platform ID in OSD cfg file
 
 } Conf;
 

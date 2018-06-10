@@ -79,13 +79,8 @@ void clear_values()
         conf.fast_ev = 0;
         conf.fast_movie_control = 0;
         conf.fast_movie_quality_control = 0;
-        conf.zoom_scale = 100;
         conf.platformid = PLATFORMID;
         conf.flash_video_override = 0;
-
-        // battery voltages are camera dependent
-        conf.batt_volts_max = get_vbatt_max();
-        conf.batt_volts_min = get_vbatt_min();
 
         // video related entries are interpreted differently on D6 cameras
         conf.video_mode = 0;
@@ -95,6 +90,15 @@ void clear_values()
 #ifdef CAM_MOVIEREC_NEWSTYLE
         shooting_video_minbitrate_change(conf.video_quality);
 #endif
+    }
+    if (conf.osd_platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
+    {
+        conf.zoom_scale = 100;
+        // battery voltages are camera dependent
+        conf.batt_volts_max = get_vbatt_max();
+        conf.batt_volts_min = get_vbatt_min();
+        conf.osd_platformid = PLATFORMID;
+
     }
 
     if (conf.clear_override)
@@ -324,6 +328,8 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO2( 296, conf.usb_info_scale,                          CONF_OSD_POS, 0,0  ),
 
     CONF_INFO( 297, conf.enable_raw_shortcut,                      CONF_DEF_VALUE, i:0),
+
+    CONF_INFO( 298, conf.osd_platformid,                           CONF_DEF_VALUE, i:PLATFORMID),
 
     {0,0,0,0,{0}}
 };
