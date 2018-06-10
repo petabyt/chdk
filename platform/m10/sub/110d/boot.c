@@ -156,7 +156,7 @@ asm volatile (
 "    BEQ     exitHook\n"
 */
 
-"    LDR     R0, =0xfc56075d\n" // task_TricInitTask
+"    LDR     R0, =task_TricInitTask\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
 "    LDREQ   R3, =task_TricInitTask_my\n"
