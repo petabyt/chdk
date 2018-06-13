@@ -181,11 +181,20 @@ void __attribute__((naked,noinline)) capt_seq_task()
                 ".long loc_FFD536D8\n"
 "loc_FFD535D8:\n"
                 "BL      sub_FFD53B94\n"
+                // only do quick press hack if overrides are active
+                "BL      captseq_hack_override_active\n"      // returns 1 if tv or sv override in effect
+                "STR     R0,[SP,#-4]!\n" // push return value
                 "BL      shooting_expo_param_override\n"  // +
                 "BL      sub_FFD51358\n"
                 "LDR     R3, =0x91AA0\n"
-                "LDR     R2, [R3,#0x24]\n"
-                "CMP     R2, #0\n"
+                "LDR     R2,[SP],#4\n" // pop override hack
+                "CMP     R2, #1\n"     // +
+                "MOVEQ   R2, #0\n"     // +
+                "STREQ   R2, [R3,#0x24]\n" // fixes overrides behavior at short shutter press
+                "LDRNE   R2, [R3,#0x24]\n" // modified NE
+                "CMPNE   R2, #0\n"         // modified NE
+//              "LDR     R2, [R3,#0x24]\n"  // above patch makes these lines redundant
+//              "CMP     R2, #0\n"
                 "BEQ     loc_FFD536D4\n"
                 "BL      sub_FFD53158_my\n"
                 "B       loc_FFD536D4\n"
