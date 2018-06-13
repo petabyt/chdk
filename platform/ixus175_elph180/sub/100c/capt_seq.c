@@ -100,9 +100,7 @@ asm volatile (
 "    BL      sub_FF88EB34 \n"
 "    BL      shooting_expo_param_override\n"    // added
 "    BL      sub_FF88B8E0 \n"
-//To do: Check if this is needed.
-//"    MOV     R0, #0\n"                          // added
-//"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+// Quick press override hack does not appear to be needed
 "    LDR     R0, [R5, #0x28] \n"
 "    CMP     R0, #0 \n"
 "    BLNE    sub_FF9AE81C_my \n"  // --> Patched. Old value = 0xFF9AE81C.
