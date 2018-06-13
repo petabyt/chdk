@@ -203,13 +203,8 @@ FW 75
 <<<
 FW 1
 >>>
-//To do: Check if this is needed.
-//"    MOV     R0, #0\n"                          // added
-//"    STR     R0, [R5,#0x28]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+// Quick press override hack does not appear to be needed
 <<<
-//REM "above patch makes these three lines redundant"
-//REM
-//REM
 FW 2
 // hook fast click function for dfs and remote - not needed if using hack above
 PATCHSUB ref=0
