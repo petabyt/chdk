@@ -1448,19 +1448,29 @@ void shooting_bracketing(void)
 // Other state test functions. 
 // Not strictly shooting related; but somehow ended up here.
 
-// TODO sd990 hack for overrides
+// Check if any shutter, aperture or ISO overrides active, for cameras
+// that require capt seq hack to override canon "quick press" behavior
 // caller must save regs
 int captseq_hack_override_active()
 {
-    if (camera_info.state.state_kbd_script_run)
+    if (camera_info.state.state_kbd_script_run) {
         if ( photo_param_put_off.tv96 != PHOTO_PARAM_TV_NONE || photo_param_put_off.sv96 )
             return 1;
+#if CAM_HAS_IRIS_DIAPHRAGM
+        if(photo_param_put_off.av96)
+            return 1;
+#endif
+    }
     if(conf.override_disable==1)
         return 0;
     if(is_iso_override_enabled)
         return 1;
     if(is_tv_override_enabled)
         return 1;
+#if CAM_HAS_IRIS_DIAPHRAGM
+    if(is_av_override_enabled)
+        return 1;
+#endif
     return 0;
 }
 
