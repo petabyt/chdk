@@ -286,6 +286,8 @@
 0xfc0aa0cd,task_CommonDrivers
 0xfc0ab1f3,task_HdmiCecTask
 0xfc0ab371,ChangePowerState_FW
+0xfc0ab3c3,EnableHDMIPower
+0xfc0ab3f9,DisableHDMIPower
 0xfc0afa03,vsprintf
 0xfc0afc51,task_TimerUtility
 0xfc0b1efb,task_PTPtoFAPI_EventProcTask_Try

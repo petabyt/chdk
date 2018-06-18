@@ -338,6 +338,8 @@
 0xfc0c22fd,task_CommonDrivers
 0xfc0c31bb,task_HdmiCecTask
 0xfc0c3339,ChangePowerState_FW
+0xfc0c3389,EnableHDMIPower
+0xfc0c33bf,DisableHDMIPower
 0xfc0c38cf,vsprintf
 0xfc0c392d,task_TimerUtility
 0xfc0c3f23,task_NfcConTask

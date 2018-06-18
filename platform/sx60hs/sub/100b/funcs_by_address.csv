@@ -335,6 +335,8 @@
 0xfc0bda3d,task_CommonDrivers
 0xfc0bdbcb,task_HdmiCecTask
 0xfc0bdd49,ChangePowerState_FW
+0xfc0bdd99,EnableHDMIPower
+0xfc0bddc9,DisableHDMIPower
 0xfc0bdff7,UnLoadScript_FW
 0xfc0be055,Printf_FW
 0xfc0be05f,LoadScript_FW
