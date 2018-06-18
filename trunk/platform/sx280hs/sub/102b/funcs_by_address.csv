@@ -289,6 +289,8 @@
 0xfc09891b,SetSDConClockSpeed_FW
 0xfc099cb3,task_HdmiCecTask
 0xfc099ec9,ChangePowerState_FW
+0xfc099f1b,EnableHDMIPower
+0xfc099f51,DisableHDMIPower
 0xfc09b4cb,vsprintf
 0xfc09b4f9,strtolx
 0xfc09b63b,strtol

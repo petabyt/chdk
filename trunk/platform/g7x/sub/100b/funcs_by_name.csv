@@ -246,6 +246,7 @@
 0xfc3d16bf,DisableFocusLensSlopeGain_FW
 0xfc3d16d5,DisableFocusLensWaveLock_FW
 0xfc3d1f7b,DisableFocusPiCircuit_FW
+0xfc0c33bf,DisableHDMIPower
 0xfc4ef253,DisableHeadDirectCapturePath_FW
 0xfc4575e5,DisableHvUpdate_FW
 0xfc3d1c4d,DisableIris_FW
@@ -345,6 +346,7 @@
 0xfc3d16b5,EnableFocusLensSlopeGain_FW
 0xfc3d16c7,EnableFocusLensWaveLock_FW
 0xfc3d1f71,EnableFocusPiCircuit_FW
+0xfc0c3389,EnableHDMIPower
 0xfc4ef251,EnableHeadDirectCapturePath_FW
 0xfc4575db,EnableHvUpdate_FW
 0xfc3d1c33,EnableIris_FW

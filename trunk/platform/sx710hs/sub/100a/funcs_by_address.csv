@@ -363,6 +363,8 @@
 0xfc0d4335,task_CommonDrivers
 0xfc0d665b,task_HdmiCecTask
 0xfc0d67ad,ChangePowerState_FW
+0xfc0d67fd,EnableHDMIPower
+0xfc0d6833,DisableHDMIPower
 0xfc0d6b07,WriteToRom_FW
 0xfc0d6b4f,EraseRom_FW
 0xfc0d6bd7,GetRomID_FW

@@ -458,6 +458,8 @@
 0xfc133e9d,GetMovieJpegVRAMVPixelsSize_FW
 0xfc13b2fb,task_HdmiCecTask
 0xfc13b475,ChangePowerState_FW
+0xfc13b4c5,EnableHDMIPower
+0xfc13b4f5,DisableHDMIPower
 0xfc13b60d,task_LEDCon
 0xfc13bd47,TP_FirmwareUpdate_FW
 0xfc13bd79,TP_GetFirmwareVersion_FW

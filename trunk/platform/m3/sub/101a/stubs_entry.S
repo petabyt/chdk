@@ -272,3 +272,5 @@ NHSTUB(memset32                               ,0x01100414) //  0
 NHSTUB(PT_MFOn                                ,0xfc0ab61d) //  0
 NHSTUB(PT_MFOff                               ,0xfc0ab651) //  0
 NHSTUB(GetAdChValue                           ,0xfc1f3577) //  0
+NHSTUB(EnableHDMIPower                        ,0xfc13b3d5) //  0
+NHSTUB(DisableHDMIPower                       ,0xfc13b405) //  0

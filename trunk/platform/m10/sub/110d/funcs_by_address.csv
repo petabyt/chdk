@@ -450,6 +450,8 @@
 0xfc12a4eb,GetMovieJpegVRAMVPixelsSize_FW
 0xfc131787,task_HdmiCecTask
 0xfc1318d5,ChangePowerState_FW
+0xfc131925,EnableHDMIPower
+0xfc131955,DisableHDMIPower
 0xfc131a6d,task_LEDCon
 0xfc132017,SubCPURomCheckSum_FW
 0xfc132909,GetInputAverageLevel_FW
