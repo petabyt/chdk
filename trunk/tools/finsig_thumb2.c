@@ -409,6 +409,10 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 
     { "GetAdChValue", OPTIONAL },
 
+    // for HDMI remote support - optional, probably only present on cameras with HDMI
+    { "EnableHDMIPower", OPTIONAL },
+    { "DisableHDMIPower", OPTIONAL },
+
     {0,0,0},
 };
 
@@ -2583,6 +2587,62 @@ int sig_match_zicokick_values(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
 }
 
+int sig_match_enable_hdmi_power(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,14,"CreateEventFlagStrictly")) {
+        printf("sig_match_enable_hdmi_power: no match CreateEventFlagStrictly\n");
+        return 0;
+    }
+    const insn_match_t match_seq[]={
+        {MATCH_INS(BL,   MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(CBNZ, MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,4,match_seq)) {
+        printf("sig_match_enable_hdmi_power: no match bl seq cbnz 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // function should be next call
+    if (!disasm_iter(fw,is)) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_disable_hdmi_power(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,24,"EnableHDMIPower")) {
+        printf("sig_match_disable_hdmi_power: no match EnableHDMIPower\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,22,"ClearEventFlag")) {
+        printf("sig_match_disable_hdmi_power: no match ClearEventFlag\n");
+        return 0;
+    }
+    const insn_match_t match_seq[]={
+        {MATCH_INS(BL,   MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(1)}},
+        {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,12,match_seq)) {
+        printf("sig_match_disable_hdmi_power: no match seq bl movs pop 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // bl matched above should be func
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,2));
+    if (!disasm_iter(fw,is)) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3668,6 +3728,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_zicokick_gt52,"zicokick_start",      "ZicoKick Start\n",0,SIG_DRY_MIN(53)},
 {sig_match_zicokick_copy,"zicokick_copy",       "zicokick_start"},
 {sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
+{sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
+{sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
 {NULL},
 };
 
