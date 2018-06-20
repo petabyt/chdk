@@ -259,6 +259,8 @@
 0xff863f5c,EdidDump_FW
 0xff864044,CecRegDump_FW
 0xff8640b0,HdmiRegDump_FW
+0xff8642d8,EnableHDMIPower
+0xff8642e0,DisableHDMIPower
 0xff86440c,task_LEDCon
 0xff8647ec,LEDDrive
 0xff8648b4,LEDDrive_FW

@@ -321,6 +321,8 @@
 0xff0642dc,Dcdc_Up_Avs_Voltage_Step_FW
 0xff06455c,task_HecMngTask
 0xff06488c,ChangePowerState_FW
+0xff064904,EnableHDMIPower
+0xff06490c,DisableHDMIPower
 0xff064914,HdmiHpd5VOutput_FW
 0xff064e30,task_LEDCon
 0xff0657e0,kbd_read_keys_r2

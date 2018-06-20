@@ -191,6 +191,7 @@
 0xffae8ebc,DisableFocusLensPort_FW
 0xffae8dcc,DisableFocusLensWaveLock_FW
 0xffae9364,DisableFocusPiCircuit_FW
+0xff86446c,DisableHDMIPower
 0xffae9178,DisableIris_FW
 0xffadc9d0,DisableIrisActuator_FW
 0xffaeb85c,DisableISAutoGyroOffset_FW
@@ -275,6 +276,7 @@
 0xffae8eac,EnableFocusLensPort_FW
 0xffae8db0,EnableFocusLensWaveLock_FW
 0xffae9354,EnableFocusPiCircuit_FW
+0xff864464,EnableHDMIPower
 0xff81e898,EnableInterrupt
 0xffae9154,EnableIris_FW
 0xffadc9ac,EnableIrisActuator_FW

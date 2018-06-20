@@ -372,6 +372,8 @@
 0xff071b44,BeepDriveComp_FW
 0xff072544,task_HdmiCecTask
 0xff0727b0,ChangePowerState_FW
+0xff07281c,EnableHDMIPower
+0xff072870,DisableHDMIPower
 0xff07319c,task_LEDCon
 0xff073da8,kbd_read_keys_r2
 0xff074634,GetKbdState

@@ -209,6 +209,7 @@
 0xff30b8e8,DisableFocusLensGainLock_FW
 0xff30b914,DisableFocusLensWaveLock_FW
 0xff30c028,DisableFocusPiCircuit_FW
+0xff055110,DisableHDMIPower
 0xff30bdec,DisableIris_FW
 0xff2f4774,DisableIrisActuator_FW
 0xff30c090,DisableIrisPiCircuit_FW
@@ -284,6 +285,7 @@
 0xff30b8bc,EnableFocusLensGainLockWithVoltage_FW
 0xff30b8f8,EnableFocusLensWaveLock_FW
 0xff30c018,EnableFocusPiCircuit_FW
+0xff0550e8,EnableHDMIPower
 0xff00e9a8,EnableInterrupt
 0xff30bdc8,EnableIris_FW
 0xff2f4750,EnableIrisActuator_FW

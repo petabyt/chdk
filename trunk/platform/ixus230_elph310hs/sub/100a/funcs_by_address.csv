@@ -249,6 +249,8 @@
 0xff0569e0,BeepDriveComp_FW
 0xff056c64,task_HecMngTask
 0xff056f90,ChangePowerState_FW
+0xff057008,EnableHDMIPower
+0xff057020,DisableHDMIPower
 0xff057038,j_HdmiHpd5VOutput_FW
 0xff05712c,task_LEDCon
 0xff057508,LEDDrive

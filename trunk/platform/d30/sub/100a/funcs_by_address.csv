@@ -321,6 +321,8 @@
 0xff04ae34,GPS_ERASE_LOG_DATA_FW
 0xff04b37c,task_HecMngTask
 0xff04b698,ChangePowerState_FW
+0xff04b710,EnableHDMIPower
+0xff04b718,DisableHDMIPower
 0xff04b720,HdmiHpd5VOutput_FW
 0xff04b854,task_LEDCon
 0xff04c20c,kbd_read_keys_r2

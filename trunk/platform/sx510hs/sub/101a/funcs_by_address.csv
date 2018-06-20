@@ -338,6 +338,8 @@
 0xff04cde0,Dcdc_Get_Avs_Voltage_Step_FW
 0xff04d0ac,task_HdmiCecTask
 0xff04d40c,ChangePowerState_FW
+0xff04d47c,EnableHDMIPower
+0xff04d4d0,DisableHDMIPower
 0xff04e058,i2c_read_proc_FW
 0xff04e0d8,i2c_write_proc_FW
 0xff04e228,task_LEDCon

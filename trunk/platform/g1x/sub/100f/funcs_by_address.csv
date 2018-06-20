@@ -273,6 +273,8 @@
 0xff05525c,i2c_dcdcavs_dump_FW
 0xff055498,task_HecMngTask
 0xff0557d8,ChangePowerState_FW
+0xff055850,EnableHDMIPower
+0xff055858,DisableHDMIPower
 0xff055860,HdmiHpd5VOutput_FW
 0xff055f0c,i2c_read_proc_FW
 0xff055f8c,i2c_write_proc_FW
