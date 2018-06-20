@@ -293,6 +293,8 @@
 0xff056d50,GPS_COLD_START_FW
 0xff0571f0,task_HecMngTask
 0xff057530,ChangePowerState_FW
+0xff0575a8,EnableHDMIPower
+0xff0575b0,DisableHDMIPower
 0xff0575b8,HdmiHpd5VOutput_FW
 0xff057f1c,task_LEDCon
 0xff0582f8,LEDDrive

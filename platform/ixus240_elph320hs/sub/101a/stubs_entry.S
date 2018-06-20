@@ -283,3 +283,5 @@ NHSTUB(SetHPTimerAfterNow                     ,0xff0b1c9c) //119
 NHSTUB(PT_MFOn                                ,0xff09fdc0) //120
 NHSTUB(PT_MFOff                               ,0xff09fdd0) //120
 NHSTUB(GetAdChValue                           ,0xff060b48) //120
+NHSTUB(EnableHDMIPower                        ,0xff064904) //123
+NHSTUB(DisableHDMIPower                       ,0xff06490c) //123

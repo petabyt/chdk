@@ -240,6 +240,8 @@
 0xff86012c,LockHdmiState_FW
 0xff860174,EdidDump_FW
 0xff86023c,HdmiRegDump_FW
+0xff8604e4,EnableHDMIPower
+0xff8604f8,DisableHDMIPower
 0xff86088c,task_LEDCon
 0xff860c6c,LEDDrive
 0xff860d34,LEDDrive_FW

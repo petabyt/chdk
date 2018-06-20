@@ -241,6 +241,8 @@
 0xff860668,LockHdmiState_FW
 0xff8606b0,EdidDump_FW
 0xff860778,HdmiRegDump_FW
+0xff8609fc,EnableHDMIPower
+0xff860a04,DisableHDMIPower
 0xff860c18,task_LEDCon
 0xff860ff8,LEDDrive
 0xff8610c0,LEDDrive_FW

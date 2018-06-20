@@ -304,6 +304,8 @@
 0xff8644f0,Dcdc_reg_read_FW
 0xff8645fc,task_HecMngTask
 0xff864914,ChangePowerState_FW
+0xff86498c,EnableHDMIPower
+0xff8649a4,DisableHDMIPower
 0xff8649bc,j_HdmiHpd5VOutput_FW
 0xff864e74,task_LEDCon
 0xff8657f8,kbd_read_keys_r2

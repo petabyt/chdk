@@ -266,6 +266,8 @@
 0xff055afc,i2c_dcdcavs_dump_FW
 0xff055d38,task_HecMngTask
 0xff056078,ChangePowerState_FW
+0xff0560f0,EnableHDMIPower
+0xff0560f8,DisableHDMIPower
 0xff056100,HdmiHpd5VOutput_FW
 0xff056a7c,task_LEDCon
 0xff056e58,LEDDrive
