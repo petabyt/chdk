@@ -99,6 +99,8 @@ void clear_values()
         conf.batt_volts_min = get_vbatt_min();
         conf.osd_platformid = PLATFORMID;
 
+        conf.mem_view_addr_init = 0x1000;
+
     }
 
     if (conf.clear_override)
