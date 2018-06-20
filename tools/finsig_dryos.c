@@ -507,6 +507,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "SS_MFOff", OPTIONAL },
 
     { "GetAdChValue", OPTIONAL },
+    { "EnableHDMIPower", OPTIONAL },
+    { "DisableHDMIPower", OPTIONAL },
 
     { 0, 0, 0 }
 };
@@ -2088,6 +2090,8 @@ string_sig string_sigs[] =
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
     { 23, "get_string_by_id", "NoError", 16,                                    99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     -2 },
+    { 23, "EnableHDMIPower", "HDMIConnectCnt", 9,                               99,     99,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,},
+    { 23, "DisableHDMIPower", "HDMIConnectCnt", 9,                              99,     99,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },
