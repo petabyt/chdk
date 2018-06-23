@@ -1,0 +1,22 @@
+************************************
+IXUS170 / ELPH170 Notes
+************************************
+
+This is a blind port, use at your own risk!
+
+Porting thread: https://chdk.setepontos.com/index.php?topic=12471.0
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options.
+
+This camera has only ND filter, no adjustable aperture.
+
+Tested:
+https://chdk.setepontos.com/index.php?topic=12471.msg131041#msg131041
+https://chdk.setepontos.com/index.php?topic=12471.msg132036#msg132036
+overrides - OK
+RAW/DNG   - OK
+scripts   - OK
+
+
+
