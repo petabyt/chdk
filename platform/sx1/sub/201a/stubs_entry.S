@@ -76,6 +76,8 @@ DEF(jpeg_count_str                          ,0x0005ced4) // Found @0xff9ed744
 //#define BATTCOVER_IDX       0
 //#define HOTSHOE_FLAG        0x10000000 // Found @0xffb367c0, levent 0x904
 //#define HOTSHOE_IDX         2
+//#define ANALOG_AV_FLAG      0x00100000 // Found @0xffb3676c, levent 0x900 (non-inverted logic)
+//#define ANALOG_AV_IDX       2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
