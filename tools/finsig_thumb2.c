@@ -4465,6 +4465,7 @@ void output_physw_vals(firmware *fw) {
         print_kval(fw,physw_tbl,physw_tbl_len,0x302,"USB","_MASK");
         print_kval(fw,physw_tbl,physw_tbl_len,0x305,"BATTCOVER","_FLAG");
         print_kval(fw,physw_tbl,physw_tbl_len,0x304,"HOTSHOE","_FLAG");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x300,"ANALOG_AV","_FLAG");
     }
     else
     { 
@@ -4472,6 +4473,7 @@ void output_physw_vals(firmware *fw) {
         print_kval(fw,physw_tbl,physw_tbl_len,0x202,"USB","_MASK");
         print_kval(fw,physw_tbl,physw_tbl_len,0x205,"BATTCOVER","_FLAG");
         print_kval(fw,physw_tbl,physw_tbl_len,0x204,"HOTSHOE","_FLAG");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x200,"ANALOG_AV","_FLAG");
     }
     do_km_vals(fw,physw_tbl,2,physw_tbl_len);
 

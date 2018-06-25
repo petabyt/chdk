@@ -5975,6 +5975,7 @@ void find_key_vals(firmware *fw)
             print_kval(fw,tadr,tsiz,tlen,0x302,"USB","_MASK");
             print_kval(fw,tadr,tsiz,tlen,0x305,"BATTCOVER","_FLAG");
             print_kval(fw,tadr,tsiz,tlen,0x304,"HOTSHOE","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x300,"ANALOG_AV","_FLAG");
         }
         else if (fw->dryos_ver >= 49)
         {
@@ -5983,6 +5984,7 @@ void find_key_vals(firmware *fw)
             print_kval(fw,tadr,tsiz,tlen,0x202,"USB","_MASK");
             print_kval(fw,tadr,tsiz,tlen,0x205,"BATTCOVER","_FLAG");
             print_kval(fw,tadr,tsiz,tlen,0x204,"HOTSHOE","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x200,"ANALOG_AV","_FLAG");
         }
         else
         {
@@ -5990,6 +5992,7 @@ void find_key_vals(firmware *fw)
             print_kval(fw,tadr,tsiz,tlen,0x902,"USB","_MASK");
             print_kval(fw,tadr,tsiz,tlen,0x905,"BATTCOVER","_FLAG");
             print_kval(fw,tadr,tsiz,tlen,0x904,"HOTSHOE","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x900,"ANALOG_AV","_FLAG");
         }
 
         uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
