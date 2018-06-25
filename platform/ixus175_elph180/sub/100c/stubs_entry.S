@@ -73,6 +73,12 @@ DEF(jpeg_count_str                          ,0x000d77d4) // Found @0xffa13d38
 //int get_flash_params_count(void) { return 0xf1; }                          // Found @0xff9c3e58
 
 // Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).
+//#define SD_READONLY_FLAG    0x02000000 // Found @0xffbe3a2c, levent 0x30a
+//#define SD_READONLY_IDX     2
+//#define USB_MASK            0x10000000 // Found @0xffbe3a3c, levent 0x302
+//#define USB_IDX             2
+//#define BATTCOVER_FLAG      0x04000000 // Found @0xffbe3a34, levent 0x305
+//#define BATTCOVER_IDX       2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 //static KeyMap keymap[] = {
