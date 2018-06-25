@@ -38,6 +38,8 @@
 //#define USB_IDX             2
 //#define BATTCOVER_FLAG      0x04000000 // Found @0xfc5694dc, levent 0x205
 //#define BATTCOVER_IDX       2
+//#define ANALOG_AV_FLAG      0x00008000 // Found @0xfc56944c, levent 0x200 (non-inverted logic)
+//#define ANALOG_AV_IDX       1
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 // WARNING: Values only verified on sx280hs (R52) and g7x (R55p6) errors likely on other cams!
