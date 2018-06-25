@@ -4458,10 +4458,21 @@ void output_physw_vals(firmware *fw) {
     write_physw_event_table_dump(fw,physw_tbl,physw_tbl_len);
 
     bprintf("// Values below go in 'platform_kbd.h':\n");
-    print_kval(fw,physw_tbl,physw_tbl_len,0x20A,"SD_READONLY","_FLAG");
-    print_kval(fw,physw_tbl,physw_tbl_len,0x202,"USB","_MASK");
-    print_kval(fw,physw_tbl,physw_tbl_len,0x205,"BATTCOVER","_FLAG");
-    print_kval(fw,physw_tbl,physw_tbl_len,0x204,"HOTSHOE","_FLAG");
+    if (fw->dryos_ver >= 58) 
+    {
+        // Event ID's have changed in DryOS 58 **********
+        print_kval(fw,physw_tbl,physw_tbl_len,0x30A,"SD_READONLY","_FLAG");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x302,"USB","_MASK");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x305,"BATTCOVER","_FLAG");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x304,"HOTSHOE","_FLAG");
+    }
+    else
+    { 
+        print_kval(fw,physw_tbl,physw_tbl_len,0x20A,"SD_READONLY","_FLAG");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x202,"USB","_MASK");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x205,"BATTCOVER","_FLAG");
+        print_kval(fw,physw_tbl,physw_tbl_len,0x204,"HOTSHOE","_FLAG");
+    }
     do_km_vals(fw,physw_tbl,2,physw_tbl_len);
 
     add_blankline();
