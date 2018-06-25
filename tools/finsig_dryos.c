@@ -5968,7 +5968,15 @@ void find_key_vals(firmware *fw)
         print_physw_raw_vals(fw, tadr, tsiz, tlen);
 #endif
         bprintf("// Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).\n");
-        if (fw->dryos_ver >= 49)
+        if (fw->dryos_ver >= 58) 
+        {
+            // Event ID's have changed again in DryOS 58 **********
+            print_kval(fw,tadr,tsiz,tlen,0x30A,"SD_READONLY","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x302,"USB","_MASK");
+            print_kval(fw,tadr,tsiz,tlen,0x305,"BATTCOVER","_FLAG");
+            print_kval(fw,tadr,tsiz,tlen,0x304,"HOTSHOE","_FLAG");
+        }
+        else if (fw->dryos_ver >= 49)
         {
             // Event ID's have changed in DryOS R49 **********
             print_kval(fw,tadr,tsiz,tlen,0x20A,"SD_READONLY","_FLAG");
