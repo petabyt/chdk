@@ -9,12 +9,25 @@ long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
 
-
 int get_usb_bit() {
     long usb_physw[3];
     usb_physw[USB_IDX] = 0;
     _kbd_read_keys_r2(usb_physw);
     return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ;
+}
+
+int get_hdmi_hpd_bit() {
+    long hpd_physw[3];
+    hpd_physw[HDMI_HPD_IDX] = 0;
+    _GetKbdState(hpd_physw);
+    return( ((hpd_physw[HDMI_HPD_IDX] & HDMI_HPD_FLAG)==HDMI_HPD_FLAG)?0:1) ;
+}
+
+int get_analog_av_bit() {
+    long av_physw[3];
+    av_physw[ANALOG_AV_IDX] = 0;
+    _GetKbdState(av_physw);
+    return( ((av_physw[ANALOG_AV_IDX] & ANALOG_AV_FLAG)==ANALOG_AV_FLAG)?0:1) ;
 }
 
 KeyMap keymap[] = {

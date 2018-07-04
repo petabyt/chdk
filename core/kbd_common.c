@@ -46,7 +46,8 @@ USB_MASK
 ** physw_status index for USB bit
 USB_IDX
 
-** get_usb_bit should use the following MMIO directly
+** get_usb_bit should use the following MMIO directly.
+** Otherwise, platform must implement get_usb_bit()
 USB_MMIO
 
 ** battery cover override - requires additional supporting code
@@ -60,12 +61,23 @@ SD_DOOR_FLAG
 * physw_status index for SD door
 SD_DOOR_IDX
 
+* HDMI Hot Plug Detect bit (0 = hotplug detected)
+HDMI_HPD_FLAG
+* HDMI Hot Plug Detect index
+HDMI_HPD_IDX
+
+* Analog AV present bit (0 = present)
+ANALOG_AV_FLAG
+* Analog AV present index
+ANALOG_AV_IDX
+
 */
 #include "platform.h"
 #include "core.h"
 #include "keyboard.h"
 #include "kbd_common.h"
 #include "conf.h"
+#include "usb_remote.h"
 
 // for KBD_SIMULATE_VIDEO_KEY
 #include "levent.h"
@@ -148,13 +160,31 @@ long kbd_update_key_state(void)
 #ifndef KBD_CUSTOM_UPDATE_PHYSW_BITS
 void kbd_update_physw_bits(void)
 {
+    if (conf.remote_enable) {
+#ifdef CAM_REMOTE_MULTICHANNEL
+        switch(conf.remote_input_channel)
+        {
+            case REMOTE_INPUT_USB:
+                physw_status[USB_IDX] = physw_status[USB_IDX] & ~(USB_MASK);
+                break;
+            #ifdef CAM_REMOTE_HDMI_HPD
+            case REMOTE_INPUT_HDMI_HPD:
+                physw_status[HDMI_HPD_IDX] |= HDMI_HPD_FLAG;
+                break;
+            #endif
+            #ifdef CAM_REMOTE_ANALOG_AV
+            case REMOTE_INPUT_ANALOG_AV:
+                physw_status[ANALOG_AV_IDX] |= ANALOG_AV_FLAG;
+                break;
+            #endif
+         }
+#else
+        physw_status[USB_IDX] = physw_status[USB_IDX] & ~(USB_MASK);
+#endif
+    }
     // TODO could save the real USB bit to avoid low level calls in get_usb_bit when immediate update not needed
     if (forced_usb_port) {
         physw_status[USB_IDX] = physw_status[USB_IDX] | USB_MASK;
-    } else if (conf.remote_enable) {
-        // TODO some cameras (e.g. a530, a540) didn't mask USB with remote,
-        // because +5v has no effect on canon firmware in rec mode
-        physw_status[USB_IDX] = physw_status[USB_IDX] & ~(USB_MASK);
     }
 // microsd cams don't have a read only bit
 #ifndef KBD_SKIP_READONLY_BIT

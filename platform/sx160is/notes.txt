@@ -6,6 +6,7 @@ Porting thread: http://chdk.setepontos.com/index.php?topic=9523.msg97518#msg9751
 To enter CHDK <Alt> mode use the Playback [>] button.
 Disp or Video [o] button can be configured as <ALT> mode button too.
 
+HDMI hotplug and analog AV detect are supported as alternate remote inputs.
 
 KNOWN BUGS
 **********

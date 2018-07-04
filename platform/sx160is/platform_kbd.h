@@ -10,5 +10,9 @@
 #define SD_READONLY_IDX     2
 #define USB_MASK            0x10000000 // Found @0xffba4b9c, levent 0x202
 #define USB_IDX             2
+#define HDMI_HPD_FLAG       0x20000000
+#define HDMI_HPD_IDX        0
+#define ANALOG_AV_FLAG      0x00002000 // levent 0x200
+#define ANALOG_AV_IDX       0
 
 #endif

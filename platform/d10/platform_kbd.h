@@ -22,4 +22,7 @@ found via GetBatteryCoverClose (which looks in a table that tells it the physw w
 #define BATTCOVER_IDX  2
 #define BATTCOVER_FLAG 0x8000
 
+#define ANALOG_AV_FLAG      0x00002000 // Found @0xffad6268, levent 0x900 (non-inverted logic)
+#define ANALOG_AV_IDX       1
+
 #endif
