@@ -3,6 +3,8 @@
 #include "keyboard.h"
 #include "kbd_common.h"
 
+extern void _GetKbdState(long *);
+
 long kbd_new_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 long kbd_prev_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
@@ -32,6 +34,13 @@ int get_usb_bit()
     usb_physw[USB_IDX] = 0;
     _kbd_read_keys_r2(usb_physw);
     return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK);
+}
+
+int get_analog_av_bit() {
+    long av_physw[3];
+    av_physw[ANALOG_AV_IDX] = 0;
+    _GetKbdState(av_physw);
+    return( ((av_physw[ANALOG_AV_IDX] & ANALOG_AV_FLAG)==ANALOG_AV_FLAG)?0:1) ;
 }
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
@@ -81,7 +90,6 @@ void my_kbd_read_keys() {
     kbd_update_physw_bits();
 }
 
-extern void _GetKbdState(long *);
 void kbd_fetch_data(long *dst)
 {
     _GetKbdState(dst);

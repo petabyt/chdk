@@ -139,8 +139,35 @@ static const char* gui_USB_control_modes_enum(int change, int arg)
     return modes[conf.remote_control_mode];
 }
 
+#if CAM_REMOTE_MULTICHANNEL
+static const char* gui_remote_input_types_enum(int change, int arg)
+{
+    static remote_input_desc_t remote_inputs[]={
+        {"USB",    REMOTE_INPUT_USB},
+#ifdef CAM_REMOTE_HDMI_HPD
+        {"HDMI HP",REMOTE_INPUT_HDMI_HPD},
+#endif
+#ifdef CAM_REMOTE_ANALOG_AV
+        {"ANLG AV",REMOTE_INPUT_ANALOG_AV},
+#endif
 #ifdef CAM_REMOTE_AtoD_CHANNEL
-static const char* gui_remote_channels[] = { "USB", "A/D Ch" };
+        {"A/D Ch", REMOTE_INPUT_AD_CHANNEL},
+#endif
+    };
+#define NUM_REMOTE_INPUT_TYPES (sizeof(remote_inputs)/sizeof(remote_inputs[0]))
+    int i;
+    for(i=0; i<NUM_REMOTE_INPUT_TYPES; i++) {
+        if(remote_inputs[i].type == conf.remote_input_channel) {
+            break;
+        }
+    }
+    // will handle out of range if existing was invalid
+    gui_enum_value_change(&i,change,NUM_REMOTE_INPUT_TYPES);
+
+    conf.remote_input_channel=remote_inputs[i].type;
+
+    return remote_inputs[i].name;
+}
 #endif
 
 #ifndef CAM_REMOTE_USES_PRECISION_SYNC
@@ -152,8 +179,8 @@ static CMenuItem synch_delay[2] = {
 
 static CMenuItem remote_submenu_items[] = {
     MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.remote_enable, (int)set_usb_remote_state),
-#ifdef CAM_REMOTE_AtoD_CHANNEL
-    MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_INPUT_CHANNEL,       &conf.remote_input_channel,   gui_remote_channels ),
+#if CAM_REMOTE_MULTICHANNEL
+    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_INPUT_CHANNEL,       MENUITEM_ENUM,                gui_remote_input_types_enum, 0),
 #endif
     MENU_ITEM   (0x5f,LANG_MENU_REMOTE_DEVICE,              MENUITEM_ENUM,                gui_USB_switch_types_enum, 0),
     MENU_ITEM   (0x5f,LANG_MENU_REMOTE_LOGIC,  	            MENUITEM_ENUM,                gui_USB_control_modes_enum, 0),

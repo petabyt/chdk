@@ -216,6 +216,11 @@ void core_spytask()
     {
         // Set up camera mode & state variables
         mode_get();
+        // update HDMI power override based on mode and remote settings
+#ifdef CAM_REMOTE_HDMI_POWER_OVERRIDE
+        extern void update_hdmi_power_override(void);
+        update_hdmi_power_override();
+#endif
 
         extern void set_palette();
         set_palette();

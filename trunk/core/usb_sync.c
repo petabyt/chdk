@@ -49,16 +49,33 @@ int force_usb_state(int state)
 
     get_remote_state()
 
-    - return state of USB 5V power or value of A/D channel for battery 3rd terminal (if supported & enabled)
+    - return state of current remote input
   ---------------------------------------------------------------------------------------------------------*/
 
 int get_remote_state()
 {
- #ifdef CAM_REMOTE_AtoD_CHANNEL
-    if( conf.remote_input_channel == 1 )
-        return ( (GetAdChValue(CAM_REMOTE_AtoD_CHANNEL) < CAM_REMOTE_AtoD_THRESHOLD) ? 1 : 0 );
+#ifdef CAM_REMOTE_MULTICHANNEL
+    switch(conf.remote_input_channel)
+    {
+        case REMOTE_INPUT_USB:
+            return get_usb_bit();
+#ifdef CAM_REMOTE_HDMI_HPD
+        case REMOTE_INPUT_HDMI_HPD:
+            return get_hdmi_hpd_bit();
 #endif
+#ifdef CAM_REMOTE_ANALOG_AV
+        case REMOTE_INPUT_ANALOG_AV:
+            return get_analog_av_bit();
+#endif
+#ifdef CAM_REMOTE_AtoD_CHANNEL
+        case REMOTE_INPUT_AD_CHANNEL:
+            return (GetAdChValue(CAM_REMOTE_AtoD_CHANNEL) < CAM_REMOTE_AtoD_THRESHOLD) ? 1 : 0;
+#endif
+    }
+    return 0;
+#else // not CAM_REMOTE_MULTICHANNEL
     return( get_usb_bit() );
+#endif
 }
 
 /*---------------------------------------------------------------------------------------------------------

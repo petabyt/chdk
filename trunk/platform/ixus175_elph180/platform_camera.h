@@ -118,8 +118,11 @@
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO    // it's unlocked by default
     #define CAM_IS_VID_REC_WORKS            1
-    
-   
+
+    #define CAM_REMOTE_ANALOG_AV                1 // Camera supports analog AV detect for remote signal
+    #define CAM_REMOTE_AtoD_CHANNEL             5 // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
+// elph180 - open circuit 1023, 10k ohm ~340 (=25c), 3.5k = ~160 (54c)
+//    #define CAM_REMOTE_AtoD_THRESHOLD       200 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
 
     //#define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 

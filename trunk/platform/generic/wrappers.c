@@ -8,6 +8,7 @@
 #include "stdlib.h"
 #include "ptp_chdk.h"
 #include "live_view.h"
+#include "usb_remote.h"
 
 //----------------------------------------------------------------------------
 // Char Wrappers (VxWorks - ARM stubs)
@@ -1780,6 +1781,31 @@ int CancelHPTimer(int handle)
 {
     return _CancelHPTimer(handle);
 }
+
+// Override HDMI power on in rec mode for using HDMI Hotplug detect as remote
+// note does not disable power if remote turned off or channel changed
+// May want to add support for controlling independent of remote as output signal
+#ifdef CAM_REMOTE_HDMI_POWER_OVERRIDE
+extern void _EnableHDMIPower();
+void update_hdmi_power_override()
+{
+    static int oldhdmistate = -1;
+    if ((camera_info.state.mode_rec == 1) && conf.remote_enable && (conf.remote_input_channel == REMOTE_INPUT_HDMI_HPD))
+    {
+        /* if switched to shooting mode and remote using HDMI hotplug is enabled, switch on HDMI Power */
+        /* just do it once on every change because it needs i2c communication depending on HDMI tranceiver */
+        if (oldhdmistate != 1)
+        {
+            _EnableHDMIPower();
+        }
+        oldhdmistate = 1;
+    }
+    else
+    {
+        oldhdmistate = 0;
+    }
+}
+#endif
 
 // disable camera error(s), E32 is the only error that can be handled at the moment (on newer 'IS' cameras)
 #if (OPT_DISABLE_CAM_ERROR)

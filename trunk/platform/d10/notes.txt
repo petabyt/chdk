@@ -7,6 +7,9 @@ Digic IV
 propset 2
 No iris, only ND filter
 
+Analog AV detect and battery temperature A/D are supported
+as alternate remote inputs.
+
 Not implemented/Not Working
 - DNG extension over USB: won't be implemented 
 

@@ -42,6 +42,9 @@
     #define CAM_REMOTE                      1   // Camera supports a remote
     #undef  CAM_REMOTE_AtoD_CHANNEL             // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll (normally 5)
     #define CAM_REMOTE_AtoD_THRESHOLD       200 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
+    #undef  CAM_REMOTE_HDMI_HPD                 // Camera supports using HDMI hotplug detect for remote signal
+    #undef  CAM_REMOTE_HDMI_POWER_OVERRIDE      // Camera requires HDMI power to be forced on in rec mode
+    #undef  CAM_REMOTE_ANALOG_AV                // Camera supports analog AV detect for remote signal
     #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental remote  precision sync patch
     #define CAM_ALLOWS_USB_PORT_FORCING     1   // USB remote state can be forced to be present (supported on all cameras that use common kbd code, others may undef)
     #define CAM_REMOTE_USB_HIGHSPEED        1   // Enable highspeed measurements of pulse width & counts on USB port 
@@ -410,6 +413,10 @@
     #define CAM_DISP_BUTTON_NAME            "DISP"
 #endif
 
+// used for conditional LANG strings and convenience - defined if any non-USB remote input supported
+#if (defined(CAM_REMOTE_AtoD_CHANNEL) || defined(CAM_REMOTE_HDMI_HPD) || defined(CAM_REMOTE_ANALOG_AV))
+#define CAM_REMOTE_MULTICHANNEL 1
+#endif
 //------------------------------------------------------------------- 
 // Keyboard / Button shortcuts - define in platform_camera.h
 // if the default values are not suitable

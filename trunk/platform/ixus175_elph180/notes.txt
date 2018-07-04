@@ -27,6 +27,8 @@ a tool such as ACID to obtain the correct firmware version
 
 Runs with battery door open, no override required.
 
+Analog AV detect and battery temperature A/D are supported as alternate remote inputs.
+
 TESTED
 ******
 llibtst.lua

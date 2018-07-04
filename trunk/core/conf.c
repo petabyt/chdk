@@ -82,6 +82,10 @@ void clear_values()
         conf.platformid = PLATFORMID;
         conf.flash_video_override = 0;
 
+        // remote input channel - all cams assumed to support USB
+        // TODO could reset only if invalid on current cam
+        conf.remote_input_channel = REMOTE_INPUT_USB;
+
         // video related entries are interpreted differently on D6 cameras
         conf.video_mode = 0;
         conf.video_quality = VIDEO_DEFAULT_QUALITY;
@@ -557,6 +561,7 @@ void conf_info_func(unsigned short id)
     case 200:
     case 204:
     case 205:   // USB Remote
+    case 208:
         set_usb_remote_state();
         break;
     case 220:

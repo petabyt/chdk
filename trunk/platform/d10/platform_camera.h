@@ -88,6 +88,10 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
     #define REMOTE_SYNC_STATUS_LED          0xc0220134  // specifies an LED that turns on while camera waits for USB remote to sync
+    #define CAM_REMOTE_ANALOG_AV                1 // Camera supports analog AV detect for remote signal
+    #define CAM_REMOTE_AtoD_CHANNEL         5   // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
+    // D10 - Open circuit = 1023, 10k ohm = ~350, 3.5k = ~150
+    //#define CAM_REMOTE_AtoD_THRESHOLD       200 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
 
     #undef  CAMERA_MIN_DIST
     #define CAMERA_MIN_DIST                 30      // Override min subject distance

@@ -6,6 +6,8 @@ This may be changed to Video in the options, but this conflicts with some shortc
 
 This camera does not have an adjustable aperture. It does have an ND filter
 
+Analog AV detect and battery temperature A/D are supported as alternate remote inputs.
+
 CHDK is a hack, use at your own risk!
 
 TESTED

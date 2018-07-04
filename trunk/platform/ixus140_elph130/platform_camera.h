@@ -132,6 +132,10 @@
 
 //    only non-AF led available
     #define REMOTE_SYNC_STATUS_LED          0xC0220094 // specifies an LED that turns on while camera waits for USB remote to sync
+    #define CAM_REMOTE_ANALOG_AV                1 // Camera supports analog AV detect for remote signal
+    #define CAM_REMOTE_AtoD_CHANNEL             5 // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
+// elph130 - open circuit 1023, 10k ohm ~340 (=25c) 3.5k = ~160 (54c)
+//    #define CAM_REMOTE_AtoD_THRESHOLD       200 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
 
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1

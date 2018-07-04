@@ -12,6 +12,8 @@
 #define USB_IDX             2
 #define BATTCOVER_FLAG      0x04000000 // Found @0xFFBE3A34, levent 0x305
 #define BATTCOVER_IDX       2
+#define ANALOG_AV_FLAG      0x00002000 // Found @0xffbe39dc, levent 0x300 (non-inverted logic)
+#define ANALOG_AV_IDX       0
 
 #endif
 

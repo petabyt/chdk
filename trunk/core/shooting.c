@@ -1802,7 +1802,9 @@ uses switch_mode_usb if a usb connection is present
 */
 void shooting_set_playrec_mode(int mode)
 {
-    if (conf.remote_enable == 0 && get_usb_bit()) 
+    // use PTP compatible switch if usb bit power detected, and USB remote not configured to use USB
+    // TODO should just check the USB bit seen by canon firmware (after masking)
+    if (get_usb_bit() && !(conf.remote_enable == 1 && conf.remote_input_channel == REMOTE_INPUT_USB))
     {
         switch_mode_usb(mode);
         return;

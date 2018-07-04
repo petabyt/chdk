@@ -11,6 +11,8 @@ extern int handle_usb_remote();
 extern void wait_until_remote_button_is_released(void);
 extern void usb_remote_key( void );
 extern int get_usb_bit();
+extern int get_hdmi_hpd_bit();
+extern int get_analog_av_bit();
 extern int get_remote_state();
 extern int get_usb_power(int edge);
 extern void clear_usb_power();
@@ -41,6 +43,19 @@ extern int forced_usb_port ;
 
 #define NUM_USB_INPUT_DRV 5
 #define NUM_USB_MODULES 10
+
+// remote input sources
+enum REMOTE_INPUT_TYPE {
+    REMOTE_INPUT_USB,
+    REMOTE_INPUT_HDMI_HPD, // HDMI hot plug detect
+    REMOTE_INPUT_ANALOG_AV, // Analog AV plug detect
+    REMOTE_INPUT_AD_CHANNEL, // A to D channel (battery temperature)
+} ;
+
+typedef struct {
+    const char *name;
+    enum REMOTE_INPUT_TYPE type;
+} remote_input_desc_t;
 
 enum {
         INVALID_STATE ,

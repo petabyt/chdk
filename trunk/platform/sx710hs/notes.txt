@@ -29,6 +29,9 @@ When running a script ~600k of RAM is available to CHDK.
 
 This camera has an adjustable aperture and does not have an ND filter.
 
+HDMI hotplug, analog AV detect, and battery temperature A/D are supported
+as alternate remote inputs.
+
 TESTED
 ******
 Tv and Av overrides, bracketing in continuous.
