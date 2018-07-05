@@ -21,7 +21,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // m10 both AV, not verified which does over and which does exif
 #define PROPCASE_AV2                             22         // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_AV                              23         // This values causes the actual aperture value to be overriden
-#define PROPCASE_MIN_AV                          27         // 24, 25, 27, 28 (set only after halfshoot)
+#define PROPCASE_MIN_AV                          28         // M10: 24, 25, 27, 28 (set only after halfshoot) elph180: (27 varies with ND, 24-26=62664)
 #define PROPCASE_USER_AV                         29         // updates instantly when setting aperture on cam with kit lens
 // no bracketing on m10, propcase assumed to be unchanged
 #define PROPCASE_BRACKET_MODE                    33         // [m10:untested] 0 = 0ff, 1 = exposure, 2 = focus (MF only) (g7x)
