@@ -69,6 +69,7 @@
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_ND_SET_AV_VALUE             298     // ND-only Camera needs AV propcase set to override ND. (elph180 value from GetUsableMaxAv - GetUsableMinAv)
     #define CAM_EXT_TV_RANGE                1       // CHDK can make exposure time longer than 64s (up to 1024s without exp_drv)
 
     #define CAM_QUALITY_OVERRIDE            1       // enable JPEG quality override
