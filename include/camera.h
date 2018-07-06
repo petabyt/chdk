@@ -58,6 +58,8 @@
     #define CAM_HAS_IRIS_DIAPHRAGM          1   // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
     #undef  CAM_HAS_ND_FILTER                   // Camera has build-in ND filter
     #undef  CAM_HAS_NATIVE_ND_FILTER            // Camera has built-in ND filter with Canon menu support for enable/disable
+    #undef  CAM_ND_SET_AV_VALUE                 // Camera needs AV propcase set to override ND. Only valid for cameras without iris.
+                                                // Value should be ND value, e.g. GetUsableMaxAv - GetUsableMinAv
 
     #define CAM_HAS_MANUAL_FOCUS            1   // Camera has native manual focus mode (disables MF shortcut feature)
     #undef  CAM_SD_OVER_IN_AF                   // Camera allows SD override if MF & AFL not set

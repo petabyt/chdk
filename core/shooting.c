@@ -795,8 +795,20 @@ void shooting_set_nd_filter_state(short v, short is_now)
     {
         if (is_now)
         {
-            if (v==1)
+#if defined(CAM_ND_SET_AV_VALUE)
+            short av;
+            get_property_case(PROPCASE_MIN_AV,&av,sizeof(av));
+            if(v==1) {
+                av += CAM_ND_SET_AV_VALUE;
+            }
+            set_property_case(PROPCASE_AV, &av, sizeof(av));
+#if defined(PROPCASE_AV2)
+            set_property_case(PROPCASE_AV2, &av, sizeof(av));
+#endif
+#endif
+            if (v==1) {
                 PutInNdFilter();
+            }
             else if (v==2)
                 PutOutNdFilter();
 #if defined(CAM_HAS_NATIVE_ND_FILTER) && defined(PROPCASE_ND_FILTER_STATE)
