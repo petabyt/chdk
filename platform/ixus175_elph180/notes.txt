@@ -49,10 +49,11 @@ PTP remote shoot - Works in cont mode, does not crash when switchinbg to play
 chdkptp camtests
 Motion detection - 50-80ms response, average 61
 Quick press - Overrides applied, raw saved when shooting without waiting for focus
+ND override
 
 KNOWN BUGS
 **********
-ND override does not appear to work. ND put in on halfpress, but not used for shot
+
 
 NOT IMPLEMENTED
 ***************
