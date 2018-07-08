@@ -22,7 +22,6 @@
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
-    #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
