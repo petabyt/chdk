@@ -26,7 +26,6 @@
     #define CAM_RAW_ROWS                    2340    // for 7 MP
 
     #define CAM_SWIVEL_SCREEN               1
-    #define CAM_HAS_ND_FILTER               1
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_MANUAL_FOCUS
     #define CAM_HAS_HI_ISO_AUTO_MODE        1

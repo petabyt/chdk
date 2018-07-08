@@ -36,7 +36,6 @@
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_UNCACHED_BIT                        // shut up compiler
     #define CAM_UNCACHED_BIT                0x40000000
-    #define CAM_HAS_ND_FILTER               1
 
     #undef CAM_DEFAULT_ALT_BUTTON
     #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
