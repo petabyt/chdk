@@ -465,6 +465,9 @@ misc_val_t misc_vals[]={
     { "ARAM_HEAP_START",    MISC_VAL_NO_STUB},
     { "ARAM_HEAP_SIZE",     MISC_VAL_NO_STUB},
     { "zicokick_values",    MISC_VAL_NO_STUB}, // used to identify Zico core Xtensa blobs (dummy for now)
+    { "CAM_HAS_ND_FILTER",  MISC_VAL_NO_STUB},
+    { "CAM_IS_ILC",         MISC_VAL_NO_STUB}, // used for finsig code that wants to check for interchangeable lens, not currently used in CHDK
+    { "CAM_HAS_IRIS_DIAPHRAGM",MISC_VAL_NO_STUB},
     {0,0,0},
 };
 
@@ -2779,6 +2782,29 @@ int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// set a boolean misc val if ref is present
+int sig_match_misc_flag_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t ref=get_saved_sig_val(rule->ref_name);
+    save_misc_val(rule->name,(ref)?1:0,0,ref);
+    return 1;
+}
+
+int sig_match_cam_has_iris_diaphragm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t v;
+    uint32_t ref=0;get_saved_sig_val(rule->ref_name);
+    // ILC assumed to have iris
+    if(get_misc_val_value("CAM_IS_ILC")) {
+        v=1;
+    } else {
+        ref=get_saved_sig_val(rule->ref_name);
+        v=(ref)?1:0;
+    }
+    save_misc_val(rule->name,v,0,ref);
+    return 1;
+}
+
 int sig_match_cam_uncached_bit(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3614,6 +3640,9 @@ sig_rule_t sig_rules_main[]={
 
 // can't use last because func has early return POP
 {sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
+{sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
+{sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
+{sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
@@ -4141,13 +4170,17 @@ void output_firmware_vals(firmware *fw)
 
     }
     add_blankline();
+    if(get_misc_val_value("CAM_IS_ILC")) {
+        bprintf("// Camera is interchangeable lens\n");
+        add_blankline();
+    }
 }
 
 // print platform.h define, if not default value
 void print_platform_misc_val_undef(const char *name, uint32_t def)
 {
     misc_val_t *mv=get_misc_val(name);
-    if(mv->val && mv->val != def) {
+    if(mv && mv->val && mv->val != def) {
         bprintf("//#undef  %s\n",name);
         bprintf("//#define %s  0x%08x // Found @0x%08x\n",name,mv->val,mv->ref_adr);
     }
@@ -4162,6 +4195,17 @@ void output_platform_vals(firmware *fw) {
         bprintf("//#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher\n");
 
     print_platform_misc_val_undef("CAM_UNCACHED_BIT",0x10000000);
+
+    if(get_misc_val_value("CAM_HAS_ND_FILTER")) {
+        bprintf("//#define CAM_HAS_ND_FILTER 1 // Camera has ND filter\n");
+    } else {
+        bprintf("//#undef CAM_HAS_ND_FILTER // Camera does not have an ND filter\n");
+    }
+    if(get_misc_val_value("CAM_HAS_IRIS_DIAPHRAGM")) {
+        bprintf("// Camera has an iris (CAM_HAS_IRIS_DIAPHRAGM default)\n");
+    } else {
+        bprintf("//#undef CAM_HAS_IRIS_DIAPHRAM // Camera does not have an iris\n");
+    }
 
     add_blankline();
 }
