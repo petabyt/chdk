@@ -24,12 +24,16 @@
 // zico_1 0xbff00000 - 0xbff04ad0 copied from 0xfca06770 (  19152 bytes)
 // zico_2 0x80a00000 - 0x80b06220 copied from 0xfca0b248 (1073696 bytes)
 
+// Camera is interchangeable lens
+
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
 //#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
 //#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xfc1536d4
+//#undef CAM_HAS_ND_FILTER // Camera does not have an ND filter
+// Camera has an iris (CAM_HAS_IRIS_DIAPHRAGM default)
 
 // physw_event_table 0xfc5f99f8 Found @0xfc074ec0
 // Values below go in 'platform_kbd.h':

@@ -29,6 +29,8 @@
 //#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xfc0f9bbc
+//#define CAM_HAS_ND_FILTER 1 // Camera has ND filter
+// Camera has an iris (CAM_HAS_IRIS_DIAPHRAGM default)
 
 // physw_event_table 0xfc571a0c Found @0xfc0714a0
 // Values below go in 'platform_kbd.h':
