@@ -3636,7 +3636,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named_last,"GiveSemaphore",          "TurnOnVideoOutMode_FW",SIG_NAMED_LAST_RANGE(10,24)},
 // TODO finding through veneers would be better for disassembly
 {sig_match_named,   "givesemaphore_low",        "GiveSemaphore",        SIG_NAMED_SUB,      SIG_DRY_MAX(52)}, // first call on dry <=52
-{sig_match_named,   "givesemaphore_low",        "GiveSemaphore",        SIG_NAMED_NTH(2,SUB),SIG_DRY_MIN(53)}, // 2nd call on dry <=52
+{sig_match_named,   "givesemaphore_low",        "GiveSemaphore",        SIG_NAMED_NTH(2,SUB),SIG_DRY_MIN(53)}, // 2nd call on dry >52
 
 // can't use last because func has early return POP
 {sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
