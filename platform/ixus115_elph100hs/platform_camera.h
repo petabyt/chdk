@@ -105,6 +105,7 @@
     #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define REMOTE_SYNC_STATUS_LED          0xC0220130   // specifies an LED that turns on while camera waits for USB remote to sync
+    #define CAM_REMOTE_HDMI_HPD             1   // Camera supports using HDMI hotplug detect for remote signal
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1   // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras

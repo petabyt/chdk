@@ -11,4 +11,4 @@ and converted for a dev trunk build in July of 2012.
 
 
 
-
+HDMI hotplug is supported as alternate remote input.

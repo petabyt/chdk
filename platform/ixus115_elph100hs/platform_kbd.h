@@ -10,4 +10,8 @@
 
 #define USB_MASK (0x4000000)
 #define USB_IDX             2
+
+#define HDMI_HPD_FLAG       0x00400000
+#define HDMI_HPD_IDX        1
+
 #endif
