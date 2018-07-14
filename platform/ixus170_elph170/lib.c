@@ -11,19 +11,11 @@ void debug_led(int state)
 	*(int*)LED_PR=state ? 0x93d800 : 0x83dc00;
 }
 
+// TODO not really complete, last call from task_Bye
 void shutdown()
 {
-    volatile long *p = (void*)LED_PR;    // Green LED
-
-    asm(
-        "MRS     R1, CPSR\n"
-        "AND     R0, R1, #0x80\n"
-        "ORR     R1, R1, #0x80\n"
-        "MSR     CPSR_cf, R1\n"
-        :::"r1","r0");
-
-    *p = 0x83dc00;  // power off.
-
+    extern void _TurnOffE1(void);
+    _TurnOffE1();
     while(1);
 }
 

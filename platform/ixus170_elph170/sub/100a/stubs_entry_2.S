@@ -7,15 +7,6 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens, 0xff98e69c)
 
 NHSTUB(MakeDirectory_Fut,0xff827fb4) // mkdir. This required #define MKDIR_RETURN_ONE_ON_SUCCESS
 
-// Try from loc_ff8369cc
-// or sub_ff99ee7c
-// loc_FF99EEAC looks interesting
-// in sub_FF894F98 references to 0x6B...
-// try 0x6B21D8
-// or sub_ff825374
-// 0xff826964
-//NHSTUB(time, 0xffa20310) uses hint from stubs_entry.S
-
 // Knowing that
 //NHSTUB(_log        ,0x006bb388) //111
 //NHSTUB(_pow        ,0x006bba40) //121
@@ -30,6 +21,9 @@ NHSTUB(UnsetZoomForMovie, NULL_SUB)
 
 NHSTUB(CreateTask_low,          0x006B15A4)
 DEF(hook_CreateTask_low,        0x006B15A4)
+
+// Additional
+NHSTUB(TurnOffE1,               0xff838320) // for shutdown(), to complicated to emulate
 
 // temporary measure
 NHSTUB(init_focus_eventflag,                0xFFB6DBC8)
