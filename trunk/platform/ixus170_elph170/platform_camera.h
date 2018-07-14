@@ -73,27 +73,35 @@
 
     #define CAM_ADJUSTABLE_ALT_BUTTON       1
 
-    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Video" }
-    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_VIDEO }
-
+    #define CAM_ALT_BUTTON_NAMES            { "Playback", "Help" }
+    #define CAM_ALT_BUTTON_OPTIONS          { KEY_PLAYBACK, KEY_HELP }
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 
+    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does not work with raw define this
 
     #define CAM_USE_ALT_SET_ZOOM_POINT          1   // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1   // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-    #define CAM_NEED_SET_ZOOM_DELAY             100 // Define to add a delay after setting the zoom position
+    #define CAM_NEED_SET_ZOOM_DELAY             300 // Define to add a delay after setting the zoom position
     
     #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_DISP_BUTTON
     #undef  CAM_DEFAULT_ALT_BUTTON
     #define CAM_DEFAULT_ALT_BUTTON          KEY_PLAYBACK
-    #define SHORTCUT_TOGGLE_RAW             KEY_VIDEO // conflicts with adjustable alt, but not many to choose from
+    #define SHORTCUT_TOGGLE_RAW             KEY_VIDEO
     #define CAM_HAS_VIDEO_BUTTON            1
-
-    #undef  CAM_MARKET_ISO_BASE
-    #define CAM_MARKET_ISO_BASE             200     // Override base 'market' ISO value, from isobase.lua
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                 0x202   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
+
+    #define CAM_SD_OVER_IN_AF               1
+    #define CAM_SD_OVER_IN_AFL              1
+    #define CAM_SD_OVER_IN_MF               1
+    #undef  CAM_HAS_IRIS_DIAPHRAGM
+    #define CAM_HAS_ND_FILTER               1
+
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                      1
+
+    #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
 
 //----------------------------------------------------------
