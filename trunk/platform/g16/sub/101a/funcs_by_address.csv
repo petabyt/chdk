@@ -573,6 +573,7 @@
 0xfc14a295,j_IsCCDTemperature_FW
 0xfc14a297,j_IsBatteryTemperature_FW
 0xfc14bb1d,task_EdetSBJTask
+0xfc14dcdb,GetUsableAvRange
 0xfc14e8dd,GetCurrentAvValue
 0xfc14e8dd,GetCurrentAvValue_FW
 0xfc14e8dd,GetIrisAv_FW
@@ -1337,6 +1338,7 @@
 0xfc3887d5,GetFocusLensGainSlope_FW
 0xfc389f75,task_MechaShutter
 0xfc38a6a5,task_Nd
+0xfc38ac2d,get_nd_value
 0xfc38ad97,GetNdMoveTime_FW
 0xfc38c265,MoveCZToPoint_FW
 0xfc38c28b,MoveCZToWide_FW

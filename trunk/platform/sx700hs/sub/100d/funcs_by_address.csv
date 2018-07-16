@@ -517,6 +517,7 @@
 0xfc124731,j_IsCCDTemperature_FW
 0xfc124733,j_IsBatteryTemperature_FW
 0xfc125f31,task_EdetSBJTask
+0xfc1299ef,GetUsableAvRange
 0xfc12a5f1,GetCurrentAvValue
 0xfc12a5f1,GetCurrentAvValue_FW
 0xfc12a5f1,GetIrisAv_FW

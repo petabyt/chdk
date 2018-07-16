@@ -576,6 +576,7 @@
 0xfc14a6df,j_GetdccdFilterValue_FW
 0xfc14a6e1,ResetRegistNoticeCBR_FW
 0xfc14a6eb,RegistFirmScanNoticeCBR_FW
+0xfc14d40b,GetUsableAvRange
 0xfc14e00d,GetCurrentAvValue
 0xfc14e00d,GetCurrentAvValue_FW
 0xfc14e00d,GetIrisAv_FW

@@ -368,6 +368,7 @@
 0xfc0d6b07,WriteToRom_FW
 0xfc0d6b4f,EraseRom_FW
 0xfc0d6bd7,GetRomID_FW
+0xfc0d742b,GetUsableAvRange
 0xfc0d8029,GetCurrentAvValue
 0xfc0d8029,GetCurrentAvValue_FW
 0xfc0d8029,GetIrisAv_FW

@@ -396,6 +396,7 @@
 0xfc2b02f3,Fwrite_Fut_FW
 0xfc1244d9,get_canon_mode_list
 0xfc308db3,get_fstype
+0xfc38ac2d,get_nd_value
 0xfc2ba3cb,get_playrec_mode
 0xfc1481b5,GetAccelerometerDataWithCorrect_FW
 0xfc3786ed,GetAccelerometerTemperature_FW
@@ -677,6 +678,7 @@
 0xfc0210bb,GetTransparentMemory_FW
 0xfc0210dd,GetTransparentMemoryPosition_FW
 0xfc0210af,GetTransparentMemorySize_FW
+0xfc14dcdb,GetUsableAvRange
 0xfc1c10f3,GetUsableMaxAv
 0xfc1c10f3,GetUsableMaxAv_FW
 0xfc1c10e1,GetUsableMinAv

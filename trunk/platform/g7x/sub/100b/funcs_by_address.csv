@@ -577,6 +577,7 @@
 0xfc144557,j_GetdccdFilterValue_FW
 0xfc144559,ResetRegistNoticeCBR_FW
 0xfc144563,RegistFirmScanNoticeCBR_FW
+0xfc14756b,GetUsableAvRange
 0xfc14816d,GetCurrentAvValue
 0xfc14816d,GetCurrentAvValue_FW
 0xfc14816d,GetIrisAv_FW
@@ -1349,6 +1350,7 @@
 0xfc3cd34d,GetFocusLensResetDefaultPosition_FW
 0xfc3ce991,task_MechaShutter
 0xfc3cf0f1,task_Nd
+0xfc3cf71f,get_nd_value
 0xfc3cf80b,GetNdMoveTime_FW
 0xfc3d0ca5,MoveCZToPoint_FW
 0xfc3d0ccb,MoveCZToWide_FW

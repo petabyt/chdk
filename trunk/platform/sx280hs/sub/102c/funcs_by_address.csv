@@ -755,6 +755,7 @@
 0xfc199cf5,File.ClearExifInfo_FW
 0xfc199dc9,File.Delete_AllImg_FW
 0xfc199e0d,File.Create_FW
+0xfc19ddb7,GetUsableAvRange
 0xfc19e9b9,GetCurrentAvValue
 0xfc19e9b9,GetCurrentAvValue_FW
 0xfc19e9b9,GetIrisAv_FW
