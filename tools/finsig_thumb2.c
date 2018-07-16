@@ -133,6 +133,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetCurrentAvValue" },
     { "GetUsableMaxAv", OPTIONAL },
     { "GetUsableMinAv", OPTIONAL },
+    { "GetUsableAvRange", UNUSED |OPTIONAL },
+    { "get_nd_value", OPTIONAL },
     { "GetDrive_ClusterSize" },
     { "GetDrive_FreeClusters" },
     { "GetDrive_TotalClusters" },
@@ -1036,6 +1038,39 @@ int sig_match_evp_table_veneer(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
     }
     return 0;
+}
+
+int sig_match_get_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // this match is only valid for cameras with both ND and Iris
+    if(!get_misc_val_value("CAM_HAS_ND_FILTER") || !get_misc_val_value("CAM_HAS_IRIS_DIAPHRAGM")) {
+        return 0;
+    }
+
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,16,"ClearEventFlag")) {
+        printf("sig_match_get_nd_value: no match ClearEventFlag\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        printf("sig_match_get_nd_value: bl match 1 failed\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // first call should be either get_nd_value or GetUsableAvRange
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        printf("sig_match_get_nd_value: bl match 1 failed\n");
+        return 0;
+    }
+    uint32_t addr=get_branch_call_insn_target(fw,is);
+    if(addr == get_saved_sig_val("GetUsableAvRange")) {
+        printf("sig_match_get_nd_value: found GetUsableAvRange, iris or ND only?\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,addr);
 }
 
 int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -3549,6 +3584,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetSystemTime",            "GetSystemTime_FW",},
 {sig_match_named,   "GetUsableMaxAv",           "GetUsableMaxAv_FW",},
 {sig_match_named,   "GetUsableMinAv",           "GetUsableMinAv_FW",},
+// a different match would be needed for older, ND only cams maybe based on "AE Result Tv Setting "
+{sig_match_named,   "GetUsableAvRange",         "GetUsableMinAv", SIG_NAMED_SUB},
 {sig_match_named,   "GetVRAMHPixelsSize",       "GetVRAMHPixelsSize_FW",},
 {sig_match_named,   "GetVRAMVPixelsSize",       "GetVRAMVPixelsSize_FW",},
 {sig_match_named,   "GetZoomLensCurrentPoint",  "GetZoomLensCurrentPoint_FW",},
@@ -3759,6 +3796,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
 {sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
+{sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
 {NULL},
 };
 
