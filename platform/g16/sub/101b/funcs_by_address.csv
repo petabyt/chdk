@@ -784,6 +784,7 @@
 0xfc1cb137,GetIrisPiSensorLevel_FW
 0xfc1cb869,GetMechaShutterMoveTime_FW
 0xfc1cb887,GetMechaShutterStatus_FW
+0xfc1cba07,j_get_current_nd_value
 0xfc1cbd1d,GetCurrentZoomLensPosition_FW
 0xfc1cbd1d,GetCurrentZoomPosition_FW
 0xfc1cbd1d,GetZoomLensCurrentPosition
@@ -1338,6 +1339,7 @@
 0xfc388825,GetFocusLensGainSlope_FW
 0xfc389fc5,task_MechaShutter
 0xfc38a6f5,task_Nd
+0xfc38ac59,get_current_nd_value
 0xfc38ac7d,get_nd_value
 0xfc38ade7,GetNdMoveTime_FW
 0xfc38c2b5,MoveCZToPoint_FW

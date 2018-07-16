@@ -446,6 +446,7 @@
 0xfc325c93,Fwrite_Fut
 0xfc325c93,Fwrite_Fut_FW
 0xfc118651,get_canon_mode_list
+0xfc3cf6fb,get_current_nd_value
 0xfc35769d,get_fstype
 0xfc3cf71f,get_nd_value
 0xfc2f77f7,get_playrec_mode
@@ -927,6 +928,7 @@
 0xfc06f97b,j_ExMem.FreeUncacheable_FW
 0xfc06f973,j_ExMem.View_FW
 0xfc360265,j_free
+0xfc1dab47,j_get_current_nd_value
 0xfc4575f3,j_GetAcceleHvPosition_FW
 0xfc1e2385,j_GetAdChValue_FW
 0xfc0e3ded,j_GetAdjTableVersion_FW

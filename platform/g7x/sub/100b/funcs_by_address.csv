@@ -828,6 +828,7 @@
 0xfc1d9f75,task_MechaCPUTransfer
 0xfc1da9a9,GetMechaShutterMoveTime_FW
 0xfc1da9c7,GetMechaShutterStatus_FW
+0xfc1dab47,j_get_current_nd_value
 0xfc1dae5d,GetCurrentZoomLensPosition_FW
 0xfc1dae5d,GetCurrentZoomPosition_FW
 0xfc1dae5d,GetZoomLensCurrentPosition
@@ -1350,6 +1351,7 @@
 0xfc3cd34d,GetFocusLensResetDefaultPosition_FW
 0xfc3ce991,task_MechaShutter
 0xfc3cf0f1,task_Nd
+0xfc3cf6fb,get_current_nd_value
 0xfc3cf71f,get_nd_value
 0xfc3cf80b,GetNdMoveTime_FW
 0xfc3d0ca5,MoveCZToPoint_FW
