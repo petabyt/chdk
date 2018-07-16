@@ -135,6 +135,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetUsableMinAv", OPTIONAL },
     { "GetUsableAvRange", UNUSED |OPTIONAL },
     { "get_nd_value", OPTIONAL },
+    { "get_current_nd_value", OPTIONAL },
     { "GetDrive_ClusterSize" },
     { "GetDrive_FreeClusters" },
     { "GetDrive_TotalClusters" },
@@ -1062,7 +1063,7 @@ int sig_match_get_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     // first call should be either get_nd_value or GetUsableAvRange
     if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-        printf("sig_match_get_nd_value: bl match 1 failed\n");
+        printf("sig_match_get_nd_value: bl match 2 failed\n");
         return 0;
     }
     uint32_t addr=get_branch_call_insn_target(fw,is);
@@ -1071,6 +1072,55 @@ int sig_match_get_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     return save_sig_with_j(fw,rule->name,addr);
+}
+
+int sig_match_get_current_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // this match is only valid for cameras with both ND and Iris
+    if(!get_misc_val_value("CAM_HAS_ND_FILTER") || !get_misc_val_value("CAM_HAS_IRIS_DIAPHRAGM")) {
+        return 0;
+    }
+
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
+        printf("sig_match_get_current_nd_value: bl match 1 failed\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        printf("sig_match_get_current_nd_value: bl match 2 failed\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        printf("sig_match_get_current_nd_value: bl match 3 failed\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!find_next_sig_call(fw,is,36,"GetCurrentShutterSpeed_FW")) {
+        printf("sig_match_get_current_nd_value: no match GetCurrentShutterSpeed_FW\n");
+        return 0;
+    }
+    // bl <func we want>
+    // strh r0, [rN,8]
+    const insn_match_t match_bl_strh[]={
+        {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(STRH,2), {MATCH_OP_REG(R0),  MATCH_OP_MEM(INVALID,INVALID,0x8)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,10,match_bl_strh)) {
+        printf("sig_match_get_current_nd_value: match failed\n");
+        return 0;
+    }
+    // rewind one for call
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,1));
+    disasm_iter(fw,is);
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -3797,6 +3847,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
+{sig_match_get_current_nd_value,"get_current_nd_value","ShowCurrentExp_FW",},
 {NULL},
 };
 
