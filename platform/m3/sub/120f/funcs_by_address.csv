@@ -1329,6 +1329,7 @@
 0xfc318ed7,GetIrisCurrentEffectiveAv_FW
 0xfc318f03,GetIrisAbsoluteAv_FW
 0xfc318f47,GetIrisCurrentAbsoluteAv_FW
+0xfc319045,GetUsableAvRange
 0xfc3191ad,GetIrisCurrentPosition_FW
 0xfc3191cd,IsIrisSlowCtrlAvailable_FW
 0xfc3191d3,IsIrisStableState_FW

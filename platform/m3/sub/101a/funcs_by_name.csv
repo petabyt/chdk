@@ -944,6 +944,7 @@
 0xfc021215,GetTransparentMemoryPosition_FW
 0xfc0211e7,GetTransparentMemorySize_FW
 0xfc25e95f,GetTRIPODModeFlagbyIS_FW
+0xfc319021,GetUsableAvRange
 0xfc181251,GetUsableMaxAv
 0xfc181251,GetUsableMaxAv_FW
 0xfc18123f,GetUsableMinAv

@@ -741,6 +741,7 @@
 0xfc0212fb,GetTransparentMemory_FW
 0xfc02131d,GetTransparentMemoryPosition_FW
 0xfc0212ef,GetTransparentMemorySize_FW
+0xfc0d742b,GetUsableAvRange
 0xfc53a771,GetUsableMaxAv
 0xfc53a771,GetUsableMaxAv_FW
 0xfc53a75f,GetUsableMinAv
