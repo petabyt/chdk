@@ -138,6 +138,7 @@ NHSTUB(GetCurrentAvValue                      ,0xfc14e915) //  0
 NHSTUB(GetUsableMaxAv                         ,0xfc1c1133) //  0
 NHSTUB(GetUsableMinAv                         ,0xfc1c1121) //  0
 NHSTUB(get_nd_value                           ,0xfc38ac7d) //  0
+NHSTUB(get_current_nd_value                   ,0xfc38ac59) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc308e69) //  0
 NHSTUB(GetDrive_FreeClusters                  ,0xfc309399) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc2c751f) //  0
