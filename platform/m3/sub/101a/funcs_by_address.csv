@@ -1409,6 +1409,7 @@
 0xfc35fb5f,GetFocusLensCurrentPosition_FW
 0xfc360133,GetCurrentShutterSpeed_FW
 0xfc360393,GetCurrentExposureTime_FW
+0xfc3606df,get_current_exp
 0xfc3618f5,PutsCameraLogEvent_FW
 0xfc361925,ShowCameraLogInfo_FW
 0xfc36196b,ShowCameraLog_FW

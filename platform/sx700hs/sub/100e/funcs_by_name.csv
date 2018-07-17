@@ -400,6 +400,7 @@
 0xfc2d7cfb,Fwrite_Fut
 0xfc2d7cfb,Fwrite_Fut_FW
 0xfc3761bd,get_canon_mode_list
+0xfc2d6991,get_current_exp
 0xfc307415,get_fstype
 0xfc2b719b,get_playrec_mode
 0xfc0cf693,GetAdChValue

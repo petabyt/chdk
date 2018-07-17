@@ -1160,6 +1160,7 @@
 0xfc2cf430,j_dry_memcpy
 0xfc2cf438,j_bzero
 0xfc2d79bb,get_playrec_mode
+0xfc2dd203,get_current_exp
 0xfc2e0a4b,task_CorctTask
 0xfc2e10a5,task_VcmMainTask
 0xfc2e12f7,GetVcmCurrentPosition_FW

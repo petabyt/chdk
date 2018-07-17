@@ -395,6 +395,7 @@
 0xfc2b0333,Fwrite_Fut
 0xfc2b0333,Fwrite_Fut_FW
 0xfc124511,get_canon_mode_list
+0xfc2cffeb,get_current_exp
 0xfc38ac65,get_current_nd_value
 0xfc308e03,get_fstype
 0xfc38ac89,get_nd_value

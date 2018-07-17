@@ -1429,6 +1429,7 @@
 0xfc362a23,StartCameraLog_FW
 0xfc362a85,StopCameraLog_FW
 0xfc362abf,LogCameraEvent
+0xfc362e27,get_current_exp
 0xfc363233,task_StartupImage
 0xfc36bfa9,UIFS_IsAvailableShots_FW
 0xfc36c5e7,UIFS_GetStillShotableNumber_FW

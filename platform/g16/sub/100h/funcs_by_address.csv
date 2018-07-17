@@ -1060,6 +1060,7 @@
 0xfc2cfcf9,BeepDrive_FW
 0xfc2cfd0d,BeepDriveComp_FW
 0xfc2cfd21,BeepDriveStop_FW
+0xfc2cff83,get_current_exp
 0xfc2d0da9,task_ISMainTask
 0xfc2d0fe1,ISInitMotion_FW
 0xfc2d156f,GetISPWMFrequency_FW

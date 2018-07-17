@@ -890,6 +890,7 @@
 0xfc30f537,PTM_RestoreUIProperty_FW
 0xfc30f9b3,SetPropertyCase
 0xfc30fae5,GetPropertyCase
+0xfc3160f3,get_current_exp
 0xfc316811,get_fstype
 0xfc316877,GetDrive_ClusterSize
 0xfc316d7b,GetDrive_FreeClusters
