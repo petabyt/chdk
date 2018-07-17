@@ -135,6 +135,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetUsableMinAv", OPTIONAL },
     { "GetUsableAvRange", UNUSED |OPTIONAL },
     { "get_nd_value", OPTIONAL },
+    { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
     { "get_current_nd_value", OPTIONAL },
     { "GetDrive_ClusterSize" },
     { "GetDrive_FreeClusters" },
@@ -1074,13 +1075,8 @@ int sig_match_get_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return save_sig_with_j(fw,rule->name,addr);
 }
 
-int sig_match_get_current_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+int sig_match_get_current_exp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    // this match is only valid for cameras with both ND and Iris
-    if(!get_misc_val_value("CAM_HAS_ND_FILTER") || !get_misc_val_value("CAM_HAS_IRIS_DIAPHRAGM")) {
-        return 0;
-    }
-
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
@@ -1100,8 +1096,18 @@ int sig_match_get_current_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *r
         printf("sig_match_get_current_nd_value: bl match 3 failed\n");
         return 0;
     }
-    // follow
-    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_get_current_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // this match is only valid for cameras with both ND and Iris
+    if(!get_misc_val_value("CAM_HAS_ND_FILTER") || !get_misc_val_value("CAM_HAS_IRIS_DIAPHRAGM")) {
+        return 0;
+    }
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
     if(!find_next_sig_call(fw,is,36,"GetCurrentShutterSpeed_FW")) {
         printf("sig_match_get_current_nd_value: no match GetCurrentShutterSpeed_FW\n");
         return 0;
@@ -3847,7 +3853,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
-{sig_match_get_current_nd_value,"get_current_nd_value","ShowCurrentExp_FW",},
+{sig_match_get_current_exp,"get_current_exp","ShowCurrentExp_FW",},
+{sig_match_get_current_nd_value,"get_current_nd_value","get_current_exp",},
 {NULL},
 };
 
