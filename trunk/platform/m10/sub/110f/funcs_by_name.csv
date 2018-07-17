@@ -562,6 +562,7 @@
 0xfc38a2c3,Fwrite_Fut
 0xfc38a2c3,Fwrite_Fut_FW
 0xfc0e3dc9,get_canon_mode_list
+0xfc362e27,get_current_exp
 0xfc388e49,get_fstype
 0xfc33e18b,get_playrec_mode
 0xfc23d78b,GetAcceleHvPosition_FW

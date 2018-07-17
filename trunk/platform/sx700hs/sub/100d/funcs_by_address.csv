@@ -1000,6 +1000,7 @@
 0xfc2c8297,EpilogMenu_FW
 0xfc2cfcd5,GetFocusLensResetPosition_FW
 0xfc2cfce1,GetFocusLensResetDefaultPosition_FW
+0xfc2d6a8d,get_current_exp
 0xfc2d7535,mzrm_createmsg
 0xfc2d7629,mzrm_sendmsg
 0xfc2d7ca3,DeleteFile_Fut

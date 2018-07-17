@@ -446,6 +446,7 @@
 0xfc325c93,Fwrite_Fut
 0xfc325c93,Fwrite_Fut_FW
 0xfc118651,get_canon_mode_list
+0xfc321acb,get_current_exp
 0xfc3cf6fb,get_current_nd_value
 0xfc35769d,get_fstype
 0xfc3cf71f,get_nd_value

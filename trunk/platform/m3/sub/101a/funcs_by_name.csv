@@ -571,6 +571,7 @@
 0xfc37401f,Fwrite_Fut
 0xfc37401f,Fwrite_Fut_FW
 0xfc0e15b1,get_canon_mode_list
+0xfc3606df,get_current_exp
 0xfc379a79,get_fstype
 0xfc325ca3,get_playrec_mode
 0xfc245fc3,GetAcceleHvPosition_FW

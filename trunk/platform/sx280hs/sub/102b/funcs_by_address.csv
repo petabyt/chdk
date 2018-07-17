@@ -1009,6 +1009,7 @@
 0xfc27db65,EpilogFile_FW
 0xfc27db81,task_Epilog
 0xfc27dbab,EpilogMenu_FW
+0xfc28879b,get_current_exp
 0xfc28b39d,GetFaceAuthBinAddr_FW
 0xfc28b3a1,GetFaceAuthBinSize_FW
 0xfc28b3a7,IsOKFaceAuthBinFile_FW

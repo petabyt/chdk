@@ -1103,6 +1103,7 @@
 0xfc31ff07,IsFocusLensOutSidePosition_FW
 0xfc31ff25,GetFocusResetPosition_FW
 0xfc31ff7f,GetFocusDefaultResetPosition_FW
+0xfc321acb,get_current_exp
 0xfc3253d1,mzrm_createmsg
 0xfc3254c5,mzrm_sendmsg
 0xfc325b3f,DeleteFile_Fut
