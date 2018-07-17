@@ -2,7 +2,7 @@
 #include "platform_palette.h"
 #include "lolevel.h"
 
-#define LED_PR 0xc022f1fc
+#define LED_PR 0xc022d1fc
 #define LED_AF 0xc022d200
 
 void debug_led(int state)
