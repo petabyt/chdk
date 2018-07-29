@@ -1081,19 +1081,19 @@ int sig_match_get_current_exp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
-        printf("sig_match_get_current_nd_value: bl match 1 failed\n");
+        printf("sig_match_get_current_exp: bl match 1 failed\n");
         return 0;
     }
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
-        printf("sig_match_get_current_nd_value: bl match 2 failed\n");
+        printf("sig_match_get_current_exp: bl match 2 failed\n");
         return 0;
     }
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
-        printf("sig_match_get_current_nd_value: bl match 3 failed\n");
+        printf("sig_match_get_current_exp: bl match 3 failed\n");
         return 0;
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
