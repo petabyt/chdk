@@ -1658,8 +1658,8 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     // dumps should be an integral number of 32 bit words
     // ensures accessing as 32 bit ints safe
     if(fw->size8&3) {
-        fprintf(stderr,"dump size %d is not divisible by 4\n",fw->size8);
-        exit(1);        
+        fprintf(stderr,"WARNING: dump size %d is not divisible by 4, truncating\n",fw->size8);
+        fw->size8 &= ~3;
     }
 
     // adjust to ensure base_adr + size doesn't overflow
