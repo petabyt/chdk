@@ -27,6 +27,10 @@ General camera and CHDK port information
 - Only simple_movie_status is implemented, so features or scripts that rely on
   direct access to the movie_status variable do not work
 
+- Video bitrate can be adjusted (CBR, VBR). Maximum possible video bitrate is approx. 35000 kbit/s
+
+- Video time based limits are raised to 3 hours (only makes sense on external power)
+
 - Using CHDK started via the "firmware update" method has not been fully tested.
   Report any problems in the porting thread.
 
@@ -34,9 +38,13 @@ General camera and CHDK port information
 
 Issues
 
+- Exposure overrides (and custom auto ISO) will not work correctly when
+  - "AF frame" is set to "tracking AF" in Canon menu
+  - "Servo AF" is enabled in Canon menu
+  - "I-contrast" is enabled in Canon menu
+
 - CHDK overlay drawing is slow, Canon display updates make the CHDK OSD blink
 - some games do not display correctly
-- movie features are not supported
 - PTP remote shoot can misbehave in certain shooting modes (sports mode, high speed burst mode, ...):
   when using continuous shooting (rs -cont or rs -quick in chdkptp), the number of actual shots
   may be larger than the requested number, the last shot from such a series may end up on card
