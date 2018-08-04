@@ -6,12 +6,26 @@ The half press zebra shortcut button is "UP" on the 4-way controller.
 
 The RAW shortcut (and generic shortcut) button is the VIDEO button.
 
-Issues
+Notes
 
-- To start the cam with the playback button, hold down the button a little longer
 - To select a digit in a CHDK menu numeric field, press the shutter halfway
 
+- To achieve card speeds greater than 20MB/s, card is now powered off during CHDK start.
+  This may result in additional startup delay, depending on card. Reports about card issues
+  are welcome in the forum: https://chdk.setepontos.com/index.php?topic=13089.0
+
+- Video bitrate can be adjusted (CBR, VBR). Maximum possible video bitrate is approx. 41000 kbit/s
+
+- Video time based limits are raised to 3 hours
+
+Issues
+
 - CHDK overlay drawing is slow, can blink excessively when the Canon OSD is updated
+- CHDK overlay flickers (making the CHDK menu unusable) in the following cases:
+  - in hybrid auto mode
+  - when face tracking auto focus enabled
+  - there are animated drawings on the Canon display
+
 - some games don't display correcly
 - some framebuffer related features do not work properly
     - zebra (some menu options are ignored)
@@ -24,9 +38,8 @@ Issues
     - does not happen in M mode
     - does not happen when AE is locked using the Canon controls (asterisk on the 4-way controller)
 
-- To achieve card speeds greater than 20MB/s, card is now powered off during CHDK start.
-  This may result in additional startup delay, depending on card. Reports about card issues
-  are welcome in the forum: https://chdk.setepontos.com/index.php?topic=13089.0
+- Exposure overrides may also fail to apply when the shutter is pressed too quickly
+
 
 Tested (using 15-45 kit lens)
 
@@ -54,7 +67,6 @@ Not implemented
 - CHDK mirrorless camera support is not complete
     - Zoom related functionality is missing (except for focal length display)
     - Most focus related functions are not working and are untested
-- Movie features are missing
 - Filewritetask is not currently supported
 
 Developer notes
