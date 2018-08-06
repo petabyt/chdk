@@ -510,7 +510,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 };
 
 // Return the array index of a named function in the array above
-uint32_t find_saved_sig(const char *name)
+int find_saved_sig(const char *name)
 {
     int i;
     for (i=0; func_names[i].name != 0; i++)
@@ -535,7 +535,7 @@ void save_sig(const char *name, uint32_t val)
 
 // Get the saved address value for a named function
 // If the address value is 0 then assume the function search has not occurred yet, so go search for it.
-uint32_t get_saved_sig(firmware *fw, const char *name)
+int get_saved_sig(firmware *fw, const char *name)
 {
     int i = find_saved_sig(name);
     if (i >= 0)
