@@ -1691,7 +1691,10 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     int k = find_str(fw, "gaonisoy");
     // assume firmware start is 32 bit jump over goanisoy
     if(k == -1) {
-        fprintf(stderr,"WARNING gaonisoy string not found, assuming code start offset 0\n");
+        // suppress warning on vxworks, main firmware start is always offset 0
+        if(find_str(fw,"VxWorks") == -1) {
+            fprintf(stderr,"WARNING gaonisoy string not found, assuming code start offset 0\n");
+        }
     } else if (k != 1) {
         // check at 0x20004 - note doesn't just use offset of first gaonisoy, because could be ref'd in romstarter
         if(fw_memcmp(fw,fw->base+0x20004,"gaonisoy",8) == 0) {
