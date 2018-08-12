@@ -1184,17 +1184,23 @@ int main(int argc, char** argv)
         }
         osig *ostub=find_sig(fw.sv->stubs,"SetPropertyCase");
         if(!ostub || !ostub->val) {
-            fprintf(stderr,"SetPropertyCase not found\n");
-            exit(1);
+            fprintf(stderr,"SetPropertyCase not found, ignoring -props\n");
+            set_prop = 0;
+        } else {
+            set_prop = ostub->val;
         }
-        set_prop = ostub->val;
         ostub=find_sig(fw.sv->stubs,"GetPropertyCase");
         if(!ostub || !ostub->val) {
-            fprintf(stderr,"GetPropertyCase not found\n");
-            exit(1);
+            fprintf(stderr,"GetPropertyCase not found, ignoring -props\n");
+            get_prop = 0;
+        } else {
+            get_prop = ostub->val;
         }
-        get_prop = ostub->val;
-        dis_opts |= DIS_OPT_PROPS;
+        if(get_prop && set_prop) {
+            dis_opts |= DIS_OPT_PROPS;
+        } else {
+            do_propset=0;
+        }
     }
     if(dis_start_fn) {
         if(!stubs_dir[0]) {
