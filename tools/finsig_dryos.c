@@ -335,6 +335,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "exmem_alloc" },
     { "exmem_free", OPTIONAL|LIST_ALWAYS },
     { "free" },
+    { "get_nd_value", OPTIONAL },
+    { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
+    { "get_current_nd_value", OPTIONAL },
+    { "GetUsableAvRange", OPTIONAL|UNUSED },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -1542,6 +1546,130 @@ int find_get_self_task_errno_pointer(firmware *fw)
     return 0;
 }
 
+int find_get_nd_value(firmware *fw)
+{
+
+    int f1 = get_saved_sig(fw,"PutInNdFilter_FW");
+    int f2 = get_saved_sig(fw,"ClearEventFlag");
+    int f3 = find_saved_sig("get_nd_value");
+    if ((f3 >= 0) && (func_names[f3].val != 0)) // return if func already found
+        return 0;
+    if ((f1 < 0) || (f2 < 0))
+        return 0;
+    f1 = adr2idx(fw, func_names[f1].val);
+    f2 = adr2idx(fw, func_names[f2].val);
+    int k1 = find_Nth_inst(fw,isBL,f1,10,2);
+    int k2 = find_inst(fw,isBL,f1,6);
+    if ((k1 == -1) || (k2 == -1))
+        return 0;
+    // note for the following line: same address can have different index on cams with multiple fw regions
+    // followBranch2 is for veneer support (s110)
+    if ( followBranch2(fw,idx2adr(fw,k2),0x01000001) != idx2adr(fw,f2) ) // ClearEventFlag?
+        return 0;
+    k1 = idxFollowBranch(fw,k1,0x01000001); // PutInNdFilter_low
+    k2 = find_inst(fw,isBL,k1,6);
+    if (k2 == -1)
+        return 0;
+    // check for signs of other functions (GetUsableAvRange, etc)
+    int k3;
+    int k4 = 0;
+    for (k3=k2-1;k3>k2-3;k3--)
+    {
+        uint32_t v1 = fwval(fw, k3);
+        k4 += (v1 == 0xe28d0004)?1:(v1 == 0xe1a0100d)?4: // add r0,sp,#4 ; mov r1,sp - GetUsableAvRange
+              ((v1 & 0xffffff00) == 0xe3a00000)?0x10:0; // mov r0, #small_imm - sx400
+    }
+    if (k4 == 0) // probably get_nd_value
+    {
+        k2 = idxFollowBranch(fw,k2,0x01000001);
+        fwAddMatch(fw,idx2adr(fw,k2),32,0,122);
+        return 1;
+    }
+
+    return 0;
+}
+
+// for cams with both ND and iris
+int find_get_current_nd_value_iris(firmware *fw)
+{
+    // match is only for cams with both, task is mostly a good indicator
+    if(get_saved_sig(fw,"task_Nd") < 0 || get_saved_sig(fw,"task_IrisEvent") < 0) {
+        return 0;
+    }
+    int f1 = get_saved_sig(fw,"get_current_exp");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int blcnt, i;
+    // expect
+    // bleq DebugAssert
+    // followed by 5 bl with other instruction between
+    // looking for 5th
+    for(i=0, blcnt=0; i<16 && blcnt < 7; i++) {
+        if(!blcnt) {
+            if(isBL_cond(fw,f1+i)) {
+                blcnt++;
+            } else if(isBL(fw,f1+i)) {
+                return 0;
+            }
+            continue;
+        }
+        if(!isBL(fw,f1+i)) {
+            continue;
+        }
+        blcnt++;
+        if(blcnt == 6) {
+            int f2 = idxFollowBranch(fw,f1+i,0x01000001);
+            // non-ND cameras have a call to return 0 
+            if(isMOV(fw,f2) && (fwRd(fw,f2) == 0) && (fwOp2(fw,f2) == 0)) // MOV R0, 0
+                return 0;
+            // veneer (might be better to require veneer)
+            if(isB(fw,f2)) {
+                f2 = idxFollowBranch(fw,f2,0x00000001);
+            }
+            fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int find_get_current_nd_value(firmware *fw)
+{
+
+    // string only present on ND-only cameres
+    if(find_str(fw, "IrisSpecification.c") < 0) {
+        return find_get_current_nd_value_iris(fw);
+    }
+
+    int f1 = get_saved_sig(fw,"GetCurrentAvValue");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    // expect
+    // adreq r0, "IrisController.c"
+    // bleq DebugAssert
+    // bl j_get_current_nd_value
+    int sadr = find_str(fw, "IrisController.c");
+    int j = find_nxt_str_ref(fw, sadr, f1);
+    if (j < 0)
+        return 0;
+
+    if(isBL_cond(fw,j+1) && isBL(fw,j+2)) {
+        f1 = idxFollowBranch(fw,j+2,0x01000001);
+        // veneer
+        if(isB(fw,f1)) {
+            f1 = idxFollowBranch(fw,f1,0x00000001);
+        }
+        fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+        return 1;
+    }
+
+    return 0;
+}
+
 int find_getcurrentmachinetime(firmware *fw)
 {
     int f1 = get_saved_sig(fw,"SetHPTimerAfterTimeout");
@@ -1969,6 +2097,7 @@ string_sig string_sigs[] =
     { 15, "CreateBinarySemaphore", "SdPower.c", 0x01000001 },
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001 },
     { 15, "get_self_task_id", "ASSERT!! %s Line %d\n", 0x01000001 },
+    { 15, "get_current_exp", "Exp  Av %d, Tv %d, Gain %d\r", 0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0001, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
     { 15, "get_task_properties", "Task ID: %d\n", 0x01000001,                    0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003 }, // string not unique!
@@ -2086,12 +2215,16 @@ string_sig string_sigs[] =
     { 22, "SetHPTimerAfterTimeout", (char*)find_sethptimeraftertimeout, 0},
     { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
     { 22, "get_self_task_errno_pointer", (char*)find_get_self_task_errno_pointer, 0},
+    { 22, "get_nd_value", (char*)find_get_nd_value, 0},
+    { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
     { 23, "get_string_by_id", "NoError", 16,                                    99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     -2 },
     { 23, "EnableHDMIPower", "HDMIConnectCnt", 9,                               99,     99,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,},
     { 23, "DisableHDMIPower", "HDMIConnectCnt", 9,                              99,     99,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,},
+    { 23, "get_nd_value", "IrisSpecification.c", 25,                            -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,},
+    { 23, "GetUsableAvRange", "[AE]Prog Line Error!\n", 20,                      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },

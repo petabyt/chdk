@@ -338,6 +338,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "exmem_alloc" },
     { "exmem_free", OPTIONAL },
     { "free" },
+    { "get_nd_value", OPTIONAL },
+    { "get_current_exp", UNUSED|OPTIONAL },
+    { "get_current_nd_value", OPTIONAL },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -965,6 +968,129 @@ int find_getcurrentmachinetime(firmware *fw)
     return 0;
 }
 
+// for cams with ND and Iris (g7)
+int find_get_nd_value(firmware *fw)
+{
+    // match is only for cams with both, task is mostly a good indicator
+    if((get_saved_sig(fw,"task_NdActuator") < 0) || (get_saved_sig(fw,"task_IrisEvent") < 0)) {
+        return 0;
+    }
+    int f1 = find_saved_sig("get_nd_value");
+    if ((f1 >= 0) && (func_names[f1].val != 0)) // return if func already found
+        return 0;
+
+    f1 = get_saved_sig(fw,"PutInNdFilter_FW");
+    int f2 = get_saved_sig(fw,"ClearEventFlag");
+
+    if ((f1 < 0) || (f2 < 0))
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    f2 = adr2idx(fw, func_names[f2].val);
+    int k1 = find_Nth_inst(fw,isBL,f1,10,2);
+    int k2 = find_inst(fw,isBL,f1,6);
+    if ((k1 == -1) || (k2 == -1))
+        return 0;
+    if ( followBranch2(fw,idx2adr(fw,k2),0x01000001) != idx2adr(fw,f2) ) // ClearEventFlag?
+        return 0;
+    
+    // note the folliwng isn't super robust, but only one model
+    k1 = idxFollowBranch(fw,k1,0x01000001); // PutInNdFilter_low veneer
+    k1 = find_inst(fw,isB,k1,3); // veneer
+    if (k1 == -1) {
+        return 0;
+    }
+    k1 = idxFollowBranch(fw,k1,0x00000001); // PutInNdFilter_low
+    if (k1 == -1) {
+        return 0;
+    }
+    k1 = find_inst(fw,isBL,k1,4); // get_nd_value wrapper
+    if (k1 == -1) {
+        return 0;
+    }
+    k1 = idxFollowBranch(fw,k1,0x01000001); // 
+    k1 = find_inst(fw,isBL,k1,2); // get_nd_value
+    if (k1 == -1) {
+        return 0;
+    }
+    k1 = idxFollowBranch(fw,k1,0x01000001);
+    fwAddMatch(fw,idx2adr(fw,k1),32,0,122);
+    return 1;
+}
+
+// for cams with both ND and iris
+int find_get_current_nd_value_iris(firmware *fw)
+{
+    // match is only for cams with both, task is mostly a good indicator
+    if((get_saved_sig(fw,"task_NdActuator") < 0) || (get_saved_sig(fw,"task_IrisEvent") < 0)) {
+        return 0;
+    }
+    int f1 = get_saved_sig(fw,"get_current_exp");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int blcnt, i;
+    // expect
+    // 2x bl DebugAssert
+    // followed by 5 bl with other instruction between
+    // looking for 5th
+    for(i=0, blcnt=0; i<28 && blcnt < 8; i++) {
+        if(!isBL(fw,f1+i)) {
+            continue;
+        }
+        blcnt++;
+        if(blcnt == 7) {
+            int f2 = idxFollowBranch(fw,f1+i,0x01000001);
+            // non-ND cameras have a call to return 0
+            if(isMOV(fw,f2) && (fwRd(fw,f2) == 0) && (fwOp2(fw,f2) == 0)) // MOV R0, 0
+                return 0;
+            // expect wrapper that pushes LR, makes return a short
+            if(isBL(fw,f2+1)) {
+                f2 = idxFollowBranch(fw,f2+1,0x01000001);
+                fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+                return 1;
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+
+int find_get_current_nd_value(firmware *fw)
+{
+
+    // string only present on ND-only cameres
+    if(find_str(fw, "IrisSpecification.c") < 0) {
+        return find_get_current_nd_value_iris(fw);
+    }
+
+    int f1 = get_saved_sig(fw,"GetCurrentAvValue");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    // skip wrapper
+    if (!isBL(fw,f1+1))
+        return 0;
+    f1 = idxFollowBranch(fw,f1+1,0x01000001);
+    // expect
+    // ldr r0, ="IrisController.c"
+    // bl DebugAssert
+    // bl get_current_nd_value
+    int sadr = find_str(fw, "IrisController.c");
+    int j = find_nxt_str_ref(fw, sadr, f1);
+    if ((j < 0) || (j-f1 > 8))
+        return 0;
+
+    j = find_Nth_inst(fw,isBL,j,8,2);
+    if (j == -1)
+        return 0;
+    f1 = idxFollowBranch(fw,j,0x01000001);
+    fwAddMatch(fw,idx2adr(fw,f1),32,0,122);
+    return 1;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -1066,6 +1192,8 @@ string_sig string_sigs[] =
     {20, "MFOff", "MFOff_FW", 1 },
     {20, "GetAdChValue", "GetAdChValue_FW", 0 },
     {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 3 },
+    {20, "get_nd_value", "NdActuator.GetNdFilterDeltaEvAdjustValue_FW", 0 }, // old vx
+    {20, "get_current_nd_value", "NdActuator.GetNdFilterDeltaEv_FW", 0 }, // old vx
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1312,6 +1440,7 @@ string_sig string_sigs[] =
     { 15, "wrapped_malloc", "\n malloc error \n", 0x01000001,                    0x0010 },
     { 15, "IsStrobeChargeCompleted", "\r\nCaptSeq::ChargeNotCompleted!!", 0x01000001 }, // ixus30, 40
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001,    0x0008 },
+    { 15, "get_nd_value", "IrisSpecification.c", 0x01000001,                     0x0014 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -1394,6 +1523,8 @@ string_sig string_sigs[] =
     { 22, "set_control_event", (char*)find_set_control_event, 0 }, // vx
     { 22, "filesem_init", (char*)find_filesem_init, 0 }, // vx
     { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
+    { 22, "get_nd_value", (char*)find_get_nd_value, 0},
+    { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
@@ -1407,6 +1538,7 @@ string_sig string_sigs[] =
     { 100, "DeleteEventFlag", "DeleteEventFlag : call from interrupt handler", 0,               8 },
     { 100, "WaitForEventFlag", "WaitForEventFlag : call from interrupt handler", 0,             12 },
     { 100, "CancelHPTimer", "EventProcedure", 0,                                                101 }, // newest vx
+    { 100, "get_current_exp", "Exp  Av %d, Tv %d, Gain %d\r",0x01000001,                        0x07 },
     
     { 101, "DeleteSemaphore", "DeleteSemaphore", 0 },
     { 101, "CreateCountingSemaphore", "CreateCountingSemaphore", 0 },
