@@ -499,6 +499,9 @@
 0xff8146d4,FreeUncacheableMemory
 0xff86dbdc,Fseek_Fut
 0xff86db44,Fwrite_Fut
+0xff90a0bc,get_current_exp
+0xffa51958,get_current_nd_value
+0xffa5196c,get_nd_value
 0xff825580,get_resource_pointer
 0xff82aaf0,GetAdChValue
 0xff82aaf0,GetAdChValue_FW

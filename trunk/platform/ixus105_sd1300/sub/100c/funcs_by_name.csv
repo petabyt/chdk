@@ -327,7 +327,10 @@
 0xffc267e8,Fseek_Fut_FW
 0xffc26748,Fwrite_Fut
 0xffc26748,Fwrite_Fut_FW
+0xffc9af44,get_current_exp
+0xffe11804,get_current_nd_value
 0xffc55b9c,get_fstype
+0xffe11848,get_nd_value
 0xffc69c98,get_resource_pointer
 0xffc09c9c,get_self_task_errno_pointer
 0xffc02a78,get_self_task_id

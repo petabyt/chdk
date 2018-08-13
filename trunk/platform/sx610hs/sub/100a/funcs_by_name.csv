@@ -431,7 +431,10 @@
 0xff026c30,Fseek_Fut_FW
 0xff026b90,Fwrite_Fut
 0xff026b90,Fwrite_Fut_FW
+0xff0fe578,get_current_exp
+0xff3adc20,get_current_nd_value
 0xff0300f8,get_fstype
+0xff3adc80,get_nd_value
 0xff0a7ad8,get_resource_pointer
 0xff023398,get_self_task_errno_pointer
 0x006b1b94,get_self_task_id
@@ -728,6 +731,7 @@
 0xff37a350,GetTransparentMemory_FW
 0xff37a394,GetTransparentMemoryPosition_FW
 0xff37a340,GetTransparentMemorySize_FW
+0xff0916b4,GetUsableAvRange
 0xff1d5910,GetUsableMaxAv
 0xff1d5910,GetUsableMaxAv_FW
 0xff1d58f4,GetUsableMinAv

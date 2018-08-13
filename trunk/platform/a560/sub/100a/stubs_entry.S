@@ -143,6 +143,8 @@ NHSTUB(_sqrt                                  ,0xffcc3df0) //  1
 NHSTUB(apex2us                                ,0xffce2b80) //  1
 NHSTUB(close                                  ,0xffcce6b8) //109
 NHSTUB(exmem_free                             ,0xffc0e520) //102
+NHSTUB(get_nd_value                           ,0xffe71ed8) //115
+NHSTUB(get_current_nd_value                   ,0xffe71ec4) //122
 NHSTUB(kbd_p1_f                               ,0xffddba38) //  1
 NHSTUB(kbd_p1_f_cont                          ,0xffddba44) //109
 NHSTUB(kbd_pwr_off                            ,0xffddd708) //  3

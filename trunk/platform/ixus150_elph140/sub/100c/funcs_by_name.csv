@@ -379,7 +379,10 @@
 0xff826da8,Fseek_Fut_FW
 0xff826d08,Fwrite_Fut
 0xff826d08,Fwrite_Fut_FW
+0xff8db050,get_current_exp
+0xffab12b4,get_current_nd_value
 0xff82f76c,get_fstype
+0xffab1314,get_nd_value
 0xff8979d8,get_resource_pointer
 0xff823568,get_self_task_errno_pointer
 0x006b1b68,get_self_task_id
@@ -644,6 +647,7 @@
 0xffa92314,GetTransparentMemory_FW
 0xffa92358,GetTransparentMemoryPosition_FW
 0xffa92304,GetTransparentMemorySize_FW
+0xff884490,GetUsableAvRange
 0xffb5361c,GetUserSetShutterSPeed_FW
 0xff82ac10,GetVBatVoltage_FW
 0xffb55334,GetVideoOutType_FW

@@ -396,6 +396,7 @@
 0xff974c00,task_ExpDrv
 0xff974c00,task_ExpDrvTask
 0xff976008,task_ExpDrvSubTask
+0xff9764dc,get_current_exp
 0xff976b2c,ExpDrvTool.ChgSpeed_FW
 0xff9837cc,task_WBCtrl
 0xff9960e0,task_OBCtrlTask
@@ -1027,6 +1028,8 @@
 0xffaea3a0,SetMechaShutterOpenDacSetting_FW
 0xffaea3bc,SetMechaShutterWaitTimeSetting_FW
 0xffaea3d0,GetMechaShutterStatus_FW
+0xffaea4fc,get_current_nd_value
+0xffaea510,get_nd_value
 0xffaea67c,TurnOnNdFilter_FW
 0xffaea67c,TurnOnNdFilterEvent_FW
 0xffaea6ac,TurnOffNdFilter_FW

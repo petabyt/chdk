@@ -608,6 +608,7 @@
 0xff0c7918,ExpCtrlTool.SetExpMode_FW
 0xff0cca8c,task_ExpDrv
 0xff0cca8c,task_ExpDrvTask
+0xff0ce608,get_current_exp
 0xff0d5c48,task_WBCR2Calc
 0xff0e225c,task_WBLPFace
 0xff0e66f4,task_OBCtrlTask
@@ -826,6 +827,7 @@
 0xff1dbbcc,IsFocusLensOutSidePosition_FW
 0xff1dbbf0,GetFocusResetPosition_FW
 0xff1dbc68,GetFocusDefaultResetPosition_FW
+0xff1dc640,GetUsableAvRange
 0xff1dd750,GetCurrentAvValue
 0xff1dd750,GetCurrentAvValue_FW
 0xff1dd750,GetIrisAv_FW

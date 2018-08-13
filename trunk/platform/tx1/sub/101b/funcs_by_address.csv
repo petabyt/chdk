@@ -395,6 +395,7 @@
 0xff977ea8,ExpCtrlTool.IsEnableBoostUpAE_FW
 0xff97cefc,task_ExpDrv
 0xff97cefc,task_ExpDrvTask
+0xff97e348,get_current_exp
 0xff97e988,ExpDrvTool.ChgSpeed_FW
 0xff98bbe4,task_WBCtrl
 0xff99ec8c,task_OBCtrlTask

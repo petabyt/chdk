@@ -311,6 +311,9 @@
 0xffc12f0c,Fseek_Fut_FW
 0xffc12e6c,Fwrite_Fut
 0xffc12e6c,Fwrite_Fut_FW
+0xffc85704,get_current_exp
+0xffde8304,get_current_nd_value
+0xffde8348,get_nd_value
 0xffc52634,get_resource_pointer
 0xffc0377c,get_self_task_errno_pointer
 0xffc02188,get_self_task_id

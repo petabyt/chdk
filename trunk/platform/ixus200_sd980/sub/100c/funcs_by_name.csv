@@ -346,6 +346,7 @@
 0xff8350b0,Fseek_Fut_FW
 0xff835010,Fwrite_Fut
 0xff835010,Fwrite_Fut_FW
+0xff8bbafc,get_current_exp
 0xff86bb88,get_fstype
 0xff8819ec,get_resource_pointer
 0xff819bbc,get_self_task_errno_pointer

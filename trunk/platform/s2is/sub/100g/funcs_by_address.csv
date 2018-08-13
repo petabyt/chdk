@@ -461,6 +461,7 @@
 0xff908e68,ExpCtrlTool.GetShiftLimit_FW
 0xff90b03c,task_ExpDrv
 0xff90b03c,task_ExpDrvTask
+0xff90c634,get_current_exp
 0xff90cac4,ExpDrvTool.ChgSpeed_FW
 0xff9129b0,task_EFChargeT
 0xff912c6c,IsStrobeChargeCompleted
@@ -1100,7 +1101,9 @@
 0xffa7eb84,NdActuator.TurnOnNdFilter_FW
 0xffa7ebb4,NdActuator.TurnOffNdFilter_FW
 0xffa7ebe4,NdActuator.IsNdFilterActive_FW
+0xffa7ebf0,get_current_nd_value
 0xffa7ebf0,NdActuator.GetNdFilterDeltaEv_FW
+0xffa7ec04,get_nd_value
 0xffa7ec04,NdActuator.GetNdFilterDeltaEvAdjustValue_FW
 0xffa7ec18,NdActuator.ReloadNdActuatorData_FW
 0xffa7ec28,NdActuator.LockNdFilterDrive_FW

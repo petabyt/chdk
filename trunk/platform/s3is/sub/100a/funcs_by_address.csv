@@ -377,6 +377,7 @@
 0xff9104dc,ExpCtrlTool.SetExpMode_FW
 0xff913258,task_ExpDrv
 0xff913258,task_ExpDrvTask
+0xff9148bc,get_current_exp
 0xff914db4,ExpDrvTool.ChgSpeed_FW
 0xff91d604,task_EFChargeT
 0xff91d8c0,IsStrobeChargeCompleted

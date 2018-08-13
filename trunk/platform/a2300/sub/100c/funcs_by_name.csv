@@ -334,7 +334,10 @@
 0xff831260,Fseek_Fut_FW
 0xff8311c0,Fwrite_Fut
 0xff8311c0,Fwrite_Fut_FW
+0xff8b06d8,get_current_exp
+0xffa6111c,get_current_nd_value
 0xff86688c,get_fstype
+0xffa6117c,get_nd_value
 0xff878440,get_resource_pointer
 0xff815038,get_self_task_errno_pointer
 0x003f1bac,get_self_task_id
@@ -500,6 +503,7 @@
 0xffae0474,GetUnpackCrwIntegralValue_FW
 0xffae06f8,GetUnpackCrwIntegralValueForColorShading_FW
 0xffae0490,GetUnpackCrwIntegralValueForShading_FW
+0xff95509c,GetUsableAvRange
 0xffad7750,GetUserSetShutterSPeed_FW
 0xff82c3d0,GetVBatVoltage_FW
 0xffadd794,GetVideoOutType_FW

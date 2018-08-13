@@ -626,6 +626,7 @@
 0xffc9017c,j_ExpCtrlTool.IsEnableBoostUpAE_FW
 0xffc93848,task_ExpDrv
 0xffc93848,task_ExpDrvTask
+0xffc95100,get_current_exp
 0xffc967ec,task_WBCtrl
 0xffc976ac,task_OBCtrlTask
 0xffc97aac,OBCtrl.IsStarted_FW
@@ -1459,6 +1460,8 @@
 0xffddb9b4,task_MechaShutter
 0xffddc2b4,GetMechaShutterStatus_FW
 0xffddc3bc,task_Nd
+0xffddc7c4,get_current_nd_value
+0xffddc7fc,get_nd_value
 0xffddd10c,task_ZoomEvent
 0xffddd8a4,IsZoomActuatorResetSensorPlusSide_FW
 0xffddde40,MoveZoomActuator_FW

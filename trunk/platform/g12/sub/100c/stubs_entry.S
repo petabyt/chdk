@@ -245,6 +245,8 @@ NHSTUB(err_init_task                          ,0xff815fd4) //111
 NHSTUB(exmem_alloc                            ,0xff88ffd8) //103
 NHSTUB(exmem_free                             ,0xff890050) //103
 NHSTUB(free                                   ,0xff814244) //112
+NHSTUB(get_nd_value                           ,0xffaf47e0) //122
+NHSTUB(get_current_nd_value                   ,0xffaf47b0) //122
 NHSTUB(kbd_p1_f                               ,0xff834a6c) //109
 NHSTUB(kbd_p1_f_cont                          ,0xff834a78) //109
 NHSTUB(kbd_p2_f                               ,0xff8342bc) //109

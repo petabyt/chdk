@@ -360,6 +360,7 @@
 0xff837cf4,Fseek_Fut_FW
 0xff837c54,Fwrite_Fut
 0xff837c54,Fwrite_Fut_FW
+0xff8ce488,get_current_exp
 0xff87586c,get_fstype
 0xff88ebe0,get_resource_pointer
 0xff819d94,get_self_task_errno_pointer

@@ -301,6 +301,9 @@
 0xff867b54,Fseek_Fut_FW
 0xff867abc,Fwrite_Fut
 0xff867abc,Fwrite_Fut_FW
+0xff8f68b4,get_current_exp
+0xffa77238,get_current_nd_value
+0xffa772b4,get_nd_value
 0xff8240bc,get_resource_pointer
 0xff828ff0,GetAdChValue
 0xff828ff0,GetAdChValue_FW

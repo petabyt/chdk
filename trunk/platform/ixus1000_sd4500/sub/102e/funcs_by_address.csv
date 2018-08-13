@@ -571,6 +571,7 @@
 0xff8c8884,ExpCtrlTool.SetExpMode_FW
 0xff8ccb28,task_ExpDrv
 0xff8ccb28,task_ExpDrvTask
+0xff8ce4fc,get_current_exp
 0xff8dcfe8,task_WBLPFace
 0xff8dfab0,ReloadWBAdjustment_FW
 0xff8e0338,task_OBCtrlTask

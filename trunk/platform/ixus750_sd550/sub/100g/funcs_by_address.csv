@@ -412,6 +412,7 @@
 0xff8f3974,ExpCtrlTool.GetShiftLimit_FW
 0xff8f5b50,task_ExpDrv
 0xff8f5b50,task_ExpDrvTask
+0xff8f7190,get_current_exp
 0xff8f75fc,ExpDrvTool.ChgSpeed_FW
 0xff8fe370,task_EFChargeT
 0xff8fe628,IsStrobeChargeCompleted
@@ -956,6 +957,8 @@
 0xffa77340,SaveMechaShutterCount_FW
 0xffa7737c,GetMechaShutterCount_FW
 0xffa773cc,ClearMechaShutterCount_FW
+0xffa777c8,get_current_nd_value
+0xffa77844,get_nd_value
 0xffa77984,task_NdActuator
 0xffa77cb0,TurnOnNdFilterEvent_FW
 0xffa77ce0,TurnOffNdFilterEvent_FW
