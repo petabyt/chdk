@@ -530,6 +530,7 @@
 0xff8aa19c,ExpCtrlTool.SetExpMode_FW
 0xff8ad7c4,task_ExpDrv
 0xff8ad7c4,task_ExpDrvTask
+0xff8aefd8,get_current_exp
 0xff8b06c4,task_WBCtrl
 0xff8b15ac,task_OBCtrlTask
 0xff8b25e8,task_DetectMoveTask
@@ -999,6 +1000,7 @@
 0xffa587e4,GetMechaDeviceComparatorThreshold_FW
 0xffa588a0,task_MechaShutter
 0xffa592cc,task_Nd
+0xffa597d8,get_current_nd_value
 0xffa5a13c,task_ZoomEvent
 0xffa5a488,StopZoomEmergency_FW
 0xffa5aadc,MoveZoomActuator_FW

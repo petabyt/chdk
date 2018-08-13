@@ -422,6 +422,7 @@
 0xff86c24c,task_MediaStatusMngr
 0xff86e750,task_SD1stInit
 0xff86efa0,task_RedEyeCapt
+0xff872278,GetUsableAvRange
 0xff8733a8,GetCurrentAvValue
 0xff8733a8,GetCurrentAvValue_FW
 0xff8733a8,GetIrisAv_FW
@@ -562,6 +563,7 @@
 0xff8c6e8c,ExpCtrlTool.SetExpMode_FW
 0xff8cb99c,task_ExpDrv
 0xff8cb99c,task_ExpDrvTask
+0xff8cd534,get_current_exp
 0xff8dd73c,task_WBLPFace
 0xff8e09e0,task_OBCtrlTask
 0xff8e1a58,task_DetectMoveTask

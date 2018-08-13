@@ -150,6 +150,8 @@ NHSTUB(_pow                                   ,0xffae15d8) //121
 NHSTUB(_sqrt                                  ,0xffae5924) //  1
 NHSTUB(apex2us                                ,0xff8bbe50) //  1
 NHSTUB(close                                  ,0xffaf44c0) //109
+NHSTUB(get_nd_value                           ,0xffa7eea0) //120
+NHSTUB(get_current_nd_value                   ,0xffa7ee8c) //120
 NHSTUB(lseek                                  ,0xffaf4604) //  1
 NHSTUB(memcmp                                 ,0xffaee034) //120
 NHSTUB(memcpy                                 ,0xffaee070) //120

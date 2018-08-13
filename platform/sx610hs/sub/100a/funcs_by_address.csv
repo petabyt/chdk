@@ -469,6 +469,7 @@
 0xff091614,GetCurrentAvValue
 0xff091614,GetCurrentAvValue_FW
 0xff091614,GetIrisAv_FW
+0xff0916b4,GetUsableAvRange
 0xff091ac0,task_LensController
 0xff092678,IsLensOutside_FW
 0xff09269c,GetFocusStartZoomPosition_FW
@@ -619,6 +620,7 @@
 0xff0f6d48,ExpCtrlTool.SoundDevTest_FW
 0xff0fc5c8,task_ExpDrv
 0xff0fc5c8,task_ExpDrvTask
+0xff0fe578,get_current_exp
 0xff101638,task_OBCtrlTask
 0xff1027c8,task_DetectMoveTask
 0xff1047dc,task_DevelopModule
@@ -1359,6 +1361,8 @@
 0xff3ac214,task_MechaAlarm
 0xff3ac748,task_MechaShutter
 0xff3ad3c0,task_Nd
+0xff3adc20,get_current_nd_value
+0xff3adc80,get_nd_value
 0xff3adf6c,GetNdMoveTime_FW
 0xff3ae0d0,task_ZoomEvent
 0xff3ae394,task_ZoomActuatorSpeedLog

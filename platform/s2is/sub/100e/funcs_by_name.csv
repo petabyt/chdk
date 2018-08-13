@@ -388,6 +388,9 @@
 0xff814844,FreeUncacheableMemory
 0xff86ff00,Fseek_Fut
 0xff86fe68,Fwrite_Fut
+0xff90c8d0,get_current_exp
+0xffa7ee8c,get_current_nd_value
+0xffa7eea0,get_nd_value
 0xff8257dc,get_resource_pointer
 0xff82b848,GetAdChValue
 0xff82b848,GetAdChValue_FW

@@ -646,6 +646,7 @@
 0xff0cb220,ExpCtrlTool.SetExpMode_FW
 0xff0cfb78,task_ExpDrv
 0xff0cfb78,task_ExpDrvTask
+0xff0d1604,get_current_exp
 0xff0d8ecc,task_WBCR2Calc
 0xff0e423c,task_WBLPFace
 0xff0e7324,ReloadWBAdjustment_FW
@@ -830,6 +831,7 @@
 0xff1c01ac,GetFocusResetPosition_FW
 0xff1c0218,GetFocusDefaultResetPosition_FW
 0xff1c0284,ReloadFocusLensAdjustment_FW
+0xff1c0d08,GetUsableAvRange
 0xff1c1e48,GetCurrentAvValue
 0xff1c1e48,GetCurrentAvValue_FW
 0xff1c1e48,GetIrisAv_FW
@@ -1164,6 +1166,8 @@
 0xff359e24,GetIrisHoldVoltage_FW
 0xff35b1cc,task_MechaShutter
 0xff35bd4c,task_Nd
+0xff35c424,get_current_nd_value
+0xff35c454,get_nd_value
 0xff35c684,GetNdMoveTime_FW
 0xff35c964,task_StrobePopUp
 0xff35d038,GetStrobePopUpActuatorCurrentState_FW

@@ -314,6 +314,9 @@
 0xffaa13b8,Fut.Save_FW
 0xffaa1248,Fwrite_Fut
 0xffaa1248,Fwrite_Fut_FW
+0xff9764dc,get_current_exp
+0xffaea4fc,get_current_nd_value
+0xffaea510,get_nd_value
 0xffb23a38,get_resource_pointer
 0xffa34024,GetAdChValue
 0xffa34024,GetAdChValue_FW

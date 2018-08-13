@@ -552,6 +552,7 @@
 0xff8fd360,ExpCtrlTool.SetExpQuickMode_FW
 0xff8ff820,task_ExpDrv
 0xff8ff820,task_ExpDrvTask
+0xff900bc4,get_current_exp
 0xff90102c,ExpDrvTool.EnablePrint_FW
 0xff901044,ExpDrvTool.DisablePrint_FW
 0xff901114,ExpDrvTool.ChgSpeedHigh_FW
@@ -1245,7 +1246,9 @@
 0xffa4f510,NdActuator.TurnOnNdFilter_FW
 0xffa4f540,NdActuator.TurnOffNdFilter_FW
 0xffa4f570,NdActuator.IsNdFilterActive_FW
+0xffa4f57c,get_current_nd_value
 0xffa4f57c,NdActuator.GetNdFilterDeltaEv_FW
+0xffa4f590,get_nd_value
 0xffa4f590,NdActuator.GetNdFilterDeltaEvAdjustValue_FW
 0xffa4f5a4,NdActuator.ReloadNdActuatorData_FW
 0xffa4f5b4,NdActuator.LockNdFilterDrive_FW

@@ -487,6 +487,7 @@
 0xffc8dd6c,ExpCtrlTool.SetExpMode_FW
 0xffc91654,task_ExpDrv
 0xffc91654,task_ExpDrvTask
+0xffc92f30,get_current_exp
 0xffca066c,task_WBLPFace
 0xffca23c0,ReloadWBAdjustment_FW
 0xffca2cf4,task_OBCtrlTask
@@ -914,6 +915,8 @@
 0xffdf199c,GetFocusLensHoldVoltage_FW
 0xffdf2850,task_MechaShutter
 0xffdf3198,task_Nd
+0xffdf35a0,get_current_nd_value
+0xffdf35e4,get_nd_value
 0xffdf377c,task_ZoomEvent
 0xffdf3e7c,IsZoomActuatorResetSensorPlusSide_FW
 0xffdf4464,MoveZoomActuator_FW

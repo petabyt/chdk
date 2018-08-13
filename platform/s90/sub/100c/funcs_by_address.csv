@@ -560,6 +560,7 @@
 0xff8bd538,ExpCtrlTool.SetExpMode_FW
 0xff8c0e54,task_ExpDrv
 0xff8c0e54,task_ExpDrvTask
+0xff8c2720,get_current_exp
 0xff8c8658,task_WBCR2Calc
 0xff8cfc34,task_WBLPFace
 0xff8cfebc,wblpface.init_FW

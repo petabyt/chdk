@@ -387,6 +387,7 @@
 0xffd1f18c,ExpCtrlTool.SetExpMode_FW
 0xffd241cc,task_ExpDrv
 0xffd241cc,task_ExpDrvTask
+0xffd25668,get_current_exp
 0xffd25ca8,ExpDrvTool.ChgSpeed_FW
 0xffd32f6c,task_WBCtrl
 0xffd45890,task_OBCtrlTask

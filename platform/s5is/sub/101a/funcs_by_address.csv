@@ -797,6 +797,7 @@
 0xff8d01e8,j_ExpCtrlTool.IsEnableBoostUpAE_FW
 0xff8d3888,task_ExpDrv
 0xff8d3888,task_ExpDrvTask
+0xff8d4ebc,get_current_exp
 0xff8d690c,task_WBCtrl
 0xff8d76ec,task_OBCtrlTask
 0xff8d7ac4,OBCtrl.IsStarted_FW

@@ -546,6 +546,7 @@
 0xff89ea94,ExpCtrlTool.SetExpMode_FW
 0xff8a2214,task_ExpDrv
 0xff8a2214,task_ExpDrvTask
+0xff8a3a7c,get_current_exp
 0xff8a524c,task_WBCtrl
 0xff8a60ec,task_OBCtrlTask
 0xff8a6d1c,task_DetectMoveTask

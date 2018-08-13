@@ -561,6 +561,7 @@
 0xff8bdf7c,ExpCtrlTool.SetExpMode_FW
 0xff8c276c,task_ExpDrv
 0xff8c276c,task_ExpDrvTask
+0xff8c42a8,get_current_exp
 0xff8d3b60,task_WBLPFace
 0xff8d6bfc,task_OBCtrlTask
 0xff8d80b8,task_DetectMoveTask
@@ -753,6 +754,7 @@
 0xff985a9c,IsFocusLensOutSidePosition_FW
 0xff985ac0,GetFocusResetPosition_FW
 0xff985b2c,GetFocusDefaultResetPosition_FW
+0xff986564,GetUsableAvRange
 0xff987674,GetCurrentAvValue
 0xff987674,GetCurrentAvValue_FW
 0xff987674,GetIrisAv_FW

@@ -473,6 +473,7 @@
 0xff091188,SetCzDebugFocusMode_FW
 0xff091188,SetCzDebugSubjectDistance_FW
 0xff09119c,CzDebugPrintToFile_FW
+0xff091af4,GetUsableAvRange
 0xff092c20,GetCurrentAvValue
 0xff092c20,GetCurrentAvValue_FW
 0xff092c20,GetIrisAv_FW
@@ -639,6 +640,7 @@
 0xff0f2098,ExpCtrlTool.SoundDevTest_FW
 0xff0f7824,task_ExpDrv
 0xff0f7824,task_ExpDrvTask
+0xff0f968c,get_current_exp
 0xff0fc1c0,task_OBCtrlTask
 0xff0fd358,task_DetectMoveTask
 0xff0ff374,task_DevelopModule

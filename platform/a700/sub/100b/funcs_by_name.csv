@@ -310,6 +310,7 @@
 0xffc56fd0,Fseek_Fut_FW
 0xffc56f38,Fwrite_Fut
 0xffc56f38,Fwrite_Fut_FW
+0xffcf620c,get_current_exp
 0xffc13f4c,get_resource_pointer
 0xffc1911c,GetAdChValue
 0xffc1911c,GetAdChValue_FW

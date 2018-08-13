@@ -558,6 +558,7 @@
 0xff8bc284,ExpCtrlTool.SetExpMode_FW
 0xff8bfba8,task_ExpDrv
 0xff8bfba8,task_ExpDrvTask
+0xff8c1480,get_current_exp
 0xff8c73d8,task_WBCR2Calc
 0xff8ceeb8,task_WBLPFace
 0xff8cf140,wblpface.init_FW
@@ -1017,6 +1018,8 @@
 0xffa91ac4,ResetIrisActuator_FW
 0xffa935a8,task_MechaShutter
 0xffa94040,task_Nd
+0xffa94570,get_current_nd_value
+0xffa945b4,get_nd_value
 0xffa94c30,task_ZoomEvent
 0xffa953dc,IsZoomActuatorResetSensorPlusSide_FW
 0xffa95958,MoveZoomActuator_FW

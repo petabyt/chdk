@@ -549,6 +549,7 @@
 0xff8aa754,ExpCtrlTool.SetExpMode_FW
 0xff8aee90,task_ExpDrv
 0xff8aee90,task_ExpDrvTask
+0xff8b0880,get_current_exp
 0xff8bf46c,task_WBLPFace
 0xff8c1c24,ReloadWBAdjustment_FW
 0xff8c2404,task_OBCtrlTask
@@ -708,6 +709,7 @@
 0xff9551ac,GetCurrentAvValue
 0xff9551ac,GetCurrentAvValue_FW
 0xff9551ac,GetIrisAv_FW
+0xff95524c,GetUsableAvRange
 0xff955384,ReloadIrisAdjustment_FW
 0xff955398,ReloadGetaAdjustment_FW
 0xff955410,GetLensErrorStatus_FW
@@ -1015,6 +1017,8 @@
 0xffa5fad4,GetFocusLensHoldVoltage_FW
 0xffa609ac,task_MechaShutter
 0xffa613f8,task_Nd
+0xffa61b50,get_current_nd_value
+0xffa61bb0,get_nd_value
 0xffa61dd8,GetNdMoveTime_FW
 0xffa61e9c,task_ZoomActuatorSpeedCheck
 0xffa6203c,task_ZoomEvent

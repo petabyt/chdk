@@ -167,6 +167,8 @@ NHSTUB(_sqrt                                  ,0xffacb378) //  1
 // ALT: NHSTUB(_sqrt, 0xffbbe0fc) // 1 24/0
 NHSTUB(apex2us                                ,0xff8b02a8) //  1
 NHSTUB(close                                  ,0xffc1a8ac) //109
+NHSTUB(get_nd_value                           ,0xffb6e5cc) //115
+NHSTUB(get_current_nd_value                   ,0xffb6e550) //122
 //NHSTUB(kbd_p1_f                             ,0xff829c94) //  1            == 0xff829c94
 //NHSTUB(kbd_p1_f_cont                        ,0xff829ca0) //109            == 0xff829ca0
 //NHSTUB(kbd_p2_f                             ,0xff82a078) //  1            == 0xff82a078

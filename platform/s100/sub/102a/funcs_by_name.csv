@@ -391,7 +391,10 @@
 0xff0271f0,Fseek_Fut_FW
 0xff027150,Fwrite_Fut
 0xff027150,Fwrite_Fut_FW
+0xff0d1604,get_current_exp
+0xff35c424,get_current_nd_value
 0xff06e7bc,get_fstype
+0xff35c454,get_nd_value
 0xff08a428,get_resource_pointer
 0xff009dc8,get_self_task_errno_pointer
 0xff002b44,get_self_task_id
@@ -649,6 +652,7 @@
 0xff3fe6f4,GetUnpackCrwIntegralValue_FW
 0xff3fe978,GetUnpackCrwIntegralValueForColorShading_FW
 0xff3fe710,GetUnpackCrwIntegralValueForShading_FW
+0xff1c0d08,GetUsableAvRange
 0xff3f5dc4,GetUsableMaxAv
 0xff3f5dc4,GetUsableMaxAv_FW
 0xff3f5dac,GetUsableMinAv

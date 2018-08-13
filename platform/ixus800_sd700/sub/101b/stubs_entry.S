@@ -152,6 +152,8 @@ NHSTUB(_pow                                   ,0xffafe054) //121
 NHSTUB(_sqrt                                  ,0xffafff28) //  1
 NHSTUB(apex2us                                ,0xff8b1db4) //  1
 NHSTUB(close                                  ,0xffb0bf90) //109
+NHSTUB(get_nd_value                           ,0xffaae3a4) //115
+NHSTUB(get_current_nd_value                   ,0xffaae300) //122
 NHSTUB(kbd_p1_f                               ,0xff826cf4) //  1
 NHSTUB(kbd_p1_f_cont                          ,0xff826d00) //109
 NHSTUB(kbd_p2_f                               ,0xff8270d8) //  1

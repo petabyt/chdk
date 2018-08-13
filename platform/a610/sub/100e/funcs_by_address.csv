@@ -414,6 +414,7 @@
 0xffce0b54,ExpCtrlTool.GetShiftLimit_FW
 0xffce2e54,task_ExpDrv
 0xffce2e54,task_ExpDrvTask
+0xffce4494,get_current_exp
 0xffce4900,ExpDrvTool.ChgSpeed_FW
 0xffcebb48,task_EFChargeT
 0xffcebe00,IsStrobeChargeCompleted

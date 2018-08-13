@@ -438,6 +438,7 @@
 0xff07bb04,SetCzDebugFocusMode_FW
 0xff07bb04,SetCzDebugSubjectDistance_FW
 0xff07bb18,CzDebugPrintToFile_FW
+0xff07c3c0,GetUsableAvRange
 0xff07d4d0,GetCurrentAvValue
 0xff07d4d0,GetCurrentAvValue_FW
 0xff07d4d0,GetIrisAv_FW
@@ -607,6 +608,7 @@
 0xff0c67b0,ExpCtrlTool.SetExpMode_FW
 0xff0cb104,task_ExpDrv
 0xff0cb104,task_ExpDrvTask
+0xff0ccc50,get_current_exp
 0xff0d43d8,task_WBCR2Calc
 0xff0e0850,task_WBLPFace
 0xff0e4ce8,task_OBCtrlTask
@@ -1210,6 +1212,8 @@
 0xff37764c,GetFocusLensHoldVoltage_FW
 0xff378c78,task_MechaShutter
 0xff37970c,task_Nd
+0xff379efc,get_current_nd_value
+0xff379f2c,get_nd_value
 0xff37a154,GetNdMoveTime_FW
 0xff37a214,task_ZoomActuatorSpeedCheck
 0xff37a3b4,task_ZoomEvent

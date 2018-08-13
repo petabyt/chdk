@@ -353,6 +353,9 @@
 0xffc14b70,Fut.Save_FW
 0xffc14a04,Fwrite_Fut
 0xffc14a04,Fwrite_Fut_FW
+0xffc95100,get_current_exp
+0xffddc7c4,get_current_nd_value
+0xffddc7fc,get_nd_value
 0xffc563e0,get_resource_pointer
 0xffc037ac,get_self_task_errno_pointer
 0xffc021c0,get_self_task_id
