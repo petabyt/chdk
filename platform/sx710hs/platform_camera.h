@@ -106,7 +106,7 @@
     #define CAM_RAW_ROWS                        3950
 
     #define CAM_JPEG_WIDTH                      5184
-    #define CAM_JPEG_HEIGHT                     3456
+    #define CAM_JPEG_HEIGHT                     3888
 
     #define CAM_ACTIVE_AREA_X1                  96 // normal level at 120
     #define CAM_ACTIVE_AREA_Y1                  18 // visible pixels start at 17, 18 to keep even, normal level at 22
