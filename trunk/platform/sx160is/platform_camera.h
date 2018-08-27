@@ -70,6 +70,7 @@
                                                             //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE           1   // Binned mode, no valid raw data
 
+    #define CAM_AV_OVERRIDE_IRIS_FIX            1  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION                  1
