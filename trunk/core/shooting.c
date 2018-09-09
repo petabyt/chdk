@@ -799,7 +799,7 @@ void shooting_set_nd_filter_state(short v, short is_now)
             short av;
             get_property_case(PROPCASE_MIN_AV,&av,sizeof(av));
             if(v==1) {
-                av += CAM_ND_SET_AV_VALUE;
+                av += shooting_get_nd_value_ev96();
             }
             set_property_case(PROPCASE_AV, &av, sizeof(av));
 #if defined(PROPCASE_AV2)

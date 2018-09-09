@@ -94,6 +94,8 @@ extern void shooting_set_user_av_by_id_rel(int v);
 extern short shooting_get_real_aperture();
 extern short shooting_get_av96_override_value();
 extern void shooting_set_nd_filter_state(short v, short is_now);
+extern short shooting_get_nd_value_ev96(void);
+extern short shooting_get_nd_current_ev96(void);
 
 /******************************************************************/
 

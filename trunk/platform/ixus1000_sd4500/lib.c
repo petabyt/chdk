@@ -85,3 +85,14 @@ void JogDial_CW(void){
 void JogDial_CCW(void){
  _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialLeft  old 875
 }
+
+// temporary dummy functions because camera is defined as ND but probably doesn't have one
+short _get_nd_value(void)
+{
+    return 0;
+}
+short _get_current_nd_value(void)
+{
+    return 0;
+}
+

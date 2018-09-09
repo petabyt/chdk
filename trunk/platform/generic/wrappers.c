@@ -329,6 +329,24 @@ void PutInNdFilter()                { _PutInNdFilter(); }
 void PutOutNdFilter()               { _PutOutNdFilter(); }
 #endif
 
+short shooting_get_nd_value_ev96(void)
+{
+#if CAM_HAS_ND_FILTER
+    return _get_nd_value();
+#else
+    return 0;
+#endif
+}
+
+short shooting_get_nd_current_ev96(void)
+{
+#if CAM_HAS_ND_FILTER
+    return _get_current_nd_value();
+#else
+    return 0;
+#endif
+}
+
 long GetCurrentAvValue()            { return _GetCurrentAvValue(); }
 long IsStrobeChargeCompleted()      { return _IsStrobeChargeCompleted(); }
 void SetCurrentCaptureModeType()    { _SetCurrentCaptureModeType(); }
@@ -338,9 +356,7 @@ void SetCurrentCaptureModeType()    { _SetCurrentCaptureModeType(); }
 // Function exists on a few later cameras without iris, behavior unknown.
 // Appears to be the full range, including smaller (higher F/ number) than available in Canon UI.
 // Note Min = smallest physical aperture = largest Av96 value
-extern short _GetUsableMinAv(void);
 short GetUsableMinAv(void) { return _GetUsableMinAv(); }
-extern short _GetUsableMaxAv(void);
 short GetUsableMaxAv(void) { return _GetUsableMaxAv(); }
 #endif
 

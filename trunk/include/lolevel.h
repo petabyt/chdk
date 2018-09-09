@@ -25,8 +25,12 @@ extern int _MoveIrisWithAv(short*);
 #endif
 extern void _PutInNdFilter();
 extern void _PutOutNdFilter();
+extern short _get_nd_value(void);
+extern short _get_current_nd_value(void);
 extern volatile long focus_busy;
 extern long _GetCurrentAvValue();
+extern short _GetUsableMinAv(void);
+extern short _GetUsableMaxAv(void);
 extern long _GetCurrentTargetDistance();
 extern long _GetPropertyCase(long opt_id, void *buf, long bufsize);
 extern long _SetPropertyCase(long opt_id, void *buf, long bufsize);
