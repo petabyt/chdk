@@ -748,6 +748,21 @@ static int luaCB_get_max_av96( lua_State* L )
   return 1;
 }
 
+// get the exposure value of the ND filter, or 0 if not present
+static int luaCB_get_nd_value_ev96( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_nd_value_ev96() );
+  return 1;
+}
+
+// get the current ND value: 0 if out or not present, or nd_value if in
+static int luaCB_get_nd_current_ev96( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_nd_current_ev96() );
+  return 1;
+}
+
+
 static int luaCB_get_user_tv_id( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_user_tv_id() );
@@ -2726,6 +2741,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_parameter_data)
     FUNC(get_min_av96)
     FUNC(get_max_av96)
+    FUNC(get_nd_value_ev96)
+    FUNC(get_nd_current_ev96)
 
     FUNC(set_av96_direct)
     FUNC(set_av96)
