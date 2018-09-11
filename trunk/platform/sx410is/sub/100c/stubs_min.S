@@ -31,6 +31,8 @@ DEF(video_compression_rate, 0x75FC) // @FF9AA7A8 blackhole
 DEF(video_target_framesize, 0xCD84+0x2C) // found in sub_FFAFF18 blackhole
 DEF(video_target_framesize2, 0xCD84+0x28) // approx. 2*video_target_framesize (for intraframes?), found in sub_FFAFF18 blackhole
 
+DEF(av_override_semaphore         ,0x0000cf30) // MoveIrisWithAv
+
 // the original some_flag_for_af_scan should not be used, as the fw's MakeAFScan function is not called
 .globl some_flag_for_af_scan
 some_flag_for_af_scan: .long 0
