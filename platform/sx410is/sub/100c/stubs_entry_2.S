@@ -21,6 +21,7 @@ NHSTUB(SetZoomActuatorSpeedPercent,         NULLSUB)
 NHSTUB(init_focus_eventflag,                0xFFBAAC74) //blackhole
 NHSTUB(init_nd_eventflag,                   0xFFAC8214) //blackhole
 NHSTUB(init_nd_semaphore,                   0xFFB042F0) //blackhole
+NHSTUB(CreateBinarySemaphoreStrictly,0xff8266a4) // for av_override_semaphore
 
 DEF(task_LiveImageTask, 0xFF915268)
 
