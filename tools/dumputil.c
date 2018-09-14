@@ -84,7 +84,8 @@ int load_dump(const char *dumpname,const char *base, dump_t *dump)
         && dump->base != 0xFF810000 
         && dump->base != 0xFF000000 
         && dump->base != 0xF8000000
-        && dump->base != 0xFC000000) {
+        && dump->base != 0xFC000000
+        && dump->base != 0xE0000000) {
 		fprintf(stderr,"error base '%s' %x\n",base,dump->base);
 		return 0;
 	}
