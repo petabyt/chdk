@@ -77,37 +77,45 @@ require'hookutil'
 require'rawoplib'
 props=require'propcase'
 
-ndtest_version="1.2"
+ndtest_version="1.3"
 
 -- utility functions
 function printf(...)
 	print(string.format(...))
 end
 
--- return av formatted as a decimal number, with optional format string
--- default format "%d.%02d"
-function fmt_av(av96,fmt)
-	if not fmt then
-		fmt="%d.%02d"
+-- return av formatted as a decimal number, optionally specifying number of decimal places, default 2
+function fmt_av(av96,dp)
+	if not dp then
+		dp=2
+	elseif dp > 3 then
+		dp=3
 	end
 	local av1k=av96_to_aperture(av96)
-	if not fmt:find('%.%%') then
-		return fmt:format(av1k/1000)
+	if dp==0 then
+		return tostring(av1k/1000)
 	end
-	return fmt:format(av1k/1000,(av1k%1000))
+	return string.format('%d.%0'..dp..'d', av1k/1000,(av1k%1000)/(10^(3-dp)))
 end
 
--- return tv formatted as a decimal number, with optional format string
--- default format "%d.%04d"
+-- return tv formatted as a decimal number, optionally specifying number of decimal places, default 4
 function fmt_tv(tv96,fmt)
 	if not fmt then
 		fmt="%d.%04d"
 	end
-	local tvus=tv96_to_usec(tv96)
 	if not fmt:find('%.%%') then
 		return fmt:format(tvus/1000000)
 	end
-	return fmt:format(tvus/1000000,(tvus%1000000))
+	if not dp then
+		dp=4
+	elseif dp > 6 then
+		dp=6
+	end
+	local tvus=tv96_to_usec(tv96)
+	if dp==0 then
+		return tostring(tvus/1000000)
+	end
+	return string.format('%d.%0'..dp..'d',tvus/1000000,(tvus%1000000)/(10^(6-dp)))
 end
 
 function frac_to_pct(v,scale)
