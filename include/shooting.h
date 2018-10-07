@@ -177,7 +177,7 @@ extern int EngDrvRead(int gpio_reg);
 
 extern void PutInNdFilter();
 extern void PutOutNdFilter();
-extern long GetCurrentAvValue();
+extern long shooting_get_current_av96();
 extern long IsStrobeChargeCompleted();
 extern void SetCurrentCaptureModeType();
 

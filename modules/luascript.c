@@ -748,6 +748,23 @@ static int luaCB_get_max_av96( lua_State* L )
   return 1;
 }
 
+// get current av96 value - actual current value, not from half press propcase
+static int luaCB_get_current_av96( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_current_av96() );
+  return 1;
+}
+
+// get current tv96 value - actual current value, not from half press propcase
+// disabled for now because of crash issues on old cams
+/*
+static int luaCB_get_current_tv96( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_current_tv96() );
+  return 1;
+}
+*/
+
 // get the exposure value of the ND filter, or 0 if not present
 static int luaCB_get_nd_value_ev96( lua_State* L )
 {
@@ -2743,6 +2760,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_max_av96)
     FUNC(get_nd_value_ev96)
     FUNC(get_nd_current_ev96)
+    FUNC(get_current_av96)
+//    FUNC(get_current_tv96)
 
     FUNC(set_av96_direct)
     FUNC(set_av96)
