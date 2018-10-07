@@ -649,7 +649,7 @@ short shooting_get_av96_override_value()
 
 short shooting_get_real_aperture()
 {
-    return shooting_get_aperture_from_av96(GetCurrentAvValue());
+    return shooting_get_aperture_from_av96(shooting_get_current_av96());
 }
 
 static short shooting_get_min_real_aperture()
@@ -1035,7 +1035,7 @@ void shooting_update_dof_values()
   short f_hyp_calc = 0, f_dist_calc = 0;
   short min_av96_zoom_point = min_av96_zoom_point_tbl[zoom_point];
   short av96 = shooting_get_user_av96();
-  short curr_av96 = GetCurrentAvValue();
+  short curr_av96 = shooting_get_current_av96();
   short prop_av96 = shooting_get_av96();
   short min_av96;
 

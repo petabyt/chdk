@@ -347,7 +347,9 @@ short shooting_get_nd_current_ev96(void)
 #endif
 }
 
-long GetCurrentAvValue()            { return _GetCurrentAvValue(); }
+//long shooting_get_current_tv96()    { return _GetCurrentShutterSpeed(); }
+long shooting_get_current_av96()    { return _GetCurrentAvValue(); }
+
 long IsStrobeChargeCompleted()      { return _IsStrobeChargeCompleted(); }
 void SetCurrentCaptureModeType()    { _SetCurrentCaptureModeType(); }
 
