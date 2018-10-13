@@ -339,6 +339,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
     { "get_current_nd_value", OPTIONAL },
     { "GetUsableAvRange", OPTIONAL|UNUSED },
+    { "GetBaseSv", OPTIONAL|UNUSED },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -1715,6 +1716,77 @@ int find_sethptimeraftertimeout(firmware *fw)
     return 0;
 }
 
+int find_GetBaseSv(firmware *fw)
+{
+    int j = get_saved_sig(fw,"SetPropertyCase");
+    if (j < 0)
+        return 0;
+    j = adr2idx(fw, func_names[j].val);
+    
+    int sadr = find_str(fw, "Sensitive.c");
+    if (sadr < fw->lowest_idx)
+        return 0;
+    int s1 = find_nxt_str_ref(fw, sadr, -1/*fw->lowest_idx*/);
+    int hist[3] = {0, 0, 0};
+    while (s1 >= 0)
+    {
+        hist[2] = hist[1];
+        hist[1] = hist[0];
+        hist[0] = s1;
+        if (hist[0] && hist[1] && hist[2])
+        {
+            if ((hist[0]-hist[1]<6) && (hist[1]-hist[2]<7))
+            {
+                int n;
+                for (n=s1+1; n<s1+26; n++)
+                {
+                    if ( isBL(fw, n) )
+                    {
+                        int k;
+                        k = idxFollowBranch(fw,n,0x01000001);
+                        if ( idx2adr(fw, k) == idx2adr(fw, j) )
+                        {
+                            // SetPropertyCase call found
+                            k = find_inst(fw, isBL, s1+2, 6);
+                            if (k != -1)
+                            {
+                                // first BL following BLEQ DebugAssert
+                                int l = idxFollowBranch(fw,k,0x01000001);
+                                if ( isB(fw, l) )
+                                {
+                                    // in most cases there's a veneer (exception: sx1)
+                                    void add_func_name(char*, uint32_t, char*);
+                                    k = idxFollowBranch(fw,l,0x01000001);
+                                    if ( isB(fw, k) )
+                                    {
+                                        int m = idxFollowBranch(fw,k,0x01000001);
+                                        add_func_name("j_j_GetBaseSv", idx2adr(fw,l), "");
+                                        add_func_name("j_GetBaseSv", idx2adr(fw,k), "");
+                                        fwAddMatch(fw,idx2adr(fw,m),32,0,122);
+                                    }
+                                    else
+                                    {
+                                        add_func_name("j_GetBaseSv", idx2adr(fw,l), "");
+                                        fwAddMatch(fw,idx2adr(fw,k),32,0,122);
+                                    }
+                                }
+                                else
+                                {
+                                    fwAddMatch(fw,idx2adr(fw,l),32,0,122);
+                                }
+                                return 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        s1 = find_nxt_str_ref(fw, sadr, s1+1);
+    }
+
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -2217,6 +2289,7 @@ string_sig string_sigs[] =
     { 22, "get_self_task_errno_pointer", (char*)find_get_self_task_errno_pointer, 0},
     { 22, "get_nd_value", (char*)find_get_nd_value, 0},
     { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
+    { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },

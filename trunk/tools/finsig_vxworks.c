@@ -341,6 +341,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED|OPTIONAL },
     { "get_current_nd_value", OPTIONAL },
+    { "GetBaseSv", OPTIONAL|UNUSED },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -1091,6 +1092,75 @@ int find_get_current_nd_value(firmware *fw)
     return 1;
 }
 
+int find_GetBaseSv(firmware *fw)
+{
+    int j = get_saved_sig(fw,"SetPropertyCase");
+    if (j < 0)
+        return 0;
+    j = adr2idx(fw, func_names[j].val);
+    int j2 = get_saved_sig(fw,"DebugAssert");
+    if (j2 < 0)
+        return 0;
+    j2 = adr2idx(fw, func_names[j2].val);
+    
+    int sadr = find_str(fw, "Sensitive.c");
+    if (sadr < fw->lowest_idx)
+        return 0;
+    int s1 = find_nxt_str_ref(fw, sadr, -1/*fw->lowest_idx*/);
+    int hist[3] = {0, 0, 0};
+    while (s1 >= 0)
+    {
+        hist[2] = hist[1];
+        hist[1] = hist[0];
+        hist[0] = s1;
+        if (hist[0] && hist[1] && hist[2])
+        {
+            if ((hist[0]-hist[1]<7) && (hist[1]-hist[2]<9))
+            {
+                int n;
+                for (n=s1+1; n<s1+26; n++)
+                {
+                    if ( isBL(fw, n) )
+                    {
+                        int k;
+                        k = idxFollowBranch(fw,n,0x01000001);
+                        if ( idx2adr(fw, k) == idx2adr(fw, j) )
+                        {
+                            // SetPropertyCase call found
+                            k = find_inst(fw, isBL, s1+2, 6);
+                            if (k != -1)
+                            {
+                                int l = idxFollowBranch(fw,k,0x01000001);
+                                if (idx2adr(fw,l) == idx2adr(fw,j2)) // DebugAssert?
+                                {
+                                    k = find_inst(fw, isBL, k+1, 6);
+                                    if (k == -1)
+                                        break;
+                                    l = idxFollowBranch(fw,k,0x01000001);
+                                }
+                                if ( (fwval(fw,l)==0xe52de004) &&
+                                     (fwval(fw,l+4)==0xe49df004) &&
+                                     isBL(fw,l+1) )
+                                {
+                                    void add_func_name(char*, uint32_t, char*);
+                                    add_func_name("j_GetBaseSv", idx2adr(fw,l), "");
+                                    k = idxFollowBranch(fw,l+1,0x01000001);
+                                    fwAddMatch(fw,idx2adr(fw,k),32,0,122);
+                                    return 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        s1 = find_nxt_str_ref(fw, sadr, s1+1);
+    }
+
+    return 0;
+}
+
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -1525,6 +1595,7 @@ string_sig string_sigs[] =
     { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
     { 22, "get_nd_value", (char*)find_get_nd_value, 0},
     { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
+    { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
