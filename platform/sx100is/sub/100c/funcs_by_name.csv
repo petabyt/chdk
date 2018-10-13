@@ -368,6 +368,7 @@
 0xffdbde6c,GetAEIntegralValueWithFix_FW
 0xffdbdd78,GetAEIntegWinData_FW
 0xffdbe020,GetAllAEIntegralAllValueWithFix_FW
+0xffd9c9f4,GetBaseSv
 0xffc3a350,GetBatteryTemperature
 0xffc3a350,GetBatteryTemperature_FW
 0xffc5abac,GetBuildDate_FW
@@ -591,6 +592,7 @@
 0xffd9bf9c,j_EF.IsChargeFull_FW
 0xffc9584c,j_ExpCtrlTool.IsEnableBoostUpAE_FW
 0xffdbde10,j_GetAEIntegWinData_FW
+0xffca0a00,j_GetBaseSv
 0xffc3a478,j_GetBatteryTemperature_FW
 0xffc3a474,j_GetCCDTemperature_FW
 0xffd10c7c,j_GetCheckSum_FW

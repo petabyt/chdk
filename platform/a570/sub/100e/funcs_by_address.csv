@@ -416,6 +416,8 @@
 0xffd5dfc0,task_EFChargeT
 0xffd5e208,IsStrobeChargeCompleted
 0xffd5ec80,task_CntFlashTask
+0xffd60ba8,j_GetBaseSv
+0xffd62230,GetBaseSv
 0xffd633ac,ActivateImager_FW
 0xffd6345c,QuietImager_FW
 0xffd636cc,CancelImager_FW

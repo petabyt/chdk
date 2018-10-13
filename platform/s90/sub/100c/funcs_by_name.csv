@@ -362,6 +362,7 @@
 0xff933fc4,GetAllAEIntegralAllValueWithFix_FW
 0xff95cd10,GetAutoPopupStrobeCurrentStatus_FW
 0xff95d1c8,GetAutoPopupStrobePiSectionTime_FW
+0xffa3908c,GetBaseSv
 0xff8335ac,GetBatteryCoverClose_FW
 0xff8615f0,GetBatteryTemperature
 0xff8615f0,GetBatteryTemperature_FW
@@ -642,6 +643,7 @@
 0xff933cb8,j_GetAEIntegWinData_FW
 0xffafe080,j_GetAutoPopupStrobeCurrentStatus_FW
 0xffafe07c,j_GetAutoPopupStrobePiSectionTime_FW
+0xff8ef9c4,j_GetBaseSv
 0xff962130,j_GetBatteryCoverClose_FW
 0xff8617c4,j_GetBatteryTemperature_FW
 0xff8617c0,j_GetCCDTemperature_FW

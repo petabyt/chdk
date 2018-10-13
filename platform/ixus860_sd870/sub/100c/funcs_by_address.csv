@@ -623,6 +623,7 @@
 0xff8b49f0,task_EFChargeT
 0xff8b4cbc,EF.IsChargeFull_FW
 0xff8b4cbc,IsStrobeChargeCompleted
+0xff8b65b0,j_GetBaseSv
 0xff8b684c,ReloadCdsAdjustment_FW
 0xff8b8c84,task_SsgMainTask
 0xff8b8eac,task_SsgPeriodTask
@@ -1045,6 +1046,7 @@
 0xff9bfca8,j_EF.IsChargeFull_FW
 0xff9bfcac,EF.AdjPreFlash_FW
 0xff9bfcf0,EF.SetChargeMode_FW
+0xff9c0700,GetBaseSv
 0xff9c0778,ActivateImager_FW
 0xff9c0804,ActivateImagerXOne_FW
 0xff9c08dc,QuietImager_FW

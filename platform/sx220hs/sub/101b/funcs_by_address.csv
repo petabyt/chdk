@@ -600,6 +600,7 @@
 0xff0e2dec,MovieAF.Suspend_FW
 0xff0e2e00,MovieAF.Resume_FW
 0xff0e454c,task_AfIntSrvTask
+0xff0fe0bc,j_GetBaseSv
 0xff0fe380,ReloadCdsAdjustment_FW
 0xff0fe988,E2LatOn_FW
 0xff0fec88,ActivateImager_FW
@@ -963,6 +964,7 @@
 0xff27358c,EF.SetChargeMode_FW
 0xff2735a0,EF.SetFlashTime_FW
 0xff279618,AFTool.GetEVal_FW
+0xff27bde0,GetBaseSv
 0xff27ec7c,LiveImageTool.StartEVF_FW
 0xff27ec88,LiveImageTool.StartEVFFocusJet_FW
 0xff27ec94,LiveImageTool.StartEVFMF_FW

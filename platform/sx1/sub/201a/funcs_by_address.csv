@@ -556,6 +556,7 @@
 0xff8d9164,E2LatOn_FW
 0xff8da390,task_SsgMainTask
 0xff8da570,task_SsgPeriodTask
+0xff8de0f0,GetBaseSv
 0xff8de138,ReloadGainAdjustment_FW
 0xff8de300,task_TgTask
 0xff8e4a08,ReloadColorAdjustment_FW

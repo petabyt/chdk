@@ -568,6 +568,7 @@
 0xff90daa0,SetLockPosNonCorrectFlag_FW
 0xff90dac0,GetDarkFixedFocusPosition_FW
 0xff90f0b4,task_GapSnd
+0xff910954,j_GetBaseSv
 0xff910e00,E2LatOn_FW
 0xff910f0c,ActivateImager_FW
 0xff910fa4,ActivateImagerXOne_FW
@@ -608,6 +609,7 @@
 0xff911290,ChangeImagerToRoadKingNepal_FW
 0xff911298,ChangeImagerToSuperWideNepal_FW
 0xff9112c4,j_E2LatOn_FW
+0xff912660,j_j_GetBaseSv
 0xff913048,task_SsgMainTask
 0xff91320c,task_SsgPeriodTask
 0xff9185b4,task__tgTask
@@ -984,6 +986,7 @@
 0xffa42a8c,j_EF.IsChargeFull_FW
 0xffa42a90,EF.AdjPreFlash_FW
 0xffa42acc,EF.SetChargeMode_FW
+0xffa55508,GetBaseSv
 0xffa57f54,SetPTGDefaultData_FW
 0xffa57f68,SetTassenAdjSGMode_FW
 0xffa58504,LiveImageTool.StartEVF_FW

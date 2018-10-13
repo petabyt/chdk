@@ -329,6 +329,7 @@
 0xffa597fc,GetAEIntegralValueWithFix_FW
 0xffa5996c,GetAllAEIntegralAllValueWithFix_FW
 0xff90ca48,GetAttributeFromDialogItem_FW
+0xff9b2ce8,GetBaseSv
 0xffa3fcbc,GetBatteryTemperature
 0xffa3fcbc,GetBatteryTemperature_FW
 0xff817f3c,GetBuildDate_FW
@@ -498,6 +499,7 @@
 0xff91ebfc,isupper
 0xff91ec14,isxdigit
 0xffaee98c,IsZoomActuatorResetSensorPlusSide_FW
+0xff9b1660,j_GetBaseSv
 0xffa3964c,kbd_p1_f
 0xffa39658,kbd_p1_f_cont
 0xffa3b230,kbd_pwr_off,(stubs_entry_2.s)

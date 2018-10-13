@@ -658,6 +658,7 @@
 0xff122974,AFTool.SetAFLogType_FW
 0xff12297c,AFTool.SetDebugAFSequence_FW
 0xff128260,task_GapSnd
+0xff129abc,j_GetBaseSv
 0xff12a444,E2LatOn_FW
 0xff12a550,ActivateImager_FW
 0xff12a5e8,ActivateImagerXOne_FW
@@ -704,6 +705,7 @@
 0xff12a908,ChangeImagerToHarleySunshineNepal_FW
 0xff12a934,j_E2LatOn_FW
 0xff12a938,ChangeAutoSlowShutterEnable_FW
+0xff12bd7c,j_j_GetBaseSv
 0xff12cac4,task_SsgMainTask
 0xff12cc90,task_SsgPeriodTask
 0xff131b0c,task__tgTask
@@ -1184,6 +1186,7 @@
 0xff31fe6c,j_EF.IsChargeFull_FW
 0xff31fe70,EF.AdjPreFlash_FW
 0xff31feac,EF.SetChargeMode_FW
+0xff333c90,GetBaseSv
 0xff3378b8,LiveImageTool.StartEVF_FW
 0xff3378c4,LiveImageTool.StartEVFFocusJet_FW
 0xff3378d0,LiveImageTool.StartEVFMF_FW

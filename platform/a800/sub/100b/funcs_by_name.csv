@@ -350,6 +350,7 @@
 0xffcf293c,GetAEIntegWinData_FW
 0xffcf2950,GetAEIntegWinDataWithMode_FW
 0xffcf2b60,GetAllAEIntegralAllValueWithFix_FW
+0xffdc85dc,GetBaseSv
 0xffc23c2c,GetBatteryCoverClose_FW
 0xffc45dec,GetBatteryTemperature_FW
 0xffc48ddc,GetBpDBAdjustmentOffset_FW
@@ -564,6 +565,7 @@
 0xffd18cd8,j_GetAdChValue_FW
 0xffd18cd4,j_GetAdVBattBottom_FW
 0xffcf294c,j_GetAEIntegWinData_FW
+0xffcb6a60,j_GetBaseSv
 0xffd18d60,j_GetBatteryCoverClose_FW
 0xffc45fd8,j_GetBatteryTemperature_FW
 0xffdebe8c,j_GetCameraInformationData_FW

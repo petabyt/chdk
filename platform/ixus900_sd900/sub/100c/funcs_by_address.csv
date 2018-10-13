@@ -326,6 +326,8 @@
 0xff8d9a98,task_DevelopModule
 0xff8e41a8,DevelopTool.DevelopTest_FW
 0xff8e4378,DevelopTool.DevelopTestNR_FW
+0xff8e5254,j_GetBaseSv
+0xff8e6be8,GetBaseSv
 0xff8e93a0,ActivateImager_FW
 0xff8e9450,QuietImager_FW
 0xff8e96c0,CancelImager_FW

@@ -579,6 +579,7 @@
 0xff138504,MovieAF.Resume_FW
 0xff139d48,task_AfIntSrvTask
 0xff152338,task_PrcssFil
+0xff153a9c,j_GetBaseSv
 0xff153f4c,E2LatOn_FW
 0xff15409c,ActivateImager_FW
 0xff154134,ActivateImagerXOne_FW
@@ -611,6 +612,7 @@
 0xff1543ec,ChangeImagerToHealthyVegetable_FW
 0xff1543f4,ChangeImagerToElectraGlide_FW
 0xff154420,j_E2LatOn_FW
+0xff155624,j_j_GetBaseSv
 0xff155ff8,task_SsgMainTask
 0xff1561b8,task_SsgPeriodTask
 0xff15b3ec,task__tgTask
@@ -1018,6 +1020,7 @@
 0xff2cbc24,EF.SetFlashTime_FW
 0xff2d30c0,AFTool.GetEVal_FW
 0xff2d32d0,j_GetMacroSupportZoomPoint_FW
+0xff2da800,GetBaseSv
 0xff2daf88,SetPTGDefaultData_FW
 0xff2daf9c,SetTassenAdjSGMode_FW
 0xff2dd8f8,LiveImageTool.StartEVF_FW

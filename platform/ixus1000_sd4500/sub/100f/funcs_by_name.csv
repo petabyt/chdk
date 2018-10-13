@@ -383,6 +383,7 @@
 0xff978940,GetBarrelEncoderCurrentPosition_FW
 0xff9788fc,GetBarrelEncoderTargetPosition_FW
 0xff978ad4,GetBarrelEncoderValue_FW
+0xffa672d8,GetBaseSv
 0xff834b7c,GetBatteryCoverClose_FW
 0xff868370,GetBatteryTemperature
 0xff868370,GetBatteryTemperature_FW
@@ -702,6 +703,7 @@
 0xff94ac78,j_GetAEIntegWinData_FW
 0xff978aa4,j_GetBarrelEncoderCurrentPosition_FW
 0xff978abc,j_GetBarrelEncoderTargetPosition_FW
+0xff8fff44,j_GetBaseSv
 0xff987400,j_GetBatteryCoverClose_FW
 0xff868550,j_GetBatteryTemperature_FW
 0xffa97378,j_GetCameraInformationData_FW
