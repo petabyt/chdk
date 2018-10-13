@@ -553,6 +553,7 @@
 0xffcadfb4,task_AFTask
 0xffcae92c,GetMacroSupportZoomPoint_FW
 0xffcaf4d0,ReloadAFAdjustment_FW
+0xffcb19b8,j_GetBaseSv
 0xffcb1bb4,ReloadCdsAdjustment_FW
 0xffcb20d8,E2LatOn_FW
 0xffcb23c8,ActivateImager_FW
@@ -894,6 +895,7 @@
 0xffdac2f4,EF.SetChargeMode_FW
 0xffdac308,EF.SetFlashTime_FW
 0xffdba75c,AFTool.GetEVal_FW
+0xffdbc80c,GetBaseSv
 0xffdc12f8,LiveImageTool.StartEVF_FW
 0xffdc1374,LiveImageTool.StartEVFFocusJet_FW
 0xffdc13f0,LiveImageTool.StartEVFMF_FW

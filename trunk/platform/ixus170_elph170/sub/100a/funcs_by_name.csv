@@ -432,6 +432,7 @@
 0xff96966c,GetAEIntegWinData_FW
 0xff969680,GetAEIntegWinDataWithMode_FW
 0xff969890,GetAllAEIntegralAllValueWithFix_FW
+0xffa5fe78,GetBaseSv
 0xff82dc88,GetBatteryCoverClose_FW
 0xff86ef40,GetBatteryTemperature
 0xff86ef40,GetBatteryTemperature_FW
@@ -817,6 +818,7 @@
 0xff874dc4,j_GetAdjTableVersion_FW
 0xff99a9e8,j_GetAdVBattBottom_FW
 0xff96967c,j_GetAEIntegWinData_FW
+0xff9047cc,j_GetBaseSv
 0xff99aad0,j_GetBatteryCoverClose_FW
 0xff86f19c,j_GetBatteryTemperature_FW
 0xffaa02b4,j_GetBatteryVoltage_FW
@@ -926,6 +928,7 @@
 0xff99a730,j_IsUnitFirmMode_FW
 0xffac3690,j_IsZoomActuatorResetSensorPlusSide_FW
 0xffaa0ca0,j_IsZoomLensOutSidePosition_FW
+0xff906580,j_j_GetBaseSv
 0xffa62dcc,j_LiveImageTool.GetDzoomPosition_FW
 0xff96ae88,j_LoadDUIDCheckSum_FW
 0xffb6b160,j_LoadFactoryNumber_FW

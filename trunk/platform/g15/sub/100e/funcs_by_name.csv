@@ -431,6 +431,7 @@
 0xff1a70d0,GetAllAEIntegralAllValueWithFix_FW
 0xff05a6b8,GetAoriAccelerationData_FW
 0xff168900,GetAoriAngle_FW
+0xff2ef2b4,GetBaseSv
 0xff01a39c,GetBatteryCoverClose_FW
 0xff0622e8,GetBatteryTemperature
 0xff0622e8,GetBatteryTemperature_FW
@@ -792,6 +793,7 @@
 0xff1a6ebc,j_GetAEIntegWinData_FW
 0xff345f60,j_GetAoriAccelerationData_FW
 0xff05a9e0,j_GetAoriAngle_FW
+0xff12dbb4,j_GetBaseSv
 0xff1e0d18,j_GetBatteryCoverClose_FW
 0xff0624cc,j_GetBatteryTemperature_FW
 0xff346130,j_GetCameraInformationData_FW
@@ -904,6 +906,7 @@
 0xff0624d0,j_IsOpticalTemperature_FW
 0xff37b594,j_IsZoomActuatorResetSensorPlusSide_FW
 0xff346a1c,j_IsZoomLensOutSidePosition_FW
+0xff12f748,j_j_GetBaseSv
 0xff2f3194,j_LiveImageTool.GetDzoomPosition_FW
 0xff432248,j_LoadFactoryNumber_FW
 0xff432330,j_LoadSerialNumber_FW

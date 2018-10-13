@@ -312,6 +312,8 @@
 0xffcb11b8,WBInteg.DisableUsageCheckSS_FW
 0xffcb7da4,task_DevelopModule
 0xffcbfc10,DevelopTool.DevelopTest_FW
+0xffcc0a64,j_GetBaseSv
+0xffcc212c,GetBaseSv
 0xffcc4908,ActivateImager_FW
 0xffcc49b8,QuietImager_FW
 0xffcc4c28,CancelImager_FW

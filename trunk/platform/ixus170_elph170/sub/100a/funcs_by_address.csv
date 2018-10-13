@@ -599,6 +599,7 @@
 0xff901924,AFTool.StoreAFixPosition_FW
 0xff90194c,AFTool.SetAFLogType_FW
 0xff902f30,task_GapSnd
+0xff9047cc,j_GetBaseSv
 0xff904c78,E2LatOn_FW
 0xff904d84,ActivateImager_FW
 0xff904e1c,ActivateImagerXOne_FW
@@ -643,6 +644,7 @@
 0xff905128,ChangeImagerToEsperRocketH_FW
 0xff905154,j_E2LatOn_FW
 0xff905158,ChangeAutoSlowShutterEnable_FW
+0xff906580,j_j_GetBaseSv
 0xff906fcc,task_SsgMainTask
 0xff907198,task_SsgPeriodTask
 0xff90c4c4,task__tgTask
@@ -1081,6 +1083,7 @@
 0xffa4d334,j_EF.IsChargeFull_FW
 0xffa4d338,EF.AdjPreFlash_FW
 0xffa4d374,EF.SetChargeMode_FW
+0xffa5fe78,GetBaseSv
 0xffa62638,SetPTGDefaultData_FW
 0xffa6264c,SetTassenAdjSGMode_FW
 0xffa62c3c,LiveImageTool.StartEVF_FW

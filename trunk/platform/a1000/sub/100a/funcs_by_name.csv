@@ -333,6 +333,7 @@
 0xffe3cb98,GetAEIntegWinData_FW
 0xffe3cce0,GetAEIntegWinDataWithMode_FW
 0xffe3cf74,GetAllAEIntegralAllValueWithFix_FW
+0xffd9f680,GetBaseSv
 0xffc113e4,GetBatteryCoverClose_FW
 0xffc33738,GetBatteryTemperature
 0xffc33738,GetBatteryTemperature_FW
@@ -570,6 +571,7 @@
 0xffd08810,j_GetAdChValue_FW
 0xffd0880c,j_GetAdVBattBottom_FW
 0xffe3ccdc,j_GetAEIntegWinData_FW
+0xffc99978,j_GetBaseSv
 0xffd08890,j_GetBatteryCoverClose_FW
 0xffc33860,j_GetBatteryTemperature_FW
 0xffc3385c,j_GetCCDTemperature_FW

@@ -385,6 +385,7 @@
 0xffa0ab34,GetAEIntegralValueWithFix_FW
 0xffa0ac58,GetAllAEIntegralAllValueWithFix_FW
 0xff9c5a48,GetAttributeFromDialogItem_FW
+0xff9ee614,GetBaseSv
 0xff850564,GetBatteryTemperature
 0xff850564,GetBatteryTemperature_FW
 0xff873688,GetBuildDate_FW
@@ -613,6 +614,7 @@
 0xffa0efd8,j_CancelBPFForBestPintCorrect_FW
 0xff9ecf80,j_EF.IsChargeFull_FW
 0xff8d0120,j_ExpCtrlTool.IsEnableBoostUpAE_FW
+0xff8dcd90,j_GetBaseSv
 0xff85068c,j_GetBatteryTemperature_FW
 0xff850688,j_GetCCDTemperature_FW
 0xff860184,j_GetCheckSum_FW

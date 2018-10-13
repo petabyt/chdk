@@ -397,6 +397,7 @@
 0xffaf53e8,GetAEIntegWinDataWithMode_FW
 0xffaf5680,GetAllAEIntegralAllValueWithFix_FW
 0xffaff5f4,GetApexAdjGain_FW
+0xff8de0f0,GetBaseSv
 0xff821aec,GetBatteryCoverClose_FW
 0xff850b00,GetBatteryTemperature
 0xff850b00,GetBatteryTemperature_FW

@@ -577,6 +577,7 @@
 0xff8d878c,EF.IsChargeFull_FW
 0xff8d878c,IsStrobeChargeCompleted
 0xff8da228,task_AfIntSrvTask
+0xff8efa40,j_GetBaseSv
 0xff8efc88,ReloadCdsAdjustment_FW
 0xff8f01c4,E2LatOn_FW
 0xff8f10c4,task_SsgMainTask
@@ -913,6 +914,7 @@
 0xffa349d0,EF.SetChargeMode_FW
 0xffa349e4,EF.SetFlashTime_FW
 0xffa36c1c,AFTool.GetEVal_FW
+0xffa3929c,GetBaseSv
 0xffa39a0c,ActivateImager_FW
 0xffa39a98,ActivateImagerXOne_FW
 0xffa39b68,QuietImager_FW

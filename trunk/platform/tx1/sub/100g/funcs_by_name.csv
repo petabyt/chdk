@@ -345,6 +345,7 @@
 0xffa612fc,GetAllAEIntegralAllValueWithFix_FW
 0xff90b2c0,GetAttributeFromDialogItem_FW
 0xffa65b20,GetBarrierPRSensorADLevel_FW
+0xff9bd690,GetBaseSv
 0xffa48d00,GetBatteryTemperature
 0xffa48d00,GetBatteryTemperature_FW
 0xff817fac,GetBuildDate_FW
@@ -591,6 +592,7 @@
 0xff9b8f54,IsStrobeChargeCompleted
 0xff91fad4,isupper
 0xff91faec,isxdigit
+0xff9bbc7c,j_GetBaseSv
 0xffb066e0,JumpToProgFirst_FW
 0xffa42f28,kbd_p1_f
 0xffa42f34,kbd_p1_f_cont

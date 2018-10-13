@@ -632,6 +632,7 @@
 0xff0d6b50,MovieAF.Resume_FW
 0xff0d844c,task_AfIntSrvTask
 0xff0efd08,task_GapMan
+0xff0f18d8,j_GetBaseSv
 0xff0f1f5c,E2LatOn_FW
 0xff0f2150,ActivateImager_FW
 0xff0f21e8,ActivateImagerXOne_FW
@@ -1020,6 +1021,7 @@
 0xff2733fc,EF.SetFlashTime_FW
 0xff27a0b0,AFTool.GetEVal_FW
 0xff291948,task_GapBS
+0xff292968,GetBaseSv
 0xff295210,LiveImageTool.StartEVF_FW
 0xff29521c,LiveImageTool.StartEVFFocusJet_FW
 0xff295228,LiveImageTool.StartEVFMF_FW

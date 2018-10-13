@@ -637,6 +637,7 @@
 0xff0f3ad4,MovieAF.Resume_FW
 0xff0f53b8,task_AfIntSrvTask
 0xff125ecc,CdsDrv.GetBaseSv_FW
+0xff125ecc,j_GetBaseSv
 0xff1267c0,E2LatOn_FW
 0xff126acc,ActivateImager_FW
 0xff126b58,ActivateImagerXOne_FW
@@ -1117,6 +1118,7 @@
 0xff2c66cc,EF.SetChargeMode_FW
 0xff2c66e0,EF.SetFlashTime_FW
 0xff2ccd7c,AFTool.GetEVal_FW
+0xff2d8bf4,GetBaseSv
 0xff2d8c20,CdsDrv.SetCdsGainForAdjustment_FW
 0xff2d8c28,CdsDrv.GetCdsGainForAdjustment_FW
 0xff2d8c48,CdsDrv.SetCdsGainRegForAdjustment_FW

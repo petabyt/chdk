@@ -560,6 +560,7 @@
 0xff8c9f4c,EF.IsChargeFull_FW
 0xff8c9f4c,IsStrobeChargeCompleted
 0xff8cc1d4,task_AfIntSrvTask
+0xff8e2ebc,j_GetBaseSv
 0xff8e35b0,E2LatOn_FW
 0xff8e37f4,ActivateImager_FW
 0xff8e388c,ActivateImagerXOne_FW
@@ -930,6 +931,7 @@
 0xffa05cd4,EF.SetChargeMode_FW
 0xffa05ce8,EF.SetFlashTime_FW
 0xffa093fc,AFTool.GetEVal_FW
+0xffa0ba60,GetBaseSv
 0xffa0c148,SetPTGDefaultData_FW
 0xffa0e5fc,LiveImageTool.StartEVF_FW
 0xffa0e608,LiveImageTool.StartEVFFocusJet_FW
