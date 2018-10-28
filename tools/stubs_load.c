@@ -308,6 +308,18 @@ void load_platform(stub_values *sv)
                 sv->max_focus_len = (v * 1000) / d;
 			}
 		}
+        s = strstr(line, "CAM_PROPSET");
+        if (s != 0)
+        {
+            char *c = strstr(line, "//");
+            if ((c == 0) || (c > s))
+            {
+                s = s + strlen("CAM_PROPSET");
+                s = get_str(s,val);
+                v = atoi(val);
+                sv->propset = v;
+            }
+        }
     }
     fclose(f);
 }
