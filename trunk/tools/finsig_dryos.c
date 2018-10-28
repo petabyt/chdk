@@ -5885,6 +5885,278 @@ void find_AdditionAgent_RAM(firmware *fw)
     }
 }
 
+/* propset related stuff */
+
+// below enum lists propcases that are handled
+enum {
+    PROPCASE_AFSTEP = 0,
+    PROPCASE_FOCUS_STATE,
+    PROPCASE_AV,
+    PROPCASE_BV,
+    PROPCASE_DELTA_DIGITALGAIN,
+    PROPCASE_DELTA_SV,
+    PROPCASE_DELTA_ND,
+    PROPCASE_EV_CORRECTION_2,
+    PROPCASE_ORIENTATION_SENSOR,
+    PROPCASE_SV_MARKET,
+    PROPCASE_SVFIX,
+    PROPCASE_TV,
+    PROPCASE_HANDLED_COUNT
+};
+
+// names for all enumerated propcases (not all appear in CHDK source)
+char* prop_names[PROPCASE_HANDLED_COUNT] =
+{
+    "PROPCASE_AFSTEP",
+    "PROPCASE_FOCUS_STATE",
+    "PROPCASE_AV",
+    "PROPCASE_BV",
+    "PROPCASE_DELTA_DIGITALGAIN",
+    "PROPCASE_DELTA_SV",
+    "PROPCASE_DELTA_ND",
+    "PROPCASE_EV_CORRECTION_2",
+    "PROPCASE_ORIENTATION_SENSOR",
+    "PROPCASE_SV_MARKET",
+    "PROPCASE_SVFIX",
+    "PROPCASE_TV",
+};
+
+// for sig matching
+string_sig prop_sigs[] =
+{
+    { 1, (char*)PROPCASE_AFSTEP, "\n\rError : GetAFStepResult", 0},
+    { 1, (char*)PROPCASE_FOCUS_STATE, "\n\rError : GetAFResult", 0},
+    { 1, (char*)PROPCASE_AV, "\n\rError : GetAvResult", 0},
+    { 1, (char*)PROPCASE_BV, "\n\rError : GetBvResult", 0},
+    { 1, (char*)PROPCASE_DELTA_DIGITALGAIN, "\n\rError : GetDeltaDigitalResult", 0},
+    { 1, (char*)PROPCASE_DELTA_SV, "\n\rError : GetDeltaGainResult", 0},
+    { 1, (char*)PROPCASE_DELTA_ND, "\n\rError : GetDeltaNdResult", 0},
+    { 1, (char*)PROPCASE_EV_CORRECTION_2, "\n\rError : GetRealExposureCompensationResult", 0},
+    { 1, (char*)PROPCASE_ORIENTATION_SENSOR, "\n\rError : GetRotationAngleResult", 0},
+    { 1, (char*)PROPCASE_SV_MARKET, "\n\rError : GetSvResult", 0},
+    { 1, (char*)PROPCASE_SVFIX, "\n\rError : GetSvFixResult", 0},
+    { 1, (char*)PROPCASE_TV, "\n\rError : GetTvResult", 0},
+    {-1, 0, 0}
+};
+
+typedef struct {
+    int     num;    // internal id from enum
+    int     id;     // propcase id, as found
+    int     use;    // 0: informational only; 1: use for propset guess AND print as #define; 2: use for propset guess
+    
+    int     id_ps2; // id in propset 2
+    int     id_ps3; // id in propset 3
+    int     id_ps4; // id in propset 4
+    int     id_ps5; // id in propset 5
+    int     id_ps6; // id in propset 6
+    int     id_ps7; // id in propset 7
+    int     id_ps8; // id in propset 8
+    int     id_ps9; // id in propset 9
+    int     id_ps10;// id in propset 10
+} known_prop_struct;
+
+
+#define KNOWN_PROPSET_COUNT 10
+
+known_prop_struct knownprops[PROPCASE_HANDLED_COUNT] =
+{   // enum                        id  u ps2 ps3 ps4 ps5 ps6 ps7 ps8 ps9 ps10
+    {PROPCASE_AFSTEP             , -1, 0                                     },
+    {PROPCASE_FOCUS_STATE        , -1, 1, 18, 18, 18, 18, 18, 18, 18, 18,  18},
+    {PROPCASE_AV                 , -1, 1, 23, 23, 23, 23, 23, 23, 23, 23,  23},
+    {PROPCASE_BV                 , -1, 1, 34, 34, 34, 34, 34, 38, 38, 38,  40},
+    {PROPCASE_DELTA_DIGITALGAIN  , -1, 0                                     },
+    {PROPCASE_DELTA_SV           , -1, 1, 79, 79, 79, 79, 79, 84, 81, 84,  86},
+    {PROPCASE_DELTA_ND           , -1, 0                                     },
+    {PROPCASE_EV_CORRECTION_2    , -1, 1,207,209,211,211,210,216,213,216, 218},
+    {PROPCASE_ORIENTATION_SENSOR , -1, 1,219,221,223,223,222,228,225,228, 230},
+    {PROPCASE_SV_MARKET          , -1, 1,246,248,250,250,249,255,252,255, 257},
+    {PROPCASE_SVFIX              , -1, 0                                     },
+    {PROPCASE_TV                 , -1, 1,262,264,266,266,265,272,269,272, 274},
+};
+
+static uintptr_t curr_prop_name;
+
+void add_prop_hit(int id, uintptr_t name)
+{
+    knownprops[name].id = (int)id;
+}
+
+// string ref follows GetPropertyCase call
+int match_propsig1a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
+{
+    if (isADR_PC_cond(fw,k) || isLDR_PC_cond(fw,k))   // LDR or ADR ?
+    {
+        uint32_t padr;
+        if (isLDR_PC_cond(fw,k)) // LDR ?
+            padr = LDR2val(fw,k);
+        else
+            padr = ADR2adr(fw,k);
+        if (padr == sadr)
+        {
+            int j1 = find_inst_rev(fw, isBL, k-1, 16);
+            if (j1 > 0)
+            {
+                int j = get_saved_sig(fw,"GetPropertyCase");
+                if (j < 0)
+                {
+                    return 0;
+                }
+                uint32_t fadr = func_names[j].val;
+                if (followBranch2(fw, idx2adr(fw,j1), 0x01000001) == fadr)
+                {
+                    // GetPropertyCase call, ID is in r0
+                    j = 0;
+                }
+                else
+                {
+                    // get_prop_with_semaphore call, ID is in r1
+                    j = 1;
+                }
+                int j2;
+                uint32_t a = 0;
+                for (j2=j1;j2>j1-8;j2--)
+                {
+                    // ID is either an immediate (MOV) or two immediates added (MOV+ADD)
+                    // larger IDs sometimes use LDR
+                    if (a==0 && isLDR_PC(fw,j2) && fwRd(fw,j2)==j)
+                    {
+                        a = LDR2val(fw,j2);
+                        if (a < 1000)
+                        {
+                            add_prop_hit(a, curr_prop_name);
+                            return 1;
+                        }
+                    }
+                    if (isADD(fw,j2) && fwRd(fw,j2)==j)
+                    {
+                        j = fwRn(fw, j2); // change the watched register on-the-fly
+                        a += ALUop2a(fw, j2);
+                    }
+                    if (isMOV_immed(fw,j2) && fwRd(fw,j2)==j)
+                    {
+                        a += ALUop2a(fw, j2);
+                        if (a < 1000)
+                        {
+                            add_prop_hit(a, curr_prop_name);
+                            return 1;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+int match_propsig1(firmware *fw, string_sig *sig, int j)
+{
+    return search_fw(fw, match_propsig1a, idx2adr(fw,j), sig->offset, 1);
+}
+
+// Call processing function based on type
+int find_strsig2(firmware *fw, string_sig *sig)
+{
+    switch (sig->type)
+    {
+    case 1:     return fw_string_process(fw, sig, match_propsig1, 1);
+    }
+
+    return 0;
+}
+
+void find_prop_matches(firmware *fw)
+{
+    int i;
+
+    for (i = 0; prop_sigs[i].type > -1; i++)
+    {
+        curr_prop_name = (uintptr_t)prop_sigs[i].name; // name (enum) has to be passed via a global
+        find_strsig2(fw, &prop_sigs[i]);
+    }
+
+}
+
+void find_propset(firmware *fw)
+{
+    uint32_t used=0;
+    uint32_t hits[KNOWN_PROPSET_COUNT];
+    
+    memset(hits, 0, KNOWN_PROPSET_COUNT*sizeof(uint32_t));
+    
+    find_prop_matches(fw);
+    
+    bprintf("\n// Known propcases\n");
+    
+    int n;
+    for (n=0; n<PROPCASE_HANDLED_COUNT; n++)
+    {
+        used += knownprops[n].use;
+        if (knownprops[n].id >= 0)
+        {
+            if (knownprops[n].use)
+            {
+                if (knownprops[n].id == knownprops[n].id_ps2) hits[2-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps3) hits[3-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps4) hits[4-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps5) hits[5-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps6) hits[6-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps7) hits[7-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps8) hits[8-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps9) hits[9-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps10) hits[10-1] += 1;
+            }
+            if (knownprops[n].use == 1)
+            {
+                bprintf("// #define %s %i\n", prop_names[n], knownprops[n].id);
+            }
+            else
+            {
+                // propcases not used by CHDK, name may be made up
+                bprintf("// //      %s %i\n", prop_names[n], knownprops[n].id);
+            }
+        }
+        else
+        {
+            bprintf("//         %s not found\n", prop_names[n]);
+        }
+    }
+    bprintf("// Guessed propset: ");
+    int m = 0;
+    int fmax = 0;
+    int okay = 0;
+    for (n=1; n<KNOWN_PROPSET_COUNT; n++)
+    {
+        if (hits[n] == used)
+        {
+            if (m) bprintf(", ");
+            bprintf("%i", n+1);
+            if (fw->sv->propset == n+1) okay = 1; // if the propset equals to (one of) the complete propset matches
+            m += 1;
+        }
+        if (hits[n] > fmax) fmax = hits[n];
+    }
+    if (m == 0)
+    {
+        bprintf("uncertain, could be "); // 'uncertain' is a warning sign
+        for (n=1; n<KNOWN_PROPSET_COUNT; n++)
+        {
+            if (hits[n] == fmax)
+            {
+                if (m) bprintf(", ");
+                bprintf("%i", n+1);
+                if (fw->sv->propset == n+1) okay = 1; // if the propset equals to (one of) the most complete propset matches
+                m += 1;
+            }
+        }
+    }
+    bprintf("\n");
+    if (!okay && fw->sv->propset>0)
+    {
+        // only shown when there's a clear mismatch
+        bprintf("// Port's propset (%i) may be set incorrectly\n", fw->sv->propset);
+    }
+}
+
 // Search for things
 void find_other_vals(firmware *fw)
 {
@@ -6977,6 +7249,7 @@ int main(int argc, char **argv)
     find_lib_vals(&fw);
     find_key_vals(&fw);
     find_platform_vals(&fw);
+    find_propset(&fw);
     find_other_vals(&fw);
 
     write_output();

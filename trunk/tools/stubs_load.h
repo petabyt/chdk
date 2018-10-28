@@ -29,6 +29,7 @@ typedef struct _stubs
 
     int     min_focus_len;
     int     max_focus_len;
+    int     propset;
 } stub_values;
 
 stub_values* new_stub_values();
