@@ -95,6 +95,21 @@ DEF(jpeg_count_str                          ,0x0005a668) // Found @0xff9921b4
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xff829944
 //#define PARAM_CAMERA_NAME 4 // Found @0xffad210c
 
+// Known propcases
+// //      PROPCASE_AFSTEP 13
+// #define PROPCASE_FOCUS_STATE 18
+// #define PROPCASE_AV 23
+// #define PROPCASE_BV 34
+// //      PROPCASE_DELTA_DIGITALGAIN 77
+// #define PROPCASE_DELTA_SV 79
+// //      PROPCASE_DELTA_ND 80
+// #define PROPCASE_EV_CORRECTION_2 207
+// #define PROPCASE_ORIENTATION_SENSOR 219
+// #define PROPCASE_SV_MARKET 246
+// //      PROPCASE_SVFIX 247
+// #define PROPCASE_TV 262
+// Guessed propset: 2
+
 // Misc stuff
 DEF(ctypes, 0xffa8f7a6)
 

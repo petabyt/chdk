@@ -110,6 +110,21 @@ DEF(jpeg_count_str                          ,0x00097234) // Found @0xffa012ac
 //#define CAM_DATE_FOLDER_NAMING 0x100 // Found @0xffa70a0c (pass as 3rd param to GetImageFolder)
 //#define PARAM_CAMERA_NAME 4 // Found @0xffbe9bc8
 
+// Known propcases
+// //      PROPCASE_AFSTEP 13
+// #define PROPCASE_FOCUS_STATE 18
+// #define PROPCASE_AV 23
+// #define PROPCASE_BV 34
+// //      PROPCASE_DELTA_DIGITALGAIN 77
+// #define PROPCASE_DELTA_SV 79
+// //      PROPCASE_DELTA_ND 80
+// #define PROPCASE_EV_CORRECTION_2 209
+// #define PROPCASE_ORIENTATION_SENSOR 221
+// #define PROPCASE_SV_MARKET 248
+// //      PROPCASE_SVFIX 249
+// #define PROPCASE_TV 264
+// Guessed propset: 3
+
 // Misc stuff
 DEF(ctypes, 0xffb40586)
 
