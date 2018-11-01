@@ -3607,7 +3607,7 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_unreg_evp_table,"UnRegisterEventProcTable","MechaUnRegisterEventProcedure"},
 {sig_match_evp_table_veneer,"RegisterEventProcTable_alt","RegisterEventProcTable"},
 {sig_match_evp_table_veneer,"UnRegisterEventProcTable_alt","UnRegisterEventProcTable"},
-{sig_match_str_r0_call,"CreateTaskStrictly",    "FileWriteTask",},
+{sig_match_str_r0_call,"CreateTaskStrictly",    "LowConsole",},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
 {sig_match_near_str,   "dry_memcpy",            "EP Slot%d",            SIG_NEAR_BEFORE(4,1)},
 {NULL},
