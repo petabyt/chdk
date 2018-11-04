@@ -435,7 +435,7 @@ typedef struct {
 #define KNOWN_PROPSET_COUNT (10-5)
 
 known_prop_t knownprops[] =
-{   // enum                          id  u ps6 ps7 ps8 ps9 ps10
+{   // name                          id  u ps6 ps7 ps8 ps9 ps10
     {"PROPCASE_AFSTEP"             , -1, 0                     },
     {"PROPCASE_FOCUS_STATE"        , -1, 1, 18, 18, 18, 18,  18},
     {"PROPCASE_AV"                 , -1, 1, 23, 23, 23, 23,  23},
@@ -3450,7 +3450,7 @@ int sig_match_prop_string(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         myreg = 1;
     }
     
-    // myis is no longer needed, re-init 'is' to current address minus at least 8 insts
+    // re-init 'is' to current address minus at least 8 insts
     const int hl = 8;
     disasm_iter_init(fw,is,call_adr - hl*4);
     // history needs to be made
@@ -4419,6 +4419,7 @@ void output_propcases(firmware *fw) {
 
     uint32_t used=0;
     uint32_t hits[KNOWN_PROPSET_COUNT];
+    const uint32_t ps_offset = 6;
     
     memset(hits, 0, KNOWN_PROPSET_COUNT*sizeof(uint32_t));
 
@@ -4431,11 +4432,11 @@ void output_propcases(firmware *fw) {
         {
             if (knownprops[n].use)
             {
-                if (knownprops[n].id == knownprops[n].id_ps6) hits[6-KNOWN_PROPSET_COUNT-1] += 1;
-                if (knownprops[n].id == knownprops[n].id_ps7) hits[7-KNOWN_PROPSET_COUNT-1] += 1;
-                if (knownprops[n].id == knownprops[n].id_ps8) hits[8-KNOWN_PROPSET_COUNT-1] += 1;
-                if (knownprops[n].id == knownprops[n].id_ps9) hits[9-KNOWN_PROPSET_COUNT-1] += 1;
-                if (knownprops[n].id == knownprops[n].id_ps10) hits[10-KNOWN_PROPSET_COUNT-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps6) hits[6-ps_offset] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps7) hits[7-ps_offset] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps8) hits[8-ps_offset] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps9) hits[9-ps_offset] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps10) hits[10-ps_offset] += 1;
             }
             if (knownprops[n].use == 1)
             {
@@ -4463,8 +4464,8 @@ void output_propcases(firmware *fw) {
         if (hits[n] == used)
         {
             if (m) bprintf(", ");
-            bprintf("%i", n+6);
-            if (fw->sv->propset == n+6) okay = 1; // if the propset equals to (one of) the complete propset matches
+            bprintf("%i", n+ps_offset);
+            if (fw->sv->propset == n+ps_offset) okay = 1; // if the propset equals to (one of) the complete propset matches
             m += 1;
         }
         if (hits[n] > fmax) fmax = hits[n];
@@ -4472,13 +4473,13 @@ void output_propcases(firmware *fw) {
     if (m == 0)
     {
         bprintf("uncertain (%i of %u match), closest to ",fmax,used);
-        for (n=1; n<KNOWN_PROPSET_COUNT; n++)
+        for (n=0; n<KNOWN_PROPSET_COUNT; n++)
         {
             if (hits[n] == fmax)
             {
                 if (m) bprintf(", ");
-                bprintf("%i", n+6);
-                if (fw->sv->propset == n+6) okay = 1; // if the propset equals to (one of) the most complete propset matches
+                bprintf("%i", n+ps_offset);
+                if (fw->sv->propset == n+ps_offset) okay = 1; // if the propset equals to (one of) the most complete propset matches
                 m += 1;
             }
         }
