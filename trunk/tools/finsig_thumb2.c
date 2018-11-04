@@ -752,7 +752,7 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
     return fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,is->adr + max_offset);
 }
 // is the insn pointed to by is a call to "name" or one of it's veneers?
-// not inefficient, should not be used for large searches
+// note: inefficient, should not be used for large searches
 int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
 {
     uint32_t adr=get_branch_call_insn_target(fw,is);
