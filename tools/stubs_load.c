@@ -24,6 +24,7 @@ stub_values* new_stub_values()
     p->min_focus_len = 0;
     p->max_focus_len = 0;
     p->propcases = 0;
+    p->propset = 0;
     return p;
 }
 
