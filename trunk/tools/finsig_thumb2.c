@@ -420,6 +420,49 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     {0,0,0},
 };
 
+typedef struct {
+    char*   name;   // name
+    int     id;     // propcase id, as found
+    int     use;    // 0: informational only; 1: use for propset guess AND print as #define; 2: use for propset guess
+    
+    int     id_ps6; // id in propset 6
+    int     id_ps7; // id in propset 7
+    int     id_ps8; // id in propset 8
+    int     id_ps9; // id in propset 9
+    int     id_ps10;// id in propset 10
+} known_prop_t;
+
+#define KNOWN_PROPSET_COUNT (10-5)
+
+known_prop_t knownprops[] =
+{   // enum                          id  u ps6 ps7 ps8 ps9 ps10
+    {"PROPCASE_AFSTEP"             , -1, 0                     },
+    {"PROPCASE_FOCUS_STATE"        , -1, 1, 18, 18, 18, 18,  18},
+    {"PROPCASE_AV"                 , -1, 1, 23, 23, 23, 23,  23},
+    {"PROPCASE_BV"                 , -1, 1, 34, 38, 38, 38,  40},
+    {"PROPCASE_DELTA_DIGITALGAIN"  , -1, 0                     },
+    {"PROPCASE_DELTA_SV"           , -1, 1, 79, 84, 81, 84,  86},
+    {"PROPCASE_DELTA_ND"           , -1, 0                     },
+    {"PROPCASE_EV_CORRECTION_2"    , -1, 1,210,216,213,216, 218},
+    {"PROPCASE_ORIENTATION_SENSOR" , -1, 1,222,228,225,228, 230},
+    {"PROPCASE_SV_MARKET"          , -1, 1,249,255,252,255, 257},
+    {"PROPCASE_SVFIX"              , -1, 0                     },
+    {"PROPCASE_TV"                 , -1, 1,265,272,269,272, 274},
+    {0,}
+};
+
+void add_prop_hit(char *name, int id)
+{
+    int n = 0;
+    while (knownprops[n].name) {
+        if (strcmp(knownprops[n].name,name) == 0) {
+            knownprops[n].id = id;
+            break;
+        }
+        n++;
+    }
+}
+
 #define MISC_BLOB_XTENSA_MAX    5
 #define MISC_BLOB_TYPE_NONE     0
 #define MISC_BLOB_TYPE_XTENSA   1
@@ -3370,6 +3413,96 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// find Nth function call within max_insns ins of string ref, and return iter state (to allow getting instruction target)
+// based on sig_match_near_str
+iter_state_t* find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("find_call_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return 0;
+    }
+    uint32_t search_adr = str_adr;
+    // looking for ref to ptr to string, not ref to string
+    // TODO only looks for first ptr
+    if(rule->param & SIG_NEAR_INDIRECT) {
+        // printf("find_call_near_str: %s str 0x%08x\n",rule->name,str_adr);
+        search_adr=find_u32_adr(fw,str_adr,fw->base);
+        if(!search_adr) {
+            printf("find_call_near_str: %s failed to find indirect ref %s\n",rule->name,rule->ref_name);
+            return 0;
+        }
+        // printf("find_call_near_str: %s indirect 0x%08x\n",rule->name,search_adr);
+    }
+    const insn_match_t *insn_match;
+    if(rule->param & SIG_NEAR_JMP_SUB) {
+        insn_match = match_b_bl_blximm;
+    } else {
+        insn_match = match_bl_blximm;
+    }
+
+    int max_insns=rule->param&SIG_NEAR_OFFSET_MASK;
+    int n=(rule->param&SIG_NEAR_COUNT_MASK)>>SIG_NEAR_COUNT_SHIFT;
+    //printf("find_call_near_str: %s max_insns %d n %d %s\n",rule->name,max_insns,n,(rule->param & SIG_NEAR_REV)?"rev":"fwd");
+    // TODO should handle multiple instances of string
+    disasm_iter_init(fw,is,(ADR_ALIGN4(search_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,search_adr+SEARCH_NEAR_REF_RANGE)) {
+        // bactrack looking for preceding call
+        if(rule->param & SIG_NEAR_REV) {
+            int i;
+            int n_calls=0;
+            for(i=1; i<=max_insns; i++) {
+                fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+                if(insn_match_any(fw->is->insn,insn_match)) {
+                    n_calls++;
+                }
+                if(n_calls == n) {
+                    return fw->is;
+                }
+            }
+        } else {
+            if(insn_match_find_nth(fw,is,max_insns,n,insn_match)) {
+                return is;
+            }
+        }
+    }
+    printf("find_call_near_str: no match %s\n",rule->name);
+    return 0;
+}
+
+int sig_match_prop_string(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // following 'myis' is either 'fw->is' or 'is', don't use calls that change them
+    iter_state_t *myis = find_call_near_str(fw, is, rule);
+    if (myis == 0)
+        return 0;
+    uint32_t myreg;
+    if (is_sig_call(fw,myis,"GetPropertyCase")) {
+        // looking for r0
+        myreg = 0;
+    }
+    else {
+        // semaphore version of GetPropertyCase, looking for r1
+        myreg = 1;
+    }
+    // myis is no longer needed, re-init 'is' to current address minus at least 8 insts
+    const int hl = 8;
+    uint32_t myadr = myis->adr;
+    disasm_iter_init(fw,is,(myis->adr | myis->thumb) - hl*4);
+    // history needs to be made
+    while (is->adr < myadr) {
+        if (!disasm_iter(fw,is))
+            disasm_iter_init(fw,is,(is->adr | is->thumb)+2);
+    }
+    uint32_t regs[4];
+    // get r0 or r1, backtracking up to 8 instructions
+    if ((get_call_const_args(fw,is,hl,regs)&(1<<myreg))==(1<<myreg)) {
+        add_prop_hit(rule->name,(int)regs[myreg]);
+        return 1;
+    }
+    return 0;
+}
+
 // check if func is a nullsub or mov r0, x ; ret
 // to prevent sig_named* matches from going off the end of dummy funcs
 int is_immediate_ret_sub(firmware *fw,iter_state_t *is_init)
@@ -3855,6 +3988,18 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
 {sig_match_get_current_exp,"get_current_exp","ShowCurrentExp_FW",},
 {sig_match_get_current_nd_value,"get_current_nd_value","get_current_exp",},
+{sig_match_prop_string,"PROPCASE_AFSTEP", "\n\rError : GetAFStepResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_FOCUS_STATE", "\n\rError : GetAFResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_AV", "\n\rError : GetAvResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_BV", "\n\rError : GetBvResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_DELTA_DIGITALGAIN", "\n\rError : GetDeltaDigitalResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_DELTA_SV", "\n\rError : GetDeltaGainResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_DELTA_ND", "\n\rError : GetDeltaNdResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_EV_CORRECTION_2", "\n\rError : GetRealExposureCompensationResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_ORIENTATION_SENSOR", "\n\rError : GetRotationAngleResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_SV_MARKET", "\n\rError : GetSvResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_SVFIX", "\n\rError : GetSvFixResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_TV", "\n\rError : GetTvResult",SIG_NEAR_BEFORE(7,1)},
 {NULL},
 };
 
@@ -4301,6 +4446,84 @@ void output_platform_vals(firmware *fw) {
         bprintf("// Camera has an iris (CAM_HAS_IRIS_DIAPHRAGM default)\n");
     } else {
         bprintf("//#undef CAM_HAS_IRIS_DIAPHRAM // Camera does not have an iris\n");
+    }
+
+    add_blankline();
+}
+
+void output_propcases(firmware *fw) {
+
+    uint32_t used=0;
+    uint32_t hits[KNOWN_PROPSET_COUNT];
+    
+    memset(hits, 0, KNOWN_PROPSET_COUNT*sizeof(uint32_t));
+
+    bprintf("// Known propcases\n");
+
+    int n = 0;
+    while (knownprops[n].name) {
+        used += knownprops[n].use>0?1:0;
+        if (knownprops[n].id >= 0)
+        {
+            if (knownprops[n].use)
+            {
+                if (knownprops[n].id == knownprops[n].id_ps6) hits[6-KNOWN_PROPSET_COUNT-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps7) hits[7-KNOWN_PROPSET_COUNT-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps8) hits[8-KNOWN_PROPSET_COUNT-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps9) hits[9-KNOWN_PROPSET_COUNT-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps10) hits[10-KNOWN_PROPSET_COUNT-1] += 1;
+            }
+            if (knownprops[n].use == 1)
+            {
+                bprintf("// #define %s %i\n", knownprops[n].name, knownprops[n].id);
+            }
+            else
+            {
+                // propcases not used by CHDK, name may be made up
+                bprintf("// //      %s %i\n", knownprops[n].name, knownprops[n].id);
+            }
+        }
+        else
+        {
+            bprintf("//         %s not found\n", knownprops[n].name);
+        }
+        n++;
+    }
+
+    bprintf("// Guessed propset: ");
+    int m = 0;
+    int fmax = 0;
+    int okay = 0;
+    for (n=0; n<KNOWN_PROPSET_COUNT; n++)
+    {
+        if (hits[n] == used)
+        {
+            if (m) bprintf(", ");
+            bprintf("%i", n+6);
+            if (fw->sv->propset == n+6) okay = 1; // if the propset equals to (one of) the complete propset matches
+            m += 1;
+        }
+        if (hits[n] > fmax) fmax = hits[n];
+    }
+    if (m == 0)
+    {
+        bprintf("uncertain (%i of %u match), closest to ",fmax,used);
+        for (n=1; n<KNOWN_PROPSET_COUNT; n++)
+        {
+            if (hits[n] == fmax)
+            {
+                if (m) bprintf(", ");
+                bprintf("%i", n+6);
+                if (fw->sv->propset == n+6) okay = 1; // if the propset equals to (one of) the most complete propset matches
+                m += 1;
+            }
+        }
+    }
+    bprintf("\n");
+    if (!okay && fw->sv->propset>0)
+    {
+        // only shown when there's a clear mismatch
+        bprintf("// Port's propset (%i) may be set incorrectly\n", fw->sv->propset);
     }
 
     add_blankline();
@@ -4986,6 +5209,8 @@ int main(int argc, char **argv)
     output_platform_vals(&fw);
     output_physw_vals(&fw);
     output_modemap(&fw);
+
+    output_propcases(&fw);
 
     write_stubs(&fw,max_find_sig);
 
