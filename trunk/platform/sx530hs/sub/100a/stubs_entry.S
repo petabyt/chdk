@@ -121,7 +121,7 @@ DEF(jpeg_count_str                          ,0x0018b064) // Found @0xff2aff5c
 // #define PROPCASE_SV_MARKET 252
 // //      PROPCASE_SVFIX 253
 // #define PROPCASE_TV 269
-// Guessed propset: uncertain, could be 8
+// Guessed propset: 8
 
 // Misc stuff
 DEF(ctypes, 0xff63aed0)

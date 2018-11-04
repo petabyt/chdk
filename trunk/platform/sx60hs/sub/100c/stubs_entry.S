@@ -83,7 +83,7 @@
 // #define PROPCASE_SV_MARKET 252
 // //      PROPCASE_SVFIX 253
 // #define PROPCASE_TV 269
-// Guessed propset: uncertain (7 of 8 match), closest to 8
+// Guessed propset: 8
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(ctypes                            ,0xfc57bf00)

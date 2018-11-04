@@ -20,7 +20,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_MIN_AV                          25         //blackhole
 #define PROPCASE_USER_AV                         26         //blackhole
 #define PROPCASE_BRACKET_MODE                    29
-#define PROPCASE_BV                              38         //blackhole-->35 & 37 ??????The same value at the same time
+#define PROPCASE_BV                              35         //blackhole-->35 & 37 ??????The same value at the same time
 #define PROPCASE_SHOOTING_MODE                   50         // jeronymo 
 #define PROPCASE_CUSTOM_SATURATION               57         // Canon Menu slide bar values: 254, 255, 0, 1, 2-----blackhole
 #define PROPCASE_QUALITY                         59         //blackhole

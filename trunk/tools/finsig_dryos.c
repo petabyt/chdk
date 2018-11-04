@@ -5963,7 +5963,7 @@ known_prop_struct knownprops[PROPCASE_HANDLED_COUNT] =
     {PROPCASE_AFSTEP             , -1, 0                                     },
     {PROPCASE_FOCUS_STATE        , -1, 1, 18, 18, 18, 18, 18, 18, 18, 18,  18},
     {PROPCASE_AV                 , -1, 1, 23, 23, 23, 23, 23, 23, 23, 23,  23},
-    {PROPCASE_BV                 , -1, 1, 34, 34, 34, 34, 34, 38, 38, 38,  40},
+    {PROPCASE_BV                 , -1, 1, 34, 34, 34, 34, 34, 38, 35, 38,  40},
     {PROPCASE_DELTA_DIGITALGAIN  , -1, 0                                     },
     {PROPCASE_DELTA_SV           , -1, 1, 79, 79, 79, 79, 79, 84, 81, 84,  86},
     {PROPCASE_DELTA_ND           , -1, 0                                     },
