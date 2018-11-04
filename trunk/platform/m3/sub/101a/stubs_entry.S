@@ -95,6 +95,21 @@
 // Current modemap entry not found in firmware - MODE_BACKGROUND_DEFOCUS   8764
 // Current modemap entry not found in firmware - MODE_NOSTALGIC            8753
 
+// Known propcases
+// //      PROPCASE_AFSTEP 13
+// #define PROPCASE_FOCUS_STATE 18
+// #define PROPCASE_AV 23
+// #define PROPCASE_BV 38
+// //      PROPCASE_DELTA_DIGITALGAIN 82
+// #define PROPCASE_DELTA_SV 84
+// //      PROPCASE_DELTA_ND 85
+// #define PROPCASE_EV_CORRECTION_2 216
+// #define PROPCASE_ORIENTATION_SENSOR 228
+// #define PROPCASE_SV_MARKET 255
+//         PROPCASE_SVFIX not found
+// #define PROPCASE_TV 272
+// Guessed propset: 7, 9
+
 // Values below can be overridden in 'stubs_min.S':
 DEF(ctypes                            ,0xfc5e29f4)
 DEF(physw_run                         ,0x000082cc) // Found @0xfc083bc6

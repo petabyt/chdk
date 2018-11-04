@@ -65,6 +65,21 @@
 // Check modemap values from 'platform/CAMERA/shooting.c':
 // 33295  0x820f In firmware but not in current modemap
 
+// Known propcases
+// //      PROPCASE_AFSTEP 13
+// #define PROPCASE_FOCUS_STATE 18
+// #define PROPCASE_AV 23
+// #define PROPCASE_BV 34
+// //      PROPCASE_DELTA_DIGITALGAIN 77
+// #define PROPCASE_DELTA_SV 79
+// //      PROPCASE_DELTA_ND 80
+// #define PROPCASE_EV_CORRECTION_2 210
+// #define PROPCASE_ORIENTATION_SENSOR 222
+// #define PROPCASE_SV_MARKET 249
+// //      PROPCASE_SVFIX 250
+// #define PROPCASE_TV 265
+// Guessed propset: 6
+
 // Values below can be overridden in 'stubs_min.S':
 //DEF(ctypes                            ,0xfc48111c),          stubs_min = 0xfc48111c (0xfc48111c)
 //DEF(physw_run                         ,0x00008328),          stubs_min = 0x00008328 (0x00008328)

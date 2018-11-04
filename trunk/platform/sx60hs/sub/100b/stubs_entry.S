@@ -70,6 +70,21 @@
 //  4173  0x104d In firmware but not in current modemap
 //  4174  0x104e In firmware but not in current modemap
 
+// Known propcases
+// //      PROPCASE_AFSTEP 13
+// #define PROPCASE_FOCUS_STATE 18
+// #define PROPCASE_AV 23
+// #define PROPCASE_BV 35
+// //      PROPCASE_DELTA_DIGITALGAIN 79
+// #define PROPCASE_DELTA_SV 81
+// //      PROPCASE_DELTA_ND 82
+// #define PROPCASE_EV_CORRECTION_2 213
+// #define PROPCASE_ORIENTATION_SENSOR 225
+// #define PROPCASE_SV_MARKET 252
+// //      PROPCASE_SVFIX 253
+// #define PROPCASE_TV 269
+// Guessed propset: uncertain (7 of 8 match), closest to 8
+
 // Values below can be overridden in 'stubs_min.S':
 DEF(ctypes                            ,0xfc57bf14)
 DEF(physw_run                         ,0x000082c8) // Found @0xfc07306a
