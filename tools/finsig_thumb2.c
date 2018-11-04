@@ -3356,66 +3356,11 @@ int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
                                 | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
 #define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
-                                
-// find Nth function call within max_insns ins of string ref
-int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
-    if(!str_adr) {
-        printf("sig_match_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
-        return 0;
-    }
-    uint32_t search_adr = str_adr;
-    // looking for ref to ptr to string, not ref to string
-    // TODO only looks for first ptr
-    if(rule->param & SIG_NEAR_INDIRECT) {
-        // printf("sig_match_near_str: %s str 0x%08x\n",rule->name,str_adr);
-        search_adr=find_u32_adr(fw,str_adr,fw->base);
-        if(!search_adr) {
-            printf("sig_match_near_str: %s failed to find indirect ref %s\n",rule->name,rule->ref_name);
-            return 0;
-        }
-        // printf("sig_match_near_str: %s indirect 0x%08x\n",rule->name,search_adr);
-    }
-    const insn_match_t *insn_match;
-    if(rule->param & SIG_NEAR_JMP_SUB) {
-        insn_match = match_b_bl_blximm;
-    } else {
-        insn_match = match_bl_blximm;
-    }
 
-    int max_insns=rule->param&SIG_NEAR_OFFSET_MASK;
-    int n=(rule->param&SIG_NEAR_COUNT_MASK)>>SIG_NEAR_COUNT_SHIFT;
-    //printf("sig_match_near_str: %s max_insns %d n %d %s\n",rule->name,max_insns,n,(rule->param & SIG_NEAR_REV)?"rev":"fwd");
-    // TODO should handle multiple instances of string
-    disasm_iter_init(fw,is,(ADR_ALIGN4(search_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,search_adr+SEARCH_NEAR_REF_RANGE)) {
-        // bactrack looking for preceding call
-        if(rule->param & SIG_NEAR_REV) {
-            int i;
-            int n_calls=0;
-            for(i=1; i<=max_insns; i++) {
-                fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
-                if(insn_match_any(fw->is->insn,insn_match)) {
-                    n_calls++;
-                }
-                if(n_calls == n) {
-                    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,fw->is));
-                }
-            }
-        } else {
-            if(insn_match_find_nth(fw,is,max_insns,n,insn_match)) {
-                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-            }
-        }
-    }
-    printf("sig_match_near_str: no match %s\n",rule->name);
-    return 0;
-}
-
-// find Nth function call within max_insns ins of string ref, and return iter state (to allow getting instruction target)
-// based on sig_match_near_str
-iter_state_t* find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+// find Nth function call within max_insns ins of string ref, 
+// returns address w/thumb bit set according to current state of call instruction
+// modifies is and potentially fw->is
+uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
     if(!str_adr) {
@@ -3457,27 +3402,46 @@ iter_state_t* find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rul
                     n_calls++;
                 }
                 if(n_calls == n) {
-                    return fw->is;
+                    return (uint32_t)fw->is->insn->address | fw->is->thumb;
                 }
             }
         } else {
             if(insn_match_find_nth(fw,is,max_insns,n,insn_match)) {
-                return is;
+                return (uint32_t)is->insn->address | is->thumb;
             }
         }
     }
     printf("find_call_near_str: no match %s\n",rule->name);
     return 0;
 }
+                                
+// find Nth function call within max_insns ins of string ref
+int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t call_adr = find_call_near_str(fw,is,rule);
+    if(call_adr) {
+        disasm_iter_init(fw,is,call_adr); // reset to a bit before where the string was found
+        disasm_iter(fw,is);
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    return 0;
+}
+
 
 int sig_match_prop_string(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    // following 'myis' is either 'fw->is' or 'is', don't use calls that change them
-    iter_state_t *myis = find_call_near_str(fw, is, rule);
-    if (myis == 0)
+    uint32_t call_adr = find_call_near_str(fw, is, rule);
+
+    if (call_adr == 0)
         return 0;
+
+    // initialize to found address
+    disasm_iter_init(fw,is,call_adr);
+    disasm_iter(fw,is);
+
     uint32_t myreg;
-    if (is_sig_call(fw,myis,"GetPropertyCase")) {
+
+    if (is_sig_call(fw,is,"GetPropertyCase")) {
         // looking for r0
         myreg = 0;
     }
@@ -3485,12 +3449,12 @@ int sig_match_prop_string(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // semaphore version of GetPropertyCase, looking for r1
         myreg = 1;
     }
+    
     // myis is no longer needed, re-init 'is' to current address minus at least 8 insts
     const int hl = 8;
-    uint32_t myadr = myis->adr;
-    disasm_iter_init(fw,is,(myis->adr | myis->thumb) - hl*4);
+    disasm_iter_init(fw,is,call_adr - hl*4);
     // history needs to be made
-    while (is->adr < myadr) {
+    while (is->adr < call_adr) {
         if (!disasm_iter(fw,is))
             disasm_iter_init(fw,is,(is->adr | is->thumb)+2);
     }
