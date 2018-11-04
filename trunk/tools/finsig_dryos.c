@@ -6090,7 +6090,7 @@ void find_propset(firmware *fw)
     int n;
     for (n=0; n<PROPCASE_HANDLED_COUNT; n++)
     {
-        used += knownprops[n].use;
+        used += knownprops[n].use>0?1:0;
         if (knownprops[n].id >= 0)
         {
             if (knownprops[n].use)
@@ -6137,7 +6137,7 @@ void find_propset(firmware *fw)
     }
     if (m == 0)
     {
-        bprintf("uncertain, could be "); // 'uncertain' is a warning sign
+        bprintf("uncertain (%i of %u match), closest to ",fmax,used);
         for (n=1; n<KNOWN_PROPSET_COUNT; n++)
         {
             if (hits[n] == fmax)
