@@ -19,8 +19,9 @@ NHSTUB(SetZoomActuatorSpeedPercent,         NULLSUB)
 
 // temporary measure
 NHSTUB(init_focus_eventflag,                0xffba5c18)
-NHSTUB(init_nd_eventflag,                   0xffba5da8)
-NHSTUB(init_nd_semaphore,                   0xffaff000)
+//NHSTUB(init_nd_eventflag,                   0xffba5da8)
+//NHSTUB(init_nd_semaphore,                   0xffaff000)
+NHSTUB(CreateBinarySemaphoreStrictly,0xff8266a0) // for av_override_semaphore
 
 DEF(task_LiveImageTask,                     0xff914f9c)
 
