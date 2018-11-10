@@ -57,6 +57,8 @@
        -498, 10000,    1957, 10000,    4116, 10000
     #define cam_CalibrationIlluminant1      21      // D65
 
+    #define CAM_AV_OVERRIDE_IRIS_FIX            1   // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
+
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_MANUAL_FOCUS
 

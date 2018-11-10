@@ -27,6 +27,8 @@ DEF(video_compression_rate, 0x75AC) // @ff9a8770: 0x7530+0x80-0x4 by comparison 
 DEF(video_target_framesize, 0xCD44+0x2C) // found in sub_ffafc2f4 by comparison to sx410 100c
 DEF(video_target_framesize2, 0xCD44+0x28) // approx. 2*video_target_framesize (for intraframes?), found in sub_ffafc2f4 by comparison to sx410 100c
 
+DEF(av_override_semaphore         ,0xcef0) // MoveIrisWithAv
+
 // the original some_flag_for_af_scan should not be used, as the fw's MakeAFScan function is not called
 .globl some_flag_for_af_scan
 some_flag_for_af_scan: .long 0
