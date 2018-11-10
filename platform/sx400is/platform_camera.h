@@ -58,8 +58,6 @@
     #define cam_CalibrationIlluminant1      21      // D65
 
     #undef  CAM_USE_ZOOM_FOR_MF
-    #undef  CAM_HAS_IRIS_DIAPHRAGM
-    #define CAM_HAS_ND_FILTER                   1
     #undef  CAM_HAS_MANUAL_FOCUS
 
     #define CAM_HAS_VIDEO_BUTTON                1
