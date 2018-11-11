@@ -93,6 +93,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "PrepareDirectory_x", UNUSED|DONT_EXPORT },
     { "PrepareDirectory_0", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly", UNUSED|DONT_EXPORT },
+    { "CreateTaskStrictly_alt", UNUSED|DONT_EXPORT },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
@@ -3705,6 +3706,7 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_evp_table_veneer,"RegisterEventProcTable_alt","RegisterEventProcTable"},
 {sig_match_evp_table_veneer,"UnRegisterEventProcTable_alt","UnRegisterEventProcTable"},
 {sig_match_str_r0_call,"CreateTaskStrictly",    "LowConsole",},
+{sig_match_str_r0_call,"CreateTaskStrictly_alt","HdmiCecTask",          0,                  SIG_DRY_MIN(59)},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
 {sig_match_near_str,   "dry_memcpy",            "EP Slot%d",            SIG_NEAR_BEFORE(4,1)},
 {NULL},
@@ -4226,6 +4228,9 @@ void find_generic_funcs(firmware *fw) {
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"RegisterEventProcTable");
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"UnRegisterEventProcTable");
     add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTaskStrictly");
+    if(get_saved_sig_val("CreateTaskStrictly_alt")) {
+        add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTaskStrictly_alt");
+    }
     add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTask");
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"RegisterEventProcTable_alt");
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"UnRegisterEventProcTable_alt");
