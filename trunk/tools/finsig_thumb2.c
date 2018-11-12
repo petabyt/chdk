@@ -2438,6 +2438,26 @@ int sig_match_pt_playsound(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return sig_match_near_str(fw,is,rule);
 }
 
+int sig_match_try_take_sem_dry_gt_58(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,24,"ReceiveMessageQueue")) {
+        printf("sig_match_try_take_sem_dry_gt_58: failed to find ReceiveMessageQueue\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,60,"bzero")) {
+        printf("sig_match_try_take_sem_dry_gt_58: failed to find bzero\n");
+        return 0;
+    }
+    if(insn_match_find_next(fw,is,3,match_bl_blximm)) {
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    printf("sig_match_try_take_sem_dry_gt_58: no match\n");
+    return 0;
+}
+
 int sig_match_wait_all_eventflag_strict(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3874,7 +3894,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"TryPostMessageQueue",      "TryPostMessageQueue(%d)\n",SIG_NEAR_BEFORE(9,1)},
 // different string on cams newer than sx280
 {sig_match_near_str,"TryPostMessageQueue",      "[CWS]TryPostMessageQueue(%d) Failed\n",SIG_NEAR_BEFORE(9,1)},
-{sig_match_near_str,"TryTakeSemaphore",         "FileScheduleTask",     SIG_NEAR_AFTER(10,2)},
+{sig_match_near_str,"TryTakeSemaphore",         "FileScheduleTask",     SIG_NEAR_AFTER(10,2),SIG_DRY_MAX(58)},
+{sig_match_try_take_sem_dry_gt_58,"TryTakeSemaphore","task_ImageStoreTask",0,SIG_DRY_MIN(59)},
 // pick up takesemaphore_low from TryTakeSemaphore in case not matched by earlier rule
 {sig_match_named,   "takesemaphore_low",        "TryTakeSemaphore",     SIG_NAMED_SUB},
 {sig_match_near_str,"WaitForAllEventFlag",      "Error WaitEvent PREPARE_TESTREC_EXECUTED.", SIG_NEAR_BEFORE(5,1)},
