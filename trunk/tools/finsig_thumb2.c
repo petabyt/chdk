@@ -3783,7 +3783,6 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "VbattGet",                 "VbattGet_FW",},
 {sig_match_named,   "Write",                    "Write_FW",},
 {sig_match_named,   "bzero",                    "exec_FW",              SIG_NAMED_SUB},
-{sig_match_named,   "memset32",                 "bzero",                SIG_NAMED_NTH(1,INSN)},
 {sig_match_named,   "exmem_free",               "ExMem.FreeCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "exmem_alloc",              "ExMem.AllocCacheable_FW",SIG_NAMED_JMP_SUB},
 {sig_match_named,   "free",                     "FreeMemory_FW",        SIG_NAMED_JMP_SUB},
@@ -3832,6 +3831,10 @@ sig_rule_t sig_rules_main[]={
 
 // can't use last because func has early return POP
 {sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
+// alternate match because "exec" lands near a literal pool on some cams
+{sig_match_near_str,"bzero",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(8,2)|SIG_NEAR_INDIRECT},
+//{sig_match_near_str,"bzero",                    "FromDate",             SIG_NEAR_BEFORE(2,1)},
+{sig_match_named,   "memset32",                 "bzero",                SIG_NAMED_NTH(1,INSN)},
 {sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
