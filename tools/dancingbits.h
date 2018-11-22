@@ -2,7 +2,7 @@
 // Dancing bits data for encoding diskboot.bin file
 // Used by dancingbits.c and finsig_dryos.c
 
-#define VITALY 16
+#define VITALY 17
 unsigned char _chr_[VITALY][8] = {
 									{ 4,6,1,0,7,2,5,3 }, // original flavor
 									{ 5,3,6,1,2,7,0,4 }, // nacho cheese sx200is, ixus100_sd780, ixu95_sd1200, a1100, d10
@@ -20,5 +20,6 @@ unsigned char _chr_[VITALY][8] = {
 									{ 7,4,5,0,2,1,3,6 }, // jeronymo sx530 (dryos r55)
 									{ 5,0,2,1,7,3,4,6 }, // sonic sour cream, g5x (dryos R58)
 									{ 1,3,7,4,5,6,0,2 }, // ixus175_elph180, sx420is (dryos r58)
+									{ 4,7,5,6,1,3,2,0 }, // sx430is (dryos r59)
 								};
 
