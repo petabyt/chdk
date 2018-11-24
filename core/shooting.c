@@ -627,14 +627,14 @@ short shooting_get_aperture_sizes_table_size()  { return AS_SIZE; }
 
 // APEX96 conversion
 
-short shooting_get_aperture_from_av96(short av96)
+int shooting_get_aperture_from_av96(short av96)
 {
     if (av96)
         return (short)((pow(2, ((double)av96)/192.0))*1000.0 + 0.5);
     return -1;
 }
 
-short shooting_get_av96_from_aperture(short aperture)
+short shooting_get_av96_from_aperture(int aperture)
 {
     return (int)((log((double)aperture/1000.0) * 192 * inv_log_2) + 0.5);
 }
@@ -647,12 +647,12 @@ short shooting_get_av96_override_value()
     return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE+1));
 }
 
-short shooting_get_real_aperture()
+int shooting_get_real_aperture()
 {
     return shooting_get_aperture_from_av96(shooting_get_current_av96());
 }
 
-static short shooting_get_min_real_aperture()
+static int shooting_get_min_real_aperture()
 {
     short av96;
     get_property_case(PROPCASE_MIN_AV, &av96, sizeof(av96));
