@@ -79,8 +79,8 @@ extern void shooting_set_user_tv_by_id_rel(int v);
 /******************************************************************/
 
 extern short shooting_get_aperture_sizes_table_size();
-extern short shooting_get_aperture_from_av96(short av96);
-extern short shooting_get_av96_from_aperture(short aperture);
+extern int shooting_get_aperture_from_av96(short av96);
+extern short shooting_get_av96_from_aperture(int aperture);
 extern int shooting_get_user_av_id();
 extern void shooting_set_user_av_by_id(int v);
 extern short shooting_get_av96();
@@ -91,7 +91,7 @@ extern void shooting_set_av96_direct(short av96, short is_now);
 extern short shooting_get_user_av96();
 extern void shooting_set_user_av96(short av96);
 extern void shooting_set_user_av_by_id_rel(int v);
-extern short shooting_get_real_aperture();
+extern int shooting_get_real_aperture();
 extern short shooting_get_av96_override_value();
 extern void shooting_set_nd_filter_state(short v, short is_now);
 extern short shooting_get_nd_value_ev96(void);
