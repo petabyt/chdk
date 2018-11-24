@@ -18,7 +18,6 @@ void shutdown()
     while(1);
 }
 
-// TODO
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
 void camera_set_led(int led, int state, int bright) {
@@ -27,19 +26,13 @@ void camera_set_led(int led, int state, int bright) {
 }
 
 void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             // Found @0xffb93e14
-//void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x34d8+0x5c)); } // Found @0xff8853f8 & 0xff885430
 char *camera_jpeg_count_str()    { return (char*)0x000d77d4; }             // Found @0xffa13d38
-int get_flash_params_count(void) { return 0xF1; }                          // Found @0xff9c3e58 NOT SURE
-
-//void *vid_get_viewport_fb()      { return (void*)0x40846b80; }             // Found @0xffb55d0c
+int get_flash_params_count(void) { return 0xF1; }                          // Found @0xff9c3e58
 
 extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];
 
 void *vid_get_bitmap_fb()        { return (void*)0x40711000; }             // Found @0xff86689c
-/*void *vid_get_bitmap_fb() {
-    return bitmap_buffer[0];
-}*/
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
