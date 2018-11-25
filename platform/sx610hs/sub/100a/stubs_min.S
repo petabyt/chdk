@@ -19,6 +19,7 @@ DEF(recreview_hold,                 0xc5e0+0x1c)    //sub_FF289D6C blackhole
 
 DEF(_nrflag, 0xd894)    //sub_FF2E1150 blackhole
 
+DEF(viewport_fb_d,					0x378c+0x54)
 
 //DEF(video_compression_rate, 0xa3e4) // sub_FF2127A0 blackhole
 
