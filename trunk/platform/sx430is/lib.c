@@ -52,7 +52,12 @@ void camera_set_led(int led, int state, int bright) {
 
 void *vid_get_bitmap_fb()        { return (void*)0x40711000; }
 void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             
-void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x367c+0x5c)); } // Found @0xff08d2cc & 0xff08d304
+
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+    return viewport_fb_d;
+}
 
 extern char active_viewport_buffer;
 extern void* viewport_buffers[];
