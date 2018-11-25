@@ -45,7 +45,11 @@ int get_flash_params_count(void) { return 0x91; }                          // Fo
 
 void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff08dfd0
 void *vid_get_viewport_fb()      { return (void*)0x4081ab80; }             // Found @0xff49c3ac
-void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x37c4+0x54)); } // Found @0xff0ad76c & 0xff0ad7a4
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+    return viewport_fb_d;
+}
 
 void *vid_get_viewport_live_fb()
 {
