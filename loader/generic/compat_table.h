@@ -98,6 +98,8 @@
 #elif (NEED_ENCODED_DISKBOOT == 16)
 { 12991,3,0xc022d1fc,0xfffe0270 }, // sx420is
 { 12993,3,0xc022d1fc,0xffff0270 }, // ixus175_elph180
+#elif (NEED_ENCODED_DISKBOOT == 17)
+{ 13013,3,0xc022d1fc,0xfffe0270 }, // sx430is
 #elif (NEED_ENCODED_DISKBOOT == 2)
 { 12732,1,0xc0220134,0xfffe0130 }, // d10
 { 12733,1,0xc0220130,0xfffe0130 }, // ixus110_sd960
