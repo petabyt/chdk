@@ -29,6 +29,8 @@ DEF(video_target_framesize2, 0xCD44+0x28) // approx. 2*video_target_framesize (f
 
 DEF(av_override_semaphore         ,0xcef0) // MoveIrisWithAv
 
+DEF(viewport_fb_d,					0x3240+0x54) // Found @0xff8824a4 and 0xff8824f8 sx400is 100b by comparison with a810 100d
+
 // the original some_flag_for_af_scan should not be used, as the fw's MakeAFScan function is not called
 .globl some_flag_for_af_scan
 some_flag_for_af_scan: .long 0

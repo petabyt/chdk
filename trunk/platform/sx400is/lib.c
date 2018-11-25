@@ -60,7 +60,11 @@ void camera_set_led(int led, int state, int bright) {
 }
 
 void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             // Found @0xffba1ce8
-void *vid_get_viewport_fb_d()    { return (void*)(*(int*)(0x3240+0x54)); } // Found @0xff8824a4 and 0xff8824f8 sx400is 100b by comparison with a810 100d
+void *vid_get_viewport_fb_d()
+{
+    extern char *viewport_fb_d;
+    return viewport_fb_d;
+}
 
 extern char active_viewport_buffer;
 extern void* viewport_buffers[];
