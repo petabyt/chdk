@@ -495,17 +495,15 @@ int isSUBx_imm(cs_insn *insn)
 {
     return ((insn->id == ARM_INS_SUB || insn->id == ARM_INS_SUBW || insn->id == ARM_INS_SUBS) && insn->detail->arm.operands[1].type == ARM_OP_IMM);
 }
-/*
-int isADR(cs_insn *insn) {
-    // objdump disassembles as add r0, pc, #x, 
-    // capstone does thumb as as adr r0, #x
-    // there are other adr type instructions though...
-    return insn->id == ARM_INS_ADR;
-//           && insn->detail->arm.op_count == 2
-//           && insn->detail->arm.operands[0].type == ARM_OP_REG
-//           && insn->detail->arm.operands[1].type == ARM_OP_IMM;
+
+// is the instruction an ADR or ADR-like instruction?
+int isADRx(cs_insn *insn)
+{
+    return ((insn->id == ARM_INS_ADR)
+        || isSUBW_PC(insn)
+        || isADDW_PC(insn)
+        || (isARM(insn) && (isADD_PC(insn) || isSUB_PC(insn))));
 }
-*/
 
 // if insn is LDR Rn, [pc,#x] return pointer to value, otherwise null
 uint32_t* LDR_PC2valptr_thumb(firmware *fw, cs_insn *insn)

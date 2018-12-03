@@ -589,97 +589,7 @@ static void do_dis_insn(
         } else {
             sprintf(comment,"WARNING didn't convert PC rel to constant!");
         }
-    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && (insn->id == ARM_INS_ADR))  {
-        uint32_t ad=ADR2adr(fw,insn);
-        uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
-        // capstone doesn't appear to generate ADR for thumb, so no special case needed
-        if(pv) {
-            if(dis_opts & DIS_OPT_ADR_LDR) {
-                strcpy(mnem,"ldr");
-                sprintf(ops,"%s, =0x%08x",
-                        cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg),
-                        ad);
-                if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // show original ADR
-                    sprintf(comment,"adr %s, #%x (0x%08x)",
-                            cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
-                            insn->detail->arm.operands[1].imm,
-                            *pv);
-                }
-            } else {
-                if(dis_opts & DIS_OPT_FMT_OBJDUMP) {
-                    strcpy(mnem,"add");
-                    sprintf(ops,"%s, pc, #%d",
-                            cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
-                            insn->detail->arm.operands[1].imm);
-                } else {
-                    //strcpy(ops,insn->op_str);
-                }
-                if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // thumb2dis.pl style
-                    sprintf(comment,"0x%08x: (%08x)",ad,*pv);
-                }
-            }
-            describe_const_op(fw,dis_opts,comment,ad);
-        } else {
-            sprintf(comment,"WARNING didn't convert ADR to constant!");
-        }
-    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isSUBW_PC(insn))  {
-        // it looks like subw is thumb only, so shouldn't need special case for arm?
-        unsigned ad=ADRx2adr(fw,insn);
-        uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
-        if(pv) {
-            if(dis_opts & DIS_OPT_ADR_LDR) {
-                strcpy(mnem,"ldr");
-                sprintf(ops,"%s, =0x%08x",
-                        cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg),
-                        ad);
-                if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // show original subw
-                    sprintf(comment,"subw %s, pc, #%x (0x%08x)",
-                            cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
-                            insn->detail->arm.operands[2].imm,
-                            *pv);
-                }
-            } else {
-                if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // thumb2dis.pl style
-                    sprintf(comment,"0x%08x: (%08x)",ad,*pv);
-                }
-            }
-            describe_const_op(fw,dis_opts,comment,ad);
-        } else {
-            sprintf(comment,"WARNING didn't convert SUBW Rd, PC, #x to constant!");
-        }
-    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADDW_PC(insn))  {
-        // it looks like addw is thumb only, so shouldn't need special case for arm?
-        unsigned ad=ADRx2adr(fw,insn);
-        uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
-        if(pv) {
-            if(dis_opts & DIS_OPT_ADR_LDR) {
-                strcpy(mnem,"ldr");
-                sprintf(ops,"%s, =0x%08x",
-                        cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg),
-                        ad);
-                if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // show original subw
-                    sprintf(comment,"addw %s, pc, #%x (0x%08x)",
-                            cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
-                            insn->detail->arm.operands[2].imm,
-                            *pv);
-                }
-            } else {
-                if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // thumb2dis.pl style
-                    sprintf(comment,"0x%08x: (%08x)",ad,*pv);
-                }
-            }
-            describe_const_op(fw,dis_opts,comment,ad);
-        } else {
-            sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
-        }
-    // capstone does ARM adr as add rd, pc,...
-    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && (isADD_PC(insn) || isSUB_PC(insn)))  {
+    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADRx(insn))  {
         unsigned ad=ADRx2adr(fw,insn);
         uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
         if(pv) {
@@ -690,13 +600,28 @@ static void do_dis_insn(
                         ad);
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // show original op
-                    sprintf(comment,"%s %s, pc, #%x (0x%08x)",
-                            insn->mnemonic,
-                            cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
-                            insn->detail->arm.operands[2].imm,
-                            *pv);
+                    if(insn->id == ARM_INS_ADR) {
+                        sprintf(comment,"adr %s, #%x (0x%08x)",
+                                cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
+                                insn->detail->arm.operands[1].imm,
+                                *pv);
+                    } else {
+                        sprintf(comment,"%s %s, pc, #%x (0x%08x)",
+                                insn->mnemonic,
+                                cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
+                                insn->detail->arm.operands[2].imm,
+                                *pv);
+                    }
                 }
             } else {
+                if(insn->id == ARM_INS_ADR) {
+                    if(dis_opts & DIS_OPT_FMT_OBJDUMP) {
+                        strcpy(mnem,"add");
+                        sprintf(ops,"%s, pc, #%d",
+                                cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
+                                insn->detail->arm.operands[1].imm);
+                    } // else keep as adr
+                }
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
                     // thumb2dis.pl style
                     sprintf(comment,"0x%08x: (%08x)",ad,*pv);
@@ -704,7 +629,7 @@ static void do_dis_insn(
             }
             describe_const_op(fw,dis_opts,comment,ad);
         } else {
-            sprintf(comment,"WARNING didn't convert ADD/SUB Rd, PC, #x to constant!");
+            sprintf(comment,"WARNING didn't convert ADR/ADD/SUB Rd, PC, #x to constant!");
         }
     } else if(get_TBx_PC_info(fw,is,ti)) {
         sprintf(comment+strlen(comment),
