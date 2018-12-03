@@ -625,7 +625,7 @@ static void do_dis_insn(
             sprintf(comment,"WARNING didn't convert ADR to constant!");
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isSUBW_PC(insn))  {
-        // it looks like subw is thubm only, so shouldn't need special case for arm?
+        // it looks like subw is thumb only, so shouldn't need special case for arm?
         unsigned ad=ADRx2adr(fw,insn);
         uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
         if(pv) {
@@ -652,7 +652,7 @@ static void do_dis_insn(
             sprintf(comment,"WARNING didn't convert SUBW Rd, PC, #x to constant!");
         }
     } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADDW_PC(insn))  {
-        // it looks like addw is thubm only, so shouldn't need special case for arm?
+        // it looks like addw is thumb only, so shouldn't need special case for arm?
         unsigned ad=ADRx2adr(fw,insn);
         uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
         if(pv) {
@@ -689,8 +689,9 @@ static void do_dis_insn(
                         cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg),
                         ad);
                 if(dis_opts & DIS_OPT_DETAIL_CONST) {
-                    // show original subw
-                    sprintf(comment,"add %s, pc, #%x (0x%08x)",
+                    // show original op
+                    sprintf(comment,"%s %s, pc, #%x (0x%08x)",
+                            insn->mnemonic,
                             cs_reg_name(is->cs_handle,insn->detail->arm.operands[0].reg), 
                             insn->detail->arm.operands[2].imm,
                             *pv);
