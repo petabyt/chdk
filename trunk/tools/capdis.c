@@ -679,7 +679,7 @@ static void do_dis_insn(
             sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
         }
     // capstone does ARM adr as add rd, pc,...
-    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isADD_PC(insn))  {
+    } else if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && (isADD_PC(insn) || isSUB_PC(insn)))  {
         unsigned ad=ADRx2adr(fw,insn);
         uint32_t *pv=(uint32_t *)adr2ptr(fw,ad);
         if(pv) {
@@ -703,7 +703,7 @@ static void do_dis_insn(
             }
             describe_const_op(fw,dis_opts,comment,ad);
         } else {
-            sprintf(comment,"WARNING didn't convert ADDW Rd, PC, #x to constant!");
+            sprintf(comment,"WARNING didn't convert ADD/SUB Rd, PC, #x to constant!");
         }
     } else if(get_TBx_PC_info(fw,is,ti)) {
         sprintf(comment+strlen(comment),
