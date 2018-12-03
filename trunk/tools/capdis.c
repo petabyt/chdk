@@ -208,6 +208,7 @@ void usage(void) {
                     " -adrldr convert ADR Rd,#x and similar to LDR RD,=... (default with -f=chdk)\n"
                     " -noadrldr don't convert ADR Rd,#x and similar to LDR RD,=...\n"
                     " -nofwdata don't attempt to initialize firmware data ranges\n"
+                    " -jfw generate LDR PC,=0x... to return to firmware at end of disassembled range\n"
               );
     exit(1);
 }
@@ -372,6 +373,7 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
 #define DIS_OPT_STUBS           0x00000080
 #define DIS_OPT_STUBS_LABEL     0x00000100
 #define DIS_OPT_PROPS           0x00000200
+#define DIS_OPT_JMP_BACK        0x00000400
 
 #define DIS_OPT_DETAIL_GROUP    0x00010000
 #define DIS_OPT_DETAIL_OP       0x00020000
@@ -948,6 +950,17 @@ TODO most constants are decimal, while capstone defaults to hex
         }
         count++;
     }
+    if(dis_opts & DIS_OPT_JMP_BACK) {
+        if(dis_opts & DIS_OPT_FMT_CHDK) {
+            printf("\"");
+        }
+        // note objdump format ignored, doesn't really make sense with jump back anyway
+        printf("    ldr     pc, =0x%"PRIx64,is->adr|is->thumb);
+        if(dis_opts & DIS_OPT_FMT_CHDK) {
+            printf("\\n\"");
+        }
+        printf(" %s Continue in firmware\n",comment_start);
+    }
     addr_hash_free(branch_list);
 }
 
@@ -1036,6 +1049,9 @@ int main(int argc, char** argv)
         }
         else if ( strcmp(argv[i],"-adrldr") == 0 ) {
             dis_opts |= DIS_OPT_ADR_LDR;
+        }
+        else if ( strcmp(argv[i],"-jfw") == 0 ) {
+            dis_opts |= DIS_OPT_JMP_BACK;
         }
         else if ( strcmp(argv[i],"-d-const") == 0 ) {
             dis_opts |= DIS_OPT_DETAIL_CONST;
