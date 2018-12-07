@@ -188,7 +188,7 @@
 0xff0ad748,CPrintf_FW
 0xff0ad7a0,CPutChar_FW
 0xff07fe70,CreateAdjustmentTableMirror_FW
-0x006b8a38,CreateBinarySemaphore
+0xff0280ac,CreateBinarySemaphore
 0xff0284cc,CreateBinarySemaphoreStrictly
 0xff0afd48,CreateController_FW
 0xff028130,CreateCountingSemaphore
@@ -1965,6 +1965,7 @@
 0xff4752e8,task_ResetFactoryWithShutdownTimer
 0xff383600,task_ResizeTask
 0xff1952d0,task_SceneDetectTask
+0x006b89b4,task_SD1stInit
 0xff3531d0,task_SetGeoTagExecution
 0xff1f8368,task_ShutterSoundTask
 0xff124020,task_SsgMainTask

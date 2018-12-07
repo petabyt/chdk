@@ -1921,6 +1921,7 @@
 0xff05c068,task_RedirectUARTTask
 0xff3c53fc,task_ResizeTask
 0xff1a7930,task_SceneDetectTask
+0x006baf0c,task_SD1stInit
 0xff18167c,task_SelectFuncController
 0xff38c410,task_SetGeoTagExecution
 0xff21ec54,task_ShutterSoundTask

@@ -138,7 +138,7 @@ DEF(ctypes, 0xff5f45d8)
 //    Name                                     Address                Comp to stubs_entry_2.S
 NHSTUB(AllocateUncacheableMemory              ,0xff027fc8) //112
 NHSTUB(Close                                  ,0xff027414) //120
-NHSTUB(CreateBinarySemaphore                  ,0x006b8a38) //115
+NHSTUB(CreateBinarySemaphore                  ,0xff0280ac) //115
 NHSTUB(CreateTask                             ,0xff025140) //120
 NHSTUB(DebugAssert                            ,0xff025500) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff026d64) //116

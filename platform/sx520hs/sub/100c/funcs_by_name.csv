@@ -2030,6 +2030,7 @@
 0xff3d83cc,task_ResizeTask
 0xff0748a0,task_RotaryEncoder
 0xff1a6148,task_SceneDetectTask
+0x006baea0,task_SD1stInit
 0xff17a758,task_SelectFuncController
 0xff3a46b4,task_SetGeoTagExecution
 0xff222120,task_ShutterSoundTask
