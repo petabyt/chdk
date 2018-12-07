@@ -696,7 +696,7 @@ int match_apex2us(firmware *fw, int k, uint32_t v1, uint32_t v2)
     if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1) && ((fwRd(fw,k) == 1) || (fwRd(fw,k) == 2)))
     {
         k = find_inst_rev(fw, isSTMFD_LR, k, 200);
-        if (k != 0)
+        if (k != -1)
         {
             if (fwval(fw,k-2) == 0xE3700D09)    // CMN R0, #0x240
                 k -= 2;
@@ -712,7 +712,7 @@ int match_apex2us2(firmware *fw, int k, uint32_t v1, uint32_t v2) // r52+?
     if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1) && ((fwRd(fw,k) == 1) || (fwRd(fw,k) == 2)))
     {
         k = find_inst_rev(fw, isSTMFD_LR, k, 200);
-        if (k != 0)
+        if (k != -1)
         {
             if (fwval(fw,k+1) != 0xe3700d0f)    // CMN R0, #0x3c0
                 return 0;
@@ -765,7 +765,7 @@ int find_mkdir(firmware *fw, string_sig *sig, int k)
             kk = k-20;
         }
         k = find_inst_rev(fw, isSTMFD_LR, kk, 200);
-        if (k != 0)
+        if (k != -1)
         {
             if ((((fwval(fw,k+12) & 0xFFF0FFFF) == 0xE350002F) && ((fwval(fw,k+15) & 0xFFF0FFFF) == 0xE3500021) && ((fwval(fw,k+19) & 0xFFF0FFFF) == 0xE3500020)) ||
                 (((fwval(fw,k+11) & 0xFFF0FFFF) == 0xE350002F) && ((fwval(fw,k+14) & 0xFFF0FFFF) == 0xE3500021) && ((fwval(fw,k+18) & 0xFFF0FFFF) == 0xE3500020)))
@@ -951,12 +951,12 @@ int find_add_ptp_handler(firmware *fw, string_sig *sig, int k)
     while ((vals[i] != 0) && isLDR_PC(fw,k) && (fwRd(fw,k) == 0) && (LDR2val(fw,k) == vals[i]))
     {
         k = find_inst(fw, isBL, k+1, 5);
-        if (k == 0) return 0;
+        if (k == -1) return 0;
         if (fadr == 0)
             fadr = followBranch(fw, idx2adr(fw,k), 0x01000001);
         k = find_inst(fw, isLDR_PC, k+1, 5);
-        if (k == 0) return 0;
         i++;
+        if (k == -1 && vals[i] != 0) return 0;
     }
 
     if (fadr != 0)
@@ -2939,8 +2939,10 @@ int match_strsig15a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
         if (padr == sadr)
         {
             int j2 = find_inst_rev(fw, isBL, k-1, dryos_ofst);
-            if (j2 > 0)
+            if (j2 != -1)
             {
+                // cams with code copied to RAM: use RAM address
+                j2 = idxcorr(fw, j2);
                 uint32_t fa = idx2adr(fw,j2);
                 fa = followBranch2(fw,fa,offset);
                 fwAddMatch(fw,fa,32,0,115);
@@ -6900,6 +6902,8 @@ uint32_t findTaskAddress(firmware *fw, int k, int reg)
 
 int match_createtask(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
+    // cams with code copied to RAM: use RAM address
+    k = idxcorr(fw, k);
     if (isBorBL(fw,k))
     {
         uint32_t adr = followBranch2(fw,idx2adr(fw,k),0x01000001);

@@ -145,8 +145,11 @@ int idx_valid(firmware *fw, int i)
     }
     if (fw->dryos_ver >= 50)
     {
-        i = ((i * 4) + (fw->base - fw->base2)) / 4;
-        if ((i >= 0) && (i < fw->size2))
+        int i2 = ((i * 4) + (fw->base - fw->base2)) / 4;
+        if ((i2 >= 0) && (i2 < fw->size2))
+            return 1;
+        // RAM code can also reference ROM, check for that
+        if (idx2adr(fw,i)>=fw->base && idx2adr(fw,i)<(fw->base+fw->size*4))
             return 1;
     }
     return 0;
@@ -181,6 +184,27 @@ char* adr2ptr(firmware *fw, uint32_t adr)
     return ((char*)fw->buf) + (adr - fw->base);
 }
 
+// check for code copied to RAM, correct idx if needed
+int idxcorr(firmware *fw, int idx)
+{
+    static int inited = 0;
+    static int b2oidx, b2idx;
+    if (!inited)
+    {
+        b2oidx = adr2idx(fw, fw->base_copied);
+        b2idx = adr2idx(fw, fw->base2);
+        inited = 1;
+    }
+
+    if (fw->base2)
+    {
+        if ((idx >= b2oidx) && (idx < b2oidx + fw->size2))
+        {
+            idx = idx - b2oidx + b2idx;
+        }
+    }
+    return idx;
+}
 //------------------------------------------------------------------------------------------------------------
 
 static int ignore_errors = 0;
