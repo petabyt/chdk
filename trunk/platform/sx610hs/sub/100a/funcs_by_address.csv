@@ -59,6 +59,7 @@
 0x006b9234,GetTimeOfSystem_FW
 0x006b9998,LocalTime
 0x006ba89c,WriteSDCard
+0x006baf0c,task_SD1stInit
 0x006dad30,_divmod_signed_int
 0x006dc34c,_divmod_unsigned_int
 0x006ddda8,_log

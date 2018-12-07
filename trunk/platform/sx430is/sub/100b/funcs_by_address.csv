@@ -2,7 +2,7 @@
 0x006b1b90,get_self_task_id
 0x006b21d4,get_task_properties
 0x006b8324,WriteSDCard
-0x006b8a38,CreateBinarySemaphore
+0x006b89b4,task_SD1stInit
 0x006d9bd0,_divmod_signed_int
 0x006db22c,_divmod_unsigned_int
 0x006dc020,_log
@@ -105,6 +105,7 @@
 0xff027ed0,task_Startup
 0xff027fc8,AllocateUncacheableMemory
 0xff028004,FreeUncacheableMemory
+0xff0280ac,CreateBinarySemaphore
 0xff028130,CreateCountingSemaphore
 0xff028130,CreateCountingSemaphore_FW
 0xff028190,DeleteSemaphore

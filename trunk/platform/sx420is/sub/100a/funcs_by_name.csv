@@ -1947,6 +1947,7 @@
 0xff05b024,task_RedirectUARTTask
 0xff3753fc,task_ResizeTask
 0xff1908b8,task_SceneDetectTask
+0x006bb060,task_SD1stInit
 0xff172e3c,task_SelectFuncController
 0xff347150,task_SetGeoTagExecution
 0xff1f5d18,task_ShutterSoundTask
