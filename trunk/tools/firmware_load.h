@@ -91,6 +91,9 @@ uint32_t idx2adr(firmware *fw, int idx);
 int adr2idx(firmware *fw, uint32_t adr);
 char* adr2ptr(firmware *fw, uint32_t adr);
 
+// index correction for cams with RAM code
+int idxcorr(firmware *fw, int idx);
+
 void set_ignore_errors(int n);
 uint32_t* fwadr(firmware *fw, int i);
 // Get a 32 bit value from the dump at the specified index
