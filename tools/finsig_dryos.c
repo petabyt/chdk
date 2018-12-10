@@ -251,6 +251,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GetBatteryTemperature" },
     { "GetCCDTemperature" },
     { "GetCurrentAvValue" },
+    { "GetCurrentShutterSpeed" },
     { "GetUsableMaxAv", OPTIONAL },
     { "GetUsableMinAv", OPTIONAL },
     { "GetDrive_ClusterSize" },
@@ -503,6 +504,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GUISrv_StartGUISystem", OPTIONAL|UNUSED|LIST_ALWAYS },
     { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
     { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
+    { "ImagerActivate", OPTIONAL|UNUSED }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1821,6 +1823,7 @@ string_sig string_sigs[] =
     {20, "GetSDProtect", "GetSDProtect_FW", 1 },
     {20, "GetSystemTime", "GetSystemTime_FW", 1 },
     {20, "GetCurrentAvValue", "GetCurrentAvValue_FW", 1 },
+    {20, "GetCurrentShutterSpeed", "GetCurrentShutterSpeed_FW", 1 },
     {20, "GetUsableMaxAv", "GetUsableMaxAv_FW", 1 },
     {20, "GetUsableMinAv", "GetUsableMinAv_FW", 1 },
     {20, "GetOpticalTemperature", "GetOpticalTemperature_FW", 1 },
@@ -2298,6 +2301,7 @@ string_sig string_sigs[] =
     { 23, "DisableHDMIPower", "HDMIConnectCnt", 9,                              99,     99,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,      3,},
     { 23, "get_nd_value", "IrisSpecification.c", 25,                            -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,},
     { 23, "GetUsableAvRange", "[AE]Prog Line Error!\n", 20,                      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,},
+    { 23, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 7,           -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,}, // two functions satisfy this, either will work for us
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },
@@ -4029,6 +4033,74 @@ int match_uiprop_count(firmware *fw, int k, int v)
     return 0;
 }
 
+int match_imager_active(firmware *fw, int k, int v)
+{
+    int gotit = 0;
+    int reg = -1;
+    int o = 0;
+    uint32_t adr,where;
+    if (isLDMFD_PC(fw,k))
+    {
+        int k1 = find_inst_rev(fw, isBL, k-1, 10);
+        if (k1 == -1)
+            return 0;
+        uint32_t a;
+        int k2 = k1 - 8;
+        for (k1=k1-1;k1>=k2;k1--)
+        {
+            if (isLDR(fw,k1) || isADR(fw,k1))
+            {
+                if (isADR(fw,k1))
+                {
+                    a = ADR2adr(fw, k1);
+                }
+                else
+                {
+                    a = LDR2val(fw, k1);
+                }
+                if ((a>fw->base) && ((a&3) == 0))
+                {
+                    int k3 = adr2idx(fw, a);
+                    if (isSTMFD_LR(fw,k3))
+                    {
+                        k3 = find_inst(fw, isBLX, k3+1, 6);
+                        if (k3 != -1)
+                        {
+                            int k4;
+                            for(k4=5; k4>0; k4--)
+                            {
+                                if (isSTR_cond(fw,k3+k4))
+                                {
+                                    reg = fwRn(fw,k3+k4);
+                                    o = fwval(fw,k3+k4) & 0xff; // offset, should be around 4
+                                    where = idx2adr(fw,k3+k4);
+                                }
+                                if (reg>=0 && isLDR_cond(fw,k3+k4) && fwRd(fw,k3+k4)==reg)
+                                {
+                                    adr = LDR2val(fw,k3+k4);
+                                    if (adr < fw->memisostart)
+                                    {
+                                        gotit = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (gotit)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (gotit)
+    {
+        bprintf("DEF(%-40s,0x%08x) // Found @0x%08x (0x%x + %i)\n","imager_active",adr+o,where,adr,o);
+        return 1;
+    }
+    return 0;
+}
+
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
@@ -5103,6 +5175,9 @@ void find_stubs_min(firmware *fw)
             search_fw(fw, match_fileiosem, fadr, nadr, 3);
         }
     }
+
+    // Find imager_active
+    search_saved_sig(fw, "ImagerActivate", match_imager_active, 0/*v*/, 0, 30);
 
     // Find UI property count
     search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);

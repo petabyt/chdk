@@ -92,6 +92,11 @@ int   shooting_get_exif_subject_dist()          { return shooting_get_prop_int(P
 int   shooting_is_flash()                       { return shooting_get_prop_int(PROPCASE_IS_FLASH_READY); }
 int   shooting_in_progress()                    { return shooting_get_prop_int(PROPCASE_SHOOTING); }
 
+int shooting_get_imager_active() {
+  extern int imager_active;
+  return imager_active;
+}
+
 // translate digital zoom propcase values to match pre-propset 7 values
 // mode: 0 = off or standard digital zoom, 2 or 3 digital tele
 // PROPCASE_DIGITAL_ZOOM_MODE not defined for propset 1, ports configured to not need these functions
@@ -463,7 +468,7 @@ short shooting_get_tv96_from_shutter_speed(float t)
             return (short)(t - 0.5);
         return (short)(t + 0.5);
     }
-    return -10000;
+    return SHOOTING_TV96_INVALID;
 }
 
 float shooting_get_shutter_speed_from_tv96(short tv96)

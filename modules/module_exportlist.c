@@ -269,6 +269,8 @@
             shooting_get_nd_value_ev96
             shooting_get_nd_current_ev96
             shooting_get_current_av96
+            shooting_get_current_tv96
+            shooting_get_imager_active
 
             rbf_char_width
             rbf_font_height
