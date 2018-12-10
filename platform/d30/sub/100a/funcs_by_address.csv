@@ -248,6 +248,7 @@
 0xff034678,task_AFTask
 0xff035414,GetMacroSupportZoomPoint_FW
 0xff0364e4,ReloadAFAdjustment_FW
+0xff036ce8,ImagerActivate
 0xff03bfec,LiveImageTool.GetDzoomPosition_FW
 0xff03cc90,GetVRAMHPixelsSize
 0xff03cc90,GetVRAMHPixelsSize_FW
@@ -633,6 +634,7 @@
 0xff099ce4,sscanf_FW
 0xff099d0c,atol_FW
 0xff099d18,strcat
+0xff09d800,GetCurrentShutterSpeed
 0xff09d800,GetCurrentShutterSpeed_FW
 0xff09dafc,GetCurrentExposureTime_FW
 0xff0a2254,task_WBIntegTask

@@ -177,6 +177,7 @@
 0xff833b8c,task_ChaceFace
 0xff8344b0,task_DispFace
 0xff835488,task_AFTask
+0xff837430,ImagerActivate
 0xff8386c0,task_ImageSensorTask
 0xff838e20,SetMontblancVSize_FW
 0xff838e34,GetMontblancVSize_FW
@@ -527,6 +528,7 @@
 0xff8977a4,memcpy_FW
 0xff897a18,strftime
 0xff898010,mktime_ext
+0xff898c14,GetCurrentShutterSpeed
 0xff898c14,GetCurrentShutterSpeed_FW
 0xff898eec,GetCurrentExposureTime_FW
 0xff89c5d8,task_WBIntegTask

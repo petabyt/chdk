@@ -67,6 +67,7 @@ DEF(active_bitmap_buffer                    ,0x00009d6c) // Found @0xff202f60
 DEF(raw_buffers                             ,0xff4ca1f4) // Found @0xff4ca1f4
 DEF(active_raw_buffer                       ,0x00003908) // Found @0xff089c68
 DEF(fileio_semaphore                        ,0x000034d8) // Found @0xff0720bc
+DEF(imager_active                           ,0x00002158) // Found @0xff03b9a0 (0x2154 + 4)
 DEF_CONST(uiprop_count                      ,0x0000008f) // Found @0xff1f5ba4
 
 // Values below go in 'lib.c':
@@ -179,6 +180,7 @@ NHSTUB(Fwrite_Fut                             ,0xff01c6fc) //120
 NHSTUB(GetBatteryTemperature                  ,0xff0622e8) //102
 NHSTUB(GetCCDTemperature                      ,0xff062274) //102
 NHSTUB(GetCurrentAvValue                      ,0xff07d4d0) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xff0b50d4) //120
 NHSTUB(GetUsableMaxAv                         ,0xff1a822c) //120
 NHSTUB(GetUsableMinAv                         ,0xff1a8210) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff073d0c) //122

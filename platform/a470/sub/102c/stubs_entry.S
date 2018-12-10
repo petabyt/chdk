@@ -48,6 +48,7 @@ DEF(focus_busy                              ,0x000082e0) // Found @0xffd02310
 DEF(recreview_hold                          ,0x00005b64) // Found @0xffc64340
 // Camera appears to have only 1 RAW buffer @ 0x10f06b20 (Found @0xffe2e564)
 DEF(fileio_semaphore                        ,0x000028b4) // Found @0xffc3e818
+DEF(imager_active                           ,0x00001ed4) // Found @0xffc24f90 (0x1ed0 + 4)
 DEF_CONST(uiprop_count                      ,0x00000064) // Found @0xffd29cd8
 
 // Values below go in 'lib.c':
@@ -152,6 +153,7 @@ NHSTUB(Fwrite_Fut                             ,0xffc13684) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc3309c) //102
 NHSTUB(GetCCDTemperature                      ,0xffc3302c) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd03d24) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xffc6ff68) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffc3cdec) //  1
 NHSTUB(GetDrive_FreeClusters                  ,0xffc3ce54) //  1
 NHSTUB(GetDrive_TotalClusters                 ,0xffc3ce20) //  1

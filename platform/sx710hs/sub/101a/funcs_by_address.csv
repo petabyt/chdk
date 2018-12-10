@@ -498,6 +498,8 @@
 0xfc1126fd,task_MechaAlarm
 0xfc11626d,task_MrkSetTask
 0xfc11fb03,RegComEventProc_FW
+0xfc120423,imager_active_callback
+0xfc1204b7,ImagerActivate
 0xfc120539,ClearImageDrive_FW
 0xfc122bc9,GetAdVBattBottom_FW
 0xfc122bcf,GetAdChValue
@@ -1138,6 +1140,7 @@
 0xfc39a1dd,task_ImgPlyTsk2
 0xfc39eda9,task_DetSeqT
 0xfc39f3bb,task_DetSeqSadT
+0xfc3a0ac3,GetCurrentShutterSpeed
 0xfc3a0ac3,GetCurrentShutterSpeed_FW
 0xfc3a0d6f,GetCurrentExposureTime_FW
 0xfc3a201f,ExpCtrlTool.SetExpMode_FW

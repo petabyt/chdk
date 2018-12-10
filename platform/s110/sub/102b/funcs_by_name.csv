@@ -475,6 +475,7 @@
 0xf80cf1b8,GetCurrentMachineTime
 0xf81ff200,GetCurrentMaximumLogSize_FW
 0xf83eb100,GetCurrentOptTemp_FW
+0xf80f70dc,GetCurrentShutterSpeed
 0xf80f70dc,GetCurrentShutterSpeed_FW
 0xf82291f4,GetCurrentTargetDistance_FW
 0xf83eb6a8,GetCurrentZoomLensDirection_FW
@@ -738,6 +739,7 @@
 0xf851ccc0,HitISLensToMechaEdge_FW
 0xf851d070,HitISMechaEdgeInOpenControl_FW
 0xf826c4b4,HwOcReadICAPCounter
+0xf80566ec,ImagerActivate
 0xf81ff1c8,InactivateAdjLog_FW
 0xf8263b7c,InitializeAdjustmentFunction_FW
 0xf8263b0c,InitializeAdjustmentSystem_FW

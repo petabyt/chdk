@@ -278,6 +278,7 @@
 0xff044280,ExpCtrlTool_StopContiAE
 0xff049528,task_AFTask
 0xff04a6e0,GetMacroSupportZoomPoint_FW
+0xff04c204,ImagerActivate
 0xff04c2e0,ClearImageDrive_FW
 0xff04d4b8,task__imageSensorTask
 0xff0507e8,LiveImageTool.GetDzoomPosition_FW
@@ -613,6 +614,7 @@
 0xff0c7d1c,memcpy
 0xff0c7d1c,memcpy_FW
 0xff0c7e68,strrchr
+0xff0db164,GetCurrentShutterSpeed
 0xff0db164,GetCurrentShutterSpeed_FW
 0xff0db4a4,GetCurrentExposureTime_FW
 0xff0dfb44,task_WBIntegTask

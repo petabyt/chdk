@@ -177,6 +177,7 @@
 0xff8337c4,task_ChaceFace
 0xff8340e8,task_DispFace
 0xff8350c0,task_AFTask
+0xff836d90,ImagerActivate
 0xff838074,task_ImageSensorTask
 0xff841c40,DispCon_ShowColorBar_FW
 0xff841c90,DispCon_ShowFiveStep_FW
@@ -516,6 +517,7 @@
 0xff8928f4,memcpy_FW
 0xff892b68,strftime
 0xff893160,mktime_ext
+0xff893d64,GetCurrentShutterSpeed
 0xff893d64,GetCurrentShutterSpeed_FW
 0xff89403c,GetCurrentExposureTime_FW
 0xff8976bc,task_WBIntegTask

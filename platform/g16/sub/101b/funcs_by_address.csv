@@ -491,6 +491,8 @@
 0xfc13f47b,task_DevelopModule
 0xfc1413bb,EF.IsChargeFull_FW
 0xfc1413bb,IsStrobeChargeCompleted
+0xfc141831,imager_active_callback
+0xfc1418c5,ImagerActivate
 0xfc142563,task__imageSensorTask
 0xfc144605,LiveImageTool.GetDzoomPosition_FW
 0xfc1449f1,GetVRAMHPixelsSize
@@ -1112,6 +1114,7 @@
 0xfc2df1ef,StartLogOut_FW
 0xfc2df1f9,IsLogOutType_FW
 0xfc2df1ff,GetCurrentMaximumLogSize_FW
+0xfc2e0e2b,GetCurrentShutterSpeed
 0xfc2e0e2b,GetCurrentShutterSpeed_FW
 0xfc2e1065,GetCurrentExposureTime_FW
 0xfc2eaa39,SetPropertyCase

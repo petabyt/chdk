@@ -515,6 +515,7 @@
 0xfc1482db,GetCurrentIrisPosition_FW
 0xfc32d9cd,GetCurrentMaximumLogSize_FW
 0xfc489aa1,GetCurrentOptTemp_FW
+0xfc16e733,GetCurrentShutterSpeed
 0xfc16e733,GetCurrentShutterSpeed_FW
 0xfc31fb03,GetCurrentTargetDistance_FW
 0xfc48a223,GetCurrentZoomLensDirection_FW
@@ -815,6 +816,8 @@
 0xfc4f5df5,HitISLensAgainstTopEdge_FW
 0xfc4f5e25,HitISLensToMechaEdge_FW
 0xfc4f5fef,HitISMechaEdgeInOpenControl_FW
+0xfc138a07,imager_active_callback
+0xfc138a9b,ImagerActivate
 0xfc0c06cb,imlInitialize_FW
 0xfc3a8911,IMX183OBClamp.DisableEvent_FW
 0xfc3a8907,IMX183OBClamp.EnableEvent_FW

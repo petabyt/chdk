@@ -489,6 +489,8 @@
 0xfc12f3b1,task_WBCtrl
 0xfc1311bd,task_AFTask
 0xfc131d17,GetMacroSupportZoomPoint_FW
+0xfc132c69,imager_active_callback
+0xfc132cfd,ImagerActivate
 0xfc1345ed,LiveImageTool.GetDzoomPosition_FW
 0xfc134981,GetVRAMHPixelsSize
 0xfc134981,GetVRAMHPixelsSize_FW
@@ -1127,6 +1129,7 @@
 0xfc2a6189,PostLogicalEventToUI_FW
 0xfc2a6255,PostEventShootSeqToUI_FW
 0xfc2a628d,ShowLogicalEventName_FW
+0xfc2a659f,GetCurrentShutterSpeed
 0xfc2a659f,GetCurrentShutterSpeed_FW
 0xfc2a67d9,GetCurrentExposureTime_FW
 0xfc2a6ab3,task_Cave2PbTask

@@ -640,6 +640,7 @@
 0xfc435585,GetCurrentImgDrvMode_FW
 0xfc37af05,GetCurrentMaximumLogSize_FW
 0xfc1bf75d,GetCurrentOptTemp_FW
+0xfc360133,GetCurrentShutterSpeed
 0xfc360133,GetCurrentShutterSpeed_FW
 0xfc0bc0d7,getCWSStatus_FW
 0xfc44b657,GetCZFramingAssistAutoHighSpeed_FW
@@ -992,6 +993,8 @@
 0xfc5a97b3,HitISLensAgainstTopEdge_FW
 0xfc5a97e3,HitISLensToMechaEdge_FW
 0xfc5a99a5,HitISMechaEdgeInOpenControl_FW
+0xfc131a2b,imager_active_callback
+0xfc131abf,ImagerActivate
 0xfc0bb4fb,imlInitialize_FW
 0xfc37aee7,InactivateAdjLog_FW
 0xfc0bfde9,initComDiscovery_FW

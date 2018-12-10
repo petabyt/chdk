@@ -207,6 +207,7 @@
 0xffc249b8,ExpCtrlTool_StartContiAE
 0xffc24b78,ExpCtrlTool_StopContiAE
 0xffc26a08,task_FramePosition
+0xffc2804c,ImagerActivate
 0xffc2933c,task_ImageSensorTask
 0xffc29a64,SetMontblancVSize_FW
 0xffc29a78,GetMontblancVSize_FW
@@ -571,6 +572,7 @@
 0xffc76f84,InPort_FW
 0xffc76f90,Capture.Delete_FW
 0xffc76ff8,Capture.Create_FW
+0xffc77b4c,GetCurrentShutterSpeed
 0xffc77b4c,GetCurrentShutterSpeed_FW
 0xffc77e28,GetCurrentExposureTime_FW
 0xffc787d0,ImgGainTool.IsValidDeltaSv_FW

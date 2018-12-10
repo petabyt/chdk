@@ -203,6 +203,7 @@
 0xffc358f8,ExpCtrlTool_StartContiAE
 0xffc35a78,ExpCtrlTool_StopContiAE
 0xffc37674,task_WBCtrl
+0xffc38e14,ImagerActivate
 0xffc3a128,task__ImageSensorTask
 0xffc3f948,DispCon_ShowColorBar_FW
 0xffc3f9a0,DispCon_ShowFiveStep_FW
@@ -489,6 +490,7 @@
 0xffc817c0,strcat
 0xffc81a08,strftime
 0xffc82008,mktime_ext
+0xffc86080,GetCurrentShutterSpeed
 0xffc86080,GetCurrentShutterSpeed_FW
 0xffc86358,GetCurrentExposureTime_FW
 0xffc8a348,task_WBIntegTask

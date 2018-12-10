@@ -244,6 +244,7 @@
 0xff8443ac,task_AFTask
 0xff844f04,GetMacroSupportZoomPoint_FW
 0xff845fc0,ReloadAFAdjustment_FW
+0xff8467ac,ImagerActivate
 0xff847fd4,task__ImageSensorTask
 0xff84895c,SetMontblancVSize_FW
 0xff848970,GetMontblancVSize_FW
@@ -542,6 +543,7 @@
 0xff896640,strftime
 0xff896c68,atol_FW
 0xff896c74,strcat
+0xff89a57c,GetCurrentShutterSpeed
 0xff89a57c,GetCurrentShutterSpeed_FW
 0xff89a878,GetCurrentExposureTime_FW
 0xff89f0c4,task_WBIntegTask

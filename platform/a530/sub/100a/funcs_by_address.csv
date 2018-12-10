@@ -303,6 +303,7 @@
 0xffca1990,WBInteg.EnableUsageCheckSS_FW
 0xffca19a0,WBInteg.DisableUsageCheckSS_FW
 0xffcaecc8,DevelopTool.DevelopTest_FW
+0xffcb2f1c,ImagerActivate
 0xffcb3430,ActivateImager_FW
 0xffcb34e0,QuietImager_FW
 0xffcb3750,CancelImager_FW
@@ -1085,6 +1086,7 @@
 0xffe81654,IsAdjCdsMode_FW
 0xffe81778,ConvertTvToExposureTime_FW
 0xffe817b4,GetCurrentExposureTime_FW
+0xffe817cc,GetCurrentShutterSpeed
 0xffe817cc,GetCurrentShutterSpeed_FW
 0xffe817e0,SetShutterSpeedWithMecha_FW
 0xffe81854,SetShutterSpeed_FW

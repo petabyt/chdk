@@ -308,6 +308,7 @@
 0xff8c379c,CdsDrv.SetCdsCalibration_FW
 0xff8c3908,CdsDrv.Create_FW
 0xff8c3940,CdsDrv.Delete_FW
+0xff8c56b4,ImagerActivate
 0xff8c5bc8,ActivateImager_FW
 0xff8c5c78,QuietImager_FW
 0xff8c5ee8,CancelImager_FW
@@ -1070,6 +1071,7 @@
 0xffa88458,IsAdjCdsMode_FW
 0xffa8857c,ConvertTvToExposureTime_FW
 0xffa885b8,GetCurrentExposureTime_FW
+0xffa885d0,GetCurrentShutterSpeed
 0xffa885d0,GetCurrentShutterSpeed_FW
 0xffa885e4,SetShutterSpeedWithMecha_FW
 0xffa88658,SetShutterSpeed_FW

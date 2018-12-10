@@ -411,6 +411,7 @@
 0xffd469c0,task_CntFlashTask
 0xffd487a0,j_GetBaseSv
 0xffd49e28,GetBaseSv
+0xffd4aa6c,ImagerActivate
 0xffd4afa4,ActivateImager_FW
 0xffd4b054,QuietImager_FW
 0xffd4b2c4,CancelImager_FW
@@ -643,6 +644,7 @@
 0xffddbcbc,IsAdjCdsMode_FW
 0xffddbdd0,ConvertTvToExposureTime_FW
 0xffddbe0c,GetCurrentExposureTime_FW
+0xffddbe24,GetCurrentShutterSpeed
 0xffddbe24,GetCurrentShutterSpeed_FW
 0xffddbe38,SetShutterSpeedWithMecha_FW
 0xffddbeac,SetShutterSpeed_FW
