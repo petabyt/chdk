@@ -276,6 +276,7 @@
 0xff044068,ExpCtrlTool_StopContiAE
 0xff0480a4,task_AFTask
 0xff0490b4,GetMacroSupportZoomPoint_FW
+0xff04ac70,ImagerActivate
 0xff04ad4c,ClearImageDrive_FW
 0xff04c244,task__imageSensorTask
 0xff04ca98,SetMontblancVSize_FW
@@ -678,6 +679,7 @@
 0xff11ea40,task_SsgPeriodTask
 0xff1232ac,task__tgTask
 0xff127064,task_LiveImageTask
+0xff127f10,GetCurrentShutterSpeed
 0xff127f10,GetCurrentShutterSpeed_FW
 0xff12829c,GetCurrentExposureTime_FW
 0xff128648,task_SyncPeriod

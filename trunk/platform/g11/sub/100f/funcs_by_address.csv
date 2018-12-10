@@ -182,6 +182,7 @@
 0xff844d88,ExpCtrlTool_StopContiAE
 0xff846800,task_WBCtrl
 0xff8494d8,task_AFTask
+0xff84b91c,ImagerActivate
 0xff84cc34,task__ImageSensorTask
 0xff8509a4,LiveImageTool.GetDzoomPosition_FW
 0xff850ad8,GetVRAMHPixelsSize
@@ -551,6 +552,7 @@
 0xff8aa728,strcat
 0xff8aa974,strftime
 0xff8aaf6c,mktime_ext
+0xff8af224,GetCurrentShutterSpeed
 0xff8af224,GetCurrentShutterSpeed_FW
 0xff8af4fc,GetCurrentExposureTime_FW
 0xff8b32b4,task_WBIntegTask

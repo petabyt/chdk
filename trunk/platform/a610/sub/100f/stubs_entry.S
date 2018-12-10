@@ -33,6 +33,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe67118) //  3 52%
 DEF(levent_table                            ,0xffd42618) // Found @0xffd42618
 DEF(FlashParamsTable                        ,0xffd4b9b4) // Found @0xffd4b9b4
 DEF(fileio_semaphore                        ,0x00002814) // Found @0xffc5a16c
+DEF(imager_active                           ,0x000054b4) // Found @0xffcb2d9c (0x54b4 + 0)
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd4d694
 
 // Values below go in 'lib.c':
@@ -81,6 +82,7 @@ NHSTUB(Fwrite_Fut                             ,0xffc56028) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc1c488) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1c474) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe7169c) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xffe712f4) //120
 NHSTUB(GetUsableMaxAv                         ,0xffe718c8) //120
 NHSTUB(GetUsableMinAv                         ,0xffe718a4) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xffc5c270) //119

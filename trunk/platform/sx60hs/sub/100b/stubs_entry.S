@@ -97,6 +97,7 @@ DEF(playrec_mode                      ,0x0000bb84) // (0xbb80+0x4) Found @0xfc2d
 DEF(jpeg_count_str                    ,0x0019b134) // Found @0xfc10379a
 DEF(zoom_busy                         ,0x0000b85c) // (0xb840+0x1c) Found @0xfc2edab4
 DEF(focus_busy                        ,0x00013488) // (0x13480+0x8) Found @0xfc2f9e0a
+DEF(imager_active                     ,0x00008688) // (0x8684+0x4) Found @0xfc13b2ac
 DEF(_nrflag                           ,0x0001e858) // (0x1e854+0x4) Found @0xfc347a40
 //DEF(active_bitmap_buffer              ,0x0000c200), ** != ** stubs_min = 0x0000c1fc (0xc1fc)
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0aa3ce
@@ -144,6 +145,7 @@ NHSTUB(Fwrite_Fut                             ,0xfc301d27) //  0
 NHSTUB(GetBatteryTemperature                  ,0xfc143bc5) //  0
 NHSTUB(GetCCDTemperature                      ,0xfc143b69) //  0
 NHSTUB(GetCurrentAvValue                      ,0xfc14e00d) //  0
+NHSTUB(GetCurrentShutterSpeed                 ,0xfc16d4e3) //  0
 NHSTUB(GetUsableMaxAv                         ,0xfc1c1c71) //  0
 NHSTUB(GetUsableMinAv                         ,0xfc1c1c5f) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc33201f) //  0

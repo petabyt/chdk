@@ -459,6 +459,8 @@
 0xfc11a8dd,task_ClockSave
 0xfc11b9f9,task_WBCtrl
 0xfc11c721,task_DevelopModule
+0xfc11ce21,imager_active_callback
+0xfc11ceb5,ImagerActivate
 0xfc11db53,task__imageSensorTask
 0xfc11fdcd,LiveImageTool.GetDzoomPosition_FW
 0xfc120139,GetVRAMHPixelsSize
@@ -577,6 +579,7 @@
 0xfc13ed2b,task_AprocBpGenTask
 0xfc148d35,AllocateUncacheableMemory
 0xfc148d61,FreeUncacheableMemory
+0xfc14982b,GetCurrentShutterSpeed
 0xfc14982b,GetCurrentShutterSpeed_FW
 0xfc149ad5,GetCurrentExposureTime_FW
 0xfc14ca4f,task_WBIntegTask

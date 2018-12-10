@@ -181,6 +181,7 @@
 0xff832b04,ExpCtrlTool_StartContiAE
 0xff832c48,ExpCtrlTool_StopContiAE
 0xff834e88,task_FramePosition
+0xff836584,ImagerActivate
 0xff837938,task_ImageSensorTask
 0xff838a40,SetUSBToDCPMode_FW
 0xff83e6dc,DispCon_ShowColorBar_FW
@@ -507,6 +508,7 @@
 0xff8943a4,memcpy_FW
 0xff894618,strftime
 0xff894c10,mktime_ext
+0xff895758,GetCurrentShutterSpeed
 0xff895758,GetCurrentShutterSpeed_FW
 0xff895a8c,GetCurrentExposureTime_FW
 0xff899048,task_WBIntegTask

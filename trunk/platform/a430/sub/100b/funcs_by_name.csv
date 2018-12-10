@@ -332,6 +332,7 @@
 0xffe66fd0,GetCurrentExposureTime_FW
 0xffe694a0,GetCurrentFocusLensPosition_FW
 0xffc0e0c8,GetCurrentMachineTime
+0xffe66fe8,GetCurrentShutterSpeed
 0xffe66fe8,GetCurrentShutterSpeed_FW
 0xffe69448,GetCurrentTargetDistance
 0xffe69448,GetCurrentTargetDistance_FW
@@ -438,6 +439,7 @@
 0xffc10e58,GiveSemaphore_FW
 0xffd33fc4,HardwareDefect_FW
 0xffc0ead8,HwOcReadICAPCounter
+0xffcb12cc,ImagerActivate
 0xffc98224,ImgGainTool.FlushGain_FW
 0xffc98290,ImgGainTool.GetDeltaGainLimit_FW
 0xffc98330,ImgGainTool.GetGain_FW

@@ -319,6 +319,7 @@
 0xffcc148c,DevelopTool.DevelopTest_FW
 0xffcc22f0,j_GetBaseSv
 0xffcc3c84,GetBaseSv
+0xffcc5df8,ImagerActivate
 0xffcc6304,ActivateImager_FW
 0xffcc63b4,QuietImager_FW
 0xffcc6624,CancelImager_FW
@@ -1138,6 +1139,7 @@
 0xffeb04a4,IsAdjCdsMode_FW
 0xffeb05c8,ConvertTvToExposureTime_FW
 0xffeb0604,GetCurrentExposureTime_FW
+0xffeb061c,GetCurrentShutterSpeed
 0xffeb061c,GetCurrentShutterSpeed_FW
 0xffeb0630,SetShutterSpeedWithMecha_FW
 0xffeb06a4,SetShutterSpeed_FW

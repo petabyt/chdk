@@ -516,6 +516,8 @@
 0xfc134e01,VbattGet_FW
 0xfc1350f9,task_ClockSave
 0xfc136ff1,task_DevelopModule
+0xfc138a07,imager_active_callback
+0xfc138a9b,ImagerActivate
 0xfc138b1d,ClearImageDrive_FW
 0xfc1397b9,task__imageSensorTask
 0xfc13bbbf,LiveImageTool.GetDzoomPosition_FW
@@ -634,6 +636,7 @@
 0xfc163f1f,task_AprocBpGenTask
 0xfc16a28b,task_DetSeqT
 0xfc16a8a1,task_DetSeqSadT
+0xfc16e733,GetCurrentShutterSpeed
 0xfc16e733,GetCurrentShutterSpeed_FW
 0xfc16e9df,GetCurrentExposureTime_FW
 0xfc17614f,ExpCtrlTool.SetExpMode_FW

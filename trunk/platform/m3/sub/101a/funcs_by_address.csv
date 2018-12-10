@@ -447,6 +447,8 @@
 0xfc130ee5,task_ClockSave
 0xfc130fe5,TurnOffE1_FW
 0xfc131085,task_Bye
+0xfc131a2b,imager_active_callback
+0xfc131abf,ImagerActivate
 0xfc131b41,ClearImageDrive_FW
 0xfc133a5d,LiveImageTool.GetDzoomPosition_FW
 0xfc133d9d,GetVRAMHPixelsSize
@@ -1407,6 +1409,7 @@
 0xfc35f9cd,GetFocusLensPullInMaxSpeed_FW
 0xfc35fb2b,GetFocusLensSubjectDistance
 0xfc35fb5f,GetFocusLensCurrentPosition_FW
+0xfc360133,GetCurrentShutterSpeed
 0xfc360133,GetCurrentShutterSpeed_FW
 0xfc360393,GetCurrentExposureTime_FW
 0xfc3606df,get_current_exp

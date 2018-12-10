@@ -65,6 +65,7 @@ DEF(palette_buffer_ptr                      ,0x000082b0) // Found @0xffd8e674
 // Offset from start of palette_buffer to color data = 8 (Found @0xffe4ad74)
 // Camera appears to have only 1 RAW buffer @ 0x414ef7e0 (Found @0xffe687a8)
 DEF(fileio_semaphore                        ,0x000028c4) // Found @0xffc43ec4
+DEF(imager_active                           ,0x00001f0c) // Found @0xffc245cc (0x1f08 + 4)
 DEF_CONST(uiprop_count                      ,0x0000006e) // Found @0xffd38dec
 
 // Values below go in 'lib.c':
@@ -174,6 +175,7 @@ NHSTUB(Fwrite_Fut                             ,0xffc133b8) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc394d8) //102
 NHSTUB(GetCCDTemperature                      ,0xffc39464) //102
 NHSTUB(GetCurrentAvValue                      ,0xffd0e010) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xffc76bf4) //120
 NHSTUB(GetUsableMaxAv                         ,0xffe607bc) //120
 NHSTUB(GetUsableMinAv                         ,0xffe607a4) //120
 NHSTUB(GetFocusLensSubjectDistance            ,0xffd0c5f0) //102

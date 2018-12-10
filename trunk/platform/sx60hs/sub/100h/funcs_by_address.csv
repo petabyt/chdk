@@ -492,6 +492,8 @@
 0xfc137a71,task_ClockSave
 0xfc13ad3f,EF.IsChargeFull_FW
 0xfc13ad3f,IsStrobeChargeCompleted
+0xfc13b29b,imager_active_callback
+0xfc13b32f,ImagerActivate
 0xfc13b3b1,ClearImageDrive_FW
 0xfc13c00d,task__imageSensorTask
 0xfc13e473,LiveImageTool.GetDzoomPosition_FW
@@ -636,6 +638,7 @@
 0xfc16a085,task_DetSeqSadT
 0xfc16cba9,AllocateUncacheableMemory
 0xfc16cbd5,FreeUncacheableMemory
+0xfc16d50b,GetCurrentShutterSpeed
 0xfc16d50b,GetCurrentShutterSpeed_FW
 0xfc16d7b7,GetCurrentExposureTime_FW
 0xfc1735e1,task_BrtMsrTask

@@ -68,6 +68,7 @@ NHSTUB(localtime                              ,0xffaeec54) //  1 93%
 DEF(levent_table                            ,0xff97d92c) // Found @0xff97d92c
 DEF(FlashParamsTable                        ,0xff9858a0) // Found @0xff9858a0
 DEF(fileio_semaphore                        ,0x00003418) // Found @0xff874694
+DEF(imager_active                           ,0x00003a40) // Found @0xff8d7140 (0x3a40 + 0)
 DEF_CONST(uiprop_count                      ,0x0000004f) // Found @0xff987598
 
 // Values below go in 'lib.c':
@@ -106,6 +107,7 @@ NHSTUB(Fwrite_Fut                             ,0xff86fe68) //  1
 NHSTUB(GetBatteryTemperature                  ,0xff82e368) //102
 NHSTUB(GetCCDTemperature                      ,0xff82e354) //102
 NHSTUB(GetCurrentAvValue                      ,0xffaa6cc4) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xffaa6918) //120
 NHSTUB(GetUsableMaxAv                         ,0xffaa6ef0) //120
 NHSTUB(GetUsableMinAv                         ,0xffaa6ecc) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff8767a0) //119

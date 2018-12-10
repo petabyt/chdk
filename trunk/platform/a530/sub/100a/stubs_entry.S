@@ -50,6 +50,7 @@ NHSTUB(Mount_FileSystem                       ,0xffc5d754) //  1 90%
 //DEF(levent_table                            ,0xffd40eac) // Found @0xffd40eac,          stubs_min = 0xffd40eac (0xFFD40EAC)
 //DEF(FlashParamsTable                        ,0xffd4a45c) // Found @0xffd4a45c,          stubs_min = 0xffd4a45c (0xFFD4A45C)
 DEF(fileio_semaphore                        ,0x000027d8) // Found @0xffc5bb78
+DEF(imager_active                           ,0x00005498) // Found @0xffcb2e18 (0x5498 + 0)
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd4bf54
 
 // Values below go in 'lib.c':
@@ -91,6 +92,7 @@ NHSTUB(Fwrite_Fut                             ,0xffc57894) //120
 NHSTUB(GetBatteryTemperature                  ,0xffc1d030) //102
 NHSTUB(GetCCDTemperature                      ,0xffc1d01c) //102
 NHSTUB(GetCurrentAvValue                      ,0xffe81b1c) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xffe817cc) //120
 //NHSTUB(GetDrive_ClusterSize                 ,0xffc5dc88) //119            == 0xffc5dc88
 //NHSTUB(GetDrive_FreeClusters                ,0xffc5dd00) //1103            == 0xffc5dd00
 //NHSTUB(GetDrive_TotalClusters               ,0xffc5dcc4) //119            == 0xffc5dcc4

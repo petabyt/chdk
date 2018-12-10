@@ -51,6 +51,7 @@ DEF(focus_busy                              ,0x00008994) // Found @0xff92e3bc
 DEF(raw_buffers                             ,0xffab0cb8) // Found @0xffab0cb8
 DEF(active_raw_buffer                       ,0x0000550c) // Found @0xff85e86c
 DEF(fileio_semaphore                        ,0x00002a0c) // Found @0xff850f2c
+DEF(imager_active                           ,0x00001ef4) // Found @0xff8362f8 (0x1ef0 + 4)
 DEF_CONST(uiprop_count                      ,0x00000064) // Found @0xff95cc24
 
 // Values below go in 'lib.c':
@@ -158,6 +159,7 @@ NHSTUB(Fwrite_Fut                             ,0xff8238c8) //120
 NHSTUB(GetBatteryTemperature                  ,0xff8455e0) //102
 NHSTUB(GetCCDTemperature                      ,0xff845570) //102
 NHSTUB(GetCurrentAvValue                      ,0xff92fdd0) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xff895938) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff84f500) //  1
 NHSTUB(GetDrive_FreeClusters                  ,0xff84f568) //  1
 NHSTUB(GetDrive_TotalClusters                 ,0xff84f534) //  1

@@ -501,6 +501,7 @@
 0xff0879e8,GetCurrentMachineTime
 0xff18f1c0,GetCurrentMaximumLogSize_FW
 0xff31b6d4,GetCurrentOptTemp_FW
+0xff0b74d0,GetCurrentShutterSpeed
 0xff0b74d0,GetCurrentShutterSpeed_FW
 0xff1bca4c,GetCurrentTargetDistance_FW
 0xff3db3cc,GetCurrentZoomLensDirection_FW
@@ -819,6 +820,7 @@
 0xff02308c,i2c_Sd_Pwr_Ctrl_FW
 0xff024310,i2c_write_proc_FW
 0xff28d444,IisTimer_FW
+0xff0425f4,ImagerActivate
 0xff18f188,InactivateAdjLog_FW
 0xff1c2c70,InactivateUsmCPU_FW
 0xff1d1dc8,InitializeAdjustmentFunction_FW

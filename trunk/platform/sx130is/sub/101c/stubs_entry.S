@@ -62,6 +62,7 @@ DEF(viewport_buffers                        ,0xffb4e474) // Found @0xff8502fc
 DEF(active_viewport_buffer                  ,0x00002064) // Found @0xff8500ac
 // Camera appears to have only 1 RAW buffer @ 0x41f3b020 (Found @0xffb102f0)
 DEF(fileio_semaphore                        ,0x00002a20) // Found @0xff86eeac
+DEF(imager_active                           ,0x00001fa8) // Found @0xff84d0c0 (0x1fa4 + 4)
 DEF_CONST(uiprop_count                      ,0x00000072) // Found @0xff993084
 
 // Values below go in 'lib.c':
@@ -170,6 +171,7 @@ NHSTUB(Fseek_Fut                              ,0xff836990) //120
 NHSTUB(Fwrite_Fut                             ,0xff8368f0) //120
 NHSTUB(GetCCDTemperature                      ,0xff862fdc) //102
 NHSTUB(GetCurrentAvValue                      ,0xff9625c0) //120
+NHSTUB(GetCurrentShutterSpeed                 ,0xff8add4c) //120
 NHSTUB(GetUsableMaxAv                         ,0xffb0759c) //120
 NHSTUB(GetUsableMinAv                         ,0xffb07584) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff8709b8) //122
