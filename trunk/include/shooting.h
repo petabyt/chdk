@@ -65,6 +65,10 @@ extern short shooting_get_flash_mode();
 
 /******************************************************************/
 
+// returned by shooting_get_tv96_from_shutter_speed for invalid input
+// and get_current_tv96 when imager not active
+#define SHOOTING_TV96_INVALID -10000
+
 extern int shooting_get_user_tv_id();
 extern short shooting_get_tv96();
 extern short shooting_get_tv96_from_shutter_speed(float t);
@@ -178,8 +182,10 @@ extern int EngDrvRead(int gpio_reg);
 extern void PutInNdFilter();
 extern void PutOutNdFilter();
 extern long shooting_get_current_av96();
+extern long shooting_get_current_tv96();
 extern long IsStrobeChargeCompleted();
 extern void SetCurrentCaptureModeType();
+extern int shooting_get_imager_active();
 
 extern int get_ev_video_avail(void);
 extern void set_ev_video_avail(int);

@@ -134,6 +134,7 @@ int isSTR(firmware *fw, int offset);
 int isSTR_cond(firmware *fw, int offset);
 int isBX(firmware *fw, int offset);
 int isBX_LR(firmware *fw, int offset);
+int isBLX(firmware *fw, int offset);
 int isBL(firmware *fw, int offset);
 int isBL_cond(firmware *fw, int offset);
 int isBLEQ(firmware *fw, int offset);

@@ -540,6 +540,12 @@ int isBX_LR(firmware *fw, int offset)
     return (fwval(fw,offset) == 0xE12FFF1E);
 }
 
+// BLX
+int isBLX(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFFFFFF0) == 0xE12FFF30);
+}
+
 // BL
 int isBL(firmware *fw, int offset)
 {

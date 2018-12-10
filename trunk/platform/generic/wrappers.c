@@ -347,7 +347,14 @@ short shooting_get_nd_current_ev96(void)
 #endif
 }
 
-//long shooting_get_current_tv96()    { return _GetCurrentShutterSpeed(); }
+long shooting_get_current_tv96()
+{
+    // old cameras crash if _GetCurrentShutterSpeed called when inactive
+    if(!shooting_get_imager_active()) {
+        return SHOOTING_TV96_INVALID;
+    }
+    return _GetCurrentShutterSpeed();
+}
 long shooting_get_current_av96()    { return _GetCurrentAvValue(); }
 
 long IsStrobeChargeCompleted()      { return _IsStrobeChargeCompleted(); }

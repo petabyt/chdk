@@ -28,6 +28,7 @@ extern void _PutOutNdFilter();
 extern short _get_nd_value(void);
 extern short _get_current_nd_value(void);
 extern volatile long focus_busy;
+extern long _GetCurrentShutterSpeed();
 extern long _GetCurrentAvValue();
 extern short _GetUsableMinAv(void);
 extern short _GetUsableMaxAv(void);

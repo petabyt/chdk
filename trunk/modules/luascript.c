@@ -756,14 +756,17 @@ static int luaCB_get_current_av96( lua_State* L )
 }
 
 // get current tv96 value - actual current value, not from half press propcase
-// disabled for now because of crash issues on old cams
-/*
+// returns nil if image sensor not active (playback, sleep mode, etc)
 static int luaCB_get_current_tv96( lua_State* L )
 {
-  lua_pushnumber( L, shooting_get_current_tv96() );
+  long tv = shooting_get_current_tv96();
+  if( tv == SHOOTING_TV96_INVALID) {
+    lua_pushnil(L);
+  } else {
+    lua_pushnumber( L, tv);
+  }
   return 1;
 }
-*/
 
 // get the exposure value of the ND filter, or 0 if not present
 static int luaCB_get_nd_value_ev96( lua_State* L )
@@ -779,6 +782,12 @@ static int luaCB_get_nd_current_ev96( lua_State* L )
   return 1;
 }
 
+// return true if sensor is enabled (live view on), false if not (playback, rec with display off, display off power save)
+static int luaCB_get_imager_active( lua_State* L )
+{
+  lua_pushboolean( L, shooting_get_imager_active() );
+  return 1;
+}
 
 static int luaCB_get_user_tv_id( lua_State* L )
 {
@@ -2761,7 +2770,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_nd_value_ev96)
     FUNC(get_nd_current_ev96)
     FUNC(get_current_av96)
-//    FUNC(get_current_tv96)
+    FUNC(get_current_tv96)
+    FUNC(get_imager_active)
 
     FUNC(set_av96_direct)
     FUNC(set_av96)

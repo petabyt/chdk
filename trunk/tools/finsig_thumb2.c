@@ -132,6 +132,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetCCDTemperature" },
 
     { "GetCurrentAvValue" },
+    { "GetCurrentShutterSpeed" },
     { "GetUsableMaxAv", OPTIONAL },
     { "GetUsableMinAv", OPTIONAL },
     { "GetUsableAvRange", UNUSED |OPTIONAL },
@@ -404,6 +405,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "DebugAssert2", OPTIONAL|UNUSED }, // helper, made up name, two arg form of DebugAssert
     { "get_canon_mode_list", OPTIONAL|UNUSED }, // helper, made up name
     { "taskcreate_LowConsole", OPTIONAL|UNUSED }, // helper, made up name
+    { "ImagerActivate", OPTIONAL|UNUSED }, // helper
+    { "imager_active_callback", OPTIONAL|UNUSED }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -504,6 +507,7 @@ misc_val_t misc_vals[]={
     { "jpeg_count_str",     },
     { "zoom_busy",          },
     { "focus_busy",         },
+    { "imager_active",      },
     { "_nrflag",            MISC_VAL_OPTIONAL},
     { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
@@ -1172,6 +1176,86 @@ int sig_match_get_current_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *r
     disasm_iter(fw,is);
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
+
+int sig_match_imager_active_callback(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t match_ldr_bl_mov_pop[]={
+        {MATCH_INS(LDR, 2),   {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(BL, MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(MOV,2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM(0)}},
+        {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+
+    if(!insn_match_find_next_seq(fw,is,28,match_ldr_bl_mov_pop)) {
+        printf("sig_match_imager_active_callback: match failed\n");
+        return 0;
+    }
+    // rewind to LDR r0,...
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,3));
+    // get LDR value
+    disasm_iter(fw,is);
+    uint32_t f1=LDR_PC2val(fw,is->insn);
+//    printf("f1 0x%08x\n",f1);
+    // thumb bit should be set correctly
+    return save_sig_with_j(fw,rule->name,f1);
+}
+int sig_match_imager_active(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+
+    const insn_match_t match_ldr_mov_str_pop[]={
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(MOV,2), {MATCH_OP_REG_ANY,  MATCH_OP_IMM(1)}},
+        {MATCH_INS(STR, 2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_ANY}},
+        {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+
+    int backtrack=3;
+    if(!insn_match_find_next_seq(fw,is,10,match_ldr_mov_str_pop)) {
+        // re-init and try reverse mov/ldr order
+        init_disasm_sig_ref(fw,is,rule);
+        const insn_match_t match_mov_ldr_str_pop[]={
+            {MATCH_INS(MOV,2), {MATCH_OP_REG_ANY,  MATCH_OP_IMM(1)}},
+            {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_BASE(PC)}},
+            {MATCH_INS(STR, 2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_ANY}},
+            {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+            {ARM_INS_ENDING}
+        };
+        if(!insn_match_find_next_seq(fw,is,10,match_mov_ldr_str_pop)) {
+            printf("sig_match_imager_active: match failed\n");
+            return 0;
+        }
+        backtrack=2;
+    }
+    // rewind to LDR
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,backtrack));
+    disasm_iter(fw,is);
+    uint32_t base=LDR_PC2val(fw,is->insn);
+    uint32_t reg=is->insn->detail->arm.operands[0].reg;
+//    printf("base 0x%08x @0x%08x\n",base,(uint32_t)is->insn->address);
+    // skip mov if after LDR
+    if(backtrack == 3) {
+        disasm_iter(fw,is);
+    }
+    disasm_iter(fw,is);
+    // sanity check base is the same as LDR'd to
+    if(is->insn->detail->arm.operands[1].mem.base != reg) {
+        printf("sig_match_imager_active: reg mismatch\n");
+        return 0;
+    }
+    uint32_t off=is->insn->detail->arm.operands[1].mem.disp;
+//    printf("off 0x%08x @0x%08x\n",off,(uint32_t)is->insn->address);
+    save_misc_val("imager_active",base,off,(uint32_t)is->insn->address);
+    return 1;
+}
+
 
 int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -3751,6 +3835,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "Fwrite_Fut",               "Fwrite_Fut_FW",},
 {sig_match_named,   "GetAdChValue",             "GetAdChValue_FW",},
 {sig_match_named,   "GetCurrentAvValue",        "GetCurrentAvValue_FW",},
+{sig_match_named,   "GetCurrentShutterSpeed",   "GetCurrentShutterSpeed_FW",},
 {sig_match_named,   "GetBatteryTemperature",    "GetBatteryTemperature_FW",},
 {sig_match_named,   "GetCCDTemperature",        "GetCCDTemperature_FW",},
 {sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",SIG_NAMED_JMP_SUB},
@@ -3858,6 +3943,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
+{sig_match_near_str,"ImagerActivate",           "Fail ImagerActivate(ErrorCode:%x)\r",SIG_NEAR_BEFORE(6,1)},
 //{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
 {sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
@@ -3978,6 +4064,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
 {sig_match_get_current_exp,"get_current_exp","ShowCurrentExp_FW",},
 {sig_match_get_current_nd_value,"get_current_nd_value","get_current_exp",},
+{sig_match_imager_active_callback,"imager_active_callback","ImagerActivate",},
+{sig_match_imager_active,"imager_active","imager_active_callback",},
 {sig_match_prop_string,"PROPCASE_AFSTEP", "\n\rError : GetAFStepResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_FOCUS_STATE", "\n\rError : GetAFResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_AV", "\n\rError : GetAvResult",SIG_NEAR_BEFORE(7,1)},

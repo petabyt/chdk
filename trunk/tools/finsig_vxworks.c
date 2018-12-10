@@ -254,6 +254,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "GetBatteryTemperature" },
     { "GetCCDTemperature" },
     { "GetCurrentAvValue" },
+    { "GetCurrentShutterSpeed" },
     { "GetUsableMaxAv", OPTIONAL },
     { "GetUsableMinAv", OPTIONAL },
     { "GetDrive_ClusterSize" },
@@ -504,6 +505,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "WaitForEventFlag", UNUSED|DONT_EXPORT }, // helper to find other eventflag functions
 
     { "filesem_init", OPTIONAL|UNUSED }, // file semaphore init function, needed for verification
+    { "ImagerActivate", OPTIONAL|UNUSED }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1195,6 +1197,7 @@ string_sig string_sigs[] =
     {20, "GetSDProtect", "GetSDProtect_FW", 1 },
     //{20, "GetSystemTime", "GetSystemTime_FW", 1 },
     {20, "GetCurrentAvValue", "GetCurrentAvValue_FW", 1 },
+    {20, "GetCurrentShutterSpeed", "GetCurrentShutterSpeed_FW", 1 },
     {20, "GetUsableMaxAv", "GetUsableMaxAv_FW", 1 },
     {20, "GetUsableMinAv", "GetUsableMinAv_FW", 1 },
     {20, "GetOpticalTemperature", "GetOpticalTemperature_FW", 1 },
@@ -1511,6 +1514,7 @@ string_sig string_sigs[] =
     { 15, "IsStrobeChargeCompleted", "\r\nCaptSeq::ChargeNotCompleted!!", 0x01000001 }, // ixus30, 40
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001,    0x0008 },
     { 15, "get_nd_value", "IrisSpecification.c", 0x01000001,                     0x0014 },
+    { 15, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 0x01000001,   0x0007 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -3437,6 +3441,79 @@ int match_uiprop_count(firmware *fw, int k, int v)
     return 1;
 }
 
+int isMOVLRPC(firmware *fw, int offset)
+{
+    return (fwval(fw,offset) == 0xE1A0E00F); // MOV LR, PC
+}
+
+int match_imager_active(firmware *fw, int k, int v)
+{
+    int gotit = 0;
+    int reg = -1;
+    int o = 0;
+    uint32_t adr,where;
+    if (fwval(fw,k) == 0xe49df004) // POP {PC}
+    {
+        int k1 = find_inst_rev(fw, isBL, k-1, 10);
+        if (k1 == -1)
+            return 0;
+        uint32_t a;
+        int k2 = k1 - 8;
+        for (k1=k1-1;k1>=k2;k1--)
+        {
+            if (isLDR(fw,k1) || isADR(fw,k1))
+            {
+                if (isADR(fw,k1))
+                {
+                    a = ADR2adr(fw, k1);
+                }
+                else
+                {
+                    a = LDR2val(fw, k1);
+                }
+                if ((a>fw->base) && ((a&3) == 0))
+                {
+                    int k3 = adr2idx(fw, a);
+                    if (isSTMFD_LR(fw,k3))
+                    {
+                        k3 = find_inst(fw, isMOVLRPC, k3+1, 6);
+                        if (k3 != -1)
+                        {
+                            int k4;
+                            for(k4=5; k4>0; k4--)
+                            {
+                                if (isSTR_cond(fw,k3+k4))
+                                {
+                                    reg = fwRn(fw,k3+k4);
+                                    o = fwval(fw,k3+k4) & 0xff; // offset, should be around 4
+                                    where = idx2adr(fw,k3+k4);
+                                }
+                                if (reg>=0 && isLDR_cond(fw,k3+k4) && fwRd(fw,k3+k4)==reg)
+                                {
+                                    adr = LDR2val(fw,k3+k4);
+                                    if (adr < fw->memisostart)
+                                    {
+                                        gotit = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (gotit)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (gotit)
+    {
+        bprintf("DEF(%-40s,0x%08x) // Found @0x%08x (0x%x + %i)\n","imager_active",adr+o,where,adr,o);
+        return 1;
+    }
+    return 0;
+}
+
 // Search for things that go in 'lib.c'
 void find_lib_vals(firmware *fw)
 {
@@ -4478,9 +4555,12 @@ void find_stubs_min(firmware *fw)
         }
     }
 */
+
+    // Find imager_active
+    search_saved_sig(fw, "ImagerActivate", match_imager_active, 0/*v*/, 0, 30);
+
     // Find UI property count
     search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
-
 }
 
 //------------------------------------------------------------------------------------------------------------
