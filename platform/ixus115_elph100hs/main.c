@@ -33,17 +33,15 @@ void startup()
 #define NUM_DATA  3    // 3 words in each entry, first is FL
 
 extern int focus_len_table[NUM_FL*NUM_DATA];
-// Focal length range is 5.0 - 28,0 mm, 20 - 112 in 35-mm equivalent according to Canon's publisehd specs
+// Focal length range is 5.0 - 20,0 mm, 28 - 112 in 35-mm equivalent according to Canon's published specs
 
 // Conversion factor lens FL --> 35mm equiv
 // lens      35mm     CF
 // ----      ----     --
-// 5.0       20       (  20 / 5.0)  * 50 = 200  (min FL)
-// 28.0      112      ( 112 / 28.0) * 50 = 200  (max FL)
+// 5.0       28       (  28 / 5.0)  * 50 = 280  (min FL)
+// 20.0      112      ( 112 / 20.0) * 50 = 280  (max FL)
 
-// So, CF_EFL = 20/5.0*10000=40000 (check : 112/28.0*10000=40000)
-// divide by 10 to avoid overflow in get_effective_focal_length()
-#define CF_EFL      200
+#define CF_EFL      280
 #define CF_EFL_DIV  50
 
 
