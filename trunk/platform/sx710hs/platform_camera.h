@@ -123,7 +123,7 @@
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL           12
 
-    #define CAM_EXT_TV_RANGE                    1   // up to 1024s appears to be supported natively in firmware
+    #define CAM_EXT_TV_RANGE                    1   // up to 1024s appears to be supported natively in firmware, exp_drv required for short exposure
 
     #undef CAM_EXT_AV_RANGE
     // up to APEX 864 F22.6 at max zoom,  657 F 10 at wide
