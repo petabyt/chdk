@@ -179,15 +179,13 @@ asm volatile (
 "    orreq   r3, #1\n"                  // make sure it's a thumb address (may not be needed?)
 "    beq     exitHook\n"                // below compares not necessary if this check has found something.
 
-// exp_drv not needed for extended exposure, probably works up to 1024s
-/*
+// exp_drv not needed for extended exposure, probably works up to 1024s, but required for < 1/3200
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
-*/
 
 // not needed in sx710
 /*
