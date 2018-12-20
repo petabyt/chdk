@@ -182,6 +182,7 @@
 0xff9513c4,DoAELock_FW
 0xff95124c,DoAFLock
 0xff95124c,DoAFLock_FW
+0xff8b98f4,DoMovieFrameCapture
 0xff9741b0,DrawBinaryBitmapToDialog_FW
 0xff974b98,DrawDialogItem_FW
 0xff974060,DrawStringToDialog_FW
@@ -576,7 +577,9 @@
 0xffafc754,memset
 0xffafc754,memset_FW
 0xffb05f7c,memShow_FW
+0xff951748,MenuIn
 0xff951748,MenuIn_FW
+0xff95177c,MenuOut
 0xff95177c,MenuOut_FW
 0xffae8b00,MessageToSubCPU_FW
 0xff951f4c,MFOff

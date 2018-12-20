@@ -223,6 +223,8 @@
 0xff01ece0,ExitFromCompensationEVF
 0xff01ed40,DoAELock
 0xff01ed64,UnlockAE
+0xff01f5e0,MenuIn
+0xff01f60c,MenuOut
 0xff020510,malloc_strictly
 0xff020838,AllocateUncacheableMemory
 0xff020878,FreeUncacheableMemory
@@ -606,6 +608,7 @@
 0xff0b50d4,GetCurrentShutterSpeed_FW
 0xff0b53d0,GetCurrentExposureTime_FW
 0xff0b9eec,task_WBIntegTask
+0xff0bf9bc,DoMovieFrameCapture
 0xff0c2a10,task_BrtMsrTask
 0xff0c6750,ExpCtrlTool.SetExpMode_FW
 0xff0cb0a4,task_ExpDrv
@@ -1703,6 +1706,7 @@
 0xff43115c,GetContinuousMovieJpegVRAMData_FW
 0xff4311d4,ChangeDistortionSetForLiveImage_FW
 0xff4311e4,ChangeElectronicRollISSetting_FW
+0xff431364,SetImageMode
 0xff431414,Bat_VIN_FW
 0xff431414,SetInputVoltage_FW
 0xff431428,Bat_Save_FW

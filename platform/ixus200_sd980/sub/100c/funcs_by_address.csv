@@ -123,6 +123,8 @@
 0xff836b24,ExitFromCompensationEVF
 0xff836b78,DoAELock
 0xff836b9c,UnlockAE
+0xff837144,MenuIn
+0xff837170,MenuOut
 0xff837df4,CreateMessageQueue
 0xff837e78,DeleteMessageQueue
 0xff837f08,ReceiveMessageQueue
@@ -571,6 +573,7 @@
 0xff8bd508,task_WBCtrl
 0xff8be3cc,task_OBCtrlTask
 0xff8bf01c,task_DetectMoveTask
+0xff8c0e50,DoMovieFrameCapture
 0xff8c30bc,task_DevelopModule
 0xff8c3754,task_EFChargeT
 0xff8c3a24,EF.IsChargeFull_FW
@@ -1462,6 +1465,7 @@
 0xffb0c0d0,j_GetMovieJpegVRAMVPixelsSize_FW
 0xffb0c1f8,GetContinuousMovieJpegVRAMData_FW
 0xffb0c270,ChangeDistortionSetForLiveImage_FW
+0xffb0c3f0,SetImageMode
 0xffb0c4a0,Bat_VIN_FW
 0xffb0c4a0,SetInputVoltage_FW
 0xffb0c4b4,Bat_Save_FW

@@ -123,6 +123,8 @@
 0xff836dc8,ExitFromCompensationEVF
 0xff836e28,DoAELock
 0xff836e4c,UnlockAE
+0xff837500,MenuIn
+0xff83752c,MenuOut
 0xff838204,CreateMessageQueue
 0xff838288,DeleteMessageQueue
 0xff838318,ReceiveMessageQueue
@@ -561,6 +563,7 @@
 0xff8c46c8,task_WBCtrl
 0xff8c5584,task_OBCtrlTask
 0xff8c6294,task_DetectMoveTask
+0xff8c80c0,DoMovieFrameCapture
 0xff8c8868,task_ChaseFrame
 0xff8c9678,task_DispFace
 0xff8cb98c,task_DevelopModule
@@ -1555,6 +1558,7 @@
 0xffb03ca8,j_GetMovieJpegVRAMVPixelsSize_FW
 0xffb03dd0,GetContinuousMovieJpegVRAMData_FW
 0xffb03e34,ChangeDistortionSetForLiveImage_FW
+0xffb03fb4,SetImageMode
 0xffb04064,Bat_VIN_FW
 0xffb04064,SetInputVoltage_FW
 0xffb04078,Bat_Save_FW

@@ -226,6 +226,7 @@
 0xff86c068,DoAELock_FW
 0xff827bc8,DoAFLock
 0xff86c048,DoAFLock_FW
+0xff8ba844,DoMovieFrameCapture
 0xff9c4e10,DrawBinaryBitmapToDialog_FW
 0xff9c5838,DrawDialogItem_FW
 0xff9c4d0c,DrawStringToDialog_FW
@@ -812,6 +813,8 @@
 0xffa4095c,MemoryChecker_FW
 0xffa64b94,memset
 0xffa64b94,memset_FW
+0xff828d28,MenuIn
+0xff828d84,MenuOut
 0xff86c098,MFOff
 0xff86c098,MFOff_FW
 0xff86c088,MFOn
@@ -1182,6 +1185,7 @@
 0xffa1128c,SetHour_FW
 0xff87231c,SetHPTimerAfterNow
 0xff87239c,SetHPTimerAfterTimeout
+0xffa10f4c,SetImageMode
 0xffa11020,SetImageMode_FW
 0xffa10ffc,SetInputVoltage_FW
 0xff860988,SetISCoefficientD_A_FW

@@ -277,6 +277,7 @@
 0xff8b3ed0,WbThumb.DumpFstpas_FW
 0xff8b3ef0,WbThumb.DumpWbThumb_FW
 0xff8b3f10,WbThumb.DumpObinteg_FW
+0xff8b5584,DoMovieFrameCapture
 0xff8b6814,Capture.Photo_FW
 0xff8b68c4,Capture.DarkSub_FW
 0xff8b69ac,Capture.WbEvf_FW
@@ -748,8 +749,10 @@
 0xff93e674,ConverterNone_FW
 0xff93e67c,ConverterTele_FW
 0xff93e684,ConverterWide_FW
+0xff93e68c,MenuIn
 0xff93e68c,MenuIn_FW
 0xff93e6e4,PrepareMenuOut_FW
+0xff93e73c,MenuOut
 0xff93e73c,MenuOut_FW
 0xff93e784,MyCameraIn_FW
 0xff93e7c4,MyCameraOut_FW
