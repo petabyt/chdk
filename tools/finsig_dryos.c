@@ -505,6 +505,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_resource_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // name made up, gets a pointer to a certain resource (font, dialog, icon)
     { "CalcLog10", OPTIONAL|UNUSED|LIST_ALWAYS }, // helper
     { "ImagerActivate", OPTIONAL|UNUSED }, // helper
+    { "DoMovieFrameCapture", OPTIONAL|UNUSED },
+    { "SetImageMode", OPTIONAL|UNUSED },
+    { "MenuIn", OPTIONAL|UNUSED },
+    { "MenuOut", OPTIONAL|UNUSED },
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1718,6 +1722,121 @@ int find_sethptimeraftertimeout(firmware *fw)
     return 0;
 }
 
+uint32_t frsp_buf = 0;
+uint32_t frsp_buf_at = 0;
+int frsp_param = -1;
+int frsp_argcnt = 0;
+int find_DoMovieFrameCapture(firmware *fw)
+{
+    void add_func_name(char*, uint32_t, char*);
+    // we need the uncached bit
+    int match_CAM_UNCACHED_BIT(firmware*, int, int);
+    search_saved_sig(fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
+
+    int j = get_saved_sig(fw,"SetImageMode");
+    if (j < 0)
+        return 0;
+    j = adr2idx(fw, func_names[j].val);
+    int k = 0;
+    int k1 = 0;
+    int l = j + 20;
+    while (j < l)
+    {
+        j = find_inst(fw, isBL, j+1, 20);
+        if (j == -1)
+            break;
+        int j1 = idxFollowBranch(fw,j,0x01000001);
+        if (j != j1)
+        {
+            int j2;
+            for (j2=j1; j2<j1+6; j2++)
+            {
+                if ((fwval(fw,j2) & 0xFF000000) == 0x1A000000) // bne
+                {
+                    int j3 = idxFollowBranch(fw,j2,0xF1000001);
+                    if (j3-j2>0 && j3-j2<5)
+                    {
+                        if (isBL(fw,j3))
+                        {
+                            // buffer adr is embedded in routine, evaluate later
+                            k = idxFollowBranch(fw,j3,0x01000001);
+                            fwAddMatch(fw,idx2adr(fw,k),32,0,122);
+                            // add_func_name("DoMovieFrameCapture_helper1", idx2adr(fw,k), ""); // for visual verification
+                            k1 = 1;
+                            break;
+                        }
+                        else
+                        {
+                            // buffer and param are func args, evaluate here
+                            int m = 0;
+                            while (m < 4)
+                            {
+                                if ((fwval(fw,j3+m) & 0xFE1F0000) == 0xE41F0000) // ldr rx, 
+                                {
+                                    frsp_argcnt = fwRd(fw,j3+m) + 1; // this should be loaded in the right register directly
+                                    frsp_buf = LDR2val(fw,j3+m);
+                                    frsp_buf_at = idx2adr(fw,j3+m);
+                                    if (!((frsp_buf > fw->uncached_adr) &&
+                                          (fw->uncached_adr+fw->maxram))) // has to be uncached ram
+                                        frsp_buf = 0;
+                                }
+                                if ((fwval(fw,j3+m) & 0xFFF00000) == 0xE3A00000) // mov rx, 
+                                {
+                                    uint32_t u1 = ALUop2a(fw,j3+m);
+                                    if (u1>fw->uncached_adr && u1<(fw->uncached_adr+fw->maxram))
+                                    {
+                                        frsp_buf = u1;
+                                        frsp_buf_at = idx2adr(fw,j3+m);
+                                        frsp_argcnt = fwRd(fw,j3+m) + 1; // this should be loaded in the right register directly
+                                    }
+                                    else
+                                    {
+                                        frsp_param = u1;
+                                    }
+                                }
+                                if (isBL(fw,j3+m))
+                                {
+                                    k = idxFollowBranch(fw,j3+m,0x01000001);
+                                    fwAddMatch(fw,idx2adr(fw,k),32,0,122);
+                                    // add_func_name("DoMovieFrameCapture_helper2", idx2adr(fw,j1), ""); // for visual verification
+                                    break;
+                                }
+                                m++;
+                            }
+                            if (k)
+                                break;
+                        }
+                    }
+                }
+            }
+            if (k)
+                break;
+        }
+    }
+    if (k && k1)
+    {
+        k1 = k+1;
+        while (k1>0 && k1<k+20)
+        {
+            if (isLDR_PC(fw,k1))
+            {
+                uint32_t v = LDR2val(fw,k1);
+                if (v>fw->uncached_adr && v<fw->uncached_adr+fw->maxram && (v&3)==0)
+                {
+                    frsp_buf = v;
+                    frsp_param = 0;
+                    frsp_buf_at = idx2adr(fw,k1);
+                    break;
+                }
+            }
+            k1++;
+        }
+    }
+    if (k)
+        return 1;
+    return 0;
+}
+
 int find_GetBaseSv(firmware *fw)
 {
     int j = get_saved_sig(fw,"SetPropertyCase");
@@ -1895,6 +2014,7 @@ string_sig string_sigs[] =
     {20, "CalcLog10", "CalcLog10_FW", 4 },
     {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 1 },
     {20, "DisableISDriveError", "DisableISDriveError_FW", 1},
+    {20, "SetImageMode", "SetImageMode_FW", 0x01000002 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -2143,6 +2263,10 @@ string_sig string_sigs[] =
     { 11, "set_control_event", "Button:0x%08X:%s", 0x01000001,            20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20 },
     { 11, "_log", (char*)log_test, 0x01000001,                             1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
     { 11, "_uartr_req", "A/uartr.req", 0,                                  3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
+    { 11, "MenuIn", "MenuIn", 0,                                           1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 11, "MenuOut", "MenuOut", 0,                                         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 11, "MenuIn", "SSAPI::MenuIn", 0,                                    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
+    { 11, "MenuOut", "SSAPI::MenuOut", 0,                                  1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54   R55   R57   R58   R59
     { 12, "DeleteFile_Fut", "DeleteFile_Fut", 1,                        0x38, 0x38, 0x4C, 0x4C, 0x4C, 0x54, 0x54, 0x54, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
@@ -2173,6 +2297,7 @@ string_sig string_sigs[] =
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001 },
     { 15, "get_self_task_id", "ASSERT!! %s Line %d\n", 0x01000001 },
     { 15, "get_current_exp", "Exp  Av %d, Tv %d, Gain %d\r", 0x01000001 },
+    //{ 15, "DoMovieFrameCapture", "DoMovieFrameCapture executed.",  0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0001, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
     { 15, "get_task_properties", "Task ID: %d\n", 0x01000001,                    0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003, 0x0003 }, // string not unique!
@@ -2293,6 +2418,7 @@ string_sig string_sigs[] =
     { 22, "get_nd_value", (char*)find_get_nd_value, 0},
     { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
+    { 22, "DoMovieFrameCapture", (char*)find_DoMovieFrameCapture, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
@@ -5179,6 +5305,13 @@ void find_stubs_min(firmware *fw)
     // Find imager_active
     search_saved_sig(fw, "ImagerActivate", match_imager_active, 0/*v*/, 0, 30);
 
+//    if (frsp_buf && frsp_param!=-1)
+//    {
+//        print_stubs_min(fw,"frsp_buf",frsp_buf,frsp_buf_at);
+//        bprintf("DEF_CONST(%-34s,0x%08x)\n","frsp_param",frsp_param);
+//        bprintf("DEF_CONST(%-34s,0x%08x)\n","frsp_argcnt",frsp_argcnt);
+//    }
+
     // Find UI property count
     search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
 }
@@ -7289,6 +7422,8 @@ int main(int argc, char **argv)
     bprintf("#include \"stubs_asm.h\"\n\n");
 
     load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0, OS_DRYOS);
+    fw.uncached_adr = 0;
+    fw.uncached_adr_idx = 0;
     find_eventprocs(&fw);
     find_builddate(&fw);
     output_firmware_vals(&fw);
@@ -7319,9 +7454,8 @@ int main(int argc, char **argv)
         }
     }
 
-    fw.uncached_adr = 0;
-    fw.uncached_adr_idx = 0;
-    search_saved_sig(&fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
+    if (!fw.uncached_adr)
+        search_saved_sig(&fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
     
     find_modemap(&fw);
     find_stubs_min(&fw);

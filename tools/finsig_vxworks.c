@@ -506,6 +506,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
 
     { "filesem_init", OPTIONAL|UNUSED }, // file semaphore init function, needed for verification
     { "ImagerActivate", OPTIONAL|UNUSED }, // helper
+    { "DoMovieFrameCapture", OPTIONAL|UNUSED },
+    { "MenuIn", OPTIONAL|UNUSED },
+    { "MenuOut", OPTIONAL|UNUSED },
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1267,6 +1270,8 @@ string_sig string_sigs[] =
     {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 3 },
     {20, "get_nd_value", "NdActuator.GetNdFilterDeltaEvAdjustValue_FW", 0 }, // old vx
     {20, "get_current_nd_value", "NdActuator.GetNdFilterDeltaEv_FW", 0 }, // old vx
+    {20, "MenuIn", "MenuIn_FW", 1 },
+    {20, "MenuOut", "MenuOut_FW", 1 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -1515,6 +1520,7 @@ string_sig string_sigs[] =
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001,    0x0008 },
     { 15, "get_nd_value", "IrisSpecification.c", 0x01000001,                     0x0014 },
     { 15, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 0x01000001,   0x0007 },
+    { 15, "DoMovieFrameCapture", "DoMovieFrameCapture executed.",  0x01000001,   0x0007 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -1625,6 +1631,8 @@ string_sig string_sigs[] =
 
     { 102, "PB2Rec", "AC:PB2Rec", 0,                                                            0x20 },
     { 102, "Rec2PB", "AC:Rec2PB", 0,                                                            0x20 },
+    { 102, "MenuIn", "SSAPI::MenuIn", 0,                                                        0x20 },
+    { 102, "MenuOut", "SSAPI::MenuOut", 0,                                                      0x20 },
 
     { 103, "GetDrive_FreeClusters", "AvailClusters.c", 0,                                       0x04 },
 
@@ -4220,6 +4228,71 @@ int match_raw_buffer(firmware *fw, int k, uint32_t rb1, uint32_t v2)
     return 0;
 }
 
+uint32_t frsp_buf = 0;
+uint32_t frsp_buf_at = 0;
+int find_DoMovieFrameCapture_buf(firmware *fw)
+{
+    uint32_t uncached_adr = 0x10000000; // true for all vx cams
+    int k = get_saved_sig(fw,"DoMovieFrameCapture");
+    int ka = get_saved_sig(fw,"ClearEventFlag");
+    if (k < 0 || ka < 0)
+        return 0;
+    k = adr2idx(fw, func_names[k].val);
+    ka = adr2idx(fw, func_names[ka].val);
+    if (k && ka)
+    {
+        int k2 = find_inst(fw,isBL,k,14);
+        if (k2 == -1 || idxFollowBranch(fw,k2,0x01000001) != ka)
+            return 0;
+        int k1 = k;
+        int reg = -1;
+        while (k1<k2)
+        {
+            k1++;
+            if (reg < 0 && isLDR_PC(fw,k1))
+            {
+                uint32_t v = LDR2val(fw,k1);
+                if (v>uncached_adr && v<uncached_adr+fw->maxram && (v&3)==0)
+                {
+                    frsp_buf = v;
+                    frsp_buf_at = idx2adr(fw,k1);
+                    break;
+                }
+            }
+            if (isMOV_immed(fw,k1) && ALUop2a(fw,k1)>uncached_adr)
+            {
+                reg = fwRd(fw,k1);
+                frsp_buf = ALUop2a(fw,k1);
+                frsp_buf_at = idx2adr(fw, k1);
+            }
+            if (reg<0)
+                continue;
+            if ((fwval(fw,k1)&0xfffff000) == (0xe2800000+(reg<<12)+(reg<<16))) // ADD Rx, Rx, #imm
+            {
+                frsp_buf += ALUop2a(fw,k1);
+                frsp_buf_at = idx2adr(fw, k1);
+            }
+        }
+    }
+    if (!frsp_buf) // ixus30/40
+    {
+        k = get_saved_sig(fw,"WBInteg.DoCaptMovieFrame_FW");
+        if (k < 0)
+            return 0;
+        k = adr2idx(fw, func_names[k].val);
+        ka = find_inst(fw,isLDR_PC,k,6);
+        if (ka < 0)
+            return 0;
+        uint32_t v = LDR2val(fw,ka);
+        if (v>uncached_adr && v<uncached_adr+fw->maxram && (v&3)==0)
+        {
+            frsp_buf = v;
+            frsp_buf_at = idx2adr(fw,ka);
+        }
+    }
+    return 0;
+}
+
 // Search for things that go in 'stubs_min.S'
 void find_stubs_min(firmware *fw)
 {
@@ -4558,6 +4631,13 @@ void find_stubs_min(firmware *fw)
 
     // Find imager_active
     search_saved_sig(fw, "ImagerActivate", match_imager_active, 0/*v*/, 0, 30);
+
+
+//    find_DoMovieFrameCapture_buf(fw);
+//    if (frsp_buf)
+//    {
+//        print_stubs_min(fw,"frsp_buf",frsp_buf,frsp_buf_at);
+//    }
 
     // Find UI property count
     search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
