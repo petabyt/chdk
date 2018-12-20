@@ -297,6 +297,7 @@
 0xff93e29c,DoAELock_FW
 0xff93e07c,DoAFLock
 0xff93e07c,DoAFLock_FW
+0xff8b57ac,DoMovieFrameCapture
 0xff81e950,Download_FW
 0xff95e770,DrawBinaryBitmapToDialog_FW
 0xff95fc70,DrawDialogItem_FW
@@ -820,7 +821,9 @@
 0xffaa0874,MemoryChecker_FW
 0xffabc348,memset
 0xffabc348,memset_FW
+0xff93e8d0,MenuIn
 0xff93e8d0,MenuIn_FW
+0xff93e980,MenuOut
 0xff93e980,MenuOut_FW
 0xffabd07c,mktime
 0xff983df8,ModeLevelMovieRecForScript_FW

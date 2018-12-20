@@ -164,6 +164,8 @@
 0xff826f7c,ExitFromCompensationEVF
 0xff8270cc,DoAELock
 0xff827108,UnlockAE
+0xff827be4,MenuIn
+0xff827c40,MenuOut
 0xff828c08,CreateEventFlag
 0xff828c60,DeleteEventFlag
 0xff828cb0,CheckAnyEventFlag
@@ -568,6 +570,7 @@
 0xff8912e4,GetCurrentExposureTime_FW
 0xff891c8c,ImgGainTool.IsValidDeltaSv_FW
 0xff894728,task_WBIntegTask
+0xff8977d0,DoMovieFrameCapture
 0xff897c28,task_AfIntSrvTask
 0xff8a21e0,AFTool.PrintStateLog_FW
 0xff8a3cd8,task_BrtMsrTask
@@ -1281,6 +1284,7 @@
 0xff9e9814,j_GetMovieJpegVRAMHPixelsSize_FW
 0xff9e9818,j_GetMovieJpegVRAMVPixelsSize_FW
 0xff9e9940,GetContinuousMovieJpegVRAMData_FW
+0xff9e9b20,SetImageMode
 0xff9e9bd0,Bat_VIN_FW
 0xff9e9bd0,SetInputVoltage_FW
 0xff9e9be4,Bat_Save_FW

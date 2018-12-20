@@ -281,6 +281,7 @@
 0xff8c3ef8,WBInteg.DisableUsageCheck_FW
 0xff8c3f08,WBInteg.EnableUsageCheckSS_FW
 0xff8c3f18,WBInteg.DisableUsageCheckSS_FW
+0xff8c51b8,DoMovieFrameCapture
 0xff8c697c,Capture.Photo_FW
 0xff8c6a30,Capture.DarkSub_FW
 0xff8c6b10,Capture.DarkAdd_FW
@@ -672,8 +673,10 @@
 0xff968934,ShootColor_FW
 0xff968980,NotifyISModeChanged_FW
 0xff968990,NotifyConvLensSettingChanged_FW
+0xff9689a0,MenuIn
 0xff9689a0,MenuIn_FW
 0xff9689f8,PrepareMenuOut_FW
+0xff968a50,MenuOut
 0xff968a50,MenuOut_FW
 0xff968a94,MyCameraIn_FW
 0xff968acc,MyCameraOut_FW

@@ -307,6 +307,7 @@
 0xff8b87fc,WbThumb.DumpFstpas_FW
 0xff8b881c,WbThumb.DumpWbThumb_FW
 0xff8b883c,WbThumb.DumpObinteg_FW
+0xff8ba078,DoMovieFrameCapture
 0xff8bb840,Capture.Photo_FW
 0xff8bb8f8,Capture.DarkSub_FW
 0xff8bb9dc,Capture.DarkAdd_FW
@@ -815,8 +816,10 @@
 0xff94f7ec,ShootColor_FW
 0xff94f838,NotifyISModeChanged_FW
 0xff94f840,NotifyConvLensSettingChanged_FW
+0xff94f848,MenuIn
 0xff94f848,MenuIn_FW
 0xff94f8a0,PrepareMenuOut_FW
+0xff94f8f8,MenuOut
 0xff94f8f8,MenuOut_FW
 0xff94f93c,MyCameraIn_FW
 0xff94f974,MyCameraOut_FW

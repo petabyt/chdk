@@ -296,6 +296,7 @@
 0xffca8784,WBInteg.DisableUsageCheck_FW
 0xffca8794,WBInteg.EnableUsageCheckSS_FW
 0xffca87a4,WBInteg.DisableUsageCheckSS_FW
+0xffcaa734,DoMovieFrameCapture
 0xffcb7484,DevelopTool.DevelopTest_FW
 0xffcbb3bc,ImagerActivate
 0xffcbb8d0,ActivateImager_FW
@@ -509,8 +510,10 @@
 0xffd42804,ShootColor_FW
 0xffd42818,NotifyISModeChanged_FW
 0xffd42820,NotifyConvLensSettingChanged_FW
+0xffd42828,MenuIn
 0xffd42828,MenuIn_FW
 0xffd42840,PrepareMenuOut_FW
+0xffd4285c,MenuOut
 0xffd4285c,MenuOut_FW
 0xffd42890,MyCameraIn_FW
 0xffd428a0,MyCameraOut_FW

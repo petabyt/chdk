@@ -310,6 +310,7 @@
 0xffcb1198,WBInteg.DisableUsageCheck_FW
 0xffcb11a8,WBInteg.EnableUsageCheckSS_FW
 0xffcb11b8,WBInteg.DisableUsageCheckSS_FW
+0xffcb37e4,DoMovieFrameCapture
 0xffcb7da4,task_DevelopModule
 0xffcbfc10,DevelopTool.DevelopTest_FW
 0xffcc0a64,j_GetBaseSv
@@ -552,8 +553,10 @@
 0xffd5938c,NotifyResolutionChanged_FW
 0xffd59394,NotifyISModeChanged_FW
 0xffd593a4,NotifyConvLensSettingChanged_FW
+0xffd593b4,MenuIn
 0xffd593b4,MenuIn_FW
 0xffd593cc,PrepareMenuOut_FW
+0xffd593e8,MenuOut
 0xffd593e8,MenuOut_FW
 0xffd5941c,MyCameraIn_FW
 0xffd5942c,MyCameraOut_FW

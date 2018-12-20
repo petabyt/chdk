@@ -337,6 +337,7 @@
 0xffce9f48,WBInteg.DisableUsageCheck_FW
 0xffce9f58,WBInteg.EnableUsageCheckSS_FW
 0xffce9f68,WBInteg.DisableUsageCheckSS_FW
+0xffceb79c,DoMovieFrameCapture
 0xffcedd6c,task_AfIntSrvTask
 0xffceebac,task_AFTask
 0xffd0db70,ExpCtrlTool.EnableUsageCheck_FW
@@ -1035,6 +1036,8 @@
 0xffe6b194,ExitFromCompensationEVF
 0xffe6b29c,DoAELock
 0xffe6b2ec,UnlockAE
+0xffe6bbd8,MenuIn
+0xffe6bc64,MenuOut
 0xffe6e0a8,task_ShootSeqTask
 0xffe6e628,task_SsStartupTask
 0xffe6f168,task_CaptSeq

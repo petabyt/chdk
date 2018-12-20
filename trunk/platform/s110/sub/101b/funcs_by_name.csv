@@ -269,6 +269,7 @@
 0xf83ea8a4,DisplayTouchedArea_FW
 0xf8037fdc,DoAELock
 0xf8037bb8,DoAFLock
+0xf81018b0,DoMovieFrameCapture
 0xf8262a08,Driver.Create_FW
 0xf8262a08,Driver_EnableEventProc_FW
 0xf81c0830,drv_is_rx_sense_active_FW
@@ -1082,6 +1083,8 @@
 0xf80f0ca8,memset
 0xf80f0ca8,memset_FW
 0xf8000d88,memShow_FW
+0xf803888c,MenuIn
+0xf80388b8,MenuOut
 0xf8369578,MergeAndConvertDefect_FW
 0xf8369afc,MixPixDetect_FW
 0xf8024794,mkdir
@@ -1423,6 +1426,7 @@
 0xf80d2190,SetHPTimerAfterNow
 0xf80d2210,SetHPTimerAfterTimeout
 0xf82629e4,SetIgnoreAVJACK_FW
+0xf8519a20,SetImageMode
 0xf8519af4,SetImageMode_FW
 0xf8519ad0,SetInputVoltage_FW
 0xf8452978,SetIrisDriveVoltage_FW

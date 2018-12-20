@@ -230,6 +230,7 @@
 0xff835934,DisplayFactoryMode_FW
 0xff8384dc,DoAELock
 0xff8382e4,DoAFLock
+0xff8b88d0,DoMovieFrameCapture
 0xff96c7f8,Driver.Create_FW
 0xff96c7f8,Driver_EnableEventProc_FW
 0xff815ed0,drysh_FW
@@ -900,6 +901,8 @@
 0xffa15ddc,memset
 0xffa15ddc,memset_FW
 0xff810dc8,memShow_FW
+0xff838abc,MenuIn
+0xff838ae8,MenuOut
 0xff837254,mkdir
 0xff8ac9f0,mktime_ext
 0xffab8dd0,MonSelEvent_FW
@@ -1220,6 +1223,7 @@
 0xff88af28,SetHPTimerAfterNow
 0xff88afa8,SetHPTimerAfterTimeout
 0xff96c7dc,SetIgnoreAVJACK_FW
+0xffb26a60,SetImageMode
 0xffb26b34,SetImageMode_FW
 0xffb26b10,SetInputVoltage_FW
 0xffab74e4,SetISCenterShiftA_FW

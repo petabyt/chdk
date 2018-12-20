@@ -293,6 +293,7 @@
 0xff8b50a0,WBInteg.DisableUsageCheck_FW
 0xff8b50b0,WBInteg.EnableUsageCheckSS_FW
 0xff8b50c0,WBInteg.DisableUsageCheckSS_FW
+0xff8b66a0,DoMovieFrameCapture
 0xff8c1ab8,DevelopTool.DevelopTest_FW
 0xff8c3df0,CdsDrv.SetCdsAdjustmentMode_FW
 0xff8c3e00,CdsDrv.SetCdsNormalMode_FW
@@ -516,8 +517,10 @@
 0xff949304,ShootColor_FW
 0xff949318,NotifyISModeChanged_FW
 0xff949320,NotifyConvLensSettingChanged_FW
+0xff949328,MenuIn
 0xff949328,MenuIn_FW
 0xff949340,PrepareMenuOut_FW
+0xff94935c,MenuOut
 0xff94935c,MenuOut_FW
 0xff94938c,MyCameraIn_FW
 0xff94939c,MyCameraOut_FW

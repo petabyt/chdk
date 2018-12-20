@@ -221,6 +221,8 @@
 0xff831d38,ExitFromCompensationEVF
 0xff831dbc,DoAELock
 0xff831de0,UnlockAE
+0xff832410,MenuIn
+0xff83243c,MenuOut
 0xff832e84,SS.SetAvailShot_FW
 0xff83301c,drysh_FW
 0xff8330d4,ExMem.View_FW
@@ -565,6 +567,7 @@
 0xff8b4218,memcpy
 0xff8b4218,memcpy_FW
 0xff8b4364,strrchr
+0xff8c7440,DoMovieFrameCapture
 0xff8c8f08,task_OBCtrlTask
 0xff8c9e38,task_DetectMoveTask
 0xff8cba00,task_DevelopModule
@@ -1596,6 +1599,7 @@
 0xffb94788,GetContinuousMovieJpegVRAMData_FW
 0xffb94800,ChangeDistortionSetForLiveImage_FW
 0xffb94810,ChangeElectronicRollISSetting_FW
+0xffb94990,SetImageMode
 0xffb94a3c,Bat_VIN_FW
 0xffb94a3c,SetInputVoltage_FW
 0xffb94a50,Bat_Save_FW

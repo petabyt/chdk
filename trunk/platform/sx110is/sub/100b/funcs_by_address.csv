@@ -143,6 +143,8 @@
 0xffc1535c,ExitFromCompensationEVF
 0xffc153bc,DoAELock
 0xffc153e0,UnlockAE
+0xffc15adc,MenuIn
+0xffc15b08,MenuOut
 0xffc168a8,TestAssert_FW
 0xffc168d4,TestAssertInt_FW
 0xffc168f4,TestException_FW
@@ -510,6 +512,7 @@
 0xffc75fe0,GetCurrentShutterSpeed_FW
 0xffc762b8,GetCurrentExposureTime_FW
 0xffc79960,task_WBIntegTask
+0xffc7cfc8,DoMovieFrameCapture
 0xffc80724,task_BrtMsrTask
 0xffc88800,ExpCtrlTool.SetExpMode_FW
 0xffc8bddc,task_ExpDrv
@@ -1329,6 +1332,7 @@
 0xffe5f088,j_GetMovieJpegVRAMVPixelsSize_FW
 0xffe5f1b0,GetContinuousMovieJpegVRAMData_FW
 0xffe5f214,ChangeDistortionSetForLiveImage_FW
+0xffe5f390,SetImageMode
 0xffe5f440,Bat_VIN_FW
 0xffe5f440,SetInputVoltage_FW
 0xffe5f454,Bat_Save_FW
