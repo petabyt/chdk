@@ -165,6 +165,7 @@ void __attribute__((naked,noinline)) sub_FFC00358_my() {
         "BCC     loc_FFC003B4\n"
         //"BL      sub_FFC0119C\n"
         "BL      sub_FFC0119C_my\n"
+/*
 "loc_FFC003C4:\n"
         "ANDEQ   R0, R0, R4,ASR#13\n"
 "loc_FFC003C8:\n"
@@ -174,6 +175,7 @@ void __attribute__((naked,noinline)) sub_FFC00358_my() {
 "loc_FFC003D0:\n"
         "NOP\n"
         "LDR     PC, =0xFFC0061C\n"
+*/
   );				
 };
 
@@ -187,10 +189,12 @@ void __attribute__((naked,noinline)) sub_FFC0119C_my() {
         "BL      sub_FFE8D778\n"
         "MOV     R0, #0x53000\n"
         "STR     R0, [SP,#4]\n"
-        //"LDR     R0, =0x133D38\n"
-		"LDR     R0, =new_sa\n"        // +
-		"LDR     R0, [R0]\n"           // +	
-		
+#if defined(CHDK_NOT_IN_CANON_HEAP)
+        "LDR     R0, =0x133D38\n"
+#else
+		 "LDR     R0, =new_sa\n"        // +
+		 "LDR     R0, [R0]\n"           // +	
+#endif
         "LDR     R2, =0x279C00\n"
         "LDR     R1, =0x2724A8\n"
         "STR     R0, [SP,#8]\n"
@@ -205,6 +209,8 @@ void __attribute__((naked,noinline)) sub_FFC0119C_my() {
         "LDR     R0, =0x19B\n"
         //"LDR     R1, =sub_FFC05E5C\n"
 		"LDR     R1, =sub_FFC05E5C_my\n"
+        "LDR     PC, =0xffc011f0\n" // jump back to fw
+/*
         "STR     R0, [SP,#0x20]\n"
         "MOV     R0, #0x96\n"
         "STR     R0, [SP,#0x24]\n"
@@ -228,6 +234,7 @@ void __attribute__((naked,noinline)) sub_FFC0119C_my() {
         "BL      sub_FFC03408\n"
         "ADD     SP, SP, #0x74\n"
         "LDR     PC, [SP],#4\n"
+*/
         );
 }; 
 
@@ -405,6 +412,8 @@ void __attribute__((naked,noinline)) sub_FFC6CF0C_my() {
         "MOV     R0, #3\n"
         //"BL      sub_FFC52014    \n"
 		"BL      sub_FFC52014_my\n"
+        "LDR     PC,=0xffc6cf18\n" // jump back to fw
+/*
         "BL      sub_FFCFE2E8\n"
         "LDR     R4, =0x2B70\n"
         "LDR     R0, [R4,#4]\n"
@@ -420,6 +429,7 @@ void __attribute__((naked,noinline)) sub_FFC6CF0C_my() {
         "MOV     R0, #1\n"
         "STR     R0, [R4]\n"
         "LDMFD   SP!, {R4,PC}\n"
+*/
  );
 }; 
 
@@ -449,6 +459,8 @@ void __attribute__((naked,noinline)) sub_FFC52014_my() {
         "MOV     R0, R6\n"
         //"BL      sub_FFC51C3C\n"
 		"BL      sub_FFC51C3C_my\n" //------------->		
+        "LDR     PC, =0xffc5206c\n" // jump back to firmware
+/*
         "MOV     R5, R0\n"
         "MOV     R0, R6\n"
         "BL      sub_FFC51E6C    \n"
@@ -482,6 +494,7 @@ void __attribute__((naked,noinline)) sub_FFC52014_my() {
         "LDREQ   R0, =0xFFC52110\n"
         "BEQ     sub_FFC01780\n"
         "LDMFD   SP!, {R4-R8,PC}\n"
+*/
  );
 }; 
 
@@ -500,6 +513,8 @@ void __attribute__((naked,noinline)) sub_FFC51C3C_my() {
         "MOV     R1, R5\n"
         //"BL      sub_FFC5195C    \n"
         "BL      sub_FFC5195C_my\n" // ------------------>		
+        "LDR     PC,=0xffc51c68\n" // jump back to fw
+/*
         "CMP     R0, #0\n"
         "LDRNE   R0, [R4,#0x38]\n"
         "MOVNE   R1, R5\n"
@@ -519,6 +534,7 @@ void __attribute__((naked,noinline)) sub_FFC51C3C_my() {
         "ORRNE   R1, R1, #2\n"
         "STRNE   R1, [R4,#0x6C]\n"
         "LDMFD   SP!, {R4-R6,PC}\n"
+*/
  );
 };
 

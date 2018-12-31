@@ -1,11 +1,16 @@
 ****************************************
 
-Camera depending notes:
+A3000 notes:
+Original port by ERR99 
 
-- S90 uses (as the G11) Propset 3 of properties
-- S90 uses new color palette (as G11) 
-- dryos with changed behaviour to previous dryos versions (stat() funtion, max. path lenght, etc.)
-- For cameras with firmware 101b, use the 101c port.
-- Blocking of Jogdial events does not work exactly as on the G11. The Jogdial events get somehow queued
-  and are passed to the oem firmware after leaving the ALT mode. Needs to be debuged
-  and fixed. ;)
+Porting thread
+https://chdk.setepontos.com/index.php?topic=5593.0
+
+alt button is the FACE key
+
+A3000 has an ND filter, and does not have an adjustable aperture
+
+This camera has little free RAM. ARAM is enabled by default, so Canon Basic
+scripts should not be used without a custom, non-ARAM build.
+
+
