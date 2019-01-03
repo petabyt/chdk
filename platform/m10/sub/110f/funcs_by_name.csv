@@ -1562,7 +1562,6 @@
 0xfc43fa2b,MoveLensToTerminatePoint_FW
 0xfc4403b7,MoveZoomLensToMechaEdge_FW
 0xfc440389,MoveZoomLensToTerminatePosition_FW
-0xfc4402f5,MoveZoomLensWithPoint
 0xfc4402f5,MoveZoomLensWithPoint_FW
 0xfc440327,MoveZoomLensWithPointImmediateReturn_FW
 0xfc440357,MoveZoomLensWithPosition_FW
@@ -1679,7 +1678,6 @@
 0xfc2a6f4d,PT_MFOff
 0xfc2a6f1d,PT_MFOn
 0xfc2a5671,PT_MoveDigitalZoomToWide
-0xfc18ae45,PT_MoveOpticalZoomAt
 0xfc27dba7,PTM_AllReset_FW
 0xfc3719df,PTM_AllResetToFactorySetting_FW
 0xfc27e64f,PTM_BackupUIProperty_FW

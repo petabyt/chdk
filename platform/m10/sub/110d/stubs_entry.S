@@ -109,6 +109,8 @@ DEF_CONST(uiprop_count                      ,0x000000d1) // Found @0xfc27de04
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc3134bd
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3896e9
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc43e66f
+//NHSTUB(MoveZoomLensWithPoint                ,0xfc4402c1) //  0        *** != 0x00000000
+//NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc18ae45) //  0        *** != 0x00000000
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc38c91f
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc38a0d9
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc12790b
@@ -167,11 +169,9 @@ NHSTUB(LocalTime                              ,0x010e1589) //  0
 NHSTUB(LockMainPower                          ,0xfc1fb48d) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc389b6f) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc43f6b9) //  0
-NHSTUB(MoveZoomLensWithPoint                  ,0xfc4402c1) //  0
 NHSTUB(Open                                   ,0xfc389801) //  0
 NHSTUB(PB2Rec                                 ,0xfc33ff7d) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2a563d) //  0
-NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc18ae45) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3858c9) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc3858fd) //  0
 NHSTUB(Read                                   ,0xfc1ebe61) //  0
