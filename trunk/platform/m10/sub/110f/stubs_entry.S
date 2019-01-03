@@ -107,6 +107,8 @@ DEF_CONST(uiprop_count                      ,0x000000d1) // Found @0xfc27de04
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc076ab3
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc3134f1
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc38971d
+//NHSTUB(MoveZoomLensWithPoint                ,0xfc4402f5) //  0        *** != 0x00000000
+//NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc18ae45) //  0        *** != 0x00000000
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc38c953
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc38a10d
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc12790b
@@ -167,11 +169,9 @@ NHSTUB(LockMainPower                          ,0xfc1fb48d) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc389ba3) //  0
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0            == 0x00000000
 NHSTUB(MoveIrisWithAv                         ,0xfc43f6ed) //  0
-NHSTUB(MoveZoomLensWithPoint                  ,0xfc4402f5) //  0
 NHSTUB(Open                                   ,0xfc389835) //  0
 NHSTUB(PB2Rec                                 ,0xfc33ffb1) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2a5671) //  0
-NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc18ae45) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3858fd) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc385931) //  0
 NHSTUB(Read                                   ,0xfc1ebe61) //  0

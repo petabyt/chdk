@@ -51,3 +51,6 @@ NHSTUB(GetLogToFile,                           0xfc18db55)
 NHSTUB(SetZoomActuatorSpeedPercent,              NULL_SUB)
 NHSTUB(UnsetZoomForMovie,                        NULL_SUB)
 
+// Dysfunctional
+NHSTUB(PT_MoveOpticalZoomAt,                     NULL_SUB)
+NHSTUB(MoveZoomLensWithPoint,                    NULL_SUB)
