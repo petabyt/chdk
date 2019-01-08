@@ -208,11 +208,6 @@
 #define LANG_REVERSI_MSG_WRONG_TEXT_1           157
 #define LANG_REVERSI_MSG_WRONG_TEXT_2           158
 
-#define LANG_REVERSI_MOVE_WHITE                 159
-#define LANG_REVERSI_MOVE_BLACK                 160
-#define LANG_REVERSI_GAME_OVER                  161
-#define LANG_REVERSI_WHITE_BLACK                162
-
 #define LANG_MBOX_ABOUT_TITLE                   163
 
 #define LANG_SOKOBAN_TEXT_LEVEL                 164
