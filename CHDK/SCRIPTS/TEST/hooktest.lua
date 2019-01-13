@@ -45,7 +45,7 @@ end
 
 local hooktest={
 	-- time to wait for any hook to become ready
-	hook_wait_timeout=5000,
+	hook_wait_timeout=10000,
 	-- time for script to block shoot hook
 	hook_shoot_timeout=5000,
 	-- time for script to block raw hook
