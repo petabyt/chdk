@@ -315,7 +315,6 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 
 void __attribute__((naked,noinline)) task_Startup_my() { 
        	asm volatile (
-"sub_FFC10560:\n"
         "STMFD   SP!, {R4,LR}\n"
         "BL      sub_FFC06228\n"
         "BL      sub_FFC24B7C\n"
