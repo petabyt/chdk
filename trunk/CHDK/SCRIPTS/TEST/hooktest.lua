@@ -24,6 +24,7 @@ The fast and cont tests will generate errors like:
 0037700: FAIL: hook_raw wait timeout
 
 NOTES:
+* Shot review should be disabled in the Canon menu.
 * Cameras that require a short PAUSE_FOR_FILE_COUNTER may pass the file counter tests.
 * PAUSE_FOR_FILE_COUNTER is only used if CHDK raw or remote shoot with raw is enabled.
   If raw is not enabled, the script will not treat a late exposure counter increment as a failure, 
@@ -74,6 +75,9 @@ function hooktest:init(opts)
 	self:log("buildinfo: %s %s %s %s %s %s %s %s 0x%x",
 						bi.platform,bi.platsub,bi.version,bi.build_number,bi.build_revision,
 						bi.build_date,bi.build_time,bi.os,bi.platformid)
+	self:log("options: single=%s fast=%s cont=%s shots=%d append=%s raw=%s",
+				tostring(ui_single),tostring(ui_fast),tostring(ui_cont),
+				ui_shots,tostring(ui_append),tostring(ui_raw))
 	if not get_mode() then
 		self:logcon("switching to rec")
 		set_record(true)
@@ -238,7 +242,7 @@ function hooktest:preshoot()
 			return false
 		end
 	until get_shooting()
-	self:log('exp=%04d dir=%s preshoot ready',get_exp_count(),get_image_dir())
+	self:log('exp=%04d dir=%s preshoot ready tv=%d av=%d sv=%d',get_exp_count(),get_image_dir(),get_tv96(),get_av96(),get_sv96())
 
 	local c = hook_preshoot.count()
 	if c ~= c_expect then
