@@ -18,9 +18,8 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // G7x both AV, not verified which does over and which does exif
 #define PROPCASE_AV2                             22         // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_AV                              23         // This values causes the actual aperture value to be overriden
-// mismatch from propset 6 starts here, +2
-#define PROPCASE_MIN_AV                          27         // or 28?
-// ps6 +4
+// mismatch from propset 6 starts here, +3
+#define PROPCASE_MIN_AV                          28         // 
 #define PROPCASE_USER_AV                         29         // or 29, values differ slightly. 29 appears to have round APEX96 vals, 30 matches PROPCASE_AV
 #define PROPCASE_BRACKET_MODE                    33         // 0 = 0ff, 1 = exposure, 2 = focus (MF only) (g7x)
 #define PROPCASE_BV                              38			// or 40? value
