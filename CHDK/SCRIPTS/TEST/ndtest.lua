@@ -1,13 +1,17 @@
 --[[
-@title ND value test
-@chdk_version 1.5.0
-#shots_per_step=3 "Shots per state"
-#start_delay=1 "Start delay, sec"
-#nd_shot_ev96=0 "ND value EV96 (0=auto)"
-#ui_shoot_mode_t=1 "Shoot mode" {Single Quick Cont} table
-#nd_set_av=false "Set AV prop on ND-only cam"
-#nd_set_shoot=false "Set ND in shoot hook"
-#ui_use_raw_e=2 "Use raw" {Default Yes No}
+@title ND control test
+@chdk_version 1.5.0.5104
+#ui_shots_per_step=3 "Shots per state"
+#ui_start_delay=1 "Start delay, sec"
+@subtitle Shooting modes
+#ui_shoot_single=true " Single"
+#ui_shoot_quick=true " Quick"
+#ui_shoot_cont=true " Continuous"
+@subtitle Advanced
+#ui_nd_shot_ev96=0 "ND value EV96 (0=auto)"
+#ui_nd_set_av=1 "Set AV prop on ND-only cam" {Auto Quick Always No} table
+#ui_nd_set_shoot=1 "Set ND in shoot hook" {Auto Quick Always No} table
+#ui_use_raw_e=2 "Save CHDK raw" {Default Yes No}
 #ui_log_append=true "Append log"
 ]]
 --[[
@@ -17,21 +21,28 @@ Usage:
 Put the camera on a tripod or other stable surface, aimed at a scene with little
 lighting variation or movement and run the script. A relatively uniform, neutral
 scene like a blank wall or sheet of paper will give better results.
-The camera should be in P or M mode, flash off.
+The camera should be in P or M mode, flash off, review off.
+Continuous mode should be enabled in the Canon firmware for complete coverage.
+
+Cameras with both ND and iris and manual Canon firmware ND control must have
+ND set to out before running. The script will exit with the error
+"Canon native ND in" if this is not done.
+
+For Cameras with only an ND filter, the scene and settings must be such that
+Canon auto exposure does not put in the ND. The script will exit with the error
+"AE used ND, try darker scene" if the Canon firmware put in the ND.
 
 Results:
-The script will print either "N warnings - check logs"  or "no warnings" on completion
-If there are no warnings, ND control likely works in the selected settings.
+The script prints status on completion:
+"ALL PASSED" = ND functionality is fully working
+"N warnings - check logs" = possible problems with ND implementation or scene
+"N failed - check logs" = problems with ND implementation
 
-If there are warnings, the script detected incorrect ND behaviour, or scene
-characteristics likely to impact accuracy of the test.
+Detailed results are logged to A/ndtest.csv.
+Failure and warning messages are logged in the fail and warn columns.
+Other messages are logged in the desc column
 
-Detailed results are logged to A/ndtest.csv. The desc column will contain any warnings
-and the the final line gives the calculated ND value.
-
-The meter96 column should not change by more than 1-2 units for shots in a given ND
-state, if it does, the scene is probably not stable enough to give good results.
-
+The default options are suitable for testing a port.
 
 Options:
 * Shots per state - Number of shots to with ND filter on and off
@@ -40,24 +51,32 @@ Options:
 * ND value ev96 - Expected ND value, used to keep the exposure relatively similar so
   neither state will be over or under exposed. The default is to use camera firmware
   functions to obtain the ND value.
-* Shoot mode 
- * Single - Do full half press, auto focus etc between each shots. Should work on most
-   cameras, but may give less precise results and is slower
- * Quick - Hold down shutter half way, click full for each shot. Faster and more precise
-   than single, but may fail on some cameras.
- * Cont - Shoot in continuous mode. More precise than single, fastest, but requires
-   continuous mode enabled in the Canon UI.
-* Set Av prop on ND-only - set the aperture propcase to reflect ND state on ND only
-  cameras, like canon firmware
+* Shooting modes
+ * Single - Do full half press, auto focus etc between each shots
+ * Quick - Hold down shutter half way, click full for each shot
+ * Cont - Shoot in continuous mode. Requires continuous mode enabled in the Canon UI
+* Set Av prop on ND-only - Set the aperture propcase to reflect ND state on ND only
+  cameras, like Canon firmware.
+  * Auto - AV propcase is not set by default, failed tests are retried with it set
+    In this mode, the script identifies if CAM_ND_SET_AV_VALUE is required
+  * Quick - AV propcase is only set in "quick" mode
+  * Always - AV propcase always set to match ND state
+  * No - AV propcase not set 
+* Set ND in shoot hook - Sets the ND state immediately before exposure start, rather
+  than using normal override process.
+  * Auto - If the ND is not in the expected state, set and generate warning
+  * Quick - ND state is set only in "quick" mode
+  * Always - ND state is set in all modes
+  * No - ND state is not set in shoot hook
 * Use raw - by default, the script disables CHDK raw for quicker testing. Set to "Yes"
   to force raw saving, or "Default" to use the CHDK menu setting
-* Append log - If checked, each run adds to the existing log. Otherwise the log is replaced
-  on each run.
+* Append log - If checked, each run adds to the existing log. Otherwise the log is
+  replaced each run.
 
 
 License: GPL
 
-Copyright 2017-2018 reyalp (at) gmail.com
+Copyright 2017-2019 reyalp (at) gmail.com
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -76,8 +95,9 @@ with CHDK. If not, see <http://www.gnu.org/licenses/>.
 require'hookutil'
 require'rawoplib'
 props=require'propcase'
+capmode=require'capmode'
 
-ndtest_version="1.3"
+ndtest_version="1.4"
 
 -- utility functions
 function printf(...)
@@ -120,6 +140,25 @@ end
 
 function frac_to_pct(v,scale)
 	return string.format("%d.%04d",v/(scale/100),v%(scale/100))
+end
+
+function ensure_rec()
+	local rec, vid = get_mode()
+	if not rec then
+		print("switching to rec")
+		sleep(1000)
+		set_record(true)
+		local i=0
+		repeat sleep(10) i=i+1 until get_mode() or i > 500
+		sleep(500)
+		rec, vid = get_mode()
+	end
+	if not rec then
+		error('rec switch failed')
+	end
+	if vid then
+		error('not in still mode')
+	end
 end
 
 -- log module
@@ -259,15 +298,23 @@ function log:close()
 end
 -- end log module
 
-saved_iso_mode=get_prop(props.ISO_MODE)
 
 function restore()
 	if raw_enable_save then
 		set_raw(raw_enable_save)
 	end
-	set_iso_mode(saved_iso_mode)
+	if saved_iso_mode then
+		set_iso_mode(saved_iso_mode)
+	end
 	set_nd_filter(0)
 	log:close()
+end
+-- restore, then error
+function rerror(msg)
+	if restore then
+		restore()
+	end
+	error(msg,2)
 end
 
 log:init{
@@ -275,6 +322,7 @@ log:init{
 	append=ui_log_append,
 	-- column names
 	cols={
+		'operation',
 		'date',
 		'tick',
 		'exp',
@@ -290,12 +338,15 @@ log:init{
 		'tv96',
 		'av',
 		'av96',
+		'av96_cur',
 		'nd',
 		'nd_cur',
 		'over_pct',
 		'under_pct',
 		'meter',
 		'meter96',
+		'fail',
+		'warn',
 		'desc',
 	},
 	-- columns automatically set at write time from functions
@@ -323,24 +374,54 @@ log:init{
 	-- columns collected in a table, concatenated at write time
 	tables={
 		desc=' / ',
+		fail=' / ',
+		warn=' / ',
 	},
 }
 logdesc=log:text_logger('desc')
 
-warn_count=0
-function warn(fmt,...)
-	logdesc('WARN: '..fmt,...)
-	warn_count = warn_count+1
+
+local ndtest={
+	need_CAM_ND_SET_AV_VALUE=false,
+	quick_need_CAM_ND_SET_AV_VALUE=false,
+	quick_need_nd_in_shoot_hook=false,
+	fail_logger=log:text_logger('fail'),
+	warn_logger=log:text_logger('warn'),
+	warn_count=0,
+	test_warn_count=0,
+	fail_count=0,
+	test_fail_count=0,
+	meter_size=1200,
+	meter_step=5,
+	meter_warn_var=12, -- warning level for variation of shots in a given state
+	meter_warn_under=-96*5, -- warning level for under exposure (APEX*96 below neutral)
+	meter_warn_over=24, -- warning level for over exposure (APEX*96 below white level
+	histo_warn_over_pct=5,
+	histo_warn_under=-96*6, -- warning level for histogram under exposure (APEX*96 below neutral)
+	histo_warn_over=16, -- warning level for over exposure (APEX*96 below white level
+	histo_warn_under_pct=10,
+	nd_val_err_max=32, -- failure level for calc nd value not matching expected
+	nd_val_total=0, -- ND value across all tests
+	test_count=0,
+	results={}, -- table of results by mode
+}
+
+
+function ndtest:warn(fmt,...)
+	self.warn_logger(fmt,...)
+	printf('WARN '..fmt,...)
+	self.warn_count = self.warn_count+1
+	self.test_warn_count = self.test_warn_count+1
+end
+function ndtest:fail(fmt,...)
+	self.fail_logger(fmt,...)
+	printf('FAIL '..fmt,...)
+	self.fail_count = self.fail_count+1
+	self.test_fail_count = self.test_fail_count+1
 end
 
-meter_size=1200
-meter_step=5
-meter_left = rawop.get_raw_width()/2 - meter_size/2
-meter_count = meter_size/meter_step
-meter_top = rawop.get_raw_height()/2 - meter_size/2
-
-function state_results(name,r)
-	local t=r.m
+function ndtest:state_results(name,r)
+	local t=r.meter
 	r.sum = 0
 	r.min = t[1]
 	r.max = t[1]
@@ -357,41 +438,81 @@ function state_results(name,r)
 	r.min96=rawop.raw_to_ev(r.min)
 	r.max96=rawop.raw_to_ev(r.max)
 	r.avg96=rawop.raw_to_ev(r.avg)
-	-- TODO probably redundant with histogram
-	-- if less than 3 stops above black level, warn
-	if r.min96 < rawop.raw_to_ev(rawop.get_black_level()+1) + 96*3 then
-		warn('%s underexposed min=%d',name,r.min96)
-	end
-	-- if > 1/4 below white level, warn
-	if r.max96 > rawop.raw_to_ev(rawop.get_white_level()) - 24 then
-		warn('%s overexposed max=%d',name,r.max96)
-	end
-	-- a good scene shouldn't vary more than a few APEX96 units
-	if r.max96 - r.min96 > 4 then
-		warn('%s variation=%d',name,r.max96-r.min96)
+	-- warn if too much variation between shots
+	if r.max96 - r.min96 > self.meter_warn_var then
+		self:warn('%s variation=%d',name,r.max96-r.min96)
 	end
 	logdesc('%s:avg=%d (%d) min=%d (%d) max=%d (%d)',name,r.avg,r.avg96,r.min,r.min96,r.max,r.max96)
 end
 
-function calc_results(nond,nd)
-	state_results('no-ND',nond)
-	state_results('ND',nd)
+function ndtest:calc_results()
+	nond=self.results[self.shoot_mode]['out']
+	nd=self.results[self.shoot_mode]['in']
 
-	local v=nond.avg96 - nd.avg96 + nd_shot_ev96
-	logdesc('ND value=%d',v)
-	if warn_count > 0 then
-		printf('%d warnings - check log',warn_count)
-	else
-		print('no warnings')
+	self:state_results('ND-out',nond)
+	self:state_results('ND-in',nd)
+
+	local v=nond.avg96 - nd.avg96 + self.nd_shot_ev96
+	logdesc('calc ND value=%d fw=%d',v,get_nd_value_ev96())
+	self.nd_val_total = self.nd_val_total + v
+	-- check firmware value, not possible UI override
+	local v_err = math.abs(v - get_nd_value_ev96())
+	if v_err > self.nd_val_err_max then
+		self:fail('ND value mismatch %d',v_err)
 	end
+	local retry_str=''
+	if self.nd_set_av_retry then
+		retry_str=' (retry)'
+	end
+	if self.test_warn_count == 0 and self.test_fail_count == 0 then
+		logdesc('%s%s PASSED',self.shoot_mode,retry_str)
+	else
+		if self.test_warn_count > 0 then
+			logdesc('%s mode %d warnings',self.shoot_mode,self.test_warn_count)
+		end
+		if self.test_fail_count > 0 then
+			logdesc('%s mode %d failed',self.shoot_mode,self.test_fail_count)
+		end
+	end
+
 end
 
+function ndtest:final_results()
+	log:set{operation='overall result'}
+	if self.warn_count == 0 and self.fail_count == 0 then
+		print('ALL PASSED')
+		logdesc('ALL PASSED')
+	else 
+		if self.warn_count > 0 then
+			printf('%d warnings - check log',self.warn_count)
+			logdesc('%d warnings',self.warn_count)
+		end
+		if self.fail_count > 0 then
+			printf('%d failed - check log',self.fail_count)
+			logdesc('%d failed',self.fail_count)
+		end
+	end
+	if #self.shoot_modes > 1 then
+		logdesc('avg calc ND value=%d fw=%d',self.nd_val_total/self.test_count,get_nd_value_ev96())
+	end
+	if self.need_CAM_ND_SET_AV_VALUE then
+		logdesc('port needs CAM_ND_SET_AV_VALUE all modes')
+	elseif self.quick_need_CAM_ND_SET_AV_VALUE then
+		logdesc('port needs CAM_ND_SET_AV_VALUE for quick')
+	end
+	if self.quick_need_nd_in_shoot_hook then
+		logdesc('port needs ND in shoot hook for quick')
+	end
+	log:write()
+end
+
+
 -- set AV to match ND state for ND only cams
-function do_nd_av(nd_state)
-	if get_nd_present() == 1 and nd_set_av then
+function ndtest:do_nd_av(nd_state)
+	if get_nd_present() == 1 and self.nd_set_av then
 		local new_av = get_prop(props.MIN_AV)
 		if nd_state then
-			new_av = new_av + nd_shot_ev96
+			new_av = new_av + self.nd_shot_ev96
 		end
 		set_prop(props.AV,new_av)
 		if props.AV2 then
@@ -400,65 +521,250 @@ function do_nd_av(nd_state)
 	end
 end
 
-function run()
-	local nd_vals={
-		m={},
-		m96={},
-	}
-	local nond_vals={
-		m={},
-		m96={},
-	}
-	local vals=nond_vals
+function ndtest:add_state_result(name,val)
+	table.insert(self.results[self.shoot_mode][self.state_name][name],val)
+end
 
+function ndtest:meter()
+	local meter = rawop.meter(self.meter_left,self.meter_top,
+							self.meter_count,self.meter_count,
+							self.meter_step,self.meter_step)
+	local meter96=rawop.raw_to_ev(meter)
+
+	if meter96 < self.meter_warn_under then
+		self:warn('BAD SCENE meter underexp')
+	end
+	if meter96 > rawop.raw_to_ev(rawop.get_white_level()) - self.meter_warn_over then
+		self:warn('BAD SCENE meter overexp')
+	end
+
+	self.histo:update(self.meter_left,self.meter_top,
+					self.meter_left+self.meter_size,
+					self.meter_top+self.meter_size,
+					self.meter_step,self.meter_step,10)
+
+	local histo_scale=10000
+	local white_level=rawop.get_white_level()
+	local over_histo_min=bitshru(rawop.ev_to_raw(rawop.raw_to_ev(white_level)-self.histo_warn_over),rawop.get_bits_per_pixel() - 10)
+
+	local over_frac = self.histo:range(over_histo_min,1023,histo_scale)
+	if over_frac > self.histo_warn_over_pct*(histo_scale/100) then
+		self:warn('BAD SCENE histo overexp')
+	end
+
+	local under_histo_max = bitshru(rawop.ev_to_raw(self.histo_warn_under),rawop.get_bits_per_pixel() - 10)
+	-- ignore much lower than black, typically bad pixels
+	local under_frac = self.histo:range(8,under_histo_max,histo_scale)
+	if under_frac > self.histo_warn_under_pct*(histo_scale/100) then
+		self:warn('BAD SCENE histo underexp')
+	end
+
+	log:set{
+		meter=meter,
+		meter96=meter96,
+		over_pct=frac_to_pct(over_frac,histo_scale),
+		under_pct=frac_to_pct(under_frac,histo_scale),
+	}
+	self:add_state_result('meter',meter)
+end
+
+function ndtest:do_state_shoot_hook(nd_state)
+	if nd_state then
+		local try_nd_set_shoot
+		if get_nd_current_ev96() == 0 then
+			-- nd only cams
+			if get_nd_present() == 1 then
+				if self.nd_set_av then
+					self:fail('hook_shoot ND out')
+				else
+					if self.nd_set_av_mode == 'auto' then
+						self.nd_set_av_retry = true
+						self.test_result = 'retry'
+						if self.shoot_mode == 'quick' then
+							self:warn('hook_shoot ND out')
+						else
+							-- fail if ND set av needed in non quick modes (=overrides don't work without)
+							self:fail('hook_shoot ND out')
+						end
+					else
+						self:fail('hook_shoot ND out')
+					end
+				end
+			else
+				if self.shoot_mode == 'quick' then
+					self:warn('hook_shoot ND out')
+				else
+					self:fail('hook_shoot ND out')
+				end
+			end
+			if self.nd_set_shoot_mode == 'auto' then
+				try_nd_set_shoot=true
+			end
+		else
+			-- nd in successfully, check if in retry
+			if self.nd_set_av_retry then
+				if self.shoot_mode == 'quick' then
+					self.quick_need_CAM_ND_SET_AV_VALUE=true
+				else
+					self.need_CAM_ND_SET_AV_VALUE=true
+				end
+			end
+		end
+		if self.nd_set_shoot or try_nd_set_shoot then
+			set_nd_filter(1)
+			if get_nd_current_ev96() == 0 then
+				self:fail('nd_set_shoot IN fail')
+			else
+				if try_nd_set_shoot then
+					if get_nd_present() == 2 and self.shoot_mode == 'quick' then
+						self.quick_need_nd_in_shoot_hook = true
+					end
+					logdesc('try_nd_set_shoot OK')
+				end
+			end
+		end
+	else
+		if get_nd_current_ev96() > 0 then
+			-- unexpectedly in is always a fail
+			-- TODO could apply auto logic here, but not expected failure mode
+			self:fail('hook_shoot ND in')
+		end
+		if self.nd_set_shoot then
+			set_nd_filter(2)
+			if get_nd_current_ev96() > 0 then
+				self:fail('nd_set_shoot OUT fail')
+			end
+		end
+	end
+end
+
+function ndtest:init()
 	local bi=get_buildinfo()
+	log:set{operation='init'}
 	logdesc("ndtest v:%s",ndtest_version);
 	logdesc("platform:%s-%s-%s-%s %s %s",
 						bi.platform,bi.platsub,bi.build_number,bi.build_revision,
 						bi.build_date,bi.build_time)
 
-	local shoot_mode = string.lower(ui_shoot_mode_t.value)
-	if nd_shot_ev96 == 0  then
-		if type(get_nd_value_ev96) ~= 'function' then
-			error('auto ND value requires get_nd_value_ev96')
-		end
-		nd_shot_ev96 = get_nd_value_ev96()
-	end
-	if type(get_nd_value_ev96) == 'function' then
-		logdesc('fw nd=%d',get_nd_value_ev96())
-	end
-	logdesc('shoot_mode=%s nd_shot_ev96=%d shots_step=%d nd_set_av=%s nd_set_shoot=%s',
-		shoot_mode,nd_shot_ev96,shots_per_step,tostring(nd_set_av),tostring(nd_set_shoot))
-	if shoot_mode == 'cont' and get_prop(props.DRIVE_MODE) ~= 1 then
-		error('Canon cont mode not set')
-	end
-
 	if get_nd_present() == 0 then
 		error('ND not enabled in port')
 	end
-	if get_nd_present() == 2 and nd_set_av then
-		warn('ignoring nd_set_av on ND+iris cam')
-		nd_set_av=false
-	end
-	-- simplify logging
-	if type(get_nd_current_ev96) ~= 'function' then
-		log_get_nd_current_ev96 = function()
-			return 0
-		end
-	else 
-		log_get_nd_current_ev96 = get_nd_current_ev96
-	end
+
+	ensure_rec()
+
+	-- save initial ISO mode to avoid unexpected auto after tests
+	saved_iso_mode=get_prop(props.ISO_MODE)
+
+	self.meter_left = rawop.get_raw_width()/2 - self.meter_size/2
+	self.meter_count = self.meter_size/self.meter_step
+	self.meter_top = rawop.get_raw_height()/2 - self.meter_size/2
+
+
 	-- turn off CHDK raw by default, not needed
-	local use_raw=({false,1,0})[ui_use_raw_e + 1]
-	if use_raw then
+	self.use_raw=({false,1,0})[ui_use_raw_e + 1]
+	if self.use_raw then
 		raw_enable_save = get_raw()
-		set_raw(use_raw)
+		set_raw(self.use_raw)
+	end
+	self.nd_set_av_mode=string.lower(ui_nd_set_av.value)
+	self.nd_set_shoot_mode=string.lower(ui_nd_set_shoot.value)
+	self.shots_per_step=ui_shots_per_step
+	self.shoot_modes={}
+	if ui_shoot_single then
+		table.insert(self.shoot_modes,'single')
+	end
+	if ui_shoot_quick then
+		table.insert(self.shoot_modes,'quick')
+	end
+	if ui_shoot_cont then
+		if get_prop(props.DRIVE_MODE) ~= 1 then
+			self:warn('cont not enabled in Canon FW - skipping')
+		else
+			table.insert(self.shoot_modes,'cont')
+		end
+	end
+	if ui_nd_shot_ev96 == 0 then
+		self.nd_shot_ev96 = get_nd_value_ev96()
+	else
+		self.nd_shot_ev96 = ui_nd_shot_ev96 
+	end
+	if get_nd_present() == 2 and self.nd_set_av_mode ~= 'auto' and self.nd_set_av_mode ~= 'no' then
+		self:warn('ignoring nd_set_av on ND+iris cam')
+		self.nd_set_av_mode='no'
+	end
+	if #self.shoot_modes == 0 then
+		rerror('no valid test modes enabled')
 	end
 
-	local histo=rawop.create_histogram()
+	logdesc('capmode=%s fw nd=%d nd_shot_ev96=%d modes=%s shots_step=%d nd_set_av=%s nd_set_shoot=%s',
+		capmode.get_name(),
+		get_nd_value_ev96(),
+		self.nd_shot_ev96,
+		table.concat(self.shoot_modes,':'),
+		self.shots_per_step,
+		self.nd_set_av_mode,
+		self.nd_set_shoot_mode)
 
-	saved_iso_mode=get_iso_mode()
-	sleep(start_delay*1000)
+	-- known NDs are ~3, < 2 or > 4 would be unexpected
+	if get_nd_value_ev96() < 96*2 or get_nd_value_ev96() > 96*4 then
+		self:fail('unexpected ND value %d',get_nd_value_ev96())
+	end
+
+	log:write()
+	sleep(ui_start_delay*1000)
+	self.histo=rawop.create_histogram()
+end
+
+function ndtest:run_test(shoot_mode)
+	if shoot_mode == 'cont' and get_prop(props.DRIVE_MODE) ~= 1 then
+		rerror('Canon cont mode not set')
+	end
+	self.test_result=true
+	self.test_warn_count=0
+	self.test_fail_count=0
+
+	self.shoot_mode = shoot_mode
+	self.state_name='out'
+
+	self.results[self.shoot_mode] = {
+		['in']={meter={}}, -- in is a keyword
+		out={meter={}},
+	}
+
+	-- ensure ISO mode is restored to initial state, since CHDK override will set to AUTO
+	set_iso_mode(saved_iso_mode)
+
+	if self.nd_set_av_mode == 'always' then
+		self.nd_set_av=true
+	elseif self.nd_set_av_mode == 'no' then
+		self.nd_set_av=false
+	elseif self.nd_set_av_mode == 'quick' then
+ 		self.nd_set_av=(shoot_mode == 'quick')
+	elseif self.nd_set_av_mode == 'auto' then
+		if self.nd_set_av_retry then
+			logdesc('retry %s nd_set_av=true',self.shoot_mode)
+			self.nd_set_av=true
+		else
+			self.nd_set_av=false
+		end
+	else
+		rerror('invalid nd_set_av_mode')
+	end
+
+	if self.nd_set_shoot_mode == 'always' then
+		self.nd_set_shoot=true
+	elseif self.nd_set_shoot_mode == 'no' then
+		self.nd_set_shoot=false
+	elseif self.nd_set_shoot_mode == 'quick' then
+ 		self.nd_set_shoot=(shoot_mode == 'quick')
+	elseif self.nd_set_shoot_mode == 'auto' then
+		-- will be auto set in 
+ 		self.nd_set_shoot=false
+	else
+		rerror('invalid nd_set_shoot_mode')
+	end
+
+
 	-- preshoot to meter
 	press'shoot_half'
 	repeat sleep(10) until get_shooting()
@@ -468,16 +774,16 @@ function run()
 	repeat sleep(10) until not get_shooting()
 	sleep(50)
 
-	logdesc('start tv96=%s sv96=%s av96=%s',get_prop(props.TV),get_prop(props.SV),get_prop(props.AV))
+	logdesc('start shoot_mode=%s tv=%d sv=%d av=%d',shoot_mode,get_prop(props.TV),get_prop(props.SV),get_prop(props.AV))
 	local sv96=get_prop(props.SV)
 	local tv96=get_prop(props.TV)
 	local av96=get_prop(props.AV)
 	sleep(100)
 	-- ND only, check if ND was in on auto exposure
 	if get_nd_present() == 1 and get_prop(props.AV) ~= get_prop(props.MIN_AV) then
-		error('AE used ND, try darker scene')
+		rerror('AE used ND, try darker scene')
 	elseif get_nd_present() == 2 and props.ND_FILTER_STATE and get_prop(props.ND_FILTER_STATE) == 1 then
-		error('ND on in Canon UI')
+		rerror('Canon native ND in')
 	end
 
 	set_tv96_direct(tv96)
@@ -487,9 +793,7 @@ function run()
 	end
 	set_nd_filter(2)
 
-	-- set shoot hook for cont mode
 	hook_shoot.set(10000)
-	-- set hook in raw for exposure
 	hook_raw.set(10000)
 
 	if shoot_mode ~= 'single' then
@@ -501,15 +805,17 @@ function run()
 		press('shoot_full_only')
 	end
 
-	local shots=shots_per_step*2
+	local shots=self.shots_per_step*2
 	local nd_state=false
 	for i=1,shots do
-		print("shot",i,"/",shots)
+		printf('%s %d/%d %s',shoot_mode,i,shots,self.state_name)
+		log:set{operation='test '..shoot_mode}
 
 		wait_click(10)
 		if is_key('menu') then
 			logdesc('user exit')
 			log:write()
+			self.test_result = 'break'
 			break
 		end
 		if shoot_mode == 'single' then
@@ -528,7 +834,7 @@ function run()
 			press('shoot_half')
 			repeat sleep(10) until get_shooting()
 			-- for single, this has to be done after get_shooting to mimic override behavior
-			do_nd_av(nd_state)
+			self:do_nd_av(nd_state)
 			sleep(50)
 		end
 
@@ -537,21 +843,8 @@ function run()
 		end
 		-- wait until the hook is reached
 		hook_shoot.wait_ready()
-
-		-- in quick, setting in raw hook seems to fail on elph130
-		if nd_set_shoot then
-			if nd_state then
-				if type(get_nd_current_ev96) == 'function' and  get_nd_current_ev96() == 0 then
-					logdesc('ND OUT before nd_set_shoot IN')
-				end
-				set_nd_filter(1)
-			else
-				if type(get_nd_current_ev96) == 'function' and get_nd_current_ev96() > 0 then
-					logdesc('ND IN before nd_set_shoot OUT')
-				end
-				set_nd_filter(2)
-			end
-		end
+		-- check if ND state matches expected, set if needed
+		self:do_state_shoot_hook(nd_state)
 
 		if shoot_mode ~= 'cont' then
 			release('shoot_full_only')
@@ -559,69 +852,43 @@ function run()
 		if shoot_mode == 'single' then
 			release('shoot_half')
 		end
+		av96_cur=get_current_av96()
 		-- allow shooting to proceed
 		hook_shoot.continue()
 
 		-- wait for the image to be captured
 		hook_raw.wait_ready()
-		local meter = rawop.meter(meter_left,meter_top,
-								meter_count,meter_count,
-								meter_step,meter_step)
+		self:meter()
 
-		histo:update(meter_left,meter_top,
-						meter_left+meter_size,
-						meter_top+meter_size,
-						meter_step,meter_step,10)
-		-- shot histo values always scaled to 10 bit, assume white=1023, black=31
-		-- ignore much lower than black, typically bad pixels
-		local histo_scale=10000
-		local white_level=rawop.get_white_level()
-		local over_histo_min=bitshru(rawop.ev_to_raw(rawop.raw_to_ev(white_level)-32),rawop.get_bits_per_pixel() - 10)
-		local over_frac = histo:range(over_histo_min,1023,histo_scale)
-		if over_frac > 5*(histo_scale/100) then
-			warn('BAD SCENE histo overexp')
-		end
-		local under_histo_max = bitshru(rawop.ev_to_raw(-96*5),rawop.get_bits_per_pixel() - 10)
-		local under_frac = histo:range(4,under_histo_max,histo_scale)
-		if under_frac > 5*(histo_scale/100) then
-			warn('BAD SCENE histo underexp')
-		end
-
-		tv96=get_prop(props.TV)
-		local meter96=rawop.raw_to_ev(meter)
-		local av96=get_prop(props.AV)
+		local tv96_log=get_prop(props.TV)
+		local av96_log=get_prop(props.AV)
 		log:set{
-			meter=meter,
-			meter96=meter96,
-			over_pct=frac_to_pct(over_frac,histo_scale),
-			under_pct=frac_to_pct(under_frac,histo_scale),
 			sv=sv96_to_iso(sv96_real_to_market(sv96)),
 			sv96=sv96,
-			av=fmt_av(av96),
-			av96=av96,
-			tv=fmt_tv(tv96),
-			tv96=tv96,
+			av=fmt_av(av96_log),
+			av96=av96_log,
+			av96_cur=av96_cur,
+			tv=fmt_tv(tv96_log),
+			tv96=tv96_log,
 			nd=nd_state,
-			nd_cur=log_get_nd_current_ev96(),
+			nd_cur=get_nd_current_ev96(),
 		}
-		-- check get_nd_current matches, if present
-		if type(get_nd_current_ev96) == 'function' then
-			if nd_state then
-				if get_nd_current_ev96() == 0 then
-					warn('ND in get_nd_current_ev96 == 0')
-				end
-			else 
-				if get_nd_current_ev96() ~= 0 then
-					warn('ND out get_nd_current_ev96 ~= 0')
-				end
+		-- check get_nd_current matches
+		if nd_state then
+			if get_nd_current_ev96() == 0 then
+				self:fail('ND in get_nd_current_ev96 == 0')
+			end
+		else 
+			if get_nd_current_ev96() ~= 0 then
+				self:fail('ND out get_nd_current_ev96 ~= 0')
 			end
 		end
-		table.insert(vals.m,meter)
-		table.insert(vals.m96,meter96)
-		if i == shots_per_step then
+		if i == self.shots_per_step then
 			nd_state=true
-			tv96 = tv96 - nd_shot_ev96
-			vals=nd_vals
+			self.state_name='in'
+			tv96 = tv96 - self.nd_shot_ev96
+			-- save the ND out value of get_current_av96 for later comparison
+			av96_cur_nond = av96_cur
 		end
 		if shoot_mode ~= 'single' and i ~= shots then
 			set_sv96(sv96)
@@ -632,27 +899,69 @@ function run()
 			if nd_state then
 				set_nd_filter(1)
 			end
-			do_nd_av(nd_state)
+			self:do_nd_av(nd_state)
 		end
 		if i == shots then
-			calc_results(nond_vals,nd_vals)
-			-- clear ND prop so it doesn't confuse Canon UI check in later runs
-			if props.ND_FILTER_STATE and get_nd_present() == 2 then 
-				set_prop(props.ND_FILTER_STATE,0)
+			-- on ND+iris cams, av shouldn't change, probably indicates no real ND
+			if get_nd_present() == 2 then
+				if av96_cur ~= av96_cur_nond then
+					self:fail('av change on ND+iris cam')
+				end
+			else
+				-- on ND only cameras, current_av96 should match ND state
+				-- TODO not clear if these should fail, or allow some wiggle room
+				if av96_cur_nond ~= get_prop(props.MIN_AV) then
+					self:fail('cur_av ND val mismatch')
+				end
+				if av96_cur ~= get_prop(props.MIN_AV)+get_nd_value_ev96() then
+					self:fail('cur_av ND val mismatch')
+				end
 			end
-
 		end
 		hook_raw.continue()
-
 		log:write()
 		collectgarbage('step')
+		if self.test_result == 'retry' then
+			break
+		end
 	end
 	hook_shoot.set(0)
 	hook_raw.set(0)
 	release('shoot_full')
+	-- allow final shot to end
+	repeat sleep(10) until not get_shooting()
+	sleep(500)
+	if self.test_result == true then
+		self.test_count = self.test_count + 1
+		self:calc_results()
+		log:set{operation='result '..shoot_mode}
+	elseif self.test_result == 'break' then
+		log:set{operation='user exit '..shoot_mode}
+	elseif self.test_result == 'retry' then
+		log:set{operation='retry '..shoot_mode}
+	end
+	log:write()
+	-- clear ND prop so it doesn't confuse Canon UI check in later runs
+	if props.ND_FILTER_STATE and get_nd_present() == 2 then 
+		set_prop(props.ND_FILTER_STATE,0)
+	end
 end
-run()
--- allow final shot to end before restore
-repeat sleep(10) until not get_shooting()
-sleep(1000)
-restore()
+function ndtest:run_all_tests()
+	local i=1
+	while i <= #self.shoot_modes do
+		self:run_test(self.shoot_modes[i])
+		if self.test_result=='break' then
+			break
+		end
+		if self.test_result ~= 'retry' then
+			self.nd_set_av_retry=false -- clear retry on success
+			i=i+1
+		end
+	end
+	self:final_results()
+	-- additional wait to allow shot to finish before restore
+	sleep(1000)
+	restore()
+end
+ndtest:init()
+ndtest:run_all_tests()
