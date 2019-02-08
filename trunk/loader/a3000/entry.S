@@ -1,5 +1,8 @@
     .section .entry
-MOV     R3, #0x8000   
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
+MOV     R3, #0x8000
 1:
 	SUB	R3, R3, #1
 	CMP	R3, #0
