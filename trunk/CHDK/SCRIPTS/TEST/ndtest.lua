@@ -103,7 +103,7 @@ require'rawoplib'
 props=require'propcase'
 capmode=require'capmode'
 
-ndtest_version="1.5"
+ndtest_version="1.6"
 
 -- utility functions
 function printf(...)
@@ -791,13 +791,19 @@ function ndtest:run_test(shoot_mode)
 	-- preshoot to meter
 	press'shoot_half'
 	repeat sleep(10) until get_shooting()
+	local focus_ok=get_focus_ok()
 	release'shoot_half'
 
 	-- ensure shooting has gone back to false so initial overrides will be SET_LATER
 	repeat sleep(10) until not get_shooting()
 	sleep(50)
 
-	logdesc('start shoot_mode=%s tv=%d sv=%d av=%d',shoot_mode,get_prop(props.TV),get_prop(props.SV),get_prop(props.AV))
+	logdesc('start shoot_mode=%s tv=%d sv=%d av=%d focus_ok=%s',
+		shoot_mode,
+		get_prop(props.TV),
+		get_prop(props.SV),
+		get_prop(props.AV),
+		tostring(focus_ok))
 	local sv96=get_prop(props.SV)
 	local tv96=get_prop(props.TV)
 	local av96=get_prop(props.AV)
@@ -932,6 +938,9 @@ function ndtest:run_test(shoot_mode)
 			av96_cur_nond = av96_cur
 		end
 		if shoot_mode ~= 'single' and i ~= shots then
+			if not get_shooting() then
+				self:warn('get_shooting false in override %s',shoot_mode);
+			end
 			self:set_sv96(sv96)
 			set_tv96_direct(tv96)
 			if get_nd_present() ~= 1 then
