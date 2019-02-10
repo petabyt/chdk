@@ -11,6 +11,8 @@
 #ui_nd_shot_ev96=0 "ND value EV96 (0=auto)"
 #ui_nd_set_av=1 "Set AV prop on ND-only cam" {Auto Quick Always No} table
 #ui_nd_set_shoot=1 "Set ND in shoot hook" {Auto Quick Always No} table
+#ui_set_sv_in_manual=false "Set ISO in non-Auto ISO"
+#ui_shooting_ready_delay=100 "Delay after get_shooting (ms)" 
 #ui_use_raw_e=2 "Save CHDK raw" {Default Yes No}
 #ui_log_append=true "Append log"
 ]]
@@ -68,6 +70,10 @@ Options:
   * Quick - ND state is set only in "quick" mode
   * Always - ND state is set in all modes
   * No - ND state is not set in shoot hook
+* Set ISO in non-Auto ISO - Override ISO for each shot, even if in non AUTO ISO mode
+  By default, ISO is overridden if AUTO ISO enabled (to prevent changes between shots)
+* Delay after get_shooting - Milliseconds to wait between get_shooting going true and 
+  pressing shoot_full
 * Use raw - by default, the script disables CHDK raw for quicker testing. Set to "Yes"
   to force raw saving, or "Default" to use the CHDK menu setting
 * Append log - If checked, each run adds to the existing log. Otherwise the log is
@@ -97,7 +103,7 @@ require'rawoplib'
 props=require'propcase'
 capmode=require'capmode'
 
-ndtest_version="1.4"
+ndtest_version="1.5"
 
 -- utility functions
 function printf(...)
@@ -400,6 +406,7 @@ local ndtest={
 	histo_warn_under=-96*6, -- warning level for histogram under exposure (APEX*96 below neutral)
 	histo_warn_over=16, -- warning level for over exposure (APEX*96 below white level
 	histo_warn_under_pct=10,
+	shooting_ready_delay=ui_shooting_ready_delay, -- minimum delay between get_shooting going true and press full
 	nd_val_err_max=32, -- failure level for calc nd value not matching expected
 	nd_val_total=0, -- ND value across all tests
 	test_count=0,
@@ -696,23 +703,39 @@ function ndtest:init()
 		rerror('no valid test modes enabled')
 	end
 
-	logdesc('capmode=%s fw nd=%d nd_shot_ev96=%d modes=%s shots_step=%d nd_set_av=%s nd_set_shoot=%s',
+	if saved_iso_mode > 40 and not ui_set_sv_in_manual then
+		self.do_set_sv = false
+	else
+		self.do_set_sv = true
+	end
+
+	logdesc('capmode=%s isomode=%d flashmode=%d fw nd=%d nd_shot_ev96=%d modes=%s shots_step=%d nd_set_av=%s nd_set_shoot=%s set_sv=%s ready_delay=%d',
 		capmode.get_name(),
+		get_prop(props.ISO_MODE),
+		get_prop(props.FLASH_MODE),
 		get_nd_value_ev96(),
 		self.nd_shot_ev96,
 		table.concat(self.shoot_modes,':'),
 		self.shots_per_step,
 		self.nd_set_av_mode,
-		self.nd_set_shoot_mode)
+		self.nd_set_shoot_mode,
+		tostring(self.do_set_sv),
+		self.shooting_ready_delay)
 
-	-- known NDs are ~3, < 2 or > 4 would be unexpected
-	if get_nd_value_ev96() < 96*2 or get_nd_value_ev96() > 96*4 then
-		self:fail('unexpected ND value %d',get_nd_value_ev96())
+	-- known NDs ~1-3, warn on unexpected range
+	if get_nd_value_ev96() < 96 or get_nd_value_ev96() > 96*4 then
+		self:warn('unexpected ND value %d',get_nd_value_ev96())
 	end
 
 	log:write()
 	sleep(ui_start_delay*1000)
 	self.histo=rawop.create_histogram()
+end
+
+function ndtest:set_sv96(sv96)
+	if self.do_set_sv then
+		set_sv96(sv96)
+	end
 end
 
 function ndtest:run_test(shoot_mode)
@@ -787,9 +810,9 @@ function ndtest:run_test(shoot_mode)
 	end
 
 	set_tv96_direct(tv96)
-	set_sv96(sv96)
+	self:set_sv96(sv96)
 	if get_nd_present() ~= 1 then
-		set_av96(av96)
+		set_av96_direct(av96)
 	end
 	set_nd_filter(2)
 
@@ -799,6 +822,7 @@ function ndtest:run_test(shoot_mode)
 	if shoot_mode ~= 'single' then
 		press('shoot_half')
 		repeat sleep(10) until get_shooting()
+		sleep(self.shooting_ready_delay)
 	end
 
 	if shoot_mode == 'cont' then
@@ -821,10 +845,10 @@ function ndtest:run_test(shoot_mode)
 		if shoot_mode == 'single' then
 			repeat sleep(10) until not get_shooting()
 			sleep(50)
-			set_sv96(sv96)
+			self:set_sv96(sv96)
 			set_tv96_direct(tv96)
 			if get_nd_present() ~= 1 then
-				set_av96(av96)
+				set_av96_direct(av96)
 			end
 			if nd_state then
 				set_nd_filter(1)
@@ -835,7 +859,7 @@ function ndtest:run_test(shoot_mode)
 			repeat sleep(10) until get_shooting()
 			-- for single, this has to be done after get_shooting to mimic override behavior
 			self:do_nd_av(nd_state)
-			sleep(50)
+			sleep(self.shooting_ready_delay)
 		end
 
 		if shoot_mode ~= 'cont' then
@@ -876,11 +900,28 @@ function ndtest:run_test(shoot_mode)
 		-- check get_nd_current matches
 		if nd_state then
 			if get_nd_current_ev96() == 0 then
-				self:fail('ND in get_nd_current_ev96 == 0')
+				-- from ixus115, hook_shoot check can pass, but ND out after
+				-- give another chance to retry
+				if get_nd_present() == 2 or self.nd_set_av then
+					self:fail('hook_raw ND out')
+				else
+					if self.nd_set_av_mode == 'auto' then
+						self.nd_set_av_retry = true
+						self.test_result = 'retry'
+						if self.shoot_mode == 'quick' then
+							self:warn('hook_raw ND out')
+						else
+							-- fail if ND set av needed in non quick modes (=overrides don't work without)
+							self:fail('hook_raw ND out')
+						end
+					else
+						self:fail('hook_raw ND out')
+					end
+				end
 			end
 		else 
 			if get_nd_current_ev96() ~= 0 then
-				self:fail('ND out get_nd_current_ev96 ~= 0')
+				self:fail('hook_raw ND in')
 			end
 		end
 		if i == self.shots_per_step then
@@ -891,10 +932,10 @@ function ndtest:run_test(shoot_mode)
 			av96_cur_nond = av96_cur
 		end
 		if shoot_mode ~= 'single' and i ~= shots then
-			set_sv96(sv96)
+			self:set_sv96(sv96)
 			set_tv96_direct(tv96)
 			if get_nd_present() ~= 1 then
-				set_av96(av96)
+				set_av96_direct(av96)
 			end
 			if nd_state then
 				set_nd_filter(1)
