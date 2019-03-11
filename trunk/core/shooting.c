@@ -92,6 +92,19 @@ int   shooting_get_exif_subject_dist()          { return shooting_get_prop_int(P
 int   shooting_is_flash()                       { return shooting_get_prop_int(PROPCASE_IS_FLASH_READY); }
 int   shooting_in_progress()                    { return shooting_get_prop_int(PROPCASE_SHOOTING); }
 
+// TODO should maybe jpeg, raw, raw+jpeg?
+int shooting_get_canon_raw_enabled() {
+#ifdef CAM_HAS_CANON_RAW
+#ifdef PROPCASE_IMAGE_FORMAT
+    return (shooting_get_prop(PROPCASE_IMAGE_FORMAT) != 1); // 0 = raw, 2 = raw+jpeg
+#else
+    return (shooting_get_prop(PROPCASE_RESOLUTION) == 5); // resolution 5 = raw, jpeg controlled with another prop
+#endif
+#else
+    return 0;
+#endif
+}
+
 int shooting_get_imager_active() {
   extern int imager_active;
   return imager_active;

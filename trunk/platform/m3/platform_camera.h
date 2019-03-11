@@ -165,3 +165,5 @@
 
     #define CAM_SIMPLE_MOVIE_STATUS             1
 
+    #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
+

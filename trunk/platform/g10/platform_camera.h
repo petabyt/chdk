@@ -135,4 +135,6 @@
 
     #define CAM_HAS_FILEWRITETASK_HOOK      1
 
+    #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
+
 //--------------------------------------------------

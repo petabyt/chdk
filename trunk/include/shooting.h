@@ -106,6 +106,7 @@ extern short shooting_get_nd_current_ev96(void);
 extern short shooting_get_is_mode();
 extern short shooting_get_resolution();
 extern short shooting_get_display_mode();
+extern int shooting_get_canon_raw_enabled();
 
 /******************************************************************/
 

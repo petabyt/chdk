@@ -792,7 +792,9 @@
 
 #define LANG_MENU_VIDEO_VBR_MIN                 668     //CONDITIONAL: CAM_MOVIEREC_NEWSTYLE
 
-#define GUI_LANG_ITEMS                          668
+#define LANG_MENU_RAW_SAVE_IN_CANON_RAW         669     //CONDITIONAL: CAM_HAS_CANON_RAW
+
+#define GUI_LANG_ITEMS                          669
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

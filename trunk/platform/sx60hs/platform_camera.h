@@ -180,4 +180,6 @@
     #define CAM_SIMPLE_MOVIE_STATUS 1
     #define CAM_IS_VID_REC_WORKS 1
     #define CAM_HOTSHOE_OVERRIDE 1
+
+    #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
 //--------------------------------------------------

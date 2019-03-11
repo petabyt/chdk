@@ -1812,6 +1812,9 @@ static CMenuItem raw_exceptions_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_TIMER,          MENUITEM_BOOL,      &conf.save_raw_in_timer,        0 ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_EDGEOVERLAY,    MENUITEM_BOOL,      &conf.save_raw_in_edgeoverlay,  0 ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_AUTO,           MENUITEM_BOOL,      &conf.save_raw_in_auto,         0 ),
+#if defined(CAM_HAS_CANON_RAW)
+    MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_CANON_RAW,      MENUITEM_BOOL,      &conf.save_raw_in_canon_raw,    0 ),
+#endif
 #if CAM_BRACKETING
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE_IN_EV_BRACKETING,  MENUITEM_BOOL,      &conf.save_raw_in_ev_bracketing, 0 ),
 #endif

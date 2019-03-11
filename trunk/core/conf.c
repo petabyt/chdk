@@ -524,6 +524,8 @@ static ConfInfo conf_info[] = {
 
     CONF_INFO(250, conf.disable_lfn_parser_ui,                  CONF_DEF_VALUE, i:0),
 
+    CONF_INFO(251, conf.save_raw_in_canon_raw,                  CONF_DEF_VALUE, i:1),
+
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 
     {0,0,0,0,{0}}
@@ -1584,7 +1586,9 @@ int is_raw_exception() {
     //       variables should be named conf.disable_save_raw_in_XXX
     return (
         (is_video_recording() && conf.save_raw_in_video) ||                                 // True is movie mode and save_raw_in_video is disabled
-        (shooting_get_resolution()==5) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
+#ifdef CAM_HAS_CANON_RAW
+        (shooting_get_canon_raw_enabled() && conf.save_raw_in_canon_raw) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
+#endif
         ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled
         ((m==MODE_AUTO) && conf.save_raw_in_auto) ||                                        // True if auto mode and save_raw_in_auto is disabled
         (conf.edge_overlay_enable && conf.save_raw_in_edgeoverlay) ||                       // True if edge overlay on and save_raw_in_edgeoverlay is disabled
