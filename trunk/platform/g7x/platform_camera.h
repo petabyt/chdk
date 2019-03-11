@@ -31,6 +31,8 @@
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
 
+    #define CAM_BRACKETING                      1 // camera has native bracketing
+
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60          // delay after a press
 
