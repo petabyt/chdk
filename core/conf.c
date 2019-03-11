@@ -1589,7 +1589,9 @@ int is_raw_exception() {
 #ifdef CAM_HAS_CANON_RAW
         (shooting_get_canon_raw_enabled() && conf.save_raw_in_canon_raw) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
 #endif
+#ifdef CAM_HAS_SPORTS_MODE
         ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled
+#endif
         ((m==MODE_AUTO) && conf.save_raw_in_auto) ||                                        // True if auto mode and save_raw_in_auto is disabled
         (conf.edge_overlay_enable && conf.save_raw_in_edgeoverlay) ||                       // True if edge overlay on and save_raw_in_edgeoverlay is disabled
         ((shooting_get_drive_mode()==1) && conf.save_raw_in_burst && !(m==MODE_SPORTS)) ||  // True if drive mode is continuous and save_raw_in_burst is disabled and not sports mode
