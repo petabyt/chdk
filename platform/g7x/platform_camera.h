@@ -214,4 +214,6 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1
 
+    #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
+
 //--------------------------------------------------

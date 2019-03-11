@@ -271,6 +271,8 @@
 
     #undef  CAM_IS_VID_REC_WORKS                // Define if the 'is_video_recording()' function works
 
+    #undef  CAM_HAS_CANON_RAW                   // Define if the camera has native raw in the canon firmware
+
     // Keyboard repeat and initial delays (override in platform_camera.h if needed)
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500

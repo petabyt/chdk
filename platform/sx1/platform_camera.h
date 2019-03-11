@@ -89,6 +89,8 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
+    #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
+
 //--------------------------------------------------
 
     #undef  CAM_DEFAULT_MENU_CURSOR_BG

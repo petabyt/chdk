@@ -58,6 +58,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SHOOTING                        303     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
 #define PROPCASE_EV_CORRECTION_2                 211
 #define PROPCASE_IS_FLASH_READY                  212
+#define PROPCASE_IMAGE_FORMAT                    214     // from UIFS_GetStillShotableNumber, 0 = RAW, 1 = JPEG, 2 = RAW+JPEG
 #define PROPCASE_RESOLUTION                      222        // 0 = L, 1 = M1, 2 = M2, 4 = S, 7 = Low Light
 #define PROPCASE_ORIENTATION_SENSOR              223
 #define PROPCASE_TIMER_MODE                      227        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom

@@ -86,4 +86,6 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_MY_COLORS                       188     // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
 #define PROPCASE_CUSTOM_SHARPNESS                229     // Canon Menu slide bar values: 255, 254, 0, 1, 2
 
+#define PROPCASE_IMAGE_FORMAT                    214     // from UIFS_GetStillShotableNumber, 0 = RAW, 1 = JPEG, 2 = RAW+JPEG
+
 #endif
