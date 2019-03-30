@@ -35,6 +35,8 @@ NHSTUB(SetHPTimerAfterNow,                     0xfc1fa9e5)
 // additional
 NHSTUB(displaybusyonscreen,                    0xfc3273d3)
 NHSTUB(undisplaybusyonscreen,                  0xfc327469)
+NHSTUB(displayblankscreen,                     0xFC3274A1)
+NHSTUB(undisplayblankscreen,                   0xFC327541)
 NHSTUB(MakeSDCardBootable,                     0xfc3896e9)
 NHSTUB(GetImageFolder,                         0xfc3134bd)
 NHSTUB(GetLensCurrentFocalLength,              0xfc43fa81)

@@ -18,6 +18,15 @@ Notes
 
 - Video time based limits are raised to 3 hours
 
+- Clean overlay is possible for HDMI output purposes: See "Video Parameters" -> "Clear Canon overlays"
+  "Rec": Canon overlay is removed upon entering shooting (aka rec) mode
+  "MviRec": Canon overlay is removed when recording video
+  CHDK overlay needs to be removed separately, in the "CHDK Settings" menu.
+  For more info, visit https://chdk.setepontos.com/index.php?topic=13489
+
+- This camera can switch on itself after a user-initiated delay. This feature can be used from a user-written Lua script.
+  For more details and the script, see https://chdk.setepontos.com/index.php?topic=12542.msg137151#msg137151
+
 Issues
 
 - CHDK overlay drawing is slow, can blink excessively when the Canon OSD is updated

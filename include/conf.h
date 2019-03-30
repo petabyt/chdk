@@ -75,7 +75,7 @@ typedef struct {
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
 // making the modules camera/platform independent
 
-#define CONF_VERSION            {3,3}       // Version for Conf structure
+#define CONF_VERSION            {3,4}       // Version for Conf structure
 
 typedef struct
 {
@@ -459,6 +459,8 @@ typedef struct
     int osd_platformid; // platform ID in OSD cfg file
 
     int save_raw_in_canon_raw; // disable raw when Canon raw enabled
+
+    int clean_overlay;  // invisible Canon overlay: 0 = never, 1 = rec mode, 2 = during movie record
 
 } Conf;
 

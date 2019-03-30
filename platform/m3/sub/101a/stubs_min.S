@@ -27,3 +27,7 @@ DEF(jog_position                  ,0xdb48) // 0xdb34 +0x14, +0x18
 DEF(jog_hw_pos                    ,0xd9854004) // found by browsing the 0xd985xxxx range...
 
 DEF(displaytype                   ,0x9974) //@ 0x9934 + 0x40, found  @ 0xFC35DD56 (GetDisplayType)
+
+DEF(palette_buffer_ptr            ,0x136c0) // FC354852, FC35486E
+DEF(active_palette_buffer         ,0x136b8) // FC354852, FC354856
+DEF(palette_control               ,0x136a8) // FC3549B6, FC3549D6

@@ -14,6 +14,19 @@ Keys
 - AE Lock and AF Adjust are assigned to zoom out and zoom in
   respectively for CHDK keyboard input and script. They do not control the lens zoom.
 
+Notes
+
+- Video bitrate can be adjusted (CBR, VBR). Maximum possible video bitrate is approx. 41000 kbit/s
+
+- Clean overlay is possible for HDMI output purposes: See "Video Parameters" -> "Clear Canon overlays"
+  "Rec": Canon overlay is removed upon entering shooting (aka rec) mode
+  "MviRec": Canon overlay is removed when recording video
+  CHDK overlay needs to be removed separately, in the "CHDK Settings" menu.
+  For more info, visit https://chdk.setepontos.com/index.php?topic=13489
+
+- This camera can switch on itself after a user-initiated delay. This feature can be used from a user-written Lua script.
+  For more details and the script, see https://chdk.setepontos.com/index.php?topic=12542.msg137151#msg137151
+
 Issues:
 
 - CHDK overlay drawing is slow
@@ -44,7 +57,6 @@ PTP live view - preliminary, requires client with live view protocol 2.2 (chdkpt
 NOT IMPLEMENTED:
 
 dark frame control
-video controls (movie_rec task)
 reboot with firmware update file
 script hard shutdown (shut_down(1))
 booting with .fi2, camera crashes

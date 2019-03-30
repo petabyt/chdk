@@ -794,7 +794,9 @@
 
 #define LANG_MENU_RAW_SAVE_IN_CANON_RAW         669     //CONDITIONAL: CAM_HAS_CANON_RAW
 
-#define GUI_LANG_ITEMS                          669
+#define LANG_MENU_CLEAN_OVERLAY                 670     //CONDITIONAL: CAM_CLEAN_OVERLAY
+
+#define GUI_LANG_ITEMS                          670
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();
