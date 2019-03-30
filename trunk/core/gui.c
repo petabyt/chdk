@@ -1216,6 +1216,10 @@ static const char* gui_show_movie_time_modes[] =            { "Don't", "hh:mm:ss
     static const char* gui_video_mode_modes[] =             { "Default", "Quality"};
 #endif
 
+#ifdef CAM_CLEAN_OVERLAY
+    static const char* gui_clean_overlay_modes[] =          { "Never", "Rec", "MviRec"};
+#endif
+
 static CMenuItem video_submenu_items[] = {
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
     MENU_ENUM2  (0x23,LANG_MENU_VIDEO_MODE,                 &conf.video_mode,       gui_video_mode_modes ),
@@ -1249,6 +1253,9 @@ static CMenuItem video_submenu_items[] = {
 #endif
     MENU_ENUM2  (0x5c,LANG_MENU_OSD_SHOW_VIDEO_TIME,        &conf.show_movie_time,  gui_show_movie_time_modes ),
     MENU_ITEM   (0x60,LANG_MENU_OSD_SHOW_VIDEO_REFRESH,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_movie_refresh,   MENU_MINMAX(1, 20) ),
+#ifdef CAM_CLEAN_OVERLAY
+    MENU_ENUM2  (0x7f,LANG_MENU_CLEAN_OVERLAY,              &conf.clean_overlay,    gui_clean_overlay_modes ),
+#endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                                  0 ),
     {0}
 };

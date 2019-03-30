@@ -167,3 +167,5 @@
 
     #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
 
+    #define CAM_CLEAN_OVERLAY                   1
+

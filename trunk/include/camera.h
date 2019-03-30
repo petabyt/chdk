@@ -226,6 +226,8 @@
                                                 // requires load_chdk_palette() and vid_get_bitmap_active_palette() to be defined
                                                 // correctly for the camera along with
 
+    #undef  CAM_CLEAN_OVERLAY                   // define when port supports making Canon overlay invisible (DIGIC 6)
+
     #define CAM_USB_EVENTID         0x902       // event ID for USB control. Changed to 0x202 in DryOS R49 so needs to be overridable.
                                                 // For DryOS only. These are "control events", and don't have the same IDs as "logical events"
 

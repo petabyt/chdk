@@ -265,3 +265,72 @@ int vid_get_viewport_row_offset() {
 }
 
 //----------------------------------------------------------------------------
+
+#ifdef CAM_CLEAN_OVERLAY
+/*
+ * Making the Canon overlay invisible under selected conditions
+ * Meant to be used on DIGIC 6 models that allow HDMI output in rec mode
+ * On m3 and m10, same palette (0) is used in rec mode and during recording
+ * Issues:
+ * - regardless of setting, modes with color submode icon (such as hybrid auto) continue to display that (blue) icon
+ * - when exposure controls are used, drop shadow of invisible osd elements may appear on screen
+ */
+extern char **palette_buffer_ptr[];
+extern char active_palette_buffer;
+extern char palette_control;
+static char *palbackup = NULL;      // backup for the original palette
+static int palette_is_clean = 0;
+static long pending_screenerase = 0;
+const unsigned int handled_palette = 0; // model dependent constant, 0 for m3 and m10
+void pal_clean() {
+    if (palette_is_clean) return;
+    if (active_palette_buffer == handled_palette) {
+        if (palbackup == NULL) {
+            palbackup = malloc(256*4); // 256 entries, 4 bytes each
+            if (palbackup) {
+                memcpy(palbackup, *palette_buffer_ptr[handled_palette]+4, 256*4);
+            }
+        }
+        if (palbackup) {
+            memset(*palette_buffer_ptr[handled_palette]+4, 0, 256*4);
+            pending_screenerase = get_tick_count() + 50; // arbitrary 50msec delay
+            palette_is_clean = 1;
+        }
+    }
+}
+void pal_restore() {
+    if (!palette_is_clean || (palbackup == NULL)) return;
+    memcpy(*palette_buffer_ptr[handled_palette]+4, palbackup, 256*4);
+    pending_screenerase = get_tick_count() + 10; // arbitrary 10msec delay
+    palette_is_clean = 0;
+}
+void handle_clean_overlay() {
+    if ((conf.clean_overlay == 1) && camera_info.state.mode_rec) { // clean during rec mode
+        pal_clean();
+    }
+    else if ((conf.clean_overlay == 2) && is_video_recording()) { // clean during video recording only
+        pal_clean();
+    }
+    else {
+        pal_restore();
+    }
+    if (pending_screenerase && (get_tick_count()>=pending_screenerase)) {
+        pending_screenerase = 0;
+
+#if 1
+        // following seems to be effective for removing/redrawing Canon overlay
+        palette_control |= 3; // magic constant, valid for m10 and m3
+        vid_bitmap_refresh();
+#else
+        // following is for the case when palette_control + vid_bitmap_refresh is not effective
+        extern void _displayblankscreen();
+        extern void _undisplayblankscreen();
+        _displayblankscreen();
+        _undisplayblankscreen();
+#endif
+    }
+}
+#endif // CAM_CLEAN_OVERLAY
+
+
+//----------------------------------------------------------------------------

@@ -41,3 +41,7 @@ DEF(jog_position                                ,0xf6dc)
 DEF(jog_hw_pos                                  ,0xd9855004) // see GetRotaryEncPulseCounter_FW
 
 DEF(canon_gui_started_flag                      ,0xb918) // see GUISrv_StartGUISystem_FW
+
+DEF(palette_buffer_ptr                          ,0x13540) // FC3599BC, FC3599D8
+DEF(active_palette_buffer                       ,0x13538) // FC3599BC, FC3599C0
+DEF(palette_control                             ,0x13528) // FC359B20, FC359B40

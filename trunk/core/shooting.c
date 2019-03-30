@@ -1637,6 +1637,11 @@ int mode_get(void)
     camera_info.state.mode_play = ((mode & MODE_MASK) == MODE_PLAY);
     camera_info.state.mode_photo = (camera_info.state.mode_play || !(camera_info.state.mode_video || (mode&MODE_SHOOTING_MASK)==MODE_STITCH));
 
+#ifdef CAM_CLEAN_OVERLAY
+    extern void handle_clean_overlay();
+    handle_clean_overlay();
+#endif
+
     return (mode);
 }
 

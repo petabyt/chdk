@@ -54,6 +54,9 @@ NHSTUB(LCDMsg_SetStr				,0xfc51f7e3)
 
 NHSTUB(GetLensFocalLengthAll                  ,0xfc25cfc3)
 
+NHSTUB(displayblankscreen,                     0xFC333265)
+NHSTUB(undisplayblankscreen,                   0xFC3332EB)
+
 // trial
 NHSTUB(refresh_bitmap_buf_from,                0xfc143435)
 

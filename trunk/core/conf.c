@@ -437,6 +437,7 @@ static ConfInfo conf_info[] = {
     CONF_INFO( 89, conf.fast_movie_control,                     CONF_DEF_VALUE, i:0),
     CONF_INFO( 90, conf.fast_movie_quality_control,             CONF_DEF_VALUE, i:0),
     CONF_INFO( 91, conf.ext_video_time,                         CONF_DEF_VALUE, i:0),
+    CONF_INFO( 92, conf.clean_overlay,                          CONF_DEF_VALUE, i:0),
 
     CONF_INFO(100, conf.clear_override,                         CONF_DEF_VALUE, i:1),
     
