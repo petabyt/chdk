@@ -2843,7 +2843,7 @@ void print_results(firmware *fw, const char *curr_name, int k)
     if (count == 0)
     {
         if (func_names[k].flags & OPTIONAL) return;
-        char fmt[50] = "";
+        char fmt[51] = "";
         sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(curr_name)));
         sprintf(line+strlen(line), fmt, curr_name, "");
     }

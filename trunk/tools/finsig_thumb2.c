@@ -5166,7 +5166,7 @@ void print_results(firmware *fw, sig_entry_t *sig)
     if (!sig->val && !ostub2)
     {
         if (sig->flags & OPTIONAL) return;
-        char fmt[50] = "";
+        char fmt[51] = "";
         sprintf(fmt, "// ERROR: %%s is not found. %%%ds//--- --- ", (int)(34-strlen(sig->name)));
         sprintf(line+strlen(line), fmt, sig->name, "");
     }
