@@ -116,7 +116,7 @@ int raw_createfile(void)
     
     raw_get_path(fn);
 
-    if(raw_br_counter && conf.bracketing_add_raw_suffix && (shooting_get_drive_mode()!=1)) {
+    if(raw_br_counter && conf.bracketing_add_raw_suffix && (shooting_get_drive_mode()==1)) {
         sprintf(fn+strlen(fn), 
                 RAW_BRACKETING_FILENAME,
                 img_prefixes[conf.raw_prefix],
