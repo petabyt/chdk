@@ -415,6 +415,15 @@ void __attribute__((naked,noinline)) sub_fc04f6c4_my() {
     "bl      sub_fc20d304\n"
     "bl      sub_fc0ba81c\n"
     "bl      sub_fc095750\n"
+
+#if defined(OPT_RUN_WITH_BATT_COVER_OPEN)
+"   mov     r0, #0x100000 \n"       // +
+"batt_loop1: \n"                    // +
+"   nop\n"                          // +
+"   SUBS    R0,R0,#1 \n"            // +
+"   BNE     batt_loop1 \n"          // +
+#endif
+
     "bl      sub_fc12ed44\n"
     "bl      sub_fc095b24\n"
     "bl      sub_fc09594a\n"
