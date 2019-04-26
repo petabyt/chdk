@@ -1746,7 +1746,9 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
         const insn_match_t match_mov_r1[]={
             {MATCH_INS(MOV,     2), {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
+#if CS_API_MAJOR < 4
             {MATCH_INS(MOVS,    2), {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
+#endif
             {ARM_INS_ENDING}
         };
 
@@ -2221,7 +2223,9 @@ int sig_match_prepdir_x(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     const insn_match_t match_mov_r1_1[]={
         {MATCH_INS(MOV,     2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(1)}},
+#if CS_API_MAJOR < 4
         {MATCH_INS(MOVS,    2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(1)}},
+#endif
         {ARM_INS_ENDING}
     };
     if(!insn_match_find_next(fw,is,1,match_mov_r1_1)) {
@@ -2252,7 +2256,9 @@ int sig_match_prepdir_0(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     uint32_t adr=(uint32_t)is->adr|is->thumb;
     const insn_match_t match_mov_r1_1[]={
         {MATCH_INS(MOV,     2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(0)}},
+#if CS_API_MAJOR < 4
         {MATCH_INS(MOVS,    2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(0)}},
+#endif
         {ARM_INS_ENDING}
     };
     if(!insn_match_find_next(fw,is,1,match_mov_r1_1)) {
@@ -3130,7 +3136,9 @@ int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *ru
             return 0;
         }
         const insn_match_t match_mov_r0_1[]={
+#if CS_API_MAJOR < 4
             {MATCH_INS(MOVS, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(1)}},
+#endif
             {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(1)}},
             {ARM_INS_ENDING}
         };
@@ -3579,7 +3587,9 @@ int is_immediate_ret_sub(firmware *fw,iter_state_t *is_init)
     fw_disasm_iter_single(fw,is_init->adr | is_init->thumb);
     const insn_match_t match_mov_r0_imm[]={
         {MATCH_INS(MOV,   2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM_ANY}},
+#if CS_API_MAJOR < 4
         {MATCH_INS(MOVS,  2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM_ANY}},
+#endif
         {ARM_INS_ENDING}
     };
     // if it's a MOV, check if next is ret
