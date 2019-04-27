@@ -155,6 +155,9 @@
     #define CAM_SD_OVER_IN_MF                   1
 
     #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
+    
+    #define CAM_REMOTE_USES_PRECISION_SYNC   	1    		// USB remote precision sync patch works with this camera
+    #define GPIO_VSYNC_CURRENT               	0xC0F070C8  // vsync current status register used by USB remote precision sync
 
     #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
 
