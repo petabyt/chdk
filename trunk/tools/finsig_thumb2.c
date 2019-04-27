@@ -2827,6 +2827,7 @@ int sig_match_zicokick_values(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
     }
     if(n_blobs > 0) {
+        blobs[n_blobs].type = MISC_BLOB_TYPE_NONE;
         save_misc_val_blobs("zicokick_values",blobs,0);
         return 1;
     } else {
