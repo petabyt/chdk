@@ -394,7 +394,9 @@ static char * sub_hex8(firmware *fw, char * op, t_value w)
 
     char *s = op;
 
-    w = followBranch(fw,w,1);           // If call to Branch then follow branch
+    // If call to Branch then follow branch; but only if original branch is in main FW (not code copied to RAM)
+    if (w >= fw->base)
+        w = followBranch(fw,w,1);
     osig *o = find_sig_val_by_type(fw->sv->stubs, w, TYPE_NHSTUB);
 
     if ((options.flags & disopt_patch_branch) && patch_func_name)
