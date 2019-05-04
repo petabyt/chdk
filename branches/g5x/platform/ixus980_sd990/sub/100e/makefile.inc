@@ -1,0 +1,27 @@
+#3193
+PLATFORMID=12691
+
+PLATFORMOS=dryos
+
+# Force ARAM on, and load CHDK in ARAM
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=1
+
+# Set up size variables for AgentRAM
+ARAM_HEAP_START=0x3ce000
+ARAM_HEAP_SIZE=0x32000
+
+ifdef OPT_CHDK_IN_ARAM
+MEMISOSTART=$(ARAM_HEAP_START)
+else
+MEMISOSTART=0xE8B40
+endif
+
+ROMBASEADDR=0xff810000
+
+# type of diskboot encoding
+NEED_ENCODED_DISKBOOT=1
+# type of FI2 encoding
+KEYSYS=d4
+
+PLATFORMOSVER=31

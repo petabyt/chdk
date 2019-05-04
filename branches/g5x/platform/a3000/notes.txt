@@ -1,0 +1,16 @@
+****************************************
+
+A3000 notes:
+Original port by ERR99 
+
+Porting thread
+https://chdk.setepontos.com/index.php?topic=5593.0
+
+alt button is the FACE key
+
+A3000 has an ND filter, and does not have an adjustable aperture
+
+This camera has little free RAM. ARAM is enabled by default, so Canon Basic
+scripts should not be used without a custom, non-ARAM build.
+
+

@@ -1,0 +1,20 @@
+************************************
+A2600 Notes
+************************************
+Porting thread:
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+
+KNOWN BUGS
+**********
+- Mute on zoom not implemented (Audio IC BU26132).
+- Set quality video does not work
+
+For Developers
+**************
+- Port based entirely on the a2500 port, the two models only differ in their LCD screen
+- Audio IC BU26132
+- File counter is a variable not a param (see ixus140 port)

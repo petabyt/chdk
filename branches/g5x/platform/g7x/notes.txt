@@ -1,0 +1,114 @@
+************************************
+G7 X notes
+************************************
+CHDK is a hack, use at your own risk!
+
+This is an ALPHA port. It has some known bugs, and many features and
+combinations of Canon settings have not been tested thoroughly.
+
+Additionally, Digic 6 has significant differences from previously 
+supported models, which means some features are not fully implemented
+and the risk of unforeseen side effects is higher than ports for
+previous Digic versions.
+
+The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
+version, use ACID or the firminfo Canon Basic script.
+
+No "firmware update" file is included in the autobuild, you must used
+bootable SD card to load. See known bugs below.
+
+General camera and CHDK port information
+****************************************
+G7 X has an adjustable aperture and ND filter
+
+SD override does not work in AF, only MF or AF lock
+
+Default alt button is PLAY. VIDEO and WIFI may also be used
+
+The RING FUNC key is identified as ERASE in scripting and CHDK shortcuts
+
+The half press zebra shortcut keys is MENU
+
+To start in shooting mode or wifi connect, hold down the corresponding button
+
+Raw blacklevel appears to be ~511, not the ~127 seen on other 12 bit cams
+
+G7 X uses propset 7. The values used in some propcases have changed, which
+can break compatibility with scripts.
+
+Only simple_movie_status is implemented, so features or scripts that rely on
+direct access to the movie_status variable do not work
+
+HDMI hotplug, analog AV detect, and battery temperature A/D are supported
+as alternate remote inputs.
+
+TESTED
+******
+llibtst.lua
+chdkptp cam tests
+PTP play/rec switch
+raw and remote hooks (in normal still shooting modes, broken some special modes)
+ND override
+SD override
+Tv, Av and bracketing
+ISO overrides and bracketing
+ - may have issues, full range not tested, some unexpected results in cont mode.
+setmode.lua - crashes with default 10ms delay, works with 100ms
+ubtest.bas
+hooktest.lua
+isobase.lua
+USB remote - plug test / remote hook only
+CHDK raw / DNG - In most still modes that take a single exposure, see Known Bugs below
+PTP remote shoot with JPEG / CHDK DNG
+ - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
+ - If Canon raw + jpeg is enabled, the jpeg will be written to the card
+ - Fails in modes that take multiple exposures: Canon firmware bracketing,
+   HDR, Creative shot etc
+Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
+PTP live view - Requires client with live view proto 2.2 support
+ (chdkptp r712 or later)
+Zebra, histogram and Edge overlay - with limitations, see Other Issues below.
+Dark frame control
+ - If set to auto Canon firmware uses DFS for tv 5-30 sec, depending on ISO and temperature
+
+NOT IMPLEMENTED
+***************
+video controls (movie_rec task)
+extra long exposures (exp_drv task)
+ - Canon firmware supports up to 250 sec
+reboot with firmware update file
+script hard shutdown (shut_down(1))
+
+OTHER ISSUES
+************
+display updating is ugly
+- CHDK UI is erased / flashes every time Canon UI updates, including
+  focus boxes, low battery icon etc.
+- Edge overlay does not erase properly when shown live
+- Zebra "Draw Over Zebra" and Restore options are non-functional
+- Some games don't draw correctly
+
+PROPCASE_RESOLUTION values differ from previous models
+- 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
+PROPCASE_IS_MODE values differ from some previous
+- 0=Continuous, 1=Shoot Only, 2=Off.
+  Setting other values (as done by mdfb2013.lua up to 1.1a) causes crash on shutdown.
+
+KNOWN BUGS
+**********
+- CHDK raw and remote hooks are not called in some special shooting modes (HDR, star trails etc)
+  This means script shoot() calls, scripts that use shoot hooks and synced remote do not function
+  correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
+- CHDK raw / DNG may not work correctly in some other special scene modes
+- When booted with FI2 update
+ - switching to hybrid auto causes a crash
+ - orientation sensor value alternates between 0 and 90
+ Because of these issues, an FI2 file is not included in the autobuild
+- When using remote shoot, DCIM directories will be created even if no files are saved
+
+
+THANKS
+******
+* srsa_4c for the sx280hs port, and doing all the hard work to support digic 6.
+* 62ndidiot and Ant for solving many generic digic 6 display issues
+* The anonymous donor who provided the camera.

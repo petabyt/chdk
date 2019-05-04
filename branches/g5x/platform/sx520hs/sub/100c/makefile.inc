@@ -1,0 +1,25 @@
+PLATFORMID=12955
+PLATFORMOS=dryos
+PLATFORMOSVER=55
+
+ROMBASEADDR=0xff010000
+
+# Set up size variables for AgentRAM
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=1
+ARAM_HEAP_START = 0x60e000
+ARAM_HEAP_SIZE  = 0x22000
+
+MAXRAMADDR=0x0fffffff # 256 MB
+
+ifdef OPT_CHDK_IN_ARAM
+MEMISOSTART=$(ARAM_HEAP_START)
+else
+MEMISOSTART=0x002ff248
+endif
+
+# type of diskboot encoding
+NEED_ENCODED_DISKBOOT=14
+# type of FI2 encoding
+KEYSYS=d4h
+

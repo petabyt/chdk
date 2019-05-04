@@ -1,0 +1,30 @@
+****************************************
+Beta CHDK for G15
+****************************************
+
+General camera and CHDK port information
+****************************************
+The default ALT button is the Shortcut key. In earlier builds, it was Playback
+
+The Meter key is used for the CHDK functions normally assigned to Display
+
+The half press zebra shortcut is the Erase key.
+
+CHDK PTP remote capture is implemented
+
+Extra long exposures (over 64 seconds) support is implemented
+
+Camera has both an ND filter and adjustable aperture
+
+Development notes:
+******************
+Porting thread
+https://chdk.setepontos.com/index.php?topic=9257.msg99073#msg99073
+
+Known issues:
+    - none
+
+TODO:
+    - Debug LEDs address and ON/OFF mechanism in lib.c
+    - EXMEM unimplemented
+    - ???
