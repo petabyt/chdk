@@ -5,72 +5,28 @@
 #include "palette.h"
 
 //-------------------------------------------------------------------
-
-extern  unsigned char   *chdk_colors;
-
-#define IDX_COLOR_TRANSPARENT       0
-#define IDX_COLOR_BLACK             1
-#define IDX_COLOR_WHITE             2
-#define IDX_COLOR_RED               3
-#define IDX_COLOR_RED_DK            4
-#define IDX_COLOR_RED_LT            5
-#define IDX_COLOR_GREEN             6
-#define IDX_COLOR_GREEN_DK          7
-#define IDX_COLOR_GREEN_LT          8
-#define IDX_COLOR_BLUE              9
-#define IDX_COLOR_BLUE_DK           10
-#define IDX_COLOR_BLUE_LT           11
-#define IDX_COLOR_GREY              12
-#define IDX_COLOR_GREY_DK           13
-#define IDX_COLOR_GREY_LT           14
-#define IDX_COLOR_YELLOW            15
-#define IDX_COLOR_YELLOW_DK         16
-#define IDX_COLOR_YELLOW_LT         17
-#define IDX_COLOR_GREY_DK_TRANS     18
-#define IDX_COLOR_MAGENTA           19
-#define IDX_COLOR_CYAN              IDX_COLOR_BLUE_LT
-
-#define IDX_COLOR_MAX               19
-
-#define COLOR_WHITE             (chdk_colors[IDX_COLOR_WHITE])
-#define COLOR_RED               (chdk_colors[IDX_COLOR_RED])
-#define COLOR_RED_DK            (chdk_colors[IDX_COLOR_RED_DK])
-#define COLOR_RED_LT            (chdk_colors[IDX_COLOR_RED_LT])
-#define COLOR_GREEN             (chdk_colors[IDX_COLOR_GREEN])
-#define COLOR_GREEN_DK          (chdk_colors[IDX_COLOR_GREEN_DK])
-#define COLOR_GREEN_LT          (chdk_colors[IDX_COLOR_GREEN_LT])
-#define COLOR_BLUE              (chdk_colors[IDX_COLOR_BLUE])
-#define COLOR_BLUE_DK           (chdk_colors[IDX_COLOR_BLUE_DK])
-#define COLOR_BLUE_LT           (chdk_colors[IDX_COLOR_BLUE_LT])
-#define COLOR_GREY              (chdk_colors[IDX_COLOR_GREY])
-#define COLOR_GREY_DK           (chdk_colors[IDX_COLOR_GREY_DK])
-#define COLOR_GREY_LT           (chdk_colors[IDX_COLOR_GREY_LT])
-#define COLOR_YELLOW            (chdk_colors[IDX_COLOR_YELLOW])
-#define COLOR_YELLOW_DK         (chdk_colors[IDX_COLOR_YELLOW_DK])
-#define COLOR_YELLOW_LT         (chdk_colors[IDX_COLOR_YELLOW_LT])
-#define COLOR_GREY_DK_TRANS     (chdk_colors[IDX_COLOR_GREY_DK_TRANS])
-#define COLOR_MAGENTA           (chdk_colors[IDX_COLOR_MAGENTA])
-#define COLOR_CYAN              (chdk_colors[IDX_COLOR_CYAN])
-
-//-------------------------------------------------------------------
 #define FONT_REAL_WIDTH         8
 #define FONT_REAL_HEIGHT        16
-
-#ifndef THUMB_FW
 
 #define FONT_WIDTH              8
 #define FONT_HEIGHT             16
 // Name of default symbol file (for reset)
 #define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
 
-#else // THUMB_FW
+#ifdef THUMB_FW
+#ifndef BITMAP_YUV2
+
+#undef FONT_WIDTH
+#undef FONT_HEIGHT
+#undef DEFAULT_SYMBOL_FILE
 
 #define FONT_WIDTH              14
 #define FONT_HEIGHT             32
 // Name of default symbol file (for reset)
 #define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_16.rbf"
 
-#endif // THUMB_FW
+#endif
+#endif
 
 // Text justification & options
 #define TEXT_LEFT               0
@@ -104,7 +60,6 @@ extern void update_draw_proc();
 extern void draw_set_guard();
 extern int draw_test_guard();
 
-extern color draw_get_pixel(coord x, coord y);
 extern color draw_get_pixel_unrotated(coord x, coord y);
 
 extern void draw_pixel(coord x, coord y, color cl);

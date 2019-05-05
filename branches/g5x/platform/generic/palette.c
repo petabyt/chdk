@@ -1,11 +1,11 @@
-// CHDK palette colors for cameras with yuv overlay
+
+// Digic6 colour handling
 
 #include "palette.h"
 
-#undef  COLOR_TRANSPARENT
-#define COLOR_TRANSPARENT           0x00
-#undef  COLOR_BLACK
-#define COLOR_BLACK                 0xff
+#ifndef BITMAP_YUV2
+
+// CHDK palette colors for cameras with yuv overlay
 
 // Colors for all camera modes
 unsigned char ply_colors[] =
@@ -31,3 +31,5 @@ unsigned char ply_colors[] =
         0xb0,                       // Transparent Dark Grey
         0xfe,                       // Magenta
 };
+
+#endif

@@ -58,7 +58,7 @@ $Opalette.flt: $Ogui_palette.o
 $Ompopup.flt: $Ogui_mpopup.o
 $Otxtread.flt: $Ogui_read.o
 $Oedgeovr.flt: $Oedgeoverlay.o $Obitvector.o $(OBJ_ISDIGIT)
-$Ozebra.flt: $Ozebra.o
+$Ozebra.flt: $Ozebra$(BT).o
 $Ohisto.flt: $Ohistogram.o
 $Oshothist.flt: $Oshot_histogram.o
 $Ocurves.flt: $Ocurves.o

@@ -261,7 +261,7 @@ static short canon_sv96_base=0;
 #define SV96_MARKET_OFFSET          69          // market-real sv96 conversion value
 
 // Conversion values for pow(2,-69/96) 'market' to 'real', and pow(2,69/96) 'real' to 'market'
-// Uses integer arithmetic to avoid floating point calculations. Values choses to get as close
+// Uses integer arithmetic to avoid floating point calculations. Values chosen to get as close
 // to the desired multiplication factor as possible within normal ISO range.
 #define ISO_MARKET_TO_REAL_MULT     9955
 #define ISO_MARKET_TO_REAL_SHIFT    14

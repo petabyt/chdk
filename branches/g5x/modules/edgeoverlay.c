@@ -359,7 +359,7 @@ static int calc_edge_overlay()
     const int x_max = (viewport_width - 2) * 3;
 #else
     const int x_min = 8;
-    const int x_max = (viewport_width - 4) * 2;
+    const int x_max = (viewport_width - 2) * 4;
 #endif
     img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
 
@@ -491,7 +491,7 @@ static int calc_edge_overlay()
     }   // for y
 
 #else
-        for (x = x_min, xdiv3 = x_min/2; x < x_max; x += 4, xdiv3 += 2)
+        for (x = x_min, xdiv3 = x_min/2; x < x_max; x += 8, xdiv3 += 2)
         {										//  1 231  2 3
             // convolve vert (second Y)			//  1 234  5 678	>>	 1 2  3 4  5 6
             conv1 = *(ptrh1 + x + 1) * ( 1) +	// UYVYYY UYVYYY	>>	UYVY UYVY UYVY
