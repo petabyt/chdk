@@ -48,6 +48,10 @@ else
     CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW
 endif
 
+ifdef BITMAP_YUV2
+    CFLAGS+=-DBITMAP_YUV2
+endif
+
 CFLAGS+=-I$(include) -I$(core) -I$(modules) -I$(cam) $(PLFLAGS)
 CFLAGS+=-DVER_$(VER) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\"
 CFLAGS+=-Wall -Wno-unused -Wno-format

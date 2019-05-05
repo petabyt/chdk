@@ -327,6 +327,7 @@ batch-clean:
 	$(MAKE) -C tools clean
 	$(MAKE) -C modules clean THUMB_FW=
 	$(MAKE) -C modules clean THUMB_FW=1
+	$(MAKE) -C modules clean THUMB_FW=1 BITMAP_YUV2=1
 	$(MAKE) -C CHDK clean
 	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 

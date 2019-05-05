@@ -63,8 +63,15 @@ endif
 # used by modules build
 ifndef THUMB_FW
     O=.o/
+    BT=_8bpp
 else
-    O=.o2/
+    ifdef BITMAP_YUV2
+        O=.o3/
+        BT=_yuv2
+    else
+        O=.o2/
+        BT=_yuv
+    endif
 endif
 
 SILENT=SILENT
