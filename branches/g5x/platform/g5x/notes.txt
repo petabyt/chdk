@@ -1,0 +1,24 @@
+Issues:
+
+- The CHDK menu display overlay may briefly flash onscreen after the menu is closed.
+- Movie features are not supported. Movie_status is wrong.
+- Booting with .fi2 is disabled (not working).
+- Not all features have been tested fully, expect issues and crashes
+
+Working and mostly tested:
+
+- Edge detection works but is slow and flickers in record mode.
+- Zebra works but is slow and flickers badly.
+- Motion detection works.
+- Auto-iso live view historgram works.
+- PTP, scripts, overrides, seem to be functional.
+- CHDK RAW & DNG works (not tested in all modes).
+
+Development notes:
+
+- Bitmap display for CHDK OSD, menus etc uses the camera YUV overlay buffers like the other Digic 6 ports; however
+    - The buffer is 736x480 (visible = 720x480) so the normal 8x16 font size is used, not the 14x32 custom rendering.
+    - The bitmap is treated as a 368x240 display to match the CHDK virtual screen size, 2x scaling is done by plotting 2x2 YUV pixels for each CHDK pixel.
+      This fits nicely with the YUV bitmap which uses 4 bytes for each 2 pixels (YVYU).
+    - The 2x scaling is done entirely in the gui_draw code, there is no ASPECT_CORRECTION like the older cameras use.
+    - Live view sends the correct width & height sizes for the YUV buffer (same as the other Digic6 ports).
