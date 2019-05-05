@@ -106,7 +106,11 @@ int live_view_get_data(ptp_data *data, int flags)
     if ( (flags & LV_TFR_VIEWPORT) && vp_fb) // live buffer
     {
         lv.vp.data_start = total_size;
+#ifndef THUMB_FW
         vp_size = (lv.vp.buffer_width*lv.vp.visible_height*6)/4;
+#else
+        vp_size = (lv.vp.buffer_width*lv.vp.visible_height*4)/2;
+#endif
         total_size += vp_size;
         // offset to start of actual data
         vp_fb += vid_get_viewport_image_offset();
@@ -117,7 +121,11 @@ int live_view_get_data(ptp_data *data, int flags)
     if ( flags & LV_TFR_BITMAP ) // bitmap buffer
     {
         lv.bm.data_start = total_size;
+#ifndef THUMB_FW
         bm_size = lv.bm.buffer_width*lv.bm.visible_height;
+#else
+        bm_size = (lv.bm.buffer_width*lv.bm.visible_height*4)/2;
+#endif
         total_size += bm_size;
     }
 

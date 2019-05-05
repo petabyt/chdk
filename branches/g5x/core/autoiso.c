@@ -57,9 +57,10 @@ int live_histogram_read_y(unsigned short *h)
         int vp_offset = vid_get_viewport_byte_width() * yscale;     // Bytes length of each row (or double row)
         img += vid_get_viewport_image_offset() + 1; // Skip border and move to 1st Y component in each block
 
-        for (int y=0; y<vp_height; y+=1, img+=vp_offset)
+        int x, y;
+        for (y=0; y<vp_height; y+=1, img+=vp_offset)
         {
-            for (int x=HISTO_STEP_SIZE/2; x<vp_width; x+=HISTO_STEP_SIZE)
+            for (x=HISTO_STEP_SIZE/2; x<vp_width; x+=HISTO_STEP_SIZE)
             {
                 h[img[x]] += 1;
             }
