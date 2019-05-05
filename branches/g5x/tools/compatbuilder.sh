@@ -27,7 +27,7 @@ do
   if [ "${cam}" != "CAMERA" ] && ( [ "${srcfw}" = "" ] || [ "${srcfw}" = "${fw}" ] ) && [ "${cam}" != "${PREV_CAM}" ]; then
     var1=`grep -E -h -s "PLATFORMID.+@" platform/${cam}/makefile.inc platform/${cam}/sub/${fw}/makefile.inc platform/${cam}/sub/${fw}/stubs_entry.S`
     if [ "$var1" != "" ]; then
-      var1=`echo ${var1} | sed -re 's/(.+@ *)([0-9xXa-fA-F]+)(.*)/\2/'`
+      var1=`echo ${var1} | sed -Ee 's/(.+@ *)([0-9xXa-fA-F]+)(.*)/\2/'`
       var2=`grep -E -h -s "NEED_ENCODED_DISKBOOT *=" platform/${cam}/makefile.inc platform/${cam}/sub/${fw}/makefile.inc`
       var3=`grep -E -h -s "^ *PLATFORMID *=" platform/${cam}/makefile.inc platform/${cam}/sub/${fw}/makefile.inc`
       var5=`grep -E -h -s "BLINK_LED_CONTROL *=" platform/${cam}/makefile.inc`
@@ -35,12 +35,12 @@ do
       if [ "$var2" = "" ]; then
         var4=`grep -E -h -s "^ *override +PLATFORM *=" platform/${cam}/makefile.inc platform/${cam}/sub/${fw}/makefile.inc`
         if [ "$var4" != "" ]; then
-          var4=`echo ${var4} | sed -re 's/(.+= *)(.+)/\2/'`
+          var4=`echo ${var4} | sed -Ee 's/(.+= *)(.+)/\2/'`
           var2=`grep -E -h -s "NEED_ENCODED_DISKBOOT *=" platform/${var4}/makefile.inc platform/${var4}/sub/${srcfw}/makefile.inc`
         fi
       fi
       if [ "$var2" != "" ]; then
-        var2=`echo ${var2} | sed -re 's/(.+= *)([0-9]+)(.*)/\2/'`
+        var2=`echo ${var2} | sed -Ee 's/(.+= *)([0-9]+)(.*)/\2/'`
       else
         var2=0
       fi
@@ -48,18 +48,18 @@ do
         var3=`grep -E -h -s "^ *TARGET_PID *=" platform/${cam}/makefile.inc platform/${cam}/sub/${fw}/makefile.inc`
       fi
       if [ "$var3" != "" ]; then
-        var3=`echo ${var3} | sed -re 's/(.+= *)([0-9xXa-fA-F]+)(.*)/\2/'`
+        var3=`echo ${var3} | sed -Ee 's/(.+= *)([0-9xXa-fA-F]+)(.*)/\2/'`
         var3=`printf %d ${var3}`
       else
         var3=0
       fi
-      if [ "$var5" != "" ] && [ `echo ${var5} | sed -re 's/([^=]+)(=.*)/\2/'` != "=" ]; then
-        ledctrl=`echo ${var5} | sed -re 's/(.+= *)([0-9]+)(.*)/\2/'`
+      if [ "$var5" != "" ] && [ `echo ${var5} | sed -Ee 's/([^=]+)(=.*)/\2/'` != "=" ]; then
+        ledctrl=`echo ${var5} | sed -Ee 's/(.+= *)([0-9]+)(.*)/\2/'`
       else
         ledctrl=0
       fi
-      if [ "$var6" != "" ] && [ `echo ${var6} | sed -re 's/([^=]+)(=.*)/\2/'` != "=" ]; then
-        ledaddr=`echo ${var6} | sed -re 's/(.+= *)([0-9xXa-fA-F]+)(.*)/\2/'`
+      if [ "$var6" != "" ] && [ `echo ${var6} | sed -Ee 's/([^=]+)(=.*)/\2/'` != "=" ]; then
+        ledaddr=`echo ${var6} | sed -Ee 's/(.+= *)([0-9xXa-fA-F]+)(.*)/\2/'`
       else
         ledaddr=0
       fi
