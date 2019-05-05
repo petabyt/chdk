@@ -122,7 +122,6 @@ DEF_CONST(uiprop_count                      ,0x000000d1) // Found @0xfc27de04
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0x010e2c9d
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc1b1d07
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc3273d3
-//NHSTUB(strtolx                              ,0x00000000) //  0        *** != 0xfc13b209
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc327469
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1faa7d
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc1fa9e5
@@ -236,6 +235,7 @@ NHSTUB(strncmp                                ,0xfc38d24f) //  0
 NHSTUB(strncpy                                ,0xfc38d209) //  0
 NHSTUB(strrchr                                ,0xfc13b359) //  0
 NHSTUB(strtol                                 ,0xfc13b34b) //  0
+//NHSTUB(strtolx                              ,0xfc13b209) //  0            == 0xfc13b209
    DEF(task_CaptSeq                           ,0xfc0bce67) //  0
    DEF(task_DvlpSeqTask                       ,0xfc10ffbb) //  0
    DEF(task_ExpDrv                            ,0xfc27baa1) //  0

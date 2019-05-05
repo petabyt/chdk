@@ -157,7 +157,6 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277b06
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc06316b
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc4fa309
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc4504b1
-//NHSTUB(strtolx                              ,0x00000000) //  0        *** != 0xfc14c1cd
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc33322d
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1fcc21
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc1fcb89
@@ -271,6 +270,7 @@ NHSTUB(strncmp                                ,0xfc20045b) //  0
 NHSTUB(strncpy                                ,0xfc37c26d) //  0
 NHSTUB(strrchr                                ,0xfc14c31d) //  0
 NHSTUB(strtol                                 ,0xfc14c30f) //  0
+//NHSTUB(strtolx                              ,0xfc14c1cd) //  0            == 0xfc14c1cd
    DEF(task_CaptSeq                           ,0xfc0bd907) //  0
    DEF(task_DvlpSeqTask                       ,0xfc110b5f) //  0
    DEF(task_ExpDrv                            ,0xfc2bc841) //  0

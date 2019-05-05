@@ -494,6 +494,7 @@
 0xfc145035,StopWDT_FW
 0xfc1455b9,GUISrv_StartGUISystem_FW
 0xfc14c1b9,sscanf_FW
+0xfc14c1cd,strtolx
 0xfc14c30f,strtol
 0xfc14c31d,strrchr
 0xfc153795,AllocateUncacheableMemory
