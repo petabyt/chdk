@@ -2287,6 +2287,7 @@
 0xfc37c26d,strncpy
 0xfc14c31d,strrchr
 0xfc14c30f,strtol
+0xfc14c1cd,strtolx
 0xfc4320a5,SubCPUMemoryDump_FW
 0xfc4320e5,SubCPURebootRequest_FW
 0xfc0f81e7,SubCPURomCheckSum_FW
