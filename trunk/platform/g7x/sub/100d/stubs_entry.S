@@ -99,6 +99,10 @@ DEF(imager_active                     ,0x00008664) // (0x8660+0x4) Found @0xfc13
 DEF(_nrflag                           ,0x0001fa4c) // (0x1fa48+0x4) Found @0xfc383b70
 DEF(active_bitmap_buffer              ,0x0000ca38) // (0xca04+0x34) Found @0xfc362058
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 2 int value(s), the first is the zoom focus length.
+// there are 101 entries in the table - set NUM_FL to 101
+//DEF(focus_len_table                         ,0xfdf2deb4) // Found @0xfdf2deb4,          stubs_min = 0xfdf2deb4 (0xfdf2deb4)
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc325d21
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc325d49

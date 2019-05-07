@@ -485,6 +485,7 @@
 0xfc137513,GetMechaCondition_FW
 0xfc1376b9,task_MovieInit
 0xfc138f01,GUISrv_StartGUISystem_FW
+0xfc13b209,strtolx
 0xfc13b34b,strtol
 0xfc13b359,strrchr
 0xfc1428e5,AllocateUncacheableMemory
