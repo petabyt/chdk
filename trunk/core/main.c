@@ -144,7 +144,7 @@ void core_spytask()
     init_chdk_ptp_task();
 #endif
 
-    while((i++<400) && !spytask_can_start) msleep(10);
+    while((i++<1000) && !spytask_can_start) msleep(10);
 
     started();
     msleep(50);
