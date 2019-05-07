@@ -54,6 +54,9 @@ NHSTUB(MakeAFScan                             ,0xff9a0560) //  2 79%
 DEF(levent_table                            ,0xff9ae87c) // Found @0xff9ae87c
 DEF(FlashParamsTable                        ,0xff9b8db4) // Found @0xff9b8db4
 DEF(fileio_semaphore                        ,0x00002984) // Found @0xff87a218
+DEF(exmem_alloc_table                       ,0x00001bcc) // Found @0xff811f28
+DEF(exmem_types_table                       ,0xff811d3c) // Found @0xff811d3c
+DEF_CONST(exmem_type_count                  ,0x0000000e)
 DEF(imager_active                           ,0x00005a60) // Found @0xff8eb40c (0x5a60 + 0)
 DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xff9bac64
 
@@ -64,6 +67,23 @@ DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xff9bac64
 //#define PARAM_CAMERA_NAME 4 // Found @0xff9b8554
 
 // Misc stuff
+
+// EXMEM types:
+// EXMEM_RAMDISK   0
+// EXMEM_COM       1
+// EXMEM_COMTMP    2
+// EXMEM_FORMATTER 3
+// EXMEM_SHADING   4
+// EXMEM_FAMODE    5
+// EXMEM_FIRMUP    6
+// EXMEM_DVLPWORK  7
+// EXMEM_FILESTORE 8
+// EXMEM_MOVIE_REC 9
+// EXMEM_MOVIE_PLY 10
+// EXMEM_WIDE      11
+// EXMEM_NARROW    12
+// EXMEM_PCEVF     13
+
 // LED table init @ 0xff82f464
 // LED #1: 0xc0220068, offset 0xc4
 // LED #2: 0xc022006c, offset 0x204
@@ -145,7 +165,8 @@ NHSTUB(_pow                                   ,0xffb8d108) //121
 NHSTUB(_sqrt                                  ,0xffb8f2f8) //  1
 NHSTUB(apex2us                                ,0xff8c8a28) //  1
 NHSTUB(close                                  ,0xffb9bc80) //109
-NHSTUB(exmem_alloc                            ,0xff812834) //  2
+NHSTUB(exmem_alloc                            ,0xff812834) //122
+NHSTUB(exmem_free                             ,0xff812904) //122
 NHSTUB(get_nd_value                           ,0xffb371d0) //122
 NHSTUB(get_current_nd_value                   ,0xffb37178) //122
 NHSTUB(kbd_p1_f                               ,0xff828014) //  1

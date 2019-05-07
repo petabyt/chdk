@@ -256,8 +256,11 @@
 0xffc52d70,ExMem.FreeUncacheable_FW
 0xffc52488,ExMem.View_FW
 0xffc52d84,exmem_alloc
+0xffc527fc,exmem_assert
 0xffc52dfc,exmem_free
 0xffc142f4,ExMem_FW
+0xffc52bd4,exmem_ualloc
+0xffc52d14,exmem_ufree
 0xffc8dbd8,ExpCtrlTool.SetExpMode_FW
 0xffc218b8,ExpCtrlTool_StartContiAE
 0xffc219fc,ExpCtrlTool_StopContiAE

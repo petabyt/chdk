@@ -226,7 +226,9 @@
 0xff832e84,SS.SetAvailShot_FW
 0xff83301c,drysh_FW
 0xff8330d4,ExMem.View_FW
+0xff833674,exmem_ualloc
 0xff8336fc,ExMem.AllocUncacheable_FW
+0xff8337b8,exmem_ufree
 0xff8337f8,ExMem.FreeUncacheable_FW
 0xff83380c,exmem_alloc
 0xff833864,ExMem.AllocCacheable_FW

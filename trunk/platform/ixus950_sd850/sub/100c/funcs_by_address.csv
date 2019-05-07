@@ -79,6 +79,10 @@
 0xff81d544,ExMem.FreeUncacheable_FW
 0xff81d558,ExMem.AllocCacheable_FW
 0xff81d570,ExMem.FreeCacheable_FW
+0xff81d958,exmem_assert
+0xff81e300,exmem_ualloc
+0xff81e3d0,exmem_ufree
+0xff81e4d0,exmem_alloc
 0xff81e550,exmem_free
 0xff81e5f4,AllocateUncacheableMemory
 0xff81f0b0,UI_ShowStateOfRecMode_FW

@@ -34,7 +34,6 @@ NHSTUB(SetParameterData                       ,0xff976e4c) //  1 86%
 NHSTUB(UnsetZoomForMovie                      ,0xff9ae16c) //  1 89%
 NHSTUB(WriteSDCard                            ,0xff87dfcc) //  3 64%
 NHSTUB(add_ptp_handler                        ,0xffa74c74) //  1 96%
-NHSTUB(exmem_alloc                            ,0xff81282c) //  2 93%
 // ERROR: free is not found.                               //--- ---    *** != 0xffb0efe4
 //NHSTUB(kbd_pwr_off                          ,0xff827f50) //  1 83%    *** != 0xff827f08
 // ALT: NHSTUB(kbd_pwr_off, 0xff827f6c) // 1 5/1
@@ -62,6 +61,9 @@ NHSTUB(Mount_FileSystem                       ,0xff86e8d4) //  1 90%
 DEF(levent_table                            ,0xff96b1c8) // Found @0xff96b1c8
 DEF(FlashParamsTable                        ,0xff97473c) // Found @0xff97473c
 DEF(fileio_semaphore                        ,0x000027b0) // Found @0xff86ccf8
+DEF(exmem_alloc_table                       ,0x00001bc0) // Found @0xff811f28
+DEF(exmem_types_table                       ,0xff811d40) // Found @0xff811d40
+DEF_CONST(exmem_type_count                  ,0x0000000d)
 DEF(imager_active                           ,0x00005488) // Found @0xff8cdd3c (0x5488 + 0)
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff97619c
 
@@ -72,6 +74,22 @@ DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff97619c
 //#define PARAM_CAMERA_NAME 3 // Found @0xff973ef8
 
 // Misc stuff
+
+// EXMEM types:
+// EXMEM_RAMDISK   0
+// EXMEM_COM       1
+// EXMEM_COMTMP    2
+// EXMEM_FORMATTER 3
+// EXMEM_SHADING   4
+// EXMEM_FAMODE    5
+// EXMEM_FIRMUP    6
+// EXMEM_FILESTORE 7
+// EXMEM_MOVIE_REC 8
+// EXMEM_MOVIE_PLY 9
+// EXMEM_WIDE      10
+// EXMEM_NARROW    11
+// EXMEM_PCEVF     12
+
 // LED table init @ 0xff82db5c
 // LED #1: 0xc022008c, offset 0x4
 // LED #2: 0xc0220088, offset 0x44
@@ -153,6 +171,8 @@ NHSTUB(_pow                                   ,0xffafe05c) //121
 NHSTUB(_sqrt                                  ,0xffafff30) //  1
 NHSTUB(apex2us                                ,0xff8b1db0) //  1
 NHSTUB(close                                  ,0xffb0bf98) //109
+NHSTUB(exmem_alloc                            ,0xff81282c) //122
+NHSTUB(exmem_free                             ,0xff8128fc) //122
 NHSTUB(get_nd_value                           ,0xffaae3ac) //115
 NHSTUB(get_current_nd_value                   ,0xffaae308) //122
 NHSTUB(kbd_p1_f                               ,0xff826cf0) //  1

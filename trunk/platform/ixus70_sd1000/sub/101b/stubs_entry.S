@@ -32,7 +32,6 @@ NHSTUB(UnsetZoomForMovie                      ,0xff834a74) //  1 89%
 //NHSTUB(WriteSDCard                          ,0xffaac1ec) //  3 74%    *** != 0xffaac394
 // ALT: NHSTUB(WriteSDCard, 0xffaac394) // 3 23/8
 NHSTUB(add_ptp_handler                        ,0xff9e469c) //  1 96%
-NHSTUB(exmem_alloc                            ,0xff81e2b0) //  2 93%
 // ERROR: free is not found.                               //--- ---    *** != 0xff9201cc
 NHSTUB(kbd_p2_f                               ,0xffa2f61c) //  1 56%
 //NHSTUB(kbd_pwr_off                          ,0xffa2e504) //  1 83%    *** != 0xffa30c58
@@ -61,6 +60,9 @@ NHSTUB(MakeAFScan                             ,0xffb00050) //  2 79%
 //DEF(levent_table                            ,0xffb2f238) // Found @0xffb2f238,          stubs_min = 0xffb2f238 (0xFFB2F238)
 //DEF(FlashParamsTable                        ,0xffb3e43c) // Found @0xffb3e43c,          stubs_min = 0xffb3e43c (0xFFB3E43C)
 DEF(fileio_semaphore                        ,0x0000a110) // Found @0xffa9c6cc
+DEF(exmem_alloc_table                       ,0x00001e24) // Found @0xff81d99c
+DEF(exmem_types_table                       ,0xff81d7bc) // Found @0xff81d7bc
+DEF_CONST(exmem_type_count                  ,0x00000011)
 DEF(imager_active                           ,0x00006d78) // Found @0xff9a93f8 (0x6d78 + 0)
 DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffb38d60
 
@@ -71,6 +73,26 @@ DEF_CONST(uiprop_count                      ,0x0000005d) // Found @0xffb38d60
 //#define PARAM_CAMERA_NAME 4 // Found @0xffb3dbcc
 
 // Misc stuff
+
+// EXMEM types:
+// EXMEM_RAMDISK   0
+// EXMEM_COM       1
+// EXMEM_COMTMP    2
+// EXMEM_FORMATTER 3
+// EXMEM_SHADING   4
+// EXMEM_FAMODE    5
+// EXMEM_FIRMUP    6
+// EXMEM_DVLPWORK  7
+// EXMEM_EVF       8
+// EXMEM_SCRIPT    9
+// EXMEM_FILESTORE 10
+// EXMEM_MOVIE_REC 11
+// EXMEM_MOVIE_PLY 12
+// EXMEM_WIDE      13
+// EXMEM_NARROW    14
+// EXMEM_CRAW_REC  15
+// EXMEM_PCEVF     16
+
 // LED table init @ 0xffa2ef20
 // LED #1: 0xc02200cc, offset 0x4
 // LED #2: 0xc02200c8, offset 0x44
@@ -153,6 +175,7 @@ NHSTUB(_pow                                   ,0xff90fcdc) //121
 NHSTUB(_sqrt                                  ,0xff911b9c) //  1
 NHSTUB(apex2us                                ,0xff931648) //  1
 NHSTUB(close                                  ,0xff91d180) //109
+NHSTUB(exmem_alloc                            ,0xff81e480) //102
 NHSTUB(exmem_free                             ,0xff81e500) //102
 NHSTUB(get_nd_value                           ,0xffadeb28) //115
 NHSTUB(get_current_nd_value                   ,0xffadeb14) //122

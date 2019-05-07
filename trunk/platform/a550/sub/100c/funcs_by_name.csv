@@ -240,7 +240,11 @@
 0xffc0d054,ExMem.AllocUncacheable_FW
 0xffc0d098,ExMem.FreeCacheable_FW
 0xffc0d06c,ExMem.FreeUncacheable_FW
+0xffc0dfac,exmem_alloc
+0xffc0d424,exmem_assert
 0xffc0e02c,exmem_free
+0xffc0dddc,exmem_ualloc
+0xffc0deac,exmem_ufree
 0xffd0a814,ExpCtrlTool.AEComp_FW
 0xffd0a874,ExpCtrlTool.AEFix_FW
 0xffd0a888,ExpCtrlTool.AEFixProg_FW

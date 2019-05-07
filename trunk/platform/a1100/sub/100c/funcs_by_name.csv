@@ -287,6 +287,8 @@
 0xffc53eb8,exmem_alloc
 0xffc53f30,exmem_free
 0xffc14040,ExMem_FW
+0xffc53d0c,exmem_ualloc
+0xffc53e58,exmem_ufree
 0xffc7a6f8,ExpCtrlTool.SetExpMode_FW
 0xffc1f880,ExpCtrlTool_StartContiAE
 0xffc1faac,ExpCtrlTool_StopContiAE,(stubs_entry_2.s)

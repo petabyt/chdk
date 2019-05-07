@@ -41,6 +41,9 @@ NHSTUB(MakeAFScan                             ,0xffd54358) //  2 79%
 //DEF(levent_table                            ,0xffd60ce4) // Found @0xffd60ce4,          stubs_min = 0xffd60ce4 (0xFFD60CE4)
 //DEF(FlashParamsTable                        ,0xffd6aa78) // Found @0xffd6aa78,          stubs_min = 0xffd6aa78 (0xFFD6AA78)
 DEF(fileio_semaphore                        ,0x0000273c) // Found @0xffc5ebb4
+DEF(exmem_alloc_table                       ,0x00001bcc) // Found @0xffc01f28
+DEF(exmem_types_table                       ,0xffc01d3c) // Found @0xffc01d3c
+DEF_CONST(exmem_type_count                  ,0x0000000e)
 DEF(imager_active                           ,0x000054e8) // Found @0xffcc40dc (0x54e8 + 0)
 DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xffd6c6b4
 
@@ -51,6 +54,23 @@ DEF_CONST(uiprop_count                      ,0x0000005b) // Found @0xffd6c6b4
 //#define PARAM_CAMERA_NAME 4 // Found @0xffd6a218
 
 // Misc stuff
+
+// EXMEM types:
+// EXMEM_RAMDISK   0
+// EXMEM_COM       1
+// EXMEM_COMTMP    2
+// EXMEM_FORMATTER 3
+// EXMEM_SHADING   4
+// EXMEM_FAMODE    5
+// EXMEM_FIRMUP    6
+// EXMEM_DVLPWORK  7
+// EXMEM_FILESTORE 8
+// EXMEM_MOVIE_REC 9
+// EXMEM_MOVIE_PLY 10
+// EXMEM_WIDE      11
+// EXMEM_NARROW    12
+// EXMEM_PCEVF     13
+
 // LED table init @ 0xffc1e0e8
 // LED #1: 0xc022008c, offset 0x4
 // LED #2: 0xc0220088, offset 0x44
@@ -138,7 +158,8 @@ NHSTUB(_pow                                   ,0xffee2218) //121
 NHSTUB(_sqrt                                  ,0xffee40ec) //  1
 NHSTUB(apex2us                                ,0xffca4bf8) //  1
 NHSTUB(close                                  ,0xffef0238) //109
-NHSTUB(exmem_alloc                            ,0xffc02834) //  2
+NHSTUB(exmem_alloc                            ,0xffc02834) //122
+NHSTUB(exmem_free                             ,0xffc02904) //122
 NHSTUB(kbd_p1_f                               ,0xffc17478) //  1
 NHSTUB(kbd_p1_f_cont                          ,0xffc17484) //109
 NHSTUB(kbd_p2_f                               ,0xffc1785c) //  1

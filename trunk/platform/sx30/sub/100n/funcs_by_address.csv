@@ -467,7 +467,9 @@
 0xff893b8c,time
 0xff893c3c,GetTimeOfSystem_FW
 0xff893eb8,ExMem.View_FW
+0xff894348,exmem_ualloc
 0xff8943a4,ExMem.AllocUncacheable_FW
+0xff894498,exmem_ufree
 0xff8944e4,ExMem.FreeUncacheable_FW
 0xff8944f8,exmem_alloc
 0xff894560,ExMem.AllocCacheable_FW

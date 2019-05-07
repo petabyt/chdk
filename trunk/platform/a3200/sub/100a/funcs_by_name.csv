@@ -315,6 +315,8 @@
 0xff887a48,exmem_alloc
 0xff887ac0,exmem_free
 0xff8373b0,ExMem_FW
+0xff88789c,exmem_ualloc
+0xff8879e8,exmem_ufree
 0xff8b9e80,ExpCtrlTool.SetExpMode_FW
 0xff846c90,ExpCtrlTool_StartContiAE
 0xff846d68,ExpCtrlTool_StopContiAE

@@ -584,10 +584,13 @@
 0xff8706cc,LocalTime
 0xff870bd0,time
 0xff870c80,GetTimeOfSystem_FW
+0xff8710e8,exmem_assert
 0xff871460,exmem_free
 0xff8714ec,exmem_alloc
 0xff8715fc,ExMem.AllocCacheable_FW
+0xff87160c,exmem_ufree
 0xff871660,ExMem.FreeUncacheable_FW
+0xff87178c,exmem_ualloc
 0xff8717e0,ExMem.AllocUncacheable_FW
 0xff8723e4,SetHPTimerAfterNow
 0xff872464,SetHPTimerAfterTimeout

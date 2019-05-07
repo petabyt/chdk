@@ -517,7 +517,9 @@
 0xff073f10,Printf_FW
 0xff073f1c,LoadScript_FW
 0xff074598,ExMem.View_FW
+0xff074a18,exmem_ualloc
 0xff074a74,ExMem.AllocUncacheable_FW
+0xff074b60,exmem_ufree
 0xff074bac,ExMem.FreeUncacheable_FW
 0xff074bc0,exmem_alloc
 0xff074c28,ExMem.AllocCacheable_FW

@@ -334,8 +334,11 @@
 0xff86c66c,ExMem.FreeUncacheable_FW
 0xff86bd60,ExMem.View_FW
 0xff86c680,exmem_alloc
+0xff86c0d4,exmem_assert
 0xff86c6f8,exmem_free
 0xff86c24c,ExMem_FW
+0xff86c4d0,exmem_ualloc
+0xff86c610,exmem_ufree
 0xff8b51f8,ExpCtrlTool.AEComp_FW
 0xff8b5220,ExpCtrlTool.AEFix_FW
 0xff8b5234,ExpCtrlTool.AEFixProg_FW

@@ -59,6 +59,9 @@ DEF(viewport_buffers                        ,0xffb5c5d0) // Found @0xff8519a4
 DEF(active_viewport_buffer                  ,0x000020d0) // Found @0xff851718
 // Camera appears to have only 1 RAW buffer @ 0x421316c0 (Found @0xffb20fc4)
 DEF(fileio_semaphore                        ,0x00002950) // Found @0xff86e104
+DEF(exmem_alloc_table                       ,0x0003a71c) // Found @0xff887450
+DEF(exmem_types_table                       ,0xffc34c4c) // Found @0x00002da4
+DEF_CONST(exmem_type_count                  ,0x00000014)
 DEF(imager_active                           ,0x0000200c) // Found @0xff84e448 (0x2008 + 4)
 DEF_CONST(uiprop_count                      ,0x00000081) // Found @0xff993820
 
@@ -128,6 +131,28 @@ DEF(jpeg_count_str                          ,0x000b44d4) // Found @0xff9fd22c
 
 // Misc stuff
 DEF(ctypes, 0xffb5be52)
+
+// EXMEM types:
+// EXMEM_RAMDISK        0
+// EXMEM_COM            1
+// EXMEM_FORMATTER      2
+// EXMEM_SHADING        3
+// EXMEM_FAMODE         4
+// EXMEM_FIRMUP         5
+// EXMEM_FIRMUP_VRAM    6
+// EXMEM_FIRMUP_INFLATE 7
+// EXMEM_DVLPWORK       8
+// EXMEM_EVF            9
+// EXMEM_SCRIPT         10
+// EXMEM_GPS            11
+// EXMEM_FILESTORE      12
+// EXMEM_MOVIE_REC      13
+// EXMEM_MOVIE_PLY      14
+// EXMEM_WIDE           15
+// EXMEM_NARROW         16
+// EXMEM_SUPER_NARROW   17
+// EXMEM_CRAW_REC       18
+// EXMEM_PCEVF          19
 
 // ISR flag: 0x1968, pointer to current task's control block: 0x1964
 // pointer to TCB area: 0x19f0, found @ 0xff816984
