@@ -17,6 +17,16 @@
 // could base on ADR etc reach
 #define SEARCH_NEAR_REF_RANGE 1024
 
+#define SIG_NEAR_OFFSET_MASK    0x00FF
+#define SIG_NEAR_COUNT_MASK     0xFF00
+#define SIG_NEAR_COUNT_SHIFT    8
+#define SIG_NEAR_REV            0x10000
+#define SIG_NEAR_INDIRECT       0x20000
+#define SIG_NEAR_JMP_SUB        0x40000
+#define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
+                                | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
+#define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
+
 /* copied from finsig_dryos.c */
 char    out_buf[32*1024] = "";
 int     out_len = 0;
@@ -767,6 +777,9 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
         return 0;
     }
     uint32_t sig_adr=get_saved_sig_val(name);
+    osig* ostub2 = find_sig(fw->sv->stubs,name);
+    if (ostub2 && ostub2->val)
+        sig_adr = ostub2->val;
     if(!sig_adr) {
         printf("is_sig_call: missing %s\n",name);
         return 0;
@@ -1110,6 +1123,9 @@ int sig_match_get_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    disasm_iter(fw,is);
+    if (B_target(fw,is->insn))
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     // first call should be either get_nd_value or GetUsableAvRange
     if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
         printf("sig_match_get_nd_value: bl match 2 failed\n");
@@ -1333,7 +1349,15 @@ int sig_match_log_camera_event(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
-        return 0;
+        osig* ostub2 = find_sig(fw->sv->stubs,rule->ref_name);
+        if (ostub2 && ostub2->val)
+        {
+            disasm_iter_init(fw,is,ostub2->val);
+        }
+        else
+        {
+            return 0;
+        }
     }
     int i;
     uint32_t physw_run=0;
@@ -1760,6 +1784,8 @@ int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule);
+
 int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
@@ -1777,9 +1803,45 @@ int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
         }
     }
+
+    uint32_t call_adr = find_call_near_str(fw,is,rule);
+    if(call_adr) {
+        disasm_iter_init(fw,is,call_adr); // reset to a bit before where the string was found
+        const insn_match_t match_closedir[]={
+            {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+            {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_REG_ANY}},
+            {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+            {ARM_INS_ENDING}
+        };
+        if(insn_match_seq(fw,is,match_closedir)){
+            return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+        }
+    }
+
     return 0;
 }
 
+int sig_match_strrchr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t sig_adr=get_saved_sig_val(rule->name);
+    if (sig_adr == 0)
+    {
+        uint32_t call_adr = find_call_near_str(fw,is,rule);
+        if(call_adr) {
+            disasm_iter_init(fw,is,call_adr-4); // reset to a bit before where the string was found
+            const insn_match_t match_mov_r1_imm[]={
+                {MATCH_INS(MOV, 2), {MATCH_OP_REG(R1),  MATCH_OP_IMM_ANY}},
+                {ARM_INS_ENDING}
+            };
+            if(insn_match_find_next(fw,is,2,match_mov_r1_imm)){
+                disasm_iter_init(fw,is,call_adr);
+                disasm_iter(fw,is);
+                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+            }
+        }
+    }
+    return 0;
+}
 
 int sig_match_time(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -1853,7 +1915,7 @@ int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    if(!find_next_sig_call(fw,is,120,"strncpy")) {
+    if(!find_next_sig_call(fw,is,130,"strncpy")) {
         return 0;
     }
     // find first call after strncpy
@@ -1926,7 +1988,16 @@ int sig_match_fgets_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!find_next_sig_call(fw,is,16,"Fopen_Fut_FW")) {
         return 0;
     }
-    if(!insn_match_find_nth(fw,is,20,2,match_bl_blximm)) {
+    disasm_iter(fw,is);
+    disasm_iter(fw,is);
+    if (B_target(fw,is->insn) && (is->insn->detail->arm.cc == ARM_CC_NE)) {
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    } else {
+        if (B_target(fw,is->insn) && (is->insn->detail->arm.cc == ARM_CC_NE)) {
+            disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        }
+    }
+    if(!insn_match_find_nth(fw,is,20,1,match_bl_blximm)) {
         return 0;
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
@@ -1993,30 +2064,57 @@ int sig_match_pow_dry_gt_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    const insn_match_t match1[]={
+    const insn_match_t match1a[]={
         {MATCH_INS(LDRSH,   2), {MATCH_OP_REG(R0),  MATCH_OP_MEM(SP,INVALID,0x12)}},
         {MATCH_INS(LDRD,    3), {MATCH_OP_REG(R2),  MATCH_OP_REG(R3), MATCH_OP_MEM(SP,INVALID,0x20)}},
         {MATCH_INS(STR,     2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM(SP,INVALID,0)}},
         {MATCH_INS(BL,      MATCH_OPCOUNT_IGNORE)},
         {ARM_INS_ENDING}
     };
-    // match above sequence
-    if(!insn_match_find_next_seq(fw,is,50,match1)) {
-        return 0;
+    const insn_match_t match1b[]={
+        {MATCH_INS(MOV,     2), {MATCH_OP_REG(R2),  MATCH_OP_REG(R7)}},
+        {MATCH_INS(LDRSH,   2), {MATCH_OP_REG(R0),  MATCH_OP_MEM(SP,INVALID,0x12)}},
+        {MATCH_INS(MOV,     2), {MATCH_OP_REG(R3),  MATCH_OP_REG(R6)}},
+        {MATCH_INS(STR,     2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM(SP,INVALID,0)}},
+        {MATCH_INS(BL,      MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    const insn_match_t* match1[]={ match1a, match1b };
+    int idx;
+    for (idx = 0; idx < 2; idx += 1)
+    {
+        // match above sequence
+        if(insn_match_find_next_seq(fw,is,50,match1[idx]))
+            break;
+        init_disasm_sig_ref(fw,is,rule);
     }
+    // check for match
+    if (idx >= 2)
+        return 0;
+    // match above sequence
     uint32_t adr=get_branch_call_insn_target(fw,is);
     if(!adr) {
         return 0;
     }
     // follow bl
     disasm_iter_init(fw,is,adr);
-    const insn_match_t match2[]={
+    const insn_match_t match2a[]={
         {MATCH_INS(LDRD,3), {MATCH_OP_REG(R0),  MATCH_OP_REG(R1),   MATCH_OP_MEM_ANY}},
         {MATCH_INS(BLX, 1), {MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
+    const insn_match_t match2b[]={
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R2),  MATCH_OP_REG(R0)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R3),  MATCH_OP_REG(R1)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R4),  MATCH_OP_IMM(0x40000000)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_IMM(0)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R1),  MATCH_OP_REG(R4)}},
+        {MATCH_INS(BL,  1), {MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    const insn_match_t* match2[]={ match2a, match2b };
     // match above sequence
-    if(!insn_match_find_next_seq(fw,is,15,match2)) {
+    if(!insn_match_find_next_seq(fw,is,15,match2[idx])) {
         return 0;
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
@@ -2058,8 +2156,8 @@ int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t 
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    // only handle first mach, don't expect multiple refs to string
-    if(fw_search_insn(fw,is,search_disasm_str_ref,0,"A/OpLogErr.txt",(uint32_t)is->adr+60)) {
+    // only handle first match, don't expect multiple refs to string
+    if(fw_search_insn(fw,is,search_disasm_str_ref,0,"A/OpLogErr.txt",(uint32_t)is->adr+260)) {
         // find first call after string ref
         if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
             // printf("sig_match_get_drive_cluster_size: bl not found\n");
@@ -2074,6 +2172,9 @@ int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t 
         }
         // follow
         disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+        disasm_iter(fw,is);
+        if (B_target(fw, is->insn))
+            disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
         // find next call
         if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
             // printf("sig_match_get_drive_cluster_size: call 2 not found\n");
@@ -2122,6 +2223,7 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
         const insn_match_t match_pop4[]={
             {MATCH_INS(POP, 4), {MATCH_OP_REST_ANY}},
+            {MATCH_INS(POP, 6), {MATCH_OP_REST_ANY}},
             {ARM_INS_ENDING}
         };
 
@@ -2238,6 +2340,39 @@ int sig_match_prepdir_x(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
+
+// PrepareDirectory (via string ref) points at something like
+// mov r1, 1
+// b PrepareDirectory_x
+int sig_match_prepdir_1(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t call_adr = find_call_near_str(fw,is,rule);
+    if(call_adr) {
+        disasm_iter_init(fw,is,call_adr);
+        disasm_iter(fw,is);
+        disasm_iter(fw,is);
+        if (!CBx_target(fw,is->insn))
+        {
+            rule->param = SIG_NEAR_BEFORE(20,5);
+            call_adr = find_call_near_str(fw,is,rule);
+            if(!call_adr) {
+                return 0;
+            }
+            disasm_iter_init(fw,is,call_adr);
+            disasm_iter(fw,is);
+            return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+        }
+    }
+
+    rule->param = SIG_NEAR_BEFORE(7,2);
+    call_adr = find_call_near_str(fw,is,rule);
+    if(!call_adr) {
+        return 0;
+    }
+    disasm_iter_init(fw,is,call_adr);
+    disasm_iter(fw,is);
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
 // assume this function is directly after the 2 instructions of ref
 int sig_match_prepdir_0(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -2288,7 +2423,19 @@ int sig_match_mkdir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
         {ARM_INS_ENDING}
     };
-    if(!insn_match_find_next_seq(fw,is,148,match)) {
+    if(insn_match_find_next_seq(fw,is,148,match)) {
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+
+    init_disasm_sig_ref(fw,is,rule);
+    const insn_match_t match2[]={
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R1),  MATCH_OP_REG_ANY}},
+        {MATCH_INS(STRB,2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM_ANY}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R0),  MATCH_OP_REG(SP)}},
+        {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,148,match2)) {
         //printf("sig_match_mkdir: no match\n");
         return 0;
     }
@@ -3321,7 +3468,7 @@ int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_aram_start: missing ref\n");
         return 0;
     }
-    if(!find_next_sig_call(fw,is,46,"DebugAssert")) {
+    if(!find_next_sig_call(fw,is,50,"DebugAssert")) {
         printf("sig_aram_start: no match DebugAssert\n");
         return 0;
     }
@@ -3344,6 +3491,41 @@ int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
 }
+
+int sig_match_aram_start2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if (get_misc_val_value("ARAM_HEAP_START"))
+        return 0;
+
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        printf("sig_match_aram_start: missing ref\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,50,"DebugAssert")) {
+        printf("sig_aram_start2: no match DebugAssert\n");
+        return 0;
+    }
+    const insn_match_t match_cmp_bne_ldr[]={
+        {MATCH_INS(CMP, 2), {MATCH_OP_REG(R1),MATCH_OP_IMM(0)}},
+        {MATCH_INS_CC(B,NE,MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(SP)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(PC)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,15,match_cmp_bne_ldr)) {
+        printf("sig_match_aram_start2: no match CMP\n");
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match_aram_start2: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // could sanity check that it looks like a RAM address
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
+    return 1;
+}
+
 int sig_match__nrflag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3461,16 +3643,6 @@ int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
-#define SIG_NEAR_OFFSET_MASK    0x00FF
-#define SIG_NEAR_COUNT_MASK     0xFF00
-#define SIG_NEAR_COUNT_SHIFT    8
-#define SIG_NEAR_REV            0x10000
-#define SIG_NEAR_INDIRECT       0x20000
-#define SIG_NEAR_JMP_SUB        0x40000
-#define SIG_NEAR_AFTER(max_insns,n) (((max_insns)&SIG_NEAR_OFFSET_MASK) \
-                                | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
-#define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
-
 // find Nth function call within max_insns ins of string ref, 
 // returns address w/thumb bit set according to current state of call instruction
 // modifies is and potentially fw->is
@@ -3532,11 +3704,14 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find Nth function call within max_insns ins of string ref
 int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t call_adr = find_call_near_str(fw,is,rule);
-    if(call_adr) {
-        disasm_iter_init(fw,is,call_adr); // reset to a bit before where the string was found
-        disasm_iter(fw,is);
-        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    if (!get_saved_sig_val(rule->name))
+    {
+        uint32_t call_adr = find_call_near_str(fw,is,rule);
+        if(call_adr) {
+            disasm_iter_init(fw,is,call_adr); // reset to a bit before where the string was found
+            disasm_iter(fw,is);
+            return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+        }
     }
     return 0;
 }
@@ -4001,13 +4176,15 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"DeleteSemaphore",          "DeleteSemaphore passed",SIG_NEAR_BEFORE(3,1)},
 {sig_match_get_num_posted_messages,"GetNumberOfPostedMessages","task_CtgTotalTask"},
 {sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"LocalTime",                "%Y.%m.%d %H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1)},
 // this matches using sig_match_near_str, but function for dryos >=57 takes additional param so disabling for those versions
 {sig_match_pt_playsound,"PT_PlaySound",         "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB, SIG_DRY_MAX(56)},
-{sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",},
-{sig_match_near_str,"strrchr",                  "ReadFast_ERROR\n",     SIG_NEAR_AFTER(9,2)},
+{sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",     SIG_NEAR_AFTER(1,1)},
+{sig_match_strrchr,"strrchr",                   "ReadFast_ERROR\n",     SIG_NEAR_AFTER(9,2)},
+{sig_match_strrchr,"strrchr",                   "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(18,4)},
 {sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
 {sig_match_near_str,"strcat",                   "String can't be displayed; no more space in buffer",SIG_NEAR_AFTER(5,2)},
 {sig_match_near_str,"strchr",                   "-._~",SIG_NEAR_AFTER(4,1)},
@@ -4029,7 +4206,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_rec2pb,  "Rec2PB",                   "_EnrySRec",},
 //{sig_match_named,   "GetParameterData",         "PTM_RestoreUIProperty_FW",          SIG_NAMED_NTH(3,JMP_SUB)},
 {sig_match_get_parameter_data,"GetParameterData","PTM_RestoreUIProperty_FW",},
-{sig_match_near_str,"PrepareDirectory_1",       "<OpenFileWithDir> PrepareDirectory NG\r\n",SIG_NEAR_BEFORE(7,2)},
+{sig_match_prepdir_1,"PrepareDirectory_1",      "<OpenFileWithDir> PrepareDirectory NG\r\n",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prepdir_x,"PrepareDirectory_x",      "PrepareDirectory_1",},
 {sig_match_prepdir_0,"PrepareDirectory_0",      "PrepareDirectory_1",},
 {sig_match_mkdir,   "MakeDirectory_Fut",        "PrepareDirectory_x",},
@@ -4057,6 +4234,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_focus_busy,"focus_busy",             "MoveFocusLensToTerminate_FW",},
 {sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
+{sig_match_aram_start2,"ARAM_HEAP_START",       "AdditionAgentRAM_FW",},
 {sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
 {sig_match_near_str,"transfer_src_overlay_helper","Window_EmergencyRefreshPhysicalScreen",SIG_NEAR_BEFORE(6,1)},
 {sig_match_transfer_src_overlay,"transfer_src_overlay","transfer_src_overlay_helper",},
@@ -5092,6 +5270,28 @@ void write_func_lists(firmware *fw) {
     write_funcs(fw, "funcs_by_address.csv", fns, compare_func_addresses);
 }
 
+void print_other_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t atadr)
+{
+    osig *o = find_sig(fw->sv->stubs_min,name);
+    if (o)
+    {
+        bprintf("//DEF(%-40s,0x%08x) // Found @0x%08x",name,fadr,atadr);
+        if (fadr != o->val)
+        {
+            bprintf(", ** != ** stubs_min = 0x%08x (%s)",o->val,o->sval);
+        }
+        else
+        {
+            bprintf(",          stubs_min = 0x%08x (%s)",o->val,o->sval);
+        }
+    }
+    else
+    {
+        bprintf("DEF(%-40s,0x%08x) // Found @0x%08x",name,fadr,atadr);
+    }
+    bprintf("\n");
+}
+
 void print_stubs_min_def(firmware *fw, misc_val_t *sig)
 {
     if(sig->flags & MISC_VAL_NO_STUB) {
@@ -5136,6 +5336,52 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
         bprintf("// %s not found",sig->name);
     }
     bprintf("\n");
+}
+
+// Search for other things that go in 'stubs_min.S'
+void find_other_stubs_min(firmware *fw)
+{
+    int k,k1;
+
+    out_hdr = 1;
+
+    // focus_len_table
+    if (fw->sv->min_focus_len != 0)
+    {
+        int found = 0, pos = 0, len = 0, size = 0;
+        for (k=0; k<fw->size32; k++)
+        {
+            if (fw->buf32[k] == fw->sv->min_focus_len)
+            {
+                int mul = 1;
+                if ((fw->buf32[k+1] == 100) && (fw->buf32[k+2] == 0)) mul = 3;
+                if ((fw->buf32[k+1] == 100) && (fw->buf32[k+2] != 0)) mul = 2;
+                if ((fw->buf32[k+1] ==   0) && (fw->buf32[k+2] != 0)) mul = 2;
+                for (k1 = k + mul; (k1 < fw->size32) && (fw->buf32[k1] > fw->buf32[k1-mul]) && (fw->buf32[k1] > fw->sv->min_focus_len) && (fw->buf32[k1] < fw->sv->max_focus_len); k1 += mul) ;
+                if (fw->buf32[k1] == fw->sv->max_focus_len)
+                {
+                    if ((found == 0) || ((size < mul) && (len < ((k1 - k) / mul) + 1)))
+                    {
+                        found = 1;
+                        pos = k;
+                        len = ((k1 - k) / mul) + 1;
+                        size = mul;
+                    }
+                }
+            }
+        }
+        if (found == 1)
+        {
+            uint32_t adr = fw->base + (pos << 2);
+            bprintf("// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).\n");
+            if (size == 1)
+                bprintf("// each entry contains 1 int value, which is the the zoom focus length.\n",size);
+            else
+                bprintf("// each entry contains %d int value(s), the first is the zoom focus length.\n",size);
+            bprintf("// there are %d entries in the table - set NUM_FL to %d\n",len,len);
+            print_other_stubs_min(fw,"focus_len_table",adr,adr);
+        }
+    }
 }
 
 // Output match results for function
@@ -5247,6 +5493,8 @@ void write_stubs(firmware *fw,int max_find_func) {
         stub_min++;
     }
 
+    find_other_stubs_min(fw);
+
     add_blankline();
 
     for (k = 0; k < max_find_func; k++)
@@ -5273,6 +5521,7 @@ int main(int argc, char **argv)
     load_stubs(fw.sv, "stubs_entry_2.S", 1);
     load_stubs_min(fw.sv);
     load_modemap(fw.sv);
+    load_platform(fw.sv);
 
     bprintf("// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!\n");
     bprintf("#include \"stubs_asm.h\"\n\n");

@@ -1870,7 +1870,7 @@ void firmware_init_data_ranges(firmware *fw)
 {
 //TODO maybe should return status
     uint32_t src_start, dst_start, dst_end;
-    uint32_t last_found_copy = 0;
+    uint32_t data_found_copy = 0;
 
     // start at fw start  + 12 (32 bit jump, gaonisoy)
     iter_state_t *is=disasm_iter_new(fw, fw->base + fw->main_offs + 12 + fw->thumb_default);
@@ -1905,6 +1905,7 @@ void firmware_init_data_ranges(firmware *fw)
             fw->data_start=dst_start;
             fw->data_len=dst_end-dst_start;
             fw_add_adr_range(fw,dst_start,dst_end,src_start, ADR_RANGE_INIT_DATA);
+            data_found_copy=is->adr;
         } else if(dst_start < 0x08000000) { /// highest known first copied ram code 0x01900000
             // fprintf(stderr,"code1? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
             if(base2_found) {
@@ -1942,7 +1943,6 @@ void firmware_init_data_ranges(firmware *fw)
             }
             fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE);
         }
-        last_found_copy=is->adr;
         if(fw->data_start && base2_found && base3_found) {
             break;
         }
@@ -1951,16 +1951,16 @@ void firmware_init_data_ranges(firmware *fw)
     }
 
     // look for BSS init after last found copy
-    if(last_found_copy) {
+    if(data_found_copy) {
         int count=0;
         uint32_t *eptr=NULL;
         uint32_t *dptr=NULL;
-        disasm_iter_init(fw,is,last_found_copy | fw->thumb_default);
+        disasm_iter_init(fw,is,(data_found_copy-4) | fw->thumb_default);
         while(disasm_iter(fw,is) && count < 20) {
             uint32_t *pv=LDR_PC2valptr(fw,is->insn);
             // not an LDR pc, reset;
             if(!pv) {
-                dptr=eptr=NULL;
+                //dptr=eptr=NULL;
             } else if(!dptr) {
                 // TODO older firmwares use reg with ending value from DATA copy
                 // should be equal to end pointer of data
@@ -1969,7 +1969,9 @@ void firmware_init_data_ranges(firmware *fw)
                 }
             } else if(!eptr) {
                 if(*pv < fw->base) {
-                    eptr=pv;
+                    if(*pv != fw->data_start + fw->data_len) {
+                        eptr=pv;
+                    }
                 } else { // dest end address in ROM, reset
                     eptr=dptr=NULL;
                 }
