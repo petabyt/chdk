@@ -335,6 +335,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
     { "exmem_free", OPTIONAL|LIST_ALWAYS },
+    { "exmem_ualloc", UNUSED|OPTIONAL|LIST_ALWAYS },
+    { "exmem_ufree", UNUSED|OPTIONAL|LIST_ALWAYS },
+    { "exmem_assert", UNUSED|OPTIONAL|LIST_ALWAYS }, // helper, r23 or lower
     { "free" },
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
@@ -2024,6 +2027,8 @@ string_sig string_sigs[] =
     { 1, "ExitTask", "ExitTask", 1 },
     { 1, "exmem_alloc", "ExMem.AllocCacheable", 4 },
     { 1, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+    { 1, "exmem_ualloc", "ExMem.AllocUncacheable", 4 },
+    { 1, "exmem_ufree", "ExMem.FreeUncacheable", 0x01000003 },
     { 1, "Fclose_Fut", "Fclose_Fut", 1 },
     { 1, "Feof_Fut", "Feof_Fut", 1 },
     { 1, "Fflush_Fut", "Fflush_Fut", 1 },
@@ -2122,6 +2127,8 @@ string_sig string_sigs[] =
     { 2, "EngDrvBits", "EngDrvBits", 0x01000005 },
     { 2, "exmem_alloc", "ExMem.AllocCacheable", 4 },
     { 2, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+    { 2, "exmem_ualloc", "ExMem.AllocUncacheable", 4 },
+    { 2, "exmem_ufree", "ExMem.FreeUncacheable", 0x01000003 },
 
     { 2, "PTM_GetCurrentItem", "PTM_GetCurrentItem", 2 }, // s5is
     { 2, "PTM_SetCurrentItem", "PTM_SetCurrentItem", 4 }, // s5is
@@ -2148,6 +2155,8 @@ string_sig string_sigs[] =
     { 3, "PT_PlaySound", "PT_PlaySound", 1 },
     { 3, "exmem_alloc", "ExMem.AllocCacheable", 4 },
     { 3, "exmem_free", "ExMem.FreeCacheable", 0x01000003 },
+    { 3, "exmem_ualloc", "ExMem.AllocUncacheable", 4 },
+    { 3, "exmem_ufree", "ExMem.FreeUncacheable", 0x01000003 },
     { 3, "GetSDProtect", "GetSDProtect", 1 },
 
     { 4, "TurnOnBackLight", "TurnOnBackLight", 1 },
@@ -2204,6 +2213,7 @@ string_sig string_sigs[] =
     { 7, "LogCameraEvent", "BufAccBeep", 0x01000001 },
     { 7, "LogCameraEvent", "MyCamFunc_PlaySound_MYCAM_COVER_OPEN", 0x01000001 },
     { 7, "DebugAssert", "Console.c", 0x01000001 },
+    { 7, "exmem_assert", "Type < MAX_NUM_OF_EXMEMORY_TYPE", 0x01000001 },
 
     { 8, "WriteSDCard", "Mounter.c", 0 },
 
@@ -4339,6 +4349,110 @@ void print_stubs_min(firmware *fw, const char *name, uint32_t fadr, uint32_t ata
     bprintf("\n");
 }
 
+uint32_t exm_typ_tbl=0, exm_typ_cnt=0;
+int print_exmem_types(firmware *fw)
+{
+    if (exm_typ_tbl==0 || exm_typ_cnt==0)
+        return 1;
+    bprintf("// EXMEM types:\n");
+    int ii = adr2idx(fw, exm_typ_tbl);
+    int n;
+    for (n=0; n<exm_typ_cnt; n++)
+    {
+        bprintf("// %s %i\n",adr2ptr(fw, fwval(fw,ii+n)),n);
+    }
+    bprintf("\n");
+    return 0;
+}
+
+int find_exmem_alloc_table(firmware *fw)
+{
+    int i = get_saved_sig(fw,"ExMem.View_FW"); // s5 and earlier don't have this
+    if (i < 0)
+    {
+        i = get_saved_sig(fw,"exmem_assert"); // s5
+    }
+    if (i < 0)
+    {
+        return 0;
+    }
+    i = adr2idx(fw, func_names[i].val);
+    uint32_t u, us;
+    uint32_t exm_typ_tbl_orig = 0;
+    int n;
+    us = 0;
+    for (n=1; n<16; n++)
+    {
+        if ( ((fwval(fw,i+n)&0xffff0000)==0xe59f0000) ) // ldr rx, [pc, #imm]
+        {
+            u = LDR2val(fw, i+n);
+            if (u>fw->data_start && u<fw->data_start+fw->data_len*4 && (fwRd(fw,i+n)>3))
+            {
+                exm_typ_tbl_orig = u;
+                u = u - fw->data_start + fw->data_init_start;
+                break;
+            }
+            else if (us==0 && u>fw->base && u<fw->base+fw->size*4-4 && (u&3)==0)
+            {
+                us = u;
+            }
+        }
+        u = 0;
+    }
+    if (!u && us)
+    {
+        u = us;
+        exm_typ_tbl_orig = u;
+    }
+    if (u)
+    {
+        exm_typ_tbl = u;
+        int ii = adr2idx(fw, exm_typ_tbl);
+        char* extyp;
+        for (n=0; n<32; n++)
+        {
+            if ( (fwval(fw,ii+n)!=0) && isASCIIstring(fw, fwval(fw,ii+n)) )
+            {
+                extyp = adr2ptr(fw, fwval(fw,ii+n));
+                if ( strncmp(extyp,"EXMEM",5)==0 )
+                {
+                    exm_typ_cnt++;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    for (n=1; n<42; n++)
+    {
+        if ( ((fwval(fw,i+n)&0xffff0000)==0xe59f0000) ) // ldr rx, [pc, #imm]
+        {
+            u = LDR2val(fw, i+n);
+            if (u>fw->data_start+fw->data_len*4 && u<fw->memisostart && (fwRd(fw,i+n)>3))
+            {
+                break;
+            }
+        }
+        u = 0;
+    }
+    if (u)
+    {
+        print_stubs_min(fw,"exmem_alloc_table",u,idx2adr(fw,i+n));
+    }
+    if (exm_typ_tbl)
+    {
+        print_stubs_min(fw,"exmem_types_table",exm_typ_tbl,exm_typ_tbl_orig);
+    }
+    if (exm_typ_cnt)
+    {
+        bprintf("DEF_CONST(%-34s,0x%08x)\n","exmem_type_count",exm_typ_cnt);
+    }
+    return 0;
+}
+
 int match_levent_table(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
     if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00000800) && (fw->buf[k+2] == 0x00000002))
@@ -5301,6 +5415,9 @@ void find_stubs_min(firmware *fw)
             search_fw(fw, match_fileiosem, fadr, nadr, 3);
         }
     }
+
+    // Find exmem allocation table
+    find_exmem_alloc_table(fw);
 
     // Find imager_active
     search_saved_sig(fw, "ImagerActivate", match_imager_active, 0/*v*/, 0, 30);
@@ -6381,6 +6498,7 @@ void find_other_vals(firmware *fw)
     }
 
     add_blankline();
+    print_exmem_types(fw);
     find_task_related_info(fw);
     find_leds(fw);
 
