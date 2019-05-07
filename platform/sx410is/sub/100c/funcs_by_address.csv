@@ -229,7 +229,9 @@
 0xff834068,MenuOut
 0xff834c1c,drysh_FW
 0xff834cd4,ExMem.View_FW
+0xff835240,exmem_ualloc
 0xff8352c4,ExMem.AllocUncacheable_FW
+0xff835380,exmem_ufree
 0xff8353c0,ExMem.FreeUncacheable_FW
 0xff8353d4,exmem_alloc
 0xff83542c,ExMem.AllocCacheable_FW

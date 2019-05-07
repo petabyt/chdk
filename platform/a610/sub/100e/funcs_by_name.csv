@@ -250,6 +250,8 @@
 0xffc11610,ExitTask_FW
 0xffd33b54,ExitTestRec_FW
 0xffc02830,exmem_alloc
+0xffc01f64,exmem_assert
+0xffc0287c,exmem_free
 0xffce0758,ExpCtrlTool.AEComp_FW
 0xffce0800,ExpCtrlTool.AEFix_FW
 0xffce06a8,ExpCtrlTool.AEFocus_FW

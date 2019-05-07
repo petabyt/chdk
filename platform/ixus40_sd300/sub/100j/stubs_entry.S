@@ -56,8 +56,6 @@ NHSTUB(UpdateMBROnFlash                       ,0xff8704d0) //  1 96%
 // ERROR: Write is not found.                              //--- ---    *** != 0xff8716f4
 // ERROR: WriteSDCard is not found.                        //--- ---    *** != 0x00000000
 NHSTUB(add_ptp_handler                        ,0xffa13b10) //  1 96%
-NHSTUB(exmem_alloc                            ,0xff813a1c) //  1 92%
-// ALT: NHSTUB(exmem_alloc, 0xfff164cc) // 1 23/2
 // ERROR: free is not found.                               //--- ---    *** != 0xffac58d8
 // ERROR: kbd_p1_f is not found.                           //--- ---    *** != 0x00000000
 // ERROR: kbd_p1_f_cont is not found.                      //--- ---    *** != 0xff830ab4
@@ -104,6 +102,9 @@ NHSTUB(localtime                              ,0xffabceb4) //  1 93%
 //DEF(levent_table                            ,0xff9514f0) // Found @0xff9514f0,          stubs_min = 0xff9514f0 (0xFF9514F0)
 //DEF(FlashParamsTable                        ,0xff958138) // Found @0xff958138,          stubs_min = 0xff958138 (0xFF958138)
 DEF(fileio_semaphore                        ,0x00002e78) // Found @0xff86e884
+DEF(exmem_alloc_table                       ,0x00001c38) // Found @0xff813218
+DEF(exmem_types_table                       ,0xff812f70) // Found @0xff812f70
+DEF_CONST(exmem_type_count                  ,0x0000000a)
 DEF(imager_active                           ,0x00003314) // Found @0xff8c4c30 (0x3314 + 0)
 DEF_CONST(uiprop_count                      ,0x00000037) // Found @0xff959d00
 
@@ -113,6 +114,18 @@ DEF_CONST(uiprop_count                      ,0x00000037) // Found @0xff959d00
 //#define CAM_3ARG_DebugAssert 1
 
 // Misc stuff
+
+// EXMEM types:
+// EXMEM_RAMDISK   0
+// EXMEM_COM       1
+// EXMEM_FORMATTER 2
+// EXMEM_SHADING   3
+// EXMEM_FAMODE    4
+// EXMEM_FILESTORE 5
+// EXMEM_MOVIE_REC 6
+// EXMEM_MOVIE_PLY 7
+// EXMEM_WIDE      8
+// EXMEM_NARROW    9
 
 // Stubs below matched 100%.
 //    Name                                     Address                Comp to stubs_entry_2.S
@@ -180,6 +193,8 @@ NHSTUB(_sqrt                                  ,0xffab3ac4) //  1
 NHSTUB(apex2us                                ,0xff8aa1c4) //  1
 NHSTUB(close                                  ,0xffac288c) //  1
 // ALT: NHSTUB(close, 0xfff5693c) // 1 29/0
+NHSTUB(exmem_alloc                            ,0xff813a1c) //122
+NHSTUB(exmem_free                             ,0xff813a68) //122
 NHSTUB(get_nd_value                           ,0xffa4a5d8) //120
 NHSTUB(get_current_nd_value                   ,0xffa4a5c4) //120
 NHSTUB(lseek                                  ,0xffac29d0) //  1

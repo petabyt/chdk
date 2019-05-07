@@ -56,6 +56,9 @@ DEF(focus_busy                              ,0x00009974) // Found @0xff94cf54
 DEF(raw_buffers                             ,0xffb37040) // Found @0xffb37040
 DEF(active_raw_buffer                       ,0x00005764) // Found @0xff86e680
 DEF(fileio_semaphore                        ,0x00002bc0) // Found @0xff85caa4
+DEF(exmem_alloc_table                       ,0x0001d3d8) // Found @0xff877f80
+DEF(exmem_types_table                       ,0xffbe6c18) // Found @0x000058b4
+DEF_CONST(exmem_type_count                  ,0x00000012)
 DEF(imager_active                           ,0x00001fbc) // Found @0xff83787c (0x1fb8 + 4)
 DEF_CONST(uiprop_count                      ,0x00000069) // Found @0xff98c940
 
@@ -123,6 +126,26 @@ DEF(jpeg_count_str                          ,0x0005ced4) // Found @0xff9ed730
 
 // Misc stuff
 DEF(ctypes, 0xffb2b0c6)
+
+// EXMEM types:
+// EXMEM_RAMDISK        0
+// EXMEM_COM            1
+// EXMEM_FORMATTER      2
+// EXMEM_SHADING        3
+// EXMEM_FAMODE         4
+// EXMEM_FIRMUP         5
+// EXMEM_FIRMUP_VRAM    6
+// EXMEM_FIRMUP_INFLATE 7
+// EXMEM_DVLPWORK       8
+// EXMEM_EVF            9
+// EXMEM_SCRIPT         10
+// EXMEM_FILESTORE      11
+// EXMEM_MOVIE_REC      12
+// EXMEM_MOVIE_PLY      13
+// EXMEM_WIDE           14
+// EXMEM_NARROW         15
+// EXMEM_CRAW_REC       16
+// EXMEM_PCEVF          17
 
 // ISR flag: 0x195c, pointer to current task's control block: 0x1958
 // pointer to TCB area: 0x19e8, found @ 0xff815724

@@ -1,5 +1,7 @@
 0xff811acc,wrapped_malloc
+0xff811f14,exmem_assert
 0xff8127e0,exmem_alloc
+0xff81282c,exmem_free
 0xff812c84,printclock_FW
 0xff812d88,StopClockSaver_FW
 0xff812da4,SetLClk72MHz_FW

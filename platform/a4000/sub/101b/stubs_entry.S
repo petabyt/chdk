@@ -63,6 +63,9 @@ DEF(viewport_buffers                        ,0xffb10490) // Found @0xff849bd8
 DEF(active_viewport_buffer                  ,0x000020b4) // Found @0xff849940
 // Camera appears to have only 1 RAW buffer @ 0x420b7fc0 (Found @0xffae3168)
 DEF(fileio_semaphore                        ,0x00002910) // Found @0xff8648d0
+DEF(exmem_alloc_table                       ,0x000371a4) // Found @0xff87aef0
+DEF(exmem_types_table                       ,0xffbfbbc4) // Found @0x00002cfc
+DEF_CONST(exmem_type_count                  ,0x00000017)
 DEF(imager_active                           ,0x00001fec) // Found @0xff84652c (0x1fe8 + 4)
 DEF_CONST(uiprop_count                      ,0x0000008d) // Found @0xff989214
 
@@ -133,6 +136,31 @@ DEF(jpeg_count_str                          ,0x000b1abc) // Found @0xff9cd8c4
 
 // Misc stuff
 DEF(ctypes, 0xffb0fce0)
+
+// EXMEM types:
+// EXMEM_RAMDISK        0
+// EXMEM_COM            1
+// EXMEM_FORMATTER      2
+// EXMEM_SHADING        3
+// EXMEM_FAMODE         4
+// EXMEM_FIRMUP         5
+// EXMEM_FIRMUP_VRAM    6
+// EXMEM_FIRMUP_INFLATE 7
+// EXMEM_DVLPWORK       8
+// EXMEM_EVF            9
+// EXMEM_SCRIPT         10
+// EXMEM_GPS            11
+// EXMEM_FACEAUTH       12
+// EXMEM_FILESTORE      13
+// EXMEM_MOVIE_REC      14
+// EXMEM_MOVIE_PLY      15
+// EXMEM_WIDE           16
+// EXMEM_NARROW         17
+// EXMEM_GIS_MODE       18
+// EXMEM_TRIPODHDR_MODE 19
+// EXMEM_HSHQ_MODE      20
+// EXMEM_CRAW_REC       21
+// EXMEM_PCEVF          22
 
 // ISR flag: 0x1968, pointer to current task's control block: 0x1964
 // pointer to TCB area: 0x19f4, found @ 0xffc082fc

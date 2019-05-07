@@ -69,6 +69,9 @@ NHSTUB(Mount_FileSystem                       ,0xff86f2c0) //  1 73%
 //DEF(levent_table                            ,0xff961230) // Found @0xff961230,          stubs_min = 0xff961230 (0xff961230)
 //DEF(FlashParamsTable                        ,0xff96abe0) // Found @0xff96abe0,          stubs_min = 0xff96abe0 (0xff96abe0)
 DEF(fileio_semaphore                        ,0x00002870) // Found @0xff86d6e4
+DEF(exmem_alloc_table                       ,0x00001c30) // Found @0xff811fe4
+DEF(exmem_types_table                       ,0xff811d44) // Found @0xff811d44
+DEF_CONST(exmem_type_count                  ,0x0000000d)
 DEF(imager_active                           ,0x0000553c) // Found @0xff8c9e4c (0x553c + 0)
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff96cad0
 
@@ -79,6 +82,22 @@ DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xff96cad0
 //#define PARAM_CAMERA_NAME 3 // Found @0xff96a4b4
 
 // Misc stuff
+
+// EXMEM types:
+// EXMEM_RAMDISK   0
+// EXMEM_COM       1
+// EXMEM_COMTMP    2
+// EXMEM_FORMATTER 3
+// EXMEM_SHADING   4
+// EXMEM_FAMODE    5
+// EXMEM_FIRMUP    6
+// EXMEM_FILESTORE 7
+// EXMEM_MOVIE_REC 8
+// EXMEM_MOVIE_PLY 9
+// EXMEM_WIDE      10
+// EXMEM_NARROW    11
+// EXMEM_PCEVF     12
+
 // LED table init @ 0xff82dd68
 // LED #1: 0xc022007c, offset 0x104
 // LED #2: 0xc022006c, offset 0x144
@@ -170,7 +189,8 @@ NHSTUB(_pow                                   ,0xffaefce0) //121
 NHSTUB(_sqrt                                  ,0xffaf402c) //  1
 NHSTUB(apex2us                                ,0xff8aef8c) //  1
 NHSTUB(close                                  ,0xffb02bc8) //109
-NHSTUB(exmem_alloc                            ,0xff8127e0) //  1
+NHSTUB(exmem_alloc                            ,0xff8127e0) //122
+NHSTUB(exmem_free                             ,0xff81282c) //122
 NHSTUB(kbd_p1_f                               ,0xff82655c) //  1
 NHSTUB(kbd_p1_f_cont                          ,0xff826568) //109
 NHSTUB(kbd_p2_f                               ,0xff826938) //  1

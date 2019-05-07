@@ -374,6 +374,8 @@
 0xff8350dc,exmem_alloc
 0xff835144,exmem_free
 0xff828264,ExMem_FW
+0xff834f48,exmem_ualloc
+0xff835088,exmem_ufree
 0xff8d834c,ExpCtrlTool.SetExpMode_FW
 0xff8d839c,ExpCtrlTool.SoundDevTest_FW
 0xff8439e8,ExpCtrlTool_StartContiAE

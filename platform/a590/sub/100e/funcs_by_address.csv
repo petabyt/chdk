@@ -404,7 +404,10 @@
 0xffc57a88,time
 0xffc57bd4,LocalTime
 0xffc57da0,ExMem.View_FW
+0xffc58114,exmem_assert
+0xffc584ec,exmem_ualloc
 0xffc58548,ExMem.AllocUncacheable_FW
+0xffc5862c,exmem_ufree
 0xffc58688,ExMem.FreeUncacheable_FW
 0xffc5869c,exmem_alloc
 0xffc58704,ExMem.AllocCacheable_FW

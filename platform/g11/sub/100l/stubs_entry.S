@@ -58,6 +58,9 @@ DEF(palette_buffer_ptr                      ,0x00009854) // Found @0xffa0eaa8
 // Offset from start of palette_buffer to color data = 8 (Found @0xffaeddd4)
 // Camera appears to have only 1 RAW buffer @ 0x41c0f460 (Found @0xffb09bc8)
 DEF(fileio_semaphore                        ,0x00002a00) // Found @0xff86e298
+DEF(exmem_alloc_table                       ,0x00038efc) // Found @0xff887b8c
+DEF(exmem_types_table                       ,0xffc0d984) // Found @0x00002e8c
+DEF_CONST(exmem_type_count                  ,0x00000012)
 DEF(imager_active                           ,0x0000201c) // Found @0xff84b6b4 (0x2018 + 4)
 DEF_CONST(uiprop_count                      ,0x0000006e) // Found @0xff995e24
 
@@ -128,6 +131,26 @@ DEF(jpeg_count_str                          ,0x00097234) // Found @0xffa012ac
 
 // Misc stuff
 DEF(ctypes, 0xffb40586)
+
+// EXMEM types:
+// EXMEM_RAMDISK        0
+// EXMEM_COM            1
+// EXMEM_FORMATTER      2
+// EXMEM_SHADING        3
+// EXMEM_FAMODE         4
+// EXMEM_FIRMUP         5
+// EXMEM_FIRMUP_VRAM    6
+// EXMEM_FIRMUP_INFLATE 7
+// EXMEM_DVLPWORK       8
+// EXMEM_EVF            9
+// EXMEM_SCRIPT         10
+// EXMEM_FILESTORE      11
+// EXMEM_MOVIE_REC      12
+// EXMEM_MOVIE_PLY      13
+// EXMEM_WIDE           14
+// EXMEM_NARROW         15
+// EXMEM_CRAW_REC       16
+// EXMEM_PCEVF          17
 
 // ISR flag: 0x1964, pointer to current task's control block: 0x1960
 // pointer to TCB area: 0x19f0, found @ 0xff81683c
