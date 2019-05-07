@@ -1,0 +1,16 @@
+Issues:
+
+- Movie features are not supported. Movie_status is wrong.
+- Booting with .fi2 is disabled (not working).
+- Not all features have been tested fully, expect issues and crashes
+
+Working and mostly tested:
+
+- Edge detection
+- Zebra
+- Motion detection
+- Auto-iso live view historgram
+- PTP, scripts, overrides, seem to be functional.
+- CHDK RAW & DNG works (not tested in all modes).
+
+Development notes:
