@@ -18,25 +18,17 @@
 // This module is used in AutoISO2 mechanizm.
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+// This uses 30 'Y' values from each row (or seccond row for cameras with 2x height YUV viewports).
+// Is summing 30 columns of data a good selection for histogram?
 
-
+// Define how many viewport bytes to step in each loop iteration. Skip 6 sets of 4 pixels.
 #ifdef THUMB_FW
-// Define how many viewport blocks to step in each loop iteration.
-// digic use 2x larger to keep overall number similar to older cams
-#define	HISTO_STEP_SIZE	12
 // Digic 6: Each block is 4 bytes (UYVY) 2 Y values
-#define HISTO_BLOCK_BYTES 4
+#define HISTO_STEP_SIZE 48
 #else
-// Define how many viewport blocks to step in each loop iteration.
-#define	HISTO_STEP_SIZE	6
 // Each block is 6 bytes (UYVYYY) / 4 Y values
-#define HISTO_BLOCK_BYTES 6
+#define HISTO_STEP_SIZE 36
 #endif
-
-// Coincidentally same value for both digic 6 and earlier
-// D6 viewport_width* is specified as the number of Y values, each block 2 Y values
-// pre-D6, width is half the number of Y values, each block contains 4 y values
-#define HISTO_BLOCK_SCALE 2
 
 static unsigned short live_histogram_proc[256]; // Buffer for histogram
 
@@ -46,27 +38,33 @@ NOTE also used by lua get_live_histo
 */
 int live_histogram_read_y(unsigned short *h)
 {
-    int total;
+    int yscale = vid_get_viewport_yscale();   // Y scale factor (2 for 480 line high lv buffer)
+#ifdef THUMB_FW
+    int vp_width = vid_get_viewport_width_proper() * 2;             // X bytes per row
+#else
+    int vp_width = vid_get_viewport_width_proper() * 6 / 4;         // X bytes per row
+#endif
+    int vp_height = vid_get_viewport_height_proper() / yscale;      // Number of rows to process (every second row if 480 high lv buffer)
 
-    int vp_width = vid_get_viewport_width();
-    int vp_height = vid_get_viewport_height();
-    int vp_offset = vid_get_viewport_row_offset();
-
-    total = (vp_width * vp_height) / (HISTO_STEP_SIZE * HISTO_BLOCK_SCALE);
-    memset(h, 0, sizeof(unsigned short)*256);
+    int total = (vp_width * vp_height) / HISTO_STEP_SIZE;
 
     unsigned char *img = vid_get_viewport_active_buffer();
-    if (!img) return total;
-
-    img += vid_get_viewport_image_offset() + 1;
-
-    int y;
-    for (y=0; y<vp_height; y++, img += vp_offset)
+    if (img)
     {
-        int x;
-        for (x=0; x<vp_width; x += HISTO_STEP_SIZE*HISTO_BLOCK_SCALE, img+=HISTO_STEP_SIZE*HISTO_BLOCK_BYTES)
+        if (h == 0) h = live_histogram_proc;
+        memset(h, 0, sizeof(unsigned short)*256);
+
+        int vp_offset = vid_get_viewport_byte_width() * yscale;     // Bytes length of each row (or double row)
+        img += vid_get_viewport_image_offset() + 1; // Skip border and move to 1st Y component in each block
+
+        int x, y;
+        for (y=0; y<vp_height; y+=1, img+=vp_offset)
         {
-            ++h[*img];
+            for (x=HISTO_STEP_SIZE/2; x<vp_width; x+=HISTO_STEP_SIZE)
+            {
+                h[img[x]] += 1;
+//                img[x] = img[x+2] = 255;  // Change sampled values on screen for debugging
+            }
         }
     }
 
