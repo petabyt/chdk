@@ -138,6 +138,8 @@
             draw_restore
             draw_button
             draw_rectangle
+            draw_hline
+            draw_vline
 
             // special functions for yuv overlay (DIGIC 6)
             set_transparent
