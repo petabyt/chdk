@@ -108,15 +108,14 @@ typedef struct StcGame {
         int level;          /* current game level               */
     } stats;
 } StcGame;
+
 StcGame *createGame();
 void deleteGame(StcGame *pGame);
 int gameInit(StcGame *gameInstance);
 void gameEnd(StcGame *gameInstance);
 void gameUpdate(StcGame *gameInstance);
 
-
 StcGame *game;
-
 
 // No need to import such simple
 long mkdir_if_not_exist(const char *dirname) 
@@ -126,131 +125,163 @@ long mkdir_if_not_exist(const char *dirname)
     return 0;   // Success
 }
 
-
-int platformInit(StcGame *gameInstance){ return GAME_ERROR_NONE;}
-void platformEnd(StcGame *gameInstance){}
+int platformInit(StcGame *gameInstance) { return GAME_ERROR_NONE; }
+void platformEnd(StcGame *gameInstance) {}
 
 /* Read input device and notify game */
-void platformReadInput(StcGame *gameInstance){}
-#define PREVIEW_X 150
-#define PREVIEW_Y 10
-#define BOARD_X 10
-#define BOARD_Y 10
-#define TILE_SIZE 10
+void platformReadInput(StcGame *gameInstance) {}
+
+int tile_size;
+#define PREVIEW_X (tile_size*15)
+#define PREVIEW_Y (tile_size)
+#define BOARD_X (tile_size)
+#define BOARD_Y (tile_size)
+#define TILE_SIZE (tile_size)
 /* Render the state of the game */
 int tmp[BOARD_WIDTH][BOARD_HEIGHT];
 int tmp2[BOARD_WIDTH][BOARD_HEIGHT];
 
 int prevNextBlockType = -1;
-void platformRenderGame(StcGame *gameInstance){
+void platformRenderGame(StcGame *gameInstance)
+{
     int i, j;
 
-    for(i = 0; i < BOARD_WIDTH; ++i) {
-        for (j = 0; j < BOARD_HEIGHT; ++j){
-          tmp[i][j] = EMPTY_CELL;
-          tmp2[i][j] = EMPTY_CELL;
+    for (i = 0; i < BOARD_WIDTH; ++i)
+    {
+        for (j = 0; j < BOARD_HEIGHT; ++j)
+        {
+            tmp[i][j] = EMPTY_CELL;
+            tmp2[i][j] = EMPTY_CELL;
         }
     }
 
     /* Draw preview block */
-    if(game->nextBlock.type != prevNextBlockType){
+    if (game->nextBlock.type != prevNextBlockType)
+    {
         prevNextBlockType = game->nextBlock.type;
-        for (i = 0; i < 4; ++i) {
-            for (j = 0; j < 4; ++j) {
-                if (game->nextBlock.cells[i][j] != EMPTY_CELL) {
-                    draw_rectangle(camera_screen.disp_left+PREVIEW_X + (TILE_SIZE * i),
-                            PREVIEW_Y + (TILE_SIZE * j),
-                            camera_screen.disp_left+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
-                            PREVIEW_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                            MAKE_COLOR(game->nextBlock.cells[i][j], game->nextBlock.cells[i][j]), RECT_BORDER0|DRAW_FILLED);
-                }else{
-                    draw_rectangle(camera_screen.disp_left+PREVIEW_X + (TILE_SIZE * i),
-                            PREVIEW_Y + (TILE_SIZE * j),
-                            camera_screen.disp_left+PREVIEW_X + (TILE_SIZE * i)+TILE_SIZE-1,
-                            PREVIEW_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                            MAKE_COLOR(TETRIS_COLOR_BG,TETRIS_COLOR_BG), RECT_BORDER0|DRAW_FILLED);
+        for (i = 0; i < 4; ++i)
+        {
+            for (j = 0; j < 4; ++j)
+            {
+                if (game->nextBlock.cells[i][j] != EMPTY_CELL)
+                {
+                    draw_rectangle(camera_screen.disp_left + PREVIEW_X + (TILE_SIZE * i),
+                                   PREVIEW_Y + (TILE_SIZE * j),
+                                   camera_screen.disp_left + PREVIEW_X + (TILE_SIZE * i) + TILE_SIZE - 1,
+                                   PREVIEW_Y + (TILE_SIZE * j) + TILE_SIZE - 1,
+                                   MAKE_COLOR(game->nextBlock.cells[i][j], game->nextBlock.cells[i][j]), RECT_BORDER0 | DRAW_FILLED);
+                }
+                else
+                {
+                    draw_rectangle(camera_screen.disp_left + PREVIEW_X + (TILE_SIZE * i),
+                                   PREVIEW_Y + (TILE_SIZE * j),
+                                   camera_screen.disp_left + PREVIEW_X + (TILE_SIZE * i) + TILE_SIZE - 1,
+                                   PREVIEW_Y + (TILE_SIZE * j) + TILE_SIZE - 1,
+                                   MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_BG), RECT_BORDER0 | DRAW_FILLED);
                 }
             }
         }
     }
-    
+
     /* Draw the cells in the board */
-    for (i = 0; i < BOARD_WIDTH; ++i) {
-        for (j = 0; j < BOARD_HEIGHT; ++j){
-            if (game->map[i][j] != EMPTY_CELL) {
+    for (i = 0; i < BOARD_WIDTH; ++i)
+    {
+        for (j = 0; j < BOARD_HEIGHT; ++j)
+        {
+            if (game->map[i][j] != EMPTY_CELL)
+            {
                 tmp2[i][j] = game->map[i][j];
             }
         }
     }
     /* Draw falling tetromino */
-    for (i = 0; i<4; ++i) {
-        for (j = 0; j < 4; ++j) {
-            if (game->fallingBlock.cells[i][j] != EMPTY_CELL) {
-              tmp[i+game->fallingBlock.x][j+game->fallingBlock.y] = game->fallingBlock.cells[i][j];
+    for (i = 0; i < 4; ++i)
+    {
+        for (j = 0; j < 4; ++j)
+        {
+            if (game->fallingBlock.cells[i][j] != EMPTY_CELL)
+            {
+                tmp[i + game->fallingBlock.x][j + game->fallingBlock.y] = game->fallingBlock.cells[i][j];
             }
         }
     }
 
-    for (i = 0; i < BOARD_WIDTH; ++i) {
-        for (j = 0; j < BOARD_HEIGHT; ++j){
-                    if(tmp[i][j] != EMPTY_CELL){
-                    draw_rectangle(camera_screen.disp_left+BOARD_X + (TILE_SIZE * i),
-                            BOARD_Y + (TILE_SIZE * j),
-                            camera_screen.disp_left+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
-                            BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                            MAKE_COLOR(tmp[i][j], tmp[i][j]), RECT_BORDER0|DRAW_FILLED);
-                    }else if(tmp2[i][j] != EMPTY_CELL){
-                    draw_rectangle(camera_screen.disp_left+BOARD_X + (TILE_SIZE * i),
-                            BOARD_Y + (TILE_SIZE * j),
-                            camera_screen.disp_left+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
-                            BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                            MAKE_COLOR(tmp2[i][j], tmp2[i][j]), RECT_BORDER0|DRAW_FILLED);
-                    }else{
-                    draw_rectangle(camera_screen.disp_left+BOARD_X + (TILE_SIZE * i),
-                            BOARD_Y + (TILE_SIZE * j),
-                            camera_screen.disp_left+BOARD_X + (TILE_SIZE * i)+TILE_SIZE-1,
-                            BOARD_Y + (TILE_SIZE * j)+TILE_SIZE-1,
-                            MAKE_COLOR(TETRIS_COLOR_BOARD,TETRIS_COLOR_BOARD), RECT_BORDER0|DRAW_FILLED);
-                    }
+    for (i = 0; i < BOARD_WIDTH; ++i)
+    {
+        for (j = 0; j < BOARD_HEIGHT; ++j)
+        {
+            if (tmp[i][j] != EMPTY_CELL)
+            {
+                draw_rectangle(camera_screen.disp_left + BOARD_X + (TILE_SIZE * i),
+                               BOARD_Y + (TILE_SIZE * j),
+                               camera_screen.disp_left + BOARD_X + (TILE_SIZE * i) + TILE_SIZE - 1,
+                               BOARD_Y + (TILE_SIZE * j) + TILE_SIZE - 1,
+                               MAKE_COLOR(tmp[i][j], tmp[i][j]), RECT_BORDER0 | DRAW_FILLED);
+            }
+            else if (tmp2[i][j] != EMPTY_CELL)
+            {
+                draw_rectangle(camera_screen.disp_left + BOARD_X + (TILE_SIZE * i),
+                               BOARD_Y + (TILE_SIZE * j),
+                               camera_screen.disp_left + BOARD_X + (TILE_SIZE * i) + TILE_SIZE - 1,
+                               BOARD_Y + (TILE_SIZE * j) + TILE_SIZE - 1,
+                               MAKE_COLOR(tmp2[i][j], tmp2[i][j]), RECT_BORDER0 | DRAW_FILLED);
+            }
+            else
+            {
+                draw_rectangle(camera_screen.disp_left + BOARD_X + (TILE_SIZE * i),
+                               BOARD_Y + (TILE_SIZE * j),
+                               camera_screen.disp_left + BOARD_X + (TILE_SIZE * i) + TILE_SIZE - 1,
+                               BOARD_Y + (TILE_SIZE * j) + TILE_SIZE - 1,
+                               MAKE_COLOR(TETRIS_COLOR_BOARD, TETRIS_COLOR_BOARD), RECT_BORDER0 | DRAW_FILLED);
+            }
         }
     }
+
     /* output game info */
+    int tx = camera_screen.disp_right - 22 * FONT_WIDTH;
+    twoColors cl = MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT);
+    int yo = FONT_HEIGHT;
     char str_buf[100];
     static struct tm *ttm;
-    sprintf(str_buf,"High:    %5d",game->stats.high);
-    draw_string(camera_screen.disp_left+150,35,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
-    sprintf(str_buf,"Points:  %5d",game->stats.score);
-    draw_string(camera_screen.disp_left+150,55,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
-    sprintf(str_buf,"Lines:   %5d",game->stats.lines);
-    draw_string(camera_screen.disp_left+150,75,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
-    sprintf(str_buf,"Level:   %5d",game->stats.level);
-    draw_string(camera_screen.disp_left+150,95,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
-    sprintf(str_buf,"UP  -> Pause");
-    draw_string(camera_screen.disp_left+150,135,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
-    sprintf(str_buf,"SET -> Rotate");
-    draw_string(camera_screen.disp_left+150,155,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
+    sprintf(str_buf, "High:    %5d", game->stats.high);
+    draw_string(tx, camera_screen.height - yo * 11, str_buf, cl);
+    sprintf(str_buf, "Points:  %5d", game->stats.score);
+    draw_string(tx, camera_screen.height - yo * 10, str_buf, cl);
+    sprintf(str_buf, "Lines:   %5d", game->stats.lines);
+    draw_string(tx, camera_screen.height - yo * 9, str_buf, cl);
+    sprintf(str_buf, "Level:   %5d", game->stats.level);
+    draw_string(tx, camera_screen.height - yo * 8, str_buf, cl);
+    sprintf(str_buf, "UP  -> Pause");
+    draw_string(tx, camera_screen.height - yo * 6, str_buf, cl);
+    sprintf(str_buf, "SET -> Rotate");
+    draw_string(tx, camera_screen.height - yo * 5, str_buf, cl);
+
     ttm = get_localtime();
-    sprintf(str_buf,"Time:    %2u:%02u", ttm->tm_hour, ttm->tm_min);
-    draw_string(camera_screen.disp_left+150,195,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
-    sprintf(str_buf,"Batt:     %3d%%", get_batt_perc());
-    draw_string(camera_screen.disp_left+150,215,str_buf, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_TEXT));
+    sprintf(str_buf, "Time:    %2u:%02u", ttm->tm_hour, ttm->tm_min);
+    draw_string(tx, camera_screen.height - yo * 3, str_buf, cl);
+    sprintf(str_buf, "Batt:     %3d%%", get_batt_perc());
+    draw_string(tx, camera_screen.height - yo * 2, str_buf, cl);
 }
 
 /* Return the current system time in milliseconds */
-long platformGetSystemTime(){return get_tick_count();}
+long platformGetSystemTime() { return get_tick_count(); }
 
 /* Set matrix elements to indicated value */
-static void setMatrixCells(int *matrix, int width, int height, int value) {
+static void setMatrixCells(int *matrix, int width, int height, int value)
+{
     int i, j;
-    for (i = 0; i < width; ++i) {
-        for (j = 0; j < height; ++j) {
+    for (i = 0; i < width; ++i)
+    {
+        for (j = 0; j < height; ++j)
+        {
             *(matrix + i + (j * width)) = value;
         }
     }
 }
 
 /* Initialize tetromino cells for every tipe of tetromino */
-static void setTetramino(int indexTetramino, StcTetramino *tetramino) {
+static void setTetramino(int indexTetramino, StcTetramino *tetramino)
+{
 
     /* Initialize tetromino cells to empty cells */
     setMatrixCells(&tetramino->cells[0][0], 4, 4, EMPTY_CELL);
@@ -259,57 +290,59 @@ static void setTetramino(int indexTetramino, StcTetramino *tetramino) {
     tetramino->size = 3;
 
     /* Initial configuration from: http://www.tetrisconcept.com/wiki/index.php/SRS */
-    switch (indexTetramino) {
-    case TETROMINO_I:
-        tetramino->cells[0][1] = TETRIS_COLOR_CYAN;
-        tetramino->cells[1][1] = TETRIS_COLOR_CYAN;
-        tetramino->cells[2][1] = TETRIS_COLOR_CYAN;
-        tetramino->cells[3][1] = TETRIS_COLOR_CYAN;
-        tetramino->size = 4;
-        break;
-    case TETROMINO_O:
-        tetramino->cells[0][0] = TETRIS_COLOR_YELLOW;
-        tetramino->cells[0][1] = TETRIS_COLOR_YELLOW;
-        tetramino->cells[1][0] = TETRIS_COLOR_YELLOW;
-        tetramino->cells[1][1] = TETRIS_COLOR_YELLOW;
-        tetramino->size = 2;
-        break;
-    case TETROMINO_T:
-        tetramino->cells[0][1] = TETRIS_COLOR_PURPLE;
-        tetramino->cells[1][0] = TETRIS_COLOR_PURPLE;
-        tetramino->cells[1][1] = TETRIS_COLOR_PURPLE;
-        tetramino->cells[2][1] = TETRIS_COLOR_PURPLE;
-        break;
-    case TETROMINO_S:
-        tetramino->cells[0][1] = TETRIS_COLOR_GREEN;
-        tetramino->cells[1][0] = TETRIS_COLOR_GREEN;
-        tetramino->cells[1][1] = TETRIS_COLOR_GREEN;
-        tetramino->cells[2][0] = TETRIS_COLOR_GREEN;
-        break;
-    case TETROMINO_Z:
-        tetramino->cells[0][0] = TETRIS_COLOR_RED;
-        tetramino->cells[1][0] = TETRIS_COLOR_RED;
-        tetramino->cells[1][1] = TETRIS_COLOR_RED;
-        tetramino->cells[2][1] = TETRIS_COLOR_RED;
-        break;
-    case TETROMINO_J:
-        tetramino->cells[0][0] = TETRIS_COLOR_BLUE;
-        tetramino->cells[0][1] = TETRIS_COLOR_BLUE;
-        tetramino->cells[1][1] = TETRIS_COLOR_BLUE;
-        tetramino->cells[2][1] = TETRIS_COLOR_BLUE;
-        break;
-    case TETROMINO_L:
-        tetramino->cells[0][1] = TETRIS_COLOR_ORANGE;
-        tetramino->cells[1][1] = TETRIS_COLOR_ORANGE;
-        tetramino->cells[2][0] = TETRIS_COLOR_ORANGE;
-        tetramino->cells[2][1] = TETRIS_COLOR_ORANGE;
-        break;
+    switch (indexTetramino)
+    {
+        case TETROMINO_I:
+            tetramino->cells[0][1] = TETRIS_COLOR_CYAN;
+            tetramino->cells[1][1] = TETRIS_COLOR_CYAN;
+            tetramino->cells[2][1] = TETRIS_COLOR_CYAN;
+            tetramino->cells[3][1] = TETRIS_COLOR_CYAN;
+            tetramino->size = 4;
+            break;
+        case TETROMINO_O:
+            tetramino->cells[0][0] = TETRIS_COLOR_YELLOW;
+            tetramino->cells[0][1] = TETRIS_COLOR_YELLOW;
+            tetramino->cells[1][0] = TETRIS_COLOR_YELLOW;
+            tetramino->cells[1][1] = TETRIS_COLOR_YELLOW;
+            tetramino->size = 2;
+            break;
+        case TETROMINO_T:
+            tetramino->cells[0][1] = TETRIS_COLOR_PURPLE;
+            tetramino->cells[1][0] = TETRIS_COLOR_PURPLE;
+            tetramino->cells[1][1] = TETRIS_COLOR_PURPLE;
+            tetramino->cells[2][1] = TETRIS_COLOR_PURPLE;
+            break;
+        case TETROMINO_S:
+            tetramino->cells[0][1] = TETRIS_COLOR_GREEN;
+            tetramino->cells[1][0] = TETRIS_COLOR_GREEN;
+            tetramino->cells[1][1] = TETRIS_COLOR_GREEN;
+            tetramino->cells[2][0] = TETRIS_COLOR_GREEN;
+            break;
+        case TETROMINO_Z:
+            tetramino->cells[0][0] = TETRIS_COLOR_RED;
+            tetramino->cells[1][0] = TETRIS_COLOR_RED;
+            tetramino->cells[1][1] = TETRIS_COLOR_RED;
+            tetramino->cells[2][1] = TETRIS_COLOR_RED;
+            break;
+        case TETROMINO_J:
+            tetramino->cells[0][0] = TETRIS_COLOR_BLUE;
+            tetramino->cells[0][1] = TETRIS_COLOR_BLUE;
+            tetramino->cells[1][1] = TETRIS_COLOR_BLUE;
+            tetramino->cells[2][1] = TETRIS_COLOR_BLUE;
+            break;
+        case TETROMINO_L:
+            tetramino->cells[0][1] = TETRIS_COLOR_ORANGE;
+            tetramino->cells[1][1] = TETRIS_COLOR_ORANGE;
+            tetramino->cells[2][0] = TETRIS_COLOR_ORANGE;
+            tetramino->cells[2][1] = TETRIS_COLOR_ORANGE;
+            break;
     }
     tetramino->type = indexTetramino;
 }
 
 /*  Start a new game */
-static void startGame(StcGame *game) {
+static void startGame(StcGame *game)
+{
     int i;
 
     /* Initialize game data */
@@ -326,7 +359,8 @@ static void startGame(StcGame *game) {
     game->stats.lines = 0;
     game->stats.totalPieces = 0;
     game->stats.level = 0;
-    for (i = 0; i < 7; ++i) {
+    for (i = 0; i < 7; ++i)
+    {
         game->stats.pieces[i] = 0;
     }
 
@@ -346,7 +380,8 @@ static void startGame(StcGame *game) {
 }
 
 /* Create new game object */
-StcGame *createGame() {
+StcGame *createGame()
+{
     /* Allocate space for our game object */
     StcGame *game = (StcGame *) malloc(sizeof(StcGame));
     return game;
@@ -355,23 +390,27 @@ StcGame *createGame() {
 /*
  * Initializes the game, if there are no problems returns GAME_ERROR_NONE.
  */
-int gameInit(StcGame *game) {
+int gameInit(StcGame *game)
+{
     int errorCode;
 
     errorCode = platformInit(game);
-    if (errorCode == GAME_ERROR_NONE) {
+    if (errorCode == GAME_ERROR_NONE)
+    {
         startGame(game);
         return GAME_ERROR_NONE;
     }
     return errorCode;
 };
 
-void gameEnd(StcGame *game) {
+void gameEnd(StcGame *game)
+{
     /* Free platform resources */
     platformEnd(game);
 }
 
-void deleteGame(StcGame *game) {
+void deleteGame(StcGame *game)
+{
     free(game);
 }
 
@@ -379,12 +418,14 @@ void deleteGame(StcGame *game) {
  * Rotate falling tetromino. If there are no collisions when the
  * tetromino is rotated this modifies the tetramino's cell buffer.
  */
-void rotateTetramino(StcGame *game, int clockwise) {
+void rotateTetramino(StcGame *game, int clockwise)
+{
     int i, j;
-    int rotated[4][4];  /* temporary array to hold rotated cells */
+    int rotated[4][4]; /* temporary array to hold rotated cells */
 
     /* If TETRAMINO_O is falling return immediately */
-    if (game->fallingBlock.type == TETROMINO_O) {
+    if (game->fallingBlock.type == TETROMINO_O)
+    {
         return; /* rotation doesn't require any changes */
     }
 
@@ -392,34 +433,45 @@ void rotateTetramino(StcGame *game, int clockwise) {
     setMatrixCells(&rotated[0][0], 4, 4, EMPTY_CELL);
 
     /* Copy rotated cells to the temporary array */
-    for (i = 0; i < game->fallingBlock.size; ++i) {
-        for (j = 0; j < game->fallingBlock.size; ++j) {
-            if (clockwise) {
+    for (i = 0; i < game->fallingBlock.size; ++i)
+    {
+        for (j = 0; j < game->fallingBlock.size; ++j)
+        {
+            if (clockwise)
+            {
                 rotated[game->fallingBlock.size - j - 1][i] = game->fallingBlock.cells[i][j];
-            } else {
+            }
+            else
+            {
                 rotated[j][game->fallingBlock.size - i - 1] = game->fallingBlock.cells[i][j];
             }
         }
     }
     /* Check collision of the temporary array */
-    for (i = 0; i < game->fallingBlock.size; ++i) {
-        for (j = 0; j < game->fallingBlock.size; ++j) {
-            if (rotated[i][j] != EMPTY_CELL) {
+    for (i = 0; i < game->fallingBlock.size; ++i)
+    {
+        for (j = 0; j < game->fallingBlock.size; ++j)
+        {
+            if (rotated[i][j] != EMPTY_CELL)
+            {
                 /* Check collision with left, right or bottom borders of the map */
-                if ((game->fallingBlock.x + i < 0) || (game->fallingBlock.x + i >= BOARD_WIDTH)
-                        || (game->fallingBlock.y + j >= BOARD_HEIGHT)) {
+                if ((game->fallingBlock.x + i < 0) || (game->fallingBlock.x + i >= BOARD_WIDTH) || (game->fallingBlock.y + j >= BOARD_HEIGHT))
+                {
                     return; /* there was collision therefore return */
                 }
                 /* Check collision with existing cells in the map */
-                if (game->map[i + game->fallingBlock.x][j + game->fallingBlock.y] != EMPTY_CELL) {
+                if (game->map[i + game->fallingBlock.x][j + game->fallingBlock.y] != EMPTY_CELL)
+                {
                     return; /* there was collision therefore return */
                 }
             }
         }
     }
     /* There are no collisions, replace tetramino cells with rotated cells */
-    for (i = 0; i < 4; ++i) {
-        for (j = 0; j < 4; ++j) {
+    for (i = 0; i < 4; ++i)
+    {
+        for (j = 0; j < 4; ++j)
+        {
             game->fallingBlock.cells[i][j] = rotated[i][j];
         }
     }
@@ -429,22 +481,27 @@ void rotateTetramino(StcGame *game, int clockwise) {
  * Check if tetromino will collide with something if it is moved in the requested direction.
  * If there are collisions returns 1 else returns 0.
  */
-static int checkCollision(StcGame *game, int dx, int dy) {
+static int checkCollision(StcGame *game, int dx, int dy)
+{
     int newx, newy, i, j;
 
     newx = game->fallingBlock.x + dx;
     newy = game->fallingBlock.y + dy;
 
-    for (i = 0; i < game->fallingBlock.size; ++i) {
-        for (j = 0; j < game->fallingBlock.size; ++j) {
-            if (game->fallingBlock.cells[i][j] != EMPTY_CELL) {
+    for (i = 0; i < game->fallingBlock.size; ++i)
+    {
+        for (j = 0; j < game->fallingBlock.size; ++j)
+        {
+            if (game->fallingBlock.cells[i][j] != EMPTY_CELL)
+            {
                 /* Check the tetramino would be inside the left, right and bottom borders */
-                if ((newx + i < 0) || (newx + i >= BOARD_WIDTH)
-                    || (newy + j >= BOARD_HEIGHT)) {
+                if ((newx + i < 0) || (newx + i >= BOARD_WIDTH) || (newy + j >= BOARD_HEIGHT))
+                {
                     return 1;
                 }
                 /* Check the tetromino won't collide with existing cells in the map */
-                if (game->map[newx + i][newy + j] != EMPTY_CELL) {
+                if (game->map[newx + i][newy + j] != EMPTY_CELL)
+                {
                     return 1;
                 }
             }
@@ -454,29 +511,32 @@ static int checkCollision(StcGame *game, int dx, int dy) {
 }
 
 /* Game scoring: http://www.tetrisconcept.com/wiki/index.php/Scoring */
-static void onFilledRows(StcGame *game, int filledRows) {
+static void onFilledRows(StcGame *game, int filledRows)
+{
     /* Update total number of filled rows */
     game->stats.lines += filledRows;
 
     /* Increase score accordingly to the number of filled rows */
-    switch (filledRows) {
-    case 1:
-        game->stats.score += (SCORE_1_FILLED_ROW * (game->stats.level));
-        break;
-    case 2:
-        game->stats.score += (SCORE_2_FILLED_ROW * (game->stats.level));
-        break;
-    case 3:
-        game->stats.score += (SCORE_3_FILLED_ROW * (game->stats.level));
-        break;
-    case 4:
-        game->stats.score += (SCORE_4_FILLED_ROW * (game->stats.level));
-        break;
-    default:
-        game->errorCode = GAME_ERROR_ASSERT;    /* This can't happen */
+    switch (filledRows)
+    {
+        case 1:
+            game->stats.score += (SCORE_1_FILLED_ROW * (game->stats.level));
+            break;
+        case 2:
+            game->stats.score += (SCORE_2_FILLED_ROW * (game->stats.level));
+            break;
+        case 3:
+            game->stats.score += (SCORE_3_FILLED_ROW * (game->stats.level));
+            break;
+        case 4:
+            game->stats.score += (SCORE_4_FILLED_ROW * (game->stats.level));
+            break;
+        default:
+            game->errorCode = GAME_ERROR_ASSERT; /* This can't happen */
     }
     /* Check if we need to update level */
-    if (game->stats.lines >= FILLED_ROWS_FOR_LEVEL_UP * (game->stats.level)) {
+    if (game->stats.lines >= FILLED_ROWS_FOR_LEVEL_UP * (game->stats.level))
+    {
         game->stats.level++;
 
         /* Increase speed for falling tetrominoes */
@@ -489,63 +549,79 @@ static void onFilledRows(StcGame *game, int filledRows) {
  * This function detects if there are filled rows or if the move 
  * lands a falling tetromino, also checks for game over condition.
  */
-static void moveTetramino(StcGame *game, int x, int y) {
+static void moveTetramino(StcGame *game, int x, int y)
+{
     int i, j, hasFullRow, numFilledRows;
-    
+
     /* Check if the move would create a collision */
-    if (checkCollision(game, x, y)) {
+    if (checkCollision(game, x, y))
+    {
         /* In case of collision check if move was downwards (y == 1) */
-        if (y == 1) {
+        if (y == 1)
+        {
             /* Check if collision occur when the falling
              * tetromino is in the 1st or 2nd row */
-            if (game->fallingBlock.y <= 1) {
-                game->isOver = 1;   /* if this happens the game is over */
+            if (game->fallingBlock.y <= 1)
+            {
+                game->isOver = 1; /* if this happens the game is over */
             }
-            else {
+            else
+            {
                 /* The falling tetromino has reached the bottom,
                  * so we copy their cells to the board map */
-                for (i = 0; i < game->fallingBlock.size; ++i) {
-                    for (j = 0; j < game->fallingBlock.size; ++j) {
-                        if (game->fallingBlock.cells[i][j] != EMPTY_CELL) {
-                            game->map[game->fallingBlock.x + i][game->fallingBlock.y + j]
-                                    = game->fallingBlock.cells[i][j];
+                for (i = 0; i < game->fallingBlock.size; ++i)
+                {
+                    for (j = 0; j < game->fallingBlock.size; ++j)
+                    {
+                        if (game->fallingBlock.cells[i][j] != EMPTY_CELL)
+                        {
+                            game->map[game->fallingBlock.x + i][game->fallingBlock.y + j] = game->fallingBlock.cells[i][j];
                         }
                     }
                 }
 
                 /* Check if the landing tetromino has created full rows */
                 numFilledRows = 0;
-                for (j = 1; j < BOARD_HEIGHT; ++j) {
+                for (j = 1; j < BOARD_HEIGHT; ++j)
+                {
                     hasFullRow = 1;
-                    for (i = 0; i < BOARD_WIDTH; ++i) {
-                        if (game->map[i][j] == EMPTY_CELL) {
+                    for (i = 0; i < BOARD_WIDTH; ++i)
+                    {
+                        if (game->map[i][j] == EMPTY_CELL)
+                        {
                             hasFullRow = 0;
                             break;
                         }
                     }
                     /* If we found a full row we need to remove that row from the map
                      * we do that by just moving all the above rows one row below */
-                    if (hasFullRow) {
-                        for (x = 0; x < BOARD_WIDTH; ++x) {
-                            for (y = j; y > 0; --y) {
+                    if (hasFullRow)
+                    {
+                        for (x = 0; x < BOARD_WIDTH; ++x)
+                        {
+                            for (y = j; y > 0; --y)
+                            {
                                 game->map[x][y] = game->map[x][y - 1];
                             }
                         }
-                        numFilledRows++;    /* increase filled row counter */
+                        numFilledRows++; /* increase filled row counter */
                     }
                 }
 
                 /* Update game statistics */
-                if (numFilledRows) {
+                if (numFilledRows)
+                {
                     onFilledRows(game, numFilledRows);
                 }
                 game->stats.totalPieces++;
                 game->stats.pieces[game->fallingBlock.type]++;
-                
+
                 /* Use preview tetromino as falling tetromino.
                  * Copy preview tetramino for falling tetramino */
-                for (i = 0; i < 4; ++i) {
-                    for (j = 0; j < 4; ++j) {
+                for (i = 0; i < 4; ++i)
+                {
+                    for (j = 0; j < 4; ++j)
+                    {
                         game->fallingBlock.cells[i][j] = game->nextBlock.cells[i][j];
                     }
                 }
@@ -561,7 +637,8 @@ static void moveTetramino(StcGame *game, int x, int y) {
             }
         }
     }
-    else {
+    else
+    {
         /* There are no collisions, just move the tetramino */
         game->fallingBlock.x += x;
         game->fallingBlock.y += y;
@@ -569,89 +646,106 @@ static void moveTetramino(StcGame *game, int x, int y) {
 }
 
 /* Hard drop */
-static void dropTetramino(StcGame *game) {
-   int y;
-   y = 1;
-   /* Calculate number of cells to drop */
-   while (!checkCollision(game, 0, y)) {
-       y++;
-   }
-   moveTetramino(game, 0, y - 1);
+static void dropTetramino(StcGame *game)
+{
+    int y;
+    y = 1;
+    /* Calculate number of cells to drop */
+    while (!checkCollision(game, 0, y))
+    {
+        y++;
+    }
+    moveTetramino(game, 0, y - 1);
 }
 
 /*
  * Main function game called every frame
  */
-void gameUpdate(StcGame *game) {
+void gameUpdate(StcGame *game)
+{
     long sysTime;
     /* Read user input */
     platformReadInput(game);
 
     /* Update game state */
-    if (game->isOver) {
-		
-		if (game->stats.score > game->stats.high) {
-			game->stats.high = game->stats.score;
-			FILE * f;
-			long buf;
-			buf = game->stats.score;
+    if (game->isOver)
+    {
 
-			mkdir_if_not_exist("A/CHDK/GAMES");
-			f = fopen ( "A/CHDK/GAMES/TETRIS.SCO" , "wb" );
-			fwrite (&buf , 1 , sizeof(buf) , f );
-			fclose (f);
-		}
-			
-		
+        if (game->stats.score > game->stats.high)
+        {
+            game->stats.high = game->stats.score;
+            FILE * f;
+            long buf;
+            buf = game->stats.score;
+
+            mkdir_if_not_exist("A/CHDK/GAMES");
+            f = fopen("A/CHDK/GAMES/TETRIS.SCO", "wb");
+            fwrite(&buf, 1, sizeof(buf), f);
+            fclose(f);
+        }
+
         //if (game->events & EVENT_RESTART) {
-		if (game->events & EVENT_PAUSE) {
-		    
-			//TurnOnBackLight();
-			
+        if (game->events & EVENT_PAUSE)
+        {
+
+            //TurnOnBackLight();
+
             game->isOver = 0;
-			startGame(game);
-			
+            startGame(game);
+
         }
     }
-    else {
+    else
+    {
         sysTime = platformGetSystemTime();
 
         /* Always handle pause event */
-        if (game->events & EVENT_PAUSE) {
+        if (game->events & EVENT_PAUSE)
+        {
             game->isPaused = !game->isPaused;
             game->events = EVENT_NONE;
         }
 
         /* Check if the game is paused */
-        if (game->isPaused) {
+        if (game->isPaused)
+        {
             /* We achieve the effect of pausing the game
              * adding the last frame duration to lastFallTime */
             game->lastFallTime += (sysTime - game->systemTime);
         }
-        else {
-            if (game->events != EVENT_NONE) {
-                if (game->events & EVENT_SHOW_NEXT) {
+        else
+        {
+            if (game->events != EVENT_NONE)
+            {
+                if (game->events & EVENT_SHOW_NEXT)
+                {
                     game->showPreview = !game->showPreview;
                 }
-                if (game->events & EVENT_DROP) {
+                if (game->events & EVENT_DROP)
+                {
                     dropTetramino(game);
                 }
-                if (game->events & EVENT_ROTATE_CW) {
+                if (game->events & EVENT_ROTATE_CW)
+                {
                     rotateTetramino(game, 1);
                 }
-                if (game->events & EVENT_MOVE_RIGHT) {
+                if (game->events & EVENT_MOVE_RIGHT)
+                {
                     moveTetramino(game, 1, 0);
                 }
-                else if (game->events & EVENT_MOVE_LEFT) {
+                else if (game->events & EVENT_MOVE_LEFT)
+                {
                     moveTetramino(game, -1, 0);
                 }
-                if (game->events & EVENT_MOVE_DOWN) {
+                if (game->events & EVENT_MOVE_DOWN)
+                {
                     moveTetramino(game, 0, 1);
                 }
                 game->events = EVENT_NONE;
             }
             /* Check if it's time to move downwards the falling tetromino */
-            if (sysTime - game->lastFallTime >= game->delay) {
+            if (sysTime - game->lastFallTime >= game->delay)
+            {
                 moveTetramino(game, 0, 1);
                 game->lastFallTime = sysTime;
             }
@@ -662,71 +756,81 @@ void gameUpdate(StcGame *game) {
     platformRenderGame(game);
 }
 
-void gui_tetris_init(){
-    draw_rectangle(camera_screen.disp_left, 0,
-                   camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(TETRIS_COLOR_BG,TETRIS_COLOR_BG), RECT_BORDER0|DRAW_FILLED);
-    draw_rectangle(camera_screen.disp_left+BOARD_X-1,BOARD_Y-1,
-                   camera_screen.disp_left+BOARD_WIDTH*TILE_SIZE+10,BOARD_HEIGHT*TILE_SIZE+10, MAKE_COLOR(TETRIS_COLOR_TEXT,TETRIS_COLOR_TEXT), RECT_BORDER1);
+void gui_tetris_init()
+{
+    tile_size = camera_screen.height / (BOARD_HEIGHT+2);
+
+    draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height - 1, MAKE_COLOR(TETRIS_COLOR_BG, TETRIS_COLOR_BG), RECT_BORDER0 | DRAW_FILLED);
+    draw_rectangle(camera_screen.disp_left + BOARD_X - 1, BOARD_Y - 1, camera_screen.disp_left + BOARD_WIDTH * TILE_SIZE + TILE_SIZE, BOARD_HEIGHT * TILE_SIZE + TILE_SIZE, MAKE_COLOR(TETRIS_COLOR_TEXT, TETRIS_COLOR_TEXT), RECT_BORDER1);
     game = createGame();
     gameInit(game);
-  
-    long buf;
-    FILE *f;    
 
-    f=fopen("A/CHDK/GAMES/TETRIS.SCO","rb");
-    if(!f) {
+    long buf;
+    FILE *f;
+
+    f = fopen("A/CHDK/GAMES/TETRIS.SCO", "rb");
+    if (!f)
+    {
         game->stats.high = 0;
-    } else {
-    
-    fread( &buf, 1, sizeof( buf ), f );
-    game->stats.high = buf; 
-    
+    }
+    else
+    {
+        fread(&buf, 1, sizeof(buf), f);
+        game->stats.high = buf;
     }
 
-    fclose (f);
+    fclose(f);
     startGame(game);
 }
 
-int basic_module_init() {
-  gui_set_mode(&GUI_MODE_TETRIS);
-  gui_tetris_init();
-  return 1;
+int basic_module_init()
+{
+    gui_set_mode(&GUI_MODE_TETRIS);
+    gui_tetris_init();
+    return 1;
 }
 
-void gui_tetris_draw(){
-  gameUpdate(game);
+void gui_tetris_draw()
+{
+    gameUpdate(game);
 }
 
-int gui_tetris_kbd_process() {
-        switch ( kbd_get_autoclicked_key() )
-        {
-            case KEY_UP:
-            if ((game->isPaused) || (game->isOver)) {
+int gui_tetris_kbd_process()
+{
+    switch (kbd_get_autoclicked_key())
+    {
+        case KEY_UP:
+            if ((game->isPaused) || (game->isOver))
+            {
                 TurnOnBackLight();
-            } else { TurnOffBackLight(); }
-                game->events |= EVENT_PAUSE;
-                break;
-            case KEY_LEFT:
-                game->events |= EVENT_MOVE_LEFT;
-                break;
-            case KEY_RIGHT:
-                game->events |= EVENT_MOVE_RIGHT;
-                break;
-            case KEY_DOWN:
-                game->events |= EVENT_MOVE_DOWN;
-                break;
+            }
+            else
+            {
+                TurnOffBackLight();
+            }
+            game->events |= EVENT_PAUSE;
+            break;
+        case KEY_LEFT:
+            game->events |= EVENT_MOVE_LEFT;
+            break;
+        case KEY_RIGHT:
+            game->events |= EVENT_MOVE_RIGHT;
+            break;
+        case KEY_DOWN:
+            game->events |= EVENT_MOVE_DOWN;
+            break;
             //case KEY_SET:
             //game->events |= EVENT_RESTART;
             //break;
-            case KEY_DISPLAY:
-            case KEY_ERASE:
-            case KEY_SET:
-                game->events |= EVENT_ROTATE_CW;
-                break;
-            default:
-                break;
-        }
-        return 0;
+        case KEY_DISPLAY:
+        case KEY_ERASE:
+        case KEY_SET:
+            game->events |= EVENT_ROTATE_CW;
+            break;
+        default:
+            break;
+    }
+    return 0;
 }
 
 #include "simple_game.c"

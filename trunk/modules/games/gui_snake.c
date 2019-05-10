@@ -20,15 +20,20 @@ gui_handler GUI_MODE_SNAKE =
     /*GUI_MODE_SNAKE*/  { GUI_MODE_MODULE, gui_snake_draw, gui_snake_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
 //-------------------------------------------------------------------
+int snake_scale;
+int snake_screen_size;
+int screen_left;
+int screen_top;
+
 #define SNAKE_MAX_LENGTH 0xF0
 #define SNAKE_ELEMENT_SIZE 8
-#define RING_WIDTH 42
+#define RING_WIDTH 40
 #define RING_HEIGHT 24
 enum{
   DIR_LEFT = 0,
-  DIR_RIGHT,
+  DIR_DOWN,
   DIR_UP,
-  DIR_DOWN
+  DIR_RIGHT,
 };
 unsigned char ring[RING_WIDTH][RING_HEIGHT];
 unsigned short snake_head;
@@ -41,110 +46,110 @@ char str_buf[40];
 
 const unsigned char labyrinth[4][RING_HEIGHT][RING_WIDTH] = {
     {
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
      },
     {
-     "##########################################",
-     "#                                        #",
-     "#                                        #",
-     "#                                        #",
-     "#     ############                       #",
-     "#                #                       #",
-     "#                #                       #",
-     "#                #########################",
-     "#                #                       #",
-     "#                #                       #",
-     "#                #                       #",
-     "#                        ######          #",
-     "#                        #    #          #",
-     "#            #############    #          #",
-     "#           #                 #          #",
-     "#          #                  #          #",
-     "#         #                   #          #",
-     "#        #                    #          #",
-     "#       #                     #          #",
-     "#       #                     #          #",
-     "#                             #          #",
-     "#                             #          #",
-     "#                             #          #",
-     "##########################################",
-     },
-
-    {
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                  ##########              ",
-     "                           #              ",
-     "                           #              ",
-     "                           #              ",
-     "                    ########              ",
-     "                    #                     ",
-     "                    #                     ",
-     "                    #                     ",
-     "                    #                     ",
-     "                                          ",
-     "                    #                     ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
-     "                                          ",
+     "########################################",
+     "#                                      #",
+     "#                                      #",
+     "#                                      #",
+     "#     ############                     #",
+     "#                #                     #",
+     "#                #                     #",
+     "#                #######################",
+     "#                #                     #",
+     "#                #                     #",
+     "#                #                     #",
+     "#                       ######         #",
+     "#                       #    #         #",
+     "#            ############    #         #",
+     "#           #                #         #",
+     "#          #                 #         #",
+     "#         #                  #         #",
+     "#        #                   #         #",
+     "#       #                    #         #",
+     "#       #                    #         #",
+     "#                            #         #",
+     "#                            #         #",
+     "#                            #         #",
+     "########################################",
      },
 
     {
-     "                                          ",
-     "                  #                       ",
-     "                  #                       ",
-     "                  #                       ",
-     "     ##########################           ",
-     "                           #              ",
-     "                           #              ",
-     "            ##########     #              ",
-     "    #                      ####           ",
-     "    #                                     ",
-     "    #                                     ",
-     "    #                                     ",
-     "    #                                     ",
-     "    #                                     ",
-     "    #################            #        ",
-     "                                 #        ",
-     "            #                    #        ",
-     "     ########                    #        ",
-     "                                 #        ",
-     "       ###########################        ",
-     "                                 #        ",
-     "                                 #        ",
-     "                                 #        ",
-     "                                          ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                ##########              ",
+     "                         #              ",
+     "                         #              ",
+     "                         #              ",
+     "                  ########              ",
+     "                  #                     ",
+     "                  #                     ",
+     "                  #                     ",
+     "                  #                     ",
+     "                                        ",
+     "                  #                     ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     "                                        ",
+     },
+
+    {
+     "                                        ",
+     "                  #                     ",
+     "                  #                     ",
+     "                  #                     ",
+     "     ##########################         ",
+     "                           #            ",
+     "                           #            ",
+     "            ##########     #            ",
+     "    #                      ####         ",
+     "    #                                   ",
+     "    #                                   ",
+     "    #                                   ",
+     "    #                                   ",
+     "    #                                   ",
+     "    #################           #       ",
+     "                                #       ",
+     "            #                   #       ",
+     "     ########                   #       ",
+     "                                #       ",
+     "       ##########################       ",
+     "                                #       ",
+     "                                #       ",
+     "                                #       ",
+     "                                        ",
      },
 };
 
@@ -204,9 +209,9 @@ const char wall[8][8] = {
 };
 
 static void draw_element(int x,int y,const char element[8][8],char angle){
-  x = camera_screen.disp_left + x * SNAKE_ELEMENT_SIZE;
-  y = y * SNAKE_ELEMENT_SIZE;
-  int xx,yy;
+  x = screen_left + x * snake_screen_size;
+  y = screen_top + y * snake_screen_size;
+  int xx,yy,px,py;
   for(xx=0;xx<SNAKE_ELEMENT_SIZE;xx++)
     for(yy=0;yy<SNAKE_ELEMENT_SIZE;yy++){
       char c = COLOR_RED;
@@ -226,7 +231,9 @@ static void draw_element(int x,int y,const char element[8][8],char angle){
         case 'O': c = 0x28; break;
         default: c = COLOR_WHITE; break;
       };
-      draw_pixel( x+xx, y+yy, c );
+      for (px=xx*snake_scale; px<(xx+1)*snake_scale; px+=1)
+          for (py=yy*snake_scale; py<(yy+1)*snake_scale; py+=1)
+              draw_pixel( x+px, y+py, c );
     }
 }
 
@@ -240,10 +247,10 @@ static void load_laby(int num){
       if(ring[x][y] != ' '){
         draw_element(x,y,wall,0);
       }else{
-        draw_rectangle(camera_screen.disp_left + x * SNAKE_ELEMENT_SIZE,
-                       y * SNAKE_ELEMENT_SIZE,
-                       camera_screen.disp_left + x * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                       y * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
+        draw_rectangle(screen_left + x * snake_screen_size,
+                       screen_top + y * snake_screen_size,
+                       screen_left + x * snake_screen_size+snake_screen_size-1,
+                       screen_top + y * snake_screen_size+snake_screen_size-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
       }
     }
 }
@@ -269,38 +276,38 @@ static void snake_generate_apple()
   }
 }
 
-static void game_over();
-
-static void snake_start(){
+static void snake_start()
+{
   int i;
   load_laby(rand()%4);
-  snake_head = 3;
+  snake_head = 2;
   snake_tail = 0;
   level = 5;
   points = 0;
-  for(i=snake_tail;i<snake_head;i++){
+  for(i=snake_tail;i<=snake_head;i++){
     snake[i][0] = 2+i;
     snake[i][1] = 2;
-    draw_rectangle(camera_screen.disp_left + snake[i][0] * SNAKE_ELEMENT_SIZE,
-                   snake[i][1] * SNAKE_ELEMENT_SIZE,
-                   camera_screen.disp_left + snake[i][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                   snake[i][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_RED), RECT_BORDER1|DRAW_FILLED);
+    draw_rectangle(screen_left + snake[i][0] * snake_screen_size,
+                   screen_top + snake[i][1] * snake_screen_size,
+                   screen_left + snake[i][0] * snake_screen_size+snake_screen_size-1,
+                   screen_top + snake[i][1] * snake_screen_size+snake_screen_size-1, MAKE_COLOR(COLOR_WHITE,COLOR_RED), RECT_BORDER1|DRAW_FILLED);
   }
   direction = DIR_RIGHT;
   for(i=0;i<10;i++)
     snake_generate_apple();
 }
 
-
-static void game_over(){
-    draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
+static void game_over()
+{
+    draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_GREY,COLOR_GREY), RECT_BORDER0|DRAW_FILLED);
     sprintf(str_buf,lang_str(LANG_SNAKE_POINTS),points);
-    draw_string(camera_screen.disp_left,0,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
+    draw_string(camera_screen.disp_width / 2 - strlen(str_buf)*FONT_WIDTH/2,camera_screen.height/2-FONT_HEIGHT/2,str_buf, MAKE_COLOR(COLOR_GREY, COLOR_BLUE));
     msleep(3000);
     snake_start();
 }
 
-int gui_snake_kbd_process() {
+int gui_snake_kbd_process()
+{
     switch (kbd_get_autoclicked_key()) {
         case KEY_UP:
             if(direction != DIR_DOWN) direction = DIR_UP;
@@ -325,104 +332,137 @@ int gui_snake_kbd_process() {
     return 0;
 }
 
-void gui_snake_draw() {
-  unsigned short new_head;
-  unsigned short new_tail;
-  unsigned short new_cord;
-  char game_over_flag = 0,draw_head,clear_tail,draw_points=1;
-  unsigned char prevdir = direction;
-  unsigned int i;
-    new_head = (snake_head+1)%SNAKE_MAX_LENGTH;
-    new_tail = (snake_tail+1)%SNAKE_MAX_LENGTH;
+void gui_snake_draw()
+{
+    unsigned short new_head;
+    unsigned short new_tail;
+    unsigned short new_cord;
+    char game_over_flag = 0, draw_head, clear_tail, draw_points = 1;
+    unsigned char prevdir = direction;
+    unsigned int i;
+    new_head = (snake_head + 1) % SNAKE_MAX_LENGTH;
+    new_tail = (snake_tail + 1) % SNAKE_MAX_LENGTH;
     draw_head = 1;
     clear_tail = 1;
-    if(direction == DIR_RIGHT){
-      new_cord = (snake[snake_head][0]+1)%RING_WIDTH;
-      snake[new_head][0] = new_cord;
-      snake[new_head][1] = snake[snake_head][1];
+    if (direction == DIR_RIGHT)
+    {
+        new_cord = (snake[snake_head][0] + 1) % RING_WIDTH;
+        snake[new_head][0] = new_cord;
+        snake[new_head][1] = snake[snake_head][1];
     }
-    if(direction == DIR_LEFT){
-      new_cord = snake[snake_head][0]-1;
-      if(new_cord == 0xFFFF) new_cord = RING_WIDTH-1;
-      snake[new_head][0] = new_cord;
-      snake[new_head][1] = snake[snake_head][1];
+    else if (direction == DIR_LEFT)
+    {
+        new_cord = snake[snake_head][0] - 1;
+        if (new_cord == 0xFFFF)
+            new_cord = RING_WIDTH - 1;
+        snake[new_head][0] = new_cord;
+        snake[new_head][1] = snake[snake_head][1];
     }
-    if(direction == DIR_UP){
-      new_cord = snake[snake_head][1]-1;
-      if(new_cord == 0xFFFF) new_cord = RING_HEIGHT-1;
-      snake[new_head][0] = snake[snake_head][0];
-      snake[new_head][1] = new_cord;
+    else if (direction == DIR_UP)
+    {
+        new_cord = snake[snake_head][1] - 1;
+        if (new_cord == 0xFFFF)
+            new_cord = RING_HEIGHT - 1;
+        snake[new_head][0] = snake[snake_head][0];
+        snake[new_head][1] = new_cord;
     }
-    if(direction == DIR_DOWN){
-      new_cord = (snake[snake_head][1]+1)%RING_HEIGHT;
-      snake[new_head][0] = snake[snake_head][0];
-      snake[new_head][1] = new_cord;
+    else if (direction == DIR_DOWN)
+    {
+        new_cord = (snake[snake_head][1] + 1) % RING_HEIGHT;
+        snake[new_head][0] = snake[snake_head][0];
+        snake[new_head][1] = new_cord;
     }
 
     i = snake_tail;
-    while(1){
-      if(snake[i][0] == snake[new_head][0] && snake[i][1] == snake[new_head][1]){
+    while (1)
+    {
+        if (snake[i][0] == snake[new_head][0] && snake[i][1] == snake[new_head][1])
+        {
+            game_over_flag = 1;
+            break;
+        }
+        if (i == snake_head)
+            break;
+        i = (i + 1) % SNAKE_MAX_LENGTH;
+    }
+
+    if (ring[snake[new_head][0]][snake[new_head][1]] == 1)
+    {
+        ring[snake[new_head][0]][snake[new_head][1]] = ' ';
+        snake_generate_apple();
+        points += level;
+        draw_points = 1;
+        if ((new_head + 1) % SNAKE_MAX_LENGTH != snake_tail)
+        {
+            new_tail = snake_tail;
+            clear_tail = 0;
+        }
+    }
+    else if (ring[snake[new_head][0]][snake[new_head][1]] != ' ')
+    {
         game_over_flag = 1;
-        break;
-      }
-      if(i == snake_head) break;
-      i = (i+1)%SNAKE_MAX_LENGTH;
     }
+    if (draw_head)
+    {
+        draw_element(snake[new_head][0], snake[new_head][1], head, direction);
 
-    if(ring[snake[new_head][0]][snake[new_head][1]] == 1){
-      ring[snake[new_head][0]][snake[new_head][1]] = ' ';
-      snake_generate_apple();
-      points+=level;
-      draw_points = 1;
-      if((new_head+1)%SNAKE_MAX_LENGTH != snake_tail){
-        new_tail = snake_tail;
-        clear_tail = 0;
-      }
-    }else if(ring[snake[new_head][0]][snake[new_head][1]] != ' '){
-      game_over_flag = 1;
-    }
-    if(draw_head){
-      if(direction == DIR_UP) draw_element(snake[new_head][0],snake[new_head][1],head,2);   //up
-      if(direction == DIR_LEFT) draw_element(snake[new_head][0],snake[new_head][1],head,0);  //left
-      if(direction == DIR_DOWN) draw_element(snake[new_head][0],snake[new_head][1],head,1);  //down
-      if(direction == DIR_RIGHT) draw_element(snake[new_head][0],snake[new_head][1],head,3);  //right
-
-      new_cord = snake_head-1;
-      if(new_cord == 0xFFFF) new_cord = SNAKE_MAX_LENGTH-1;
-      if(snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_UP) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,2);
-      else if(snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_LEFT) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,0);
-      else if(snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_UP) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,4);
-      else if(snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_RIGHT) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,3);
-      else if(snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_RIGHT) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,2);
-      else if(snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_DOWN) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,0);
-      else if(snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_LEFT) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,4);
-      else if(snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_DOWN) draw_element(snake[snake_head][0],snake[snake_head][1],tail2,3);
-      else if(prevdir == direction && (direction == DIR_RIGHT || direction == DIR_LEFT)) draw_element(snake[snake_head][0],snake[snake_head][1],tail,0);
-      else if(prevdir == direction && (direction == DIR_UP || direction == DIR_DOWN)) draw_element(snake[snake_head][0],snake[snake_head][1],tail,1);
+        new_cord = snake_head - 1;
+        if (new_cord == 0xFFFF)
+            new_cord = SNAKE_MAX_LENGTH - 1;
+        if (snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_UP)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 2);
+        else if (snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_LEFT)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 0);
+        else if (snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_UP)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 4);
+        else if (snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] > snake[new_head][1] && direction == DIR_RIGHT)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 3);
+        else if (snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_RIGHT)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 2);
+        else if (snake[new_cord][0] < snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_DOWN)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 0);
+        else if (snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_LEFT)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 4);
+        else if (snake[new_cord][0] > snake[new_head][0] && snake[new_cord][1] < snake[new_head][1] && direction == DIR_DOWN)
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail2, 3);
+        else if (prevdir == direction && (direction == DIR_RIGHT || direction == DIR_LEFT))
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail, 0);
+        else if (prevdir == direction && (direction == DIR_UP || direction == DIR_DOWN))
+            draw_element(snake[snake_head][0], snake[snake_head][1], tail, 1);
     }
     prevdir = direction;
-    if(clear_tail){
-        draw_rectangle(camera_screen.disp_left + snake[snake_tail][0] * SNAKE_ELEMENT_SIZE,
-                       snake[snake_tail][1] * SNAKE_ELEMENT_SIZE,
-                       camera_screen.disp_left + snake[snake_tail][0] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1,
-                       snake[snake_tail][1] * SNAKE_ELEMENT_SIZE+SNAKE_ELEMENT_SIZE-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
+    if (clear_tail)
+    {
+        draw_rectangle(screen_left + snake[snake_tail][0] * snake_screen_size,
+                       screen_top + snake[snake_tail][1] * snake_screen_size,
+                       screen_left + snake[snake_tail][0] * snake_screen_size + snake_screen_size - 1,
+                       screen_top + snake[snake_tail][1] * snake_screen_size + snake_screen_size - 1, MAKE_COLOR(COLOR_WHITE, COLOR_WHITE), RECT_BORDER0 | DRAW_FILLED);
     }
     snake_head = new_head;
     snake_tail = new_tail;
     msleep(100);
-    if(game_over_flag){
-      game_over();
-      game_over_flag = 0;
+    if (game_over_flag)
+    {
+        game_over();
+        game_over_flag = 0;
     }
-    if(draw_points){
-      draw_points = 0;
-      sprintf(str_buf,lang_str(LANG_SNAKE_POINTS),points);
-      draw_string(camera_screen.disp_left + 10,220,str_buf, MAKE_COLOR(COLOR_WHITE, COLOR_BLUE));
+    if (draw_points)
+    {
+        draw_points = 0;
+        sprintf(str_buf, lang_str(LANG_SNAKE_POINTS), points);
+        draw_string(camera_screen.disp_width/2 - strlen(str_buf)*FONT_WIDTH/2, camera_screen.height-FONT_HEIGHT-4, str_buf, MAKE_COLOR(COLOR_GREY, COLOR_BLUE));
     }
 }
 
-int gui_snake_init() {
-    draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_WHITE,COLOR_WHITE), RECT_BORDER0|DRAW_FILLED);
+int gui_snake_init()
+{
+    snake_scale = camera_screen.height / 240;
+    if (snake_scale < 1) snake_scale = 1;
+    snake_screen_size = SNAKE_ELEMENT_SIZE * snake_scale;
+    screen_left = camera_screen.disp_left + (camera_screen.disp_width - RING_WIDTH * snake_screen_size)/2;
+    screen_top = (camera_screen.height - FONT_HEIGHT - 4 - RING_HEIGHT * snake_screen_size)/2;
+
+    draw_rectangle(camera_screen.disp_left,0,camera_screen.disp_right,camera_screen.height-1, MAKE_COLOR(COLOR_GREY,COLOR_GREY), RECT_BORDER0|DRAW_FILLED);
     snake_start();
     gui_set_mode(&GUI_MODE_SNAKE);
     return 1;

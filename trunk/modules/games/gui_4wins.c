@@ -21,10 +21,12 @@ void gui_4wins_draw();
 gui_handler GUI_MODE_4WINS = 
     /*GUI_MODE_4WINS*/  { GUI_MODE_MODULE, gui_4wins_draw, gui_4wins_kbd_process, gui_game_menu_kbd_process, 0, GUI_MODE_FLAG_NODRAWRESTORE };
 
-#define BORDER		 20
-#define XBORDER		 (camera_screen.disp_left+BORDER)
-#define RECT_SIZE	 30
-#define BORDER_TOP	 RECT_SIZE
+int rect_size = 30;
+
+#define XBORDER		 (camera_screen.disp_left+FONT_WIDTH)
+#define RECT_SIZE	 rect_size
+#define STONE_SIZE   (rect_size/2-5)
+#define BORDER_TOP	 (FONT_HEIGHT + 10)
 #define FIELD_HEIGHT 7
 #define FIELD_WIDTH	 7
 #define P1_COLOR	 COLOR_BLUE
@@ -43,43 +45,60 @@ char in_game=0;
 char mode_rival=0; //1=person 0=cam
 char count_win[2]={0,0};
 
+static void stone(int column, int row, color cl)
+{
+    draw_ellipse((XBORDER+((column-1)*RECT_SIZE))+(RECT_SIZE/2), (BORDER_TOP+((7-row)*RECT_SIZE))+(RECT_SIZE/2), STONE_SIZE, STONE_SIZE, cl, DRAW_FILLED);
+}
+
+static void cursor(int column, color cl)
+{
+    stone(column+1, 7, cl);
+}
 //-------------------------------------------------------------------
 static char isFull(int column)
 {
-	if(field[column-1][6]) 
-		return 1; 
-	else 
-		return 0;
+    if (field[column - 1][6])
+        return 1;
+    else
+        return 0;
 }
 
 static char set_stone(int column, char player, char visible)
 {
-	int i;
-    in_game=1;
-	if(!isFull(column))
-	{
-		for(i=1;field[column-1][i];i++);			//1 ist wichtig (0=Fundament)
-		if (visible) {
-			draw_ellipse((XBORDER+((column-1)*RECT_SIZE))+15, (BORDER+((6-i)*RECT_SIZE))+15+BORDER_TOP, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR, DRAW_FILLED);
-		}
-		field[column-1][i]=player;
-		return 1;
-	} 
-	else return 0;
+    int i;
+    in_game = 1;
+    if (!isFull(column))
+    {
+        for (i = 1; field[column - 1][i]; i++)
+            ;			//1 ist wichtig (0=Fundament)
+        if (visible)
+        {
+            stone(column, i, (cur_player == 1) ? P1_COLOR : P2_COLOR);
+        }
+        field[column - 1][i] = player;
+        return 1;
+    }
+    else
+        return 0;
 }
 /*====================      KI   ===========================*/
 static void unset_stone(int column)
 {
-  int i;
-  for(i=1;(i<=6)&&field[column-1][i];i++);			//1 ist wichtig (0=Fundament)
-  field[column-1][i-1]=0;
+    int i;
+    for(i=1;(i<=6)&&field[column-1][i];i++);			//1 ist wichtig (0=Fundament)
+    field[column-1][i-1]=0;
 }
 
-char ki_isBadColumn(int column){
-  if(badColumns[column-1]) return column; else return 0;
+char ki_isBadColumn(int column)
+{
+    if (badColumns[column - 1])
+        return column;
+    else
+        return 0;
 }
 
-char ki_3(char player) {
+char ki_3(char player)
+{
   int i,j;
   //waagerecht und Diagonal (über Anstieg)
   for(i=0;i<=3;i++){		// column
@@ -173,21 +192,25 @@ char ki_findColumn(char mode, char player) {							//player = 1|2
   return erg;
 }
 /*======================= K I   END ===============================*/
-void draw_txt_message(char* text) {
+void draw_txt_message(char* text)
+{
     coord w, x, y;
     twoColors cl = MAKE_COLOR(COLOR_RED, COLOR_WHITE);
     w = (strlen(text) + 2) * FONT_WIDTH;
 
-    x = (camera_screen.width-w)>>1;
-    y = ((camera_screen.height)>>1);
-    draw_rectangle(x, y, x+w, y+FONT_HEIGHT+8, cl, RECT_BORDER2|DRAW_FILLED|RECT_ROUND_CORNERS);
-    draw_string_justified(x, y+4, text, cl, 0, w, TEXT_CENTER);
+    x = (camera_screen.width - w) >> 1;
+    y = ((camera_screen.height) >> 1);
+    draw_rectangle(x, y, x + w, y + FONT_HEIGHT + 8, cl, RECT_BORDER2 | DRAW_FILLED | RECT_ROUND_CORNERS);
+    draw_string_justified(x, y + 4, text, cl, 0, w, TEXT_CENTER);
 }
 //-------------------------------------------------------------------
 static void change_player()
 {
-	if (cur_player==1) cur_player=2; else cur_player=1;
-	draw_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR, DRAW_FILLED);
+    if (cur_player == 1)
+        cur_player = 2;
+    else
+        cur_player = 1;
+    cursor(cursor_position, (cur_player == 1) ? P1_COLOR : P2_COLOR);
 }
 //-------------------------------------------------------------------
 static char win_query()
@@ -230,144 +253,168 @@ static char win_query()
 	return 0;
 }
 //-------------------------------------------------------------------
-void win() {
-  if(win_query()==1){
-    finished=1;
-    count_win[cur_player-1]++;
-    draw_txt_message(lang_str((cur_player==1)?LANG_CONNECT4_P1_WIN:(mode_rival)?LANG_CONNECT4_P2_WIN:LANG_CONNECT4_CAM_WIN));
-  }	else if (win_query()==9) {
-    finished=1;
-    draw_txt_message(lang_str(LANG_CONNECT4_DRAW));
-  }
-  change_player();
+void win()
+{
+    if (win_query() == 1)
+    {
+        finished = 1;
+        count_win[cur_player - 1]++;
+        draw_txt_message(lang_str((cur_player == 1) ? LANG_CONNECT4_P1_WIN : (mode_rival) ? LANG_CONNECT4_P2_WIN : LANG_CONNECT4_CAM_WIN));
+    }
+    else if (win_query() == 9)
+    {
+        finished = 1;
+        draw_txt_message(lang_str(LANG_CONNECT4_DRAW));
+    }
+    change_player();
 }
 //-------------------------------------------------------------------
 void draw_mode()
 {
-    int x = camera_screen.disp_left + 30*FONT_WIDTH;
-    draw_string_justified(x, 4*FONT_HEIGHT, (mode_rival==1) ? lang_str(LANG_CONNECT4_HUMAN) : "cam", TEXT_COLOR, 0, 12*FONT_WIDTH, TEXT_LEFT|TEXT_FILL);
+    int x = camera_screen.disp_right - 15 * FONT_WIDTH;
+    draw_string_justified(x, 4 * FONT_HEIGHT, (mode_rival == 1) ? lang_str(LANG_CONNECT4_HUMAN) : "cam", TEXT_COLOR, 0, 12 * FONT_WIDTH, TEXT_LEFT | TEXT_FILL);
 }
 //-------------------------------------------------------------------
 void change_mode()
 {
-	cur_player=1;
-	count_win[0]=count_win[1]=0;
-	if(mode_rival==1)
-		mode_rival=0;	//CAM
-	else
-		mode_rival=1;	//HUMAN
-	draw_mode();
+    cur_player = 1;
+    count_win[0] = count_win[1] = 0;
+    if (mode_rival == 1)
+        mode_rival = 0;	//CAM
+    else
+        mode_rival = 1;	//HUMAN
+    draw_mode();
 }
 //-------------------------------------------------------------------
 void set()
 {
-	if(finished==0)
-	{
-		if(cursor_position==7 && in_game==0)	
-		{
-			change_mode();
-		}
-		else
-		{
-			if(cur_player==1 || (cur_player==2 && mode_rival==1)) if(set_stone(cursor_position+1,cur_player,1)) win();
-			if((mode_rival==0 && cur_player==2) && !finished) if(set_stone(ki_findColumn(1, cur_player),cur_player, 1)) win();
-		}
-	}
+    if (finished == 0)
+    {
+        if (cursor_position == 7 && in_game == 0)
+        {
+            change_mode();
+        }
+        else
+        {
+            if (cur_player == 1 || (cur_player == 2 && mode_rival == 1))
+                if (set_stone(cursor_position + 1, cur_player, 1))
+                    win();
+            if ((mode_rival == 0 && cur_player == 2) && !finished)
+                if (set_stone(ki_findColumn(1, cur_player), cur_player, 1))
+                    win();
+        }
+    }
 }
 //-------------------------------------------------------------------
 static void move_cursor(int in_x_pos)
 {
-	draw_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10,BK_COLOR, DRAW_FILLED);
-	if(in_game)
-	{
-		if(cursor_position==0 && in_x_pos<0) 
-			cursor_position=7+in_x_pos; 
-		else 
-			cursor_position=(cursor_position+in_x_pos)%7;
-	}
-	else
-	{
-		if(cursor_position==0 && in_x_pos<0) 
-			cursor_position=8+in_x_pos; 
-		else 
-			cursor_position=(cursor_position+in_x_pos)%8;
-	}
-	draw_ellipse((XBORDER+((cursor_position)*RECT_SIZE))+15, BORDER+10, 10,10, (cur_player==1)?P1_COLOR:P2_COLOR, DRAW_FILLED);
+    cursor(cursor_position, BK_COLOR);
+    if (in_game)
+    {
+        if (cursor_position == 0 && in_x_pos < 0)
+            cursor_position = 7 + in_x_pos;
+        else
+            cursor_position = (cursor_position + in_x_pos) % 7;
+    }
+    else
+    {
+        if (cursor_position == 0 && in_x_pos < 0)
+            cursor_position = 8 + in_x_pos;
+        else
+            cursor_position = (cursor_position + in_x_pos) % 8;
+    }
+    cursor(cursor_position, (cur_player == 1) ? P1_COLOR : P2_COLOR);
 }
 //-------------------------------------------------------------------
 int gui_4wins_init() 
 {
-	static char str[16];
-	int i=0,j=0;
+    static char str[16];
+    int i = 0, j = 0;
 
-	cursor_position=3;
-	finished=in_game=0;
-	srand(time(NULL));
-	
-	draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height-1, MAKE_COLOR(BK_COLOR,BK_COLOR), RECT_BORDER0|DRAW_FILLED);		// draw backgraund
-	draw_rectangle(XBORDER, BORDER+BORDER_TOP, XBORDER+(7*RECT_SIZE), BORDER+(6*RECT_SIZE)+BORDER_TOP, FIELD_COLOR, RECT_BORDER0|DRAW_FILLED);
-	draw_rectangle(camera_screen.disp_left+240, 90, camera_screen.disp_left+360-BORDER, 240-10, MAKE_COLOR(INFO_COLOR,INFO_COLOR), RECT_BORDER0|DRAW_FILLED|RECT_ROUND_CORNERS);
-    draw_string(camera_screen.disp_left+12*FONT_WIDTH, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
-    draw_line(camera_screen.disp_left,15,camera_screen.disp_left+360,15,COLOR_GREY_LT);
+    if (camera_screen.height * 3 > camera_screen.width * 2)
+    {
+        // worst case scenario (640x480)
+        rect_size = 8 * (camera_screen.height - FONT_HEIGHT - 20) / (9 * FIELD_HEIGHT);
+    }
+    else
+    {
+        rect_size = (camera_screen.height - FONT_HEIGHT - 20) / FIELD_HEIGHT;
+    }
 
-	for(i=0;i<7;i++)
-	{
-		for(j=0;j<6;j++)
-		{
-			field[i][j+1]=0;
-			draw_ellipse(XBORDER+(i*RECT_SIZE)+(RECT_SIZE/2), BORDER+(j*RECT_SIZE)+(RECT_SIZE/2)+BORDER_TOP, 10, 10, BK_COLOR, DRAW_FILLED);
-		}
-	}
-	for(i=0;i<7;i++)
-	{
-		field[i][0]=9;
-	}
+    cursor_position = 3;
+    finished = in_game = 0;
+    srand(time(NULL));
 
-	move_cursor(0);
-	draw_string(camera_screen.disp_left+30*FONT_WIDTH, 3*FONT_HEIGHT, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
-    sprintf(str, "%d",count_win[0]);
-	draw_string(camera_screen.disp_left+34*FONT_WIDTH, camera_screen.height-9*FONT_HEIGHT, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
+    draw_rectangle(camera_screen.disp_left, 0, camera_screen.disp_right, camera_screen.height - 1, MAKE_COLOR(BK_COLOR, BK_COLOR), RECT_BORDER0 | DRAW_FILLED);		// draw backgraund
+    draw_rectangle(XBORDER, BORDER_TOP + RECT_SIZE, XBORDER + (7 * RECT_SIZE), BORDER_TOP + (7 * RECT_SIZE), FIELD_COLOR, RECT_BORDER0 | DRAW_FILLED);
+    draw_rectangle(camera_screen.disp_right - 16 * FONT_WIDTH, 5 * FONT_HEIGHT, camera_screen.disp_right - FONT_WIDTH, camera_screen.height - 10, MAKE_COLOR(INFO_COLOR, INFO_COLOR), RECT_BORDER0 | DRAW_FILLED | RECT_ROUND_CORNERS);
+    draw_string(camera_screen.disp_left + 12 * FONT_WIDTH, 0, lang_str(LANG_MENU_GAMES_CONNECT4), TEXT_COLOR);
+    draw_line(camera_screen.disp_left, FONT_HEIGHT, camera_screen.disp_right - 1, FONT_HEIGHT, COLOR_GREY_LT);
+
+    for (i = 0; i < 7; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            field[i][j + 1] = 0;
+            stone(i + 1, j + 1, BK_COLOR);
+        }
+    }
+    for (i = 0; i < 7; i++)
+    {
+        field[i][0] = 9;
+    }
+
+    move_cursor(0);
+    draw_string(camera_screen.disp_right - 15 * FONT_WIDTH, 3 * FONT_HEIGHT, lang_str(LANG_CONNECT4_RIVAL), TEXT_COLOR);
+    sprintf(str, "%d", count_win[0]);
+    draw_string(camera_screen.disp_right - (10 + strlen(str)) * FONT_WIDTH, camera_screen.height - 9 * FONT_HEIGHT, str, MAKE_COLOR(INFO_COLOR, P1_COLOR));
     sprintf(str, ":");
-	draw_string(camera_screen.disp_left+36*FONT_WIDTH, camera_screen.height-9*FONT_HEIGHT, str, INFO_TEXT_COLOR);
-    sprintf(str, "%d",count_win[1]);
-	draw_string(camera_screen.disp_left+38*FONT_WIDTH, camera_screen.height-9*FONT_HEIGHT, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
-	draw_mode();
-	if(cur_player==2&&!mode_rival) set();
+    draw_string(camera_screen.disp_right - 9 * FONT_WIDTH, camera_screen.height - 9 * FONT_HEIGHT, str, INFO_TEXT_COLOR);
+    sprintf(str, "%d", count_win[1]);
+    draw_string(camera_screen.disp_right - 7 * FONT_WIDTH, camera_screen.height - 9 * FONT_HEIGHT, str, MAKE_COLOR(INFO_COLOR, P2_COLOR));
+    draw_mode();
+    if (cur_player == 2 && !mode_rival)
+        set();
 
     gui_set_mode(&GUI_MODE_4WINS);
 
-	return 1;
+    return 1;
 }
 
-int basic_module_init() {
-  return gui_4wins_init();
+int basic_module_init()
+{
+    return gui_4wins_init();
 }
 
 //-------------------------------------------------------------------
 int gui_4wins_kbd_process() 
 {
-	switch (kbd_get_autoclicked_key()) 
-	{
-		case KEY_SET:
-		    if(!finished) set(); else gui_4wins_init();
-			break;
-		case KEY_LEFT:
-			if(finished==0)
-				move_cursor(-1);
-			break;
-		case KEY_RIGHT:
-			if(finished==0)
-				move_cursor(1);
-			break;
-	}
+    switch (kbd_get_autoclicked_key())
+    {
+        case KEY_SET:
+            if (!finished)
+                set();
+            else
+                gui_4wins_init();
+            break;
+        case KEY_LEFT:
+            if (finished == 0)
+                move_cursor(-1);
+            break;
+        case KEY_RIGHT:
+            if (finished == 0)
+                move_cursor(1);
+            break;
+    }
     return 0;
 }
 //-------------------------------------------------------------------
-void gui_4wins_draw() {
-  static char str[16];
-  sprintf(str, "Batt: %3d%%", get_batt_perc());
-  draw_string(camera_screen.disp_left+31*FONT_WIDTH, camera_screen.height-2*FONT_HEIGHT, str, INFO_TEXT_COLOR);
-  gui_osd_draw_clock(camera_screen.disp_left+34*FONT_WIDTH,camera_screen.height-3*FONT_HEIGHT,INFO_TEXT_COLOR,1);
+void gui_4wins_draw()
+{
+    static char str[16];
+    sprintf(str, "Batt: %3d%%", get_batt_perc());
+    draw_string(camera_screen.disp_right - 12 * FONT_WIDTH, camera_screen.height - 2 * FONT_HEIGHT, str, INFO_TEXT_COLOR);
+    gui_osd_draw_clock(camera_screen.disp_right - 11 * FONT_WIDTH, camera_screen.height - 3 * FONT_HEIGHT, INFO_TEXT_COLOR, 1);
 }
 
 #include "simple_game.c"
