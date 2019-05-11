@@ -530,6 +530,9 @@ misc_val_t misc_vals[]={
     { "CAM_HAS_ND_FILTER",  MISC_VAL_NO_STUB},
     { "CAM_IS_ILC",         MISC_VAL_NO_STUB}, // used for finsig code that wants to check for interchangeable lens, not currently used in CHDK
     { "CAM_HAS_IRIS_DIAPHRAGM",MISC_VAL_NO_STUB},
+    { "exmem_alloc_table",  },
+    { "exmem_types_table",  },
+    { "exmem_type_count",   MISC_VAL_DEF_CONST},
     {0,0,0},
 };
 
@@ -2795,6 +2798,58 @@ int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *r
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+// find exmem related stuff
+int sig_match_exmem_vars(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t adr[2], fnd[2];
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        printf("sig_match_exmem_vars: missing ref\n");
+        return 0;
+    }
+    // expect first LDR pc
+    if(!insn_match_find_next(fw,is,15,match_ldr_pc)) {
+        printf("sig_match_exmem_vars: match LDR PC failed\n");
+        return 0;
+    }
+    adr[0]=LDR_PC2val(fw,is->insn);
+    fnd[0]=(uint32_t)is->insn->address;
+    if(!insn_match_find_next(fw,is,5,match_ldr_pc)) {
+        printf("sig_match_exmem_vars: 2nd match LDR PC failed\n");
+        return 0;
+    }
+    adr[1]=LDR_PC2val(fw,is->insn);
+    fnd[1]=(uint32_t)is->insn->address;
+    //printf("sig_match_exmem_vars: %x, %x\n",adr[0], adr[1]);
+    int n;
+    for (n=0; n<2; n++) {
+        if (adr[n] < fw->data_start+fw->data_len) {
+            uint32_t ladr = adr[n]-fw->data_start+fw->data_init_start;
+            save_misc_val("exmem_types_table",ladr,0,fnd[n]);
+            int m;
+            int exm_typ_cnt = 0;
+            for (m=0; m<42; m++) {
+                if ( (fw_u32(fw,ladr+m*4)!=0) && isASCIIstring(fw, fw_u32(fw,ladr+m*4)) )
+                {
+                    char *extyp = (char*)adr2ptr(fw, fw_u32(fw,ladr+m*4));
+                    if ( strncmp(extyp,"EXMEM",5)==0 )
+                    {
+                        exm_typ_cnt++;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            save_misc_val("exmem_type_count",exm_typ_cnt,0,ladr);
+        }
+        else if (adr[n] < fw->memisostart) {
+            save_misc_val("exmem_alloc_table",adr[n],0,fnd[n]);
+        }
+    }
+    return 1;
+}
+
 // find function that copies Zico Xtensa blobs to their destination (dryos 52)
 int sig_match_zicokick_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -4267,6 +4322,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_prop_string,"PROPCASE_SV_MARKET", "\n\rError : GetSvResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_SVFIX", "\n\rError : GetSvFixResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_TV", "\n\rError : GetTvResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_exmem_vars,"exmem_types_table", "ExMem.View_FW"},
 {NULL},
 };
 
@@ -4797,6 +4853,23 @@ void output_propcases(firmware *fw) {
         bprintf("// Port's propset (%i) may be set incorrectly\n", fw->sv->propset);
     }
 
+    add_blankline();
+}
+
+void output_exmem_types(firmware *fw)
+{
+
+    misc_val_t *ett=get_misc_val("exmem_types_table");
+    misc_val_t *etc=get_misc_val("exmem_type_count");
+    if (ett->val == 0 || etc->val == 0) {
+        return;
+    }
+    bprintf("// EXMEM types:\n");
+    int n;
+    for (n=0; n<etc->val; n++) {
+        char *extyp = (char*)adr2ptr(fw, fw_u32(fw,ett->val+n*4));
+        bprintf("// %s %i\n", extyp, n);
+    }
     add_blankline();
 }
 
@@ -5553,6 +5626,7 @@ int main(int argc, char **argv)
     output_modemap(&fw);
 
     output_propcases(&fw);
+    output_exmem_types(&fw);
 
     write_stubs(&fw,max_find_sig);
 
