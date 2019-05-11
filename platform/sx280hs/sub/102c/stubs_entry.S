@@ -80,6 +80,36 @@
 // #define PROPCASE_TV 265
 // Guessed propset: 6
 
+// EXMEM types:
+// EXMEM_RAMDISK        0
+// EXMEM_COM            1
+// EXMEM_FORMATTER      2
+// EXMEM_SHADING        3
+// EXMEM_FAMODE         4
+// EXMEM_FIRMUP         5
+// EXMEM_FIRMUP_VRAM    6
+// EXMEM_FIRMUP_INFLATE 7
+// EXMEM_DVLPWORK       8
+// EXMEM_EVF            9
+// EXMEM_SCRIPT         10
+// EXMEM_GPS            11
+// EXMEM_FACEAUTH       12
+// EXMEM_OHYEARLOG      13
+// EXMEM_WIFI           14
+// EXMEM_MULTI_PLY      15
+// EXMEM_FILESTORE      16
+// EXMEM_MOVIE_REC      17
+// EXMEM_MOVIE_PLY      18
+// EXMEM_WIDE           19
+// EXMEM_NARROW         20
+// EXMEM_AUTO_GIS_MODE  21
+// EXMEM_NP_GIS_MODE    22
+// EXMEM_TRIPODHDR_MODE 23
+// EXMEM_HSHQ_MODE      24
+// EXMEM_CRAW_REC       25
+// EXMEM_PCEVF          26
+// EXMEM_WIFI_RESIZE    27
+
 // Values below can be overridden in 'stubs_min.S':
 //DEF(ctypes                            ,0xfc48111c),          stubs_min = 0xfc48111c (0xfc48111c)
 //DEF(physw_run                         ,0x00008328),          stubs_min = 0x00008328 (0x00008328)
@@ -95,6 +125,9 @@
 DEF(imager_active                     ,0x00008624) // (0x8620+0x4) Found @0xfc132c7a
 DEF(active_bitmap_buffer              ,0x0000ac14) // (0xabdc+0x38) Found @0xfc143c7e
 DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
+DEF(exmem_alloc_table                 ,0x0003280c) // Found @0xfc06225a
+DEF(exmem_types_table                 ,0xfc934724) // Found @0xfc06225e
+DEF_CONST(exmem_type_count                  ,0x0000001c) // Found @0xfc934724
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
 // there are 101 entries in the table - set NUM_FL to 101
