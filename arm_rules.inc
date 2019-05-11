@@ -45,7 +45,11 @@ ifndef THUMB_FW
         CFLAGS+=-mtune=arm946e-s $(ARCH)
     endif
 else
-    CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW
+    ifdef DIGIC7
+        CFLAGS+=-march=armv7-a -mthumb -DTHUMB_FW
+    else
+        CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW
+    endif
 endif
 
 CFLAGS+=-I$(include) -I$(core) -I$(modules) -I$(cam) $(PLFLAGS)

@@ -30,6 +30,7 @@ LED control methods
 #define LEDCNTRL_NEW1 2     // DIGIC 5; bit5, inverted
 #define LEDCNTRL_NEW2 3     // DIGIC 4+, 5; 0x93d800 to on, 0x83dc00 to off
 #define LEDCNTRL_NEW3 4     // DIGIC 6; 0x4d0002 to on, 0x4c0003 to off
+#define LEDCNTRL_NEW4 5     // DIGIC 7; 0x024d0002 to on, 0x024c0003 to off
 
 #ifndef NEED_ENCODED_DISKBOOT
 #define NEED_ENCODED_DISKBOOT 0
@@ -62,6 +63,10 @@ void set_led(int led, int state, int method) {
     else if (method == LEDCNTRL_NEW3) {
         // DIGIC 6
         *p = ((state) ? 0x4d0002 : 0x4c0003);
+    }
+    else if (method == LEDCNTRL_NEW4) {
+        // DIGIC 7
+        *p = ((state) ? 0x024d0002 : 0x024c0003);
     }
     else if (method == LEDCNTRL_OLD) {
         *p = ((state) ? 0x46 : 0x44);

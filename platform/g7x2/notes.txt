@@ -1,0 +1,12 @@
+Issues
+
+- Not a working port, very early expirements.
+
+Development notes
+
+- Diskboot partially works
+- Boot code duplicates E0020000 startup code
+- Some calls commented out that cause camera to lock up
+- Creates a task that blinks the green LED
+- Initialisation fails to start Canon GUI or keyboard tasks - black screen, no button response.
+- Need to pull battery to shut down.

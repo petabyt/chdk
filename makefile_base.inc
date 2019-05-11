@@ -64,7 +64,11 @@ endif
 ifndef THUMB_FW
     O=.o/
 else
-    O=.o2/
+    ifndef DIGIC7
+        O=.o2/
+    else
+        O=.o3/
+    endif
 endif
 
 SILENT=SILENT
