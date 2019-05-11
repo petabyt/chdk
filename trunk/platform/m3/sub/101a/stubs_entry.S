@@ -110,6 +110,41 @@
 // #define PROPCASE_TV 272
 // Guessed propset: 7, 9
 
+// EXMEM types:
+// EXMEM_RAMDISK        0
+// EXMEM_COM            1
+// EXMEM_FORMATTER      2
+// EXMEM_SHADING        3
+// EXMEM_FAMODE         4
+// EXMEM_FIRMUP         5
+// EXMEM_FIRMUP_VRAM    6
+// EXMEM_FIRMUP_INFLATE 7
+// EXMEM_FIRMUP_PICTURESTYLE 8
+// EXMEM_DVLPWORK       9
+// EXMEM_EVF            10
+// EXMEM_SCRIPT         11
+// EXMEM_GPS            12
+// EXMEM_FACEAUTH       13
+// EXMEM_OHYEARLOG      14
+// EXMEM_WIFI           15
+// EXMEM_MULTI_PLY      16
+// EXMEM_FEP            17
+// EXMEM_LENS_FIRMUP    18
+// EXMEM_LENS_COMPENSATION 19
+// EXMEM_FILESTORE      20
+// EXMEM_MOVIE_REC      21
+// EXMEM_MOVIE_PLY      22
+// EXMEM_WIFI_RESIZE    23
+// EXMEM_PCEVF          24
+// EXMEM_WIDE           25
+// EXMEM_NARROW         26
+// EXMEM_AUTO_GIS_MODE  27
+// EXMEM_NP_GIS_MODE    28
+// EXMEM_TRIPODHDR_MODE 29
+// EXMEM_HSHQ_MODE      30
+// EXMEM_CRAW_REC       31
+// EXMEM_PHOTO_IN_MOVIE 32
+
 // Values below can be overridden in 'stubs_min.S':
 DEF(ctypes                            ,0xfc5e29f4)
 DEF(physw_run                         ,0x000082cc) // Found @0xfc083bc6
@@ -126,6 +161,9 @@ DEF(imager_active                     ,0x000086c4) // (0x86c0+0x4) Found @0xfc13
 DEF(_nrflag                           ,0x000287bc) // (0x287b4+0x8) Found @0xfc3f53de
 //DEF(active_bitmap_buffer              ,0x0000c150), ** != ** stubs_min = 0x0000c14c (0xC14C)
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277c02
+DEF(exmem_alloc_table                 ,0x0005a444) // Found @0xfc07882a
+DEF(exmem_types_table                 ,0xfcc66ce0) // Found @0xfc07882e
+DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcc66ce0
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc373f15
 //NHSTUB(DeleteFile_Fut                       ,0x00000000) //  0        *** != 0xfc373ecb
