@@ -26,6 +26,7 @@ gui_handler GUI_MODE_BENCH =
 //-------------------------------------------------------------------
 static struct {
     int screen_input_bps;
+    unsigned int screen_input_size;
     int screen_output_bps;
     int memory_read_bps;
     int memory_read_uc_bps;
@@ -69,6 +70,7 @@ static int bench_mode_next = BENCH_ALL;
 //-------------------------------------------------------------------
 void gui_bench_init() {
     bench.screen_input_bps=-1;
+    bench.screen_input_size=0;
     bench.screen_output_bps=-1;
     bench.memory_read_bps=-1;
     bench.memory_read_uc_bps=-1;
@@ -272,7 +274,7 @@ void gui_bench_draw() {
 
             gui_bench_draw_results_screen(4, bench.screen_output_bps, camera_screen.buffer_size);
             add_to_log(log_run,"Screen write    :",buf);
-            gui_bench_draw_results_screen(5, bench.screen_input_bps, camera_screen.width * vid_get_viewport_height() * 3);
+            gui_bench_draw_results_screen(5, bench.screen_input_bps, bench.screen_input_size);
             add_to_log(log_run,"Viewport read   :",buf);
 
             gui_bench_draw_results_memory(7, bench.memory_write_bps, bench.memory_write_uc_bps);
@@ -356,9 +358,10 @@ static void bench_screen_read() {
 
     scr = vid_get_viewport_active_buffer();
     if (!scr) return;
-    s = camera_screen.width * vid_get_viewport_height() * 3;
+    s = vid_get_viewport_byte_width() * vid_get_viewport_height_proper();
     // limit used mem area (due to low speed access)
     if ((s < 1) || (s > 360*240*3)) s = 360*240*3;
+    bench.screen_input_size = s;
     t = get_tick_count();
     for (n=0; n<32; ++n) {
         asm volatile (

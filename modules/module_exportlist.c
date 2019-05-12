@@ -170,6 +170,8 @@
             vid_get_bitmap_active_palette
             vid_get_viewport_height
             vid_get_viewport_width
+            vid_get_viewport_height_proper
+            vid_get_viewport_width_proper
             vid_get_viewport_byte_width
             vid_get_viewport_display_xoffset
             vid_get_viewport_display_yoffset
