@@ -3,6 +3,7 @@ Issues:
 - Movie features are not supported. Movie_status is wrong.
 - Booting with .fi2 is disabled (not working).
 - Not all features have been tested fully, expect issues and crashes
+- MoveFocusLensToDistance crashes. Event flag fix is implemented; but FW crashes later in the function.
 
 Working and mostly tested:
 

@@ -222,8 +222,8 @@ NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc5e4aa1) //  0
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3bd739) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc3bd76d) //  0
-NHSTUB(PutInNdFilter                          ,0xfc667ec5) //  0
-NHSTUB(PutOutNdFilter                         ,0xfc667eeb) //  0
+//NHSTUB(PutInNdFilter                        ,0xfc667ec5) //  0            Overridden
+//NHSTUB(PutOutNdFilter                       ,0xfc667eeb) //  0            Overridden
 NHSTUB(Read                                   ,0xfc151589) //  0
 NHSTUB(ReadFastDir                            ,0xfc282ec9) //  0
 NHSTUB(Rec2PB                                 ,0xfc364f57) //  0

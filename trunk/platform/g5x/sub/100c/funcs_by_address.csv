@@ -2222,9 +2222,7 @@
 0xfc667d6d,SetFocusResetState_FW
 0xfc667df7,SaveFocusResetPulse_FW
 0xfc667ead,ReloadNdFilterAdjustment_FW
-0xfc667ec5,PutInNdFilter
 0xfc667ec5,PutInNdFilter_FW
-0xfc667eeb,PutOutNdFilter
 0xfc667eeb,PutOutNdFilter_FW
 0xfc6684ff,SetScanLensIndex_FW
 0xfc668597,SetScanWindowMode_FW
