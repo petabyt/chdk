@@ -99,33 +99,25 @@ char *hook_raw_image_addr()
 //{
 //}
 
-extern void* viewport_buffers[];
-extern void *current_viewport_buffer;
+extern void* _GetActiveViewportBuffer();
 
 void *vid_get_viewport_fb_d()
 {
-    extern void *current_fb_d;
-    return current_fb_d;
+    return _GetActiveViewportBuffer();
 }
 
 void *vid_get_viewport_fb()
 {
-    return viewport_buffers[0];
+    return _GetActiveViewportBuffer();
 }
 
 void *vid_get_viewport_live_fb()
 {
-    int i;
-    for(i=0;i<4;i++) {
-        if(current_viewport_buffer == viewport_buffers[i]) {
-            return viewport_buffers[(i+1)&3];
-        }
-    }
-    return 0;
+    return _GetActiveViewportBuffer();
 }
 
-int vid_get_viewport_width() {
-    extern int _GetVRAMHPixelsSize();
+int vid_get_viewport_width()
+{
     extern int _GetVRAMHPixelsSize();
     if (camera_info.state.mode_play)
     {
