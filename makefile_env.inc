@@ -12,7 +12,12 @@ ifndef OSTYPE
     OSTYPE = Windows
     EXE = .exe
     SH = sh
-    DEVNULL = NUL
+# avoid creating NUL files on some MSYS systems
+    ifeq ($(shell test -e /dev/null && echo yes),yes)
+        DEVNULL = /dev/null
+    else
+        DEVNULL = NUL
+    endif
 	OLDSEPARATOR = \\\\
 	NEWSEPARATOR = /
 	SORT := $(dir $(shell which uniq.exe | sed 's_$(OLDSEPARATOR)_$(NEWSEPARATOR)_g'))/sort.exe
