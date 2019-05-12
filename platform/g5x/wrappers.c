@@ -36,3 +36,19 @@ int UnlockMF(void)
   }
   return(0);
 }
+
+// Wrappers to call inner functions of event procs for ND filter
+
+static void null_func() { }
+
+void _PutInNdFilter()
+{
+    extern void _PutInNdFilter_FW(void*, int);
+    _PutInNdFilter_FW(null_func,0);
+}
+
+void _PutOutNdFilter()
+{
+    extern void _PutOutNdFilter_FW(void*, int);
+    _PutOutNdFilter_FW(null_func,0);
+}
