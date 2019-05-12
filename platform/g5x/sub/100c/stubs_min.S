@@ -1,9 +1,5 @@
 #include "stubs_asm.h"
 
-DEF(current_viewport_buffer         ,0x00010388)    // OK search RAM for first viewport_buffer, second address
-DEF(viewport_buffers                ,0xfc6cdba0)    // OK found by searching for "VRAM Address"
-DEF(current_fb_d                    ,0x00011048)    // OK @fc108e70 search for "ImgDDev.c" and look up
-
 // Menu & main OSD bitmap
 //DEF(bitmap_buffer1                  ,0x41D81000)            // OK
 //DEF(bitmap_buffer2                  ,0x41D81000 + 864*4)    // OK

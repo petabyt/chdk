@@ -33,6 +33,7 @@ NHSTUB(VTMLock                                ,0xFC3BE383)
 NHSTUB(VTMUnlock                              ,0xFC3BE5AB)
 
 NHSTUB(get_dial_hw_position                   ,0xfc286651)
+NHSTUB(GetActiveViewportBuffer                ,0xfc108e67)
 
 // gets raw address and other stuff for next shot, stores in structure pointed to by r1
 // via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
