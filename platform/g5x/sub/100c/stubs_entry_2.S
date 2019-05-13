@@ -38,8 +38,10 @@ NHSTUB(GetActiveViewportBuffer                ,0xfc108e67)
 // Ignore event proc versions, use inner functions from wrapper
 IGNORE(PutInNdFilter)
 IGNORE(PutOutNdFilter)
+IGNORE(MoveFocusLensToDistance)
 NHSTUB(PutInNdFilter_FW                       ,0xfc1ca7fb)
 NHSTUB(PutOutNdFilter_FW                      ,0xfc1ca825)
+NHSTUB(MoveFocusLensToDistance_FW             ,0xfc667c0f)
 
 //// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 //// see https://chdk.setepontos.com/index.php?topic=12516.0
