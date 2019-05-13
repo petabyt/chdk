@@ -129,6 +129,9 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
 
+//    #define CAM_SD_OVER_IN_AF                   1   // Crashes
+    #define CAM_SD_OVER_IN_MF                   1
+
     // TODO: Below needs tp be checked
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
@@ -172,9 +175,6 @@
 
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
 
 
 //--------------------------------------------------

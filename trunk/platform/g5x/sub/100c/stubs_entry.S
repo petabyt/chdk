@@ -212,7 +212,7 @@ NHSTUB(LEDDrive                               ,0xfc5e3b65) //  0
 NHSTUB(LocalTime                              ,0x010e1589) //  0
 NHSTUB(LockMainPower                          ,0xfc39abad) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc3b5f83) //  0
-NHSTUB(MoveFocusLensToDistance                ,0xfc667c1d) //  0
+//NHSTUB(MoveFocusLensToDistance              ,0xfc667c1d) //  0            Overridden
 NHSTUB(MoveIrisWithAv                         ,0xfc660919) //  0
 NHSTUB(MoveZoomLensWithPoint                  ,0xfc661349) //  0
 NHSTUB(Open                                   ,0xfc3b5bc3) //  0

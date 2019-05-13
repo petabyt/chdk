@@ -1394,7 +1394,6 @@
 0xfc6600e7,MoveFocusActuator_FW
 0xfc667c1d,MoveFocusDistance_FW
 0xfc66069d,MoveFocusLensChangeCarrierFrequency_FW
-0xfc667c1d,MoveFocusLensToDistance
 0xfc667c1d,MoveFocusLensToDistance_FW
 0xfc667b79,MoveFocusLensToPosition_FW
 0xfc667ad9,MoveFocusLensToPositionWithMaxSpeed_FW

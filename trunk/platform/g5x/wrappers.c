@@ -44,11 +44,18 @@ static void null_func() { }
 void _PutInNdFilter()
 {
     extern void _PutInNdFilter_FW(void*, int);
-    _PutInNdFilter_FW(null_func,0);
+    _PutInNdFilter_FW(null_func, 0);
 }
 
 void _PutOutNdFilter()
 {
     extern void _PutOutNdFilter_FW(void*, int);
-    _PutOutNdFilter_FW(null_func,0);
+    _PutOutNdFilter_FW(null_func, 0);
+}
+
+void _MoveFocusLensToDistance(short *dist)
+{
+    // Crashes unless camera is set to manual focus in Canon GUI
+    extern void _MoveFocusLensToDistance_FW(short*, void*, int);
+    _MoveFocusLensToDistance_FW(dist, null_func, 0);
 }
