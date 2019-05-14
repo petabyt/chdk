@@ -1394,6 +1394,7 @@
 0xfc6600e7,MoveFocusActuator_FW
 0xfc667c1d,MoveFocusDistance_FW
 0xfc66069d,MoveFocusLensChangeCarrierFrequency_FW
+0xfc667c1d,MoveFocusLensToDistance
 0xfc667c1d,MoveFocusLensToDistance_FW
 0xfc667b79,MoveFocusLensToPosition_FW
 0xfc667ad9,MoveFocusLensToPositionWithMaxSpeed_FW
@@ -1546,7 +1547,9 @@
 0xfc3ae19b,PTM_SetCurrentCaptureMode_FW
 0xfc2a63a5,PTM_SetCurrentItem_FW
 0xfc2a69f1,PTM_SetProprietyEnable_FW
+0xfc667ec5,PutInNdFilter
 0xfc667ec5,PutInNdFilter_FW
+0xfc667eeb,PutOutNdFilter
 0xfc667eeb,PutOutNdFilter_FW
 0xfc39b4a5,PutsCameraLogEvent_FW
 0xfc22f36d,qsort
