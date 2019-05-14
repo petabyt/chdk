@@ -5475,8 +5475,10 @@ void print_results(firmware *fw, sig_entry_t *sig)
     if (ostub2 && (sig->val != ostub2->val))
     {
         if (ostub2->type != TYPE_IGNORE)
+        {
             err = 1;
-       sig->flags |= BAD_MATCH;
+            sig->flags |= BAD_MATCH;
+        }
     }
     else
     {

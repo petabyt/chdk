@@ -2215,13 +2215,16 @@
 0xfc667b79,MoveFocusLensToPosition_FW
 0xfc667ba5,MoveFocusPosition_FW
 0xfc667c1d,MoveFocusDistance_FW
+0xfc667c1d,MoveFocusLensToDistance
 0xfc667c1d,MoveFocusLensToDistance_FW
 0xfc667c61,ResetFocus_FW
 0xfc667d45,j_IsFocusLensOutSidePosition_FW
 0xfc667d6d,SetFocusResetState_FW
 0xfc667df7,SaveFocusResetPulse_FW
 0xfc667ead,ReloadNdFilterAdjustment_FW
+0xfc667ec5,PutInNdFilter
 0xfc667ec5,PutInNdFilter_FW
+0xfc667eeb,PutOutNdFilter
 0xfc667eeb,PutOutNdFilter_FW
 0xfc6684ff,SetScanLensIndex_FW
 0xfc668597,SetScanWindowMode_FW
