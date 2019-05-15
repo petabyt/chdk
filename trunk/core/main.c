@@ -133,6 +133,13 @@ void core_spytask()
 
     spytask_can_start=0;
 
+#if !defined(CAM_DRYOS)
+// create semaphore to protect Canon memory malloc/free/memPartInfo
+// on VxWorks, spytask should start before any other CHDK tasks
+    extern void canon_malloc_init(void);
+    canon_malloc_init();
+#endif
+
     extern void aram_malloc_init(void);
     aram_malloc_init();
 
