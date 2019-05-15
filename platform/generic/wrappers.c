@@ -10,6 +10,12 @@
 #include "live_view.h"
 #include "usb_remote.h"
 
+// arbitrary timeout for canon heap semaphore
+#if !CAM_DRYOS
+#define CANON_HEAP_SEM_TIMEOUT 1000
+extern int canon_heap_sem;
+#endif
+
 //----------------------------------------------------------------------------
 // Char Wrappers (VxWorks - ARM stubs)
 
@@ -962,20 +968,54 @@ void *exmem_alloc(int pool_id,int size,int unk,int unk2)
 
 void *canon_malloc(long size)
 {
+#if CAM_DRYOS
     return _malloc(size);
+#else
+    if (_TakeSemaphore(canon_heap_sem,CANON_HEAP_SEM_TIMEOUT)) {
+        return 0;
+    } else {
+        void *r=_malloc(size);
+        _GiveSemaphore(canon_heap_sem);
+        return r;
+    }
+#endif
 }
 
 void canon_free(void *p)
 {
+#if CAM_DRYOS
     _free(p);
+#else
+    if (!_TakeSemaphore(canon_heap_sem,CANON_HEAP_SEM_TIMEOUT)) {
+       _free(p);
+       _GiveSemaphore(canon_heap_sem);
+    }
+#endif
 }
 
 void *umalloc(long size) {
+#if CAM_DRYOS
     return _AllocateUncacheableMemory(size);
+#else
+    if (_TakeSemaphore(canon_heap_sem,CANON_HEAP_SEM_TIMEOUT)) {
+        return 0;
+    } else {
+        void *r=_AllocateUncacheableMemory(size);
+        _GiveSemaphore(canon_heap_sem);
+        return r;
+    }
+#endif
 }
 
 void ufree(void *p) {
-    return _FreeUncacheableMemory(p);
+#if CAM_DRYOS
+    _FreeUncacheableMemory(p);
+#else
+    if (!_TakeSemaphore(canon_heap_sem,CANON_HEAP_SEM_TIMEOUT)) {
+        _FreeUncacheableMemory(p);
+       _GiveSemaphore(canon_heap_sem);
+    }
+#endif
 }
 
 void *memcpy(void *dest, const void *src, long n) {
@@ -1036,18 +1076,21 @@ extern int sys_mempart_id;
     int fw_info[5];
     // -1 for invalid
     memset(camera_meminfo,0xFF,sizeof(cam_meminfo));
+    if(!_TakeSemaphore(canon_heap_sem,CANON_HEAP_SEM_TIMEOUT)) {
 #ifdef CAM_NO_MEMPARTINFO
-    camera_meminfo->free_block_max_size = _memPartFindMax(sys_mempart_id);
+        camera_meminfo->free_block_max_size = _memPartFindMax(sys_mempart_id);
 #else
-    _memPartInfoGet(sys_mempart_id,fw_info);
-    // TODO we could fill in start address from _start + MEMISOSIZE, if chdk not in exmem
-    // these are guessed, look reasonable on a540
-    camera_meminfo->free_size = fw_info[0];
-    camera_meminfo->free_block_count = fw_info[1];
-    camera_meminfo->free_block_max_size = fw_info[2];
-    camera_meminfo->allocated_size = fw_info[3];
-    camera_meminfo->allocated_count = fw_info[4];
+        _memPartInfoGet(sys_mempart_id,fw_info);
+        // TODO we could fill in start address from _start + MEMISOSIZE, if chdk not in exmem
+        // these are guessed, look reasonable on a540
+        camera_meminfo->free_size = fw_info[0];
+        camera_meminfo->free_block_count = fw_info[1];
+        camera_meminfo->free_block_max_size = fw_info[2];
+        camera_meminfo->allocated_size = fw_info[3];
+        camera_meminfo->allocated_count = fw_info[4];
 #endif
+        _GiveSemaphore(canon_heap_sem);
+    }
 #endif
 }
 

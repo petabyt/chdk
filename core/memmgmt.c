@@ -224,6 +224,16 @@ int GetARamInfo(cam_meminfo *camera_meminfo)
     return chdk_meminfo(&aram_heap, camera_meminfo);
 }
 
+// --------------------------------------------------------------------------
+// semaphore for canon heap on vxworks
+#if !defined(CAM_DRYOS)
+int canon_heap_sem;
+
+void canon_malloc_init(void) {
+    canon_heap_sem=CreateBinarySemaphore("canonheap", 1);
+}
+#endif
+
 //----------------------------------------------------------------------------
 static void combine_meminfo(cam_meminfo *combined,cam_meminfo *m)
 {
