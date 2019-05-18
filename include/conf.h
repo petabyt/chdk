@@ -564,6 +564,7 @@ typedef struct {
 
 #define CONF_INFO(id, param, type, def)             { id, sizeof( param ), type, &param, {def}, 0 }
 #define CONF_INFO2(id, param, type, px, py)         { id, sizeof( param ), type, &param, {pos:{px,py}}, 0 }
+#define CONF_INFOP(id, param, type, px, py)         { id, sizeof( param ), type, &param, {pos:{(px)*CAM_SCREEN_WIDTH/360,(py)*CAM_SCREEN_HEIGHT/240}}, 0 }
 #define CONF_INFOC(id, param, type, bc, fc, bt, ft) { id, sizeof( param ), type, &param, {cl:{fg:{fc,ft},bg:{bc,bt}}}, 0 }
 
 extern void config_save(ConfInfo *conf_info, const char *filename, int config_base);

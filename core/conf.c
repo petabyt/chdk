@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "conf.h"
-#include "histogram.h"
 #include "font.h"
 #include "raw.h"
 #include "gui.h"
@@ -173,23 +172,25 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO(  6, conf.rotate_osd,                             CONF_DEF_VALUE, i:0),
     CONF_INFO(  7, conf.show_hiddenfiles,                       CONF_DEF_VALUE, i:0),
 
-    CONF_INFO2( 20, conf.histo_pos,                             CONF_OSD_POS,   45,CAM_SCREEN_HEIGHT-HISTO_HEIGHT-40),
-    CONF_INFO2( 21, conf.dof_pos,                               CONF_OSD_POS,   90,45),
-    CONF_INFO2( 22, conf.batt_icon_pos,                         CONF_OSD_POS,   178,0),
-    CONF_INFO2( 23, conf.batt_txt_pos,                          CONF_OSD_POS,   178,FONT_HEIGHT),
-    CONF_INFO2( 24, conf.mode_state_pos,                        CONF_OSD_POS,   35,0),
-    CONF_INFO2( 25, conf.values_pos,                            CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH,30),
-    CONF_INFO2( 26, conf.clock_pos,                             CONF_OSD_POS,   CAM_SCREEN_WIDTH-5*FONT_WIDTH-2,0),
-    CONF_INFO2( 27, conf.space_icon_pos,                        CONF_OSD_POS,   CAM_SCREEN_WIDTH-100,0),
-    CONF_INFO2( 28, conf.space_txt_pos,                         CONF_OSD_POS,   128,0),
-    CONF_INFO2( 29, conf.mode_raw_pos,                          CONF_OSD_POS,   CAM_SCREEN_WIDTH-7*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-3*FONT_HEIGHT-2),
-    CONF_INFO2( 30, conf.space_ver_pos,                         CONF_OSD_POS,   CAM_SCREEN_WIDTH-7,0),
-    CONF_INFO2( 31, conf.space_hor_pos,                         CONF_OSD_POS,   0,CAM_SCREEN_HEIGHT-7),   
-    CONF_INFO2( 32, conf.mode_video_pos,                        CONF_OSD_POS,   CAM_SCREEN_WIDTH-25*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-6*FONT_HEIGHT-2),
-    CONF_INFO2( 33, conf.mode_ev_pos,                           CONF_OSD_POS,   CAM_SCREEN_WIDTH-40*FONT_WIDTH-2,CAM_SCREEN_HEIGHT-8*FONT_HEIGHT-2),
-    CONF_INFO2( 34, conf.temp_pos,                              CONF_OSD_POS,   CAM_SCREEN_WIDTH-9*FONT_WIDTH-2,FONT_HEIGHT),
-    CONF_INFO2( 35, conf.ev_video_pos,                          CONF_OSD_POS,   18,80),
-    CONF_INFO2( 36, conf.usb_info_pos,                          CONF_OSD_POS,   95,0),
+    // The default X & Y position values below are based on 360x240 size screen display.
+    // The CONF_INFOP macro scales these, at build time, based on the actual camera screen size (CAM_SCREEN_WIDTH & CAM_SCREEN_HEIGHT).
+    CONF_INFOP( 20, conf.histo_pos,                             CONF_OSD_POS,   45,150),
+    CONF_INFOP( 21, conf.dof_pos,                               CONF_OSD_POS,   90,45),
+    CONF_INFOP( 22, conf.batt_icon_pos,                         CONF_OSD_POS,   178,0),
+    CONF_INFOP( 23, conf.batt_txt_pos,                          CONF_OSD_POS,   178,16),
+    CONF_INFOP( 24, conf.mode_state_pos,                        CONF_OSD_POS,   35,0),
+    CONF_INFOP( 25, conf.values_pos,                            CONF_OSD_POS,   288,30),
+    CONF_INFOP( 26, conf.clock_pos,                             CONF_OSD_POS,   294,0),
+    CONF_INFOP( 27, conf.space_icon_pos,                        CONF_OSD_POS,   260,0),
+    CONF_INFOP( 28, conf.space_txt_pos,                         CONF_OSD_POS,   128,0),
+    CONF_INFOP( 29, conf.mode_raw_pos,                          CONF_OSD_POS,   302,214),
+    CONF_INFOP( 30, conf.space_ver_pos,                         CONF_OSD_POS,   353,0),
+    CONF_INFOP( 31, conf.space_hor_pos,                         CONF_OSD_POS,   0,233),
+    CONF_INFOP( 32, conf.mode_video_pos,                        CONF_OSD_POS,   158,142),
+    CONF_INFOP( 33, conf.mode_ev_pos,                           CONF_OSD_POS,   38,110),
+    CONF_INFOP( 34, conf.temp_pos,                              CONF_OSD_POS,   286,16),
+    CONF_INFOP( 35, conf.ev_video_pos,                          CONF_OSD_POS,   18,80),
+    CONF_INFOP( 36, conf.usb_info_pos,                          CONF_OSD_POS,   95,0),
 
     // Keep these together
     CONF_INFOC( 50, conf.histo_color,                           CONF_DEF_VALUE, IDX_COLOR_GREY_DK,IDX_COLOR_WHITE,1,1),
