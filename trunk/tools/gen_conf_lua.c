@@ -91,6 +91,7 @@ int main(int argc, char **argv)
             int off = 10;
             s = strstr(line, "CONF_INFO(");
             if (s == 0) { off = 11; s = strstr(line, "CONF_INFO2("); }
+            if (s == 0) { off = 11; s = strstr(line, "CONF_INFOP("); }
             if (s != 0)
             {
                 char *c = strstr(line, "//");
