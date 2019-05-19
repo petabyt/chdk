@@ -680,10 +680,12 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
     int k;
 
     char *s = n;
+    int mallocd = 0;
     if (suffix != 0)
     {
         s = malloc(strlen(n) + strlen(suffix) + 1);
         sprintf(s, "%s%s", n, suffix);
+        mallocd = 1;
     }
 
     for (k=0; sig_names[k].name != 0; k++)
@@ -694,10 +696,14 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
             {
                 sig_names[k].val = eadr;
                 sig_names[k].flags |= EV_MATCH;
+                if (mallocd)
+                    free(s);
                 return;
             }
             else if (sig_names[k].val == eadr)     // same name, same address
             {
+                if (mallocd)
+                    free(s);
                 return;
             }
             else // same name, different address
@@ -3219,6 +3225,7 @@ int sig_match_zicokick_values(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
     for(i=1; i<=64; i++) {
         if (!disasm_iter(fw,is)) {
+            free(blobs);
             return 0;
         }
         if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].type == ARM_OP_MEM) {
@@ -4891,6 +4898,7 @@ void add_generic_sig_match(search_calls_multi_data_t *match_fns,
     uint32_t adr=get_saved_sig_val(name);
     if(!adr) {
         printf("add_generic_sig_match: missing %s\n",name);
+        return;
     }
     add_generic_func_match(match_fns,match_fn_count,MAX_GENERIC_FUNCS,fn,adr);
     char veneer[128];
