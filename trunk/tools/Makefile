@@ -89,7 +89,7 @@ gen_conf_lua$(EXE): gen_conf_lua.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-finsig_thumb2$(EXE): finsig_thumb2.o stubs_load.o firmware_load_ng.o
+finsig_thumb2$(EXE): finsig_thumb2.o stubs_load.o firmware_load_ng.o ptp_op_names.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^ $(CAPSTONE_TOOLS_LINK)
 
@@ -166,12 +166,13 @@ stubs_load.o: stubs_load.c stubs_load.h
 firmware_load.o: firmware_load.c firmware_load.h stubs_load.h
 code_gen.o: code_gen.c chdk_dasm.h stubs_load.h firmware_load.h
 chdk_dasm.o: chdk_dasm.c chdk_dasm.h stubs_load.h firmware_load.h
+ptp_op_names.o: ptp_op_names.c ptp_op_names.h
 
 firmware_load_ng.o: firmware_load_ng.c firmware_load_ng.h stubs_load.h
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $<
 
-finsig_thumb2.o: finsig_thumb2.c stubs_load.h firmware_load_ng.h
+finsig_thumb2.o: finsig_thumb2.c stubs_load.h firmware_load_ng.h ptp_op_names.h
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) $(CAPSTONE_TOOLS_INC) -c -o $@ $< 
 
@@ -188,5 +189,6 @@ include $(topdir)bottom.inc
 chdk_dasm.h: ;
 firmware_load.h: ;
 firmware_load_ng.h: ;
+ptp_op_names.h: ;
 stubs_load.h: ;
 ../lib/font/font_8x16_uni.h: ;
