@@ -16,14 +16,14 @@ ROMBASEADDR=0xFC000000
 # end of RAM
 MAXRAMADDR = 0x0fffffff
 
-# force FI2 off - does not work
-override OPT_FI2=
-
 # Found @FC0044D8
 NEED_ENCODED_DISKBOOT=15
 
 # Found @FC003FC8 & @FCC8FD64
 KEYSYS=d5
+
+# generated FI2 needs word-based checksum
+FI2FLAGS=W
 
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfdf20040
