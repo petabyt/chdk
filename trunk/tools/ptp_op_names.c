@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdint.h>
 #include "ptp_op_names.h"
 
