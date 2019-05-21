@@ -1,3 +1,5 @@
+# temp disable for autobuild
+override OPT_FI2=
 # mandatory for DIGIC 6
 THUMB_FW=1
 
