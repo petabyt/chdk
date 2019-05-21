@@ -143,6 +143,12 @@ CreateTask_my ()
             //"    ldreq   r3, =movie_record_task\n"
             //"    beq     exitHook\n"
 
+            "    ldr     r0, =task_TricInitTask\n"
+            "    cmp     r0, r3\n"
+            "    itt     eq\n"
+            "    ldreq   r3, =task_TricInitTask_my\n"
+            "    beq     exitHook\n"
+
             "    ldr     r0, =task_InitFileModules\n"
             "    cmp     r0, r3\n"
             "    it      eq\n"
@@ -699,5 +705,49 @@ sub_fc0ecc40_my ()
             "    ldr.w   r0, [r0]\n"// + use CHDK override value
             //"    mov.w   r0, #-1\n"           // -
             "    ldr     pc, =0xfc0ecc4d\n"// Continue in firmware
+    );
+}
+
+void __attribute__((naked,noinline)) task_TricInitTask_my() {
+    asm volatile(
+            //capdis -f=chdk -s=0xfc54224d -c=35 -stubs PRIMARY.BIN 0xfc000000
+            "    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}\n"
+            "    movs    r0, #8\n"
+            "    ldr     r1, =0xfc542478\n" //  *"InitTskStart"
+            "    bl      sub_fc3b77f2\n"
+            "    ldr.w   sl, =0x000222dc\n"
+            "    movw    fp, #0x1000\n"
+            "    ldr     r4, =0x000222d8\n"
+            "    movs    r2, #0\n"
+            "    ldr     r1, =0x0703870f\n"
+            "    ldr     r0, [r4]\n"
+            "    blx     sub_fc34d214\n"
+            "    lsls    r0, r0, #0x1f\n"
+            "    bne     sub_fc542270\n"    // + jump to FW
+            "    ldr     r4, =0x000222d8\n"
+            "    add     r1, sp, #0xc\n"
+            "    ldr     r0, [r4]\n"
+            "    blx     sub_fc34cffc\n"
+            "    ldr     r1, [sp, #0xc]\n"
+            "    ldr     r0, [r4]\n"
+            "    blx     sub_fc34d1cc\n"
+            "    ldr     r0, =0x02000003\n"
+            "    ldr     r7, [sp, #0xc]\n"
+            "    tst     r7, r0\n"
+            "    beq     sub_fc542386\n"    // + jump to FW
+            "    lsls    r0, r7, #0x1f\n"
+            "    beq     sub_fc5422a6\n"    // + jump to FW
+
+            "    ldr     r0, =0xd2020074\n" // +
+            "    ldr     r0, [r0]\n"        // + nonzero when core already running
+            "    subs    r0, #0\n"          // +
+            "    beq     tric1\n"           // +
+            "    ldr     r0, [r4]\n"        // +
+            "    mov     r1, #0x80\n"       // +
+            "    bl      _SetEventFlag\n"   // + core already initialized, set the SmacIdleCmp eventflag here
+            "tric1:\n"                      // +
+
+            "    bl      sub_fc54272a\n"
+            "    b       sub_fc542312\n"    // + jump to FW
     );
 }
