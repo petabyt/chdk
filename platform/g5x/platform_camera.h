@@ -67,7 +67,6 @@
     #define CAM_DATE_FOLDER_NAMING              0x80
     #define CAM_FILE_COUNTER_IS_VAR             1     // file counter is variable file_counter_var in stubs, not a param
 
-    #undef  CAM_HAS_ERASE_BUTTON
 //    #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
@@ -158,9 +157,9 @@
     //#define CAM_QUALITY_OVERRIDE                1
 
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     100         // Override min subject distance
+    #define CAMERA_MIN_DIST                     109         // Override min subject distance
     #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
+    #define CAMERA_MAX_DIST                     16990       // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 

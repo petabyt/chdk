@@ -18,7 +18,7 @@ long lens_get_target_distance()
  //--------------------------------------------------
  // DoMFLock : use _MFOn/_MFOff  or  _PT_MFOn/_PT_MFOff  or _SS_MFOn/_SS_MFOff if defined in stubs_entry.S
  //            otherwise use PostLogicalEventForNotPowerType(levent_id_for_name(PressSW1andMF),0); (see sx500hs for an example)
- 
+
 int DoMFLock(void)
 {
   if (!camera_info.state.mode_play) {
@@ -27,7 +27,7 @@ int DoMFLock(void)
   }
   return(0);
 }
- 
+
 int UnlockMF(void)
 {
   if (!camera_info.state.mode_play) {
@@ -56,6 +56,6 @@ void _PutOutNdFilter()
 void _MoveFocusLensToDistance(short *dist)
 {
     // Crashes unless camera is set to manual focus in Canon GUI
-    extern void _MoveFocusLensToDistance_FW(short*, void*, int);
-    _MoveFocusLensToDistance_FW(dist, null_func, 0);
+    extern void _MoveFocusLensToDistance_FW(int, void*, int);
+    _MoveFocusLensToDistance_FW(*(int*)dist, null_func, 0);
 }
