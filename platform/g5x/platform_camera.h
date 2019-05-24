@@ -129,6 +129,7 @@
     #define EDGE_HMARGIN                        10
 
 //    #define CAM_SD_OVER_IN_AF                   1   // Crashes
+    #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 
     // TODO: Below needs tp be checked
