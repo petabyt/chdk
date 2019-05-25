@@ -4581,7 +4581,8 @@ int process_add_ptp_handler_call(firmware *fw, iter_state_t *is,uint32_t unused)
             }
             if(insn->detail->arm.operands[0].reg != ARM_REG_R0
                 || insn->detail->arm.operands[1].mem.base == ARM_REG_PC
-                || insn->detail->arm.operands[1].shift.value != 3) {
+                // shift isn't set correctly under capstone 3, not required for current cams
+                /*|| insn->detail->arm.operands[1].shift.value != 3*/) { 
                 continue;
             }
             ptr_reg = insn->detail->arm.operands[1].mem.base;
