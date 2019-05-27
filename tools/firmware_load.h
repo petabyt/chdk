@@ -143,6 +143,9 @@ int isBorBL(firmware *fw, int offset);
 int isCMP(firmware *fw, int offset);
 int isMOV(firmware *fw, int offset);
 int isMOV_immed(firmware *fw, int offset);
+int isORR(firmware *fw, int offset);
+int isADD(firmware *fw, int offset);
+int isSUB(firmware *fw, int offset);
 
 int isASCIIstring(firmware *fw, uint32_t adr);
 
