@@ -8,6 +8,7 @@
 
 #include "stubs_load.h"
 #include "firmware_load.h"
+#include "ptp_op_names.h"
 
 //------------------------------------------------------------------------------------------------------------
 // #define DEBUG_PRINT_ALL_FUNC_NAMES 1 // enable debug output on stderr for development
@@ -5631,6 +5632,153 @@ void find_builddate(firmware *fw)
         fw->fw_build_time = 0;
 }
 
+int save_ptp_handler_func(uint32_t op,uint32_t handler) {
+    if((op >= 0x9000 && op < 0x10000) || (op >= 0x1000 && op < 0x2000)) {
+        char *buf=malloc(64);
+        const char *nm=get_ptp_op_name(op);
+        if(nm) {
+            sprintf(buf,"handle_%s",nm);
+        } else {
+            sprintf(buf,"handle_PTP_OC_0x%04x",op);
+        }
+        // TODO Canon sometimes uses the same handler for multiple opcodes
+        add_func_name(buf,handler,NULL);
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int find_ptp_handler_imm(firmware *fw, int k)
+{
+    int o;
+
+    uint32_t op=0;
+    uint32_t handler=0;
+
+    //fprintf(stderr,"find_ptp_handler_imm 0x%x\n",idx2adr(fw,k));
+    for (o=-1; o>-7; o--)
+    {
+        if (isLDR_PC(fw,k+o))
+        {
+            if(fwRd(fw,k+o) == 0)
+            {
+                op = LDR2val(fw,k+o);
+            }
+            else if(fwRd(fw,k+o) == 1){
+                handler = LDR2val(fw,k+o);
+            }
+        }
+        // only expect handler to come from adr
+        else if (isADR_PC(fw,k+o) && (fwRd(fw,k+o) == 1))
+        {
+            handler=ADR2adr(fw,k+o);
+        }
+        // vxworks cameras freqently load 0x1000 or 0x9000 once and then use ORR and ADD
+        if (!op)
+        {
+            if (isORR(fw,k+o) && (fwRd(fw,k+o) == 0) && (fwRn(fw,k+o) > 3))
+            {
+                int reg = fwRn(fw,k+o);
+                int k1;
+                uint32_t u1 = 0;
+                for (k1=k+o-1; k1>=k+o-50; k1--)
+                {
+                    if (isMOV_immed(fw,k1) && (fwRd(fw,k1) == reg))
+                    {
+                        u1 = ALUop2a(fw,k1);
+                        //fprintf(stderr,"find_ptp_handler_imm u1 0x%x\n",u1);
+                        if ((u1 == 0x1000 || u1 == 0x9000)) // expect opcode range start
+                        {
+                            break;
+                        }
+                        u1 = 0;
+                    }
+                }
+                if (u1)
+                {
+                    op = ALUop2a(fw,k+o) | u1;
+                }
+            }
+            else if (isADD(fw,k+o) && (fwRd(fw,k+o) == 0) && (fwRn(fw,k+o) <= 3))
+            {
+                int reg = fwRn(fw,k+o);
+                int k1;
+                uint32_t u1 = 0;
+                for (k1=k+o-1; k1>=k+o-7; k1--)
+                {
+                    if (isMOV_immed(fw,k1) && (fwRd(fw,k1) == reg))
+                    {
+                        u1 = ALUop2a(fw,k1);
+                        if ((u1 == 0x1000 || u1 == 0x9000)) // expect opcode range start
+                        {
+                            break;
+                        }
+                        u1 = 0;
+                    }
+                }
+                if (u1)
+                {
+                    op = ALUop2a(fw,k+o) + u1;
+                }
+            }
+        }
+        if(op && handler) {
+            //fprintf(stderr,"find_ptp_handler_imm found 0x%x 0x%x\n",op,handler);
+            return save_ptp_handler_func(op,handler);
+        }
+    }
+    //fprintf(stderr,"find_ptp_handler_imm not found\n");
+    return 0;
+}
+
+int match_ptp_handlers(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+{
+    // check for table of opcode, func ptr, ...
+    if(fwval(fw,k) == 0x1004
+        && fwval(fw,k+2) == 0x1005
+        && fwval(fw,k+4) == 0x1006
+        && fwval(fw,k+1) > fw->base
+        && fwval(fw,k+3) > fw->base
+        && fwval(fw,k+5) > fw->base)
+    {
+        // TODO canon firmware has count in loop that calls add_ptp_handler,
+        // but for simplicity just checking for valid opcode with hardcoded max
+        int i;
+        for(i=0; i<64; i++) {
+            uint32_t op=fwval(fw,k+i*2);
+            uint32_t handler=fwval(fw,k+i*2+1);
+            // fails on op out of range
+            if(!save_ptp_handler_func(op,handler)) {
+                break;
+            }
+        }
+        return 0;
+    }
+    // otherwise, check for calls
+    if (!isBorBL(fw,k))
+    {
+        return 0;
+    }
+    uint32_t adr = followBranch2(fw,idx2adr(fw,k),0x01000001);
+    // call to add_ptp_handler
+    if (adr == fadr)
+    {
+        find_ptp_handler_imm(fw,k);
+    }
+
+    return 0;
+}
+
+void find_ptp_handlers(firmware *fw)
+{
+    int k = get_saved_sig(fw,"add_ptp_handler");
+    if (k >= 0)
+    {
+        search_fw(fw, match_ptp_handlers, func_names[k].val, 0, 128);
+    }
+}
+
 void write_levent_table_dump(firmware *fw, uint32_t tadr)
 {
     char *str;
@@ -5819,6 +5967,7 @@ int main(int argc, char **argv)
 
     load_firmware(&fw,argv[1],argv[2],(argc==5)?argv[4]:0, OS_VXWORKS);
     find_eventprocs(&fw);
+    find_ptp_handlers(&fw);
     find_builddate(&fw);
     output_firmware_vals(&fw);
 

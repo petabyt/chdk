@@ -29,7 +29,7 @@ pakwif$(EXE): pakwif.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-finsig_vxworks$(EXE): finsig_vxworks.o stubs_load.o firmware_load.o
+finsig_vxworks$(EXE): finsig_vxworks.o stubs_load.o firmware_load.o ptp_op_names.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
@@ -37,7 +37,7 @@ gensig_vxworks$(EXE): gensig_vxworks.o
 	@echo $< \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
-finsig_dryos$(EXE): finsig_dryos.o stubs_load.o firmware_load.o
+finsig_dryos$(EXE): finsig_dryos.o stubs_load.o firmware_load.o ptp_op_names.o
 	@echo $^ \-\> $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
@@ -160,8 +160,8 @@ sig_ref_dryos_5.bin:
 sig_ref_dryos_6.bin:
 	touch sig_ref_dryos_6.bin
 
-finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h stubs_load.h firmware_load.h
-finsig_dryos.o: finsig_dryos.c signatures_dryos.h stubs_load.h firmware_load.h
+finsig_vxworks.o: finsig_vxworks.c signatures_vxworks.h stubs_load.h firmware_load.h ptp_op_names.h
+finsig_dryos.o: finsig_dryos.c signatures_dryos.h stubs_load.h firmware_load.h ptp_op_names.h
 stubs_load.o: stubs_load.c stubs_load.h
 firmware_load.o: firmware_load.c firmware_load.h stubs_load.h
 code_gen.o: code_gen.c chdk_dasm.h stubs_load.h firmware_load.h

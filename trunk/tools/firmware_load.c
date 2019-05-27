@@ -364,6 +364,7 @@ uint32_t ALUop2a(firmware *fw, int offset)
         case 0x02800000:    // ADD Immed
         case 0x03A00000:    // MOV Immed
         case 0x03C00000:    // BIC Immed
+        case 0x03800000:    // ORR Immed
             fadr = offst;
             break;
     }
@@ -592,6 +593,24 @@ int isMOV(firmware *fw, int offset)
 int isMOV_immed(firmware *fw, int offset)
 {
     return ((fwval(fw,offset) & 0xFFF00000) == 0xE3A00000);
+}
+
+// ORR Rd, Rn, #
+int isORR(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xFFF00000) == 0xE3800000);
+}
+
+// ADD
+int isADD(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xfff00000) == 0xe2800000);
+}
+
+// SUB
+int isSUB(firmware *fw, int offset)
+{
+    return ((fwval(fw,offset) & 0xfff00000) == 0xe2400000);
 }
 
 //------------------------------------------------------------------------------------------------------------
