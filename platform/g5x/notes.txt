@@ -1,7 +1,6 @@
 Issues:
 
 - Movie features are not supported. Movie_status is wrong.
-- Booting with .fi2 is disabled (not working).
 - Not all features have been tested fully, expect issues and crashes
 
 Working and mostly tested:
