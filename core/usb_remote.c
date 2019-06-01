@@ -218,7 +218,12 @@ void kbd_calibrate_synch_delay()
 void usb_remote_status_led(int state)
 {
     if (camera_info.cam_remote_sync_status_led)
-        *(int*)camera_info.cam_remote_sync_status_led=state ? 0x46 : 0x44;
+    {
+        if (camera_info.cam_remote_sync_status_led == -1)
+            debug_led(state);
+        else
+            *(int*)camera_info.cam_remote_sync_status_led=state ? 0x46 : 0x44;
+    }
 }
 
 /*---------------------------------------------------------------------------------------------------------
