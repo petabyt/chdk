@@ -261,7 +261,11 @@ int vid_get_viewport_image_offset() {
 // returns the byte offset to skip at the end of a viewport buffer row to get to the next row.
 // see G12 port for sample implementation
 int vid_get_viewport_row_offset() {
-    return (vid_get_viewport_byte_width() * vid_get_viewport_yscale()) - (vid_get_viewport_width() * 3);
+#ifndef THUMB_FW
+    return (vid_get_viewport_byte_width() * vid_get_viewport_yscale()) - (vid_get_viewport_width_proper() * 6 / 4);
+#else
+    return (vid_get_viewport_byte_width() * vid_get_viewport_yscale()) - (vid_get_viewport_width_proper() * 4 / 2);
+#endif
 }
 
 //----------------------------------------------------------------------------

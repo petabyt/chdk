@@ -91,7 +91,7 @@ static void histogram_alloc()
 void histogram_process()
 {
     static unsigned char *img;
-    static int viewport_size, viewport_width, viewport_row_offset, viewport_height, viewport_byte_width;
+    static int viewport_size, viewport_width, viewport_row_offset, viewport_height, viewport_step_size;
 
     register int x, i, hi;
     int y, v, u, c;
@@ -131,15 +131,28 @@ void histogram_process()
     switch (histogram_stage)
     {
         case 0:
-            img=vid_get_viewport_active_buffer();
+            img = vid_get_viewport_active_buffer();
             if (!img) return;
 
             img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
-            viewport_height = vid_get_viewport_height();
-            viewport_byte_width = vid_get_viewport_byte_width();
-            viewport_size = viewport_height * viewport_byte_width * vid_get_viewport_yscale();
-            viewport_width = vid_get_viewport_width();
+
+            viewport_height = vid_get_viewport_height_proper();
+            viewport_size = viewport_height * vid_get_viewport_byte_width();
+            // Viewport visible width in bytes
+#ifndef THUMB_FW
+            viewport_width = vid_get_viewport_width_proper() * 6 / 4;
+#else
+            viewport_width = vid_get_viewport_width_proper() * 4 / 2;
+#endif
+            // Number of columns to scan - 30 for 720 pixel wide viewport, 40 for widescreen (960 wide).
+            // This give 24 pixel increments between columns.
+            // For pre Digic6 24 pixels = 24 * 6 / 4 bytes = 36 bytes (6 bytes = 4 pixels). Each 'stage' does a column @1/3rd of this width = 12 bytes = 8 pixels.
+            // For Digic6 24 pixels = 24 * 4 / 2 bytes = 48 bytes (4 bytes = 2 pixels). Each 'stage' does a column @1/3rd of this width = 16 bytes = 8 pixels.
+            // We offset all columns by 4 pixels so the first column is not hard against the left edge
+            viewport_step_size = viewport_width / (vid_get_viewport_width_proper() / 24);
+            // Increment to adjust for each row if physical width > visible width
             viewport_row_offset = vid_get_viewport_row_offset();
+
             for (c=0; c<5; ++c) {
                 memset(histogram_proc[c],0,256*sizeof(unsigned short));
                 histo_max[c] = histo_max_center[c] = 0;
@@ -151,38 +164,19 @@ void histogram_process()
         case 1:
         case 2:
         case 3:
-            x = 0;  // count how many blocks we have done on the current row (to skip unused buffer space at end of each row)
-#ifndef THUMB_FW
+            x = 0;  // count how many bytes we have done on the current row (to skip unused buffer space at end of each row)
 
-            for (i=(histogram_stage-1)*6; i<viewport_size; i+=HISTO_STEP_SIZE*6) {
-#else
+            for (i=(histogram_stage-1)*(viewport_step_size/3)+(viewport_step_size/6); i<viewport_size; i+=viewport_step_size) {
 
-//digic 6
-// 16:9     f:8 vh:360 vw:640 vbw:1280 vxo:0 vyo:60
-//1x1        f:8 vh:480 vw:480 vbw:1280 vxo:80 vyo:0
-            int  yp;
-//for yp=0,3,6...
-//then yp=1,4,7...
-//then yp=2,5,8....
-
-            for (yp=(histogram_stage - 1); yp< viewport_height;yp+=3) {
-              for (x=0;x<viewport_width*2 ;x+=HISTO_STEP_SIZE*4) {
-               i = x + yp * viewport_byte_width;
-#endif
-
-#ifndef THUMB_FW
                 y = img[i+1];
-                u = *(signed char*)(&img[i]);
-                //if (u&0x00000080) u|=0xFFFFFF00;  // Compiler should handle the unsigned -> signed conversion
-                v = *(signed char*)(&img[i+2]);
+#ifndef THUMB_FW
+                u = (signed char)img[i];
+                v = (signed char)img[i+2];
 #else
-                unsigned int ibuf = *(unsigned int*)(&img[i&0xfffffffc]);
-                u =(signed char)((ibuf&0xff)-128);
-                v =(signed char)(((ibuf>>16)&0xff)-128);
-                y = (unsigned char)((ibuf>>8)&0xff);
-
+                u = (int)img[i] - 128;
+                v = (int)img[i+2] - 128;
 #endif
-                //if (v&0x00000080) v|=0xFFFFFF00;  // Compiler should handle the unsigned -> signed conversion
+//                img[i+1] = img[i+3] = 255;    // Draw columns on screen for debugging
 
                 ++histogram_proc[HISTO_Y][y];                       // Y
                 hi = clip(((y<<12)          + v*5743 + 2048)>>12);  // R
@@ -192,22 +186,14 @@ void histogram_process()
                 hi = clip(((y<<12) + u*7258          + 2048)>>12);  // B
                 ++histogram_proc[HISTO_B][hi];
 
-
-#ifndef THUMB_FW
                 // Handle case where viewport memory buffer is wider than the actual buffer.
-                x += HISTO_STEP_SIZE * 2;	// viewport width is measured in blocks of three bytes each even though the data is stored in six byte chunks !
+                x += viewport_step_size;
                 if (x == viewport_width)
                 {
                     i += viewport_row_offset;
                     x = 0;
                 }
             } //loop i
-#else
-              }
-            }
-#endif
-
-
 
             ++histogram_stage;
             break;
