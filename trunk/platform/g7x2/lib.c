@@ -135,11 +135,6 @@ long vid_get_viewport_height() {
     return _GetVRAMVPixelsSize();
 }
 
-int vid_get_viewport_yscale()
-{
-    return 1;
-}
-
 int vid_get_viewport_byte_width()
 {
     return 736*2;     // buffer is 736 wide (720 image pixels) UYVY
@@ -148,8 +143,6 @@ int vid_get_viewport_byte_width()
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width(); }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
 int vid_get_viewport_fullscreen_width()         { return 720; }
 int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_viewport_buffer_width_proper()      { return 736; }

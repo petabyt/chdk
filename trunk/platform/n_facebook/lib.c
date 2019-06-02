@@ -110,7 +110,6 @@ extern int active_palette_buffer;
 extern int** palette_buffer_ptr;
 extern char palette_control;
 
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }

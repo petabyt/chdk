@@ -121,11 +121,6 @@ void vid_bitmap_refresh() {
         return 960 * 6 / 4;     // IXUS 300 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
     }
 
-    // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-    int vid_get_viewport_yscale() {
-        return 1 ;               // IXUS 300 viewport is 240 pixels high
-    }
-
     int vid_get_viewport_width()
     {
         if (camera_info.state.mode_play)
@@ -157,7 +152,6 @@ void vid_bitmap_refresh() {
 
 // Additional Functions for PTP Live View system
 
-    int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2 ; }
     int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2 ; }
     int vid_get_viewport_height_proper()            { return 240; }
     int vid_get_viewport_buffer_width_proper()      { return 960; }

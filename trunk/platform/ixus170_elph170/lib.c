@@ -101,12 +101,6 @@ void vid_bitmap_refresh()
     _ScreenUnlock();
 }
 
-//see viewport.h
-int vid_get_aspect_ratio()
-{
-    return 0; // 4:3
-}
-
 int vid_get_palette_type()   { return 5; }
 int vid_get_palette_size()   { return 256 * 4 ; }
 

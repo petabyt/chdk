@@ -73,11 +73,6 @@ void *vid_get_viewport_live_fb()
     return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-/*int vid_get_viewport_yscale() {
-    return 2;
-}*/
-
 extern int _GetVRAMHPixelsSize();
 extern int _GetVRAMVPixelsSize();
 
@@ -118,7 +113,6 @@ int vid_get_viewport_display_xoffset()
 
 //int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset()<<1; }
 //int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset()<<1; }
-//int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 //int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
 //int vid_get_viewport_fullscreen_height()        { return 240; }
 //int vid_get_viewport_fulllscreen_width()        { return 720; }

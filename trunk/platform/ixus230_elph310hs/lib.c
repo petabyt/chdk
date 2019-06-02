@@ -122,7 +122,6 @@ int vid_get_viewport_display_xoffset()
 
 // Functions for PTP Live View system
 
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() * 2; }
 int vid_get_viewport_height_proper()            { return 480; }
 int vid_get_viewport_buffer_width_proper()      { return 960; }
