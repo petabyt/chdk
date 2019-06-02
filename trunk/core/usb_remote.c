@@ -24,7 +24,7 @@
 #include "action_stack.h"
 #include "gui_draw.h"
 #include "usb_remote.h"
-
+#include "debug_led.h"
 
 /*===================================================================================================
     Variables
