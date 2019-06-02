@@ -1716,10 +1716,15 @@ unsigned char SetFileAttributes(const char* fn, unsigned char attr)
 int __attribute__((weak)) vid_get_viewport_display_xoffset_proper() { return vid_get_viewport_display_xoffset()*2; }
 int __attribute__((weak)) vid_get_viewport_display_yoffset_proper() { return vid_get_viewport_display_yoffset(); }
 int __attribute__((weak)) vid_get_viewport_buffer_width_proper()    { return 720; }
+#ifdef THUMB_FW
+int __attribute__((weak)) vid_get_viewport_width_proper()           { return vid_get_viewport_width(); }
+int __attribute__((weak)) vid_get_viewport_height_proper()          { return vid_get_viewport_height(); }
+#else
 int __attribute__((weak)) vid_get_viewport_width_proper()           { return vid_get_viewport_width()*2; }
 int __attribute__((weak)) vid_get_viewport_height_proper()          { return 240; }
-int __attribute__((weak)) vid_get_viewport_fullscreen_height()         { return 240; }
-int __attribute__((weak)) vid_get_viewport_fullscreen_width()          { return vid_get_viewport_buffer_width_proper(); }
+#endif
+int __attribute__((weak)) vid_get_viewport_fullscreen_height()      { return 240; }
+int __attribute__((weak)) vid_get_viewport_fullscreen_width()       { return vid_get_viewport_buffer_width_proper(); }
 
 int __attribute__((weak)) vid_get_palette_type()                    { return 0; }       // 0 = no palette into, 1 = 16 x 4 byte AYUV values, 
                                                                                         // 2 = 16 x 4 byte AYUV (A = 0..3), 3 = 256 x 4 byte AYUV (A = 0..3)

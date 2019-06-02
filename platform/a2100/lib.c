@@ -78,11 +78,6 @@ long vid_get_viewport_height()
    return 240;    //  G10
 }
 
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-// int vid_get_viewport_yscale() {
-	// return 2;               // G10 viewport is 480 pixels high
-// }
-
 //1024 entry palette based on 100a ffcad26c
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }

@@ -143,11 +143,6 @@ fc13498e:   4770        bx  lr
     return _GetVRAMVPixelsSize();
 }
 
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-int vid_get_viewport_yscale() {
-    return 1;
-}
-
 int vid_get_viewport_yoffset() {
     // this seems to be always 0, buffer always begins with actual display data (widescreen or not)
     return 0;
@@ -172,8 +167,6 @@ void *vid_get_bitmap_fb() {
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width(); }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() /** 2*/; }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; } // may not be always ok
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
 int vid_get_viewport_byte_width()               { return camera_screen.buffer_width * 2; } // may not be always ok

@@ -201,11 +201,6 @@ fc13498e:   4770        bx  lr
     return _GetVRAMVPixelsSize();
 }
 
-
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-int vid_get_viewport_yscale() {
-    return 1; //for digic 6
-}
 // viewport width offset table for each aspect ratio
 // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1 4 = 4:5
 static long vp_xo[5] = { 0, 0, 0, 80, 128 };// should all be even values for edge overlay
@@ -262,8 +257,6 @@ int vid_get_viewport_byte_width() {
 // digic 6 uYvY    2 pixels per 4 bytes
   return (640 * 2);
 }
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width() ; }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() ; }
 int vid_get_viewport_fullscreen_width()         { return camera_screen.width; }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok

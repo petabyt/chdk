@@ -156,11 +156,6 @@ long vid_get_viewport_height()
     return _GetVRAMVPixelsSize();
 }
 
-int vid_get_viewport_yscale()
-{
-    return 1;
-}
-
 static long vp_xo[5] = { 0, 0,  0,  80, 128 };// should all be even values for edge overlay
 static long vp_yo[5] = { 0, 60, 28, 0,  0};
 
@@ -208,8 +203,6 @@ void *vid_get_bitmap_fb()
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
 int vid_get_viewport_byte_width()               { return (640 * 2); }
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width(); }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
 int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
 int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }

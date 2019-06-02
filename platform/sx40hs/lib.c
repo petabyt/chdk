@@ -220,7 +220,6 @@ int vid_get_viewport_display_yoffset()
 
 // Functions for PTP Live View system
 
-int vid_get_viewport_width_proper()             { return vid_get_viewport_width() * 2; }
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height(); }
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
