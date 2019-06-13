@@ -835,7 +835,7 @@ void gui_fselect_draw(int enforce_redraw)
                         n = (n + 512) >> 10;
                         c = 'M';
                     }
-                    unsigned long f = ((n & 0x3FF) * 10 + 512) >> 10;    // 1 digit of remainder % 1024
+                    unsigned long f = ((n & 0x3FF) * 10) >> 10;    // 1 digit of remainder % 1024
                     sprintf(dbuf+j, "%3d.%1d%c", n >> 10, f, c);
                 }
             }
