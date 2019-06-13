@@ -1452,7 +1452,7 @@ static void exit_fselect(char* file)
 
     gui_set_mode(gui_fselect_mode_old);
 
-    if (fselect_on_select)
+    if (fselect_on_select && file)
     {
         fselect_on_select(file);
         // if called mode will return control to filemanager - we need to redraw it
@@ -1466,6 +1466,7 @@ static void exit_fselect(char* file)
 int gui_fselect_kbd_process()
 {
     int i;
+    int do_exit = 0;
 
     switch (kbd_get_autoclicked_key() | get_jogdial_direction())
     {
@@ -1581,26 +1582,19 @@ int gui_fselect_kbd_process()
                     sprintf(selected_file, "%s/%s", items.dir, selected->name);
 
                     char *ext = strrchr(selected->name,'.');
-                    int do_exit = 1;
+                    do_exit = 1;
 
                     if (!fselect_on_select)
                     {
                         if (chk_ext(ext,"txt") || chk_ext(ext,"log") || chk_ext(ext,"csv"))
                         {
-                            exit_fselect(0);
-                            do_exit = 0;
-                    		libtxtread->read_file(selected_file);
+                            fselect_on_select = (void (*)(const char*))libtxtread->read_file;
                         }
                         else if (chk_ext(ext,"flt"))
                         {
-                            exit_fselect(0);
-                            do_exit = 0;
-                    		module_run(selected_file);
+                            fselect_on_select = (void (*)(const char*))module_run;
                         }
                     }
-
-                    if (do_exit)
-                        exit_fselect(selected_file);
                 }
             }
             break;
@@ -1619,6 +1613,10 @@ int gui_fselect_kbd_process()
             }
             break;
     }
+
+    if (do_exit)
+        exit_fselect(selected_file);
+
     return 0;
 }
 
