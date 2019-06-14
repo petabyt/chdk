@@ -824,19 +824,27 @@ void gui_fselect_draw(int enforce_redraw)
                     sprintf(dbuf+j, "%5db", n); // " 1023 b"
                 else
                 {
-                    char c = 'k';
-                    if (n >= 1024*1024*1024)        // GB
+                    static char* suffixes = "kMG";
+                    int sfx = 0;
+                    if (n >= 4294967245ul)    // 4GB - 51 - avoid overflow
                     {
-                        n = n >> 20;    // Note: can't round this up in case of overflow
-                        c = 'G';
+                        sfx = 2;    // 'G' suffix
+                        n = 4096;   // 4G
                     }
-                    else if (n >= 1024*1024)        // MB
+                    else
                     {
-                        n = (n + 512) >> 10;
-                        c = 'M';
+                        // Round to 1 decimal place (51 = 1024 * 0.05)
+                        n += 51;
+                        // Reduce and round until < 1M, incrementing size suffix index
+                        while (n >= 1024*1024)
+                        {
+                            n >>= 10;
+                            n += 51;
+                            sfx += 1;
+                        }
                     }
                     unsigned long f = ((n & 0x3FF) * 10) >> 10;    // 1 digit of remainder % 1024
-                    sprintf(dbuf+j, "%3d.%1d%c", n >> 10, f, c);
+                    sprintf(dbuf+j, "%3d.%1d%c", n >> 10, f, suffixes[sfx]);
                 }
             }
             j += SIZE_SIZE;
