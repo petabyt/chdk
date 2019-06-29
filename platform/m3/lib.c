@@ -239,37 +239,34 @@ void *vid_get_bitmap_active_palette() {
  * an extra screen erase doesn't seem to be needed
  */
 void update_screen_dimensions() {
-    // see sub_fc18618a in 102b and 102c for the values
+    // see sub_FC177FCA in 101a, sub_FC1780F2 in 120f for the values
     extern int displaytype;
     static int old_displaytype = -1;
 
-   /*  if (old_displaytype == displaytype) {
+    if (old_displaytype == displaytype) {
         return;
     }
-    old_displaytype = displaytype; */
-//*(int*)0xd20b0810  = 0x4d0002;	 // Orange Led = on
+    old_displaytype = displaytype;
+    
     switch(displaytype) {
         case 0:
         case 3:
         case 4:
         case 5:
-		case 10:
-            // lcd
-			
-            camera_screen.physical_width = camera_screen.width = 720;
-			camera_screen.buffer_width = 736;
+            // ?
+            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 640;
             camera_screen.height = camera_screen.buffer_height = 480;
-            camera_screen.size = camera_screen.buffer_size = 736*480;
+            camera_screen.size = camera_screen.buffer_size = 640*480;
             break;
         case 1:
         case 2:
         case 8:
         case 9:
-            // tv-out
-            camera_screen.width = 736;
-            camera_screen.physical_width = camera_screen.buffer_width = 736;
+            // tv-out (not implemented in hw)
+            camera_screen.physical_width = camera_screen.width = 720;
+            camera_screen.buffer_width = 736;
             camera_screen.height = camera_screen.buffer_height = 480;
-            camera_screen.size = 736*480;
+            camera_screen.size = 720*480;
             camera_screen.buffer_size = 736*480;
             break;
         case 6:
@@ -278,6 +275,20 @@ void update_screen_dimensions() {
             camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 960;
             camera_screen.height = camera_screen.buffer_height = 540;
             camera_screen.size = camera_screen.buffer_size = 960*540;
+            break;
+        case 10:
+            // lcd
+            camera_screen.physical_width = camera_screen.width = 720;
+            camera_screen.buffer_width = 736;
+            camera_screen.height = camera_screen.buffer_height = 480;
+            camera_screen.size = 720*480;
+            camera_screen.buffer_size = 736*480;
+            break;
+        case 11:
+            // evf
+            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 1024;
+            camera_screen.height = camera_screen.buffer_height = 768;
+            camera_screen.size = camera_screen.buffer_size = 1024*768;
             break;
     }
 }
