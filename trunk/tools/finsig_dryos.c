@@ -525,6 +525,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "EnableHDMIPower", OPTIONAL },
     { "DisableHDMIPower", OPTIONAL },
 
+    { "get_ptp_buf_size", OPTIONAL },
+    { "get_ptp_file_buf", OPTIONAL },
+
     { 0, 0, 0 }
 };
 
@@ -867,6 +870,66 @@ int find_rand(firmware *fw, string_sig *sig, int j)
     }
 
     return 0;
+}
+// helper used for get_ptp_file_buf and get_ptp_buf_size
+int get_ptp_file_buf_id(firmware *fw) {
+    // ID of the file buffer appears to be 5 for r43-r52
+    if(fw->dryos_ver >= 43 && fw->dryos_ver <= 52) {
+        return 5;
+    } else {
+        return 4;
+    }
+}
+
+// Special case for get_ptp_file_buf
+int find_get_ptp_file_buf(firmware *fw, string_sig *sig, int j)
+{
+    /*
+     * looking for
+     * MOV r0,#ptp_file_buf_id
+     * bl get_ptp_buf_size
+     * bic r1, r0, #1
+     * MOV r0,#ptp_file_buf_id
+     * bl sub...
+    */
+    if(!(isMOV_immed(fw,j) 
+        && (fwRn(fw,j) == 0)
+        && isBL(fw,j+1) 
+        && ((fwval(fw,j+2) & 0xFFF00000) == 0xe3C00000) // BIC
+        && (ALUop2(fw,j+2) == 1)
+        && isMOV_immed(fw,j+3)
+        && (fwRn(fw,j+3) == 0)
+        && isBL(fw,j+4))) {
+        return 0;
+    }
+    int file_buf_id = get_ptp_file_buf_id(fw);
+    if(ALUop2(fw,j) != file_buf_id || ALUop2(fw,j+3) != file_buf_id) {
+        return 0;
+    }
+    uint32_t f1 = followBranch(fw,idx2adr(fw,j+1),0x01000001);
+    int i = get_saved_sig(fw,"get_ptp_buf_size");
+    // if sig not found, end search completely
+    if(i < 0) {
+        // fprintf(stderr,"find_get_ptp_file_buf func missing @0x%08x\n",idx2adr(fw,j));
+        return 1;
+    }
+    if(f1 != func_names[i].val) {
+        // fprintf(stderr,"find_get_ptp_file_buf func mismatch @0x%08x\n",idx2adr(fw,j));
+        return 0;
+    }
+
+    // search backwards for push
+    int k = find_inst_rev(fw, isSTMFD_LR, j-1, 8);
+    if(k < 0) {
+        // fprintf(stderr,"find_get_ptp_file_buf failed to find push @0x%08x\n",idx2adr(fw,j));
+        return 0;
+    }
+    // functions could have a MOV, LDR etc before the push, but not seen for this function
+    uint32_t fadr = idx2adr(fw, k);
+    fwAddMatch(fw,fadr,32,0,121);
+    // fprintf(stderr,"find_get_ptp_file_buf match @0x%08x\n",fadr);
+
+    return 1;
 }
 
 // Special case for 'closedir'
@@ -1841,6 +1904,49 @@ int find_DoMovieFrameCapture(firmware *fw)
     return 0;
 }
 
+int find_get_ptp_buf_size(firmware *fw)
+{
+    int j = get_saved_sig(fw,"handle_PTP_OC_SendObject"); // same handler as CANON_SendObjectByPath
+    if(j < 0) {
+        // fprintf(stderr,"find_get_ptp_buf_size missing handle_PTP_OC_SendObject\n");
+        return 0;
+    }
+    int k=adr2idx(fw,func_names[j].val);
+    int k_max=k+80;
+    uint32_t adr=0;
+    int file_buf_id=get_ptp_file_buf_id(fw);
+ 
+    for(; k < k_max;k++) {
+        // look for
+        // mov r0,#file_buf_id
+        // bl ...
+        if(isMOV_immed(fw,k) && fwRn(fw,k) == 0 && ALUop2(fw,k) == file_buf_id && isBL(fw, k+1)) {
+            adr = followBranch(fw,idx2adr(fw,k+1),0x01000001);
+            // fprintf(stderr,"find_get_ptp_buf_size match 1 0x%08x @0x%08x\n",adr,idx2adr(fw,k+1));
+            break;
+        }
+    }
+    if(!adr) {
+        // fprintf(stderr,"find_get_ptp_buf_size no match\n");
+        return 0;
+    }
+    // look for same seq again, within 6 ins
+    k_max = k+6;
+    for(; k < k_max;k++) {
+        if(isMOV_immed(fw,k) && fwRn(fw,k) == 0 && ALUop2(fw,k) == file_buf_id && isBL(fw, k+1)) {
+            uint32_t adr2 = followBranch(fw,idx2adr(fw,k+1),0x01000001);
+            // is it the same address?
+            if(adr2 == adr) {
+                // fprintf(stderr,"find_get_ptp_buf_size match 2 @0x%08x\n",idx2adr(fw,k+1));
+                fwAddMatch(fw,adr,32,0,122);
+                return 0;
+            }
+            // fprintf(stderr,"find_get_ptp_buf_size match 2 mismatch 0x%08x != 0x%08x @0x%08x\n",adr,adr2,idx2adr(fw,k+1));
+        }
+    }
+    return 0;
+}
+
 int find_GetBaseSv(firmware *fw)
 {
     int j = get_saved_sig(fw,"SetPropertyCase");
@@ -2406,6 +2512,7 @@ string_sig string_sigs[] =
     { 21, "mkdir", (char*)find_mkdir, 0 },
     { 21, "_pow", (char*)find_pow, 0 },
     { 21, "rand", (char*)find_rand, 0 },
+    { 21, "get_ptp_file_buf", (char*)find_get_ptp_file_buf, 0 },
 
     { 22, "closedir", (char*)find_closedir, 0 },
     { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },
@@ -2430,6 +2537,7 @@ string_sig string_sigs[] =
     { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
     { 22, "DoMovieFrameCapture", (char*)find_DoMovieFrameCapture, 0},
+    { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
