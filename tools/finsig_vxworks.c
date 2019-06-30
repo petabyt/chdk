@@ -518,6 +518,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "MFOff", OPTIONAL },
 
     { "GetAdChValue", OPTIONAL },
+    { "get_ptp_buf_size", OPTIONAL },
+    { "get_ptp_file_buf", OPTIONAL },
 
     { 0, 0, 0 }
 };
@@ -765,6 +767,57 @@ int find_log10(firmware *fw, string_sig *sig, int j)
     }
 
     return 0;
+}
+// Special case for get_ptp_file_buf
+int find_get_ptp_file_buf(firmware *fw, string_sig *sig, int j)
+{
+    /*
+     * looking for
+     * MOV r0,#4
+     * BNE 
+     * BL get_ptp_buf_size
+     * BIC r1, r0, #1
+     * MOV r0,#4
+     * BL sub...
+    */
+    if(!(isMOV_immed(fw,j) 
+        && (fwRn(fw,j) == 0)
+        && ((fwval(fw,j+1) & 0xFF000000) == 0x1A000000) // BNE
+        && isBL(fw,j+2) 
+        && ((fwval(fw,j+3) & 0xFFF00000) == 0xe3C00000) // BIC
+        && (ALUop2(fw,j+3) == 1)
+        && isMOV_immed(fw,j+4)
+        && (fwRn(fw,j+4) == 0)
+        && isBL(fw,j+5))) {
+        return 0;
+    }
+    if(ALUop2(fw,j) != 4 || ALUop2(fw,j+4) != 4) {
+        return 0;
+    }
+
+    uint32_t f1 = followBranch(fw,idx2adr(fw,j+2),0x01000001);
+    int i = get_saved_sig(fw,"get_ptp_buf_size");
+    // if sig not found, end search completely
+    if(i < 0) {
+        // fprintf(stderr,"find_get_ptp_file_buf func missing @0x%08x\n",idx2adr(fw,j));
+        return 1;
+    }
+    if(f1 != func_names[i].val) {
+        // fprintf(stderr,"find_get_ptp_file_buf func mismatch @0x%08x\n",idx2adr(fw,j));
+        return 0;
+    }
+    // search backwards for push
+    int k = find_inst_rev(fw, isSTMFD_LR, j-1, 8);
+    if(k < 0) {
+        // fprintf(stderr,"find_get_ptp_file_buf failed to find push @0x%08x\n",idx2adr(fw,j));
+        return 0;
+    }
+    // functions could have a MOV, LDR etc before the push, but not seen for this function
+    uint32_t fadr = idx2adr(fw, k);
+    fwAddMatch(fw,fadr,32,0,121);
+    // fprintf(stderr,"find_get_ptp_file_buf match @0x%08x\n",fadr);
+
+    return 1;
 }
 
 // Special case for 'closedir' (DryOS)
@@ -1160,6 +1213,51 @@ int find_exmem_alloc(firmware *fw)
         {
             fwAddMatch(fw,idx2adr(fw,m),32,0,122);
             return 1;
+        }
+    }
+    return 0;
+}
+
+int find_get_ptp_buf_size(firmware *fw)
+{
+    int j = get_saved_sig(fw,"handle_PTP_OC_SendObject"); // same handler as CANON_SendObjectByPath
+    if(j < 0) {
+        // fprintf(stderr,"find_get_ptp_buf_size missing handle_PTP_OC_SendObject\n");
+        return 0;
+    }
+    int k=adr2idx(fw,func_names[j].val);
+    int k_max=k+120;
+    uint32_t adr=0;
+    // ID of the file buffer appears to always be 4 on vxworks
+    // very early cams have a hard coded size
+    int file_buf_id=4;
+
+    for(; k < k_max;k++) {
+        // look for
+        // mov r0,#file_buf_id
+        // bl ...
+        if(isMOV_immed(fw,k) && fwRn(fw,k) == 0 && ALUop2(fw,k) == file_buf_id && isBL(fw, k+1)) {
+            adr = followBranch(fw,idx2adr(fw,k+1),0x01000001);
+            // fprintf(stderr,"find_get_ptp_buf_size match 1 0x%08x @0x%08x\n",adr,idx2adr(fw,k+1));
+            break;
+        }
+    }
+    if(!adr) {
+        // fprintf(stderr,"find_get_ptp_buf_size no match\n");
+        return 0;
+    }
+    // look for same seq again, within 6 ins
+    k_max = k+6;
+    for(; k < k_max;k++) {
+        if(isMOV_immed(fw,k) && fwRn(fw,k) == 0 && ALUop2(fw,k) == file_buf_id && isBL(fw, k+1)) {
+            uint32_t adr2 = followBranch(fw,idx2adr(fw,k+1),0x01000001);
+            // is it the same address?
+            if(adr2 == adr) {
+                // fprintf(stderr,"find_get_ptp_buf_size match 2 @0x%08x\n",idx2adr(fw,k+1));
+                fwAddMatch(fw,adr,32,0,122);
+                return 0;
+            }
+            // fprintf(stderr,"find_get_ptp_buf_size match 2 mismatch 0x%08x != 0x%08x @0x%08x\n",adr,adr2,idx2adr(fw,k+1));
         }
     }
     return 0;
@@ -1667,6 +1765,7 @@ string_sig string_sigs[] =
     { 21, "_pow", (char*)find_pow, 0 },
     { 21, "_log", (char*)find_log, 0 },
     { 21, "_log10", (char*)find_log10, 0 },
+    { 21, "get_ptp_file_buf", (char*)find_get_ptp_file_buf, 0 },
 
     { 22, "closedir", (char*)find_closedir, 0 },
     { 22, "PT_PlaySound", (char*)find_PT_PlaySound, 0 },
@@ -1681,6 +1780,7 @@ string_sig string_sigs[] =
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
     { 22, "exmem_free", (char*)find_exmem_free, 0},
     { 22, "exmem_alloc", (char*)find_exmem_alloc, 0},
+    { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
