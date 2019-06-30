@@ -707,6 +707,7 @@
 0xff13434c,task_LiveImageTask
 0xff136c84,task_SyncPeriod
 0xff136d18,task_SynchTask
+0xff138a60,get_ptp_buf_size
 0xff138ad4,task_TimerUtility
 0xff13a1e4,handle_PTP_OC_0x9805
 0xff13a7d8,handle_PTP_OC_0x9804
@@ -1160,6 +1161,7 @@
 0xff2e5e74,task_PTPtoFAPI_EventProcTask_Block
 0xff2e69a8,add_ptp_handler
 0xff2e7434,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xff2e8524,get_ptp_file_buf
 0xff30dca0,task_Raw2Ss2YuvTask
 0xff31a394,ReloadDfeAdjustment_FW
 0xff31b968,EngDrvOut_FW

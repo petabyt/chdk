@@ -344,6 +344,8 @@
 0xffc5b6f0,Fwrite_Fut
 0xffc5b6f0,Fwrite_Fut_FW
 0xffcff6c8,get_current_exp
+0xffe48774,get_ptp_buf_size
+0xffe68100,get_ptp_file_buf
 0xffc14e70,get_resource_pointer
 0xffc1a1d8,GetAdChValue
 0xffc1a1d8,GetAdChValue_FW

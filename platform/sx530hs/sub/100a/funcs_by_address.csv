@@ -723,6 +723,7 @@
 0xff1355b8,task_SyncPeriod
 0xff135668,task_SynchTask
 0xff144068,task_WBLPFace
+0xff148e08,get_ptp_buf_size
 0xff148e80,task_TimerUtility
 0xff14b074,task_NfcConTask
 0xff14b9dc,ClearNFCSystemArea_FW
@@ -1300,6 +1301,7 @@
 0xff337a60,j_LiveImageTool.GetDzoomPosition_FW
 0xff337a64,LiveImageTool.Jump_FW
 0xff337a80,LiveImageTool.Dister_FW
+0xff34b87c,get_ptp_file_buf
 0xff3528a8,task_PingManager
 0xff360d88,HdmiChange5VShortState_FW
 0xff360d94,HecHdmiCecPhysicalCheckForScript_FW

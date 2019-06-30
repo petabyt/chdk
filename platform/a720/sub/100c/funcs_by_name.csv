@@ -353,6 +353,8 @@
 0xffc14b10,Fwrite_Fut
 0xffc14b10,Fwrite_Fut_FW
 0xffc92cfc,get_current_exp
+0xffca6f78,get_ptp_buf_size
+0xffd8e040,get_ptp_file_buf
 0xffc55140,get_resource_pointer
 0xffc037ac,get_self_task_errno_pointer
 0xffc021c0,get_self_task_id

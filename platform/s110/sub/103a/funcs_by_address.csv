@@ -671,6 +671,7 @@
 0xf817bf34,task_LiveImageTask
 0xf817e0a0,task_SyncPeriod
 0xf817e134,task_SynchTask
+0xf817fe40,get_ptp_buf_size
 0xf817feb4,task_TimerUtility
 0xf8181e60,handle_PTP_OC_0x9805
 0xf8182454,handle_PTP_OC_0x9804
@@ -1210,6 +1211,7 @@
 0xf838ebb4,j_LiveImageTool.GetDzoomPosition_FW
 0xf838ebb8,LiveImageTool.Jump_FW
 0xf838ebcc,LiveImageTool.Dister_FW
+0xf8392838,get_ptp_file_buf
 0xf83989f8,task_PingManager
 0xf83a3524,Debug_GetCecEventStatus_FW
 0xf83a5634,HecHdmiCecPhysicalCheckForScript_FW

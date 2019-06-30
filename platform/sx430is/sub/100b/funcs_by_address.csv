@@ -672,6 +672,7 @@
 0xff12f05c,task_SynchTask
 0xff133100,task_WBIntegTask
 0xff1435e8,task_WBLPFace
+0xff14801c,get_ptp_buf_size
 0xff148094,task_TimerUtility
 0xff149538,task_NfcConTask
 0xff14a1ac,ClearNFCSystemArea_FW
@@ -1297,6 +1298,7 @@
 0xff2effc8,ShutterTool.SetExpTimeForFix_FW
 0xff2effec,ShutterTool.GetLimOfTvForFix_FW
 0xff2f0008,ShutterTool.GetLimOfTvForFixWithAv_FW
+0xff302490,get_ptp_file_buf
 0xff3083a8,task_PingManager
 0xff30de88,task_WSSAPP
 0xff3174b0,task_AACDrvTask

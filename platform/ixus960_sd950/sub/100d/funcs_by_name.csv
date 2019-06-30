@@ -352,6 +352,8 @@
 0xff8b1070,get_current_exp
 0xffa18378,get_current_nd_value
 0xffa183bc,get_nd_value
+0xff8c5a54,get_ptp_buf_size
+0xff9d09cc,get_ptp_file_buf
 0xff8646e0,get_resource_pointer
 0xff8137ac,get_self_task_errno_pointer
 0xff8121c0,get_self_task_id

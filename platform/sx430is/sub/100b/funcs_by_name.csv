@@ -428,6 +428,8 @@
 0xff026efc,Fwrite_Fut_FW
 0xff0f8900,get_current_exp
 0xff0313cc,get_fstype
+0xff14801c,get_ptp_buf_size
+0xff302490,get_ptp_file_buf
 0xff0a98a8,get_resource_pointer
 0xff0234d8,get_self_task_errno_pointer
 0x006b1b90,get_self_task_id

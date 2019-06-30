@@ -650,6 +650,7 @@
 0xff8c0f1c,StopContinuousVRAMData_FW
 0xff8c1860,task_SyncPeriod
 0xff8c18e8,task_SynchTask
+0xff8c4244,get_ptp_buf_size
 0xff8c438c,task_EntiCtrl
 0xff8c4970,task_SesnMngr
 0xff8c5490,task_TimerUtility
@@ -1175,6 +1176,7 @@
 0xff9c78d4,task_SesnDaem
 0xff9c8aac,task_ReqRecev
 0xff9ca884,task_DirectOpEventQueueMngr
+0xff9cc074,get_ptp_file_buf
 0xff9ccb74,task_SelectThumbCache
 0xff9d225c,task_RAPI_Task
 0xff9d2c58,task_DCPClassTask

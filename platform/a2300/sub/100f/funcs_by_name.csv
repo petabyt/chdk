@@ -343,6 +343,8 @@
 0xffa61b50,get_current_nd_value
 0xff86688c,get_fstype
 0xffa61bb0,get_nd_value
+0xff8f3df0,get_ptp_buf_size
+0xffa18f90,get_ptp_file_buf
 0xff878440,get_resource_pointer
 0xff815038,get_self_task_errno_pointer
 0x003f1bac,get_self_task_id

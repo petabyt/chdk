@@ -835,6 +835,7 @@
 0xffa5ac30,StartDpsIdPhotoMenu_FW
 0xffa5f30c,ControlViewEvent_FW
 0xffa6b864,InstallPrintMenu_FW
+0xffa6fc08,get_ptp_buf_size
 0xffa71e10,DisableNotificationPTP_FW
 0xffa71e24,EnableNotificationPTP_FW
 0xffa71e3c,SetUSBToPTPMode_FW
@@ -857,6 +858,7 @@
 0xffa89aa4,PTPRspnd.StartUpPTPFrameworkClient_FW
 0xffa89b4c,PTPRspnd.ShutDownPTPFrameworkClient_FW
 0xffa8df6c,task_PreLoadTask
+0xffa8ee20,get_ptp_file_buf
 0xffa90438,handle_PTP_OC_GetStorageIDs
 0xffa90538,handle_PTP_OC_GetStorageInfo
 0xffa907c8,handle_PTP_OC_GetNumObjects

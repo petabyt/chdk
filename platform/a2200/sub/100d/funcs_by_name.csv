@@ -333,6 +333,8 @@
 0xffa9b378,get_current_nd_value
 0xff86fd20,get_fstype
 0xffa9b3d8,get_nd_value
+0xff8fffd0,get_ptp_buf_size
+0xffa42780,get_ptp_file_buf
 0xff883920,get_resource_pointer
 0xff819dd0,get_self_task_errno_pointer
 0xff812b38,get_self_task_id

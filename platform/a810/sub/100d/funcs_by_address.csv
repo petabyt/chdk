@@ -605,6 +605,7 @@
 0xff8f070c,task_PrcssFil
 0xff8f1a28,task_SyncPeriod
 0xff8f1ab0,task_SynchTask
+0xff8f3798,get_ptp_buf_size
 0xff8f380c,task_TimerUtility
 0xff8f42b4,handle_PTP_OC_0x9805
 0xff8f48a8,handle_PTP_OC_0x9804
@@ -1017,6 +1018,7 @@
 0xffa16834,task_PTPtoFAPI_EventProcTask_Block
 0xffa172dc,add_ptp_handler
 0xffa17d30,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xffa18db0,get_ptp_file_buf
 0xffa31a68,GetFaceAuthBinAddr_FW
 0xffa31a70,GetFaceAuthBinSize_FW
 0xffa31a78,IsOKFaceAuthBinFile_FW

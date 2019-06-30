@@ -826,6 +826,7 @@
 0xffdcdcfc,StartDpMovieMenu_FW
 0xffdcf248,StartDpsIdPhotoMenu_FW
 0xffdcf620,ControlViewEvent_FW
+0xffdd6520,get_ptp_buf_size
 0xffdd86fc,DisableNotificationPTP_FW
 0xffdd8710,EnableNotificationPTP_FW
 0xffdd8728,SetUSBToPTPMode_FW
@@ -848,6 +849,7 @@
 0xffdec2e4,PTPRspnd.StartUpPTPFrameworkClient_FW
 0xffdec38c,PTPRspnd.ShutDownPTPFrameworkClient_FW
 0xffdf1458,task_PreLoadTask
+0xffdf227c,get_ptp_file_buf
 0xffdf3664,handle_PTP_OC_GetStorageIDs
 0xffdf3764,handle_PTP_OC_GetStorageInfo
 0xffdf39f4,handle_PTP_OC_GetNumObjects

@@ -240,3 +240,5 @@ NHSTUB(PTM_GetCurrentItem                     ,0xffb46ee4) //102
 NHSTUB(CancelHPTimer                          ,0xff814644) //1100
 NHSTUB(SetHPTimerAfterNow                     ,0xff81415c) //119
 NHSTUB(GetAdChValue                           ,0xffa31ad4) //120
+NHSTUB(get_ptp_buf_size                       ,0xff9e1c9c) //122
+NHSTUB(get_ptp_file_buf                       ,0xff9fa5c4) //121

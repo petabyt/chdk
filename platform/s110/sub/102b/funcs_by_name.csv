@@ -414,6 +414,8 @@
 0xf84251a0,get_current_nd_value
 0xf8093890,get_fstype
 0xf84251d0,get_nd_value
+0xf817fe5c,get_ptp_buf_size
+0xf8392854,get_ptp_file_buf
 0xf80d0348,get_resource_pointer
 0xf8005314,get_self_task_errno_pointer
 0x00685c1c,get_self_task_id

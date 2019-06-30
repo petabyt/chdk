@@ -373,6 +373,8 @@
 0xff825870,Fwrite_Fut
 0xff825870,Fwrite_Fut_FW
 0xff8d4ebc,get_current_exp
+0xff8ea37c,get_ptp_buf_size
+0xff9f8a84,get_ptp_file_buf
 0xff86f7b0,get_resource_pointer
 0xff8137c0,get_self_task_errno_pointer
 0xff8121d4,get_self_task_id

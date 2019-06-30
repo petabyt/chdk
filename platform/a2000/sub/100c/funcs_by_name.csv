@@ -317,6 +317,8 @@
 0xffc85704,get_current_exp
 0xffde8304,get_current_nd_value
 0xffde8348,get_nd_value
+0xffca4944,get_ptp_buf_size
+0xffdadd40,get_ptp_file_buf
 0xffc52634,get_resource_pointer
 0xffc0377c,get_self_task_errno_pointer
 0xffc02188,get_self_task_id

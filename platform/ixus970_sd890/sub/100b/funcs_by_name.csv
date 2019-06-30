@@ -294,6 +294,8 @@
 0xff8b80b8,get_current_exp
 0xffa21dec,get_current_nd_value
 0xffa21e30,get_nd_value
+0xff8caf8c,get_ptp_buf_size
+0xff9e3454,get_ptp_file_buf
 0xff865bd8,get_resource_pointer
 0xff813794,get_self_task_errno_pointer
 0xff8121a8,get_self_task_id
