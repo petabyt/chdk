@@ -711,6 +711,7 @@
 0xff13badc,task_SynchTask
 0xff13f3f0,task_WBIntegTask
 0xff14fb0c,task_WBLPFace
+0xff154980,get_ptp_buf_size
 0xff1549f8,task_TimerUtility
 0xff155ec4,task_NfcConTask
 0xff156b10,ClearNFCSystemArea_FW
@@ -1317,6 +1318,7 @@
 0xff327e34,ShutterTool.SetExpTimeForFix_FW
 0xff327e58,ShutterTool.GetLimOfTvForFix_FW
 0xff327e74,ShutterTool.GetLimOfTvForFixWithAv_FW
+0xff33918c,get_ptp_file_buf
 0xff33f050,task_PingManager
 0xff34b5a0,HdmiSetOutputResolusion_FW
 0xff34b5a4,HdmiChange5VShortState_FW

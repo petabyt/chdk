@@ -405,6 +405,8 @@
 0xff8276ac,Fwrite_Fut_FW
 0xff8e298c,get_current_exp
 0xff831914,get_fstype
+0xff928b90,get_ptp_buf_size
+0xffa97288,get_ptp_file_buf
 0xff89c1e8,get_resource_pointer
 0xff82338c,get_self_task_errno_pointer
 0x006b1b94,get_self_task_id

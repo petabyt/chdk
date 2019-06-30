@@ -350,6 +350,8 @@
 0xffaa0e5c,get_current_nd_value
 0xff86fd1c,get_fstype
 0xffaa0ebc,get_nd_value
+0xff902548,get_ptp_buf_size
+0xffa488d0,get_ptp_file_buf
 0xff885cf8,get_resource_pointer
 0xff819dd0,get_self_task_errno_pointer
 0xff812b38,get_self_task_id

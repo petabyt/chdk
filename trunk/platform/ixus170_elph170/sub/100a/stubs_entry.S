@@ -326,3 +326,5 @@ NHSTUB(SetHPTimerAfterNow                     ,0xff89c70c) //119
 NHSTUB(SS_MFOn                                ,0xff99bc1c) //120
 NHSTUB(SS_MFOff                               ,0xff99bc2c) //120
 NHSTUB(GetAdChValue                           ,0xff867758) //120
+NHSTUB(get_ptp_buf_size                       ,0xff922754) //122
+NHSTUB(get_ptp_file_buf                       ,0xffa77c68) //121

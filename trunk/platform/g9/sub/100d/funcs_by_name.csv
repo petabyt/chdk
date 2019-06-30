@@ -417,6 +417,8 @@
 0xff8ba448,get_current_exp
 0xffa3bdd0,get_current_nd_value
 0xffa3be08,get_nd_value
+0xff8d1fa8,get_ptp_buf_size
+0xff9f2580,get_ptp_file_buf
 0xff86a654,get_resource_pointer
 0xff8137ac,get_self_task_errno_pointer
 0xff8121c0,get_self_task_id

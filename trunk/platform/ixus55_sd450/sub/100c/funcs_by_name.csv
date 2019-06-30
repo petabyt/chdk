@@ -307,6 +307,8 @@
 0xff8f67e0,get_current_exp
 0xffa77164,get_current_nd_value
 0xffa771e0,get_nd_value
+0xffa2e608,get_ptp_buf_size
+0xffa4e5cc,get_ptp_file_buf
 0xff823fe8,get_resource_pointer
 0xff828f1c,GetAdChValue
 0xff828f1c,GetAdChValue_FW

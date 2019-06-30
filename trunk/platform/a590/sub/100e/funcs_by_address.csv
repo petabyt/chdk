@@ -544,6 +544,7 @@
 0xffca9f04,ReloadColorAdjustment_FW
 0xffcaa438,task_SyncPeriod
 0xffcaa4c0,task_SynchTask
+0xffcabd70,get_ptp_buf_size
 0xffcabeb8,task_EntiCtrl
 0xffcac49c,task_SesnMngr
 0xffcacfbc,task_TimerUtility
@@ -909,6 +910,7 @@
 0xffda95e0,task_DirectOpEventQueueMngr
 0xffdaa4e8,add_ptp_handler
 0xffdab05c,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xffdabdbc,get_ptp_file_buf
 0xffdacb30,task_SelectThumbCache
 0xffdb23b0,task_RAPI_Task
 0xffdb2dac,task_DCPClassTask

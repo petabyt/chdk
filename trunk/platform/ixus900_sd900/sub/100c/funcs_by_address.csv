@@ -904,6 +904,7 @@
 0xffa9cedc,EndClockMode_FW
 0xffaa008c,ControlViewEvent_FW
 0xffaabee0,InstallPrintMenu_FW
+0xffab014c,get_ptp_buf_size
 0xffab251c,DisableNotificationPTP_FW
 0xffab2530,EnableNotificationPTP_FW
 0xffab2548,SetUSBToPTPMode_FW
@@ -925,6 +926,7 @@
 0xffac8160,PTPRspnd.StartUpPTPFrameworkClient_FW
 0xffac8214,PTPRspnd.ShutDownPTPFrameworkClient_FW
 0xffacc7f4,task_PreLoadTask
+0xffacd68c,get_ptp_file_buf
 0xffacecc4,handle_PTP_OC_GetStorageIDs
 0xffacedc8,handle_PTP_OC_GetStorageInfo
 0xffacf01c,handle_PTP_OC_GetNumObjects

@@ -345,6 +345,8 @@
 0xff83501c,Fwrite_Fut_FW
 0xff8c2720,get_current_exp
 0xff86e404,get_fstype
+0xff8ffaa4,get_ptp_buf_size
+0xffa489a8,get_ptp_file_buf
 0xff885908,get_resource_pointer
 0xff819bbc,get_self_task_errno_pointer
 0xff812a58,get_self_task_id

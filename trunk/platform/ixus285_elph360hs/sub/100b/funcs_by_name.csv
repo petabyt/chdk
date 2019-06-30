@@ -438,6 +438,8 @@
 0xff3c1ba4,get_current_nd_value
 0xff0309c8,get_fstype
 0xff3c1c04,get_nd_value
+0xff154980,get_ptp_buf_size
+0xff33918c,get_ptp_file_buf
 0xff0a7794,get_resource_pointer
 0xff0233e0,get_self_task_errno_pointer
 0x006b1b90,get_self_task_id

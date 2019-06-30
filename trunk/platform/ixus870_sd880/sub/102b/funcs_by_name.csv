@@ -315,6 +315,8 @@
 0xff8a5e60,get_current_exp
 0xffa31300,get_current_nd_value
 0xffa31344,get_nd_value
+0xff8c6a98,get_ptp_buf_size
+0xff9f10c8,get_ptp_file_buf
 0xff86a4fc,get_resource_pointer
 0xff813778,get_self_task_errno_pointer
 0xff812184,get_self_task_id

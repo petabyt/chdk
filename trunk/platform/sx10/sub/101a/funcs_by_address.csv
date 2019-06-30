@@ -555,6 +555,7 @@
 0xff8d5534,ReloadColorAdjustment_FW
 0xff8d6034,task_SyncPeriod
 0xff8d60bc,task_SynchTask
+0xff8d7b84,get_ptp_buf_size
 0xff8d7dc4,task_TimerUtility
 0xff8d8824,handle_PTP_OC_0x9805
 0xff8d8ebc,handle_PTP_OC_0x9804
@@ -1032,6 +1033,7 @@
 0xffa162b0,task_DirectOpEventQueueMngr
 0xffa1727c,add_ptp_handler
 0xffa17e1c,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xffa18c00,get_ptp_file_buf
 0xffa19920,task_SelectThumbCache
 0xffa1f19c,task_RAPI_Task
 0xffa244a8,TurnOnAFLamp_FW

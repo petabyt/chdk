@@ -541,6 +541,7 @@
 0xff8c5de8,StopContinuousVRAMData_FW
 0xff8c6ac4,task_SyncPeriod
 0xff8c6b4c,task_SynchTask
+0xff8c83e0,get_ptp_buf_size
 0xff8c8528,task_EntiCtrl
 0xff8c8b0c,task_SesnMngr
 0xff8c962c,task_TimerUtility
@@ -915,6 +916,7 @@
 0xff9d9c2c,task_DirectOpEventQueueMngr
 0xff9dab04,add_ptp_handler
 0xff9db678,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xff9dc434,get_ptp_file_buf
 0xff9dd1a8,task_SelectThumbCache
 0xff9e2a28,task_RAPI_Task
 0xff9e3424,task_DCPClassTask

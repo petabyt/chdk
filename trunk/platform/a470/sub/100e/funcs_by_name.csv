@@ -293,6 +293,8 @@
 0xffc91904,get_current_exp
 0xffdcf640,get_current_nd_value
 0xffdcf684,get_nd_value
+0xffca3c94,get_ptp_buf_size
+0xffd979b8,get_ptp_file_buf
 0xffc50100,get_resource_pointer
 0xffc03794,get_self_task_errno_pointer
 0xffc021a8,get_self_task_id

@@ -299,3 +299,5 @@ NHSTUB(MFOff                                  ,0xff86c160) //120
 NHSTUB(PT_MFOn                                ,0xff86ba8c) //120
 NHSTUB(PT_MFOff                               ,0xff86ba9c) //120
 NHSTUB(GetAdChValue                           ,0xff821354) //120
+NHSTUB(get_ptp_buf_size                       ,0xff8ea37c) //122
+NHSTUB(get_ptp_file_buf                       ,0xff9f8a84) //121

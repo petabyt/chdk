@@ -368,6 +368,8 @@
 0xffab8320,get_current_nd_value
 0xff82f76c,get_fstype
 0xffab8380,get_nd_value
+0xff91d6bc,get_ptp_buf_size
+0xffa63fd4,get_ptp_file_buf
 0xff8948ec,get_resource_pointer
 0xff823568,get_self_task_errno_pointer
 0x006b1b68,get_self_task_id

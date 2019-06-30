@@ -579,6 +579,7 @@
 0xff8b5d48,task_PrcssFil
 0xff8b698c,task_SyncPeriod
 0xff8b6a14,task_SynchTask
+0xff8b85f0,get_ptp_buf_size
 0xff8b8be0,task_TimerUtility
 0xff8b9510,handle_PTP_OC_0x9805
 0xff8b9ba8,handle_PTP_OC_0x9804
@@ -989,6 +990,7 @@
 0xffa047a4,task_PTPtoFAPI_EventProcTask
 0xffa05234,add_ptp_handler
 0xffa05dd4,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xffa06e08,get_ptp_file_buf
 0xffa16e5c,EngDrvOut_FW
 0xffa16e78,EngDrvIn_FW
 0xffa16e80,EngDrvRead_FW

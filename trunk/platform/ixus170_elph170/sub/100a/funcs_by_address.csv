@@ -659,6 +659,7 @@
 0xff90fb28,task_SyncPeriod
 0xff90fbcc,task_SynchTask
 0xff91de44,task_WBLPFace
+0xff922754,get_ptp_buf_size
 0xff9227cc,task_TimerUtility
 0xff923ec4,handle_PTP_OC_0x9805
 0xff9243f4,handle_PTP_OC_0x9804
@@ -1174,6 +1175,7 @@
 0xffa73f38,handle_PTP_OC_CANON_EOS_RequestDevicePropValue
 0xffa7600c,add_ptp_handler
 0xffa76a7c,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xffa77c68,get_ptp_file_buf
 0xffa8a19c,GetFaceAuthBinAddr_FW
 0xffa8a1a4,GetFaceAuthBinSize_FW
 0xffa8a1ac,IsOKFaceAuthBinFile_FW

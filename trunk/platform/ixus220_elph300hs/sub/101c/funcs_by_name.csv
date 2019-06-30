@@ -363,6 +363,8 @@
 0xffada780,get_current_nd_value
 0xff876384,get_fstype
 0xffada7e0,get_nd_value
+0xff9160f4,get_ptp_buf_size
+0xffa7d9a0,get_ptp_file_buf
 0xff88ec00,get_resource_pointer
 0xff819dd0,get_self_task_errno_pointer
 0xff812b38,get_self_task_id

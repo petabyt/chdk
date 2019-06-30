@@ -332,6 +332,8 @@
 0xffdfdacc,get_current_nd_value
 0xffc524c4,get_fstype
 0xffdfdb10,get_nd_value
+0xffcbd5cc,get_ptp_buf_size
+0xffdca77c,get_ptp_file_buf
 0xffc6577c,get_resource_pointer
 0xffc0a290,get_self_task_errno_pointer
 0xffc02a7c,get_self_task_id

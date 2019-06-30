@@ -689,6 +689,7 @@
 0xff134cb8,task_LiveImageTask
 0xff1375d8,task_SyncPeriod
 0xff13766c,task_SynchTask
+0xff139400,get_ptp_buf_size
 0xff139474,task_TimerUtility
 0xff13ab84,handle_PTP_OC_0x9805
 0xff13b178,handle_PTP_OC_0x9804
@@ -1120,6 +1121,7 @@
 0xff2eb14c,task_PTPtoFAPI_EventProcTask_Block
 0xff2ebc80,add_ptp_handler
 0xff2ec70c,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xff2ed7fc,get_ptp_file_buf
 0xff2f2404,LcdCon_SetLcdBackLightBrightness_FW
 0xff2f2438,LcdCon_SetLcdBackLightParameter_FW
 0xff2f248c,LcdCon_GetLcdBackLightParameter_FW

@@ -337,3 +337,5 @@ NHSTUB(PT_MFOff                               ,0xff079b38) //120
 NHSTUB(GetAdChValue                           ,0xff0538d0) //120
 NHSTUB(EnableHDMIPower                        ,0xff0575a8) //123
 NHSTUB(DisableHDMIPower                       ,0xff0575b0) //123
+NHSTUB(get_ptp_buf_size                       ,0xff138a60) //122
+NHSTUB(get_ptp_file_buf                       ,0xff2e8524) //121

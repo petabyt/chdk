@@ -628,6 +628,7 @@
 0xff15c550,task_LiveImageTask
 0xff163ba8,task_SyncPeriod
 0xff163c30,task_SynchTask
+0xff165900,get_ptp_buf_size
 0xff165974,task_TimerUtility
 0xff16641c,handle_PTP_OC_0x9805
 0xff166948,handle_PTP_OC_0x9804
@@ -1114,6 +1115,7 @@
 0xff2ddb74,j_LiveImageTool.GetDzoomPosition_FW
 0xff2ddb78,LiveImageTool.Jump_FW
 0xff2ddb94,LiveImageTool.Dister_FW
+0xff2e0c24,get_ptp_file_buf
 0xff2e7d7c,task_PingManager
 0xff302900,GetFaceAuthBinAddr_FW
 0xff302908,GetFaceAuthBinSize_FW

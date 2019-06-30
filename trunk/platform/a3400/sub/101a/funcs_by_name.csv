@@ -370,6 +370,8 @@
 0xffa788d0,get_current_nd_value
 0xff86710c,get_fstype
 0xffa78930,get_nd_value
+0xff8f6704,get_ptp_buf_size
+0xffa2ea18,get_ptp_file_buf
 0xff87baec,get_resource_pointer
 0xff815038,get_self_task_errno_pointer
 0x003f1bac,get_self_task_id

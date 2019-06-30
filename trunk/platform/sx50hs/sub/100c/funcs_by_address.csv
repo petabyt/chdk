@@ -666,6 +666,7 @@
 0xff141358,task_LiveImageTask
 0xff1435e0,task_SyncPeriod
 0xff143674,task_SynchTask
+0xff145380,get_ptp_buf_size
 0xff1453f4,task_TimerUtility
 0xff147384,handle_PTP_OC_0x9805
 0xff147978,handle_PTP_OC_0x9804
@@ -1261,6 +1262,7 @@
 0xff2ff688,task_PTPtoFAPI_EventProcTask_Block
 0xff300128,add_ptp_handler
 0xff300b80,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xff301c00,get_ptp_file_buf
 0xff30a7a4,Debug_GetCecEventStatus_FW
 0xff30c8b4,HecHdmiCecPhysicalCheckForScript_FW
 0xff30c9a8,LockHdmiState_FW

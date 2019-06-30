@@ -398,6 +398,8 @@
 0xff35c424,get_current_nd_value
 0xff06e7bc,get_fstype
 0xff35c454,get_nd_value
+0xff138a60,get_ptp_buf_size
+0xff2e852c,get_ptp_file_buf
 0xff08a428,get_resource_pointer
 0xff009dc8,get_self_task_errno_pointer
 0xff002b44,get_self_task_id

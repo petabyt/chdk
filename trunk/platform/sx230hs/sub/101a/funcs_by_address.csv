@@ -666,6 +666,7 @@
 0xff112c6c,ReloadColorAdjustment_FW
 0xff114a5c,task_SyncPeriod
 0xff114af0,task_SynchTask
+0xff116764,get_ptp_buf_size
 0xff116d60,task_TimerUtility
 0xff118470,handle_PTP_OC_0x9805
 0xff118a64,handle_PTP_OC_0x9804
@@ -1078,6 +1079,7 @@
 0xff2913c0,task_PTPtoFAPI_EventProcTask
 0xff291e00,add_ptp_handler
 0xff29288c,handle_PTP_OC_CANON_ChangeUSBProtocol
+0xff293980,get_ptp_file_buf
 0xff2b7b0c,EngDrvOut_FW
 0xff2b7b28,EngDrvIn_FW
 0xff2b7b30,EngDrvRead_FW

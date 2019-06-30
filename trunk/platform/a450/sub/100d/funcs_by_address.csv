@@ -487,6 +487,7 @@
 0xffd6e8a0,RefreshUSBMode_FW
 0xffd6e924,NotifyConnectPictBridge_FW
 0xffd6e93c,NotifyDisconnectPictBridge_FW
+0xffd719ac,get_ptp_buf_size
 0xffd7200c,task_EntiCtrl
 0xffd72808,task_SesnMngr
 0xffd73270,task_CnctEntiSnd
@@ -544,6 +545,7 @@
 0xffd890d4,PTPRspnd.ResetTable_FW
 0xffd890e0,PTPRspnd.EnableGetTreeInfo_FW
 0xffd89120,PTPRspnd.EnableStorage_FW
+0xffd89490,get_ptp_file_buf
 0xffd8a5fc,PTPRspnd.ShowRemoteStg_FW
 0xffd8bc14,task_TrnsCtrlTask
 0xffd95494,task_RapiRevr

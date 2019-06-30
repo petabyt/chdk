@@ -661,6 +661,7 @@
 0xff8ceb50,ReloadColorAdjustment_FW
 0xff8cf598,task_SyncPeriod
 0xff8cf620,task_SynchTask
+0xff8d1fa8,get_ptp_buf_size
 0xff8d20f0,task_EntiCtrl
 0xff8d26d4,task_SesnMngr
 0xff8d31f4,task_TimerUtility
@@ -1236,6 +1237,7 @@
 0xff9edde0,task_SesnDaem
 0xff9eefb8,task_ReqRecev
 0xff9f0d90,task_DirectOpEventQueueMngr
+0xff9f2580,get_ptp_file_buf
 0xff9f3080,task_SelectThumbCache
 0xff9f8568,task_RAPI_Task
 0xff9fa9dc,task_DCPClassTask
