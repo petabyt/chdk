@@ -1780,7 +1780,15 @@ void dbg_printf(char *fmt,...) {
     // camera log - will show up in crash dumps, or in stdout on ShowCameraLog
     // _LogPrintf(0x120,s);
 
-    // file TODO
+    // file
+    /*
+    FILE *f=fopen("A/DBGPRINT.LOG","ab");
+    if(!f) {
+        return;
+    }
+    fwrite(s,strlen(s),1,f);
+    fclose(f);
+    */
 #endif
 }
 
