@@ -325,6 +325,8 @@ extern int _add_ptp_handler(int, void*, int);
 extern void _set_control_event(int);
 extern void _PB2Rec();
 extern void _Rec2PB();
+extern int _get_ptp_buf_size(int slot);
+extern char *_get_ptp_file_buf(void);
 
 #ifdef OPT_EXMEM_MALLOC
 // dryos + some vxworks only takes 3 params in reality

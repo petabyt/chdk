@@ -6,7 +6,7 @@ topdir=../../
 include $(topdir)makefile_core.inc
 
 OBJS = $Ogui_batt.o $Ogui_space.o $Ogui_usb.o $Ogui_mbox.o $Ogps.o $Ogui_script.o $Ogui_menu.o $Ogui_user_menu.o
-OBJS+= $Osuba.o $Olevent.o $Oconsole.o $Ogps_math.o $Olive_view.o $Optp.o $Oaction_stack.o $Oscript.o
+OBJS+= $Osuba.o $Olevent.o $Oconsole.o $Ogps_math.o $Olive_view.o $Oaction_stack.o $Oscript.o
 OBJS+= $Ousb_input.o $Ousb_module.o $Ousb_remote.o $Oautoiso.o
 OBJS+= $Omodule_hashlist.o $Omodule_load.o $Omodules.o $Oversions.o
 

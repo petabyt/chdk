@@ -278,6 +278,12 @@
     // Keyboard repeat and initial delays (override in platform_camera.h if needed)
     #define KBD_REPEAT_DELAY                175
     #define KBD_INITIAL_DELAY               500
+    #undef CAM_PTP_USE_NATIVE_BUFFER            // define to use native firmware buffers for PTP transfers
+                                                // for cameras that have problems transfering to cached RAM
+                                                // or specific alignment requirements
+
+    #undef CAM_PTP_FILE_BUFFER_ID               // define to override default ID for file transfer buffer
+
 
 // Base 'market' ISO value. Most (all?) DryOS R49 and later use 200, use tests/isobase.lua to check
 #if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL >= 49 // CAM_DRYOS_REL defined on command line, not from platform_camera.h
@@ -378,6 +384,15 @@
 #if (CAM_ACTIVE_AREA_Y2 - CAM_ACTIVE_AREA_Y1) < CAM_JPEG_HEIGHT
     #error "CAM_JPEG_HEIGHT larger than active area"
 #endif
+
+// default PTP buffer id
+#ifndef CAM_PTP_FILE_BUFFER_ID
+#if defined(CAM_DRYOS) && CAM_DRYOS_REL >= 43 && CAM_DRYOS_REL <= 52
+    #define CAM_PTP_FILE_BUFFER_ID 5
+#else
+    #define CAM_PTP_FILE_BUFFER_ID 4
+#endif
+#endif // ifndef CAM_PTP_FILE_BUFFER_ID
 
 //==========================================================
 // END of Camera-dependent settings

@@ -41,6 +41,8 @@ extern void dbg_printf(char *fmt,...);
 // debug with timestamp
 #ifdef DEBUG_LOGGING
 #define DBGPRINTF(fmt,args...) dbg_printf("%08d DBG:" fmt,get_tick_count(), ##args)
+// when using LogCameraEvent, timestamps already present, length limited
+//#define DBGPRINTF(fmt,args...) dbg_printf(fmt, ##args)
 #else
 #define DBGPRINTF(...)
 #endif

@@ -1,3 +1,4 @@
+#include "platform.h"
 #include "camera_info.h"
 #include "stddef.h"
 #include "stdlib.h"
@@ -14,6 +15,9 @@
 
 #include "remotecap_core.h"
 static int buf_size=0;
+
+int get_ptp_file_buf_size(void);
+char *get_ptp_file_buf(void);
 
 // process id for scripts, increments before each attempt to run script
 // does not handle wraparound
@@ -41,53 +45,154 @@ static void init_chdk_ptp()
 void init_chdk_ptp_task()
 {
     CreateTask("InitCHDKPTP", 0x19, 0x200, init_chdk_ptp);
-};
-
-/*
-WARNING: it appears that on some vxworks cameras,
-if a call to recv_ptp_data doesn't end on a word (4 byte) boundery,
-subsequent calls will return corrupt data
-the final call not ending on a word boundery is OK.
-see http://chdk.setepontos.com/index.php?topic=6730.msg76760#msg76760
-*/
-static int recv_ptp_data(ptp_data *data, char *buf, int size)
-  // repeated calls per transaction are ok
-{
-  while ( size >= buf_size )
-  {
-    data->recv_data(data->handle,buf,buf_size,0,0);
-    // XXX check for success??
-
-    size -= buf_size;
-    buf += buf_size;
-  }
-  if ( size != 0 )
-  {
-    data->recv_data(data->handle,buf,size,0,0);
-    // XXX check for success??
-  }
-
-  return 1;
 }
 
-// camera will shut down if you ignore a recv data phase
-static void flush_recv_ptp_data(ptp_data *data,int size) {
-  char *buf;
-  buf = malloc((size > buf_size) ? buf_size:size);
-  if(!buf) // buf_size should always be less then available memory
-    return;
-  while ( size > 0 )
-  {
-    if ( size >= buf_size )
-    {
-      recv_ptp_data(data,buf,buf_size);
-      size -= buf_size;
-    } else {
-      recv_ptp_data(data,buf,size);
-      size = 0;
+typedef struct {
+    char *buf; // buffer for transfer
+    char *dst_buf; // final destination for data, if not used directly from transfer buffer
+    int buf_size; // transfer buffer size (= total size if it fits)
+    int total_size; // total data size
+    int total_read; // total data read so far
+    int last_read; // last data transfer / length of valid data in buf
+} recv_ptp_data_state_t;
+
+
+// define to limit receive buffer size, for testing issues with specific sizes
+//#define PTP_RECV_BUF_MAX_SIZE (256*1024)
+
+/*
+initialize receive data state
+dst_buf may be NULL if caller will use rs->buf directly (e.g. for file transfer where date is only needed during transaction)
+ */
+static int recv_ptp_data_init(recv_ptp_data_state_t *rs, int total_size, char *dst_buf)
+{
+    memset(rs,0,sizeof(recv_ptp_data_state_t));
+#ifdef CAM_PTP_USE_NATIVE_BUFFER
+    rs->buf_size = (get_ptp_file_buf_size() >> 1); // canon code seems to use half reported size for file buf
+    rs->buf = get_ptp_file_buf();
+#else
+    //if using malloc, half of largest free block
+    rs->buf_size = (core_get_free_memory() >> 1);
+#endif
+    // for testing smaller / fixed size chunks
+#ifdef PTP_RECV_BUF_MAX_SIZE
+    if(rs->buf_size > PTP_RECV_BUF_MAX_SIZE) {
+        rs->buf_size = PTP_RECV_BUF_MAX_SIZE;
     }
-  }
-  free(buf);
+#endif
+    // clamp size is a multiple of 512 to simplify multi-read workaround (0x1f5 bug)
+    // https://chdk.setepontos.com/index.php?topic=4338.msg140577#msg140577
+    // size must also be multiple of 4 due to other issues on some cameras
+    // http://chdk.setepontos.com/index.php?topic=6730.msg76760#msg76760
+    rs->buf_size &= 0xFFFFFE00; 
+    // things will be badly broken if only a few KB free, try to fail gracefully
+    if(rs->buf_size < 2048) {
+        return 0;
+    }
+    // requested size smaller that buffer
+    if(rs->buf_size > total_size) {
+        rs->buf_size = total_size;
+    }
+    rs->total_size = total_size;
+    rs->total_read = 0;
+    rs->last_read = 0;
+    rs->dst_buf = dst_buf;
+
+#ifndef CAM_PTP_USE_NATIVE_BUFFER
+    if(!dst_buf) {
+        rs->buf = malloc(rs->buf_size);
+        if(!rs->buf) {
+            return 0;
+        }
+    } else {
+        rs->buf = NULL;
+    }
+#endif
+    return 1;
+}
+
+/*
+read a chunk of data, based on size and buffer configuration from recv_ptp_data_chunk
+may be called multiple times per transaction
+*/
+static int recv_ptp_data_chunk(recv_ptp_data_state_t *rs,ptp_data *data)
+{
+    int size_left = rs->total_size - rs->total_read;
+    if(size_left <= 0) {
+        return 0;
+    }
+#ifndef CAM_PTP_USE_NATIVE_BUFFER
+    // using unbuffered, has to be all in one go
+    if(!rs->buf) {
+        // TODO maybe shouldn't add to total on error?
+        rs->total_read = rs->last_read = rs->total_size;
+        if(data->recv_data(data->handle,rs->dst_buf,rs->total_size,0,0) != 0) {
+            return 0;
+        }
+        return 1;
+    }
+#endif
+
+    int rsize;
+    // less than one chunk remaining, read all
+    if(size_left <= rs->buf_size) {
+        rsize = size_left;
+    } else {
+        rsize = rs->buf_size;
+        // if on last full chunk, check for multi-read bug sizes
+        // https://chdk.setepontos.com/index.php?topic=4338.msg140577#msg140577
+        if(size_left <= rs->buf_size * 2) {
+            // assumes buf_size is multiple of 512, enforced in recv_ptp_data_init
+            int rest = size_left % rs->buf_size;
+            // if final transfer would be problem size, reduce size of next to last transfer by 1k
+            // if buffer size is less than 0x800, things are badly hosed anyway
+            if(rs->buf_size >= 0x800 && rest > 0x1f4 && rest < 0x3f4) {
+                rsize -= 0x400;
+            }
+        }
+    }
+    rs->last_read = rsize;
+    if(data->recv_data(data->handle,rs->buf,rsize,0,0) != 0) {
+        return 0;
+    }
+    if(rs->dst_buf) {
+        memcpy(rs->dst_buf + rs->total_read,rs->buf,rsize);
+    }
+    rs->total_read += rsize;
+    return 1;
+}
+
+/*
+free buffer if needed
+*/
+static void recv_ptp_data_finish(recv_ptp_data_state_t *rs)
+{
+#ifndef CAM_PTP_USE_NATIVE_BUFFER
+    free(rs->buf);
+#endif
+    memset(rs,0,sizeof(recv_ptp_data_state_t));
+}
+
+/*
+read size into buf
+use to read full transaction data into buf, or discard if buf is NULL
+to read and process chunks directly (i.e. for file transfer) use recv_ptp_data_chunk
+*/
+static int recv_ptp_data(ptp_data *data, char *buf, int size)
+{
+    recv_ptp_data_state_t rs;
+    if(!recv_ptp_data_init(&rs,size,buf)) {
+        return 0;
+    }
+    int status=1;
+    while(rs.total_read < size && status) {
+        status = recv_ptp_data_chunk(&rs,data);
+    }
+    recv_ptp_data_finish(&rs);
+    return status;
+}
+static void flush_recv_ptp_data(ptp_data *data,int size) {
+    recv_ptp_data(data,NULL,size);
 }
 
 static int send_ptp_data(ptp_data *data, const char *buf, int size)
@@ -507,27 +612,31 @@ static int handle_ptp(
     case PTP_CHDK_UploadFile:
       {
         FILE *f=NULL;
-        char *buf=NULL, *fn=NULL;
-        unsigned data_size,fn_len,chunk_size;
+        char *fn=NULL;
+        unsigned data_size,fn_len;
+        recv_ptp_data_state_t rs;
         data_size = data->get_data_size(data->handle);
+        // flush data would try to do init and fail again, so just break
+        if(!recv_ptp_data_init(&rs,data_size,NULL)) {
+            ptp.code = PTP_RC_GeneralError;
+            break;
+        }
+        int recv_err = 0;
         while ( data_size > 0 ) {
-            chunk_size = (data_size > buf_size) ? buf_size:data_size;
-            // first time through
-            // allocate buffer, parse out the file name and open file
-            if(!buf) {
-                buf=malloc(chunk_size);
-                if(!buf) {
-                    ptp.code = PTP_RC_GeneralError;
-                    break;
-                }
-                recv_ptp_data(data,buf,chunk_size);
-                fn_len = *(unsigned *)buf;
+            if(!recv_ptp_data_chunk(&rs,data)) {
+                ptp.code = PTP_RC_GeneralError;
+                recv_err = 1; // flag PTP errors to avoid trying to read more in flush
+                break;
+            }
+            // first chunk, extact file name and write remaining data
+            if(!f) {
+                fn_len = *(unsigned *)rs.buf;
                 fn = malloc(fn_len+1);
                 if(!fn) {
                     ptp.code = PTP_RC_GeneralError;
                     break;
                 }
-                memcpy(fn,buf+4,fn_len);
+                memcpy(fn,rs.buf+4,fn_len);
                 fn[fn_len] = 0;
                 f = fopen(fn,"wb");
                 free(fn);
@@ -535,19 +644,18 @@ static int handle_ptp(
                     ptp.code = PTP_RC_GeneralError;
                     break;
                 }
-                fwrite(buf+4+fn_len,1,chunk_size - 4 - fn_len,f);
+                fwrite(rs.buf+4+fn_len,1,rs.last_read - 4 - fn_len,f);
             } else {
-                recv_ptp_data(data,buf,chunk_size);
-                fwrite(buf,1,chunk_size,f);
+                fwrite(rs.buf,1,rs.last_read,f);
             }
-            data_size -= chunk_size;
+            data_size -= rs.last_read;
         }
+
         if(f) {
             fclose(f);
         }
-
-        free(buf);
-        if(data_size > 0 && ptp.code != PTP_RC_OK) { 
+        recv_ptp_data_finish(&rs);
+        if(data_size > 0 && ptp.code != PTP_RC_OK && !recv_err) { 
             flush_recv_ptp_data(data,data_size); 
         } 
         break;

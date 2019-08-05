@@ -1630,6 +1630,18 @@ int add_ptp_handler(int opcode, ptp_handler handler, int unknown)
 #endif
 }
 
+#ifdef CAM_PTP_USE_NATIVE_BUFFER
+int get_ptp_file_buf_size(void)
+{
+    return _get_ptp_buf_size(CAM_PTP_FILE_BUFFER_ID);
+}
+
+char *get_ptp_file_buf(void)
+{
+    return _get_ptp_file_buf();
+}
+#endif
+
 int CreateTask (const char *name, int prio, int stack_size, void *entry)
 {
     return _CreateTask(name, prio, stack_size, entry, 0);
@@ -1778,7 +1790,9 @@ void dbg_printf(char *fmt,...) {
     // stdout - for use with uart redirection
     _ExecuteEventProcedure("Printf",s);
     // camera log - will show up in crash dumps, or in stdout on ShowCameraLog
-    // _LogPrintf(0x120,s);
+    // length limited, asserts if too long
+    //s[59]=0;
+    //_LogCameraEvent(0x20,s);
 
     // file
     /*
