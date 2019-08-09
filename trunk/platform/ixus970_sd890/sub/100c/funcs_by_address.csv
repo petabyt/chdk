@@ -1051,9 +1051,9 @@
 0xffa2ab80,SetMechaShutterOpenDacSetting_FW
 0xffa2ab9c,SetMechaShutterWaitTimeSetting_FW
 0xffa2abb0,j_GetMechaShutterStatus_FW
-0xffa838f8,PutInNdFilter,(stubs_entry_2.s)
+0xffa2ac20,PutInNdFilter
 0xffa2ac20,TurnOnNdFilter_FW
-0xffa8392c,PutOutNdFilter,(stubs_entry_2.s)
+0xffa2ac44,PutOutNdFilter
 0xffa2ac44,TurnOffNdFilter_FW
 0xffa2ac68,SetNdDacSetting_FW
 0xffa2ac8c,EnableZoomLensEncoderPowerControl_FW
