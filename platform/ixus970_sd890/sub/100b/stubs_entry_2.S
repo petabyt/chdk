@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 #define NULL_SUB 0xFF810948
 
-// Override stubs_entry.S
-NHSTUB(PutInNdFilter,               0xFFA838F8)
-NHSTUB(PutOutNdFilter,              0xFFA8392C)
-
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 

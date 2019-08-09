@@ -1,10 +1,6 @@
 #include "stubs_asm.h"
 #define NULL_SUB 0xFF810948
 
-// Override stubs_entry.S
-NHSTUB(PutInNdFilter,               0xFFA83868)
-NHSTUB(PutOutNdFilter,              0xFFA8389C)
-
 // These don't exist/aren't found in dryos
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 

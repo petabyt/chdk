@@ -23,8 +23,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(PutInNdFilter                        ,0xffa2ac20) //102        *** != 0xffa838f8
-//NHSTUB(PutOutNdFilter                       ,0xffa2ac44) //102        *** != 0xffa8392c
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffa3eec8 -> ffaf9530
@@ -220,6 +218,8 @@ NHSTUB(PT_MoveOpticalZoomAt                   ,0xff85bbbc) //120
 NHSTUB(PT_PlaySound                           ,0xff85b240) //102
 NHSTUB(PostLogicalEventForNotPowerType        ,0xff873274) //120
 NHSTUB(PostLogicalEventToUI                   ,0xff8732c0) //120
+NHSTUB(PutInNdFilter                          ,0xffa2ac20) //102
+NHSTUB(PutOutNdFilter                         ,0xffa2ac44) //102
 NHSTUB(Read                                   ,0xff81a094) //120
 NHSTUB(ReadFastDir                            ,0xffa13500) //  1
 NHSTUB(Rec2PB                                 ,0xff876ed4) //104
