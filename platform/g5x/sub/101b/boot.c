@@ -51,7 +51,7 @@ boot ()
             "    ldr     r1, [r2]\n"
             "    orr     r1, r1, #1\n"
             "    str     r1, [r2]\n"
-            "    ldr     r0, =0xfcee2128\n"
+            "    ldr     r0, =0xfcee2168\n"
             "    ldr     r1, =0x010e1000\n"
             "    ldr     r3, =0x010fbd18\n"
             "loc_fc02002a:\n"
@@ -63,7 +63,7 @@ boot ()
             "    ldr     r0, =0x010e1000\n"
             "    ldr     r1, =0x0001ad18\n"
             "    bl      sub_fc150d5a\n"
-            "    ldr     r0, =0xfcefce40\n"
+            "    ldr     r0, =0xfcefce80\n"
             "    ldr     r1, =0xbfe10800\n"
             "    ldr     r3, =0xbfe176a9\n"
             "loc_fc020046:\n"
@@ -80,7 +80,7 @@ boot ()
             "    bic     r0, #1\n" // clear thumb bit
             "    stm     r0, {r1,r2}\n" // Store patch instructions
 
-            "    ldr     r0, =0xfceacab4\n"
+            "    ldr     r0, =0xfceacaf4\n"
             "    ldr     r1, =0x00008000\n"
             "    ldr     r3, =0x0003d674\n"
             "loc_fc02005a:\n"
@@ -211,7 +211,7 @@ sub_fc066258_my ()
             "    str     r0, [r1]\n"
             "    movs    r1, #0x78\n"
             "    mov     r0, sp\n"
-            "    blx     sub_fc34d244\n"
+            "    blx     sub_fc34d25c\n"
             "    ldr     r0, =0x0060e000\n"
             "    mov.w   r1, #0xc0000\n"
             "    stm.w   sp, {r0, r1, r4}\n"
@@ -248,7 +248,7 @@ sub_fc066258_my ()
             "    lsls    r0, r0, #5\n"
             "    str     r0, [sp, #0x68]\n"
             "    mov     r0, sp\n"
-            "    blx     sub_fc34c9a0\n"
+            "    blx     sub_fc34c9b8\n"
             "    add     sp, #0x78\n"
             "    pop     {r4, pc}\n"
     );
@@ -340,17 +340,17 @@ sub_fc0667de_my ()
             "loc_fc0667f2:\n"
             "    b       loc_fc0667f2\n" // infinite loop
             "loc_fc0667f4:\n"
-            "    blx     sub_fc34c9f8\n"
+            "    blx     sub_fc34ca10\n"
             "    ldr     r1, =0x006ce000\n"
             "    movs    r0, #0\n"
-            "    bl      sub_fc3bf968\n"
+            "    bl      sub_fc3bf9a4\n"
             "    movs    r3, #0\n"
             "    str     r3, [sp]\n"
             "    ldr     r3, =task_Startup_my\n" // Patched
             "    movs    r2, #0\n"
             "    movs    r1, #0x19\n"
             "    ldr     r0, =0xfc06681c\n" //  *"Startup"
-            "    blx     sub_fc34ce24\n"
+            "    blx     sub_fc34ce3c\n"
             "    movs    r0, #0\n"
             "    pop     {r3, pc}\n"
     );
@@ -396,7 +396,7 @@ sub_fc0ecf20_my ()
             "    beq     loc_fc0ecfa6\n"
             "    cbz     r5, loc_fc0ecf98\n"
             "    movs    r0, #0x5a\n"
-            "    blx     sub_fc34d19c\n"
+            "    blx     sub_fc34d1b4\n"
             "    movs    r0, #0x8a\n"
             "    bl      sub_fc09bcca\n"
             "    bic.w   r5, r8, r0\n"
@@ -446,7 +446,7 @@ task_Startup_my ()
             "    bl      sub_fc0c2dfc\n"
             "    bl      sub_fc0668b8\n"
             "    bl      sub_fc0ed2d0\n"
-            "    bl      sub_fc44f2b8\n"
+            "    bl      sub_fc44f2f4\n"
             // added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
             "    bl      sub_010e1746\n" // ref in sub_010e1746 following SD1stInit create
             //"    bl      sub_fc0ed356\n"   // - startdiskboot
@@ -454,7 +454,7 @@ task_Startup_my ()
             "    bl      sub_fc0ed448\n"
             "    bl      sub_fc066a44\n"
             "    bl      sub_fc0669c0\n"
-            "    bl      sub_fc44f2f6\n"
+            "    bl      sub_fc44f332\n"
             "    bl      sub_fc0a2498\n"
             "    bl      sub_fc0ed44e\n"
             "    bl      sub_fc0ece46_my\n" // -> taskcreate_physw
@@ -468,7 +468,7 @@ task_Startup_my ()
             "    bl      sub_fc0c2d4a\n"
             "    bl      sub_fc0c29b8\n"
             "    bl      sub_fc066a48\n"
-            "    bl      sub_fc3691b8\n"
+            "    bl      sub_fc3691d0\n"
             "    bl      sub_fc0c298a\n"
             "    pop.w   {r4, lr}\n"
             "    b.w     sub_fc0c2dd2\n" // continue in firmware
@@ -497,7 +497,7 @@ sub_fc0ece46_my ()
             "    movs    r1, #0x17\n"
             "    ldr     r0, =0xfc0ed1c8\n" //  *"PhySw"
             "    movw    r2, #0x2000\n" // original value 0x800
-            "    blx     sub_fc34d09c\n"
+            "    blx     sub_fc34d0b4\n"
             "    str     r0, [r4, #4]\n"
             "loc_fc0ece72:\n"
             "    pop     {r3, r4, r5, pc}\n"
@@ -512,14 +512,14 @@ init_file_modules_task ()
             //capdis -f=chdk -s=0xfc157609 -c=18 -stubs PRIMARY.BIN 0xfc000000
             "    push    {r4, r5, r6, lr}\n"
             "    movs    r0, #6\n"
-            "    bl      sub_fc368a14\n"
+            "    bl      sub_fc368a2c\n"
             "    bl      sub_fc0c994c\n"
             "    movs    r4, r0\n"
             "    movw    r5, #0x5006\n"
             "    beq     loc_fc157624\n"
             "    movs    r1, #0\n"
             "    mov     r0, r5\n"
-            "    bl      sub_fc3bd76c\n"
+            "    bl      sub_fc3bd7a8\n"
             "loc_fc157624:\n"
             "    bl      sub_fc0c9976\n"
             "    bl      core_spytask_can_start\n" // + CHDK: Set "it's-safe-to-start" flag for spytask
@@ -528,7 +528,7 @@ init_file_modules_task ()
             "    mov     r0, r5\n"
             "    pop.w   {r4, r5, r6, lr}\n"
             "    movs    r1, #1\n"
-            "    b.w     sub_fc3bd76c\n" // continue in firmware
+            "    b.w     sub_fc3bd7a8\n"
             "loc_fc157638:\n"
             "    pop     {r4, r5, r6, pc}\n"
     );
@@ -713,33 +713,33 @@ sub_fc0ecc40_my ()
 
 void __attribute__((naked,noinline)) task_TricInitTask_my() {
     asm volatile(
-            //capdis -f=chdk -s=0xfc54224d -c=35 -stubs PRIMARY.BIN 0xfc000000
+            //capdis -f=chdk -s=0xfc542289 -c=35 -stubs PRIMARY.BIN 0xfc000000
             "    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}\n"
             "    movs    r0, #8\n"
-            "    ldr     r1, =0xfc542478\n" //  *"InitTskStart"
-            "    bl      sub_fc3b77f2\n"
+            "    ldr     r1, =0xfc5424b4\n" //  *"InitTskStart"
+            "    bl      sub_fc3b782e\n"
             "    ldr.w   sl, =0x000222dc\n"
             "    movw    fp, #0x1000\n"
             "    ldr     r4, =0x000222d8\n"
             "    movs    r2, #0\n"
             "    ldr     r1, =0x0703870f\n"
             "    ldr     r0, [r4]\n"
-            "    blx     sub_fc34d214\n"
+            "    blx     sub_fc34d22c\n"
             "    lsls    r0, r0, #0x1f\n"
-            "    bne     sub_fc542270\n"    // + jump to FW
+            "    bne     sub_fc5422ac\n"    // + jump to FW
             "    ldr     r4, =0x000222d8\n"
             "    add     r1, sp, #0xc\n"
             "    ldr     r0, [r4]\n"
-            "    blx     sub_fc34cffc\n"
+            "    blx     sub_fc34d014\n"
             "    ldr     r1, [sp, #0xc]\n"
             "    ldr     r0, [r4]\n"
-            "    blx     sub_fc34d1cc\n"
+            "    blx     sub_fc34d1e4\n"
             "    ldr     r0, =0x02000003\n"
             "    ldr     r7, [sp, #0xc]\n"
             "    tst     r7, r0\n"
-            "    beq     sub_fc542386\n"    // + jump to FW
+            "    beq     sub_fc5423c2\n"    // + jump to FW
             "    lsls    r0, r7, #0x1f\n"
-            "    beq     sub_fc5422a6\n"    // + jump to FW
+            "    beq     sub_fc5422e2\n"    // + jump to FW
 
             "    ldr     r0, =0xd2020074\n" // +
             "    ldr     r0, [r0]\n"        // + nonzero when core already running
@@ -750,7 +750,7 @@ void __attribute__((naked,noinline)) task_TricInitTask_my() {
             "    bl      _SetEventFlag\n"   // + core already initialized, set the SmacIdleCmp eventflag here
             "tric1:\n"                      // +
 
-            "    bl      sub_fc54272a\n"
-            "    b       sub_fc542312\n"    // + jump to FW
+            "    bl      sub_fc542766\n"
+            "    b       sub_fc54234e\n"    // + jump to FW
     );
 }

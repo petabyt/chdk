@@ -26,7 +26,7 @@ KEYSYS=d5
 FI2FLAGS=W
 
 # next line is for the compatibility check, as comment
-# PLATFORMID @ 0xfdf20040
+# PLATFORMID @ 0xFDF20270
 # below 2 commented lines are used by tools/compatbuilder.sh
 # BLINK_LED_CONTROL=4
 # BLINK_LED_GPIO=0xd20b0994
