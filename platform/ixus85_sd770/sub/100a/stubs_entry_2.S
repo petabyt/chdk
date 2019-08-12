@@ -3,8 +3,6 @@
 
 // Override stubs_entry.S
 NHSTUB(DebugAssert,                 0xFF81BCF8)
-NHSTUB(PutInNdFilter,               0xFFA7CBDC)
-NHSTUB(PutOutNdFilter,              0xFFA7CC10)
 
 // These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)

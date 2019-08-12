@@ -986,9 +986,9 @@
 0xff95be20,PTM_SetCurrentItem_FW
 0xff95c4bc,PTM_SetPropertyEnable
 0xff95c4bc,PTM_SetProprietyEnable_FW
-0xffa7cbdc,PutInNdFilter,(stubs_entry_2.s)
+0xffa25968,PutInNdFilter
 0xffa7cc98,PutInNdFilter_FW
-0xffa7cc10,PutOutNdFilter,(stubs_entry_2.s)
+0xffa2598c,PutOutNdFilter
 0xffa7ccd0,PutOutNdFilter_FW
 0xff869e90,PutsCameraLogEvent_FW
 0xff9ac928,qsort
