@@ -173,8 +173,15 @@ firzipsubcopy: infoline
 
 
 firzipsubcomplete: infoline clean firsub
-	cat $(doc)/1_intro.txt $(cam)/notes.txt $(doc)/2_installation.txt $(doc)/3_faq.txt $(doc)/4_urls.txt $(doc)/5_gpl.txt $(doc)/6_ubasic_copyright.txt > $(doc)/readme.txt
-	cp $(cam)/notes.txt $(doc)/camnotes.txt
+	( printf "\r\n*** Build Information ***\r\n" ; \
+	 printf "CHDK for $(TARGET_CAM) fw:$(PLATFORMSUB)" ; \
+	 COMPATFW="$(shell grep '^'$(TARGET_CAM)',[^,]\+,[^,]*,'$(PLATFORMSUB) camera_list.csv | grep -v '^'$(TARGET_CAM),$(PLATFORMSUB) | sed -e 's/^'$(TARGET_CAM)',\([^,]\+\),[^,]*,'$(PLATFORMSUB)'.*/\1/')" ; \
+	 if [ ! -z "$$COMPATFW" ] ; then \
+	  printf " compatible fw:$$COMPATFW" ; \
+	 fi ; \
+	 printf " PID:$(TARGET_PID)\r\nbuild:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`\r\n\r\n*** Camera specific notes ***\r\n" ) > $(doc)/camnotes.txt
+	cat $(cam)/notes.txt >> $(doc)/camnotes.txt
+	cat $(doc)/1_intro.txt $(doc)/camnotes.txt $(doc)/2_installation.txt $(doc)/3_faq.txt $(doc)/4_urls.txt $(doc)/5_gpl.txt $(doc)/6_ubasic_copyright.txt > $(doc)/readme.txt
 	@echo \-\> $(ZIP_SMALL)
 	rm -f $(bin)/$(ZIP_SMALL)
 	LANG=C echo "CHDK-$(VER) for $(TARGET_CAM) fw:$(TARGET_FW) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
