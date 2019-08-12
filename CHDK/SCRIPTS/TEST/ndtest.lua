@@ -103,7 +103,7 @@ require'rawoplib'
 props=require'propcase'
 capmode=require'capmode'
 
-ndtest_version="1.6"
+ndtest_version="1.7"
 
 -- utility functions
 function printf(...)
@@ -495,6 +495,9 @@ function ndtest:final_results()
 			logdesc('%d warnings',self.warn_count)
 		end
 		if self.fail_count > 0 then
+			if self.test_result == 'fatal' then
+				printf('FATAL ERROR - test incomplete')
+			end
 			printf('%d failed - check log',self.fail_count)
 			logdesc('%d failed',self.fail_count)
 		end
@@ -865,14 +868,33 @@ function ndtest:run_test(shoot_mode)
 			repeat sleep(10) until get_shooting()
 			-- for single, this has to be done after get_shooting to mimic override behavior
 			self:do_nd_av(nd_state)
+			-- get av96 set for shoot, for hook comparison
+			av96_shot = get_prop(props.AV)
 			sleep(self.shooting_ready_delay)
+		else
+			-- get av96 set for shoot, for hook comparison
+			av96_shot = get_prop(props.AV)
 		end
 
 		if shoot_mode ~= 'cont' then
 			press('shoot_full_only')
 		end
 		-- wait until the hook is reached
-		hook_shoot.wait_ready()
+		if not hook_shoot.wait_ready({timeout_error=false}) then
+			self:fail('hook_shoot timeout')
+			log:write()
+			self.test_result = 'fatal'
+			break
+		end
+		
+		-- overrides appear to fail in some cases
+		if get_prop(props.TV) ~= tv96 then
+			self:warn('hook_shoot tv mismatch')
+		end
+		if get_prop(props.AV) ~= av96_shot then
+			self:warn('hook_shoot av mismatch')
+		end
+
 		-- check if ND state matches expected, set if needed
 		self:do_state_shoot_hook(nd_state)
 
@@ -887,7 +909,12 @@ function ndtest:run_test(shoot_mode)
 		hook_shoot.continue()
 
 		-- wait for the image to be captured
-		hook_raw.wait_ready()
+		if not hook_raw.wait_ready({timeout_error=false}) then
+			self:fail('hook_raw timeout')
+			log:write()
+			self.test_result = 'fatal'
+			break
+		end
 		self:meter()
 
 		local tv96_log=get_prop(props.TV)
@@ -903,6 +930,14 @@ function ndtest:run_test(shoot_mode)
 			nd=nd_state,
 			nd_cur=get_nd_current_ev96(),
 		}
+		-- overrides appear to fail in some cases
+		if tv96_log ~= tv96 then
+			self:warn('hook_raw tv mismatch')
+		end
+		if av96_log ~= av96_shot then
+			self:warn('hook_raw av mismatch')
+		end
+
 		-- check get_nd_current matches
 		if nd_state then
 			if get_nd_current_ev96() == 0 then
@@ -987,6 +1022,8 @@ function ndtest:run_test(shoot_mode)
 		log:set{operation='result '..shoot_mode}
 	elseif self.test_result == 'break' then
 		log:set{operation='user exit '..shoot_mode}
+	elseif self.test_result == 'fatal' then
+		log:set{operation='fatal error '..shoot_mode}
 	elseif self.test_result == 'retry' then
 		log:set{operation='retry '..shoot_mode}
 	end
@@ -1000,7 +1037,7 @@ function ndtest:run_all_tests()
 	local i=1
 	while i <= #self.shoot_modes do
 		self:run_test(self.shoot_modes[i])
-		if self.test_result=='break' then
+		if self.test_result=='break' or self.test_result=='fatal' then
 			break
 		end
 		if self.test_result ~= 'retry' then
