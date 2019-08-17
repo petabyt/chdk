@@ -294,8 +294,14 @@ void core_spytask()
 
         if ((camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) || recreview_hold)
         {
-            if (((cnt++) & 3) == 0)
-                gui_redraw();
+#ifdef CAM_DETECT_BITMAP_UPDATE
+            extern int check_gui_needs_redraw();
+            int gui_force_redraw = check_gui_needs_redraw();
+#else
+            int gui_force_redraw = 0;
+#endif
+            if (gui_force_redraw || (((cnt++) & 3) == 0))
+                gui_redraw(gui_force_redraw);
         }
 
         if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)

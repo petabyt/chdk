@@ -59,3 +59,13 @@ long get_vbatt_max()
 {
     return 3900;
 }
+
+// Support swivel screen open/closed flag
+int screen_opened(void) {
+    return (physw_status[0] & 0x00002000);
+}
+
+// Support swivel screen rotated flag - used to flip CHDK UI.
+int screen_rotated(void) {
+    return !(physw_status[0] & 0x10000000);
+}

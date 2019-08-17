@@ -73,7 +73,7 @@ extern int gui_kbd_process();
 extern void gui_default_kbd_process_menu_btn();
 extern int gui_touch_process(int x, int y);
 
-extern void gui_redraw();
+extern void gui_redraw(int flag_gui_enforce_redraw);
 extern void gui_set_need_restore();
 extern void gui_cancel_need_restore();
 

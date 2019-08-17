@@ -38,6 +38,8 @@
 
     #define CAM_HAS_CMOS                        1
 
+    #define CAM_SWIVEL_SCREEN                   1
+
     #define CAM_HAS_VIDEO_BUTTON                1
 
     #undef  CAM_UNCACHED_BIT
@@ -69,15 +71,18 @@
 
 //    #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
-    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
+    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1   // Bitmap resolution changes when switching to EVF
+    #define CAM_DETECT_BITMAP_UPDATE            1   // camera can detect if CHDK needs to be redrawn
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
     #undef  CAM_SCREEN_HEIGHT
-    #define CAM_BITMAP_WIDTH                    736 // Actual width of bitmap screen in <s>bytes</s> pixels (YUV buffer)
-    #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows
-    #define CAM_SCREEN_WIDTH                    720 // Width of bitmap screen in CHDK co-ordinates (360 or 480)
-    #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
+    // Initial settings are for LCD screen
+    #define CAM_BITMAP_WIDTH                    736 // Actual width of bitmap screen in <s>bytes</s> pixels (YUV buffer) [evf = 1024]
+    #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows [evf = 768]
+    #define CAM_SCREEN_WIDTH                    720 // Width of bitmap screen in CHDK co-ordinates [evf = 1024]
+    #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates [evf = 768]
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.
 
