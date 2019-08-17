@@ -12,23 +12,24 @@ void vid_bitmap_refresh()
     extern void _VTMLock();
     extern void _VTMUnlock();
     _VTMLock();
-    _transfer_src_overlay(active_bitmap_buffer);
+    int n = active_bitmap_buffer;
+    _transfer_src_overlay(n^1);
+    _transfer_src_overlay(n);
     _VTMUnlock();
 }
 
 void *vid_get_bitmap_fb()
 {
     // For live view send YUV instead of RGBA
-    return bitmap_buffer[active_bitmap_buffer&1];
+    return bitmap_buffer[active_bitmap_buffer];
 }
 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
-// found near BmpDDev.c
-void *opacity_buffer[2] = { (void*)0x5FC40000, (void*)0x5FB80000 };
+extern void *opacity_buffer[];
 
 void *vid_get_opacity_active_buffer()
 {
-    return opacity_buffer[active_bitmap_buffer&1];
+    return opacity_buffer[active_bitmap_buffer];
 }
 
 char *camera_jpeg_count_str()
@@ -149,3 +150,58 @@ int vid_get_viewport_fullscreen_height()        { return 480; }
 int vid_get_viewport_buffer_width_proper()      { return 736; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
+
+/*
+ * Needed because bitmap buffer resolution changes when using the EVF
+ * LCD = 720 x 480
+ * EVF = 1024 x 768
+ * TODO: This does not reset the OSD positions of things on screen
+ *       If user has customised OSD layout how should this be handled?
+ */
+void update_screen_dimensions()
+{
+    extern unsigned char evf_active;
+
+    // Get LCD / EVF width & height
+    if (evf_active == 0)
+    {
+        // LCD
+        camera_screen.width = 720;
+        camera_screen.height = 480;
+        camera_screen.buffer_width = 736;
+    }
+    else
+    {
+        // EVF
+        camera_screen.width = 1024;
+        camera_screen.height = 768;
+        camera_screen.buffer_width = 1024;
+
+    }
+
+    // Reset OSD offset and width
+    camera_screen.disp_right = camera_screen.width - 1;
+    camera_screen.disp_width = camera_screen.width;
+
+    // Update other values
+    camera_screen.physical_width = camera_screen.buffer_width;
+    camera_screen.buffer_height = camera_screen.height;
+    camera_screen.size = camera_screen.width * camera_screen.height;
+    camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
+}
+
+/*
+ * Check if active_bitmap_buffer has changed. Used to force CHDK UI redraw.
+ * If AF Method set to Face+Tracking active_bitmap_buffer is constantly changing causing severe flickering issues with CHDK UI.
+ * This reduces the flickering; but does not eliminate it.
+ */
+int check_gui_needs_redraw()
+{
+    static int last_bitmap_buffer = 0;
+    if (active_bitmap_buffer != last_bitmap_buffer)
+    {
+        last_bitmap_buffer = active_bitmap_buffer;
+        return 1;
+    }
+    return 0;
+}

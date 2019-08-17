@@ -2564,7 +2564,7 @@ static void gui_draw_alt_helper()
     is_menu_shortcut = 0;
 
     int y = FONT_HEIGHT;
-    int x = ((CAM_SCREEN_WIDTH/2)-(FONT_WIDTH*35/2));
+    int x = ((camera_screen.width/2)-(FONT_WIDTH*35/2));
 
     twoColors col = user_color(conf.menu_color);
     twoColors hdr_col = user_color(conf.menu_title_color);
@@ -2954,10 +2954,8 @@ gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process,
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
-void gui_redraw()
+void gui_redraw(int flag_gui_enforce_redraw)
 {
-    int flag_gui_enforce_redraw = 0;
-
     if (!draw_test_guard() && (!camera_info.state.gui_mode_none || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();

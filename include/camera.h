@@ -251,6 +251,8 @@
 
     #undef  CAM_SUPPORT_BITMAP_RES_CHANGE       // port can adapt to resolution change of the bitmap buffer (when composite or hdmi output is used)
 
+    #undef  CAM_DETECT_BITMAP_UPDATE            // camera can detect if CHDK UI needs to be redrawn
+
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
 

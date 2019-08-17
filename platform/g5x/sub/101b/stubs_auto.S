@@ -3,7 +3,7 @@
 
 #include "stubs_asm.h"
 
-STUB(010e1747)
+STUB(010e1746)
 STUB(fc02007e)
 STUB(fc06647a)
 STUB(fc066610)

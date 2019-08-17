@@ -1125,8 +1125,8 @@ void gui_draw_debug_vals_osd()
 
     twoColors col = user_color(conf.osd_color);
 
-#define DBGMISCVALS_X ((CAM_SCREEN_WIDTH/FONT_WIDTH)-17)
-#define DBGMISCVALS_Y ((CAM_SCREEN_HEIGHT/FONT_HEIGHT)-6)
+    int DBGMISCVALS_X = ((camera_screen.width/FONT_WIDTH)-17);
+    int DBGMISCVALS_Y = ((camera_screen.height/FONT_HEIGHT)-6);
 
     // DEBUG: "Show misc. values"
     // change ROW to fit values on screen in draw_txt_string(COLUMN, ROW, ...)
