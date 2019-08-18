@@ -161,11 +161,9 @@ asm volatile (
 "    B       loc_FF0751B4 \n"
 
 "loc_FF075010:\n"
-"    BL      wait_until_remote_button_is_released\n"    // added
-"    BL      capt_seq_hook_set_nr\n"                    // added
 "    LDR     R8, [R0, #0xC] \n"
 "    MOV     R0, R8 \n"
-"    BL      sub_FF184DA8 \n"
+"    BL      sub_FF184DA8_my \n"  // --> Patched. Old value = 0xFF184DA8.
 "    MOV     R4, R0 \n"
 "    MOV     R2, R8 \n"
 "    MOV     R1, #1 \n"
@@ -354,6 +352,129 @@ asm volatile (
 "    BLEQ    _DebugAssert \n"
 "    STR     R6, [R4, #8] \n"
 "    B       loc_FF074F2C \n"
+);
+}
+
+/*************************************************************/
+//** sub_FF184DA8_my @ 0xFF184DA8 - 0xFF184F14, length=92
+void __attribute__((naked,noinline)) sub_FF184DA8_my() {
+asm volatile (
+"    STMFD   SP!, {R3-R7,LR} \n"
+"    LDR     R5, =0x3E1F4 \n"
+"    MOV     R4, R0 \n"
+"    LDR     R0, [R5, #0x28] \n"
+"    MOV     R6, #0 \n"
+"    CMP     R0, #0 \n"
+"    BNE     loc_FF184E2C \n"
+"    LDR     R0, [R5, #0xBC] \n"
+"    CMP     R0, #1 \n"
+"    BNE     loc_FF184E14 \n"
+"    LDRH    R0, [R5, #0x96] \n"
+"    CMP     R0, #3 \n"
+"    LDRNE   R0, [R4, #8] \n"
+"    CMPNE   R0, #1 \n"
+"    BLS     loc_FF184DF8 \n"
+"    BL      sub_FF022D20 \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF184E2C \n"
+"    BL      sub_FF07AB88 \n"
+"    B       loc_FF184E24 \n"
+
+"loc_FF184DF8:\n"
+"    MOV     R0, #0xC \n"
+"    BL      sub_FF07AB20 \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF184E2C \n"
+"    BL      sub_FF1855D8 \n"
+"    BL      sub_FF072DFC \n"
+"    B       loc_FF184E24 \n"
+
+"loc_FF184E14:\n"
+"    MOV     R0, #0xC \n"
+"    BL      sub_FF07AB20 \n"
+"    TST     R0, #1 \n"
+"    BEQ     loc_FF184E2C \n"
+
+"loc_FF184E24:\n"
+"    MOV     R0, #1 \n"
+"    LDMFD   SP!, {R3-R7,PC} \n"
+
+"loc_FF184E2C:\n"
+"    BL      sub_FF0756D8 \n"
+"    LDR     R0, [R5, #0x28] \n"
+"    CMP     R0, #0 \n"
+"    BNE     loc_FF184F00 \n"
+"    MOV     R0, R4 \n"
+"    BL      sub_FF184678 \n"
+"    TST     R0, #1 \n"
+"    LDMNEFD SP!, {R3-R7,PC} \n"
+"    MOV     R0, R4 \n"
+"    BL      sub_FF184AB0 \n"
+"    BL      sub_FF18551C \n"
+"    LDR     R0, [R5, #0xBC] \n"
+"    CMP     R0, #1 \n"
+"    BNE     loc_FF184E78 \n"
+"    LDRH    R0, [R5, #0x96] \n"
+"    CMP     R0, #3 \n"
+"    LDRNE   R0, [R4, #8] \n"
+"    CMPNE   R0, #1 \n"
+"    BHI     loc_FF184E80 \n"
+
+"loc_FF184E78:\n"
+"    MOV     R0, #2 \n"
+"    BL      sub_FF07C4B4 \n"
+"    BL      wait_until_remote_button_is_released\n"    // added
+"    BL      capt_seq_hook_set_nr\n"                    // added
+
+"loc_FF184E80:\n"
+"    LDRH    R0, [R5] \n"
+"    SUB     R1, R0, #0x8200 \n"
+"    SUBS    R1, R1, #0x11 \n"
+"    LDREQ   R0, [R4, #0x14] \n"
+"    BLEQ    sub_FF0704BC \n"
+"    LDRH    R0, [R5] \n"
+"    SUB     R1, R0, #0x8200 \n"
+"    SUBS    R1, R1, #0x2D \n"
+"    BNE     loc_FF184EF0 \n"
+"    MOV     R5, #1 \n"
+"    MOV     R2, #2 \n"
+"    MOV     R1, SP \n"
+"    ADD     R0, R2, #0x15C \n"
+"    STR     R5, [SP] \n"
+"    BL      _GetPropertyCase \n"
+"    TST     R0, #1 \n"
+"    MOVNE   R1, #0xBC \n"
+"    LDRNE   R0, =0xFF185018 /*'SsCaptureSeq.c'*/ \n"
+"    BLNE    _DebugAssert \n"
+"    LDRH    R0, [SP] \n"
+"    CMP     R0, #1 \n"
+"    BLS     loc_FF184EE8 \n"
+"    MOV     R0, R4 \n"
+"    STR     R5, [R4, #0xE4] \n"
+"    BL      sub_FF30E174 \n"
+"    B       loc_FF184EF8 \n"
+
+"loc_FF184EE8:\n"
+"    MOV     R0, #0 \n"
+"    STR     R0, [R4, #0xE4] \n"
+
+"loc_FF184EF0:\n"
+"    MOV     R0, R4 \n"
+"    BL      sub_FF30DE24 \n"
+
+"loc_FF184EF8:\n"
+"    MOV     R6, R0 \n"
+"    B       loc_FF184F10 \n"
+
+"loc_FF184F00:\n"
+"    LDR     R0, =0x74C0 \n"
+"    LDR     R0, [R0] \n"
+"    CMP     R0, #0 \n"
+"    MOVNE   R6, #0x1D \n"
+
+"loc_FF184F10:\n"
+"    MOV     R0, R6 \n"
+"    LDMFD   SP!, {R3-R7,PC} \n"
 );
 }
 
