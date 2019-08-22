@@ -32,23 +32,6 @@ char *hook_raw_image_addr()   //ASM1989 08.20.2010
 
 }
 
-// Live picture buffer (shoot not pressed) //ASM1989 08.20.2010
-void *vid_get_viewport_live_fb()
-{
-
-
-    return 0x0;
-/*
-    void **fb=(void **)0x2180;                               // 0x2150 or 0x2180 (old SX200) ???? What for SX210
-    unsigned char buff = *((unsigned char*)0x2058);          // found at FF84FA18 (guess work)
-    if (buff == 0) buff = 2;  else buff--;
-    return fb[buff];*/
-
-
-}
-
-
-
 // OSD buffer  //ASM1989 08.20.2010
 void *vid_get_bitmap_fb()
 {
@@ -56,6 +39,10 @@ void *vid_get_bitmap_fb()
 }
 
 
+void *vid_get_bitmap_active_buffer()
+{
+	return (void*)(*(int*)(0x62c0+0x18)); //"Add: %p Width : %ld Hight : %ld"
+}
 
 // Live picture buffer (shoot half-pressed) //ASM1989 08.20.2010
 void *vid_get_viewport_fb()
