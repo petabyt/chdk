@@ -17,8 +17,6 @@ TESTED
 ******
 To be done.
 
-This is a blind port, with no user feedback other than "it works".
-
 NOT IMPLEMENTED
 ***************
 Filewritetask and movie features are not supported.

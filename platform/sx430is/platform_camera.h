@@ -24,6 +24,7 @@
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
+    #define CAM_DRYOS_2_3_R59               1 // Defined for cameras with DryOS version R59 or higher
 
     #define CAM_RAW_ROWPIX                  5248    
     #define CAM_RAW_ROWS                    3920     

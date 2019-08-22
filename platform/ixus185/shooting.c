@@ -92,6 +92,7 @@ const CapturemodeMap modemap[] = {
     { MODE_MINIATURE,           33337 },
     { MODE_TOY_CAMERA,          33340 },
     { MODE_MONOCHROME,          33344 },   
+    { MODE_DIGITAL_IS,          33348 },
 };
 
 #include "../generic/shooting.c"
