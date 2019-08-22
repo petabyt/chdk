@@ -697,7 +697,9 @@ struct	__stat  // DryOS pre R39
 
 #else
 
-struct __stat   // DryOS post R39
+#ifndef CAM_DRYOS_2_3_R59
+
+struct __stat   // DryOS R39...R58
 {
     unsigned long	st_unknown_1;
     unsigned long	st_attrib;
@@ -706,6 +708,21 @@ struct __stat   // DryOS post R39
     unsigned long	st_mtime;
     unsigned long	st_unknown_2;
 };
+
+#else
+
+struct __stat   // DryOS >= R59
+{
+    unsigned long	st_unknown_1;
+    unsigned long	st_attrib;
+    unsigned long	st_size;        // fixme: very likely 64bit, upper 32 bit is st_unknown_2
+    unsigned long	st_unknown_2;
+    unsigned long	st_ctime;
+    unsigned long	st_mtime;
+    unsigned long	st_unknown_3;
+};
+
+#endif//CAM_DRYOS_2_3_R59
 
 #endif//CAM_DRYOS_2_3_R39
 

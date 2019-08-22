@@ -28,6 +28,7 @@
     #define CAM_FLASHPARAMS_VERSION         3   // flash parameters structure version (every camera from 2005 on is version 3)
     #undef  CAM_DRYOS_2_3_R39                   // Define for cameras with DryOS release R39 or greater
     #undef  CAM_DRYOS_2_3_R47                   // Define for cameras with DryOS release R47 or greater -> Cameras can boot from FAT32
+    #undef  CAM_DRYOS_2_3_R59                   // Define for cameras with DryOS release R59 or greater -> some support for 64bit files
 
     #define CAM_CIRCLE_OF_CONFUSION         5   // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
 
