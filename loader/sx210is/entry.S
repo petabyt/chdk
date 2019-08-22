@@ -1,5 +1,8 @@
     .section .entry
 
+    LDR     SP, =MEMBASEADDR
+    BL      check_compat
+
 // Turn OFF SD Card power           
 // to support autostart
 	LDR     R3, =0xC0220018
