@@ -24,12 +24,15 @@
     #define CAM_DRYOS                       1
     #define CAM_DRYOS_2_3_R39               1 // Defined for cameras with DryOS version R39 or higher
     #define CAM_DRYOS_2_3_R47               1 // Defined for cameras with DryOS version R47 or higher
+    #define CAM_DRYOS_2_3_R59               1 // Defined for cameras with DryOS version R59 or higher
 
     #define CAM_RAW_ROWPIX                  5248    
     #define CAM_RAW_ROWS                    3920     
 
     #define CAM_JPEG_WIDTH                  5152    
     #define CAM_JPEG_HEIGHT                 3864    
+
+    #define CAM_QUALITY_OVERRIDE            1
 
 	//TODO
     #define CAM_ACTIVE_AREA_X1              0
@@ -112,6 +115,7 @@
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60  // delay after a press - Required by zoom_in/zoom_out buttons
 
+    #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 

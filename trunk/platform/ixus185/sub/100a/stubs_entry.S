@@ -34,7 +34,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9abb7c) //  3 90%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ffafe02c -> ffcf8ffc
-// Mode 33348 in firmware but not in current modemap
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0001015c) // Found @0xff82ce70
