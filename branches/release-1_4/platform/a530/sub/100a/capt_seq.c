@@ -164,14 +164,14 @@ void __attribute__((naked,noinline)) sub_FFD37A98_my(long p)
 		"BL      sub_FFC0FB44\n"
 		"LDR     R3, =0x8F360\n"
 		"LDR     R0, [R3,#0x74]\n"
-		"BL      sub_FFC8C01C\n"
+//		"BL      sub_FFC8C01C\n" // nullsub
 		"BL      sub_FFD379EC\n"
-        //    "BL      wait_until_remote_button_is_released\n"
-		"BL      capt_seq_hook_set_nr\n" // +
 		"LDR     R3, =0x6168\n"
 		"LDR     R0, [R3]\n"
-
-		"B       sub_FFD37AD0\n"
+		"BL      sub_FFC8C4CC\n"
+        "BL      wait_until_remote_button_is_released\n"
+		"BL      capt_seq_hook_set_nr\n" // +
+        "LDR PC,=0xFFD37AD4\n" // continue in firmware
 	);
 }
 
