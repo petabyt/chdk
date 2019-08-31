@@ -14,6 +14,7 @@ void CreateTask_PhySw();
 void CreateTask_spytask();
 extern volatile int jogdial_stopped;
 void JogDial_task_my(void);
+extern void task_FileWrite();
 
 /*----------------------------------------------------------------------
 	taskCreateHook()
@@ -34,6 +35,7 @@ void taskCreateHook(context_t **context) {
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 }
 
 /*----------------------------------------------------------------------

@@ -24,6 +24,7 @@ extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_FileWrite();
 
 void taskCreateHook(context_t **context) { 
 	task_t *tcb=(task_t*)((char*)context-offsetof(task_t, context));
@@ -34,6 +35,7 @@ void taskCreateHook(context_t **context) {
 	if(tcb->entry == (void*)task_RotaryEncoder)		tcb->entry = (void*)JogDial_task_my;
 	if(tcb->entry == (void*)task_MovieRecord)		tcb->entry = (void*)movie_record_task;
 	if(tcb->entry == (void*)task_ExpDrv)			tcb->entry = (void*)exp_drv_task;
+    if(tcb->entry == (void*)task_FileWrite)         tcb->entry = (void*)filewritetask;
 }
 
 /*----------------------------------------------------------------------
