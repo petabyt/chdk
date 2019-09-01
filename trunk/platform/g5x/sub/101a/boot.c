@@ -130,13 +130,13 @@ CreateTask_my ()
             //"    itt     eq\n"
             //"    LDREQ   r3, =developseq_task\n"
             //"    BEQ     exitHook\n"
-            //
-            //"    ldr     r0, =task_FileWrite\n"
-            //"    cmp     r0, R3\n"
-            //"    itt     eq\n"
-            //"    ldreq   r3, =filewritetask\n"
-            //"    beq     exitHook\n"
-            //
+
+            "    ldr     r0, =task_FileWrite\n"
+            "    cmp     r0, R3\n"
+            "    itt     eq\n"
+            "    ldreq   r3, =filewritetask\n"
+            "    beq     exitHook\n"
+
             //"    ldr     r0, =task_MovieRecord\n"
             //"    cmp     r0, R3\n"
             //"    itt     eq\n"
