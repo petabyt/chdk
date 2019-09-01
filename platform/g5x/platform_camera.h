@@ -143,6 +143,8 @@
 
     #define REMOTE_SYNC_STATUS_LED              -1      // -1 = special value to force code to use debug_led
 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+
     // TODO: Below needs to be checked
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
@@ -155,9 +157,6 @@
     #undef  CAM_USE_ZOOM_FOR_MF
 
     #define CAM_EXT_TV_RANGE                    1
-
-    //#define CAM_HAS_FILEWRITETASK_HOOK          1
-    //#define CAM_FILEWRITETASK_SEEKS             1
 
     //#define CAM_QUALITY_OVERRIDE                1
 

@@ -130,13 +130,13 @@ CreateTask_my ()
             //"    itt     eq\n"
             //"    LDREQ   r3, =developseq_task\n"
             //"    BEQ     exitHook\n"
-            //
-            //"    ldr     r0, =task_FileWrite\n"
-            //"    cmp     r0, R3\n"
-            //"    itt     eq\n"
-            //"    ldreq   r3, =filewritetask\n"
-            //"    beq     exitHook\n"
-            //
+
+            "    ldr     r0, =task_FileWrite\n"
+            "    cmp     r0, R3\n"
+            "    itt     eq\n"
+            "    ldreq   r3, =filewritetask\n"
+            "    beq     exitHook\n"
+
             //"    ldr     r0, =task_MovieRecord\n"
             //"    cmp     r0, R3\n"
             //"    itt     eq\n"
@@ -528,7 +528,7 @@ init_file_modules_task ()
             "    mov     r0, r5\n"
             "    pop.w   {r4, r5, r6, lr}\n"
             "    movs    r1, #1\n"
-            "    b.w     sub_fc3bd7a8\n"
+            "    b.w     sub_fc3bd7a8\n" // continue in firmware
             "loc_fc157638:\n"
             "    pop     {r4, r5, r6, pc}\n"
     );

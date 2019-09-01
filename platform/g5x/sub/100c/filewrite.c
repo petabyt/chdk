@@ -1,0 +1,538 @@
+#include "lolevel.h"
+#include "platform.h"
+
+typedef struct {
+    unsigned int address;
+    unsigned int length;
+} cam_ptp_data_chunk; //camera specific structure
+
+#define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
+                              // corresponds to filewritetask() jump table entries 0-6
+
+/*
+ * fwt_data_struct: defined here as it's camera dependent
+ * unneeded members are designated with unkn
+ * file_offset, full_size, seek_flag only needs to be defined for cameras with CAM_FILEWRITETASK_SEEK/CAM_FILEWRITETASK_MULTIPASS
+ * pdc is always required
+ * name is not currently used
+ */
+// Copied from G7X port - appears to be the same
+typedef struct
+{
+    int unkn1;
+    int file_offset;
+    int maybe_full_size;
+    int unkn2, unkn3;
+    int unkn4;
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    int maybe_seek_flag;
+    int unkn5, unkn6;
+    char name[32];
+} fwt_data_struct;
+
+#include "../../../generic/filewrite.c"
+
+/*************************************************************/
+
+void __attribute__((naked,noinline))
+filewritetask()
+{
+    asm volatile (
+            //capdis -f=chdk -s=0xfc4e8429 -c=43 -stubs PRIMARY.BIN 0xfc000000
+            "    push    {r3, r4, r5, r6, r7, lr}\n"
+            "    ldr     r6, =0x09200001\n"
+            "    movw    r7, #0x476\n"
+            "    ldr     r5, =0x000264c0\n"
+            "    adds    r6, #0x12\n"
+            "loc_fc4e8434:\n"
+            "    mov     r1, sp\n"
+            "    movs    r2, #0\n"
+            "    ldr     r0, [r5, #0x14]\n"
+            "    blx     sub_fc34d03c\n"
+            "    cbz     r0, loc_fc4e844a\n"
+            "    movs    r0, #0\n"
+            "    mov     r2, r7\n"
+            "    ldr     r1, =0xfc4e84f4\n" //  *"dwFWrite.c"
+            "    blx     sub_fc34d24c\n"
+            "loc_fc4e844a:\n"
+            "    ldr     r0, [sp]\n"
+            "    ldr     r1, [r0]\n"
+            "    cmp     r1, #0xd\n"
+            "    bhs     loc_fc4e8434\n"
+            "    tbb     [pc, r1]\n" // (jumptable r1 13 elements)
+            "branchtable_fc4e8456:\n"
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 0)
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 1)
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 2)
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 3)
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 4)
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 5)
+            "    .byte((loc_fc4e8498 - branchtable_fc4e8456) / 2)\n" // (case 6)
+            "    .byte((loc_fc4e849e - branchtable_fc4e8456) / 2)\n" // (case 7)
+            "    .byte((loc_fc4e8464 - branchtable_fc4e8456) / 2)\n" // (case 8)
+            "    .byte((loc_fc4e8476 - branchtable_fc4e8456) / 2)\n" // (case 9)
+            "    .byte((loc_fc4e8492 - branchtable_fc4e8456) / 2)\n" // (case 10)
+            "    .byte((loc_fc4e846a - branchtable_fc4e8456) / 2)\n" // (case 11)
+            "    .byte((loc_fc4e8470 - branchtable_fc4e8456) / 2)\n" // (case 12)
+            ".align 1\n"
+            "loc_fc4e8464:\n"
+            "    bl      sub_fc4e8616\n"
+            "    b       loc_fc4e8434\n"
+            "loc_fc4e846a:\n"
+            "    bl      sub_fc4e8662\n"
+            "    b       loc_fc4e8434\n"
+            "loc_fc4e8470:\n"
+            "    bl      sub_fc4e81ac_my\n"     // Patched
+            "    b       loc_fc4e8434\n"
+            "loc_fc4e8476:\n"
+            "    ldr     r1, [r0, #4]\n"
+            "    movs    r2, #0\n"
+            "    mov     r4, r0\n"
+            "    ldr     r0, [r5, #8]\n"
+            "    bl      sub_fc3b5dda\n"
+            "    adds    r0, r0, #1\n"
+            "    bne     loc_fc4e8434\n"
+            "    movs    r0, #7\n"
+            "    mov     r1, r4\n"
+            "    str     r6, [r4, #0x14]\n"
+            "    bl      sub_fc4e8132\n"
+            "    b       loc_fc4e8434\n"
+            "loc_fc4e8492:\n"
+            "    bl      sub_fc4e86c0\n"
+            "    b       loc_fc4e8434\n"
+            "loc_fc4e8498:\n"
+            "    bl      sub_fc4e8732_my\n"     // Patched
+            "    b       loc_fc4e8434\n"
+            "loc_fc4e849e:\n"
+            "    bl      sub_fc4e82de_my\n"     // Patched
+            "    b       loc_fc4e8434\n"
+    );
+}
+
+void __attribute__((naked,noinline))
+sub_fc4e81ac_my() {
+    asm volatile (
+            //capdis -f=chdk -s=0xfc4e81ad -c=126 -stubs PRIMARY.BIN 0xfc000000
+            "    push.w  {r4, r5, r6, r7, r8, sb, lr}\n"
+            "    mov     r4, r0\n"
+
+            //hook placed here to avoid conditional branch a few instructions below (watch out for registers!)
+            //"  mov   r0, r4\n"      //data block start, commented out as R0 is already holding what we need
+            "    bl filewrite_main_hook\n"
+            "    mov     r0, r4\n"      //restore register(s)
+
+            "    ldr     r0, [r0, #0x50]\n"
+            "    sub     sp, #0x3c\n"
+            "    lsls    r1, r0, #0x1f\n"
+            "    bne     loc_fc4e81be\n"
+            "    lsls    r0, r0, #0x1d\n"
+            "    bpl     loc_fc4e82ba\n"
+            "loc_fc4e81be:\n"
+            "    ldr     r7, =0x000264c0\n"
+            "    ldr     r0, [r7, #0x1c]\n"
+            "    cbz     r0, loc_fc4e81c6\n"
+            "    blx     r0\n"
+            "loc_fc4e81c6:\n"
+            "    add.w   r0, r4, #0x5c\n"
+            "    mov     r8, r0\n"
+            "    bl      sub_fc3b7608\n"
+            "    movs    r1, #0\n"
+            "    bl      sub_fc07dd36\n"
+            "    movs    r1, #0\n"
+            "    movs    r0, #0x47\n"
+            "    bl      sub_fc3b5a48\n"
+            "    ldr     r0, [r4, #0x50]\n"
+            "    lsls    r0, r0, #0x1f\n"
+            "    beq     loc_fc4e82ba\n"
+            "    ldr     r0, [r4, #0x10]\n"
+            "    bl      sub_fc1c8962\n"
+            "    ldr     r0, [r4, #0x50]\n"
+            "    movw    r5, #0x301\n"
+            "    lsls    r1, r0, #0x1b\n"
+            "    bpl     loc_fc4e81f8\n"
+            "    movs    r5, #9\n"
+            "    b       loc_fc4e81fe\n"
+            "loc_fc4e81f8:\n"
+            "    lsls    r1, r0, #0x19\n"
+            "    bpl     loc_fc4e81fe\n"
+            "    movs    r5, #1\n"
+            "loc_fc4e81fe:\n"
+            "    lsls    r0, r0, #0x1a\n"
+            "    bmi     loc_fc4e8208\n"
+            "    ldr     r0, [r4, #0x58]\n"
+            "    cmp     r0, #1\n"
+            "    bne     loc_fc4e820c\n"
+            "loc_fc4e8208:\n"
+            "    orr     r5, r5, #0x8000\n"
+            "loc_fc4e820c:\n"
+            "    movw    sb, #0x1b6\n"
+            "    ldr     r6, [r4, #0x10]\n"
+            "    mov     r2, sb\n"
+            "    mov     r1, r5\n"
+            "    mov     r0, r8\n"
+
+//            "    bl      sub_fc3b5bc2\n"    // Open
+            "    bl      fwt_open\n"    // +
+
+            "    adds    r1, r0, #1\n"
+            "    bne     loc_fc4e825a\n"
+            "    mov     r0, r8\n"
+            "    bl      sub_fc3b60a6\n"
+            "    movs    r2, #0xf\n"
+            "    mov     r1, r8\n"
+            "    add     r0, sp, #4\n"
+            "    blx     sub_fc34d204\n"
+            "    movs    r0, #0\n"
+            "    strb.w  r0, [sp, #0x13]\n"
+            "    movw    r1, #0x41ff\n"
+            "    str     r1, [sp, #0x24]\n"
+            "    strd    r0, r6, [sp, #0x2c]\n"
+            "    movs    r1, #0x10\n"
+            "    str     r6, [sp, #0x34]\n"
+            "    add     r0, sp, #4\n"
+            "    str     r6, [sp, #0x38]\n"
+            "    str     r1, [sp, #0x28]\n"
+            "    add     r1, sp, #0x24\n"
+            "    bl      sub_fc1c8eb6\n"
+            "    mov     r2, sb\n"
+            "    mov     r1, r5\n"
+            "    mov     r0, r8\n"
+            "    bl      sub_fc3b5bc2\n"
+            "loc_fc4e825a:\n"
+            "    mov     r5, r0\n"
+            "    str     r0, [r7, #8]\n"
+            "    adds    r0, r0, #1\n"
+            "    bne     loc_fc4e8292\n"
+            "    movs    r1, #0\n"
+            "    movs    r0, #0x48\n"
+            "    bl      sub_fc3b5a48\n"
+            "    mov     r0, r8\n"
+            "    bl      sub_fc3b7608\n"
+            "    ldr     r1, [r7, #0x20]\n"
+            "    bl      sub_fc07dd94\n"
+            "    ldr     r0, [r7, #0x18]\n"
+            "    cmp     r0, #0\n"
+            "    beq     loc_fc4e82d8\n"
+            "    ldr     r5, =0x09200001\n"
+            "    mov     r0, r4\n"
+            "    mov     r1, r5\n"
+            "    bl      sub_fc4e80f8\n"
+            "    ldr     r1, [r7, #0x18]\n"
+            "    add     sp, #0x3c\n"
+            "    mov     r0, r5\n"
+            "    pop.w   {r4, r5, r6, r7, r8, sb, lr}\n"
+            "    bx      r1\n"
+            "loc_fc4e8292:\n"
+            "    ldr     r0, =0x001d2ae4\n"
+            "    movs    r2, #0x20\n"
+            "    mov     r1, r8\n"
+            "    blx     sub_fc34d254\n"
+
+            // TODO looks equivalent to G7X, not verified that it's required
+            //mod start
+            "    LDR     r3, =current_write_ignored\n"
+            "    LDR     r3, [r3]\n"
+            "    cbnz    r3,loc_C\n" // jump over the next block
+            //mod end
+
+            "    ldr     r0, [r4, #0x50]\n"
+            "    lsls    r0, r0, #0x18\n"
+            "    bpl     loc_fc4e82ba\n"
+            "    ldr     r1, [r4, #0xc]\n"
+            "    mov     r0, r5\n"
+            "    bl      sub_fc3b5eae\n"
+            "    cbnz    r0, loc_fc4e82b8\n"
+            "    ldr     r0, =0x09200001\n"
+            "    mov     r1, r4\n"
+            "    adds    r0, #0x16\n"
+            "    str     r0, [r4, #0x14]\n"
+            "    movs    r0, #7\n"
+            "    b       loc_fc4e82d0\n"
+            "loc_fc4e82b8:\n"
+            "    b       loc_fc4e82ba\n"
+            "loc_fc4e82ba:\n"
+            "loc_C:\n"
+            "    ldr     r0, [r4, #0x50]\n"
+            "    lsls    r0, r0, #0x19\n"
+            "    bmi     loc_fc4e82c4\n"
+            "    ldr     r0, [r4, #4]\n"
+            "    cbz     r0, loc_fc4e82cc\n"
+            "loc_fc4e82c4:\n"
+            "    movs    r0, #9\n"
+            "    mov     r1, r4\n"
+            "    bl      sub_fc4e8132\n"
+            "loc_fc4e82cc:\n"
+            "    movs    r0, #0\n"
+            "    mov     r1, r4\n"
+            "loc_fc4e82d0:\n"
+            "    add     sp, #0x3c\n"
+            "    pop.w   {r4, r5, r6, r7, r8, sb, lr}\n"
+            "    b       sub_fc4e8132\n"
+            "loc_fc4e82d8:\n"
+            "    add     sp, #0x3c\n"
+            "    pop.w   {r4, r5, r6, r7, r8, sb, pc}\n"
+    );
+}
+
+void __attribute__((naked,noinline))
+sub_fc4e8732_my() {
+    asm volatile (
+            //capdis -f=chdk -s=0xfc4e8733 -c=65 -stubs PRIMARY.BIN 0xfc000000
+            "    push.w  {r4, r5, r6, r7, r8, sb, sl, lr}\n"
+            "    mov     r5, r0\n"
+            "    ldr     r0, [r0]\n"
+            "    cmp     r0, #6\n"
+            "    bhi     loc_fc4e874a\n"
+            "    add.w   r0, r5, r0, lsl #3\n"
+            "    ldrd    r7, r6, [r0, #0x18]\n"
+            "    cbnz    r6, loc_fc4e875e\n"
+            "    b       loc_fc4e8758\n"
+            "loc_fc4e874a:\n"
+            "    movw    r2, #0x3b5\n"
+            "    ldr     r1, =0xfc4e84f4\n" //  *"dwFWrite.c"
+            "    movs    r0, #0\n"
+            "    blx     sub_fc34d24c\n"
+            "loc_fc4e8758:\n"
+            "    movs    r0, #7\n"
+            "    mov     r1, r5\n"
+            "    b       loc_fc4e87ce\n"
+            "loc_fc4e875e:\n"
+            "    ldr.w   sl, =0x000264c0\n"
+            "    mov.w   sb, #0x1000000\n"
+            "    mov     r4, r6\n"
+            "loc_fc4e8768:\n"
+            "    ldr     r0, [r5, #4]\n"
+            "    cmp     r4, sb\n"
+            "    mov     r1, sb\n"
+            "    bhi     loc_fc4e8772\n"
+            "    mov     r1, r4\n"
+            "loc_fc4e8772:\n"
+            "    lsls    r2, r0, #8\n"
+            "    beq     loc_fc4e8784\n"
+            "    bic     r0, r0, #0xff000000\n"
+            "    rsb.w   r0, r0, #0x1000000\n"
+            "    cmp     r1, r0\n"
+            "    bls     loc_fc4e8784\n"
+            "    mov     r1, r0\n"
+            "loc_fc4e8784:\n"
+            "    ldr.w   r0, [sl, #8]\n"
+            "    mov     r8, r1\n"
+            "    mov     r2, r1\n"
+            "    mov     r1, r7\n"
+
+//            "    bl      sub_fc3b5d9c\n"    //j_Write_FW
+            "    bl      fwt_write\n"   // +
+
+            "    ldr     r1, [r5, #4]\n"
+            "    cmp     r8, r0\n"
+            "    add     r1, r0\n"
+            "    str     r1, [r5, #4]\n"
+            "    beq     loc_fc4e87ae\n"
+            "    adds    r0, r0, #1\n"
+            "    bne     loc_fc4e87a6\n"
+            "    ldr     r0, =0x09200006\n"
+            "    subs    r0, r0, #1\n"
+            "    b       loc_fc4e87aa\n"
+            "loc_fc4e87a6:\n"
+            "    ldr     r0, =0x09200006\n"
+            "    adds    r0, #0xf\n"
+            "loc_fc4e87aa:\n"
+            "    str     r0, [r5, #0x14]\n"
+            "    b       loc_fc4e8758\n"
+            "loc_fc4e87ae:\n"
+            "    subs    r4, r4, r0\n"
+            "    cmp     r4, r6\n"
+            "    add     r7, r0\n"
+            "    blo     loc_fc4e87c4\n"
+            "    movw    r2, #0x3df\n"
+            "    ldr     r1, =0xfc4e84f4\n" //  *"dwFWrite.c"
+            "    movs    r0, #0\n"
+            "    blx     sub_fc34d24c\n"
+            "loc_fc4e87c4:\n"
+            "    cmp     r4, #0\n"
+            "    bne     loc_fc4e8768\n"
+            "    ldr     r0, [r5]\n"
+            "    mov     r1, r5\n"
+            "    adds    r0, r0, #1\n"
+            "loc_fc4e87ce:\n"
+            "    pop.w   {r4, r5, r6, r7, r8, sb, sl, lr}\n"
+            "    b       sub_fc4e8132\n"
+    );
+}
+
+void __attribute__((naked,noinline))
+sub_fc4e82de_my() {
+    asm volatile (
+            //capdis -f=chdk -s=0xfc4e82df -c=141 -stubs PRIMARY.BIN 0xfc000000
+            "    push    {r4, r5, r6, r7, lr}\n"
+            "    mov     r4, r0\n"
+            "    ldr     r0, [r0, #0x50]\n"
+            "    ldr     r5, =0x000264c0\n"
+            "    sub     sp, #0x3c\n"
+            "    add.w   r7, r4, #0x5c\n"
+            "    lsls    r1, r0, #0x1e\n"
+            "    bmi     loc_fc4e82f6\n"
+            "    lsls    r0, r0, #0x1c\n"
+            "    bpl     loc_fc4e83f0\n"
+            "    b       loc_fc4e834a\n"
+            "loc_fc4e82f6:\n"
+            "    lsls    r0, r0, #0x18\n"
+            "    bpl     loc_fc4e8326\n"
+            "    ldrd    r1, r0, [r4, #8]\n"
+            "    cmp     r1, r0\n"
+            "    beq     loc_fc4e8326\n"
+            "    ldr     r0, [r5, #8]\n"
+            "    bl      sub_fc3b5eae\n"
+            "    cbnz    r0, loc_fc4e8312\n"
+            "    ldr     r0, =0x09200001\n"
+            "    adds    r0, #0x16\n"
+            "    str     r0, [r4, #0x14]\n"
+            "    b       loc_fc4e8326\n"
+            "loc_fc4e8312:\n"
+            "    ldr     r0, [r4, #8]\n"
+            "    add     r1, sp, #0x24\n"
+            "    str     r0, [r4, #4]\n"
+            "    mov     r0, r7\n"
+            "    bl      sub_fc1c8e40\n"
+            "    cmp     r0, #1\n"
+            "    bne     loc_fc4e8326\n"
+            "    ldr     r0, [r4, #4]\n"
+            "    str     r0, [sp, #0x2c]\n"
+            "loc_fc4e8326:\n"
+            "    ldr     r0, [r5, #8]\n"
+            "    adds    r1, r0, #1\n"
+            "    beq     loc_fc4e834a\n"
+            "    ldr     r6, =0x09200001\n"
+            "    ldr     r1, [r4, #0x58]\n"
+            "    adds    r6, r6, #2\n"
+            "    cmp     r1, #1\n"
+            "    bne     loc_fc4e833c\n"
+
+            //mod start
+            "    LDR R3, =current_write_ignored\n"
+            "    LDR R3, [R3]\n"
+            "    cbnz R3,loc_D\n" // jump over the next block
+            //mod end
+
+            "    bl      sub_fc3b5c30\n"
+            "    b       loc_fc4e8340\n"
+            "loc_fc4e833c:\n"
+
+            "loc_D:\n"
+//            "    bl      sub_fc3b5bfe\n"    // Close
+            "    bl      fwt_close\n" // +
+
+            "loc_fc4e8340:\n"
+            "    cbz     r0, loc_fc4e8344\n"
+            "    str     r6, [r4, #0x14]\n"
+            "loc_fc4e8344:\n"
+            "    mov.w   r0, #-1\n"
+            "    str     r0, [r5, #8]\n"
+            "loc_fc4e834a:\n"
+            "    ldr     r0, [r4, #0x14]\n"
+            "    lsls    r0, r0, #0x1f\n"
+            "    bne     loc_fc4e83f6\n"
+            "    ldr     r0, [r4, #0x50]\n"
+            "    lsls    r1, r0, #0x1f\n"
+            "    beq     loc_fc4e8372\n"
+            "    movw    r0, #0x81ff\n"
+            "    str     r0, [sp, #0x24]\n"
+            "    movs    r0, #0x20\n"
+            "    str     r0, [sp, #0x28]\n"
+            "    ldr     r0, [r4, #4]\n"
+            "    str     r0, [sp, #0x2c]\n"
+            "    ldr     r0, [r4, #0x10]\n"
+            "    str     r0, [sp, #0x30]\n"
+            "    ldr     r0, [r4, #0x10]\n"
+            "    str     r0, [sp, #0x34]\n"
+            "    ldr     r0, [r4, #0x10]\n"
+            "    str     r0, [sp, #0x38]\n"
+            "    b       loc_fc4e8394\n"
+            "loc_fc4e8372:\n"
+            "    lsls    r0, r0, #0x1b\n"
+            "    bpl     loc_fc4e8394\n"
+            "    add     r1, sp, #0x24\n"
+            "    mov     r0, r7\n"
+            "    bl      sub_fc1c8e40\n"
+            "    cbnz    r0, loc_fc4e838c\n"
+            "    movs    r0, #0\n"
+            "    movw    r2, #0x43b\n"
+            "    ldr     r1, =0xfc4e84f4\n" //  *"dwFWrite.c"
+            "    blx     sub_fc34d24c\n"
+            "loc_fc4e838c:\n"
+            "    ldr     r0, [sp, #0x2c]\n"
+            "    ldr     r1, [r4, #4]\n"
+            "    add     r0, r1\n"
+            "    str     r0, [sp, #0x2c]\n"
+            "loc_fc4e8394:\n"
+            "    ldr     r0, [r4, #0x50]\n"
+            "    mvns    r0, r0\n"
+            "    lsls    r0, r0, #0x19\n"
+            "    bpl     loc_fc4e83a4\n"
+            "    add     r1, sp, #0x24\n"
+            "    mov     r0, r7\n"
+            "    bl      sub_fc1c8eb6\n"
+            "loc_fc4e83a4:\n"
+            "    ldr     r0, [r4, #0x50]\n"
+            "    lsls    r1, r0, #0x1e\n"
+            "    bpl     loc_fc4e83f6\n"
+            "    lsls    r0, r0, #0x1a\n"
+            "    bpl     loc_fc4e83f6\n"
+            "    movs    r2, #0x20\n"
+            "    mov     r1, r7\n"
+            "    add     r0, sp, #4\n"
+            "    blx     sub_fc34d254\n"
+            "    add     r0, sp, #4\n"
+            "    bl      sub_fc3bf460\n"
+            "    add     r2, sp, #4\n"
+            "    add     r0, r2\n"
+            "    movs    r1, #0x54\n"
+            "    strb    r1, [r0, #-0x3]!\n"
+            "    movs    r1, #0x4d\n"
+            "    strb    r1, [r0, #1]\n"
+            "    movs    r1, #0x50\n"
+            "    strb    r1, [r0, #2]\n"
+            "    add     r1, sp, #4\n"
+            "    mov     r0, r7\n"
+            "    bl      sub_fc1c8b3a\n"
+            "    cbnz    r0, loc_fc4e83e6\n"
+            "    movs    r0, #0\n"
+            "    movw    r2, #0x1be\n"
+            "    ldr     r1, =0xfc4e84f4\n" //  *"dwFWrite.c"
+            "    blx     sub_fc34d24c\n"
+            "loc_fc4e83e6:\n"
+            "    add     r0, sp, #4\n"
+            "    bl      sub_fc1c91a8\n"
+            "    mov     r0, r7\n"
+            "    b       loc_fc4e83f2\n"
+            "loc_fc4e83f0:\n"
+            "    b       loc_fc4e840c\n"
+            "loc_fc4e83f2:\n"
+            "    bl      sub_fc1c91a8\n"
+            "loc_fc4e83f6:\n"
+            "    movs    r1, #0\n"
+            "    movs    r0, #0x48\n"
+            "    bl      sub_fc3b5a48\n"
+            "    mov     r0, r7\n"
+            "    bl      sub_fc3b7608\n"
+            "    ldr     r1, [r5, #0x20]\n"
+            "    bl      sub_fc07dd94\n"
+            "    b       loc_fc4e8410\n"
+            "loc_fc4e840c:\n"
+            "    ldr     r0, [r5, #0x20]\n"
+            "    blx     r0\n"
+            "loc_fc4e8410:\n"
+            "    ldr     r0, [r5, #0x18]\n"
+            "    cmp     r0, #0\n"
+            "    beq     loc_fc4e8424\n"
+            "    ldr     r1, [r4, #0x14]\n"
+            "    mov     r0, r4\n"
+            "    bl      sub_fc4e80f8\n"
+            "    ldr     r1, [r5, #0x18]\n"
+            "    ldr     r0, [r4, #0x14]\n"
+            "    blx     r1\n"
+            "loc_fc4e8424:\n"
+            "    add     sp, #0x3c\n"
+            "    pop     {r4, r5, r6, r7, pc}\n"
+    );
+}
