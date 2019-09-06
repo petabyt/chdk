@@ -62,3 +62,83 @@ ENDASM
 ENDFUNC
 
 ENDFILE
+
+//-------------------------- CAPT_SEQ.C -----------------------------------------------------------
+
+FILE capt_seq.c
+
+>>> file=../capt_seq_hdr.c
+
+//////////////////////////////////////////////////////////////
+// capt_seq_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_CaptSeq name=capt_seq_task
+ASM
+FW 55
+>>>
+"    BL    shooting_expo_iso_override\n"
+<<<
+FW
+>>>
+"    BL    shooting_expo_param_override\n"
+<<<
+FW
+REM "3 lines removed - redundant with added lines below"
+REM
+REM
+>>>
+        "    MOV     R0, #0 \n" // added
+        "    STR     R0, [R4,#0x28] \n" //added, fixes overrides behavior at short shutter press (S95)
+<<<
+
+FW 23
+// hook fast click function for dfs and remote - not needed if using hack above
+PATCHSUB ref=0
+>>>
+"    BL    capt_seq_hook_raw_here \n"
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+// to remote + nr hook
+FUNC ref=0
+ASM
+FW 68
+>>>
+"    BL      wait_until_remote_button_is_released\n" // added
+"    BL      capt_seq_hook_set_nr\n"                 // added
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// exp_drv_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_ExpDrv name=exp_drv_task
+ASM
+FW 262
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 50
+PATCHSUB ref=0
+->FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 16
+PATCHSUB name=apex2us
+->FW
+ENDASM
+ENDFUNC
+
+ENDFILE
+

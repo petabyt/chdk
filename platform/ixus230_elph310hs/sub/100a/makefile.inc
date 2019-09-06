@@ -1,6 +1,6 @@
 
-#override OPT_EXMEM_MALLOC=1
-#override OPT_CHDK_IN_EXMEM=1
+override OPT_EXMEM_MALLOC=1
+override OPT_CHDK_IN_EXMEM=1
 
 PLATFORMID=12855
 
@@ -11,7 +11,7 @@ ARAM_HEAP_START=0x3de000
 ARAM_HEAP_SIZE=0x22000
 
 ifdef OPT_CHDK_IN_EXMEM
-MEMISOSTART=0x75867E0  # MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32(0x20) (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
+MEMISOSTART=0x78e67e0  # MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32(0x20) (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
 else					#265kb=79467E0, 512kb=79067E0, 640kb=78E67E0
 MEMISOSTART=0x181A9C   # original non-exmem value
 endif
