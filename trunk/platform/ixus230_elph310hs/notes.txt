@@ -8,7 +8,10 @@ Long Press of Playback button will execute original Canon functionality.
 
 Support for dual partition is not available.
 
+This camera has and ND filter and does not have an adjustable aperture.
+
 For more information please refer to IXUS230HS/ELPH310HS Porting Thread:
 http://chdk.setepontos.com/index.php?topic=7149.30
 
-This camera has very little free RAM.
+This camera has very little free RAM in the Canon heap. EXMEM is enabled
+to provide sufficient memory for CHDK.
