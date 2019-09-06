@@ -56,4 +56,5 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CONTINUOUS_AF              12      // 0 = Continuous AF off, 1 = Continuous AF on
 #define PROPCASE_SERVO_AF                   297     // 0 = Servo AF off, 1 = Servo AF on
 #define PROPCASE_TIMER_SHOTS                336     // Number of shots for TIMER_MODE=Custom
+#define PROPCASE_ND_FILTER_STATE            194     // 0 = out, 1 = in
 #endif
