@@ -34,7 +34,7 @@ void debug_led(int state)
 }
 
 void camera_set_led(int led, int state, int bright) {
- static char led_table[]={0,12}; // status, AF
+ static char led_table[]={0,4}; // status, AF
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
