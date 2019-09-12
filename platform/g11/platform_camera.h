@@ -39,6 +39,7 @@
 
     #undef  CAM_USE_ZOOM_FOR_MF
     #define CAM_HAS_ND_FILTER               1
+    #define CAM_HAS_NATIVE_ND_FILTER        1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
     #define CAM_HAS_JOGDIAL                 1
@@ -91,6 +92,9 @@
                                                 // Used to enabled bracketing in custom timer, required on many recent cameras
                                                 // see http://chdk.setepontos.com/index.php/topic,3994.405.html
     #define REMOTE_SYNC_STATUS_LED          0xC0220128  // specifies an LED that turns on while camera waits for USB remote to sync
+
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          4   // Index of AF led in camera_set_led function
 
     #define CAM_SD_OVER_IN_AF               1
     #define CAM_SD_OVER_IN_AFL              1
