@@ -9,6 +9,7 @@ Camera depending notes:
 - G11 has an ND Filter AND real iris diaphragm. ND Filter feature in camera.h is disabled, because
   camera asserts if ND-Filter state is changed via CHDK.
 - 100j and 100k are the same, development is done in the 100j tree
+- fast motion detection is implemented
 
 set_led values
 0 Upper LED near EVF in Green
