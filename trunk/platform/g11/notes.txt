@@ -3,13 +3,11 @@
 Camera depending notes:
 
 - manual loading (with "firmware update" from the Canon menu) DOES NOT work yet
-- G11 uses (new) Propset 3 of properties
-- G11 uses new color palette 
-- dryos with changed behaviour to previous dryos versions (stat() funtion, max. path length, etc.)
-- G11 has an ND Filter AND real iris diaphragm. ND Filter feature in camera.h is disabled, because
-  camera asserts if ND-Filter state is changed via CHDK.
-- 100j and 100k are the same, development is done in the 100j tree
-- fast motion detection is implemented
+- G11 uses Propset 3
+- G11 has both iris and ND filter
+- 100h, 100j and 100k use the same build, development is done in the 100j tree
+- Fast motion detection is implemented
+- PTP remote shoot is supported
 
 set_led values
 0 Upper LED near EVF in Green
