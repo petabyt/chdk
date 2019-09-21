@@ -35,8 +35,7 @@ If the alt key is set to video, the raw / debug shortcut will not work
 
 KNOWN BUGS
 **********
-Zoom lever doesn't work when zoom has been set to something other than 0 with
-set_zoom. Use set_zoom(0) to allow it to work again.
+None
 
 CREDITS
 *******
