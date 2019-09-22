@@ -14,7 +14,6 @@
 #include "callfunc.h"
 
 #include "remotecap_core.h"
-static int buf_size=0;
 
 int get_ptp_file_buf_size(void);
 char *get_ptp_file_buf(void);
@@ -195,32 +194,55 @@ static void flush_recv_ptp_data(ptp_data *data,int size) {
     recv_ptp_data(data,NULL,size);
 }
 
-static int send_ptp_data(ptp_data *data, const char *buf, int size)
-  // repeated calls per transaction are *not* ok
+typedef struct {
+    char *buf;
+    int size;
+} send_ptp_data_buf_t;
+
+/*
+initialize a buffer of up to 1/2 largest free heap block
+note this could be extended to use native buffers like recv
+currently not required but potentially useful on low mem cams
+uncached is also faster on some
+*/
+static int send_ptp_data_buf_init(send_ptp_data_buf_t *sb,int total_size)
 {
-  int tmpsize;
-  
-  tmpsize = size;
-  while ( size >= buf_size )
-  {
-    if ( data->send_data(data->handle,buf,buf_size,tmpsize,0,0,0) )
+    int buf_size=(core_get_free_memory()>>1);
+  // make sure size is an integer number of words (avoid some possible issues with multiple calls)
+    buf_size &= 0xFFFFFFFC;
+    if(buf_size > total_size) {
+        buf_size = total_size;
+    }
+    sb->buf=malloc(buf_size);
+    if(!sb->buf) {
+        sb->size=0;
+        return 0;
+    }
+    sb->size=buf_size;
+    return 1;
+}
+
+/*
+free buffer from send_ptp_data_buf_init
+*/
+static void send_ptp_data_buf_free(send_ptp_data_buf_t *sb)
+{
+    free(sb->buf);
+    sb->buf=NULL;
+    sb->size=0;
+}
+
+/*
+send size data from src all in one go
+repeated calls per transaction are *not* ok, use data->send_data directly or send_ptp_data_buffered in that case
+*/
+static int send_ptp_data(ptp_data *data, const char *src, int size)
+{
+    if ( data->send_data(data->handle,src,size,size,0,0,0) )
     {
       return 0;
     }
-
-    tmpsize = 0;
-    size -= buf_size;
-    buf += buf_size;
-  }
-  if ( size != 0 )
-  {
-    if ( data->send_data(data->handle,buf,size,tmpsize,0,0,0) )
-    {
-      return 0;
-    }
-  }
-
-  return 1;
+    return 1;
 }
 
 /*
@@ -228,36 +250,41 @@ send data buffered, for regions which cannot be directly used by DMA (MMIO, some
 copy_fn should behave like memcpy.
 A function that does word by word copy rather than LDM/STM might be more correct for MMIO, but memcpy seems to work
 */
-static int send_ptp_data_buffered(ptp_data *data, void * (*copy_fn)(void *d, const void *s, long sz), const char *src, char *buf, int size)
+static int send_ptp_data_buffered(ptp_data *data, void * (*copy_fn)(void *d, const void *s, long sz), const char *src, int size)
 {
+    send_ptp_data_buf_t sb;
+    if(!send_ptp_data_buf_init(&sb,size)) {
+        return 0;
+    }
+
     int tmpsize = size;
     int send_size;
     while ( size > 0 )
     {
-        if(size > buf_size) {
-            send_size = buf_size;
+        if(size > sb.size) {
+            send_size = sb.size;
         } else {
             send_size = size;
         }
         // src inside buf ?
-        if(src >= buf && src < buf + send_size) {
+        if(src >= sb.buf && src < sb.buf + send_size) {
             // send whatever is in buffer without attempting to copy
-            if(src + size < buf + buf_size) {
+            if(src + size < sb.buf + sb.size) {
                 // all remainder is in buf
                 send_size = size;
             } else {
                 // send up to end of buffer
-                send_size = buf_size - (src - buf);
+                send_size = sb.size - (src - sb.buf);
             }
         } else {
             // full copy size would overlap
-            if(src < buf && src + send_size > buf) {
+            if(src < sb.buf && src + send_size > sb.buf) {
                 // copy up to start of buf
-                send_size = buf - src;
+                send_size = sb.buf - src;
             }
-            copy_fn(buf,src,send_size);
+            copy_fn(sb.buf,src,send_size);
         }
-        if ( data->send_data(data->handle,buf,send_size,tmpsize,0,0,0) )
+        if ( data->send_data(data->handle,sb.buf,send_size,tmpsize,0,0,0) )
         {
             return 0;
         }
@@ -265,6 +292,7 @@ static int send_ptp_data_buffered(ptp_data *data, void * (*copy_fn)(void *d, con
         size -= send_size;
         src += send_size;
     }
+    send_ptp_data_buf_free(&sb);
     return 1;
 }
 
@@ -426,14 +454,6 @@ static int handle_ptp(
   ptp.trans_id = trans_id;
   ptp.num_param = 0;
   
-  // TODO 
-  // calling this on every PTP command is not good on cameras without CAM_FIRMWARE_MEMINFO
-  // since it figures out free memory by repeatedly malloc'ing!
-  // using half of available memory may be undesirable in some cases as well
-  buf_size=(core_get_free_memory()>>1);
-  // make sure size is an integer number of words (avoid some possible issues with multiple receive calls)
-  buf_size &= 0xFFFFFFFC;
-
   // handle command
   switch ( param1 )
   {
@@ -497,12 +517,7 @@ static int handle_ptp(
             result = 1;
         }
       } else if(param4 == PTP_CHDK_GETMEM_MODE_BUFFER) {
-        int chunk_size = (size > buf_size) ? buf_size:size;
-        char *buf=malloc(chunk_size);
-        if(buf) {
-          result = send_ptp_data_buffered(data,memcpy,src,buf,size);
-          free(buf);
-        }
+        result = send_ptp_data_buffered(data,memcpy,src,size);
       } // else error
       if(!result)
       {
@@ -664,8 +679,8 @@ static int handle_ptp(
     case PTP_CHDK_DownloadFile:
       {
         FILE *f;
-        int tmp,t,s,r;
-        char *buf, *fn;
+        int tmp,t,total_size,r;
+        char *fn;
 
         if ( temp_data_kind != 1 )
         {
@@ -703,34 +718,34 @@ static int handle_ptp(
         free(fn);
 
         fseek(f,0,SEEK_END);
-        s = ftell(f);
+        total_size = ftell(f);
         fseek(f,0,SEEK_SET);
 
-        buf = (char *) malloc(buf_size);
-        if ( buf == NULL )
+        send_ptp_data_buf_t sb;
+        if(!send_ptp_data_buf_init(&sb,total_size))
         {
           // send dummy data, otherwise error hoses connection
           send_ptp_data(data,"\0",1);
           ptp.code = PTP_RC_GeneralError;
+          fclose(f);
           break;
         }
 
-        tmp = s;
-        t = s;
-        while ( (r = fread(buf,1,(t<buf_size)?t:buf_size,f)) > 0 )
+        tmp = total_size;
+        t = total_size;
+        while ( (r = fread(sb.buf,1,(t<sb.size)?t:sb.size,f)) > 0 )
         {
           t -= r;
-          // cannot use send_ptp_data here
-          data->send_data(data->handle,buf,r,tmp,0,0,0);
+          data->send_data(data->handle,sb.buf,r,tmp,0,0,0);
           tmp = 0;
         }
         fclose(f);
-        // XXX check that we actually read/send s bytes! (t == 0)
+        // XXX check that we actually read/send total_size bytes! (t == 0)
 
         ptp.num_param = 1;
-        ptp.param1 = s;
+        ptp.param1 = total_size;
 
-        free(buf);
+        send_ptp_data_buf_free(&sb);
 
         break;
       }
@@ -840,7 +855,7 @@ static int handle_ptp(
       ptp.param1 = PTP_CHDK_S_MSGSTATUS_OK;
       if (!script_is_running()) {
         ptp.param1 = PTP_CHDK_S_MSGSTATUS_NOTRUN;
-      } else if(param2 && param2 != script_run_id) {// check if target script for message is running
+      } else if(param2 && (unsigned)param2 != script_run_id) {// check if target script for message is running
         ptp.param1 = PTP_CHDK_S_MSGSTATUS_BADID;
       } else if(script_msg_q_full(&msg_q_in)) {
         ptp.param1 = PTP_CHDK_S_MSGSTATUS_QFULL;
