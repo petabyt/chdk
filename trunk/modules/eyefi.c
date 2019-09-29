@@ -490,7 +490,6 @@ static void eyefi_configured_networks()
 static void confirm_add_network_cb(unsigned int btn)
 {
     int n,i;
-    char s[80];
 
     if (btn==MBOX_BTN_YES)
     {

@@ -480,7 +480,7 @@ if minimal is set, don't pad to 512 byte boundery or create thumbnail
 
 void create_dng_header(int ver1_1, int minimal)
 {
-    int i,j;
+    int i;
 
     // Set version and opcodes
     if (ver1_1)
@@ -1239,7 +1239,6 @@ void reverse_bytes_task() {
     // the portions of the buffer which have been written out, waiting as needed
     if(rb_state.src == rb_state.dst) {
         src = rb_state.src;
-        int offset = 0;
         while(src < rb_state.end) {
             int chunk_size = rb_state.written - src;
             if(!chunk_size) {

@@ -602,9 +602,8 @@ static int md_measure_b()
 static int md_detect_motion(void)
 {
     int idx, tick, rv;
-    int val, cy, cv, cu;
 
-    register int col, row, x, y;
+    register int col, row;
 
     if(!md_running())
     {

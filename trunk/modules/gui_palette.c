@@ -143,9 +143,8 @@ int gui_palette_kbd_process()
 //-------------------------------------------------------------------
 static void palette_test()
 {
-    unsigned int x, y, xl, xr, xt, w, h;
-    color c, co;
-    static char buf[64];
+    unsigned int x, y, xl, xr, w, h;
+    color c;
 
     xl = camera_screen.disp_left;
     xr = camera_screen.disp_right;

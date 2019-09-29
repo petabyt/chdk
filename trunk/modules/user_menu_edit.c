@@ -481,8 +481,6 @@ static void gui_draw_text(char *str, int num_symbols)
 // Common code extracted from gui_draw for displaying an int or enum that can be enabled/disabled
 static void gui_draw_state_value(CMenuItem *c)
 {
-    const char *ch = "";
-
     int text = curr_menu->menu[imenu].text;
     if (c[0].text != 0)
         text = c[0].text;
@@ -497,7 +495,6 @@ static void gui_draw_state_value(CMenuItem *c)
 static void gui_draw(int enforce_redraw)
 {
     int i, j;
-    const char *ch = "";
 
 	if ( enforce_redraw )
 		gui_menu_redraw = 2;

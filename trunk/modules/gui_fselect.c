@@ -567,7 +567,7 @@ static void process_dir(const char *parent, const char *name, int nested, void (
 //-------------------------------------------------------------------
 static void fselect_goto_prev(int step)
 {
-    int j, i;
+    int j;
 
     for (j=0; j<step; ++j)
     {
@@ -741,7 +741,7 @@ void gui_fselect_init(int title, const char* prev_dir, const char* default_dir, 
 void gui_fselect_draw(int enforce_redraw)
 {
     int i, j;
-    twoColors cl_marked, cl_selected;
+    twoColors cl_marked;
 
     if (gui_fselect_readdir)
     {
