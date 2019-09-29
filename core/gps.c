@@ -107,11 +107,13 @@ rect2polar (t_rectangular* r, t_polar* p) {
     p->alpha = arctan2 (r->east, r->north);
 }
 
+#if 0
 static void
 polar2rect (t_rectangular* r, t_polar* p) {
     r->east = sin(p->alpha) * p->delta;
     r->north= cos(p->alpha) * p->delta;
 }
+#endif
 
 static int
 radian2deg (double alpha) {
@@ -481,7 +483,6 @@ static void show_sat_symbol_task(){
         int my1=0;
         int o_x1=270;
         int o_y1=0;
-        int nm=1;
         int f_v_0;
         int f_h_0;
         int f_v_1;
@@ -1159,7 +1160,6 @@ static void gps_logging_task(){
     char lon[40];
     char hei[40];
     char vBuf[512];
-    int r=0;
     unsigned long t;
     char gpx_name[30];
     static struct tm *ttm;

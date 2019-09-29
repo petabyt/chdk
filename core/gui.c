@@ -1206,6 +1206,7 @@ static const char* gui_video_af_key_enum(int change, int arg)
 #endif
 
 static const char* gui_show_movie_time_modes[] =            { "Don't", "hh:mm:ss", "KB/s","both"};
+#if CAM_CHDK_HAS_EXT_VIDEO_MENU
 #if !CAM_VIDEO_QUALITY_ONLY
     #ifndef CAM_MOVIEREC_NEWSTYLE
         static const char* gui_video_mode_modes[] =             { "Bitrate", "Quality"};
@@ -1215,6 +1216,7 @@ static const char* gui_show_movie_time_modes[] =            { "Don't", "hh:mm:ss
 #else
     static const char* gui_video_mode_modes[] =             { "Default", "Quality"};
 #endif
+#endif // HAS_EXT_VIDEO_MENU
 
 #ifdef CAM_CLEAN_OVERLAY
     static const char* gui_clean_overlay_modes[] =          { "Never", "Rec", "MviRec"};

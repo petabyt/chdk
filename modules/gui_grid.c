@@ -32,10 +32,13 @@ struct gline {
 static int grid_loading = 0;
 static int interval = GRID_REDRAW_INTERVAL;
 static struct gline *head=NULL, *top=NULL;
+// unused
+#if 0
 static const char *grid_default =
     "@title Default grid\n"
     "@line 0,79,359,79,17\n"
     "@line 0,160,359,160,17\n";
+#endif
 
 //-------------------------------------------------------------------
 static void grid_lines_free_data() {

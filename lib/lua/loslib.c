@@ -381,7 +381,6 @@ static int idir_gc(lua_State *L) {
   idir(ud,false) -- ensure directory handle is closed
 */
 static int os_idir (lua_State *L) {
-  DIR *dir;
   const char *dirname = luaL_checkstring(L, 1);
   int all=0,od_flags=OPENDIR_FL_CHDK_LFN;
   if(lua_istable(L,2)) {

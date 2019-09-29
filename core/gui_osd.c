@@ -731,7 +731,6 @@ static int kbd_use_up_down_left_right_as_fast_switch()
 {
     static long key_pressed = 0;
     int ev_video = 0;
-    int jogdial;
 
 #if CAM_EV_IN_VIDEO
     ev_video = get_ev_video_avail(); 
@@ -770,7 +769,7 @@ static int kbd_use_up_down_left_right_as_fast_switch()
             return 1;
         }
 #else
-        jogdial=get_jogdial_direction();
+        int jogdial=get_jogdial_direction();
 
         if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_RIGHT))
         {

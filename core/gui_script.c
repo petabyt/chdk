@@ -686,7 +686,7 @@ void save_params_values( int enforce )
             last_script_param_set = conf.script_param_set;
         }
 
-        int i, changed=0;
+        int changed=0;
 
         // Check is anything changed since last time
         sc_param *p = script_params;
@@ -733,8 +733,6 @@ void script_reset_to_default_params_values()
 //-------------------------------------------------------------------
 void script_load(const char *fn)
 {
-    char* buf;
-
     // if filename is empty, try to load default named script.
     // if no such one, no script will be used
     if ((fn == 0) || (fn[0] == 0))
@@ -789,6 +787,7 @@ static void gui_load_script(int arg)
     libfselect->file_select(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
 }
 
+#if 0
 static void gui_reset_script_default(int arg)
 {
     gui_menu_cancel_redraw();       // Stop menu redraw until after menu rebuilt from script params
@@ -797,6 +796,7 @@ static void gui_reset_script_default(int arg)
     script_load(conf.script_file);
     gui_set_need_restore();
 }
+#endif
 
 static void gui_load_script_default(int arg)
 {
