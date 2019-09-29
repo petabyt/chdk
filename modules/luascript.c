@@ -1635,12 +1635,12 @@ static int luaCB_get_time( lua_State* L )
   static struct tm *ttm;
   ttm = get_localtime();
   const char *t = luaL_checkstring( L, 1 );
-  if (strncmp("s", t, 1)==0) r = ( L, ttm->tm_sec );
-  else if (strncmp("m", t, 1)==0) r = ( L, ttm->tm_min );
-  else if (strncmp("h", t, 1)==0) r = ( L, ttm->tm_hour );
-  else if (strncmp("D", t, 1)==0) r = ( L, ttm->tm_mday );
-  else if (strncmp("M", t, 1)==0) r = ( L, ttm->tm_mon+1 );
-  else if (strncmp("Y", t, 1)==0) r = ( L, 1900+ttm->tm_year );
+  if (strncmp("s", t, 1)==0) r = ttm->tm_sec;
+  else if (strncmp("m", t, 1)==0) r = ttm->tm_min;
+  else if (strncmp("h", t, 1)==0) r = ttm->tm_hour;
+  else if (strncmp("D", t, 1)==0) r = ttm->tm_mday;
+  else if (strncmp("M", t, 1)==0) r = ttm->tm_mon+1;
+  else if (strncmp("Y", t, 1)==0) r = 1900+ttm->tm_year;
   lua_pushnumber( L, r );
   return 1;
 }
