@@ -682,7 +682,7 @@ static int shooting_get_min_real_aperture()
 // Overrides
 
 // Find nearest entry in 'aperture_sizes_table' to the given 'av96' value
-#if CAM_HAS_IRIS_DIAPHRAGM
+#if (CAM_HAS_IRIS_DIAPHRAGM || CAM_DRAW_EXPOSITION)
 static int find_nearest_aperture_entry(short av96)
 {
     if (av96 <= aperture_sizes_table[0].prop_id)
