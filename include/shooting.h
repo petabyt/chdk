@@ -38,6 +38,9 @@ typedef struct {
 } ApertureSize;
 
 typedef struct {
+    int subj_dist;
+    int dsubj_dist;
+    int subj_dist_step;
     short av96;
     short dav96;
     short av96_step;
@@ -50,9 +53,6 @@ typedef struct {
     short iso;
     short diso;
     short iso_step;
-    short subj_dist;
-    short dsubj_dist;
-    short subj_dist_step;
     short shoot_counter;
 } EXPO_BRACKETING_VALUES;
 

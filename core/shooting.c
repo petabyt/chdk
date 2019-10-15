@@ -39,10 +39,10 @@ static short *min_av96_zoom_point_tbl = NULL;
 #define PHOTO_PARAM_TV_NONE 32767 // ~ 1/(2^341) seconds, safe marker for "no value"
 
 typedef struct {
+    int subj_dist;
     short av96;
     short tv96;
     short sv96;
-    short subj_dist;
     short nd_filter;
 } PHOTO_PARAM;
 
