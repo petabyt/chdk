@@ -1712,6 +1712,8 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
         // check at 0x20004 - note doesn't just use offset of first gaonisoy, because could be ref'd in romstarter
         if(fw_memcmp(fw,fw->base+0x20004,"gaonisoy",8) == 0) {
             fw->main_offs = 0x20000;
+        } else if (fw_memcmp(fw,fw->base+0x10004,"gaonisoy",8) == 0) { // newer armv5 firmwares base ff81000 start at ff820000
+            fw->main_offs = 0x10000;
         } else {
             fprintf(stderr,"WARNING code start offset not found, assuming 0\n");
         }
@@ -1861,6 +1863,7 @@ int find_startup_copy(firmware *fw,
             *dst_end=*eptr;
             return 1;
         }
+        count++;
     }
     return 0;
 }
