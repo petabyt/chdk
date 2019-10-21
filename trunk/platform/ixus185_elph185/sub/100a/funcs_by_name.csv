@@ -1232,7 +1232,7 @@
 0xffaf7204,RegisterZoomLensPositionPassedCBR_FW
 0xff881008,RegistFirmScanNoticeCBR_FW
 0xffba65ac,RegistFirmVer_FW
-0xff838c8c,ReleaseRecursiveLock
+0xff838c90,ReleaseRecursiveLock
 0xffbab1c4,ReloadAFAdjustment_FW
 0xffba82c8,ReloadCdsAdjustment_FW
 0xffba3940,ReloadColorAdjustment_FW

@@ -53,7 +53,7 @@
 0x006b8898,CreateRecursiveLock
 0x006b88f0,DeleteRecursiveLock
 0x006b8958,AcquireRecursiveLock
-0x006b8ac0,ReleaseRecursiveLock
+0x006b8ab8,ReleaseRecursiveLock
 0x006b8f0c,SleepTask
 0x006b8f0c,SleepTask_FW
 0x006b92ac,time

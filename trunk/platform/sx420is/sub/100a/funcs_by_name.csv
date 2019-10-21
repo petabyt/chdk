@@ -1496,7 +1496,7 @@
 0xff372140,RegisterZoomLensPositionPassedCBR_FW
 0xff0827a4,RegistFirmScanNoticeCBR_FW
 0xff4658b4,RegistFirmVer_FW
-0x006b8ac0,ReleaseRecursiveLock
+0x006b8ab8,ReleaseRecursiveLock
 0xff46a744,ReloadAFAdjustment_FW
 0xff4677ac,ReloadCdsAdjustment_FW
 0xff462c70,ReloadColorAdjustment_FW
