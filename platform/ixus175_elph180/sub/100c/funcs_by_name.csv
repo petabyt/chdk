@@ -1236,7 +1236,7 @@
 0xffae6bbc,RegisterZoomLensPositionPassedCBR_FW
 0xff87cf00,RegistFirmScanNoticeCBR_FW
 0xffb95564,RegistFirmVer_FW
-0x006b8ac0,ReleaseRecursiveLock
+0x006b8ab8,ReleaseRecursiveLock
 0xffb9a074,ReloadAFAdjustment_FW
 0xffb971b0,ReloadCdsAdjustment_FW
 0xffb92954,ReloadColorAdjustment_FW
