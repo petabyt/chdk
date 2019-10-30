@@ -1206,15 +1206,18 @@ void shooting_set_image_quality(int imq)
 
 void shooting_set_zoom(int v)
 {
-    int dist;
     if (!camera_info.state.mode_play)
     {
-        dist = shooting_get_subject_distance();
+#if CAM_REFOCUS_AFTER_ZOOM
+        int dist = shooting_get_subject_distance();
         lens_set_zoom_point(v);
 #if defined(CAM_NEED_SET_ZOOM_DELAY)
         msleep(CAM_NEED_SET_ZOOM_DELAY);
 #endif
         shooting_set_focus(dist, SET_NOW);
+#else // CAM_REFOCUS_AFTER_ZOOM
+        lens_set_zoom_point(v);
+#endif // CAM_REFOCUS_AFTER_ZOOM
     }
 }
 
