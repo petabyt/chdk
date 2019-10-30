@@ -237,10 +237,12 @@
                                                 // different from CAM_USB_EVENTID since it should be undefined on most cameras
 
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
+                                                // ignored if CAM_REFOCUS_AFTER_ZOOM is 0
 
     #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
     #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+    #undef  CAM_REFOCUS_AFTER_ZOOM              // save and restore focus distance after set_zoom, Defaults off (0) for ALT_PT_MoveOpticalZoomAt, on for others
 
     #undef  CAM_HAS_HI_ISO_AUTO_MODE            // Define if camera has 'HI ISO Auto' mode (as well as Auto ISO mode), needed for adjustment in user auto ISO menu 
 
@@ -397,6 +399,14 @@
 #endif
 #endif // ifndef CAM_PTP_FILE_BUFFER_ID
 
+// set default refocus behavior if not set by port
+#ifndef CAM_REFOCUS_AFTER_ZOOM
+#ifdef CAM_USE_ALT_PT_MoveOpticalZoomAt
+    #define CAM_REFOCUS_AFTER_ZOOM 0
+#else
+    #define CAM_REFOCUS_AFTER_ZOOM 1
+#endif
+#endif // CAM_REFOCUS_AFTER_ZOOM
 //==========================================================
 // END of Camera-dependent settings
 //==========================================================
