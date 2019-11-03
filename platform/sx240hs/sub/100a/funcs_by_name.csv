@@ -1162,6 +1162,7 @@
 0xff3e7d78,MoveISLensToTopLimitPosition_FW
 0xff354eec,MoveLensToFirstPoint_FW
 0xff354f34,MoveLensToTerminatePoint_FW
+0xff02315c,MoveOpticalZoomAt
 0xff34328c,MoveStrobePopUpActuator_FW
 0xff3432d0,MoveStrobePopUpActuatorWithTime_FW
 0xff1b0ad0,MoveStrobePopUpWithDirection_FW

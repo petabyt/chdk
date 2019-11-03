@@ -157,6 +157,7 @@
 0xffc15308,SetFileTimeStamp
 0xffc15358,SetFileAttributes
 0xffc153d0,mkdir
+0xffc1628c,MoveOpticalZoomAt
 0xffc16d2c,DoAFLock
 0xffc16d7c,UnlockAF
 0xffc170a4,EnterToCompensationEVF

@@ -1043,6 +1043,7 @@
 0xfc248dd9,qsort
 0xfc26ab21,task_AFTask
 0xfc26bb9d,GetMacroSupportZoomPoint_FW
+0xfc282e05,MoveOpticalZoomAt
 0xfc282fd3,PT_MoveDigitalZoomToWide
 0xfc283063,SS.GetDigitalZoomPosition_FW
 0xfc2835af,DoAFLock

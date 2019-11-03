@@ -116,6 +116,7 @@
 0xff835900,j_ExMem.AllocCacheable_FW
 0xff835904,j_ExMem.FreeCacheable_FW
 0xff835908,ExMem_FW
+0xff83640c,MoveOpticalZoomAt
 0xff836654,PT_GetDigitalZoomPosition_FW
 0xff83687c,DoAFLock
 0xff8368b4,UnlockAF

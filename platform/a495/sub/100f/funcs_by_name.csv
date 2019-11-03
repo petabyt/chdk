@@ -826,6 +826,7 @@
 0xffdfa8dc,MoveIrisWithAvWithoutBacklash_FW
 0xffdfa960,MoveLensToFirstPoint_FW
 0xffdfa9a8,MoveLensToTerminatePoint_FW
+0xffc27144,MoveOpticalZoomAt
 0xffdf43b8,MoveZoomActuator_FW
 0xffdfaf0c,MoveZoomLensToMechaEdge_FW
 0xffe52eb4,MoveZoomLensToMechaEnd_FW

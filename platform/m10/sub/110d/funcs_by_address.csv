@@ -1344,6 +1344,7 @@
 0xfc296a47,EFLensCom.UpdateStatus_FW
 0xfc297465,IsEFLensMFSwOn_FW
 0xfc29b7e3,task_MetaCtg
+0xfc2a553d,MoveOpticalZoomAt
 0xfc2a563d,PT_MoveDigitalZoomToWide
 0xfc2a57c1,SS.GetDigitalZoomPosition_FW
 0xfc2a5d83,DoAFLock

@@ -924,6 +924,7 @@
 0xffe60d94,MoveISLensToTopLimitPosition_FW
 0xffe04c68,MoveLensToFirstPoint_FW
 0xffe04cb0,MoveLensToTerminatePoint_FW
+0xffc148bc,MoveOpticalZoomAt
 0xffe01a10,MoveZoomActuator_FW
 0xffe05144,MoveZoomLensToMechaEdge_FW
 0xffe5ace4,MoveZoomLensToMechaEnd_FW

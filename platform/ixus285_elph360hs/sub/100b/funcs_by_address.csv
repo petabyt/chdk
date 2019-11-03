@@ -217,6 +217,7 @@
 0xff031190,GetDrive_TotalClusters
 0xff0311bc,GetDrive_FreeClusters
 0xff0316c4,MakeSDCardBootable
+0xff032254,MoveOpticalZoomAt
 0xff0324d8,SS.GetDigitalZoomPosition_FW
 0xff032930,DoAFLock
 0xff032960,UnlockAF

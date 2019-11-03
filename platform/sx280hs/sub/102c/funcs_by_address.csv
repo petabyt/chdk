@@ -970,6 +970,7 @@
 0xfc1e93dd,task_ExpDrvTask
 0xfc1f2ba1,task_FmidTask
 0xfc20cb11,task_CorctTask
+0xfc20d679,MoveOpticalZoomAt
 0xfc20d755,PT_MoveDigitalZoomToWide
 0xfc20d8c9,SS.GetDigitalZoomPosition_FW
 0xfc20dc5b,DoAFLock

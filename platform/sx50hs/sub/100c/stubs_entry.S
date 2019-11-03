@@ -234,6 +234,7 @@ NHSTUB(MakeSDCardBootable                     ,0xff072de4) //105
 NHSTUB(MoveFocusLensToDistance                ,0xff42ca68) //102
 NHSTUB(MoveIrisWithAv                         ,0xff38b1c0) //120
 NHSTUB(MoveZoomLensWithPoint                  ,0xff38ba6c) //120
+NHSTUB(MoveOpticalZoomAt                      ,0xff01dfd4) //109
 NHSTUB(Open                                   ,0xff01ca14) //120
 NHSTUB(PB2Rec                                 ,0xff04a06c) //104
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xff1f1f9c) //102

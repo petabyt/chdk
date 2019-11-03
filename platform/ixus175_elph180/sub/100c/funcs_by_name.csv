@@ -1111,6 +1111,7 @@
 0xff97c92c,MoveIrisWithTerminatePosition_FW
 0xffae5e54,MoveLensToFirstPoint_FW
 0xffae5ea4,MoveLensToTerminatePoint_FW
+0xff8313e4,MoveOpticalZoomAt
 0xffada544,MoveZoomActuator_FW
 0xffae6844,MoveZoomLensToMechaEdge_FW
 0xffab73bc,MoveZoomLensToMechaEnd_FW

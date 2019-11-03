@@ -215,6 +215,7 @@
 0xff81fa20,GetDrive_ClusterSize
 0xff820240,GetDrive_TotalClusters
 0xff82026c,GetDrive_FreeClusters
+0xff821248,MoveOpticalZoomAt
 0xff821478,SS.GetDigitalZoomPosition_FW
 0xff8219fc,DoAFLock
 0xff821a2c,UnlockAF
