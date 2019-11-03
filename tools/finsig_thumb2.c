@@ -182,6 +182,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "PB2Rec" },
     { "PT_MoveDigitalZoomToWide", OPTIONAL },
     { "PT_MoveOpticalZoomAt", OPTIONAL },
+    { "MoveOpticalZoomAt", OPTIONAL },
     { "PT_PlaySound" },
     { "PostLogicalEventForNotPowerType" },
     { "PostLogicalEventToUI" },
@@ -4186,6 +4187,7 @@ sig_rule_t sig_rules_main[]={
 
 // can't use last because func has early return POP
 {sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "MoveOpticalZoomAt",        "SS.MoveOpticalZoomAt_FW",SIG_NAMED_SUB},
 // alternate match because "exec" lands near a literal pool on some cams
 {sig_match_near_str,"bzero",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(8,2)|SIG_NEAR_INDIRECT},
 //{sig_match_near_str,"bzero",                    "FromDate",             SIG_NEAR_BEFORE(2,1)},
