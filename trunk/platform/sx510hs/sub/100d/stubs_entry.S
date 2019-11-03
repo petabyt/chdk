@@ -227,6 +227,7 @@ NHSTUB(LockMainPower                          ,0xff08a2fc) //120
 NHSTUB(MoveFocusLensToDistance                ,0xff447500) //102
 NHSTUB(MoveIrisWithAv                         ,0xff36e934) //120
 NHSTUB(MoveZoomLensWithPoint                  ,0xff36f350) //120
+NHSTUB(MoveOpticalZoomAt                      ,0xff011ab0) //109
 NHSTUB(Open                                   ,0xff0071c4) //120
 NHSTUB(PB2Rec                                 ,0xff03e120) //104
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xff1d7664) //102

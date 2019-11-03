@@ -153,11 +153,11 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc3b9005
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3b738f
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc3ba223
-//NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc39d654
+//NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc39d655
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3b68af
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3b8d8d
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc0c306f
-//NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3b5f06
+//NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3b5f07
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2a6cd7
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc15bb35
 //NHSTUB(TurnOnBackLight                      ,0x00000000) //  0        *** != 0xfc15bb31
@@ -219,6 +219,7 @@ NHSTUB(Open                                   ,0xfc3b5bff) //  0
 NHSTUB(PB2Rec                                 ,0xfc364f2b) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2d2ed3) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc5e4add) //  0
+NHSTUB(MoveOpticalZoomAt                      ,0xfc2d2d09) //  0
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3bd775) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc3bd7a9) //  0

@@ -171,6 +171,7 @@
 0xff825858,SetFileAttributes
 0xff8258d0,mkdir
 0xff825d44,task_ShutdownRecTask
+0xff826ad4,MoveOpticalZoomAt
 0xff8275cc,DoAFLock
 0xff827638,UnlockAF
 0xff8279a8,EnterToCompensationEVF

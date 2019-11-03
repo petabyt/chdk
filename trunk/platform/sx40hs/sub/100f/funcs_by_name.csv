@@ -1321,6 +1321,7 @@
 0xff3e5300,MoveISLensToTopLimitPosition_FW
 0xff3553a4,MoveLensToFirstPoint_FW
 0xff3553ec,MoveLensToTerminatePoint_FW
+0xff028aa4,MoveOpticalZoomAt
 0xff1c2cd4,MoveUsm_FW
 0xff1c2d44,MoveUsmWithFreq_FW
 0xff3ff94c,MoveVcm_FW

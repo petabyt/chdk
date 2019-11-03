@@ -114,6 +114,7 @@
 0xff824420,j_ExMem.AllocCacheable_FW
 0xff824424,j_ExMem.FreeCacheable_FW
 0xff824428,ExMem_FW
+0xff824f14,MoveOpticalZoomAt
 0xff825380,DoAFLock
 0xff8253b8,UnlockAF
 0xff82546c,EnterToCompensationEVF

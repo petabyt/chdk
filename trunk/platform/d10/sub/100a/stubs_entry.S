@@ -212,6 +212,7 @@ NHSTUB(MakeDirectory_Fut                      ,0xff8235d0) //116
 NHSTUB(MoveFocusLensToDistance                ,0xffa98b5c) //102
 NHSTUB(MoveIrisWithAv                         ,0xffa46724) //120
 NHSTUB(MoveZoomLensWithPoint                  ,0xffa46cac) //120
+NHSTUB(MoveOpticalZoomAt                      ,0xff824f30) //109
 NHSTUB(Open                                   ,0xff823c88) //120
 NHSTUB(PB2Rec                                 ,0xff87ad90) //104
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xff85e8dc) //120

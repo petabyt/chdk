@@ -208,6 +208,7 @@ NHSTUB(Open                                   ,0xfc2a507d) //  0
 NHSTUB(PB2Rec                                 ,0xfc0c0985) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc20d755) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc1a8291) //  0
+NHSTUB(MoveOpticalZoomAt                      ,0xfc20d679) //  0
 NHSTUB(PT_PlaySound                           ,0xfc148f2d) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc2a615d) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc2a6189) //  0

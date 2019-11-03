@@ -130,6 +130,7 @@
 0xff8371c8,j_ExMem.AllocCacheable_FW
 0xff8371cc,j_ExMem.FreeCacheable_FW
 0xff8371d0,ExMem_FW
+0xff837db8,MoveOpticalZoomAt
 0xff837f80,PT_GetDigitalZoomPosition_FW
 0xff8383f0,DoAFLock
 0xff838480,UnlockAF

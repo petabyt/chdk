@@ -924,6 +924,7 @@
 0xffdc5ef0,MoveIsToProvisionalCentralPosition_FW
 0xffc48a20,MoveLensToFirstPoint_FW
 0xffc48a68,MoveLensToTerminatePoint_FW
+0xffc163e8,MoveOpticalZoomAt
 0xffc53ac8,MoveOpticalZoomAt_FW
 0xffc53a98,MoveOpticalZoomToTele_FW
 0xffc53ab0,MoveOpticalZoomToWide_FW

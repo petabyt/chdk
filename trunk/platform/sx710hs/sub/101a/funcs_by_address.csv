@@ -724,6 +724,7 @@
 0xfc23809b,GetFixedPWMOutA_FW
 0xfc2380a1,GetFixedPWMOutB_FW
 0xfc24c883,GetMacroSupportZoomPoint_FW
+0xfc267663,MoveOpticalZoomAt
 0xfc267763,PT_MoveDigitalZoomToWide
 0xfc2678db,SS.GetDigitalZoomPosition_FW
 0xfc267f67,DoAFLock

@@ -980,6 +980,7 @@
 0xfc242d35,j_IsZoomActuatorResetSensorPlusSide_FW
 0xfc242d4b,SetZoomSpeedCheckStopTime_FW
 0xfc242d65,GetZoomActuatorCurrentPosition_FW
+0xfc25b63d,MoveOpticalZoomAt
 0xfc25b817,PT_MoveDigitalZoomToWide
 0xfc25b8a7,SS.GetDigitalZoomPosition_FW
 0xfc25bebf,DoAFLock

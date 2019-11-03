@@ -974,6 +974,7 @@
 0xfc23b385,task_AFTask
 0xfc23c20b,GetMacroSupportZoomPoint_FW
 0xfc246a03,task_WBIntegTask
+0xfc25432d,MoveOpticalZoomAt
 0xfc25442d,PT_MoveDigitalZoomToWide
 0xfc2545a7,SS.GetDigitalZoomPosition_FW
 0xfc254a09,DoAFLock

@@ -947,6 +947,7 @@
 0xff85e97c,MoveLensToFirstPointEvent_FW
 0xff85e9c0,MoveLensToTerminatePoint_FW
 0xff85e9c0,MoveLensToTerminatePointEvent_FW
+0xff8270a4,MoveOpticalZoomAt
 0xff86bfe8,MoveOpticalZoomAt_FW
 0xff86bfb8,MoveOpticalZoomToTele_FW
 0xff86bfd0,MoveOpticalZoomToWide_FW

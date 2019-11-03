@@ -1050,6 +1050,7 @@
 0xffb5aed4,MoveISLensToTopLimitPosition_FW
 0xffae7208,MoveLensToFirstPoint_FW
 0xffae7250,MoveLensToTerminatePoint_FW
+0xff8391b8,MoveOpticalZoomAt
 0xffad4744,MoveZoomActuator_FW
 0xffae78b8,MoveZoomLensToMechaEdge_FW
 0xffb520b0,MoveZoomLensToMechaEnd_FW

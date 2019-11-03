@@ -204,6 +204,7 @@ NHSTUB(Open                                   ,0xfc317179) //  0
 NHSTUB(PB2Rec                                 ,0xfc2cfd35) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc26775b) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc4acb3d) //  0
+NHSTUB(MoveOpticalZoomAt                      ,0xfc26765b) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc2e3d9d) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc2e3dc9) //  0
 NHSTUB(PutInNdFilter                          ,0xfc54ddd5) //  0

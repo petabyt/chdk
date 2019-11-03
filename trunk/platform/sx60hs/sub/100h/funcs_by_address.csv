@@ -1105,6 +1105,7 @@
 0xfc255985,task_AFTask
 0xfc256a4b,GetMacroSupportZoomPoint_FW
 0xfc25910d,task_MoviePlay
+0xfc275a99,MoveOpticalZoomAt
 0xfc275c6f,PT_MoveDigitalZoomToWide
 0xfc275cff,SS.GetDigitalZoomPosition_FW
 0xfc2763b9,DoAFLock

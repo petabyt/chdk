@@ -259,6 +259,7 @@
 0xfc093593,task_ComWireless
 0xfc09ad29,SetDefaultRecParameter_FW
 0xfc09ca4b,task_dccdCalcTask
+0xfc0a9c47,MoveOpticalZoomAt
 0xfc0a9e45,PT_MoveDigitalZoomToWide
 0xfc0a9ed5,SS.GetDigitalZoomPosition_FW
 0xfc0aa4a1,DoAFLock
