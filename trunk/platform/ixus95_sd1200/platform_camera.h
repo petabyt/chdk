@@ -94,4 +94,6 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
+    #define CAM_PTP_USE_NATIVE_BUFFER       1 // use firmware buffers to avoid problems with uncached memory
+
 //--------------------------------------------------
