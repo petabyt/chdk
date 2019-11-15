@@ -115,7 +115,7 @@ int gameInit(StcGame *gameInstance);
 void gameEnd(StcGame *gameInstance);
 void gameUpdate(StcGame *gameInstance);
 
-StcGame *game;
+StcGame *game = 0;
 
 // No need to import such simple
 long mkdir_if_not_exist(const char *dirname) 
@@ -664,6 +664,12 @@ static void dropTetramino(StcGame *game)
 void gameUpdate(StcGame *game)
 {
     long sysTime;
+
+    if (!game)
+    {
+        return;
+    }
+
     /* Read user input */
     platformReadInput(game);
 
@@ -797,6 +803,10 @@ void gui_tetris_draw()
 
 int gui_tetris_kbd_process()
 {
+    if (!game)
+    {
+        return 0;
+    }
     switch (kbd_get_autoclicked_key())
     {
         case KEY_UP:
