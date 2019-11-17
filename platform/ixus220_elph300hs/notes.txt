@@ -1,12 +1,16 @@
 ************************************
 IXUS220HS / ELPH300HS Notes
 
-To enter CHDK <Alt> mode use the Video button. Maybe this will be changed later to Playback button, but in this first version you have to use Video button.
+The default <ALT> button is PLAY. It can be assigned to VIDEO in CHDK settings.
 
-Short Press of Video button will toggle <ALT> mode.
-Long Press of Video button will execute original Canon functionality.
+Long Press the <ALT> button to access the original function.
 
-Support for dual partition is not available.
+Booting from FAT32 is supported, so multipartition cards are not required or supported.
+
+This camera has an ND filter and does not have an iris.
+
+Known bugs:
+The camera crashes when PTP is connected. There is no known workaround.
 
 For more information please refer to IXUS200HS/ELPH300HS Porting Thread:
 http://chdk.setepontos.com/index.php?topic=6341
