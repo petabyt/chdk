@@ -148,9 +148,9 @@ void __attribute__((naked,noinline)) sub_FF810358_my() {
 	*(int*)0x1938=(int)taskHook;
 	*(int*)0x193C=(int)taskHook;
 
-	// replacement of sub_FF024B5C for correct power-on.
+	// replacement of sub_FF864E00 for correct power-on.
 	// http://chdk.setepontos.com/index.php?topic=6341.msg76409#msg76409
-	*(int*)(0x25F4) = (*(int*)0xC0220130)&1 ? 0x200000 : 0x100000;
+	*(int*)(0x25F4) = (*(int*)0xC0220128)&1 ? 0x200000 : 0x100000;
 
 asm volatile (
 "    LDR     R0, =0xFF8103D0 \n"

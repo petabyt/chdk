@@ -30,7 +30,6 @@ KeyMap keymap[] = {
     { 2, KEY_LEFT            ,0x00000010 }, // Found @0xffba2b58, levent 0x06
     { 2, KEY_RIGHT           ,0x00000020 }, // Found @0xffba2b60, levent 0x07
     { 2, KEY_DOWN            ,0x00000040 }, // Found @0xffba2b68, levent 0x05
-	{ 2, KEY_DISPLAY         ,0x00000040 },
     { 2, KEY_UP              ,0x00000080 }, // Found @0xffba2b70, levent 0x04
 	{ 2, KEY_VIDEO		     ,0x00004000 },
 	{ 2, KEY_PLAYBACK        ,0x00000800 },
