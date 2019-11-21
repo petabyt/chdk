@@ -11,7 +11,8 @@ static char osd_buf[32];
 //-------------------------------------------------------------------
 
 unsigned long get_space_perc() {
-    return GetFreeCardSpaceKb()*100/GetTotalCardSpaceKb();
+    // accuracy reduced to support cards up to 2TB
+    return (GetFreeCardSpaceKb()>>6)*100/(GetTotalCardSpaceKb()>>6);
 }
 
 // Local variables used by various space display functions, setup in space_color
