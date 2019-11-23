@@ -2401,7 +2401,10 @@ static void gui_handle_splash(int force_redraw)
 }
 
 //-------------------------------------------------------------------
-static gui_handler *gui_mode=0;	// current gui mode. pointer to gui_handler structure
+// Dummy for startup to avoid null gui_mode pointer
+static gui_handler startupGuiHandler = { GUI_MODE_STARTUP, 0, 0, 0, 0, GUI_MODE_FLAG_NODRAWRESTORE | GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
+
+static gui_handler *gui_mode = &startupGuiHandler;	// current gui mode. pointer to gui_handler structure
 
 static int gui_osd_need_restore = 0;    // Set when screen needs to be erase and redrawn
 static int gui_mode_need_redraw = 0;    // Set if current mode needs to redraw itself
@@ -2440,9 +2443,6 @@ void gui_init()
     process_file( "A/CHDK/badpixel", make_pixel_list, 1 );
     process_file( "A/CHDK/badpixel.txt", make_pixel_list, 1 );
 }
-
-//-------------------------------------------------------------------
-gui_mode_t gui_get_mode() { return gui_mode->mode; }
 
 //-------------------------------------------------------------------
 // Set new GUI mode, returns old mode

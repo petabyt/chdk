@@ -170,7 +170,7 @@ int show_virtual_buttons()
 
 int chdk_process_touch()
 {
-    int guiMode = gui_get_mode();
+    int guiMode = camera_info.state.gui_mode;
     int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
     
     unsigned short tx, ty;                                              // Touch co-ordinate
@@ -220,7 +220,7 @@ int ts_process_touch()
 
     if (touch_panel_state != 0xFFFFFFFF)
     {
-        int guiMode = gui_get_mode();
+        int guiMode = camera_info.state.gui_mode;
         int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
         for (i=0; keymap[i].hackkey; i++)
@@ -247,7 +247,7 @@ int redraw_buttons = 1;
 
 void virtual_buttons()
 {
-    int guiMode = gui_get_mode();
+    int guiMode = camera_info.state.gui_mode;
     char buf[30];
 
     //if(menu_key_index == -1) 

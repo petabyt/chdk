@@ -9,6 +9,7 @@
 // Module ID's for specific modules that we need to be able to detect
 // use GUI_MODE_MODULE for generic module modes (e.g.games)
 enum Gui_Mode_ {
+    GUI_MODE_STARTUP = -1,
     GUI_MODE_NONE = 0,
     GUI_MODE_ALT,
     GUI_MODE_MENU,
@@ -77,7 +78,6 @@ extern void gui_redraw(int flag_gui_enforce_redraw);
 extern void gui_set_need_restore();
 extern void gui_cancel_need_restore();
 
-extern gui_mode_t gui_get_mode();
 extern gui_handler* gui_set_mode(gui_handler *mode);
 extern void gui_reset_alt_helper();
 

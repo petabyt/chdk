@@ -47,7 +47,7 @@ volatile long *blue_LED = (void*)LED_DP;
 
         while(1){
 
-            gui_mode = gui_get_mode() ;
+            gui_mode = camera_info.state.gui_mode;
 
             if(( (gui_mode == GUI_MODE_ALT)  && (gui_mode_flag != GUI_MODE_ALT) ) || ( (gui_mode == GUI_MODE_NONE)  && (gui_mode_flag != GUI_MODE_NONE) ) )
             {
@@ -637,7 +637,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x200 \n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF872014 \n"
+"    BL      sub_FF872014 /*_exmem_ualloc*/ \n"
 "    MOVS    R4, R0 \n"
 "    BNE     loc_FF859838 \n"
 
@@ -655,7 +655,7 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    BNE     loc_FF859864 \n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF872160 \n"
+"    BL      sub_FF872160 /*_exmem_ufree*/ \n"
 "    B       loc_FF859830 \n"
 
 "loc_FF859864:\n"
@@ -731,7 +731,7 @@ asm volatile (
 
 "loc_FF8598EC:\n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF872160 \n"
+"    BL      sub_FF872160 /*_exmem_ufree*/ \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF859924 \n"
 "    MOV     R6, #0 \n"

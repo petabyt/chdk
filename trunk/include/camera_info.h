@@ -182,7 +182,7 @@ typedef struct
         int     state_kbd_script_run;       // Script execution state
         int     osd_title_line;             // Display state of CHDK OSD title line
 
-        int     gui_mode;                   // Current GUI mode (from gui_get_mode())
+        int     gui_mode;                   // Current GUI mode (from gui_mode->mode)
         int     gui_mode_none;              // Current GUI mode == GUI_MODE_NONE
         int     gui_mode_alt;               // Current GUI mode == GUI_MODE_ALT
 

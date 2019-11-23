@@ -44,7 +44,7 @@ volatile long *blue_LED = (void*)LED_DP;
 
         while(1){
 
-            gui_mode = gui_get_mode() ;
+            gui_mode = camera_info.state.gui_mode;
 
             if(( (gui_mode == GUI_MODE_ALT)  && (gui_mode_flag != GUI_MODE_ALT) ) || ( (gui_mode == GUI_MODE_NONE)  && (gui_mode_flag != GUI_MODE_NONE) ) )
             {
