@@ -381,7 +381,7 @@ int chdk_process_touch()
     // If in canon menu, let the firmware have all the touch events.
     if (!show_virtual_buttons()) return 0;
 
-    int guiMode = gui_get_mode();
+    int guiMode = camera_info.state.gui_mode;
     int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
     // Touch co-ordinate
@@ -421,7 +421,7 @@ int print_key_index = -1;
 
 void virtual_buttons()
 {
-    int guiMode = gui_get_mode();
+    int guiMode = camera_info.state.gui_mode;
     char buf[30];
 
     // If shooting or in any Canon menus then don't display any CHDK buttons
@@ -503,7 +503,7 @@ int ts_process_touch()
 
     if (touch_panel_state != 0xFFFFFFFF)
     {
-        int guiMode = gui_get_mode();
+        int guiMode = camera_info.state.gui_mode;
         int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);
 
         //ts_proc_cnt++;
