@@ -217,7 +217,6 @@ NHSTUB(PutOutNdFilter                         ,0xfc45d55f) //  0
 NHSTUB(Read                                   ,0xfc119b79) //  0
 NHSTUB(ReadFastDir                            ,0xfc0faf71) //  0
 NHSTUB(Rec2PB                                 ,0xfc0cd787) //  0
-//NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 NHSTUB(ScreenLock                             ,0xfc30d24f) //  0
 NHSTUB(ScreenUnlock                           ,0xfc30d28d) //  0
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc459d69) //  0

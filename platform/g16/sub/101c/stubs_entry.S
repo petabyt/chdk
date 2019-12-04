@@ -156,7 +156,6 @@ DEF_CONST(exmem_type_count                  ,0x0000001f) // Found @0xfcbc61f4
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2c7819
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc2abc79
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc309783
-//NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0        *** != 0xfc15a39f
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc2b017d
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc0b59b5
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc309b01

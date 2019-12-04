@@ -236,6 +236,7 @@ NHSTUB(Open                                   ,0xe0373e7b) //  0
 NHSTUB(PB2Rec                                 ,0xe035dfcb) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xe02982c3) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xe0552e39) //  0
+NHSTUB(MoveOpticalZoomAt                      ,0xe02980f9) //  0
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(PostLogicalEventForNotPowerType        ,0xe037a839) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xe037a86d) //  0
@@ -244,7 +245,6 @@ NHSTUB(PutOutNdFilter                         ,0xe0592473) //  0
 NHSTUB(Read                                   ,0xe0451397) //  0
 NHSTUB(ReadFastDir                            ,0xe0373fef) //  0
 NHSTUB(Rec2PB                                 ,0xe035e00f) //  0
-//NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0            == 0x00000000
 //NHSTUB(Restart                              ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ScreenLock                           ,0x00000000) //  0            == 0x00000000

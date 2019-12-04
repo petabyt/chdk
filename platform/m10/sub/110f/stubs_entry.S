@@ -215,7 +215,6 @@ NHSTUB(PostLogicalEventToUI                   ,0xfc385931) //  0
 NHSTUB(Read                                   ,0xfc1ebe61) //  0
 NHSTUB(ReadFastDir                            ,0xfc1168dd) //  0
 NHSTUB(Rec2PB                                 ,0xfc33fff5) //  0
-//NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc5bb2dd) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xfc1fb4dd) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc37102f) //  0

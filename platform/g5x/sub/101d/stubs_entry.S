@@ -228,7 +228,6 @@ NHSTUB(PostLogicalEventToUI                   ,0xfc3bd7d1) //  0
 NHSTUB(Read                                   ,0xfc151589) //  0
 NHSTUB(ReadFastDir                            ,0xfc282ef1) //  0
 NHSTUB(Rec2PB                                 ,0xfc364f97) //  0
-//NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ScreenLock                           ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ScreenUnlock                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc664669) //  0
