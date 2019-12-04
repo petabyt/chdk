@@ -191,7 +191,6 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "Read" },
     { "ReadFastDir" },
     { "Rec2PB" },
-    { "RefreshPhysicalScreen" },
     { "Remove", OPTIONAL|UNUSED },
     { "RenameFile_Fut" },
     { "Restart" },

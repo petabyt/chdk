@@ -22,7 +22,6 @@ NHSTUB(GetDrive_TotalClusters               ,0xfc3324eb + 0x4)
 //NHSTUB(GetFocusLensSubjectDistance          ,0xfc2fa8df) //stubs_entry.S
 NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xFC2FABc1 + 0x4)
 //NHSTUB(PT_PlaySound                         ,0xFC333df1)
-NHSTUB(RefreshPhysicalScreen                  ,NULL_SUB) // NOT FOUND put to null, original in sx280 102b was 0xfc143599 
 NHSTUB(RenameFile_Fut                       ,0xFC301B5d + 0x4)
 NHSTUB(Restart                              ,0xFC0B96E5)
 NHSTUB(SetFileAttributes                    ,0xFC332C01 + 0x4)

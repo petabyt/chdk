@@ -16,7 +16,6 @@ NHSTUB(GetDrive_TotalClusters,                 0xfc076ab3)
 NHSTUB(GetFocusLensSubjectDistanceFromLens,    0xfc360e8b) // useless, returns zero
 NHSTUB(MoveFocusLensToDistance,                0xfc43e66f) // MoveFocusLensWithDistance_FW, seems to do nothing useful (calls lots of emptied functions)
 NHSTUB(PT_PlaySound,                           0xfc38c91f) // no longer an eventproc?
-NHSTUB(RefreshPhysicalScreen,                  NULL_SUB)
 NHSTUB(RenameFile_Fut,                         0xfc38a0d9)
 NHSTUB(Restart,                                0xfc12790b)
 NHSTUB(ScreenLock,                             0xfc38c505)
