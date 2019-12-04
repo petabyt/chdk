@@ -20,7 +20,7 @@ NHSTUB(GetImageFolder                         ,0xfc2abc79 ) //?matches SX60 - cl
 NHSTUB(MakeSDCardBootable                     ,0xfc309783 ) // in function before ref to "SCRIPT" @0xfc3092ae                                              
 NHSTUB(realloc                                ,0xfc4c5b1d ) // called just before string "fatal error - scanner input buffer overflow"                                              
 NHSTUB(reboot_fw_update                       ,0xfc3905b1 ) // look for "FirmUpgrade.c"                                              
-NHSTUB(RefreshPhysicalScreen                  ,0xfc15a39f ) // look for "Reduce ScreenUnLock"
+//NHSTUB(RefreshPhysicalScreen                  ,0xfc15a39f ) // look for "Reduce ScreenUnLock"
 NHSTUB(RenameFile_Fut                         ,0xfc2b017d ) // found after a call to PrepareDirectory_1
 NHSTUB(Restart                                ,0xfc0b59b5 ) // one of the calls to StopRedirectUART_FW
 NHSTUB(SetFileAttributes                      ,0xfc309b01 ) // function following SetFileTimeStamp in ROM

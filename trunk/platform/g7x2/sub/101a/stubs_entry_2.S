@@ -40,7 +40,6 @@ NHSTUB(captseq_raw_addr_init                  ,NULL_SUB)
 
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)
-NHSTUB(RefreshPhysicalScreen                  ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)
 NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)

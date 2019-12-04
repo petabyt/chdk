@@ -174,10 +174,13 @@ void mark_filesystem_bootable()
 #endif
 }
 
+// d6 cams must define, don't have usable _RefreshPhysicalScreen
+#ifndef THUMB_FW
 void __attribute__((weak)) vid_bitmap_refresh()
 {
     _RefreshPhysicalScreen(1);
 }
+#endif
 
 long lens_get_zoom_pos()
 {

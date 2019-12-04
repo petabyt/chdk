@@ -62,9 +62,6 @@ NHSTUB(WriteSDCard                          ,0xfc0e851d) //  sx700v100e above th
 
 NHSTUB(reboot_fw_update                     ,0xfc370b89) //  sx700v100e look for "FirmUpgrade.c"
 
-// *** Not Found 
-NHSTUB(RefreshPhysicalScreen,NULL_SUB)
-
 // not implemented
 NHSTUB(UnsetZoomForMovie,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
