@@ -182,7 +182,6 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcc66ce0
 //NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc189ec1) //  0        *** != 0x00000000
 //NHSTUB(PutInNdFilter                        ,0x00000000) //  0        *** != 0xfc44ceb1
 //NHSTUB(PutOutNdFilter                       ,0x00000000) //  0        *** != 0xfc44cecb
-//NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0        *** != 0xfc37ef9f
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc373e69
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc1311dd
 //NHSTUB(ScreenUnlock                         ,0x00000000) //  0        *** != 0xfc37f619
