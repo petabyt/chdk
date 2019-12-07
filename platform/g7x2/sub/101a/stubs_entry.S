@@ -100,12 +100,16 @@
 // //      PROPCASE_DELTA_DIGITALGAIN 84
 //         PROPCASE_DELTA_SV not found
 // //      PROPCASE_DELTA_ND 87
+// //      PROPCASE_FELOCK 122
+// #define PROPCASE_FLASH_ADJUST_MODE 129
+// #define PROPCASE_FLASH_FIRE 130
+// //      PROPCASE_HSCAPTURE 146
 // #define PROPCASE_EV_CORRECTION_2 218
 // #define PROPCASE_ORIENTATION_SENSOR 230
 // #define PROPCASE_SV_MARKET 258
 // //      PROPCASE_SVFIX 259
 // #define PROPCASE_TV 275
-// Guessed propset: uncertain (5 of 8 match), closest to 10
+// Guessed propset: uncertain (12 of 15 match), closest to 10
 
 // EXMEM types:
 // EXMEM_RAMDISK        0
