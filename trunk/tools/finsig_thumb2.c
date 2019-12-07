@@ -445,24 +445,30 @@ typedef struct {
     int     id_ps8; // id in propset 8
     int     id_ps9; // id in propset 9
     int     id_ps10;// id in propset 10
+    int     id_ps11;// id in propset 11
+    int     id_ps12;// id in propset 12
 } known_prop_t;
 
-#define KNOWN_PROPSET_COUNT (10-5)
+#define KNOWN_PROPSET_COUNT (12-5)
 
 known_prop_t knownprops[] =
-{   // name                          id  u ps6 ps7 ps8 ps9 ps10
-    {"PROPCASE_AFSTEP"             , -1, 0                     },
-    {"PROPCASE_FOCUS_STATE"        , -1, 1, 18, 18, 18, 18,  18},
-    {"PROPCASE_AV"                 , -1, 1, 23, 23, 23, 23,  23},
-    {"PROPCASE_BV"                 , -1, 1, 34, 38, 35, 38,  40},
-    {"PROPCASE_DELTA_DIGITALGAIN"  , -1, 0                     },
-    {"PROPCASE_DELTA_SV"           , -1, 1, 79, 84, 81, 84,  86},
-    {"PROPCASE_DELTA_ND"           , -1, 0                     },
-    {"PROPCASE_EV_CORRECTION_2"    , -1, 1,210,216,213,216, 218},
-    {"PROPCASE_ORIENTATION_SENSOR" , -1, 1,222,228,225,228, 230},
-    {"PROPCASE_SV_MARKET"          , -1, 1,249,255,252,255, 257},
-    {"PROPCASE_SVFIX"              , -1, 0                     },
-    {"PROPCASE_TV"                 , -1, 1,265,272,269,272, 274},
+{   // name                          id  u ps6 ps7 ps8 ps9 ps10 ps11 ps12
+    {"PROPCASE_AFSTEP"             , -1, 2, 13, 13, 13, 13,  13,  13,  13},
+    {"PROPCASE_FOCUS_STATE"        , -1, 1, 18, 18, 18, 18,  18,  18,  18},
+    {"PROPCASE_AV"                 , -1, 1, 23, 23, 23, 23,  23,  23,  23},
+    {"PROPCASE_BV"                 , -1, 1, 34, 38, 35, 38,  40,  40,  40},
+    {"PROPCASE_DELTA_DIGITALGAIN"  , -1, 2, 77, 82, 79, 82,  84,  85,  85},
+    {"PROPCASE_DELTA_SV"           , -1, 1, 79, 84, 81, 84,  86,  87,  87},
+    {"PROPCASE_DELTA_ND"           , -1, 2, 80, 85, 82, 85,  87,  88,  88},
+    {"PROPCASE_FELOCK"             , -1, 2,114,120,117,120, 122, 123, 123},
+    {"PROPCASE_FLASH_ADJUST_MODE"  , -1, 1,121,127,124,127, 129, 130, 130},
+    {"PROPCASE_FLASH_FIRE"         , -1, 1,122,128,125,128, 130, 131, 131},
+    {"PROPCASE_HSCAPTURE"          , -1, 2,138,144,141,144, 146, 147, 147},
+    {"PROPCASE_EV_CORRECTION_2"    , -1, 1,210,216,213,216, 218, 219, 220},
+    {"PROPCASE_ORIENTATION_SENSOR" , -1, 1,222,228,225,228, 230, 231, 232},
+    {"PROPCASE_SV_MARKET"          , -1, 1,249,255,252,255, 257, 259, 260},
+    {"PROPCASE_SVFIX"              , -1, 0                               },
+    {"PROPCASE_TV"                 , -1, 1,265,272,269,272, 274, 276, 277},
     {0,}
 };
 
@@ -3378,7 +3384,7 @@ int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *ru
         return 0;
     }
     // match second call
-    if(!insn_match_find_nth(fw,is,12,2,match_bl_blximm)) {
+    if(!insn_match_find_nth(fw,is,12,2,match_b_bl_blximm)) {
         // printf("sig_match_get_canon_mode_list: no match bl 2\n");
         return 0;
     }
@@ -3391,7 +3397,7 @@ int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *ru
         {MATCH_INS_CC(B,LO,MATCH_OPCOUNT_IGNORE)},
         {ARM_INS_ENDING}
     };
-    if(!insn_match_find_next_seq(fw,is,40,match_loop)) {
+    if(!insn_match_find_next_seq(fw,is,64,match_loop)) {
         // printf("sig_match_get_canon_mode_list: match 1 failed\n");
         return 0;
     }
@@ -4333,6 +4339,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_prop_string,"PROPCASE_SV_MARKET", "\n\rError : GetSvResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_SVFIX", "\n\rError : GetSvFixResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_TV", "\n\rError : GetTvResult",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_HSCAPTURE", "GetPropertyFromCase Error [HSCapture]",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_FLASH_FIRE", "FlashDecision",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_FELOCK", "GetPropertyFromCurrentCase Error [FELock]",SIG_NEAR_BEFORE(7,1)},
+{sig_match_prop_string,"PROPCASE_FLASH_ADJUST_MODE", "GetPropertyFromCurrentCase Error [FlashAdjust]",SIG_NEAR_BEFORE(7,1)},
 {sig_match_exmem_vars,"exmem_types_table", "ExMem.View_FW"},
 {NULL},
 };
@@ -4901,6 +4911,8 @@ void output_propcases(firmware *fw) {
                 if (knownprops[n].id == knownprops[n].id_ps8) hits[8-ps_offset] += 1;
                 if (knownprops[n].id == knownprops[n].id_ps9) hits[9-ps_offset] += 1;
                 if (knownprops[n].id == knownprops[n].id_ps10) hits[10-ps_offset] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps11) hits[11-ps_offset] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps12) hits[12-ps_offset] += 1;
             }
             if (knownprops[n].use == 1)
             {
