@@ -71,6 +71,8 @@ typedef struct {
 
 #define FW_MAX_ADR_RANGES 5
 
+#define FW_MAX_DRYOS_VERS 10
+
 // loaded firmware
 typedef struct {
     union {
@@ -88,8 +90,13 @@ typedef struct {
     int             size8;          // Size of the firmware (as loaded from the dump) in bytes
     int             size32;         // Size of the firmware in 32 bit words
 
-	int			    dryos_ver;          // DryOS version number
-    char            *dryos_ver_str;     // DryOS version string
+    int             dryos_ver;          // main firmware DryOS version number
+    char            *dryos_ver_str;     // main firmware DryOS version string
+    uint32_t        dryos_ver_adr;      // address of main firmware DryOS version string
+    uint32_t        dryos_ver_ref_adr;  // address of pointer used to identify main fw string
+    uint32_t        dryos_ver_list[FW_MAX_DRYOS_VERS]; // addresses of all found DryOS version strings
+    uint32_t        dryos_ver_count;    // number of version strings found
+
     char            *firmware_ver_str;  // Camera firmware version string
 
     // TODO duplicated with adr_range stuff below
@@ -144,14 +151,37 @@ int find_Nth_str(firmware *fw, char *str, int N);
 // above, N=1
 int find_str(firmware *fw, char *str);
 
-// Find the index of a string in the firmware, can start at any address
-// returns firmware address
-uint32_t find_str_bytes(firmware *fw, char *str);
+// find sequence of bytes, starting from address, any alignment
+// returns firmware address or 0
+// use repeated calls to find multiple
+// NOTE only handles ROM addresses
+uint32_t find_next_bytes(firmware *fw, const void *bytes, size_t len, uint32_t adr);
+
+// find up to maxmatch matching byte sequences, storing addresses in result
+// returns count
+int find_bytes_all(firmware *fw, const void *bytes, size_t len, uint32_t adr, uint32_t *result, int maxmatch);
+
+// find index of string, starting from address, str can start at any address
+// returns firmware address or 0
+// use repeated calls to find multiple
+// NOTE only handles ROM addresses
+uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr);
+
+// as above, but without terminating null
+uint32_t find_next_substr_bytes(firmware *fw, const char *str, uint32_t adr);
+
+// as find_next_str_bytes, first match
+uint32_t find_str_bytes(firmware *fw, const char *str);
 
 int isASCIIstring(firmware *fw, uint32_t adr);
 
 /*
-return firmware address of 32 bit value, starting at address "start"
+return firmware address of 32 bit value, starting at address "start", up to "maxadr"
+*/
+uint32_t find_u32_adr_range(firmware *fw, uint32_t val, uint32_t start, uint32_t maxadr);
+
+/*
+return firmware address of 32 bit value, starting at address "start", to end of dump
 */
 uint32_t find_u32_adr(firmware *fw, uint32_t val, uint32_t start);
 

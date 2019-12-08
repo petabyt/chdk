@@ -4721,7 +4721,7 @@ void find_generic_funcs(firmware *fw) {
     disasm_iter_free(is);
 }
 
-int find_ctypes(firmware *fw, int k)
+void find_ctypes(firmware *fw)
 {
     static unsigned char ctypes[] =
     {
@@ -4735,20 +4735,31 @@ int find_ctypes(firmware *fw, int k)
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0x10, 0x10, 0x10, 0x10, 0x20
     };
 
-    // > main_offs because d7 firmwares have another ctypes before main firmware
-    if ((k < (fw->size8 - sizeof(ctypes)) && (k > fw->main_offs)))
-    {
-        if (memcmp(((char*)fw->buf8)+k,ctypes,sizeof(ctypes)) == 0)
-        {
-            //printf("found ctypes 0x%08x\n",fw->base + k);
-            save_misc_val("ctypes",fw->base + k,0,0); 
-            // use ctypes as max search address for non-copied / relocated code. 
-            // seems to be true on current firmwares
-            fw->rom_code_search_max_adr = fw->base + k;
-            return 1;
+    uint32_t ctypes_matches[10];
+    int match_count = find_bytes_all(fw,ctypes,sizeof(ctypes),fw->base,ctypes_matches,10);
+    if(!match_count) {
+        return;
+    }
+    if(match_count == 10) {
+        fprintf(stderr,"WARNING found 10+ ctypes!\n");
+    }
+    int i;
+    int match_i;
+    uint32_t min_adr = 0xFFFFFFFF;
+    for(i = 0; i< match_count; i++) {
+        // ref should easily be in the first 1M
+        uint32_t maxadr = (fw->rom_code_search_max_adr > fw->base + 0x400000)?fw->base + 0x100000:fw->rom_code_search_max_adr;
+        uint32_t adr = find_u32_adr_range(fw,ctypes_matches[i],fw->rom_code_search_min_adr,maxadr);
+        if(adr && adr < min_adr) {
+            min_adr = adr;
+            match_i = i;
         }
     }
-    return 0;
+    if(min_adr == 0xFFFFFFFF) {
+        fprintf(stderr,"WARNING cytpes pointer not found, defaulting to first\n");
+        match_i = 0;
+    }
+    save_misc_val("ctypes",ctypes_matches[match_i],0,min_adr); 
 }
 
 void print_misc_val_makefile(const char *name)
@@ -4781,7 +4792,11 @@ void output_firmware_vals(firmware *fw)
     {
         bprintf("//   Can't find DRYOS version !!!\n\n");
     } else {
-        bprintf("//   DRYOS R%d (%s)\n",fw->dryos_ver,fw->dryos_ver_str);
+        bprintf("//   DRYOS R%d (%s) @ 0x%08x ref @ 0x%08x\n",
+                    fw->dryos_ver,
+                    fw->dryos_ver_str,
+                    fw->dryos_ver_adr,
+                    fw->dryos_ver_ref_adr);
     }
     if (fw->firmware_ver_str == 0)
     {
@@ -4847,6 +4862,15 @@ void output_firmware_vals(firmware *fw)
                     mv->blobs[i].size);
         }
 
+    }
+    if(fw->dryos_ver_count) {
+        bprintf("\n// Found DryOS versions:\n");
+        for(i=0;i<fw->dryos_ver_count;i++) {
+            bprintf("// 0x%08x %s \"%s\"\n",
+                fw->dryos_ver_list[i], (fw->dryos_ver_list[i] == fw->dryos_ver_adr) ? "main ":"other",
+                (char *)adr2ptr(fw,fw->dryos_ver_list[i]));
+        }
+        add_blankline();
     }
     add_blankline();
     if(get_misc_val_value("CAM_IS_ILC")) {
@@ -5728,8 +5752,8 @@ int main(int argc, char **argv)
     }
     
 
-    // find ctypes - used for code search limit
-    fw_search_bytes(&fw, find_ctypes);
+    // find ctypes - previously separate from regular sig matches to set code search limit
+    find_ctypes(&fw);
 
     run_sig_rules(&fw,sig_rules_initial);
     find_generic_funcs(&fw);
