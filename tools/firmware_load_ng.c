@@ -79,6 +79,19 @@ static void findRanges(firmware *fw)
     }
 }
 
+// return the buffrange for a given offset or null if not found
+BufRange *getBufRangeForIndex(firmware *fw,int i)
+{
+    BufRange *br = fw->br;
+    while (br) {
+        if(i >= br->off && i < br->off + br->len) {
+            return br;
+        }
+        br = br->next;
+    }
+    return NULL;
+}
+
 // Find the index of a string in the firmware
 // Assumes the string starts on a 32bit boundary.
 // String + terminating zero byte should be at least 4 bytes long
@@ -112,23 +125,65 @@ int find_str(firmware *fw, char *str)
     return find_Nth_str(fw, str, 1);
 }
 
-// Find the index of a string in the firmware, can start at any address
-// returns firmware address
-uint32_t find_str_bytes(firmware *fw, char *str)
+// find sequence of bytes, starting from address, any alignment
+// returns firmware address or 0
+// use repeated calls to find multiple
+// NOTE only handles ROM addresses
+uint32_t find_next_bytes(firmware *fw, const void *bytes, size_t len, uint32_t adr)
 {
-    BufRange *p = fw->br;
-    while (p)
+    if(!adr) {
+        adr = fw->base;
+    }
+    BufRange *p = getBufRangeForIndex(fw,(adr - fw->base)/4);
+    if(!p) {
+        return 0;
+    }
+    int k = adr - fw->base;
+
+    while (1)
     {
-        int k;
-        for (k = p->off*4; k < (p->off + p->len)*4; k++)
+        for (; k < (p->off + p->len)*4; k++)
         {
-            if (strcmp(((char*)fw->buf8)+k,str) == 0)
+            if (memcmp(fw->buf8+k,bytes,len) == 0) {
                 return fw->base+k;
+            }
         }
         p = p->next;
+        if(!p) {
+            break;
+        }
+        k = p->off*4;
     }
-
     return 0;
+}
+
+// find up to max matching byte sequences, storing addresses in result
+// returns count
+int find_bytes_all(firmware *fw, const void *bytes, size_t len, uint32_t adr, uint32_t *result, int max)
+{
+    int i;
+    for(i=0,adr=find_next_bytes(fw,bytes,len,0); adr && (i < max); adr=find_next_bytes(fw,bytes,len,adr+len),i++) {
+        result[i] = adr;
+    }
+    return i;
+}
+
+uint32_t find_next_substr_bytes(firmware *fw, const char *str, uint32_t adr) {
+    //fprintf(stderr,"find_next_substr_bytes 0x%08x\n",adr);
+    // strlen excludes null
+    return find_next_bytes(fw,str,strlen(str),adr);
+}
+
+uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr) {
+    // +1 to include the null in memcmp
+    return find_next_bytes(fw,str,strlen(str)+1,adr);
+}
+
+// Find the index of a string in the firmware, can start at any address
+// returns firmware address
+uint32_t find_str_bytes(firmware *fw, const char *str)
+{
+    return find_next_str_bytes(fw,str,fw->base);
 }
 
 int isASCIIstring(firmware *fw, uint32_t adr)
@@ -227,9 +282,9 @@ int adr_is_var(firmware *fw, uint32_t adr)
 
 
 /*
-return firmware address of 32 bit value, starting at address "start"
+return firmware address of 32 bit value, starting at address "start", up to max
 */
-uint32_t find_u32_adr(firmware *fw, uint32_t val, uint32_t start)
+uint32_t find_u32_adr_range(firmware *fw, uint32_t val, uint32_t start,uint32_t maxadr)
 {
     // TODO 
     if(start == 0) {
@@ -244,14 +299,26 @@ uint32_t find_u32_adr(firmware *fw, uint32_t val, uint32_t start)
         fprintf(stderr,"find_u32_adr bad start 0x%08x\n",start);
         return 0;
     }
-    uint32_t *p_end=fw->buf32 + fw->size32;
-    while(p<p_end) {
+    uint32_t *p_end;
+    if(maxadr) {
+        p_end = (uint32_t *)adr2ptr(fw,maxadr);
+    } else {
+        p_end = fw->buf32 + fw->size32 - 1;
+    }
+    // TODO should use buf ranges
+    while(p<=p_end) {
         if(*p==val) {
             return ptr2adr(fw,(uint8_t *)p);
         }
         p++;
     }
     return 0;
+}
+
+// as above, full to end of fw
+uint32_t find_u32_adr(firmware *fw, uint32_t val, uint32_t start)
+{
+    return find_u32_adr_range(fw,val,start, fw->base + (fw->size8 -4));
 }
 
 // return u32 value at adr
@@ -1655,6 +1722,56 @@ void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_s
     fw->adr_range_count++;
 }
 
+void find_dryos_vers(firmware *fw)
+{
+    const char *sig="DRYOS version 2.3, release #";
+    fw->dryos_ver_count = find_bytes_all(fw,sig,strlen(sig),fw->base,fw->dryos_ver_list,FW_MAX_DRYOS_VERS);
+    /*
+    int i;
+    for(i=0;i<fw->dryos_ver_count;i++) {
+        fprintf(stderr,"found %s (%d) @0x%08x\n",
+            (char *)adr2ptr(fw,fw->dryos_ver_list[i]),
+            atoi((char *)adr2ptr(fw,fw->dryos_ver_list[i]+strlen(sig))),
+            fw->dryos_ver_list[i]);
+    }
+    */
+    if(fw->dryos_ver_count) {
+        if(fw->dryos_ver_count == FW_MAX_DRYOS_VERS) {
+            fprintf(stderr,"WARNING hit FW_MAX_DRYOS_VERS\n");
+        }
+        int i;
+        int match_i;
+        uint32_t min_adr = 0xFFFFFFFF;
+        
+        // ref should easily be in the first 8M (most near start but g7x2 at >0x500000)
+        uint32_t maxadr = (fw->rom_code_search_max_adr - 0x800000 > fw->base)?fw->base + 0x800000:fw->rom_code_search_max_adr;
+        // look for pointer to dryos version nearest to main ROM start, before the string itself
+        // NOTE it's the *pointer* that must be nearest, the string may not be the first
+        for(i=0; i<fw->dryos_ver_count; i++) {
+            // TODO could limit range more, ctypes should be ref'd a lot
+            // could sanity check not a random value that happens to match
+            uint32_t adr = find_u32_adr_range(fw,fw->dryos_ver_list[i],fw->rom_code_search_min_adr,maxadr);
+            if(adr && adr < min_adr) {
+                min_adr = adr;
+                match_i = i;
+            }
+        }
+        if(min_adr == 0xFFFFFFFF) {
+            fprintf(stderr,"WARNING dryos version pointer not found, defaulting to first\n");
+            match_i = 0;
+            min_adr = 0;
+        }
+        fw->dryos_ver_str = (char *)adr2ptr(fw,fw->dryos_ver_list[match_i]);
+        fw->dryos_ver = atoi((char *)adr2ptr(fw,fw->dryos_ver_list[match_i]+strlen(sig)));
+        fw->dryos_ver_adr = fw->dryos_ver_list[match_i];
+        fw->dryos_ver_ref_adr = min_adr;
+        // fprintf(stderr,"main firmware version %s @ 0x%08x ptr 0x%08x\n",fw->dryos_ver_str,fw->dryos_ver_adr,min_adr);
+    } else {
+        fw->dryos_ver=0;
+        fw->dryos_ver_str=NULL;
+        fw->dryos_ver_adr=0;
+    }
+}
 
 // load firmware and initialize stuff that doesn't require disassembly
 void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_arch)
@@ -1718,15 +1835,11 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
             fprintf(stderr,"WARNING code start offset not found, assuming 0\n");
         }
     }
-    k = find_str(fw, "DRYOS version 2.3, release #");
-    if (k != -1)
-    {
-        fw->dryos_ver = atoi((char *)fw->buf8 + k*4 + 28);
-        fw->dryos_ver_str = (char *)fw->buf8 + k*4;
-    } else {
-        fw->dryos_ver=0;
-        fw->dryos_ver_str=NULL;
-    }
+
+    fw->rom_code_search_min_adr = fw->base + fw->main_offs; // 0 if not found
+    fw->rom_code_search_max_adr=fw->base+fw->size8 - 4; // default == end of fw, may be adjusted by firmware_init_data_ranges
+
+    find_dryos_vers(fw);
 
     fw->firmware_ver_str = 0;
     k = find_str(fw, "Firmware Ver ");
@@ -1734,8 +1847,6 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     {
         fw->firmware_ver_str = (char *)fw->buf8 + k*4;
     }
-    fw->rom_code_search_min_adr = fw->base + fw->main_offs; // 0 if not found
-    fw->rom_code_search_max_adr=fw->base+fw->size8 - 4; // default == end of fw, may be adjusted by firmware_init_data_ranges
     // set expected instruction set
     if(fw->arch==FW_ARCH_ARMv5) {
         fw->thumb_default = 0;
@@ -1991,6 +2102,12 @@ void firmware_init_data_ranges(firmware *fw)
     // TODO could use copied code regions too, but after data on known firmwares
     if(fw->data_start) {
         fw->rom_code_search_max_adr=fw->data_init_start;
+    }
+    // if dryos version string found, use as search limit
+    if(fw->dryos_ver_adr) {
+        if(fw->dryos_ver_adr < fw->rom_code_search_max_adr) {
+            fw->rom_code_search_max_adr = fw->dryos_ver_adr;
+        }
     }
     disasm_iter_free(is);
 }
