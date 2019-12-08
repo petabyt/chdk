@@ -3,7 +3,7 @@
 
 // Camera info:
 //   Main firmware start: 0xfc020000
-//   DRYOS R54 (DRYOS version 2.3, release #0054+p3)
+//   DRYOS R54 (DRYOS version 2.3, release #0054+p3) @ 0xfc514c64 ref @ 0xfc0497ac
 //   Firmware Ver GM1.00D   // Found @ 0xfc136788, "GM1.00D" @ 0xfc136795
 
 // Values for makefile.inc
@@ -22,6 +22,11 @@
 // zico_0 0xbff20000 - 0xbff27398 copied from 0xfca30f2c (  29592 bytes)
 // zico_1 0xbff00000 - 0xbff04a70 copied from 0xfca382cc (  19056 bytes)
 // zico_2 0x80a00000 - 0x80b09020 copied from 0xfca3cd44 (1085472 bytes)
+
+// Found DryOS versions:
+// 0xfc514c64 main  "DRYOS version 2.3, release #0054+p3"
+// 0xfc52b2bc other "DRYOS version 2.3, release #0054+p3"
+// 0xfca3dd24 other "DRYOS version 2.3, release #0054+p4"
 
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
@@ -123,7 +128,7 @@
 // EXMEM_BACKBLUR       30
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(ctypes                            ,0xfc514d0c)
+DEF(ctypes                            ,0xfc514d0c) // Found @0xfc03b7cc
 DEF(physw_run                         ,0x000082c8) // Found @0xfc07a0be
 DEF(physw_sleep_delay                 ,0x000082d0) // (0x82c8+0x8) Found @0xfc07a0c2
 DEF(physw_status                      ,0x000308b0) // Found @0xfc07a3bc

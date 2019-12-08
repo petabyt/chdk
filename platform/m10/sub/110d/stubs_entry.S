@@ -3,7 +3,7 @@
 
 // Camera info:
 //   Main firmware start: 0xfc020000
-//   DRYOS R57 (DRYOS version 2.3, release #0057)
+//   DRYOS R57 (DRYOS version 2.3, release #0057) @ 0xfc608084 ref @ 0xfc04686c
 //   Firmware Ver GM1.10D   // Found @ 0xfc1fb03c, "GM1.10D" @ 0xfc1fb049
 
 // Values for makefile.inc
@@ -23,6 +23,11 @@
 // zico_0 0xbff20000 - 0xbff27938 copied from 0xfca326f8 (  31032 bytes)
 // zico_1 0xbff00000 - 0xbff04b30 copied from 0xfca3a038 (  19248 bytes)
 // zico_2 0x80a00000 - 0x80b15060 copied from 0xfca3eb70 (1134688 bytes)
+
+// Found DryOS versions:
+// 0xfc608084 main  "DRYOS version 2.3, release #0057"
+// 0xfc61f510 other "DRYOS version 2.3, release #0057"
+// 0xfca3fd20 other "DRYOS version 2.3, release #0057"
 
 // Camera is interchangeable lens
 
@@ -119,7 +124,7 @@
 // EXMEM_PHOTO_IN_MOVIE 32
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(ctypes                            ,0xfc60812c)
+DEF(ctypes                            ,0xfc60812c) // Found @0xfc045b30
 DEF(physw_run                         ,0x000082cc) // Found @0xfc08c8ca
 DEF(physw_sleep_delay                 ,0x000082d4) // (0x82cc+0x8) Found @0xfc08c8ce
 DEF(physw_status                      ,0x00056bec) // Found @0xfc08cbb4

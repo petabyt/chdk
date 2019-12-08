@@ -3,7 +3,7 @@
 
 // Camera info:
 //   Main firmware start: 0xfc020000
-//   DRYOS R55 (DRYOS version 2.3, release #0055+p6)
+//   DRYOS R55 (DRYOS version 2.3, release #0055+p6) @ 0xfc5e294c ref @ 0xfc03d55c
 //   Firmware Ver GM1.01A   // Found @ 0xfc1fce98, "GM1.01A" @ 0xfc1fcea5
 
 // Values for makefile.inc
@@ -23,6 +23,11 @@
 // zico_0 0xbff20000 - 0xbff277b8 copied from 0xfc9fefb0 (  30648 bytes)
 // zico_1 0xbff00000 - 0xbff04ad0 copied from 0xfca06770 (  19152 bytes)
 // zico_2 0x80a00000 - 0x80b06220 copied from 0xfca0b248 (1073696 bytes)
+
+// Found DryOS versions:
+// 0xfc5e294c main  "DRYOS version 2.3, release #0055+p6"
+// 0xfc5f62d4 other "DRYOS version 2.3, release #0055+p6"
+// 0xfca0c278 other "DRYOS version 2.3, release #0055+p6"
 
 // Camera is interchangeable lens
 
@@ -150,7 +155,7 @@
 // EXMEM_PHOTO_IN_MOVIE 32
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(ctypes                            ,0xfc5e29f4)
+DEF(ctypes                            ,0xfc5e29f4) // Found @0xfc03c888
 DEF(physw_run                         ,0x000082cc) // Found @0xfc083bc6
 DEF(physw_sleep_delay                 ,0x000082d4) // (0x82cc+0x8) Found @0xfc083bca
 DEF(physw_status                      ,0x00052098) // Found @0xfc083eb4
