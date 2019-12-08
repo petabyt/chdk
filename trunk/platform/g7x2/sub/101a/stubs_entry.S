@@ -3,7 +3,7 @@
 
 // Camera info:
 //   Main firmware start: 0xe0020000
-//   DRYOS R58 (DRYOS version 2.3, release #0058+p10)
+//   DRYOS R58 (DRYOS version 2.3, release #0058+p10) @ 0xe05d81d4 ref @ 0xe05c5468
 //   Firmware Ver GM1.01A   // Found @ 0xe0503c40, "GM1.01A" @ 0xe0503c4d
 
 // Values for makefile.inc
@@ -23,6 +23,13 @@
 // zico_0 0xbff20000 - 0xbff24ab8 copied from 0xe0e79d0c (  19128 bytes)
 // zico_1 0xbff00000 - 0xbff08000 copied from 0xe0e7e7cc (  32768 bytes)
 // zico_2 0x80a00000 - 0x80ad4350 copied from 0xe0e867d4 ( 869200 bytes)
+
+// Found DryOS versions:
+// 0xe0018d08 other "DRYOS version 2.3, release #0058+p10"
+// 0xe05d81d4 main  "DRYOS version 2.3, release #0058+p10"
+// 0xe0c260a8 other "DRYOS version 2.3, release #0058+p10"
+// 0xe0e87064 other "DRYOS version 2.3, release #0058+p7"
+// 0xe123e380 other "DRYOS version 2.3, release #0058+p10"
 
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
@@ -149,7 +156,7 @@
 // EXMEM_TIME_LAPSE_MOVIE 34
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(ctypes                            ,0xe05d8334)
+DEF(ctypes                            ,0xe05d8334) // Found @0xe00386cc
 DEF(physw_run                         ,0x00008370) // Found @0xe005b31a
 DEF(physw_sleep_delay                 ,0x00008378) // (0x8370+0x8) Found @0xe005b31e
 DEF(physw_status                      ,0x0004e448) // Found @0xe005b632

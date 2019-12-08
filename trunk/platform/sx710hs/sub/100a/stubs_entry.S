@@ -3,7 +3,7 @@
 
 // Camera info:
 //   Main firmware start: 0xfc020000
-//   DRYOS R57 (DRYOS version 2.3, release #0057)
+//   DRYOS R57 (DRYOS version 2.3, release #0057) @ 0xfc56bcc0 ref @ 0xfc032ea4
 //   Firmware Ver GM1.00A   // Found @ 0xfc4a3480, "GM1.00A" @ 0xfc4a348d
 
 // Values for makefile.inc
@@ -23,6 +23,11 @@
 // zico_0 0xbff20000 - 0xbff27800 copied from 0xfcb2a300 (  30720 bytes)
 // zico_1 0xbff00000 - 0xbff04b20 copied from 0xfcb31b08 (  19232 bytes)
 // zico_2 0x80a00000 - 0x80b0d2d0 copied from 0xfcb36630 (1102544 bytes)
+
+// Found DryOS versions:
+// 0xfc56bcc0 main  "DRYOS version 2.3, release #0057"
+// 0xfc5818ec other "DRYOS version 2.3, release #0057"
+// 0xfcb37660 other "DRYOS version 2.3, release #0057"
 
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
@@ -122,7 +127,7 @@
 // EXMEM_CREATIVE_SHOT  32
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(ctypes                            ,0xfc56bd68)
+DEF(ctypes                            ,0xfc56bd68) // Found @0xfc0321f0
 DEF(physw_run                         ,0x000082c8) // Found @0xfc0cefc8
 DEF(physw_sleep_delay                 ,0x000082d0) // (0x82c8+0x8) Found @0xfc0cefcc
 DEF(physw_status                      ,0x00032710) // Found @0xfc0cf2f4

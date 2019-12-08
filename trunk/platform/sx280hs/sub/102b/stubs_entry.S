@@ -3,7 +3,7 @@
 
 // Camera info:
 //   Main firmware start: 0xfc020000
-//   DRYOS R52 (DRYOS version 2.3, release #0052)
+//   DRYOS R52 (DRYOS version 2.3, release #0052) @ 0xfc480fe0 ref @ 0xfc063df4
 //   Firmware Ver GM1.02B   // Found @ 0xfc142888, "GM1.02B" @ 0xfc142895
 
 // Values for makefile.inc
@@ -21,6 +21,11 @@
 // Zico Xtensa blobs:
 // zico_0 0xbff20000 - 0xbff257c8 copied from 0xfc764784 (  22472 bytes)
 // zico_1 0x80a00000 - 0x80afd2e8 copied from 0xfc769f60 (1037032 bytes)
+
+// Found DryOS versions:
+// 0xfc480fe0 main  "DRYOS version 2.3, release #0052"
+// 0xfc499140 other "DRYOS version 2.3, release #0052"
+// 0xfc76adf0 other "DRYOS version 2.3, release #0052"
 
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
