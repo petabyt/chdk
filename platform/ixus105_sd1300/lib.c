@@ -68,29 +68,15 @@ int get_flash_params_count(void){
  return 0x94;
 }
 
-// Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-int vid_get_viewport_yscale() {
-	return 2;
-}
-
+// following width and height works for most modes, except: 320x240 video, stitch, maybe more
 int vid_get_viewport_width()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
-    {
-        return 360;
-    }
-    extern int _GetVRAMHPixelsSize();
-    return _GetVRAMHPixelsSize() >> 1;
+    return 360;
 }
 
 long vid_get_viewport_height()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
-    {
-        return 240;
-    }
-    extern int _GetVRAMVPixelsSize();
-    return _GetVRAMVPixelsSize() >> 1;
+    return 240;
 }
 
 
