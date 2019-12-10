@@ -76,8 +76,7 @@ boot ()
             // Install CreateTask patch
             "    adr     r0, patch_CreateTask\n" // Patch data
             "    ldm     r0, {r1,r2}\n" // Get two patch instructions
-            "    ldr     r0, =orig_CreateTask\n" // Address to patch
-            "    bic     r0, #1\n" // clear thumb bit
+            "    ldr     r0, =hook_CreateTask\n" // Address to patch, thumb bit is clear in stubs_entry.S
             "    stm     r0, {r1,r2}\n" // Store patch instructions
 
             "    ldr     r0, =0xfceacb1c\n"
@@ -161,7 +160,7 @@ CreateTask_my ()
             "    push.w  {r1, r2, r3, r4, r5, r6, r7, r8, sb, lr}\n"
             "    mov     r4, r0\n"
             "    ldr     r0, =0x00008164\n"
-            "    ldr.w   pc, =(orig_CreateTask + 8) \n" // Continue in firmware
+            "    ldr.w   pc, =(hook_CreateTask + 9) \n" // Continue in firmware, thumb bit set
             ".ltorg\n"
     );
 }

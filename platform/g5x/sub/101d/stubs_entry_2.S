@@ -4,8 +4,6 @@
 
 #define NULL_SUB 0xFC066A49 // bx lr
 
-   DEF(orig_CreateTask                        ,0xBFE149E5)
-
 NHSTUB(EnterToCompensationEVF                 ,0xfc2d390d)
 NHSTUB(ExitFromCompensationEVF                ,0xfc2d394f)
 NHSTUB(ExpCtrlTool_StartContiAE               ,0xfc2cdb83)
@@ -34,6 +32,9 @@ NHSTUB(VTMUnlock                              ,0xfc3be60f)
 
 NHSTUB(get_dial_hw_position                   ,0xfc286679)
 NHSTUB(GetActiveViewportBuffer                ,0xfc108e67)
+
+NHSTUB(displayblankscreen,                     0xFC35330F)
+NHSTUB(undisplayblankscreen,                   0xFC3533AD)
 
 // Ignore event proc versions, use inner functions from wrapper
 IGNORE(PutInNdFilter)
