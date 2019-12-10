@@ -156,6 +156,8 @@
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_USE_ZOOM_FOR_MF
 
+    #define CAM_CLEAN_OVERLAY                   1
+
     #define CAM_EXT_TV_RANGE                    1
 
     //#define CAM_QUALITY_OVERRIDE                1

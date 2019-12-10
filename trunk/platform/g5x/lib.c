@@ -155,39 +155,52 @@ int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
  * Needed because bitmap buffer resolution changes when using the EVF
  * LCD = 720 x 480
  * EVF = 1024 x 768
+ * HDMI = 960 x 540
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
  */
 void update_screen_dimensions()
 {
-    extern unsigned char evf_active;
+    extern int displaytype;
+    static int old_displaytype = -1;
 
-    // Get LCD / EVF width & height
-    if (evf_active == 0)
+    if (old_displaytype != displaytype)
     {
-        // LCD
-        camera_screen.width = 720;
-        camera_screen.height = 480;
-        camera_screen.buffer_width = 736;
+        old_displaytype = displaytype;
+
+        switch (displaytype)
+        {
+            case 6:
+            case 7:
+                // HDMI
+                camera_screen.width = 960;
+                camera_screen.height = 540;
+                camera_screen.buffer_width = 960;
+                break;
+            case 11:
+                // EVF
+                camera_screen.width = 1024;
+                camera_screen.height = 768;
+                camera_screen.buffer_width = 1024;
+                break;
+            default:
+                // LCD
+                camera_screen.width = 720;
+                camera_screen.height = 480;
+                camera_screen.buffer_width = 736;
+                break;
+        }
+
+        // Reset OSD offset and width
+        camera_screen.disp_right = camera_screen.width - 1;
+        camera_screen.disp_width = camera_screen.width;
+
+        // Update other values
+        camera_screen.physical_width = camera_screen.buffer_width;
+        camera_screen.buffer_height = camera_screen.height;
+        camera_screen.size = camera_screen.width * camera_screen.height;
+        camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
     }
-    else
-    {
-        // EVF
-        camera_screen.width = 1024;
-        camera_screen.height = 768;
-        camera_screen.buffer_width = 1024;
-
-    }
-
-    // Reset OSD offset and width
-    camera_screen.disp_right = camera_screen.width - 1;
-    camera_screen.disp_width = camera_screen.width;
-
-    // Update other values
-    camera_screen.physical_width = camera_screen.buffer_width;
-    camera_screen.buffer_height = camera_screen.height;
-    camera_screen.size = camera_screen.width * camera_screen.height;
-    camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
 }
 
 /*
