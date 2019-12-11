@@ -169,7 +169,7 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3b5ecb
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2a6cd7
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc15bb35
-//NHSTUB(TurnOnBackLight                      ,0x00000000) //  0        *** != 0xfc15bb31
+//NHSTUB(TurnOnBackLight                      ,0xfc15b413) //  0        *** != 0xfc15bb31
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc25f5cb
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc06647b
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc5e5321

@@ -2365,6 +2365,7 @@
 0xfc66122f,TurnOffNdFilter_FW
 0xfc66126f,TurnOffNdFilterWithTiming_FW
 0xfc2e0fcf,TurnOffVideoOutMode_FW
+0xfc15bb31,TurnOnBackLight,(stubs_entry_2.s)
 0xfc0ba83f,TurnOnDisplay
 0xfc661215,TurnOnNdFilter_FW
 0xfc661249,TurnOnNdFilterWithTiming_FW
