@@ -1,3 +1,4 @@
+0x010c1389,CreateTask_low
 0x010c283d,createsemaphore_low
 0x010c2923,givesemaphore_low
 0x010c294f,takesemaphore_low
