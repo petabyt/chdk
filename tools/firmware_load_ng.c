@@ -220,6 +220,16 @@ adr_range_t *adr_get_range(firmware *fw, uint32_t adr)
     return NULL;
 }
 
+// return what kind of range adr is in
+int adr_get_range_type(firmware *fw, uint32_t adr)
+{
+    adr_range_t *r=adr_get_range(fw,adr);
+    if(!r) {
+        return ADR_RANGE_INVALID;
+    }
+    return r->type;
+}
+
 uint32_t ptr2adr(firmware *fw, uint8_t *ptr)
 {
     // TODO handle copied, or maybe another func to convert?
