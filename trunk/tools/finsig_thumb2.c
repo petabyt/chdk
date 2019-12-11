@@ -2777,7 +2777,6 @@ int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t 
         if((found_regs&0x1)!=0x1) {
             // some cameras load r0 through a base reg, try alternate match
             // r3 == 3 and r2 or r1 found and in ROM
-            printf("foundregs %x r1 0x%x r2 0x%x r3 0x%x\n",found_regs,regs[1],regs[2],regs[3]);
             if((found_regs & 0x8) && regs[3] == 4) {
                 if((found_regs & 0x2 && regs[1] > fw->rom_code_search_min_adr) 
                     || (found_regs & 0x4 && regs[2] > fw->rom_code_search_min_adr)) {
