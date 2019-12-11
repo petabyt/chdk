@@ -183,6 +183,7 @@
 0x010c2845,createsemaphore_low
 0x010c5239,CreateTask
 0x010c5239,CreateTask_FW
+0x010c1389,CreateTask_low
 0x010c5b35,CreateTaskStrictly
 0xfc0ebb71,CreateUserSettingMirror_FW
 0xfc02084d,CrossDefDetect_FW

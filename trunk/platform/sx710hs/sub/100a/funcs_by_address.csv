@@ -13,6 +13,7 @@
 0x011036e8,_log10
 0x01103850,_pow
 0x011058d0,_sqrt
+0xbfe10b89,CreateTask_low
 0xbfe11fc5,createsemaphore_low
 0xbfe1208b,givesemaphore_low
 0xbfe120b3,takesemaphore_low

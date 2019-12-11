@@ -214,6 +214,7 @@
 0xdffca279,CreateRecursiveLockStrictly
 0xdffc93bb,CreateTask
 0xdffc93bb,CreateTask_FW
+0xdffc6385,CreateTask_low
 0xdffca1d1,CreateTaskStrictly
 0xe004542b,CreateUserSettingMirror_FW
 0xe05af727,CrossDefDetect_FW

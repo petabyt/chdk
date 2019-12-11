@@ -12,6 +12,7 @@
 0x010f7a38,_log10
 0x010f7ba0,_pow
 0x010f9c20,_sqrt
+0xbfe10b85,CreateTask_low
 0xbfe11fcd,createsemaphore_low
 0xbfe12093,givesemaphore_low
 0xbfe120bb,takesemaphore_low
