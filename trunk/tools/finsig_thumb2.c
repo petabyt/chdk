@@ -2773,8 +2773,18 @@ int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t 
         }
         // check call args, expect r0 = 70000
         uint32_t regs[4];
-        if((get_call_const_args(fw,is,6,regs)&0x1)!=0x1) {
-            // printf("sig_match_set_hp_timer_after_now: failed to get args 0x%"PRIx64"\n",is->insn->address);
+        uint32_t found_regs = get_call_const_args(fw,is,6,regs);
+        if((found_regs&0x1)!=0x1) {
+            // some cameras load r0 through a base reg, try alternate match
+            // r3 == 3 and r2 or r1 found and in ROM
+            printf("foundregs %x r1 0x%x r2 0x%x r3 0x%x\n",found_regs,regs[1],regs[2],regs[3]);
+            if((found_regs & 0x8) && regs[3] == 4) {
+                if((found_regs & 0x2 && regs[1] > fw->rom_code_search_min_adr) 
+                    || (found_regs & 0x4 && regs[2] > fw->rom_code_search_min_adr)) {
+                    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+                }
+            }
+            // printf("sig_match_set_hp_timer_after_now: failed to match args 0x%"PRIx64"\n",is->insn->address);
             continue;
         }
         // r1, r2 should be func pointers but may involve reg-reg moves that get_call_const_args doesn't track
