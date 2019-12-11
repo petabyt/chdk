@@ -105,6 +105,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "PrepareDirectory_0", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly_alt", UNUSED|DONT_EXPORT },
+    { "CreateTask_low", UNUSED | OPTIONAL },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
     { "StartRecModeMenu", UNUSED },
@@ -286,6 +287,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "task_TricInitTask", OPTIONAL },
 
     { "hook_CreateTask" },
+    { "hook_CreateTask_low", UNUSED}, // unused changed at runtime if CreateTask in ROM
 
     { "time" },
     { "vsprintf" },
@@ -3956,8 +3958,15 @@ int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_NAMED_NTH_MASK      0x00000F00
 #define SIG_NAMED_NTH_SHIFT     8
 
+// number of instructions to search for each Nth
+// default 5
+#define SIG_NAMED_NTH_RANGE_MASK  0x0003F000
+#define SIG_NAMED_NTH_RANGE_SHIFT 12
+
 //#define SIG_NAMED_NTH(n,type)   ((SIG_NAMED_NTH_MASK&((n)<<SIG_NAMED_NTH_SHIFT)) | ((SIG_NAMED_##type)&SIG_NAME_TYPE_MASK))
 #define SIG_NAMED_NTH(n,type)   ((SIG_NAMED_NTH_MASK&((n)<<SIG_NAMED_NTH_SHIFT)) | (SIG_NAMED_##type))
+
+#define SIG_NAMED_NTH_RANGE(n)   ((SIG_NAMED_NTH_RANGE_MASK&((n)<<SIG_NAMED_NTH_RANGE_SHIFT)))
 
 void sig_match_named_save_sig(const char *name, uint32_t adr, uint32_t flags)
 {
@@ -3979,8 +3988,12 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     uint32_t sig_type = rule->param & SIG_NAMED_TYPE_MASK;
     uint32_t sig_flags = rule->param & SIG_NAMED_FLAG_MASK;
     uint32_t sig_nth = (rule->param & SIG_NAMED_NTH_MASK)>>SIG_NAMED_NTH_SHIFT;
+    uint32_t sig_nth_range = (rule->param & SIG_NAMED_NTH_RANGE_MASK)>>SIG_NAMED_NTH_RANGE_SHIFT;
     if(!sig_nth) {
         sig_nth=1;
+    }
+    if(!sig_nth_range) {
+        sig_nth_range=5;
     }
     // no offset, just save match as is
     // TODO might want to validate anyway
@@ -4019,8 +4032,8 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 1;
     }
 
-    // TODO max search is hardcoded
-    if(insn_match_find_nth(fw,is,15 + 5*sig_nth,sig_nth,insn_match)) {
+    // initial 15 is hard coded
+    if(insn_match_find_nth(fw,is,15 + sig_nth_range*sig_nth,sig_nth,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
             // BLX, set thumb bit 
@@ -4077,6 +4090,8 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_str_r0_call,"CreateTaskStrictly",    "LowConsole",},
 {sig_match_str_r0_call,"CreateTaskStrictly_alt","HdmiCecTask",          0,                  SIG_DRY_MIN(59)},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
+{sig_match_named,   "CreateTask_low",           "CreateTask",           (SIG_NAMED_NTH(2,SUB)|SIG_NAMED_NTH_RANGE(10)), SIG_DRY_MAX(52)},
+{sig_match_named,   "CreateTask_low",           "CreateTask",           (SIG_NAMED_NTH(3,SUB)|SIG_NAMED_NTH_RANGE(10)), SIG_DRY_MIN(54)},
 {sig_match_near_str,   "dry_memcpy",            "EP Slot%d",            SIG_NEAR_BEFORE(4,1)},
 {sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
 {NULL},
@@ -4175,8 +4190,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "vsprintf",                 "sprintf_FW",           SIG_NAMED_SUB},
 {sig_match_named,   "PTM_GetCurrentItem",       "PTM_GetCurrentItem_FW",},
 {sig_match_named,   "DisableISDriveError",      "DisableISDriveError_FW",},
-// TODO assumes CreateTask is in RAM, doesn't currently check
 {sig_match_named,   "hook_CreateTask",          "CreateTask",           SIG_NAMED_CLEARTHUMB},
+// alternate if CreateTask is in ROM
+{sig_match_named,   "hook_CreateTask_low",      "CreateTask_low",       SIG_NAMED_CLEARTHUMB},
 {sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "DebugAssert2",             "malloc_strictly",      SIG_NAMED_NTH(3,SUB)},
 {sig_match_named,   "AcquireRecursiveLockStrictly","StartWDT_FW",       SIG_NAMED_NTH(1,SUB)},
@@ -4886,6 +4902,21 @@ void output_firmware_vals(firmware *fw)
     add_blankline();
     if(get_misc_val_value("CAM_IS_ILC")) {
         bprintf("// Camera is interchangeable lens\n");
+        add_blankline();
+    }
+
+    // check if CreateTask is in ROM, offer CreateTask_low if it's in RAM
+    sig_entry_t * ct = find_saved_sig("hook_CreateTask");
+    if(ct && adr_get_range_type(fw,ct->val) != ADR_RANGE_RAM_CODE) {
+        bprintf("// CreateTask is not in RAM code\n");
+        ct->flags |= UNUSED;
+        sig_entry_t * ctl = find_saved_sig("CreateTask_low");
+        if(ctl && adr_get_range_type(fw,ctl->val) == ADR_RANGE_RAM_CODE) {
+            bprintf("// use hook_CreateTask_low instead\n");
+            ctl->flags &= ~UNUSED;
+            sig_entry_t * hctl = find_saved_sig("hook_CreateTask_low");
+            hctl->flags &= ~UNUSED;
+        }
         add_blankline();
     }
 }

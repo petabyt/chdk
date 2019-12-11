@@ -138,6 +138,9 @@ uint32_t ptr2adr(firmware *fw, uint8_t *ptr);
 // return address range struct for adr, or NULL if not in known range
 adr_range_t *adr_get_range(firmware *fw, uint32_t adr);
 
+// return what kind of range adr is in
+int adr_get_range_type(firmware *fw, uint32_t adr);
+
 // return true if adr is in firmware DATA or BSS
 int adr_is_var(firmware *fw, uint32_t adr);
 
