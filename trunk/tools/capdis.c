@@ -935,7 +935,7 @@ TODO most constants are decimal, while capstone defaults to hex
                 do_tbx_data(fw,is,dis_opts,&ti);
             }
             if((dis_opts & DIS_OPT_END_RET) && isRETx(is->insn)) { // end disassembly on return
-                if(dis_end_ret_count) {
+                if(dis_end_ret_count > 1) {
                     dis_end_ret_count--;
                 } else {
                     count++;
