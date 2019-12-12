@@ -1405,38 +1405,52 @@ uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is)
 }
 
 /*
-advance is up to max_insns looking for the start of a sequence like
+search up to max_search_ins for first LDR, =value
+and then match up to max_seq_insns for a sequence like
 LDR Rbase,=adr
+... possible intervening ins
 SUB Rbase,#adj // optional, may be any add/sub variant
+... possible intervening ins
 LDR Rval,[Rbase + #off]
+
 returns 1 if found, 0 if not
 stores registers and constants in *result if successful
+
+NOTE bad values are possible with intervening ins, short sequences recommended
 
 TODO similar code for STR would be useful, but in many cases would have to handle load or move into reg_val
 */
 int find_and_get_var_ldr(firmware *fw,
                             iter_state_t *is,
-                            int max_insns,
+                            int max_search_insns,
+                            int max_seq_insns,
                             arm_reg match_val_reg, // ARM_REG_INVALID for any
                             var_ldr_desc_t *result)
 
 {
+    if(!insn_match_find_next(fw,is,max_search_insns,match_ldr_pc)) {
+        // printf("find_and_get_var_ldr: LDR PC not found\n");
+        return 0;
+    }
     var_ldr_desc_t r;
-    int i=0;
-    while(i < max_insns) {
+    memset(&r,0,sizeof(r));
+    r.reg_base=is->insn->detail->arm.operands[0].reg;
+    r.adr_base=LDR_PC2val(fw,is->insn);
+    int seq_count=1;
+
+    while(seq_count < max_seq_insns) {
         // disassembly failed, no match (could ignore..)
         if(!disasm_iter(fw,is)) {
             return 0;
         }
-        if(!isLDR_PC(is->insn)) {
-            continue;
+        // assume first encountered LDR x,[pc] is the one to use
+        // give up if we encounter another. Don't know beforehand which reg is base
+        // NOTE: backward search would allow matching base that eventually ends up in desired reg
+        if(isLDR_PC(is->insn)) {
+            // printf("find_and_get_var_ldr: second ldr pc\n");
+            return  0;
         }
-        r.reg_base=is->insn->detail->arm.operands[0].reg;
-        r.adr_base=LDR_PC2val(fw,is->insn);
-        if(!disasm_iter(fw,is)) {
-            return 0;
-        }
-        i++;
+        seq_count++;
         // firmware may use add/sub to get actual firmware base address
         if(isADDx_imm(is->insn) || isSUBx_imm(is->insn)) {
             if(is->insn->detail->arm.operands[0].reg != r.reg_base) {
@@ -1450,11 +1464,28 @@ int find_and_get_var_ldr(firmware *fw,
             if(!disasm_iter(fw,is)) {
                 return 0;
             }
-            i++;
+            seq_count++;
         } else {
             r.adj=0;
         }
+        // try to bail out if base reg trashed 
+        // BL, BLX etc will trash r0-r3, B, BX go somewhere else
+        // only break on unconditional - optimistic, could produce incorrect results
+        // can't account for branches into searched code
+        if((r.reg_base >= ARM_REG_R0 && r.reg_base <= ARM_REG_R3)
+                && (is->insn->id == ARM_INS_BL || is->insn->id == ARM_INS_BLX 
+                    || is->insn->id == ARM_INS_B || is->insn->id == ARM_INS_BX)
+                && is->insn->detail->arm.cc == ARM_CC_AL) {
+            // printf("find_and_get_var_ldr: bail B*\n");
+            return 0;
+        }
         if(is->insn->id != ARM_INS_LDR || is->insn->detail->arm.operands[1].reg != r.reg_base) {
+            // other operation on with base reg as first operand, give up
+            // simplistic, many other things could affect reg
+            if(is->insn->detail->arm.operands[0].type == ARM_OP_REG && is->insn->detail->arm.operands[0].reg == r.reg_base) {
+                // printf("find_and_get_var_ldr: bail mod base\n");
+                return 0;
+            }
             continue;
         }
         r.reg_val = is->insn->detail->arm.operands[0].reg;
