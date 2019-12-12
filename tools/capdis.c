@@ -209,6 +209,7 @@ void usage(void) {
                     " -noadrldr don't convert ADR Rd,#x and similar to LDR RD,=...\n"
                     " -nofwdata don't attempt to initialize firmware data ranges\n"
                     " -jfw generate LDR PC,=0x... to return to firmware at end of disassembled range\n"
+                    " -eret[=n] stop on Nth return-like instruction (if no count / end, sets count=500)\n"
               );
     exit(1);
 }
@@ -374,6 +375,7 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
 #define DIS_OPT_STUBS_LABEL     0x00000100
 #define DIS_OPT_PROPS           0x00000200
 #define DIS_OPT_JMP_BACK        0x00000400
+#define DIS_OPT_END_RET         0x00000800
 
 #define DIS_OPT_DETAIL_GROUP    0x00010000
 #define DIS_OPT_DETAIL_OP       0x00020000
@@ -827,6 +829,7 @@ static void do_dis_range(firmware *fw,
                     unsigned dis_start,
                     unsigned dis_count,
                     unsigned dis_end,
+                    unsigned dis_end_ret_count,
                     unsigned dis_opts)
 {
     iter_state_t *is=disasm_iter_new(fw,dis_start);
@@ -931,6 +934,20 @@ TODO most constants are decimal, while capstone defaults to hex
             if(ti.start) {
                 do_tbx_data(fw,is,dis_opts,&ti);
             }
+            if((dis_opts & DIS_OPT_END_RET) && isRETx(is->insn)) { // end disassembly on return
+                if(dis_end_ret_count) {
+                    dis_end_ret_count--;
+                } else {
+                    count++;
+                    // could do this, but eret in code should work better pasting between ports
+                    /*
+                    if(dis_opts & DIS_OPT_FMT_CHDK) {
+                        printf("// -f=chdk -s=0x%08x -c=%d\n",dis_start,(unsigned)count);
+                    }
+                    */
+                    break;
+                }
+            }
         } else {
             uint16_t *pv=(uint16_t *)adr2ptr(fw,is->adr);
             // TODO optional data directives
@@ -973,6 +990,7 @@ int main(int argc, char** argv)
     unsigned dis_start=0;
     const char *dis_start_fn=NULL;
     unsigned dis_end=0;
+    unsigned dis_end_ret_count=0;
     unsigned dis_count=0;
     int do_fw_data_init=1;
     int verbose=0;
@@ -1052,6 +1070,13 @@ int main(int argc, char** argv)
         }
         else if ( strcmp(argv[i],"-jfw") == 0 ) {
             dis_opts |= DIS_OPT_JMP_BACK;
+        }
+        else if ( strcmp(argv[i],"-eret") == 0 ) {
+            dis_opts |= DIS_OPT_END_RET;
+        }
+        else if ( strncmp(argv[i],"-eret=",6) == 0 ) {
+            dis_opts |= DIS_OPT_END_RET;
+            dis_end_ret_count=strtoul(argv[i]+6,NULL,0);
         }
         else if ( strcmp(argv[i],"-d-const") == 0 ) {
             dis_opts |= DIS_OPT_DETAIL_CONST;
@@ -1179,6 +1204,10 @@ int main(int argc, char** argv)
         }
         dis_count=(dis_end-dis_start)/2; // need a count for do_dis_range, assume all 16 bit ins
     }
+    // allow eret without count, enough for most cases
+    if((dis_count==0) && (dis_opts & DIS_OPT_END_RET)) {
+        dis_count=500;
+    }
     if(dis_count==0) {
         fprintf(stderr,"missing instruction count\n");
         usage();
@@ -1215,7 +1244,7 @@ int main(int argc, char** argv)
     }
 
 
-    do_dis_range(&fw, dis_start, dis_count, dis_end, dis_opts);
+    do_dis_range(&fw, dis_start, dis_count, dis_end, dis_end_ret_count, dis_opts);
 
     firmware_unload(&fw);
 
