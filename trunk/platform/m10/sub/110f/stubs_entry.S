@@ -137,6 +137,7 @@ DEF(jpeg_count_str                    ,0x00190ac0) // Found @0xfc1a15f6
 //DEF(focus_busy                        ,0x00000000), ** != ** stubs_min = 0x00000001 (1)
 DEF(imager_active                     ,0x0000861c) // (0x8618+0x4) Found @0xfc128198
 //DEF(_nrflag                           ,0x00029c00),          stubs_min = 0x00029c00 (0x29c00)
+DEF(av_override_semaphore             ,0x0002e804) // Found @0xfc43f700
 DEF(active_bitmap_buffer              ,0x0000b964) // (0xb924+0x40) Found @0xfc38c5b6
 DEF_CONST(uiprop_count                      ,0x000000d1) // Found @0xfc27de04
 DEF(exmem_alloc_table                 ,0x0005e2b8) // Found @0xfc08125a
