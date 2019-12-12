@@ -444,12 +444,18 @@ returns 0 if current instruction not branch/call
 uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is);
 
 /*
-advance is up to max_insns looking for the start of a sequence like
+search up to max_search_ins for first LDR, =value
+and then match up to max_seq_insns for a sequence like
 LDR Rbase,=adr
+... possible intervening ins
 SUB Rbase,#adj // optional, may be any add/sub variant
+... possible intervening ins
 LDR Rval,[Rbase + #off]
+
 returns 1 if found, 0 if not
 stores registers and constants in *result if successful
+
+NOTE bad values are possible with intervening ins, short sequences recommended
 
 TODO similar code for STR would be useful, but in many cases would have to handle load or move into reg_val
 */
@@ -465,7 +471,8 @@ typedef struct {
 } var_ldr_desc_t;
 int find_and_get_var_ldr(firmware *fw,
                             iter_state_t *is,
-                            int max_insns,
+                            int max_search_insns,
+                            int max_seq_insns,
                             arm_reg match_val_reg, // ARM_REG_INVALID for any
                             var_ldr_desc_t *result);
 
