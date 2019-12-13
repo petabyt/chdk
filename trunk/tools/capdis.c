@@ -1149,6 +1149,8 @@ int main(int argc, char** argv)
         load_funcs(fw.sv, stubs_path);
         sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry.S");
         load_stubs(fw.sv, stubs_path, 1);
+        sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_min.S");
+        load_stubs(fw.sv, stubs_path, 1);
         sprintf(stubs_path,"%s/%s",stubs_dir,"stubs_entry_2.S");
         load_stubs(fw.sv, stubs_path, 1);   // Load second so values override stubs_entry.S
     }
