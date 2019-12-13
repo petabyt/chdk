@@ -527,6 +527,7 @@ misc_val_t misc_vals[]={
     { "zoom_busy",          },
     { "focus_busy",         },
     { "imager_active",      },
+    { "canon_menu_active",  },
     { "_nrflag",            MISC_VAL_OPTIONAL},
     { "av_override_semaphore",MISC_VAL_OPTIONAL},
     { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
@@ -3719,6 +3720,28 @@ int sig_match_av_over_sem(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_canon_menu_active(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    var_ldr_desc_t desc;
+    if(!find_and_get_var_ldr(fw, is, 2, 4, ARM_REG_R0, &desc)) {
+        printf("sig_match_canon_menu_active: no match ldr at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_canon_menu_active: disasm failed\n");
+        return 0;
+    }
+    if(is->insn->id != ARM_INS_CMP) {
+        printf("sig_match_canon_menu_active: no match cmp at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    save_misc_val(rule->name,desc.adr_adj,desc.off,(uint32_t)is->insn->address);
+    return 1;
+}
+
 int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4400,6 +4423,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_prop_string,"PROPCASE_FLASH_ADJUST_MODE", "GetPropertyFromCurrentCase Error [FlashAdjust]",SIG_NEAR_BEFORE(7,1)},
 {sig_match_exmem_vars,"exmem_types_table", "ExMem.View_FW"},
 {sig_match_av_over_sem,"av_override_semaphore", "MoveIrisWithAv_FW"},
+{sig_match_canon_menu_active,"canon_menu_active", "StartRecModeMenu_FW"},
 {NULL},
 };
 
