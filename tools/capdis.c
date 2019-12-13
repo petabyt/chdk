@@ -208,6 +208,7 @@ void usage(void) {
                     " -adrldr convert ADR Rd,#x and similar to LDR RD,=... (default with -f=chdk)\n"
                     " -noadrldr don't convert ADR Rd,#x and similar to LDR RD,=...\n"
                     " -nofwdata don't attempt to initialize firmware data ranges\n"
+                    " -nosimplefunc don't comment calls / jumps that return immediately or imm constant\n"
                     " -jfw generate LDR PC,=0x... to return to firmware at end of disassembled range\n"
                     " -eret[=n] stop on Nth return-like instruction (if no count / end, sets count=500)\n"
               );
@@ -376,6 +377,7 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
 #define DIS_OPT_PROPS           0x00000200
 #define DIS_OPT_JMP_BACK        0x00000400
 #define DIS_OPT_END_RET         0x00000800
+#define DIS_OPT_SIMPLE_FUNCS    0x00001000
 
 #define DIS_OPT_DETAIL_GROUP    0x00010000
 #define DIS_OPT_DETAIL_OP       0x00020000
@@ -427,9 +429,25 @@ void describe_prop_call(firmware *fw,iter_state_t *is, unsigned dis_opts, char *
     }
     osig* ostub = find_sig_val(fw->sv->propcases,regs[0]);
     if(ostub && ostub->val) {
-        sprintf(comment+strlen(comment)," %s (%d) ",ostub->nm,ostub->val);
+        sprintf(comment+strlen(comment)," %s (%d)",ostub->nm,ostub->val);
     } else {
-        sprintf(comment+strlen(comment)," (%d) ",regs[0]); // print number on propcase call line for easier searching
+        sprintf(comment+strlen(comment)," (%d)",regs[0]); // print number on propcase call line for easier searching
+    }
+}
+
+void describe_simple_func(firmware *fw, unsigned dis_opts, char *comment, uint32_t target)
+{
+    if(!(dis_opts & DIS_OPT_SIMPLE_FUNCS)) {
+        return;
+    }
+    simple_func_desc_t info;
+    if(!check_simple_func(fw, target, MATCH_SIMPLE_FUNC_ANY, &info)) {
+        return;
+    }
+    if(info.ftype == MATCH_SIMPLE_FUNC_NULLSUB) {
+        strcat(comment," return");
+    } else if (info.ftype == MATCH_SIMPLE_FUNC_IMM) {
+        sprintf(comment+strlen(comment)," return %#x",info.retval);
     }
 }
 
@@ -485,11 +503,9 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
     } else if (subname) {
        strcat(comment,subname);
     }
-    if(j_target) {
-        describe_prop_call(fw,is,dis_opts,comment,j_target|is->thumb);
-    } else {
-        describe_prop_call(fw,is,dis_opts,comment,target|is->thumb);
-    }
+    uint32_t desc_adr = (j_target)?j_target:target;
+    describe_prop_call(fw,is,dis_opts,comment,desc_adr | is->thumb);
+    describe_simple_func(fw,dis_opts,comment,desc_adr | is->thumb);
     return 1;
 }
 
@@ -541,11 +557,9 @@ int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, c
     } else if (subname) {
        strcat(comment,subname);
     }
-    if(j_target) {
-        describe_prop_call(fw,is,dis_opts,comment,j_target);
-    } else {
-        describe_prop_call(fw,is,dis_opts,comment,target);
-    }
+    uint32_t desc_adr = (j_target)?j_target:target;
+    describe_prop_call(fw,is,dis_opts,comment,desc_adr);
+    describe_simple_func(fw,dis_opts,comment,desc_adr);
     return 1;
 }
 
@@ -994,7 +1008,7 @@ int main(int argc, char** argv)
     unsigned dis_count=0;
     int do_fw_data_init=1;
     int verbose=0;
-    unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS|DIS_OPT_STR);
+    unsigned dis_opts=(DIS_OPT_LABELS|DIS_OPT_SUBS|DIS_OPT_CONSTS|DIS_OPT_STR|DIS_OPT_SIMPLE_FUNCS);
     int dis_arch=FW_ARCH_ARMv7;
     int do_propset=0;
     if(argc < 2) {
@@ -1064,6 +1078,9 @@ int main(int argc, char** argv)
         }
         else if ( strcmp(argv[i],"-nofwdata") == 0 ) {
             do_fw_data_init = 0;
+        }
+        else if ( strcmp(argv[i],"-nosimplefunc") == 0 ) {
+            dis_opts &= ~DIS_OPT_SIMPLE_FUNCS;
         }
         else if ( strcmp(argv[i],"-adrldr") == 0 ) {
             dis_opts |= DIS_OPT_ADR_LDR;

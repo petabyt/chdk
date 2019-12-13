@@ -1493,6 +1493,72 @@ int find_and_get_var_ldr(firmware *fw,
     return 0;
 }
 
+/*
+check for, and optionally return information about 
+functions with return values that can be completely determined
+from disassembly
+uses fw->is
+*/
+// constants below may  as flags on input, and as return valaue
+// no simple function found
+#define MATCH_SIMPLE_FUNC_NONE    0x0
+// immediately returns, with no value
+#define MATCH_SIMPLE_FUNC_NULLSUB 0x1
+// immediately returns with a MOV constant
+#define MATCH_SIMPLE_FUNC_IMM     0x2
+// TODO LDR pc, =const,  ADR
+// TODO could also do pointer derefs and return pointer info without val
+#define MATCH_SIMPLE_FUNC_ANY     0x3
+int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_desc_t *info)
+{
+    const insn_match_t match_mov_r0_imm[]={
+        {MATCH_INS(MOV,   2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM_ANY}},
+#if CS_API_MAJOR < 4
+        {MATCH_INS(MOVS,  2),  {MATCH_OP_REG(R0),  MATCH_OP_IMM_ANY}},
+#endif
+        {ARM_INS_ENDING}
+    };
+
+    int found = 0;
+    int found_val = 0;
+    if(info) {
+        info->ftype = MATCH_SIMPLE_FUNC_NONE;
+        info->retval = 0;
+    }
+    if(!fw_disasm_iter_single(fw,adr)) {
+        //fprintf(stderr,"check_simple_func: disasm_iter_single failed 0x%x\n",adr);
+        return 0;
+    }
+    if(match_ftype & MATCH_SIMPLE_FUNC_IMM) {
+        // check mov r0, #imm
+        if(insn_match_any(fw->is->insn,match_mov_r0_imm)) {
+            found_val = fw->is->insn->detail->arm.operands[1].imm; 
+            found = MATCH_SIMPLE_FUNC_IMM;
+            // fprintf(stderr,"check_simple_func: found IMM\n");
+            if(!fw_disasm_iter(fw)) {
+                //fprintf(stderr,"check_simple_func: disasm_iter failed 0x%x\n",adr);
+                return 0;
+            }
+        }
+    }
+    if(!isRETx(fw->is->insn)) {
+        // fprintf(stderr,"check_simple_func: no ret\n");
+        return 0;
+    }
+    // no previous found, check if ret alone
+    if(!found && (match_ftype & MATCH_SIMPLE_FUNC_NULLSUB)) {
+        found = MATCH_SIMPLE_FUNC_NULLSUB;
+        // fprintf(stderr,"check_simple_func: found nullsub\n");
+    }
+    if(found) {
+        if(info) {
+            info->ftype = found;
+            info->retval = found_val;
+        }
+    }
+    return found;
+}
+
 // ****** utilities for matching instructions and instruction sequences ******
 
 // some common matches for insn_match_find_next
