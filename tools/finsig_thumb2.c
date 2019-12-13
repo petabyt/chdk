@@ -3800,7 +3800,7 @@ int sig_match_file_counter_var(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // printf("sig_match_file_counter_var: not a data address 0x%08x at 0x%"PRIx64"\n",adr,is->insn->address);
         return 0;
     }
-    save_misc_val(rule->name,adr,0,adr);
+    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
 }
 
