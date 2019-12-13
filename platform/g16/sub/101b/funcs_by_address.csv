@@ -831,6 +831,7 @@
 0xfc1c2e49,File.ClearExifInfo_FW
 0xfc1c2f1d,File.Delete_AllImg_FW
 0xfc1c2f61,File.Create_FW
+0xfc1c31f9,file_counter_var_init
 0xfc1c9369,task_IrisEvent
 0xfc1c9d8d,EnableIrisActuator_FW
 0xfc1c9da7,DisableIrisActuator_FW

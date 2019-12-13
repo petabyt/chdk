@@ -143,6 +143,7 @@ DEF(zoom_busy                         ,0x0000b85c) // (0xb840+0x1c) Found @0xfc2
 DEF(focus_busy                        ,0x00013488) // (0x13480+0x8) Found @0xfc2f9df6
 DEF(imager_active                     ,0x00008688) // (0x8684+0x4) Found @0xfc13b2ac
 //DEF(canon_menu_active                 ,0x0000c240),          stubs_min = 0x0000c240 (0x0000c238+0x8)
+//DEF(file_counter_var                  ,0x00013148),          stubs_min = 0x00013148 (0x00013148)
 DEF(_nrflag                           ,0x0001e858) // (0x1e854+0x4) Found @0xfc347a2c
 //DEF(av_override_semaphore             ,0x0002569c),          stubs_min = 0x0002569c (0x0002569c)
 //DEF(active_bitmap_buffer              ,0x0000c200), ** != ** stubs_min = 0x0000c1fc (0xc1fc)

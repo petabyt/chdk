@@ -427,6 +427,7 @@
 0xe0464923,File.Create_FW
 0xe0464337,File.Delete_AllImg_FW
 0xe046437b,File.SetSACustomEffect_FW
+0xe0402395,file_counter_var_init
 0xe0583dc1,FixAEWithCompensation_FW
 0xe05688a5,FixISStatus_FW
 0xe03ece73,FmtMenu_ExecuteQuickFormat_FW
