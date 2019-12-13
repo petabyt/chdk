@@ -489,6 +489,28 @@ int find_and_get_var_ldr(firmware *fw,
                             arm_reg match_val_reg, // ARM_REG_INVALID for any
                             var_ldr_desc_t *result);
 
+/*
+check for, and optionally return information about 
+functions with return values that can be completely determined
+from disassembly
+uses fw->is
+*/
+// constants below may  as flags on input, and as return valaue
+// no simple function found
+#define MATCH_SIMPLE_FUNC_NONE    0x0
+// immediately returns, with no value
+#define MATCH_SIMPLE_FUNC_NULLSUB 0x1
+// immediately returns with a MOV constant
+#define MATCH_SIMPLE_FUNC_IMM     0x2
+// TODO LDR pc, =const,  ADR
+// TODO could also do pointer derefs and return pointer info without val
+#define MATCH_SIMPLE_FUNC_ANY     0x3
+typedef struct {
+    int ftype;
+    uint32_t retval;
+} simple_func_desc_t;
+int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_desc_t *info);
+
 
 // ****** utilities for matching instructions and instruction sequences ******
 
