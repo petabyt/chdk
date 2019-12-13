@@ -420,6 +420,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "taskcreate_LowConsole", OPTIONAL|UNUSED }, // helper, made up name
     { "ImagerActivate", OPTIONAL|UNUSED }, // helper
     { "imager_active_callback", OPTIONAL|UNUSED }, // helper
+    { "file_counter_var_init", OPTIONAL|UNUSED }, // helper
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -528,6 +529,7 @@ misc_val_t misc_vals[]={
     { "focus_busy",         },
     { "imager_active",      },
     { "canon_menu_active",  },
+    { "file_counter_var",   },
     { "_nrflag",            MISC_VAL_OPTIONAL},
     { "av_override_semaphore",MISC_VAL_OPTIONAL},
     { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
@@ -3742,6 +3744,66 @@ int sig_match_canon_menu_active(firmware *fw, iter_state_t *is, sig_rule_t *rule
     return 1;
 }
 
+int sig_match_file_counter_init(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // find first call
+    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+        // printf("sig_match_file_counter_init: bl match 1 failed at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // some cameras (dry 58+?) have a nullsub before the function of interest
+    if(check_simple_func(fw,get_branch_call_insn_target(fw,is),MATCH_SIMPLE_FUNC_NULLSUB,NULL)) {
+        if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+            // printf("sig_match_file_counter_init: bl match 1a failed at 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+        // printf("sig_match_file_counter_init: bl match 2 failed at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    uint32_t fadr = get_branch_call_insn_target(fw,is);
+    // follow
+    disasm_iter_init(fw,is,fadr);
+    if(!disasm_iter(fw,is)) {
+        // printf("sig_match_file_counter_init: disasm failed\n");
+        return 0;
+    }
+    // sanity check
+    if(!isLDR_PC(is->insn)) {
+        // printf("sig_match_file_counter_init: no match LDR PC at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // function we're looking for
+    return save_sig_with_j(fw,rule->name,fadr);
+}
+int sig_match_file_counter_var(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t adr=LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        // printf("sig_match_file_counter_var: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+        // printf("sig_match_file_counter_var: not R0 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    if(!adr_is_var(fw,adr)) {
+        // printf("sig_match_file_counter_var: not a data address 0x%08x at 0x%"PRIx64"\n",adr,is->insn->address);
+        return 0;
+    }
+    save_misc_val(rule->name,adr,0,adr);
+    return 1;
+}
+
 int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4424,6 +4486,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_exmem_vars,"exmem_types_table", "ExMem.View_FW"},
 {sig_match_av_over_sem,"av_override_semaphore", "MoveIrisWithAv_FW"},
 {sig_match_canon_menu_active,"canon_menu_active", "StartRecModeMenu_FW"},
+{sig_match_file_counter_init,"file_counter_var_init","task_InitFileModules",},
+{sig_match_file_counter_var,"file_counter_var","file_counter_var_init",},
 {NULL},
 };
 
