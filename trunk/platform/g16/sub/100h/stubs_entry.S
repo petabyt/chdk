@@ -144,6 +144,7 @@ DEF(jpeg_count_str                    ,0x000eb498) // Found @0xfc1189c6
 DEF(zoom_busy                         ,0x000129e0) // (0x129c0+0x20) Found @0xfc1cbad6
 DEF(focus_busy                        ,0x000127b0) // (0x127a8+0x8) Found @0xfc2c68ca
 DEF(imager_active                     ,0x00008710) // (0x870c+0x4) Found @0xfc14180a
+//DEF(canon_menu_active                 ,0x0000c9b4),          stubs_min = 0x0000c9b4 (0x0000c9ac+0x8)
 DEF(_nrflag                           ,0x0001c020) // (0x1c014+0xc) Found @0xfc33be14
 DEF(av_override_semaphore             ,0x000231c8) // Found @0xfc38cfa8
 //DEF(active_bitmap_buffer              ,0x0000c980), ** != ** stubs_min = 0x0000c97c (0xC97C)
