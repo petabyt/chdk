@@ -1241,6 +1241,7 @@
 0xfc24593d,Scene.TestHumanSmile_FW
 0xfc245961,Scene.TestHumanSleep_FW
 0xfc245985,Scene.TestKidMove_FW
+0xfc24a2cd,file_counter_var_init
 0xfc24ed9b,task_ImageStoreTask
 0xfc24f771,task_MediaStatusMngr
 0xfc250fbd,task_LensInfo

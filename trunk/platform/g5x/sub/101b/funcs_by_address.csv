@@ -536,6 +536,7 @@
 0xfc10b9e5,AprocSigProc_NoiseCutEffect_FW
 0xfc10b9e5,SoundDevZoomNCEffective_FW
 0xfc10e76d,task_DefMarkRomCopyTask
+0xfc111e69,file_counter_var_init
 0xfc113609,task_IrisCycleEvent
 0xfc114237,task_MechaNCTask
 0xfc119665,UIFS_WriteFirmInfoToFile

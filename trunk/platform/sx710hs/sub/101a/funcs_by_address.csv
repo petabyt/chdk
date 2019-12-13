@@ -648,6 +648,7 @@
 0xfc16a525,j_GetFaceAuthBinAddr_FW
 0xfc16a529,j_GetFaceAuthBinSize_FW
 0xfc16a52d,j_IsOKFaceAuthBinFile_FW
+0xfc16e6ad,file_counter_var_init
 0xfc16f291,task_ImageStoreTask
 0xfc1707c5,task_MediaStatusMngr
 0xfc170a0d,GetIrisDriveVoltage_FW

@@ -1210,6 +1210,7 @@
 0xfc252411,Scene.TestHumanSmile_FW
 0xfc252435,Scene.TestHumanSleep_FW
 0xfc252459,Scene.TestKidMove_FW
+0xfc2571c5,file_counter_var_init
 0xfc25cc89,task_LensInfo
 0xfc25cfd9,GetLensExtenderTypeValue_FW
 0xfc25d023,GetLensTypeValue_FW

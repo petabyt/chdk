@@ -447,6 +447,7 @@
 0xfc5e2a0d,File.ClearExifInfo_FW
 0xfc5e2b21,File.Create_FW
 0xfc5e2add,File.Delete_AllImg_FW
+0xfc111e69,file_counter_var_init
 0xfc66474f,FixAEWithCompensation_FW
 0xfc661d9f,FixISStatus_FW
 0xfc11a4fd,FmtMenu_ExecuteQuickFormat_FW

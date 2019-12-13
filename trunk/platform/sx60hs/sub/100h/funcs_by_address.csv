@@ -912,6 +912,7 @@
 0xfc1c7611,File.ClearExifInfo_FW
 0xfc1c76e3,File.Delete_AllImg_FW
 0xfc1c7727,File.Create_FW
+0xfc1c7a01,file_counter_var_init
 0xfc1c88df,task_ImageStoreTask
 0xfc1c92ed,task_MediaStatusMngr
 0xfc1cad51,task_IrisEvent

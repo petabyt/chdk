@@ -708,6 +708,7 @@
 0xe0401e3b,Printf_FW
 0xe0401e45,LoadScript_FW
 0xe0402367,GetLatestHVPosition_FW
+0xe0402395,file_counter_var_init
 0xe0403913,task_EISMainTask
 0xe040420d,task_TmgGen
 0xe0408095,GetFocusLensResetPosition_FW
