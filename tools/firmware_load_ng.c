@@ -570,11 +570,7 @@ int isADDx_imm(cs_insn *insn)
 // is the instruction SUB* rx, imm
 int isSUBx_imm(cs_insn *insn)
 {
-#if CS_API_MAJOR < 4
-    return ((insn->id == ARM_INS_SUB || insn->id == ARM_INS_SUBW || insn->id == ARM_INS_SUBS) && insn->detail->arm.operands[1].type == ARM_OP_IMM);
-#else
-    return ((insn->id == ARM_INS_SUB || insn->id == ARM_INS_SUBW) && insn->detail->arm.operands[1].type == ARM_OP_IMM);
-#endif
+    return (IS_INSN_ID_SUBx(insn->id) && insn->detail->arm.operands[1].type == ARM_OP_IMM);
 }
 
 // is the instruction an ADR or ADR-like instruction?
@@ -1281,11 +1277,7 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
                 continue;
             }
             // immediate MOV note MOVT combinations, not accounted for, some handled ADDs below
-#if CS_API_MAJOR < 4
-            if( (insn_id == ARM_INS_MOV || insn_id == ARM_INS_MOVS || insn_id == ARM_INS_MOVW)
-#else
-            if( (insn_id == ARM_INS_MOV || insn_id == ARM_INS_MOVW)
-#endif
+            if( IS_INSN_ID_MOVx(insn_id)
                 && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
                 res[rd_i] += fw->is->insn->detail->arm.operands[1].imm;
 //                if(dbg_count) printf("found move r%d,#0x%08x\n",rd_i,res[rd_i]);

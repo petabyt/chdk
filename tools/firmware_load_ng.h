@@ -209,6 +209,19 @@ void adr_hist_add(adr_hist_t *ah, uint32_t adr);
 uint32_t adr_hist_get(adr_hist_t *ah, int i);
 
 // ****** instruction analysis utilities ******
+// handle varying instruction ID enums in different capstone versions
+// note these take an arm_insn enum, NOT a cs_insn *
+#if CS_API_MAJOR < 4
+// is insn_id a full reg MOV (does not include MOVT)
+#define IS_INSN_ID_MOVx(insn_id) ((insn_id) == ARM_INS_MOV || (insn_id) == ARM_INS_MOVS || (insn_id) == ARM_INS_MOVW)
+// is insn_id a a sub*
+#define IS_INSN_ID_SUBx(insn_id) ((insn_id) == ARM_INS_SUB || (insn_id) == ARM_INS_SUBW || (insn_id) == ARM_INS_SUBS)
+#else
+#define IS_INSN_ID_MOVx(insn_id) ((insn_id) == ARM_INS_MOV || (insn_id) == ARM_INS_MOVW)
+#define IS_INSN_ID_SUBx(insn_id) ((insn_id) == ARM_INS_SUB || (insn_id) == ARM_INS_SUBW)
+#endif
+
+
 // is insn an ARM instruction?
 // like cs_insn_group(cs_handle,insn,ARM_GRP_ARM) but doesn't require handle and doesn't check or report errors
 int isARM(cs_insn *insn);
