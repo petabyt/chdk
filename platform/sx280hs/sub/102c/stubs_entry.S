@@ -132,6 +132,7 @@
 //DEF(zoom_busy                         ,0x00010814),          stubs_min = 0x00010814 (0x00010814)
 //DEF(focus_busy                        ,0x00010694),          stubs_min = 0x00010694 (0x00010694)
 DEF(imager_active                     ,0x00008624) // (0x8620+0x4) Found @0xfc132c7a
+//DEF(canon_menu_active                 ,0x0000ac58),          stubs_min = 0x0000ac58 (0x0000ac58)
 DEF(av_override_semaphore             ,0x0001bfa0) // Found @0xfc3b7e2c
 DEF(active_bitmap_buffer              ,0x0000ac14) // (0xabdc+0x38) Found @0xfc143c7e
 DEF_CONST(uiprop_count                      ,0x00000083) // Found @0xfc090128
