@@ -195,6 +195,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "Remove", OPTIONAL|UNUSED },
     { "RenameFile_Fut" },
     { "Restart" },
+    { "screenlock_helper", UNUSED|DONT_EXPORT },
     { "ScreenLock" },
     { "ScreenUnlock" },
     { "SetAE_ShutterSpeed" },
@@ -1294,12 +1295,11 @@ int sig_match_imager_active(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
-
-int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
+int sig_match_screenlock_helper(firmware *fw, iter_state_t *is, sig_rule_t *rule) {
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
+    uint32_t init_adr = (uint32_t)is->adr | is->thumb;
     // match specific instruction sequence instead of first call because g3x, g5x have different code
     // not by dryos rev, sx710 has same code as earlier cams
     const insn_match_t match_cmp_bne_bl[]={
@@ -1308,11 +1308,39 @@ int sig_match_screenlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
         {ARM_INS_ENDING}
     };
-    if(!insn_match_find_next_seq(fw,is,6,match_cmp_bne_bl)) {
-        // printf("sig_match_screenlock: match failed\n");
+    const insn_match_t match_ldrpc_mov_b[]={
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),  MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R1),  MATCH_OP_IMM(0)}},
+        {MATCH_INS_CC(B,AL,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    // match first seq, this is the func we want
+    if(insn_match_find_next_seq(fw,is,6,match_cmp_bne_bl)) {
+        return save_sig_with_j(fw,rule->name,init_adr);
+
+    }
+    // try alternate match on newer cameras (around r57, but some variation)
+    // this version puts a pointer to the function used in normal match in r0, 0 in R1, and jumps
+    // go back to start
+    disasm_iter_init(fw,is,init_adr);
+    if(!insn_match_find_next_seq(fw,is,1,match_ldrpc_mov_b)) {
+        printf("sig_match_screenlock_helper: match 2 failed 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
-    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    disasm_iter_init(fw,is,init_adr);
+    disasm_iter(fw,is);
+    uint32_t adr = LDR_PC2val(fw,is->insn);
+    if(!adr) {
+        printf("sig_match_screenlock_helper: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    disasm_iter_init(fw,is,adr);
+    // retry original match on pointer
+    if(!insn_match_find_next_seq(fw,is,6,match_cmp_bne_bl)) {
+        printf("sig_match_screenlock_helper: match failed 0x%8x\n",init_adr);
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,adr);
 }
 
 int sig_match_screenunlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4341,9 +4369,12 @@ sig_rule_t sig_rules_main[]={
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
 {sig_match_near_str,"ImagerActivate",           "Fail ImagerActivate(ErrorCode:%x)\r",SIG_NEAR_BEFORE(6,1)},
-//{sig_match_named,   "ScreenLock",               "UIFS_DisplayFirmUpdateView_FW",SIG_NAMED_SUB},
-{sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
-{sig_match_screenunlock,"ScreenUnlock",         "UIFS_DisplayFirmUpdateView_FW"},
+{sig_match_screenlock_helper,"screenlock_helper","UIFS_DisplayFirmUpdateView_FW"},
+{sig_match_named,   "ScreenLock",               "screenlock_helper",SIG_NAMED_SUB},
+//{sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
+{sig_match_screenunlock,"ScreenUnlock",         "screenlock_helper",    0,SIG_DRY_MAX(55)},
+{sig_match_near_str,"ScreenUnlock",             "PB._ErrorRef",         SIG_NEAR_AFTER(8,2)|SIG_NEAR_JMP_SUB,SIG_DRY_RANGE(57,58)},
+{sig_match_near_str,"ScreenUnlock",             "PB._ErrorRef:SI",      SIG_NEAR_AFTER(8,2)|SIG_NEAR_JMP_SUB,SIG_DRY_MIN(59)},
 {sig_match_log_camera_event,"LogCameraEvent",   "task_StartupImage",},
 {sig_match_physw_misc, "physw_misc",            "task_PhySw"},
 {sig_match_kbd_read_keys, "kbd_read_keys",      "kbd_p1_f"},
