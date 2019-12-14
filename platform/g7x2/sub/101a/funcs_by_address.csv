@@ -56,8 +56,6 @@
 0xdffcd8c5,_log
 0xdffcdc39,_log10
 0xdffcdd31,_pow
-0xe0006ff1,GetMemInfo
-0xe000f9d3,strtol
 0xe00206d5,task_Startup
 0xe00218ad,task_UartLog
 0xe0021a23,StartRedirectUART_FW
@@ -1027,6 +1025,7 @@
 0xe04ddaa9,UIFS_StartMoviePlay_FW
 0xe04e58d9,UIFS_PlayTrimExecuteAllImageSize_FW
 0xe04e8375,strtolx
+0xe04e84cf,strtol
 0xe04e875f,task_MotionVector
 0xe04ea2f9,task_ScenarioMaker
 0xe04f0eed,task_BA_Task
@@ -2203,6 +2202,7 @@
 0xe05882e5,GetISHallOffsetDAConvertValue_FW
 0xe05882eb,SetISPWMFreqData_FW
 0xe05882f7,j_GetISPWMFreqData_FW
+0xe0589b61,GetMemInfo
 0xe058c9e5,GetCurrentAdjImgDriveType_FW
 0xe058c9f1,GetCurrentImgDrvMode_FW
 0xe058ca0b,ConvertAEIntegDrvTypeToAdjImgDriveType_FW
