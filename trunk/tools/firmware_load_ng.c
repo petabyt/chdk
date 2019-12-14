@@ -325,6 +325,21 @@ int adr_is_var(firmware *fw, uint32_t adr)
     return (adr > fw->data_start && adr < fw->memisostart);
 }
 
+// return true if adr is in the ROM search range, or one of the copied RAM code regions
+int adr_is_main_fw_code(firmware *fw, uint32_t adr)
+{
+    int adr_type = adr_get_range_type(fw,adr);
+    if(adr_type == ADR_RANGE_RAM_CODE) {
+        return 1;
+    }
+    if(adr_type != ADR_RANGE_ROM) {
+        return 0;
+    }
+    if(adr < fw->rom_code_search_min_adr  || adr > fw->rom_code_search_max_adr) {
+        return 0;
+    }
+    return 1;
+}
 
 /*
 return firmware address of 32 bit value, starting at address "start", up to max

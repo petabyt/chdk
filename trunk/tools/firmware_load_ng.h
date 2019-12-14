@@ -144,6 +144,9 @@ int adr_get_range_type(firmware *fw, uint32_t adr);
 // return true if adr is in firmware DATA or BSS
 int adr_is_var(firmware *fw, uint32_t adr);
 
+// return true if adr is in the ROM search range, or one of the copied RAM code regions
+int adr_is_main_fw_code(firmware *fw, uint32_t adr);
+
 //
 // Find the index of a string in the firmware
 // Assumes the string starts on a 32bit boundary.
