@@ -4452,7 +4452,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_transfer_src_overlay,"transfer_src_overlay","transfer_src_overlay_helper",},
 {sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(3,SUB),SIG_DRY_MAX(52)},
 {sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(4,SUB),SIG_DRY_RANGE(53,57)},// VTMReduuce fails on M10
-{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduuce"/*sic*/,SIG_NEAR_BEFORE(6,1),SIG_DRY_MIN(58)}, 
+{sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(5,SUB),SIG_DRY_MIN(58)},// additional call
+//{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduuce"/*sic*/,SIG_NEAR_BEFORE(6,1),SIG_DRY_RANGE(58,58)}, 
+//{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduce",SIG_NEAR_BEFORE(6,1),SIG_DRY_MIN(59)},  // canon fixed the typo, works on sx730 but others have diff code
 {sig_match_named,"GraphicSystemCoreFinish","GraphicSystemCoreFinish_helper",SIG_NAMED_SUB},
 {sig_match_named,"mzrm_createmsg","GraphicSystemCoreFinish",SIG_NAMED_SUB},
 {sig_match_named_last,"mzrm_sendmsg","GraphicSystemCoreFinish",SIG_NAMED_LAST_RANGE(10,16)},
