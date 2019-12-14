@@ -675,12 +675,17 @@ sig_entry_t* find_saved_sig_by_val(uint32_t val)
 #endif
 
 // Save the address value found for a function in the above array
-void save_sig(const char *name, uint32_t val)
+void save_sig(firmware *fw, const char *name, uint32_t val)
 {
     sig_entry_t *sig = find_saved_sig(name);
     if (!sig)
     {
         printf("save_sig: refusing to save unknown name %s\n",name);
+        return;
+    }
+    // if we end up needed these, can add a flag
+    if(!adr_is_main_fw_code(fw,val)) {
+        printf("save_sig: refusing to save %s with out of range address 0x%08x\n",name,val);
         return;
     }
     if(sig->val && sig->val != val) {
@@ -689,7 +694,7 @@ void save_sig(const char *name, uint32_t val)
     sig->val = val;
 }
 
-void add_func_name(char *n, uint32_t eadr, char *suffix)
+void add_func_name(firmware *fw, char *n, uint32_t eadr, char *suffix)
 {
     int k;
 
@@ -700,6 +705,15 @@ void add_func_name(char *n, uint32_t eadr, char *suffix)
         s = malloc(strlen(n) + strlen(suffix) + 1);
         sprintf(s, "%s%s", n, suffix);
         mallocd = 1;
+    }
+
+    // if we end up needed these, can add a flag
+    if(!adr_is_main_fw_code(fw,eadr)) {
+        printf("save_sig: refusing to save %s with out of range address 0x%08x\n",s,eadr);
+        if(mallocd) {
+            free(s);
+        }
+        return;
     }
 
     for (k=0; sig_names[k].name != 0; k++)
@@ -753,11 +767,11 @@ int save_sig_with_j(firmware *fw, char *name, uint32_t adr)
     if(b_adr) {
         char *buf=malloc(strlen(name)+6);
         sprintf(buf,"j_%s",name);
-        add_func_name(buf,adr,NULL); // this is the orignal named address
+        add_func_name(fw,buf,adr,NULL); // this is the orignal named address
 //        adr=b_adr | fw->is->thumb; // thumb bit from iter state
         adr=b_adr; // thumb bit already handled by get_direct...
     }
-    save_sig(name,adr);
+    save_sig(fw,name,adr);
     return 1;
 }
 
@@ -929,7 +943,7 @@ int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(insn_match_seq(fw,is,reg_evp_match)) {
         reg_evp=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
         //printf("RegisterEventProcedure found 0x%08x at %"PRIx64"\n",reg_evp,is->insn->address);
-        save_sig("RegisterEventProcedure",reg_evp);
+        save_sig(fw,"RegisterEventProcedure",reg_evp);
     }
     return (reg_evp != 0);
 }
@@ -958,7 +972,7 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
         reg_evp_alt1=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
         //printf("RegisterEventProcedure_alt1 found 0x%08x at %"PRIx64"\n",reg_evp_alt1,is->insn->address);
-        save_sig("RegisterEventProcedure_alt1",reg_evp_alt1);
+        save_sig(fw,"RegisterEventProcedure_alt1",reg_evp_alt1);
 
         uint32_t regs[4];
 
@@ -968,7 +982,7 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             if(regs[0]==str_adr) {
                 dd_enable_p=regs[1]; // constant value should already have correct ARM/THUMB bit
                 //printf("DispDev_EnableEventProc found 0x%08x at %"PRIx64"\n",dd_enable_p,is->insn->address);
-                add_func_name("DispDev_EnableEventProc",dd_enable_p,NULL);
+                add_func_name(fw,"DispDev_EnableEventProc",dd_enable_p,NULL);
                 break;
             }
         }
@@ -982,7 +996,7 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             if(get_call_const_args(fw,is,4,regs)&1) {
                 reg_evp_tbl=ADR_SET_THUMB(is->insn->detail->arm.operands[0].imm);
                 // printf("RegisterEventProcTable found 0x%08x at %"PRIx64"\n",reg_evp_tbl,is->insn->address);
-                save_sig("RegisterEventProcTable",reg_evp_tbl);
+                save_sig(fw,"RegisterEventProcTable",reg_evp_tbl);
             }
         }
     }
@@ -1020,7 +1034,7 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                     printf("RegisterEventProcedure_alt2 == _alt1 at %"PRIx64"\n",is->insn->address);
                     reg_evp_alt2=0;
                 } else {
-                    save_sig("RegisterEventProcedure_alt2",reg_evp_alt2);
+                    save_sig(fw,"RegisterEventProcedure_alt2",reg_evp_alt2);
                    // printf("RegisterEventProcedure_alt2 found 0x%08x at %"PRIx64"\n",reg_evp_alt2,is->insn->address);
                     // TODO could follow alt2 and make sure it matches expected mov r2,0, bl register..
                 }
@@ -1116,7 +1130,7 @@ int sig_match_evp_table_veneer(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 uint32_t b_adr = get_branch_call_insn_target(fw,is);
                 if (prevb && (b_adr == ref_adr)) {
                     // this doesn't use _with_j since we want identify the veneer
-                    add_func_name(rule->name,cadr | is->thumb,NULL);
+                    add_func_name(fw,rule->name,cadr | is->thumb,NULL);
                     return 1;
                 }
                 prevb = 1;
@@ -1475,13 +1489,13 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
         return 0;
     }
-    save_sig("kbd_p1_f",get_branch_call_insn_target(fw,is));
+    save_sig(fw,"kbd_p1_f",get_branch_call_insn_target(fw,is));
 
     // look for kbd_p2_f
     if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
         return 0;
     }
-    save_sig("kbd_p2_f",get_branch_call_insn_target(fw,is));
+    save_sig(fw,"kbd_p2_f",get_branch_call_insn_target(fw,is));
     return 1;
 }
 // TODO also finds p1_f_cont, physw_status
@@ -1494,7 +1508,7 @@ int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
         return 0;
     }
-    save_sig("kbd_read_keys",get_branch_call_insn_target(fw,is));
+    save_sig(fw,"kbd_read_keys",get_branch_call_insn_target(fw,is));
     if(!disasm_iter(fw,is)) {
         printf("sig_match_kbd_read_keys: disasm failed\n");
         return 0;
@@ -1502,7 +1516,7 @@ int sig_match_kbd_read_keys(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     uint32_t physw_status=LDR_PC2val(fw,is->insn);
     if(physw_status) {
         save_misc_val("physw_status",physw_status,0,(uint32_t)is->insn->address);
-        save_sig("kbd_p1_f_cont",(uint32_t)(is->insn->address) | is->thumb);
+        save_sig(fw,"kbd_p1_f_cont",(uint32_t)(is->insn->address) | is->thumb);
         return 1;
     }
     return 0;
@@ -1548,7 +1562,7 @@ int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     // TODO could verify it looks right (version string)
-    save_sig("CreateJumptable",get_branch_call_insn_target(fw,is));
+    save_sig(fw,"CreateJumptable",get_branch_call_insn_target(fw,is));
     return 1;
 }
 
@@ -4134,12 +4148,12 @@ int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 #define SIG_NAMED_NTH_RANGE(n)   ((SIG_NAMED_NTH_RANGE_MASK&((n)<<SIG_NAMED_NTH_RANGE_SHIFT)))
 
-void sig_match_named_save_sig(const char *name, uint32_t adr, uint32_t flags)
+void sig_match_named_save_sig(firmware *fw,const char *name, uint32_t adr, uint32_t flags)
 {
     if(flags & SIG_NAMED_CLEARTHUMB) {
         adr = ADR_CLEAR_THUMB(adr);
     }
-    save_sig(name,adr);
+    save_sig(fw,name,adr);
 }
 // match already identified function found by name
 // if offset is 1, match the first called function with 20 insn instead (e.g. to avoid eventproc arg handling)
@@ -4164,7 +4178,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // no offset, just save match as is
     // TODO might want to validate anyway
     if(sig_type == SIG_NAMED_ASIS) {
-        sig_match_named_save_sig(rule->name,ref_adr,sig_flags); 
+        sig_match_named_save_sig(fw,rule->name,ref_adr,sig_flags); 
         return 1;
     }
     const insn_match_t *insn_match;
@@ -4194,7 +4208,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 return 0;
             }
         }
-        sig_match_named_save_sig(rule->name,(uint32_t)is->insn->address | is->thumb,sig_flags); 
+        sig_match_named_save_sig(fw,rule->name,(uint32_t)is->insn->address | is->thumb,sig_flags); 
         return 1;
     }
 
@@ -4220,13 +4234,13 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                     char *buf=malloc(strlen(rule->name)+3);
                     // add j_ for cross referencing
                     sprintf(buf,"j_%s",rule->name);
-                    add_func_name(buf,adr,NULL); // add the previous address as j_...
+                    add_func_name(fw,buf,adr,NULL); // add the previous address as j_...
                     adr=j_adr;
                 }
             } else {
                 printf("sig_match_named: disasm failed in j_ check at %s 0x%08x\n",rule->name,adr);
             }
-            sig_match_named_save_sig(rule->name,adr,sig_flags); 
+            sig_match_named_save_sig(fw,rule->name,adr,sig_flags); 
             return 1;
         } else {
             printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
@@ -4588,11 +4602,11 @@ void add_event_proc(firmware *fw, char *name, uint32_t adr)
     if(b_adr) {
         char *buf=malloc(strlen(name)+6);
         sprintf(buf,"j_%s_FW",name);
-        add_func_name(buf,adr,NULL); // this is the orignal named address
+        add_func_name(fw,buf,adr,NULL); // this is the orignal named address
 //        adr=b_adr | fw->is->thumb; // thumb bit from iter state
         adr=b_adr; // thumb bit already handled by get_direct...
     }
-    add_func_name(name,adr,"_FW");
+    add_func_name(fw,name,adr,"_FW");
 }
 
 // process a call to an 2 arg event proc registration function
@@ -4604,7 +4618,7 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
         if(isASCIIstring(fw,regs[0])) {
             char *nm=(char *)adr2ptr(fw,regs[0]);
             add_event_proc(fw,nm,regs[1]);
-            //add_func_name(nm,regs[1],NULL);
+            //add_func_name(fw,nm,regs[1],NULL);
             //printf("eventproc found %s 0x%08x at 0x%"PRIx64"\n",nm,regs[1],is->insn->address);
         } else {
             printf("eventproc name not string at 0x%"PRIx64"\n",is->insn->address);
@@ -4725,7 +4739,7 @@ int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused)
                 p++;
                 //printf("found %s 0x%08x\n",nm,fn);
                 add_event_proc(fw,nm,fn);
-                //add_func_name(nm,fn,NULL);
+                //add_func_name(fw,nm,fn,NULL);
             }
         } else {
             printf("failed to get *EventProcTable arg 0x%08x at 0x%"PRIx64"\n",regs[0],is->insn->address);
@@ -4747,7 +4761,7 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
             char *nm=(char *)adr2ptr(fw,regs[0]);
             sprintf(buf,"task_%s",nm);
             //printf("found %s 0x%08x at 0x%"PRIx64"\n",buf,regs[3],is->insn->address);
-            add_func_name(buf,regs[3],NULL);
+            add_func_name(fw,buf,regs[3],NULL);
         } else {
             printf("task name name not string at 0x%"PRIx64"\n",is->insn->address);
         }
@@ -4757,7 +4771,7 @@ int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
     return 0;
 }
 
-int save_ptp_handler_func(uint32_t op,uint32_t handler) {
+int save_ptp_handler_func(firmware *fw,uint32_t op,uint32_t handler) {
     if((op >= 0x9000 && op < 0x10000) || (op >= 0x1000 && op < 0x2000)) {
         char *buf=malloc(64);
         const char *nm=get_ptp_op_name(op);
@@ -4767,7 +4781,7 @@ int save_ptp_handler_func(uint32_t op,uint32_t handler) {
             sprintf(buf,"handle_PTP_OC_0x%04x",op);
         }
         // TODO Canon sometimes uses the same handler for multiple opcodes
-        add_func_name(buf,handler,NULL);
+        add_func_name(fw,buf,handler,NULL);
     } else {
         return 0;
     }
@@ -4778,7 +4792,7 @@ int process_add_ptp_handler_call(firmware *fw, iter_state_t *is,uint32_t unused)
     // get r0 (opcode) and r1 (handler), backtracking up to 8 instructions
     if((get_call_const_args(fw,is,8,regs)&3)==3) {
         //uint32_t op=regs[0];
-        if(!save_ptp_handler_func(regs[0],regs[1])) {
+        if(!save_ptp_handler_func(fw,regs[0],regs[1])) {
             printf("add_ptp_handler op 0x%08x out of range 0x%"PRIx64"\n",regs[0],is->insn->address);
         }
         return 0;
@@ -4838,7 +4852,7 @@ int process_add_ptp_handler_call(firmware *fw, iter_state_t *is,uint32_t unused)
             uint32_t op=fw_u32(fw,op_table+i*8);
             uint32_t handler=fw_u32(fw,op_table+i*8+4);
             // fails on op out of range
-            if(!save_ptp_handler_func(op,handler)) {
+            if(!save_ptp_handler_func(fw,op,handler)) {
                 break;
             }
         }
