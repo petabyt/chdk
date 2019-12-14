@@ -1479,6 +1479,7 @@
 0xfc18f501,Scene.TestKidMove_FW
 0xfc18f42b,Scene.TestSunset_FW
 0xfc143bd3,ScreenLock
+0xfc393a4d,screenlock_helper
 0xfc143c0b,ScreenUnlock
 0xfc08f7d1,SdDrv_SetSSCG_FW
 0xfc3e3ab9,SearchBCentralPosition_FW

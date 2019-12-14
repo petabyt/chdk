@@ -820,6 +820,8 @@
 0xdffca149,GiveSemaphore
 0xdffca149,GiveSemaphore_FW
 0xdffc6807,givesemaphore_low
+0xe01d5655,GraphicSystemCoreFinish
+0xe01ccb27,GraphicSystemCoreFinish_helper
 0xe01d7ab9,GUISrv_StartGUISystem_FW
 0xe054369d,handle_PTP_OC_0x902f
 0xe0534da5,handle_PTP_OC_0x9038
@@ -1461,6 +1463,8 @@
 0xe058d195,MoveZoomPosition_FW
 0xe01ce28b,MovieAF.Resume_FW
 0xe01ce281,MovieAF.Suspend_FW
+0xe030658f,mzrm_createmsg
+0xe0306693,mzrm_sendmsg
 0xe04f1825,NewTaskShell_FW
 0xe0527e6d,NFCEvt.Create_FW
 0xe0527e09,NFCEvt.IsNfcStart_FW
@@ -1642,6 +1646,7 @@
 0xe045e1cf,Scene.TestHumanSmile_FW
 0xe045e21f,Scene.TestKidMove_FW
 0xe045e159,Scene.TestSunset_FW
+0xe0431637,screenlock_helper
 0xe051e69f,SDCardUHSActive_FW
 0xe0569a8f,SDump_FW
 0xe0587f11,SearchBCentralPosition_FW

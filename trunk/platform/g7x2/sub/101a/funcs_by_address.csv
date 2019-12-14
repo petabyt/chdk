@@ -368,10 +368,12 @@
 0xe01a7cfb,SoundDevParam_SetATTMode_FW
 0xe01a7d13,SoundDevParam_SetMicSelect_FW
 0xe01afcd3,task_DetSeqChaseT
+0xe01ccb27,GraphicSystemCoreFinish_helper
 0xe01ce281,MovieAF.Suspend_FW
 0xe01ce28b,MovieAF.Resume_FW
 0xe01d2b3f,StartTestRecLog_FW
 0xe01d2b4b,StopTestRecLog_FW
+0xe01d5655,GraphicSystemCoreFinish
 0xe01d7ab9,GUISrv_StartGUISystem_FW
 0xe01d7c5d,mktime_ext
 0xe0207fd9,zicokick_start
@@ -498,6 +500,8 @@
 0xe02f082b,get_playrec_mode
 0xe02f31db,add_ptp_handler
 0xe0303fad,UIFS_WirelessExecuteSendForever_FW
+0xe030658f,mzrm_createmsg
+0xe0306693,mzrm_sendmsg
 0xe0306df1,EpilogShow_FW
 0xe0306f1d,EpilogFile_FW
 0xe0306f39,task_Epilog
@@ -737,6 +741,7 @@
 0xe04253ff,task_ITCMainTask
 0xe0425cd7,SetRecAutoShutdownTime_FW
 0xe0425cf5,SetPlayAutoShutdownTime_FW
+0xe0431637,screenlock_helper
 0xe043461d,task_MrkSetTask
 0xe043985d,TurnOffDisplay
 0xe0439e2b,DispCon_ShowYuvData_FW

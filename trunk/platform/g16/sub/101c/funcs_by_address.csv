@@ -1861,6 +1861,7 @@
 0xfc40a39d,UI_ShowStateOfRecMode_FW
 0xfc40a3af,UI.Create_FW
 0xfc40a3af,UI_RegistDebugEventProc_FW
+0xfc40a975,screenlock_helper
 0xfc40a975,UIFS_DisplayFirmUpdateView_FW
 0xfc40b809,qsort
 0xfc4244ef,task_OhyIntegTask

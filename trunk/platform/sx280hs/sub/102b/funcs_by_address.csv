@@ -1368,6 +1368,7 @@
 0xfc3935a1,UI_ShowStateOfRecMode_FW
 0xfc3935b3,UI.Create_FW
 0xfc3935b3,UI_RegistDebugEventProc_FW
+0xfc3939bd,screenlock_helper
 0xfc3939bd,UIFS_DisplayFirmUpdateView_FW
 0xfc3a9abb,NRTBL.SetDarkSubType_FW
 0xfc3a9b0b,NRTBL.SetDefectCorrectType_FW

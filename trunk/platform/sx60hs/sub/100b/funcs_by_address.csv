@@ -2355,6 +2355,7 @@
 0xfc434df1,UI_ShowStateOfRecMode_FW
 0xfc434e03,UI.Create_FW
 0xfc434e03,UI_RegistDebugEventProc_FW
+0xfc4354a9,screenlock_helper
 0xfc4354a9,UIFS_DisplayFirmUpdateView_FW
 0xfc435993,UIFS_StartMoviePlay_FW
 0xfc4374ad,qsort

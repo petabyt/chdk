@@ -1911,6 +1911,7 @@
 0xfc46ed91,UI_ShowStateOfRecMode_FW
 0xfc46eda3,UI.Create_FW
 0xfc46eda3,UI_RegistDebugEventProc_FW
+0xfc46f2ed,screenlock_helper
 0xfc46f2ed,UIFS_DisplayFirmUpdateView_FW
 0xfc46f947,UIFS_StartMoviePlay_FW
 0xfc484e69,DevelopTool.DevelopTest_FW

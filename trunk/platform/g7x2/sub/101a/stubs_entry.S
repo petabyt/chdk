@@ -182,6 +182,8 @@ DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xe0fd7a20
 // there are 101 entries in the table - set NUM_FL to 101
 DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 
+//NHSTUB(ScreenLock                           ,0xe03780e3) //  0        *** != 0x00000000
+//NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
 //NHSTUB(TurnOnBackLight                      ,0xe0439adf) //  0        *** != 0x00000000
 //NHSTUB(_sqrt                                ,0x00000000) //  0        *** != 0xdffcf241
 //NHSTUB(strcat                               ,0x00000000) //  0        *** != 0xe04968ad
@@ -262,8 +264,6 @@ NHSTUB(ReadFastDir                            ,0xe0373fef) //  0
 NHSTUB(Rec2PB                                 ,0xe035e00f) //  0
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0            == 0x00000000
 //NHSTUB(Restart                              ,0x00000000) //  0            == 0x00000000
-//NHSTUB(ScreenLock                           ,0x00000000) //  0            == 0x00000000
-//NHSTUB(ScreenUnlock                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetAE_ShutterSpeed                     ,0xe0583cd9) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xe04d064b) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xe037ca81) //  0

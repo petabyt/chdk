@@ -169,6 +169,8 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3b68af
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3b8d8d
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc0c306f
+//NHSTUB(ScreenLock                           ,0xfc3becb5) //  0        *** != 0x00000000
+//NHSTUB(ScreenUnlock                         ,0xfc3beceb) //  0        *** != 0x00000000
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3b5f07
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2a6cd7
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc15bb35
@@ -240,8 +242,6 @@ NHSTUB(PostLogicalEventToUI                   ,0xfc3bd7a9) //  0
 NHSTUB(Read                                   ,0xfc151589) //  0
 NHSTUB(ReadFastDir                            ,0xfc282ec9) //  0
 NHSTUB(Rec2PB                                 ,0xfc364f6f) //  0
-//NHSTUB(ScreenLock                           ,0x00000000) //  0            == 0x00000000
-//NHSTUB(ScreenUnlock                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc664641) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xfc39ac39) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc388197) //  0
