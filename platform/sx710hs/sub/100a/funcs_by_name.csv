@@ -1654,6 +1654,7 @@
 0xfc1697d3,Scene.TestKidMove_FW
 0xfc169721,Scene.TestSunset_FW
 0xfc30a241,ScreenLock
+0xfc1849b9,screenlock_helper
 0xfc30a27f,ScreenUnlock
 0xfc5427e7,SDump_FW
 0xfc56ab1d,SearchBCentralPosition_FW

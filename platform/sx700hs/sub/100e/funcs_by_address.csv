@@ -1377,6 +1377,7 @@
 0xfc3ea0d9,UI_ShowStateOfRecMode_FW
 0xfc3ea0eb,UI.Create_FW
 0xfc3ea0eb,UI_RegistDebugEventProc_FW
+0xfc3ea51d,screenlock_helper
 0xfc3ea51d,UIFS_DisplayFirmUpdateView_FW
 0xfc3ed63d,qsort
 0xfc400049,DevelopTool.DevelopTest_FW

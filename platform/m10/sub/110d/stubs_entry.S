@@ -164,8 +164,6 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfce67974
 //NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc38c91f
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc38a0d9
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc12790b
-//NHSTUB(ScreenLock                           ,0x00000000) //  0        *** != 0xfc38c505
-//NHSTUB(ScreenUnlock                         ,0x00000000) //  0        *** != 0xfc38c53b
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc389b19
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc389ad1
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc27e64f
@@ -227,6 +225,8 @@ NHSTUB(PostLogicalEventToUI                   ,0xfc3858fd) //  0
 NHSTUB(Read                                   ,0xfc1ebe61) //  0
 NHSTUB(ReadFastDir                            ,0xfc1168dd) //  0
 NHSTUB(Rec2PB                                 ,0xfc33ffc1) //  0
+//NHSTUB(ScreenLock                           ,0xfc38c505) //  0            == 0xfc38c505
+//NHSTUB(ScreenUnlock                         ,0xfc38c53b) //  0            == 0xfc38c53b
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc5bb2a9) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xfc1fb4dd) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc370ffb) //  0

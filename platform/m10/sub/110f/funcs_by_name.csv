@@ -1948,6 +1948,9 @@
 0xfc24593d,Scene.TestHumanSmile_FW
 0xfc245985,Scene.TestKidMove_FW
 0xfc2458d3,Scene.TestSunset_FW
+0xfc38c539,ScreenLock
+0xfc26e073,screenlock_helper
+0xfc38c56f,ScreenUnlock
 0xfc443803,SDump_FW
 0xfc5bff0b,SearchBCentralPosition_FW
 0xfc5bff0b,SearchISLensCentralPosition_FW

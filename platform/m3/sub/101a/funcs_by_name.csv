@@ -1946,6 +1946,7 @@
 0xfc252555,Scene.TestKidMove_FW
 0xfc2524a3,Scene.TestSunset_FW
 0xfc37f5db,ScreenLock
+0xfc38df71,screenlock_helper
 0xfc4508a7,SDump_FW
 0xfc5a982b,SearchBCentralPosition_FW
 0xfc5a982b,SearchISLensCentralPosition_FW

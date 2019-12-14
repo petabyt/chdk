@@ -684,6 +684,7 @@
 0xfc17a123,OpenConsole_FW
 0xfc17a1dd,CloseConsole_FW
 0xfc1840c7,FmtMenu_ExecuteQuickFormat_FW
+0xfc1849c1,screenlock_helper
 0xfc1849c1,UIFS_DisplayFirmUpdateView_FW
 0xfc1a117d,UIFS_StartMoviePlay_FW
 0xfc1bfe3f,task_FmidTask

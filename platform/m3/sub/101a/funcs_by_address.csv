@@ -1640,6 +1640,7 @@
 0xfc38b533,UIFS_WriteFirmInfoToFile
 0xfc38b533,UIFS_WriteFirmInfoToFile_FW
 0xfc38d6e7,FmtMenu_ExecuteQuickFormat_FW
+0xfc38df71,screenlock_helper
 0xfc38df71,UIFS_DisplayFirmUpdateView_FW
 0xfc3c86ad,qsort
 0xfc3e7b3d,task_FmidTask

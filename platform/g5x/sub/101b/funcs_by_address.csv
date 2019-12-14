@@ -542,6 +542,7 @@
 0xfc119665,UIFS_WriteFirmInfoToFile
 0xfc119665,UIFS_WriteFirmInfoToFile_FW
 0xfc11a4fd,FmtMenu_ExecuteQuickFormat_FW
+0xfc11a9a9,screenlock_helper
 0xfc13dad7,task_PingManager
 0xfc14526f,task_ReadMultiConTask
 0xfc14629d,task_MrkSetTask

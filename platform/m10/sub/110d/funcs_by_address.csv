@@ -1311,6 +1311,7 @@
 0xfc26b5f5,UIFS_WriteFirmInfoToFile
 0xfc26b5f5,UIFS_WriteFirmInfoToFile_FW
 0xfc26d797,FmtMenu_ExecuteQuickFormat_FW
+0xfc26e073,screenlock_helper
 0xfc27baa1,task_ExpDrv
 0xfc27baa1,task_ExpDrvTask
 0xfc27d001,task_ISMainTask
@@ -1630,6 +1631,8 @@
 0xfc38b239,task_Epilog
 0xfc38b263,EpilogMenu_FW
 0xfc38ba49,transfer_src_overlay
+0xfc38c505,ScreenLock
+0xfc38c53b,ScreenUnlock
 0xfc38c553,transfer_src_overlay_helper
 0xfc38ccf5,j_malloc
 0xfc38ccf9,j_free

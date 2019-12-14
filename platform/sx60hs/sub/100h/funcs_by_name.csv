@@ -1805,6 +1805,7 @@
 0xfc1b8a7b,Scene.TestKidMove_FW
 0xfc1b89c9,Scene.TestSunset_FW
 0xfc3379fd,ScreenLock
+0xfc4354bd,screenlock_helper
 0xfc337a3b,ScreenUnlock
 0xfc3a4577,SDump_FW
 0xfc401155,SearchBCentralPosition_FW
