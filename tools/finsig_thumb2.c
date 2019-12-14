@@ -1871,6 +1871,26 @@ int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+int sig_match_readfastdir_gt58(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // find the first call to bzero
+    if(!find_next_sig_call(fw,is,22,"bzero")) {
+        return 0;
+    }
+    // find the first call to OpenFastDir
+    if(!find_next_sig_call(fw,is,10,"OpenFastDir")) {
+        return 0;
+    }
+    // find next call
+    if(!insn_match_find_nth(fw,is,12,1,match_bl_blximm)) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 int sig_match_strrchr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t sig_adr=get_saved_sig_val(rule->name);
@@ -4421,7 +4441,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"LocalTime",                "%Y.%m.%d %H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
-{sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1),SIG_DRY_MAX(58)},
+{sig_match_readfastdir_gt58,"ReadFastDir",      "FADumpFileList_FW",    0,SIG_DRY_MIN(59)},
 // this matches using sig_match_near_str, but function for dryos >=57 takes additional param so disabling for those versions
 {sig_match_pt_playsound,"PT_PlaySound",         "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB, SIG_DRY_MAX(56)},
 {sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",     SIG_NEAR_AFTER(1,1)},
