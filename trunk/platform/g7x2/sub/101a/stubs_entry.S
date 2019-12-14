@@ -230,7 +230,7 @@ NHSTUB(GetFocusLensSubjectDistance            ,0xe0372bf5) //  0
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0            == 0x00000000
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0            == 0x00000000
 NHSTUB(GetKbdState                            ,0xe004e73b) //  0
-NHSTUB(GetMemInfo                             ,0xe0006ff1) //  0
+NHSTUB(GetMemInfo                             ,0xe0589b61) //  0
 NHSTUB(GetOpticalTemperature                  ,0xe0401223) //  0
 NHSTUB(GetParameterData                       ,0xe02725cf) //  0
 NHSTUB(GetPropertyCase                        ,0xe036af69) //  0
@@ -322,7 +322,7 @@ NHSTUB(strlen                                 ,0xe037e6c7) //  0
 NHSTUB(strncmp                                ,0xe0422079) //  0
 NHSTUB(strncpy                                ,0xe0484f57) //  0
 NHSTUB(strrchr                                ,0xe04b23dd) //  0
-NHSTUB(strtol                                 ,0xe000f9d3) //  0
+NHSTUB(strtol                                 ,0xe04e84cf) //  0
 NHSTUB(strtolx                                ,0xe04e8375) //  0
    DEF(task_CaptSeq                           ,0xe0032f57) //  0
    DEF(task_DvlpSeqTask                       ,0xe004b693) //  0

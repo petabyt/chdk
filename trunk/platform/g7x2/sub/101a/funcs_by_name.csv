@@ -721,7 +721,7 @@
 0xe006aa35,GetMechaShutterMoveTime_FW
 0xe0567acd,GetMechaShutterOpenDacSetting_FW
 0xe006aa53,GetMechaShutterStatus_FW
-0xe0006ff1,GetMemInfo
+0xe0589b61,GetMemInfo
 0xe0585463,GetMinute_FW
 0xe055a9fd,GetModeDialName_FW
 0xe055a98b,GetModeDialState_FW
@@ -2086,7 +2086,7 @@
 0xe0422079,strncmp
 0xe0484f57,strncpy
 0xe04b23dd,strrchr
-0xe000f9d3,strtol
+0xe04e84cf,strtol
 0xe04e8375,strtolx
 0xe0584221,SwitchOffDisplay_FW
 0xe0584247,SwitchOnDisplay_FW
