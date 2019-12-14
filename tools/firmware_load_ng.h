@@ -154,11 +154,11 @@ int find_Nth_str(firmware *fw, char *str, int N);
 // above, N=1
 int find_str(firmware *fw, char *str);
 
-// find sequence of bytes, starting from address, any alignment
+// find sequence of bytes, starting from star_adr, up to max_adr, any alignment
 // returns firmware address or 0
 // use repeated calls to find multiple
 // NOTE only handles ROM addresses
-uint32_t find_next_bytes(firmware *fw, const void *bytes, size_t len, uint32_t adr);
+uint32_t find_next_bytes_range(firmware *fw, const void *bytes, size_t len, uint32_t start_adr, uint32_t max_adr);
 
 // find up to maxmatch matching byte sequences, storing addresses in result
 // returns count
@@ -172,6 +172,10 @@ uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr);
 
 // as above, but without terminating null
 uint32_t find_next_substr_bytes(firmware *fw, const char *str, uint32_t adr);
+
+// find a string within range of LDR pc or ADR, starting from main fw
+// i.e., a string directly referenced from main code
+uint32_t find_str_bytes_main_fw(firmware *fw, const char *str);
 
 // as find_next_str_bytes, first match
 uint32_t find_str_bytes(firmware *fw, const char *str);

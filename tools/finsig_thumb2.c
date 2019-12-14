@@ -882,7 +882,7 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 // bl=<our func>
 int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_str_r0_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
@@ -939,7 +939,7 @@ int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     // ref to find RegisterEventProcTable
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name); // note this string may appear more than once, assuming want first
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name); // note this string may appear more than once, assuming want first
     if(!str_adr) {
         printf("sig_match_reg_evp_table: failed to find %s\n",rule->ref_name);
         return 0;
@@ -994,7 +994,7 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t reg_evp_alt2=0;
     // TODO could make this a param for different fw variants
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_reg_evp_alt2: failed to find %s\n",rule->ref_name);
         return 0;
@@ -1034,7 +1034,7 @@ int sig_match_reg_evp_alt2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find UnRegisterEventProc (made up name) for reference, finding tables missed by reg_event_proc_table
 int sig_match_unreg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_unreg_evp_table: failed to find %s\n",rule->ref_name);
         return 0;
@@ -1618,7 +1618,7 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
 
 int sig_match_get_semaphore_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_get_semaphore_value: failed to find ref %s\n",rule->ref_name);
         return 0;
@@ -1659,7 +1659,7 @@ int sig_match_get_semaphore_value(firmware *fw, iter_state_t *is, sig_rule_t *ru
 // similar to sig_match_str_r0_call, but string also appears with Fopen_Fut
 int sig_match_stat(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_stat: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
@@ -1800,7 +1800,7 @@ int sig_match_ufree(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_deletefile_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_deletefile_fut: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
@@ -1838,7 +1838,7 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 
 int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_closedir: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
@@ -1915,7 +1915,7 @@ int sig_match_strrchr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_time(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_time: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return  0;
@@ -1958,7 +1958,7 @@ int sig_match_strncpy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_strncmp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_strncmp: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2022,7 +2022,7 @@ int sig_match_strtolx(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find the version of ExecuteEventProcedure that doesn't assert evp isn't reg'd
 int sig_match_exec_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_exec_evp: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2257,7 +2257,7 @@ int sig_match_get_drive_cluster_size(firmware *fw, iter_state_t *is, sig_rule_t 
 
 int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_mktime_ext: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2314,7 +2314,7 @@ int sig_match_mktime_ext(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // match call after ref to "_EnrySRec" because "AC:Rec2PB" ref before push in function, hard to be sure of start
 int sig_match_rec2pb(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_mktime_ext: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2514,7 +2514,7 @@ int sig_match_mkdir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_add_ptp_handler(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_add_ptp_handler: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2587,7 +2587,7 @@ int sig_match_qsort(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // DeleteDirectory_Fut
 int sig_match_deletedirectory_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_deletedirectory_fut: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2643,7 +2643,7 @@ same string is used elsewhere, so match specific sequence
 */
 int sig_match_set_control_event(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         // not logged, two different ref strings so failing one is normal
         // printf("sig_match_set_control_event: failed to find ref %s\n",rule->ref_name);
@@ -2679,7 +2679,7 @@ int sig_match_displaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_t 
     if (fw->dryos_ver != 52) {
         return 0;
     }
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_displaybusyonscreen: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2712,7 +2712,7 @@ int sig_match_undisplaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_
     if (fw->dryos_ver != 52) {
         return 0;
     }
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_undisplaybusyonscreen: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2770,7 +2770,7 @@ int sig_match_wait_all_eventflag_strict(firmware *fw, iter_state_t *is, sig_rule
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    uint32_t str_adr = find_str_bytes(fw,"EFTool.c");
+    uint32_t str_adr = find_str_bytes_main_fw(fw,"EFTool.c");
     if(!str_adr) {
         printf("sig_match_wait_all_eventflag_strict: failed to find ref EFTool.c\n");
         return 0;
@@ -2809,7 +2809,7 @@ int sig_match_get_num_posted_messages(firmware *fw, iter_state_t *is, sig_rule_t
 
 int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_set_hp_timer_after_now: failed to find ref %s\n",rule->ref_name);
         return 0;
@@ -2929,7 +2929,7 @@ int sig_match_exmem_vars(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find function that copies Zico Xtensa blobs to their destination (dryos 52)
 int sig_match_zicokick_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_zicokick_52: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -2965,7 +2965,7 @@ int sig_match_zicokick_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // find function that copies Zico Xtensa blobs to their destination (dryos >52)
 int sig_match_zicokick_gt52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_zicokick_gt52: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -3270,7 +3270,7 @@ int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
 }
 int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_jpeg_count_str: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -3396,7 +3396,7 @@ int sig_match_uiprop_count(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
     if(!str_adr) {
         printf("sig_match_get_canon_mode_list: failed to find ref %s\n",rule->ref_name);
         return  0;
@@ -3889,7 +3889,12 @@ int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // modifies is and potentially fw->is
 uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    uint32_t str_adr = find_str_bytes(fw,rule->ref_name);
+    uint32_t str_adr;
+    if(rule->param & SIG_NEAR_INDIRECT) {
+        str_adr = find_str_bytes(fw,rule->ref_name); // indirect string could be in data area
+    } else {
+        str_adr = find_str_bytes_main_fw(fw,rule->ref_name); // direct string must be near actual code
+    }
     if(!str_adr) {
         printf("find_call_near_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return 0;
@@ -3899,7 +3904,7 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // TODO only looks for first ptr
     if(rule->param & SIG_NEAR_INDIRECT) {
         // printf("find_call_near_str: %s str 0x%08x\n",rule->name,str_adr);
-        search_adr=find_u32_adr(fw,str_adr,fw->base);
+        search_adr=find_u32_adr_range(fw,str_adr,fw->rom_code_search_min_adr,fw->rom_code_search_max_adr);
         if(!search_adr) {
             printf("find_call_near_str: %s failed to find indirect ref %s\n",rule->name,rule->ref_name);
             return 0;

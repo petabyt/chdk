@@ -125,22 +125,34 @@ int find_str(firmware *fw, char *str)
     return find_Nth_str(fw, str, 1);
 }
 
-// find sequence of bytes, starting from address, any alignment
+// find sequence of bytes, starting from star_adr, up to max_adr, any alignment
 // returns firmware address or 0
 // use repeated calls to find multiple
 // NOTE only handles ROM addresses
-uint32_t find_next_bytes(firmware *fw, const void *bytes, size_t len, uint32_t adr)
+uint32_t find_next_bytes_range(firmware *fw, const void *bytes, size_t len, uint32_t start_adr, uint32_t max_adr)
 {
-    if(!adr) {
-        adr = fw->base;
+    if(!start_adr) {
+        start_adr = fw->base;
     }
-    BufRange *p = getBufRangeForIndex(fw,(adr - fw->base)/4);
+    if(start_adr < fw->base || start_adr >= fw->base + fw->size8) {
+        fprintf(stderr,"find_next_bytes_range invalid start_adr 0x%08x\n",start_adr);
+        return 0;
+    }
+    if(!max_adr) {
+        max_adr = fw->base + fw->size8-1;
+    }
+    if(max_adr < fw->base || max_adr >= fw->base + fw->size8) {
+        fprintf(stderr,"find_next_bytes_range invalid max_adr 0x%08x\n",max_adr);
+        return 0;
+    }
+    int end_k = (max_adr - fw->base);
+    BufRange *p = getBufRangeForIndex(fw,(start_adr - fw->base)/4);
     if(!p) {
         return 0;
     }
-    int k = adr - fw->base;
+    int k = start_adr - fw->base;
 
-    while (1)
+    while (k < end_k)
     {
         for (; k < (p->off + p->len)*4; k++)
         {
@@ -162,21 +174,44 @@ uint32_t find_next_bytes(firmware *fw, const void *bytes, size_t len, uint32_t a
 int find_bytes_all(firmware *fw, const void *bytes, size_t len, uint32_t adr, uint32_t *result, int max)
 {
     int i;
-    for(i=0,adr=find_next_bytes(fw,bytes,len,0); adr && (i < max); adr=find_next_bytes(fw,bytes,len,adr+len),i++) {
+    for(i=0,adr=find_next_bytes_range(fw,bytes,len,0,0); adr && (i < max); adr=find_next_bytes_range(fw,bytes,len,adr+len,0),i++) {
         result[i] = adr;
     }
     return i;
 }
 
-uint32_t find_next_substr_bytes(firmware *fw, const char *str, uint32_t adr) {
+uint32_t find_next_substr_bytes(firmware *fw, const char *str, uint32_t adr)
+{
     //fprintf(stderr,"find_next_substr_bytes 0x%08x\n",adr);
     // strlen excludes null
-    return find_next_bytes(fw,str,strlen(str),adr);
+    return find_next_bytes_range(fw,str,strlen(str),adr,0);
 }
 
-uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr) {
+uint32_t find_next_str_bytes_range(firmware *fw, const char *str, uint32_t adr,uint32_t max_adr)
+{
     // +1 to include the null in memcmp
-    return find_next_bytes(fw,str,strlen(str)+1,adr);
+    return find_next_bytes_range(fw,str,strlen(str)+1,adr,max_adr);
+}
+
+// find a string within range of LDR pc or ADR, starting from main fw
+uint32_t find_str_bytes_main_fw(firmware *fw, const char *str)
+{
+    // max is end of fw code + 4096, assuming it fits in fw
+    // while early code could technically load from base - 1k, unlikely
+    uint32_t max_adr;
+    if(fw->base + fw->size8 - 4096 > fw->rom_code_search_max_adr) {
+        max_adr = fw->rom_code_search_max_adr + 4096;
+    } else {
+        max_adr = fw->base + fw->size8;
+    }
+    // +1 to include the null in memcmp
+    return find_next_bytes_range(fw,str,strlen(str)+1,fw->rom_code_search_min_adr,max_adr);
+}
+
+uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr)
+{
+    // +1 to include the null in memcmp
+    return find_next_bytes_range(fw,str,strlen(str)+1,adr,0);
 }
 
 // Find the index of a string in the firmware, can start at any address
