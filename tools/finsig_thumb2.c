@@ -4457,7 +4457,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_wait_all_eventflag_strict,"WaitForAllEventFlagStrictly","EF.StartInternalMainFlash_FW"},
 {sig_match_near_str,"DeleteSemaphore",          "DeleteSemaphore passed",SIG_NEAR_BEFORE(3,1)},
 {sig_match_get_num_posted_messages,"GetNumberOfPostedMessages","task_CtgTotalTask"},
-{sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1),SIG_DRY_MAX(58)},
 {sig_match_near_str,"LocalTime",                "%Y.%m.%d %H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
