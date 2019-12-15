@@ -401,6 +401,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "takesemaphore_low", OPTIONAL|UNUSED },
     { "bzero" }, // 
     { "memset32" }, // actually jump to 2nd instruction of bzero 
+    { "get_dial_hw_position", OPTIONAL },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -1545,6 +1546,46 @@ int sig_match_get_kbd_state(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     save_sig_with_j(fw,"kbd_read_keys_r2",get_branch_call_insn_target(fw,is));
     return 1;
+}
+
+int sig_match_get_dial_hw_position(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t adr = find_last_call_from_func(fw,is,18,50);
+    if(!adr) {
+        // printf("sig_match_get_dial_hw_position: no match call 1 at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,adr);
+    adr = find_last_call_from_func(fw,is,16,32);
+    if(!adr) {
+        // printf("sig_match_get_dial_hw_position: no match call 2 at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,adr);
+    // find next function call
+    if(!insn_match_find_next(fw,is,30,match_bl_blximm)) {
+        // printf("sig_match_get_dial_hw_position: no match call 3 at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    uint32_t fadr = get_branch_call_insn_target(fw,is);
+    // rewind and match instructions for sanity check
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,4));
+    const insn_match_t match_hw_dial_call[]={
+        {MATCH_INS(ADD,MATCH_OPCOUNT_ANY), {MATCH_OP_REG(R0)}},
+        {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0),MATCH_OP_MEM_BASE(PC)}},
+        {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next(fw,is,4,match_hw_dial_call)) {
+        // printf("sig_match_get_dial_hw_position: no match seq 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,fadr);
 }
 
 int sig_match_create_jumptable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4523,6 +4564,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_current_nd_value,"get_current_nd_value","get_current_exp",},
 {sig_match_imager_active_callback,"imager_active_callback","ImagerActivate",},
 {sig_match_imager_active,"imager_active","imager_active_callback",},
+{sig_match_get_dial_hw_position,"get_dial_hw_position","kbd_p1_f",},
 {sig_match_prop_string,"PROPCASE_AFSTEP", "\n\rError : GetAFStepResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_FOCUS_STATE", "\n\rError : GetAFResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_AV", "\n\rError : GetAvResult",SIG_NEAR_BEFORE(7,1)},

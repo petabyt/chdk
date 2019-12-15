@@ -1630,22 +1630,26 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
         if(isPUSH_LR(is->insn)) {
             // already found a PUSH LR, probably in new function
             if(push_found) {
+                //printf("find_last_call_from_func: second push pc 0x%"PRIx64"\n",is->adr);
                 return 0;
             }
             push_found=1;
             continue;
         }
         // ignore everything before push (could be some mov/ldr, shoudln't be any calls)
+        // TODO may want to allow starting in the middle of a function
         if(!push_found) {
             continue;
         }
         // found a potential call, store
         if(insn_match_any(is->insn,match_bl_blximm) && count >= min_insns) {
+            //printf("find_last_call_from_func: found call 0x%"PRIx64"\n",is->adr);
             last_adr=get_branch_call_insn_target(fw,is);
             continue;
         }
         // found pop PC, can only be stored call if present
         if(isPOP_PC(is->insn)) {
+            // printf("find_last_call_from_func: found pop PC 0x%"PRIx64"\n",is->adr);
             if(last_adr) {
                 return last_adr;
             }
@@ -1656,7 +1660,7 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
         if(isPOP_LR(is->insn)) {
             // hit func end with less than min, no match
             if(count < min_insns) {
-                //printf("find_last_call_from_func: pop before min 0x%"PRIx64"\n",rule->name,is->adr);
+                // printf("find_last_call_from_func: pop before min 0x%"PRIx64"\n",is->adr);
                 return 0;
             }
             if(!disasm_iter(fw,is)) {
@@ -1667,13 +1671,16 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
                 return get_branch_call_insn_target(fw,is);
             }
             // doen't go more than one insn after pop (could be more, but uncommon)
+            // printf("find_last_call_from_func: more than one insn after pop 0x%"PRIx64"\n",is->adr);
             return 0;
         }
         // found another kind of ret, give up
         if(isRETx(is->insn)) {
+            // printf("find_last_call_from_func: other ret 0x%"PRIx64"\n",is->adr);
             return 0;
         }
     }
+    // printf("find_last_call_from_func: no match in range 0x%"PRIx64"\n",is->adr);
     return 0;
 }
 
