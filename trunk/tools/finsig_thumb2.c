@@ -3608,6 +3608,38 @@ int sig_match_aram_size(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_aram_size_gt58(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        printf("sig_match_aram_size: missing ref\n");
+        return 0;
+    }
+    const insn_match_t match_ldrd_r0r1_mov[]={
+        {MATCH_INS(LDRD, 3), {MATCH_OP_REG(R0),MATCH_OP_REG(R1),MATCH_OP_MEM(SP,INVALID,0x10)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R2),MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    // d7? variant
+    const insn_match_t match_ldrd_r2r1_mov[]={
+        {MATCH_INS(LDRD, 3), {MATCH_OP_REG(R2),MATCH_OP_REG(R1),MATCH_OP_MEM(SP,INVALID,0x10)}},
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R3),MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,15,match_ldrd_r0r1_mov)) {
+        init_disasm_sig_ref(fw,is,rule); // reset to start
+        if(!insn_match_find_next_seq(fw,is,15,match_ldrd_r2r1_mov)) {
+            printf("sig_match_aram_size: no match LDR\n");
+        }
+        return 0;
+    }
+    uint32_t val=is->insn->detail->arm.operands[1].imm;
+    if(val != 0x22000 && val != 0x32000) {
+        printf("sig_match_aram_size: unexpected ARAM size 0x%08x\n",val);
+    }
+    save_misc_val(rule->name,val,0,(uint32_t)is->insn->address);
+    return 1;
+}
+
 int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -3647,7 +3679,7 @@ int sig_match_aram_start2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_aram_start: missing ref\n");
         return 0;
     }
-    if(!find_next_sig_call(fw,is,50,"DebugAssert")) {
+    if(!find_next_sig_call(fw,is,60,"DebugAssert")) {
         printf("sig_aram_start2: no match DebugAssert\n");
         return 0;
     }
@@ -4516,7 +4548,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_rom_ptr_get,"canon_mode_list",       "get_canon_mode_list",},
 {sig_match_zoom_busy,"zoom_busy",               "ResetZoomLens_FW",},
 {sig_match_focus_busy,"focus_busy",             "MoveFocusLensToTerminate_FW",},
-{sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",},
+{sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",  0,                  SIG_DRY_MAX(58)},
+{sig_match_aram_size_gt58,"ARAM_HEAP_SIZE",     "AdditionAgentRAM_FW",  0,                  SIG_DRY_MIN(59)},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
 {sig_match_aram_start2,"ARAM_HEAP_START",       "AdditionAgentRAM_FW",},
 {sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
