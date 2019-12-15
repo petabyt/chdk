@@ -535,6 +535,7 @@ misc_val_t misc_vals[]={
     { "_nrflag",            MISC_VAL_OPTIONAL},
     { "av_override_semaphore",MISC_VAL_OPTIONAL},
     { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
+    { "bitmap_buffer",      MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -2923,10 +2924,36 @@ int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *r
         printf("sig_match_transfer_src_overlay: no match bl 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
+    // main sig value
+    uint32_t fadr = get_branch_call_insn_target(fw,is);
     // adding active_bitmap_buffer here
     // note 4 bytes after value used on many ports, but the value normally sent to transfer_src_overlay
     save_misc_val("active_bitmap_buffer",desc.adr_adj,desc.off,(uint32_t)is->insn->address);
-    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    // pick up bitmap_buffer 
+    // expect
+    // ldr rx,[reg bitmap buffer]
+    // add r0, <reg from bitmap buffer>, const
+    const insn_match_t bm_buf_match[]={
+        {MATCH_INS(LDR,   2),  {MATCH_OP_REG_ANY,  MATCH_OP_MEM_ANY}},
+        {MATCH_INS(ADD,   3),  {MATCH_OP_REG(R0), MATCH_OP_REG_ANY, MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(insn_match_find_next_seq(fw,is,1,bm_buf_match)) {
+        if(is->insn->detail->arm.operands[1].reg == desc.reg_base) {
+            save_misc_val("bitmap_buffer",desc.adr_adj,is->insn->detail->arm.operands[2].imm,(uint32_t)is->insn->address);
+        }
+        /*
+        else {
+            printf("sig_match_transfer_src_overlay: no match bitmap_buffer add 0x%"PRIx64"\n",is->insn->address);
+        }
+        */
+    }
+    /*
+    else {
+        printf("sig_match_transfer_src_overlay: no match bitmap_buffer seq 0x%"PRIx64"\n",is->insn->address);
+    }
+    */
+    return save_sig_with_j(fw,rule->name,fadr);
 }
 
 // find exmem related stuff
