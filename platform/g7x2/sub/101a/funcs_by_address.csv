@@ -8,6 +8,7 @@
 0xdffc95af,ExitTask_FW
 0xdffc96f5,DebugAssert
 0xdffc971b,DebugAssert2
+0xdffc974d,CreateEventFlag
 0xdffc9787,DeleteEventFlag
 0xdffc97c5,CheckAnyEventFlag
 0xdffc97fb,CheckAllEventFlag

@@ -204,6 +204,7 @@
 0xdffca023,CreateCountingSemaphore_FW
 0xdffca25f,CreateCountingSemaphoreStrictly
 0xe0044b37,CreateDefectTableMirror_FW
+0xdffc974d,CreateEventFlag
 0xdffca22b,CreateEventFlagStrictly
 0xe03738cf,CreateFADBGSingalID_FW
 0xe057ad85,CreateJumptable
