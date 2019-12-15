@@ -190,6 +190,7 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(strchr                               ,0x00000000) //  0        *** != 0xe045197e
 //   DEF(task_PhySw                           ,0x00000000) //  0        *** != 0xe005b319
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xe03f4ac1
+//NHSTUB(get_dial_hw_position                 ,0xe04d1bdd) //  0        *** != 0x00000000
 
 NHSTUB(AllocateUncacheableMemory              ,0xe046e571) //  0
 NHSTUB(Close                                  ,0xe0373eb7) //  0

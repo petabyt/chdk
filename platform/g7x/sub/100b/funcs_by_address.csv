@@ -2048,6 +2048,7 @@
 0xfc48ac67,SetZoomAmpereLimitOffTimeForAdjustZoom_FW
 0xfc48ac71,j_GetZoomPiDefaultPosition_FW
 0xfc48b80d,task_MetaCtgPrsTask
+0xfc491e95,get_dial_hw_position
 0xfc49205f,GetFocusLensCurrentPosition_FW
 0xfc492063,GetFocusLensCurrentPositionWithMotor_FW
 0xfc492067,GetFocusLensDriveVoltage_FW

@@ -565,6 +565,7 @@
 0xfc1192ad,OpenFastDir
 0xfc11934d,ReadFastDir
 0xfc119383,j_closedir
+0xfc119805,get_dial_hw_position
 0xfc1198c9,get_canon_mode_list
 0xfc13638d,memShow_FW
 0xfc136d43,open

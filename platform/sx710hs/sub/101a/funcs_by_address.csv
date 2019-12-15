@@ -508,6 +508,7 @@
 0xfc1053a9,LCDRect_Create_FW
 0xfc10545b,LCDRect_Delete_FW
 0xfc10feb3,task_PingManager
+0xfc110d61,get_dial_hw_position
 0xfc1126fd,task_MechaAlarm
 0xfc11626d,task_MrkSetTask
 0xfc11fb03,RegComEventProc_FW
