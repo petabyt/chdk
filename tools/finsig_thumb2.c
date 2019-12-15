@@ -4445,7 +4445,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"DeleteEventFlag",          "DeleteEventFlag(%d) is FAILURE",SIG_NEAR_BEFORE(10,1)},
 {sig_match_near_str,"ReceiveMessageQueue",      "ReceiveMessageQue:%d", SIG_NEAR_BEFORE(9,1)},
 {sig_match_near_str,"RegisterInterruptHandler", "WdtInt",               SIG_NEAR_AFTER(3,1)},
-{sig_match_near_str,"TryPostMessageQueue",      "TryPostMessageQueue(%d)\n",SIG_NEAR_BEFORE(9,1)},
+{sig_match_near_str,"TryPostMessageQueue",      "TryPostMessageQueue(%d)\n",SIG_NEAR_BEFORE(9,1),SIG_DRY_MAX(52)},
 // different string on cams newer than sx280
 {sig_match_near_str,"TryPostMessageQueue",      "[CWS]TryPostMessageQueue(%d) Failed\n",SIG_NEAR_BEFORE(9,1)},
 {sig_match_near_str,"TryTakeSemaphore",         "FileScheduleTask",     SIG_NEAR_AFTER(10,2),SIG_DRY_MAX(58)},
