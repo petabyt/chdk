@@ -1053,7 +1053,7 @@ void shooting_update_dof_values()
   int fl = get_focal_length(zoom_point);
   short f_focus_ok = shooting_get_focus_ok();
   short f_hyp_calc = 0, f_dist_calc = 0;
-  short min_av96_zoom_point = min_av96_zoom_point_tbl[zoom_point];
+  short min_av96_zoom_point = 0;
   short av96 = shooting_get_user_av96();
   short curr_av96 = shooting_get_current_av96();
   short prop_av96 = shooting_get_av96();
@@ -1063,7 +1063,9 @@ void shooting_update_dof_values()
     min_av96_zoom_point_tbl = (short *) malloc(zoom_points * sizeof(short));
     if (min_av96_zoom_point_tbl) {
       memset(min_av96_zoom_point_tbl, 0, zoom_points * sizeof(short));
-      min_av96_zoom_point = 0;
+    }
+    else {
+        return;
     }
   } else min_av96_zoom_point = min_av96_zoom_point_tbl[zoom_point]; 
 
