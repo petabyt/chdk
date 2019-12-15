@@ -4096,60 +4096,9 @@ int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_named_last: immediate return %s\n",rule->name);
         return 0;
     }
-    int push_found=0;
-    uint32_t last_adr=0;
-    int count;
-    for(count=0; count < max; count++) {
-        if(!disasm_iter(fw,is)) {
-            printf("sig_match_named_last: disasm failed %s 0x%"PRIx64"\n",rule->name,is->adr);
-            return 0;
-        }
-        if(isPUSH_LR(is->insn)) {
-            // already found a PUSH LR, probably in new function
-            if(push_found) {
-                return 0;
-            }
-            push_found=1;
-            continue;
-        }
-        // ignore everything before push (could be some mov/ldr, shoudln't be any calls)
-        if(!push_found) {
-            continue;
-        }
-        // found a potential call, store
-        if(insn_match_any(is->insn,match_bl_blximm) && count >= min) {
-            last_adr=get_branch_call_insn_target(fw,is);
-            continue;
-        }
-        // found pop PC, can only be stored call if present
-        if(isPOP_PC(is->insn)) {
-            if(last_adr) {
-                return save_sig_with_j(fw,rule->name,last_adr);
-            }
-            // no call found, or not found within min
-            return 0;
-        }
-        // found pop LR, check if next is unconditional B
-        if(isPOP_LR(is->insn)) {
-            // hit func end with less than min, no match
-            if(count < min) {
-                printf("sig_match_named_last: pop before min %s 0x%"PRIx64"\n",rule->name,is->adr);
-                return 0;
-            }
-            if(!disasm_iter(fw,is)) {
-                printf("sig_match_named_last: disasm failed %s 0x%"PRIx64"\n",rule->name,is->adr);
-                return 0;
-            }
-            if(is->insn->id == ARM_INS_B && is->insn->detail->arm.cc == ARM_CC_AL) {
-                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-            }
-            // doen't go more than one insn after pop (could be more, but uncommon)
-            return 0;
-        }
-        // found another kind of ret, give up
-        if(isRETx(is->insn)) {
-            return 0;
-        }
+    uint32_t fadr = find_last_call_from_func(fw,is,min,max);
+    if(fadr) {
+        return save_sig_with_j(fw,rule->name,fadr);
     }
     return 0;
 }

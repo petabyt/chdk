@@ -518,6 +518,14 @@ typedef struct {
 } simple_func_desc_t;
 int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_desc_t *info);
 
+/*
+advance is trying to find the last function called by a function
+function assumed to push lr, pop lr or pc (many small functions don't!)
+either the last bl/blximmg before pop {... pc}
+or b after pop {... lr}
+after min_insns up to max_insns
+*/
+uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, int max_insns);
 
 // ****** utilities for matching instructions and instruction sequences ******
 
