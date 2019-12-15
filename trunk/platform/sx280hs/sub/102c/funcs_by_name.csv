@@ -389,6 +389,7 @@
 0xfc28fec7,Fwrite_Fut_FW
 0xfc10ac11,get_canon_mode_list
 0xfc288823,get_current_exp
+0xfc32bebf,get_dial_hw_position
 0xfc2a464d,get_fstype
 0xfc279407,get_playrec_mode
 0xfc0c33c7,GetAdChValue

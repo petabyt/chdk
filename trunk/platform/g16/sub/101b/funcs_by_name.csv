@@ -399,6 +399,7 @@
 0xfc124511,get_canon_mode_list
 0xfc2cffeb,get_current_exp
 0xfc38ac59,get_current_nd_value
+0xfc42faf7,get_dial_hw_position
 0xfc308e03,get_fstype
 0xfc38ac7d,get_nd_value
 0xfc2ba40b,get_playrec_mode

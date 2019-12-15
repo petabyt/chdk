@@ -1284,6 +1284,7 @@
 0xfc31f357,task_FORMAT_TASK_NAME
 0xfc327ca1,task_FilYuvMaker
 0xfc32850b,task_DecJpgRd
+0xfc32be43,get_dial_hw_position
 0xfc32c497,GetFocusLensCurrentPosition_FW
 0xfc32c49b,GetFocusLensCurrentPositionWithMotor_FW
 0xfc32c49f,GetFocusLensDriveVoltage_FW

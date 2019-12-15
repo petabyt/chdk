@@ -1806,6 +1806,7 @@
 0xfc435d05,EFLensCom.LensFirmUpdate_FW
 0xfc4361b5,EFLensTool.Create_FW
 0xfc4361c1,EFLensEEPROM.Create_FW
+0xfc4365dd,get_dial_hw_position
 0xfc436b51,task_MechaAlarm
 0xfc437a95,task_MechaShutter
 0xfc438a69,IsUnitFirmMode_FW

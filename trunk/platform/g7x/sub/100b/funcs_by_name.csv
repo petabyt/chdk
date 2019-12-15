@@ -450,6 +450,7 @@
 0xfc118651,get_canon_mode_list
 0xfc321acb,get_current_exp
 0xfc3cf6fb,get_current_nd_value
+0xfc491e95,get_dial_hw_position
 0xfc35769d,get_fstype
 0xfc3cf71f,get_nd_value
 0xfc2f77f7,get_playrec_mode

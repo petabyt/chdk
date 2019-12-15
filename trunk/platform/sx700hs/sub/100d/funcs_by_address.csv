@@ -1286,6 +1286,7 @@
 0xfc356cb3,task_SetGeoTagExecution
 0xfc35fd8f,task_FilYuvMaker
 0xfc3605fb,task_DecJpgRd
+0xfc364d11,get_dial_hw_position
 0xfc3654e1,SetPMByGpio_FW
 0xfc3654eb,ClearPMByGpio_FW
 0xfc3654f9,ClearPMByFs_FW

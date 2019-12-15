@@ -321,6 +321,7 @@ NHSTUB(SetEventFlag                           ,0x010c5599) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc15a093) //  0
 NHSTUB(bzero                                  ,0x010d8498) //  0
 NHSTUB(memset32                               ,0x010d849c) //  0
+//NHSTUB(get_dial_hw_position                 ,0xfc42faf7) //  0            == 0xfc42faf7
 NHSTUB(PT_MFOn                                ,0xfc255d15) //  0
 NHSTUB(PT_MFOff                               ,0xfc255d49) //  0
 NHSTUB(GetAdChValue                           ,0xfc0e95b7) //  0

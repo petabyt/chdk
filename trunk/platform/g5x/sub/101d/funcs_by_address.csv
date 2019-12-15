@@ -831,6 +831,7 @@
 0xfc282f27,j_closedir
 0xfc283657,task_FilYuvMaker
 0xfc283ec3,task_DecJpgRd
+0xfc286679,get_dial_hw_position
 0xfc286bc1,task_MechaAlarm
 0xfc28a415,task_SAlbumPlay
 0xfc28b329,task_AlbumReader

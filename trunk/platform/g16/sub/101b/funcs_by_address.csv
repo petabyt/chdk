@@ -1872,6 +1872,7 @@
 0xfc427b49,ChangeAdjImgDrvMode_FW
 0xfc427b69,ChangeAEIntegDrvTypeToAdjImgDriveType_FW
 0xfc4285e1,task_MetaCtgPrsTask
+0xfc42faf7,get_dial_hw_position
 0xfc430e79,task_Cave2RecTask
 0xfc4626e5,zicokick_start
 0xfc462759,zicokick_copy

@@ -979,6 +979,7 @@
 0xfc1c06b7,GetMicSoundLevelForFATest_FW
 0xfc1c116d,task_FORMAT_TASK_PROGRESS
 0xfc1c13ad,task_FORMAT_TASK_NAME
+0xfc1c19bd,get_dial_hw_position
 0xfc1c1ba1,task_MechaAlarm
 0xfc1edf5d,memShow_FW
 0xfc1ee46f,open
