@@ -1609,6 +1609,74 @@ int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_d
     return found;
 }
 
+/*
+advance is trying to find the last function called by a function
+function assumed to push lr, pop lr or pc (many small functions don't!)
+either the last bl/blximmg before pop {... pc}
+or b after pop {... lr}
+after min_insns up to max_insns
+*/
+uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, int max_insns)
+{
+    int push_found=0;
+    uint32_t last_adr=0;
+    int count;
+    for(count=0; count < max_insns; count++) {
+        if(!disasm_iter(fw,is)) {
+            fprintf(stderr,"find_last_call_from_func: disasm failed 0x%"PRIx64"\n",is->adr);
+            return 0;
+        }
+        // TODO could match push regs with pop
+        if(isPUSH_LR(is->insn)) {
+            // already found a PUSH LR, probably in new function
+            if(push_found) {
+                return 0;
+            }
+            push_found=1;
+            continue;
+        }
+        // ignore everything before push (could be some mov/ldr, shoudln't be any calls)
+        if(!push_found) {
+            continue;
+        }
+        // found a potential call, store
+        if(insn_match_any(is->insn,match_bl_blximm) && count >= min_insns) {
+            last_adr=get_branch_call_insn_target(fw,is);
+            continue;
+        }
+        // found pop PC, can only be stored call if present
+        if(isPOP_PC(is->insn)) {
+            if(last_adr) {
+                return last_adr;
+            }
+            // no call found, or not found within min
+            return 0;
+        }
+        // found pop LR, check if next is unconditional B
+        if(isPOP_LR(is->insn)) {
+            // hit func end with less than min, no match
+            if(count < min_insns) {
+                //printf("find_last_call_from_func: pop before min 0x%"PRIx64"\n",rule->name,is->adr);
+                return 0;
+            }
+            if(!disasm_iter(fw,is)) {
+                fprintf(stderr,"find_last_call_from_func: disasm failed 0x%"PRIx64"\n",is->adr);
+                return 0;
+            }
+            if(is->insn->id == ARM_INS_B && is->insn->detail->arm.cc == ARM_CC_AL) {
+                return get_branch_call_insn_target(fw,is);
+            }
+            // doen't go more than one insn after pop (could be more, but uncommon)
+            return 0;
+        }
+        // found another kind of ret, give up
+        if(isRETx(is->insn)) {
+            return 0;
+        }
+    }
+    return 0;
+}
+
 // ****** utilities for matching instructions and instruction sequences ******
 
 // some common matches for insn_match_find_next
