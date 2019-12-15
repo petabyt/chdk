@@ -147,6 +147,7 @@ DEF(imager_active                     ,0x00008664) // (0x8660+0x4) Found @0xfc13
 DEF(_nrflag                           ,0x0001fa4c) // (0x1fa48+0x4) Found @0xfc383b70
 //DEF(av_override_semaphore             ,0x0002708c),          stubs_min = 0x0002708c (0x0002708c)
 DEF(active_bitmap_buffer              ,0x0000ca38) // (0xca04+0x34) Found @0xfc362058
+//DEF(bitmap_buffer                     ,0x0000ca3c),          stubs_min = 0x0000ca3c (0xca3c)
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc0af556
 DEF(exmem_alloc_table                 ,0x00040020) // Found @0xfc079882
 DEF(exmem_types_table                 ,0xfcd3dce4) // Found @0xfc079886
