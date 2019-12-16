@@ -30,7 +30,6 @@ NHSTUB(CancelHPTimer                          ,0xFC165D89)
 NHSTUB(VTMLock                                ,0xfc3be3e7)
 NHSTUB(VTMUnlock                              ,0xfc3be60f)
 
-NHSTUB(get_dial_hw_position                   ,0xfc286679)
 NHSTUB(GetActiveViewportBuffer                ,0xfc108e67)
 
 NHSTUB(displayblankscreen,                     0xFC35330F)
