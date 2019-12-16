@@ -49,7 +49,7 @@
 //#define ANALOG_AV_IDX       1
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
-// WARNING: Values only verified on sx280hs (R52) and g7x (R55p6) errors likely on other cams!
+// WARNING: Key name / function may vary! Values for unknown DryOS versions should not be trusted!
 //KeyMap keymap[] = {
 //    { 0, KEY_SHOOT_FULL      ,0x00040001 }, // Found @0xfc613700, levent 0x01
 //    { 0, KEY_SHOOT_HALF      ,0x00040000 }, // Found @0xfc613778, levent 0x00
@@ -64,6 +64,7 @@
 //    { 0, KEY_LEFT            ,0x00000100 }, // Found @0xfc613740, levent 0x08
 //    { 0, KEY_SET             ,0x00000200 }, // Found @0xfc613748, levent 0x0a
 //    { 0, KEY_PLAYBACK        ,0x00000800 }, // Found @0xfc613758, levent 0x101
+//    { 0, KEY_WIFI            ,0x00010000 }, // Found @0xfc613768, levent 0x103
 //    { 0, KEY_POWER           ,0x00020000 }, // Found @0xfc613770, levent 0x100
 //    { 0, 0, 0 }
 //};

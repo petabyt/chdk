@@ -52,7 +52,7 @@
 //#define HOTSHOE_IDX         2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
-// WARNING: Values only verified on sx280hs (R52) and g7x (R55p6) errors likely on other cams!
+// WARNING: Key name / function may vary! Values for unknown DryOS versions should not be trusted!
 //KeyMap keymap[] = {
 //    { 0, KEY_POWER           ,0x00000001 }, // Found @0xfc5f99f8, levent 0x100 (uses inverted logic in physw_status)
 //    { 0, KEY_PLAYBACK        ,0x00000002 }, // Found @0xfc5f9a00, levent 0x101 (uses inverted logic in physw_status)
@@ -66,7 +66,7 @@
 //    { 1, KEY_RIGHT           ,0x00000080 }, // Found @0xfc5f9a88, levent 0x09
 //    { 1, KEY_LEFT            ,0x00000100 }, // Found @0xfc5f9a90, levent 0x08
 //    { 1, KEY_SET             ,0x00000200 }, // Found @0xfc5f9a98, levent 0x0a
-//    { 1, KEY_HELP            ,0x00000400 }, // Found @0xfc5f9aa0, levent 0x0d
+//    { 1, KEY_DISPLAY         ,0x00000400 }, // Found @0xfc5f9aa0, levent 0x0d
 //    { 0, 0, 0 }
 //};
 
