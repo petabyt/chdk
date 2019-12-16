@@ -144,12 +144,12 @@ DEF(jpeg_count_str                    ,0x0016a9c0) // Found @0xfc1303e8
 DEF(zoom_busy                         ,0x00014c94) // (0x14c74+0x20) Found @0xfc1caa36
 DEF(focus_busy                        ,0x00014a3c) // (0x14a34+0x8) Found @0xfc3b9378
 DEF(imager_active                     ,0x00008648) // (0x8644+0x4) Found @0xfc44fd10
-//DEF(canon_menu_active                 ,0x0000d180),          stubs_min = 0x0000d180 (0x0000D180)
-//DEF(file_counter_var                  ,0x000146ec),          stubs_min = 0x000146ec (0x000146EC)
+DEF(canon_menu_active                 ,0x0000d180) // (0xd17c+0x4) Found @0xfc364422
+DEF(file_counter_var                  ,0x000146ec) // Found @0xfc111e68
 DEF(_nrflag                           ,0x000223b4) // (0x223b0+0x4) Found @0xfc0b2364
 DEF(av_override_semaphore             ,0x00027134) // Found @0xfc660968
 DEF(active_bitmap_buffer              ,0x0000d13c) // (0xd0f4+0x48) Found @0xfc3bed32
-//DEF(bitmap_buffer                     ,0x0000d140),          stubs_min = 0x0000d140 (0xd140)
+DEF(bitmap_buffer                     ,0x0000d140) // (0xd0f4+0x4c) Found @0xfc3bed38
 DEF_CONST(uiprop_count                      ,0x000000d7) // Found @0xfc2a63d6
 DEF(exmem_alloc_table                 ,0x00047438) // Found @0xfc0a3386
 DEF(exmem_types_table                 ,0xfceb1070) // Found @0xfc0a338a
@@ -322,7 +322,7 @@ NHSTUB(SetEventFlag                           ,0xbfe14df7) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc3be18d) //  0
 NHSTUB(bzero                                  ,0x010f4cd8) //  0
 NHSTUB(memset32                               ,0x010f4cdc) //  0
-//NHSTUB(get_dial_hw_position                 ,0xfc286651) //  0            == 0xfc286651
+NHSTUB(get_dial_hw_position                   ,0xfc286651) //  0
 NHSTUB(PT_MFOn                                ,0xfc2d4a45) //  0
 NHSTUB(PT_MFOff                               ,0xfc2d4a79) //  0
 NHSTUB(GetAdChValue                           ,0xfc15c443) //  0
