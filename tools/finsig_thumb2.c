@@ -5513,10 +5513,9 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
     add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
     
     add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
-    add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0); // unverified
+    add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
 
-    // TODO mostly copied from finsig_dryos, with < r52 stuff removed
-    // unverified for others
+    // mostly copied from finsig_dryos, with < r52 stuff removed
     if (fw->dryos_ver == 52)  // unclear if this applies any other ver
     {
         add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
@@ -5531,6 +5530,7 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
         add_kmval(fw,tadr,tsiz,tlen,0x12,"KEY_HELP",0);
         add_kmval(fw,tadr,tsiz,tlen,0x19,"KEY_ERASE",0);
         add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+//        add_kmval(fw,tadr,tsiz,tlen,18,"KEY_SHORTCUT",0);
     }
     else if (fw->dryos_ver < 54)
     {
@@ -5555,10 +5555,12 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
         add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
         add_kmval(fw,tadr,tsiz,tlen,0xE,"KEY_MENU",0);
         add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
-        add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
-        //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_DISPLAY",0);
+        add_kmval(fw,tadr,tsiz,tlen,0x103,"KEY_WIFI",0);
+// framing assist / shortuct
+//        add_kmval(fw,tadr,tsiz,tlen,0xF,"KEY_",0);
     }
-    else
+    else if (fw->dryos_ver < 59)
     {
         add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
         add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
@@ -5569,12 +5571,28 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
         add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
         add_kmval(fw,tadr,tsiz,tlen,0x14,"KEY_MENU",0);
         add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
-        add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_HELP",0);
-        //add_kmval(fw,tadr,tsiz,tlen,?,"KEY_DISPLAY",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xD,"KEY_DISPLAY",0);
+        add_kmval(fw,tadr,tsiz,tlen,0x103,"KEY_WIFI",0);
+// framing assist, shortcut
+//        add_kmval(fw,tadr,tsiz,tlen,0xF,"KEY_",0);
+    }
+    else
+    {
+        add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
+        add_kmval(fw,tadr,tsiz,tlen,4,"KEY_ZOOM_OUT",0);
+        add_kmval(fw,tadr,tsiz,tlen,6,"KEY_UP",0);
+        add_kmval(fw,tadr,tsiz,tlen,7,"KEY_DOWN",0);
+        add_kmval(fw,tadr,tsiz,tlen,8,"KEY_LEFT",0);
+        add_kmval(fw,tadr,tsiz,tlen,9,"KEY_RIGHT",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xA,"KEY_SET",0);
+        add_kmval(fw,tadr,tsiz,tlen,0x15,"KEY_MENU",0);
+        add_kmval(fw,tadr,tsiz,tlen,2,"KEY_VIDEO",0);
+        add_kmval(fw,tadr,tsiz,tlen,0xB,"KEY_ERASE",0); // also framing assist etc
+        add_kmval(fw,tadr,tsiz,tlen,0x103,"KEY_WIFI",0);
     }
 
     bprintf("\n// Keymap values for kbd.c. Additional keys may be present, only common values included here.\n");
-    bprintf("// WARNING: Values only verified on sx280hs (R52) and g7x (R55p6) errors likely on other cams!\n");
+    bprintf("// WARNING: Key name / function may vary! Values for unknown DryOS versions should not be trusted!\n");
     print_kmvals();
 }
 void output_physw_vals(firmware *fw) {
