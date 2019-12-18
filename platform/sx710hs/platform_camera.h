@@ -77,7 +77,7 @@
 // default
 //    #define CAM_CIRCLE_OF_CONFUSION             5  // CoC value for camera/sensor (see http://www.dofmaster.com/digital_coc.html)
 
-    #define CAM_DNG_LENS_INFO                   { 45,10,7500,10,32,10,69,10 }
+    #define CAM_DNG_LENS_INFO                   { 45,10,1350,10,32,10,69,10 }
     #define cam_CFAPattern                      0x02010100
 
 // TODO C&P form sx60hs
