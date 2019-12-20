@@ -333,10 +333,14 @@ function hooktest:test_cont()
 	press'shoot_full_only'
 	for i=1,self.burst_shots do
 		self:check_hook_shoot()
+		-- release shoot_full and hook immediately on final shot
+		-- to avoid spurious extra shots
+		if i == self.burst_shots then
+			hook_shoot.set(0)
+			release'shoot_full'
+		end
 		self:check_hook_raw()
 	end
-	release'shoot_full'
-	hook_shoot.set(0)
 	hook_raw.set(0)
 end
 
