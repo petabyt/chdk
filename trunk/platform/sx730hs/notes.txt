@@ -1,0 +1,77 @@
+************************************
+SX730 HS notes
+************************************
+This is a lightly tested PREALPHA port. CHDK is a hack, use at your own risk!
+
+Report bugs in the porting thread:
+https://chdk.setepontos.com/index.php?topic=13573.10
+
+
+General camera and CHDK port information
+****************************************
+Default alt button is PLAY. VIDEO and WIFI may also be used. Long press to
+access the original function of the assigned alt button.
+
+SX730 has an adjustable aperture and does not have an ND filter.
+
+SX730 automatically powers on when connected to a USB host. It enters charging
+mode when connected to a USB charger. CHDK does not appear to interfere with
+these functions, but it has not been tested extensively. Beware that applying
+USB power with the CHDK USB remote enabled could cause the camera to power on
+and extend the lens.
+
+The framing assist key is assigned to ERASE for CHDK functionality and script.
+
+The half press shortcut for zebra toggle is MENU
+
+The half press shortcut for histogram toggle is disabled, due to limited keys.
+
+Subject distance (focus) override is supported in AFLock and MF, not in AF.
+
+~800 KB of free RAM is available. This should be enough for normal operation.
+
+set_led id 0 controls the green indicator LED, 1 controls the AF assist LED.
+Control of the orange charge indicator is not currently available.
+
+TESTED
+******
+- PTP operation, including live view
+- Shutter, aperture and ISO override
+- Focus override. MF or AF lock is required 
+- Bracketing in continuous mode
+- llibtst.lua (see known bugs)
+- hooktest.lua (see known bugs)
+- ISO base, real/market conversion
+- Propset values
+- Fast MD - MD_Tune.bas response times  40-70ms
+- USB remote (see known bugs)
+- "Firm update" boot
+- Dark frame subtraction control
+
+NOT IMPLEMENTED
+***************
+- Jpeg remote shoot. File write task does not exist in this firmware.
+- Video controls (movie_rec task)
+- Reboot with firmware update file
+- Script hard shutdown (shut_down(1))
+- Changing UI resolution for HDMI out
+- exp_drv task. Shutter speeds shorter than 1/3200 likely do not work.
+  Long exposures up to 1024s likely work, but have not been tested.
+
+OTHER ISSUES
+************
+- Display updating is ugly / has usual Digic 6 limitations
+  - Flashes a lot if the Canon firmware is updating the display
+  - Edge overlay does not erase properly when shown live
+  - Zebra "Draw Over Zebra" and Restore options are non-functional
+  - Some games don't draw correctly
+- DNG color matrix is incorrect (copied from sx60hs) but usable
+
+KNOWN BUGS
+**********
+- USB remote may shoot multiple shots in continuous mode
+- Timestamps on files created before a shot is taken may be 1/1/2000
+  This causes a failure in llibtst.lua
+- Script using shoot hooks in continuous mode (such as hooktest.lua) may trigger
+  a HardwareDefect error 14. This appears to be avoided if the shoot key is
+  released immediately after hook_shoot becomes ready for the final shot.

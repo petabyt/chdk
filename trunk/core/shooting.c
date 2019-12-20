@@ -128,7 +128,7 @@ int shooting_get_digital_zoom_mode(void)
 // state: 0 = off or digital tele, 1 = standard
 int shooting_get_digital_zoom_state(void)
 {
-#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10 || CAM_PROPSET == 11
+#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10 || CAM_PROPSET == 11 || CAM_PROPSET == 12
     // PS7 doesn't have _STATE, combines values
     int x=shooting_get_prop(PROPCASE_DIGITAL_ZOOM_MODE);
     if(x==1) {
