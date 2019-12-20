@@ -810,6 +810,11 @@ void __attribute__((naked,noinline)) sub_fc24454a_my() {
 "    ldr     r1, =0xfc24494c\n" //  *"SsStandardCaptureSeq.c"
 "    bl      _DebugAssert\n"
 "loc_fc24462c:\n"
+// later than this point crashes with a HardwareDefect 14
+"    BL      wait_until_remote_button_is_released\n" // + remote hook, might be able to go later
+#ifdef CAPTSEQ_DEBUG_LOG
+"bl log_remote_hook\n"
+#endif
 "    ldrh    r0, [r4, #0x18]\n"
 "    cbnz    r0, loc_fc24463a\n"
 "    ldr     r1, [r4, #0x60]\n"
@@ -842,11 +847,7 @@ void __attribute__((naked,noinline)) sub_fc24454a_my() {
 "    mov     r0, r4\n"
 "    bl      sub_fc244a0a\n"
 "    mov     r6, r0\n"
-// remote hook
-"    BL      wait_until_remote_button_is_released\n" // + remote hook, might be able to go later
-#ifdef CAPTSEQ_DEBUG_LOG
-"bl log_remote_hook\n"
-#endif
+// this was the remote hook location on sx710, but crashes sx730
 "    ldr     r0, [sp, #8]\n"
 "    ubfx    r0, r0, #8, #8\n"
 "    ldr     r0, [sp, #0xc]\n"

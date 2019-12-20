@@ -72,6 +72,3 @@ KNOWN BUGS
 - USB remote may shoot multiple shots in continuous mode
 - Timestamps on files created before a shot is taken may be 1/1/2000
   This causes a failure in llibtst.lua
-- Script using shoot hooks in continuous mode (such as hooktest.lua) may trigger
-  a HardwareDefect error 14. This appears to be avoided if the shoot key is
-  released immediately after hook_shoot becomes ready for the final shot.
