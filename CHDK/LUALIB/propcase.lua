@@ -1,4 +1,4 @@
---[[ 
+--[[
 This module loads a table which maps camera property case names to 
 their respective numbers. It also takes care to load the correct property 
 case set for the camera.
@@ -30,6 +30,8 @@ elseif get_propset()==10 then
   return require("gen/propset10")
 elseif get_propset()==11 then
   return require("gen/propset11")
+elseif get_propset()==12 then
+  return require("gen/propset12")
 else
   error('Unsupported propset ' .. get_propset(), 1)
 end

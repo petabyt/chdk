@@ -74,7 +74,7 @@ int task_id_list_get(int *idlist,int size)
 long get_property_case(long id, void *buf, long bufsize)
 {
 // workaround for missing PROPCASE_SHOOTING
-#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10 || CAM_PROPSET == 11
+#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10 || CAM_PROPSET == 11 || CAM_PROPSET == 12
     if(id==PROPCASE_SHOOTING) {
         int r=_GetPropertyCase(PROPCASE_SHOOTING_STATE, buf, bufsize);
         // 1 50ms after half press, 2 after exp hook, 3 while shooting
