@@ -20,6 +20,16 @@ these functions, but it has not been tested extensively. Beware that applying
 USB power with the CHDK USB remote enabled could cause the camera to power on
 and extend the lens.
 
+When connected to a USB host, the camera only charges over USB after the 
+GetObjectHandles opcode has been received. This opcode would normally be sent by
+standard photo software to list images on the camera. On systems configured
+for use with chdkptp, this opcode will not normally be sent, so the camera 
+will not charge unless it is sent manually, for example using using gphoto to
+list images or !con:ptp_get_object_handles() in chdkptp.
+After GetObjectHandles is received, the camera display will turn off and the
+camera will not be able to switch to shooting mode until disconnected or
+rebooted.
+
 The framing assist key is assigned to ERASE for CHDK functionality and script.
 
 The half press shortcut for zebra toggle is MENU
@@ -47,6 +57,7 @@ TESTED
 - USB remote (see known bugs)
 - "Firm update" boot
 - Dark frame subtraction control
+- Raw / DNG. Not all modes tested, works in P, M, Tv, Av at least
 
 NOT IMPLEMENTED
 ***************
@@ -55,8 +66,6 @@ NOT IMPLEMENTED
 - Reboot with firmware update file
 - Script hard shutdown (shut_down(1))
 - Changing UI resolution for HDMI out
-- exp_drv task. Shutter speeds shorter than 1/3200 likely do not work.
-  Long exposures up to 1024s likely work, but have not been tested.
 
 OTHER ISSUES
 ************
@@ -69,6 +78,8 @@ OTHER ISSUES
 
 KNOWN BUGS
 **********
-- USB remote may shoot multiple shots in continuous mode
-- Timestamps on files created before a shot is taken may be 1/1/2000
-  This causes a failure in llibtst.lua
+- USB remote may shoot multiple shots in continuous mode (this is a general
+  CHDK issue)
+- Timestamps on files created before a shot is taken may be 1/1/2000 
+  This causes a failure in llibtst.lua (this is a general CHDK issue)
+

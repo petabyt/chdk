@@ -175,7 +175,7 @@ void __attribute__((naked,noinline)) CreateTask_low_my() {
 asm volatile (
 // CreateTask_low has entry point in r0, use r1 
 "    push   {r1}\n"
-//R3 = Pointer to task function to create
+//R0 = Pointer to task function to create
 "    ldr     r1, =task_CaptSeq\n"       // DryOS original code function ptr.
 "    cmp     r1, r0\n"                  // is the given taskptr equal to our searched function?
 "    itt     eq\n"                      // EQ block
@@ -190,16 +190,13 @@ asm volatile (
 "    orreq   r0, #1\n"
 "    BEQ     exitHook\n"
 
-// TODO exp_drv not needed for extended exposure, probably works up to 1024s, but likely required for < 1/3200
-/*
+// exp_drv probably not needed for extended exposure, probably works up to 1024s, but required for < 1/3200
 "    LDR     R1, =task_ExpDrv\n"
 "    CMP     R1, R0\n"
 "    itt     eq\n"
 "    LDREQ   R0, =exp_drv_task\n"
 "    orreq   r0, #1\n"
 "    BEQ     exitHook\n"
-*/
-
 
 // note FileWrite does not exist on sx730
 
