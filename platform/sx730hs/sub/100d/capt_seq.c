@@ -666,7 +666,6 @@ void __attribute__((naked,noinline)) sub_fc18df7e_my() {
 "    bl      sub_fc18e8be\n"
 "    mov     r1, r7\n"
 "    bl      sub_fc369bea\n" // ClearEventFlag
-"loc_fc18e0f4:\n"
 "    ldr     r2, =0xfc18df6d\n"
 "    mov     r3, r7\n"
 "    ldr     r0, [sp, #4]\n"
@@ -848,8 +847,6 @@ void __attribute__((naked,noinline)) sub_fc24454a_my() {
 "    bl      sub_fc244a0a\n"
 "    mov     r6, r0\n"
 // this was the remote hook location on sx710, but crashes sx730
-"    ldr     r0, [sp, #8]\n"
-"    ubfx    r0, r0, #8, #8\n"
 "    ldr     r0, [sp, #0xc]\n"
 "    ubfx    r0, r0, #8, #8\n"
 "    cmp     r0, #6\n"
