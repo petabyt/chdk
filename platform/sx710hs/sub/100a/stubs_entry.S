@@ -140,16 +140,20 @@ DEF(jpeg_count_str                    ,0x00158f7c) // Found @0xfc0c6a66
 DEF(zoom_busy                         ,0x0000b840) // (0xb820+0x20) Found @0xfc0d8486
 DEF(focus_busy                        ,0x000136e0) // (0x136d8+0x8) Found @0xfc327206
 DEF(imager_active                     ,0x0000860c) // (0x8608+0x4) Found @0xfc120434
-//DEF(canon_menu_active                 ,0x0000c694),          stubs_min = 0x0000c694 (0x0000c690+0x4)
-//DEF(file_counter_var                  ,0x00013398),          stubs_min = 0x00013398 (0x00013398)
+DEF(canon_menu_active                 ,0x0000c694) // (0xc690+0x4) Found @0xfc2d1e82
+DEF(file_counter_var                  ,0x00013398) // Found @0xfc16e6ac
 DEF(_nrflag                           ,0x0001c49c) // (0x1c498+0x4) Found @0xfc0adaa0
-//DEF(av_override_semaphore             ,0x00020bdc),          stubs_min = 0x00020bdc (0x00020bdc)
+DEF(av_override_semaphore             ,0x00020bdc) // Found @0xfc540600
 DEF(active_bitmap_buffer              ,0x0000c65c) // (0xc62c+0x30) Found @0xfc30a2f2
-//DEF(bitmap_buffer                     ,0x0000c668),          stubs_min = 0x0000c668 (0xc62c+0x3c)
+DEF(bitmap_buffer                     ,0x0000c668) // (0xc62c+0x3c) Found @0xfc30a2f8
 DEF_CONST(uiprop_count                      ,0x000000ce) // Found @0xfc0666a0
 DEF(exmem_alloc_table                 ,0x0003a3ac) // Found @0xfc08e6f2
 DEF(exmem_types_table                 ,0xfcd22214) // Found @0xfc08e6f6
 DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcd22214
+// focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
+// each entry contains 2 int value(s), the first is the zoom focus length.
+// there are 112 entries in the table - set NUM_FL to 112
+DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc326b09
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc326b31
@@ -309,7 +313,7 @@ NHSTUB(SetEventFlag                           ,0xbfe14e4f) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc309889) //  0
 NHSTUB(bzero                                  ,0x01100b48) //  0
 NHSTUB(memset32                               ,0x01100b4c) //  0
-//NHSTUB(get_dial_hw_position                 ,0xfc110d61) //  0            == 0xfc110d61
+NHSTUB(get_dial_hw_position                   ,0xfc110d61) //  0
 NHSTUB(PT_MFOn                                ,0xfc2691b9) //  0
 NHSTUB(PT_MFOff                               ,0xfc2691e9) //  0
 NHSTUB(GetAdChValue                           ,0xfc122bcf) //  0

@@ -10,7 +10,6 @@ PLATFORMOSVER=57
 # start of firmware
 ROMBASEADDR=0xFC000000
 
-# TODO guess
 MAXRAMADDR = 0x1fffffff
 
 NEED_ENCODED_DISKBOOT=13
@@ -32,5 +31,3 @@ ARAM_HEAP_SIZE = 0x00022000 #  Found @0xfc4ad1ba
 # Force ARAM on, but don't load CHDK in ARAM, because size is marginal for core
 override OPT_ARAM_MALLOC=1
 override OPT_CHDK_IN_ARAM=
-
-override OPT_FI2=
