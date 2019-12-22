@@ -11,6 +11,7 @@ extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_TricInitTask();
 
 extern void handle_jogdial();
 
@@ -211,6 +212,13 @@ asm volatile (
 "    LDREQ   R3, =movie_record_task\n"
 "    BEQ     exitHook\n"
 */
+
+"    ldr     r0, =task_TricInitTask\n"
+"    cmp     r0, r3\n"
+"    itt     eq\n"
+"    ldreq   r3, =TricInitTask_my\n"
+"    orreq   r3, #1\n"
+"    beq     exitHook\n"
 
 "    ldr     r0, =task_InitFileModules\n"
 "    cmp     r0, r3\n"
@@ -560,24 +568,77 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
     );
 }
 /*
-    *** TEMPORARY? workaround ***
+    *** workaround ***
     Init stuff to avoid asserts on cameras running DryOS r54+
     https://chdk.setepontos.com/index.php?topic=12516.0
     Execute this only once
  */
 void init_required_fw_features(void) {
     extern void _init_focus_eventflag();
-    extern void _init_nd_eventflag();
-//    extern void _init_nd_semaphore();
-    //extern void _init_zoom_semaphore(); // for MoveZoomLensWithPoint
 
     _init_focus_eventflag();
-    _init_nd_eventflag();
     // for MoveIrisWithAv, based on fc540574 from Mecha.Create (but without registering eventprocs)
     extern int av_override_semaphore;
     extern int _CreateBinarySemaphoreStrictly(int x, int y);
     av_override_semaphore = _CreateBinarySemaphoreStrictly(0,0);
-//    _init_nd_semaphore();
+}
+
+// fix for FI2 boot, see https://chdk.setepontos.com/index.php?topic=11316.msg136622#msg136622
+// -f=chdk -s=task_TricInitTask -c=36
+void __attribute__((naked,noinline)) TricInitTask_my()
+{
+    asm volatile(
+   // task_TricInitTask 0xfc4417a1
+"    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}\n"
+"    blx     sub_fc2c7d30\n"
+"    movs    r0, #8\n"
+"    ldr     r1, =0xfc4419d0\n" //  *"InitTskStart"
+"    bl      sub_fc315ec6\n"
+"    ldr.w   sl, =0x00020bb0\n"
+"    movw    fp, #0x1000\n"
+"    ldr     r4, =0x00020bac\n"
+"    movs    r2, #0\n"
+"    ldr     r1, =0x0703870f\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc2c7dd0\n" // j_WaitForAnyEventFlag
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc4417da\n"
+"    movs    r0, #8\n"
+"    ldr     r1, =0xfc4419e8\n" //  *"ER IniTskWait"
+"    bl      sub_fc315f26\n"
+"    ldr     r1, =0x00020b98\n"
+"    movs    r0, #0\n"
+"    str     r0, [r1]\n"
+"    pop.w   {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, pc}\n"
+"loc_fc4417da:\n"
+"    ldr     r4, =0x00020bac\n"
+"    add     r1, sp, #0xc\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc2c7ba0\n" // j_GetEventFlagValue
+"    ldr     r1, [sp, #0xc]\n"
+"    ldr     r0, [r4]\n"
+"    blx     sub_fc2c7dc8\n" // j_ClearEventFlag
+"    ldr     r0, =0x02000003\n"
+"    ldr     r7, [sp, #0xc]\n"
+"    tst     r7, r0\n"
+"    beq     sub_fc4418de\n" // loc -> sub
+"    lsls    r0, r7, #0x1f\n"
+"    beq     sub_fc4417fe\n" // loc -> sub
+
+"    ldr     r0, =0xd2020074\n" // + MMIO ref'd from code jumped to at end of fc441c82
+"    ldr     r0, [r0]\n"        // + nonzero when core already running
+"    subs    r0, #0\n"          // +
+"    beq     tric1\n"           // +
+"    ldr     r0, [r4]\n"        // +
+"    mov     r1, #0x80\n"       // +
+"    bl      _SetEventFlag\n"   // + core already initialized, set the SmacIdleCmp eventflag here
+"tric1:\n"                      // +
+
+"    bl      sub_fc441c82\n"
+//"    b       loc_fc44186a\n"
+"    ldr     pc, =0xfc44186b\n" // b to ldr pc, continue in fw
+".ltorg\n"
+    );
 }
 
 #ifdef CAM_HAS_JOGDIAL

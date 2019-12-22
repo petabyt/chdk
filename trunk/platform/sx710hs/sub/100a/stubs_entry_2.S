@@ -19,13 +19,14 @@ NHSTUB(GetDrive_TotalClusters,					0xfc316d4f) // function immediately before Ge
 NHSTUB(LogCameraEvent,							0xfc2f2a07) // debugging, from func csv
 NHSTUB(CancelHPTimer,							0xfc126b7d) // At fc0f20c8, following LcdSequence, TakeSemaphoreStrictly calls similar to g7x fc0cd6b0
 
-NHSTUB(get_dial_hw_position,					0xfc110d61) // kbd_p1_f_cont->fc086ab4->fc08b5cc, 4 for jogdial
+//NHSTUB(get_dial_hw_position,					0xfc110d61) // kbd_p1_f_cont->fc086ab4->fc08b5cc, 4 for jogdial
 NHSTUB(PT_PlaySound,							0xfc3061b9) // via call from fc34f91c to fc3505da, similar to g7x fc41fef8
 
 // required because DryOS >=54 functions assert on unitialized event flag, sem etc 
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,	0xfc54dd23) // InitializeAdjustmentSystem->fc5422f8->fc54dd22 event flag matches MoveFocusLensToDistance
-NHSTUB(init_nd_eventflag,		0xfc54de2d) // InitializeAdjustmentSystem->fc5422f8->fc54de2d event flag matches PutInNdFilter
+// NO nd
+//NHSTUB(init_nd_eventflag,		0xfc54de2d) // InitializeAdjustmentSystem->fc5422f8->fc54de2d event flag matches PutInNdFilter
 NHSTUB(CreateBinarySemaphoreStrictly,           0xbfe1553f) // from csv
 
 // via func fc07b6ba hooked in preshoot case, similar to g7x

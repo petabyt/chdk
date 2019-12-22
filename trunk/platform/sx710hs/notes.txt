@@ -3,17 +3,7 @@ SX710 HS notes
 ************************************
 CHDK is a hack, use at your own risk!
 
-This is an ALPHA port. Some CHDK features have not been tested.
-
-Additionally, Digic 6 has significant differences from previously 
-supported models, which means some features are not fully implemented
-and the risk of unforeseen side effects is higher than ports for
-previous Digic versions.
-
 The VER.REQ method works to obtain the Canon firmware. VERS.REQ does not
-
-No "firmware update" file is included in the autobuild, you must used
-bootable SD card to load. See known bugs below.
 
 
 General camera and CHDK port information
@@ -70,6 +60,3 @@ DNG color matrix is incorrect (copied from sx60hs) but usable
 
 KNOWN BUGS
 **********
-- When booted with FI2 update
- - switching to hybrid auto causes a crash
- Because of this issue, an FI2 file is not included in the autobuild

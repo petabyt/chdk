@@ -1,7 +1,8 @@
 #include "stubs_asm.h"
-DEF(file_counter_var,              0x00013398) // found @fc16e6d4 by searching for "FileBackupProperty.c", similar to g7x 
-DEF(av_override_semaphore         ,0x00020bdc) // Found in MoveIrisWithAv, required for bracketing Created by Mecha.Create in fc540574
-DEF(canon_menu_active             ,0x0000c690+0x4) // found @fc2d1e80, via call to sub_fc2d1e7a, near ref to "MviCon_ClrEvt" @fc2ff642, just after PT_PlaySound call
+// below found by sig finder now
+//DEF(file_counter_var,              0x00013398) // found @fc16e6d4 by searching for "FileBackupProperty.c", similar to g7x 
+//DEF(av_override_semaphore         ,0x00020bdc) // Found in MoveIrisWithAv, required for bracketing Created by Mecha.Create in fc540574
+//DEF(canon_menu_active             ,0x0000c690+0x4) // found @fc2d1e80, via call to sub_fc2d1e7a, near ref to "MviCon_ClrEvt" @fc2ff642, just after PT_PlaySound call
 
 // via fc0d1ce4 (similar g7x fc13b3da), 101a by searching mem near 0x86de for known vp buffer 0x42cafe00
 // Contains viewport address that updates at ~30fps in rec mode, 0 or last rec value in pb
@@ -21,8 +22,8 @@ DEF(recreview_hold                ,0x9090+0x50)
 
 // based on search for 4500 100
 // 112 entries, 2 words each, first is fl
-DEF(focus_len_table                ,0xfdf3167c)
-DEF(bitmap_buffer, 0xc62c+0x3c) // struct starts @ 0xc62c, from sub @0xfc309ccc after "VTM SW", +0x3c @fc309d66
+//DEF(focus_len_table                ,0xfdf3167c)
+//DEF(bitmap_buffer, 0xc62c+0x3c) // struct starts @ 0xc62c, from sub @0xfc309ccc after "VTM SW", +0x3c @fc309d66
 DEF(dial_positions,0x0000fe84) // from sub_fc08b6f6, Jogdial at 0x0000fe84 0x0000fe88
 
 // to hook asserts for debugging
