@@ -304,7 +304,7 @@ void play_sound(unsigned sound)
     if(sound >= sizeof(sounds)/sizeof(sounds[0]))
         return;
 
-    _PT_PlaySound(sounds[sound], 0);
+    _PT_PlaySound(sounds[sound], 0, 0);
 }
 
 long stat_get_vbatt()
