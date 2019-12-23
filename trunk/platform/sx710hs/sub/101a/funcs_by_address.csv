@@ -923,6 +923,7 @@
 0xfc2fff3b,UiEvnt_StartDisguiseCradleStatus_FW
 0xfc2fff43,UiEvnt_StopDisguiseCradleStatus_FW
 0xfc301659,task_CtrlSrv
+0xfc3061c1,PT_PlaySound
 0xfc308c33,UIFS_GetNumberOfDisplayedImage_FW
 0xfc309891,transfer_src_overlay
 0xfc30a249,ScreenLock

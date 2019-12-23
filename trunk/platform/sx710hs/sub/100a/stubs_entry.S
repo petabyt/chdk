@@ -161,7 +161,6 @@ DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc3281b3
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc310b01
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3170dd
-//NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc3061b9
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3268b9
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc317491
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc317449
@@ -223,6 +222,7 @@ NHSTUB(PB2Rec                                 ,0xfc2cfd35) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc26775b) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc4acb3d) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc26765b) //  0
+//NHSTUB(PT_PlaySound                         ,0xfc3061b9) //  0            == 0xfc3061b9
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc2e3d9d) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc2e3dc9) //  0
 NHSTUB(PutInNdFilter                          ,0xfc54ddd5) //  0

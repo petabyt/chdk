@@ -184,6 +184,7 @@ DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xe0fd7a20
 // there are 101 entries in the table - set NUM_FL to 101
 DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 
+//NHSTUB(PT_PlaySound                         ,0xe037e475) //  0        *** != 0x00000000
 //NHSTUB(ScreenLock                           ,0xe03780e3) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
 //NHSTUB(_sqrt                                ,0x00000000) //  0        *** != 0xdffcf241
@@ -256,7 +257,6 @@ NHSTUB(PB2Rec                                 ,0xe035dfcb) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xe02982c3) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xe0552e39) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xe02980f9) //  0
-//NHSTUB(PT_PlaySound                         ,0x00000000) //  0            == 0x00000000
 NHSTUB(PostLogicalEventForNotPowerType        ,0xe037a839) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xe037a86d) //  0
 NHSTUB(PutInNdFilter                          ,0xe059244d) //  0

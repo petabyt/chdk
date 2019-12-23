@@ -31,10 +31,6 @@ NHSTUB(_pow,									0x010f8718) // note ARM
 NHSTUB(captseq_raw_addr_init,					0xfc0f5fd3)
 NHSTUB(apex2us,									0xfc21985b) // Ghidra exact
 
-// TODO below
-NHSTUB(PT_PlaySound,							NULL_SUB) // via call from fc34f924 to fc3505e2, similar to g7x fc41fef8
-
-
 // SX730 NOT found
 NHSTUB(TurnOnBackLight,							NULL_SUB)
 NHSTUB(TurnOffBackLight,						NULL_SUB)

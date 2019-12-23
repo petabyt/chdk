@@ -934,6 +934,7 @@
 0xfc344785,PostMessageQueue
 0xfc344803,TryPostMessageQueue
 0xfc344839,GetNumberOfPostedMessages
+0xfc344951,PT_PlaySound
 0xfc34777d,UIFS_GetNumberOfDisplayedImage_FW
 0xfc3481bd,transfer_src_overlay
 0xfc3484e9,ScreenLock
