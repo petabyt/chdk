@@ -2792,14 +2792,6 @@ int sig_match_undisplaybusyonscreen_52(firmware *fw, iter_state_t *is, sig_rule_
     }
     return 0;
 }
-int sig_match_pt_playsound(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    // function looks different on dry >= 57, may be OK but will need wrapper changes
-    if (fw->dryos_ver >= 57) {
-        return 0;
-    }
-    return sig_match_near_str(fw,is,rule);
-}
 
 int sig_match_try_take_sem_dry_gt_58(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -4511,8 +4503,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1),SIG_DRY_MAX(58)},
 {sig_match_readfastdir_gt58,"ReadFastDir",      "FADumpFileList_FW",    0,SIG_DRY_MIN(59)},
-// this matches using sig_match_near_str, but function for dryos >=57 takes additional param so disabling for those versions
-{sig_match_pt_playsound,"PT_PlaySound",         "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB, SIG_DRY_MAX(56)},
+{sig_match_near_str,"PT_PlaySound",             "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB,SIG_DRY_MAX(58)},
+// for dry 59+ the above match finds function that takes different params on some cameras (d7?)
+{sig_match_near_str,"PT_PlaySound",             "PB._PMenuCBR",         SIG_NEAR_BEFORE(7,3),SIG_DRY_MIN(59)},
 {sig_match_closedir,"closedir",                 "ReadFast_ERROR\n",     SIG_NEAR_AFTER(1,1)},
 {sig_match_strrchr,"strrchr",                   "ReadFast_ERROR\n",     SIG_NEAR_AFTER(9,2)},
 {sig_match_strrchr,"strrchr",                   "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(18,4)},
