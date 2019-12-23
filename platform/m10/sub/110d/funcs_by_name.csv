@@ -1782,6 +1782,7 @@
 0xfc2a6f19,PT_MFOff
 0xfc2a6ee9,PT_MFOn
 0xfc2a563d,PT_MoveDigitalZoomToWide
+0xfc38c91f,PT_PlaySound
 0xfc27dba7,PTM_AllReset_FW
 0xfc3719ab,PTM_AllResetToFactorySetting_FW
 0xfc27e64f,PTM_BackupUIProperty_FW

@@ -161,7 +161,6 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfce679ac
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc38971d
 //NHSTUB(MoveZoomLensWithPoint                ,0xfc4402f5) //  0        *** != 0x00000000
 //NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc18ae45) //  0        *** != 0x00000000
-//NHSTUB(PT_PlaySound                         ,0x00000000) //  0        *** != 0xfc38c953
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc38a10d
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc12790b
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc389b4d
@@ -222,6 +221,7 @@ NHSTUB(Open                                   ,0xfc389835) //  0
 NHSTUB(PB2Rec                                 ,0xfc33ffb1) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2a5671) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc2a5571) //  0
+//NHSTUB(PT_PlaySound                         ,0xfc38c953) //  0            == 0xfc38c953
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3858fd) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc385931) //  0
 NHSTUB(Read                                   ,0xfc1ebe61) //  0
