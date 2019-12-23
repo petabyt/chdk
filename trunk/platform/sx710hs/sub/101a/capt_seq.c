@@ -3,7 +3,7 @@
 #include "core.h"
 
 // debug
-#define CAPTSEQ_DEBUG_LOG 1
+//#define CAPTSEQ_DEBUG_LOG 1
 extern void _LogCameraEvent(int id,const char *fmt,...);
 
 #define USE_STUBS_NRFLAG 1
