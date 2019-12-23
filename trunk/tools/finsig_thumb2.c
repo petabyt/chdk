@@ -4388,7 +4388,6 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "TurnOnDisplay",            "DispCon_TurnOnDisplay_FW",SIG_NAMED_SUB},
 {sig_match_named,   "TurnOffDisplay",           "DispCon_TurnOffDisplay_FW",SIG_NAMED_SUB},
 {sig_match_named,   "TurnOnBackLight",          "DispCon_TurnOnBackLight_FW",SIG_NAMED_SUB, SIG_DRY_MAX(57)},
-{sig_match_named_last,"TurnOnBackLight",        "TurnOnDisplay",SIG_NAMED_LAST_RANGE(2,6),  SIG_DRY_MIN(58)},
 {sig_match_named,   "TurnOffBackLight",         "DispCon_TurnOffBackLight_FW",SIG_NAMED_SUB},
 {sig_match_named,   "UIFS_WriteFirmInfoToFile", "UIFS_WriteFirmInfoToFile_FW",},
 {sig_match_named,   "UnlockAE",                 "SS.UnlockAE_FW",       SIG_NAMED_JMP_SUB},
