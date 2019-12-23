@@ -239,7 +239,7 @@ NHSTUB(SetScriptMode                          ,0xfc34125d) //  0
 NHSTUB(SleepTask                              ,0xfc3690e1) //  0
 NHSTUB(TakeSemaphore                          ,0xfc362fad) //  0
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0            == 0x00000000
-NHSTUB(TurnOnBackLight                        ,0xfc0e3935) //  0
+//NHSTUB(TurnOnBackLight                      ,0x00000000) //  0            == 0x00000000
 NHSTUB(TurnOnDisplay                          ,0xfc166eef) //  0
 NHSTUB(TurnOffDisplay                         ,0xfc0e3729) //  0
 NHSTUB(UnlockAE                               ,0xfc27fce9) //  0

@@ -186,7 +186,6 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 
 //NHSTUB(ScreenLock                           ,0xe03780e3) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
-//NHSTUB(TurnOnBackLight                      ,0xe0439adf) //  0        *** != 0x00000000
 //NHSTUB(_sqrt                                ,0x00000000) //  0        *** != 0xdffcf241
 //NHSTUB(strcat                               ,0x00000000) //  0        *** != 0xe04968ad
 //NHSTUB(strchr                               ,0x00000000) //  0        *** != 0xe045197e
@@ -279,6 +278,7 @@ NHSTUB(SetScriptMode                          ,0xe0371d17) //  0
 NHSTUB(SleepTask                              ,0xdffc9293) //  0
 NHSTUB(TakeSemaphore                          ,0xdffca0cf) //  0
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0            == 0x00000000
+//NHSTUB(TurnOnBackLight                      ,0x00000000) //  0            == 0x00000000
 NHSTUB(TurnOnDisplay                          ,0xe01082cb) //  0
 NHSTUB(TurnOffDisplay                         ,0xe043985d) //  0
 NHSTUB(UnlockAE                               ,0xe0298e3b) //  0

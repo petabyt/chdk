@@ -37,6 +37,7 @@ NHSTUB(PT_PlaySound,							NULL_SUB) // via call from fc34f924 to fc3505e2, simi
 
 
 // SX730 NOT found
+NHSTUB(TurnOnBackLight,							NULL_SUB)
 NHSTUB(TurnOffBackLight,						NULL_SUB)
 NHSTUB(exmem_alloc,								RET0)
 
