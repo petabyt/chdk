@@ -311,7 +311,6 @@
 0xfc0e1d19,handle_PTP_OC_OpenSession
 0xfc0e1db3,handle_PTP_OC_GetDeviceInfo
 0xfc0e3729,TurnOffDisplay
-0xfc0e3935,TurnOnBackLight
 0xfc0e3c9b,DispCon_ShowYuvData_FW
 0xfc0e3cc7,DispCon_SetDisplayTypeLCD_FW
 0xfc0e3cd3,DispCon_ShowColorBar_FW

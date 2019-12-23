@@ -2424,7 +2424,6 @@
 0xfc0e3701,TurnOffDisplay
 0xfc0939b5,TurnOffE1_FW
 0xfc29848f,TurnOffVideoOutMode_FW
-0xfc0e390d,TurnOnBackLight
 0xfc166ec7,TurnOnDisplay
 0xfc29845f,TurnOnVideoOutMode_FW
 0xfc194837,UI.Create_FW
