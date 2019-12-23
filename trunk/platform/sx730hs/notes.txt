@@ -66,6 +66,7 @@ NOT IMPLEMENTED
 - Reboot with firmware update file
 - Script hard shutdown (shut_down(1))
 - Changing UI resolution for HDMI out
+- Script backlight control (set_backlight)
 
 OTHER ISSUES
 ************
