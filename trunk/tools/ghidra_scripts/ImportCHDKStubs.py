@@ -375,7 +375,7 @@ def do_create_stubs(stubs_data,stype):
         monitor.setMessage(str(cval['gh_adr'])+ ' ' + cval['pri_name']) 
         create_cval_symbols(cval)
         if stype == 'func':
-            if g_options['create_entrypoints']:
+            if g_options['create_entrypoints'] and not g_options['pretend']:
                 addEntryPoint(cval['gh_adr']);
             if g_options['disassemble_functions']:
                 # NOTE disassemble will happen even if no labels created,
