@@ -9,6 +9,8 @@ https://chdk.setepontos.com/index.php?topic=13573.10
 
 General camera and CHDK port information
 ****************************************
+Firmware 100b uses the 100c build, and 100e uses the 100d build.
+
 Default alt button is PLAY. VIDEO and WIFI may also be used. Long press to
 access the original function of the assigned alt button.
 
