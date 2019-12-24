@@ -4,10 +4,10 @@
 #  stubs_entry.S, stubs_entry.err.S, stubs_min.S func_by_address.csv
 # and prompts for which ones to load.
 #
-# It then attempts to create labels for the loaded function and variable definitions, and start disassembly on the
-# functions if they aren't already disassembled. By default, it also attempts to copy EOL comments from stubs,
-# and clean up incorrect data definitions related to thumb pointers. This can be controlled with options
-# described below.
+# It then attempts to create labels for the loaded function and variable definitions, and optionally start
+# disassembly on the functions if they aren't already disassembled. By default, it also attempts to copy EOL
+# comments from stubs, and clean up incorrect data definitions which interfere with disassembly. This can be
+# controlled with options described below.
 # 
 # Variable definitions require that you have created a memory map with the appropriate address space.
 #
@@ -15,7 +15,11 @@
 #
 # Some behavior can be controlled by an ini format configuration file, which is created automatically in the same
 # directory as the script if not present. The default cfg includes a description of each option, and can be
-# created by just running the script and cancelling.
+# created by just running the script and cancelling when prompted for the directory.
+# 
+# By default, the script tries to start disassembly at function addresses which do not already have disassembled
+# code. You can disable this with the disassemble_functions option.
+# You can disable disassembly and enable create_entrypoints to provide hints for the initial auto-analysis.
 #
 # By default, if multiple different names refer to the same address, the script creates multiple labels. This is
 # convenient since you can jump to any of them, and see in the listing when multiple names refer to the same
@@ -38,13 +42,14 @@
 # program as pre-comments. Any existing comment of the same type will be overwritten. This can be controlled with the
 # stubs_comments and stubs_comments_type options
 #
-# The script also tries to fix up an issue I noticed on thumb2 firmware, where the analysis can end up creating data
-# at the second byte of a thumb function if it happens to look like a string, do to interpreting a thumb pointer as a
-# possible data address.
-# The clean_thumb_data option controls this.
+# The script also tries to fix up an issues where auto-analysis creates data that interferes with disassembly. 
+# This can happens when it detects bytes that look like an string overlapping the function start, or in thumb2
+# firmware, where pointers with the thumb bit set are interpreted as data pointers.
+# These are controlled by the clean_func_conflict_data and clean_thumb_data options, respectively.
 #
 #@category CHDK
 #@author reyalp
+#@menupath Tools.CHDK.Import Stubs
 
 # License: GPL
 #
@@ -91,11 +96,35 @@ g_options = {
 # used directly if skip_load_config
 g_options_spec = [
     {
+        'name':'disassemble_functions',
+        'type':'bool',
+        'default':True,
+        'desc':"""\
+# Attempt disassembly at function addresses if not already disassembled
+""",
+    },
+    {
         'name':'clean_thumb_data',
         'type':'bool',
         'default':True,
         'desc':"""\
 # Undefine data +1 from thumb func adr
+""",
+    },
+    {
+        'name':'clean_func_conflict_data',
+        'type':'bool',
+        'default':True,
+        'desc':"""\
+# Undefine data which contains function entry point
+""",
+    },
+    {
+        'name':'create_entrypoints',
+        'type':'bool',
+        'default':False,
+        'desc':"""\
+# Add entry points at function addresses, can be used to aid auto-analysis
 """,
     },
     {
@@ -303,6 +332,13 @@ def disassemble_cval(cval):
     if getInstructionAt(address):
         return
 
+    if g_options['clean_func_conflict_data']:
+        bad_data = getDataContaining(address) # ghidra address, has thumb bit off
+        if bad_data:
+            infomsgf(0,'remove conflict data %s\n',bad_data)
+            if not g_options['pretend']:
+                removeData(bad_data)
+
 # if thumb, try to set default context reg
 # had trouble with setValue throwing ContextChangeException for reasons that aren't clear
     try:
@@ -339,9 +375,12 @@ def do_create_stubs(stubs_data,stype):
         monitor.setMessage(str(cval['gh_adr'])+ ' ' + cval['pri_name']) 
         create_cval_symbols(cval)
         if stype == 'func':
-            # NOTE disassemble will happen even if no labels created,
-            # should be harmless
-            disassemble_cval(cval)
+            if g_options['create_entrypoints']:
+                addEntryPoint(cval['gh_adr']);
+            if g_options['disassemble_functions']:
+                # NOTE disassemble will happen even if no labels created,
+                # should be harmless
+                disassemble_cval(cval)
 
         monitor.incrementProgress(1)
 
