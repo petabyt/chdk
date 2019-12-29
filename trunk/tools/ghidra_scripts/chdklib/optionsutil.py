@@ -35,15 +35,15 @@ import os
 # Unclear if / how Ghidra props file could be used instead
 import ConfigParser
 
-from chdklib.logutil import infomsgf, warnf
+from chdklib.logutil import infomsg, warn
 
 def write_options(secname,cfgfile,options_spec,options):
     # lets caller bypass
     if options['skip_create_config']:
-        infomsgf(0,"Skip writing config file %s\n",cfgfile)
+        infomsg(0,"Skip writing config file %s\n"%(cfgfile))
         return
 
-    infomsgf(0,"Writing config file %s\n",cfgfile)
+    infomsg(0,"Writing config file %s\n"%(cfgfile))
     try:
         fh = open(cfgfile,"w")
         fh.write('['+secname+']\n')
@@ -56,7 +56,7 @@ def write_options(secname,cfgfile,options_spec,options):
         fh.close()
 
     except IOError:
-        warnf('saving default cfg failed')
+        warn('saving default cfg failed')
 
 # returns true if config is missiong sections / values,
 # to flag for re-write
@@ -66,16 +66,16 @@ def load_options(secname,cfgfile,options_spec,options):
         options[ospec['name']] = ospec['default']
 
     if not os.path.isfile(cfgfile):
-        infomsgf(0,'Config not found %s\n',cfgfile)
+        infomsg(0,'Config not found %s\n'%(cfgfile))
         return True
 
     missing = False
     # lets caller bypass
     if options['skip_load_config']:
-        infomsgf(0,'Skip load config %s\n',cfgfile)
+        infomsg(0,'Skip load config %s\n'%(cfgfile))
     else:
         config = ConfigParser.ConfigParser()
-        infomsgf(0,'Load config %s\n',cfgfile)
+        infomsg(0,'Load config %s\n'%(cfgfile))
         config.read(cfgfile)
         if config.has_section(secname):
             for ospec in options_spec:
@@ -94,9 +94,9 @@ def load_options(secname,cfgfile,options_spec,options):
                     if cv in ospec['vals']:
                         options[k] = cv
                     else:
-                        warnf("unexpected cfg option %s %s",k,cv)
+                        warn("unexpected cfg option %s %s"%(k,cv))
                 else:
-                    warnf("unexpected option desc %s",k)
+                    warn("unexpected option desc %s"%(k))
 
         else:
             missing = True

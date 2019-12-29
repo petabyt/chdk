@@ -1,26 +1,26 @@
 # Ghidra python script to import function and variable definitions from CHDK "stubs" files
+# 
+# Variables and functions copied to out of ROM require that you have created a memory map with the appropriate
+# address space defined. The InitCHDKMemMap.py script may be used to create an initial memory map.
 #
 # This script prompts for a platform/sub directory, looks for any of
-#  stubs_entry.S, stubs_entry.err.S, stubs_min.S func_by_address.csv
+#  stubs_entry.S, stubs_entry.err.S, stubs_entry_2.S, stubs_min.S, funcs_by_address.csv
 # and prompts for which ones to load.
 #
-# It then attempts to create labels for the loaded function and variable definitions, and optionally start
-# disassembly on the functions if they aren't already disassembled. By default, it also attempts to copy EOL
-# comments from stubs, and clean up incorrect data definitions which interfere with disassembly. This can be
-# controlled with options described below.
+# NOTE: If you are starting a port and have copied stubs_min.S or stubs_entry_2.S, you SHOULD NOT
+# select these files unless all incorrect / unknown stubs are commented out. Additionally, stubs_entry_2.S
+# overrides can be picked up in funcs_by_address.csv, so should be commented out when building
+# stubs.
+#
+# By default, the script prompts whether to create entry points only, disassemble, or use whatever is set in
+# the config file. Entry points mode is intended for use before auto-analysis has been run. Disassemble
+# should be used if the dump is already analyzed. This selection overrides the create_entrypoints and
+# disassemble_functions config options.
+#
+# Additional behavior can be controlled by an ini format configuration file, which is created automatically in
+# the same directory as the script if not present. The default cfg includes a description of each option, and
+# can be created by starting the script and cancelling any of the dialogs.
 # 
-# Variable definitions require that you have created a memory map with the appropriate address space.
-#
-# It currently loads but does not do anything with DEF_CONST values
-#
-# Some behavior can be controlled by an ini format configuration file, which is created automatically in the same
-# directory as the script if not present. The default cfg includes a description of each option, and can be
-# created by just running the script and cancelling when prompted for the directory.
-# 
-# By default, the script tries to start disassembly at function addresses which do not already have disassembled
-# code. You can disable this with the disassemble_functions option.
-# You can disable disassembly and enable create_entrypoints to provide hints for the initial auto-analysis.
-#
 # By default, if multiple different names refer to the same address, the script creates multiple labels. This is
 # convenient since you can jump to any of them, and see in the listing when multiple names refer to the same
 # function. 
@@ -46,6 +46,12 @@
 # This can happens when it detects bytes that look like an string overlapping the function start, or in thumb2
 # firmware, where pointers with the thumb bit set are interpreted as data pointers.
 # These are controlled by the clean_func_conflict_data and clean_thumb_data options, respectively.
+#
+# By default, the script tries to add labels at the start of ROM and ROMSTARTER entry points, to aid
+# disassembly. 
+# The add_boot_entries option controls this.
+#
+# The prompt to select mode is controlled by askmode option
 #
 #@category CHDK
 #@author reyalp
@@ -77,13 +83,9 @@ import ghidra.program.model.symbol as ProgramSymbol
 
 # to set verbosity
 import chdklib.logutil
-from chdklib.logutil import infomsgf, warnf
-import chdklib.stubs_loader as stubs_loader
+from chdklib.logutil import infomsg, warn
+from chdklib.stubs_loader import StubsData
 import chdklib.optionsutil as optionsutil
-
-# for thumb "register" value
-progCtx = currentProgram.getProgramContext()
-tmodeReg = progCtx.getRegister("TMode")
 
 # global options, filled by init_options
 g_options = {
@@ -95,6 +97,14 @@ g_options = {
 # options defaults, descriptions
 # used directly if skip_load_config
 g_options_spec = [
+    {
+        'name':'askmode',
+        'type':'bool',
+        'default':True,
+        'desc':"""\
+# Prompt for preset mode when run
+""",
+    },
     {
         'name':'disassemble_functions',
         'type':'bool',
@@ -220,6 +230,14 @@ g_options_spec = [
 # Print created stubs
 ''',
     },
+    {
+        'name':'add_boot_entries',
+        'type':'bool',
+        'default':True,
+        'desc':"""\
+# Attempt to add entry points for main firmware boot and romstarter
+""",
+    },
 ]
 
 # hack, call wants type not string
@@ -253,7 +271,7 @@ def get_available_files(sub_dir):
         if os.path.isfile(fullpath):
             available_files.append(fname)
         elif fname != 'stubs_entry.S.err':
-            infomsgf(0,'Missing %s\n',fullpath)
+            infomsg(0,'Missing %s\n'%(fullpath))
     return available_files
 
 # check for existing symbols with the same name and different addresses
@@ -266,7 +284,7 @@ def handle_conflict_name(cval,name,how):
     if how == 'remove':
         for s in getSymbols(name,None):
             if s.getAddress() != address:
-                infomsgf(0, "Delete existing conflicting %s %s != %s\n", name, address, s.getAddress())
+                infomsg(0, "Delete existing conflicting %s %s != %s\n"%(name, address, s.getAddress()))
                 if not g_options['pretend']:
                     s.delete()
 
@@ -276,9 +294,9 @@ def handle_conflict_name(cval,name,how):
 
         for s in conflict_names:
             if s.getAddress() != address:
-                infomsgf(0, "Conflicting %s %s != %s\n", new_name, address, s.getAddress())
+                infomsg(0, "Conflicting %s %s != %s\n"%(new_name, address, s.getAddress()))
                 new_name = '{}_stubs_{:08x}'.format(new_name,cval['adr'])
-                infomsgf(0,"Rename incoming %s = %s\n", name, new_name)
+                infomsg(0,"Rename incoming %s = %s\n"%(name, new_name))
                 break
 
         return new_name
@@ -286,7 +304,7 @@ def handle_conflict_name(cval,name,how):
     if how == 'skip':
         for s in getSymbols(name,None):
             if s.getAddress() != address:
-                infomsgf(0, "Skip conflicting %s %s != %s\n", name, address, s.getAddress())
+                infomsg(0, "Skip conflicting %s %s != %s\n"%(name, address, s.getAddress()))
                 return None
         return name
 
@@ -319,68 +337,83 @@ def create_cval_symbols(cval):
                 setEOLComment(cval['gh_adr'],cval['comment'])
             elif g_options['stubs_comment_type'].lower() == 'pre':
                 setPreComment(cval['gh_adr'],cval['comment'])
- 
 
     if len(created_names):
         if g_options['print_created_stubs']:
-            infomsgf(0,"%s %s\n",cval['gh_adr'],' '.join(created_names))
+            infomsg(0,"%s %s\n"%(cval['gh_adr'],' '.join(created_names)))
 
-def disassemble_cval(cval):
+def clean_data_for_disassemble(cval):
     adr = cval['adr']
     address = cval['gh_adr']
-
-    if getInstructionAt(address):
-        return
 
     if g_options['clean_func_conflict_data']:
         bad_data = getDataContaining(address) # ghidra address, has thumb bit off
         if bad_data:
-            infomsgf(0,'remove conflict data %s\n',bad_data)
+            infomsg(0,'remove conflict data %s\n'%(bad_data))
             if not g_options['pretend']:
                 removeData(bad_data)
 
-# if thumb, try to set default context reg
-# had trouble with setValue throwing ContextChangeException for reasons that aren't clear
+    if g_options['clean_thumb_data'] and adr & 1 == 1:
+        bad_data = getDataAt(toAddr(adr)) # from *thumb* address, +1 of func
+        if bad_data:
+            infomsg(0,'remove data %s\n'%(bad_data))
+            if not g_options['pretend']:
+                removeData(bad_data)
+
+def set_thumb_reg_for_cval(cval):
+    address = cval['gh_adr']
+
+    # for thumb "register" value
+    progCtx = currentProgram.getProgramContext()
+    tmodeReg = progCtx.getRegister("TMode")
     try:
-        if adr & 1 == 1:
-            infomsgf(0,"Dis thumb %s\n",address)
-            if g_options['clean_thumb_data']:
-                bad_data = getDataAt(toAddr(adr)) # from *thumb* address, +1 of func
-                if bad_data:
-                    infomsgf(0,'remove data %s\n',bad_data)
-                    if not g_options['pretend']:
-                        removeData(bad_data)
-            if not g_options['pretend']:
-                progCtx.setValue(tmodeReg,address,address,BigInteger("1"))
+        if cval['adr'] & 1 == 1:
+            if tmodeReg:
+                infomsg(0,"Set thumb %s\n"%(address))
+                if not g_options['pretend']:
+                    progCtx.setValue(tmodeReg,address,address,BigInteger("1"))
+            else:
+                warn("Thumb bit set without TMode register %s"%(address))
         else:
-            infomsgf(0,"Dis ARM %s\n",address)
-            if not g_options['pretend']:
+            infomsg(0,"Set ARM %s\n"%(address))
+            if tmodeReg and not g_options['pretend']:
                 progCtx.setValue(tmodeReg,address,address,BigInteger("0"))
+        return True
+    except ghidra.program.model.listing.ContextChangeException:
+        warn("Set tmode failed at %s"%(address))
+        return False
+
+def process_func_cval(cval):
+    address = cval['gh_adr']
+    if g_options['create_entrypoints'] and not g_options['pretend']:
+        addEntryPoint(address);
+
+    # following only relevant if not already disassembled
+    if getInstructionAt(address):
+        return
+
+    clean_data_for_disassemble(cval)
+
+    if set_thumb_reg_for_cval(cval) and g_options['disassemble_functions']:
+        # NOTE disassemble will happen even if no labels created,
+        # should be harmless
         if not g_options['pretend']:
             disassemble(address)
-    except ghidra.program.model.listing.ContextChangeException:
-        warnf("Set tmode failed at %s\n",address)
 
-def do_create_stubs(stubs_data,stype):
-    items = stubs_data['create'][stype]
+def do_create_stubs(items,stype):
     monitor.initialize(len(items))
     if stype == 'func':
         desc = 'functions'
     else:
         desc = 'data items'
 
-    infomsgf(0,"Processing %d %s\n",len(items),desc)
+    infomsg(0,"Processing %d %s\n"%(len(items),desc))
     for cval in items:
         monitor.checkCanceled()
         monitor.setMessage(str(cval['gh_adr'])+ ' ' + cval['pri_name']) 
         create_cval_symbols(cval)
         if stype == 'func':
-            if g_options['create_entrypoints'] and not g_options['pretend']:
-                addEntryPoint(cval['gh_adr']);
-            if g_options['disassemble_functions']:
-                # NOTE disassemble will happen even if no labels created,
-                # should be harmless
-                disassemble_cval(cval)
+            process_func_cval(cval)
 
         monitor.incrementProgress(1)
 
@@ -391,13 +424,13 @@ def handle_stubs_name_conflict(stubs_data,sval,how):
         return in_name
 
     # check for stubs with the same name and different address
-    for osval in stubs_data['name_map'][in_name]:
+    for osval in stubs_data.name_map[in_name]:
         if osval['adr'] == sval['adr']:
             continue
         if how == 'unique':
-            infomsgf(0, "Conflicting stubs %s %08x != %08x\n", in_name, sval['adr'], osval['adr'])
+            infomsg(0, "Conflicting stubs %s %08x != %08x\n"%(in_name, sval['adr'], osval['adr']))
             new_name = '{}_stubs_{:08x}'.format(in_name,sval['adr'])
-            infomsgf(0,"Rename %s = %s\n", in_name, new_name)
+            infomsg(0,"Rename %s = %s\n"%(in_name, new_name))
             return new_name
 
         elif how == 'skip':
@@ -411,8 +444,8 @@ def process_list(stubs_data):
         'func':[],
         'data':[],
     }
-    for adr in stubs_data['adr_map']:
-        svlist = stubs_data['adr_map'][adr]
+    for adr in stubs_data.adr_map:
+        svlist = stubs_data.adr_map[adr]
         # structure describing value to create
         cval = {
             'adr':adr,
@@ -428,7 +461,7 @@ def process_list(stubs_data):
             if sval['type'] == 'const':
                 continue
             if sval['type'] != cval['type']:
-                warnf('Conflicting types at %x %s:%s != %s\n',adr,sval['name'],sval['type'],cval['type'])
+                warn('Conflicting types at %x %s:%s != %s'%(adr,sval['name'],sval['type'],cval['type']))
 
             create_name = handle_stubs_name_conflict(stubs_data,sval,g_options['conflict_stubs'])
 
@@ -468,7 +501,7 @@ def process_list(stubs_data):
 
         # Skip if address isn't in defined memory
         if not getMemoryBlock(gh_adr):
-            warnf("%s not in defined memory block %s %s\n",cval['type'],cval['pri_name'], gh_adr)
+            warn("%s not in defined memory block %s %s"%(cval['type'],cval['pri_name'], gh_adr))
             continue
 
         if g_options['stubs_comments'] and len(cval['comments']):
@@ -480,35 +513,97 @@ def process_list(stubs_data):
 
     return to_create
 
+def do_mode_choice():
+    if not g_options['askmode']:
+        return
+
+    mode_options = ['Entry points only (un-analyzed dump)','Load and disassemble (analyzed dump)','Whatever is in the config']
+    # default to un-analyzed if there are only a few functions
+    default_mode = 0
+    # 20 because exception vectors sometimes ID by address alone
+    if getCurrentProgram().getFunctionManager().getFunctionCount() > 20:
+        default_mode = 1
+    # ghidra widget seems to remember previous choices, but we tried :(
+    mode_choice = askChoice("Select mode preset",
+        "Mode (askmode=0 in config to disable)",
+        mode_options,mode_options[default_mode])
+    if mode_choice == mode_options[0]:
+        g_options['create_entrypoints']=True
+        g_options['disassemble_functions']=False
+    elif mode_choice == mode_options[1]:
+        g_options['create_entrypoints']=False
+        g_options['disassemble_functions']=True
+
+def add_boot_entries(stubs_data):
+    if not g_options['add_boot_entries']:
+        return
+
+    stubs_data.guess_platform_vals()
+    smisc = stubs_data.stubs_entry_misc
+    if 'ar_rom' in smisc:
+        rom_start = smisc['ar_rom']['start_adr']
+    else:
+        rom_start = None
+
+    # digic 6 / 7 have thumb jump at main fw start, identified by sig finder
+    if smisc['digic'] >= 6:
+        if 'main_fw_start' in smisc:
+            stubs_data.add_stubs_value('func','ImportCHDKStubs','-','main_firmware_boot',smisc['main_fw_start']+1,'',0)
+        else:
+            infomsg(0,'add_boot_entries: main_fw_start not found\n')
+        # romstarter stuff depends on identified ROM region
+        if not rom_start:
+            infomsg(0,'add_boot_entries: ar_rom not found\n')
+            return
+
+        # digic 6 firmware appears to have a pointer into romstarter at start of ROM
+        if smisc['digic'] == 6:
+            p1 = getInt(toAddr(smisc['ar_rom']['start_adr']))&0xffffffff
+            if p1 > rom_start and p1 - rom_start < 0x6000:
+                stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',p1,'',0)
+        # digic 7 appears to have an ARM code
+        elif smisc['digic'] == 7: 
+            stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',rom_start,'',0)
+    else:
+        if rom_start:
+            stubs_data.add_stubs_value('func','ImportCHDKStubs-','-','main_firmware_boot',rom_start,'',0)
+        else:
+            infomsg(0,'add_boot_entries: ar_rom not found\n')
+        # don't bother adding romstarter entries for digic < 6, Ghidra should pick up high exception vector if
+        # it's at 0xffff0000
 
 def import_chdk_stubs_main():
     init_options()
 
-    stubs_data = stubs_loader.initialize(g_options)
+    stubs_data = StubsData(print_loaded_stubs=g_options['print_loaded_stubs'], warnfunc=warn, infofunc=infomsg)
 
     # whatever askDirectory returns isn't actually string
     sub_dir = str(askDirectory("CHDK platform sub","select"))
     available_files = get_available_files(sub_dir)
     if len(available_files) == 0:
-        warnf('No stubs files found\n')
+        warn('No stubs files found')
         return
 
     selected_files = askChoices("Select files","Choose stubs to import",available_files)
     if len(selected_files) == 0:
-        infomsgf(0,'Nothing to do!\n')
+        infomsg(0,'Nothing to do!\n')
         return
+
+    do_mode_choice()
 
     # TODO could add other that lets you pick arbitrary s/csv
     for fname in selected_files:
         base, ext = os.path.splitext(fname)
         if ext == '.csv':
-            stubs_loader.load_funcs_csv(os.path.join(sub_dir,fname),stubs_data)
+            stubs_data.load_funcs_csv(os.path.join(sub_dir,fname))
         elif ext == '.S' or ext == '.s' or ext == '.err':
-            stubs_loader.load_stubs_s(os.path.join(sub_dir,fname),stubs_data)
+            stubs_data.load_stubs_s(os.path.join(sub_dir,fname))
 
-    stubs_data['create'] = process_list(stubs_data)
+    add_boot_entries(stubs_data)
 
-    do_create_stubs(stubs_data,'data')
-    do_create_stubs(stubs_data,'func')
+    to_create = process_list(stubs_data)
+
+    do_create_stubs(to_create['data'],'data')
+    do_create_stubs(to_create['func'],'func')
 
 import_chdk_stubs_main()

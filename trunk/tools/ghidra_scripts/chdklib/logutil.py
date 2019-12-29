@@ -1,14 +1,31 @@
+# for non-ghidra
+from __future__ import print_function
+
 # tiny hokey module to share verbosity between modules
-# printf based wrappers since print is annoying to wrap. Goes to "script console"
-# NOTE ghidra Address must be formatted as string, numeric values as %x etc
+# printf used to send to main ghidra console, no EOL
+import sys
 
-# Ghidra needs this in a module to access stuff like printf
-from __main__ import *
+# allow use from non-ghidra
+if 'ghidra.python' in sys.modules:
+    # Ghidra needs this in a module to access stuff like printf
+    from __main__ import *
+    is_ghidra = True
+else:
+    is_ghidra = False
+
 verbosity = 0
-def warnf(fmt,*args):
-    printf("WARNING: "+fmt,*args)
+if is_ghidra:
+    def warn(msg):
+        printf("WARNING: %s\n",msg)
 
-def infomsgf(level,fmt,*args):
-    if verbosity >= level:
-        printf(fmt,*args)
+    def infomsg(level,msg):
+        if verbosity >= level:
+            printf("%s",msg)
+else:
+    def warn(msg):
+        print("WARNING: "+str(msg))
+
+    def infomsg(level,msg):
+        if verbosity >= level:
+            print(msg,end='')
 
