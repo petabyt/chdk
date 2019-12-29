@@ -408,12 +408,19 @@ def init_chdk_mem_map_main():
         # RAM from end of ram data to end of RAM
         mbops.add_uninit('RAM', ar_ramdata['last_adr']+1, last_adr=smisc['max_ram_addr'])
 
-    # layout of d7 TCM? unclear
-    if ar_btcmcode and ar_btcmcode['start_adr'] == 0xbfe10800:
-        # 0x800 before code
-        mbops.add_uninit('BTCM', 0xbfe10000, 0x800)
-        # from code end to 64k
-        mbops.add_uninit('BTCM', ar_btcmcode['last_adr']+1, last_adr=0xbfe20000-1)
+    if smisc['digic'] == 6:
+        if ar_btcmcode and ar_btcmcode['start_adr'] == 0xbfe10800:
+            # 0x800 before code
+            mbops.add_uninit('BTCM', 0xbfe10000, 0x800)
+            # from code end to 64k
+            mbops.add_uninit('BTCM', ar_btcmcode['last_adr']+1, last_adr=0xbfe20000-1)
+    elif smisc['digic'] == 7:
+        # per https://chdk.setepontos.com/index.php?topic=11316.msg142197#msg142197
+        if ar_btcmcode and ar_btcmcode['start_adr'] == 0xdffc4900:
+            # 0x4900 before code. TODO this is actually initialized, could create mapped
+            mbops.add_uninit('BTCM', 0xdffc0000, 0x4900)
+            # from code end to 256k
+            mbops.add_uninit('BTCM', ar_btcmcode['last_adr']+1, last_adr=0xdfffffff)
 
     if g_options['include_zico']:
         for ardef in smisc['zico_blobs']:
