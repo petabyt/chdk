@@ -86,6 +86,7 @@ import chdklib.logutil
 from chdklib.logutil import infomsg, warn
 from chdklib.stubs_loader import StubsData
 import chdklib.optionsutil as optionsutil
+from chdklib.analyzeutil import get_pinsn_at
 
 # global options, filled by init_options
 g_options = {
@@ -565,10 +566,25 @@ def add_boot_entries(stubs_data):
         elif smisc['digic'] == 7: 
             stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',rom_start,'',0)
     else:
-        if rom_start:
-            stubs_data.add_stubs_value('func','ImportCHDKStubs-','-','main_firmware_boot',rom_start,'',0)
-        else:
+        if not rom_start:
             infomsg(0,'add_boot_entries: ar_rom not found\n')
+            return
+
+        main_fw_boot_addr = None
+        if smisc['os_info']['os'] == 'vxworks':
+            main_fw_boot_addr = rom_start
+        else:
+            # look for b_ preceding "gaonisoy"
+            for match_addr in findBytes(toAddr(rom_start),"gaonisoy",10,4):
+                pi = get_pinsn_at(match_addr.add(-4))
+                if pi and pi.getMnemonicString() == 'b':
+                    opstr = pi.getDefaultOperandRepresentation(0)
+                    if opstr == '0x'+str(match_addr.add(8)):
+                        main_fw_boot_addr = match_addr.add(-4).getOffset()
+        if main_fw_boot_addr:
+            stubs_data.add_stubs_value('func','ImportCHDKStubs','-','main_firmware_boot',main_fw_boot_addr,'',0)
+
+
         # don't bother adding romstarter entries for digic < 6, Ghidra should pick up high exception vector if
         # it's at 0xffff0000
 
