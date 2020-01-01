@@ -444,10 +444,14 @@ class StubsData:
 
         if 'CAM_UNCACHED_BIT' in smisc['camera_h_vals']:
             ucadr = int(smisc['camera_h_vals']['CAM_UNCACHED_BIT']['val'],16)
-            if 'max_ram_addr' in smisc:
-                self.add_guess_adr_range('uncached',ucadr,smisc['max_ram_addr']+1)
+        elif smisc['os_info']['os'] == 'VXWORKS':
+            # all known vx cams use this, not detected by sig finder
+            ucadr = 0x10000000
         else:
             ucadr = False
+
+        if 'max_ram_addr' in smisc and ucadr:
+            self.add_guess_adr_range('uncached',ucadr,smisc['max_ram_addr']+1)
 
         # main MMIO for digic < 6, d6 and d7 still have some there
         self.add_guess_adr_range('mmio',0xC0000000,0x01000000)
@@ -458,7 +462,7 @@ class StubsData:
                 self.add_guess_adr_range('dtcm',0x80000000,0x1000)
             elif ucadr == 0x10000000:
                 self.add_guess_adr_range('dtcm',0x40000000,0x1000)
-            else:
+            elif ucadr:
                 self.warn('unexpected uncached adr 0x%08x'%(ucadr))
         else:
             # 2M starting at 0xdfe00000 is a different region (Omar TCM), d7 have TCM? in 0xdff
