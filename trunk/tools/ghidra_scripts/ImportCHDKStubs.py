@@ -571,7 +571,7 @@ def add_boot_entries(stubs_data):
             return
 
         main_fw_boot_addr = None
-        if smisc['os_info']['os'] == 'vxworks':
+        if smisc['os_info']['os'] == 'VXWORKS':
             main_fw_boot_addr = rom_start
         else:
             # look for b_ preceding "gaonisoy"
