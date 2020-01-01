@@ -249,6 +249,8 @@ static void describe_insn_ops(csh handle, cs_insn *insn) {
         printf("%s  %d: %s",comment_start,i,arm_op_type_name(insn->detail->arm.operands[i].type));
         switch(insn->detail->arm.operands[i].type) {
             case ARM_OP_IMM:
+            case ARM_OP_PIMM:
+            case ARM_OP_CIMM:
                 printf("=0x%x",insn->detail->arm.operands[i].imm);
                 break;
             case ARM_OP_MEM: {
