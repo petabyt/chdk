@@ -25,7 +25,9 @@ extern void _GetKbdState(long*);
     { 2, KEY_PLAYBACK        ,0x00000080 }, // Found @0xff6365c4, levent 0x101
 	{ 2, KEY_WIFI            ,0x00000200 }, // physw_bits.txt, levent 0x103
     { 2, KEY_ZOOM_IN         ,0x00002000 },
+    { 2, KEY_ZOOM_IN         ,0x00001000 }, // half speed
 	{ 2, KEY_ZOOM_OUT        ,0x00008000 },
+	{ 2, KEY_ZOOM_OUT        ,0x00004000 }, // half speed
 //    { 2, KEY_POWER           ,0x00000100 }, // Found @0xff6365cc, levent 0x100
     { 0, 0, 0 }
 };
