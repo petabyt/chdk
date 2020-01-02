@@ -5078,6 +5078,10 @@ void output_firmware_vals(firmware *fw)
             bprintf("//   %s   // Found @ 0x%08x, \"%s\" @ 0x%08x\n",fw->firmware_ver_str,j,fw->firmware_ver_str,j);
         }
     }
+    if (fw->arch_flags & FW_ARCH_FL_VMSA) {
+        bprintf("//   VMSA detected, probably digic >= 7\n");
+    }
+
     bprintf("\n// Values for makefile.inc\n");
     bprintf("//   PLATFORMOSVER = %d\n",fw->dryos_ver);
 
@@ -5098,13 +5102,13 @@ void output_firmware_vals(firmware *fw)
     for(i=0; i<fw->adr_range_count; i++) {
         if(fw->adr_ranges[i].type == ADR_RANGE_ROM) {
             bprintf("// %-8s 0x%08x - 0x%08x (%7d bytes)\n",
-                    adr_range_type_str(fw->adr_ranges[i].type),
+                    adr_range_desc_str(&fw->adr_ranges[i]),
                     fw->adr_ranges[i].start,
                     fw->adr_ranges[i].start+fw->adr_ranges[i].bytes,
                     fw->adr_ranges[i].bytes);
         } else {
             bprintf("// %-8s 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n",
-                    adr_range_type_str(fw->adr_ranges[i].type),
+                    adr_range_desc_str(&fw->adr_ranges[i]),
                     fw->adr_ranges[i].start,
                     fw->adr_ranges[i].start+fw->adr_ranges[i].bytes,
                     fw->adr_ranges[i].src_start,

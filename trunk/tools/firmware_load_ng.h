@@ -6,8 +6,11 @@
 
 // Digic 2-5+ (ignoring S1)
 #define FW_ARCH_ARMv5       1
-// Digic 6
+// Digic 6, 7
 #define FW_ARCH_ARMv7       2
+
+// additional arch flags
+#define FW_ARCH_FL_VMSA     1 // firmware implements Virtual Memory System Architecture, i.e. has MMU
 
 // for clarity of thumb bit manipulations
 #define ADR_SET_THUMB(x) ((x)|1)
@@ -25,6 +28,9 @@
 #define ADR_RANGE_RAM_CODE  2
 #define ADR_RANGE_INIT_DATA 3
 
+#define ADR_RANGE_FL_NONE   0
+#define ADR_RANGE_FL_TCM    1 // TCM
+#define ADR_RANGE_FL_EVEC   2 // exception vector
 
 // Stores a range of valid data in the firmware dump (used to skip over empty blocks)
 typedef struct bufrange {
@@ -67,9 +73,10 @@ typedef struct {
     uint32_t src_start; // source ROM firmware address
     int bytes; // size in bytes
     int type;   // ADR_RANGE_* define
+    int flags;  // ADR_RANGE_FL_*
 } adr_range_t;
 
-#define FW_MAX_ADR_RANGES 5
+#define FW_MAX_ADR_RANGES 10
 
 #define FW_MAX_DRYOS_VERS 10
 
@@ -81,7 +88,8 @@ typedef struct {
     };
     BufRange        *br, *last;         // Valid ranges
 
-    int             arch;           // firmware CPU arch
+    int             arch;           // firmware CPU arch, set by caller at load time
+    int             arch_flags;     // additional CPU arch information, inferred
     uint32_t        base;           // Base address of the firmware in the camera
     int             main_offs;      // Offset of main firmware from the start of the dump
 
@@ -130,6 +138,9 @@ uint8_t* adr2ptr_with_data(firmware *fw, uint32_t adr);
 
 // return constant string describing type
 const char* adr_range_type_str(int type);
+
+// return constant string describing type + flags
+const char* adr_range_desc_str(adr_range_t *r);
 
 // convert pointer into buf into firmware address
 // current doesn't sanity check or adjust ranges
@@ -547,6 +558,10 @@ typedef struct {
 #define MATCH_OP_REG(r)             {ARM_OP_REG,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_IMM_ANY            {ARM_OP_IMM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_IMM(imm)           {ARM_OP_IMM,    ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm),  ARM_REG_INVALID}
+#define MATCH_OP_PIMM_ANY           {ARM_OP_PIMM,   ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_PIMM(imm)          {ARM_OP_PIMM,   ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm),  ARM_REG_INVALID}
+#define MATCH_OP_CIMM_ANY           {ARM_OP_CIMM,   ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_CIMM(imm)          {ARM_OP_CIMM,   ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm),  ARM_REG_INVALID}
 #define MATCH_OP_MEM_ANY            {ARM_OP_MEM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_MEM(rb,ri,imm)     {ARM_OP_MEM,    ARM_REG_##rb,       MATCH_OP_FL_IMM,    (imm),  ARM_REG_##ri}
 #define MATCH_OP_MEM_BASE(r)        {ARM_OP_MEM,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
@@ -617,7 +632,7 @@ int fw_search_bytes(firmware *fw, search_bytes_fn func);
 
 // ****** firmware loading / initialization / de-allocation ******
 // add given address range
-void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type);
+void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type, int flags);
 
 // load firmware and initialize stuff that doesn't require disassembly
 void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_arch);
