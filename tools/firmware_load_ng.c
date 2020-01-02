@@ -319,6 +319,28 @@ const char* adr_range_type_str(int type)
     }
 }
 
+// return constant string describing type and flags
+const char* adr_range_desc_str(adr_range_t *r)
+{
+    switch(r->type) {
+        case ADR_RANGE_INVALID:
+            return "(invalid)";
+        case ADR_RANGE_ROM:
+            return "ROM";
+        case ADR_RANGE_RAM_CODE:
+            if(r->flags & ADR_RANGE_FL_EVEC) {
+                return "EVEC";
+            } else if(r->flags & ADR_RANGE_FL_TCM) {
+                return "TCM code";
+            }
+            return "RAM code";
+        case ADR_RANGE_INIT_DATA:
+            return "RAM data";
+        default:
+            return "(unknown)";
+    }
+}
+
 // return true if adr is in firmware DATA or BSS
 int adr_is_var(firmware *fw, uint32_t adr)
 {
@@ -1783,7 +1805,9 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
             }
         }
         if(match->operands[i].flags & MATCH_OP_FL_IMM) {
-            if(insn->detail->arm.operands[i].type == ARM_OP_IMM) {
+            if(insn->detail->arm.operands[i].type == ARM_OP_IMM
+                    || insn->detail->arm.operands[i].type == ARM_OP_PIMM
+                    || insn->detail->arm.operands[i].type == ARM_OP_CIMM) {
                 if(insn->detail->arm.operands[i].imm != match->operands[i].imm) {
                     return  0;
                 }
@@ -1908,7 +1932,7 @@ int fw_search_bytes(firmware *fw, search_bytes_fn func)
 
 // ****** firmware loading / initialization / de-allocation ******
 // add given address range
-void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type)
+void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_start, int type, int flags)
 {
     if(fw->adr_range_count == FW_MAX_ADR_RANGES) {
         fprintf(stderr,"fw_add_adr_range: FW_MAX_ADR_RANGES hit\n");
@@ -1941,6 +1965,7 @@ void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_s
     r->src_start=src_start;
     r->bytes=len;
     r->type=type;
+    r->flags=flags;
     r->buf=fw->buf8 + (r->src_start - fw->base);
 
     fw->adr_range_count++;
@@ -2039,7 +2064,7 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
 
     fw->adr_range_count=0;
     // add ROM
-    fw_add_adr_range(fw,fw->base, fw->base+fw->size8, fw->base, ADR_RANGE_ROM);
+    fw_add_adr_range(fw,fw->base, fw->base+fw->size8, fw->base, ADR_RANGE_ROM, ADR_RANGE_FL_NONE);
 
     fw->main_offs = 0;
     int k = find_str(fw, "gaonisoy");
@@ -2203,6 +2228,86 @@ int find_startup_copy(firmware *fw,
     return 0;
 }
 
+void find_exception_vec(firmware *fw, iter_state_t *is)
+{
+    // check for exception vector, d7 id
+    // only on thumb2 for now
+    if(fw->arch != FW_ARCH_ARMv7) {
+        return;
+    }
+
+    const insn_match_t match_bl_mcr[]={
+        {MATCH_INS(BL,  1), {MATCH_OP_IMM_ANY}},
+        // Vector Base Address Register MCR p15, 0, <Rt>, c12, c0, 0 - not present on PMSA
+        {MATCH_INS(MCR, 6), {MATCH_OP_PIMM(15),MATCH_OP_IMM(0),MATCH_OP_REG_ANY,MATCH_OP_CIMM(12),MATCH_OP_CIMM(0),MATCH_OP_IMM(0)}},
+        {ARM_INS_ENDING}
+    };
+    
+    // reset to main fw start
+    disasm_iter_init(fw, is, fw->base + fw->main_offs + 12 + fw->thumb_default);
+    if(!insn_match_find_next(fw,is,4,match_bl_mcr)) {
+        printf("no match!\n");
+        return;
+    }
+    // check which instruction we matched
+    uint32_t faddr = get_branch_call_insn_target(fw,is);
+    if(faddr) {
+        // bl = digic6, has function to set up exception vector
+        disasm_iter_init(fw, is, faddr);
+        disasm_iter(fw, is);
+        int ra,rb;
+        uint32_t va, vb;
+        if(!IS_INSN_ID_MOVx(is->insn->id) || is->insn->detail->arm.operands[1].type != ARM_OP_IMM) {
+            return;
+        }
+        ra = is->insn->detail->arm.operands[0].reg;
+        va = is->insn->detail->arm.operands[1].imm;
+        disasm_iter(fw, is);
+        if(is->insn->id != ARM_INS_MOVT 
+            || is->insn->detail->arm.operands[0].reg != ra
+            || is->insn->detail->arm.operands[1].type != ARM_OP_IMM) {
+            return;
+        }
+        va = (is->insn->detail->arm.operands[1].imm << 16) | (va & 0xFFFF);
+        // fw has BIC
+        va = va & ~1;
+        if(adr_get_range_type(fw,va) != ADR_RANGE_ROM) {
+            return;
+        }
+        disasm_iter(fw, is);
+        if(!IS_INSN_ID_MOVx(is->insn->id) || is->insn->detail->arm.operands[1].type != ARM_OP_IMM) {
+            return;
+        }
+        rb = is->insn->detail->arm.operands[0].reg;
+        vb = is->insn->detail->arm.operands[1].imm;
+        disasm_iter(fw, is);
+        if(is->insn->id != ARM_INS_MOVT 
+            || is->insn->detail->arm.operands[0].reg != rb
+            || is->insn->detail->arm.operands[1].type != ARM_OP_IMM) {
+            return;
+        }
+        vb = (is->insn->detail->arm.operands[1].imm << 16) | (vb & 0xFFFF);
+        vb = vb & ~1;
+        if(adr_get_range_type(fw,vb) != ADR_RANGE_ROM) {
+            return;
+        }
+        if(va >= vb) {
+            return;
+        }
+        fw_add_adr_range(fw,0,vb - va, va, ADR_RANGE_RAM_CODE, ADR_RANGE_FL_EVEC | ADR_RANGE_FL_TCM);
+        // printf("ex vec 0x%08x-0x%08x\n",va,vb);
+
+    } else if(is->insn->id == ARM_INS_MCR) {
+        // digic 7 = mcr ... 
+        fw->arch_flags |= FW_ARCH_FL_VMSA;
+        // rewind 1
+        disasm_iter_init(fw, is, adr_hist_get(&is->ah,1));
+        disasm_iter(fw, is);
+        // uint32_t ex_vec = LDR_PC2val(fw,is->insn);
+        //printf("found MCR @ 0x%"PRIx64" ex vec at 0x%08x\n",is->insn->address,ex_vec);
+    }
+}
+
 // init basic copied RAM code / data ranges
 void firmware_init_data_ranges(firmware *fw)
 {
@@ -2242,7 +2347,7 @@ void firmware_init_data_ranges(firmware *fw)
             fw->data_init_start=src_start;
             fw->data_start=dst_start;
             fw->data_len=dst_end-dst_start;
-            fw_add_adr_range(fw,dst_start,dst_end,src_start, ADR_RANGE_INIT_DATA);
+            fw_add_adr_range(fw,dst_start,dst_end,src_start, ADR_RANGE_INIT_DATA, ADR_RANGE_FL_NONE);
             data_found_copy=is->adr;
         } else if(dst_start < 0x08000000) { /// highest known first copied ram code 0x01900000
             // fprintf(stderr,"code1? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
@@ -2265,7 +2370,7 @@ void firmware_init_data_ranges(firmware *fw)
                 fprintf(stderr,"firmware_init_data_ranges: guess unknown base2 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
             }
-            fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE);
+            fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE, ADR_RANGE_FL_NONE);
         } else { // know < ROM based on match, assume second copied code
             // fprintf(stderr, "code2? @0x%"PRIx64" 0x%08x-0x%08x from 0x%08x\n",is->adr,dst_start,dst_end,src_start);
             if(base3_found) {
@@ -2279,7 +2384,7 @@ void firmware_init_data_ranges(firmware *fw)
                 fprintf(stderr,"firmware_init_data_ranges: guess unknown base3 0x%08x src 0x%08x end 0x%08x\n",
                         dst_start,src_start,dst_end);
             }
-            fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE);
+            fw_add_adr_range(fw,dst_start,dst_end,src_start,ADR_RANGE_RAM_CODE, ADR_RANGE_FL_TCM);
         }
         if(fw->data_start && base2_found && base3_found) {
             break;
@@ -2322,6 +2427,9 @@ void firmware_init_data_ranges(firmware *fw)
             count++;
         }
     }
+
+    find_exception_vec(fw,is);
+
     // if data found, adjust default code search range
     // TODO could use copied code regions too, but after data on known firmwares
     if(fw->data_start) {
