@@ -436,8 +436,12 @@ class StubsData:
             elif ar['name'] == 'RAM code':
                 if ar['start_adr'] < smisc['max_ram_addr']:
                     smisc['ar_ramcode'] = ar
-                else:
+                else: # older finsig_thumb2 version didn't label TCM
                     smisc['ar_btcmcode'] = ar
+            elif ar['name'] == 'TCM code':
+                smisc['ar_btcmcode'] = ar
+            elif ar['name'] == 'EVEC':
+                smisc['ar_evec'] = ar
 
         if not 'adr_ranges_extra' in smisc:
             smisc['adr_ranges_extra'] = []
