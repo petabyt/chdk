@@ -17,6 +17,7 @@
 // ROM      0xfc000000 - 0xfe000000 (33554432 bytes)
 // RAM code 0x010c1000 - 0x010df808 copied from 0xfcc64f9c ( 124936 bytes)
 // RAM data 0x00008000 - 0x0002efdc copied from 0xfcc3dfc0 ( 159708 bytes)
+// EVEC     0x00000000 - 0x00000038 copied from 0xfc05d104 (     56 bytes)
 
 // Zico Xtensa blobs:
 // zico_0 0xbff20000 - 0xbff27398 copied from 0xfca30f2c (  29592 bytes)
