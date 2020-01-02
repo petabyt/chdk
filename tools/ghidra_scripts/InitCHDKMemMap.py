@@ -379,12 +379,13 @@ def init_chdk_mem_map_main():
     ar_ramcode = smisc.get('ar_ramcode')
     ar_btcmcode = smisc.get('ar_btcmcode')
     ar_ramdata = smisc.get('ar_ramdata')
+    ar_evec = smisc.get('ar_evec')
+    ar_atcm = smisc.get('ar_atcm')
 
     mbops.add_stubs_ar(ar_ramdata, 'RAMDATA')
     mbops.add_stubs_ar(ar_ramcode, 'RAMCODE', x=True)
     mbops.add_stubs_ar(ar_btcmcode, 'BTCMCODE', x=True)
     mbops.add_stubs_ar(smisc.get('ar_itcm'), 'ITCM')
-    mbops.add_stubs_ar(smisc.get('ar_atcm'), 'ATCM')
     mbops.add_stubs_ar(smisc.get('ar_uncached'), 'UNCACHED')
     mbops.add_stubs_ar(smisc.get('ar_dtcm'), 'DTCM')
     mbops.add_stubs_ar(smisc.get('ar_mmio'), 'MMIO',v=True)
@@ -395,6 +396,15 @@ def init_chdk_mem_map_main():
     if smisc['digic'] >= 6:
         # RAM between ATCM and copied data
         mbops.add_uninit('RAM', 0x4000, 0x4000)
+        # detected exception vector at address 0, add as initialized
+        if ar_evec and ar_evec['start_adr'] == 0:
+            mbops.add_stubs_ar(smisc.get('ar_evec'), 'EVEC')
+            if ar_atcm and ar_atcm['start_adr'] == 0:
+                mbops.add_uninit('ATCM', ar_evec['last_adr']+1, last_adr=ar_atcm['last_adr'])
+            else:
+                mbops.add_stubs_ar(smisc.get('ar_atcm'), 'ATCM')
+        else:
+            mbops.add_stubs_ar(smisc.get('ar_atcm'), 'ATCM')
     else:
         # RAM between ITCM and copied data
         mbops.add_uninit('RAM', 0x1000, 0x900)
