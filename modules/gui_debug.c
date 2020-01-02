@@ -135,6 +135,7 @@ int gui_debug_kbd_process() {
         debug_to_draw = 2;
         break;
     case KEY_DISPLAY:
+    case KEY_SHOOT_HALF:
         switch (step) {
             case 0x00000004: step = 0x00000010; break;
             case 0x10000000: step = 0x00000004; break;
