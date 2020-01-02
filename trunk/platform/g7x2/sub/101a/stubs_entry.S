@@ -5,6 +5,7 @@
 //   Main firmware start: 0xe0020000
 //   DRYOS R58 (DRYOS version 2.3, release #0058+p10) @ 0xe05d81d4 ref @ 0xe05c5468
 //   Firmware Ver GM1.01A   // Found @ 0xe0503c40, "GM1.01A" @ 0xe0503c4d
+//   VMSA detected, probably digic >= 7
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 58
@@ -17,7 +18,7 @@
 // ROM      0xe0000000 - 0xe2000000 (33554432 bytes)
 // RAM data 0x00008000 - 0x0004c618 copied from 0xe0fd3770 ( 280088 bytes)
 // RAM code 0x01900000 - 0x0190139c copied from 0xe1017d88 (   5020 bytes)
-// RAM code 0xdffc4900 - 0xdffd0908 copied from 0xe1019124 (  49160 bytes)
+// TCM code 0xdffc4900 - 0xdffd0908 copied from 0xe1019124 (  49160 bytes)
 
 // Zico Xtensa blobs:
 // zico_0 0xbff20000 - 0xbff24ab8 copied from 0xe0e79d0c (  19128 bytes)

@@ -16,8 +16,9 @@
 // Detected address ranges:
 // ROM      0xfc000000 - 0xfe000000 (33554432 bytes)
 // RAM code 0x010e1000 - 0x011074ac copied from 0xfcc98870 ( 156844 bytes)
-// RAM code 0xbfe10800 - 0xbfe17391 copied from 0xfccbed1c (  27537 bytes)
+// TCM code 0xbfe10800 - 0xbfe17391 copied from 0xfccbed1c (  27537 bytes)
 // RAM data 0x00008000 - 0x00050770 copied from 0xfcc50100 ( 296816 bytes)
+// EVEC     0x00000000 - 0x00000038 copied from 0xfc062ffc (     56 bytes)
 
 // Zico Xtensa blobs:
 // zico_0 0xbff20000 - 0xbff277b8 copied from 0xfca00388 (  30648 bytes)
