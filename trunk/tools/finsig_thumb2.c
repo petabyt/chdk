@@ -5241,6 +5241,8 @@ void output_platform_vals(firmware *fw) {
         bprintf("//#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher\n");
     if (fw->dryos_ver >= 47)
         bprintf("//#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher\n");
+    if (fw->dryos_ver >= 59)
+        bprintf("//#define CAM_DRYOS_2_3_R59 1 // Defined for cameras with DryOS version R59 or higher\n");
 
     print_platform_misc_val_undef("CAM_UNCACHED_BIT",0x10000000);
 
