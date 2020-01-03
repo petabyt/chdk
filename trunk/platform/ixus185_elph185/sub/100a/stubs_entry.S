@@ -105,6 +105,7 @@ DEF(jpeg_count_str                          ,0x000d7400) // Found @0xffa1e798
 //#define CAM_DRYOS         1
 //#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
 //#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
+//#define CAM_DRYOS_2_3_R59 1 // Defined for cameras with DryOS version R59 or higher
 //#define CAM_RAW_ROWPIX    5248 // Found @0xff985a80
 //#define CAM_RAW_ROWS      3920 // Found @0xff985a88
 //#undef  CAM_UNCACHED_BIT
