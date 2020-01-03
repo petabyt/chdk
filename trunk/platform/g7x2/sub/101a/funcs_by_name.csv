@@ -381,6 +381,13 @@
 0xe0420389,EraseRom_FW
 0xe055202d,EraseSignature_FW
 0xe05661c9,EscapeFocusLens_FW
+0xe0020321,exception_handler_DataAbort
+0xe002023f,exception_handler_FIQ
+0xe0020241,exception_handler_IRQ
+0xe0020307,exception_handler_PrefetchAbort
+0xe0020011,exception_handler_Reset
+0xe002023d,exception_handler_SupervisorCall
+0xe00202dd,exception_handler_UndefinedInstruction
 0xe0569bf3,exec_FW
 0xe055a38d,ExecuteAvs_FW
 0xe00280cb,Executedccd_FW

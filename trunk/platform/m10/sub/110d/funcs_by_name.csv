@@ -492,6 +492,12 @@
 0xfc0d3637,ErrorTest_Disconnect_FW
 0xfc0d35ed,ErrorTest_Succession_FW
 0xfc43e5a7,EscapeFocusLens_FW
+0xfc06c627,exception_handler_DataAbort
+0xfc06c685,exception_handler_FIQ
+0xfc06c7e1,exception_handler_IRQ
+0xfc06c611,exception_handler_PrefetchAbort
+0xfc06c63d,exception_handler_SupervisorCall
+0xfc06c5ed,exception_handler_UndefinedInstruction
 0xfc443935,exec_FW
 0xfc5bef65,ExecLensCapturePostprocess_FW
 0xfc5bef15,ExecLensCapturePreprocess1st_FW
