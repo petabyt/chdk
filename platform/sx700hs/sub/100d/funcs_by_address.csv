@@ -111,6 +111,12 @@
 0xfc0217a3,InitializeFAExtendFile_FW
 0xfc0217ab,TerminateFAExtendFile_FW
 0xfc0255a9,NR_SetDoubleNRType_FW
+0xfc05d13d,exception_handler_UndefinedInstruction
+0xfc05d161,exception_handler_PrefetchAbort
+0xfc05d177,exception_handler_DataAbort
+0xfc05d18d,exception_handler_SupervisorCall
+0xfc05d1d5,exception_handler_FIQ
+0xfc05d331,exception_handler_IRQ
 0xfc05d581,task_Startup
 0xfc05e71d,task_UartLog
 0xfc05e88d,StartRedirectUART_FW

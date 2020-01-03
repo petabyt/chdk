@@ -373,6 +373,12 @@
 0xfc393eb3,ErrorTest_Disconnect_FW
 0xfc393e69,ErrorTest_Succession_FW
 0xfc53f577,EscapeFocusLens_FW
+0xfc0559bb,exception_handler_DataAbort
+0xfc055a19,exception_handler_FIQ
+0xfc055b75,exception_handler_IRQ
+0xfc0559a5,exception_handler_PrefetchAbort
+0xfc0559d1,exception_handler_SupervisorCall
+0xfc055981,exception_handler_UndefinedInstruction
 0xfc54294d,exec_FW
 0xfc4b9c91,ExecuteAvs_FW
 0xfc05cfb1,Executedccd_FW

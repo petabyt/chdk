@@ -401,6 +401,12 @@
 0xfc15634b,ErrorTest_Disconnect_FW
 0xfc156301,ErrorTest_Succession_FW
 0xfc65fbd3,EscapeFocusLens_FW
+0xfc06637f,exception_handler_DataAbort
+0xfc0663dd,exception_handler_FIQ
+0xfc066539,exception_handler_IRQ
+0xfc066369,exception_handler_PrefetchAbort
+0xfc066395,exception_handler_SupervisorCall
+0xfc066345,exception_handler_UndefinedInstruction
 0xfc663001,exec_FW
 0xfc5ec3e5,ExecuteAvs_FW
 0xfc06d24f,Executedccd_FW

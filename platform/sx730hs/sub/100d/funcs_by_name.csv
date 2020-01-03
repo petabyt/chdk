@@ -421,6 +421,12 @@
 0xfc09640d,ErrorTest_Disconnect_FW
 0xfc0963c3,ErrorTest_Succession_FW
 0xfc43e90b,EscapeFocusLens_FW
+0xfc05ca63,exception_handler_DataAbort
+0xfc05cac1,exception_handler_FIQ
+0xfc05cc1d,exception_handler_IRQ
+0xfc05ca4d,exception_handler_PrefetchAbort
+0xfc05ca79,exception_handler_SupervisorCall
+0xfc05ca29,exception_handler_UndefinedInstruction
 0xfc42ce75,ExecuteAvs_FW
 0xfc0e8e49,Executedccd_FW
 0xfc0213d9,ExecuteDefectRec_FW

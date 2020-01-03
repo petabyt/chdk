@@ -57,6 +57,13 @@
 0xdffcd8c5,_log
 0xdffcdc39,_log10
 0xdffcdd31,_pow
+0xe0020011,exception_handler_Reset
+0xe002023d,exception_handler_SupervisorCall
+0xe002023f,exception_handler_FIQ
+0xe0020241,exception_handler_IRQ
+0xe00202dd,exception_handler_UndefinedInstruction
+0xe0020307,exception_handler_PrefetchAbort
+0xe0020321,exception_handler_DataAbort
 0xe00206d5,task_Startup
 0xe00218ad,task_UartLog
 0xe0021a23,StartRedirectUART_FW

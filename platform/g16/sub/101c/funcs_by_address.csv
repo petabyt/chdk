@@ -107,6 +107,12 @@
 0xfc0215eb,TerminateFAExtendFile_FW
 0xfc024d49,NR_SetLotasPonyType_FW
 0xfc024d4d,NR_SetDoubleNRType_FW
+0xfc05e0f9,exception_handler_UndefinedInstruction
+0xfc05e11d,exception_handler_PrefetchAbort
+0xfc05e133,exception_handler_DataAbort
+0xfc05e149,exception_handler_SupervisorCall
+0xfc05e191,exception_handler_FIQ
+0xfc05e2ed,exception_handler_IRQ
 0xfc05e53d,task_Startup
 0xfc05f63d,task_UartLog
 0xfc05f7ad,StartRedirectUART_FW

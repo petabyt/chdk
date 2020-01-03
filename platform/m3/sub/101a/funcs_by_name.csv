@@ -489,6 +489,12 @@
 0xfc0bbc35,ErrorTest_Succession_FW
 0xfc44b745,EscapeFocusLens_FW
 0xfc10af59,EvfFunctionCmd_FW
+0xfc06306f,exception_handler_DataAbort
+0xfc0630cd,exception_handler_FIQ
+0xfc063229,exception_handler_IRQ
+0xfc063059,exception_handler_PrefetchAbort
+0xfc063085,exception_handler_SupervisorCall
+0xfc063035,exception_handler_UndefinedInstruction
 0xfc450a0d,exec_FW
 0xfc1bf4f9,ExecuteAvs_FW
 0xfc08f477,Executedccd_FW

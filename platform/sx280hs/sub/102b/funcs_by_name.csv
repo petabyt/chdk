@@ -326,6 +326,12 @@
 0xfc0d1b31,EraseRom_FW
 0xfc1a789f,EraseSignature_FW
 0xfc3b71d5,EscapeFocusLens_FW
+0xfc04f2bb,exception_handler_DataAbort
+0xfc04f319,exception_handler_FIQ
+0xfc04f475,exception_handler_IRQ
+0xfc04f2a5,exception_handler_PrefetchAbort
+0xfc04f2d1,exception_handler_SupervisorCall
+0xfc04f281,exception_handler_UndefinedInstruction
 0xfc3b9819,exec_FW
 0xfc3ac8fd,ExecuteAvs_FW
 0xfc0c9df7,Executedccd_FW
