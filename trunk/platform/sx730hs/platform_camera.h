@@ -48,6 +48,7 @@
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
+    #define CAM_DRYOS_2_3_R59                   1
 
     #define CAM_HAS_CMOS                        1
 
