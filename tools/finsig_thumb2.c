@@ -4942,6 +4942,69 @@ void add_generic_sig_match(search_calls_multi_data_t *match_fns,
         add_generic_func_match(match_fns,match_fn_count,MAX_GENERIC_FUNCS,fn,adr);
     }
 }
+
+void find_exception_handlers(firmware *fw, iter_state_t *is)
+{
+    uint32_t ex_vec = 0;
+    // somewhat duplicated from to firmware_load_ng, but it's simple
+    if (fw->arch_flags & FW_ARCH_FL_VMSA) {
+        const insn_match_t match_mcr_vbar[]={
+            // Vector Base Address Register MCR p15, 0, <Rt>, c12, c0, 0 - not present on PMSA
+            {MATCH_INS(MCR, 6), {MATCH_OP_PIMM(15),MATCH_OP_IMM(0),MATCH_OP_REG_ANY,MATCH_OP_CIMM(12),MATCH_OP_CIMM(0),MATCH_OP_IMM(0)}},
+            {ARM_INS_ENDING}
+        };
+        // reset to main fw start
+        disasm_iter_init(fw, is, fw->base + fw->main_offs + 12 + fw->thumb_default);
+        if(!insn_match_find_next(fw,is,4,match_mcr_vbar)) {
+            return;
+        }
+        // back up one
+        disasm_iter_init(fw, is, adr_hist_get(&is->ah,1));
+        disasm_iter(fw, is);
+        // expect ldr to be exception vector address
+        ex_vec  = LDR_PC2val(fw,is->insn);
+        if(!ex_vec || adr_get_range_type(fw,ex_vec) != ADR_RANGE_ROM) {
+            return;
+        }
+    }
+    // both d6 and d7 appear to have an ARM instruction in reset, and thumb in the remaining
+    // which appears contrary to arm documentation (ARM DDI 0406C.c (ID051414) 
+    // On digic 6, Reset appears to be an infinte loop, so must not be expected in any case
+    disasm_iter_init(fw, is, ex_vec);
+    disasm_iter(fw, is);
+
+    char *names[]={
+        "exception_handler_Reset",
+        "exception_handler_UndefinedInstruction",
+        "exception_handler_SupervisorCall",
+        "exception_handler_PrefetchAbort",
+        "exception_handler_DataAbort",
+        "exception_handler_NotUsed",
+        "exception_handler_IRQ",
+        "exception_handler_FIQ",
+    };
+
+    uint32_t addr=LDR_PC2val(fw,is->insn);
+    if(!addr && is->insn->id == ARM_INS_B) {
+        addr=get_branch_call_insn_target(fw,is);
+    }
+    // addr may be 0 (= inf loop at reset vector) but stubs system won't recognize it anyway
+    if(addr) {
+        add_func_name(fw,names[0],addr,NULL);
+    }
+    disasm_iter_init(fw, is, ADR_SET_THUMB(ex_vec + 4));
+    int i;
+    for(i=1; i<8; i++) {
+        disasm_iter(fw, is);
+        // all seen so far use a thumb ldr.w pc,...
+        // "NotUsed" is typically a NOP, which won't get picked up here, but would fall through to IRQ
+        addr=LDR_PC2val(fw,is->insn);
+        if(addr) {
+            add_func_name(fw,names[i],addr,NULL);
+        }
+    }
+}
+
 /*
 collect as many calls as possible of functions identified by name, whether or not listed in funcs to find
 this does a full disassembly of the entire firmware, which is slow
@@ -4978,6 +5041,8 @@ void find_generic_funcs(firmware *fw) {
         disasm_iter_init(fw,is,fw->adr_ranges[i].start | fw->thumb_default); // reset to start of range
         fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,0);
     }
+
+    find_exception_handlers(fw,is);
 
     disasm_iter_free(is);
 }
