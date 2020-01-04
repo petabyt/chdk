@@ -150,6 +150,7 @@
 0xffc14ef8,Open_FW
 0xffc14f20,Close
 0xffc14f20,Close_FW
+0xffc14f68,Remove
 0xffc14fc8,j_Read_FW
 0xffc14fcc,Write
 0xffc14fcc,Write_FW

@@ -30,7 +30,6 @@ NHSTUB(PutInNdFilter                          ,0xffac15b4) //  1 92%
 // ALT: NHSTUB(PutInNdFilter, 0xffac3144) // 2 25/2
 // ALT: NHSTUB(PutInNdFilter, 0xffac318c) // 2 25/2
 NHSTUB(PutOutNdFilter                         ,0xffac15fc) //  1 94%
-//NHSTUB(Remove                               ,0xff8caf98) //  3 52%
 NHSTUB(SetParameterData                       ,0xff977100) //  1 86%
 NHSTUB(UnsetZoomForMovie                      ,0xff9ae498) //  1 89%
 NHSTUB(WriteSDCard                            ,0xff87e128) //  3 64%

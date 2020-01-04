@@ -112,6 +112,7 @@
 0xff823d78,Open_FW
 0xff823da0,Close
 0xff823da0,Close_FW
+0xff823de8,Remove
 0xff823e48,j_Read_FW
 0xff823e4c,Write
 0xff823e4c,Write_FW

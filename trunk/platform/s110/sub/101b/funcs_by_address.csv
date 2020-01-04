@@ -170,6 +170,7 @@
 0xf802434c,Write_FW
 0xf80243a0,j_Open_FW
 0xf80243a4,j_Close_FW
+0xf802441c,Remove
 0xf80244a4,j_Read_FW
 0xf80244a8,j_Write_FW
 0xf8024514,Lseek

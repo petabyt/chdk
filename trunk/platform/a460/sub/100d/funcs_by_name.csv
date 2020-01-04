@@ -853,6 +853,7 @@
 0xffddc324,ReloadNdFilterAdjustment_FW
 0xffddd610,ReloadWBAdjustment_FW
 0xffdddc84,ReloadZoomAdjustment_FW
+0xffe1d7f0,Remove
 0xffdeaf94,RemoveTransparentMemory_FW
 0xffe18d00,RenameFile_Fut
 0xffd37aa4,RenewThermoLogNo_FW

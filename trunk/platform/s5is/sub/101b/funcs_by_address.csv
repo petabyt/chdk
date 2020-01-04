@@ -155,6 +155,7 @@
 0xff825c9c,Open_FW
 0xff825cc4,Close
 0xff825cc4,Close_FW
+0xff825d0c,Remove
 0xff825d6c,j_Read_FW
 0xff825d70,Write
 0xff825d70,Write_FW

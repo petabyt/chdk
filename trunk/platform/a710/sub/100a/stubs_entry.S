@@ -17,7 +17,6 @@
 
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
-//NHSTUB(Remove                               ,0xffcc0be4) //  3 52%
 NHSTUB(Restart                                ,0xffc12fdc) //  1 96%
 NHSTUB(UnsetZoomForMovie                      ,0xffda9138) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffe59fe4) //  1 96%

@@ -129,6 +129,7 @@
 0xffc260a0,Open_FW
 0xffc2610c,Close
 0xffc2610c,Close_FW
+0xffc26140,Remove
 0xffc26198,j_Read_FW
 0xffc2619c,Write
 0xffc2619c,Write_FW

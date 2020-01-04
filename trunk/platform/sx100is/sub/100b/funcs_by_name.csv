@@ -1116,6 +1116,7 @@
 0xffdbf120,ReloadNdFilterAdjustment_FW
 0xffd94a2c,ReloadWBAdjustment_FW
 0xffd0eae8,ReloadZoomAdjustment_FW
+0xffc15094,Remove
 0xffdc7c10,RemoveTransparentMemory_FW
 0xffc14860,RenameFile_Fut
 0xffdc0d94,ResetFocus_FW

@@ -947,6 +947,7 @@
 0xffe1d7a8,Open_FW
 0xffe1d7d0,Close
 0xffe1d7d0,Close_FW
+0xffe1d7f0,Remove
 0xffe1d864,Read
 0xffe1d864,Read_FW
 0xffe1d870,Write

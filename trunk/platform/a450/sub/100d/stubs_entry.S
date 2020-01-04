@@ -26,7 +26,6 @@ NHSTUB(GetPropertyCase                        ,0xffc0b79c) //  2 89%
 NHSTUB(GetSystemTime                          ,0xffc03398) //  1 96%
 NHSTUB(PutInNdFilter                          ,0xffddc35c) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffddc3a4) //  1 94%
-//NHSTUB(Remove                               ,0xffd4892c) //  3 52%
 NHSTUB(Restart                                ,0xffc0b250) //  1 96%
 NHSTUB(SetFileAttributes                      ,0xffe1da0c) //  1 65%
 NHSTUB(SetParameterData                       ,0xffea9678) //  1 86%

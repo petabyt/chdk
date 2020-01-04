@@ -231,6 +231,7 @@
 0xff870544,Open_FW
 0xff87056c,Close
 0xff87056c,Close_FW
+0xff87058c,Remove
 0xff870600,Read
 0xff870600,Read_FW
 0xff87060c,Write

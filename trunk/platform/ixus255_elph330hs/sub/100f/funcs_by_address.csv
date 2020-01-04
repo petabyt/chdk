@@ -193,6 +193,7 @@
 0xff035198,Write_FW
 0xff0351ec,j_Open_FW
 0xff0351f0,j_Close_FW
+0xff035268,Remove
 0xff0352f0,j_Read_FW
 0xff0352f4,j_Write_FW
 0xff035360,Lseek

@@ -28,7 +28,6 @@ NHSTUB(GetPropertyCase                        ,0xff8258d4) //  2 92%
 NHSTUB(GetSystemTime                          ,0xff8150d8) //  1 96%
 NHSTUB(PutInNdFilter                          ,0xffb50450) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffb50498) //  1 94%
-//NHSTUB(Remove                               ,0xff8e7ac8) //  3 52%
 //NHSTUB(Restart                              ,0xff823ac0) //  1 92%    *** != 0xff823abc
 NHSTUB(UnsetZoomForMovie                      ,0xff9f6ba4) //  1 89%
 //NHSTUB(WriteSDCard                          ,0xff88bcd0) //  2 93%    *** != 0xff88be6c
