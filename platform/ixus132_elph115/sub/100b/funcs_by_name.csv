@@ -1249,6 +1249,7 @@
 0xff413840,ReloadShadingAdjustmentData_FW
 0xff40d330,ReloadWBAdjustment_FW
 0xff31d0ec,ReloadZoomAdjustment_FW
+0xff034300,Remove
 0xff31df6c,RemoveTransparentMemory_FW
 0xff033ad4,RenameFile_Fut
 0xff189e8c,RequestConnectPTPIP_FW

@@ -146,6 +146,7 @@
 0xffc15004,Open_FW
 0xffc1502c,Close
 0xffc1502c,Close_FW
+0xffc15074,Remove
 0xffc150d4,j_Read_FW
 0xffc150d8,Write
 0xffc150d8,Write_FW

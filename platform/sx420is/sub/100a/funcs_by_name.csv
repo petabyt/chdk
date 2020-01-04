@@ -1489,6 +1489,7 @@
 0xff4626bc,ReloadWBAdjustment_FW
 0xff3342cc,ReloadZoomAdjustment_FW
 0xff33376c,ReloadZoomNCProfileEvent_FW
+0xff027440,Remove
 0xff3351f8,RemoveTransparentMemory_FW
 0xff026a04,RenameFile_Fut
 0xff1725e8,RequestConnectPTPIP_FW

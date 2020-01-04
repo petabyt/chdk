@@ -1151,6 +1151,7 @@
 0xffa0bdb0,ReloadNdFilterAdjustment_FW
 0xff9e4e00,ReloadWBAdjustment_FW
 0xff957a10,ReloadZoomAdjustment_FW
+0xff825dd4,Remove
 0xffa13d24,RemoveTransparentMemory_FW
 0xff8255a0,RenameFile_Fut
 0xff9e52e4,RenewThermoLogNo_FW

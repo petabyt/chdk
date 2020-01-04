@@ -229,6 +229,7 @@
 0xffc62580,Open_FW
 0xffc625a8,Close
 0xffc625a8,Close_FW
+0xffc625c8,Remove
 0xffc6263c,Read
 0xffc6263c,Read_FW
 0xffc62648,Write

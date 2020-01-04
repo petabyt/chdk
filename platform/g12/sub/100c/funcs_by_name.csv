@@ -1216,6 +1216,7 @@
 0xff8deb7c,ReloadWBAdjustment_FW
 0xff98221c,ReloadZoomAdjustment_FW
 0xff98a5d4,RemoteCPU.Create_FW
+0xff837114,Remove
 0xffac590c,RemoveTransparentMemory_FW
 0xff8369c4,RenameFile_Fut
 0xffb72000,ResetFocus_FW

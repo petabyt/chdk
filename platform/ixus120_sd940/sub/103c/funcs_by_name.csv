@@ -1127,6 +1127,7 @@
 0xffad6eac,ReloadShadingAdjustmentData_FW
 0xff9f6a90,ReloadWBAdjustment_FW
 0xff93b14c,ReloadZoomAdjustment_FW
+0xff8353e8,Remove
 0xffa31128,RemoveTransparentMemory_FW
 0xff834cac,RenameFile_Fut
 0xffad1314,ResetFocus_FW

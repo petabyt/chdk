@@ -1305,6 +1305,7 @@
 0xffa1f26c,ReloadWBAdjustment_FW
 0xffaf78ec,ReloadZoomAdjustment_FW
 0xff95e350,RemoteCPU.Create_FW
+0xff823a8c,Remove
 0xffa54094,RemoveTransparentMemory_FW
 0xff82329c,RenameFile_Fut
 0xffaff508,ResetCampGain_FW

@@ -105,6 +105,7 @@
 0xff836c90,Open_FW
 0xff836cfc,Close
 0xff836cfc,Close_FW
+0xff836d30,Remove
 0xff836d88,j_Read_FW
 0xff836d8c,Write
 0xff836d8c,Write_FW

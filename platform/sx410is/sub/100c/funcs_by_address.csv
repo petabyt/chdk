@@ -114,6 +114,7 @@
 0xff827b6c,Write_FW
 0xff827bc0,j_Open_FW
 0xff827bc4,j_Close_FW
+0xff827c3c,Remove
 0xff827cc4,j_Read_FW
 0xff827cc8,j_Write_FW
 0xff827d34,Lseek

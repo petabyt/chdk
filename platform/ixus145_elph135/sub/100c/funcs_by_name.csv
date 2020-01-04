@@ -1092,6 +1092,7 @@
 0xffb650d4,ReloadWBAdjustment_FW
 0xffa980b4,ReloadZoomAdjustment_FW
 0xffa97ab4,ReloadZoomNCProfileEvent_FW
+0xff827294,Remove
 0xffa99038,RemoveTransparentMemory_FW
 0xff826a68,RenameFile_Fut
 0xffb6a28c,ResetFocus_FW

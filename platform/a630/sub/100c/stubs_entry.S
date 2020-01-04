@@ -22,7 +22,6 @@ NHSTUB(GetFocusLensSubjectDistance            ,0xffe9b4fc) //  2 96%
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xffe9bab0) //  2 57%
 NHSTUB(PutInNdFilter                          ,0xffea7484) //  1 92%
 NHSTUB(PutOutNdFilter                         ,0xffea74cc) //  1 94%
-//NHSTUB(Remove                               ,0xffcc0730) //  3 52%
 NHSTUB(Restart                                ,0xffc12fd4) //  1 96%
 NHSTUB(UnsetZoomForMovie                      ,0xffda1ce4) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffe5291c) //  1 96%

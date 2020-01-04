@@ -105,6 +105,7 @@
 0xff837ff4,Open_FW
 0xff838060,Close
 0xff838060,Close_FW
+0xff838094,Remove
 0xff8380ec,j_Read_FW
 0xff8380f0,Write
 0xff8380f0,Write_FW
@@ -129,6 +130,7 @@
 0xff8385d8,j_ExMem.AllocCacheable_FW
 0xff8385dc,j_ExMem.FreeCacheable_FW
 0xff8385e0,ExMem_FW
+0xff839168,MoveOpticalZoomAt
 0xff8393d0,PT_GetDigitalZoomPosition_FW
 0xff839670,DoAFLock
 0xff8396a8,UnlockAF
