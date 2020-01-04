@@ -1331,6 +1331,35 @@ int find_GetBaseSv(firmware *fw)
     return 0;
 }
 
+int find_Remove(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"Close");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int f2, blcnt, i;
+    f2 = find_str_ref(fw,"File Write Fail.");
+    if(f2 == -1)
+        return 0;
+    // looking for 1st bl after Close
+    for(i=1, blcnt=0; i<8 && blcnt < 2; i++) {
+        if(!isBL(fw,f2+i)) {
+            continue;
+        }
+        // is it Close?
+        if(idxFollowBranch(fw,f2+i,0x01000001) == f1) {
+            blcnt++;
+            continue;
+        }
+        if (blcnt == 1) {
+            f2 = idxFollowBranch(fw,f2+i,0x01000001);
+            fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
 
 //------------------------------------------------------------------------------------------------------------
 
@@ -1781,6 +1810,7 @@ string_sig string_sigs[] =
     { 22, "exmem_free", (char*)find_exmem_free, 0},
     { 22, "exmem_alloc", (char*)find_exmem_alloc, 0},
     { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
+    { 22, "Remove", (char*)find_Remove, 0},
 
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
