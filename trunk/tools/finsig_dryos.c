@@ -2019,6 +2019,40 @@ int find_GetBaseSv(firmware *fw)
     return 0;
 }
 
+int find_Remove(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"Close");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int f2, blcnt, i;
+    f2 = find_str_ref(fw,"File Write Fail.");
+    if(f2 == -1)
+        return 0;
+    // looking for 1st bl after Close
+    for(i=1, blcnt=0; i<8 && blcnt < 2; i++) {
+        if(!isBL(fw,f2+i)) {
+            continue;
+        }
+        // is it Close?
+        if(idxFollowBranch(fw,f2+i,0x01000001)==f1) {
+            blcnt++;
+            continue;
+        }
+        else if(idxFollowBranch(fw,idxFollowBranch(fw,f2+i,0x01000001),0x01000001)==f1) {
+            blcnt++;
+            continue;
+        }
+        if (blcnt == 1) {
+            f2 = idxFollowBranch(fw,f2+i,0x01000001);
+            fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -2542,6 +2576,7 @@ string_sig string_sigs[] =
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
     { 22, "DoMovieFrameCapture", (char*)find_DoMovieFrameCapture, 0},
     { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
+    { 22, "Remove", (char*)find_Remove, 0},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
