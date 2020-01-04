@@ -7451,13 +7451,13 @@ int find_ptp_handler_imm(firmware *fw, int k)
 
 int match_ptp_handlers(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 {
-    // check for table of opcode, func ptr, ...
+    // check for table of opcode, func ptr (word aligned), ...
     if(fwval(fw,k) == 0x1004
         && fwval(fw,k+2) == 0x1005
         && fwval(fw,k+4) == 0x1006
-        && fwval(fw,k+1) > fw->base
-        && fwval(fw,k+3) > fw->base
-        && fwval(fw,k+5) > fw->base)
+        && fwval(fw,k+1) > fw->base && !(fwval(fw,k+1) & 0x3)
+        && fwval(fw,k+3) > fw->base && !(fwval(fw,k+1) & 0x3)
+        && fwval(fw,k+5) > fw->base && !(fwval(fw,k+1) & 0x3))
     {
         // TODO canon firmware has count in loop that calls add_ptp_handler,
         // but for simplicity just checking for valid opcode with hardcoded max
