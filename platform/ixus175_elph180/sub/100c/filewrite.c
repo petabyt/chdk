@@ -458,11 +458,11 @@ asm volatile (
 "    LDR     R1, [R4, #0x58] \n"
 "    LDR     R6, =0x9200003 \n"
 "    CMP     R1, #1 \n"
+"    BNE     loc_FFAC8A4C \n"
 "    LDR R3, =current_write_ignored\n"
 "    LDR R3, [R3]\n"
 "    CMP R3, #0\n"
 "    BNE loc_D\n" // jump over the next block
-"    BNE     loc_FFAC8A4C \n"
 "    BL      sub_FF827264 \n"
 "    B       sub_FFAC8A50 \n"
 
