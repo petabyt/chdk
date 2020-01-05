@@ -379,14 +379,14 @@ ENDFUNC
 // msg 7: close
 FUNC ref=2
 ASM
-FW 34
+FW 35
 >>>
 "    LDR R3, =current_write_ignored\n"
 "    LDR R3, [R3]\n"
 "    CMP R3, #0\n"
 "    BNE loc_D\n" // jump over the next block
 <<<
-FW 3
+FW 2
 >>>
 "loc_D:\n"
 <<<
