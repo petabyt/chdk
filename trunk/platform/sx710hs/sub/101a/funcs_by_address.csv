@@ -976,6 +976,7 @@
 0xfc317571,PrepareDirectory_x
 0xfc31761b,PrepareDirectory_1
 0xfc31761f,PrepareDirectory_0
+0xfc3246d3,get_displaytype
 0xfc324f01,TurnOnBackLight
 0xfc324f41,TurnOffBackLight
 0xfc3251ef,DispCon_ShowColorBar_FW

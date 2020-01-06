@@ -1235,6 +1235,7 @@
 0xfc326641,RegisterEventProcTable_alt
 0xfc326645,j_UnRegisterEventProcTable
 0xfc326645,UnRegisterEventProcTable_alt
+0xfc32a04f,get_displaytype
 0xfc32a7f5,TurnOnBackLight
 0xfc32a833,TurnOffBackLight
 0xfc32ab3f,DispCon_ShowColorBar_FW

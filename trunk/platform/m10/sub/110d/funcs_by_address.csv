@@ -999,6 +999,7 @@
 0xfc1ed933,task_DevelopModule
 0xfc1eeb69,task__imageSensorTask
 0xfc1ef06f,task__vBLKTask
+0xfc1f0253,get_displaytype
 0xfc1f0a5f,TurnOnBackLight
 0xfc1f0abb,TurnOffBackLight
 0xfc1f0def,DispCon_ShowColorBar_FW

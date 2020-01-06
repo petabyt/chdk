@@ -146,6 +146,7 @@ DEF(file_counter_var                  ,0x00013398) // Found @0xfc16e6ac
 DEF(_nrflag                           ,0x0001c49c) // (0x1c498+0x4) Found @0xfc0adaa0
 DEF(av_override_semaphore             ,0x00020bdc) // Found @0xfc540600
 DEF(active_bitmap_buffer              ,0x0000c65c) // (0xc62c+0x30) Found @0xfc30a2f2
+DEF(displaytype                       ,0x00009244) // (0x9204+0x40) Found @0xfc3246ca
 DEF(bitmap_buffer                     ,0x0000c668) // (0xc62c+0x3c) Found @0xfc30a2f8
 DEF_CONST(uiprop_count                      ,0x000000ce) // Found @0xfc0666a0
 DEF(exmem_alloc_table                 ,0x0003a3ac) // Found @0xfc08e6f2

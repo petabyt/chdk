@@ -1478,6 +1478,7 @@
 0xfc353e23,UIFS_StopMovieRecord_FW
 0xfc3590a7,DispSwCon_TurnOffDisplayDevice_FW
 0xfc35c40f,UIFS_GetNumberOfDisplayedImage_FW
+0xfc35dd57,get_displaytype
 0xfc35e6eb,TurnOnBackLight
 0xfc35e73f,TurnOffBackLight
 0xfc35ea6f,DispCon_ShowColorBar_FW

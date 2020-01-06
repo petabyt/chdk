@@ -476,6 +476,7 @@
 0xfc3afa17,get_current_exp
 0xfc4ea849,get_current_nd_value
 0xfc286679,get_dial_hw_position
+0xfc15a793,get_displaytype
 0xfc3b6e71,get_fstype
 0xfc4ea86f,get_nd_value
 0xfc318f1f,get_playrec_mode

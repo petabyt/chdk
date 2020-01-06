@@ -749,6 +749,7 @@
 0xe0425cf5,SetPlayAutoShutdownTime_FW
 0xe0431637,screenlock_helper
 0xe043461d,task_MrkSetTask
+0xe0439821,get_displaytype
 0xe043985d,TurnOffDisplay
 0xe0439e2b,DispCon_ShowYuvData_FW
 0xe0439e51,DispCon_ShowColorBar_FW

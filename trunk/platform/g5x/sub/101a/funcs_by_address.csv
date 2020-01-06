@@ -619,6 +619,7 @@
 0xfc1570e9,task_LachesisTest
 0xfc157609,task_InitFileModules
 0xfc15763b,task_CommonDrivers
+0xfc15a793,get_displaytype
 0xfc15b0f7,TurnOffDisplay
 0xfc15b671,DispCon_ShowColorBar_FW
 0xfc15b6d5,DispCon_ShowFiveStep_FW
