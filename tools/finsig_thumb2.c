@@ -423,6 +423,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "ImagerActivate", OPTIONAL|UNUSED }, // helper
     { "imager_active_callback", OPTIONAL|UNUSED }, // helper
     { "file_counter_var_init", OPTIONAL|UNUSED }, // helper
+    { "get_displaytype", OPTIONAL|UNUSED }, // for camera bitmap res change
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -535,6 +536,7 @@ misc_val_t misc_vals[]={
     { "_nrflag",            MISC_VAL_OPTIONAL},
     { "av_override_semaphore",MISC_VAL_OPTIONAL},
     { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
+    { "displaytype",        MISC_VAL_OPTIONAL},
     { "bitmap_buffer",      MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
@@ -4584,6 +4586,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_imager_active_callback,"imager_active_callback","ImagerActivate",},
 {sig_match_imager_active,"imager_active","imager_active_callback",},
 {sig_match_get_dial_hw_position,"get_dial_hw_position","kbd_p1_f",},
+{sig_match_near_str,"get_displaytype","DisplayType : %d\r\n",SIG_NEAR_BEFORE(5,1)},
 {sig_match_prop_string,"PROPCASE_AFSTEP", "\n\rError : GetAFStepResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_FOCUS_STATE", "\n\rError : GetAFResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_AV", "\n\rError : GetAvResult",SIG_NEAR_BEFORE(7,1)},
@@ -4605,6 +4608,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_canon_menu_active,"canon_menu_active", "StartRecModeMenu_FW"},
 {sig_match_file_counter_init,"file_counter_var_init","task_InitFileModules",},
 {sig_match_file_counter_var,"file_counter_var","file_counter_var_init",},
+{sig_match_var_struct_get,"displaytype",       "get_displaytype",},
 {NULL},
 };
 
