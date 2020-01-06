@@ -122,6 +122,9 @@
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
 	
 	#define CAM_3ARG_DebugAssert                1
+
+    // looks like elph180 which doesn't appear to use complicated multi pass or seek in normal cases
+    #define CAM_HAS_FILEWRITETASK_HOOK      1       // FileWriteTask hook is available (local file write can be prevented)
     
 //----------------------------------------------------------
     #undef  CAM_DEFAULT_MENU_CURSOR_BG

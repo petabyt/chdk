@@ -15,11 +15,11 @@ This camera has only ND filter, no adjustable aperture.
 
 TESTED
 ******
-To be done.
+chdkptp remote capture, general PTP functionality
 
 NOT IMPLEMENTED
 ***************
-Filewritetask and movie features are not supported.
+movie features are not supported.
 
 KNOWN BUGS
 **********

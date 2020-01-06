@@ -12,6 +12,7 @@ NHSTUB(MakeDirectory_Fut,                   0xFF827984) //*
 
 // Additional
 NHSTUB(TurnOffE1,                           0xFF83778C) //* for shutdown(), to complicated to emulate 
+//NHSTUB(LogCameraEvent,                      0xff8356e8) // Testing, from csv
 
 // Not needed
 NHSTUB(RefreshPhysicalScreen,               NULLSUB)
