@@ -107,6 +107,8 @@ static const struct keyword_token keywords[] = {
   {"get_av",                  TOKENIZER_GET_USER_AV_ID}, //FOR COMPATIBILITY
   {"get_bv96",                TOKENIZER_GET_BV96},
   {"get_capture_mode",        TOKENIZER_GET_CAPTURE_MODE},
+  {"get_current_av96",        TOKENIZER_GET_CURRENT_AV96},
+  {"get_current_tv96",        TOKENIZER_GET_CURRENT_TV96},
   {"get_display_mode",        TOKENIZER_GET_DISPLAY_MODE},
   {"get_day_seconds",         TOKENIZER_GET_DAY_SECONDS},
   {"get_disk_size",           TOKENIZER_GET_DISK_SIZE},
@@ -120,14 +122,19 @@ static const struct keyword_token keywords[] = {
   {"get_focus",               TOKENIZER_GET_FOCUS},
   {"get_sd_over_modes",       TOKENIZER_GET_SD_OVER_MODES},
   {"get_hyp_dist",            TOKENIZER_GET_HYPERFOCAL_DIST},
+  {"get_imager_active",       TOKENIZER_GET_IMAGER_ACTIVE},
   {"get_iso_market",          TOKENIZER_GET_ISO_MARKET},
   {"get_iso_mode",            TOKENIZER_GET_ISO_MODE},
   {"get_iso_real",            TOKENIZER_GET_ISO_REAL},
   {"get_iso",                 TOKENIZER_GET_ISO_MODE}, //FOR COMPATIBILITY
   {"get_jpg_count",           TOKENIZER_GET_JPG_COUNT},
+  {"get_max_av96",            TOKENIZER_GET_MAX_AV96},
+  {"get_min_av96",            TOKENIZER_GET_MIN_AV96},
   {"get_min_stack_dist",      TOKENIZER_GET_MIN_STACK_DIST},
   {"get_movie_status",        TOKENIZER_GET_MOVIE_STATUS},
   {"get_mode",				  TOKENIZER_GET_MODE},  // Returns 0 in recordmode, 1 in playmode
+  {"get_nd_value_ev96",		  TOKENIZER_GET_ND_VALUE_EV96},
+  {"get_nd_current_ev96",	  TOKENIZER_GET_ND_CURRENT_EV96},
   {"get_near_limit",          TOKENIZER_GET_NEAR_LIMIT},
   {"get_platform_id",         TOKENIZER_GET_PLATFORM_ID},
   {"get_propset",             TOKENIZER_GET_PROPSET},
