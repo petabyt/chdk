@@ -14,10 +14,10 @@
 //"    BEQ     exitHook\n"
 
 /*** INSTALL filewrite() hook ***/
-//"    LDR     R1, =task_FileWrite\n"
-//"    CMP     R1, R0\n"
-//"    LDREQ   R0, =filewritetask\n"
-//"    BEQ     exitHook\n"
+"    LDR     R1, =task_FileWrite\n"
+"    CMP     R1, R0\n"
+"    LDREQ   R0, =filewritetask\n"
+"    BEQ     exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
 //"    LDR     R1, =task_MovieRecord\n"
