@@ -1361,6 +1361,7 @@
 0xfc3026c5,RegisterEventProcTable_alt
 0xfc3026c9,j_UnRegisterEventProcTable
 0xfc3026c9,UnRegisterEventProcTable_alt
+0xfc30470b,get_displaytype
 0xfc30514f,TurnOnBackLight
 0xfc305199,TurnOffBackLight
 0xfc30552d,DispCon_ShowColorBar_FW

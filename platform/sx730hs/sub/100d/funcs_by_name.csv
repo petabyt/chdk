@@ -499,6 +499,7 @@
 0xfc071135,get_canon_mode_list
 0xfc2f8d91,get_current_exp
 0xfc3e43b9,get_dial_hw_position
+0xfc0e36ed,get_displaytype
 0xfc3520f7,get_fstype
 0xfc309b7b,get_playrec_mode
 0xfc3d2f57,GetAcceleHvPosition_FW

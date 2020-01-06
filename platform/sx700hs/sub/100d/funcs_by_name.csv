@@ -410,6 +410,7 @@
 0xfc3762e5,get_canon_mode_list
 0xfc2d6a8d,get_current_exp
 0xfc364d11,get_dial_hw_position
+0xfc120aff,get_displaytype
 0xfc30753d,get_fstype
 0xfc2b7297,get_playrec_mode
 0xfc0cf6f3,GetAdChValue

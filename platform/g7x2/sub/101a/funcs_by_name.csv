@@ -456,6 +456,7 @@
 0xe0036f2d,get_canon_mode_list
 0xe0368075,get_current_exp
 0xe04fd789,get_current_nd_value
+0xe0439821,get_displaytype
 0xe0374bcf,get_fstype
 0xe04fd7af,get_nd_value
 0xe02f082b,get_playrec_mode
