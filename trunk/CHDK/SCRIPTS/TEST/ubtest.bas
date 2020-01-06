@@ -90,7 +90,9 @@ rem TODO some cameras need additional sleep between play->rec and mode switch (g
 sleep 1000
 
 c = get_capture_mode
-print "current mode ",c
+print "current mode ",c,"imager active", get_imager_active
+print "min av", get_min_av96, "max av", get_max_av96, "nd ev", get_nd_value_ev96
+print "cur tv", get_current_tv96, "cur av", get_current_tv96, "cur nd", get_nd_current_ev96
 
 if c <> 2 then
 rem I think all cameras have P (might be called manual)
@@ -119,7 +121,7 @@ endif
 p=get_av96
 s=get_sv96
 t=get_tv96
-print "Av", p, "Sv", s, "Tv", t
+print "Av", p, "Sv", s, "Tv", t, "ND", get_nd_current_ev96
 print "shot - default",get_exp_count + 1
 press "shoot_full"
 sleep 50

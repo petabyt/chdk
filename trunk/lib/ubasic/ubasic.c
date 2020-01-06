@@ -698,6 +698,34 @@ static int factor(void)
     accept(TOKENIZER_GET_RAW_SUPPORT);
     r = (is_raw_possible() && !camera_info.state.mode_play);
     break;    
+  case TOKENIZER_GET_CURRENT_AV96:
+    accept(TOKENIZER_GET_CURRENT_AV96);
+    r = shooting_get_current_av96();
+    break;
+  case TOKENIZER_GET_CURRENT_TV96:
+    accept(TOKENIZER_GET_CURRENT_TV96);
+    r = shooting_get_current_tv96();
+    break;
+  case TOKENIZER_GET_IMAGER_ACTIVE:
+    accept(TOKENIZER_GET_IMAGER_ACTIVE);
+    r = shooting_get_imager_active();
+    break;
+  case TOKENIZER_GET_MAX_AV96:
+    accept(TOKENIZER_GET_MAX_AV96);
+    r = shooting_get_max_av96(); // NOTE -1 if not available, i.e. playback
+    break;
+  case TOKENIZER_GET_MIN_AV96:
+    accept(TOKENIZER_GET_MIN_AV96);
+    r = shooting_get_min_av96(); // NOTE -1 if not available, i.e. playback
+    break;
+  case TOKENIZER_GET_ND_VALUE_EV96:
+    accept(TOKENIZER_GET_ND_VALUE_EV96);
+    r = shooting_get_nd_value_ev96();
+    break;
+  case TOKENIZER_GET_ND_CURRENT_EV96:
+    accept(TOKENIZER_GET_ND_CURRENT_EV96);
+    r = shooting_get_nd_current_ev96();
+    break;
 
   //ARM Begin
       
