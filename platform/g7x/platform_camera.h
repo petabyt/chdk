@@ -141,9 +141,7 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
-    //#undef  CAM_USES_ASPECT_CORRECTION
-    //#define CAM_USES_ASPECT_CORRECTION          1
-    // TODO
+
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
@@ -152,8 +150,7 @@
     #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows
     #define CAM_SCREEN_WIDTH                    720 // Width of bitmap screen in CHDK co-ordinates (360 or 480)
     #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
-// TODO
-//    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1
+    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1
     
 
     #undef  EDGE_HMARGIN
