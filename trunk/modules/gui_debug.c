@@ -44,7 +44,7 @@ void gui_debug_init(void *st_addr)
 static void gui_debug_draw_values(const coord y, void* addr) {
     int i;
 
-    if ((addr<=(void*)camera_info.maxramaddr || addr>=(void*)camera_info.rombaseaddr))
+    if (addr<=(void*)camera_info.maxramaddr || (addr>=(void*)camera_info.rombaseaddr && (unsigned)addr <= 0xfffffffc))
     {
         sprintf(buf, "0x%08X (%10u)", *((unsigned int*)addr), *((unsigned int*)addr));
         draw_string(10*FONT_WIDTH, y, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
@@ -103,7 +103,7 @@ void gui_debug_draw() {
             sprintf(buf,"%0d",debug_cont_update);
             draw_string(44*FONT_WIDTH, 0, buf, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE));
             gui_debug_draw_values(2*FONT_HEIGHT, addr);
-            if ((addr<=(void*)camera_info.maxramaddr || addr>=(void*)camera_info.rombaseaddr))
+            if (addr<=(void*)camera_info.maxramaddr || (addr>=(void*)camera_info.rombaseaddr && (unsigned)addr <= 0xfffffffc))
                 gui_debug_draw_values(8*FONT_HEIGHT, *((void**)addr));
             else
                 gui_debug_draw_values(8*FONT_HEIGHT, addr);
