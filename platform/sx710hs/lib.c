@@ -119,11 +119,17 @@ void *vid_get_viewport_live_fb()
     return 0;
 }
 
+// track viewport size changes with display type
+// only different from bitmap for HDMI out, playback only, probably pointless
+static int vp_full_width = 640;
+static int vp_full_buf_width = 640;
+static int vp_full_height = 480;
+
 int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
     if (camera_info.state.mode_play)
     {
-        return 640;
+        return vp_full_width;
     }
 // TODO: currently using actual width rather than half width used on pre d6
 // pixel format is uyvy (16bpp)
@@ -134,7 +140,7 @@ long vid_get_viewport_height() {
     extern int _GetVRAMVPixelsSize();
     if (camera_info.state.mode_play)
     {
-        return 480;
+        return vp_full_height;
     }
 // TODO: currently using actual height rather than 240 used on pre d6
     return _GetVRAMVPixelsSize();
@@ -186,15 +192,15 @@ void *vid_get_bitmap_fb() {
 }
 
 int vid_get_viewport_byte_width() {
-    return 640*2;
+    return vp_full_buf_width*2;
 }
 
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
-int vid_get_viewport_fullscreen_width()         { return 640; }
-int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_viewport_buffer_width_proper()      { return 640; }
+int vid_get_viewport_fullscreen_width()         { return vp_full_width; }
+int vid_get_viewport_fullscreen_height()        { return vp_full_height; }
+int vid_get_viewport_buffer_width_proper()      { return vp_full_buf_width; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 
 void *vid_get_bitmap_active_buffer() {
@@ -210,15 +216,13 @@ void *vid_get_opacity_active_buffer() {
     return (void *)opacity_buffer[active_bitmap_buffer&1];
 }
 
-// TODO sx280 c&p
-#if 0
 #ifdef CAM_SUPPORT_BITMAP_RES_CHANGE
 /*
  * needed because bitmap buffer resolutions change when an external display is used
  * an extra screen erase doesn't seem to be needed
  */
 void update_screen_dimensions() {
-    // see sub_fc18618a in 102b and 102c for the values
+    // see sub_fc163142 in 101a for values
     extern int displaytype;
     static int old_displaytype = -1;
 
@@ -230,34 +234,59 @@ void update_screen_dimensions() {
     switch(displaytype) {
         case 0:
         case 3:
-        case 4:
+        case 4: // normal screen
         case 5:
             // lcd
             camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 640;
             camera_screen.height = camera_screen.buffer_height = 480;
             camera_screen.size = camera_screen.buffer_size = 640*480;
             break;
-        case 1:
-        case 2:
-        case 8:
-        case 9:
             // tv-out
+        case 1: // NTSC
+        case 2: // PAL
+        case 8: // HDMI to non-HD display, (both NTSC and PAL)
+        case 9:
+        case 10:
             camera_screen.width = 720;
             camera_screen.physical_width = camera_screen.buffer_width = 736;
             camera_screen.height = camera_screen.buffer_height = 480;
             camera_screen.size = 720*480;
             camera_screen.buffer_size = 736*480;
             break;
-        case 6:
-        case 7:
-            // hdmi
+            // hdmi, playback only
+        case 6: // NTSC
+        case 7: // PAL
             camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 960;
             camera_screen.height = camera_screen.buffer_height = 540;
             camera_screen.size = camera_screen.buffer_size = 960*540;
             break;
+// unknown / invalid, but in canon code. Can be set with sub_fc0f0dfa but display is garbled, unstable
+        case 11:// O_o
+            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 1024;
+            camera_screen.height = camera_screen.buffer_height = 768;
+            camera_screen.size = 1024*768;
+            camera_screen.buffer_size = 1024*768;
+            break;
+        case 12:// O_o
+            camera_screen.width = 900;
+            camera_screen.physical_width = camera_screen.buffer_width = 928;
+            camera_screen.height = camera_screen.buffer_height = 600;
+            camera_screen.size = 900*600;
+            camera_screen.buffer_size = 928*600;
+            break;
+
+    }
+    if(displaytype == 6 || displaytype == 7) {
+        vp_full_width = 1920;
+        vp_full_buf_width = 1920;
+        vp_full_height = 1080;
+    } else {
+        // others are unclear, but unlikely to come up in practice
+        vp_full_width = camera_screen.width;
+        vp_full_buf_width = camera_screen.buffer_width;
+        vp_full_height = camera_screen.height;
     }
 }
-#endif
 #endif
 
 char *camera_jpeg_count_str()
