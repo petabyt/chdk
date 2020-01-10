@@ -14,11 +14,12 @@
 //"    BEQ     exitHook\n"
 
 /*** INSTALL filewrite() hook ***/
-//"    LDR     R0, =task_FileWrite\n"
-//"    CMP     R0, R3\n"
-//"    LDREQ   R3, =filewritetask\n"
-//"    BEQ     exitHook\n"
-
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+"    LDR     R0, =task_FileWrite\n"
+"    CMP     R0, R3\n"
+"    LDREQ   R3, =filewritetask\n"
+"    BEQ     exitHook\n"
+#endif
 /*** INSTALL movie_record_task() hook ***/
 //"    LDR     R0, =task_MovieRecord\n"
 //"    CMP     R0, R3\n"
