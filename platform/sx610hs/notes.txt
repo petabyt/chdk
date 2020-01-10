@@ -15,6 +15,11 @@ NOTE:
 	video features are not supported
 	ptp live view is not displayed correctly in  "Miniature Mode"
 
+PTP remote shoot is implemented but disabled pending testing.
+Please test and report in the forum using the build from:
+https://chdk.setepontos.com/index.php?topic=13355.msg142240#msg142240
+
+
 Tested:
 testing scripts: http://chdk.wikia.com/wiki/Testing? PASS
 RAW/DNG - OK

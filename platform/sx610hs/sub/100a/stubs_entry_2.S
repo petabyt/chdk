@@ -21,6 +21,8 @@ NHSTUB(init_focus_eventflag,                0xFF4CAD94) //blackhole
 NHSTUB(init_nd_eventflag,                   0xFF37A0B8) //blackhole
 NHSTUB(init_nd_semaphore,                   0xFF3C15AC) //blackhole FF3C15AC
 
+NHSTUB(LogCameraEvent,                   	0xff035200) // csv, for debug
+
 
 
 

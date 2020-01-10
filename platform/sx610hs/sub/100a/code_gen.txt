@@ -249,3 +249,98 @@ ENDASM
 ENDFUNC
 
 ENDFILE
+
+//-------------------------- FILEWRITE.C ----------------------------------------------------------
+
+FILE filewrite.c
+
+>>> file=../filewrite_hdr.c
+
+//////////////////////////////////////////////////////////////
+// filewritetask
+//////////////////////////////////////////////////////////////
+FUNC sig=task_FileWrite name=filewritetask
+ASM
+FW 1
+>>>
+#ifdef FILEWRITE_DEBUG_LOG
+"bl log_fwt_start\n"
+#endif
+<<<
+FW 10
+>>>
+#ifdef FILEWRITE_DEBUG_LOG
+"ldr     r0, [sp,#8]\n"
+"bl log_fwt_msg\n"
+#endif
+<<<
+FW 50
+PATCHSUB ref 0 comment="msg 12 - open, main hook"
+FW 15
+PATCHSUB ref 1 comment="msg 0-6 - write chunk"
+FW 1
+PATCHSUB ref 2 comment="msg 0-7 - close"
+FW $
+ENDASM
+ENDFUNC
+
+// msg 12: Open
+FUNC ref=0
+ASM
+FW 2
+>>>
+//hook placed here to avoid conditional branch a few instructions below (watch out for registers!)
+//"  MOV   R0, R4\n"      //data block start, commented out as R0 is already holding what we need
+"    BL filewrite_main_hook\n"
+"    MOV     R0, R4\n"      //restore register(s)
+<<<
+FW 39
+PATCHSUB name=fwt_open
+FW 52
+>>>
+"    LDR R3, =current_write_ignored\n"
+"    LDR R3, [R3]\n"
+"    CMP R3, #0\n"
+"    BNE loc_C\n" // jump over the next block
+<<<
+FW 12
+>>>
+"loc_C:\n"
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+// msg 0-6: write chunk
+FUNC ref=1
+ASM
+FW 33
+PATCHSUB name=fwt_write
+FW $
+ENDASM
+ENDFUNC
+
+// msg 7: close
+FUNC ref=2
+ASM
+FW 35
+>>>
+"    LDR R3, =current_write_ignored\n"
+"    LDR R3, [R3]\n"
+"    CMP R3, #0\n"
+"    BNE loc_D\n" // jump over the next block
+<<<
+FW 2
+>>>
+"loc_D:\n"
+<<<
+PATCHSUB name=fwt_close
+->FW
+ENDASM
+ENDFUNC
+>>>
+#endif // CAM_HAS_FILEWRITETASK_HOOK
+<<<
+
+ENDFILE
+
