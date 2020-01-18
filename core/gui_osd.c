@@ -1175,6 +1175,31 @@ void gui_draw_debug_vals_osd()
         */
 
         /*
+        // user friendlier keymap display with separated bits, grouped by hex digits
+        // comment out the above FB, ZB and USB related lines when using this
+        extern long physw_status[3];
+        #define BITDISP(str, val) { unsigned bdi; \
+                            char dig[4] = {'1','2','4','8'}; \
+                            for(bdi=0; bdi<32; bdi++) { \
+                              str[31-bdi] = (val&(1<<bdi))?dig[bdi&3]:'0'; \
+                            } \
+                            str[32] = 0; \
+                          }
+        draw_txt_string(DBGMISCVALS_X-20, DBGMISCVALS_Y+1, "     [ 7][ 6][ 5][ 4][ 3][ 2][ 1][ 0]", col);
+        strcpy(osd_buf, "PS1: ");
+        BITDISP((osd_buf+5), physw_status[0])
+        draw_txt_string(DBGMISCVALS_X-20, DBGMISCVALS_Y+2, osd_buf, col);
+
+        strcpy(osd_buf, "PS2: ");
+        BITDISP((osd_buf+5), physw_status[1])
+        draw_txt_string(DBGMISCVALS_X-20, DBGMISCVALS_Y+3, osd_buf, col);
+
+        strcpy(osd_buf, "PS3: ");
+        BITDISP((osd_buf+5), physw_status[2])
+        draw_txt_string(DBGMISCVALS_X-20, DBGMISCVALS_Y+4, osd_buf, col);
+        */
+
+        /*
         long v=get_file_counter();
         sprintf(osd_buf, "1:%03d-%04d", (v>>18)&0x3FF, (v>>4)&0x3FFF);
         sprintf(osd_buf, "1:%d, %08X", xxxx, eeee);
