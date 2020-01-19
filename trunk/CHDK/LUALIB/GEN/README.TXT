@@ -5,3 +5,5 @@ propsetN.lua
 modelist.lua 
   Contains an array of capture mode names indexed by CHDK mode number
   LUALIB/capmode.lua provides a friendly interface to capture modes
+cnf_*.lua
+  Contains name / ID mappings for set_config_value
