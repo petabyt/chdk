@@ -497,6 +497,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_self_task_id", OPTIONAL|UNUSED|LIST_ALWAYS }, // gets ID of own task
     { "get_task_properties", OPTIONAL|UNUSED|LIST_ALWAYS }, // gets copy of task's data (different struct, not the real TCB)
     { "get_self_task_errno_pointer", OPTIONAL|UNUSED|LIST_ALWAYS }, // gets pointer to own task's errno
+    { "EnableDispatch", OPTIONAL|UNUSED }, // enables task switching (high level wrapper)
+    { "DisableDispatch", OPTIONAL|UNUSED }, // disables task switching (high level wrapper)
+    { "EnableDispatch_low", OPTIONAL|UNUSED }, // enables task switching
+    { "DisableDispatch_low", OPTIONAL|UNUSED }, // disables task switching
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -2053,6 +2057,84 @@ int find_Remove(firmware *fw)
     return 0;
 }
 
+int find_dispatch_funcs(firmware *fw, int param)
+{
+    int f1;
+    if (param==0) {
+        f1= get_saved_sig(fw,"EnableDispatch_low");
+    }
+    else if (param==1) {
+        f1= get_saved_sig(fw,"DisableDispatch_low");
+    }
+    else {
+        return 0;
+    }
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int r0, r1, cnt;
+    r0 = find_str(fw,"Booting"); // for sx230 (extra task on a few models)
+    if (r0 == -1) {
+        r0 = find_str(fw,"Startup"); // locating taskcreate_Startup
+        r1 = find_str(fw,"Startup.c");
+        if (r0 == r1) { // for s5is
+            r0 = find_Nth_str(fw,"Startup",2);
+        }
+    }
+    r0 = find_nxt_str_ref(fw,r0,r0-1024);
+    if(r0 < 0)
+        return 0;
+    r0 = adr2idx(fw,idx2adr(fw,r0)); // needed on cams with code copied to RAM
+    cnt = 0;
+    while (r0!=-1 && cnt<5) {
+        r0 = find_inst_rev(fw,isBL,r0-1,10);
+        int b1 = idxFollowBranch(fw,r0,0x01000001);
+        b1 = adr2idx(fw,idx2adr(fw,b1)); // needed on cams with code copied to RAM
+        if (isLDR_PC(fw,b1)) { // for s110
+            b1 = idxFollowBranch(fw,b1,0x01000001);
+        }
+        if (param==0) { // EnableDispatch
+            r1 = find_nxt_str_ref_alt(fw, "KerSys.c", b1, 24);
+            int i1 = find_inst(fw,isLDMFD_PC,b1,24);
+            if (r1!=-1 && i1>r1) {
+                int j1 = find_Nth_inst(fw,isBL,b1,24,1);
+                if (j1 != -1) {
+                    if (idx2adr(fw,idxFollowBranch(fw,j1,0x01000001))==idx2adr(fw,f1)) {
+                        fwAddMatch(fw,idx2adr(fw,b1),32,0,122);
+                        return 1;
+                    }
+                }
+            }
+        }
+        else if (param==1) { // DisableDispatch
+            int c = 1;
+            while (c<3) {
+                int b2 = find_Nth_inst(fw,isBL,b1,12,c);
+                if (b2 == -1) {
+                    break;
+                }
+                b2 = idxFollowBranch(fw,b2,0x01000001);
+                b2 = adr2idx(fw,idx2adr(fw,b2)); // needed on cams with code copied to RAM
+                r1 = find_nxt_str_ref_alt(fw, "KerSys.c", b2, 24);
+                int i1 = find_inst(fw,isLDMFD_PC,b2,24);
+                if (r1!=-1 && i1>r1) {
+                    int j1 = find_Nth_inst(fw,isBL,b2,24,1);
+                    if (j1 != -1) {
+                        if (idx2adr(fw,idxFollowBranch(fw,j1,0x01000001))==idx2adr(fw,f1)) {
+                            fwAddMatch(fw,idx2adr(fw,b2),32,0,122);
+                            return 1;
+                        }
+                    }
+                }
+                c++;
+            }
+        }
+        cnt++;
+    }
+    return 0;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Data for matching the '_log' function
@@ -2452,6 +2534,7 @@ string_sig string_sigs[] =
     { 15, "get_resource_pointer", "Not found icon resource.\r\n", 0x01000001 },
     { 15, "get_self_task_id", "ASSERT!! %s Line %d\n", 0x01000001 },
     { 15, "get_current_exp", "Exp  Av %d, Tv %d, Gain %d\r", 0x01000001 },
+    { 15, "EnableDispatch_low", "\n%s Task was Suspended.\n", 0x01000001 },
     //{ 15, "DoMovieFrameCapture", "DoMovieFrameCapture executed.",  0x01000001 },
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 15, "SetHPTimerAfterTimeout", "FrameRateGenerator.c", 0x01000001,          0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007, 0x0001, 0x0007, 0x0007, 0x0007, 0x0007, 0x0007 },
@@ -2577,6 +2660,8 @@ string_sig string_sigs[] =
     { 22, "DoMovieFrameCapture", (char*)find_DoMovieFrameCapture, 0},
     { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
     { 22, "Remove", (char*)find_Remove, 0},
+    { 22, "EnableDispatch", (char*)find_dispatch_funcs, 0},
+    { 22, "DisableDispatch", (char*)find_dispatch_funcs, 1},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
@@ -2586,9 +2671,12 @@ string_sig string_sigs[] =
     { 23, "get_nd_value", "IrisSpecification.c", 25,                            -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,},
     { 23, "GetUsableAvRange", "[AE]Prog Line Error!\n", 20,                      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,},
     { 23, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 7,           -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,}, // two functions satisfy this, either will work for us
+    { 23, "DisableDispatch_low", "data abort", 7,                                0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },
+
+    { 25, "", "", 0 },
 
     { 0, 0, 0, 0 }
 };
@@ -3537,7 +3625,7 @@ int find_strsig(firmware *fw, string_sig *sig)
             return 0;
         }
     case 21:    return fw_process(fw, sig, (int (*)(firmware*, string_sig*, int))(sig->ev_name));
-    case 22:    return ((int (*)(firmware*))(sig->ev_name))(fw);
+    case 22:    return ((int (*)(firmware*,int))(sig->ev_name))(fw,sig->offset);
     case 23:    return fw_string_process(fw, sig, match_strsig23, 1);
     case 24:    return fw_string_process(fw, sig, match_strsig24, 0);
     }

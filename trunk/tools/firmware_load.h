@@ -165,6 +165,7 @@ int find_Nth_inst_rev(firmware *fw, int (*inst)(firmware*,int), int idx, int len
 int find_strptr_ref(firmware *fw, char *str);
 int find_str_ref(firmware *fw, char *str);
 int find_nxt_str_ref(firmware *fw, int str_adr, int ofst);
+int find_nxt_str_ref_alt(firmware *fw, char *str, int ofst, int limit);
 
 // Find a B or BL instruction that calls/jumps to the 'v1' address
 int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2);

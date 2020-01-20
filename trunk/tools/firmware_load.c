@@ -826,6 +826,24 @@ int find_nxt_str_ref(firmware *fw, int str_adr, int ofst)
     return -1;
 }
 
+// Finds the next reference to a string
+int find_nxt_str_ref_alt(firmware *fw, char *str, int ofst, int limit)
+{
+    int k;
+    for (k=ofst; k<ofst+limit; k++)
+    {
+        if (isADR_PC_cond(fw,k) && idx_valid(fw,adr2idx(fw,ADR2adr(fw,k))) && (strcmp(str,adr2ptr(fw,ADR2adr(fw,k))) == 0))
+        {
+            return k;
+        }
+        else if (isLDR_PC_cond(fw,k) && idx_valid(fw,adr2idx(fw,LDR2val(fw,k))) && (strcmp(str,adr2ptr(fw,LDR2val(fw,k))) == 0))
+        {
+            return k;
+        }
+    }
+    return -1;
+}
+
 //------------------------------------------------------------------------------------------------------------
 
 // Checks if the instruction at index 'k' is a BL to address 'v1'

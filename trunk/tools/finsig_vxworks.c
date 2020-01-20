@@ -492,6 +492,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "EnableInterrupt", OPTIONAL|UNUSED }, // enables IRQ
     { "GetCurrentMachineTime", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
     { "HwOcReadICAPCounter", OPTIONAL|UNUSED }, // reads usec counter, name from ixus30
+    { "EnableDispatch", OPTIONAL|UNUSED }, // enables task switching (high level wrapper)
+    { "DisableDispatch", OPTIONAL|UNUSED }, // disables task switching (high level wrapper)
+    { "EnableDispatch_low", OPTIONAL|UNUSED }, // enables task switching
+    { "DisableDispatch_low", OPTIONAL|UNUSED }, // disables task switching
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED|DONT_EXPORT },
@@ -1678,6 +1682,7 @@ string_sig string_sigs[] =
     { 9, "open", "Open", 0,                                                3 },
     { 9, "open", "Open", 0,                                                3 },
     { 9, "malloc_alt", "wrapped_malloc", 0,                                2 },
+    { 9, "DisableDispatch_low", "DisableDispatch", 0,                      6 },
 
     //                                                                   ???
     { 11, "err_init_task", "\n-- %s() error in init_task() --", 0,         2 },
@@ -1721,6 +1726,7 @@ string_sig string_sigs[] =
     { 15, "get_nd_value", "IrisSpecification.c", 0x01000001,                     0x0014 },
     { 15, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 0x01000001,   0x0007 },
     { 15, "DoMovieFrameCapture", "DoMovieFrameCapture executed.",  0x01000001,   0x0007 },
+    { 15, "EnableDispatch_low", "EnableDispatch : dispatch counter unserflow", 0x01000001,   0x0003 },
 
     { 16, "DeleteDirectory_Fut", (char*)DeleteDirectory_Fut_test, 0x01000001 },
     { 16, "MakeDirectory_Fut", (char*)MakeDirectory_Fut_test, 0x01000001 },
@@ -1825,6 +1831,8 @@ string_sig string_sigs[] =
     { 100, "WaitForEventFlag", "WaitForEventFlag : call from interrupt handler", 0,             12 },
     { 100, "CancelHPTimer", "EventProcedure", 0,                                                101 }, // newest vx
     { 100, "get_current_exp", "Exp  Av %d, Tv %d, Gain %d\r",0x01000001,                        0x07 },
+    { 100, "EnableDispatch", "EnableDispatch : call from interrupt handler", 0,                 3 },
+    { 100, "DisableDispatch", "DisableDispatch : call from interrupt handler", 0,               3 },
     
     { 101, "DeleteSemaphore", "DeleteSemaphore", 0 },
     { 101, "CreateCountingSemaphore", "CreateCountingSemaphore", 0 },
