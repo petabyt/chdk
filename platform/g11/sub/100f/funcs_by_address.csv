@@ -1,5 +1,7 @@
 0x00091e3c,task_AdditionAgent
 0xff810da8,memShow_FW
+0xff8129d8,DisableDispatch_low
+0xff812a04,EnableDispatch_low
 0xff812a58,get_self_task_id
 0xff813a18,get_task_properties
 0xff813f38,strncpy
@@ -154,8 +156,10 @@
 0xff838e08,GiveSemaphore
 0xff838e08,GiveSemaphore_FW
 0xff838e40,GetSemaphoreValue
+0xff838eac,DisableDispatch
 0xff839070,SleepTask
 0xff839070,SleepTask_FW
+0xff8390dc,EnableDispatch
 0xff839130,CreateTaskStrictly
 0xff839164,CreateMessageQueueStrictly
 0xff839188,CreateEventFlagStrictly

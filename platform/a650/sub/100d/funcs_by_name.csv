@@ -171,6 +171,8 @@
 0xffd8ba38,DevelopTool.DevelopTest_FW
 0xffd00ebc,DisableCzDebugLog_FW
 0xffe2fc24,DisableDebugLogMode_FW
+0xffc196cc,DisableDispatch
+0xffc02140,DisableDispatch_low
 0xffd031a8,DisableFocusLens_FW
 0xffd03228,DisableFocusLensGainLock_FW
 0xffd03254,DisableFocusLensWaveLock_FW
@@ -226,6 +228,8 @@
 0xffd91e68,EF.StopEFCharge_FW
 0xffd00ea4,EnableCzDebugLog_FW
 0xffe2fc10,EnableDebugLogMode_FW
+0xffc198fc,EnableDispatch
+0xffc0216c,EnableDispatch_low
 0xffd0315c,EnableFocusLens_FW
 0xffd031f4,EnableFocusLensGainLockWithVoltage_FW
 0xffd03238,EnableFocusLensWaveLock_FW

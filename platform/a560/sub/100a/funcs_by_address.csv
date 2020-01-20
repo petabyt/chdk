@@ -1250,6 +1250,8 @@
 0xffea92f4,GiveSemaphore
 0xffea92f4,GiveSemaphore_FW
 0xffea93e0,GetSemaphoreValue
+0xffea954c,DisableDispatch
+0xffea95d8,EnableDispatch
 0xffea963c,SleepTask
 0xffea963c,SleepTask_FW
 0xffea9728,CreateTask
@@ -1349,3 +1351,5 @@
 0xfff040bc,task_CtgTotalTask
 0xfff11a10,task_MovieRecord
 0xfff142a4,task_AviWrite
+0xfff16540,DisableDispatch_low
+0xfff16570,EnableDispatch_low

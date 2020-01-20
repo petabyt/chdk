@@ -169,6 +169,8 @@
 0xff9b5d50,DisableAutoShutdown_FW
 0xffb48068,DisableCzDebugLog_FW
 0xffb62a70,DisableDebugLogMode_FW
+0xff8223b8,DisableDispatch
+0xff81e488,DisableDispatch_low
 0xffb24ff4,DisableFocusPiCircuit_FW
 0xffb31350,DisableIrisActuatorEvent_FW
 0xffb355d8,DisableIrisEvent_FW
@@ -224,6 +226,8 @@
 0xff9b5d68,EnableAutoShutdown_FW
 0xffb4804c,EnableCzDebugLog_FW
 0xffb62a58,EnableDebugLogMode_FW
+0xff822444,EnableDispatch
+0xff81e4b8,EnableDispatch_low
 0xffb3f930,EnableFocusLens_FW
 0xffb24fe4,EnableFocusPiCircuit_FW
 0xff82106c,EnableInterrupt

@@ -65,6 +65,8 @@
 0xff81eb9c,Peek8_FW
 0xff81eba8,EraseSignature_FW
 0xff81ebd8,GetSystemTime_FW
+0xff81f640,DisableDispatch_low
+0xff81f670,EnableDispatch_low
 0xff81fefc,GetCurrentMachineTime
 0xff8209cc,HwOcReadICAPCounter
 0xff820f6c,task_ReceiveSio
@@ -102,6 +104,8 @@
 0xff8230e0,TryTakeSemaphore
 0xff823144,GiveSemaphore
 0xff823144,GiveSemaphore_FW
+0xff8234f4,DisableDispatch
+0xff823580,EnableDispatch
 0xff8235e4,SleepTask
 0xff8235e4,SleepTask_FW
 0xff823784,CreateTask

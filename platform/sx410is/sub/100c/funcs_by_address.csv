@@ -1,4 +1,6 @@
 0x001058b0,task_AdditionAgent
+0x006b1b14,DisableDispatch_low
+0x006b1b40,EnableDispatch_low
 0x006b1b94,get_self_task_id
 0x006b21d8,get_task_properties
 0x006bab48,_divmod_signed_int
@@ -161,8 +163,10 @@
 0xff82a1b0,DeleteRecursiveLock
 0xff82a218,AcquireRecursiveLock
 0xff82a380,ReleaseRecursiveLock
+0xff82a424,DisableDispatch
 0xff82a760,SleepTask
 0xff82a760,SleepTask_FW
+0xff82a7ac,EnableDispatch
 0xff82ab10,time
 0xff82abc4,GetTimeOfSystem_FW
 0xff82b460,task_StartupImage

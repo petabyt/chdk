@@ -214,6 +214,8 @@
 0xff054a40,DisableAcceleLogWrite_FW
 0xff19451c,DisableDebugLogMode_FW
 0xff3722f4,DisableDISModeChange_FW
+0xff02b55c,DisableDispatch
+0xff002ac4,DisableDispatch_low
 0xff37091c,DisableFocusLens_FW
 0xff370994,DisableFocusLensGainLock_FW
 0xff3709c0,DisableFocusLensWaveLock_FW
@@ -293,6 +295,8 @@
 0xff054a2c,EnableAcceleLogWrite_FW
 0xff194508,EnableDebugLogMode_FW
 0xff372304,EnableDISModeChange_FW
+0xff02b7b0,EnableDispatch
+0xff002af0,EnableDispatch_low
 0xff3708d0,EnableFocusLens_FW
 0xff370968,EnableFocusLensGainLockWithVoltage_FW
 0xff3709a4,EnableFocusLensWaveLock_FW

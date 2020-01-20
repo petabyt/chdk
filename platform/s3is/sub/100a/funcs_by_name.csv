@@ -146,6 +146,8 @@
 0xffafc054,DisableCzDebugLog_FW
 0xffafc020,DisableCzSilentDrive_FW
 0xffb1b018,DisableDebugLogMode_FW
+0xff82147c,DisableDispatch
+0xff81dc90,DisableDispatch_low
 0xffaf19a4,DisableFocusLensSilentDrive_FW
 0xffadfaa4,DisableFocusPiCircuit_FW
 0xffaf3d20,DisableIrisActuatorEvent_FW
@@ -201,6 +203,8 @@
 0xffafc038,EnableCzDebugLog_FW
 0xffafc004,EnableCzSilentDrive_FW
 0xffb1b000,EnableDebugLogMode_FW
+0xff821508,EnableDispatch
+0xff81dcc0,EnableDispatch_low
 0xffaf1994,EnableFocusLensSilentDrive_FW
 0xffadfa94,EnableFocusPiCircuit_FW
 0xff820130,EnableInterrupt

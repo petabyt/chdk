@@ -1,4 +1,6 @@
 0x00150c00,task_AdditionAgent
+0x006b1b10,DisableDispatch_low
+0x006b1b3c,EnableDispatch_low
 0x006b1b90,get_self_task_id
 0x006b21d4,get_task_properties
 0x006b5484,RegisterInterruptHandler

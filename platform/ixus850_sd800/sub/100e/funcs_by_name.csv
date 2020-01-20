@@ -167,6 +167,8 @@
 0xffb0ed6c,DeviceUniqueIDCheckSum_FW
 0xff9adcd8,DisableAutoShutdown_FW
 0xffb25754,DisableDebugLogMode_FW
+0xff822504,DisableDispatch
+0xff81e59c,DisableDispatch_low
 0xffaee158,DisableFocusPiCircuit_FW
 0xffaee138,DisableMechaCircuit_FW
 0xff9e7098,DisableMovieController_FW
@@ -219,6 +221,8 @@
 0xff994ce4,EmergencyOfLens_FW
 0xff9adcf0,EnableAutoShutdown_FW
 0xffb2573c,EnableDebugLogMode_FW
+0xff822590,EnableDispatch
+0xff81e5cc,EnableDispatch_low
 0xffb04208,EnableFocusLens_FW
 0xffaee148,EnableFocusPiCircuit_FW
 0xff8211b8,EnableInterrupt

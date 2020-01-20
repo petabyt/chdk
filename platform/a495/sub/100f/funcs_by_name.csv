@@ -170,6 +170,8 @@
 0xffceabd4,DeviceUniqueIDCheckSum_FW
 0xffd06c58,DisableCzDebugLog_FW
 0xffced5dc,DisableDebugLogMode_FW
+0xffc28f98,DisableDispatch
+0xffc029fc,DisableDispatch_low
 0xffdfa5c4,DisableFocusLens_FW
 0xffdfa644,DisableFocusLensGainLock_FW
 0xffdfa670,DisableFocusLensWaveLock_FW
@@ -229,6 +231,8 @@
 0xffda13a8,EF.StopEFCharge_FW
 0xffd06c40,EnableCzDebugLog_FW
 0xffced5c8,EnableDebugLogMode_FW
+0xffc291c8,EnableDispatch
+0xffc02a28,EnableDispatch_low
 0xffdfa578,EnableFocusLens_FW
 0xffdfa610,EnableFocusLensGainLockWithVoltage_FW
 0xffdfa654,EnableFocusLensWaveLock_FW

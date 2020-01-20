@@ -186,6 +186,8 @@
 0xffa2ac70,DevelopTool.DevelopTest_FW
 0xff92bd2c,DeviceUniqueIDCheckSum_FW
 0xff92ec94,DisableDebugLogMode_FW
+0xff8388a8,DisableDispatch
+0xff8129d8,DisableDispatch_low
 0xffa96f10,DisableFocusLens_FW
 0xffa96f90,DisableFocusLensGainLock_FW
 0xffa970a8,DisableFocusLensPort_FW
@@ -266,6 +268,8 @@
 0xffa362f8,EF.StartInternalPreFlash_FW
 0xffa362d4,EF.StopEFCharge_FW
 0xff92ec80,EnableDebugLogMode_FW
+0xff838ad8,EnableDispatch
+0xff812a04,EnableDispatch_low
 0xffa96ec4,EnableFocusLens_FW
 0xffa96f5c,EnableFocusLensGainLockWithVoltage_FW
 0xffa97098,EnableFocusLensPort_FW

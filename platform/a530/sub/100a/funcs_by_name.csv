@@ -142,6 +142,8 @@
 0xffcaecc8,DevelopTool.DevelopTest_FW
 0xffd479bc,DisableAutoShutdown_FW
 0xffe914a0,DisableDebugLogMode_FW
+0xffc11080,DisableDispatch
+0xffc0d894,DisableDispatch_low
 0xffe62bb8,DisableFocusPiCircuit_FW
 0xffe62b98,DisableMechaCircuit_FW
 0xffd80b3c,DisableMovieController_FW
@@ -191,6 +193,8 @@
 0xffd30c14,EmergencyOfLens_FW
 0xffd479d4,EnableAutoShutdown_FW
 0xffe91488,EnableDebugLogMode_FW
+0xffc1110c,EnableDispatch
+0xffc0d8c4,EnableDispatch_low
 0xffe77a1c,EnableFocusLens_FW
 0xffe62ba8,EnableFocusPiCircuit_FW
 0xffc0fd34,EnableInterrupt
