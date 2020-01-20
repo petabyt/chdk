@@ -1,4 +1,6 @@
 0x00180ba4,task_AdditionAgent
+0x00685b2c,DisableDispatch_low
+0x00685b58,EnableDispatch_low
 0x00685bac,get_self_task_id
 0x00686da0,get_task_properties
 0x0068a7bc,RegisterInterruptHandler
@@ -54,8 +56,10 @@
 0x0068f26c,DeleteRecursiveLock
 0x0068f2bc,AcquireRecursiveLock
 0x0068f3dc,ReleaseRecursiveLock
+0x0068f464,DisableDispatch
 0x0068f670,SleepTask
 0x0068f670,SleepTask_FW
+0x0068f6b8,EnableDispatch
 0x006992d0,LocalTime
 0x006998ac,time
 0x0069995c,GetTimeOfSystem_FW

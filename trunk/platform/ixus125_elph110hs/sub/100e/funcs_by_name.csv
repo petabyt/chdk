@@ -207,6 +207,8 @@
 0xff15db30,DeviceUniqueIDCheckSum_FW
 0xff1609b4,DisableDebugLogMode_FW
 0xff31fd48,DisableDISModeChange_FW
+0x0068c0dc,DisableDispatch
+0x00685b2c,DisableDispatch_low
 0xff31e614,DisableFocusLens_FW
 0xff31e690,DisableFocusLensGainLock_FW
 0xff31e6bc,DisableFocusLensWaveLock_FW
@@ -282,6 +284,8 @@
 0xff1a4a60,EFUSE_ReadData_FW
 0xff1609a0,EnableDebugLogMode_FW
 0xff31fd58,EnableDISModeChange_FW
+0x0068c330,EnableDispatch
+0x00685b58,EnableDispatch_low
 0xff31e5c8,EnableFocusLens_FW
 0xff31e664,EnableFocusLensGainLockWithVoltage_FW
 0xff31e6a0,EnableFocusLensWaveLock_FW

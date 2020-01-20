@@ -142,6 +142,8 @@
 0xffcb7418,DevelopTool.DevelopTest_FW
 0xffd582cc,DisableAutoShutdown_FW
 0xffea6eb4,DisableDebugLogMode_FW
+0xffc11080,DisableDispatch
+0xffc0d894,DisableDispatch_low
 0xffe73ae8,DisableFocusPiCircuit_FW
 0xffe7f424,DisableIrisActuatorEvent_FW
 0xffe836f8,DisableIrisEvent_FW
@@ -193,6 +195,8 @@
 0xffd41594,EmergencyOfLens_FW
 0xffd582e4,EnableAutoShutdown_FW
 0xffea6e9c,EnableDebugLogMode_FW
+0xffc1110c,EnableDispatch
+0xffc0d8c4,EnableDispatch_low
 0xffe8d17c,EnableFocusLens_FW
 0xffe73ad8,EnableFocusPiCircuit_FW
 0xffc0fd34,EnableInterrupt

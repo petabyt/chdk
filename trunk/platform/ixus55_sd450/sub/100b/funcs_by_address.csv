@@ -71,6 +71,8 @@
 0xff81b9a0,CloseConsole_FW
 0xff81baec,task_ConsoleSvr
 0xff81bc88,task_LowConsole
+0xff81db30,DisableDispatch_low
+0xff81db60,EnableDispatch_low
 0xff81e360,GetCurrentMachineTime
 0xff81ed70,HwOcReadICAPCounter
 0xff81f2b8,task_UartSio
@@ -107,6 +109,8 @@
 0xff8211d4,GiveSemaphore
 0xff8211d4,GiveSemaphore_FW
 0xff8212a8,GetSemaphoreValue
+0xff821400,DisableDispatch
+0xff82148c,EnableDispatch
 0xff8214f0,SleepTask
 0xff8214f0,SleepTask_FW
 0xff8215dc,CreateTask

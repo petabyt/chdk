@@ -264,6 +264,8 @@
 0xff955d28,DisableAutoShutdown_FW
 0xff93f4c0,DisableCaptureLog_FW
 0xffa7e44c,DisableDebugLogMode_FW
+0xff8234f4,DisableDispatch
+0xff81f640,DisableDispatch_low
 0xffa499d4,DisableFocusPiCircuit_FW
 0xffa49964,DisableMechaCircuit_FW
 0xffa7e478,DisableMemoryCheckMode_FW
@@ -330,6 +332,8 @@
 0xff955d40,EnableAutoShutdown_FW
 0xff93f4b8,EnableCaptureLog_FW
 0xffa7e434,EnableDebugLogMode_FW
+0xff823580,EnableDispatch
+0xff81f670,EnableDispatch_low
 0xffa499c4,EnableFocusPiCircuit_FW
 0xff821f48,EnableInterrupt
 0xffa49954,EnableMechaCircuit_FW

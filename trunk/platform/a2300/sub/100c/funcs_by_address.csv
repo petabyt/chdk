@@ -1,4 +1,6 @@
 0x000ae6c0,task_AdditionAgent
+0x003f1b2c,DisableDispatch_low
+0x003f1b58,EnableDispatch_low
 0x003f1bac,get_self_task_id
 0x003f2da0,get_task_properties
 0x003f67bc,RegisterInterruptHandler
@@ -29,8 +31,10 @@
 0x003f7704,GiveSemaphore
 0x003f7704,GiveSemaphore_FW
 0x003f773c,GetSemaphoreValue
+0x003f77a4,DisableDispatch
 0x003f79b0,SleepTask
 0x003f79b0,SleepTask_FW
+0x003f79f8,EnableDispatch
 0x003f7a50,CreateTaskStrictly
 0x003f7a84,CreateMessageQueueStrictly
 0x003f7aa8,CreateEventFlagStrictly

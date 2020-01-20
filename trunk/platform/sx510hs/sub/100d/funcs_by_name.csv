@@ -206,6 +206,8 @@
 0xff197b2c,DeviceUniqueIDCheckSum_FW
 0xff19aa60,DisableDebugLogMode_FW
 0xff37013c,DisableDISModeChange_FW
+0x006b89f4,DisableDispatch
+0x006b1b9c,DisableDispatch_low
 0xff46d24c,DisableEsmDacOut_FW
 0xff46da80,DisableEsmFixVolSpdMeasure_FW
 0xff46d00c,DisableEsmOpenDrive_FW
@@ -291,6 +293,8 @@
 0xff2d4cf4,EF.StopEFCharge_FW
 0xff19aa4c,EnableDebugLogMode_FW
 0xff37014c,EnableDISModeChange_FW
+0x006b8d78,EnableDispatch
+0x006b1bc8,EnableDispatch_low
 0xff46d23c,EnableEsmDacOut_FW
 0xff46da70,EnableEsmFixVolSpdMeasure_FW
 0xff46d004,EnableEsmOpenDrive_FW

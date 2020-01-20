@@ -1,5 +1,7 @@
 0x000b9fec,task_AdditionAgent
 0xff810bd0,memShow_FW
+0xff812128,DisableDispatch_low
+0xff812154,EnableDispatch_low
 0xff8121a8,get_self_task_id
 0xff81339c,get_task_properties
 0xff813794,get_self_task_errno_pointer
@@ -166,8 +168,10 @@
 0xff828054,DeleteRecursiveLock
 0xff8280a4,AcquireRecursiveLock
 0xff8281a8,ReleaseRecursiveLock
+0xff82822c,DisableDispatch
 0xff8283f0,SleepTask
 0xff8283f0,SleepTask_FW
+0xff82845c,EnableDispatch
 0xff8284c0,malloc_strictly
 0xff82856c,AllocateUncacheableMemory
 0xff8285a0,FreeUncacheableMemory

@@ -226,6 +226,8 @@
 0xff9698fc,DisableCaptureLog_FW
 0xffa7ef34,DisableCZDebugLog_FW
 0xffab4d44,DisableDebugLogMode_FW
+0xff82210c,DisableDispatch
+0xff81e448,DisableDispatch_low
 0xffa7c820,DisableFocusPiCircuit_FW
 0xffa925b4,DisableIrisActuatorEvent_FW
 0xffa7c7cc,DisableMechaCircuit_FW
@@ -288,6 +290,8 @@
 0xff9698f4,EnableCaptureLog_FW
 0xffa7ef1c,EnableCZDebugLog_FW
 0xffab4d2c,EnableDebugLogMode_FW
+0xff822198,EnableDispatch
+0xff81e478,EnableDispatch_low
 0xffa7c810,EnableFocusPiCircuit_FW
 0xff820b5c,EnableInterrupt
 0xffa92584,EnableIrisActuatorEvent_FW

@@ -190,6 +190,8 @@
 0xff9e6060,DevelopTool.DevelopTest_FW
 0xff877c78,DisableAutoShutdown_FW
 0xffa734d8,DisableDebugLogMode_FW
+0xff82a994,DisableDispatch
+0xff812154,DisableDispatch_low
 0xff9523e4,DisableFocusLens_FW
 0xff9541e0,DisableFocusPiCircuit_FW
 0xff953994,DisableIris_FW
@@ -247,6 +249,8 @@
 0xff9ece90,EF.StopEFCharge_FW
 0xff877d9c,EnableAutoShutdown_FW
 0xffa734c4,EnableDebugLogMode_FW
+0xff82abc4,EnableDispatch
+0xff812180,EnableDispatch_low
 0xff952398,EnableFocusLens_FW
 0xff9541d0,EnableFocusPiCircuit_FW
 0xff81b624,EnableInterrupt
