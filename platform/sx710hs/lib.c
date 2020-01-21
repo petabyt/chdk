@@ -247,8 +247,8 @@ void update_screen_dimensions() {
         case 8: // HDMI to non-HD display, (both NTSC and PAL)
         case 9:
         case 10:
-            camera_screen.width = 720;
-            camera_screen.physical_width = camera_screen.buffer_width = 736;
+            camera_screen.physical_width = camera_screen.width = 720;
+            camera_screen.buffer_width = 736;
             camera_screen.height = camera_screen.buffer_height = 480;
             camera_screen.size = 720*480;
             camera_screen.buffer_size = 736*480;
