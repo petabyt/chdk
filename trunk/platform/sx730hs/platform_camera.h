@@ -186,9 +186,8 @@
 
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
-// TODO for sx730
-//    #define CAM_REMOTE_HDMI_HPD                 1 // Camera supports using HDMI hotplug detect for remote signal
-//    #define CAM_REMOTE_HDMI_POWER_OVERRIDE      1 // Camera requires HDMI power to be forced on in rec mode
+    #define CAM_REMOTE_HDMI_HPD                 1 // Camera supports using HDMI hotplug detect for remote signal
+    #define CAM_REMOTE_HDMI_POWER_OVERRIDE      1 // Camera requires HDMI power to be forced on in rec mode
 //    #define CAM_REMOTE_AtoD_CHANNEL             3 // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
     // sx710 - Open circuit = ~4090, 10k ohm = ~1380?, 3.5k = ~600 (56C as bat temp)
 //    #undef CAM_REMOTE_AtoD_THRESHOLD

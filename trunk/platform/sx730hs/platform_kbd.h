@@ -12,6 +12,10 @@
 #define USB_MASK            0x00800000 // Found @0xfc637f28, levent 0x302
 #define USB_IDX             2
 
+// HDMI hotplug, from watching physw_status and jumping pins
+#define HDMI_HPD_FLAG       0x00000020
+#define HDMI_HPD_IDX        2
+
 // standard fw doesn't care about bat door
 /*
 #define BATTCOVER_FLAG      0x00400000 // Found @0xfc637f20, levent 0x305

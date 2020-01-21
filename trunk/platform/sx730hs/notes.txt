@@ -45,6 +45,8 @@ Subject distance (focus) override is supported in AFLock and MF, not in AF.
 set_led id 0 controls the green indicator LED, 1 controls the AF assist LED.
 Control of the orange charge indicator is not currently available.
 
+HDMI hotplug detect is supported as an alternate remote input.
+
 TESTED
 ******
 - PTP operation, including live view
