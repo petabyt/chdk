@@ -11,3 +11,5 @@ NHSTUB(MakeDirectory_Fut,             0xff82be34)  //mkdir. This requires #defin
 // These do not exist
 NHSTUB(SetZoomActuatorSpeedPercent,     NULL_SUB)
 
+//NHSTUB(LogCameraEvent,0xff8920b8)
+

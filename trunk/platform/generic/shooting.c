@@ -133,7 +133,7 @@ int register_pt_hooks() {
     if(_ExecuteEventProcedure("ExportToEventProcedure","PT_CompleteFileWrite",overridden_PT_CompleteFileWrite) == -1) {
         return 3;
     }
-    //_LogPrintf(0x120,"pt hook(s) registered");
+    //_LogCameraEvent(0x120,"pt hook(s) registered");
     return 0;
 }
 #endif
