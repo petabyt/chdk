@@ -4,7 +4,7 @@ NHSTUB(MakeDirectory_Fut, 0xff034678) //mkdir. This requires #define MKDIR_RETUR
 NHSTUB(finish_shutdown,0xFF037FE4) // for shutdown(), to complicated to emulate
 
 // Additional
-NHSTUB(LogPrintf,0xFF0BF58C) // camera log debugging
+NHSTUB(LogCameraEvent,0xFF0BF58C) // camera log debugging
 
 // Not needed
 NHSTUB(RefreshPhysicalScreen, NULLSUB)

@@ -11,7 +11,7 @@ NHSTUB(DebugAssert,                         0x006b5a58)
 NHSTUB(Restart,                             0xff01786c)
 
 // Additional
-// NHSTUB(LogPrintf,                        0xff015564) // camera log debugging
+// NHSTUB(LogCameraEvent,                        0xff015564) // camera log debugging
 NHSTUB(TurnOffE1,                           0xff017610) // for shutdown(), to complicated to emulate
 
 

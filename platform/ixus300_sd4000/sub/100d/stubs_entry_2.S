@@ -8,7 +8,7 @@ NHSTUB(UnsetZoomForMovie,           NULL_SUB)
 // Additional
 NHSTUB(GetLogToFile,                0xFF975780)
 NHSTUB(LockAndRefresh,              0xFFA13354)
-NHSTUB(LogPrintf,                   0xFF88C920)
+NHSTUB(LogCameraEvent,                   0xFF88C920)
 NHSTUB(PostLEDMessage,              0xFF860C6C)
 NHSTUB(ScreenUnLock,                0xFFA12124)
 NHSTUB(UnlockAndRefresh,            0xFFA13398)

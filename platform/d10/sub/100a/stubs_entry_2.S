@@ -13,7 +13,7 @@ NHSTUB(UnlockAF,                    0xFF85E924)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 // Additional
-NHSTUB(LogPrintf,                   0xFF86EF38)
+NHSTUB(LogCameraEvent,              0xFF86EF38)
 NHSTUB(MakeAFScan,                  0xFF932820)
 NHSTUB(ScreenLock,                  0xFF9B967C)
 NHSTUB(exmem_free,                  0xFF86C7B0)
