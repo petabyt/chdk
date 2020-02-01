@@ -87,5 +87,6 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SHARPNESS                229     // Canon Menu slide bar values: 255, 254, 0, 1, 2
 
 #define PROPCASE_IMAGE_FORMAT                    214     // from UIFS_GetStillShotableNumber, 0 = RAW, 1 = JPEG, 2 = RAW+JPEG
+#define PROPCASE_TIMER_SHOTS                     378     // Number of shots for TIMER_MODE=Custom
 
 #endif
