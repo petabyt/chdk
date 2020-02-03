@@ -26,3 +26,5 @@ NHSTUB(TurnOnMic,                   0xffc1e74c)
 NHSTUB(GetVRAMHPixelsSize,0xFFE9E3A4)
 NHSTUB(GetVRAMVPixelsSize,0xFFE9E3B0)
 
+//NHSTUB(iosDevFind,0xFFEDF0D0)
+//NHSTUB(LogCameraEvent,0xFFC07C48)
