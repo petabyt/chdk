@@ -122,6 +122,10 @@ long kbd_process()
     // Set Shutter Half Press state for GUI task.
     camera_info.state.is_shutter_half_press = kbd_is_key_pressed(KEY_SHOOT_HALF);
 
+    // update any state that needs to be updated regularly in shooting
+    extern void shooting_update_state(void);
+    shooting_update_state();
+
 	// Alternative keyboard mode stated/exited by pressing print key.
 	// While running Alt. mode shoot key will start a script execution.
 

@@ -48,11 +48,29 @@ typedef struct {
 
 static PHOTO_PARAM photo_param_put_off;
 
+// used to save / restore ISO mode when using override
+// because override requires mode set to AUTO
+static int iso_override_mode_save = 0;
+
 //-------------------------------------------------------------------
 // Convert values to/from APEX 96
 
 //static const double log_2 = 0.6931471805599;      // natural logarithm of 2
 static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
+
+//-------------------------------------------------------------------
+// Periodic update from kbd_task
+void shooting_update_state(void)
+{
+    // ISO override will set ISO_MODE to auto in halfpress when get_shooting becomes true
+    // or immediately if already in shooting or raw hook for bracketing
+    // if existing ISO mode is not auto, it will be saved to iso_override_mode_save
+    // restore when shooting goes to false
+    if (iso_override_mode_save && !shooting_in_progress()) {
+        shooting_set_iso_mode(iso_override_mode_save);
+        iso_override_mode_save = 0;
+    }
+}
 
 //-------------------------------------------------------------------
 // Functions to access Canon properties
@@ -410,8 +428,12 @@ void shooting_set_sv96(short sv96, short is_now)
             while ((shooting_is_flash_ready()!=1) || (focus_busy)) msleep(10);
 
             short iso_mode = shooting_get_canon_iso_mode();
-            if (iso_mode >= 50)
+            if (iso_mode >= 50) {
+                // save current ISO mode, to avoid leaving in auto after override done
+                // only needed for non-auto
+                iso_override_mode_save = iso_mode;
                 shooting_set_iso_mode(0);   // Force AUTO mode on camera
+            }
 
             short dsv96 = sv96 + SV96_MARKET_OFFSET - canon_sv96_base;
 
