@@ -1146,6 +1146,11 @@ void shooting_update_dof_values()
           camera_info.dof_values.depth_of_field = camera_info.dof_values.far_limit - camera_info.dof_values.near_limit;
       }
     }
+    // if at infinity then set near to hyperfocal value
+    // note focus beyond infinity is not distinguished from infinity
+    if (shooting_is_infinity_distance()) {
+      camera_info.dof_values.near_limit = hyp;
+    }
   }
   camera_info.dof_values.hyperfocal_distance_1e3 = hyp_1e3;
   camera_info.dof_values.hyperfocal_distance = hyp;

@@ -43,9 +43,10 @@ typedef struct {
 static EXPO_TYPE expo;
 
 //-------------------------------------------------------------------
-static void print_dist(char *buf, int dist, short is_hyp) {
+// Append scaled value display of 'dist' to 'osd_buf'
+static void sprintf_dist(char *buf, int dist) {
 // length of printed string is always 4
-    if (dist<=0 || (!(is_hyp) && shooting_is_infinity_distance())) {
+    if (dist<=0) {
         sprintf(buf, " inf");
     } else {
         int i = dist / 1000;
@@ -59,18 +60,6 @@ static void print_dist(char *buf, int dist, short is_hyp) {
         else
             sprintf(buf, "%4d", i);
     }
-}
-
-// Append scaled value display of 'dist' to 'osd_buf'
-static void sprintf_dist(char *buf, int dist)
-{
-    print_dist(buf, dist, 0);
-}
-
-// Append scaled value display of 'dist' to 'osd_buf'
-static void sprintf_dist_hyp(char *buf, int dist)
-{
-    print_dist(buf, dist, 1);
 }
 
 static void sprintf_canon_values(char *buf, short dist) 
@@ -133,7 +122,7 @@ void gui_osd_draw_dof(int is_osd_edit)
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:col, conf.dof_scale);
         i = i+j;
 	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, "/", col, conf.dof_scale);
-        sprintf_dist_hyp(osd_buf, camera_info.dof_values.hyperfocal_distance);
+        sprintf_dist(osd_buf, camera_info.dof_values.hyperfocal_distance);
 	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.hyperfocal_valid)?valid_col:col, conf.dof_scale);
     }
 }
@@ -194,18 +183,14 @@ static void gui_print_osd_misc_string_canon_values(const char * title, short val
     gui_print_osd_misc_string();
 }
     
-static void gui_print_osd_dof_string_dist(const char * title, int value, short use_good_color, short is_hyp) {
+static void gui_print_osd_dof_string_dist(const char * title, int value, short use_good_color) {
   strcpy(osd_buf, title);
   int i=strlen(osd_buf);
   twoColors col = user_color(conf.osd_color);
   twoColors valid_col = MAKE_COLOR(BG_COLOR(col), COLOR_GREEN);
   if (i<8) {
     draw_osd_string(conf.values_pos, 0, m, osd_buf, col, conf.values_scale);
-    if (is_hyp) {
-        sprintf_dist_hyp(osd_buf, value);
-    } else {
-        sprintf_dist(osd_buf, value);
-    }
+    sprintf_dist(osd_buf, value);
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
     draw_osd_string(conf.values_pos, i*FONT_WIDTH, m, osd_buf, use_good_color?valid_col:col, conf.values_scale);
@@ -392,15 +377,15 @@ static void gui_osd_draw_values(int is_osd_edit, int is_zebra)
         if (((conf.show_dof==DOF_SHOW_IN_MISC) || f_ex) && showtype && !is_osd_edit)
         {
           if (conf.dof_subj_dist_in_misc)
-              gui_print_osd_dof_string_dist("SD :", camera_info.dof_values.subject_distance, f_ex && (camera_info.dof_values.distance_valid || shooting_get_focus_mode()), 0);
+              gui_print_osd_dof_string_dist("SD :", camera_info.dof_values.subject_distance, f_ex && (camera_info.dof_values.distance_valid || shooting_get_focus_mode()));
           if (conf.dof_near_limit_in_misc)
-              gui_print_osd_dof_string_dist("NL :", camera_info.dof_values.near_limit, f_ex && camera_info.dof_values.distance_valid, 0);
+              gui_print_osd_dof_string_dist("NL :", camera_info.dof_values.near_limit, f_ex && camera_info.dof_values.distance_valid);
           if (conf.dof_far_limit_in_misc)
-              gui_print_osd_dof_string_dist("FL :", camera_info.dof_values.far_limit, f_ex && camera_info.dof_values.distance_valid, 0);
+              gui_print_osd_dof_string_dist("FL :", camera_info.dof_values.far_limit, f_ex && camera_info.dof_values.distance_valid);
           if (conf.dof_depth_in_misc)
-              gui_print_osd_dof_string_dist("DOF:", camera_info.dof_values.depth_of_field, f_ex && camera_info.dof_values.distance_valid, 0);
+              gui_print_osd_dof_string_dist("DOF:", camera_info.dof_values.depth_of_field, f_ex && camera_info.dof_values.distance_valid);
           if (conf.dof_hyperfocal_in_misc)
-              gui_print_osd_dof_string_dist("HYP:", camera_info.dof_values.hyperfocal_distance, f_ex && camera_info.dof_values.hyperfocal_valid, 1);
+              gui_print_osd_dof_string_dist("HYP:", camera_info.dof_values.hyperfocal_distance, f_ex && camera_info.dof_values.hyperfocal_valid);
         }
 
         if ((showtype == 1) || is_osd_edit)
