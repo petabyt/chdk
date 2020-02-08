@@ -2610,7 +2610,7 @@ string_sig string_sigs[] =
     { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 }, // alt r52 (sx510)
                                                                                                                                                                                                
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002c,-0x002d,-0x0c2d,-0x0c2d,-0x0c2d,-0x0e2d },
-    { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002d, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 }, // alt r52 (sx510)
+    { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002d, 0x0001, 0x0001,-0x0b2d, 0x0001, 0x0001 }, // alt r52 (sx510), r57 (ixus275)
                                                                                                                                                                                                        
     { 19, "CalcLog10", "CalcLog10_FW", 0,                                       -0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f },
     { 19, "_dfixu", "_dfix", 0,                                                  0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c },
@@ -5471,11 +5471,14 @@ void find_stubs_min(firmware *fw)
                 for (k1 = k + mul; (k1 < fw->size) && (fw->buf[k1] > fw->buf[k1-mul]) && (fw->buf[k1] > fw->sv->min_focus_len) && (fw->buf[k1] < fw->sv->max_focus_len); k1 += mul) ;
                 if (fw->buf[k1] == fw->sv->max_focus_len)
                 {
-                    if ((found == 0) || ((size < mul) && (len < ((k1 - k) / mul) + 1)))
+                    int nlen = ((k1 - k) / mul) + 1;
+                    // printf("FOCUS_LEN_TABLE: %08x %d %d %d %d %d\n", k+fw->base, found, size, mul, len, nlen);
+                    // Record first table found, or update if better table found - prefer longer entries or longer table with same size entries
+                    if ((found == 0) || (size < mul) || ((size == mul) && (len < nlen)))
                     {
                         found = 1;
                         pos = k;
-                        len = ((k1 - k) / mul) + 1;
+                        len = nlen;
                         size = mul;
                     }
                 }
