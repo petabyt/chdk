@@ -2058,6 +2058,7 @@
 0xff37a940,TerminateSoundRec_FW
 0xff08409c,TerminateTestRec_FW
 0xff05a394,TerminateWLAN_FW
+0x006b9180,time
 0x006b86b8,TryPostMessageQueue
 0x006b8584,TryReceiveMessageQueue
 0x006b79dc,TryTakeSemaphore

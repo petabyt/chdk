@@ -22,9 +22,3 @@ NHSTUB(init_nd_eventflag,                   0xFF37A0B8) //blackhole
 NHSTUB(init_nd_semaphore,                   0xFF3C15AC) //blackhole FF3C15AC
 
 NHSTUB(LogCameraEvent,                   	0xff035200) // csv, for debug
-
-
-
-
-
-NHSTUB(time,                                0xFF86D174) //??? sx610hs_100a sub_FF86D174 blackhole

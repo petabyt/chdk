@@ -54,9 +54,9 @@ DEF(canon_menu_active                       ,0x0000407c) // Found @0xff0b5560
 DEF(canon_shoot_menu_active                 ,0x0000d895) // Found @0xff2c79ec
 DEF(zoom_status                             ,0x0000eca0) // Found @0xff3473c8
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
-// each entry contains 1 int value, which is the the zoom focus length.
-// there are 551 entries in the table - set NUM_FL to 551
-DEF(focus_len_table                         ,0xffa28a10) // Found @0xffa28a10
+// each entry contains 2 int value(s), the first is the zoom focus length.
+// there are 101 entries in the table - set NUM_FL to 101
+DEF(focus_len_table                         ,0xfffee67c) // Found @0xfffee67c
 DEF(zoom_busy                               ,0x0000a030) // Found @0xff20bc38
 DEF(focus_busy                              ,0x00009ef8) // Found @0xff207d68
 // Palette colour tables  found @ 0xff6e674c
