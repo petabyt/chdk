@@ -120,6 +120,7 @@ enum {
     MODE_SELFIE             , // self portrait, m10
 
     MODE_VIDEO_SHORT_CLIP   , // sx710 (short clips with special effects like slomo, individual effects don't get their own mode)
+    MODE_ZOOM_BLUR          , // ixus990_sd970 "The optical zoom operates automatically during shooting"
 
 };
 
