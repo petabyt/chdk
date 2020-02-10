@@ -1,0 +1,43 @@
+ixus990_sd970 porting thread:
+https://chdk.setepontos.com/index.php?topic=13966.0
+
+Camera specifics:
+- Has an ND filter
+- Does not have an iris
+- propset 2
+- ALT button is PRINT
+- Supports multi-partition for cards larger than 4GB, does not support booting
+  from singe partition FAT32
+
+
+What's known to be missing:
+
+- while zebra works edge overlay is stretched for 1px to cover 2px 
+   (only upper half image used on full screen)
+- whatever video stuff needs to be done beyond what sd780 implemented
+- stubs_min.S "recreview_hold" is not set
+- testing of FW 100B (should work but is untested)
+   - If you can test that report here: https://chdk.setepontos.com/index.php?topic=13966.0
+
+
+What koshy thought to be done:
+
+- boot & spytask
+- powerup sequence by Play and Rec buttons
+- keyboard, all CHDKPTP buttons tested
+- jogdial, including CHDKPTP buttons
+   - jogdial no longer gets through to Canon FW
+   - jogdial controls CHDK menus just fine
+- shooting DNG
+   - ColorMatrix / ForwardMatrix
+   - ActiveArea
+- USB remote is tested
+- Quick press of shutter button does write DNG
+- Custom palette for Rec mode including Func palette
+- Long time exposures > 60 sec. tested working
+- CHDKPTP File write task is tested
+- CHDKPTP Palette is working
+- CHDKPTP Liveview is implemented for all modes including Video 320
+- the 25 tests reyalp and koshy used to run on a lot of cameras recently all pass
+- Zebra is working
+- implemented the same Movie related stuff as on sd780 but did not test it

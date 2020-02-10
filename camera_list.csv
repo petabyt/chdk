@@ -242,6 +242,8 @@ ixus970_sd890,100d,,100c,
 ixus970_sd890,100f,,,
 ixus980_sd990,100e,,,
 ixus980_sd990,101b,,,
+ixus990_sd970,100a,BETA,,SKIP_AUTOBUILD
+ixus990_sd970,100b,ALPHA,100a,SKIP_AUTOBUILD
 ixusizoom_sd30,100h,,,
 ixusizoom_sd30,100g,,,
 ixusizoom_sd30,100f,,100g,
