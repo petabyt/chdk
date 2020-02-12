@@ -97,4 +97,6 @@
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
     #define CAM_PTP_USE_NATIVE_BUFFER       1   // use firmware buffers to avoid problems with uncached memory
 
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                      4
 //--------------------------------------------------
