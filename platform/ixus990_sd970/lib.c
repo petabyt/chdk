@@ -42,10 +42,11 @@ int get_flash_params_count(void) { return 0x7a; }  // sd970: Found @0xff94ce88
 void camera_set_led(int led, int state, int bright) {
  static char led_table[]={0, // green
                           1, // orange, right
-						  // 2,3
-						  4, // blue
-						  5 // af
-						  };
+                          2, // yellow, left
+                          // 3,4,5,6,7,
+                          8, // blue
+                          9 // af
+                          };
  if((unsigned)led < sizeof(led_table))
   _LEDDrive(led_table[led], state<=1 ? !state : state);
 // _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
