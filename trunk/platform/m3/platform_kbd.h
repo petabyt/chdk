@@ -12,4 +12,7 @@
 #define BATTCOVER_IDX       0
 #define HOTSHOE_FLAG        0x00010000 // Found @0xfc5f9af0, levent 0x204
 #define HOTSHOE_IDX         2
+#define HDMI_HPD_FLAG       0x00000010
+#define HDMI_HPD_IDX        2
+
 #endif
