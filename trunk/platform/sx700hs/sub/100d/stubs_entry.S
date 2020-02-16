@@ -149,6 +149,9 @@ DEF(_nrflag                           ,0x0001b8e4) // (0x1b8e0+0x4) Found @0xfc3
 DEF(active_bitmap_buffer              ,0x0000c784) // (0xc754+0x30) Found @0xfc30d428
 //DEF(displaytype                       ,0x00008f98),          stubs_min = 0x00008f98 (0x8f98)
 //DEF(bitmap_buffer                     ,0x0000c788),          stubs_min = 0x0000c788 (0xc754+0x34)
+DEF(palette_control                   ,0x00014b2c) // Found @0xfc308b58
+DEF(palette_buffer_ptr                ,0x00014b44) // (0x14b2c+0x18) Found @0xfc308b76
+DEF(active_palette_buffer             ,0x00014b3c) // (0x14b2c+0x10) Found @0xfc308b5e
 DEF_CONST(uiprop_count                      ,0x0000009d) // Found @0xfc0bb6b8
 DEF(exmem_alloc_table                 ,0x00037a40) // Found @0xfc06e71e
 DEF(exmem_types_table                 ,0xfcc41c3c) // Found @0xfc06e722
