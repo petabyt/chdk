@@ -587,6 +587,9 @@ typedef struct {
 // match a B instruction
 extern const insn_match_t match_b[];
 
+// match a BL instruction
+extern const insn_match_t match_bl[];
+
 // match B and BL
 extern const insn_match_t match_b_bl[];
 

@@ -538,6 +538,9 @@ misc_val_t misc_vals[]={
     { "active_bitmap_buffer",MISC_VAL_OPTIONAL},
     { "displaytype",        MISC_VAL_OPTIONAL},
     { "bitmap_buffer",      MISC_VAL_OPTIONAL},
+    { "palette_control",    MISC_VAL_OPTIONAL},
+    { "palette_buffer_ptr", MISC_VAL_OPTIONAL},
+    { "active_palette_buffer",MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -3960,6 +3963,100 @@ int sig_match_file_counter_var(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+int sig_match_palette_vars(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,70,"transfer_src_overlay")) {
+        printf("sig_match_palette_vars: no match transfer_src_overlay\n");
+        return 0;
+    }
+    uint32_t fadr=0;
+    int i;
+    // search backwards for call before transfer_src_overlay
+    for(i=1; i<=6; i++) {
+        if(!fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i))) {
+            printf("sig_match_palette_vars: disasm failed\n");
+            return 0;
+        }
+        fadr=get_branch_call_insn_target(fw,fw->is);
+        if(fadr) {
+            break;
+        }
+   }
+   if(!fadr) {
+        printf("sig_match_palette_vars: no match bl 1 0x%"PRIx64"\n",fw->is->insn->address);
+        return 0;
+   }
+    // follow
+    disasm_iter_init(fw,is,fadr);
+    // find first func call
+    if(!insn_match_find_next(fw,is,3,match_bl)) {
+        printf("sig_match_palette_vars: no match bl 2 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+
+    if(!insn_match_find_next(fw,is,3,match_ldr_pc)) {
+        printf("sig_match_palette_vars: no match ldr pc 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+
+    uint32_t pal_base=LDR_PC2val(fw,is->insn);
+    if(!pal_base || !adr_is_var(fw,pal_base)) {
+        printf("sig_match_palette_vars: bad LDR PC 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // palette_control is at the start of struct, save register
+    arm_reg ptr_reg = is->insn->detail->arm.operands[0].reg;
+
+    save_misc_val(rule->name,pal_base,0,(uint32_t)is->insn->address);
+
+    int found=0;
+    // find LDR Rn  [ptr_reg +x]
+    for(i=0; i<3; i++) {
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_palette_vars: disasm failed\n");
+            return 0;
+        }
+        if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].mem.base == ptr_reg) {
+            save_misc_val("active_palette_buffer",
+                        pal_base,
+                        is->insn->detail->arm.operands[1].mem.disp,
+                        (uint32_t)is->insn->address);
+            found=1;
+            break;
+        }
+    }
+    if(!found) {
+        printf("sig_match_palette_vars: no match active_palette_buffer 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+
+    if(!find_next_sig_call(fw,is,20,"PTM_RestoreUIProperty_FW")) {
+        printf("sig_match_palette_vars: no match PTM_RestoreUIProperty_FW\n");
+        return 0;
+    }
+    // find LDR Rn  [ptr_reg +x]
+    for(i=0; i<6; i++) {
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_palette_vars: disasm failed\n");
+            return 0;
+        }
+        if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].mem.base == ptr_reg) {
+            save_misc_val("palette_buffer_ptr",
+                        pal_base,
+                        is->insn->detail->arm.operands[1].mem.disp,
+                        (uint32_t)is->insn->address);
+            return 1;
+        }
+    }
+    printf("sig_match_palette_vars: no match palette_buffer_ptr 0x%"PRIx64"\n",is->insn->address);
+    return 0;
+}
+
 int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4609,6 +4706,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_file_counter_init,"file_counter_var_init","task_InitFileModules",},
 {sig_match_file_counter_var,"file_counter_var","file_counter_var_init",},
 {sig_match_var_struct_get,"displaytype",       "get_displaytype",},
+{sig_match_palette_vars,"palette_control",     "transfer_src_overlay_helper",0,SIG_DRY_MAX(58)},// Dry59 code is different
 {NULL},
 };
 
