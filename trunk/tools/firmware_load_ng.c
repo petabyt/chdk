@@ -1713,6 +1713,10 @@ const insn_match_t match_b[]={
     {MATCH_INS(B,   MATCH_OPCOUNT_IGNORE)},
     {ARM_INS_ENDING}
 };
+const insn_match_t match_bl[]={
+    {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
+    {ARM_INS_ENDING}
+};
 const insn_match_t match_b_bl[]={
     {MATCH_INS(B,   MATCH_OPCOUNT_IGNORE)},
     {MATCH_INS(BL,  MATCH_OPCOUNT_IGNORE)},
