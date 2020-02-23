@@ -104,9 +104,8 @@
 
     #define CAM_FILE_COUNTER_IS_VAR             1 // file counter is variable file_counter_var in stubs, not a param
 
-// DISABLED until there's a test report
+    #define  CAM_HAS_FILEWRITETASK_HOOK         1 // FileWriteTask hook is available (local file write can be prevented)
     // doesn't appear to use complicated multi pass or seek in normal cases (based on similarity to elph180)
-//    #define  CAM_HAS_FILEWRITETASK_HOOK         1 // FileWriteTask hook is available (local file write can be prevented)
 //    #define  CAM_FILEWRITETASK_SEEKS            1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_NEED_SET_ZOOM_DELAY             500     // Define to add a delay after setting the zoom position
