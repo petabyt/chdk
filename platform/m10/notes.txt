@@ -39,7 +39,6 @@ Issues
 - some framebuffer related features do not work properly
     - zebra (some menu options are ignored)
     - edge overlay (drawings accumulate)
-- booting with .fi2 does not work (update file error)
 - CHDK dark frame subtraction control only seems effective when Canon setting is on AUTO
 
 - Exposure overrides may fail to apply when shutter is held halfway down for a while
@@ -48,6 +47,8 @@ Issues
     - does not happen when AE is locked using the Canon controls (asterisk on the 4-way controller)
 
 - Exposure overrides may also fail to apply when the shutter is pressed too quickly
+
+- Av override selector in the Enhanced Photo Operations menu has garbage entries
 
 
 Tested (using 15-45 kit lens)

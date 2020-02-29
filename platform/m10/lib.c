@@ -51,11 +51,15 @@ int get_flash_params_count(void) {
 }
 
 void JogDial_CW(void) {
-    _PostLogicalEventToUI(0x872, 1);    //RotateJogDialRight
+    _PostLogicalEventToUI(0x1134, 1);
+    _PostLogicalEventToUI(0x8AF, 1);    //RotateEDialRight
+    _PostLogicalEventToUI(0x1135, 1);
 }
 
 void JogDial_CCW(void) {
-    _PostLogicalEventToUI(0x873, 1);    //RotateJogDialLeft
+    _PostLogicalEventToUI(0x1134, 1);
+    _PostLogicalEventToUI(0x8B0, 1);    //RotateEDialLeft
+    _PostLogicalEventToUI(0x1135, 1);
 }
 
 extern  int     active_raw_buffer;
