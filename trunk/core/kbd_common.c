@@ -88,6 +88,17 @@ ANALOG_AV_IDX
 extern long physw_status[3];
 extern int forced_usb_port;
 
+// get HDMI hotplug status from as seen by canon firmware (possibly modified by CHDK)
+int get_hdmi_hpd_physw_mod(void)
+{
+#ifdef HDMI_HPD_FLAG
+    if(!(physw_status[HDMI_HPD_IDX] & HDMI_HPD_FLAG)) {
+        return 1;
+    }
+#endif
+    return 0;
+}
+
 #ifndef KBD_CUSTOM_UPDATE_KEY_STATE
 
 #ifdef CAM_HAS_GPS

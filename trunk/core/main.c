@@ -16,6 +16,8 @@
   #include "gps.h"
 #endif
 
+#include "kbd_common.h"
+
 //==========================================================
 
 static char osd_buf[50];
@@ -219,10 +221,22 @@ void core_spytask()
 
     shooting_init();
 
+    // if starting  with HDMI connected, suspend drawing for 3s to avoid crashes
+#ifdef HDMI_HPD_FLAG
+    if(get_hdmi_hpd_physw_mod()) {
+        draw_suspend(3000);
+    }
+#endif
+
     while (1)
     {
         // Set up camera mode & state variables
         mode_get();
+
+#ifdef CAM_CLEAN_OVERLAY
+        extern void handle_clean_overlay();
+        handle_clean_overlay();
+#endif
         // update HDMI power override based on mode and remote settings
 #ifdef CAM_REMOTE_HDMI_POWER_OVERRIDE
         extern void update_hdmi_power_override(void);
