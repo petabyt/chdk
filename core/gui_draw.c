@@ -38,6 +38,10 @@ extern volatile char *opacity_buffer[];
 
 #endif
 //-------------------------------------------------------------------
+// used to prevent draw_restore from being called until tick reached
+// to avoid crashes on video out change
+int draw_restore_suspend_tick;
+
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 void            (*draw_pixel_proc_norm)(unsigned int offset, color cl);
 
@@ -397,10 +401,27 @@ void draw_init()
     draw_set_guard();
 }
 
+// disable draw_restore for the ms milliseconds
+void draw_suspend(int ms)
+{
+    int t=get_tick_count() + ms;
+    // only change if not already suspended to a later time
+    if(t > draw_restore_suspend_tick) {
+        draw_restore_suspend_tick = t;
+    }
+}
+// disable draw_restore for the ms milliseconds
+int draw_is_suspended(void)
+{
+    return (draw_restore_suspend_tick > get_tick_count());
+}
 // Restore CANON_OSD
 //-------------------------------------------------------------------
 void draw_restore()
 {
+    if(draw_is_suspended()) {
+        return;
+    }
     vid_bitmap_refresh();
 
     draw_set_guard();

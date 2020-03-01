@@ -1,6 +1,7 @@
 // routines compiled as thumb
 #include "platform.h"
 #include "conf.h"
+#include "gui_draw.h"
 
 #if defined(CAM_DRYOS)
 #include "chdk-dir.c"
@@ -318,7 +319,7 @@ void handle_clean_overlay() {
     else {
         pal_restore();
     }
-    if (pending_screenerase && (get_tick_count()>=pending_screenerase)) {
+    if (pending_screenerase && (get_tick_count()>=pending_screenerase) && !draw_is_suspended()) {
         pending_screenerase = 0;
 
 #if 1
