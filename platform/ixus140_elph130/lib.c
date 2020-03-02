@@ -1,9 +1,13 @@
 #include "platform.h"
 #include "platform_palette.h"
 #include "lolevel.h"
+#include "gui_draw.h"
 
 void vid_bitmap_refresh()
 {
+    if(draw_is_suspended()) {
+        return;
+    }
     extern int full_screen_refresh;
     extern void _ScreenLock();
     extern void _ScreenUnlock();
@@ -210,7 +214,10 @@ void *vid_get_bitmap_active_palette()
     // active_palette_buffer can point at null when
     // func and menu are opened for the first time
     if(!p) {
-        p = palette_buffer_ptr[0]; // rec mode buffer appears to always be initialized
+        p = palette_buffer_ptr[0]; // rec mode buffer normally initialized
+        if(!p) { // but may be null on video out switch
+            return (void *)0;
+        }
     }
     return (p+1);
 }
@@ -224,7 +231,7 @@ void load_chdk_palette()
     if ((active_palette_buffer == 0) || (active_palette_buffer == 5) || (active_palette_buffer == 4))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
-        if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
+        if (pal && pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
         {
             pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
             pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red

@@ -141,8 +141,17 @@ void vid_bitmap_refresh()
 void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
-    extern char* palette_buffer[];
-    return (palette_buffer[active_palette_buffer]+4);
+    extern int** palette_buffer_ptr;
+    int *p = palette_buffer_ptr[active_palette_buffer];
+    // active_palette_buffer can point at null when
+    // func and menu are opened for the first time
+    if(!p) {
+        p = palette_buffer_ptr[0];
+        if(!p) {
+            return (void *)0;
+        }
+    }
+    return (p+1);
 }
 
 void *vid_get_bitmap_active_buffer()
@@ -160,7 +169,7 @@ void load_chdk_palette()
     if ((active_palette_buffer == 0) || (active_palette_buffer == 5))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
-        if (pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62)
+        if (pal && pal[CHDK_COLOR_BASE+0] != 0x3F3ADF62)
         {
             pal[CHDK_COLOR_BASE+0]  = 0x3F3ADF62;  // Red
             pal[CHDK_COLOR_BASE+1]  = 0x3F26EA40;  // Dark Red
