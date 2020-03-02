@@ -78,6 +78,8 @@ ANALOG_AV_IDX
 #include "kbd_common.h"
 #include "conf.h"
 #include "usb_remote.h"
+// for draw_suspend
+#include "gui_draw.h"
 
 // for KBD_SIMULATE_VIDEO_KEY
 #include "levent.h"
@@ -93,6 +95,17 @@ int get_hdmi_hpd_physw_mod(void)
 {
 #ifdef HDMI_HPD_FLAG
     if(!(physw_status[HDMI_HPD_IDX] & HDMI_HPD_FLAG)) {
+        return 1;
+    }
+#endif
+    return 0;
+}
+
+// get analog AV status from as seen by canon firmware (possibly modified by CHDK)
+int get_analog_av_physw_mod(void)
+{
+#ifdef ANALOG_AV_FLAG
+    if(!(physw_status[ANALOG_AV_IDX] & ANALOG_AV_FLAG)) {
         return 1;
     }
 #endif
@@ -197,6 +210,15 @@ void kbd_update_physw_bits(void)
     if (forced_usb_port) {
         physw_status[USB_IDX] = physw_status[USB_IDX] | USB_MASK;
     }
+// workaround for crashes switching between analog AV out and native display
+#ifdef ANALOG_AV_FLAG 
+    static long prev_analog_av_state = 0; // default to not present
+    long new_analog_av_state = get_analog_av_physw_mod();
+    if(new_analog_av_state != prev_analog_av_state) {
+        draw_suspend(1000);
+        prev_analog_av_state = new_analog_av_state;
+    }
+#endif
 // microsd cams don't have a read only bit
 #ifndef KBD_SKIP_READONLY_BIT
     physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
