@@ -54,8 +54,9 @@ prop_langs={
 	[9]={prop=66, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
 	-- 10 id changed, values not changed from 7
 	[10]={prop=68, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
-	-- 11 id changed, values not changed
-	[11]={prop=69, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
+	-- 11 is untested
+	-- 12 id changed, values not changed
+	[12]={prop=69, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
 }
 
 -- return camera language name, or nil
