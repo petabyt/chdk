@@ -9,9 +9,12 @@
 
 #define PARAM_FILE_COUNTER      0x1        // see comments in ixus140 port
 
-// aperture values recorded at wide angle
+// aperture values from PROPCASE_USER_AV, step size 1/3EV
 const ApertureSize aperture_sizes_table[] = {
-    { 9,  171, "1.8" },
+    { 6,   64, "1.2" },
+    { 7,   96, "1.4" },
+    { 8,  128, "1.6" },
+    { 9,  160, "1.8" },
     { 10, 192, "2.0" },
     { 11, 224, "2.2" },
     { 12, 256, "2.5" },
@@ -30,7 +33,7 @@ const ApertureSize aperture_sizes_table[] = {
     { 25, 672, "11.0" },
     { 26, 704, "13.0" },
     { 27, 736, "14.0" },
-    { 28, 760, "16.0" },
+    { 28, 768, "16.0" },
     { 29, 800, "18.0" },
     { 30, 832, "20.0" },
     { 31, 864, "22.0" },
