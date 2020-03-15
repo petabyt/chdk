@@ -1,0 +1,38 @@
+************************************
+Ixus275/Elph350 HS Notes
+************************************
+This is an early alpha port, use at your own risk!
+Porting thread: https://chdk.setepontos.com/index.php?topic=13151.msg133016#msg133016
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video or WiFi in the options
+
+This camera has only ND filter, no adjustable aperture.
+
+TESTED
+******
+Tv,ISO,SD overrides
+RAW / DNG capture (disabled in Hybrid auto,Hendheld night scene,Highspeed burst and Low light modes)
+Edge overlay
+Histogram
+Zebra
+Bracketing
+ND filter state
+USB remote
+PTP
+Test scripts
+
+
+NOT IMPLEMENTED
+***************
+exp_drv not implemented, < 1024s probably works without
+video functions
+remoteshoot (filewritetask)
+
+
+
+
+
+
+
+
