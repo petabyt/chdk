@@ -8,6 +8,7 @@
 
 // Values for makefile.inc
 //   PLATFORMOSVER = 52
+//   DIGIC = 60
 //   MEMISOSTART = 0x2bd558
 //   MEMBASEADDR = 0x8000
 //   ARAM_HEAP_START = 0x005ce000 #  Found @0xfc1abe80
