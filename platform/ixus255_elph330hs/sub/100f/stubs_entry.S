@@ -8,6 +8,7 @@
 //   Canon IXUS 255 HS
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 52
 //   PLATFORMID = 12904 (0x3268) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

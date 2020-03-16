@@ -8,6 +8,7 @@
 //   Canon PowerShot SX400 IS
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 55
 //   PLATFORMID = 12956 (0x329c) // Found @ 0xffff0040
 //   MAXRAMADDR = 0x07ffffff

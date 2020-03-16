@@ -8,6 +8,7 @@
 //   Canon PowerShot SX530 HS
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 55
 //   PLATFORMID = 12959 (0x329f) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x0fffffff

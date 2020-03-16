@@ -8,6 +8,7 @@
 //   Canon PowerShot ELPH 320 HS
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12864 (0x3240) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

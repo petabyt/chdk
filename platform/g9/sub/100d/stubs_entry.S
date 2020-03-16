@@ -8,6 +8,7 @@
 //   Canon PowerShot G9
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 23
 //   PLATFORMID = 12634 (0x315a) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

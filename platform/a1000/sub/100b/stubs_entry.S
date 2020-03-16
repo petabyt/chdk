@@ -8,6 +8,7 @@
 //   Canon PowerShot A1000 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12686 (0x318e) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

@@ -7,6 +7,7 @@
 //   Canon PowerShot SD850 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMID = 12619 (0x314b) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000ac070

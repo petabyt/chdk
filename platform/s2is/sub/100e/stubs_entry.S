@@ -9,6 +9,7 @@
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
+//   DIGIC = 20                  // DIGIC II
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0006ef50
 

@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 65
 
 // Values for makefile.inc
+//   DIGIC = 20                  // DIGIC II
 //   PLATFORMID = 12542 (0x30fe) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009c6b0

@@ -8,6 +8,7 @@
 //   Canon PowerShot S90
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 39
 //   PLATFORMID = 12769 (0x31e1) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

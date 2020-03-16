@@ -8,6 +8,7 @@
 //   Canon PowerShot SX230 HS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 47
 //   PLATFORMID = 12840 (0x3228) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff

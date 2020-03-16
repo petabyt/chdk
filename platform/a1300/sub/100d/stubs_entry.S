@@ -8,6 +8,7 @@
 //   Canon PowerShot A1300
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12862 (0x323e) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

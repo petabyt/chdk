@@ -8,6 +8,7 @@
 //   Canon PowerShot D10
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12732 (0x31bc) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

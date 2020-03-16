@@ -8,6 +8,7 @@
 //   Canon PowerShot G15
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 51
 //   PLATFORMID = 12888 (0x3258) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

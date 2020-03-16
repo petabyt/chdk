@@ -8,6 +8,7 @@
 //   Canon PowerShot SX610 HS
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 57
 //   PLATFORMID = 12967 (0x32a7) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x1fffffff

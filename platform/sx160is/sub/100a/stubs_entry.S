@@ -8,6 +8,7 @@
 //   Canon PowerShot SX160 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 51
 //   PLATFORMID = 12890 (0x325a) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

@@ -8,6 +8,7 @@
 //   Canon IXUS 1000HS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 45
 //   PLATFORMID = 12792 (0x31f8) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff

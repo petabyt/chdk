@@ -8,6 +8,7 @@
 //   Canon PowerShot A1200
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 47
 //   PLATFORMID = 12843 (0x322b) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

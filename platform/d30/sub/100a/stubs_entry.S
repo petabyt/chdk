@@ -8,6 +8,7 @@
 //   Canon PowerShot D30
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12932 (0x3284) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff

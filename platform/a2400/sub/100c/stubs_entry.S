@@ -8,6 +8,7 @@
 //   Canon PowerShot A2400 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12873 (0x3249) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

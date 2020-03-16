@@ -8,6 +8,7 @@
 //   Canon PowerShot A3000 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 43
 //   PLATFORMID = 12786 (0x31f2) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff

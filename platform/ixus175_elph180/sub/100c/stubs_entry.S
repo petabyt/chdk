@@ -8,6 +8,7 @@
 //   Canon IXUS 175
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 58
 //   PLATFORMID = 12993 (0x32c1) // Found @ 0xffff0270
 //   MAXRAMADDR = 0x07ffffff

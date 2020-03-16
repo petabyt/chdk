@@ -8,6 +8,7 @@
 //   Canon DIGITAL IXUS 960 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 23
 //   PLATFORMID = 12639 (0x315f) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

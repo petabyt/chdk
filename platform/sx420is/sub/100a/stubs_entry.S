@@ -8,6 +8,7 @@
 //   Canon PowerShot SX420 IS
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 58
 //   PLATFORMID = 12991 (0x32bf) // Found @ 0xfffe0270
 //   MAXRAMADDR = 0x0fffffff

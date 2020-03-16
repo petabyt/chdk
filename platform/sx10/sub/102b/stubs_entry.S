@@ -8,6 +8,7 @@
 //   Canon PowerShot SX10 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12685 (0x318d) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

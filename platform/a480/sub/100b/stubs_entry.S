@@ -8,6 +8,7 @@
 //   Canon PowerShot A480
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12735 (0x31bf) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff

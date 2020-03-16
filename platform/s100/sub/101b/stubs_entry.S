@@ -8,6 +8,7 @@
 //   Canon PowerShot S100
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 49
 //   PLATFORMID = 12854 (0x3236) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

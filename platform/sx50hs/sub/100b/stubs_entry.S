@@ -8,6 +8,7 @@
 //   Canon PowerShot SX50 HS
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 51
 //   PLATFORMID = 12889 (0x3259) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

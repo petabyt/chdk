@@ -8,6 +8,7 @@
 //   Canon PowerShot A2500 
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 52
 //   PLATFORMID = 12913 (0x3271) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

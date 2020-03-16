@@ -8,6 +8,7 @@
 //   Canon PowerShot A810
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12863 (0x323f) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

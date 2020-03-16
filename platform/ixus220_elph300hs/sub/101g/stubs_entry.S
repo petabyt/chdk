@@ -8,6 +8,7 @@
 //   Canon IXUS 220HS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 47
 //   PLATFORMID = 12841 (0x3229) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x07ffffff

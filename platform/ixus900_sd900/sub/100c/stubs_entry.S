@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 900Ti
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMID = 12565 (0x3115) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000a4d10

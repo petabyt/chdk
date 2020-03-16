@@ -8,6 +8,7 @@
 //   Canon IXUS 125 HS
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12865 (0x3241) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

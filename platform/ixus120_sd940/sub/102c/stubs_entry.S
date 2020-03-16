@@ -8,6 +8,7 @@
 //   Canon PowerShot SD940 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 39
 //   PLATFORMID = 12774 (0x31e6) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

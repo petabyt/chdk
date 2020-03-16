@@ -8,6 +8,7 @@
 //   Canon PowerShot N
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 52
 //   PLATFORMID = 12939 (0x328b) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

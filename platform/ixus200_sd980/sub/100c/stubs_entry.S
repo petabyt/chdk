@@ -8,6 +8,7 @@
 //   Canon DIGITAL IXUS 200 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 39
 //   PLATFORMID = 12773 (0x31e5) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
