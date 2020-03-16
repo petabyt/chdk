@@ -7712,6 +7712,37 @@ void output_firmware_vals(firmware *fw)
     }
 
     bprintf("\n// Values for makefile.inc\n");
+
+    // work out digic version
+    int digicver = 0;
+    char *digics = "";
+    if (fw->uncached_adr == 0x10000000)
+    {
+        digicver = 20;
+        digics = "DIGIC II";
+        if (find_str(fw,"FaceFrame") != -1) // face recognition related task
+        {
+            digics = "DIGIC III";
+            digicver = 30;
+        }
+    }
+    else
+    {
+        digicver = 40;
+        digics = "DIGIC 4";
+        if (find_str(fw,"\xac\xd0\x22\xc0") != -1) // 0xc022d0ac, D4+ GPIO
+        {
+            digicver = 41;
+            digics = "DIGIC 4+";
+        }
+        else if (find_str(fw,"\xac\xc0\x22\xc0") != -1) // 0xc022c0ac, D5 GPIO
+        {
+            digicver = 50;
+            digics = "DIGIC 5";
+        }
+    }
+    bprintf("//   DIGIC = %i                  // %s\n",digicver,digics);
+
     bprintf("//   PLATFORMOSVER = %d\n",fw->real_dryos_ver);
 
     if (fw->pid != 0)
@@ -7869,6 +7900,8 @@ int main(int argc, char **argv)
     find_eventprocs(&fw);
     find_ptp_handlers(&fw);
     find_builddate(&fw);
+    if (!fw.uncached_adr)
+        search_saved_sig(&fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
     output_firmware_vals(&fw);
 
     out_hdr = 1;
@@ -7897,9 +7930,6 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!fw.uncached_adr)
-        search_saved_sig(&fw, "FreeUncacheableMemory", match_CAM_UNCACHED_BIT, 0, 0, 8);
-    
     find_modemap(&fw);
     find_stubs_min(&fw);
     find_lib_vals(&fw);
