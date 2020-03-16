@@ -8,6 +8,7 @@
 //   Canon PowerShot SX210 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 43
 //   PLATFORMID = 12790 (0x31f6) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

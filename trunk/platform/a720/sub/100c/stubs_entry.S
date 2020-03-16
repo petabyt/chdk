@@ -8,6 +8,7 @@
 //   Canon PowerShot A720 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 23
 //   PLATFORMID = 12637 (0x315d) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff

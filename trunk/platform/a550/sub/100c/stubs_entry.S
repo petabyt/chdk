@@ -7,6 +7,7 @@
 //   Canon PowerShot A550
 
 // Values for makefile.inc
+//   DIGIC = 20                  // DIGIC II
 //   PLATFORMID = 12624 (0x3150) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009f2b0

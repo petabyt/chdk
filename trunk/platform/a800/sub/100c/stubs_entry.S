@@ -8,6 +8,7 @@
 //   Canon PowerShot A800
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 47
 //   PLATFORMID = 12838 (0x3226) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x01ffffff

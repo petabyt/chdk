@@ -8,6 +8,7 @@
 //   Canon PowerShot ELPH 130 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 52
 //   PLATFORMID = 12901 (0x3265) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x03ffffff

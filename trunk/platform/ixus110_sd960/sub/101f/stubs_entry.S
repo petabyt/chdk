@@ -8,6 +8,7 @@
 //   Canon DIGITAL IXUS 110 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12733 (0x31bd) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

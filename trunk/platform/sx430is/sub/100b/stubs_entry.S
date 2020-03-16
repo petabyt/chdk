@@ -8,6 +8,7 @@
 //   Canon PowerShot SX430 IS
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 59
 //   PLATFORMID = 13013 (0x32d5) // Found @ 0xfffe0270
 //   MAXRAMADDR = 0x0fffffff

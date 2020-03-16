@@ -8,6 +8,7 @@
 //   Canon PowerShot SX510 HS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 52
 //   PLATFORMID = 12919 (0x3277) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff

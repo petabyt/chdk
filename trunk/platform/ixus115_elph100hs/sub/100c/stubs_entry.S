@@ -8,6 +8,7 @@
 //   Canon PowerShot ELPH 100 HS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 47
 //   PLATFORMID = 12839 (0x3227) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x07ffffff

@@ -8,6 +8,7 @@
 //   Canon PowerShot D20
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12866 (0x3242) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff

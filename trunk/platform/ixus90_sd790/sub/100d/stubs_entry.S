@@ -8,6 +8,7 @@
 //   Canon DIGITAL IXUS 90 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 23
 //   PLATFORMID = 12660 (0x3174) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

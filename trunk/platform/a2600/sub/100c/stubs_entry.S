@@ -8,6 +8,7 @@
 //   Canon PowerShot A2600 
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 52
 //   PLATFORMID = 12898 (0x3262) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

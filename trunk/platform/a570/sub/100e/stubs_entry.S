@@ -7,6 +7,7 @@
 //   Canon PowerShot A570 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMID = 12620 (0x314c) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a6c30

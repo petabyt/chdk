@@ -8,6 +8,7 @@
 //   Canon PowerShot S110
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 51
 //   PLATFORMID = 12891 (0x325b) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

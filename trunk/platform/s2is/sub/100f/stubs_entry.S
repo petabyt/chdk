@@ -7,6 +7,7 @@
 //   Canon PowerShot S2 IS
 
 // Values for makefile.inc
+//   DIGIC = 20                  // DIGIC II
 //   PLATFORMID = 12528 (0x30f0) // Found @ 0xffd70130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0006ef50

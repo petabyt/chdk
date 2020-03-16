@@ -7,6 +7,7 @@
 //   Canon PowerShot TX1
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMID = 12544 (0x3100) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000b84d0

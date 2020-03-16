@@ -8,6 +8,7 @@
 //   Canon IXUS 285 HS
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 58
 //   PLATFORMID = 12989 (0x32bd) // Found @ 0xfffe0270
 //   MAXRAMADDR = 0x1fffffff

@@ -8,6 +8,7 @@
 //   Canon PowerShot SX150 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 49
 //   PLATFORMID = 12852 (0x3234) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

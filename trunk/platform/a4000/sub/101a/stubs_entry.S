@@ -8,6 +8,7 @@
 //   Canon PowerShot A4000 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12867 (0x3243) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff

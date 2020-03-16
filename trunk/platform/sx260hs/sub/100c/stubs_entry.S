@@ -8,6 +8,7 @@
 //   Canon PowerShot SX260 HS
 
 // Values for makefile.inc
+//   DIGIC = 50                  // DIGIC 5
 //   PLATFORMOSVER = 50
 //   PLATFORMID = 12868 (0x3244) // Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff

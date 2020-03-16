@@ -8,6 +8,7 @@
 //   Canon PowerShot G11
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 39
 //   PLATFORMID = 12767 (0x31df) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

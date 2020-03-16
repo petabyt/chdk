@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 800 IS
 
 // Values for makefile.inc
+//   DIGIC = 20                  // DIGIC II
 //   PLATFORMID = 12569 (0x3119) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009c890

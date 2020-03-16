@@ -8,6 +8,7 @@
 //   Canon PowerShot A3100 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 43
 //   PLATFORMID = 12785 (0x31f1) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

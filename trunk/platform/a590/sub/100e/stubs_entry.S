@@ -8,6 +8,7 @@
 //   Canon PowerShot A590 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMOSVER = 23
 //   PLATFORMID = 12662 (0x3176) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff

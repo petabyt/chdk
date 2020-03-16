@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS WIRELESS
 
 // Values for makefile.inc
+//   DIGIC = 20                  // DIGIC II
 //   PLATFORMID = 12529 (0x30f1) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000c5d80

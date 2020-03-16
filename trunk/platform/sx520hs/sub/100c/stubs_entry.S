@@ -8,6 +8,7 @@
 //   Canon PowerShot SX520 HS 
 
 // Values for makefile.inc
+//   DIGIC = 41                  // DIGIC 4+
 //   PLATFORMOSVER = 55
 //   PLATFORMID = 12955 (0x329b) // Found @ 0xfffe0040
 //   MAXRAMADDR = 0x0fffffff

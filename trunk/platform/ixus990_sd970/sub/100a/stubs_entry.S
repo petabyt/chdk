@@ -8,6 +8,7 @@
 //   Canon DIGITAL IXUS 990 IS
 
 // Values for makefile.inc
+//   DIGIC = 40                  // DIGIC 4
 //   PLATFORMOSVER = 31
 //   PLATFORMID = 12737 (0x31c1) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff

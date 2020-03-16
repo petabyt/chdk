@@ -7,6 +7,7 @@
 //   Canon DIGITAL IXUS 850 IS
 
 // Values for makefile.inc
+//   DIGIC = 30                  // DIGIC III
 //   PLATFORMID = 12598 (0x3136) // Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000ba7b0
