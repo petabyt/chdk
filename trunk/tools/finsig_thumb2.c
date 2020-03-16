@@ -5251,6 +5251,12 @@ void output_firmware_vals(firmware *fw)
 
     bprintf("\n// Values for makefile.inc\n");
     bprintf("//   PLATFORMOSVER = %d\n",fw->dryos_ver);
+    if (fw->arch_flags & FW_ARCH_FL_VMSA) {
+        bprintf("//   DIGIC = 70\n");
+    } else {
+        // 6+ exists, but not for known powershot firmware cams
+        bprintf("//   DIGIC = 60\n");
+    }
 
     if (fw->memisostart) {
         bprintf("//   MEMISOSTART = 0x%x\n",fw->memisostart);
