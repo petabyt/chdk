@@ -5994,6 +5994,17 @@ void output_firmware_vals(firmware *fw)
 
     bprintf("\n// Values for makefile.inc\n");
 
+    // work out digic version
+    int digicver = 20;
+    char *digics = "DIGIC II";
+    if (find_str(fw,"Fencing") != -1) // face recognition related task
+    {
+        digics = "DIGIC III";
+        digicver = 30;
+    }
+
+    bprintf("//   DIGIC = %i                  // %s\n",digicver,digics);
+
     if (fw->pid != 0)
     {
         bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,fw->pid_adr);
