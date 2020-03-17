@@ -8,15 +8,15 @@
 //   Canon DIGITAL IXUS 100 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12738 (0x31c2) // Found @ 0xfffe0130
+//   PLATFORMID = 12738# (0x31c2) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00146b8c
-//   KEYSYS = d4                 // Found @ 0xffff3584
-//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff3594
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff927850
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff927810
+//   KEYSYS = d4# Found @ 0xffff3584
+//   NEED_ENCODED_DISKBOOT = 2# Found @ 0xffff3594
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff927850
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff927810
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

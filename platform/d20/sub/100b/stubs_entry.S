@@ -8,15 +8,15 @@
 //   Canon PowerShot D20
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 50
-//   PLATFORMID = 12866 (0x3242) // Found @ 0xfff40040
+//   PLATFORMID = 12866# (0x3242) Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x001716e8
-//   KEYSYS = d4c                // Found @ 0xffff39e0
-//   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff39f0
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff18c9a8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff18c96c
+//   KEYSYS = d4c# Found @ 0xffff39e0
+//   NEED_ENCODED_DISKBOOT = 8# Found @ 0xffff39f0
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff18c9a8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff18c96c
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

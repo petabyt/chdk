@@ -8,15 +8,15 @@
 //   Canon PowerShot A580
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12663 (0x3177) // Found @ 0xfffe0130
+//   PLATFORMID = 12663# (0x3177) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a47e0
-//   KEYSYS = d3enc              // Found @ 0xffff1ac0
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1aa0
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffde57d4
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffde5794
+//   KEYSYS = d3enc# Found @ 0xffff1ac0
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff1aa0
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffde57d4
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffde5794
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

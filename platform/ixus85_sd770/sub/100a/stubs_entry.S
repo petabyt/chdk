@@ -8,15 +8,15 @@
 //   Canon PowerShot SD770 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12661 (0x3175) // Found @ 0xfffe0130
+//   PLATFORMID = 12661# (0x3175) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000cba08
-//   KEYSYS = d3enc              // Found @ 0xffff33e0
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff33c0
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa2997c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa2993c
+//   KEYSYS = d3enc# Found @ 0xffff33e0
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff33c0
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffa2997c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffa2993c
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

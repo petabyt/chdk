@@ -8,15 +8,15 @@
 //   Canon IXUS 132
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12925 (0x327d) // Found @ 0xfff40040
+//   PLATFORMID = 12925# (0x327d) Found @ 0xfff40040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00242f28
-//   KEYSYS = d4d                // Found @ 0xffff1d2c
-//   NEED_ENCODED_DISKBOOT = 10   // Found @ 0xffff1d3c
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff2015b8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff20157c
+//   KEYSYS = d4d# Found @ 0xffff1d2c
+//   NEED_ENCODED_DISKBOOT = 10# Found @ 0xffff1d3c
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xff2015b8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff20157c
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

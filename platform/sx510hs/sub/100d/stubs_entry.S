@@ -8,15 +8,15 @@
 //   Canon PowerShot SX510 HS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12919 (0x3277) // Found @ 0xfff40040
+//   PLATFORMID = 12919# (0x3277) Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x00265a28
-//   KEYSYS = d4e                // Found @ 0xffff39bc
-//   NEED_ENCODED_DISKBOOT = 11   // Found @ 0xffff39cc
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff1e2aec
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1e2aac
+//   KEYSYS = d4e# Found @ 0xffff39bc
+//   NEED_ENCODED_DISKBOOT = 11# Found @ 0xffff39cc
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff1e2aec
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1e2aac
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

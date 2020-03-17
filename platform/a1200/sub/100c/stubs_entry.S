@@ -8,15 +8,15 @@
 //   Canon PowerShot A1200
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 47
-//   PLATFORMID = 12843 (0x322b) // Found @ 0xfffe0040
+//   PLATFORMID = 12843# (0x322b) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0016913c
-//   KEYSYS = d4c                // Found @ 0xffff3514
-//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff3524
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff972750
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff972710
+//   KEYSYS = d4c# Found @ 0xffff3514
+//   NEED_ENCODED_DISKBOOT = 6# Found @ 0xffff3524
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff972750
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff972710
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

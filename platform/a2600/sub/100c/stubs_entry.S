@@ -8,15 +8,15 @@
 //   Canon PowerShot A2600 
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12898 (0x3262) // Found @ 0xfffe0040
+//   PLATFORMID = 12898# (0x3262) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0015afe8
-//   KEYSYS = d4d                // Found @ 0xffff1d30
-//   NEED_ENCODED_DISKBOOT = 10   // Found @ 0xffff1d40
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff981720
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9816e4
+//   KEYSYS = d4d# Found @ 0xffff1d30
+//   NEED_ENCODED_DISKBOOT = 10# Found @ 0xffff1d40
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff981720
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9816e4
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

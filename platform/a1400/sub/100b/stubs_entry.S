@@ -8,15 +8,15 @@
 //   Canon PowerShot A1400
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12900 (0x3264) // Found @ 0xfffe0040
+//   PLATFORMID = 12900# (0x3264) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0015a048
-//   KEYSYS = d4d                // Found @ 0xffff1d54
-//   NEED_ENCODED_DISKBOOT = 10   // Found @ 0xffff1d64
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff97f678
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff97f63c
+//   KEYSYS = d4d# Found @ 0xffff1d54
+//   NEED_ENCODED_DISKBOOT = 10# Found @ 0xffff1d64
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff97f678
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff97f63c
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

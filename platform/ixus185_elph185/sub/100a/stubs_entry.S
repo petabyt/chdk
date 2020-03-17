@@ -8,13 +8,13 @@
 //   Canon IXUS 185 
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 59
-//   PLATFORMID = 13012 (0x32d4) // Found @ 0xffff0270
+//   PLATFORMID = 13012# (0x32d4) Found @ 0xffff0270
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x0018aa24
-//   KEYSYS = d4j                // Found @ 0xff812968
-//   NEED_ENCODED_DISKBOOT = 17   // Found @ 0xff812978
+//   KEYSYS = d4j# Found @ 0xff812968
+//   NEED_ENCODED_DISKBOOT = 17# Found @ 0xff812978
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

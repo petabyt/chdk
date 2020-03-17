@@ -8,15 +8,15 @@
 //   Canon PowerShot SX410 IS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 55
-//   PLATFORMID = 12973 (0x32ad) // Found @ 0xffff0040
+//   PLATFORMID = 12973# (0x32ad) Found @ 0xffff0040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x001bdf3c
-//   KEYSYS = d4g                // Found @ 0xff812968
-//   NEED_ENCODED_DISKBOOT = 13   // Found @ 0xff812978
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff9bf6c8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9bf688
+//   KEYSYS = d4g# Found @ 0xff812968
+//   NEED_ENCODED_DISKBOOT = 13# Found @ 0xff812978
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff9bf6c8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9bf688
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

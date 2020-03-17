@@ -8,15 +8,15 @@
 //   Canon PowerShot SX210 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 43
-//   PLATFORMID = 12790 (0x31f6) // Found @ 0xfffe0130
+//   PLATFORMID = 12790# (0x31f6) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00152728
-//   KEYSYS = d4a                // Found @ 0xffff3570
-//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff3580
-//   ARAM_HEAP_START = 0x38e000  // Found @ 0xff97c6bc
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff97c67c
+//   KEYSYS = d4a# Found @ 0xffff3570
+//   NEED_ENCODED_DISKBOOT = 4# Found @ 0xffff3580
+//   ARAM_HEAP_START = 0x38e000# Found @ 0xff97c6bc
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff97c67c
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

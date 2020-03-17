@@ -8,15 +8,15 @@
 //   Canon PowerShot A3400 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 50
-//   PLATFORMID = 12872 (0x3248) // Found @ 0xfffe0040
+//   PLATFORMID = 12872# (0x3248) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0015967c
-//   KEYSYS = d4c                // Found @ 0xffff1d28
-//   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff1d38
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff972040
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff972004
+//   KEYSYS = d4c# Found @ 0xffff1d28
+//   NEED_ENCODED_DISKBOOT = 8# Found @ 0xffff1d38
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff972040
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff972004
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

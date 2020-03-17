@@ -8,15 +8,15 @@
 //   Canon PowerShot ELPH 350 HS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 57
-//   PLATFORMID = 12971 (0x32ab) // Found @ 0xfffe0040
+//   PLATFORMID = 12971# (0x32ab) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x1fffffff
 //   MEMISOSTART = 0x002cf204
-//   KEYSYS = d4g                // Found @ 0xff014590
-//   NEED_ENCODED_DISKBOOT = 13   // Found @ 0xff0145a0
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff228514
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff2284d4
+//   KEYSYS = d4g# Found @ 0xff014590
+//   NEED_ENCODED_DISKBOOT = 13# Found @ 0xff0145a0
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff228514
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff2284d4
 
 // Detected address ranges:
 // ROM      0xff010000 - 0xffffffff (16711680 bytes)

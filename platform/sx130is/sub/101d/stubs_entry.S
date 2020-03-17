@@ -8,15 +8,15 @@
 //   Canon PowerShot SX130 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 45
-//   PLATFORMID = 12817 (0x3211) // Found @ 0xfffe0130
+//   PLATFORMID = 12817# (0x3211) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00166210  (*** DOES NOT MATCH MAKEFILE VALUE 0x00f00000***)
-//   KEYSYS = d4b                // Found @ 0xffff3618
-//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff3628
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff977548
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff977508
+//   KEYSYS = d4b# Found @ 0xffff3618
+//   NEED_ENCODED_DISKBOOT = 5# Found @ 0xffff3628
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff977548
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff977508
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

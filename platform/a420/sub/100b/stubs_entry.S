@@ -7,8 +7,8 @@
 //   Canon PowerShot A420
 
 // Values for makefile.inc
-//   DIGIC = 20                  // DIGIC II
-//   PLATFORMID = 12559 (0x310f) // Found @ 0xfffe0130
+//   DIGIC = 20# DIGIC II
+//   PLATFORMID = 12559# (0x310f) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x00ffffff
 //   MEMISOSTART = 0x0009ef70
 

@@ -8,15 +8,15 @@
 //   Canon PowerShot A490
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 43
-//   PLATFORMID = 12784 (0x31f0) // Found @ 0xfffe0130
+//   PLATFORMID = 12784# (0x31f0) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x00129140
-//   KEYSYS = d4a                // Found @ 0xffff1a0c
-//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff1a1c
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffd18218
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd181d8
+//   KEYSYS = d4a# Found @ 0xffff1a0c
+//   NEED_ENCODED_DISKBOOT = 4# Found @ 0xffff1a1c
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffd18218
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd181d8
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

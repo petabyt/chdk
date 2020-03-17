@@ -10,15 +10,15 @@
 //   Canon DIGITAL IXUS 82 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12676 (0x3184) // Found @ 0xfffe0130
+//   PLATFORMID = 12676# (0x3184) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000bff60
-//   KEYSYS = d3enc              // Found @ 0xffff3308
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff32e8
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa277f0
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa277b0
+//   KEYSYS = d3enc# Found @ 0xffff3308
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff32e8
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffa277f0
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffa277b0
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

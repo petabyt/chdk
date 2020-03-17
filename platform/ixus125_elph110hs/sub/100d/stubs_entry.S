@@ -8,15 +8,15 @@
 //   Canon PowerShot ELPH 110 HS
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 50
-//   PLATFORMID = 12865 (0x3241) // Found @ 0xfff40040
+//   PLATFORMID = 12865# (0x3241) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x00180998
-//   KEYSYS = d4c                // Found @ 0xffff3cbc
-//   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff3ccc
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff1a4920
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1a48e4
+//   KEYSYS = d4c# Found @ 0xffff3cbc
+//   NEED_ENCODED_DISKBOOT = 8# Found @ 0xffff3ccc
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xff1a4920
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1a48e4
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

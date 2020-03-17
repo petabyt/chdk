@@ -8,12 +8,12 @@
 //   Canon PowerShot S5 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 20
-//   PLATFORMID = 12616 (0x3148) // Found @ 0xfffe0130
+//   PLATFORMID = 12616# (0x3148) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0009b610
-//   KEYSYS = d3                 // Found @ 0xffff31c8
+//   KEYSYS = d3# Found @ 0xffff31c8
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

@@ -8,12 +8,12 @@
 //   Canon PowerShot A650 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12635 (0x315b) // Found @ 0xfffe0130
+//   PLATFORMID = 12635# (0x315b) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000a3f20
-//   KEYSYS = d3                 // Found @ 0xffff1b20
+//   KEYSYS = d3# Found @ 0xffff1b20
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

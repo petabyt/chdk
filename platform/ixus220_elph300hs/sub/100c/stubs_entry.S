@@ -8,15 +8,15 @@
 //   Canon IXUS 220 HS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 47
-//   PLATFORMID = 12841 (0x3229) // Found @ 0xfffe0040
+//   PLATFORMID = 12841# (0x3229) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x001774ec
-//   KEYSYS = d4c                // Found @ 0xffff3620
-//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff3630
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff994958
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff994918
+//   KEYSYS = d4c# Found @ 0xffff3620
+//   NEED_ENCODED_DISKBOOT = 6# Found @ 0xffff3630
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff994958
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff994918
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

@@ -8,15 +8,15 @@
 //   Canon PowerShot G11
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 39
-//   PLATFORMID = 12767 (0x31df) // Found @ 0xfffe0130
+//   PLATFORMID = 12767# (0x31df) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x001411e8
-//   KEYSYS = d4                 // Found @ 0xffff35a8
-//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff35b8
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff971b60
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff971b20
+//   KEYSYS = d4# Found @ 0xffff35a8
+//   NEED_ENCODED_DISKBOOT = 3# Found @ 0xffff35b8
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff971b60
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff971b20
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

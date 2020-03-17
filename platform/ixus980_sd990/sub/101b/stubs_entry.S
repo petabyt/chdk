@@ -8,15 +8,15 @@
 //   Canon DIGITAL IXUS 980 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12691 (0x3193) // Found @ 0xfffe0130
+//   PLATFORMID = 12691# (0x3193) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x000e8b40
-//   KEYSYS = d4                 // Found @ 0xffff363c
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff364c
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff94782c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff9477ec
+//   KEYSYS = d4# Found @ 0xffff363c
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff364c
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff94782c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff9477ec
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

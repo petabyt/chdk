@@ -8,15 +8,15 @@
 //   Canon IXUS 145
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 54
-//   PLATFORMID = 12936 (0x3288) // Found @ 0xffff0040
+//   PLATFORMID = 12936# (0x3288) Found @ 0xffff0040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x00181550
-//   KEYSYS = d4f                // Found @ 0xff812744
-//   NEED_ENCODED_DISKBOOT = 12   // Found @ 0xff812754
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff99dc24
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff99dbe4
+//   KEYSYS = d4f# Found @ 0xff812744
+//   NEED_ENCODED_DISKBOOT = 12# Found @ 0xff812754
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff99dc24
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff99dbe4
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

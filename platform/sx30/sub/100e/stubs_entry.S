@@ -8,15 +8,15 @@
 //   Canon PowerShot SX30 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 45
-//   PLATFORMID = 12816 (0x3210) // Found @ 0xfffe0130
+//   PLATFORMID = 12816# (0x3210) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x0018124c
-//   KEYSYS = d4b                // Found @ 0xffff3680
-//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff3690
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff99c1a8
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff99c168
+//   KEYSYS = d4b# Found @ 0xffff3680
+//   NEED_ENCODED_DISKBOOT = 5# Found @ 0xffff3690
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff99c1a8
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff99c168
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

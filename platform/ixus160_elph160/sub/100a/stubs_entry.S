@@ -8,15 +8,15 @@
 //   Canon IXUS 160
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 55
-//   PLATFORMID = 12970 (0x32aa) // Found @ 0xffff0040
+//   PLATFORMID = 12970# (0x32aa) Found @ 0xffff0040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x00185cb0
-//   KEYSYS = d4g                // Found @ 0xff81296c
-//   NEED_ENCODED_DISKBOOT = 13   // Found @ 0xff81297c
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff9a53d0
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9a5390
+//   KEYSYS = d4g# Found @ 0xff81296c
+//   NEED_ENCODED_DISKBOOT = 13# Found @ 0xff81297c
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff9a53d0
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9a5390
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

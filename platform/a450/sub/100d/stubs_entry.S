@@ -7,8 +7,8 @@
 //   Canon PowerShot A450
 
 // Values for makefile.inc
-//   DIGIC = 20                  // DIGIC II
-//   PLATFORMID = 12629 (0x3155) // Found @ 0xfffe0130
+//   DIGIC = 20# DIGIC II
+//   PLATFORMID = 12629# (0x3155) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x00ffffff
 //   MEMISOSTART = 0x00095730
 

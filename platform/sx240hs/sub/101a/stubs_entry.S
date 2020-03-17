@@ -8,15 +8,15 @@
 //   Canon PowerShot SX240 HS
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 50
-//   PLATFORMID = 12869 (0x3245) // Found @ 0xfff40040
+//   PLATFORMID = 12869# (0x3245) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x00193a24
-//   KEYSYS = d4c                // Found @ 0xffff3ce0
-//   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff3cf0
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff1c90c8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1c908c
+//   KEYSYS = d4c# Found @ 0xffff3ce0
+//   NEED_ENCODED_DISKBOOT = 8# Found @ 0xffff3cf0
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xff1c90c8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1c908c
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

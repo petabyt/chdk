@@ -10,13 +10,13 @@
 //   Could not find Camera name - possible corrupt firmware dump
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
 //   PLATFORMID = ?           // Not found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000cbc48
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa2d9c8
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa2d988
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffa2d9c8
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffa2d988
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

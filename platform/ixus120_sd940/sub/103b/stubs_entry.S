@@ -8,15 +8,15 @@
 //   Canon PowerShot SD940 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 39
-//   PLATFORMID = 12774 (0x31e6) // Found @ 0xfffe0130
+//   PLATFORMID = 12774# (0x31e6) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0013ca18
-//   KEYSYS = d4                 // Found @ 0xffff3564
-//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff3574
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff94b264
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff94b224
+//   KEYSYS = d4# Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 3# Found @ 0xffff3574
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff94b264
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff94b224
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

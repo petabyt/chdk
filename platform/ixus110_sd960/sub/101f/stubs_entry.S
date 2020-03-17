@@ -8,15 +8,15 @@
 //   Canon DIGITAL IXUS 110 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12733 (0x31bd) // Found @ 0xfffe0130
+//   PLATFORMID = 12733# (0x31bd) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00148428
-//   KEYSYS = d4                 // Found @ 0xffff3564
-//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff3574
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff92e9e4
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff92e9a4
+//   KEYSYS = d4# Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 2# Found @ 0xffff3574
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff92e9e4
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff92e9a4
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

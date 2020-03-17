@@ -8,15 +8,15 @@
 //   Canon IXUS 170
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 55
-//   PLATFORMID = 12972 (0x32ac) // Found @ 0xffff0040
+//   PLATFORMID = 12972# (0x32ac) Found @ 0xffff0040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x001929d8
-//   KEYSYS = d4g                // Found @ 0xff812968
-//   NEED_ENCODED_DISKBOOT = 13   // Found @ 0xff812978
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff9a9078
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9a9038
+//   KEYSYS = d4g# Found @ 0xff812968
+//   NEED_ENCODED_DISKBOOT = 13# Found @ 0xff812978
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff9a9078
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9a9038
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

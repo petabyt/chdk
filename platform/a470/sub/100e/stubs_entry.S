@@ -8,15 +8,15 @@
 //   Canon PowerShot A470
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12666 (0x317a) // Found @ 0xfffe0130
+//   PLATFORMID = 12666# (0x317a) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a5718
-//   KEYSYS = d3enc              // Found @ 0xffff1a98
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1a78
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffddb06c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffddb02c
+//   KEYSYS = d3enc# Found @ 0xffff1a98
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff1a78
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffddb06c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffddb02c
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

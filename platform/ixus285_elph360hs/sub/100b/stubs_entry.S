@@ -8,15 +8,15 @@
 //   Canon IXUS 285 HS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 58
-//   PLATFORMID = 12989 (0x32bd) // Found @ 0xfffe0270
+//   PLATFORMID = 12989# (0x32bd) Found @ 0xfffe0270
 //   MAXRAMADDR = 0x1fffffff
 //   MEMISOSTART = 0x002f6598
-//   KEYSYS = d4i                // Found @ 0xff014590
-//   NEED_ENCODED_DISKBOOT = 16   // Found @ 0xff0145a0
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff22d9e4
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff22d9a4
+//   KEYSYS = d4i# Found @ 0xff014590
+//   NEED_ENCODED_DISKBOOT = 16# Found @ 0xff0145a0
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff22d9e4
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff22d9a4
 
 // Detected address ranges:
 // ROM      0xff010000 - 0xffffffff (16711680 bytes)

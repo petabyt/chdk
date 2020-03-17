@@ -8,15 +8,15 @@
 //   Canon PowerShot S90
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 39
-//   PLATFORMID = 12769 (0x31e1) // Found @ 0xfffe0130
+//   PLATFORMID = 12769# (0x31e1) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00141dbc
-//   KEYSYS = d4                 // Found @ 0xffff3564
-//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff3574
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff96fd1c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff96fcdc
+//   KEYSYS = d4# Found @ 0xffff3564
+//   NEED_ENCODED_DISKBOOT = 3# Found @ 0xffff3574
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff96fd1c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff96fcdc
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

@@ -8,12 +8,12 @@
 //   Canon DIGITAL IXUS 860 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12640 (0x3160) // Found @ 0xfffe0130
+//   PLATFORMID = 12640# (0x3160) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009fe50
-//   KEYSYS = d3                 // Found @ 0xffff3184
+//   KEYSYS = d3# Found @ 0xffff3184
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

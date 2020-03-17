@@ -7,8 +7,8 @@
 //   Canon PowerShot G7
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
-//   PLATFORMID = 12581 (0x3125) // Found @ 0xfffe0130
+//   DIGIC = 30# DIGIC III
+//   PLATFORMID = 12581# (0x3125) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000a7910
 

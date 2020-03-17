@@ -8,15 +8,15 @@
 //   Canon PowerShot SX500 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 51
-//   PLATFORMID = 12892 (0x325c) // Found @ 0xfff40040
+//   PLATFORMID = 12892# (0x325c) Found @ 0xfff40040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x001791c0
-//   KEYSYS = d4c                // Found @ 0xffff1d2c
-//   NEED_ENCODED_DISKBOOT = 9   // Found @ 0xffff1d3c
-//   ARAM_HEAP_START = 0x38e000  // Found @ 0xff1999e8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1999ac
+//   KEYSYS = d4c# Found @ 0xffff1d2c
+//   NEED_ENCODED_DISKBOOT = 9# Found @ 0xffff1d3c
+//   ARAM_HEAP_START = 0x38e000# Found @ 0xff1999e8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1999ac
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

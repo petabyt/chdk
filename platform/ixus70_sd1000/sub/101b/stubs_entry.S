@@ -7,8 +7,8 @@
 //   Canon DIGITAL IXUS 70
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
-//   PLATFORMID = 12623 (0x314f) // Found @ 0xfffe0130
+//   DIGIC = 30# DIGIC III
+//   PLATFORMID = 12623# (0x314f) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000bef70
 

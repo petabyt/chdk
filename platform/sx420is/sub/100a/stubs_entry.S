@@ -8,15 +8,15 @@
 //   Canon PowerShot SX420 IS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 58
-//   PLATFORMID = 12991 (0x32bf) // Found @ 0xfffe0270
+//   PLATFORMID = 12991# (0x32bf) Found @ 0xfffe0270
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x002b8c4c
-//   KEYSYS = d4i                // Found @ 0xff014590
-//   NEED_ENCODED_DISKBOOT = 16   // Found @ 0xff0145a0
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff1ff5b8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1ff578
+//   KEYSYS = d4i# Found @ 0xff014590
+//   NEED_ENCODED_DISKBOOT = 16# Found @ 0xff0145a0
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff1ff5b8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1ff578
 
 // Detected address ranges:
 // ROM      0xff010000 - 0xffffffff (16711680 bytes)

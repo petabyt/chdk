@@ -8,15 +8,15 @@
 //   Canon IXUS 175
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 58
-//   PLATFORMID = 12993 (0x32c1) // Found @ 0xffff0270
+//   PLATFORMID = 12993# (0x32c1) Found @ 0xffff0270
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x001899d8
-//   KEYSYS = d4i                // Found @ 0xff812968
-//   NEED_ENCODED_DISKBOOT = 16   // Found @ 0xff812978
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff9b8f58
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9b8f18
+//   KEYSYS = d4i# Found @ 0xff812968
+//   NEED_ENCODED_DISKBOOT = 16# Found @ 0xff812978
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff9b8f58
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9b8f18
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

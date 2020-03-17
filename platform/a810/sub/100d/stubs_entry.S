@@ -8,15 +8,15 @@
 //   Canon PowerShot A810
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 50
-//   PLATFORMID = 12863 (0x323f) // Found @ 0xfffe0040
+//   PLATFORMID = 12863# (0x323f) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x001585d0
-//   KEYSYS = d4c                // Found @ 0xffff1d4c
-//   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff1d5c
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff969c20
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff969be4
+//   KEYSYS = d4c# Found @ 0xffff1d4c
+//   NEED_ENCODED_DISKBOOT = 8# Found @ 0xffff1d5c
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff969c20
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff969be4
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

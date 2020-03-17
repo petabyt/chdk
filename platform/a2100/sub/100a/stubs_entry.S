@@ -8,15 +8,15 @@
 //   Canon PowerShot A2100 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12734 (0x31be) // Found @ 0xfffe0130
+//   PLATFORMID = 12734# (0x31be) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0012edb4
-//   KEYSYS = d4                 // Found @ 0xffff1d14
-//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff1d24
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xffd037c4
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd03784
+//   KEYSYS = d4# Found @ 0xffff1d14
+//   NEED_ENCODED_DISKBOOT = 2# Found @ 0xffff1d24
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xffd037c4
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd03784
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

@@ -8,15 +8,15 @@
 //   Canon PowerShot A590 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12662 (0x3176) // Found @ 0xfffe0130
+//   PLATFORMID = 12662# (0x3176) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a5304
-//   KEYSYS = d3enc              // Found @ 0xffff1ad8
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1ab8
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffdf2578
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffdf2538
+//   KEYSYS = d3enc# Found @ 0xffff1ad8
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff1ab8
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffdf2578
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffdf2538
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

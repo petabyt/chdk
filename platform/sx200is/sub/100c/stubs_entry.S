@@ -8,15 +8,15 @@
 //   Canon PowerShot SX200 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12736 (0x31c0) // Found @ 0xfffe0130
+//   PLATFORMID = 12736# (0x31c0) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0012351c
-//   KEYSYS = d4                 // Found @ 0xffff356c
-//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff357c
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff94553c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff9454fc
+//   KEYSYS = d4# Found @ 0xffff356c
+//   NEED_ENCODED_DISKBOOT = 2# Found @ 0xffff357c
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff94553c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff9454fc
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

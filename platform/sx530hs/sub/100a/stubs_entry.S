@@ -8,15 +8,15 @@
 //   Canon PowerShot SX530 HS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 55
-//   PLATFORMID = 12959 (0x329f) // Found @ 0xfffe0040
+//   PLATFORMID = 12959# (0x329f) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x002ff248
-//   KEYSYS = d4h                // Found @ 0xff0144a4
-//   NEED_ENCODED_DISKBOOT = 14   // Found @ 0xff0144b4
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff22c030
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff22bff0
+//   KEYSYS = d4h# Found @ 0xff0144a4
+//   NEED_ENCODED_DISKBOOT = 14# Found @ 0xff0144b4
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff22c030
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff22bff0
 
 // Detected address ranges:
 // ROM      0xff010000 - 0xffffffff (16711680 bytes)
