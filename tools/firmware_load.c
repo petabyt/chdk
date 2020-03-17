@@ -1219,19 +1219,19 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                 {
                     // Note: only check first word of key (assumes Canon won't release a new key with the same initial value as an existing one)
                     // (Avoid storing full encryption key in this source code).
-                    case 0x70726964:    fw->ksys = "d3   "; break;
+                    case 0x70726964:    fw->ksys = "d3"; break;
                     case 0x646C726F:    fw->ksys = "d3enc"; break;
-                    case 0x774D450B:    fw->ksys = "d4   "; break;
-                    case 0x80751A95:    fw->ksys = "d4a  "; break;
-                    case 0x76894368:    fw->ksys = "d4b  "; break;
-                    case 0x50838EF7:    fw->ksys = "d4c  "; break;
-                    case 0xCCE4D2E6:    fw->ksys = "d4d  "; break;
-                    case 0x66E0C6D2:    fw->ksys = "d4e  "; break;
-                    case 0xE1268DB4:    fw->ksys = "d4f  "; break;
-                    case 0x216EA8C8:    fw->ksys = "d4g  "; break;
-                    case 0x45264974:    fw->ksys = "d4h  "; break;
-					case 0x666363FC:    fw->ksys = "d4i  "; break;
-					case 0xAE8DB5AF:    fw->ksys = "d4j  "; break;
+                    case 0x774D450B:    fw->ksys = "d4"; break;
+                    case 0x80751A95:    fw->ksys = "d4a"; break;
+                    case 0x76894368:    fw->ksys = "d4b"; break;
+                    case 0x50838EF7:    fw->ksys = "d4c"; break;
+                    case 0xCCE4D2E6:    fw->ksys = "d4d"; break;
+                    case 0x66E0C6D2:    fw->ksys = "d4e"; break;
+                    case 0xE1268DB4:    fw->ksys = "d4f"; break;
+                    case 0x216EA8C8:    fw->ksys = "d4g"; break;
+                    case 0x45264974:    fw->ksys = "d4h"; break;
+					case 0x666363FC:    fw->ksys = "d4i"; break;
+					case 0xAE8DB5AF:    fw->ksys = "d4j"; break;
                 }
             }
 

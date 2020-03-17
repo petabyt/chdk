@@ -6429,8 +6429,8 @@ void find_AdditionAgent_RAM(firmware *fw)
         }
         if (ramstart>0)
         {
-            bprintf("//   ARAM_HEAP_START = 0x%x  // Found @ 0x%08x\n",ramstart,startloc);
-            bprintf("//   ARAM_HEAP_SIZE  = 0x%x   // Found @ 0x%08x\n",ramsize,sizeloc);
+            bprintf("//   ARAM_HEAP_START = 0x%x# Found @ 0x%08x\n",ramstart,startloc);
+            bprintf("//   ARAM_HEAP_SIZE  = 0x%x# Found @ 0x%08x\n",ramsize,sizeloc);
         }
     }
 }
@@ -7741,13 +7741,13 @@ void output_firmware_vals(firmware *fw)
             digics = "DIGIC 5";
         }
     }
-    bprintf("//   DIGIC = %i                  // %s\n",digicver,digics);
+    bprintf("//   DIGIC = %i# %s\n",digicver,digics);
 
     bprintf("//   PLATFORMOSVER = %d\n",fw->real_dryos_ver);
 
     if (fw->pid != 0)
     {
-        bprintf("//   PLATFORMID = %d (0x%04x) // Found @ 0x%08x\n",fw->pid,fw->pid,fw->pid_adr);
+        bprintf("//   PLATFORMID = %d# (0x%04x) Found @ 0x%08x\n",fw->pid,fw->pid,fw->pid_adr);
     }
     else
     {
@@ -7768,13 +7768,13 @@ void output_firmware_vals(firmware *fw)
 
     if (fw->ksys != 0)
     {
-        bprintf("//   KEYSYS = %s              // Found @ 0x%08x\n",fw->ksys,idx2adr(fw,fw->ksys_idx));
+        bprintf("//   KEYSYS = %s# Found @ 0x%08x\n",fw->ksys,idx2adr(fw,fw->ksys_idx));
 
         if (fw->dancing_bits_idx != 0)
         {
             if (fw->dancing_bits)
             {
-                bprintf("//   NEED_ENCODED_DISKBOOT = %d   // Found @ 0x%08x",fw->dancing_bits,idx2adr(fw,fw->dancing_bits_idx));
+                bprintf("//   NEED_ENCODED_DISKBOOT = %d# Found @ 0x%08x",fw->dancing_bits,idx2adr(fw,fw->dancing_bits_idx));
                 osig *o = find_sig(fw->sv->makevals,"NEED_ENCODED_DISKBOOT");
                 if (o == 0)
                     bprintf(" (*** NOT IN MAKEFILE.INC ***)");
