@@ -37,3 +37,6 @@ KEYSYS=d6
 # below 2 commented lines are used by tools/compatbuilder.sh
 # BLINK_LED_CONTROL=5
 # BLINK_LED_GPIO=0xD20801E4
+
+DIGIC = 70
+
