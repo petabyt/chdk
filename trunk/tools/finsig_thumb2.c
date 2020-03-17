@@ -5201,7 +5201,7 @@ void print_misc_val_makefile(const char *name)
         bprintf("// %s not found\n",name);
         return;
     }
-    bprintf("//   %s = 0x%08x # ",name,mv->val);
+    bprintf("//   %s = 0x%08x# ",name,mv->val);
     if(mv->offset) {
         bprintf(" (0x%x+0x%x)",mv->base,mv->offset);
     }
