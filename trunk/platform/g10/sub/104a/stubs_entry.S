@@ -8,15 +8,15 @@
 //   Canon PowerShot G10
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12687 (0x318f) // Found @ 0xfffe0130
+//   PLATFORMID = 12687# (0x318f) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x000eeecc
-//   KEYSYS = d4                 // Found @ 0xffff368c
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff369c
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff952c0c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff952bcc
+//   KEYSYS = d4# Found @ 0xffff368c
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff369c
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff952c0c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff952bcc
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

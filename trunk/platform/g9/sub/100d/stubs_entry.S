@@ -8,12 +8,12 @@
 //   Canon PowerShot G9
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12634 (0x315a) // Found @ 0xfffe0130
+//   PLATFORMID = 12634# (0x315a) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000b0b68
-//   KEYSYS = d3                 // Found @ 0xffff31f0
+//   KEYSYS = d3# Found @ 0xffff31f0
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

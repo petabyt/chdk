@@ -8,15 +8,15 @@
 //   Canon PowerShot SX20 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 39
-//   PLATFORMID = 12772 (0x31e4) // Found @ 0xfffe0130
+//   PLATFORMID = 12772# (0x31e4) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0013dd20
-//   KEYSYS = d4                 // Found @ 0xffff35a0
-//   NEED_ENCODED_DISKBOOT = 3   // Found @ 0xffff35b0
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff96b0fc
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff96b0bc
+//   KEYSYS = d4# Found @ 0xffff35a0
+//   NEED_ENCODED_DISKBOOT = 3# Found @ 0xffff35b0
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff96b0fc
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff96b0bc
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

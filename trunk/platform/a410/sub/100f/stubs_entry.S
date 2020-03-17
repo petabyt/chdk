@@ -7,8 +7,8 @@
 //   Canon PowerShot A410
 
 // Values for makefile.inc
-//   DIGIC = 20                  // DIGIC II
-//   PLATFORMID = 12537 (0x30f9) // Found @ 0xfffe0130
+//   DIGIC = 20# DIGIC II
+//   PLATFORMID = 12537# (0x30f9) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x00ffffff
 //   MEMISOSTART = 0x0009f470
 

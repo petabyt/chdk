@@ -8,12 +8,12 @@
 //   Canon PowerShot A720 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12637 (0x315d) // Found @ 0xfffe0130
+//   PLATFORMID = 12637# (0x315d) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009d024
-//   KEYSYS = d3                 // Found @ 0xffff1aa4
+//   KEYSYS = d3# Found @ 0xffff1aa4
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

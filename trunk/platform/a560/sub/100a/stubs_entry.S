@@ -7,8 +7,8 @@
 //   Canon PowerShot A560
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
-//   PLATFORMID = 12621 (0x314d) // Found @ 0xfffe0130
+//   DIGIC = 30# DIGIC III
+//   PLATFORMID = 12621# (0x314d) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a6090
 

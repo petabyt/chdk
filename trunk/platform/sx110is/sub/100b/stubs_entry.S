@@ -8,15 +8,15 @@
 //   Canon PowerShot SX110 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12690 (0x3192) // Found @ 0xfffe0130
+//   PLATFORMID = 12690# (0x3192) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000a2728
-//   KEYSYS = d4                 // Found @ 0xffff1a08
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1a18
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffd24b80
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd24b40
+//   KEYSYS = d4# Found @ 0xffff1a08
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff1a18
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffd24b80
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd24b40
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

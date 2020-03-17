@@ -8,12 +8,12 @@
 //   Canon PowerShot SX100 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12638 (0x315e) // Found @ 0xfffe0130
+//   PLATFORMID = 12638# (0x315e) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009f498
-//   KEYSYS = d3                 // Found @ 0xffff1a04
+//   KEYSYS = d3# Found @ 0xffff1a04
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

@@ -8,15 +8,15 @@
 //   Canon PowerShot SX430 IS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 59
-//   PLATFORMID = 13013 (0x32d5) // Found @ 0xfffe0270
+//   PLATFORMID = 13013# (0x32d5) Found @ 0xfffe0270
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x002b9464
-//   KEYSYS = d4j                // Found @ 0xff014590
-//   NEED_ENCODED_DISKBOOT = 17   // Found @ 0xff0145a0
-//   ARAM_HEAP_START = 0x9400001  // Found @ 0xff201610
-//   ARAM_HEAP_SIZE  = 0x0   // Found @ 0x00000000
+//   KEYSYS = d4j# Found @ 0xff014590
+//   NEED_ENCODED_DISKBOOT = 17# Found @ 0xff0145a0
+//   ARAM_HEAP_START = 0x9400001# Found @ 0xff201610
+//   ARAM_HEAP_SIZE  = 0x0# Found @ 0x00000000
 
 // Detected address ranges:
 // ROM      0xff010000 - 0xffffffff (16711680 bytes)

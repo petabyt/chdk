@@ -8,15 +8,15 @@
 //   Canon PowerShot SX400 IS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 55
-//   PLATFORMID = 12956 (0x329c) // Found @ 0xffff0040
+//   PLATFORMID = 12956# (0x329c) Found @ 0xffff0040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x001bade8
-//   KEYSYS = d4h                // Found @ 0xff81287c
-//   NEED_ENCODED_DISKBOOT = 14   // Found @ 0xff81288c
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff9bd628
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9bd5e8
+//   KEYSYS = d4h# Found @ 0xff81287c
+//   NEED_ENCODED_DISKBOOT = 14# Found @ 0xff81288c
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff9bd628
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9bd5e8
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

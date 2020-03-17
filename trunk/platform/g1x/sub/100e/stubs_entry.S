@@ -8,15 +8,15 @@
 //   Canon PowerShot G1 X
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 49
-//   PLATFORMID = 12851 (0x3233) // Found @ 0xfff40040
+//   PLATFORMID = 12851# (0x3233) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x0018c774
-//   KEYSYS = d4c                // Found @ 0xffff3bb0
-//   NEED_ENCODED_DISKBOOT = 7   // Found @ 0xffff3bc0
-//   ARAM_HEAP_START = 0x5de000  // Found @ 0xff1db828
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1db7e8
+//   KEYSYS = d4c# Found @ 0xffff3bb0
+//   NEED_ENCODED_DISKBOOT = 7# Found @ 0xffff3bc0
+//   ARAM_HEAP_START = 0x5de000# Found @ 0xff1db828
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1db7e8
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

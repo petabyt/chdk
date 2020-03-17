@@ -7,8 +7,8 @@
 //   Canon PowerShot A620
 
 // Values for makefile.inc
-//   DIGIC = 20                  // DIGIC II
-//   PLATFORMID = 12540 (0x30fc) // Found @ 0xfffe0130
+//   DIGIC = 20# DIGIC II
+//   PLATFORMID = 12540# (0x30fc) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0009f990
 

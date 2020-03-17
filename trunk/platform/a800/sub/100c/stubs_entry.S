@@ -8,15 +8,15 @@
 //   Canon PowerShot A800
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 47
-//   PLATFORMID = 12838 (0x3226) // Found @ 0xfffe0040
+//   PLATFORMID = 12838# (0x3226) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x0013a700
-//   KEYSYS = d4c                // Found @ 0xffff1a20
-//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff1a30
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffd23d54
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd23d14
+//   KEYSYS = d4c# Found @ 0xffff1a20
+//   NEED_ENCODED_DISKBOOT = 6# Found @ 0xffff1a30
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffd23d54
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd23d14
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

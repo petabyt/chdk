@@ -8,15 +8,15 @@
 //   Canon PowerShot S95
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 45
-//   PLATFORMID = 12818 (0x3212) // Found @ 0xfffe0130
+//   PLATFORMID = 12818# (0x3212) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x0016ee30
-//   KEYSYS = d4b                // Found @ 0xffff3624
-//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff3634
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff994efc
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff994ebc
+//   KEYSYS = d4b# Found @ 0xffff3624
+//   NEED_ENCODED_DISKBOOT = 5# Found @ 0xffff3634
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff994efc
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff994ebc
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

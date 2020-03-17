@@ -8,15 +8,15 @@
 //   Canon IXUS 310 HS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 47
-//   PLATFORMID = 12837 (0x3225) // Found @ 0xfff40040
+//   PLATFORMID = 12837# (0x3225) Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x0018b834
-//   KEYSYS = d4c                // Found @ 0xffff3610
-//   NEED_ENCODED_DISKBOOT = 6   // Found @ 0xffff3620
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff18ea74
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff18ea34
+//   KEYSYS = d4c# Found @ 0xffff3610
+//   NEED_ENCODED_DISKBOOT = 6# Found @ 0xffff3620
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff18ea74
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff18ea34
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

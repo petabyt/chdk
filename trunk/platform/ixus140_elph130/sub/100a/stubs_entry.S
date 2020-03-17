@@ -8,15 +8,15 @@
 //   Canon PowerShot ELPH 130 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12901 (0x3265) // Found @ 0xfff40040
+//   PLATFORMID = 12901# (0x3265) Found @ 0xfff40040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00242f28
-//   KEYSYS = d4d                // Found @ 0xffff1d2c
-//   NEED_ENCODED_DISKBOOT = 10   // Found @ 0xffff1d3c
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff201a10
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff2019d4
+//   KEYSYS = d4d# Found @ 0xffff1d2c
+//   NEED_ENCODED_DISKBOOT = 10# Found @ 0xffff1d3c
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xff201a10
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff2019d4
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

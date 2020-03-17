@@ -8,15 +8,15 @@
 //   Canon PowerShot SX1 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12693 (0x3195) // Found @ 0xfffe0130
+//   PLATFORMID = 12693# (0x3195) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x000c2d08
-//   KEYSYS = d4                 // Found @ 0xffff3674
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff3684
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff96a758
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff96a718
+//   KEYSYS = d4# Found @ 0xffff3674
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff3684
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff96a758
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff96a718
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

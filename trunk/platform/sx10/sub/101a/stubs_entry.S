@@ -8,15 +8,15 @@
 //   Canon PowerShot SX10 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12685 (0x318d) // Found @ 0xfffe0130
+//   PLATFORMID = 12685# (0x318d) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000acb74
-//   KEYSYS = d4                 // Found @ 0xffff3570
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff3580
-//   ARAM_HEAP_START = 0x30e000  // Found @ 0xff956394
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff956354
+//   KEYSYS = d4# Found @ 0xffff3570
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff3580
+//   ARAM_HEAP_START = 0x30e000# Found @ 0xff956394
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff956354
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

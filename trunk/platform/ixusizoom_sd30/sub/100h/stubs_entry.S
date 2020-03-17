@@ -7,8 +7,8 @@
 //   Canon DIGITAL IXUS i zoom
 
 // Values for makefile.inc
-//   DIGIC = 20                  // DIGIC II
-//   PLATFORMID = 12532 (0x30f4) // Found @ 0xffd70130
+//   DIGIC = 20# DIGIC II
+//   PLATFORMID = 12532# (0x30f4) Found @ 0xffd70130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x000a85f0
 

@@ -8,15 +8,15 @@
 //   Canon PowerShot S100
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 49
-//   PLATFORMID = 12854 (0x3236) // Found @ 0xfff40040
+//   PLATFORMID = 12854# (0x3236) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x00195d34
-//   KEYSYS = d4c                // Found @ 0xffff3b28
-//   NEED_ENCODED_DISKBOOT = 7   // Found @ 0xffff3b38
-//   ARAM_HEAP_START = 0x5de000  // Found @ 0xff1dd024
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1dcfe4
+//   KEYSYS = d4c# Found @ 0xffff3b28
+//   NEED_ENCODED_DISKBOOT = 7# Found @ 0xffff3b38
+//   ARAM_HEAP_START = 0x5de000# Found @ 0xff1dd024
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1dcfe4
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

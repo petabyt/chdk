@@ -8,15 +8,15 @@
 //   Canon PowerShot S110
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 51
-//   PLATFORMID = 12891 (0x325b) // Found @ 0xfff40040
+//   PLATFORMID = 12891# (0x325b) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x0028bc88
-//   KEYSYS = d4c                // Found @ 0xffff3cd0
-//   NEED_ENCODED_DISKBOOT = 9   // Found @ 0xffff3ce0
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xf827243c
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xf8272400
+//   KEYSYS = d4c# Found @ 0xffff3cd0
+//   NEED_ENCODED_DISKBOOT = 9# Found @ 0xffff3ce0
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xf827243c
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xf8272400
 
 // Detected address ranges:
 // ROM      0xf8000000 - 0xf9000000 (16777216 bytes)

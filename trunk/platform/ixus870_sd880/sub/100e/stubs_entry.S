@@ -8,15 +8,15 @@
 //   Canon DIGITAL IXUS 870 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12694 (0x3196) // Found @ 0xfffe0130
+//   PLATFORMID = 12694# (0x3196) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000de578
-//   KEYSYS = d4                 // Found @ 0xffff3554
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff3564
-//   ARAM_HEAP_START = 0x30e000  // Found @ 0xff93fc98
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff93fc58
+//   KEYSYS = d4# Found @ 0xffff3554
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff3564
+//   ARAM_HEAP_START = 0x30e000# Found @ 0xff93fc98
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff93fc58
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

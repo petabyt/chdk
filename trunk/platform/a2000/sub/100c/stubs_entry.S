@@ -8,15 +8,15 @@
 //   Canon PowerShot A2000 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12689 (0x3191) // Found @ 0xfffe0130
+//   PLATFORMID = 12689# (0x3191) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000d4f38
-//   KEYSYS = d4                 // Found @ 0xffff1a98
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1aa8
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffd15f40
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd15f00
+//   KEYSYS = d4# Found @ 0xffff1a98
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff1aa8
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffd15f40
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd15f00
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

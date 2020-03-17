@@ -8,15 +8,15 @@
 //   Canon IXUS 1000HS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 45
-//   PLATFORMID = 12792 (0x31f8) // Found @ 0xfffe0130
+//   PLATFORMID = 12792# (0x31f8) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x00172bf8
-//   KEYSYS = d4b                // Found @ 0xffff3624
-//   NEED_ENCODED_DISKBOOT = 5   // Found @ 0xffff3634
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff9944e4
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff9944a4
+//   KEYSYS = d4b# Found @ 0xffff3624
+//   NEED_ENCODED_DISKBOOT = 5# Found @ 0xffff3634
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff9944e4
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff9944a4
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

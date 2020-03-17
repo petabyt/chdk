@@ -8,15 +8,15 @@
 //   Canon IXUS 130
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 43
-//   PLATFORMID = 12787 (0x31f3) // Found @ 0xfffe0130
+//   PLATFORMID = 12787# (0x31f3) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0014fe20
-//   KEYSYS = d4a                // Found @ 0xffff3568
-//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff3578
-//   ARAM_HEAP_START = 0x38e000  // Found @ 0xff9688d4
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff968894
+//   KEYSYS = d4a# Found @ 0xffff3568
+//   NEED_ENCODED_DISKBOOT = 4# Found @ 0xffff3578
+//   ARAM_HEAP_START = 0x38e000# Found @ 0xff9688d4
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff968894
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

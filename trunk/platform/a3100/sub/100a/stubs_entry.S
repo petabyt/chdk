@@ -8,15 +8,15 @@
 //   Canon PowerShot A3100 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 43
-//   PLATFORMID = 12785 (0x31f1) // Found @ 0xfffe0130
+//   PLATFORMID = 12785# (0x31f1) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x001488e0
-//   KEYSYS = d4a                // Found @ 0xffff33e0
-//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff33f0
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xff93a484
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xff93a444
+//   KEYSYS = d4a# Found @ 0xffff33e0
+//   NEED_ENCODED_DISKBOOT = 4# Found @ 0xffff33f0
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xff93a484
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xff93a444
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

@@ -7,8 +7,8 @@
 //   Canon PowerShot S3 IS
 
 // Values for makefile.inc
-//   DIGIC = 20                  // DIGIC II
-//   PLATFORMID = 12570 (0x311a) // Found @ 0xfffe0130
+//   DIGIC = 20# DIGIC II
+//   PLATFORMID = 12570# (0x311a) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x01ffffff
 //   MEMISOSTART = 0x00096410
 

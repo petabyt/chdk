@@ -8,15 +8,15 @@
 //   Canon PowerShot N
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12939 (0x328b) // Found @ 0xfff40040
+//   PLATFORMID = 12939# (0x328b) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x002f8aec
-//   KEYSYS = d4d                // Found @ 0xffff3c38
-//   NEED_ENCODED_DISKBOOT = 10   // Found @ 0xffff3c48
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff2490e4
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff2490a8
+//   KEYSYS = d4d# Found @ 0xffff3c38
+//   NEED_ENCODED_DISKBOOT = 10# Found @ 0xffff3c48
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xff2490e4
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff2490a8
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

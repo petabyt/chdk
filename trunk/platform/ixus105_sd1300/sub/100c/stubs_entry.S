@@ -8,15 +8,15 @@
 //   Canon IXUS 105
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 43
-//   PLATFORMID = 12788 (0x31f4) // Found @ 0xfffe0130
+//   PLATFORMID = 12788# (0x31f4) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0012e9fc
-//   KEYSYS = d4a                // Found @ 0xffff1c18
-//   NEED_ENCODED_DISKBOOT = 4   // Found @ 0xffff1c28
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xffd27a5c
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd27a1c
+//   KEYSYS = d4a# Found @ 0xffff1c18
+//   NEED_ENCODED_DISKBOOT = 4# Found @ 0xffff1c28
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xffd27a5c
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd27a1c
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

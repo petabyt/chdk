@@ -11,8 +11,8 @@
 //   DIGIC = 60
 //   MEMISOSTART = 0x39124c
 //   MEMBASEADDR = 0x8000
-//   ARAM_HEAP_START = 0x006ce000 #  Found @0xfc5e5154
-//   ARAM_HEAP_SIZE = 0x00022000 #  Found @0xfc5e512e
+//   ARAM_HEAP_START = 0x006ce000#  Found @0xfc5e5154
+//   ARAM_HEAP_SIZE = 0x00022000#  Found @0xfc5e512e
 
 // Detected address ranges:
 // ROM      0xfc000000 - 0xfe000000 (33554432 bytes)

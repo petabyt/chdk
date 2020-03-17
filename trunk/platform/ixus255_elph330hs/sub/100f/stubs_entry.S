@@ -8,15 +8,15 @@
 //   Canon IXUS 255 HS
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 52
-//   PLATFORMID = 12904 (0x3268) // Found @ 0xfff40040
+//   PLATFORMID = 12904# (0x3268) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x0026172c
-//   KEYSYS = d4d                // Found @ 0xffff3c28
-//   NEED_ENCODED_DISKBOOT = 10   // Found @ 0xffff3c38
-//   ARAM_HEAP_START = 0x5ce000  // Found @ 0xff23e7ec
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff23e7b0
+//   KEYSYS = d4d# Found @ 0xffff3c28
+//   NEED_ENCODED_DISKBOOT = 10# Found @ 0xffff3c38
+//   ARAM_HEAP_START = 0x5ce000# Found @ 0xff23e7ec
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff23e7b0
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

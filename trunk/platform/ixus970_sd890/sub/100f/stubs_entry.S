@@ -8,15 +8,15 @@
 //   Canon PowerShot SD890 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 23
-//   PLATFORMID = 12659 (0x3173) // Found @ 0xfffe0130
+//   PLATFORMID = 12659# (0x3173) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000cbd40
-//   KEYSYS = d3enc              // Found @ 0xffff33e0
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff33c0
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffa2eba4
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffa2eb64
+//   KEYSYS = d3enc# Found @ 0xffff33e0
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff33c0
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffa2eba4
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffa2eb64
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

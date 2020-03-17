@@ -8,15 +8,15 @@
 //   Canon DIGITAL IXUS 95 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12740 (0x31c4) // Found @ 0xfffe0130
+//   PLATFORMID = 12740# (0x31c4) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x0012ad3c
-//   KEYSYS = d4                 // Found @ 0xffff1be4
-//   NEED_ENCODED_DISKBOOT = 2   // Found @ 0xffff1bf4
-//   ARAM_HEAP_START = 0x34e000  // Found @ 0xffd03454
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd03414
+//   KEYSYS = d4# Found @ 0xffff1be4
+//   NEED_ENCODED_DISKBOOT = 2# Found @ 0xffff1bf4
+//   ARAM_HEAP_START = 0x34e000# Found @ 0xffd03454
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd03414
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

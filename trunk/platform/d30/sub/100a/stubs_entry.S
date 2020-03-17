@@ -8,15 +8,15 @@
 //   Canon PowerShot D30
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 50
-//   PLATFORMID = 12932 (0x3284) // Found @ 0xfff40040
+//   PLATFORMID = 12932# (0x3284) Found @ 0xfff40040
 //   MAXRAMADDR = 0x07ffffff
 //   MEMISOSTART = 0x00171710
-//   KEYSYS = d4c                // Found @ 0xffff39e0
-//   NEED_ENCODED_DISKBOOT = 8   // Found @ 0xffff39f0
-//   ARAM_HEAP_START = 0x3ce000  // Found @ 0xff18cce8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff18ccac
+//   KEYSYS = d4c# Found @ 0xffff39e0
+//   NEED_ENCODED_DISKBOOT = 8# Found @ 0xffff39f0
+//   ARAM_HEAP_START = 0x3ce000# Found @ 0xff18cce8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff18ccac
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)

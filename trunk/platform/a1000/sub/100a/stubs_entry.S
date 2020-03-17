@@ -8,15 +8,15 @@
 //   Canon PowerShot A1000 IS
 
 // Values for makefile.inc
-//   DIGIC = 30                  // DIGIC III
+//   DIGIC = 30# DIGIC III
 //   PLATFORMOSVER = 31
-//   PLATFORMID = 12686 (0x318e) // Found @ 0xfffe0130
+//   PLATFORMID = 12686# (0x318e) Found @ 0xfffe0130
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x000d4ec8
-//   KEYSYS = d4                 // Found @ 0xffff1a9c
-//   NEED_ENCODED_DISKBOOT = 1   // Found @ 0xffff1aac
-//   ARAM_HEAP_START = 0x2ce000  // Found @ 0xffd15e44
-//   ARAM_HEAP_SIZE  = 0x32000   // Found @ 0xffd15e04
+//   KEYSYS = d4# Found @ 0xffff1a9c
+//   NEED_ENCODED_DISKBOOT = 1# Found @ 0xffff1aac
+//   ARAM_HEAP_START = 0x2ce000# Found @ 0xffd15e44
+//   ARAM_HEAP_SIZE  = 0x32000# Found @ 0xffd15e04
 
 // Detected address ranges:
 // ROM      0xffc00000 - 0xffffffff (4194304 bytes)

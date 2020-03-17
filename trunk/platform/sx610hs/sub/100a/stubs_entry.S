@@ -8,15 +8,15 @@
 //   Canon PowerShot SX610 HS
 
 // Values for makefile.inc
-//   DIGIC = 41                  // DIGIC 4+
+//   DIGIC = 41# DIGIC 4+
 //   PLATFORMOSVER = 57
-//   PLATFORMID = 12967 (0x32a7) // Found @ 0xfffe0040
+//   PLATFORMID = 12967# (0x32a7) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x1fffffff
 //   MEMISOSTART = 0x002ce584
-//   KEYSYS = d4g                // Found @ 0xff014590
-//   NEED_ENCODED_DISKBOOT = 13   // Found @ 0xff0145a0
-//   ARAM_HEAP_START = 0x60e000  // Found @ 0xff228d60
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff228d20
+//   KEYSYS = d4g# Found @ 0xff014590
+//   NEED_ENCODED_DISKBOOT = 13# Found @ 0xff0145a0
+//   ARAM_HEAP_START = 0x60e000# Found @ 0xff228d60
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff228d20
 
 // Detected address ranges:
 // ROM      0xff010000 - 0xffffffff (16711680 bytes)

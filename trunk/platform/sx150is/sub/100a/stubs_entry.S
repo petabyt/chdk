@@ -8,15 +8,15 @@
 //   Canon PowerShot SX150 IS
 
 // Values for makefile.inc
-//   DIGIC = 40                  // DIGIC 4
+//   DIGIC = 40# DIGIC 4
 //   PLATFORMOSVER = 49
-//   PLATFORMID = 12852 (0x3234) // Found @ 0xfffe0040
+//   PLATFORMID = 12852# (0x3234) Found @ 0xfffe0040
 //   MAXRAMADDR = 0x03ffffff
 //   MEMISOSTART = 0x00175ce0
-//   KEYSYS = d4c                // Found @ 0xffff3514
-//   NEED_ENCODED_DISKBOOT = 7   // Found @ 0xffff3524
-//   ARAM_HEAP_START = 0x35e000  // Found @ 0xff9958e4
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff9958a4
+//   KEYSYS = d4c# Found @ 0xffff3514
+//   NEED_ENCODED_DISKBOOT = 7# Found @ 0xffff3524
+//   ARAM_HEAP_START = 0x35e000# Found @ 0xff9958e4
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff9958a4
 
 // Detected address ranges:
 // ROM      0xff810000 - 0xffffffff (8323072 bytes)

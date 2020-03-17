@@ -8,15 +8,15 @@
 //   Canon PowerShot SX40 HS
 
 // Values for makefile.inc
-//   DIGIC = 50                  // DIGIC 5
+//   DIGIC = 50# DIGIC 5
 //   PLATFORMOSVER = 49
-//   PLATFORMID = 12856 (0x3238) // Found @ 0xfff40040
+//   PLATFORMID = 12856# (0x3238) Found @ 0xfff40040
 //   MAXRAMADDR = 0x0fffffff
 //   MEMISOSTART = 0x00198c30
-//   KEYSYS = d4c                // Found @ 0xffff3b48
-//   NEED_ENCODED_DISKBOOT = 7   // Found @ 0xffff3b58
-//   ARAM_HEAP_START = 0x5de000  // Found @ 0xff1deca8
-//   ARAM_HEAP_SIZE  = 0x22000   // Found @ 0xff1dec68
+//   KEYSYS = d4c# Found @ 0xffff3b48
+//   NEED_ENCODED_DISKBOOT = 7# Found @ 0xffff3b58
+//   ARAM_HEAP_START = 0x5de000# Found @ 0xff1deca8
+//   ARAM_HEAP_SIZE  = 0x22000# Found @ 0xff1dec68
 
 // Detected address ranges:
 // ROM      0xff000000 - 0xffffffff (16777216 bytes)
