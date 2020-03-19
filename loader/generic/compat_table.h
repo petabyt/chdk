@@ -102,6 +102,7 @@
 { 12989,3,0xc022d1fc,0xfffe0270 }, // ixus285_elph360hs
 { 12991,3,0xc022d1fc,0xfffe0270 }, // sx420is
 { 12993,3,0xc022d1fc,0xffff0270 }, // ixus175_elph180
+{ 12995,3,0xc022d1fc,0xfffe0270 }, // sx620hs
 #elif (NEED_ENCODED_DISKBOOT == 17)
 { 13012,3,0xc022d1fc,0xffff0270 }, // ixus185_elph185
 { 13013,3,0xc022d1fc,0xfffe0270 }, // sx430is

@@ -1,0 +1,31 @@
+************************************
+SX620 HS  Notes
+************************************
+This is an early alpha port, use at your own risk!
+
+Porting thread: https://chdk.setepontos.com/index.php?topic=13426.0
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video or WiFi (blue smartphone) in the options.
+
+This camera has only ND filter, no adjustable aperture.
+
+NOTE:
+    exp_drv not implemented, < 1024s probably works without
+	video features are not supported
+
+
+Tested:
+reported by paczkov in https://chdk.setepontos.com/index.php?topic=13426.msg140888#msg140888
+
+testing scripts: http://chdk.wikia.com/wiki/Testing? PASS
+Overrides: TV , ISO - OK
+File counter (single and continuous shots) - OK, numbers match
+RAW File in Dir with JPEG - OK
+RAW/DNG - OK  (disabled in Hybrid auto,Handheld night scene,Highspeed burst and Low light modes)
+ZEBRA - OK
+Free memory - over 800kb, so it's fine
+PTP - OK
+
+
+
