@@ -95,7 +95,7 @@ long get_property_case(long id, void *buf, long bufsize)
 long set_property_case(long id, void *buf, long bufsize)
 {
     // ignore set on fake prop
-#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10 || CAM_PROPSET == 11
+#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10 || CAM_PROPSET == 11 || CAM_PROPSET == 12
     if(id==PROPCASE_SHOOTING) {
         return 0;
     }
