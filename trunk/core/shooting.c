@@ -135,7 +135,7 @@ int shooting_get_imager_active() {
 int shooting_get_digital_zoom_mode(void)
 {
     int x=shooting_get_prop(PROPCASE_DIGITAL_ZOOM_MODE);
-#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10|| CAM_PROPSET == 11
+#if CAM_PROPSET == 7 || CAM_PROPSET == 9 || CAM_PROPSET == 10|| CAM_PROPSET == 11 || CAM_PROPSET == 12
     if(x==1) {
         return 0;
     }
