@@ -1788,7 +1788,7 @@ void set_number_field(lua_State* L, const char *key, int val)
 
 static int luaCB_get_buildinfo( lua_State* L )
 {
-  lua_createtable(L, 0, 9);
+  lua_createtable(L, 0, 10);
   set_string_field( L,"platform", camera_info.platform );
   set_string_field( L,"platsub", camera_info.platformsub );
   set_string_field( L,"version", camera_info.chdk_ver );
@@ -1798,6 +1798,7 @@ static int luaCB_get_buildinfo( lua_State* L )
   set_string_field( L,"build_time", camera_info.build_time );
   set_string_field( L,"os", camera_info.os );
   set_number_field( L,"platformid", conf.platformid );
+  set_number_field( L,"digic", camera_info.cam_digic );
   return 1;
 }
 

@@ -217,6 +217,7 @@ _cam_info camera_info =
     CAM_KEY_PRESS_DELAY, CAM_KEY_RELEASE_DELAY, 
     CAM_AF_LED,
     CAM_CIRCLE_OF_CONFUSION,
+    CAM_DIGIC,
 };
 
 //==========================================================
