@@ -3,7 +3,7 @@
 
 #define KEYS_MASK0          0x0000DF42
 #define KEYS_MASK1          0x00000000
-#define KEYS_MASK2          0x00000233
+#define KEYS_MASK2          0x000002F3
 
 #define SD_READONLY_FLAG    0x02000000 // Found @0xffbf4c44, levent 0x20a
 #define SD_READONLY_IDX     2

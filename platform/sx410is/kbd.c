@@ -9,7 +9,7 @@ long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _GetKbdState(long*);
 
-//TODO
+
 
  KeyMap keymap[] = {
     { 0, KEY_VIDEO           ,0x00000002 }, // Found @0xffbf9000, levent 0x02
@@ -24,7 +24,9 @@ extern void _GetKbdState(long*);
     { 0, KEY_MENU            ,0x00008000 }, // Found @0xffbf9050, levent 0x14
     { 2, KEY_AUTO            ,0x00000200 }, //
     { 2, KEY_ZOOM_IN         ,0x00000020 },
+    { 2, KEY_ZOOM_IN         ,0x00000080 }, // half speed
     { 2, KEY_ZOOM_OUT        ,0x00000010 },
+    { 2, KEY_ZOOM_OUT        ,0x00000040 }, // half speed
     { 2, KEY_SHOOT_FULL      ,0x00000003 }, // Found @0xffbf9060, levent 0x01
     { 2, KEY_SHOOT_FULL_ONLY ,0x00000002 }, // Found @0xffbf9060, levent 0x01
     { 2, KEY_SHOOT_HALF      ,0x00000001 }, // Found @0xffbf9058, levent 0x00
