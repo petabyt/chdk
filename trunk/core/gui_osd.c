@@ -1116,6 +1116,22 @@ void gui_draw_debug_vals_osd()
     // change ROW to fit values on screen in draw_txt_string(COLUMN, ROW, ...)
     // uncomment call to gui_draw_debug_vals_osd() in gui_redraw() if you want debug values always on top
     if (conf.debug_misc_vals_show) {
+
+#ifdef OPT_VIEWPORT_DEBUG
+        {
+            extern char avb_history[32];
+            extern unsigned char avb_times[32];
+            unsigned avbtsum = 0;
+            int n;
+            for (n=0; n<32; n++) {
+                avbtsum += avb_times[n];
+                osd_buf[n] = avb_history[n]+'0';
+            }
+            sprintf(osd_buf+24, " FPS x 10: %3u",avbtsum?320000/avbtsum:0);
+            draw_txt_string(DBGMISCVALS_X-25,  DBGMISCVALS_Y-1, osd_buf, col);
+        }
+#endif
+
         // show value of Memory Address selected with Memory Browser
         sprintf(osd_buf, "MEM: %#8x", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Hexadecimal integer
         //sprintf(osd_buf, "MEM: %8u", (void*) (*(int*)conf.mem_view_addr_init));    // show value in Decimal integer

@@ -59,6 +59,15 @@ static int iso_override_mode_save = 0;
 static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
 
 //-------------------------------------------------------------------
+
+#ifdef OPT_VIEWPORT_DEBUG
+    char avb_history[32];
+    unsigned char avb_times[32];
+    static unsigned avb_hp = 0;
+    static long avb_pts = 0;
+    static char avb_pv = 0;
+#endif
+
 // Periodic update from kbd_task
 void shooting_update_state(void)
 {
@@ -70,6 +79,22 @@ void shooting_update_state(void)
         shooting_set_iso_mode(iso_override_mode_save);
         iso_override_mode_save = 0;
     }
+
+#ifdef OPT_VIEWPORT_DEBUG
+    extern volatile char active_viewport_buffer;
+    long avb_ts;
+    char avb_v;
+    avb_ts = get_tick_count();
+    avb_v = active_viewport_buffer;
+    if (avb_v != avb_pv) {
+        avb_history[avb_hp] = avb_v;
+        avb_times[avb_hp] = avb_ts - avb_pts;
+        avb_hp = (avb_hp+1) & 31;
+        avb_pts = avb_ts;
+        avb_pv = avb_v;
+    }
+#endif
+
 }
 
 //-------------------------------------------------------------------

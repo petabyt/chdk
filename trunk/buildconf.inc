@@ -27,6 +27,9 @@ OPT_PTP=1
 # Enable this to include debug code in the motion_detect module
 #OPT_MD_DEBUG=1
 
+# Enable this for an extra misc value display showing viewport history and FPS. Requires active_viewport_buffer FW variable.
+#OPT_VIEWPORT_DEBUG=1
+
 # needs proper fi2.inc in platform/ !!! see http://chdk.setepontos.com/index.php/topic,2995.0.html
 #OPT_FI2=1
 
