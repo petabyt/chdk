@@ -65,9 +65,6 @@ extern void* viewport_buffers[];
 
 void *vid_get_viewport_live_fb()
 {
-    if (MODE_IS_VIDEO(mode_get()) || is_video_recording())
-        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
-
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     // verified -1 gives best response
     return viewport_buffers[(active_viewport_buffer-1)&3];
@@ -124,7 +121,7 @@ extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];
 void *vid_get_bitmap_active_buffer()
 {
-    return bitmap_buffer[active_bitmap_buffer];
+    return bitmap_buffer[active_bitmap_buffer&1];
 }
 
 void *vid_get_bitmap_active_palette()
