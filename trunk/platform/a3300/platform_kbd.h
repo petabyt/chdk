@@ -3,7 +3,7 @@
 // plaform specific keyboard defines, see core/kbd_common.c for documentation
 #define KEYS_MASK0 (0x00002000)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x0000FFFF)
+#define KEYS_MASK2 (0x0000F0FF)
 
 #define SD_READONLY_FLAG (0x00020000)
 #define SD_READONLY_IDX     2
