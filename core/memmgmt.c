@@ -178,7 +178,6 @@ void exmem_malloc_init()
 #define OPT_EXMEM_TESTING 0
 #endif
 	// pool zero is EXMEM_RAMDISK on d10
-    extern void *exmem_alloc(int pool_id,int size,int unk,int unk2); 
 	void *mem = exmem_alloc(0,EXMEM_HEAP_SIZE,0,0);
 	if (mem)
     {
@@ -305,3 +304,30 @@ void free(void *p)
             canon_free(p);
 }
 
+// --------------------------------------------------------------------------
+// exmem related functions
+
+// returns name of exmem type
+// NULL is returned for invalid types
+char *get_exmem_type_name(unsigned int type)
+{
+    extern char* exmem_types_table[];
+    
+    if (type<exmem_type_count) {
+        return exmem_types_table[type];
+    }
+    return 0;
+}
+
+// allocation status for type is returned in struct pointed to by allocinf
+// returns 1 for success, 0 otherwise
+int get_exmem_type_status(unsigned int type, exmem_alloc_info *allocinf)
+{
+    extern exmem_alloc_info exmem_alloc_table[];
+    if (type<exmem_type_count && allocinf) {
+        allocinf->addr = exmem_alloc_table[type].addr;
+        allocinf->len = exmem_alloc_table[type].len;
+        return 1;
+    }
+    return 0;
+}

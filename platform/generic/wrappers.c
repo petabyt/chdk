@@ -999,12 +999,15 @@ double _sqrt(double x) {
 
 //----------------------------------------------------------------------------
 
-#ifdef OPT_EXMEM_MALLOC
-void *exmem_alloc(int pool_id,int size,int unk,int unk2)
+void *exmem_alloc(unsigned int pool_id,unsigned int size,int unk,int unk2)
 {
     return _exmem_alloc(pool_id,size,unk,unk2);
 }
-#endif
+
+void exmem_free(unsigned int pool_id)
+{
+    _exmem_free(pool_id);
+}
 
 void *canon_malloc(long size)
 {

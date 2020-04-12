@@ -37,6 +37,7 @@ NHSTUB(PutOutNdFilter                         ,0xffb7ffcc) //  1 94%
 NHSTUB(UnsetZoomForMovie                      ,0xff9a7ce0) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffa62090) //  1 96%
 NHSTUB(exmem_alloc                            ,0xff814f44) //  2 93%
+// ERROR: exmem_free is not found.                         //--- ---    *** != 0xff815014
 // ERROR: free is not found.                               //--- ---    *** != 0xffc1d8f8
 // ERROR: kbd_read_keys_r2 is not found.                   //--- ---    *** != 0xff82aaac
 //NHSTUB(kbd_pwr_off                          ,0xff82b05c) //  1 83%    *** != 0xff82afb0

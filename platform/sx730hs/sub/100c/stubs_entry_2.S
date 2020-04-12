@@ -32,10 +32,12 @@ NHSTUB(_pow,									0x010f8718) // note ARM
 NHSTUB(captseq_raw_addr_init,					0xfc0f5fab)
 NHSTUB(apex2us,									0xfc219833) // Ghidra exact
 
+NHSTUB(exmem_alloc,								0xFC3B2DDD)
+NHSTUB(exmem_free,								0xFC3B2E15)
+
 // SX730 NOT found
 NHSTUB(TurnOnBackLight,							NULL_SUB)
 NHSTUB(TurnOffBackLight,						NULL_SUB)
-NHSTUB(exmem_alloc,								RET0)
 
 // not implemented
 NHSTUB(EnterToCompensationEVF,NULL_SUB)

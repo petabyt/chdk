@@ -233,7 +233,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "displaybusyonscreen", OPTIONAL },
     { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
-    { "exmem_free", OPTIONAL|LIST_ALWAYS },
+    { "exmem_free" },
     { "free" },
 
     { "kbd_p1_f" },

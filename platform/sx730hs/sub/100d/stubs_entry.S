@@ -164,6 +164,8 @@ DEF_CONST(exmem_type_count                  ,0x00000019) // Found @0xfcda5260
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3517db
 //NHSTUB(_pow                                 ,0x00000000) //  0        *** != 0x010f8718
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc21985b
+//NHSTUB(exmem_alloc                          ,0x00000000) //  0        *** != 0xfc3b2e05
+//NHSTUB(exmem_free                           ,0x00000000) //  0        *** != 0xfc3b2e3d
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc3b35b9
 
 NHSTUB(CreateTask_low                         ,0xbfe10b85) //  0
@@ -258,7 +260,6 @@ NHSTUB(_log10                                 ,0x010f85b0) //  0
 NHSTUB(_sqrt                                  ,0x010fa798) //  0
 NHSTUB(add_ptp_handler                        ,0xfc32224b) //  0
 NHSTUB(close                                  ,0xfc3a918b) //  0
-//NHSTUB(exmem_alloc                          ,0x00000000) //  0            == 0x00000000
 NHSTUB(free                                   ,0xfc369ebb) //  0
 NHSTUB(kbd_p1_f                               ,0xfc589b47) //  0
 NHSTUB(kbd_p1_f_cont                          ,0xfc589b4f) //  0

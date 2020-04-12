@@ -31,6 +31,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff9abb7c) //  3 90%
 // ERROR: TurnOnBackLight is not found.                    //--- ---    *** != 0x00000000
 // ERROR: close is not found.                              //--- ---    *** != 0xff823e5c
 // ERROR: exmem_alloc is not found.                        //--- ---    *** != 0xff8345b8
+// ERROR: exmem_free is not found.                         //--- ---    *** != 0xff834610
 // ERROR: open is not found.                               //--- ---    *** != 0xff823dac
 
 // Check of modemap from 'platform/CAMERA/shooting.c':

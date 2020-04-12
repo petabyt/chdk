@@ -46,6 +46,8 @@
             free
             umalloc
             ufree
+            exmem_alloc
+            exmem_free
             dcache_clean_all
             load_file
             process_file
@@ -291,6 +293,9 @@
             GetExMemInfo
             GetARamInfo
             GetCombinedMemInfo
+            get_exmem_type_name
+            get_exmem_type_status
+            exmem_type_count
 
             img_prefixes
             img_exts
