@@ -74,11 +74,12 @@ void *vid_get_viewport_fb() {
 }
 
 void *vid_get_viewport_live_fb() {
-    if (MODE_IS_VIDEO(mode_get()) || is_video_recording())
-        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
-
-    // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    return viewport_buffers[(active_viewport_buffer-1)&3];
+    // appears to use 4 buffers in video mode or recording
+    if (camera_info.state.mode_video || is_video_recording()) {
+        return viewport_buffers[(active_viewport_buffer-1)&3];
+    }
+    // 8 buffers in still mode
+    return viewport_buffers[(active_viewport_buffer-1)&7];
 }
 
 int vid_get_viewport_width() {
