@@ -328,13 +328,12 @@ extern void _Rec2PB();
 extern int _get_ptp_buf_size(int slot);
 extern char *_get_ptp_file_buf(void);
 
-#ifdef OPT_EXMEM_MALLOC
 // dryos + some vxworks only takes 3 params in reality
 // on some vxworks the function that is easy to match with sig finder takes an additional param,
 // set to zero in the real AllocateExMem
 // versions that don't expect a 4th param will just ignore it
-extern void *_exmem_alloc(int pool_id,int size,int unk,int unk2); 
-#endif
+extern void *_exmem_alloc(unsigned int pool_id,unsigned int size,int unk,int unk2); 
+extern void *_exmem_free(unsigned int pool_id); 
 
 // vxworks only
 // used on a few cameras that don't have memPartInfoGet, see CAM_NO_MEMPARTINFO

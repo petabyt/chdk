@@ -338,7 +338,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "close" },
     { "err_init_task", OPTIONAL },
     { "exmem_alloc" },
-    { "exmem_free", OPTIONAL },
+    { "exmem_free" },
     { "exmem_ualloc", UNUSED|OPTIONAL|LIST_ALWAYS },
     { "exmem_ufree", UNUSED|OPTIONAL|LIST_ALWAYS },
     { "exmem_assert", UNUSED|OPTIONAL|LIST_ALWAYS }, // helper

@@ -5,6 +5,7 @@
 NHSTUB(CreateTask_low,                      0x006B15A0)
 DEF(hook_CreateTask_low,                    0x006B15A0)
 NHSTUB(exmem_alloc                         ,0xFF035360) //blackhole
+NHSTUB(exmem_free                          ,0xFF0353B8)
 NHSTUB(open                                ,0xFF023DB0) //blackhole
 NHSTUB(close                               ,0xFF023E60) //blackhole
 NHSTUB(MakeDirectory_Fut,                   0xFF027988) //blackhole

@@ -52,6 +52,7 @@ NHSTUB(SetScriptMode,               0xff96368c)  //close to **"SetScriptMode" st
 NHSTUB(UniqueLedOff,                0xff830b98)  //close to "gfff" found by comparison to ixus55 100b
 NHSTUB(UniqueLedOn,                 0xff830b24)  //close to "gfff" found by comparison to ixus55 100b
 NHSTUB(GiveSemaphore,               0xff82395c)  //from movie_record_task
+NHSTUB(exmem_free                  ,0xFF815014)
 
 
 // These don't exist
