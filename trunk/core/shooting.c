@@ -1649,7 +1649,8 @@ int mode_is_video(int m)
             m==MODE_VIDEO_IFRAME_MOVIE ||
             m==MODE_VIDEO_M ||
             m==MODE_VIDEO_STAR_TIME_LAPSE ||
-            m==MODE_VIDEO_SHORT_CLIP
+            m==MODE_VIDEO_SHORT_CLIP ||
+            m==MODE_VIDEO_SUPER_SLOW
         // not clear if this should be considered a video mode ?
         //  m==MODE_VIDEO_MOVIE_DIGEST
         );

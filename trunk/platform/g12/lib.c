@@ -99,11 +99,12 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb()
 {
-    if (camera_info.state.mode_video)
-        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+    int b = (active_viewport_buffer-1)&3;
+    if ((b == 3) && camera_info.state.mode_video)
+        b = 2;  // Video only seems to use the first 3 viewport buffers.
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    return viewport_buffers[(active_viewport_buffer-1)&3];
+    return viewport_buffers[b];
 }
 
 void *vid_get_viewport_fb_d()
