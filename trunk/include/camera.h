@@ -312,7 +312,9 @@
     #elif CAM_DRYOS_REL == 39
         #define CAM_MAX_FNAME_LENGTH        30 
         #define CAM_MAX_PATH_LENGTH         32
-//    #elif CAM_DRYOS_REL == 43 // unknown
+    #elif CAM_DRYOS_REL == 43
+        #define CAM_MAX_FNAME_LENGTH        30
+        #define CAM_MAX_PATH_LENGTH         32
     #elif CAM_DRYOS_REL == 45
         #define CAM_MAX_FNAME_LENGTH        57 
         #define CAM_MAX_PATH_LENGTH         59
