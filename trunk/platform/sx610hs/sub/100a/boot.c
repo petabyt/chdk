@@ -202,10 +202,10 @@ asm volatile (
 //** sub_FF0203C4_my @ 0xFF0203C4 - 0xFF02042C, length=27
 void __attribute__((naked,noinline)) sub_FF0203C4_my() {
 
-   // Replacement of sub_ for correct power-on.
-   // (short press = playback mode, long press = record mode)
-   // value and pointer fromsub_FF074124 sx610hs_100a 
-   *(int*)(0x2e70+0x4) = (*(int*)0xC022F484)&0x100000 ? 0x80000 : 0x40000;
+   // Replacement of sub_FF02BA64 for correct power-on.
+   // (ON/OFF short press = playback mode, long press = record mode)
+   // value and pointer from sub_FF074124 sx610hs_100a 
+   *(int*)(0x2e70+0x4) = (*(int*)0xC022F48C)&0x100000 ? 0x80000 : 0x40000;
 
 asm volatile (
 "    LDR     R0, =0xFF02043C \n"
