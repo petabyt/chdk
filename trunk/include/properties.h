@@ -12,12 +12,14 @@
 #ifndef CHDK_MODULE_CODE
 
 /* propcase ID constants. These are in their own header files for easier sed processing */
-#if CAM_PROPSET == 12
-    #include "propset12.h"   // DryOS r59 (eos m100, sx730)
+#if CAM_PROPSET == 13
+    #include "propset13.h"  // G7X2
+#elif CAM_PROPSET == 12
+    #include "propset12.h"  // DryOS r59 (eos m100, sx730)
 #elif CAM_PROPSET == 11
-    #include "propset11.h"   // SX430 -
+    #include "propset11.h"  // SX430 -
 #elif CAM_PROPSET == 10
-    #include "propset10.h"   // Some DryOS R57 (eos m10)
+    #include "propset10.h"  // Some DryOS R57 (eos m10)
 #elif CAM_PROPSET == 9
     #include "propset9.h"   // Some DryOS R55 (eos m3)
 #elif CAM_PROPSET == 8
