@@ -134,6 +134,7 @@ const CapturemodeMap modemap[] = {
         { MODE_STAR_PORTRAIT        ,16452 },
         { MODE_STAR_NIGHTSCAPE      ,16453 },
         { MODE_STAR_TRAILS          ,16454 },
+        { MODE_VIDEO_STAR_TIME_LAPSE,16459 },
         { MODE_NIGHT_SCENE          ,16953 },
         { MODE_FIREWORK             ,16416 },
         { MODE_CREATIVE_EFFECT      ,33299 },

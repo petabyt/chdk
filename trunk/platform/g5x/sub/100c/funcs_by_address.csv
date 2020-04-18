@@ -49,6 +49,7 @@
 0xbfe15471,GiveSemaphore
 0xbfe15471,GiveSemaphore_FW
 0xbfe154a1,GetSemaphoreValue
+0xbfe15501,CreateTask_alt
 0xbfe15501,CreateTaskStrictly
 0xbfe15523,CreateMessageQueueStrictly
 0xbfe1553d,CreateEventFlagStrictly
@@ -864,6 +865,7 @@
 0xfc2a69f1,PTM_SetProprietyEnable_FW
 0xfc2a6bd9,PTM_IsEnableItem_FW
 0xfc2a6cd7,PTM_BackupUIProperty_FW
+0xfc2a6cd7,SetParameterData
 0xfc2a6dc3,GetParameterData
 0xfc2b9419,task_AFTask
 0xfc2ba509,GetMacroSupportZoomPoint_FW
@@ -990,6 +992,7 @@
 0xfc34d07c,j_CheckAllEventFlag
 0xfc34d08c,j__pow
 0xfc34d094,j_LocalTime
+0xfc34d09c,j_CreateTask_alt
 0xfc34d09c,j_CreateTaskStrictly
 0xfc34d0a4,j_CreateBinarySemaphoreStrictly
 0xfc34d0b4,j_WaitForAllEventFlag

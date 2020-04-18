@@ -221,6 +221,7 @@
 0xbfe1558b,CreateRecursiveLockStrictly
 0xbfe11fcd,createsemaphore_low
 0xbfe149e5,CreateTask
+0xbfe15501,CreateTask_alt
 0xbfe149e5,CreateTask_FW
 0xbfe10b85,CreateTask_low
 0xbfe15501,CreateTaskStrictly
@@ -1059,6 +1060,7 @@
 0xfc34ce5c,j_CreateRecursiveLockStrictly
 0xfc34d12c,j_createsemaphore_low
 0xfc34ce64,j_CreateTask
+0xfc34d0dc,j_CreateTask_alt
 0xfc34d0dc,j_CreateTaskStrictly
 0xfc08dcf5,j_CreateUserSettingMirror_FW
 0xfc34d28c,j_DebugAssert
@@ -1932,6 +1934,7 @@
 0xfc667857,SetObClampValue_FW
 0xfc675c37,SetOneShotWBParam_FW
 0xfc675c37,SetOneTypeWBParam_FW
+0xfc2a6cff,SetParameterData
 0xfc4224a5,SetPMByGpio_FW
 0xfc661fd3,SetPoweredISOFF_FW
 0xfc661fc7,SetPoweredISON_FW

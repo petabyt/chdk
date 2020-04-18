@@ -17,7 +17,6 @@ NHSTUB(MakeSDCardBootable                     ,0xfc3b688b)
 NHSTUB(RenameFile_Fut                         ,0xfc3b8d69)
 NHSTUB(Restart                                ,0xFC0C306F)
 NHSTUB(SetFileTimeStamp                       ,0xfc3b5ee3)
-NHSTUB(SetParameterData                       ,0xFC2A6CD7)
 NHSTUB(TurnOffBackLight                       ,0xFC15BB35)  // Does not do anything?
 NHSTUB(TurnOnBackLight                        ,0xFC15BB31)  // Does not do anything?
 NHSTUB(apex2us                                ,0xfc25f5cb)
