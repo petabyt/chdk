@@ -73,7 +73,6 @@
 
 // canon_mode_list 0xfca80510 Found @0xfc07de1c
 // Check modemap values from 'platform/CAMERA/shooting.c':
-// 16459  0x404b In firmware but not in current modemap
 // 33297  0x8211 In firmware but not in current modemap
 //  4172  0x104c In firmware but not in current modemap
 
@@ -181,7 +180,6 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(ScreenLock                           ,0xfc3bec79) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xfc3becaf) //  0        *** != 0x00000000
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3b5ecb
-//NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2a6cd7
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc15bb35
 //NHSTUB(TurnOnBackLight                      ,0x00000000) //  0        *** != 0xfc15bb31
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc25f5cb
@@ -255,6 +253,7 @@ NHSTUB(SetAutoShutdownTime                    ,0xfc39abfd) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc38815b) //  0
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetLogicalEventActive                  ,0xfc39b307) //  0
+NHSTUB(SetParameterData                       ,0xfc2a6cd7) //  0
 NHSTUB(SetPropertyCase                        ,0xfc3b81ef) //  0
 NHSTUB(SetScriptMode                          ,0xfc39b33f) //  0
 NHSTUB(SleepTask                              ,0xbfe14969) //  0

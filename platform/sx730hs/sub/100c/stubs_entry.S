@@ -162,6 +162,7 @@ DEF_CONST(exmem_type_count                  ,0x00000019) // Found @0xfcda5260
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc34c711
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc3517fb
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3517b3
+//NHSTUB(SetParameterData                     ,0xfc06af67) //  0        *** != 0x00000000
 //NHSTUB(_pow                                 ,0x00000000) //  0        *** != 0x010f8718
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc219833
 //NHSTUB(exmem_alloc                          ,0x00000000) //  0        *** != 0xfc3b2ddd
@@ -239,7 +240,6 @@ NHSTUB(SetAE_ShutterSpeed                     ,0xfc52be69) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xfc0fde2f) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc355e67) //  0
 NHSTUB(SetLogicalEventActive                  ,0xfc3411fd) //  0
-//NHSTUB(SetParameterData                     ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetPropertyCase                        ,0xfc35b511) //  0
 NHSTUB(SetScriptMode                          ,0xfc341235) //  0
 NHSTUB(SleepTask                              ,0xfc3690b9) //  0
