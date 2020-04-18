@@ -4453,6 +4453,7 @@ sig_rule_t sig_rules_initial[]={
 // Run after find_generic_funcs. Order is important
 sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param          dry rel
+{sig_match_named,   "SetParameterData",         "PTM_BackupUIProperty_FW", 0, SIG_DRY_MIN(58)},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcLog10",                "CalcLog10_FW",         SIG_NAMED_JMP_SUB},
