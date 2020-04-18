@@ -648,4 +648,7 @@ void firmware_init_data_ranges(firmware *fw);
 
 // free resources associated with fw
 void firmware_unload(firmware *fw);
+
+// get iter_state instruction address with optional thumb bit
+#define iter_state_adr(is) ((uint32_t)is->insn->address | is->thumb)
 #endif
