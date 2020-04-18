@@ -1971,7 +1971,8 @@ int sig_match_readfastdir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 return save_sig_match_call(fw, rule, call_adr);
             }
         }
-        for(int i=3; i<=max_insns; i++) {
+        int i;
+        for(i=3; i<=max_insns; i++) {
             // Check for bl followed by cbz branching to ref_adr
             fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
             if(insn_match_any(fw->is->insn,match_bl_blximm)) {
