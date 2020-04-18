@@ -105,6 +105,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "PrepareDirectory_0", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly", UNUSED|DONT_EXPORT },
     { "CreateTaskStrictly_alt", UNUSED|DONT_EXPORT },
+    { "CreateTask_alt", UNUSED|DONT_EXPORT },
     { "CreateTask_low", UNUSED | OPTIONAL },
     { "CreateJumptable", UNUSED },
     { "_uartr_req", UNUSED },
@@ -1932,24 +1933,60 @@ int sig_match_closedir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
-int sig_match_readfastdir_gt58(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+// Save sig for function call (BL/BLX) at current instruction
+int save_sig_match_call(firmware* fw, sig_rule_t *rule, uint32_t call_adr)
 {
-    if(!init_disasm_sig_ref(fw,is,rule)) {
+    disasm_iter_init(fw,fw->is,call_adr); // reset to a bit before where the string was found
+    disasm_iter(fw,fw->is);
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,fw->is));
+}
+
+int sig_match_readfastdir(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr;
+    str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_readfastdir: %s failed to find ref %s\n",rule->name,rule->ref_name);
         return 0;
     }
-    // find the first call to bzero
-    if(!find_next_sig_call(fw,is,22,"bzero")) {
-        return 0;
+    const insn_match_t match_cbnz_r0[]={
+        {MATCH_INS(CBNZ, 2), {MATCH_OP_REG(R0), MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    const insn_match_t match_cbz_r0[]={
+        {MATCH_INS(CBZ, 2), {MATCH_OP_REG(R0), MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    int max_insns=rule->param&SIG_NEAR_OFFSET_MASK;
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        uint32_t ref_adr = iter_state_adr(is);
+        // Check for bl followed by cbnz in previous 2 instructions
+        fw_disasm_iter_single(fw,adr_hist_get(&is->ah,2));
+        if(insn_match_any(fw->is->insn,match_bl_blximm)) {
+            uint32_t call_adr = iter_state_adr(fw->is);
+            fw_disasm_iter_single(fw,adr_hist_get(&is->ah,1));
+            if(insn_match_any(fw->is->insn,match_cbnz_r0)) {
+                return save_sig_match_call(fw, rule, call_adr);
+            }
+        }
+        for(int i=3; i<=max_insns; i++) {
+            // Check for bl followed by cbz branching to ref_adr
+            fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+            if(insn_match_any(fw->is->insn,match_bl_blximm)) {
+                uint32_t call_adr = iter_state_adr(fw->is);
+                fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i-1));
+                if(insn_match_any(fw->is->insn,match_cbz_r0)) {
+                    uint32_t b_adr = get_branch_call_insn_target(fw,fw->is);
+                    if (ref_adr == b_adr) {
+                        return save_sig_match_call(fw, rule, call_adr);
+                    }
+                }
+            }
+        }
     }
-    // find the first call to OpenFastDir
-    if(!find_next_sig_call(fw,is,10,"OpenFastDir")) {
-        return 0;
-    }
-    // find next call
-    if(!insn_match_find_nth(fw,is,12,1,match_bl_blximm)) {
-        return 0;
-    }
-    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    printf("sig_match_readfastdir: no match %s\n",rule->name);
+    return 0;
 }
 
 int sig_match_strrchr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -1965,9 +2002,7 @@ int sig_match_strrchr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 {ARM_INS_ENDING}
             };
             if(insn_match_find_next(fw,is,2,match_mov_r1_imm)){
-                disasm_iter_init(fw,is,call_adr);
-                disasm_iter(fw,is);
-                return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+                return save_sig_match_call(fw, rule, call_adr);
             }
         }
     }
@@ -2399,7 +2434,7 @@ int sig_match_rec2pb(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             // followed branch, doesn't make sense to keep searching
             return 0;
         }
-        uint32_t adr=(uint32_t)is->insn->address | is->thumb;
+        uint32_t adr = iter_state_adr(is);
         // follow for sanity check
         disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
         if(!find_next_sig_call(fw,is,16,"LogCameraEvent")) {
@@ -2500,9 +2535,7 @@ int sig_match_prepdir_1(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(!call_adr) {
         return 0;
     }
-    disasm_iter_init(fw,is,call_adr);
-    disasm_iter(fw,is);
-    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    return save_sig_match_call(fw, rule, call_adr);
 }
 // assume this function is directly after the 2 instructions of ref
 int sig_match_prepdir_0(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4139,12 +4172,12 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                     n_calls++;
                 }
                 if(n_calls == n) {
-                    return (uint32_t)fw->is->insn->address | fw->is->thumb;
+                    return iter_state_adr(fw->is);
                 }
             }
         } else {
             if(insn_match_find_nth(fw,is,max_insns,n,insn_match)) {
-                return (uint32_t)is->insn->address | is->thumb;
+                return iter_state_adr(is);
             }
         }
     }
@@ -4159,9 +4192,7 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     {
         uint32_t call_adr = find_call_near_str(fw,is,rule);
         if(call_adr) {
-            disasm_iter_init(fw,is,call_adr); // reset to a bit before where the string was found
-            disasm_iter(fw,is);
-            return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+            return save_sig_match_call(fw, rule, call_adr);
         }
     }
     return 0;
@@ -4348,7 +4379,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 return 0;
             }
         }
-        sig_match_named_save_sig(fw,rule->name,(uint32_t)is->insn->address | is->thumb,sig_flags); 
+        sig_match_named_save_sig(fw,rule->name,iter_state_adr(is),sig_flags);
         return 1;
     }
 
@@ -4410,6 +4441,7 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_str_r0_call,"CreateTaskStrictly",    "LowConsole",},
 {sig_match_str_r0_call,"CreateTaskStrictly_alt","HdmiCecTask",          0,                  SIG_DRY_MIN(59)},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
+{sig_match_str_r0_call,"CreateTask_alt",        "PhySw",                0,                  SIG_DRY_MIN(58)},
 {sig_match_named,   "CreateTask_low",           "CreateTask",           (SIG_NAMED_NTH(2,SUB)|SIG_NAMED_NTH_RANGE(10)), SIG_DRY_MAX(52)},
 {sig_match_named,   "CreateTask_low",           "CreateTask",           (SIG_NAMED_NTH(3,SUB)|SIG_NAMED_NTH_RANGE(10)), SIG_DRY_MIN(54)},
 {sig_match_near_str,   "dry_memcpy",            "EP Slot%d",            SIG_NEAR_BEFORE(4,1)},
@@ -4600,8 +4632,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"LocalTime",                "%Y.%m.%d %H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
-{sig_match_near_str,"ReadFastDir",              "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(5,1),SIG_DRY_MAX(58)},
-{sig_match_readfastdir_gt58,"ReadFastDir",      "FADumpFileList_FW",    0,SIG_DRY_MIN(59)},
+{sig_match_readfastdir,"ReadFastDir",           "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(24,1)},
 {sig_match_near_str,"PT_PlaySound",             "BufAccBeep",           SIG_NEAR_AFTER(7,2)|SIG_NEAR_JMP_SUB,SIG_DRY_MAX(58)},
 // for dry 59+ the above match finds function that takes different params on some cameras (d7?)
 {sig_match_near_str,"PT_PlaySound",             "PB._PMenuCBR",         SIG_NEAR_BEFORE(7,3),SIG_DRY_MIN(59)},
@@ -4844,7 +4875,7 @@ int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused)
     foundr0 = get_call_const_args(fw,is,4,regs) & 1;
     if (!foundr0) {
         // case 1: table memcpy'd onto stack
-        uint32_t ca = is->insn->address | is->thumb;
+        uint32_t ca = iter_state_adr(is);
         uint32_t sa = adr_hist_get(&is->ah,2);
         uint32_t ta = adr_hist_get(&is->ah,8);
         disasm_iter_set(fw,is,ta);
@@ -5126,6 +5157,9 @@ void find_generic_funcs(firmware *fw) {
         add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTaskStrictly_alt");
     }
     add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTask");
+    if(get_saved_sig_val("CreateTask_alt")) {
+        add_generic_sig_match(match_fns,&match_fn_count,process_createtask_call,"CreateTask_alt");
+    }
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"RegisterEventProcTable_alt");
     add_generic_sig_match(match_fns,&match_fn_count,process_eventproc_table_call,"UnRegisterEventProcTable_alt");
     add_generic_sig_match(match_fns,&match_fn_count,process_add_ptp_handler_call,"add_ptp_handler");
