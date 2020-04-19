@@ -11,7 +11,7 @@ DEF(palette_buffer_ptr              ,0x15AF8) // FC378202 in 100c
 DEF(active_palette_buffer           ,0x15AF0) // FC3781EA in 100c
 DEF(palette_control                 ,0x15AE0) // FC378366 in 100c
 
-DEF(simple_movie_status             ,0x0000c180)    // 0x0000c088 + 0x80 + 0x78 found @fc0b3eb0 sub_ via task_MovieRecord. 1 when recording or busy after, 0 otherwise
+DEF(simple_movie_status             ,0x0000c180)    // 0x0000c088 + 0x80 + 0x78 found @fc0b3eb0 sub_fc0b3e80 via task_MovieRecord. 1 when recording or busy after, 0 otherwise
 
 // TODO:
 
