@@ -1,12 +1,20 @@
 Issues
 
-- Not a working port, very early expirements.
+- Not a fully working port.
+- Screen update in CHDK menu has problems in record mode (sometimes displays old frame).
+- No CHDK Raw capture, or associated functionality. 
+- Memory browser may crash if it tries to dereference an invalid address.
+- Overrides do not work yet.
 
-Development notes
+Development notes:
 
-- Diskboot partially works
-- Boot code duplicates E0020000 startup code
-- Some calls commented out that cause camera to lock up
-- Creates a task that blinks the green LED
-- Initialisation fails to start Canon GUI or keyboard tasks - black screen, no button response.
-- Need to pull battery to shut down.
+- Booting via diskboot and firmware update both work.
+- Screen draw working, CHDK menus working.
+- Core functionality working. Config save/load, debug menu, games, tools, file browser, scripts etc.
+- PTP working including live view and UI overlay
+- Edge detection, zebra and histogram work.
+- CaptSeq task not implemented.
+- MovieRecord task not implemented.
+- ExpDrv task not implemented.
+- FileWrite task not implemented.
+ 

@@ -6,6 +6,7 @@
 0xdffc93bb,CreateTask_FW
 0xdffc95af,ExitTask
 0xdffc95af,ExitTask_FW
+0xdffc95d9,CreateTask_alt
 0xdffc96f5,DebugAssert
 0xdffc971b,DebugAssert2
 0xdffc974d,CreateEventFlag
@@ -238,6 +239,7 @@
 0xe005aa2b,IsRomLogAvailable_FW
 0xe005aa37,EraseLogSector_FW
 0xe005b079,kbd_p2_f
+0xe005b319,task_PhySw
 0xe005b569,GetSwitchStatus_FW
 0xe005b5c1,GetSDDetect_FW
 0xe005b5c7,GetSDProtect_FW
@@ -410,6 +412,7 @@
 0xe0271e6d,PTM_PrevItem_FW
 0xe02723e3,PTM_IsEnableItem_FW
 0xe02724e3,PTM_BackupUIProperty_FW
+0xe02724e3,SetParameterData
 0xe02725cf,GetParameterData
 0xe028c771,task_AFTask
 0xe028dd2b,GetMacroSupportZoomPoint_FW
@@ -607,7 +610,6 @@
 0xe0373e7b,Open_FW
 0xe0373eb7,Close
 0xe0373eb7,Close_FW
-0xe0373fef,ReadFastDir
 0xe0374047,j_Read_FW
 0xe037404b,j_Write_FW
 0xe0374089,lseek
@@ -689,6 +691,7 @@
 0xe03f2fd5,task_ReadMultiConTask
 0xe03fa829,closedir
 0xe03fa861,OpenFastDir
+0xe03fa8ff,ReadFastDir
 0xe03fa935,j_closedir
 0xe03fb7e1,task_DefMarkRomCopyTask
 0xe03fbedd,IsUnitFirmMode_FW
@@ -964,6 +967,7 @@
 0xe04d05fb,LockMainPower_FW
 0xe04d064b,SetAutoShutdownTime
 0xe04d064b,SetAutoShutdownTime_FW
+0xe04d1bdd,get_dial_hw_position
 0xe04d1d59,task_IrisCycleEvent
 0xe04d2631,GetZoomPiDefaultPosition_FW
 0xe04d2645,GetZoomResetSensorLevel_FW
@@ -1046,6 +1050,8 @@
 0xe04f2177,ConnectPtpIPService_FW
 0xe04f217d,DisconnectPtpIPService_FW
 0xe04f7f1b,task_WdtPrint
+0xe04f7fcf,task_WdtReset
+0xe04f7ff5,task_WdtPU1Check
 0xe04f807b,StartWDT_FW
 0xe04f80b9,StopWDT_FW
 0xe04fa755,task_MovieTranscoder

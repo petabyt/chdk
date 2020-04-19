@@ -20,7 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                         10
+    #define CAM_PROPSET                         13
 
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1   // Camera has built-in ND filter (in addition to iris)
@@ -29,14 +29,23 @@
     #define CAM_KEY_PRESS_DELAY                 60  // delay after a press
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
-    #define CAM_ALT_BUTTON_NAMES                { "WiFi", "Video", "Display", "Playback" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_WIFI, KEY_VIDEO, KEY_DISPLAY, KEY_PLAYBACK }
+    #define CAM_ALT_BUTTON_NAMES                { "WiFi", "Video", "Playback" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_WIFI, KEY_VIDEO, KEY_PLAYBACK }
 
     #define CAM_DRYOS                           1
     #define CAM_DRYOS_2_3_R39                   1
     #define CAM_DRYOS_2_3_R47                   1
 
     #define CAM_HAS_CMOS                        1
+
+// not implemented
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    #undef  CAM_VIDEO_CONTROL
+
+// minimal recording or not only
+    #define CAM_SIMPLE_MOVIE_STATUS             1
+
+    #define CAM_IS_VID_REC_WORKS                1 // Define if the 'is_video_recording()' function works
 
     #define CAM_HAS_VIDEO_BUTTON                1
 

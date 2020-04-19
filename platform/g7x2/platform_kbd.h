@@ -3,9 +3,9 @@
 
 // TODO:
 // plaform specific keyboard defines, see core/kbd_common.c for documentation
-#define KEYS_MASK0 (0x00050FFF)
-#define KEYS_MASK1 (0x00000010)
-#define KEYS_MASK2 (0x00000000)
+#define KEYS_MASK0 (0x005F8000)
+#define KEYS_MASK1 (0x00000000)
+#define KEYS_MASK2 (0x00003E60)
 
 #define SD_READONLY_FLAG    0x00000020 // Found @0xe05df0f8, levent 0x30a
 #define SD_READONLY_IDX     1
