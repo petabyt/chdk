@@ -23,8 +23,10 @@ typedef int             int32_t;
 // Architecture of build (GCC ABI, thumb/thumb2, etc)
 #define GCC_ELF_THUMB               1
 #define GCC_EABI_THUMB              2
-#define GCC_ELF_THUMB2           0x11   // unlikely variant
-#define GCC_EABI_THUMB2          0x12
+#define GCC_ELF_THUMB2           0x11   // Cortex R, unlikely variant
+#define GCC_EABI_THUMB2          0x12   // Cortex R
+#define GCC_ELF_THUMB2A          0x21   // Cortex A, unlikely variant
+#define GCC_EABI_THUMB2A         0x22   // Cortex A
 
 // Base module interface - once loaded into memory and any relocations done these
 // functions provide the minimum interface to run the module code.

@@ -162,10 +162,18 @@ ifndef THUMB_FW
         CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
     endif
 else
-    ifdef OPT_USE_GCC_EABI
-        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2
+    ifdef DIGIC7
+        ifdef OPT_USE_GCC_EABI
+            CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
+        else
+            CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB2A
+        endif
     else
-        CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB2
+        ifdef OPT_USE_GCC_EABI
+            CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2
+        else
+            CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB2
+        endif
     endif
 endif
 
