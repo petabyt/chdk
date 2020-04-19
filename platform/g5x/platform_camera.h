@@ -38,6 +38,15 @@
 
     #define CAM_HAS_CMOS                        1
 
+// not implemented
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+    #undef  CAM_VIDEO_CONTROL
+
+// minimal recording or not only
+    #define CAM_SIMPLE_MOVIE_STATUS             1
+
+    #define CAM_IS_VID_REC_WORKS                1 // Define if the 'is_video_recording()' function works
+
     #define CAM_SWIVEL_SCREEN                   1
 
     #define CAM_HAS_VIDEO_BUTTON                1
