@@ -13,7 +13,7 @@ DEF(current_fb_d                  ,0x0000fbe4+0x24)      // found @fc1b41e6 simi
 DEF(current_viewport_buffer       ,0x8858+0x38)          // GetMovieJpegVRAMVPixelsSize_FW 0xfc1449d1
 DEF(viewport_buffers              ,0xfc570f64)           // multiple refs like @ 0xfc144232 - add 0x010 like sx280 & g7x
 
-DEF(simple_movie_status           ,0x0000bae8+0x0c+0x54) // found @fc14ef7e sub_fc14ef64 via task_MovieRecord. 1 when recording or busy after, 0 otherwise
+DEF(simple_movie_status           ,0x0000bae8+0x80+0x0c) // found @fc14ef7e sub_fc14ef64 via task_MovieRecord. 1 when recording or busy after, 0 otherwise
 DEF(full_screen_refresh           ,0x00013bc4)           // Found @0xfc30a954
 DEF(canon_menu_active             ,0x0000c9ac+0x8)       // found @fc2caa4c, via call to sub_fc2caa4a, near ref to "MviCon_ClrEvt" @fc14568c
 DEF(zoom_status                   ,0x0000f88c)           // after "TerminateDeliverToZoomController" 0xfc1af3b4 = 0xf8ac - 0x20
