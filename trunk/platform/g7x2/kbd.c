@@ -28,28 +28,14 @@ KeyMap keymap[] = {
     { 0, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xe05df0d8, levent 0x00
     { 0, KEY_SHOOT_FULL_ONLY ,0x00080000 }, // Found @0xe05df0d0, levent 0x01
     { 0, KEY_POWER           ,0x00200000 }, // Found @0xe05df0e0, levent 0x100
+    { 0, KEY_WIFI            ,0x00400000 }, // Found @0xe05df0e8, levent 0x103
+    { 2, KEY_MENU            ,0x00000020 },
+    { 2, KEY_DISPLAY         ,0x00000040 }, // RING FUNC button
     { 2, KEY_UP              ,0x00000200 }, // Found @0xe05df158, levent 0x06
     { 2, KEY_DOWN            ,0x00000400 }, // Found @0xe05df160, levent 0x07
     { 2, KEY_RIGHT           ,0x00000800 }, // Found @0xe05df168, levent 0x09
     { 2, KEY_LEFT            ,0x00001000 }, // Found @0xe05df170, levent 0x08
     { 2, KEY_SET             ,0x00002000 }, // Found @0xe05df178, levent 0x0a
-//    { 0, KEY_SHOOT_FULL_ONLY ,0x00000001 },
-//    { 0, KEY_ZOOM_OUT        ,0x00000002 },
-//    { 0, KEY_ZOOM_IN         ,0x00000004 },
-//    { 0, KEY_VIDEO           ,0x00000008 },
-//    { 0, KEY_MENU            ,0x00000010 },
-//    { 0, KEY_UP              ,0x00000020 },
-//    { 0, KEY_DOWN            ,0x00000040 },
-//    { 0, KEY_RIGHT           ,0x00000080 },
-//    { 0, KEY_LEFT            ,0x00000100 },
-//    { 0, KEY_SET             ,0x00000200 },
-//    { 0, KEY_ERASE           ,0x00000400 },
-//    { 0, KEY_PLAYBACK        ,0x00000800 },
-//    { 0, KEY_WIFI            ,0x00010000 },
-//    { 0, KEY_POWER           ,0x00020000 },
-//    { 0, KEY_SHOOT_HALF      ,0x00040000 },
-//    { 0, KEY_SHOOT_FULL      ,0x00040001 },
-    { 1, KEY_DISPLAY         ,0x00000010 },
     { 0, 0, 0 }
 };
 
@@ -59,7 +45,7 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
         "push    {r1-r7, lr}\n"
         "movs    r4, #0\n"
         "bl      my_kbd_read_keys\n"
-        "b       _kbd_p1_f_cont\n"
+        "b       kbd_p1_f_cont_my\n"
     );
 
     return 0;
@@ -76,8 +62,7 @@ void __attribute__((naked,noinline)) mykbd_task()
 
         if (wrap_kbd_p1_f() == 1)
         {
-//            kbd_p2_f_my();
-            _kbd_p2_f();
+            kbd_p2_f_my();
         }
     }
 
@@ -94,11 +79,11 @@ int get_dial_hw_position(int dial)
 }
 
 // TODO:
-extern long dial_positions[6];
+extern long dial_positions[4];
 
 int get_jogdial_counter()
 {
-    int p = get_dial_hw_position(4);
+    int p = get_dial_hw_position(5);
     return p;
 }
 
@@ -120,7 +105,7 @@ int handle_jogdial()
     if (jogdial_stopped)
     {
         // update positions in RAM
-        dial_positions[0] = dial_positions[3] = get_jogdial_counter();
+        dial_positions[0] = dial_positions[2] = get_jogdial_counter();
         return 0;
     }
     return 1;
@@ -131,9 +116,14 @@ void jogdial_control(int c)
     jogdial_stopped = c;
 }
 
+int physw0_override;
+
 void my_kbd_read_keys()
 {
-    kbd_update_key_state();
+    if (kbd_update_key_state())
+        physw0_override = physw_status[0];
+    else
+        physw0_override = -1;
     kbd_update_physw_bits();
 }
 

@@ -12,7 +12,9 @@ void vid_bitmap_refresh()
     extern void _VTMLock();
     extern void _VTMUnlock();
     _VTMLock();
-    _transfer_src_overlay(active_bitmap_buffer);
+    int n = active_bitmap_buffer;
+    _transfer_src_overlay(n^1);
+    _transfer_src_overlay(n);
     _VTMUnlock();
 }
 

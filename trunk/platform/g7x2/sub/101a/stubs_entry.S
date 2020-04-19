@@ -12,8 +12,8 @@
 //   DIGIC = 70
 //   MEMISOSTART = 0x2c460c
 //   MEMBASEADDR = 0x8000
-//   ARAM_HEAP_START = 0x006ce000 #  Found @0xe0560f88
-//   ARAM_HEAP_SIZE = 0x00022000 #  Found @0xe0560f60
+//   ARAM_HEAP_START = 0x006ce000#  Found @0xe0560f88
+//   ARAM_HEAP_SIZE = 0x00022000#  Found @0xe0560f60
 
 // Detected address ranges:
 // ROM      0xe0000000 - 0xe2000000 (33554432 bytes)
@@ -73,34 +73,8 @@
 
 // canon_mode_list 0xe089d47c Found @0xe0036f2c
 // Check modemap values from 'platform/CAMERA/shooting.c':
-// 16455  0x4047 In firmware but not in current modemap
-// 16460  0x404c In firmware but not in current modemap
-// 16954  0x423a In firmware but not in current modemap
-// 16968  0x4248 In firmware but not in current modemap
-// 16970  0x424a In firmware but not in current modemap
-// 16969  0x4249 In firmware but not in current modemap
-// 16958  0x423e In firmware but not in current modemap
-// 16971  0x424b In firmware but not in current modemap
-// 16929  0x4221 In firmware but not in current modemap
-// 16424  0x4028 In firmware but not in current modemap
-//  2645  0x0a55 In firmware but not in current modemap
-//  2654  0x0a5e In firmware but not in current modemap
-//  2653  0x0a5d In firmware but not in current modemap
-//  2655  0x0a5f In firmware but not in current modemap
 // 33297  0x8211 In firmware but not in current modemap
 //  4174  0x104e In firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_M              2651
-// Current modemap entry not found in firmware - MODE_VIDEO_IFRAME_MOVIE   2650
-// Current modemap entry not found in firmware - MODE_VIDEO_STD            2643
-// Current modemap entry not found in firmware - MODE_CREATIVE_EFFECT     33299
-// Current modemap entry not found in firmware - MODE_STAR_PORTRAIT       16452
-// Current modemap entry not found in firmware - MODE_POSTER_EFFECT       16947
-// Current modemap entry not found in firmware - MODE_SUPER_VIVID         16946
-// Current modemap entry not found in firmware - MODE_MONOCHROME          16959
-// Current modemap entry not found in firmware - MODE_TOY_CAMERA          16955
-// Current modemap entry not found in firmware - MODE_FISHEYE             16951
-// Current modemap entry not found in firmware - MODE_NOSTALGIC           16945
-// Current modemap entry not found in firmware - MODE_HDR                 16967
 
 // Known propcases
 // //      PROPCASE_AFSTEP 13
@@ -119,7 +93,7 @@
 // #define PROPCASE_SV_MARKET 258
 // //      PROPCASE_SVFIX 259
 // #define PROPCASE_TV 275
-// Guessed propset: uncertain (12 of 15 match), closest to 10
+// Guessed propset: uncertain (14 of 15 match), closest to 13
 
 // EXMEM types:
 // EXMEM_RAMDISK        0
@@ -171,13 +145,13 @@ DEF(jpeg_count_str                    ,0x0014dd38) // Found @0xe01a81d8
 DEF(zoom_busy                         ,0x00011664) // (0x11644+0x20) Found @0xe005f92a
 DEF(focus_busy                        ,0x0001141c) // (0x113f8+0x24) Found @0xe0372082
 DEF(imager_active                     ,0x000086f4) // (0x86f0+0x4) Found @0xe045be1e
-//DEF(canon_menu_active                 ,0x0000ce08),          stubs_min = 0x0000ce08 (0x0000ce08)
-//DEF(file_counter_var                  ,0x00011084),          stubs_min = 0x00011084 (0x00011084)
+DEF(canon_menu_active                 ,0x0000ce08) // (0xce04+0x4) Found @0xe03756e0
+DEF(file_counter_var                  ,0x00011084) // Found @0xe0402394
 DEF(_nrflag                           ,0x00026278) // (0x26274+0x4) Found @0xe005efac
 DEF(av_override_semaphore             ,0x00036fb8) // Found @0xe0566f90
 DEF(active_bitmap_buffer              ,0x0000cdc0) // (0xcd74+0x4c) Found @0xe03789c2
 DEF(displaytype                       ,0x000096f8) // (0x969c+0x5c) Found @0xe0439820
-//DEF(bitmap_buffer                     ,0x0000cdc4),          stubs_min = 0x0000cdc4 (0xcdc4)
+DEF(bitmap_buffer                     ,0x0000cdc4) // (0xcd74+0x50) Found @0xe03789c8
 DEF(palette_control                   ,0x0001257c) // Found @0xe0344a6a
 DEF(palette_buffer_ptr                ,0x00012594) // (0x1257c+0x18) Found @0xe0344a86
 DEF(active_palette_buffer             ,0x0001258c) // (0x1257c+0x10) Found @0xe0344a6e
@@ -190,15 +164,20 @@ DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xe0fd7a20
 // there are 101 entries in the table - set NUM_FL to 101
 DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 
+//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xe03710c1
+//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xe03710eb
+//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xe0375125
+//NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xe0355015
 //NHSTUB(PT_PlaySound                         ,0xe037e475) //  0        *** != 0x00000000
+//NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xe0370e69
 //NHSTUB(ScreenLock                           ,0xe03780e3) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
+//NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xe0374179
 //NHSTUB(_sqrt                                ,0x00000000) //  0        *** != 0xdffcf241
 //NHSTUB(strcat                               ,0x00000000) //  0        *** != 0xe04968ad
-//NHSTUB(strchr                               ,0x00000000) //  0        *** != 0xe045197e
-//   DEF(task_PhySw                           ,0x00000000) //  0        *** != 0xe005b319
+//NHSTUB(strchr                               ,0x00000000) //  0        *** != 0xe045197f
+//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xe03f4b5b
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xe03f4ac1
-//NHSTUB(get_dial_hw_position                 ,0xe04d1bdd) //  0        *** != 0x00000000
 
 NHSTUB(AllocateUncacheableMemory              ,0xe046e571) //  0
 NHSTUB(Close                                  ,0xe0373eb7) //  0
@@ -216,8 +195,6 @@ NHSTUB(ExitTask                               ,0xdffc95af) //  0
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fclose_Fut                             ,0xe0370f77) //  0
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0            == 0x00000000
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fgets_Fut                              ,0xe037105b) //  0
 NHSTUB(Fopen_Fut                              ,0xe0370f4f) //  0
 NHSTUB(Fread_Fut                              ,0xe0370feb) //  0
@@ -234,10 +211,8 @@ NHSTUB(get_nd_value                           ,0xe04fd7af) //  0
 NHSTUB(get_current_nd_value                   ,0xe04fd789) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xe0374c35) //  0
 NHSTUB(GetDrive_FreeClusters                  ,0xe0375149) //  0
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0            == 0x00000000
 NHSTUB(GetFocusLensSubjectDistance            ,0xe0372bf5) //  0
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0            == 0x00000000
-//NHSTUB(GetImageFolder                       ,0x00000000) //  0            == 0x00000000
 NHSTUB(GetKbdState                            ,0xe004e73b) //  0
 NHSTUB(GetMemInfo                             ,0xe0589b61) //  0
 NHSTUB(GetOpticalTemperature                  ,0xe0401223) //  0
@@ -268,17 +243,15 @@ NHSTUB(PostLogicalEventToUI                   ,0xe037a86d) //  0
 NHSTUB(PutInNdFilter                          ,0xe059244d) //  0
 NHSTUB(PutOutNdFilter                         ,0xe0592473) //  0
 NHSTUB(Read                                   ,0xe0451397) //  0
-NHSTUB(ReadFastDir                            ,0xe0373fef) //  0
+NHSTUB(ReadFastDir                            ,0xe03fa8ff) //  0
 NHSTUB(Rec2PB                                 ,0xe035e00f) //  0
-//NHSTUB(RenameFile_Fut                       ,0x00000000) //  0            == 0x00000000
 //NHSTUB(Restart                              ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetAE_ShutterSpeed                     ,0xe0583cd9) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xe04d064b) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xe037ca81) //  0
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0            == 0x00000000
-//NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetLogicalEventActive                  ,0xe0371cdf) //  0
-//NHSTUB(SetParameterData                     ,0x00000000) //  0            == 0x00000000
+NHSTUB(SetParameterData                       ,0xe02724e3) //  0
 NHSTUB(SetPropertyCase                        ,0xe036ae25) //  0
 NHSTUB(SetScriptMode                          ,0xe0371d17) //  0
 NHSTUB(SleepTask                              ,0xdffc9293) //  0
@@ -339,6 +312,7 @@ NHSTUB(strtolx                                ,0xe04e8375) //  0
    DEF(task_FileWrite                         ,0xe03af92b) //  0
    DEF(task_InitFileModules                   ,0xe04200b1) //  0
    DEF(task_MovieRecord                       ,0xe038f12f) //  0
+   DEF(task_PhySw                             ,0xe005b319) //  0
    DEF(task_TricInitTask                      ,0xe025d527) //  0
    DEF(hook_CreateTask                        ,0xdffc93ba) //  0
 NHSTUB(time                                   ,0xdffca509) //  0
@@ -346,11 +320,11 @@ NHSTUB(vsprintf                               ,0xe0463383) //  0
 //NHSTUB(EngDrvRead                           ,0x00000000) //  0            == 0x00000000
 NHSTUB(PTM_GetCurrentItem                     ,0xe0376d2b) //  0
 NHSTUB(DisableISDriveError                    ,0xe0568923) //  0
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetEventFlag                           ,0xdffc9939) //  0
 NHSTUB(transfer_src_overlay                   ,0xe0377dbb) //  0
 NHSTUB(bzero                                  ,0xdffcc545) //  0
 NHSTUB(memset32                               ,0xdffcc549) //  0
+NHSTUB(get_dial_hw_position                   ,0xe04d1bdd) //  0
 NHSTUB(PT_MFOn                                ,0xe0299ea5) //  0
 NHSTUB(PT_MFOff                               ,0xe0299ed9) //  0
 NHSTUB(GetAdChValue                           ,0xe04d970f) //  0
