@@ -49,6 +49,12 @@ int get_usb_bit()
         return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ;
 }
 
+// required because this platform uses KBD_CUSTOM_ALL
+int kbd_force_analog_av(int state)
+{
+    return 0;
+}
+
 #define TS_KEY_TOGGLE_RAW   200
 #define TS_KEY_TOGGLE_ZEBRA 201
 #define TS_KEY_TOGGLE_HISTO 202

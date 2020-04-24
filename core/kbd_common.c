@@ -112,6 +112,21 @@ int get_analog_av_physw_mod(void)
     return 0;
 }
 
+#ifdef ANALOG_AV_FLAG
+int forced_analog_av;
+long prev_analog_av_state;
+#endif
+
+int kbd_force_analog_av(int state)
+{
+#ifdef ANALOG_AV_FLAG
+    forced_analog_av = state;
+    return 1;
+#else
+    return 0;
+#endif
+}
+
 #ifndef KBD_CUSTOM_UPDATE_KEY_STATE
 
 #ifdef CAM_HAS_GPS
@@ -210,8 +225,15 @@ void kbd_update_physw_bits(void)
     if (forced_usb_port) {
         physw_status[USB_IDX] = physw_status[USB_IDX] | USB_MASK;
     }
-// workaround for crashes switching between analog AV out and native display
 #ifdef ANALOG_AV_FLAG 
+    // 1 force on, 2 = force off, other = don't touch
+    if (forced_analog_av == 1) {
+        physw_status[ANALOG_AV_IDX] &= ~(ANALOG_AV_FLAG);
+    } else if(forced_analog_av == 2) {
+        physw_status[ANALOG_AV_IDX] |= ANALOG_AV_FLAG;
+    }
+
+// workaround for crashes switching between analog AV out and native display
     static long prev_analog_av_state = 0; // default to not present
     long new_analog_av_state = get_analog_av_physw_mod();
     if(new_analog_av_state != prev_analog_av_state) {

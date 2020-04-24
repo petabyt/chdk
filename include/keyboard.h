@@ -93,6 +93,7 @@ extern long kbd_get_autoclicked_key();
 extern long kbd_use_zoom_as_mf();
 extern void kbd_set_extra_button(short);
 extern long get_jogdial_direction(void);
+extern int kbd_force_analog_av(int);
 
 extern void JogDial_CW(void);
 extern void JogDial_CCW(void);

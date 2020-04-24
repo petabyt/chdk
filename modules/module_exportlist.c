@@ -199,6 +199,7 @@
             get_jogdial_direction
             JogDial_CCW
             JogDial_CW
+            kbd_force_analog_av
 
             debug_led
             camera_set_led
