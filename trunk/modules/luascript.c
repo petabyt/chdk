@@ -2089,6 +2089,22 @@ static int luaCB_switch_mode_usb( lua_State* L )
   switch_mode_usb(on_off_value_from_lua_arg(L,1));
   return 0;
 }
+
+/*
+  result=force_analog_av(state)
+  force state of analog video connector detect bit
+  where 0 = don't force, 1 = on, 2 = off
+  result true if implemented by port (ANALOG_AV_FLAG defined), false if not
+  can be used to enable video out while using the AV bit as remote input
+  NOTE: video out affects display resolution on some cameras, which 
+  may not be accounted for in features like PTP live view, zebra, histrogram etc
+  forcing video out while PTP is in use may cause problems on some cameras
+*/
+static int luaCB_force_analog_av( lua_State* L )
+{
+  lua_pushboolean(L, kbd_force_analog_av(luaL_checknumber( L, 1 )));
+  return 1;
+}
  
 /*
 pack the lua args into a buffer to pass to the native code calling functions 
@@ -2901,6 +2917,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(set_record)
 
     FUNC(switch_mode_usb)
+
+    FUNC(force_analog_av)
 
     FUNC(call_event_proc)
     FUNC(call_func_ptr)
