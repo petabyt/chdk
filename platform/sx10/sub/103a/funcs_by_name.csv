@@ -1453,6 +1453,7 @@
 0xffaeb058,SetVcmTargetPosition_FW
 0xffaeb070,SetVcmTargetSpeed_FW
 0xffaeb3e8,SetVcmTravelTimeMeasurePosition_FW
+0xffad10e8,SetVideoOutType
 0xffad1124,SetVideoOutType_FW
 0xffacc6a8,SetWBYlStandardWidth_FW
 0xffaca78c,SetWhiteCoefficient_FW

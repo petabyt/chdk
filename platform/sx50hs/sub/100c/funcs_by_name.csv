@@ -1762,6 +1762,7 @@
 0xff44f654,SetVcmTargetPosition_FW
 0xff44f66c,SetVcmTargetSpeed_FW
 0xff44fa04,SetVcmTravelTimeMeasurePosition_FW
+0xff430de8,SetVideoOutType
 0xff430e44,SetVideoOutType_FW
 0xff432f90,SetWBTemperature_FW
 0xff42c15c,SetWBYlStandardWidth_FW

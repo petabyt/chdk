@@ -1631,6 +1631,7 @@
 0xf8514608,SetToolCorrectCoefficient_FW
 0xf83ead58,SetTouchPanelDispSize_FW
 0xf83ead70,SetTouchPanelValidSize_FW
+0xf8518a58,SetVideoOutType
 0xf8518ab4,SetVideoOutType_FW
 0xf851ac04,SetWBTemperature_FW
 0xf8514590,SetWBYlStandardWidth_FW

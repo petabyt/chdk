@@ -1900,6 +1900,7 @@
 0xff4d23e4,SwitchOffDisplay_FW
 0xff4d2434,SwitchOnDisplay_FW
 0xff4d2444,j_GetVideoOutType_FW
+0xff4d2448,SetVideoOutType
 0xff4d24a4,SetVideoOutType_FW
 0xff4d24b8,IsEVFDrive_FW
 0xff4d24e0,j_IsEVFDrive_FW

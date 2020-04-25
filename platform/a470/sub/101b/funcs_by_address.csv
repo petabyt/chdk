@@ -1214,6 +1214,7 @@
 0xffe2b264,GetVideoOutType_FW
 0xffe2b28c,SwitchOffDisplay_FW
 0xffe2b2c4,SwitchOnDisplay_FW
+0xffe2b300,SetVideoOutType
 0xffe2b33c,SetVideoOutType_FW
 0xffe2b344,IsEVFDrive_FW
 0xffe2b36c,StopEVFDrive_FW

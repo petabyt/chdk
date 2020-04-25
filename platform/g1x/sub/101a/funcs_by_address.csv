@@ -1718,6 +1718,7 @@
 0xff407900,GetVideoOutType_FW
 0xff40795c,SwitchOffDisplay_FW
 0xff407990,SwitchOnDisplay_FW
+0xff4079cc,SetVideoOutType
 0xff407a28,SetVideoOutType_FW
 0xff407a30,IsEVFDrive_FW
 0xff407a58,StopEVFDrive_FW

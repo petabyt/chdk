@@ -1382,6 +1382,7 @@
 0xffaa1308,GetVideoOutType_FW
 0xffaa1330,SwitchOffDisplay_FW
 0xffaa1368,SwitchOnDisplay_FW
+0xffaa13a4,SetVideoOutType
 0xffaa13e0,SetVideoOutType_FW
 0xffaa13e8,IsEVFDrive_FW
 0xffaa1410,StopEVFDrive_FW

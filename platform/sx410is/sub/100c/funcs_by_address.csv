@@ -1784,6 +1784,7 @@
 0xffba635c,SwitchOffDisplay_FW
 0xffba63ac,SwitchOnDisplay_FW
 0xffba63bc,j_GetVideoOutType_FW
+0xffba63c0,SetVideoOutType
 0xffba63fc,SetVideoOutType_FW
 0xffba6410,IsEVFDrive_FW
 0xffba6438,j_IsEVFDrive_FW

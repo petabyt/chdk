@@ -318,3 +318,4 @@ NHSTUB(PT_MFOff                               ,0xffc57188) //120
 NHSTUB(GetAdChValue                           ,0xffc409b0) //120
 NHSTUB(get_ptp_buf_size                       ,0xffcb98b4) //122
 NHSTUB(get_ptp_file_buf                       ,0xffdbed1c) //121
+NHSTUB(SetVideoOutType                        ,0xffe5367c) //109

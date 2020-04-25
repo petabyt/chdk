@@ -1561,6 +1561,7 @@
 0xffb6128c,GetVideoOutType_FW
 0xffb612e8,SwitchOffDisplay_FW
 0xffb61320,SwitchOnDisplay_FW
+0xffb6135c,SetVideoOutType
 0xffb613b8,SetVideoOutType_FW
 0xffb613c0,IsEVFDrive_FW
 0xffb613e8,StopEVFDrive_FW

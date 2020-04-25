@@ -1344,6 +1344,7 @@
 0xffa0c998,SetToolCorrectCoefficient_FW
 0xff841fb4,SetUSBToDCPMode_FW
 0xff841fa4,SetUSBToPTPMode_FW
+0xffa0fdb8,SetVideoOutType
 0xffa0fe24,SetVideoOutType_FW
 0xffa0c92c,SetWBYlStandardWidth_FW
 0xffa0acc8,SetWhiteCoefficient_FW

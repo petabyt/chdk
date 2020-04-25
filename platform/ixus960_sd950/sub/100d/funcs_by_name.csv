@@ -1264,6 +1264,7 @@
 0xff829d08,SetTimerWhen
 0xff9e9798,SetToolCorrectCoefficient_FW
 0xff839e3c,SetUSBToDCPMode_FW
+0xff9ecfb4,SetVideoOutType
 0xff9ecff0,SetVideoOutType_FW
 0xff9e972c,SetWBYlStandardWidth_FW
 0xff9e7cac,SetWhiteCoefficient_FW
