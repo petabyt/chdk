@@ -1870,6 +1870,7 @@
 0xf851853c,SwitchOffDisplay_FW
 0xf8518588,SwitchOnDisplay_FW
 0xf8518598,j_GetVideoOutType_FW
+0xf851859c,SetVideoOutType
 0xf85185f8,SetVideoOutType_FW
 0xf851860c,IsEVFDrive_FW
 0xf8518634,j_IsEVFDrive_FW

@@ -1179,6 +1179,7 @@
 0xff828a88,SetTimerWhen
 0xffa7b79c,SetToolCorrectCoefficient_FW
 0xff8389c0,SetUSBToDCPMode_FW
+0xffa7f714,SetVideoOutType
 0xffa7f750,SetVideoOutType_FW
 0xffa7b730,SetWBYlStandardWidth_FW
 0xffa79b14,SetWhiteCoefficient_FW

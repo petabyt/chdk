@@ -1209,6 +1209,7 @@
 0xff833200,SetTimerAfter
 0xff833280,SetTimerWhen
 0xffad9d98,SetToolCorrectCoefficient_FW
+0xffadee94,SetVideoOutType
 0xffadeed0,SetVideoOutType_FW
 0xffae20a0,SetWBTemperature_FW
 0xffad9d30,SetWBYlStandardWidth_FW

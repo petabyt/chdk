@@ -337,3 +337,4 @@ NHSTUB(EnableHDMIPower                        ,0xff864464) //123
 NHSTUB(DisableHDMIPower                       ,0xff86446c) //123
 NHSTUB(get_ptp_buf_size                       ,0xff91c724) //122
 NHSTUB(get_ptp_file_buf                       ,0xffa903a4) //121
+NHSTUB(SetVideoOutType                        ,0xffb563bc) //109
