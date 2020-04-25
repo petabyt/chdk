@@ -152,9 +152,9 @@ DEF(av_override_semaphore             ,0x00027134) // Found @0xfc66092c
 DEF(active_bitmap_buffer              ,0x0000d13c) // (0xd0f4+0x48) Found @0xfc3becf6
 DEF(displaytype                       ,0x00009794) // (0x9738+0x5c) Found @0xfc15a792
 DEF(bitmap_buffer                     ,0x0000d140) // (0xd0f4+0x4c) Found @0xfc3becfc
-//DEF(palette_control                   ,0x00015ae0),          stubs_min = 0x00015ae0 (0x15AE0)
-//DEF(palette_buffer_ptr                ,0x00015af8),          stubs_min = 0x00015af8 (0x15AF8)
-//DEF(active_palette_buffer             ,0x00015af0),          stubs_min = 0x00015af0 (0x15AF0)
+DEF(palette_control                   ,0x00015ae0) // Found @0xfc3781e6
+DEF(palette_buffer_ptr                ,0x00015af8) // (0x15ae0+0x18) Found @0xfc378202
+DEF(active_palette_buffer             ,0x00015af0) // (0x15ae0+0x10) Found @0xfc3781ea
 DEF_CONST(uiprop_count                      ,0x000000d7) // Found @0xfc2a63d6
 DEF(exmem_alloc_table                 ,0x00047438) // Found @0xfc0a3386
 DEF(exmem_types_table                 ,0xfceb1030) // Found @0xfc0a338a
