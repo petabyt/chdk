@@ -533,6 +533,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_ptp_buf_size", OPTIONAL },
     { "get_ptp_file_buf", OPTIONAL },
 
+    { "SetVideoOutType", OPTIONAL },
+
     { 0, 0, 0 }
 };
 
@@ -2490,6 +2492,7 @@ string_sig string_sigs[] =
     { 9, "MoveOpticalZoomAt", "PT_MoveOpticalZoomAt_FW", 0,                1,    2,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
     { 9, "MoveOpticalZoomAt", "PT_MoveOpticalZoomAt_FW", 0,                1,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
     { 9, "MoveOpticalZoomAt", "SS.MoveOpticalZoomAt_FW", 0,                0,    0,    0,    0,    0,    0,    0,    0,    0,    3,    5,    5,    5,    5,    5,    5 },
+    { 9, "SetVideoOutType", "SetVideoOutType_FW", 0,                       1,    1,    1,    1,    1,    1,    1,    1,    1,    2,    2,    2,    2,    2,    2,    2 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54   R55   R57   R58   R59
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
