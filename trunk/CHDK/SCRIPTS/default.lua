@@ -49,8 +49,8 @@ prop_langs={
 	[6]={prop=61, [0]='ENGLISH',[1]='GERMAN',[2]='FRENCH',[3]='DUTCH',[5]='ITALIAN',[6]='UKRAINIAN',[8]='INDONESIAN',[10]='FINNISH',[13]='SPANISH',[15]='RUSSIAN',[16]='PORTUGUESE',[17]='GREEK',[18]='POLISH',[19]='CZECH',[20]='HUNGARIAN',[21]='TURKISH',[26]='ROMANIAN'},
 	-- 7 id changed, values go by row rather than col (verified g7x)
 	[7]={prop=66, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
-	-- 8 untested, but 7 and 9 are identical
-	[8]={prop=66, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
+	-- 8 is chronologically between 6 and 7, same order as 7
+	[8]={prop=63, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
 	[9]={prop=66, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
 	-- 10 id changed, values not changed from 7
 	[10]={prop=68, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},

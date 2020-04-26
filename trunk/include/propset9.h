@@ -27,6 +27,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // ps6 +5
 #define PROPCASE_CUSTOM_SATURATION               503        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_QUALITY                         62
+#define PROPCASE_LANGUAGE                        66         // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_CUSTOM_CONTRAST                 502        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_FLASH_SYNC_CURTAIN              69         // 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   254			//??? 70 for g7x

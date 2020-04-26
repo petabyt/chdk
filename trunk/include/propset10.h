@@ -30,6 +30,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SATURATION               62         // [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_QUALITY                         64         // [m10:untested] 
 #define PROPCASE_CUSTOM_CONTRAST                 66         // [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_LANGUAGE                        68         // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN              71         // 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   72         // [m10:zero]
 // TODO M10 has no date stamp option

@@ -25,6 +25,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SATURATION               57         // Canon Menu slide bar values: 254, 255, 0, 1, 2-----blackhole
 #define PROPCASE_QUALITY                         59         //blackhole
 #define PROPCASE_CUSTOM_CONTRAST                 61         // Canon Menu slide bar values: 254, 255, 0, 1, 2-----blackhole
+#define PROPCASE_LANGUAGE                        63         // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN              66         // TODO guess ps6+2
 #define PROPCASE_SUBJECT_DIST2                   67         //-----blackhole        
 #define PROPCASE_DATE_STAMP                      68         // 0 = Off, 1 = Date, 2 = Date & Time----blackhole

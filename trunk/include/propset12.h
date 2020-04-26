@@ -30,6 +30,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SATURATION           63 // [sx730: cam]
 #define PROPCASE_QUALITY                     65 // [sx730: cam]
 #define PROPCASE_CUSTOM_CONTRAST             67 // [sx730: cam]
+#define PROPCASE_LANGUAGE                    69 // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN          72 //
 #define PROPCASE_SUBJECT_DIST2               73 // [sx730: cam]
 // M10 has no date stamp option
