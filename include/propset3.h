@@ -43,6 +43,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_DIGITAL_ZOOM_POSITION      95
 #define PROPCASE_DISPLAY_MODE               105
 #define PROPCASE_BRACKET_MODE               29
+#define PROPCASE_LANGUAGE                   61     // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN         64
 #define PROPCASE_METERING_MODE              155
 #define PROPCASE_WB_MODE                    270     // 0 = Auto, 1 = Daylight, 2 = Cloudy, 3 = Tungsten, 4 = Fluorescent, 5 = Fluorescent H, 7 = Custom

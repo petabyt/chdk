@@ -18,6 +18,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_BRACKET_MODE                    29
 #define PROPCASE_SHOOTING_MODE                   49
 #define PROPCASE_QUALITY                         57
+#define PROPCASE_LANGUAGE                        61     // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_DATE_STAMP                      66     // 0 = Off, 1 = Date, 2 = Date & Time
 #define PROPCASE_DIGITAL_ZOOM_MODE               91     // Digital Zoom Mode/State 0 = off/standard, 2 = 1.7x, 3 = 2.1x
 #define PROPCASE_DIGITAL_ZOOM_STATE              94     // Digital Zoom Mode/State 0 = Digital Zoom off, 1 = Digital Zoom on

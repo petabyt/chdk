@@ -29,6 +29,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SATURATION               60         // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_QUALITY                         62
 #define PROPCASE_CUSTOM_CONTRAST                 64         // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_LANGUAGE                        66         // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN              69         // 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   70
 // TODO Guessed as ps6 +5, g7x has no date stamp option

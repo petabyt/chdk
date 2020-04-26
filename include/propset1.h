@@ -52,6 +52,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_AF_LOCK                    193
 #define PROPCASE_AF_ASSIST_BEAM             63       // 0=disabled,  1=enabled
 #define PROPCASE_DATE_STAMP                 190      // 0 = Off, 1 = Date, 2 = Date & Time, may only function in "postcard mode"
+#define PROPCASE_LANGUAGE                   196     // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_CUSTOM_SHARPNESS           2       // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_SATURATION          3       // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_CONTRAST            4       // Canon Menu slide bar values: 255, 254, 0, 1, 2
