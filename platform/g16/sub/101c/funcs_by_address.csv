@@ -164,7 +164,9 @@
 0xfc071055,kbd_p1_f_cont
 0xfc07149d,kbd_read_keys_r2
 0xfc0719e9,ExMem.View_FW
+0xfc071caf,exmem_ualloc
 0xfc071cef,ExMem.AllocUncacheable_FW
+0xfc071e93,exmem_ufree
 0xfc071ed1,ExMem.FreeUncacheable_FW
 0xfc071edd,exmem_alloc
 0xfc071f25,ExMem.AllocCacheable_FW

@@ -166,7 +166,8 @@ DEF_CONST(exmem_type_count                  ,0x00000019) // Found @0xfcda5260
 //NHSTUB(_pow                                 ,0x00000000) //  0        *** != 0x010f8718
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc21985b
 //NHSTUB(exmem_alloc                          ,0x00000000) //  0        *** != 0xfc3b2e05
-//NHSTUB(exmem_free                           ,0x00000000) //  0        *** != 0xfc3b2e3d
+//NHSTUB(exmem_ualloc                         ,0x00000000) //  0        *** != 0xfc3b2d79
+//NHSTUB(exmem_ufree                          ,0x00000000) //  0        *** != 0xfc3b2dd5
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc3b35b9
 
 NHSTUB(CreateTask_low                         ,0xbfe10b85) //  0

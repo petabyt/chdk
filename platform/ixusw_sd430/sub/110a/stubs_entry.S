@@ -36,8 +36,6 @@ NHSTUB(PutOutNdFilter                         ,0xffb7ffcc) //  1 94%
 //NHSTUB(SetParameterData                     ,0xff96a23c) //  1 96%        == 0xff96a23c
 NHSTUB(UnsetZoomForMovie                      ,0xff9a7ce0) //  1 89%
 NHSTUB(add_ptp_handler                        ,0xffa62090) //  1 96%
-NHSTUB(exmem_alloc                            ,0xff814f44) //  2 93%
-// ERROR: exmem_free is not found.                         //--- ---    *** != 0xff815014
 // ERROR: free is not found.                               //--- ---    *** != 0xffc1d8f8
 // ERROR: kbd_read_keys_r2 is not found.                   //--- ---    *** != 0xff82aaac
 //NHSTUB(kbd_pwr_off                          ,0xff82b05c) //  1 83%    *** != 0xff82afb0
@@ -190,6 +188,9 @@ NHSTUB(_sqrt                                  ,0xffacb378) //  1
 // ALT: NHSTUB(_sqrt, 0xffbbe0fc) // 1 24/0
 NHSTUB(apex2us                                ,0xff8b02a8) //  1
 NHSTUB(close                                  ,0xffc1a8ac) //109
+NHSTUB(exmem_alloc                            ,0xff815090) //122
+NHSTUB(exmem_ualloc                           ,0xff814f44) //122
+NHSTUB(exmem_ufree                            ,0xff815014) //122
 NHSTUB(get_nd_value                           ,0xffb6e5cc) //115
 NHSTUB(get_current_nd_value                   ,0xffb6e550) //122
 //NHSTUB(kbd_p1_f                             ,0xff829c94) //  1            == 0xff829c94

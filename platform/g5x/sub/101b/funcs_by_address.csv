@@ -272,7 +272,9 @@
 0xfc0a168d,drysh_FW
 0xfc0a2531,task_WBCtrl
 0xfc0a3361,ExMem.View_FW
+0xfc0a37f9,exmem_ualloc
 0xfc0a3827,ExMem.AllocUncacheable_FW
+0xfc0a38b3,exmem_ufree
 0xfc0a38e3,ExMem.FreeUncacheable_FW
 0xfc0a38ef,exmem_alloc
 0xfc0a3927,ExMem.AllocCacheable_FW

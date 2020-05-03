@@ -5,7 +5,9 @@
 NHSTUB(CreateTask_low,                      0x006B15A0) //*
 DEF(hook_CreateTask_low,                    0x006B15A0) //*
 NHSTUB(exmem_alloc                         ,0xFF8345B8) //*
-NHSTUB(exmem_free                          ,0xff834610) //*
+//NHSTUB(exmem_free                          ,0xff834610) //*
+NHSTUB(exmem_ualloc                        ,0xFF8344E0) //*
+NHSTUB(exmem_ufree                         ,0xFF834578) //*
 NHSTUB(open                                ,0xFF823DAC) //*
 NHSTUB(close                               ,0xFF823E5C) //*
 NHSTUB(MakeDirectory_Fut,                   0xFF827984) //*

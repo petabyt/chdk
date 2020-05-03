@@ -165,7 +165,9 @@
 0xfc061a55,OpLog.Start_FW
 0xfc061adf,OpLog.Terminate_FW
 0xfc062235,ExMem.View_FW
+0xfc0624fb,exmem_ualloc
 0xfc06253b,ExMem.AllocUncacheable_FW
+0xfc0626df,exmem_ufree
 0xfc06271d,ExMem.FreeUncacheable_FW
 0xfc062729,exmem_alloc
 0xfc062771,ExMem.AllocCacheable_FW

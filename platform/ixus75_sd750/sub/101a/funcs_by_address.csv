@@ -80,6 +80,8 @@
 0xff81d568,ExMem.AllocCacheable_FW
 0xff81d580,ExMem.FreeCacheable_FW
 0xff81d90c,exmem_assert
+0xff81dffc,exmem_alloc_low
+0xff81e190,exmem_free_low
 0xff81e2c4,exmem_ualloc
 0xff81e394,exmem_ufree
 0xff81e494,exmem_alloc

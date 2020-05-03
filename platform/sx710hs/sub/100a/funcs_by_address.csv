@@ -280,7 +280,9 @@
 0xfc08b8f5,drysh_FW
 0xfc08cfed,task_WBCtrl
 0xfc08e6cd,ExMem.View_FW
+0xfc08eb35,exmem_ualloc
 0xfc08eb63,ExMem.AllocUncacheable_FW
+0xfc08ebef,exmem_ufree
 0xfc08ec1f,ExMem.FreeUncacheable_FW
 0xfc08ec2b,exmem_alloc
 0xfc08ec63,ExMem.AllocCacheable_FW

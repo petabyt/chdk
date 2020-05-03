@@ -189,7 +189,9 @@
 0xfc080241,OpLog.Start_FW
 0xfc0802cf,OpLog.Terminate_FW
 0xfc081235,ExMem.View_FW
+0xfc08169d,exmem_ualloc
 0xfc0816cb,ExMem.AllocUncacheable_FW
+0xfc081757,exmem_ufree
 0xfc081787,ExMem.FreeUncacheable_FW
 0xfc081793,exmem_alloc
 0xfc0817cb,ExMem.AllocCacheable_FW

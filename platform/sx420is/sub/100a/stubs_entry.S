@@ -270,7 +270,8 @@ NHSTUB(add_ptp_handler                        ,0xff151550) //121
 NHSTUB(apex2us                                ,0xff2e5910) //121
 NHSTUB(err_init_task                          ,0xff0247d8) //111
 NHSTUB(exmem_alloc                            ,0xff0345b8) //101
-NHSTUB(exmem_free                             ,0xff034620) //101
+NHSTUB(exmem_ualloc                           ,0xff03441c) //101
+NHSTUB(exmem_ufree                            ,0xff034564) //101
 NHSTUB(free                                   ,0xff025084) //112
 NHSTUB(kbd_p1_f                               ,0xff02c42c) //109
 NHSTUB(kbd_p1_f_cont                          ,0xff02c438) //109

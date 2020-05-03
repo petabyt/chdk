@@ -272,7 +272,8 @@ NHSTUB(apex2us                                ,0xffa2655c) //121
 NHSTUB(close                                  ,0xff823d18) //109
 NHSTUB(err_init_task                          ,0xff824798) //111
 NHSTUB(exmem_alloc                            ,0xff8350dc) //101
-NHSTUB(exmem_free                             ,0xff835144) //101
+NHSTUB(exmem_ualloc                           ,0xff834f48) //101
+NHSTUB(exmem_ufree                            ,0xff835088) //101
 NHSTUB(free                                   ,0xff825628) //112
 NHSTUB(get_nd_value                           ,0xffac1ea4) //123
 NHSTUB(get_current_nd_value                   ,0xffac1e44) //122

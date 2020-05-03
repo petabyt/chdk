@@ -194,8 +194,8 @@ NHSTUB(_sqrt                                  ,0xffab3ac4) //  1
 NHSTUB(apex2us                                ,0xff8aa1c4) //  1
 NHSTUB(close                                  ,0xffac288c) //  1
 // ALT: NHSTUB(close, 0xfff5693c) // 1 29/0
-NHSTUB(exmem_alloc                            ,0xff813a1c) //122
-NHSTUB(exmem_free                             ,0xff813a68) //122
+NHSTUB(exmem_ualloc                           ,0xff813a1c) //122
+NHSTUB(exmem_ufree                            ,0xff813a68) //122
 NHSTUB(get_nd_value                           ,0xffa4a5d8) //120
 NHSTUB(get_current_nd_value                   ,0xffa4a5c4) //120
 NHSTUB(lseek                                  ,0xffac29d0) //  1

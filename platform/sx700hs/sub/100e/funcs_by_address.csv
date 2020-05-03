@@ -144,7 +144,9 @@
 0xfc06e207,GetKbdState
 0xfc06e6e7,j_GetKbdState
 0xfc06e6f9,ExMem.View_FW
+0xfc06e9db,exmem_ualloc
 0xfc06ea0b,ExMem.AllocUncacheable_FW
+0xfc06ebb1,exmem_ufree
 0xfc06ebe1,ExMem.FreeUncacheable_FW
 0xfc06ebed,exmem_alloc
 0xfc06ec25,ExMem.AllocCacheable_FW

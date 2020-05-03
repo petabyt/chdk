@@ -212,7 +212,9 @@
 0xe0052ff5,task_WbSeqTask
 0xe00547ef,task_DistTask
 0xe0055d71,ExMem.View_FW
+0xe005604f,exmem_ualloc
 0xe00561d9,ExMem.AllocUncacheable_FW
+0xe005625f,exmem_ufree
 0xe005628f,ExMem.FreeUncacheable_FW
 0xe005629b,exmem_alloc
 0xe00562d5,ExMem.AllocCacheable_FW

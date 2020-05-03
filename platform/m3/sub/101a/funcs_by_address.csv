@@ -187,7 +187,9 @@
 0xfc07803f,IsNormalCameraMode_FW
 0xfc07804d,StartFactoryModeController_FW
 0xfc078805,ExMem.View_FW
+0xfc078c6d,exmem_ualloc
 0xfc078c9b,ExMem.AllocUncacheable_FW
+0xfc078d27,exmem_ufree
 0xfc078d57,ExMem.FreeUncacheable_FW
 0xfc078d63,exmem_alloc
 0xfc078d9b,ExMem.AllocCacheable_FW

@@ -273,7 +273,8 @@ NHSTUB(_sqrt                                  ,0x0110ba18) //  0
 NHSTUB(add_ptp_handler                        ,0xfc0f38b7) //  0
 NHSTUB(close                                  ,0xfc13443b) //  0
 NHSTUB(exmem_alloc                            ,0xfc079dbb) //  0
-NHSTUB(exmem_free                             ,0xfc079dfb) //  0
+NHSTUB(exmem_ualloc                           ,0xfc079cc5) //  0
+NHSTUB(exmem_ufree                            ,0xfc079d7f) //  0
 NHSTUB(free                                   ,0xfc3623fb) //  0
 NHSTUB(kbd_p1_f                               ,0xfc0783f7) //  0
 NHSTUB(kbd_p1_f_cont                          ,0xfc0783ff) //  0

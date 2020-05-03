@@ -159,8 +159,9 @@ NHSTUB(_pow                                   ,0xffeb9f94) //121
 NHSTUB(_sqrt                                  ,0xffebbd30) //  1
 NHSTUB(apex2us                                ,0xffc985ec) //  1
 NHSTUB(close                                  ,0xffec84f0) //109
-NHSTUB(exmem_alloc                            ,0xffc02818) //122
-NHSTUB(exmem_free                             ,0xffc028e8) //122
+NHSTUB(exmem_alloc                            ,0xffc02964) //122
+NHSTUB(exmem_ualloc                           ,0xffc02818) //122
+NHSTUB(exmem_ufree                            ,0xffc028e8) //122
 NHSTUB(get_nd_value                           ,0xffe6f450) //115
 NHSTUB(get_current_nd_value                   ,0xffe6f3ac) //122
 NHSTUB(kbd_p1_f                               ,0xffc16918) //  1

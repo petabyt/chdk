@@ -370,6 +370,8 @@
 0xfc071edd,exmem_alloc
 0xfc071f2d,exmem_free
 0xfc066b47,ExMem_FW
+0xfc071caf,exmem_ualloc
+0xfc071e93,exmem_ufree
 0xfc17936f,ExpCtrlTool.SetExpMode_FW
 0xfc2debeb,ExportToEventProcedure_FW
 0xfc1d21f3,FA.Create_FW
