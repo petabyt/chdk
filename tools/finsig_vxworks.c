@@ -337,10 +337,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "apex2us" },
     { "close" },
     { "err_init_task", OPTIONAL },
-    { "exmem_alloc" },
-    { "exmem_free" },
-    { "exmem_ualloc", UNUSED|OPTIONAL|LIST_ALWAYS },
-    { "exmem_ufree", UNUSED|OPTIONAL|LIST_ALWAYS },
+    { "exmem_alloc", OPTIONAL },
+    { "exmem_free", UNUSED|OPTIONAL },
+    { "exmem_alloc_low", UNUSED|OPTIONAL }, // helper
+    { "exmem_free_low", UNUSED|OPTIONAL }, // helper
+    { "exmem_ualloc" },
+    { "exmem_ufree" },
     { "exmem_assert", UNUSED|OPTIONAL|LIST_ALWAYS }, // helper
     { "free" },
     { "get_nd_value", OPTIONAL },
@@ -1158,10 +1160,10 @@ int find_get_current_nd_value(firmware *fw)
     return 1;
 }
 
-int find_exmem_free(firmware *fw)
+int find_exmem_ufree(firmware *fw)
 {
 
-    int k = get_saved_sig(fw,"ExMem.FreeCacheable_FW"); // newer cam, a wrapped version of exmem_free is already located
+    int k = get_saved_sig(fw,"ExMem.FreeCacheable_FW"); // newer cam
     if (k >= 0)
         return 0;
     k = get_saved_sig(fw,"memset_FW");
@@ -1192,13 +1194,31 @@ int find_exmem_free(firmware *fw)
             }
         }
     }
+    // no success, search for first routine calling exmem_free_low
+    k = get_saved_sig(fw,"exmem_free_low");
+    if (k < 0)
+        return 0;
+    k = adr2idx(fw, func_names[k].val);
+    for (n=50; n<1000; n++) {
+        if (isBL(fw,k+n)) {
+            int m = idxFollowBranch(fw,k+n,0x01000001);
+            if (idx2adr(fw,m) == idx2adr(fw,k))
+            {
+                j = find_inst_rev(fw,isSTMFD_LR,k+n,23);
+                if (j != -1) {
+                    fwAddMatch(fw,idx2adr(fw,j),32,0,122);
+                    return 1;
+                }
+            }
+        }
+    }
     return 0;
 }
 
-int find_exmem_alloc(firmware *fw)
+int find_exmem_ualloc(firmware *fw)
 {
 
-    int k = get_saved_sig(fw,"ExMem.AllocCacheable_FW"); // newer cam, a wrapped version of exmem_alloc is already located
+    int k = get_saved_sig(fw,"ExMem.AllocCacheable_FW"); // newer cam
     if (k >= 0)
         return 0;
     k = get_saved_sig(fw,"DebugAssert"); // 
@@ -1217,6 +1237,99 @@ int find_exmem_alloc(firmware *fw)
         {
             fwAddMatch(fw,idx2adr(fw,m),32,0,122);
             return 1;
+        }
+    }
+    // no success, search for first routine calling exmem_alloc_low
+    k = get_saved_sig(fw,"exmem_alloc_low");
+    if (k < 0)
+        return 0;
+    k = adr2idx(fw, func_names[k].val);
+    int n;
+    for (n=70; n<1000; n++) {
+        if (isBL(fw,k+n)) {
+            m = idxFollowBranch(fw,k+n,0x01000001);
+            if (idx2adr(fw,m) == idx2adr(fw,k))
+            {
+                j = find_inst_rev(fw,isSTMFD_LR,k+n,14);
+                if (j != -1) {
+                    fwAddMatch(fw,idx2adr(fw,j),32,0,122);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int find_exmem_free(firmware *fw)
+{
+
+    int k = get_saved_sig(fw,"ExMem.FreeCacheable_FW"); // newer cam
+    if (k >= 0)
+        return 0;
+    k = get_saved_sig(fw,"exmem_free_low");
+    if (k < 0)
+        return 0;
+    k = adr2idx(fw, func_names[k].val);
+    int n;
+    for (n=50; n<1000; n++) {
+        if (isBL(fw,k+n)) {
+            int m = idxFollowBranch(fw,k+n,0x01000001);
+            if (idx2adr(fw,m) == idx2adr(fw,k))
+            {
+                int bic = 0;
+                int o;
+                for (o=1; o<9; o++) {
+                    if ((fwval(fw,k+n-o)&0xfff00fff) == 0xe3c00201) { // bic rx, rx, 0x10000000
+                        bic++;
+                        break;
+                    }
+                }
+                if (!bic) {
+                    continue;
+                }
+                int j = find_inst_rev(fw,isSTMFD_LR,k+n,30);
+                if (j != -1) {
+                    fwAddMatch(fw,idx2adr(fw,j),32,0,122);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int find_exmem_alloc(firmware *fw)
+{
+
+    int k = get_saved_sig(fw,"ExMem.AllocCacheable_FW"); // newer cam
+    k = get_saved_sig(fw,"exmem_alloc_low");
+    if (k < 0)
+        return 0;
+    k = adr2idx(fw, func_names[k].val);
+    int n;
+    for (n=70; n<1000; n++) {
+        if (isBL(fw,k+n)) {
+            int m = idxFollowBranch(fw,k+n,0x01000001);
+            if (idx2adr(fw,m) == idx2adr(fw,k))
+            {
+                int bic = 0;
+                int o;
+                for (o=1; o<9; o++) {
+                    if ((fwval(fw,k+n+o)&0xfff00fff) == 0xe3c00201) { // bic rx, rx, 0x10000000
+                        bic++;
+                        break;
+                    }
+                }
+                if (!bic) {
+                    continue;
+                }
+                int j = find_inst_rev(fw,isSTMFD_LR,k+n,16);
+                if (j != -1) {
+                    fwAddMatch(fw,idx2adr(fw,j),32,0,122);
+                    return 1;
+                }
+            }
         }
     }
     return 0;
@@ -1815,6 +1928,8 @@ string_sig string_sigs[] =
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
     { 22, "exmem_free", (char*)find_exmem_free, 0},
     { 22, "exmem_alloc", (char*)find_exmem_alloc, 0},
+    { 22, "exmem_ufree", (char*)find_exmem_ufree, 0},
+    { 22, "exmem_ualloc", (char*)find_exmem_ualloc, 0},
     { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
     { 22, "Remove", (char*)find_Remove, 0},
 
@@ -1850,6 +1965,8 @@ string_sig string_sigs[] =
     { 103, "GetDrive_FreeClusters", "AvailClusters.c", 0,                                       0x04 },
 
     { 104, "SetLogicalEventActive", "EventReciever.c", 16,                                      0x0000 },
+    { 104, "exmem_alloc_low", "m_MemBlockArray[Type].Size == 0L", 33,                           0x0000 },
+    { 104, "exmem_free_low", "m_MemBlockArray[Type].Size != 0L", 25,                            0x0000 },
 
     { 0, 0, 0, 0 }
 };

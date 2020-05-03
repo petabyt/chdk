@@ -48,7 +48,6 @@ apex2us 0xFFC987EC
 close 0xFFEBBE5C
 closedir 0xFFEB7DFC
 errnoOfTaskGet 0xFFEB85C8
-exmem_alloc 0xFFC02830
 free 0xFFEBEEA8
 iosDevAdd 0xFFEBD07C
 iosDevDelete 0xFFEBD054
