@@ -362,6 +362,8 @@
 0xfc062729,exmem_alloc
 0xfc062779,exmem_free
 0xfc0578c7,ExMem_FW
+0xfc0624fb,exmem_ualloc
+0xfc0626df,exmem_ufree
 0xfc163ca3,ExpCtrlTool.SetExpMode_FW
 0xfc29b0ef,ExportToEventProcedure_FW
 0xfc1a83bb,FA.Create_FW

@@ -249,8 +249,10 @@
 0xffc0d58c,ExMem.FreeCacheable_FW
 0xffc0d560,ExMem.FreeUncacheable_FW
 0xffc0e4a0,exmem_alloc
+0xffc0e008,exmem_alloc_low
 0xffc0d918,exmem_assert
 0xffc0e520,exmem_free
+0xffc0e19c,exmem_free_low
 0xffc0e2d0,exmem_ualloc
 0xffc0e3a0,exmem_ufree
 0xffd15de8,ExpCtrlTool.AEComp_FW

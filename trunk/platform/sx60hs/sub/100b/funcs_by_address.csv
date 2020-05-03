@@ -146,7 +146,9 @@
 0xfc070705,kbd_read_keys_r2
 0xfc0707e9,GetKbdState
 0xfc070d21,ExMem.View_FW
+0xfc071189,exmem_ualloc
 0xfc0711b7,ExMem.AllocUncacheable_FW
+0xfc071243,exmem_ufree
 0xfc071273,ExMem.FreeUncacheable_FW
 0xfc07127f,exmem_alloc
 0xfc0712b7,ExMem.AllocCacheable_FW

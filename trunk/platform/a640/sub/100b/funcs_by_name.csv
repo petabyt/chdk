@@ -272,9 +272,13 @@
 0xffc12514,ExitTask
 0xffc12514,ExitTask_FW
 0xffd530e4,ExitTestRec_FW
-0xffc02834,exmem_alloc
+0xffc02a04,exmem_alloc
+0xffc02574,exmem_alloc_low
 0xffc01e6c,exmem_assert
-0xffc02904,exmem_free
+0xffc02a84,exmem_free
+0xffc02708,exmem_free_low
+0xffc02834,exmem_ualloc
+0xffc02904,exmem_ufree
 0xffcf8b80,ExpCtrlTool.AEComp_FW
 0xffcf8cb0,ExpCtrlTool.AEFix_FW
 0xffcf8cc4,ExpCtrlTool.AEFixProg_FW

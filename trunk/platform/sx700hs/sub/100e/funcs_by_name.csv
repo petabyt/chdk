@@ -374,6 +374,8 @@
 0xfc06ebed,exmem_alloc
 0xfc06ec2d,exmem_free
 0xfc067b2b,ExMem_FW
+0xfc06e9db,exmem_ualloc
+0xfc06ebb1,exmem_ufree
 0xfc152d7b,ExpCtrlTool.SetExpMode_FW
 0xfc152dad,ExpCtrlTool.SoundDevTest_FW
 0xfc2de0c3,ExportToEventProcedure_FW

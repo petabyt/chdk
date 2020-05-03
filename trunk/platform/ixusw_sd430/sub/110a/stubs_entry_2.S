@@ -41,7 +41,6 @@ NHSTUB(SetParameterData,            0xff96a23c)  //similar to ixus65
 //NHSTUB(SetLogicalEventActive                  ,0xff963624) //  1 88%
 //NHSTUB(UnsetZoomForMovie                      ,0xff9a7ce0) //  1 89%
 //NHSTUB(add_ptp_handler                        ,0xffa62090) //  1 96%
-//NHSTUB(exmem_alloc                            ,0xff814f44) //  2 93%
 //NHSTUB(malloc                                 ,0xffc1d8ec) //  1 53%
 //NHSTUB(taskIdListGet                          ,0xffc2c248) //  1 82%
 //NHSTUB(localtime                              ,0xffc15040) //  1 93%
@@ -52,7 +51,6 @@ NHSTUB(SetScriptMode,               0xff96368c)  //close to **"SetScriptMode" st
 NHSTUB(UniqueLedOff,                0xff830b98)  //close to "gfff" found by comparison to ixus55 100b
 NHSTUB(UniqueLedOn,                 0xff830b24)  //close to "gfff" found by comparison to ixus55 100b
 NHSTUB(GiveSemaphore,               0xff82395c)  //from movie_record_task
-NHSTUB(exmem_free                  ,0xFF815014)
 
 
 // These don't exist

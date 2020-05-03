@@ -1,7 +1,8 @@
 0xff811d44,wrapped_malloc
 0xff813150,exmem_assert
-0xff813a1c,exmem_alloc
-0xff813a68,exmem_free
+0xff813884,exmem_alloc_low
+0xff813a1c,exmem_ualloc
+0xff813a68,exmem_ufree
 0xff813cb0,task_ClockSaverTask
 0xff814bc4,LocalTime
 0xff814c10,DebugAssert

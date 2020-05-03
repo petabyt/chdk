@@ -272,7 +272,8 @@ NHSTUB(add_ptp_handler                        ,0xff169274) //121
 NHSTUB(apex2us                                ,0xff32d6b4) //121
 NHSTUB(err_init_task                          ,0xff0247d8) //111
 NHSTUB(exmem_alloc                            ,0xff034954) //101
-NHSTUB(exmem_free                             ,0xff0349bc) //101
+NHSTUB(exmem_ualloc                           ,0xff0347b8) //101
+NHSTUB(exmem_ufree                            ,0xff034900) //101
 NHSTUB(free                                   ,0xff025084) //112
 NHSTUB(get_nd_value                           ,0xff3c6ba8) //123
 NHSTUB(get_current_nd_value                   ,0xff3c6b48) //122
