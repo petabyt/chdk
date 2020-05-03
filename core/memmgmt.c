@@ -178,7 +178,8 @@ void exmem_malloc_init()
 #define OPT_EXMEM_TESTING 0
 #endif
 	// pool zero is EXMEM_RAMDISK on d10
-	void *mem = exmem_alloc(0,EXMEM_HEAP_SIZE,0,0);
+	extern void *exmem_alloc_cached(unsigned int pool_id,unsigned int size,int unk,int unk2);
+	void *mem = exmem_alloc_cached(0,EXMEM_HEAP_SIZE,0,0);
 	if (mem)
     {
         chdk_heap_create(&exmem_heap, mem, EXMEM_BUFFER_SIZE, OPT_CHDK_IN_EXMEM, OPT_EXMEM_TESTING, "exmem_suba");

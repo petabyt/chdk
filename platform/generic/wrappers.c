@@ -999,14 +999,20 @@ double _sqrt(double x) {
 
 //----------------------------------------------------------------------------
 
-void *exmem_alloc(unsigned int pool_id,unsigned int size,int unk,int unk2)
+#ifdef OPT_EXMEM_MALLOC
+void *exmem_alloc_cached(unsigned int pool_id,unsigned int size,int unk,int unk2)
 {
     return _exmem_alloc(pool_id,size,unk,unk2);
 }
+#endif
 
-void exmem_free(unsigned int pool_id)
+void *exmem_alloc_uncached(unsigned int type, unsigned int size, exmem_alloc_info *allocinf)
 {
-    _exmem_free(pool_id);
+    return _exmem_ualloc(type, size, allocinf);
+}
+void exmem_free_uncached(unsigned int type)
+{
+    _exmem_ufree(type);
 }
 
 void *canon_malloc(long size)

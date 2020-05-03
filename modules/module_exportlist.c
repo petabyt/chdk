@@ -46,8 +46,8 @@
             free
             umalloc
             ufree
-            exmem_alloc
-            exmem_free
+            exmem_alloc_uncached
+            exmem_free_uncached
             dcache_clean_all
             load_file
             process_file

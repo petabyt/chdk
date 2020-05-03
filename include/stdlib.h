@@ -254,11 +254,13 @@ extern unsigned int exmem_type_count;
 char *get_exmem_type_name(unsigned int type);
 int get_exmem_type_status(unsigned int type, exmem_alloc_info *allocinf);
 
-// allocates cached exmem region for pool_id (pool_id is the original CHDK term for exmem type)
-// only a single allocation by pool_id can exist at any time, assert is thrown otherwise
+// allocates UNCACHED exmem region for exmem type
+// only a single allocation by type can exist at any time, assert is thrown otherwise
 // allocation must be freed as soon as possible, otherwise normal camera functions might become affected
-extern void *exmem_alloc(unsigned int pool_id,unsigned int size,int unk,int unk2);
-// frees cached exmem region
-extern void exmem_free(unsigned int pool_id);
+// allocation info is returned in allocinf, if not NULL
+extern void *exmem_alloc_uncached(unsigned int type, unsigned int size, exmem_alloc_info *allocinf);
+// frees UNCACHED exmem region
+// in case allocation was accessed through CPU cache, caller must flush data cache before freeing
+extern void exmem_free_uncached(unsigned int type);
 
 #endif
