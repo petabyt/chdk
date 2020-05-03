@@ -16,6 +16,5 @@ SetPropertyCase 0xFFC14C9C
 TurnOffBackLight 0xffdbd750
 TurnOnBackLight 0xffdbd720
 WriteSDCard 0xFFC702A4
-exmem_alloc 0xFFC02834
 free 0xFFF00ACC
 malloc 0xFFF00AC0

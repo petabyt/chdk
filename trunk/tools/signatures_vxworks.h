@@ -1430,36 +1430,6 @@ static FuncSig func_sig_errnoOfTaskGet_1[] = {
 	/* 15/32 */
 };
 
-static FuncSig func_sig_exmem_alloc_1[] = {
-	{   0, 0xe1a03000, 0xfdffffff }, // mov:6:0xE3A03000
-	{   1, 0xe52de004, 0xfdffffff }, // str:4:0xE52DE004
-	{   2, 0xe49de004, 0xfdffffff }, // ldr:4:0xE49DE004
-	{   3, 0xea000000, 0xff000000 }, // b, bl:3:0xEAFFFF95
-	{   4, 0xe1a03002, 0xfdffffff }, // mov:6:0xE1A03002
-	{   5, 0xe1a02001, 0xfdffffff }, // mov:6:0xE1A02001
-	{   6, 0xe1a01000, 0xfdffffff }, // mov:6:0xE3A01000
-	{   7, 0xe52de004, 0xfdffffff }, // str:4:0xE52DE004
-	{   8, 0xe49de004, 0xfdffffff }, // ldr:4:0xE49DE004
-	{   9, 0xea000000, 0xff000000 }, // b, bl:3:0xEAFFFF8F
-	{  12, 0x70416b63, 0xfdffffff }, // sub:6:0x72416B63
-	{  13, 0x5b000000, 0xff000000 }, // b, bl:3:0x5B796172
-	{  18, 0x00000000, 0xfdffffff }, // and:6:0x00000000
-	{  20, 0xe59f3128, 0xfdffffff }, // ldr:4:0xE59F3128
-	{  21, 0xe04dd008, 0xfdffffff }, // sub:6:0xE24DD008
-	{  22, 0xe1a08000, 0xfdffffff }, // mov:6:0xE1A08000
-	{  23, 0xe1a01000, 0xfdffffff }, // mov:6:0xE3A01000
-	{  24, 0xe5930000, 0xfdffffff }, // ldr:4:0xE5930000
-	{  25, 0xeb000000, 0xff000000 }, // b, bl:3:0xEB0038F1
-	{  26, 0xe59f5114, 0xfdffffff }, // ldr:4:0xE59F5114
-	{  27, 0xe1a03ffd, 0xfdffffff }, // mov:6:0xE3A03FFD
-	{  28, 0xe1a04000, 0xfdffffff }, // mov:6:0xE3A04000
-	{  29, 0xe158000c, 0xfdffffff }, // cmp:7:0xE358000C
-	{  30, 0x81a00000, 0xfdffffff }, // mov:6:0x83A00000
-	{  31, 0x91a00001, 0xfdffffff }, // mov:6:0x93A00001
-	{ -1, -1, -1 },
-	/* 25/32 */
-};
-
 static FuncSig func_sig_free_1[] = {
 	{   0, 0xe1a01000, 0xfdffffff }, // mov:6:0xE1A01000
 	{   1, 0xe59f0064, 0xfdffffff }, // ldr:4:0xE59F0064
@@ -3285,40 +3255,6 @@ static FuncSig func_sig_WriteSDCard_2[] = {
 	/* 31/32 */
 };
 
-static FuncSig func_sig_exmem_alloc_2[] = {
-	{   1, 0xe59f6048, 0xfdffffff }, // ldr:4:0xE59F6048
-	{   2, 0xe1a07000, 0xfdffffff }, // mov:6:0xE1A07000
-	{   3, 0xe1a04001, 0xfdffffff }, // mov:6:0xE1A04001
-	{   4, 0xe1a05002, 0xfdffffff }, // mov:6:0xE1A05002
-	{   5, 0xe1a01000, 0xfdffffff }, // mov:6:0xE3A01000
-	{   6, 0xe5960000, 0xfdffffff }, // ldr:4:0xE5960000
-	{   7, 0xeb000000, 0xff000000 }, // b, bl:3:0xEB003B1D
-	{   8, 0xe1a01004, 0xfdffffff }, // mov:6:0xE1A01004
-	{   9, 0xe1a02005, 0xfdffffff }, // mov:6:0xE1A02005
-	{  10, 0xe1a03000, 0xfdffffff }, // mov:6:0xE3A03000
-	{  11, 0xe1a00007, 0xfdffffff }, // mov:6:0xE1A00007
-	{  12, 0xeb000000, 0xff000000 }, // b, bl:3:0xEBFFFF42
-	{  13, 0xe59f201c, 0xfdffffff }, // ldr:4:0xE59F201C
-	{  14, 0xe1a03000, 0xfdffffff }, // mov:6:0xE3A03000
-	{  15, 0xe1a04000, 0xfdffffff }, // mov:6:0xE1A04000
-	{  16, 0xe5823107, 0xfdffffff }, // str:4:0xE7823107
-	{  17, 0xe5960000, 0xfdffffff }, // ldr:4:0xE5960000
-	{  18, 0xeb000000, 0xff000000 }, // b, bl:3:0xEB003B8C
-	{  19, 0xe1a00004, 0xfdffffff }, // mov:6:0xE1A00004
-	{  21, 0x00001ce4, 0xfdffffff }, // and:6:0x00001CE4
-	{  22, 0x00001cac, 0xfdffffff }, // and:6:0x00001CAC
-	{  24, 0xe59f6048, 0xfdffffff }, // ldr:4:0xE59F6048
-	{  25, 0xe1a07000, 0xfdffffff }, // mov:6:0xE1A07000
-	{  26, 0xe1a05002, 0xfdffffff }, // mov:6:0xE1A05002
-	{  27, 0xe1a04001, 0xfdffffff }, // mov:6:0xE1A04001
-	{  28, 0xe5960000, 0xfdffffff }, // ldr:4:0xE5960000
-	{  29, 0xe1a01000, 0xfdffffff }, // mov:6:0xE3A01000
-	{  30, 0xeb000000, 0xff000000 }, // b, bl:3:0xEB003B06
-	{  31, 0xe1a02004, 0xfdffffff }, // mov:6:0xE1A02004
-	{ -1, -1, -1 },
-	/* 29/32 */
-};
-
 static FuncSig func_sig_free_2[] = {
 	{   0, 0xe1a01000, 0xfdffffff }, // mov:6:0xE1A01000
 	{   1, 0xe59f0064, 0xfdffffff }, // ldr:4:0xE59F0064
@@ -4060,8 +3996,6 @@ FuncsList func_list[] = {
 	{ "close", func_sig_close_1, 1 },
 	{ "closedir", func_sig_closedir_1, 1 },
 	{ "errnoOfTaskGet", func_sig_errnoOfTaskGet_1, 1 },
-	{ "exmem_alloc", func_sig_exmem_alloc_1, 1 },
-	{ "exmem_alloc", func_sig_exmem_alloc_2, 2 },
 	{ "free", func_sig_free_1, 1 },
 	{ "free", func_sig_free_2, 2 },
 	{ "free", func_sig_free_3, 3 },
