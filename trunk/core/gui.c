@@ -2389,6 +2389,10 @@ static void gui_handle_splash(int force_redraw)
             if (force_redraw || (gui_splash == SPLASH_TIME))
                 gui_draw_splash();
 
+        // on half shoot, cancel splash screen
+        if(kbd_is_key_pressed(KEY_SHOOT_HALF)) {
+            gui_splash = 1;
+        }
         if (--gui_splash == 0)
         {
             if (camera_info.state.gui_mode_none || camera_info.state.gui_mode_alt)
