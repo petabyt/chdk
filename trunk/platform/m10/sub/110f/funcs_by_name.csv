@@ -948,6 +948,7 @@
 0xfc554ab3,GetUserSetShutterSPeed_FW
 0xfc12711b,GetVBatVoltage_FW
 0xfc55645d,GetVgaGainValue_FW
+0xfc5bb7dd,GetVideoOutType
 0xfc5bb7dd,GetVideoOutType_FW
 0xfc12a4d3,GetVRAMHPixelsSize
 0xfc12a4d3,GetVRAMHPixelsSize_FW
@@ -2194,6 +2195,7 @@
 0xfc1cac87,SetTouchPanelValidSize_FW
 0xfc0c1de1,SetTurnOffDisplay_FW
 0xfc556459,SetVgaGainValue_FW
+0xfc5bb871,SetVideoOutType
 0xfc5bb89d,SetVideoOutType_FW
 0xfc5bdb19,SetWBTemperature_FW
 0xfc5fe61d,SetWBYlStandardWidth_FW

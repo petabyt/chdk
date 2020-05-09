@@ -518,6 +518,7 @@
 0xffa99fdc,GetUnpackCrwIntegralValue_FW
 0xffa92188,GetUserSetShutterSPeed_FW
 0xff820644,GetVBatVoltage_FW
+0xffa976b0,GetVideoOutType
 0xffa976b0,GetVideoOutType_FW
 0xff8b1568,GetVRAMHPixelsSize
 0xff8b1568,GetVRAMHPixelsSize_FW

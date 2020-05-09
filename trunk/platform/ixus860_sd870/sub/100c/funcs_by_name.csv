@@ -517,6 +517,7 @@
 0xff9ecd3c,GetTransparentMemorySize_FW
 0xff9eacf0,GetUnpackCrwIntegralValue_FW
 0xff9e41f0,GetUserSetShutterSPeed_FW
+0xff9e8910,GetVideoOutType
 0xff9e8910,GetVideoOutType_FW
 0xff8c0e50,GetVRAMHPixelsSize
 0xff8c0e50,GetVRAMHPixelsSize_FW

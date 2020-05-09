@@ -506,6 +506,7 @@
 0xffacf508,GetUsableMinAv_FW
 0xffacf114,GetUserSetShutterSPeed_FW
 0xff820574,GetVBatVoltage_FW
+0xffad46d4,GetVideoOutType
 0xffad46d4,GetVideoOutType_FW
 0xff83ce54,GetVRAMHPixelsSize
 0xff83ce54,GetVRAMHPixelsSize_FW

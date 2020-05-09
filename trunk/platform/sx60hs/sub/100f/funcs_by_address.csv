@@ -2017,10 +2017,12 @@
 0xfc3fc161,AdjAEWithAperturePriority_FW
 0xfc3fc193,SleepAE_FW
 0xfc3fc311,AfAEWithCompensation_FW
+0xfc3fc3b1,GetVideoOutType
 0xfc3fc3b1,GetVideoOutType_FW
 0xfc3fc401,SwitchOffDisplay_FW
 0xfc3fc439,SwitchOnDisplay_FW
 0xfc3fc443,j_GetVideoOutType_FW
+0xfc3fc445,SetVideoOutType
 0xfc3fc471,SetVideoOutType_FW
 0xfc3fc47d,IsEVFDrive_FW
 0xfc3fc495,j_IsEVFDrive_FW

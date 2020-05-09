@@ -2212,10 +2212,12 @@
 0xfc6648b1,AdjAEWithAperturePriority_FW
 0xfc6648e3,SleepAE_FW
 0xfc664a61,AfAEWithCompensation_FW
+0xfc664b01,GetVideoOutType
 0xfc664b01,GetVideoOutType_FW
 0xfc664b43,SwitchOffDisplay_FW
 0xfc664b69,SwitchOnDisplay_FW
 0xfc664b73,j_GetVideoOutType_FW
+0xfc664b75,SetVideoOutType
 0xfc664ba1,SetVideoOutType_FW
 0xfc664bad,IsEVFDrive_FW
 0xfc664bc5,j_IsEVFDrive_FW

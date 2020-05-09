@@ -1928,10 +1928,12 @@
 0xfc3e0843,AdjAEWithAperturePriority_FW
 0xfc3e0875,SleepAE_FW
 0xfc3e09f5,AfAEWithCompensation_FW
+0xfc3e0a95,GetVideoOutType
 0xfc3e0a95,GetVideoOutType_FW
 0xfc3e0ae5,SwitchOffDisplay_FW
 0xfc3e0b19,SwitchOnDisplay_FW
 0xfc3e0b23,j_GetVideoOutType_FW
+0xfc3e0b25,SetVideoOutType
 0xfc3e0b51,SetVideoOutType_FW
 0xfc3e0b5d,IsEVFDrive_FW
 0xfc3e0b75,j_IsEVFDrive_FW

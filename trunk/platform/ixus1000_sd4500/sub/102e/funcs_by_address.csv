@@ -1608,6 +1608,7 @@
 0xffb4c2b4,SleepAE_FW
 0xffb4c408,AfAEWithCompensation_FW
 0xffb4c44c,SetAdjExpWithBv_FW
+0xffb4c5c8,GetVideoOutType
 0xffb4c5c8,GetVideoOutType_FW
 0xffb4c624,SwitchOffDisplay_FW
 0xffb4c65c,SwitchOnDisplay_FW

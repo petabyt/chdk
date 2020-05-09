@@ -777,6 +777,7 @@
 0xfc469daf,GetUsableMinAv_FW
 0xfc4ef3d7,GetUserSetShutterSPeed_FW
 0xfc134e01,GetVBatVoltage_FW
+0xfc4f07c5,GetVideoOutType
 0xfc4f07c5,GetVideoOutType_FW
 0xfc13bef1,GetVRAMHPixelsSize
 0xfc13bef1,GetVRAMHPixelsSize_FW
@@ -1896,6 +1897,7 @@
 0xfc4efce1,SetToolCorrectCoefficient_FW
 0xfc489517,SetTouchPanelDispSize_FW
 0xfc489525,SetTouchPanelValidSize_FW
+0xfc4f0859,SetVideoOutType
 0xfc4f0885,SetVideoOutType_FW
 0xfc4f1f6f,SetWBTemperature_FW
 0xfc4efc9b,SetWBYlStandardWidth_FW
