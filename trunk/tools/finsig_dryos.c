@@ -534,6 +534,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_ptp_file_buf", OPTIONAL },
 
     { "SetVideoOutType", OPTIONAL },
+    { "GetVideoOutType", OPTIONAL },
 
     { 0, 0, 0 }
 };
@@ -2244,6 +2245,7 @@ string_sig string_sigs[] =
     {20, "HwOcReadICAPCounter", "GetCurrentMachineTime", 1 },
     {20, "DisableISDriveError", "DisableISDriveError_FW", 1},
     {20, "SetImageMode", "SetImageMode_FW", 0x01000002 },
+    {20, "GetVideoOutType", "GetVideoOutType_FW", 1},
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
