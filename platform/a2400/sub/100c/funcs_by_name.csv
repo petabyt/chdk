@@ -620,6 +620,7 @@
 0xff9562f0,GetUsableAvRange
 0xffad9940,GetUserSetShutterSPeed_FW
 0xff82c3cc,GetVBatVoltage_FW
+0xffadf998,GetVideoOutType
 0xffadf998,GetVideoOutType_FW
 0xff84bd7c,GetVRAMHPixelsSize
 0xff84bd7c,GetVRAMHPixelsSize_FW

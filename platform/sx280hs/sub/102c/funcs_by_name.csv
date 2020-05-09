@@ -676,6 +676,7 @@
 0xfc197e9d,GetUsableMinAv_FW
 0xfc3dd8cf,GetUserSetShutterSPeed_FW
 0xfc12ec71,GetVBatVoltage_FW
+0xfc3e0a95,GetVideoOutType
 0xfc3e0a95,GetVideoOutType_FW
 0xfc134981,GetVRAMHPixelsSize
 0xfc134981,GetVRAMHPixelsSize_FW
@@ -1696,6 +1697,7 @@
 0xfc0c9f71,SetTestRecMasterCxCy_FW
 0xfc0c9fff,SetTestRecSkimmingYUV_FW
 0xfc435a61,SetToolCorrectCoefficient_FW
+0xfc3e0b25,SetVideoOutType
 0xfc3e0b51,SetVideoOutType_FW
 0xfc3e21a3,SetWBTemperature_FW
 0xfc435a1b,SetWBYlStandardWidth_FW

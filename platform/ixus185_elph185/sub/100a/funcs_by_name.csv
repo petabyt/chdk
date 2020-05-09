@@ -612,6 +612,7 @@
 0xff98626c,GetUsableMinAv_FW
 0xffba2610,GetUserSetShutterSPeed_FW
 0xff82bc3c,GetVBatVoltage_FW
+0xffba43b8,GetVideoOutType
 0xffba43b8,GetVideoOutType_FW
 0xff8519cc,GetVRAMHPixelsSize
 0xff8519cc,GetVRAMHPixelsSize_FW

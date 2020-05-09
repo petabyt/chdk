@@ -327,3 +327,5 @@ NHSTUB(PT_MFOff                               ,0xfc25d153) //  0
 NHSTUB(GetAdChValue                           ,0xfc0cf693) //  0
 NHSTUB(EnableHDMIPower                        ,0xfc0ab3c3) //  0
 NHSTUB(DisableHDMIPower                       ,0xfc0ab3f9) //  0
+NHSTUB(SetVideoOutType                        ,0xfc45a2f9) //  0
+NHSTUB(GetVideoOutType                        ,0xfc45a265) //  0

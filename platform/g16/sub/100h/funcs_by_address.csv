@@ -1950,10 +1950,12 @@
 0xfc46cc03,AdjAEWithAperturePriority_FW
 0xfc46cc35,SleepAE_FW
 0xfc46cdb5,AfAEWithCompensation_FW
+0xfc46ce55,GetVideoOutType
 0xfc46ce55,GetVideoOutType_FW
 0xfc46cea5,SwitchOffDisplay_FW
 0xfc46ced9,SwitchOnDisplay_FW
 0xfc46cee3,j_GetVideoOutType_FW
+0xfc46cee5,SetVideoOutType
 0xfc46cf11,SetVideoOutType_FW
 0xfc46cf1d,IsEVFDrive_FW
 0xfc46cf35,j_IsEVFDrive_FW

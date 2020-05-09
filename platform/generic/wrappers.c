@@ -1992,3 +1992,15 @@ void GiveSemaphore(int sem)
 }
 
 //---------------------------------------------------------------
+// Video out
+#ifdef CAM_UNLOCK_ANALOG_AV_IN_REC
+void SetVideoOutType(int x) {
+    extern void _SetVideoOutType(int);
+    _SetVideoOutType(x);
+}
+int GetVideoOutType(void) {
+    extern int _GetVideoOutType(void);
+    return _GetVideoOutType();
+}
+#endif
+//---------------------------------------------------------------

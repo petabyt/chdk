@@ -2012,10 +2012,12 @@
 0xe0583f8f,AdjAEWithAperturePriority_FW
 0xe0584059,SleepAE_FW
 0xe058413d,AfAEWithCompensation_FW
+0xe05841df,GetVideoOutType
 0xe05841df,GetVideoOutType_FW
 0xe0584221,SwitchOffDisplay_FW
 0xe0584247,SwitchOnDisplay_FW
 0xe0584251,j_GetVideoOutType_FW
+0xe0584253,SetVideoOutType
 0xe058427f,SetVideoOutType_FW
 0xe058428b,IsEVFDrive_FW
 0xe05842a3,j_IsEVFDrive_FW

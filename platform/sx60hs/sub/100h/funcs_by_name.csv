@@ -855,6 +855,7 @@
 0xfc2e1339,GetVcmTargetPosition_FW
 0xfc2e1739,GetVcmTravelTime_FW
 0xfc2e159b,GetVcmVdPosition_FW
+0xfc3fc3d9,GetVideoOutType
 0xfc3fc3d9,GetVideoOutType_FW
 0xfc13e7ad,GetVRAMHPixelsSize
 0xfc13e7ad,GetVRAMHPixelsSize_FW
@@ -2062,6 +2063,7 @@
 0xfc403321,SetVcmTargetPosition_FW
 0xfc403333,SetVcmTargetSpeed_FW
 0xfc403595,SetVcmTravelTimeMeasurePosition_FW
+0xfc3fc46d,SetVideoOutType
 0xfc3fc499,SetVideoOutType_FW
 0xfc4b463f,SetWBTemperature_FW
 0xfc4b405f,SetWBYlStandardWidth_FW

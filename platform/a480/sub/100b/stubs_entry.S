@@ -311,3 +311,4 @@ NHSTUB(GetAdChValue                           ,0xffc29f00) //120
 NHSTUB(get_ptp_buf_size                       ,0xffc8d44c) //122
 NHSTUB(get_ptp_file_buf                       ,0xffd8bc84) //121
 NHSTUB(SetVideoOutType                        ,0xffe0704c) //109
+NHSTUB(GetVideoOutType                        ,0xffe06fb0) //120

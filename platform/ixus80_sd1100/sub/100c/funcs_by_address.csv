@@ -1313,6 +1313,7 @@
 0xffa7f3d8,AdjAEWithAperturePriority_FW
 0xffa7f430,SleepAE_FW
 0xffa7f584,AfAEWithCompensation_FW
+0xffa7f678,GetVideoOutType
 0xffa7f678,GetVideoOutType_FW
 0xffa7f6a0,SwitchOffDisplay_FW
 0xffa7f6d8,SwitchOnDisplay_FW

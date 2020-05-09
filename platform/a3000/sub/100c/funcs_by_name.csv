@@ -539,6 +539,7 @@
 0xffe6531c,GetUnpackCrwIntegralValueForShading_FW
 0xffe5ccd0,GetUserSetShutterSPeed_FW
 0xffc22cf0,GetVBatVoltage_FW
+0xffe620b8,GetVideoOutType
 0xffe620b8,GetVideoOutType_FW
 0xffcba764,GetVRAMHPixelsSize
 0xffcba764,GetVRAMHPixelsSize_FW

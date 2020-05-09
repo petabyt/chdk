@@ -1314,6 +1314,7 @@
 0xffa81590,AdjAEWithAperturePriority_FW
 0xffa815e8,SleepAE_FW
 0xffa8173c,AfAEWithCompensation_FW
+0xffa81830,GetVideoOutType
 0xffa81830,GetVideoOutType_FW
 0xffa81858,SwitchOffDisplay_FW
 0xffa81890,SwitchOnDisplay_FW

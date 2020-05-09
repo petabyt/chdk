@@ -780,6 +780,7 @@
 0xff1e7ba0,GetVcmTargetPosition_FW
 0xff1e83fc,GetVcmTravelTime_FW
 0xff1e7ed8,GetVcmVdPosition_FW
+0xff430ca4,GetVideoOutType
 0xff430ca4,GetVideoOutType_FW
 0xff04191c,GetVRAMHPixelsSize
 0xff04191c,GetVRAMHPixelsSize_FW
