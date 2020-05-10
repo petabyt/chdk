@@ -1258,6 +1258,9 @@ static CMenuItem video_submenu_items[] = {
 #ifdef CAM_CLEAN_OVERLAY
     MENU_ENUM2  (0x7f,LANG_MENU_CLEAN_OVERLAY,              &conf.clean_overlay,    gui_clean_overlay_modes ),
 #endif
+#ifdef CAM_UNLOCK_ANALOG_AV_IN_REC
+    MENU_ITEM   (0x83,LANG_MENU_UNLOCK_AV_OUT_IN_REC,       MENUITEM_BOOL,          &conf.unlock_av_out_in_rec,         0 ),
+#endif
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,            0,                                  0 ),
     {0}
 };

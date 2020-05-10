@@ -29,6 +29,8 @@ Runs with battery door open, no override required.
 
 Analog AV detect and battery temperature A/D are supported as alternate remote inputs.
 
+Enabling analog video out in rec mode is supported. AF Point Zoom must be disabled.
+
 TESTED
 ******
 llibtst.lua
@@ -53,7 +55,7 @@ ND override
 
 KNOWN BUGS
 **********
-
+* Crashes on half shoot if AF Point Zoom is enabled with AV out in rec.
 
 NOT IMPLEMENTED
 ***************

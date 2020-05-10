@@ -153,6 +153,24 @@ int shooting_get_imager_active() {
   return imager_active;
 }
 
+/*
+get canon video out type setting.
+NOTE this reflects the menu NTSC/PAL menu setting, not whether video out is active
+Returns 1 = NTSC, 2 = PAL, like with GetVideoOutType
+1 if prop unknown
+*/
+int shooting_get_analog_video_standard(void)
+{
+#ifdef PROPCASE_LANGUAGE
+    int v=shooting_get_prop(PROPCASE_LANGUAGE);
+    // lowest bit of language propcase
+    v = (v&1) + 1;
+    return v;
+#else // if unknown, just pretend it's NTSC
+    return 1;
+#endif
+}
+
 // translate digital zoom propcase values to match pre-propset 7 values
 // mode: 0 = off or standard digital zoom, 2 or 3 digital tele
 // PROPCASE_DIGITAL_ZOOM_MODE not defined for propset 1, ports configured to not need these functions

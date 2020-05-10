@@ -237,6 +237,11 @@ void core_spytask()
         extern void handle_clean_overlay();
         handle_clean_overlay();
 #endif
+
+#ifdef  CAM_UNLOCK_ANALOG_AV_IN_REC
+        extern void handle_analog_av_in_rec();
+        handle_analog_av_in_rec();
+#endif
         // update HDMI power override based on mode and remote settings
 #ifdef CAM_REMOTE_HDMI_POWER_OVERRIDE
         extern void update_hdmi_power_override(void);

@@ -127,5 +127,6 @@
 
     //#define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
+    #define CAM_UNLOCK_ANALOG_AV_IN_REC     1 // define to enable analog video out in rec mode for cameras without native support
    
 //----------------------------------------------------------

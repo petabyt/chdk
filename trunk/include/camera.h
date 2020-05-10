@@ -289,6 +289,8 @@
 
     #undef CAM_PTP_FILE_BUFFER_ID               // define to override default ID for file transfer buffer
 
+    #undef CAM_UNLOCK_ANALOG_AV_IN_REC          // define to enable analog video out in rec mode for cameras without native support
+                                                // ANALOG_AV_IDX and ANALOG_AV_FLAG must be identified. Some cameras crash if AF point zoom enabled
 
 // Base 'market' ISO value. Most (all?) DryOS R49 and later use 200, use tests/isobase.lua to check
 #if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL >= 49 // CAM_DRYOS_REL defined on command line, not from platform_camera.h

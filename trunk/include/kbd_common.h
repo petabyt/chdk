@@ -42,4 +42,17 @@ void kbd_fetch_data(long *data);
 void jogdial_control(int n);
 extern int jogdial_stopped;
 
+// sanity checks. These can't be in camera.h because they depend on platform_kbd.h
+#if defined(CAM_UNLOCK_ANALOG_AV_IN_REC) && !defined(ANALOG_AV_FLAG)
+    #error "CAM_UNLOCK_ANALOG_AV_IN_REC requires ANALOG_AV_FLAG"
+#endif
+
+#if defined(CAM_REMOTE_ANALOG_AV) && !defined(ANALOG_AV_FLAG)
+    #error "CAM_REMOTE_ANALOG_AV requires ANALOG_AV_FLAG"
+#endif
+
+#if defined(CAM_REMOTE_HDMI_HPD) && !defined(HDMI_HPD_FLAG)
+    #error "CAM_REMOTE_HDMI_HPD requires HDMI_HPD_FLAG"
+#endif
+
 #endif
