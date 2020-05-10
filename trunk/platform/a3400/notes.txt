@@ -8,6 +8,8 @@ Long Press of Playback button will execute original Canon functionality.
 
 The Playback [>], Help [?] or Video [o] button can be configured as <ALT> mode button.
 
+Analog video output can be enabled in shooting mode:
+Video parameters -> Enable video out in rec [.]
 
 KNOWN BUGS
 **********
