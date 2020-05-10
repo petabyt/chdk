@@ -9,4 +9,8 @@
 #define SD_READONLY_IDX     2
 #define USB_MASK            0x00040000 // Found @0xffb10080, levent 0x202
 #define USB_IDX             2
+#define BATTCOVER_FLAG      0x00080000 // Found @0xffb2fddc, levent 0x205
+#define BATTCOVER_IDX       2
+#define ANALOG_AV_FLAG      0x00000200 // Found @0xffb2fd4c, levent 0x200 (non-inverted logic)
+#define ANALOG_AV_IDX       0
 #endif

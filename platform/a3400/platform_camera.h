@@ -65,6 +65,8 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE       1       // camera doesn't actually have digest mode, this is needed by is_video_recording
     #define CAM_IS_VID_REC_WORKS            1
 
+    #define CAM_UNLOCK_ANALOG_AV_IN_REC     1       // define to enable analog video out in rec mode for cameras without native support
+
     #define CAM_DATE_FOLDER_NAMING          0x400
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
