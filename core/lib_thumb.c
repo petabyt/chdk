@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "conf.h"
 #include "gui_draw.h"
+#include "keyboard.h"
 
 #if defined(CAM_DRYOS)
 #include "chdk-dir.c"
@@ -337,5 +338,25 @@ void handle_clean_overlay() {
 }
 #endif // CAM_CLEAN_OVERLAY
 
-
+#ifdef CAM_UNLOCK_ANALOG_AV_IN_REC
+void handle_analog_av_in_rec(void) {
+    extern void SetVideoOutType(int);
+    extern int GetVideoOutType(void);
+    if (!camera_info.state.mode_rec) {
+        return;
+    }
+    int vot = GetVideoOutType();
+    if(conf.unlock_av_out_in_rec) {
+        if(get_analog_av_physw_mod() && vot == 0) {
+            SetVideoOutType(shooting_get_analog_video_standard());
+        } else if(!get_analog_av_physw_mod() && vot != 0) {
+            SetVideoOutType(0);
+        }
+    } else {
+        if(vot != 0) {
+            SetVideoOutType(0);
+        }
+    }
+}
+#endif  // CAM_UNLOCK_ANALOG_AV_IN_REC
 //----------------------------------------------------------------------------

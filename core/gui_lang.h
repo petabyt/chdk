@@ -796,7 +796,9 @@
 
 #define LANG_MENU_CLEAN_OVERLAY                 670     //CONDITIONAL: CAM_CLEAN_OVERLAY
 
-#define GUI_LANG_ITEMS                          670
+#define LANG_MENU_UNLOCK_AV_OUT_IN_REC          671     //CONDITIONAL: CAM_UNLOCK_ANALOG_AV_IN_REC
+
+#define GUI_LANG_ITEMS                          671
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

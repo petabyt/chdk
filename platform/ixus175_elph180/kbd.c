@@ -36,12 +36,14 @@ int get_usb_bit()
     return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK);
 }
 
+#ifdef ANALOG_AV_FLAG
 int get_analog_av_bit() {
     long av_physw[3];
     av_physw[ANALOG_AV_IDX] = 0;
     _GetKbdState(av_physw);
     return( ((av_physw[ANALOG_AV_IDX] & ANALOG_AV_FLAG)==ANALOG_AV_FLAG)?0:1) ;
 }
+#endif
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f() {
     // ixus150 100c 0xff82bdf8
