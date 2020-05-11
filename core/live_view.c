@@ -1,6 +1,7 @@
 #include "camera_info.h"
 #include "stdlib.h"
 #include "conf.h"
+#include "modes.h"
 #include "viewport.h"
 #include "ptp_chdk.h"
 #include "live_view.h"
@@ -42,6 +43,10 @@ int live_view_get_data(ptp_data *data, int flags)
 #else
     lv.lv.bmo_desc_start = 0;
 #endif
+
+    // update camera_screen values to increase chance they will be consistent 
+    // with values obtained directly from fw functions
+    mode_get();
 
     // Viewport
     lv.vp.fb_type = vid_get_viewport_type();
