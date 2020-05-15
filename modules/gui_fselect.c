@@ -1460,7 +1460,8 @@ static void exit_fselect(char* file)
 
     gui_set_mode(gui_fselect_mode_old);
 
-    if (fselect_on_select && file)
+    // call callback if set. file will be null if canceled (menu or leaving alt)
+    if (fselect_on_select)
     {
         fselect_on_select(file);
         // if called mode will return control to filemanager - we need to redraw it
