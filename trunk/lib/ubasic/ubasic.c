@@ -726,7 +726,10 @@ static int factor(void)
     accept(TOKENIZER_GET_ND_CURRENT_EV96);
     r = shooting_get_nd_current_ev96();
     break;
-
+  case TOKENIZER_GET_DIGIC:
+    accept(TOKENIZER_GET_DIGIC);
+    r = camera_info.cam_digic;
+    break;
   //ARM Begin
       
   default:
