@@ -13,7 +13,7 @@ f=0
 
 rem output to CHDK/LOGS/LOG_0001.TXT
 print_screen 1
-print "test plat", get_platform_id, "pset",get_propset
+print "test plat", get_platform_id, "pset",get_propset, "digic",get_digic
 
 print "sleep/tick test"
 s=get_tick_count

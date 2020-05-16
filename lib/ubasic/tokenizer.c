@@ -109,6 +109,7 @@ static const struct keyword_token keywords[] = {
   {"get_capture_mode",        TOKENIZER_GET_CAPTURE_MODE},
   {"get_current_av96",        TOKENIZER_GET_CURRENT_AV96},
   {"get_current_tv96",        TOKENIZER_GET_CURRENT_TV96},
+  {"get_digic",               TOKENIZER_GET_DIGIC},
   {"get_display_mode",        TOKENIZER_GET_DISPLAY_MODE},
   {"get_day_seconds",         TOKENIZER_GET_DAY_SECONDS},
   {"get_disk_size",           TOKENIZER_GET_DISK_SIZE},

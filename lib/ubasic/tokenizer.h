@@ -238,6 +238,7 @@ typedef enum {
   TOKENIZER_GET_MIN_AV96,
   TOKENIZER_GET_ND_VALUE_EV96,
   TOKENIZER_GET_ND_CURRENT_EV96,
+  TOKENIZER_GET_DIGIC,
 } ubasic_token;
 
 void tokenizer_init(const char *program);
