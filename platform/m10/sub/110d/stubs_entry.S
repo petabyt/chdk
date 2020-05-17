@@ -37,6 +37,7 @@
 //#define CAM_DRYOS         1
 //#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
 //#define CAM_DRYOS_2_3_R47 1 // Defined for cameras with DryOS version R47 or higher
+//#define CAM_ILC 1 // Camera is interchangeable lens
 //#undef  CAM_UNCACHED_BIT
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xfc142914
 //#undef CAM_HAS_ND_FILTER // Camera does not have an ND filter
@@ -221,12 +222,8 @@ NHSTUB(LocalTime                              ,0x010e1589) //  0
 NHSTUB(LockMainPower                          ,0xfc1fb48d) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc389b6f) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc43f6b9) //  0
-NHSTUB(MoveZoomLensWithPoint                  ,0xfc4402c1) //  0
 NHSTUB(Open                                   ,0xfc389801) //  0
 NHSTUB(PB2Rec                                 ,0xfc33ff7d) //  0
-NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2a563d) //  0
-NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc18ae45) //  0
-NHSTUB(MoveOpticalZoomAt                      ,0xfc2a553d) //  0
 //NHSTUB(PT_PlaySound                         ,0xfc38c91f) //  0            == 0xfc38c91f
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3858c9) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc3858fd) //  0
