@@ -79,6 +79,7 @@ void write_output()
 #define LIST_ALWAYS    0x20
 // force an arm veneer (NHSTUB2)
 #define ARM_STUB       0x80
+#define DONT_EXPORT_ILC 0x100
 
 typedef struct {
     char        *name;
@@ -178,13 +179,13 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "MakeSDCardBootable", OPTIONAL },
     { "MoveFocusLensToDistance" },
     { "MoveIrisWithAv", OPTIONAL },
-    { "MoveZoomLensWithPoint" },
+    { "MoveZoomLensWithPoint", DONT_EXPORT_ILC},
     { "NewTaskShell", UNUSED },
     { "Open" },
     { "PB2Rec" },
-    { "PT_MoveDigitalZoomToWide", OPTIONAL },
-    { "PT_MoveOpticalZoomAt", OPTIONAL },
-    { "MoveOpticalZoomAt", OPTIONAL },
+    { "PT_MoveDigitalZoomToWide", OPTIONAL | DONT_EXPORT_ILC},
+    { "PT_MoveOpticalZoomAt", OPTIONAL | DONT_EXPORT_ILC },
+    { "MoveOpticalZoomAt", OPTIONAL | DONT_EXPORT_ILC },
     { "PT_PlaySound" },
     { "PostLogicalEventForNotPowerType" },
     { "PostLogicalEventToUI" },
@@ -218,7 +219,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "UnlockAE" },
     { "UnlockAF" },
     { "UnlockMainPower" },
-    { "UnsetZoomForMovie", OPTIONAL },
+    { "UnsetZoomForMovie", OPTIONAL | DONT_EXPORT_ILC },
 //    { "UpdateMBROnFlash" },
     { "VbattGet" },
     { "Write" },
@@ -556,7 +557,7 @@ misc_val_t misc_vals[]={
     { "ARAM_HEAP_SIZE",     MISC_VAL_NO_STUB},
     { "zicokick_values",    MISC_VAL_NO_STUB}, // used to identify Zico core Xtensa blobs (dummy for now)
     { "CAM_HAS_ND_FILTER",  MISC_VAL_NO_STUB},
-    { "CAM_IS_ILC",         MISC_VAL_NO_STUB}, // used for finsig code that wants to check for interchangeable lens, not currently used in CHDK
+    { "CAM_IS_ILC",         MISC_VAL_NO_STUB}, // used for finsig code that wants to check for interchangeable lens
     { "CAM_HAS_IRIS_DIAPHRAGM",MISC_VAL_NO_STUB},
     { "exmem_alloc_table",  },
     { "exmem_types_table",  },
@@ -5398,6 +5399,11 @@ void output_platform_vals(firmware *fw) {
     if (fw->dryos_ver >= 59)
         bprintf("//#define CAM_DRYOS_2_3_R59 1 // Defined for cameras with DryOS version R59 or higher\n");
 
+    if(get_misc_val_value("CAM_IS_ILC")) {
+        bprintf("//#define CAM_ILC 1 // Camera is interchangeable lens\n");
+    }
+
+
     print_platform_misc_val_undef("CAM_UNCACHED_BIT",0x10000000);
 
     if(get_misc_val_value("CAM_HAS_ND_FILTER")) {
@@ -6124,6 +6130,10 @@ void print_results(firmware *fw, sig_entry_t *sig)
     char line[500] = "";
 
     if (sig->flags & DONT_EXPORT) {
+        return;
+    }
+
+    if ((sig->flags & DONT_EXPORT_ILC) && get_misc_val_value("CAM_IS_ILC")) {
         return;
     }
 
