@@ -167,8 +167,6 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfce67974
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc3134bd
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3896e9
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc43e66f
-//NHSTUB(MoveZoomLensWithPoint                ,0xfc4402c1) //  0        *** != 0x00000000
-//NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc18ae45) //  0        *** != 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc38a0d9
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc12790b
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc389b19
@@ -223,9 +221,11 @@ NHSTUB(LocalTime                              ,0x010e1589) //  0
 NHSTUB(LockMainPower                          ,0xfc1fb48d) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc389b6f) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc43f6b9) //  0
+NHSTUB(MoveZoomLensWithPoint                  ,0xfc4402c1) //  0
 NHSTUB(Open                                   ,0xfc389801) //  0
 NHSTUB(PB2Rec                                 ,0xfc33ff7d) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2a563d) //  0
+NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc18ae45) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc2a553d) //  0
 //NHSTUB(PT_PlaySound                         ,0xfc38c91f) //  0            == 0xfc38c91f
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3858c9) //  0
@@ -250,7 +250,6 @@ NHSTUB(TurnOffDisplay                         ,0xfc177029) //  0
 NHSTUB(UnlockAE                               ,0xfc2a6175) //  0
 NHSTUB(UnlockAF                               ,0xfc2a5db3) //  0
 NHSTUB(UnlockMainPower                        ,0xfc1fb425) //  0
-//NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc12711b) //  0
 NHSTUB(Write                                  ,0xfc3898bd) //  0
 NHSTUB(_log                                   ,0x011033b8) //  0

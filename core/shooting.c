@@ -1276,6 +1276,11 @@ void shooting_set_image_quality(int imq)
 }
 #endif
 
+#ifdef CAM_ILC
+void shooting_set_zoom(int v) {}
+void shooting_set_zoom_rel(int v) {}
+void shooting_set_zoom_speed(int v) {}
+#else // not ILC
 void shooting_set_zoom(int v)
 {
     if (!camera_info.state.mode_play)
@@ -1308,6 +1313,7 @@ void shooting_set_zoom_speed(int v) {
         lens_set_zoom_speed(v);
     }
 }
+#endif // !CAM_ILC
 
 void set_focus_bypass(int m)
 {

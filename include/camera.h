@@ -25,6 +25,7 @@
 
     #undef  CAM_DRYOS                           // Camera is DryOS-based
     #undef  CAM_PROPSET                         // Camera's properties group (the generation)
+    #undef  CAM_ILC                             // Camera uses interchangable lenses (EOS M series)
     #define CAM_FLASHPARAMS_VERSION         3   // flash parameters structure version (every camera from 2005 on is version 3)
     #undef  CAM_DRYOS_2_3_R39                   // Define for cameras with DryOS release R39 or greater
     #undef  CAM_DRYOS_2_3_R47                   // Define for cameras with DryOS release R47 or greater -> Cameras can boot from FAT32
@@ -68,7 +69,7 @@
 
     #define CAM_HAS_USER_TV_MODES           1   // Camera has tv-priority or manual modes with ability to set tv value
     #undef  CAM_SHOW_OSD_IN_SHOOT_MENU          // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode
-    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1 // Camera can unlock optical zoom in video (if it is locked)
+    #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1 // Camera can unlock optical zoom in video (if it is locked in Canon firmare, do not define for cameras that already allow)
     #undef  CAM_FEATURE_FEATHER                 // Cameras with "feather" or touch wheel.
     #define CAM_HAS_IS                      1   // Camera has image stabilizer
     #undef  CAM_HAS_JOGDIAL                     // Camera has a "jog dial"
@@ -241,7 +242,7 @@
 
     #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
     #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-    #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
+    #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process(). Only meaningful with CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_REFOCUS_AFTER_ZOOM              // save and restore focus distance after set_zoom, Defaults off (0) for ALT_PT_MoveOpticalZoomAt, on for others
 
     #undef  CAM_HAS_HI_ISO_AUTO_MODE            // Define if camera has 'HI ISO Auto' mode (as well as Auto ISO mode), needed for adjustment in user auto ISO menu 
@@ -329,6 +330,11 @@
     #endif 
 #endif
 
+// default off for ILC
+#ifdef CAM_ILC
+#undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+#endif
+
 //----------------------------------------------------------
 // Overridden values for each camera
 //----------------------------------------------------------
@@ -411,6 +417,21 @@
     #define CAM_REFOCUS_AFTER_ZOOM 1
 #endif
 #endif // CAM_REFOCUS_AFTER_ZOOM
+
+#ifdef CAM_ILC
+#ifdef CAM_USE_ALT_SET_ZOOM_POINT
+#error "CAM_USE_ALT_SET_ZOOM_POINT not compatible with CAM_ILC"
+#endif
+#ifdef CAM_USE_ALT_PT_MoveOpticalZoomAt
+#error "CAM_USE_ALT_PT_MoveOpticalZoomAt not compatible with CAM_ILC"
+#endif
+#ifdef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+#error "CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO not compatible with CAM_ILC"
+#endif
+#ifdef CAM_USE_OPTICAL_MAX_ZOOM_STATUS
+#error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS not compatible with CAM_ILC"
+#endif
+#endif // CAM_ILC
 //==========================================================
 // END of Camera-dependent settings
 //==========================================================

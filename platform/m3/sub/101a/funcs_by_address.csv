@@ -859,6 +859,7 @@
 0xfc189ae5,System.Create_FW
 0xfc189ea9,SS.MoveOpticalZoomToTele_FW
 0xfc189eb5,SS.MoveOpticalZoomToWide_FW
+0xfc189ec1,PT_MoveOpticalZoomAt
 0xfc189ec1,SS.MoveOpticalZoomAt_FW
 0xfc189ed1,SS.MoveDigitalZoomToTele_FW
 0xfc189edb,SS.MoveDigitalZoomToWide_FW
@@ -1987,6 +1988,7 @@
 0xfc44cfcd,ResetZoomLens_FW
 0xfc44cfed,ResetZoomLensToFirst_FW
 0xfc44d01b,ResetZoomLensToTerminate_FW
+0xfc44d049,MoveZoomLensWithPoint
 0xfc44d049,MoveZoomLensWithPoint_FW
 0xfc44d07b,MoveZoomLensWithPointImmediateReturn_FW
 0xfc44d08d,WaitMoveZoomLensComplete_FW

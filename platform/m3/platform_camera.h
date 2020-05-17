@@ -19,6 +19,7 @@
 // When porting CHDK to a new camera, check the documentation in 'include/camera.h'
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
+    #define CAM_ILC                             1 // Camera uses interchangable lenses (EOS M series)
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
@@ -128,10 +129,6 @@
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
     #define CAM_HAS_MOVIE_DIGEST_MODE           1 
-
-    #define CAM_USE_ALT_SET_ZOOM_POINT          1           // Define to use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1           // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-    #define CAM_NEED_SET_ZOOM_DELAY             300
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.
 

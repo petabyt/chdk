@@ -197,8 +197,6 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcc66ce0
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc303c41
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc37a34d
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc44b80d
-//NHSTUB(MoveZoomLensWithPoint                ,0xfc44d049) //  0        *** != 0x00000000
-//NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc189ec1) //  0        *** != 0x00000000
 //NHSTUB(PutInNdFilter                        ,0x00000000) //  0        *** != 0xfc44ceb1
 //NHSTUB(PutOutNdFilter                       ,0x00000000) //  0        *** != 0xfc44cecb
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc373e69
@@ -259,9 +257,11 @@ NHSTUB(LocalTime                              ,0x010e1515) //  0
 NHSTUB(LockMainPower                          ,0xfc1fd09f) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc37a7eb) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc44c48d) //  0
+NHSTUB(MoveZoomLensWithPoint                  ,0xfc44d049) //  0
 NHSTUB(Open                                   ,0xfc37a47d) //  0
 NHSTUB(PB2Rec                                 ,0xfc32a941) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc0a9e45) //  0
+NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc189ec1) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc0a9c47) //  0
 NHSTUB(PT_PlaySound                           ,0xfc37763b) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc37e801) //  0
@@ -285,7 +285,6 @@ NHSTUB(TurnOffDisplay                         ,0xfc177cdf) //  0
 NHSTUB(UnlockAE                               ,0xfc0aa85d) //  0
 NHSTUB(UnlockAF                               ,0xfc0aa4d1) //  0
 NHSTUB(UnlockMainPower                        ,0xfc1fd037) //  0
-//NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc130beb) //  0
 NHSTUB(Write                                  ,0xfc37a539) //  0
 NHSTUB(_log                                   ,0x01102bc8) //  0

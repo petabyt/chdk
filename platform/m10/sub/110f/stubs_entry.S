@@ -165,8 +165,6 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfce679ac
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc076ab3
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc3134f1
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc38971d
-//NHSTUB(MoveZoomLensWithPoint                ,0xfc4402f5) //  0        *** != 0x00000000
-//NHSTUB(PT_MoveOpticalZoomAt                 ,0xfc18ae45) //  0        *** != 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc38a10d
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc12790b
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc389b4d
@@ -223,9 +221,11 @@ NHSTUB(LockMainPower                          ,0xfc1fb48d) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc389ba3) //  0
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0            == 0x00000000
 NHSTUB(MoveIrisWithAv                         ,0xfc43f6ed) //  0
+NHSTUB(MoveZoomLensWithPoint                  ,0xfc4402f5) //  0
 NHSTUB(Open                                   ,0xfc389835) //  0
 NHSTUB(PB2Rec                                 ,0xfc33ffb1) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2a5671) //  0
+NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc18ae45) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc2a5571) //  0
 //NHSTUB(PT_PlaySound                         ,0xfc38c953) //  0            == 0xfc38c953
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3858fd) //  0
@@ -250,7 +250,6 @@ NHSTUB(TurnOffDisplay                         ,0xfc177029) //  0
 NHSTUB(UnlockAE                               ,0xfc2a61a9) //  0
 NHSTUB(UnlockAF                               ,0xfc2a5de7) //  0
 NHSTUB(UnlockMainPower                        ,0xfc1fb425) //  0
-//NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc12711b) //  0
 NHSTUB(Write                                  ,0xfc3898f1) //  0
 NHSTUB(_log                                   ,0x011033b8) //  0
