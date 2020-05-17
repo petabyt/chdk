@@ -1696,6 +1696,7 @@
 0xfc0a9c47,MoveOpticalZoomAt
 0xfc44d10b,MoveZoomLensToMechaEdge_FW
 0xfc44d0dd,MoveZoomLensToTerminatePosition_FW
+0xfc44d049,MoveZoomLensWithPoint
 0xfc44d049,MoveZoomLensWithPoint_FW
 0xfc44d07b,MoveZoomLensWithPointImmediateReturn_FW
 0xfc44d0ab,MoveZoomLensWithPosition_FW
@@ -1809,6 +1810,7 @@
 0xfc0ab651,PT_MFOff
 0xfc0ab61d,PT_MFOn
 0xfc0a9e45,PT_MoveDigitalZoomToWide
+0xfc189ec1,PT_MoveOpticalZoomAt
 0xfc37763b,PT_PlaySound
 0xfc27780b,PTM_AllReset_FW
 0xfc36de1b,PTM_AllResetToFactorySetting_FW

@@ -192,6 +192,11 @@ long lens_get_zoom_point()
     return _GetZoomLensCurrentPoint();
 }
 
+#ifdef CAM_ILC
+void lens_set_zoom_point(long newpt) {}
+void lens_set_zoom_speed(long newspd) {}
+#else // !CAM_ILC
+
 #if defined(CAM_USE_ALT_PT_MoveOpticalZoomAt)
 static int mz_speed = 3; // max speed on cameras with multi-speed zoom, ignored on others
 #endif
@@ -279,6 +284,7 @@ void lens_set_zoom_speed(long newspd)
     _SetZoomActuatorSpeedPercent((short*)&newspd);
 #endif //!CAM_USE_ALT_PT_MoveOpticalZoomAt
 }
+#endif // !CAM_ILC
 
 void lens_set_focus_pos(long newpos)
 {

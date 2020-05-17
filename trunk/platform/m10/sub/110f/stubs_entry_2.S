@@ -47,11 +47,3 @@ NHSTUB(GetLensWideFocalLength,                 0xfc43fac7)
 
 NHSTUB(LogCameraEvent,                         0xfc362abf)
 NHSTUB(GetLogToFile,                           0xfc18db55)
-
-// These don't exist
-NHSTUB(SetZoomActuatorSpeedPercent,              NULL_SUB)
-NHSTUB(UnsetZoomForMovie,                        NULL_SUB)
-
-// Dysfunctional
-NHSTUB(PT_MoveOpticalZoomAt,                     NULL_SUB)
-NHSTUB(MoveZoomLensWithPoint,                    NULL_SUB)

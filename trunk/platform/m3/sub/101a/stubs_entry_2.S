@@ -59,11 +59,3 @@ NHSTUB(undisplayblankscreen,                   0xFC33314B)
 
 // trial
 NHSTUB(refresh_bitmap_buf_from,                0xfc143435)
-
-// These don't exist
-NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
-NHSTUB(UnsetZoomForMovie,           NULL_SUB)
-
-// Dysfunctional
-NHSTUB(PT_MoveOpticalZoomAt,                     NULL_SUB)
-NHSTUB(MoveZoomLensWithPoint,                    NULL_SUB)

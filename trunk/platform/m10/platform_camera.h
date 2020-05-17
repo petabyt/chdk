@@ -19,6 +19,7 @@
 // When porting CHDK to a new camera, check the documentation in 'include/camera.h'
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
+    #define CAM_ILC                             1 // Camera uses interchangable lenses (EOS M series)
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1
