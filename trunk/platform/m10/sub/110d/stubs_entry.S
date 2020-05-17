@@ -31,8 +31,6 @@
 // 0xfc61f510 other "DRYOS version 2.3, release #0057"
 // 0xfca3fd20 other "DRYOS version 2.3, release #0057"
 
-// Camera is interchangeable lens
-
 // Values below go in 'platform_camera.h':
 //#define CAM_DRYOS         1
 //#define CAM_DRYOS_2_3_R39 1 // Defined for cameras with DryOS version R39 or higher
