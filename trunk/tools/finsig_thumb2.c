@@ -5358,10 +5358,6 @@ void output_firmware_vals(firmware *fw)
         add_blankline();
     }
     add_blankline();
-    if(get_misc_val_value("CAM_IS_ILC")) {
-        bprintf("// Camera is interchangeable lens\n");
-        add_blankline();
-    }
 
     // check if CreateTask is in ROM, offer CreateTask_low if it's in RAM
     sig_entry_t * ct = find_saved_sig("hook_CreateTask");
