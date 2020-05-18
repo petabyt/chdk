@@ -28,7 +28,7 @@
 
 # License: GPL
 #
-# Copyright 2019 reyalp (at) gmail.com
+# Copyright 2019-2020 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -252,7 +252,7 @@ mbops = MBlockOps()
 def make_romstarter_mblock(smisc):
     """check for romstarter and create execuable block if possible"""
 
-    if smisc['digic'] < 6:
+    if smisc['digic'] < 60:
         rs_start = 0xffff0000
         rs_start_addr = toAddr(rs_start)
         # TODO size could be found by checking for run of 0xff
@@ -260,7 +260,7 @@ def make_romstarter_mblock(smisc):
         rs_after = rs_start + rs_size
         rs_after_addr = rs_start_addr.add(rs_size)
 
-    elif smisc['digic'] == 6:
+    elif smisc['digic'] == 60:
         if not 'main_fw_start' in smisc:
             infomsg(0,'make_romstarter_mblock: main fw start not identified\n')
             return
@@ -291,7 +291,7 @@ def make_romstarter_mblock(smisc):
         infomsg(0,'make_romstarter_mblock: multiple memory blocks in region or too small\n')
         return
 
-    if smisc['digic'] == 6:
+    if smisc['digic'] == 60:
         if mb_src != getMemoryBlock(main_fw_addr):
             infomsg(0,'make_romstarter_mblock: multiple memory blocks in region or too small\n')
 
@@ -301,7 +301,7 @@ def make_romstarter_mblock(smisc):
         infomsg(0,'make_romstarter_mblock: too small\n')
         return
 
-    if smisc['digic'] < 6:
+    if smisc['digic'] < 60:
         pi = get_pinsn_at(rs_start_addr)
         if not pi:
             infomsg(0,'make_romstarter_mblock: no instruction found\n')
@@ -314,7 +314,7 @@ def make_romstarter_mblock(smisc):
         mbops.add_split('ROMSTARTER', rs_start, w=False, x=True)
         mbops.add_split('ROMDATA', rs_after, w=False, x=False)
 
-    elif smisc['digic'] == 6:
+    elif smisc['digic'] == 60:
         # digic 6 romstarter code doesn't start exactly at rom start, can't do instruction check
         # TODO romstarter will end up with the original ROM name, should have a rename op
         mbops.add_split('ROMDATA', rs_after, w=False, x=False)
@@ -393,7 +393,7 @@ def init_chdk_mem_map_main():
     mbops.add_stubs_ar(smisc.get('ar_mmio_0xc1'), 'MMIO',v=True)
     mbops.add_stubs_ar(smisc.get('ar_mmio_0xc8'), 'MMIO',v=True)
 
-    if smisc['digic'] >= 6:
+    if smisc['digic'] >= 60:
         # RAM between ATCM and copied data
         mbops.add_uninit('RAM', 0x4000, 0x4000)
         # detected exception vector at address 0, add as initialized
@@ -418,13 +418,13 @@ def init_chdk_mem_map_main():
         # RAM from end of ram data to end of RAM
         mbops.add_uninit('RAM', ar_ramdata['last_adr']+1, last_adr=smisc['max_ram_addr'])
 
-    if smisc['digic'] == 6:
+    if smisc['digic'] == 60:
         if ar_btcmcode and ar_btcmcode['start_adr'] == 0xbfe10800:
             # 0x800 before code
             mbops.add_uninit('BTCM', 0xbfe10000, 0x800)
             # from code end to 64k
             mbops.add_uninit('BTCM', ar_btcmcode['last_adr']+1, last_adr=0xbfe20000-1)
-    elif smisc['digic'] == 7:
+    elif smisc['digic'] == 70:
         # per https://chdk.setepontos.com/index.php?topic=11316.msg142197#msg142197
         if ar_btcmcode and ar_btcmcode['start_adr'] == 0xdffc4900:
             # 0x4900 before code. TODO this is actually initialized, could create mapped

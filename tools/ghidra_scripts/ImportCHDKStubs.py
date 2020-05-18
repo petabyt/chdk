@@ -59,7 +59,7 @@
 
 # License: GPL
 #
-# Copyright 2019 reyalp (at) gmail.com
+# Copyright 2019-2020 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -547,7 +547,7 @@ def add_boot_entries(stubs_data):
         rom_start = None
 
     # digic 6 / 7 have thumb jump at main fw start, identified by sig finder
-    if smisc['digic'] >= 6:
+    if smisc['digic'] >= 60:
         if 'main_fw_start' in smisc:
             stubs_data.add_stubs_value('func','ImportCHDKStubs','-','main_firmware_boot',smisc['main_fw_start']+1,'',0)
         else:
@@ -558,12 +558,12 @@ def add_boot_entries(stubs_data):
             return
 
         # digic 6 firmware appears to have a pointer into romstarter at start of ROM
-        if smisc['digic'] == 6:
+        if smisc['digic'] == 60:
             p1 = getInt(toAddr(smisc['ar_rom']['start_adr']))&0xffffffff
             if p1 > rom_start and p1 - rom_start < 0x6000:
                 stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',p1,'',0)
         # digic 7 appears to have an ARM code
-        elif smisc['digic'] == 7: 
+        elif smisc['digic'] == 70: 
             stubs_data.add_stubs_value('func','ImportCHDKStubs','-','romstarter_entry',rom_start,'',0)
     else:
         if not rom_start:

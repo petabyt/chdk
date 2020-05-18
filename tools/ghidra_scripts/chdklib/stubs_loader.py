@@ -2,7 +2,7 @@
 
 # License: GPL
 #
-# Copyright 2019 reyalp (at) gmail.com
+# Copyright 2019-2020 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -387,23 +387,29 @@ class StubsData:
     def guess_platform_vals(self):
         """Set inferred values in stubs_entry_misc based on values from comments"""
         smisc = self.stubs_entry_misc
+
+        if 'DIGIC' in smisc['makefile_vals']:
+            smisc['digic'] = int(smisc['makefile_vals']['DIGIC']['val'])
+            smisc['digic_major'] = int(smisc['digic']/10)
+            smisc['digic_minor'] = int(smisc['digic']%10)
+            self.infomsg(0,'digic %d var %d\n'%(smisc['digic_major'],smisc['digic_minor']))
+
+            if smisc['digic'] >= 60:
+                smisc['thumb2'] = True
+
         # only finsig_thumb2 sets this
         if smisc['main_fw_start']:
-            smisc['thumb2'] = True
             # currently, all known d7 are at 0xe..., while d6 are at 0xf...
             if smisc['main_fw_start'] < 0xf0000000:
-                self.infomsg(0,'digic 7\n')
-                smisc['digic'] = 7
+                smisc['digic_guess'] = 70
                 smisc['max_ram_addr'] = 0x3fffffff # 1 GB, unclear if correct for all?
             else:
-                self.infomsg(0,'digic 6\n')
-                smisc['digic'] = 6
+                smisc['digic_guess'] = 60
                 smisc['max_ram_addr'] = 0x1fffffff # 512 MB, seems to be true on all known
 
         else:
-            self.infomsg(0,'digic 5 or below\n')
             # TODO could distinguish 3 and below by uncached bit?
-            smisc['digic'] = 5
+            smisc['digic_guess'] = 50
             # should only be missing for vx
             if not smisc['os_info']:
                 smisc['os_info'] = {
@@ -425,7 +431,18 @@ class StubsData:
                 else:
                     # highest known vx (g7)?
                     smisc['max_ram_addr'] = 0x03ffffff
-                warn("MAXRAMADDR unknown, defaulted to 0x%08x"%(smisc['max_ram_addr']))
+                self.warn("MAXRAMADDR unknown, defaulted to 0x%08x"%(smisc['max_ram_addr']))
+
+        if 'digic' in smisc:
+            # guess doesn't distinguish between 2-5+
+            if smisc['digic_guess'] != smisc['digic'] and smisc['digic'] >= 60:
+                self.warn("sig digic %d doesn't match guess %d"%(smisc['digic'],smisc['digic_guess']))
+
+        else:
+            smisc['digic'] = smisc['digic_guess']
+            smisc['digic_major'] = int(smisc['digic']/10)
+            smisc['digic_minor'] = int(smisc['digic']%10)
+            self.infomsg(0,'guessed digic %d var %d\n'%(smisc['digic_major'],smisc['digic_minor']))
 
         # make known address ranges available by name
         for ar in smisc['adr_ranges']:
@@ -434,10 +451,9 @@ class StubsData:
             elif ar['name'] == 'RAM data':
                 smisc['ar_ramdata'] = ar
             elif ar['name'] == 'RAM code':
-                if ar['start_adr'] < smisc['max_ram_addr']:
-                    smisc['ar_ramcode'] = ar
-                else:
-                    smisc['ar_btcmcode'] = ar
+                smisc['ar_ramcode'] = ar
+            elif ar['name'] == 'TCM code':
+                smisc['ar_btcmcode'] = ar
 
         if not 'adr_ranges_extra' in smisc:
             smisc['adr_ranges_extra'] = []
@@ -452,7 +468,7 @@ class StubsData:
         # main MMIO for digic < 6, d6 and d7 still have some there
         self.add_guess_adr_range('mmio',0xC0000000,0x01000000)
 
-        if smisc['digic'] < 6:
+        if smisc['digic'] < 60:
             self.add_guess_adr_range('itcm',0,0x1000)
             if ucadr == 0x40000000:
                 self.add_guess_adr_range('dtcm',0x80000000,0x1000)
@@ -464,9 +480,9 @@ class StubsData:
             # 2M starting at 0xdfe00000 is a different region (Omar TCM), d7 have TCM? in 0xdff
             self.add_guess_adr_range('mmio_0xd', 0xD0000000, 0x10000000 - 0x200000)
             # D6 has a few in the range 0xc8000000 - 0xc8200000
-            if smisc['digic'] == 6:
+            if smisc['digic'] == 60:
                 self.add_guess_adr_range('mmio_0xc8', 0xc8000000, 0x00300000)
-            elif smisc['digic'] == 7:
+            elif smisc['digic'] == 70:
                 # D7 has some in the ranges 0xc1000000 - 0xc2xxxxxx
                 self.add_guess_adr_range('mmio_0xc1', 0xc1000000, 0x02000000)
                 # and 0xc8000000 - 0xc9xxxxxx
@@ -476,7 +492,7 @@ class StubsData:
             # TODO BTCM varies by model (dry ver?, d7), is part of copied code on later cams
 
 
-        if smisc['digic'] >= 6:
+        if smisc['digic'] >= 60:
             smisc['main_fw_code_end'] =  smisc['os_info']['verstr_adr'] - 1
         elif smisc['os_info']['os'] == 'DRYOS':
             # ctypes is a reasonable proxy on older firmware
@@ -489,7 +505,7 @@ class StubsData:
                 smisc['main_fw_code_end'] = smisc['ar_ramdata']['src_adr'] - 1
 
         if not 'main_fw_code_end' in smisc:
-            warn('failed to identify firmware code end')
+            self.warn('failed to identify firmware code end')
 
 
     def load_stubs_s(self,fname,process_comments=None):
