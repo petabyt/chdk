@@ -432,6 +432,10 @@
 #error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS not compatible with CAM_ILC"
 #endif
 #endif // CAM_ILC
+
+#if defined(CAM_USE_OPTICAL_MAX_ZOOM_STATUS) && !defined(CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO)
+#error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS requires CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO"
+#endif
 //==========================================================
 // END of Camera-dependent settings
 //==========================================================
