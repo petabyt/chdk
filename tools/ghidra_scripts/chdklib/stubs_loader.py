@@ -294,7 +294,7 @@ class StubsFileParser:
                 self.stubs_data.add_stubs_value('data',self.src_name,'COMMENT',cmisc['name'],cmisc['adr'],cmisc['comment'],0)
 
     def process_file(self):
-        for line in file(self.fname):
+        for line in open(self.fname):
             self.process_line(line)
 
         # hacky - will clobber any data from previous loads, but should only be one stubs_entry.S / .S.err
@@ -358,7 +358,7 @@ class StubsData:
         self.infomsg(0,"Load csv %s\n"%(fname))
         src_name = os.path.basename(fname)
         rows = 0
-        for r in csv.reader(file(fname)):
+        for r in csv.reader(open(fname)):
             adr = int(r[0],16)
             name = r[1].rstrip()
             # (stubs_entry_2) column
