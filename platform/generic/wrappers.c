@@ -197,7 +197,7 @@ void lens_set_zoom_point(long newpt) {}
 void lens_set_zoom_speed(long newspd) {}
 #else // !CAM_ILC
 
-#if defined(CAM_USE_ALT_PT_MoveOpticalZoomAt)
+#if defined(CAM_USE_ALT_SET_ZOOM_POINT)
 static int mz_speed = 3; // max speed on cameras with multi-speed zoom, ignored on others
 #endif
 
@@ -224,27 +224,18 @@ void lens_set_zoom_point(long newpt)
 			_PT_MoveDigitalZoomToWide();
 		}
 
-  #if defined(CAM_USE_ALT_PT_MoveOpticalZoomAt)
-		// SX30 - _MoveZoomLensWithPoint crashes camera
+		// starting around digic 4 - _MoveZoomLensWithPoint crashes many cameras
 		// _PT_MoveOpticalZoomAt works, and updates PROPCASE_OPTICAL_ZOOM_POSITION; but doesn't wait for zoom to finish
-        // IXUS220, SX220/230 - _MoveZoomLensWithPoint does not notify the JPEG engine of the new focal length,
-        //                      causing incorrect lens distortion fixes to be applied; _PT_MoveOpticalZoomAt works
         // _MoveOpticalZoom at is underlying function that accepts speed
+        // updates jpeg engine distortion correction setting, maintains focus position
 		extern void _MoveOpticalZoomAt(long pt,int speed);
 		_MoveOpticalZoomAt(newpt,mz_speed);
-  #else
-	    _MoveZoomLensWithPoint((short*)&newpt);
-  #endif
 
 		// have to sleep here, zoom_busy set in another task, without sleep this will hang
 		while (zoom_busy) msleep(10);
 
 		// g10,g12 & sx30 only use this value for optical zoom
 		zoom_status=ZOOM_OPTICAL_MAX;
-
-  #if !defined(CAM_USE_ALT_PT_MoveOpticalZoomAt) 
-	    _SetPropertyCase(PROPCASE_OPTICAL_ZOOM_POSITION, &newpt, sizeof(newpt));
-  #endif
 	}
 #else	// !(CAM_USE_ALT_SET_ZOOM_POINT)
     _MoveZoomLensWithPoint((short*)&newpt);
@@ -264,7 +255,7 @@ void lens_set_zoom_speed(long newspd)
 {
 // translate % to speed values for _MoveOpticalZoomAt
 // which correspond to different speeds varies by camera
-#if defined(CAM_USE_ALT_PT_MoveOpticalZoomAt)
+#if defined(CAM_USE_ALT_SET_ZOOM_POINT)
     if (newspd < 25) {
         mz_speed = 0;
     } else if (newspd < 50) {
@@ -274,7 +265,7 @@ void lens_set_zoom_speed(long newspd)
     } else {
         mz_speed = 3;
     }
-#else  // !CAM_USE_ALT_PT_MoveOpticalZoomAt
+#else  // !CAM_USE_ALT_SET_ZOOM_POINT
     // a few old cameras support setting by %
     if (newspd < 5) {
         newspd = 5;
@@ -282,7 +273,7 @@ void lens_set_zoom_speed(long newspd)
         newspd = 100;
     }
     _SetZoomActuatorSpeedPercent((short*)&newspd);
-#endif //!CAM_USE_ALT_PT_MoveOpticalZoomAt
+#endif // !CAM_USE_ALT_SET_ZOOM_POINT
 }
 #endif // !CAM_ILC
 

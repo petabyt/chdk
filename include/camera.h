@@ -241,9 +241,8 @@
                                                 // ignored if CAM_REFOCUS_AFTER_ZOOM is 0
 
     #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
-    #undef  CAM_USE_ALT_PT_MoveOpticalZoomAt    // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process(). Only meaningful with CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #undef  CAM_REFOCUS_AFTER_ZOOM              // save and restore focus distance after set_zoom, Defaults off (0) for ALT_PT_MoveOpticalZoomAt, on for others
+    #undef  CAM_REFOCUS_AFTER_ZOOM              // save and restore focus distance after set_zoom, Defaults off (0) for CAM_USE_ALT_SET_ZOOM_POINT, on for others
 
     #undef  CAM_HAS_HI_ISO_AUTO_MODE            // Define if camera has 'HI ISO Auto' mode (as well as Auto ISO mode), needed for adjustment in user auto ISO menu 
 
@@ -411,7 +410,7 @@
 
 // set default refocus behavior if not set by port
 #ifndef CAM_REFOCUS_AFTER_ZOOM
-#ifdef CAM_USE_ALT_PT_MoveOpticalZoomAt
+#ifdef CAM_USE_ALT_SET_ZOOM_POINT
     #define CAM_REFOCUS_AFTER_ZOOM 0
 #else
     #define CAM_REFOCUS_AFTER_ZOOM 1
@@ -421,9 +420,6 @@
 #ifdef CAM_ILC
 #ifdef CAM_USE_ALT_SET_ZOOM_POINT
 #error "CAM_USE_ALT_SET_ZOOM_POINT not compatible with CAM_ILC"
-#endif
-#ifdef CAM_USE_ALT_PT_MoveOpticalZoomAt
-#error "CAM_USE_ALT_PT_MoveOpticalZoomAt not compatible with CAM_ILC"
 #endif
 #ifdef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 #error "CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO not compatible with CAM_ILC"

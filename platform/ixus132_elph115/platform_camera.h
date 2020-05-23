@@ -128,7 +128,6 @@
     #define  CAM_FILEWRITETASK_SEEKS        1   // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_USE_ALT_SET_ZOOM_POINT       1
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1
     #define CAM_NEED_SET_ZOOM_DELAY         300
 
     // TODO
