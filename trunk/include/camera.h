@@ -238,7 +238,7 @@
                                                 // different from CAM_USB_EVENTID since it should be undefined on most cameras
 
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
-                                                // ignored if CAM_REFOCUS_AFTER_ZOOM is 0
+                                                // ignored if CAM_REFOCUS_AFTER_ZOOM is 0 (default when CAM_USE_ALT_SET_ZOOM_POINT set)
 
     #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point(). Defaults on for Digic 4 and above, may be used on earlier cams
     #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process(). Only meaningful with CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
