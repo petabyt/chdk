@@ -240,7 +240,7 @@
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
                                                 // ignored if CAM_REFOCUS_AFTER_ZOOM is 0
 
-    #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point()
+    #undef  CAM_USE_ALT_SET_ZOOM_POINT          // Define to use the alternate code in lens_set_zoom_point(). Defaults on for Digic 4 and above, may be used on earlier cams
     #undef  CAM_USE_OPTICAL_MAX_ZOOM_STATUS     // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process(). Only meaningful with CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_REFOCUS_AFTER_ZOOM              // save and restore focus distance after set_zoom, Defaults off (0) for CAM_USE_ALT_SET_ZOOM_POINT, on for others
 
@@ -329,9 +329,9 @@
     #endif 
 #endif
 
-// default off for ILC
-#ifdef CAM_ILC
-#undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+// default CAM_USE_ALT_SET_ZOOM_POINT for digic >= 4
+#if CAM_DIGIC >= 40
+    #define  CAM_USE_ALT_SET_ZOOM_POINT       1   // Define to use the alternate code in lens_set_zoom_point()
 #endif
 
 //----------------------------------------------------------
@@ -340,6 +340,13 @@
 
 // Include the settings file for the camera model currently being compiled.
 #include "platform_camera.h"
+
+// force off for ILC - CAM_ILC is a platform_camera define, not makefile, so has to be after
+// but otherwise default on (CAM_USE_ALT_SET_ZOOM_POINT for digic >= 4
+#ifdef CAM_ILC
+#undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
+#undef CAM_USE_ALT_SET_ZOOM_POINT
+#endif
 
 // DryOS r31 and later cameras use 32bit subject distance values
 // set a default limit that's high enough
@@ -417,21 +424,10 @@
 #endif
 #endif // CAM_REFOCUS_AFTER_ZOOM
 
-#ifdef CAM_ILC
-#ifdef CAM_USE_ALT_SET_ZOOM_POINT
-#error "CAM_USE_ALT_SET_ZOOM_POINT not compatible with CAM_ILC"
-#endif
-#ifdef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-#error "CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO not compatible with CAM_ILC"
-#endif
-#ifdef CAM_USE_OPTICAL_MAX_ZOOM_STATUS
-#error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS not compatible with CAM_ILC"
-#endif
-#endif // CAM_ILC
-
 #if defined(CAM_USE_OPTICAL_MAX_ZOOM_STATUS) && !defined(CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO)
-#error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS requires CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO"
+    #error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS requires CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO"
 #endif
+
 //==========================================================
 // END of Camera-dependent settings
 //==========================================================
