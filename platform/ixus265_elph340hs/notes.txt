@@ -1,0 +1,31 @@
+************************************
+Ixus265/Elph340 HS Notes
+************************************
+This is an early alpha port, use at your own risk!
+Porting thread: https://chdk.setepontos.com/index.php?topic=11597.0
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video or WiFi in the options
+
+This camera has only ND filter, no adjustable aperture.
+
+TESTED
+******
+Tv,ISO,SD - OK
+Zebra     - OK
+PTP       - OK
+
+
+NOT IMPLEMENTED
+***************
+exp_drv not implemented, < 1024s probably works without
+video functions
+remoteshoot (filewritetask)
+
+
+
+
+
+
+
+
