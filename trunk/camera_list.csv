@@ -183,6 +183,7 @@ ixus240_elph320hs,100d,ALPHA,101a,
 ixus240_elph320hs,102a,ALPHA,,
 ixus255_elph330hs,100f,BETA,,
 ixus255_elph330hs,100h,BETA,100f,
+ixus265_elph340hs,100c,ALPHA,,SKIP_AUTOBUILD
 ixus275_elph350hs,100a,ALPHA,,
 ixus285_elph360hs,100b,ALPHA,,SKIP_AUTOBUILD
 ixus300_sd4000,100d,,,

@@ -81,12 +81,13 @@
 { 12933,4,0xd20b0994,0xfff20040 }, // sx700hs
 { 12935,3,0xc022d1fc,0xffff0040 }, // ixus150_elph140
 { 12936,3,0xc022d1fc,0xffff0040 }, // ixus145_elph135
+{ 12937,3,0xc022d1fc,0xfff40040 }, // ixus265_elph340hs
 #elif (NEED_ENCODED_DISKBOOT == 13)
 { 12960,4,0xd20b0994,0xfff20270 }, // m10
 { 12966,4,0xd20b0994,0xfff20270 }, // sx710hs
 { 12967,3,0xc022d1fc,0xfffe0040 }, // sx610hs
 { 12970,3,0xc022d1fc,0xffff0040 }, // ixus160_elph160
-{ 12971,3,0xc022d1fc,0xfffe0040 }, // ixus275_elph350
+{ 12971,3,0xc022d1fc,0xfffe0040 }, // ixus275_elph350hs
 { 12972,3,0xc022d1fc,0xffff0040 }, // ixus170_elph170
 { 12973,3,0xc022d1fc,0xffff0040 }, // sx410is
 #elif (NEED_ENCODED_DISKBOOT == 14)
@@ -99,6 +100,7 @@
 #elif (NEED_ENCODED_DISKBOOT == 15)
 { 12979,4,0xd20b0994,0xFDF20270 }, // g5x
 #elif (NEED_ENCODED_DISKBOOT == 16)
+{ 12988,5,0xD20801E4,0xe1f20270 }, // g7x2
 { 12989,3,0xc022d1fc,0xfffe0270 }, // ixus285_elph360hs
 { 12991,3,0xc022d1fc,0xfffe0270 }, // sx420is
 { 12993,3,0xc022d1fc,0xffff0270 }, // ixus175_elph180
