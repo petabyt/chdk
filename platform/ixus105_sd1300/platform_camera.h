@@ -71,7 +71,6 @@
 
     #define CAM_NEED_SET_ZOOM_DELAY         150  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS 1   // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom in gui_std_kbd_process()
-    #define CAM_USE_ALT_SET_ZOOM_POINT      1    // Define to use the alternate code in lens_set_zoom_point()
 
     #define CAM_QUALITY_OVERRIDE            1
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1

@@ -93,7 +93,6 @@
     #define CAM_FILEWRITETASK_SEEKS         1
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
-    #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()
 
 //To do
     #define CAM_FILE_COUNTER_IS_VAR         1       // file counter is variable file_counter_var in stubs, not a param

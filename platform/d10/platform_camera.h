@@ -43,7 +43,6 @@
 
     #define CAM_AF_SCAN_DURING_VIDEO_RECORD 1
 
-    #define CAM_USE_ALT_SET_ZOOM_POINT      1   // Define to use the alternate code in lens_set_zoom_point()
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_VIDEO_QUALITY_ONLY          1
