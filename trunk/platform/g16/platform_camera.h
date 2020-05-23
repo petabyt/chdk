@@ -170,7 +170,6 @@
 
     #define CAM_HAS_MOVIE_DIGEST_MODE           1
 
-    #define CAM_USE_ALT_SET_ZOOM_POINT          1           // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_NEED_SET_ZOOM_DELAY             300
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.

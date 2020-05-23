@@ -101,7 +101,6 @@
     #define CAM_AF_LED                      2       // index of AF led in camera_set_led function
 
     #define CAM_NEED_SET_ZOOM_DELAY          300    // Define to add a delay after setting the zoom position
-    #define CAM_USE_ALT_SET_ZOOM_POINT       1      // Define to use the alternate code in lens_set_zoom_point()
  
     #define CAM_MIN_ISO_OVERRIDE            (125+1) // Defines min market (non-zero) ISO override value - lower value may crash if flash used [0 = AUTO, so always allowed] (+1 due to rounding issues)
 

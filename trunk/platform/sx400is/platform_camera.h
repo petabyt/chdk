@@ -105,7 +105,6 @@
     #define  CAM_FILEWRITETASK_SEEKS            1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
     #define CAM_NEED_SET_ZOOM_DELAY             500     // Define to add a delay after setting the zoom position
-    #define CAM_USE_ALT_SET_ZOOM_POINT          1       // Define to use the alternate code in lens_set_zoom_point()
 
 //  only non-AF led available
 //    #define REMOTE_SYNC_STATUS_LED          0xC022302C  // specifies an LED that turns on while camera waits for USB remote to sync

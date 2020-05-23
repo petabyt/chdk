@@ -103,7 +103,6 @@
 
     #undef  CAM_USE_ZOOM_FOR_MF                             // not useful if cam does not have Canon MF mode - just changes focus mode
     #define CAM_NEED_SET_ZOOM_DELAY         300             // add a delay after setting the zoom position
-    #define CAM_USE_ALT_SET_ZOOM_POINT      1               // use the alternate code in lens_set_zoom_point()
 
     #define CAM_BRACKETING                  1               // allow disable of RAW saving in native Ev bracketing
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1               // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.

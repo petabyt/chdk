@@ -142,7 +142,6 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
-    #define CAM_USE_ALT_SET_ZOOM_POINT      1       // Define to use the alternate code in lens_set_zoom_point()
     #define CAM_NEED_SET_ZOOM_DELAY          150    // Define to add a delay after setting the zoom position
 
     #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
