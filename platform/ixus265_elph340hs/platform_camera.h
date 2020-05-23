@@ -107,12 +107,6 @@
 
     #define CAM_FILE_COUNTER_IS_VAR             1 // file counter is variable file_counter_var in stubs, not a param
 
-
-    #define CAM_NEED_SET_ZOOM_DELAY             500     // Define to add a delay after setting the zoom position
-    #define CAM_USE_ALT_SET_ZOOM_POINT          1       // Define to use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt    1       // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
-
-
     #undef CAM_AF_LED
     #define CAM_AF_LED                          1
 
