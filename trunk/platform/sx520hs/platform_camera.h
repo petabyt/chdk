@@ -122,7 +122,6 @@
     #undef  CAM_FILEWRITETASK_SEEKS
 
     #define CAM_USE_ALT_SET_ZOOM_POINT      1 // Define to use the alternate code in lens_set_zoom_point()
-    #define CAM_USE_ALT_PT_MoveOpticalZoomAt 1 // Define to use the PT_MoveOpticalZoomAt() function in lens_set_zoom_point()
     #define CAM_NEED_SET_ZOOM_DELAY            300
 
 //  only non-AF led available
