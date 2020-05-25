@@ -9,8 +9,6 @@ long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 extern void _platformsub_kbd_fetch_data(long*);
 
-#define NEW_SS (0x2000)
-
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -18,8 +16,6 @@ int get_usb_bit()
 	_kbd_read_keys_r2(usb_physw);
 	return(( usb_physw[USB_IDX] & USB_MASK)==USB_MASK) ; 
 }
-
-static char kbd_stack[NEW_SS];
 
 KeyMap keymap[] = {
 	/* tiny bug: key order matters. see kbd_get_pressed_key()
@@ -51,51 +47,17 @@ KeyMap keymap[] = {
 
 long __attribute__((naked)) wrap_kbd_p1_f() ;
 
-static void __attribute__((noinline)) mykbd_task_proceed()
+void __attribute__((noinline)) mykbd_task()
 {
 	while (physw_run){
 		_SleepTask(10);
 
-		if (wrap_kbd_p1_f() == 1){ // autorepeat ?
+		if (wrap_kbd_p1_f() == 1){
 			_kbd_p2_f();
 		}
 	}
-}
-
-void __attribute__((naked,noinline)) mykbd_task()
-{
-    /* WARNING
-     * Stack pointer manipulation performed here!
-     * This means (but not limited to):
-     *	function arguments destroyed;
-     *	function CAN NOT return properly;
-     *	MUST NOT call or use stack variables before stack
-     *	is setup properly;
-     *
-     */
-
-	register int i;
-	register long *newstack;
-
-	newstack = (void*)kbd_stack;
-
-	for (i=0;i<NEW_SS/4;i++)
-		newstack[i]=0xdededede;
-
-	asm volatile (
-		"MOV	SP, %0"
-		:: "r"(((char*)newstack)+NEW_SS)
-		: "memory"
-	);
-
-	mykbd_task_proceed();
-
-	/* function can be modified to restore SP here...
-	 */
-
 	_ExitTask();
 }
-
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 {
