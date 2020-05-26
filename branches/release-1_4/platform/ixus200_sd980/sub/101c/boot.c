@@ -153,7 +153,7 @@ void __attribute__((naked,noinline)) sub_FF810354_my() {
 
     // replacement of sub_FF85A70C for correct power-on.
     //(short press = playback mode, long press = record mode)
-    *(int*)(0x23DC)= (*(int*)0xC0220128) & 1 ? 0x400000 : 0x800000;
+    *(int*)(0x23DC)= (*(int*)0xC0220128) & 1 ? 0x800000 : 0x400000;
 
 asm volatile (
 "    LDR     R0, =0xFF8103CC \n"
