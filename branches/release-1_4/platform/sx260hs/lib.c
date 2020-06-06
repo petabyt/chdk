@@ -58,11 +58,11 @@ int get_flash_params_count(void) {
 }
 
 void JogDial_CW(void) {
-    _PostLogicalEventForNotPowerType(0x872, 1);    //asm1989 RotateJogDialRight (in table @ FF58799C)
+    _PostLogicalEventForNotPowerType(0x872, 2);    //asm1989 RotateJogDialRight (in table @ FF58799C)
 }
 
 void JogDial_CCW(void) {
-    _PostLogicalEventForNotPowerType(0x873, 1);    //asm1989  RotateJogDialLeft (in table @FF5879A8  like SX40 -> FF593E5C,)
+    _PostLogicalEventForNotPowerType(0x873, 2);    //asm1989  RotateJogDialLeft (in table @FF5879A8  like SX40 -> FF593E5C,)
 }
 
 extern char active_viewport_buffer;
