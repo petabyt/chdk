@@ -55,12 +55,15 @@ void shutdown_soft() {
 
 int get_flash_params_count(void) { return 0xa6; }  // Found @0xff1f3f8c sx240hs
 
+// note SX260 was reported to require *ToUI rather than ForNotPowerType
+// https://chdk.setepontos.com/index.php?topic=7889.msg143589#msg143589
+// this camera is assumed to be the same
 void JogDial_CW(void) {
-    _PostLogicalEventForNotPowerType(0x872, 1);    //asm1989 RotateJogDialRight (in table @ FF58799C)
+    _PostLogicalEventToUI(0x872, 1);    //asm1989 RotateJogDialRight (in table @ FF58799C)
 }
 
 void JogDial_CCW(void) {
-    _PostLogicalEventForNotPowerType(0x873, 1);    //asm1989  RotateJogDialLeft (in table @FF5879A8  like SX40 -> FF593E5C,)
+    _PostLogicalEventToUI(0x873, 1);    //asm1989  RotateJogDialLeft (in table @FF5879A8  like SX40 -> FF593E5C,)
 }
 
 extern char active_viewport_buffer;
