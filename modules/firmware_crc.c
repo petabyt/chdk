@@ -133,7 +133,7 @@ int load_checksum_file(const char *fn)
         blocks[b].start = (char *)strtoul(p,&p,16);
         blocks[b].size = strtoul(p,&p,16);
         blocks[b].crc = strtoul(p,&p,16);
-        if(!blocks[b].start || !blocks[b].size || !blocks[b].crc || blocks[b].start < (void*)camera_info.rombaseaddr ) {
+        if(!blocks[b].start || !blocks[b].size || !blocks[b].crc || blocks[b].start < (char *)camera_info.rombaseaddr ) {
             blocks[b].start = 0;
             break;
         }
