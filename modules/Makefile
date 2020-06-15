@@ -18,7 +18,7 @@ LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(tools)/link-boot.ld -Wl,-N
 FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids.flt $Omdetect.flt $Ozebra.flt \
      $O_dng.flt $Obenchm.flt $Ocalend.flt $O4wins.flt $Omastmind.flt $Oreversi.flt $Osokoban.flt $O_rawop.flt \
      $Otxtread.flt $Omemview.flt $Omodinsp.flt $Otetris.flt $Osnake.flt $Osudoku.flt $O_tbox.flt $O_osd_le.flt \
-     $Oexmemins.flt $Ofshelter.flt\
+     $Oexmemins.flt $Ofshelter.flt $Ofwcrc.flt \
      $O_hexbox.flt $Oubasic.flt $Olua.flt $Ocpuinfo.flt $Ouseredit.flt $Oeyefi.flt $Ohisto.flt $Oshothist.flt
 
 # Include optional rules for user defined modules
@@ -75,6 +75,7 @@ $Ocpuinfo.flt: $Ocpuinfo.o
 $Oexmemins.flt: $Oexmem_inspector.o
 $Ofshelter.flt: $Ofile_shelter.o
 $Oeyefi.flt: $Oeyefi.o $Omd5.o $Osha1.o
+$Ofwcrc.flt: $Ofirmware_crc.o
 
 $Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(lubasic)/$Olibubasic.a
 $Olua.flt: $Oluascript.o $Oscript_key_funcs.o $Oscript_shoot_hook.o $Ocordic_math.o $Odbg_dump.o $Orawhookops.o $(llua)/$Oliblua.a
