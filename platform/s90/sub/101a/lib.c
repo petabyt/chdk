@@ -86,17 +86,6 @@ void *vid_get_viewport_fb_d()
 	 // S90: 0x58 @FF86FA30  0x2A50 @FF86F9F8 (Search for aImageplayer_c)
 }
 
-
-/* ERR99: ToDO: Check if this is also ok for G11 (taken from SX200IS port) */
-void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
-}
-
-void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
-}
-
-
 char *camera_jpeg_count_str()
 {
     return (char*)0x9792C;// S90 OK /* Search for a9999 ; "9999" */

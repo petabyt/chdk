@@ -34,6 +34,14 @@ void camera_set_led(int led, int state, int bright) {
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
+void JogDial_CW(void){
+ _PostLogicalEventForNotPowerType(0x876, 1);  // RotateJogDialRight
+}
+
+void JogDial_CCW(void){
+ _PostLogicalEventForNotPowerType(0x877, 1);  // RotateJogDialLeft
+}
+
 int get_flash_params_count(void){
  return 130; // ERR99 ToDo: Is this the correct S90 value?
 }
