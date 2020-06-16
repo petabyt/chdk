@@ -38,6 +38,13 @@ void camera_set_led(int led, int state, int bright) {
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
+void JogDial_CW(void){
+	_PostLogicalEventToUI(0x86E, 1);  // RotateJogDialRight
+}
+
+void JogDial_CCW(void){
+	_PostLogicalEventToUI(0x86F, 1);  // RotateJogDialLeft
+}
 
 int get_flash_params_count(void){
 	return 0x9a;	// found in GetParameterData

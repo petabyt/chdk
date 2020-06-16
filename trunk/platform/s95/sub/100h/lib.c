@@ -55,16 +55,6 @@ void *vid_get_viewport_fb_d()
 }
 
 
-void JogDial_CW(void){
-	_PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
-}
-
-
-void JogDial_CCW(void){
-	_PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
-}
-
-
 char *camera_jpeg_count_str()
 {
     return (char*) 0xBBC9C;						// @FFA3ACC4 - ok

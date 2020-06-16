@@ -50,11 +50,11 @@ int get_flash_params_count(void)
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 2);  // RotateJogDialRight
+ _PostLogicalEventToUI(0x876, 2);  // RotateJogDialRight
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
+ _PostLogicalEventToUI(0x877, 2);  // RotateJogDialLeft
 }
 
 // Functions for PTP Live View system
