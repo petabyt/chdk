@@ -68,8 +68,8 @@ void __attribute__((naked,noinline)) sub_FF8101A4_my() {
 
     // replacement of sub_FF8423E8 for correct power-on.
     //(short press = playback mode, long press = record mode)
-    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x100000 : 0x200000;
-    
+    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x200000 : 0x100000;
+
 asm volatile (
 "    LDR     R0, =0xFF81021C \n"
 "    MOV     R1, #0 \n"
@@ -225,7 +225,7 @@ asm volatile (
 "    LDR     R1, =0x2CE000 \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF8284B0 \n"
-"    BL      sub_FF82845C \n"
+"    BL      sub_FF82845C /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF81CC60.
@@ -425,7 +425,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x200 \n"
 "    MOV     R0, #3 \n"
-"    BL      sub_FF867A40 \n"
+"    BL      _exmem_ualloc \n"
 "    MOVS    R4, R0 \n"
 "    BNE     loc_FF84EB6C \n"
 
@@ -443,7 +443,7 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    BNE     loc_FF84EB98 \n"
 "    MOV     R0, #3 \n"
-"    BL      sub_FF867B80 \n"
+"    BL      _exmem_ufree \n"
 "    B       loc_FF84EB64 \n"
 
 "loc_FF84EB98:\n"
@@ -522,7 +522,7 @@ asm volatile (
 
 "loc_FF84EC20:\n"
 "    MOV     R0, #3 \n"
-"    BL      sub_FF867B80 \n"
+"    BL      _exmem_ufree \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF84EC58 \n"
 "    MOV     R6, #0 \n"

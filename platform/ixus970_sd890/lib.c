@@ -35,12 +35,12 @@ void camera_set_led(int led, int state, int bright)
 
 void JogDial_CW(void)
 {
-	_PostLogicalEventForNotPowerType(0x874, 1);  // RotateJogDialRight
+	_PostLogicalEventToUI(0x866, 2);  // RotateJogDialRight
 }
 
 void JogDial_CCW(void)
 {
-	_PostLogicalEventForNotPowerType(0x875, 1);  // RotateJogDialLeft
+	_PostLogicalEventToUI(0x867, 2);  // RotateJogDialLeft
 }
 
 // PTP display stuff
