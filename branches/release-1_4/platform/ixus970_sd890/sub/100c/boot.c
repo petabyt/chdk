@@ -68,8 +68,8 @@ void __attribute__((naked,noinline)) sub_FF8101A4_my() {
 
     // replacement of sub_FF8423E8 for correct power-on.
     //(short press = playback mode, long press = record mode)
-    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x100000 : 0x200000;
-    
+    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x200000 : 0x100000;
+
 asm volatile (
 "    LDR     R0, =0xFF81021C \n"
 "    MOV     R1, #0 \n"

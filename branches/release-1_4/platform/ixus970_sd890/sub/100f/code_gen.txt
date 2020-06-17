@@ -60,8 +60,8 @@ FUNC start=0xFF8101A4 length=27
 
     // replacement of sub_FF8423E4 for correct power-on.
     //(short press = playback mode, long press = record mode)
-    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x100000 : 0x200000;
-    
+    *(int*)(0x2290)= (*(int*)0xC02200F8) & 1 ? 0x200000 : 0x100000;
+
 <<<
 
 ASM
