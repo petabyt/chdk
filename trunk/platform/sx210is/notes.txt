@@ -1,5 +1,9 @@
 ************************************
-SX120IS Notes
+SX210IS Notes
 
+The default alt button is Video. It can be changed to Playback in CHDK settings
 
+This camera has an iris and does not have an ND filter.
 
+Porting thread
+https://chdk.setepontos.com/index.php?topic=5045.0
