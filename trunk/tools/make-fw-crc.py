@@ -38,6 +38,8 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
     argparser.add_argument("-d", "--dumps", help="CHDK dumps root, default PRIMARY_ROOT or source platform dir",action='store')
     argparser.add_argument("-o", "--out", help="Output file, default stdout",action='store')
     argparser.add_argument('-v','--verbose',help="Increase verbosity", action='count',default=0) 
+    argparser.add_argument("--stubsub", help="Firmware stubs, if copied sub",action='store')
+    argparser.add_argument("--stubplat", help="Platform for stubs, if copied platform",action='store')
 
     args = argparser.parse_args()
 
@@ -53,7 +55,17 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
     else:
         dump_root = os.environ.get('PRIMARY_ROOT',os.path.join(chdk_root,'platform'))
 
-    plat_dir = os.path.join(chdk_root,'platform',plat,'sub',platsub)
+    if args.stubsub:
+        stubsub = args.stubsub
+    else:
+        stubsub = platsub
+
+    if args.stubplat:
+        stubplat = args.stubplat
+    else:
+        stubplat = plat
+
+    plat_dir = os.path.join(chdk_root,'platform',stubplat,'sub',stubsub)
     dump_name = os.path.join(dump_root,plat,'sub',platsub,'PRIMARY.BIN')
 
     infomsg(1,'%s %s %s %s\n'%(plat,platsub,plat_dir,dump_name))
