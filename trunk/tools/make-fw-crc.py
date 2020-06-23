@@ -18,10 +18,41 @@ import chdklib.logutil
 from chdklib.logutil import infomsg, warn
 from chdklib.stubs_loader import StubsData
 
-def crc32_file_chunk(fh,offset,size):
-    fh.seek(offset)
-    data=fh.read(size)
-    return zlib.crc32(data)
+class ChecksumInfo:
+    """Blocks to CRC and associated file info"""
+    def __init__(self,filepath):
+        self.blocks=[]
+        self.filepath = filepath
+        self.filesize = os.path.getsize(filepath)
+        self.total_size = 0
+
+    def add_block(self,blk):
+        b = blk.copy()
+        if b['offset'] >= self.filesize:
+            warn("block %s start outside file, ignored"%(b['name']))
+            return
+
+        if self.filesize - b['offset'] < b['size']:
+            warn("block %s end outside file, truncated"%(b['name']))
+            b['size'] = self.filesize - b['offset']
+
+        self.total_size += b['size']
+        self.blocks.append(b)
+
+    def crc32_all(self):
+        fh = open(self.filepath,'rb')
+        infomsg(1,'%-8s %-10s %-10s %-7s %-10s\n'%('name','start_adr','offset','size','crc32'))
+
+        for b in self.blocks:
+            fh.seek(b['offset'])
+            data=fh.read(b['size'])
+            b['crc32'] = zlib.crc32(data)
+            infomsg(1,'%-8s 0x%08x 0x%08x %7d 0x%08x\n'%(b['name'],b['start_adr'],b['offset'],b['size'],b['crc32']))
+
+        fh.close()
+
+        infomsg(1,"%d blocks %d bytes %d%%\n"%(len(self.blocks),self.total_size,100*self.total_size/self.filesize))
+
 
 def fwsums_main():
     argparser = argparse.ArgumentParser(description='''\
@@ -40,6 +71,7 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
     argparser.add_argument('-v','--verbose',help="Increase verbosity", action='count',default=0) 
     argparser.add_argument("--stubsub", help="Firmware stubs, if copied sub",action='store')
     argparser.add_argument("--stubplat", help="Platform for stubs, if copied platform",action='store')
+    argparser.add_argument("--dumpfile", help="specify dump file directly instead of inferring from platform/sub",action='store')
 
     args = argparser.parse_args()
 
@@ -66,7 +98,10 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
         stubplat = plat
 
     plat_dir = os.path.join(chdk_root,'platform',stubplat,'sub',stubsub)
-    dump_name = os.path.join(dump_root,plat,'sub',platsub,'PRIMARY.BIN')
+    if args.dumpfile:
+        dump_name = args.dumpfile
+    else:
+        dump_name = os.path.join(dump_root,plat,'sub',platsub,'PRIMARY.BIN')
 
     infomsg(1,'%s %s %s %s\n'%(plat,platsub,plat_dir,dump_name))
 
@@ -74,8 +109,8 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
         sys.stderr.write("ERROR: missing %s\n"%(dump_name))
         sys.exit(1)
 
-    dump_size = os.path.getsize(dump_name)
-    if dump_size == 0:
+    csums = ChecksumInfo(dump_name)
+    if csums.filesize == 0:
         sys.stderr.write("ERROR: zero byte dump %s\n"%(dump_name))
         sys.exit(1)
 
@@ -88,7 +123,6 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
     stubs_data.load_stubs_s(stubs_entry_name,process_comments=True)
     stubs_data.guess_platform_vals()
     smisc = stubs_data.stubs_entry_misc
-    check_blocks = []
 
     romcode_start = smisc.get('main_fw_start')
     # not default to get(), may be literal None
@@ -97,7 +131,7 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
 
     rom_base = smisc['ar_rom']['start_adr']
 
-    check_blocks.append({
+    csums.add_block({
         'name':'ROMCODE',
         'start_adr':romcode_start,
         'offset':romcode_start - rom_base,
@@ -108,7 +142,7 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
         if not ar:
             continue
 
-        check_blocks.append({
+        csums.add_block({
             'name':ar['name'],
             'start_adr':ar['src_adr'],
             'offset':ar['src_adr'] - rom_base,
@@ -116,31 +150,21 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
         })
 
     for ar in smisc['zico_blobs']:
-        check_blocks.append({
+        csums.add_block({
             'name':ar['name'],
             'start_adr':ar['src_adr'],
             'offset':ar['src_adr'] - rom_base,
             'size':ar['size'],
         })
 
-    dump_file = open(dump_name,'rb')
-    total_size = 0
-    infomsg(1,'%-8s %-10s %-10s %-7s %-10s\n'%('name','start_adr','offset','size','crc32'))
-    for b in check_blocks:
-        b['crc32'] = crc32_file_chunk(dump_file,b['offset'],b['size']) & 0xffffffff
-        infomsg(1,'%-8s 0x%08x 0x%08x %7d 0x%08x\n'%(b['name'],b['start_adr'],b['offset'],b['size'],b['crc32']))
-        total_size = total_size + b['size']
-
-    dump_file.close()
-
-    infomsg(1,"%d blocks %d bytes %d%%\n"%(len(check_blocks),total_size,100*total_size/dump_size))
+    csums.crc32_all()
 
     if args.out:
         outfile = open(args.out,'w', newline='\n')
     else:
         outfile = sys.stdout
 
-    for b in check_blocks:
+    for b in csums.blocks:
         outfile.write('%x %x %x\n'%(b['start_adr'],b['size'],b['crc32']))
 
     if args.out:
