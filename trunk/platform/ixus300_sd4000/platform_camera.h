@@ -46,6 +46,8 @@
     #undef CAM_DEFAULT_ALT_BUTTON
     #define CAM_DEFAULT_ALT_BUTTON  KEY_PLAYBACK   // alt button for cameras without adjustable alt
     #undef  CAM_HAS_DISP_BUTTON
+    #undef  CAM_KEY_PRESS_DELAY
+    #define CAM_KEY_PRESS_DELAY             100      // delay after a press
 
     #undef  DNG_BADPIXEL_VALUE_LIMIT
     #define DNG_BADPIXEL_VALUE_LIMIT        16      // Camera sensor apparently has bad pixels with value > 0 & <=16

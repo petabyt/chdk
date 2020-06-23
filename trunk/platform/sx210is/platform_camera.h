@@ -38,6 +38,9 @@
     #define CAM_ALT_BUTTON_NAMES            { "Video", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS          { KEY_VIDEO, KEY_PLAYBACK }
 
+    #undef  CAM_KEY_PRESS_DELAY
+    #define CAM_KEY_PRESS_DELAY             100      // delay after a press
+
     #define CAM_HAS_VIDEO_BUTTON            1
     #define CAM_VIDEO_QUALITY_ONLY          1
     #undef  CAM_VIDEO_CONTROL
