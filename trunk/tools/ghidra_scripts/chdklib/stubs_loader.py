@@ -89,6 +89,16 @@ class StubsFileParser:
                 'verstr_adr':verstr_adr,
                 'verstr_adr_ref':verstr_adr_ref,
             }
+            return
+
+        m = re.match('Firmware Ver ([^ ]+)\s+// Found @ 0x([0-9A-Fa-f]{8}), "[^ ]+" @ 0x([0-9A-Fa-f]{8})',body)
+        if m:
+            self.comment_data['fw_ver_info'] = {
+                'verstr':m.group(1), # GM... string
+                'verstr_adr':int(m.group(3),16), # address of the GM string
+                'verstr_adr_ref':int(m.group(2),16), # address of the whole string
+            }
+
         # everything else in section is ignored for now
 
     def process_makefile_val(self,body):
