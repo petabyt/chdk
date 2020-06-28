@@ -91,10 +91,10 @@ class StubsFileParser:
             }
             return
 
-        m = re.match('Firmware Ver ([^ ]+)\s+// Found @ 0x([0-9A-Fa-f]{8}), "[^ ]+" @ 0x([0-9A-Fa-f]{8})',body)
+        m = re.match('Firmware Ver(?:sion)? ([^ ]+)\s+// Found @ 0x([0-9A-Fa-f]{8}), "[^ ]+" @ 0x([0-9A-Fa-f]{8})',body)
         if m:
             self.comment_data['fw_ver_info'] = {
-                'verstr':m.group(1), # GM... string
+                'verstr':m.group(1), # actual version, like GM1.00A string (few early cams don't have GM)
                 'verstr_adr':int(m.group(3),16), # address of the GM string
                 'verstr_adr_ref':int(m.group(2),16), # address of the whole string
             }
