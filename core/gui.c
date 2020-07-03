@@ -390,6 +390,8 @@ static const char* gui_debug_display_modes[] =              { "None", "Props", "
 static const char* gui_debug_display_modes[] =              { "None", "Props", "Params", "Tasks", "UIProps"};
 #endif
 
+static const char* gui_firmware_crc_modes[] =              { "Never", "Next", "Always"};
+
 extern volatile int memdmp_delay; // from core/main.c
 
 static void gui_menu_edit_hexa_value(int val) {
@@ -421,6 +423,8 @@ static CMenuItem debug_submenu_items[] = {
     MENU_ENUM2  (0x5c,LANG_MENU_DEBUG_SHORTCUT_ACTION,      &conf.debug_shortcut_action,    gui_debug_shortcut_modes ),
     MENU_ITEM   (0x2a,LANG_MENU_DEBUG_MEMDMP,               MENUITEM_SUBMENU,               &memdmp_submenu,                    0 ),
     MENU_ITEM   (0x2a,LANG_SAVE_ROMLOG,                     MENUITEM_PROC,                  save_romlog,                        0 ),
+    MENU_ENUM2  (0x5c,LANG_FIRMWARE_CRC_BOOT_MENU,          &conf.check_firmware_crc,       gui_firmware_crc_modes ),
+
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
 };

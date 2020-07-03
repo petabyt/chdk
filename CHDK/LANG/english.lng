@@ -806,3 +806,9 @@
 670 "Clear Canon Overlays"
 
 671 "Enable video out in rec"
+
+672 "Possible Canon ROM corruption!\nPlease report on CHDK forum."
+673 "Failed chunks:"
+674 "Click OK to dump ROM"
+675 "Checksum ROM at boot"
+

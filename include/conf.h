@@ -75,7 +75,7 @@ typedef struct {
 // Don't make any of the entries conditionally compiled in - this will change the offsets between cameras causing problems with
 // making the modules camera/platform independent
 
-#define CONF_VERSION            {3,5}       // Version for Conf structure
+#define CONF_VERSION            {3,6}       // Version for Conf structure
 
 typedef struct
 {
@@ -463,6 +463,8 @@ typedef struct
     int clean_overlay;  // invisible Canon overlay: 0 = never, 1 = rec mode, 2 = during movie record
 
     int unlock_av_out_in_rec;  // Force video out when in Rec if AV bit is set. Bool
+
+    int check_firmware_crc;  // Check firmware CRC on startup. 0 = no. 1 = Check and set to 0. 2 = always
 
 } Conf;
 

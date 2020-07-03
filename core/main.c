@@ -228,6 +228,10 @@ void core_spytask()
     }
 #endif
 
+    if(conf.check_firmware_crc) {
+        module_run("fwcrc.flt");
+    }
+
     while (1)
     {
         // Set up camera mode & state variables
