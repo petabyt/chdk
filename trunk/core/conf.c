@@ -529,6 +529,8 @@ static ConfInfo conf_info[] = {
 
     CONF_INFO(251, conf.save_raw_in_canon_raw,                  CONF_DEF_VALUE, i:1),
 
+    CONF_INFO(252, conf.check_firmware_crc,                     CONF_DEF_VALUE, i:1),
+
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 
     {0,0,0,0,{0}}

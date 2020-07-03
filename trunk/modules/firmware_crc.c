@@ -7,66 +7,13 @@
 #include "clock.h"
 #include "console.h"
 #include "conf.h"
+#include "lang.h"
+#include "firmware_crc_types.h"
 
 // =========  MODULE INIT =================
 
 static int running = 0;
-static char osdbuf[128];
 
-extern int basic_module_init();
-
-/***************** BEGIN OF AUXILARY PART *********************
-  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
- **************************************************************/
-
-int _run()
-{
-    basic_module_init();
-
-    return 0;
-}
-
-int _module_can_unload()
-{
-    return (running==0);
-}
-
-int _module_exit_alt()
-{
-    running = 0;
-    return 0;
-}
-
-/******************** Module Information structure ******************/
-
-libsimple_sym _librun =
-{
-    {
-         0, 0, _module_can_unload, _module_exit_alt, _run
-    }
-};
-
-ModuleInfo _module_info =
-{
-    MODULEINFO_V1_MAGICNUM,
-    sizeof(ModuleInfo),
-    {1,0},      // Module version
-
-    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,           // Requirements of CHDK version
-    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
-
-    (int32_t)"Checksum Canon firmware",
-    MTYPE_TOOL,
-
-    &_librun.base,
-
-    CONF_VERSION,               // CONF version
-    CAM_SCREEN_VERSION,         // CAM SCREEN version
-    ANY_VERSION,                // CAM SENSOR version
-    ANY_VERSION,                // CAM INFO version
-};
-
-/*************** END OF AUXILARY PART *******************/
 //-------------------------------------------------------------------
 // From public domain crc32 code
 //-------------------------------------------------------------------
@@ -92,110 +39,212 @@ void crc32(const void *data, unsigned long n_bytes, unsigned long* crc) {
     }
 }
 
-#define MAX_CRC_BLOCKS 10
-
-typedef struct {
-    char *start;
-    unsigned size;
-    unsigned crc;
-} block_desc_t;
-
-block_desc_t blocks[MAX_CRC_BLOCKS+1];
-
-int load_checksum_file(const char *fn)
-{
-    struct stat st;
-    if(stat(fn, &st) != 0) {
-        return 0;
-    }
-    unsigned size = st.st_size;
-
-    char *buf = malloc(size);
-    if(!buf) {
-        return 0;
-    }
-
-    FILE *fd = fopen(fn, "rb");
-    if (!fd) {
-        free(buf);
-        return 0;
-    }
-
-    int ret = fread(buf, 1, size, fd);
-    fclose(fd);
-    if (ret != size) {
-        free(buf);
-        return 0;
-    }
-    int b = 0;
-    char *p = buf;
-    for(b = 0; b < MAX_CRC_BLOCKS && *p; b++) {
-        blocks[b].start = (char *)strtoul(p,&p,16);
-        blocks[b].size = strtoul(p,&p,16);
-        blocks[b].crc = strtoul(p,&p,16);
-        if(!blocks[b].start || !blocks[b].size || !blocks[b].crc || blocks[b].start < (char *)camera_info.rombaseaddr ) {
-            blocks[b].start = 0;
-            break;
-        }
-    }
-    free(buf);
-    return (b > 0); // no blocks loaded = bad file
-}
-
-
 /*************** GUI MODULE *******************/
 
 #include "gui_lang.h"
 #include "gui_mbox.h"
 #include "gui_fselect.h"
+#include "keyboard.h"
 #include "stdlib.h"
 
+void gui_fwc_draw();
 
-//xxxxxxxx xxxxxxxx PASS\n  x 10
-static char out[250];
+gui_handler GUI_MODE_FWC = 
+    /*GUI_MODE_FWC*/  { GUI_MODE_MODULE, gui_fwc_draw, 0 /* only keys are in dialogs */, 0 /* no special handling for menu */, 0, 0 };
 
-static void gui_firmware_crc_done(unsigned unused)
-{
-    running = 0;
-}
-static void gui_firmware_crc_file_selected(const char *fn)
-{
-    if (fn) {
-        if(load_checksum_file(fn)) {
-            char *s = out;
-            int failed = 0;
-            int b = 0;
-            for(b = 0; b < MAX_CRC_BLOCKS && blocks[b].start; b++) {
-                s += sprintf(s,"%8x %8x ",blocks[b].start,blocks[b].size);
-                unsigned long fw_crc = 0;
-                crc32(blocks[b].start,blocks[b].size,&fw_crc);
-                if(fw_crc == blocks[b].crc) {
-                    s += sprintf(s,"PASS\n");
-                } else {
-                    s += sprintf(s,"FAIL\n");
-                    failed++;
-                }
-            }
-            if(failed > 0) {
-                gui_mbox_init(LANG_ERROR, (int)out, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_firmware_crc_done );
-            } else {
-                gui_mbox_init(LANG_INFORMATION, (int)out, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_firmware_crc_done );
-            }
-        } else {
-            gui_mbox_init(LANG_ERROR, (int)"Failed to load file", MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_firmware_crc_done );
-        }
-    } else {
-        running = 0;
+enum {
+    FWC_STATE_INIT,
+    FWC_STATE_STARTED,
+    FWC_STATE_CHECK,
+    FWC_STATE_FAIL,
+    FWC_STATE_DIALOG,
+    FWC_STATE_DUMP,
+    FWC_STATE_DUMP_OK,
+    FWC_STATE_DUMP_FAIL,
+    FWC_STATE_DONE,
+    FWC_STATE_QUIT,
+    FWC_STATE_END,
+}; 
+
+int fwc_state = FWC_STATE_INIT;
+
+extern const firmware_crc_desc_t firmware_crc_desc;
+
+static char out[512];
+
+int dump_rom(void) {
+    // match dumper script that normally skipts last word to avoid potential wraparound issues
+    unsigned dump_size = 0xfffffffc - camera_info.rombaseaddr;
+    // so far, no ROM bigger that 32MB
+    if(dump_size > 0x1fffffc) {
+        dump_size = 0x1fffffc;
     }
-}
-
-//-------------------------------------------------------------------
-
-int basic_module_init()
-{
-    running = 1;
-    libfselect->file_select((int)"Checksum file", "A/CHDK", "A/CHDK", gui_firmware_crc_file_selected);
+    FILE *fh = fopen("A/PRIMARY.BIN","wb");
+    if(!fh) {
+        return 0;
+    }
+    fwrite((char *)camera_info.rombaseaddr,dump_size,1,fh);
+    fclose(fh);
     return 1;
 }
 
+static void gui_fwc_done(unsigned unused)
+{
+    fwc_state = FWC_STATE_DONE;
+}
+
+static void gui_fwc_dump_dialog(unsigned btn)
+{
+    if (btn == MBOX_BTN_OK) {
+        fwc_state = FWC_STATE_DUMP;
+    } else {
+        fwc_state = FWC_STATE_DONE;
+    }
+}
+
+int crc_core(const firmware_crc_desc_t *desc)
+{
+    running = 1;
+
+    int failed = 0;
+    char *s = out;
+    int i;
+    for(i=0; i < desc->sub_count; i++) {
+        if(!strcmp(desc->firmware_ver_ptr,desc->subs[i].canon_sub)) {
+            gui_browser_progress_show("ROM CRC",0);
+            s += sprintf(out,"%s\n%s %s\n%s\n",
+                    lang_str(LANG_FIRMWARE_CRC_FAIL),
+                    camera_info.platform, desc->subs[i].canon_sub,lang_str(LANG_FIRMWARE_CRC_FAILED_CHUNKS));
+            int b;
+            const firmware_crc_block_t *blocks = desc->subs[i].blocks;
+            for(b=0; b < desc->block_count; b++) {
+                gui_browser_progress_show("ROM CRC",100*(b+1)/desc->block_count);
+                // truncated dump could have zero sized blocks
+                if(blocks[b].size != 0) {
+                    unsigned long fw_crc = 0;
+                    crc32(blocks[b].start,blocks[b].size,&fw_crc);
+                    if(fw_crc != blocks[b].crc) {
+                        s += sprintf(s,"%8x ",blocks[b].start);
+                        failed++;
+                    }
+                }
+            }
+            sprintf(s,"\n%s",lang_str(LANG_FIRMWARE_CRC_DUMP_ROM));
+            break;
+        }
+    }
+    if(failed) {
+        fwc_state = FWC_STATE_FAIL;
+    } else {
+        fwc_state = FWC_STATE_DONE;
+    }
+    return 0;
+}
+
+void gui_fwc_draw()
+{
+    switch(fwc_state) {
+        case FWC_STATE_STARTED:
+            fwc_state = FWC_STATE_CHECK;
+            crc_core(&firmware_crc_desc);
+            break;
+        case FWC_STATE_FAIL:
+            fwc_state = FWC_STATE_DIALOG;
+            gui_mbox_init(LANG_WARNING, (int)out, MBOX_BTN_OK|MBOX_BTN_CANCEL|MBOX_FUNC_RESTORE, gui_fwc_dump_dialog );
+            break;
+        case FWC_STATE_DUMP:
+            gui_browser_progress_show("Write PRIMARY.BIN",10); // LIES!
+            if(dump_rom()) {
+                fwc_state = FWC_STATE_DUMP_OK;
+            } else {
+                fwc_state = FWC_STATE_DUMP_FAIL;
+            }
+            gui_browser_progress_show("Write PRIMARY.BIN",100);
+            break;
+        case FWC_STATE_DUMP_OK:
+            fwc_state = FWC_STATE_DIALOG;
+            gui_mbox_init(LANG_INFORMATION,(int)"Wrote PRIMARY.BIN", MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_fwc_done);
+            break;
+        case FWC_STATE_DUMP_FAIL:
+            fwc_state = FWC_STATE_DIALOG;
+            gui_mbox_init(LANG_ERROR, (int)"Failed to write PRIMARY.BIN", MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_fwc_done);
+            break;
+        case FWC_STATE_DONE:
+            // if set to only on boot, clear
+            if(conf.check_firmware_crc == 1) {
+                conf.check_firmware_crc = 0;
+                conf_save();
+            }
+            // force one spytask iteration delay
+            fwc_state = FWC_STATE_QUIT;
+            break;
+        case FWC_STATE_QUIT:
+            fwc_state = FWC_STATE_END;
+            // exiting alt will clear gui mode, meaning draw will no longer be called, exit_alt handler will terminate module
+            exit_alt();
+    }
+}
+
+
+//-------------------------------------------------------------------
+
+/***************** BEGIN OF AUXILARY PART *********************
+  ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
+ **************************************************************/
+
+int _run()
+{
+    // PROBLEM: we need to be in alt mode for keyboard handling and dialogs to work,
+    // but entering alt changes gui and requires getting into the main spytask loop
+    // solution: abuse the _module_can_unload handler, which is called periodically from the main loop
+    running = 1;
+    enter_alt();
+    return 0;
+}
+
+int _module_can_unload()
+{
+    if(fwc_state == FWC_STATE_INIT) {
+        gui_set_mode(&GUI_MODE_FWC);
+        fwc_state = FWC_STATE_STARTED;
+    }
+    return (running==0);
+}
+
+int _module_exit_alt()
+{
+    running = 0;
+    return 0;
+}
+
+/******************** Module Information structure ******************/
+
+libsimple_sym _libfirmwarecrc =
+{
+    {
+         0, 0, _module_can_unload, _module_exit_alt, _run
+    },
+};
+
+ModuleInfo _module_info =
+{
+    MODULEINFO_V1_MAGICNUM,
+    sizeof(ModuleInfo),
+    {2,0},      // Module version
+
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,           // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
+
+    (int32_t)"Checksum ROM",
+    MTYPE_TOOL,
+
+    &_libfirmwarecrc.base,
+
+    CONF_VERSION,               // CONF version
+    CAM_SCREEN_VERSION,         // CAM SCREEN version
+    ANY_VERSION,                // CAM SENSOR version
+    ANY_VERSION,                // CAM INFO version
+};
+
+/*************** END OF AUXILARY PART *******************/
 

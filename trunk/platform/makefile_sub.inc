@@ -20,7 +20,8 @@ FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
 #add platform dependent 'core' files (build as THUMB)
 OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o kbd_common.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
-     shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o lang_str.thm.o ptp.thm.o
+     shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o lang_str.thm.o ptp.thm.o\
+     firmware_crc_data.thm.o
 
 gui_draw.thm.o: $(core)/gui_draw.c $(lfont)/font_8x16_uni_packed.h
 	@echo $< \-\> $@
@@ -29,6 +30,10 @@ gui_draw.thm.o: $(core)/gui_draw.c $(lfont)/font_8x16_uni_packed.h
 lang_str.thm.o: $(llang)/lang_str.c $(llang)/lang_str.h
 	@echo $< \-\> $@
 	$(CC) $(CFLAGS) -nostdinc -mthumb -c -o $@ $<
+
+firmware_crc_data.thm.o: $(core)/firmware_crc_data.c $(camfw)/firmware_crc_data.h
+	@echo $< \-\> $@
+	$(CC) $(CFLAGS) -I$(camfw) -nostdinc -mthumb -c -o $@ $<
 
 # Build rules for source files containing assembly code - don't include 'march=armv4'
 # NOTE: these files should not contain C functions that could be called from Thumb code

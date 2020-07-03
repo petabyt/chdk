@@ -798,7 +798,12 @@
 
 #define LANG_MENU_UNLOCK_AV_OUT_IN_REC          671     //CONDITIONAL: CAM_UNLOCK_ANALOG_AV_IN_REC
 
-#define GUI_LANG_ITEMS                          671
+#define LANG_FIRMWARE_CRC_FAIL                  672
+#define LANG_FIRMWARE_CRC_FAILED_CHUNKS         673
+#define LANG_FIRMWARE_CRC_DUMP_ROM              674
+#define LANG_FIRMWARE_CRC_BOOT_MENU             675
+
+#define GUI_LANG_ITEMS                          675
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

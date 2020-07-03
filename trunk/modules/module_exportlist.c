@@ -433,3 +433,5 @@
 
             set_focus_bypass
             sd_over_modes
+
+            &firmware_crc_desc

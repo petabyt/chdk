@@ -247,6 +247,10 @@ run-code-gen: platformcheck
 	$(MAKE) -C tools code_gen$(EXE)
 	$(MAKE) -C $(camfw) run-code-gen
 
+# firmware_crc_data.h is built for actual source port, not copied subs
+rebuild-firmware-crc: platformcheck
+	$(tools)/make-fw-crc.py --header $(PLATFORM) $(PLATFORMSUB) -d $(PRIMARY_ROOT) -o $(camfw)/firmware_crc_data.h
+
 # note assumes PLATFORMOS is always in same case!
 os-camera-list-entry: platformcheck
 ifeq ($(SRCFW),)
@@ -329,6 +333,10 @@ batch-rebuild-stubs-parallel: sigfinders
 # Note:- needs GNU Parallel, runs one job per CPU core
 batch-rebuild-stubs-gnu-parallel: sigfinders
 	sh tools/auto_build_parallel.sh $(MAKE) rebuild-stubs $(CAMERA_LIST) echo -noskip | parallel
+
+# rebuild all the firmware checksum files for available dumps
+batch-rebuild-firmware-crc:
+	sh tools/auto_build.sh $(MAKE) rebuild-firmware-crc $(CAMERA_LIST) -noskip
 
 batch-clean:
 	$(MAKE) -C tools clean
