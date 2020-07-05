@@ -398,6 +398,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "mzrm_sendmsg", OPTIONAL|UNUSED },
     { "zicokick_start", OPTIONAL|UNUSED }, // used to identify Zico core Xtensa blobs
     { "zicokick_copy", OPTIONAL|UNUSED }, // used to identify Zico core Xtensa blobs
+    { "init_ex_drivers", OPTIONAL|UNUSED }, // used to identify Omar core ARM blobs
+    { "omar_init", OPTIONAL|UNUSED }, // used to identify Omar core ARM blobs
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -501,6 +503,7 @@ void add_prop_hit(char *name, int id)
 #define MISC_BLOB_XTENSA_MAX    5
 #define MISC_BLOB_TYPE_NONE     0
 #define MISC_BLOB_TYPE_XTENSA   1
+#define MISC_BLOB_TYPE_OMAR     2
 typedef struct {
     int         type;
     uint32_t    rom_adr; // location of data in ROM, if copied
@@ -556,6 +559,8 @@ misc_val_t misc_vals[]={
     { "ARAM_HEAP_START",    MISC_VAL_NO_STUB},
     { "ARAM_HEAP_SIZE",     MISC_VAL_NO_STUB},
     { "zicokick_values",    MISC_VAL_NO_STUB}, // used to identify Zico core Xtensa blobs (dummy for now)
+    { "omar_init_data",     MISC_VAL_NO_STUB}, // structure containing pointers to Omar blogs
+    { "omar_init_values",   MISC_VAL_NO_STUB}, // Omar blobs
     { "CAM_HAS_ND_FILTER",  MISC_VAL_NO_STUB},
     { "CAM_IS_ILC",         MISC_VAL_NO_STUB}, // used for finsig code that wants to check for interchangeable lens
     { "CAM_HAS_IRIS_DIAPHRAGM",MISC_VAL_NO_STUB},
@@ -3235,6 +3240,105 @@ int sig_match_zicokick_values(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
 }
 
+int sig_match_init_ex_drivers(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    int i;
+    int b_count;
+    // search forward 32 instructions or 14 calls
+    for(i=0, b_count = 0; i < 32 && b_count < 14; i++) {
+        if (!disasm_iter(fw,is)) {
+            printf("sig_match_init_ex_drivers: disasm failed 1\n");
+            return 0;
+        }
+        uint32_t b_tgt = get_branch_call_insn_target(fw,is);
+        if(!b_tgt) {
+            continue;
+        }
+        b_count++;
+        uint64_t next_adr = is->adr | is->thumb;
+        disasm_iter_init(fw,is,b_tgt);
+        if (!disasm_iter(fw,is)) {
+            printf("sig_match_init_ex_drivers: disasm failed 2\n");
+            return 0;
+        }
+        // expect the function we're looking for to start with a push
+        if(is->insn->id == ARM_INS_PUSH) {
+            if(find_next_sig_call(fw,is,30,"DebugAssert")) {
+                uint32_t regs[4];
+                if((get_call_const_args(fw,is,5,regs)&0x2)==0x2) {
+                    const char *str=(char *)adr2ptr(fw,regs[1]);
+                    if(str && strcmp(str,"InitExDrivers.c") == 0) {
+                        return save_sig_with_j(fw,rule->name,b_tgt);
+                    }
+                }
+            }
+        }
+        disasm_iter_init(fw,is,next_adr);
+    }
+    return 0;
+}
+
+int sig_match_omar_init(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // not present on digic 7
+    if (fw->arch_flags & FW_ARCH_FL_VMSA) {
+        return 0;
+    }
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t fadr = find_last_call_from_func(fw,is,20,42);
+    if(!fadr) {
+        printf("sig_match_omar_init: no match call\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,fadr);
+    if(!find_next_sig_call(fw,is,44,"dry_memcpy")) {
+        printf("sig_match_omar_init: no match dry_memcpy\n");
+        return 0;
+    }
+    uint32_t regs[4];
+    // expect dry_memcpy(stack ptr,rom ptr, 0x18)
+    if((get_call_const_args(fw,is,5,regs)&0x6)!=0x6) {
+        printf("sig_match_omar_init: no match dry_memcpy args 1\n");
+        return 0;
+    }
+    if(regs[2] != 0x18 || !adr2ptr(fw,regs[1])) {
+        printf("sig_match_omar_init: no match dry_memcpy args 2\n");
+        return 0;
+    }
+    uint32_t dadr = regs[1];
+    save_misc_val("omar_init_data",dadr,0,(uint32_t)is->insn->address);
+    misc_blob_t *blobs=malloc(3*sizeof(misc_blob_t));
+    int i;
+    for(i = 0; i<2; i++) {
+        uint32_t dst = fw_u32(fw,dadr + i*12);
+        uint32_t src = fw_u32(fw,dadr + i*12 + 4);
+        uint32_t bsize = fw_u32(fw,dadr + i*12 + 8);
+        if(src && dst && bsize) {
+            blobs[i].type = MISC_BLOB_TYPE_OMAR;
+            blobs[i].rom_adr = src;
+            blobs[i].ram_adr = dst;
+            blobs[i].size = bsize;
+        } else {
+            printf("sig_match_omar_init: invalid blobs\n");
+            free(blobs);
+            blobs = NULL;
+            break;
+        }
+    }
+    if(blobs) {
+        blobs[2].type = MISC_BLOB_TYPE_NONE;
+        save_misc_val_blobs("omar_init_values",blobs,0);
+    }
+
+    return save_sig_with_j(fw,rule->name,fadr);
+}
+
 int sig_match_enable_hdmi_power(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4719,6 +4823,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_zicokick_gt52,"zicokick_start",      "ZicoKick Start\n",0,SIG_DRY_MIN(53)},
 {sig_match_zicokick_copy,"zicokick_copy",       "zicokick_start"},
 {sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
+{sig_match_init_ex_drivers,"init_ex_drivers",   "task_Startup"},
+{sig_match_omar_init,"omar_init",               "init_ex_drivers"},
 {sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
@@ -5347,6 +5453,18 @@ void output_firmware_vals(firmware *fw)
                     mv->blobs[i].size);
         }
 
+    }
+    mv=get_misc_val("omar_init_values");
+    if(mv->blobs) {
+        bprintf("\n// Omar ARM blobs:\n");
+        for(i=0;mv->blobs[i].type != MISC_BLOB_TYPE_NONE;i++) {
+            bprintf("// omar_%d 0x%08x - 0x%08x copied from 0x%08x (%7d bytes)\n",
+                    i,
+                    mv->blobs[i].ram_adr,
+                    mv->blobs[i].ram_adr+mv->blobs[i].size,
+                    mv->blobs[i].rom_adr,
+                    mv->blobs[i].size);
+        }
     }
     if(fw->dryos_ver_count) {
         bprintf("\n// Found DryOS versions:\n");
