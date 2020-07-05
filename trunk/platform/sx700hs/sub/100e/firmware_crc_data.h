@@ -1,14 +1,10 @@
 /* THIS FILE IS GENERATED, DO NOT EDIT! */
 
 const firmware_crc_block_t firmware_100e_crc32[]={
-    { (const char *)0xfc020000,   0x4f4920, 0xa89e5ab8 },
-    { (const char *)0xfcc64c5c,    0x1e808, 0xc45dd68d },
-    { (const char *)0xfcc3dc80,    0x26fdc, 0x52cc6ea0 },
-    { (const char *)0xfca30bec,     0x7398, 0x4a806932 },
-    { (const char *)0xfca37f8c,     0x4a70, 0xe397fcd5 },
-    { (const char *)0xfca3ca04,   0x109020, 0xb76228af },
-    { (const char *)0xfc514b48,      0xeec, 0x16768e96 },
-    { (const char *)0xfc515a34,    0x4fdd8, 0x2d8f3b8a },
+    { (const char *)0xfc020000,   0x4f4920, 0xa89e5ab8 }, // ROMCODE
+    { (const char *)0xfc514b48,    0x50cc4, 0x19d96165 }, // omar_0, omar_1
+    { (const char *)0xfca30bec,   0x114e38, 0xbb6f5900 }, // zico_0, zico_1, zico_2
+    { (const char *)0xfcc3dc80,    0x457e4, 0x2cfcd642 }, // RAM data, RAM code
 };
 
 firmware_crc_sub_t firmware_crc_list[]={
@@ -19,5 +15,5 @@ const firmware_crc_desc_t firmware_crc_desc={
     (const char *)0xfc1366c9, // firmware_ver_ptr
     firmware_crc_list,
     1,  // sub_count
-    8,  // block_count
+    4,  // block_count
 };
