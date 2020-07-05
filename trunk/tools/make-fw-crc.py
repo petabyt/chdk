@@ -75,6 +75,14 @@ class ChecksumInfo:
                 'size':ar['size'],
             })
 
+        for ar in smisc['omar_blobs']:
+            self.add_block({
+                'name':ar['name'],
+                'start_adr':ar['src_adr'],
+                'offset':ar['src_adr'] - rom_base,
+                'size':ar['size'],
+            })
+
         self.crc32_all()
 
 
