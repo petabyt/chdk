@@ -1,13 +1,13 @@
 /* THIS FILE IS GENERATED, DO NOT EDIT! */
 
 const firmware_crc_block_t firmware_100a_crc32[]={
-    { (const char *)0xff810000,   0x2e0092, 0x34ad3f14 },
-    { (const char *)0xffb84e78,     0xc074, 0xe661f405 },
+    { (const char *)0xff810000,   0x2e0092, 0x34ad3f14 }, // ROMCODE
+    { (const char *)0xffb84e78,     0xc074, 0xe661f405 }, // RAM data
 };
 
 const firmware_crc_block_t firmware_100b_crc32[]={
-    { (const char *)0xff810000,   0x2e0092, 0x3c76c634 },
-    { (const char *)0xffb84e78,     0xc074, 0xe661f405 },
+    { (const char *)0xff810000,   0x2e0092, 0x3c76c634 }, // ROMCODE
+    { (const char *)0xffb84e78,     0xc074, 0xe661f405 }, // RAM data
 };
 
 firmware_crc_sub_t firmware_crc_list[]={
