@@ -40,6 +40,31 @@ class ChecksumInfo:
         self.total_size += b['size']
         self.blocks.append(b)
 
+    def merge_blocks(self):
+        '''merge adjacent blocks to reduce CHDK core data'''
+        blocks = []
+        pb = None;
+        for b in sorted(self.blocks,key=lambda b: b['offset']):
+            if pb:
+                infomsg(2,'%s %s %x\n'%(pb['name'],b['name'],b['offset']-(pb['offset']+pb['size'])))
+                pb_end = pb['offset'] + pb['size']
+                # should be handled correctly, but may indicate incorrect block detection
+                if pb_end > b['offset']:
+                    warn('overlapping blocks %s %s\n'%(pb['name'],b['name']))
+
+                # allow a modest fudge, assuming Canon wouldn't put a varying chunk in a small space
+                if b['offset'] <= pb['offset'] + pb['size'] + 32:
+                    nb = pb
+                    nb['name'] += ', '+ b['name']
+                    nb['size'] += b['size'] + b['offset'] - (pb['offset'] + pb['size'])
+                    pb = nb
+                    continue
+            pb = b
+            blocks.append(b)
+
+        self.blocks = blocks
+
+
     def process_stubs(self,stubs_data):
         smisc = stubs_data.stubs_entry_misc
         romcode_start = smisc.get('main_fw_start')
@@ -83,11 +108,13 @@ class ChecksumInfo:
                 'size':ar['size'],
             })
 
+        self.merge_blocks()
+
         self.crc32_all()
 
 
     def crc32_all(self):
-        infomsg(1,'%-8s %-10s %-10s %-7s %-10s\n'%('name','start_adr','offset','size','crc32'))
+        infomsg(1,'%-10s %-10s %-7s %-10s %s\n'%('start_adr','offset','size','crc32','name'))
 
         with open(self.filepath,'rb') as fh:
             for b in self.blocks:
@@ -97,7 +124,7 @@ class ChecksumInfo:
                     b['crc32'] = zlib.crc32(data)
                 else:
                     b['crc32'] = 0
-                infomsg(1,'%-8s 0x%08x 0x%08x %7d 0x%08x\n'%(b['name'],b['start_adr'],b['offset'],b['size'],b['crc32']))
+                infomsg(1,'0x%08x 0x%08x %7d 0x%08x %s\n'%(b['start_adr'],b['offset'],b['size'],b['crc32'],b['name']))
 
         infomsg(1,"%d blocks %d bytes %d%%\n"%(len(self.blocks),self.total_size,100*self.total_size/self.filesize))
 
@@ -254,7 +281,7 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
         for s in r:
             outfile.write('const firmware_crc_block_t firmware_%s_crc32[]={\n'%(s['sub']))
             for b in s['csums'].blocks:
-                outfile.write('    { (const char *)%#10x, %#10x, %#10x },\n'%(b['start_adr'],b['size'],b['crc32']))
+                outfile.write('    { (const char *)%#10x, %#10x, %#10x }, // %s\n'%(b['start_adr'],b['size'],b['crc32'],b['name']))
             outfile.write('};\n\n');
 
         outfile.write('firmware_crc_sub_t firmware_crc_list[]={\n')
