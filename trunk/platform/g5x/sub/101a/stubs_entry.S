@@ -26,6 +26,10 @@
 // zico_1 0xbff00000 - 0xbff04ad0 copied from 0xfcc98e78 (  19152 bytes)
 // zico_2 0x80a00000 - 0x80b16748 copied from 0xfcc9d950 (1140552 bytes)
 
+// Omar ARM blobs:
+// omar_0 0xdff00000 - 0xdff00e90 copied from 0xfc677728 (   3728 bytes)
+// omar_1 0x40700000 - 0x407505a0 copied from 0xfc6785b8 ( 329120 bytes)
+
 // Found DryOS versions:
 // 0xfc6774f0 main  "DRYOS version 2.3, release #0058+p3"
 // 0xfc68e2cc other "DRYOS version 2.3, release #0058+p3"

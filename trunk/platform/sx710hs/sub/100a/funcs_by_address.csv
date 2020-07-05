@@ -122,6 +122,7 @@
 0xfc055a19,exception_handler_FIQ
 0xfc055b75,exception_handler_IRQ
 0xfc055dc9,task_Startup
+0xfc055ff1,init_ex_drivers
 0xfc056f3d,task_UartLog
 0xfc0570ad,StartRedirectUART_FW
 0xfc05714d,StopRedirectUART_FW
@@ -1600,6 +1601,7 @@
 0xfc4bad45,task_MechaShutter
 0xfc516a9d,task_ITCMainTask
 0xfc539ba9,memShow_FW
+0xfc53a0ad,omar_init
 0xfc53a5a9,MoveIrisToAv_FW
 0xfc53a5d7,j_GetCurrentAvValue_FW
 0xfc53a659,MoveIrisFullOpen_FW

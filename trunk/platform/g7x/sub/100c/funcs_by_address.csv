@@ -120,6 +120,7 @@
 0xfc064485,exception_handler_FIQ
 0xfc0645e1,exception_handler_IRQ
 0xfc064831,task_Startup
+0xfc064a91,init_ex_drivers
 0xfc0659d9,task_UartLog
 0xfc065b49,StartRedirectUART_FW
 0xfc065be9,StopRedirectUART_FW
@@ -610,6 +611,7 @@
 0xfc134e01,VbattGet
 0xfc134e01,VbattGet_FW
 0xfc1350f9,task_ClockSave
+0xfc136d35,omar_init
 0xfc136ff1,task_DevelopModule
 0xfc138a07,imager_active_callback
 0xfc138a9b,ImagerActivate

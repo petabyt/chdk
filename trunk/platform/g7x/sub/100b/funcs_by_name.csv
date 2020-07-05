@@ -928,6 +928,7 @@
 0xfc3a8925,IMX183OBClamp.SetDeltaGainThresh_FW
 0xfc3a8971,IMX183OBClamp.SetKidsThresh_FW
 0xfc32d9bb,InactivateAdjLog_FW
+0xfc064a91,init_ex_drivers
 0xfc0a98c1,initComDiscovery_FW
 0xfc1e33dd,InitializeAdjustmentFunction_FW
 0xfc1e339d,InitializeAdjustmentSystem_FW
@@ -1510,6 +1511,7 @@
 0xfc383b8f,NRTBL.SetDefectCorrectType_FW
 0xfc383ba1,NRTBL.SetTassenType_FW
 0xfc1e23f3,OffPrintPhySw_FW
+0xfc136d35,omar_init
 0xfc4efc7f,OneShotWhigeBalance_FW
 0xfc4efc7f,OneTypeWhiteBalance_FW
 0xfc1e23e9,OnPrintPhySw_FW

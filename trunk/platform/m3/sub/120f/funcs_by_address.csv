@@ -124,6 +124,7 @@
 0xfc0630cd,exception_handler_FIQ
 0xfc063229,exception_handler_IRQ
 0xfc06347d,task_Startup
+0xfc0636dd,init_ex_drivers
 0xfc064649,task_UartLog
 0xfc0647b9,StartRedirectUART_FW
 0xfc064859,StopRedirectUART_FW
@@ -995,6 +996,7 @@
 0xfc1ee4df,close
 0xfc1ee5e5,Read
 0xfc1ee5e5,Read_FW
+0xfc1f02cd,omar_init
 0xfc1f1059,task__imageSensorTask
 0xfc1f159b,task__vBLKTask
 0xfc1f35e1,GetAdVBattBottom_FW

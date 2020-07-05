@@ -114,6 +114,7 @@
 0xfc05e191,exception_handler_FIQ
 0xfc05e2ed,exception_handler_IRQ
 0xfc05e53d,task_Startup
+0xfc05e781,init_ex_drivers
 0xfc05f63d,task_UartLog
 0xfc05f7ad,StartRedirectUART_FW
 0xfc05f84d,StopRedirectUART_FW
@@ -557,6 +558,7 @@
 0xfc13d08f,close
 0xfc13d195,Read
 0xfc13d195,Read_FW
+0xfc13e449,omar_init
 0xfc13e57d,task_WBCtrl
 0xfc13f443,task_DevelopModule
 0xfc141383,EF.IsChargeFull_FW
