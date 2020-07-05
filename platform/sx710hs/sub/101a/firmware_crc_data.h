@@ -8,6 +8,8 @@ const firmware_crc_block_t firmware_101a_crc32[]={
     { (const char *)0xfcb2a320,     0x7800, 0x1fb6677c },
     { (const char *)0xfcb31b28,     0x4b20, 0x27dd60a8 },
     { (const char *)0xfcb36650,   0x10d2d0, 0x987d27ea },
+    { (const char *)0xfc56bef0,      0xed0, 0x182c0800 },
+    { (const char *)0xfc56cdc0,    0x4f1c4, 0xd7cf6f42 },
 };
 
 firmware_crc_sub_t firmware_crc_list[]={
@@ -18,5 +20,5 @@ const firmware_crc_desc_t firmware_crc_desc={
     (const char *)0xfc4a3495, // firmware_ver_ptr
     firmware_crc_list,
     1,  // sub_count
-    7,  // block_count
+    9,  // block_count
 };

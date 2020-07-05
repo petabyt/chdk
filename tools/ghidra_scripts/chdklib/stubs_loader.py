@@ -33,6 +33,7 @@ class StubsFileParser:
         'Values for makefile.inc':'MAKEFILE_INC',
         'Detected address ranges:':'ADR_RANGES',
         'Zico Xtensa blobs:':'ZICO_BLOBS',
+        'Omar ARM blobs:':'OMAR_BLOBS',
         "Values below go in 'platform_camera.h':":'CAMERA_H',
     }
     stubs_entry_header = '// !!! THIS FILE IS GENERATED. DO NOT EDIT. !!!'
@@ -55,6 +56,7 @@ class StubsFileParser:
             'makefile_vals':{},
             'adr_ranges':[],
             'zico_blobs':[],
+            'omar_blobs':[],
             'misc_vals':[],
             'camera_h_vals':{},
         }
@@ -219,6 +221,8 @@ class StubsFileParser:
             self.process_adr_range(body,'adr_ranges')
         elif self.section == 'ZICO_BLOBS':
             self.process_adr_range(body,'zico_blobs')
+        elif self.section == 'OMAR_BLOBS':
+            self.process_adr_range(body,'omar_blobs')
         elif self.section == 'CAMERA_H':
             self.process_camera_h_val(body)
         else:
