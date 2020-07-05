@@ -1110,6 +1110,7 @@
 0xfc131abf,ImagerActivate
 0xfc0bb4fb,imlInitialize_FW
 0xfc37aee7,InactivateAdjLog_FW
+0xfc0636dd,init_ex_drivers
 0xfc0bfde9,initComDiscovery_FW
 0xfc189fc9,InitializeAdjustmentFunction_FW
 0xfc189f89,InitializeAdjustmentSystem_FW
@@ -1741,6 +1742,7 @@
 0xfc3f53f1,NRTBL.SetDefectCorrectType_FW
 0xfc3f5403,NRTBL.SetTassenType_FW
 0xfc188fab,OffPrintPhySw_FW
+0xfc1f02a1,omar_init
 0xfc5dda55,OneShotWhigeBalance_FW
 0xfc5dda55,OneTypeWhiteBalance_FW
 0xfc188fa1,OnPrintPhySw_FW

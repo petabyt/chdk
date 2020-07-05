@@ -126,6 +126,7 @@
 0xfc06c685,exception_handler_FIQ
 0xfc06c7e1,exception_handler_IRQ
 0xfc06ca35,task_Startup
+0xfc06cc5d,init_ex_drivers
 0xfc06dbad,task_UartLog
 0xfc06dd1d,StartRedirectUART_FW
 0xfc06ddbd,StopRedirectUART_FW
@@ -999,6 +1000,7 @@
 0xfc1ebd5b,close
 0xfc1ebe61,Read
 0xfc1ebe61,Read_FW
+0xfc1ed67d,omar_init
 0xfc1ed933,task_DevelopModule
 0xfc1eeb69,task__imageSensorTask
 0xfc1ef06f,task__vBLKTask

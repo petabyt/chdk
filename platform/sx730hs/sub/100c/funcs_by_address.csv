@@ -68,6 +68,7 @@
 0xfc05cac1,exception_handler_FIQ
 0xfc05cc1d,exception_handler_IRQ
 0xfc05ccf5,task_Startup
+0xfc05d0c9,init_ex_drivers
 0xfc05dc35,task_UartLog
 0xfc05dda5,StartRedirectUART_FW
 0xfc05de45,StopRedirectUART_FW
@@ -303,6 +304,7 @@
 0xfc0dbcbb,VbattGet
 0xfc0dbcbb,VbattGet_FW
 0xfc0dc2dd,task_ClockSave
+0xfc0dcf31,omar_init
 0xfc0dd243,task_DevelopModule
 0xfc0de145,task__imageSensorTask
 0xfc0e099d,LiveImageTool.GetDzoomPosition_FW

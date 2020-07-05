@@ -962,6 +962,7 @@
 0xe0074fbb,IMX183OBClamp.SetDeltaGainThresh_FW
 0xe0074fc5,IMX183OBClamp.SetKidsThresh_FW
 0xe0373cf9,InactivateAdjLog_FW
+0xe00208bf,init_ex_drivers
 0xe0552f3d,InitializeAdjustmentFunction_FW
 0xe0552efd,InitializeAdjustmentSystem_FW
 0xe02a7725,InitializeAudio_FW

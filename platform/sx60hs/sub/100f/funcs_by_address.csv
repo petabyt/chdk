@@ -120,6 +120,7 @@
 0xfc05f045,exception_handler_FIQ
 0xfc05f1a1,exception_handler_IRQ
 0xfc05f3f1,task_Startup
+0xfc05f651,init_ex_drivers
 0xfc060561,task_UartLog
 0xfc0606d1,StartRedirectUART_FW
 0xfc060771,StopRedirectUART_FW
@@ -585,6 +586,7 @@
 0xfc137779,VbattGet
 0xfc137779,VbattGet_FW
 0xfc137a71,task_ClockSave
+0xfc1394f1,omar_init
 0xfc13ad3f,EF.IsChargeFull_FW
 0xfc13ad3f,IsStrobeChargeCompleted
 0xfc13b29b,imager_active_callback

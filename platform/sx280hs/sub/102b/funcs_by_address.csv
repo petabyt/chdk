@@ -116,6 +116,8 @@
 0xfc04f319,exception_handler_FIQ
 0xfc04f475,exception_handler_IRQ
 0xfc04f6c5,task_Startup
+0xfc04f909,init_ex_drivers
+0xfc04fd5d,omar_init
 0xfc050ed5,task_UartLog
 0xfc051045,StartRedirectUART_FW
 0xfc0510e5,StopRedirectUART_FW
