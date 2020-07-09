@@ -72,3 +72,49 @@ def get_tmode_reg_at(address):
         return 0
     
     return int(progCtx.getValue(tmodeReg,address,False))
+
+def is_likely_func_start(addr,tmode = None):
+    """check if code at addr looks like a function start, or trivial function. tmode taken from program if not set"""
+    if tmode is None:
+        tmode = get_tmode_reg_at(addr)
+
+    pi = get_pinsn_at(addr,tmode)
+    if not pi:
+        return False
+
+    # check for a few common instructions before push
+    # mov or ldr r0-r3
+    # sub sp,sp ... (old firmware)
+    # add / sub r0-r3,#const
+    # using string operands is probably fragile
+    for i in range(0,2):
+        op = pi.getMnemonicString()
+        a0 = pi.getDefaultOperandRepresentation(0)
+        a1 = pi.getDefaultOperandRepresentation(1)
+        a2 = pi.getDefaultOperandRepresentation(2)
+        if ((re.match('mov|ldr',op) and re.match('r[0-3]',a0))
+            or (re.match('add|sub',op) and re.match('r[0-3]',a0) and re.match('r[0-3]',a1) and re.match('#',a2))
+            or (re.match('add|sub',op) and re.match('r[0-3]',a0) and re.match('#',a1))
+            or (op == 'sub' and a0 == 'sp')):
+            addr = addr.add(pi.length)
+            pi = get_pinsn_at(addr,tmode)
+            if not pi:
+                return False
+        else:
+            break
+
+    if tmode:
+        if op == 'push':
+            return True
+    else:
+        if ((op == 'stmdb' and a0[0:3] == 'sp!') or (op == 'str' and  a0 == 'lr' and a1 == '[sp,#-0x4]!')):
+            return True
+
+    # not a push, check immediate return
+    if (op == 'bx' and a0 == 'lr') or (op == 'mov' and a0 == 'pc' and a1 == 'lr'):
+        return True
+
+    # TODO veneers, trivial wrappers like foo(x) => bar(1,x)
+
+    return False
+
