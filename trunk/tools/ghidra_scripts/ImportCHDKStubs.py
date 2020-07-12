@@ -51,6 +51,10 @@
 # disassembly. 
 # The add_boot_entries option controls this.
 #
+# By default, when disassembly is enabled, the script tries to define functions in Ghidra for stubs which are
+# likely to be function
+# The create_functions option controls this.
+
 # The prompt to select mode is controlled by askmode option
 #
 #@category CHDK
@@ -80,13 +84,15 @@ import csv
 import re
 from java.math import BigInteger 
 import ghidra.program.model.symbol as ProgramSymbol
+import ghidra.program.model.symbol.SymbolType as SymbolType
+import ghidra.program.model.symbol.SourceType as SourceType
 
 # to set verbosity
 import chdklib.logutil
 from chdklib.logutil import infomsg, warn
 from chdklib.stubs_loader import StubsData
 import chdklib.optionsutil as optionsutil
-from chdklib.analyzeutil import get_pinsn_at
+from chdklib.analyzeutil import get_pinsn_at, is_likely_func_start
 
 # global options, filled by init_options
 g_options = {
@@ -239,14 +245,22 @@ g_options_spec = [
 # Attempt to add entry points for main firmware boot and romstarter
 """,
     },
+    {
+        'name':'create_functions',
+        'type':'bool',
+        'default':True,
+        'desc':"""\
+# Attempt to create functions for stubs that look like functions (only if disassemble_functions enabled)
+""",
+    },
 ]
 
 # hack, call wants type not string
 g_sym_src_map = {
-    'ANALYSIS': ProgramSymbol.SourceType.ANALYSIS,
-    'DEFAULT': ProgramSymbol.SourceType.DEFAULT,
-    'IMPORTED': ProgramSymbol.SourceType.IMPORTED,
-    'USER_DEFINED': ProgramSymbol.SourceType.USER_DEFINED,
+    'ANALYSIS': SourceType.ANALYSIS,
+    'DEFAULT': SourceType.DEFAULT,
+    'IMPORTED': SourceType.IMPORTED,
+    'USER_DEFINED': SourceType.USER_DEFINED,
 }
 
 
@@ -384,6 +398,70 @@ def set_thumb_reg_for_cval(cval):
         warn("Set tmode failed at %s"%(address))
         return False
 
+def do_create_func(cval):
+    if not (g_options['disassemble_functions'] and g_options['create_functions']):
+        return
+
+    if cval['make_func'] == 0:
+        return
+
+    addr = cval['gh_adr']
+    sym = getSymbolAt(addr)
+    if sym and sym.getSymbolType() == SymbolType.FUNCTION: 
+        # infomsg(0,'already a function %s %s\n'%(cval['pri_name'],addr));
+        return True
+
+    # heuristics for things that aren't high confidence functions
+    if cval['make_func'] != 2:
+        is_called = False
+        # check references to address:
+        for ref in getReferencesTo(addr):
+            if ref.getReferenceType().isCall():
+                is_called = True
+                break
+
+        # give up if addr doesn't have call reference, or a normal function prologue
+        if not (is_called or is_likely_func_start(cval['gh_adr'])):
+            return
+
+    infomsg(2,'make func %s %s\n'%(cval['pri_name'],addr));
+    fc = getFunctionContaining(addr)
+    f_addr = None
+    if fc:
+        infomsg(1,'%s %s already part of function %s\n'%(cval['pri_name'],addr, fc.getName()))
+        fb = fc.getBody()
+        # check if containing function is non-contiguous (often, but not always incorrect)
+        if fb.getNumAddressRanges() > 1:
+            r = fb.getRangeContaining(addr)
+            # if our func is start of non-contiguous func, remove it
+            if r.getMinAddress() == addr:
+                infomsg(1,'remove %s %s from %s %s\n'%(cval['pri_name'],addr,fc.getName(),fc.getSymbol().address))
+                if not g_options['pretend']:
+                    s = fc.getSymbol()
+                    if s.getSource() == SourceType.ANALYSIS or s.getSource() == SourceType.DEFAULT:
+                        f_addr = fc.getSymbol().address
+                        removeFunction(fc)
+                    else:
+                        infomsg(1,'not removing non-default source function %s\n'%(fc.getName()))
+
+    if g_options['pretend']:
+        return True
+
+    f = createFunction(addr,None)
+    if f_addr:
+        fr = createFunction(f_addr,None)
+        if fr:
+            infomsg(1,'recreated %s at %s\n'%(fr.getName(),f_addr))
+        else:
+            infomsg(0,'failed to recreate function at %s\n'%(f_addr))
+
+    if f:
+        return True
+    else:
+        warn('create function failed %s'%(addr))
+        return False
+
+
 def process_func_cval(cval):
     address = cval['gh_adr']
     if g_options['create_entrypoints'] and not g_options['pretend']:
@@ -415,6 +493,7 @@ def do_create_stubs(items,stype):
         create_cval_symbols(cval)
         if stype == 'func':
             process_func_cval(cval)
+            do_create_func(cval)
 
         monitor.incrementProgress(1)
 
@@ -452,11 +531,13 @@ def process_list(stubs_data):
             'adr':adr,
             'pri_name':svlist[0]['name'], # default first found, functions adjust below
             'names':[], # all names, ordered to match sources, comments
-            'alt_names':[],
+            'alt_names':[], # unique alternative names, excluding primary
             'sources':[],
             'comments':[],
             'comment':None,
             'type':svlist[0]['type'],
+            'make_func':0, # should this be created as a function in ghidra when create_functions is enabled?
+                            # 0=never 1=guess based on code 2=yes
         }
         for sval in svlist:
             if sval['type'] == 'const':
@@ -496,7 +577,30 @@ def process_list(stubs_data):
                 cval['alt_names'].append(name)
 
         if cval['type'] == 'func':
+            # ghidra address, with thumb bit clear
             gh_adr = toAddr(adr & 0xfffffffe)
+
+            # based on name, try to guess if the stub should be defined as a function in ghidra
+            cval['make_func'] = 1 # default for function (code) stubs, guess based on refs and code
+            for name in cval['names']:
+                # kbd_p1_f_cont, and hopefully if we do similar things
+                if re.search('_cont$',name):
+                    cval['make_func'] = 0
+                    break
+
+                # don't bother with known veneers
+                if re.search('^j_',name):
+                    cval['make_func'] = 0
+                    break
+
+                # tasks, PTP handlers, exception and exception handlers
+                # should mostly be well formed functions
+                # |_FW(_stubs_[0-9a-fA-F]{8})? not included because many event procs
+                # are wrappers that use a b instead of bl
+                if re.search('^task_|^handle_PTP_OC_|^exception_handler_',name):
+                    cval['make_func'] = 2
+                    break
+
         else:
             gh_adr = toAddr(adr)
 
