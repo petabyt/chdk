@@ -70,7 +70,7 @@ def do_make_func(addr):
         if fr:
             infomsg(0,'recreated %s at %s\n'%(fr.getName(),f_addr))
         else:
-            infomsg(0,'failed to function %s\n'%(fr.getName(),f_addr))
+            infomsg(0,'failed to re-create function at %s\n'%(f_addr))
 
     if f:
         return True
