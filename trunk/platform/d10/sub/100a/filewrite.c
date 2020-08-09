@@ -3,6 +3,11 @@
 
 // ifdef allows easy building with/without filewrite support for testing
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
+
+// debug
+//#define FILEWRITE_DEBUG_LOG 1
+extern void _LogCameraEvent(int id,const char *fmt,...);
+
 typedef struct {
     unsigned int address;
     unsigned int length;
@@ -18,12 +23,27 @@ typedef struct {
  */
 typedef struct
 {
-    int unkn1, unkn2, unkn3, unkn4, unkn5;
+    int unkn1[5]; // first value is message number, next seems to be total written, others unknown
     cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
     char name[32];
 } fwt_data_struct;
 
 #include "../../../generic/filewrite.c"
+
+#ifdef FILEWRITE_DEBUG_LOG
+void log_fwt_msg(fwt_data_struct *fwd)
+{
+    int m=fwd->unkn1[0];
+    _LogCameraEvent(0x20,"fw m:%d",m);
+    _LogCameraEvent(0x20,"fw %s",fwd->name);
+    // 4 because write stage messages start at 4 (not true for all cams)
+    if(m >= 4 && m < (4+MAX_CHUNKS_FOR_JPEG)) {
+        _LogCameraEvent(0x20,"fw chunk adr:0x%08x l:0x%08x",fwd->pdc[m-4].address,fwd->pdc[m-4].length);
+    }
+    _LogCameraEvent(0x20,"fw u %08x %08x %08x %08x",fwd->unkn1[1],fwd->unkn1[2],fwd->unkn1[3],fwd->unkn1[4]);
+}
+#endif
+
 
 void __attribute__((naked,noinline)) filewritetask() { // FFA25FB4 "FileWriteTask"
 asm volatile (
@@ -37,6 +57,10 @@ asm volatile (
 "                BL      sub_FF826C30\n" // KerQueue.c 0
 "                CMP     R0, #0\n"
 "                BNE     loc_FFA25FEC\n"
+#ifdef FILEWRITE_DEBUG_LOG
+"ldr     r0, [sp,#8]\n"
+"bl log_fwt_msg\n"
+#endif
 "                LDR     R0, [SP,#8]\n"
 "                LDR     R1, [R0]\n"
 "                CMP     R1, #1\n"
