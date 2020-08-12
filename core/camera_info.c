@@ -218,6 +218,11 @@ _cam_info camera_info =
     CAM_AF_LED,
     CAM_CIRCLE_OF_CONFUSION,
     CAM_DIGIC,
+#if defined(CAM_HAS_CANON_RAW)
+    1,
+#else
+    0,
+#endif
 };
 
 //==========================================================

@@ -38,7 +38,7 @@ typedef struct
 //      _cam_info   --> CAM_INFO_VERSION
 #define CAM_SCREEN_VERSION      {2,0}       // Version for camera_screen
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
-#define CAM_INFO_VERSION        {2,0}       // Version for camera_info
+#define CAM_INFO_VERSION        {3,0}       // Version for camera_info
 
 typedef struct
 {
@@ -166,6 +166,7 @@ typedef struct
     int cam_af_led;
     int circle_of_confusion;
     int cam_digic; // digic number from makefile. Number x10, so digic 2 = 20,  digic IV = 40, digic IV+ = 41.
+    int cam_canon_raw; // cam has native raw support
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct

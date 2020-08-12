@@ -106,7 +106,10 @@ extern short shooting_get_nd_current_ev96(void);
 extern short shooting_get_is_mode();
 extern short shooting_get_resolution();
 extern short shooting_get_display_mode();
-extern int shooting_get_canon_raw_enabled();
+#define SHOOTING_CANON_FMT_JPG  1
+#define SHOOTING_CANON_FMT_RAW  2
+extern int shooting_get_canon_image_format();
+extern int shooting_set_canon_image_format(int fmt);
 
 /******************************************************************/
 

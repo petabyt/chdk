@@ -58,4 +58,5 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SERVO_AF                   297     // 0 = Servo AF off, 1 = Servo AF on
 #define PROPCASE_TIMER_SHOTS                336     // Number of shots for TIMER_MODE=Custom
 #define PROPCASE_ND_FILTER_STATE            194     // 0 = out, 1 = in
+#define PROPCASE_JPEG_WITH_RAW              284     // RAW+JPEG menu setting, 0 = Off, 1 = On
 #endif

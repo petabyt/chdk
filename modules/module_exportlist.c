@@ -278,6 +278,8 @@
             shooting_get_current_av96
             shooting_get_current_tv96
             shooting_get_imager_active
+            shooting_get_canon_image_format
+            shooting_set_canon_image_format
 
             rbf_char_width
             rbf_font_height
