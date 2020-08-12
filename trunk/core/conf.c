@@ -1592,7 +1592,7 @@ int is_raw_exception() {
     return (
         (is_video_recording() && conf.save_raw_in_video) ||                                 // True is movie mode and save_raw_in_video is disabled
 #ifdef CAM_HAS_CANON_RAW
-        (shooting_get_canon_raw_enabled() && conf.save_raw_in_canon_raw) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
+        ((shooting_get_canon_image_format() & SHOOTING_CANON_FMT_RAW) && conf.save_raw_in_canon_raw) ||                                                   // True if Canon RAW enabled, for cams that treat it as a resolution setting (g9, g10, s90, sx1? not g12, g1x)
 #endif
 #ifdef CAM_HAS_SPORTS_MODE
         ((m==MODE_SPORTS) && conf.save_raw_in_sports) ||                                    // True if sports mode and save_raw_in_sports is disabled

@@ -135,18 +135,89 @@ int   shooting_get_exif_subject_dist()          { return shooting_get_prop_int(P
 int   shooting_is_flash()                       { return shooting_get_prop_int(PROPCASE_IS_FLASH_READY); }
 int   shooting_in_progress()                    { return shooting_get_prop_int(PROPCASE_SHOOTING); }
 
-// TODO should maybe jpeg, raw, raw+jpeg?
-int shooting_get_canon_raw_enabled() {
+// get current image format: 1 = jpeg, 2 = Raw, 3 = Raw + JPEG
+int shooting_get_canon_image_format() {
 #ifdef CAM_HAS_CANON_RAW
 #ifdef PROPCASE_IMAGE_FORMAT
-    return (shooting_get_prop(PROPCASE_IMAGE_FORMAT) != 1); // 0 = raw, 2 = raw+jpeg
-#else
-    return (shooting_get_prop(PROPCASE_RESOLUTION) == 5); // resolution 5 = raw, jpeg controlled with another prop
+    switch(shooting_get_prop(PROPCASE_IMAGE_FORMAT)) {
+        case 0:
+            return SHOOTING_CANON_FMT_RAW;
+        case 2:
+            return (SHOOTING_CANON_FMT_RAW | SHOOTING_CANON_FMT_JPG);
+        default:
+            return SHOOTING_CANON_FMT_JPG;
+    }
+#else // PROPCASE_IMAGE_FORMAT not defined, = propset 2 or 3
+    if(shooting_get_prop(PROPCASE_RESOLUTION) == 5) { // resolution 5 = raw, jpeg controlled by JPEG_WITH_RAW
+       if(shooting_get_prop(PROPCASE_JPEG_WITH_RAW) == 1) {
+           return (SHOOTING_CANON_FMT_RAW | SHOOTING_CANON_FMT_JPG);
+       }
+       return SHOOTING_CANON_FMT_RAW;
+    } else {
+        return SHOOTING_CANON_FMT_JPG;
+    }
 #endif
-#else
-    return 0;
+#else // no native raw
+    return SHOOTING_CANON_FMT_JPG;
 #endif
 }
+
+// set current canon image format: 1 = jpeg, 2 = Raw, 3 = Raw + JPEG
+int shooting_set_canon_image_format(int fmt) {
+#ifdef CAM_HAS_CANON_RAW
+#ifdef PROPCASE_IMAGE_FORMAT
+    int v;
+    switch(fmt) {
+        case SHOOTING_CANON_FMT_RAW:
+            v = 0;  
+            break;
+        case (SHOOTING_CANON_FMT_RAW | SHOOTING_CANON_FMT_JPG):
+            v = 2;
+            break;
+        case SHOOTING_CANON_FMT_JPG:
+            v = 1;
+            break;
+        default:
+            return 0;
+    }
+    shooting_set_prop(PROPCASE_IMAGE_FORMAT,v);
+    return 1;
+#else // PROPCASE_IMAGE_FORMAT not defined, propset 2 or 3
+    // raw enabled is in resolution, try to save when changing to raw, restore when switching to jpeg
+    static int saved_resolution = -1;
+
+    // invalid format, bail
+    if(fmt < 1 || fmt > 3) {
+        return 0;
+    }
+    if(fmt & SHOOTING_CANON_FMT_RAW) {
+        int res = shooting_get_prop(PROPCASE_RESOLUTION);
+        if( res != 5) { // raw requested, if resolution not already set, set to 5 and previous
+            saved_resolution = res;
+            shooting_set_prop(PROPCASE_RESOLUTION,5);
+        }
+        if(fmt & SHOOTING_CANON_FMT_JPG) {
+            shooting_set_prop(PROPCASE_JPEG_WITH_RAW,1);
+        } else {
+            shooting_set_prop(PROPCASE_JPEG_WITH_RAW,0);
+        }
+    } else { // jpeg
+        if(shooting_get_prop(PROPCASE_RESOLUTION) == 5) { // 5 = raw for cams that set with resolution
+            if(saved_resolution != -1) {
+                shooting_set_prop(PROPCASE_RESOLUTION,saved_resolution); // switching to jpeg, try to restore resolution
+                saved_resolution = -1;
+            } else {
+                shooting_set_prop(PROPCASE_RESOLUTION,0); // default to L if we don't know
+            }
+        }
+    }
+    return 1;
+#endif
+#else // no native raw
+    return fmt == SHOOTING_CANON_FMT_JPG; // only setting jpeg is valid
+#endif
+}
+
 
 int shooting_get_imager_active() {
   extern int imager_active;

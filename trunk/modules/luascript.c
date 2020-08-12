@@ -789,6 +789,20 @@ static int luaCB_get_imager_active( lua_State* L )
   return 1;
 }
 
+// return current canon image format as bitmask 1 = jpg, 2 = raw, 3 = raw+jpg
+static int luaCB_get_canon_image_format( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_canon_image_format() );
+  return 1;
+}
+
+// does cam support canon raw?
+static int luaCB_get_canon_raw_support( lua_State* L )
+{
+  lua_pushboolean(L, camera_info.cam_canon_raw);
+  return 1;
+}
+
 static int luaCB_get_user_tv_id( lua_State* L )
 {
   lua_pushnumber( L, shooting_get_user_tv_id() );
@@ -860,6 +874,15 @@ static int luaCB_set_av96( lua_State* L )
 {
   shooting_set_av96( luaL_checknumber( L, 1 ), shooting_in_progress()?SET_NOW:SET_LATER );
   return 0;
+}
+
+// set current canon image format as bitmask 1 = jpg, 2 = raw, 3 = raw+jpg
+// returns true if support format, false if not
+// NOTE: this setting is lost in shooting mode and play/rec switches
+static int luaCB_set_canon_image_format( lua_State* L )
+{
+  lua_pushboolean( L, shooting_set_canon_image_format(luaL_checknumber( L, 1 )) );
+  return 1;
 }
 
 static int luaCB_set_focus_interlock_bypass( lua_State* L )
@@ -2789,9 +2812,12 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_current_av96)
     FUNC(get_current_tv96)
     FUNC(get_imager_active)
+    FUNC(get_canon_image_format)
+    FUNC(get_canon_raw_support)
 
     FUNC(set_av96_direct)
     FUNC(set_av96)
+    FUNC(set_canon_image_format)
     FUNC(set_focus)
     FUNC(set_focus_interlock_bypass)
     FUNC(set_iso_mode)
