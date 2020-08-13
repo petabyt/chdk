@@ -320,7 +320,14 @@ FILE filewrite.c
 //////////////////////////////////////////////////////////////
 FUNC sig=task_FileWrite name=filewritetask
 ASM
-FW 43
+FW 8
+>>>
+#ifdef FILEWRITE_DEBUG_LOG
+"ldr     r0, [sp,#8]\n"
+"bl log_fwt_msg\n"
+#endif
+<<<
+FW 35
 PATCHSUB name=fwt_close
 FW 8
 PATCHSUB ref=0 comment="Open stage"
