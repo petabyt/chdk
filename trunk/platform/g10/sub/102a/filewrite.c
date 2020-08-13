@@ -4,12 +4,16 @@
 #include "lolevel.h"
 #include "platform.h"
 
+// debug
+//#define FILEWRITE_DEBUG_LOG 1
+extern void _LogCameraEvent(int id,const char *fmt,...);
+
 typedef struct {
     unsigned int address;
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 3 //filewritetask is prepared for this many chunks
+#define MAX_CHUNKS_FOR_JPEG 4 //filewritetask is prepared for this many chunks
 /*
  * fwt_data_struct: defined here as it's camera dependent
  * unneeded members are designated with unkn
@@ -26,6 +30,20 @@ typedef struct
 
 #include "../../../generic/filewrite.c"
 
+#ifdef FILEWRITE_DEBUG_LOG
+void log_fwt_msg(fwt_data_struct *fwd)
+{
+    int m=fwd->unkn1[0];
+    _LogCameraEvent(0x20,"fw m:%d",m);
+    _LogCameraEvent(0x20,"fw %s",fwd->name);
+    if(m >= 4 && m < (4+MAX_CHUNKS_FOR_JPEG)) {
+        _LogCameraEvent(0x20,"fw chunk adr:0x%08x l:0x%08x",fwd->pdc[m-4].address,fwd->pdc[m-4].length);
+    }
+    _LogCameraEvent(0x20,"fw u %08x %08x %08x %08x",fwd->unkn1[1],fwd->unkn1[2],fwd->unkn1[3],fwd->unkn1[4]);
+}
+#endif
+
+
 /*************************************************************/
 //** filewritetask @ 0xFFA46A18 - 0xFFA46AFC, length=58
 void __attribute__((naked,noinline)) filewritetask() {
@@ -40,6 +58,10 @@ asm volatile (
 "    BL      sub_FF827D30 /*_ReceiveMessageQueue*/ \n"
 "    CMP     R0, #0 \n"
 "    BNE     loc_FFA46A50 \n"
+#ifdef FILEWRITE_DEBUG_LOG
+"ldr     r0, [sp,#8]\n"
+"bl log_fwt_msg\n"
+#endif
 "    LDR     R0, [SP, #8] \n"
 "    LDR     R1, [R0] \n"
 "    CMP     R1, #1 \n"
