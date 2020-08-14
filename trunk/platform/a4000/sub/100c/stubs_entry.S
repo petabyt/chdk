@@ -120,6 +120,9 @@ DEF(jpeg_count_str                          ,0x000b1abc) // Found @0xff9cd838
 //#define CAM_DATE_FOLDER_NAMING 0x400 // Found @0xffa4930c (pass as 3rd param to GetImageFolder)
 //#define PARAM_CAMERA_NAME 4 // Found @0xffba0d18
 
+// Below goes in 'filewrite.c' or 'platform_camera.h':
+//#define MAX_CHUNKS_FOR_JPEG 7 // Found @0xffa54a90
+
 // Known propcases
 // //      PROPCASE_AFSTEP 13
 // #define PROPCASE_FOCUS_STATE 18

@@ -97,6 +97,9 @@ DEF(jpeg_count_str                          ,0x00049a80) // Found @0xffd5e8c0
 //#define CAM_UNCACHED_BIT  0x10000000 // Found @0xffc17e54
 //#define PARAM_CAMERA_NAME 4 // Found @0xffe92348
 
+// Below goes in 'filewrite.c' or 'platform_camera.h':
+//#define MAX_CHUNKS_FOR_JPEG 3 // Found @0xffdc1948
+
 // Known propcases
 // //      PROPCASE_AFSTEP 13
 // #define PROPCASE_FOCUS_STATE 18
