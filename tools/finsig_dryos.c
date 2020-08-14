@@ -4312,6 +4312,25 @@ void find_platform_vals(firmware *fw)
     }
 
     find_DebugAssert_argcount(fw);
+
+    k = get_saved_sig(fw,"task_FileWrite");
+    if (k >= 0)
+    {
+        uint32_t fadr = func_names[k].val;
+        k1 = adr2idx(fw, fadr);
+        for (k=1; k<32; k++)
+        {
+            if ((fwval(fw, k1+k) & 0x0fffff00) == 0x008ff100) // add[cond] pc, pc, rx, lsl#2
+            {
+                for (k++;isB(fw,k1+k) && idxFollowBranch(fw,k1+k,1) != idxFollowBranch(fw,k1+k-1,1);k++);
+                int c = 1;
+                for (;isB(fw,k1+k) && idxFollowBranch(fw,k1+k,1) == idxFollowBranch(fw,k1+k-1,1);k++,c++);
+                bprintf("\n// Below goes in 'filewrite.c' or 'platform_camera.h':\n");
+                bprintf("//#define MAX_CHUNKS_FOR_JPEG %d // Found @0x%08x\n",c,idx2adr(fw,k+k1));
+                break;
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------
