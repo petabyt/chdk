@@ -1211,6 +1211,7 @@
 0xffa68cd0,SetCdsGainValue_FW
 0xff99bc94,SetColor_FW
 0xff826048,SetDataChunkSize_FW
+0xff99f720,SetDate
 0xff99f720,SetDate_FW
 0xff99f8e0,SetDay_FW
 0xffa57e0c,SetDCMotorWaitTime_FW

@@ -1580,6 +1580,7 @@
 0xff37e3c0,SetCzDebugFocusMode_FW
 0xff37e3d4,SetCzDebugSoundMeasurementMode_FW
 0xff37e3a8,SetCzDebugSubjectDistance_FW
+0xff474794,SetDate
 0xff474794,SetDate_FW
 0xff4749d8,SetDay_FW
 0xff4a0e78,SetDCMotorWaitTime_FW

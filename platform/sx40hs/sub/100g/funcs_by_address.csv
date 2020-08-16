@@ -1863,6 +1863,7 @@
 0xff3e177c,Bat_Save_FW
 0xff3e177c,SaveBatSenseOffsetAdjustmentTable_FW
 0xff3e178c,SetImageMode_FW
+0xff3e1794,SetDate
 0xff3e1794,SetDate_FW
 0xff3e18dc,SetYear_FW
 0xff3e193c,SetMonth_FW

@@ -166,6 +166,7 @@ NHSTUB(Restart                                ,0xff822bb0) //  1
 NHSTUB(SetAE_ShutterSpeed                     ,0xffabbb28) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff96819c) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff998560) //120
+NHSTUB(SetDate                                ,0xffabd680) //120
 NHSTUB(SetFileAttributes                      ,0xff870724) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff9660fc) //1104
 NHSTUB(SetParameterData                       ,0xff96d9f4) //  1

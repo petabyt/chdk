@@ -244,6 +244,7 @@ NHSTUB(ScreenUnlock                           ,0xff8ab8c0) //117
 NHSTUB(SetAE_ShutterSpeed                     ,0xffba3c20) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff8a7c34) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff8b2a30) //120
+NHSTUB(SetDate                                ,0xffba5ab4) //120
 NHSTUB(SetFileAttributes                      ,0xff8278ec) //  6
 NHSTUB(SetFileTimeStamp                       ,0xff827874) //  6
 NHSTUB(SetLogicalEventActive                  ,0xff8a7720) //120

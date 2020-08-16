@@ -1028,6 +1028,7 @@
 0xff99f2f4,UiTimerLib_StartTimer_FW
 0xff99f360,UiTimerLib_StartCyclicTimer_FW
 0xff99f3cc,UiTimerLib_CancelTimer_FW
+0xff99f720,SetDate
 0xff99f720,SetDate_FW
 0xff99f814,SetYear_FW
 0xff99f87c,SetMonth_FW

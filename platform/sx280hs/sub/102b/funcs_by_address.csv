@@ -1959,6 +1959,7 @@
 0xfc3e192f,Bat_Save_FW
 0xfc3e192f,SaveBatSenseOffsetAdjustmentTable_FW
 0xfc3e1939,SetImageMode_FW
+0xfc3e193d,SetDate
 0xfc3e193d,SetDate_FW
 0xfc3e19c5,SetYear_FW
 0xfc3e19fd,SetMonth_FW

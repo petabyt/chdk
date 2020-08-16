@@ -1024,6 +1024,7 @@
 0xff82ab20,SetCurrentCaptureModeType
 0xff82ab20,SetCurrentCaptureModeType_FW
 0xff912ec4,SetCurrentPalette_FW
+0xffa60098,SetDate
 0xffa60098,SetDate_FW
 0xffa60258,SetDay_FW
 0xffaeb618,SetDCMotorWaitTime_FW

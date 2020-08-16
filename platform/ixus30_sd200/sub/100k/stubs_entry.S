@@ -173,6 +173,7 @@ NHSTUB(RenameFile_Fut                         ,0xff869934) //  1
 // ALT: NHSTUB(RenameFile_Fut, 0xfff16fd8) // 1 27/0
 NHSTUB(SetAE_ShutterSpeed                     ,0xffa6d214) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff955e48) //120
+NHSTUB(SetDate                                ,0xff99f4dc) //120
 // ERROR: SetPropertyCase is not found.                    //--- ---        Overridden
 NHSTUB(SleepTask                              ,0xff8235e4) //120
 NHSTUB(TakeSemaphore                          ,0xff822f5c) //1101

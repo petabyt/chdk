@@ -1167,6 +1167,7 @@
 0xffa703e8,SetCDSGainStep_FW
 0xffa703a0,SetCdsGainValue_FW
 0xff98191c,SetCurrentPalette_FW
+0xffa77410,SetDate
 0xffa77410,SetDate_FW
 0xffa775d0,SetDay_FW
 0xffa5eda8,SetDCMotorChargePump_FW

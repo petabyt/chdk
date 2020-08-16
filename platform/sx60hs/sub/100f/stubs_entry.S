@@ -256,6 +256,7 @@ NHSTUB(ScreenUnlock                           ,0xfc337a13) //  0
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc3fbeb5) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xfc15c45f) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc2fd1a1) //  0
+NHSTUB(SetDate                                ,0xfc3fd369) //  0
 NHSTUB(SetLogicalEventActive                  ,0xfc3230df) //  0
 NHSTUB(SetPropertyCase                        ,0xfc321daf) //  0
 NHSTUB(SetScriptMode                          ,0xfc323117) //  0

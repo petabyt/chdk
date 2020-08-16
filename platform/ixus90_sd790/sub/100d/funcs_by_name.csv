@@ -1085,6 +1085,7 @@
 0xffa82230,SetCdsPreGainReg_FW
 0xff87c5b8,SetCurrentCaptureModeType
 0xff87c5b8,SetCurrentCaptureModeType_FW
+0xffa885ac,SetDate
 0xffa885ac,SetDate_FW
 0xffa887a8,SetDay_FW
 0xffa9baf8,SetDCMotorWaitTime_FW

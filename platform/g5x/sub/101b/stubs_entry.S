@@ -255,6 +255,7 @@ NHSTUB(Rec2PB                                 ,0xfc364f6f) //  0
 NHSTUB(SetAE_ShutterSpeed                     ,0xfc664641) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xfc39ac39) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xfc388197) //  0
+NHSTUB(SetDate                                ,0xfc665b1d) //  0
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetLogicalEventActive                  ,0xfc39b343) //  0
 NHSTUB(SetParameterData                       ,0xfc2a6cd7) //  0
