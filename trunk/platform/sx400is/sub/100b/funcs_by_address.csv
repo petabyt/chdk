@@ -1766,6 +1766,7 @@
 0xffba295c,SaveBatSenseOffsetAdjustmentTable_FW
 0xffba296c,SetImageMode_FW
 0xffba2974,CalcLowBatteryOffsetValue_FW
+0xffba299c,SetDate
 0xffba299c,SetDate_FW
 0xffba2b00,SetYear_FW
 0xffba2b60,SetMonth_FW

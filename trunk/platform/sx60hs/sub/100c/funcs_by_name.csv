@@ -1857,6 +1857,7 @@
 0xfc2fd1a5,SetCurrentCaptureModeType_FW
 0xfc2c320b,SetCzDebugFocusMode_FW
 0xfc2c320b,SetCzDebugSubjectDistance_FW
+0xfc3fd36d,SetDate
 0xfc3fd36d,SetDate_FW
 0xfc3fd461,SetDay_FW
 0xfc1c15ff,SetDefaultAEIntegSmearLimitter_FW

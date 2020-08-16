@@ -1001,6 +1001,7 @@
 0xff9c3db8,SetCurrentCaptureModeType
 0xff9c3db8,SetCurrentCaptureModeType_FW
 0xff9a3150,SetCurrentPalette_FW
+0xffb12244,SetDate
 0xffb12244,SetDate_FW
 0xffb12404,SetDay_FW
 0xff99bb6c,SetDefaultMovingFocusToDialog_FW

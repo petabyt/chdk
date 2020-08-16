@@ -1994,6 +1994,7 @@
 0xfc549539,SetCMOSOddEventGainValue_FW
 0xfc36cac9,SetCurrentCaptureModeType
 0xfc36cac9,SetCurrentCaptureModeType_FW
+0xfc5a6499,SetDate
 0xfc5a6499,SetDate_FW
 0xfc5a658d,SetDay_FW
 0xfc180c97,SetDefaultAEIntegSmearLimitter_FW

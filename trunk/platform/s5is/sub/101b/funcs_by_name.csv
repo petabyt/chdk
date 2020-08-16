@@ -1230,6 +1230,7 @@
 0xff87f884,SetCurrentCaptureModeType
 0xff87f884,SetCurrentCaptureModeType_FW
 0xff9c722c,SetCurrentPalette_FW
+0xffa11028,SetDate
 0xffa11028,SetDate_FW
 0xffa11224,SetDay_FW
 0xffa0b0c0,SetDefaultAEIntegSmearLimitter_FW

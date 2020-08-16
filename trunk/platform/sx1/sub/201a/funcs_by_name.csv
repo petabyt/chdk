@@ -1384,6 +1384,7 @@
 0xffaffa00,SetChannelOffset_FW
 0xff88d348,SetCurrentCaptureModeType
 0xff88d348,SetCurrentCaptureModeType_FW
+0xffafd0b4,SetDate
 0xffafd0b4,SetDate_FW
 0xffafd2b0,SetDay_FW
 0xffaff650,SetdBAdjCdsGain_FW

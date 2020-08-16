@@ -163,6 +163,7 @@ NHSTUB(RefreshPhysicalScreen                  ,0xff97b578) //120
 NHSTUB(RenameFile_Fut                         ,0xff863570) //  1
 NHSTUB(SetAE_ShutterSpeed                     ,0xffa738ec) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff96787c) //120
+NHSTUB(SetDate                                ,0xffa75184) //120
 NHSTUB(SetLogicalEventActive                  ,0xff96622c) //1104
 NHSTUB(SetScriptMode                          ,0xff966290) //120
 NHSTUB(SleepTask                              ,0xff821870) //120

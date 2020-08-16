@@ -236,6 +236,7 @@ NHSTUB(RenameFile_Fut                         ,0xffc12b9c) //  1
 NHSTUB(Restart                                ,0xffc189ec) //122
 NHSTUB(SetAutoShutdownTime                    ,0xffc5ce44) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xffc634f8) //120
+NHSTUB(SetDate                                ,0xffe445c4) //120
 NHSTUB(SetFileAttributes                      ,0xffc13670) //  1
 NHSTUB(SetFileTimeStamp                       ,0xffc13620) //  1
 NHSTUB(SetLogicalEventActive                  ,0xffc5cb4c) //120

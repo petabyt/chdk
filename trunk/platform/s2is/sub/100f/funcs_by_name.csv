@@ -1108,6 +1108,7 @@
 0xffaa678c,SetCDSGainStep_FW
 0xffaa6744,SetCdsGainValue_FW
 0xff9941a0,SetCurrentPalette_FW
+0xffaad6ac,SetDate
 0xffaad6ac,SetDate_FW
 0xffaad86c,SetDay_FW
 0xff98e938,SetDefaultMovingFocusToDialog_FW

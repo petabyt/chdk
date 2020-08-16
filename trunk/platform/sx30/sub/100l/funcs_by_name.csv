@@ -1418,6 +1418,7 @@
 0xffb501d4,SetCdsPreGainReg_FW
 0xff8a922c,SetCurrentCaptureModeType
 0xff8a922c,SetCurrentCaptureModeType_FW
+0xffb578e4,SetDate
 0xffb578e4,SetDate_FW
 0xffb57ae0,SetDay_FW
 0xff9577e0,SetDefaultAEIntegSmearLimitter_FW

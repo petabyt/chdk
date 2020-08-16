@@ -142,6 +142,7 @@ NHSTUB(RenameFile_Fut                         ,0xff875964) //  3
 NHSTUB(SetAE_ShutterSpeed                     ,0xffb5544c) //102
 NHSTUB(SetAutoShutdownTime                    ,0xff9b5f54) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff9e9dd8) //120
+NHSTUB(SetDate                                ,0xffb5771c) //120
 NHSTUB(SetFileAttributes                      ,0xff87cd74) //  1
 NHSTUB(SetLogicalEventActive                  ,0xff9b387c) //1104
 NHSTUB(SetParameterData                       ,0xff9bbc80) //  2

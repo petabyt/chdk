@@ -896,6 +896,7 @@
 0xff98cdf8,SetCurrentCaptureModeType
 0xff98cdf8,SetCurrentCaptureModeType_FW
 0xff971480,SetCurrentPalette_FW
+0xffa8ff98,SetDate
 0xffa8ff98,SetDate_FW
 0xffa90158,SetDay_FW
 0xffa75280,SetDCMotorChargePump_FW

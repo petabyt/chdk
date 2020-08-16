@@ -1371,6 +1371,7 @@
 0xff0b8990,SetCurrentCaptureModeType_FW
 0xff08b83c,SetCzDebugFocusMode_FW
 0xff08b83c,SetCzDebugSubjectDistance_FW
+0xff4d5e08,SetDate
 0xff4d5e08,SetDate_FW
 0xff4d6028,SetDay_FW
 0xff4f6a6c,SetDCMotorWaitTime_FW

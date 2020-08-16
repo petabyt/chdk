@@ -1102,6 +1102,7 @@
 0xff9e9dd8,SetCurrentCaptureModeType
 0xff9e9dd8,SetCurrentCaptureModeType_FW
 0xff9c9ed4,SetCurrentPalette_FW
+0xffb5771c,SetDate
 0xffb5771c,SetDate_FW
 0xffb578dc,SetDay_FW
 0xffb2f9d0,SetDCMotorChargePump_FW
