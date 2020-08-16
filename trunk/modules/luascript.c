@@ -1667,6 +1667,27 @@ static int luaCB_get_time( lua_State* L )
   lua_pushnumber( L, r );
   return 1;
 }
+
+/*
+set_clock(year, month, day, hour, minute, second)
+
+sets camera clock, including RTC
+values are as they appear in camera UI, full year, month and day start at 1
+does not change DST state, time set is time displayed
+also updates tick_count_offset
+no validation in CHDK
+*/
+static int luaCB_set_clock( lua_State* L )
+{
+    set_clock(luaL_checknumber(L,1), // year, like 2020
+            luaL_checknumber(L,2), // month, 1-12
+            luaL_checknumber(L,3), // day, 1-31
+            luaL_checknumber(L,4), // hour
+            luaL_checknumber(L,5), // minute
+            luaL_checknumber(L,5)); // second
+    return 0;
+}
+
 /*
   val=peek(address[,size])
   return the value found at address in memory, or nil if address or size is invalid
@@ -2903,6 +2924,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(bitnot)
 
     FUNC(get_time)
+    FUNC(set_clock)
 
     FUNC(get_buildinfo)
     FUNC(get_mode)

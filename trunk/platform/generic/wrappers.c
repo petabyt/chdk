@@ -975,6 +975,20 @@ time_t mktime(struct tm *timp) {
 #endif
 }
 
+void set_clock(int year, int month, int day, int hour, int minute, int second)
+{
+    int buf[6];
+    buf[0] = year;
+    buf[1] = month;
+    buf[2] = day;
+    buf[3] = hour;
+    buf[4] = minute;
+    buf[5] = second;
+    _SetDate(buf);
+    // SetDate sets second, so adjust subsec offset
+    camera_info.tick_count_offset = get_tick_count() % 1000; 
+}
+
 //----------------------------------------------------------------------------
 // Math wrappers
 

@@ -85,6 +85,7 @@
             mktime
             strftime
             msleep
+            set_clock
 
             rand
             srand

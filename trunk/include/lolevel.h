@@ -256,6 +256,8 @@ extern void *_LocalTime(const /*time_t*/ unsigned long *_tod, void * t_m); // DR
 extern long _strftime(char *s, unsigned long maxsize, const char *format, const /*struct tm*/ void *timp);
 extern /*time_t*/ long _mktime(/*struct tm*/ void *timp); // VXWORKS
 extern /*time_t*/ long _mktime_ext(void *tim_extp); // DRYOS, doesn't take a struct tm *
+extern int _SetDate(void *setdate_p); // expects ptr to year, month, day, hour, min, sec, not compatible with tm
+                                      // appears to return non-DST adjusted time
 
 #ifdef CAM_DRYOS_2_3_R39
 extern int _SetFileTimeStamp(const char *file_path, int time1, int time2);
