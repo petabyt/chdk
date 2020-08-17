@@ -1684,7 +1684,7 @@ static int luaCB_set_clock( lua_State* L )
             luaL_checknumber(L,3), // day, 1-31
             luaL_checknumber(L,4), // hour
             luaL_checknumber(L,5), // minute
-            luaL_checknumber(L,5)); // second
+            luaL_checknumber(L,6)); // second
     return 0;
 }
 
