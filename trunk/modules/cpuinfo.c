@@ -45,15 +45,17 @@ static const char *regperm_str(unsigned val) {
 
 #ifdef THUMB_FW
     #include "cpuinfo_v7.c"
+    // note, this is how many we know, nothing to do with how many cpuinfo_get_info knows
+    #define NUM_CPUINFO_WORDS (((sizeof(cpuinfo_desc_pmsa)>sizeof(cpuinfo_desc_vmsa))? \
+                              sizeof(cpuinfo_desc_pmsa):sizeof(cpuinfo_desc_vmsa))/ \
+                              sizeof(cpuinfo_desc_pmsa[0]) - 1)
 #else
     #include "cpuinfo_v5.c"
+    // note, this is how many we know, nothing to do with how many cpuinfo_get_info knows
+    #define NUM_CPUINFO_WORDS ((sizeof(cpuinfo_desc)/sizeof(cpuinfo_desc[0])) - 1)
 #endif
 
-// note, this is how many we know, nothing to do with how many debug_read_cpuinfo knows
-#define NUM_CPUINFO_WORDS ((sizeof(cpuinfo_desc)/sizeof(cpuinfo_desc[0])) - 1)
-
 void cpuinfo_finish(unsigned dummy);
-void cpuinfo_get_info(unsigned *results);
 
 void cpuinfo_write_file(void) {
     unsigned cpuinfo[NUM_CPUINFO_WORDS];
@@ -63,7 +65,21 @@ void cpuinfo_write_file(void) {
     FILE *finfo;
     char buf[100];
     char *p;
+#ifdef THUMB_FW
+    struct cpuinfo_word_desc_s *cpuinfo_desc;
+    if (cpu_is_vmsa()) {
+        FILE *f=fopen("A/MMU_MAP.CSV", "wb");
+        memmapping_vmsa(f);
+        cpuinfo_get_info_vmsa(cpuinfo);
+        cpuinfo_desc = (struct cpuinfo_word_desc_s*) cpuinfo_desc_vmsa;
+    }
+    else {
+        cpuinfo_get_info_pmsa(cpuinfo);
+        cpuinfo_desc = (struct cpuinfo_word_desc_s*) cpuinfo_desc_pmsa;
+    }
+#else
     cpuinfo_get_info(cpuinfo);
+#endif
     finfo=fopen("A/CPUINFO.TXT", "wb");
     for(i = 0; cpuinfo_desc[i].name; i++) {
         wordval = cpuinfo[i];
