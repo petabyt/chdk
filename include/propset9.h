@@ -90,6 +90,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SV                              354        // used for exif / UI. 256 appears similar but does not update exif
 // TODO GPS guessed, ps6 + 8
 // #define PROPCASE_GPS                             365        // (CHDKLover, August 2011) - contains a 272 bytes long structure
+#define PROPCASE_REVIEW_TIME                     371        // Review time 0 = off, -1 = hold, 100= quick, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                     	384        // Number of shots for TIMER_MODE=Custom
 
 // 

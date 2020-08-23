@@ -78,6 +78,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ASPECT_RATIO                    300        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
 #define PROPCASE_SV                              347        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_GPS                             358        // (CHDKLover, August 2011) - contains a 272 bytes long structure
+#define PROPCASE_REVIEW_TIME                     364        // Review time 0 = off, -1 = hold, 100 = quick, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                     377        // Number of shots for TIMER_MODE=Custom
 
 // !not sure

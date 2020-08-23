@@ -78,6 +78,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SHOOTING                        302        // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
 #define PROPCASE_SV                              346        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_GPS                             357        // (CHDKLover, August 2011) - contains a 272 bytes long structure
+#define PROPCASE_REVIEW_TIME                     363        // Review time 0 = off, -1 = hold, 100 = quick, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                     376        // Number of shots for TIMER_MODE=Custom
 
 // !not sure

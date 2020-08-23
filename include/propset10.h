@@ -87,6 +87,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SV                              356        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 // TODO no GPS on M10
 // #define PROPCASE_GPS
+#define PROPCASE_REVIEW_TIME                     373        // Review time 0 = off, -1 = hold, 100 = quick, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                     386        // Number of shots for TIMER_MODE=Custom
 
 //
