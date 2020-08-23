@@ -87,6 +87,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SV                         359 // [m100: cam, sx730: cam]
 // TODO no GPS on M10
 // #define PROPCASE_GPS
+#define PROPCASE_REVIEW_TIME                376 // [sx730: cam] Review time 0 = off, -1 = hold, 100 = quick, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                388 // [m100: cam, sx730: cam]
 
 //
