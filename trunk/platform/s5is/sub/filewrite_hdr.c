@@ -6,7 +6,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 3 //filewritetask is prepared for this many chunks
+#define MAX_CHUNKS_FOR_FWT 3 //filewritetask is prepared for this many chunks
 /*
  * fwt_data_struct: defined here as it's camera dependent
  * unneeded members are designated with unkn
@@ -17,7 +17,7 @@ typedef struct {
 typedef struct
 {
     int unkn1[5];                                //
-    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_FWT];
     char name[32];                               // open stage: sub_FFDBFF20 --> "ADD     R0, R0, #0x2C"
                                                  // offset of 'name' from start = 0x2C = 44 bytes = 11 words
 } fwt_data_struct;

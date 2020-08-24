@@ -10,7 +10,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
+#define MAX_CHUNKS_FOR_FWT 7 // filewritetask is prepared for this many chunks
                               // Note : corresponds to filewritetask() jump table entries 0-6
 /*
  * fwt_data_struct: defined here as it's camera dependent
@@ -24,7 +24,7 @@ typedef struct
     int file_offset;          // 01
     int maybe_full_size;      // 02 TODO doesn't seem to actually be full size for jpeg, instead round number somewhat smaller
     int unkn2, unkn3;         // 03, 04
-    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];  // 05 - 18
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_FWT];  // 05 - 18
     int maybe_seek_flag;      // 19 from sub_fc054ea8 0x4C = 74 bytes,  74/4 = 19 words offset in fwt_data_struct
     int unkn5, unkn6;         // 20, 21
     char name[32];            // 22 from sub_fc054ea8  0x58 = 88 bytes,  88/4 = 22 words offset in fwt_data_struct

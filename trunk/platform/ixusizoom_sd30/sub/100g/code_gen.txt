@@ -128,7 +128,7 @@ FW 15
 "    STMFD SP!, {R1-R12,LR}\n"
 "    MOV R0, R4\n"
 "    BL filewrite_main_hook\n"
-"    BL filewrite_jpeg_complete\n"
+"    BL filewrite_file_complete\n"
 "    CMP R0, #0\n"
 "    LDRNE R0, =loc_mynull\n" // /null as file name (works only on VxWorks)
 "    LDMFD SP!, {R1-R12,LR}\n"

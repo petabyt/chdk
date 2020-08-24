@@ -4328,7 +4328,7 @@ void find_platform_vals(firmware *fw)
                 int c = 1;
                 for (;isB(fw,k1+k) && idxFollowBranch(fw,k1+k,1) == idxFollowBranch(fw,k1+k-1,1);k++,c++);
                 bprintf("\n// Below goes in 'filewrite.c' or 'platform_camera.h':\n");
-                bprintf("//#define MAX_CHUNKS_FOR_JPEG %d // Found @0x%08x\n",c,idx2adr(fw,k+k1));
+                bprintf("//#define MAX_CHUNKS_FOR_FWT %d // Found @0x%08x\n",c,idx2adr(fw,k+k1));
                 break;
             }
         }

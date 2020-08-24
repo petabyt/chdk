@@ -6,7 +6,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
+#define MAX_CHUNKS_FOR_FWT 7 // filewritetask is prepared for this many chunks
                               // Found in sub_FF339D5C (1.00a) --> "CMP     R0, #6" and
                               // corresponds to filewritetask() jump table entries 0-6
 /*
@@ -22,7 +22,7 @@ typedef struct
     int file_offset;
     int full_size;
     int unkn2, unkn3;
-    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_FWT];
     int seek_flag;      // offset from start 0x4c = 76 bytes = 19 words
     int unkn4, unkn5;
     char name[32];      // offset from start 0x58 = 88 bytes = 22 words

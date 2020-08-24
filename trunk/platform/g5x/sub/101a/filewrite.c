@@ -6,7 +6,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
+#define MAX_CHUNKS_FOR_FWT 7 // filewritetask is prepared for this many chunks
                               // corresponds to filewritetask() jump table entries 0-6
 
 /*
@@ -24,7 +24,7 @@ typedef struct
     int maybe_full_size;
     int unkn2, unkn3;
     int unkn4;
-    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_FWT];
     int maybe_seek_flag;
     int unkn5, unkn6;
     char name[32];

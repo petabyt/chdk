@@ -8,118 +8,118 @@ volatile int current_write_ignored=0; //needed to prevent nasty surprises with t
 #endif //CAM_DRYOS
 
 /*
-handle camera specific MAX_CHUNKS_FOR_JPEG, camp_ptp_data_chunk
+handle camera specific MAX_CHUNKS_FOR_FWT, camp_ptp_data_chunk
 get address and size of chunk N
 returns NULL addr and zero size when max chunks reached
 */
-static cam_ptp_data_chunk *jpeg_chunks;
+static cam_ptp_data_chunk *file_chunks;
 #ifdef CAM_FILEWRITETASK_MULTIPASS
-static int jpeg_curr_session_chunk;
+static int file_curr_session_chunk;
 #ifdef CAM_FILEWRITETASK_SEEKS
-static int jpeg_bytes_left;
-static int jpeg_file_offset;
-static int jpeg_full_size;
+static int file_bytes_left;
+static int fwt_file_offset;
+static int file_full_size;
 #else
-static int jpeg_last_session;
+static int file_last_session;
 #endif
 #endif
 
 /*
-called by ptp task (via remotecap.c code) to fetch chunks of jpeg data
+called by ptp task (via remotecap.c code) to fetch chunks of file data
 */
-int filewrite_get_jpeg_chunk(char **addr,int *size,unsigned n,int *pos) {
+int filewrite_get_file_chunk(char **addr,int *size,unsigned n,int *pos) {
     *pos=-1;
 #if !defined(CAM_FILEWRITETASK_MULTIPASS)
     // TODO null should probably be an error
-    if (n >= MAX_CHUNKS_FOR_JPEG || jpeg_chunks == NULL) {
+    if (n >= MAX_CHUNKS_FOR_FWT || file_chunks == NULL) {
         *addr=(char *)0xFFFFFFFF; // signals last chunk
         *size=0;
-        return REMOTECAP_JPEG_CHUNK_STATUS_LAST; // last chunk
+        return REMOTECAP_FWT_CHUNK_STATUS_LAST; // last chunk
     }
-    *addr=(char *)jpeg_chunks[n].address;
-    *size=jpeg_chunks[n].length;
-    if (n < MAX_CHUNKS_FOR_JPEG-1) {
-        if (jpeg_chunks[n+1].length==0) {
-            return REMOTECAP_JPEG_CHUNK_STATUS_LAST; // last chunk
+    *addr=(char *)file_chunks[n].address;
+    *size=file_chunks[n].length;
+    if (n < MAX_CHUNKS_FOR_FWT-1) {
+        if (file_chunks[n+1].length==0) {
+            return REMOTECAP_FWT_CHUNK_STATUS_LAST; // last chunk
         }
-        return REMOTECAP_JPEG_CHUNK_STATUS_MORE; // not last chunk
+        return REMOTECAP_FWT_CHUNK_STATUS_MORE; // not last chunk
     }
-    return REMOTECAP_JPEG_CHUNK_STATUS_LAST; // last chunk
+    return REMOTECAP_FWT_CHUNK_STATUS_LAST; // last chunk
 #else
-    if ( jpeg_chunks == NULL ) { //do we have a valid queue?
+    if ( file_chunks == NULL ) { //do we have a valid queue?
         int m=50;
         while (m>0) { //wait for at most 500ms
             _SleepTask(10);
             m--;
-            if ( jpeg_chunks != NULL ) break;
+            if ( file_chunks != NULL ) break;
         }
-        if ( jpeg_chunks == NULL ) { //timeout, error
+        if ( file_chunks == NULL ) { //timeout, error
             *addr=(char *)0;
             *size=0;
-            return REMOTECAP_JPEG_CHUNK_STATUS_LAST;
+            return REMOTECAP_FWT_CHUNK_STATUS_LAST;
         }
     }
-    *addr=(char *)jpeg_chunks[jpeg_curr_session_chunk].address;
-    *size=jpeg_chunks[jpeg_curr_session_chunk].length;
+    *addr=(char *)file_chunks[file_curr_session_chunk].address;
+    *size=file_chunks[file_curr_session_chunk].length;
 #ifdef CAM_FILEWRITETASK_SEEKS
     if ( n == 0 ) { // first chunk for this shot
-        jpeg_bytes_left = jpeg_full_size;
+        file_bytes_left = file_full_size;
     }
-    jpeg_bytes_left -= *size;
-    if (jpeg_curr_session_chunk == 0) {
-        *pos=jpeg_file_offset; //only post file offset for the first chunk in the current queue
+    file_bytes_left -= *size;
+    if (file_curr_session_chunk == 0) {
+        *pos=fwt_file_offset; //only post file offset for the first chunk in the current queue
     }
 #else
-    if ((jpeg_curr_session_chunk==0) && (jpeg_last_session)) {
+    if ((file_curr_session_chunk==0) && (file_last_session)) {
         *pos=0; //only post file offset for the first chunk in the last queue
     }
 #endif
-    jpeg_curr_session_chunk++;
+    file_curr_session_chunk++;
 #ifdef CAM_FILEWRITETASK_SEEKS
-    if (jpeg_bytes_left>0) {
-        if ( jpeg_curr_session_chunk < MAX_CHUNKS_FOR_JPEG ) {
-            if (jpeg_chunks[jpeg_curr_session_chunk].length==0) { //last chunk of the current queue
-                return REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST;
+    if (file_bytes_left>0) {
+        if ( file_curr_session_chunk < MAX_CHUNKS_FOR_FWT ) {
+            if (file_chunks[file_curr_session_chunk].length==0) { //last chunk of the current queue
+                return REMOTECAP_FWT_CHUNK_STATUS_SESS_LAST;
             }
-            return REMOTECAP_JPEG_CHUNK_STATUS_MORE; //not last
+            return REMOTECAP_FWT_CHUNK_STATUS_MORE; //not last
         }
         else {
-            return REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST;
+            return REMOTECAP_FWT_CHUNK_STATUS_SESS_LAST;
         }
     }
 #else
-    if ( jpeg_curr_session_chunk < MAX_CHUNKS_FOR_JPEG ) {
-        if (jpeg_chunks[jpeg_curr_session_chunk].length==0) { //last chunk of the current queue
-            if (jpeg_last_session) {
-                return REMOTECAP_JPEG_CHUNK_STATUS_LAST;
+    if ( file_curr_session_chunk < MAX_CHUNKS_FOR_FWT ) {
+        if (file_chunks[file_curr_session_chunk].length==0) { //last chunk of the current queue
+            if (file_last_session) {
+                return REMOTECAP_FWT_CHUNK_STATUS_LAST;
             }
             else {
-                return REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST;
+                return REMOTECAP_FWT_CHUNK_STATUS_SESS_LAST;
             }
         }
-        return REMOTECAP_JPEG_CHUNK_STATUS_MORE; //not last
+        return REMOTECAP_FWT_CHUNK_STATUS_MORE; //not last
     }
     else {
-        if (jpeg_last_session) {
-            return REMOTECAP_JPEG_CHUNK_STATUS_LAST;
+        if (file_last_session) {
+            return REMOTECAP_FWT_CHUNK_STATUS_LAST;
         }
         else {
-            return REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST;
+            return REMOTECAP_FWT_CHUNK_STATUS_SESS_LAST;
         }
     }
 #endif
-    return REMOTECAP_JPEG_CHUNK_STATUS_LAST; //last
+    return REMOTECAP_FWT_CHUNK_STATUS_LAST; //last
 #endif //CAM_FILEWRITETASK_MULTIPASS
 }
 
-void filewrite_set_discard_jpeg(int state) {
+void filewrite_set_discard_file(int state) {
     ignore_current_write = state;
 }
 
 void filewrite_main_hook(fwt_data_struct *fwt_data)
 {
 #ifdef CAM_FILEWRITETASK_MULTIPASS
-    jpeg_curr_session_chunk = 0;
+    file_curr_session_chunk = 0;
 #ifdef CAM_FILEWRITETASK_SEEKS
     // don't forget to #define FWT_SEEKMASK, FWT_MUSTSEEK
     /*
@@ -134,60 +134,71 @@ void filewrite_main_hook(fwt_data_struct *fwt_data)
      * otherwise, seek is only performed when file_offset is not 0
      */
     if ( ((fwt_data->seek_flag & FWT_SEEKMASK) == FWT_MUSTSEEK) || (fwt_data->file_offset != 0) ) {
-        jpeg_file_offset = fwt_data->file_offset;
+        fwt_file_offset = fwt_data->file_offset;
     }
     else {
-        jpeg_file_offset = -1; // no seek needed
+        fwt_file_offset = -1; // no seek needed
     }
-    jpeg_full_size = fwt_data->full_size;
+    file_full_size = fwt_data->full_size;
 #else
     /*
      * below information is only valid when this routine is called
      *
-     * we need to watch the file open flags to determine whether the jpeg data arrives in multiple passes
+     * we need to watch the file open flags to determine whether the file data arrives in multiple passes
      * if the flag isn't there, it's the last (or only) pass
      */
     if (fwt_data->oflags & OFLAG_NOFLUSH) {
-        jpeg_last_session = 0;
+        file_last_session = 0;
     }
     else {
-        jpeg_last_session = 1;
+        file_last_session = 1;
     }
 #endif // CAM_FILEWRITETASK_SEEKS
 #endif // CAM_FILEWRITETASK_MULTIPASS
-    jpeg_chunks = &(fwt_data->pdc[0]);
-    remotecap_jpeg_available();
-    jpeg_chunks=NULL;
+
+    file_chunks = &(fwt_data->pdc[0]);
+#ifdef CAM_HAS_CANON_RAW
+    int fmt;
+    // for raw enabled cameras, get format from extension
+    // A/DCIM/100CANON/IMG_1234.CR2
+    if(strcmp(".CR2",&(fwt_data->name[24])) == 0) {
+        remotecap_fwt_craw_available();
+    } else {
+        remotecap_fwt_jpeg_available();
+    }
+#else
+    remotecap_fwt_jpeg_available();
+#endif
+    file_chunks=NULL;
 }
 
 // called from filewrite when the hook has returned for the last time for a given file
 // to clear ignored write and tell remotecap raw hook it's ok to proceed to next shot
 // returns whether the write was ignored, for simpler asm code on the cams that need to switch filename
-int filewrite_jpeg_complete(void) {
+int filewrite_file_complete(void) {
     if(ignore_current_write) {
 #ifdef CAM_DRYOS
 #ifdef CAM_FILEWRITETASK_SEEKS
-        if (fwt_bytes_written < jpeg_full_size) {
+        if (fwt_bytes_written < file_full_size) {
             return 1;
         }
 #elif defined(CAM_FILEWRITETASK_MULTIPASS)
-        if (!jpeg_last_session) {
+        if (!file_last_session) {
             return 1;
         }
 #endif // CAM_FILEWRITETASK_SEEKS, CAM_FILEWRITETASK_MULTIPASS
         current_write_ignored=0;
         fwt_bytes_written = 0;
 #endif // CAM_DRYOS
-        ignore_current_write=0;
-        remotecap_type_complete(1); //PTP_CHDK_CAPTURE_JPG
+        remotecap_fwt_file_complete();
         return 1;
     }
     return 0;
 }
 
 #ifdef CAM_FILEWRITETASK_MULTIPASS
-void remotecap_jpeg_chunks_done() {
-    jpeg_chunks=NULL;
+void remotecap_fwt_chunks_done() {
+    file_chunks=NULL;
 }
 #endif // CAM_FILEWRITETASK_MULTIPASS
 
@@ -219,13 +230,12 @@ int fwt_lseek(int fd, long offset, int whence) {
 #endif // CAM_FILEWRITETASK_SEEKS
 
 int fwt_close (int fd) {
-    if (!current_write_ignored) {
+    if (!filewrite_file_complete()) {
         int ret = _Close(fd);
         //imagesavecomplete=1;
         fwt_bytes_written = 0;
         return ret;
     }
-    filewrite_jpeg_complete();
     return 0;
 }
 #else // ifdef CAM_DRYOS

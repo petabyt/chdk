@@ -27,10 +27,12 @@ static int startline=0;
 static int linecount=0;
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-static int jpeg_curr_chunk;
-static int jpeg_last_status;
+static int fwt_curr_chunk;
+static int fwt_last_status;
+static int fwt_current_type; // data type of current filewrite file, for cams with raw and jpeg
+static int fwt_expect_file_count; // number of filewrite files expected (for cameras with native raw+jpeg)
 #ifdef CAM_FILEWRITETASK_MULTIPASS
-static int jpeg_session_wait; // should the current invocation of the jpeg hook block
+static int fwt_session_wait; // should the current invocation of the filewrite hook block
 #endif //CAM_FILEWRITETASK_MULTIPASS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
@@ -39,6 +41,9 @@ int remotecap_get_target_support(void) {
     int ret = (PTP_CHDK_CAPTURE_RAW | PTP_CHDK_CAPTURE_DNGHDR);
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
     ret |= PTP_CHDK_CAPTURE_JPG;
+#ifdef CAM_HAS_CANON_RAW
+    ret |= PTP_CHDK_CAPTURE_CRAW;
+#endif
 #endif
     return ret;
 }
@@ -85,7 +90,7 @@ static void remotecap_reset(void) {
     remote_file_target=0;
     remotecap_set_available_data_type(0);
     pending_image_data=0;
-    // TODO do we need remotecap_jpeg_chunks_done() ?
+    // TODO do we need remotecap_fwt_chunks_done() ?
 }
 
 //called to activate or deactive hooks
@@ -96,6 +101,10 @@ int remotecap_set_target( int type, int lstart, int lcount )
     if ((type & ~remotecap_get_target_support()) 
         || !camera_info.state.mode_rec
         || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())
+#ifdef CAM_HAS_CANON_RAW
+        || ((type & PTP_CHDK_CAPTURE_CRAW) && !(shooting_get_canon_image_format() & SHOOTING_CANON_FMT_RAW))
+        || ((type & PTP_CHDK_CAPTURE_JPG) && !(shooting_get_canon_image_format() & SHOOTING_CANON_FMT_JPG))
+#endif
 #if defined(CAM_FILEWRITETASK_MULTIPASS) && !defined(CAM_FILEWRITETASK_SEEKS)
     // other drive modes do not work on these cams currently
         || (shooting_get_drive_mode() != 0)
@@ -150,12 +159,12 @@ static int remotecap_wait(int datatype) {
 }
 
 // called from filewrite or spytask when type is fully completed
-void remotecap_type_complete(int type) {
+static void remotecap_type_complete(int type) {
     pending_image_data = (pending_image_data & ~type);
 }
 
-void filewrite_set_discard_jpeg(int state);
-int filewrite_get_jpeg_chunk(char **addr,unsigned *size, unsigned n, int *pos);
+void filewrite_set_discard_file(int state);
+int filewrite_get_file_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 
 void remotecap_raw_available(char *rawadr) {
     // get file number as early as possible, before blocking
@@ -164,7 +173,7 @@ void remotecap_raw_available(char *rawadr) {
 /*
 ensure raw hook is blocked until any prevous remotecap shot is finished or times out
 if prevous times out, remotecap settings will be cleared due to the time out, so no
-remotecap will be done, althouth writes will still be skipped
+remotecap will be done, although writes will still be skipped
 wait == 0 timeout shouldn't get hit here unless the script is fiddling with the
 timeout value, but it ensures that we don't block indefinitely.
 */
@@ -182,8 +191,17 @@ timeout value, but it ensures that we don't block indefinitely.
 // provided the actual chunks are transmitted
 // TODO this should probably just be noop if hook doesn't exist
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
-    filewrite_set_discard_jpeg(1);
-    jpeg_curr_chunk=0; //needs to be done here
+    filewrite_set_discard_file(1);
+    fwt_curr_chunk=0; //needs to be done here
+#ifdef CAM_HAS_CANON_RAW
+    if(shooting_get_canon_image_format() == (SHOOTING_CANON_FMT_RAW | SHOOTING_CANON_FMT_JPG)) {
+        fwt_expect_file_count = 2;
+    } else {
+        fwt_expect_file_count = 1;
+    }
+#else
+    fwt_expect_file_count = 1;
+#endif
 #endif //CAM_HAS_FILEWRITETASK_HOOK
     if (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) {
         started();
@@ -215,21 +233,33 @@ timeout value, but it ensures that we don't block indefinitely.
 }
 
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
+// called from filewrite when file is complete and remotecap is enabled, regardless of whether type is target
+void remotecap_fwt_file_complete(void) {
+    remotecap_type_complete(fwt_current_type); // clearing non-target type should be harmless...
+    // possible this could be reset on error, or not set in mode with broken raw hook
+    if(fwt_expect_file_count) {
+        fwt_expect_file_count--;
+    }
+    if(fwt_expect_file_count == 0) {
+        filewrite_set_discard_file(0);
+    }
+}
+
 /*
-called from filewrite hook to notify code that jpeg data is available
+called from filewrite hook to notify code new file data is available
 */
-void remotecap_jpeg_available() {
-    if(!(remote_file_target & PTP_CHDK_CAPTURE_JPG)) {
+static void remotecap_fwt_file_available(void) {
+    if(!(remote_file_target & fwt_current_type)) {
         return;
     }
 #ifdef CAM_FILEWRITETASK_MULTIPASS
     // need custom wait code here to resume if jpeg queue is done
     int wait = hook_wait_max;
 
-    jpeg_session_wait = 1;
-    remotecap_set_available_data_type(PTP_CHDK_CAPTURE_JPG);
+    fwt_session_wait = 1;
+    remotecap_set_available_data_type(fwt_current_type);
 
-    while (wait && jpeg_session_wait && (available_image_data & PTP_CHDK_CAPTURE_JPG)) {
+    while (wait && fwt_session_wait && (available_image_data & fwt_current_type)) {
         msleep(10);
         wait--;
     }
@@ -238,12 +268,25 @@ void remotecap_jpeg_available() {
     }
 
 #else
-    if(!remotecap_wait(PTP_CHDK_CAPTURE_JPG)) {
+    if(!remotecap_wait(fwt_current_type)) {
         remotecap_reset();
     }
 #endif
 }
+
+void remotecap_fwt_jpeg_available(void) {
+    fwt_current_type = PTP_CHDK_CAPTURE_JPG;
+    remotecap_fwt_file_available();
+}
+
+#ifdef CAM_HAS_CANON_RAW
+void remotecap_fwt_craw_available(void) {
+    fwt_current_type = PTP_CHDK_CAPTURE_CRAW;
+    remotecap_fwt_file_available();
+}
 #endif
+
+#endif // CAM_HAS_FILEWRITETASK_HOOK
 
 // called by ptp code to get next chunk address/size for the format (fmt) that is being currently worked on
 // returns REMOTECAP_CHUNK_STATUS MORE, ERROR or LAST
@@ -259,12 +302,18 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
             *size=raw_chunk.length;
             break;
 #ifdef CAM_HAS_FILEWRITETASK_HOOK
+        case PTP_CHDK_CAPTURE_CRAW: //canon raw
         case PTP_CHDK_CAPTURE_JPG: //jpeg
-            jpeg_last_status = filewrite_get_jpeg_chunk(addr,size,jpeg_curr_chunk,pos);
-            jpeg_curr_chunk+=1;
-            if(jpeg_last_status != REMOTECAP_JPEG_CHUNK_STATUS_LAST) {
+            fwt_last_status = filewrite_get_file_chunk(addr,size,fwt_curr_chunk,pos);
+            fwt_curr_chunk+=1;
+            if(fwt_last_status != REMOTECAP_FWT_CHUNK_STATUS_LAST) {
                 status = REMOTECAP_CHUNK_STATUS_MORE;
+            } 
+#ifdef CAM_HAS_CANON_RAW
+            else {
+                fwt_curr_chunk=0;
             }
+#endif
             break;
 #endif
         case PTP_CHDK_CAPTURE_DNGHDR: // dng header
@@ -295,9 +344,9 @@ int remotecap_send_complete(int rcgd_status, int type) {
         remotecap_set_available_data_type(0);
     }
 #ifdef CAM_FILEWRITETASK_MULTIPASS
-    else if(type == PTP_CHDK_CAPTURE_JPG && jpeg_last_status == REMOTECAP_JPEG_CHUNK_STATUS_SESS_LAST) {
-        remotecap_jpeg_chunks_done(); // make jpeg_chunks NULL, immediately
-        jpeg_session_wait = 0;
+    else if(type == PTP_CHDK_CAPTURE_JPG && fwt_last_status == REMOTECAP_FWT_CHUNK_STATUS_SESS_LAST) {
+        remotecap_fwt_chunks_done(); // make file_chunks NULL, immediately
+        fwt_session_wait = 0;
     }
 #endif
     if((rcgd_status == REMOTECAP_CHUNK_STATUS_ERROR) || timeout_flag) {
