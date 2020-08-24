@@ -13,7 +13,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 7 // filewritetask is prepared for this many chunks
+#define MAX_CHUNKS_FOR_FWT 7 // filewritetask is prepared for this many chunks
 
 
 /*
@@ -30,7 +30,7 @@ typedef struct
     int maybe_full_size; // maybe, on g7x wasn't always full size
     int unkn2, unkn3;
     int unkn4;
-    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_FWT];
     int maybe_seek_flag;      // 0x2083 jpeg, 0x100 create dir, 0x200 CacheFlush
     int unkn5, unkn6;
     char name[32];      // offset from start 0x5c, from Open case

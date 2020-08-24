@@ -7,7 +7,7 @@
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #define PTP_CHDK_VERSION_MAJOR 2  // increase only with backwards incompatible changes (and reset minor)
-#define PTP_CHDK_VERSION_MINOR 8  // increase with extensions of functionality
+#define PTP_CHDK_VERSION_MINOR 9  // increase with extensions of functionality
                                   // minor > 1000 for development versions
 
 /*
@@ -24,6 +24,7 @@ protocol version history
 2.6 - script execution flags
 2.7 - IN DEVELOPMENT live view protocol 2.2
 2.8 - IN DEVELOPMENT GetMemory extensions
+2.9 - IN DEVELOPMENT Canon raw remote capture
 */
 
 #define PTP_OC_CHDK 0x9999
@@ -169,6 +170,12 @@ adjusting dimensions.
 Bad pixels will not be patched, but DNG opcodes will specify how to patch them
 */
 #define PTP_CHDK_CAPTURE_DNGHDR 0x4  
+
+/*
+Canon raw - only on cameras with native raw support and filewrite hook
+use Lua get_usb_capture_support to check
+*/
+#define PTP_CHDK_CAPTURE_CRAW   0x8  
 
 // status from PTP_CHDK_RemoteCaptureIsReady if capture not enabled
 #define PTP_CHDK_CAPTURE_NOTSET 0x10000000

@@ -170,7 +170,7 @@ asm volatile (
 "    MOV     R0, #3 \n"
 "    MOV     R1, #0x200 \n"
 "    MOV     R2, #0 \n"
-"    BL      sub_FF814F44 /*_exmem_alloc*/ \n"
+"    BL      _exmem_ualloc \n"
 "    SUBS    R6, R0, #0 \n"
 "    BEQ     loc_FF8720F8 \n"
 "    ADD     R12, R8, R5 \n"
@@ -185,7 +185,7 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    BNE     loc_FF87206C \n"
 "    MOV     R0, #3 \n"
-"    BL      sub_FF815014 \n"
+"    BL      _exmem_ufree \n"
 
 "loc_FF872064:\n"
 "    MOV     R0, #0 \n"
@@ -204,7 +204,7 @@ asm volatile (
 "    LDMFD   SP!, {R4-R11,LR}\n"    // +
 "    MOV     R4, R0 \n"
 "    MOV     R0, #3 \n"
-"    BL      sub_FF815014 \n"
+"    BL      _exmem_ufree \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF8720D0 \n"
 "    MOV     R0, R7 \n"

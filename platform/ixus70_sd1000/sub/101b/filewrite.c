@@ -9,7 +9,7 @@ typedef struct {
     unsigned int length;
 } cam_ptp_data_chunk; //camera specific structure
 
-#define MAX_CHUNKS_FOR_JPEG 3 //model specific
+#define MAX_CHUNKS_FOR_FWT 3 //model specific
 /*
  * fwt_data_struct: defined here as it's camera dependent
  * unneeded members are designated with unkn
@@ -20,7 +20,7 @@ typedef struct {
 typedef struct
 {
     int unkn1[5];    
-    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_JPEG];
+    cam_ptp_data_chunk pdc[MAX_CHUNKS_FOR_FWT];
     char name[32];
 } fwt_data_struct;
 #define CAM_HAS_COMPLETEFILEWRITE_REPLACEMENT 1
@@ -110,7 +110,7 @@ asm volatile (
 "    STMFD   SP!, {R1-R12,LR}\n"
 "    MOV     R0, R5\n"
 "    BL      filewrite_main_hook\n"
-"    BL      filewrite_jpeg_complete\n"
+"    BL      filewrite_file_complete\n"
 "    CMP     R0, #0\n"
 "    LDRNE   R0, =loc_mynull\n" // /null as file name (works only on VxWorks)
 "    LDMFD   SP!, {R1-R12,LR}\n"

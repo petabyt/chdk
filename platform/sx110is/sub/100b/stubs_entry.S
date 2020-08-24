@@ -110,7 +110,7 @@ DEF(jpeg_count_str                          ,0x00045e58) // Found @0xffd84a7c
 //#define PARAM_CAMERA_NAME 4 // Found @0xffedfac8
 
 // Below goes in 'filewrite.c' or 'platform_camera.h':
-//#define MAX_CHUNKS_FOR_JPEG 3 // Found @0xffdeff3c
+//#define MAX_CHUNKS_FOR_FWT 3 // Found @0xffdeff3c
 
 // Known propcases
 // //      PROPCASE_AFSTEP 13
