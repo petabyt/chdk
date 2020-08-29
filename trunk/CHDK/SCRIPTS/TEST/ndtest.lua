@@ -347,6 +347,7 @@ log:init{
 		'av96_cur',
 		'nd',
 		'nd_cur',
+		'nd_av_match',
 		'over_pct',
 		'under_pct',
 		'meter',
@@ -893,6 +894,15 @@ function ndtest:run_test(shoot_mode)
 		end
 		if get_prop(props.AV) ~= av96_shot then
 			self:warn('hook_shoot av mismatch')
+		end
+
+		-- for ND only cams, record if AV value in shoot hook matches ND state
+		if get_nd_present() == 1 then
+			if nd_state then
+				log:set{nd_av_match=(av96_shot == get_prop(props.MIN_AV) + get_nd_value_ev96())}
+			else
+				log:set{nd_av_match=(av96_shot == get_prop(props.MIN_AV))}
+			end
 		end
 
 		-- check if ND state matches expected, set if needed
