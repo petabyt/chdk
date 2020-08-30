@@ -60,7 +60,8 @@
     #define CAM_HAS_IRIS_DIAPHRAGM          1   // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
     #undef  CAM_HAS_ND_FILTER                   // Camera has build-in ND filter
     #undef  CAM_HAS_NATIVE_ND_FILTER            // Camera has built-in ND filter with Canon menu support for enable/disable
-    #undef  CAM_ND_SET_AV_VALUE                 // Camera needs AV propcase set to override ND. Only valid for cameras without iris. 1 if needed, undef if not
+    #undef  CAM_ND_SET_AV_VALUE                 // Camera needs AV propcase set to override ND. Only valid for cameras without iris.
+                                                // Defaults on for cameras with ND only, define 0 to force off
 
     #define CAM_HAS_MANUAL_FOCUS            1   // Camera has native manual focus mode (disables MF shortcut feature)
     #undef  CAM_SD_OVER_IN_AF                   // Camera allows SD override if MF & AFL not set
@@ -346,6 +347,15 @@
 #ifdef CAM_ILC
 #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
 #undef CAM_USE_ALT_SET_ZOOM_POINT
+#endif
+
+// default CAM_ND_SET_AV_VALUE on for ND only cams
+#if !defined(CAM_ND_SET_AV_VALUE)
+    #if defined(CAM_HAS_ND_FILTER) && !defined(CAM_HAS_IRIS_DIAPHRAGM)
+        #define CAM_ND_SET_AV_VALUE 1
+    #else
+        #define CAM_ND_SET_AV_VALUE 0
+    #endif
 #endif
 
 // DryOS r31 and later cameras use 32bit subject distance values
