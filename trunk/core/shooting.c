@@ -951,7 +951,7 @@ void shooting_set_nd_filter_state(short v, short is_now)
     {
         if (is_now)
         {
-#if defined(CAM_ND_SET_AV_VALUE)
+#if CAM_ND_SET_AV_VALUE == 1
             short av;
             get_property_case(PROPCASE_MIN_AV,&av,sizeof(av));
             if(v==1) {
@@ -961,7 +961,7 @@ void shooting_set_nd_filter_state(short v, short is_now)
 #if defined(PROPCASE_AV2)
             set_property_case(PROPCASE_AV2, &av, sizeof(av));
 #endif
-#endif
+#endif // CAM_ND_SET_AV_VALUE
             if (v==1) {
                 PutInNdFilter();
             }
@@ -975,7 +975,7 @@ void shooting_set_nd_filter_state(short v, short is_now)
         else
             photo_param_put_off.nd_filter = v;
     }
-#endif
+#endif // CAM_HAS_ND_FILTER
 }
 
 
