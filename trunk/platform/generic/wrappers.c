@@ -2007,7 +2007,9 @@ void GiveSemaphore(int sem)
 #ifdef CAM_UNLOCK_ANALOG_AV_IN_REC
 void SetVideoOutType(int x) {
     extern void _SetVideoOutType(int);
+    _TurnOffDisplay();
     _SetVideoOutType(x);
+    _TurnOnDisplay();
 }
 int GetVideoOutType(void) {
     extern int _GetVideoOutType(void);
