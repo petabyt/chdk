@@ -26,6 +26,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SV_MARKET                  72
 #define PROPCASE_BV                         71
 #define PROPCASE_ISO_MODE                   21
+#define PROPCASE_AF_FRAME                   64 // 0 = AiAf, 1 = Center (values differ from later propsets)
 #define PROPCASE_SUBJECT_DIST1              65
 #define PROPCASE_SUBJECT_DIST2              66
 #define PROPCASE_SHOOTING                   205
@@ -46,7 +47,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_METERING_MODE              9
 #define PROPCASE_WB_ADJ                     100
 #define PROPCASE_WB_MODE                    5  // 0 = Auto, 1 = Daylight, 2 = Cloudy, 3 = Tungsten, 4 = Fluorescent, 5 = Fluoresent H, 6 = Flash, 7 = Custom, 10 Underwater
-#define PROPCASE_OPTICAL_ZOOM_POSITION      99 //untested !
+#define PROPCASE_OPTICAL_ZOOM_POSITION      99
 #define PROPCASE_STITCH_DIRECTION           52 // 0=left>right, 1=right>left. Some cams have more
 #define PROPCASE_STITCH_SEQUENCE            48 // counts shots in stitch sequence, positive for left-right, negative for right-left
 #define PROPCASE_AF_LOCK                    193

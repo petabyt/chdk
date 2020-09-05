@@ -53,6 +53,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_OPTICAL_ZOOM_POSITION      197
 #define PROPCASE_VIDEO_RESOLUTION           169
 #define PROPCASE_AF_ASSIST_BEAM             5       // 0=disabled,  1=enabled
+#define PROPCASE_AF_FRAME                   8       // 1 = FlexiZone, 2 = Face AiAF / Tracking AF
 #define PROPCASE_AF_LOCK                    11      // 0 = AF not locked, 1 = AF locked
 #define PROPCASE_CONTINUOUS_AF              12      // 0 = Continuous AF off, 1 = Continuous AF on
 #define PROPCASE_SERVO_AF                   297     // 0 = Servo AF off, 1 = Servo AF on
