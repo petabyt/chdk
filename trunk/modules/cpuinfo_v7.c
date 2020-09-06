@@ -525,13 +525,13 @@ const struct cpuinfo_word_desc_s cpuinfo_desc_pmsa[]={
     {"MPU region 7 base", cpuinf_mpubase },
     {"MPU region 7 size & enable", cpuinf_mpusizeen },
     {"MPU region 7 access control", cpuinf_accesscontrol },
-    //{"Floating Point System ID register", cpuinf_generic },
-    //{"Media and VFP Feature Register 0", cpuinf_generic },
-    //{"Media and VFP Feature Register 1", cpuinf_generic },
     {"DBGDIDR", cpuinf_dbgdidr },
     {"DBGDRAR", cpuinf_dbgd_address },
     {"DBGDSAR", cpuinf_dbgd_address },
     {"DBGDSCR", cpuinf_dbgdscr },
+    //{"Floating Point System ID register", cpuinf_generic },
+    //{"Media and VFP Feature Register 0", cpuinf_generic },
+    //{"Media and VFP Feature Register 1", cpuinf_generic },
     {}
 };
 
@@ -933,6 +933,30 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ttbr1[] = {
     {}
 };
 
+const struct cpuinfo_bitfield_desc_s cpuinf_actlr_vmsa[] = {
+    {1,"Cache & TLB maint. broadcast" },
+    {1,"L2 prefetch enable" },
+    {1,"L1 prefetch enable" },
+    {1,"Write full line of zeroes" },
+    {2,"(zero)"},
+    {1,"SMP" },
+    {1,"Exclusive cache" },
+    {1,"Alloc in one way" },
+    {1,"Parity on" },
+    {22,"-"},
+    {}
+};
+
+const struct cpuinfo_bitfield_desc_s cpuinf_cpacr_vmsa[] = {
+    {20,"(zero)"},
+    {2,"CP10 access permission" },
+    {2,"CP11 access permission" },
+    {6,"(zero)"},
+    {1,"D32DIS" },
+    {1,"ASEDIS" },
+    {}
+};
+
 const struct cpuinfo_word_desc_s cpuinfo_desc_vmsa[]={
     {"ID", cpuinf_id },
     {"Cache type", cpuinf_ctr },
@@ -961,20 +985,25 @@ const struct cpuinfo_word_desc_s cpuinfo_desc_vmsa[]={
     {"Cache size ID reg (data, level0)", cpuinf_ccsidr },
     {"Cache size ID reg (inst, level0)", cpuinf_ccsidr },
     {"SCTLR", cpuinf_sctlr_vmsa },
-    {"ACTLR", cpuinf_generic },
+    {"ACTLR", cpuinf_actlr_vmsa },
     {"ACTLR2", cpuinf_generic },
-    {"CPACR", cpuinf_generic },
+    {"CPACR", cpuinf_cpacr_vmsa },
     {"DACR", cpuinf_generic },
     //{"ATCM region reg", cpuinf_tcmreg }, // not specified in Cortex A literature
     //{"BTCM region reg", cpuinf_tcmreg }, // not specified in Cortex A literature
     {"NSACR (sec. ext. only)", cpuinf_generic },
-    //{"Floating Point System ID register", cpuinf_generic },
-    //{"Media and VFP Feature Register 0", cpuinf_generic },
-    //{"Media and VFP Feature Register 1", cpuinf_generic },
     {"DBGDIDR", cpuinf_dbgdidr },
     {"DBGDRAR", cpuinf_dbgd_address },
     {"DBGDSAR", cpuinf_dbgd_address },
     {"DBGDSCR", cpuinf_dbgdscr },
+    //{"Floating Point System ID register", cpuinf_generic },
+    //{"Media and VFP Feature Register 0", cpuinf_generic },
+    //{"Media and VFP Feature Register 1", cpuinf_generic },
+    {"Config base addr reg", cpuinf_generic },
+    {"PLEIDR", cpuinf_generic },
+    {"TLB lockdown reg", cpuinf_generic },
+    {"PRRR", cpuinf_generic },
+    {"NMRR", cpuinf_generic },
     {}
 };
 
@@ -1156,6 +1185,26 @@ void __attribute__((naked,noinline)) cpuinfo_get_info_vmsa(unsigned *results) {
         //".word  0xEEF61A10\n" //"VMRS   R1, MVFR1\n" // Media and VFP Feature Register 1
         //"ADD    R0, R0, #4\n"
         //"STR    R1, [R0]\n"
+
+        "MRC    p15, 4, R1,c15,c0,0\n" // config base addr reg (Cortex A9)
+        "ADD    R0, R0, #4\n"
+        "STR    R1, [R0]\n"
+
+        "MRC    p15, 0, R1,c11,c0,0\n" // PLEIDR (Cortex A9)
+        "ADD    R0, R0, #4\n"
+        "STR    R1, [R0]\n"
+
+        "MRC    p15, 0, R1,c10,c0,0\n" // TLB lockdown reg (Cortex A9)
+        "ADD    R0, R0, #4\n"
+        "STR    R1, [R0]\n"
+
+        "MRC    p15, 0, R1,c10,c2,0\n" // PRRR (Cortex A9)
+        "ADD    R0, R0, #4\n"
+        "STR    R1, [R0]\n"
+
+        "MRC    p15, 0, R1,c10,c2,1\n" // NMRR (Cortex A9)
+        "ADD    R0, R0, #4\n"
+        "STR    R1, [R0]\n"
 
         "BX     LR\n"
 
@@ -1421,7 +1470,7 @@ void memmapping_vmsa(FILE *f) {
                 l2a = l1a;
                 ee = (unsigned*) r;
                 for (nn=0; nn<256; nn++) {
-                    sprintf(linebuf,"0x%08X,L2,",l2a); // virtual address to be described by L1 entry
+                    sprintf(linebuf,"0x%08X,L2,",l2a); // virtual address to be described by L2 entry
                     fwrite(linebuf,1,strlen(linebuf),f);
                     conclude = "\n";
                     rr = interpret_l2_table_entry(*ee, linebuf);
