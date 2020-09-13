@@ -1,5 +1,5 @@
 --[[
-@title MF Test Suite v3.1
+@title MF Test Suite v3.2
 @chdk_version 1.3
 
 Instructions : 
@@ -44,7 +44,7 @@ end
 function new_log(cam)
     filename = "A/mf_"..cam..".csv"
     log=io.open(filename,"a")
-    log:write(os.date(),",MF Test 3.1 Log\n")     
+    log:write(os.date(),",MF Test 3.2 Log\n")     
     log:close()
 end
 
@@ -158,10 +158,10 @@ end
     set_config_value(cfg2.subj_dist_override_koef, 0)  
     
 
-    new_log(bi.platform)
+    new_log(string.format('%x',bi.platformid))
     enter_shoot_mode()
     print_screen(0)  
-    printf("Set Focus Tester v3.1 %s",string.upper(bi.platform))
+    printf("Set Focus Tester v3.2 %s",string.upper(bi.platform))
 
     if( props.CONTINUOUS_AF == nil ) then caf=-999 else caf = get_prop(props.CONTINUOUS_AF) end
     if( props.SERVO_AF == nil ) then saf=-999 else saf = get_prop(props.SERVO_AF) end
