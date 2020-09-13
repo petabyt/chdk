@@ -69,10 +69,10 @@
     #define CAM_JPEG_WIDTH                  4000
     #define CAM_JPEG_HEIGHT                 3000
 
-    #define CAM_ACTIVE_AREA_X1              96
-    #define CAM_ACTIVE_AREA_Y1              24
+    #define CAM_ACTIVE_AREA_X1              92
+    #define CAM_ACTIVE_AREA_Y1              16
     #define CAM_ACTIVE_AREA_X2              4164
-    #define CAM_ACTIVE_AREA_Y2              3060
+    #define CAM_ACTIVE_AREA_Y2              3058 // the bottom most row has weird artifacts, rounded to 3058 to keep size even
 
     #define PARAM_CAMERA_NAME               4
     #undef  CAM_SENSOR_BITS_PER_PIXEL
