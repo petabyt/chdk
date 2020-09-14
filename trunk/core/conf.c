@@ -288,7 +288,7 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFO(202, conf.remaining_raw_treshold,                 CONF_DEF_VALUE, i:0),
     CONF_INFO(203, conf.raw_exceptions_warn,                    CONF_DEF_VALUE, i:1),
 
-    CONF_INFO(210, conf.show_movie_time,                        CONF_DEF_VALUE, i:3),
+    CONF_INFO(210, conf.show_movie_time,                        CONF_DEF_VALUE, i:0),
     CONF_INFO(211, conf.show_movie_refresh,                     CONF_DEF_VALUE, i:1),
 
     CONF_INFO(220, conf.show_temp,                              CONF_DEF_VALUE, i:1),
