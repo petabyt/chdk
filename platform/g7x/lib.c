@@ -265,7 +265,7 @@ void *vid_get_bitmap_fb() {
 }
 
 int vid_get_viewport_byte_width() {
-    return (vp_full_width * 2);
+    return (vp_full_buf_width * 2);
 }
 
 // Functions for PTP Live View system
