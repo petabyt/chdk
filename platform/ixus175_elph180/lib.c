@@ -50,26 +50,57 @@ void *vid_get_bitmap_active_palette()
     return (p+1);
 }
 
-extern int _GetVRAMHPixelsSize();
-extern int _GetVRAMVPixelsSize();
+extern int _GetVRAMHPixelsSize(void);
+extern int _GetVRAMVPixelsSize(void);
+extern int _GetVideoOutType(void);
+
+// playback is 480 / 576 for NTSC / PAL respectively
+int vid_get_viewport_yscale() {
+    if (camera_info.state.mode_play && _GetVideoOutType() != 0) {
+        return 2;
+    }
+    return 1;
+}
 
 //taken from n
 int vid_get_viewport_width()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 360;
     }
     return _GetVRAMHPixelsSize() >> 1;
 }
-// taken from n
+
 long vid_get_viewport_height()
 {
-  if ((mode_get() & MODE_MASK) == MODE_PLAY)
+  if (camera_info.state.mode_play)
   {
+       if(_GetVideoOutType() == 2) { // PAL
+           return 288; // 576
+       }
+       // rec or NTSC
        return 240;
   }
   return _GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * vid_get_viewport_yscale(); }
+
+int vid_get_viewport_fullscreen_height()
+{
+    if (camera_info.state.mode_play) {
+        int vot = _GetVideoOutType();
+        if(vot == 2) {
+            return 576; // PAL in playback is 576
+        } else if(vot == 1) {
+            return 480; // NTSC is 480
+        } else {
+            return 240; // normal is 240
+        }
+    } else {
+        return 240;
+    }
 }
 
 void *vid_get_viewport_fb_d()

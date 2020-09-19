@@ -84,9 +84,17 @@ char *hook_raw_image_addr()
     return (char*)0x42365c30; //(Found @0xff413f98)
 }
 
+extern int _GetVideoOutType(void);
+extern int _GetVRAMHPixelsSize(void);
+extern int _GetVRAMVPixelsSize(void);
+
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+// elph130 is 240 when using video out in rec
 int vid_get_viewport_yscale() {
-	return 2;
+    if (camera_info.state.mode_play || _GetVideoOutType() == 0) {
+        return 2;
+    }
+    return 1;
 }
 
 int vid_get_viewport_width()
@@ -95,18 +103,24 @@ int vid_get_viewport_width()
     {
         return 360;
     }
-    extern int _GetVRAMHPixelsSize();
     return _GetVRAMHPixelsSize() >> 1;
 }
 
 long vid_get_viewport_height()
 {
+    int vot = _GetVideoOutType();
     if (camera_info.state.mode_play)
     {
+        if(vot == 2) { // PAL
+            return 288; // 576
+        }
         return 240;
     }
-    extern int _GetVRAMVPixelsSize();
-    return _GetVRAMVPixelsSize() >> 1;
+    if(vot == 0) {
+        return _GetVRAMVPixelsSize() >> 1;
+    } else {
+        return _GetVRAMVPixelsSize(); // full size is 240 in rec video out
+    }
 }
 
 // viewport width offset table for each image size
@@ -140,7 +154,7 @@ int vid_get_viewport_display_xoffset()
     }
     else
     {
-	    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+        return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
@@ -169,7 +183,7 @@ int vid_get_viewport_yoffset()
     }
     else
     {
-	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+        return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
@@ -188,19 +202,35 @@ int vid_get_viewport_display_yoffset()
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
             return 0;// 4:3 video, no offset
         } else {
-            return 30; // 16:9 video
+            return 30;
         }
     }
     else
     {
-	    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+        return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
-int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * 2; }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
-int vid_get_viewport_fullscreen_height()        { return 480; }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * vid_get_viewport_yscale(); }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * vid_get_viewport_yscale(); }
 
+int vid_get_viewport_fullscreen_height()
+{
+    int vot = _GetVideoOutType();
+    if (camera_info.state.mode_play) {
+        if(vot == 2) {
+            return 576; // PAL in playback is 576
+        } else {
+            return 480; // all other playback is 480
+        }
+    } else {
+        if(vot == 0) {
+            return 480; // rec without video out
+        } else {
+            return 240;
+        }
+    }
+}
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
