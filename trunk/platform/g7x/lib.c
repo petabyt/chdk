@@ -188,19 +188,19 @@ void *vid_get_viewport_live_fb()
 }
 
 // track viewport size changes with display type
-// only different for HDMI out, playback only, probably pointless
 static int vp_full_width = 720;
 static int vp_full_buf_width = 736;
 static int vp_full_height = 480;
+static int lv_aspect = LV_ASPECT_3_2; // expected physical aspect ratio depends on output type
 
+// NOTE: digic 6 currently using actual width rather than half width used on pre d6
+// pixel format is uyvy (16bpp)
 int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
     if (camera_info.state.mode_play)
     {
         return vp_full_width;
     }
-// TODO: currently using actual width rather than half width used on pre d6
-// pixel format is uyvy (16bpp)
     return _GetVRAMHPixelsSize();
 }
 
@@ -210,7 +210,6 @@ long vid_get_viewport_height() {
     {
         return vp_full_height;
     }
-// TODO: currently using actual height rather than 240 used on pre d6
     return _GetVRAMVPixelsSize();
 }
 
@@ -218,9 +217,14 @@ int vid_get_viewport_yoffset() {
     // this seems to be always 0, buffer always begins with actual display data (widescreen or not)
     return 0;
 }
-//
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-static long vp_xo[5] = { 40, 0, 0, 120, 168 };				// should all be even values for edge overlay
+
+// should all be even values for edge overlay
+static long vp_xo[3][5] = {
+// 0=4:3, 1=16:9, 2=3:2, 3=1:1, 4=4:5
+    {  0,     0,     0,    90,   144 }, // analog out 4:3 
+    {  0,     0,     0,     0,     0 }, // 16:9 dummy, only applies to playback
+    { 40,     0,     0,   120,   168 }, // LCD 3x2
+};
 
 int vid_get_viewport_display_xoffset() {
     if (camera_info.state.mode_play)
@@ -230,13 +234,20 @@ int vid_get_viewport_display_xoffset() {
     // video, ignore still res propcase
     if(camera_info.state.mode_video || is_video_recording()) {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
-            return 40;// 4:3 video
+            return vp_xo[lv_aspect][0];// 4:3 video
         } else {
             return 0; // 16:9 video, no x offset
         }
     }
-    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return vp_xo[lv_aspect][shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
+
+static long vp_yo[3][5] = {
+// 0=4:3, 1=16:9, 2=3:2, 3=1:1, 4=4:5
+    {  0,     60,    27,     0,     0 }, // analog out 4:3 
+    {  0,      0,     0,     0,     0 }, // 16:9 dummy, only applies to playback
+    {  0,     36,     0,     0,     0 }, // LCD 3x2 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
+};
 
 int vid_get_viewport_display_yoffset() {
     if (camera_info.state.mode_play)
@@ -248,14 +259,10 @@ int vid_get_viewport_display_yoffset() {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
             return 0; // 4:3 video, no Y offset
         } else {
-            return 36; // 16:9 video
+            return vp_yo[lv_aspect][1];// 16:9 video
         }
     }
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)
-    {
-        return 36;
-    }
-    return 0;
+    return vp_yo[lv_aspect][shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 extern char* bitmap_buffer[];
@@ -275,7 +282,7 @@ int vid_get_viewport_fullscreen_width()         { return vp_full_width; }
 int vid_get_viewport_fullscreen_height()        { return vp_full_height; }
 int vid_get_viewport_buffer_width_proper()      { return vp_full_buf_width; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
-int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
+int vid_get_aspect_ratio()                      { return lv_aspect; }
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
 }
@@ -322,7 +329,7 @@ void update_screen_dimensions() {
             break;
         case 1: // TV out NTSC
         case 2: // TV out PAL
-        case 8:
+        case 8: // HDMI on displays not capable of 1080i, 720x480, expected physical aspect ratio unclear
         case 9: 
         case 10:// LCD
             camera_screen.width = camera_screen.physical_width = 720;
@@ -349,11 +356,17 @@ void update_screen_dimensions() {
         vp_full_width = 1920;
         vp_full_buf_width = 1920;
         vp_full_height = 1080;
+        lv_aspect = LV_ASPECT_16_9;
     } else {
         // others are unclear, but unlikely to come up in practice
         vp_full_width = 720;
         vp_full_buf_width = 736;
         vp_full_height = 480;
+        if(displaytype == 10) { // LCD is 3:2
+            lv_aspect = LV_ASPECT_3_2;
+        } else { // TV out is 4:3, low res HDMI looks correct at 4:3
+            lv_aspect = LV_ASPECT_4_3;
+        }
     }
 }
 #endif
