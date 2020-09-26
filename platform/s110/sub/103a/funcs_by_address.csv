@@ -55,6 +55,10 @@
 0x0068f4b4,AcquireRecursiveLock
 0x0068f5d4,ReleaseRecursiveLock
 0x0068f65c,DisableDispatch
+0x0068f6c0,GetValidSystemCalender
+0x0068f6e0,IsInvalidTime
+0x0068f6f8,PauseTimeOfSystem
+0x0068f708,ResumeTimeOfSystem
 0x0068f868,SleepTask
 0x0068f868,SleepTask_FW
 0x0068f8b0,EnableDispatch
@@ -320,6 +324,7 @@
 0xf8077cb8,EnableHvUpdate_FW
 0xf8077cc8,DisableHvUpdate_FW
 0xf8077cd8,j_GetSlantAngle_FW
+0xf807929c,GetTimeFromRTC
 0xf8079464,task_BeepTask
 0xf80797e4,BeepDrive_FW
 0xf8079804,BeepDriveComp_FW
@@ -2060,6 +2065,7 @@
 0xf86481f0,GetSRAndDisableInterrupt
 0xf86481f8,SetSR
 0xf86482b0,_divmod_unsigned_int
+0xf86485c8,SetValidSystemCalender
 0xf86486d8,_fdiv
 0xf86488b0,_dflt
 0xf86488c0,_pow

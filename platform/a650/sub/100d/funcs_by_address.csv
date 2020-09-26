@@ -195,6 +195,11 @@
 0xffc19544,AcquireRecursiveLock
 0xffc19648,ReleaseRecursiveLock
 0xffc196cc,DisableDispatch
+0xffc19724,SetValidSystemCalender
+0xffc19730,GetValidSystemCalender
+0xffc19750,IsInvalidTime
+0xffc19768,PauseTimeOfSystem
+0xffc19778,ResumeTimeOfSystem
 0xffc19890,SleepTask
 0xffc19890,SleepTask_FW
 0xffc198fc,EnableDispatch
@@ -261,6 +266,7 @@
 0xffc350f4,GetAdChValue
 0xffc350f4,GetAdChValue_FW
 0xffc35190,GetAdVBattBottom_FW
+0xffc36140,GetTimeFromRTC
 0xffc365c0,Bat_Calc_FW
 0xffc365c0,CalculateBatSenseOffset_FW
 0xffc367ec,task_BeepTask

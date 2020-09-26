@@ -197,6 +197,11 @@
 0xff82a8d4,AcquireRecursiveLock
 0xff82a9d8,ReleaseRecursiveLock
 0xff82aa5c,DisableDispatch
+0xff82aab4,SetValidSystemCalender
+0xff82aac0,GetValidSystemCalender
+0xff82aae0,IsInvalidTime
+0xff82aaf8,PauseTimeOfSystem
+0xff82ab08,ResumeTimeOfSystem
 0xff82ac20,SleepTask
 0xff82ac20,SleepTask_FW
 0xff82ac8c,EnableDispatch
@@ -302,6 +307,7 @@
 0xff84a2b8,DispCon_ShowVideoAdjParameter_FW
 0xff84a2d0,DispCon_SaveVideoAdjParameter_FW
 0xff84a96c,LcdCon_SetLcdType_FW
+0xff84c070,GetTimeFromRTC
 0xff84c4ec,Bat_Calc_FW
 0xff84c4ec,CalculateBatSenseOffset_FW
 0xff84c6f8,task_BeepTask

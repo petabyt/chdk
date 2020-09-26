@@ -56,6 +56,11 @@
 0x006b8810,DeleteRecursiveLock
 0x006b8878,AcquireRecursiveLock
 0x006b89e0,ReleaseRecursiveLock
+0x006b8a94,SetValidSystemCalender
+0x006b8aa4,GetValidSystemCalender
+0x006b8ac4,IsInvalidTime
+0x006b8adc,PauseTimeOfSystem
+0x006b8aec,ResumeTimeOfSystem
 0x006b8d54,SleepTask
 0x006b8d54,SleepTask_FW
 0x006b9180,time
@@ -376,6 +381,7 @@
 0xff071de4,task_BeepTask
 0xff07216c,BeepDrive_FW
 0xff07218c,BeepDriveComp_FW
+0xff072324,GetTimeFromRTC
 0xff072b88,task_HdmiCecTask
 0xff072dcc,ChangePowerState_FW
 0xff072e38,EnableHDMIPower

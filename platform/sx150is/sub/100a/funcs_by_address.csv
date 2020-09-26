@@ -170,6 +170,11 @@
 0xff83a768,GiveSemaphore_FW
 0xff83a7a0,GetSemaphoreValue
 0xff83a808,DisableDispatch
+0xff83a860,SetValidSystemCalender
+0xff83a86c,GetValidSystemCalender
+0xff83a88c,IsInvalidTime
+0xff83a8a4,PauseTimeOfSystem
+0xff83a8b4,ResumeTimeOfSystem
 0xff83aa14,SleepTask
 0xff83aa14,SleepTask_FW
 0xff83aa5c,EnableDispatch
@@ -249,6 +254,7 @@
 0xff862598,GetAdVBattBottom_FW
 0xff8625a0,GetAdChValue
 0xff8625a0,GetAdChValue_FW
+0xff863ce4,GetTimeFromRTC
 0xff863ea8,task_BeepTask
 0xff864228,BeepDrive_FW
 0xff864248,BeepDriveComp_FW
