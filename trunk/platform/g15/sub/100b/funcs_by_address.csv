@@ -57,6 +57,11 @@
 0x0068c130,AcquireRecursiveLock
 0x0068c250,ReleaseRecursiveLock
 0x0068c2d8,DisableDispatch
+0x0068c330,SetValidSystemCalender
+0x0068c33c,GetValidSystemCalender
+0x0068c35c,IsInvalidTime
+0x0068c374,PauseTimeOfSystem
+0x0068c384,ResumeTimeOfSystem
 0x0068c4e4,SleepTask
 0x0068c4e4,SleepTask_FW
 0x0068c52c,EnableDispatch
@@ -335,6 +340,7 @@
 0xff05a9cc,DisableHvUpdate_FW
 0xff05a9dc,j_GetSlantAngle_FW
 0xff05a9e0,j_GetAoriAngle_FW
+0xff05bfac,GetTimeFromRTC
 0xff05c174,task_BeepTask
 0xff05c4f4,BeepDrive_FW
 0xff05c514,BeepDriveComp_FW

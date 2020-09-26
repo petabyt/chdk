@@ -57,6 +57,11 @@
 0x0068c134,AcquireRecursiveLock
 0x0068c254,ReleaseRecursiveLock
 0x0068c2dc,DisableDispatch
+0x0068c334,SetValidSystemCalender
+0x0068c340,GetValidSystemCalender
+0x0068c360,IsInvalidTime
+0x0068c378,PauseTimeOfSystem
+0x0068c388,ResumeTimeOfSystem
 0x0068c4e8,SleepTask
 0x0068c4e8,SleepTask_FW
 0x0068c530,EnableDispatch
@@ -316,6 +321,7 @@
 0xff08fd04,_avsLoadParamData_FW
 0xff08fd40,_avsSaveAdjData_FW
 0xff08fd80,_avsChk_FW
+0xff090cb8,GetTimeFromRTC
 0xff0913d8,task_BeepTask
 0xff091758,BeepDrive_FW
 0xff091778,BeepDriveComp_FW

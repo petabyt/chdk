@@ -148,6 +148,11 @@
 0xff8383f4,GiveSemaphore_FW
 0xff83842c,GetSemaphoreValue
 0xff838498,DisableDispatch
+0xff8384f0,SetValidSystemCalender
+0xff8384fc,GetValidSystemCalender
+0xff83851c,IsInvalidTime
+0xff838534,PauseTimeOfSystem
+0xff838544,ResumeTimeOfSystem
 0xff83865c,SleepTask
 0xff83865c,SleepTask_FW
 0xff8386c8,EnableDispatch
@@ -226,6 +231,7 @@
 0xff856b2c,GetX_AxisAcceleration_FW
 0xff856b44,GetY_AxisAcceleration_FW
 0xff856b5c,GetZ_AxisAcceleration_FW
+0xff858158,GetTimeFromRTC
 0xff858320,Bat_Calc_FW
 0xff858320,CalculateBatSenseOffset_FW
 0xff858554,task_BeepTask

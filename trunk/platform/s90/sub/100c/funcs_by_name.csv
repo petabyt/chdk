@@ -542,6 +542,7 @@
 0xffa9d1c0,GetSystemTime
 0xffa9d1c0,GetSystemTime_FW
 0xff8661f0,GetTestRecCrawAddress_FW
+0xff85b49c,GetTimeFromRTC
 0xff886c98,GetTimeOfSystem_FW
 0xffa61598,GetTransparentMemory_FW
 0xffa615dc,GetTransparentMemoryPosition_FW
@@ -555,6 +556,7 @@
 0xffaf99bc,GetUsableMinAv
 0xffaf99bc,GetUsableMinAv_FW
 0xffaf95c8,GetUserSetShutterSPeed_FW
+0xff8388f0,GetValidSystemCalender
 0xff831e04,GetVBatVoltage_FW
 0xffafebec,GetVideoOutType
 0xffafebec,GetVideoOutType_FW
@@ -684,6 +686,7 @@
 0xff861e20,IsFactoryMode_FW
 0xff958dc8,IsFocusLensOutSidePosition_FW
 0xff875f80,ISInitMotion_FW
+0xff838910,IsInvalidTime
 0xff8742ec,IsLensOutside_FW
 0xff935634,IsLogOutType_FW
 0xffa9b8c0,ISMDStart_FW
@@ -1057,6 +1060,7 @@
 0xff88a3b4,OpLog.WriteToROM_FW
 0xff88a8ac,OpLog.WriteToSD_FW
 0xff9351b4,OutputLogToFile_FW
+0xff838928,PauseTimeOfSystem
 0xff8977c4,PB2Rec
 0xffa9d190,Peek16_FW
 0xffa9d188,Peek32_FW
@@ -1200,6 +1204,7 @@
 0xffafb154,ResetZoomToTerminate_FW
 0xffafb154,ResetZoomToTerminatePoint_FW
 0xff83a520,Restart
+0xff838938,ResumeTimeOfSystem
 0xff88bbb8,RomCheckSum_FW
 0xff81ef94,RotateConsoleZOder_FW
 0xff863524,SaveAdjustmentTable_FW
@@ -1369,6 +1374,7 @@
 0xff8391b0,SetTimerAfter
 0xff839230,SetTimerWhen
 0xffafa748,SetToolCorrectCoefficient_FW
+0xff8388e4,SetValidSystemCalender
 0xffafecb8,SetVideoOutType
 0xffafed14,SetVideoOutType_FW
 0xffafa6dc,SetWBYlStandardWidth_FW

@@ -161,6 +161,11 @@
 0xff83a7e4,GiveSemaphore_FW
 0xff83a81c,GetSemaphoreValue
 0xff83a888,DisableDispatch
+0xff83a8e0,SetValidSystemCalender
+0xff83a8ec,GetValidSystemCalender
+0xff83a90c,IsInvalidTime
+0xff83a924,PauseTimeOfSystem
+0xff83a934,ResumeTimeOfSystem
 0xff83aa4c,SleepTask
 0xff83aa4c,SleepTask_FW
 0xff83aab8,EnableDispatch
@@ -256,6 +261,7 @@
 0xff860ea8,LoadAcceleParamFromFile_FW
 0xff860f10,RegisterElecLevelInfoNotifyCBR_FW
 0xff860f2c,UnRegisterElecLevelInfoNotifyCBR_FW
+0xff862a48,GetTimeFromRTC
 0xff862c5c,task_BeepTask
 0xff862fe0,BeepDrive_FW
 0xff863000,BeepDriveComp_FW

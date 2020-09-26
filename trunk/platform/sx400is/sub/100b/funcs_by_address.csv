@@ -164,6 +164,11 @@
 0xff82a214,AcquireRecursiveLock
 0xff82a37c,ReleaseRecursiveLock
 0xff82a420,DisableDispatch
+0xff82a480,SetValidSystemCalender
+0xff82a490,GetValidSystemCalender
+0xff82a4b0,IsInvalidTime
+0xff82a4c8,PauseTimeOfSystem
+0xff82a4d8,ResumeTimeOfSystem
 0xff82a75c,SleepTask
 0xff82a75c,SleepTask_FW
 0xff82a7a8,EnableDispatch
@@ -341,6 +346,7 @@
 0xff868854,task_BeepTask
 0xff868bdc,BeepDrive_FW
 0xff868bfc,BeepDriveComp_FW
+0xff868d94,GetTimeFromRTC
 0xff869d9c,task_LEDCon
 0xff86a7e8,kbd_read_keys_r2
 0xff86ae4c,GetKbdState
