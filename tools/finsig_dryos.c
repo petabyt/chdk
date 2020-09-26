@@ -502,6 +502,12 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "DisableDispatch", OPTIONAL|UNUSED }, // disables task switching (high level wrapper)
     { "EnableDispatch_low", OPTIONAL|UNUSED }, // enables task switching
     { "DisableDispatch_low", OPTIONAL|UNUSED }, // disables task switching
+    { "GetValidSystemCalender", OPTIONAL|UNUSED }, // name from ixus30
+    { "SetValidSystemCalender", OPTIONAL|UNUSED }, // name from ixus30
+    { "GetTimeFromRTC", OPTIONAL|UNUSED },
+    { "IsInvalidTime", OPTIONAL|UNUSED }, // name from ixus30
+    { "PauseTimeOfSystem", OPTIONAL|UNUSED }, // name from ixus30
+    { "ResumeTimeOfSystem", OPTIONAL|UNUSED }, // name from ixus30
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
@@ -952,6 +958,95 @@ int find_closedir(firmware *fw)
         {
             uint32_t fadr = followBranch(fw, idx2adr(fw, k-2), 0x01000001);
             fwAddMatch(fw,fadr,32,0,121);
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int find_GetTimeFromRTC_and_more(firmware *fw, int i)
+{
+    int j = fw->main_offs;
+    int k = -1;
+    while (j < fw->size)
+    {
+        if (isLDR(fw, j) && LDR2val(fw, j) == 0x7FE8177F)
+        {
+            if (i == 2)
+            {
+                k = find_inst(fw, isBL, j+1, 6);
+                if (k > j)
+                {
+                    k = adr2idx(fw, followBranch(fw, idx2adr(fw, k), 0x01000001));
+                    uint32_t fadr = idx2adr(fw, k);
+                    fwAddMatch(fw,fadr,32,0,122); // SetValidSystemCalender
+                    return 1;
+                }
+            }
+            k = find_Nth_inst(fw, isBL, j+1, 6, 2);
+            break;
+        }
+        j++;
+    }
+    if (k > j)
+    {
+        k = adr2idx(fw, followBranch(fw, idx2adr(fw, k), 0x01000001));
+        j = find_inst(fw, isBLEQ, k+1, 30);
+        if (j != -1) // newer cam
+        {
+            if (i == 0)
+            {
+                j = adr2idx(fw, followBranch(fw, idx2adr(fw, j), 0xe1000001));
+                uint32_t fadr = idx2adr(fw, j);
+                fwAddMatch(fw,fadr,32,0,122); // GetTimeFromRTC
+                return 1;
+            }
+            k = find_Nth_inst_rev(fw, isBL, j-1, 14, 2);
+            j = adr2idx(fw, followBranch(fw, idx2adr(fw, k), 0x01000001));
+            if (!isSTMFD_LR(fw,j))
+            {
+                uint32_t fadr = idx2adr(fw, j);
+                fwAddMatch(fw,fadr,32,0,122); // GetValidSystemCalender
+                return 1;
+            }
+            return 0;
+        }
+        k = find_Nth_inst(fw, isBL, k+1, 20, 2);
+        if (k == -1)
+        {
+            return 0;
+        }
+        j = adr2idx(fw, followBranch2(fw, idx2adr(fw, k), 0x01000001)); // followBranch2 to support s110
+        if (isSTMFD_LR(fw,j))
+        {
+            k = find_inst(fw, isBL, k+1, 8);
+            if (k == -1)
+            {
+                return 0;
+            }
+            j = adr2idx(fw, followBranch(fw, idx2adr(fw, k), 0x01000001));
+        }
+        if (isSTMFD_LR(fw,j))
+        {
+            return 0;
+        }
+        if (i == 1) // GetValidSystemCalender (ixus30/40, sic)
+        {
+            uint32_t fadr = idx2adr(fw, j);
+            fwAddMatch(fw,fadr,32,0,122);
+            return 1;
+        }
+        k = find_inst(fw, isBL, k+1, 8);
+        if (k == -1)
+        {
+            return 0;
+        }
+        j = adr2idx(fw, followBranch(fw, idx2adr(fw, k), 0x01000001));
+        if (i == 0 && isSTMFD_LR(fw,j)) // GetTimeFromRTC
+        {
+            uint32_t fadr = idx2adr(fw, j);
+            fwAddMatch(fw,fadr,32,0,122);
             return 1;
         }
     }
@@ -2618,6 +2713,9 @@ string_sig string_sigs[] =
                                                                                                                                                                                                
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002c,-0x002d,-0x0c2d,-0x0c2d,-0x0c2d,-0x0e2d },
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002d, 0x0001, 0x0001,-0x0b2d, 0x0001, 0x0001 }, // alt r52 (sx510), r57 (ixus275)
+    { 19, "IsInvalidTime", "GetValidSystemCalender", 0,                          0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008 },
+    { 19, "PauseTimeOfSystem", "GetValidSystemCalender", 0,                      0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e },
+    { 19, "ResumeTimeOfSystem", "GetValidSystemCalender", 0,                     0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012 },
                                                                                                                                                                                                        
     { 19, "CalcLog10", "CalcLog10_FW", 0,                                       -0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f },
     { 19, "_dfixu", "_dfix", 0,                                                  0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c },
@@ -2669,6 +2767,9 @@ string_sig string_sigs[] =
     { 22, "Remove", (char*)find_Remove, 0},
     { 22, "EnableDispatch", (char*)find_dispatch_funcs, 0},
     { 22, "DisableDispatch", (char*)find_dispatch_funcs, 1},
+    { 22, "GetTimeFromRTC", (char*)find_GetTimeFromRTC_and_more, 0},
+    { 22, "GetValidSystemCalender", (char*)find_GetTimeFromRTC_and_more, 1},
+    { 22, "SetValidSystemCalender", (char*)find_GetTimeFromRTC_and_more, 2},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
