@@ -196,7 +196,7 @@ void update_screen_dimensions()
         camera_screen.disp_width = camera_screen.width;
 
         // Update other values
-        camera_screen.physical_width = camera_screen.buffer_width;
+        camera_screen.physical_width = camera_screen.width;
         camera_screen.buffer_height = camera_screen.height;
         camera_screen.size = camera_screen.width * camera_screen.height;
         camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
