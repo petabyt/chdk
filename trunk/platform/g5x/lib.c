@@ -142,6 +142,50 @@ int vid_get_viewport_byte_width()
     return 736*2;     // buffer is 736 wide (720 image pixels) UYVY
 }
 
+int vid_get_viewport_display_xoffset()
+{
+    // viewport width offset table for each image size
+    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+    static long vp_xo[5] = { 40, 0, 0, 120};    // should all be even values for edge overlay
+
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    else if (camera_info.state.mode_video)
+    {
+        if (shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2)  // VGA
+            return 40;
+        return 0;
+    }
+    else
+    {
+        return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_yoffset()
+{
+    // viewport height offset table for each image size
+    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+    static long vp_yo[5] = { 0, 38, 0, 0 };
+
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    else if (camera_info.state.mode_video)
+    {
+        if (shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) // VGA
+            return 0;
+        return 38;
+    }
+    else
+    {
+        return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
