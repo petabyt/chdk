@@ -125,7 +125,6 @@ void __attribute__((naked,noinline)) capt_seq_task() {
             "    ldr     r0, [r0, #0xc]\n"
             "    bl      sub_e0039274\n"
             "    BL      shooting_expo_param_override\n" // +
-            "    BL      captseq_get_raw_addr\n"  // +
             "    bl      sub_e004f1e4\n"
             "    ldr     r0, [r4, #0x28]\n"
             "    cmp     r0, #0\n"
@@ -644,6 +643,7 @@ void __attribute__((naked,noinline)) sub_e005348c_my() {
             //capdis -f=chdk -s=0xe005348d -c=293 -stubs PRIMARY.BIN 0xe0000000
             "    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, lr}\n"
             "    mov     r4, r0\n"
+            "    BL      captseq_get_raw_addr\n"  // +
             "    ldr     r7, =0x00057d2c\n"
             "    ldr.w   r0, [r7, #0x104]\n"
             "    cbz     r0, loc_e00534a8\n"
