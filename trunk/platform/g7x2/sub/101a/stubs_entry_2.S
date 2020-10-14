@@ -29,10 +29,6 @@ NHSTUB(CancelHPTimer                          ,0xe03f4b5b)
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK
 NHSTUB(VTMUnlock                              ,0xe03781d7)  // ??? VTMUnlock string not in FW
 
-// gets raw address and other stuff for next shot, stores in structure pointed to by r1
-// via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
-NHSTUB(captseq_raw_addr_init                  ,NULL_SUB)
-
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)

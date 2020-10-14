@@ -82,17 +82,17 @@ void JogDial_CCW(void)
 }
 
 // updated by using function in capt_seq, valid between shot start and raw hook end
-extern  char*   current_raw_addr;
-
 char *hook_raw_image_addr()
 {
+    extern char* current_raw_addr;
     return current_raw_addr;
 }
 
-// TODO:
-//char *hook_alt_raw_image_addr()
-//{
-//}
+char *hook_alt_raw_image_addr()
+{
+    extern char* current_raw_alt_addr;
+    return current_raw_alt_addr;
+}
 
 extern void* viewport_buffers[];
 extern void *current_viewport_buffer;

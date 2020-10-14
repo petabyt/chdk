@@ -2,9 +2,7 @@ Issues
 
 - Not a fully working port.
 - Screen update in CHDK menu has problems in record mode (sometimes displays old frame).
-- No CHDK Raw capture, or associated functionality. 
 - Memory browser may crash if it tries to dereference an invalid address.
-- Overrides do not work yet.
 
 Development notes:
 
@@ -13,8 +11,8 @@ Development notes:
 - Core functionality working. Config save/load, debug menu, games, tools, file browser, scripts etc.
 - PTP working including live view and UI overlay
 - Edge detection, zebra and histogram work.
-- CaptSeq task not implemented.
 - MovieRecord task not implemented.
 - ExpDrv task not implemented.
 - FileWrite task not implemented.
- 
+- DNG files created by CHDK do not load correctly in latest Adobe ACR / Lightroom.
+  Appears to be an Adobe bug. Files load in RawTherapee, darktable, digikam, and RawDigger.
