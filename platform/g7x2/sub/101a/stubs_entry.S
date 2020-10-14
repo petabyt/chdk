@@ -143,7 +143,7 @@ DEF(FlashParamsTable                  ,0xe089d83c) // Found @0xe0036f40
 DEF(playrec_mode                      ,0x0000c1d8) // (0xc1d4+0x4) Found @0xe02f082a
 DEF(jpeg_count_str                    ,0x0014dd38) // Found @0xe01a81d8
 DEF(zoom_busy                         ,0x00011664) // (0x11644+0x20) Found @0xe005f92a
-DEF(focus_busy                        ,0x0001141c) // (0x113f8+0x24) Found @0xe0372082
+DEF(focus_busy                        ,0x00011400) // (0x113f8+0x8) Found @0xe0372086
 DEF(imager_active                     ,0x000086f4) // (0x86f0+0x4) Found @0xe045be1e
 DEF(canon_menu_active                 ,0x0000ce08) // (0xce04+0x4) Found @0xe03756e0
 DEF(file_counter_var                  ,0x00011084) // Found @0xe0402394
