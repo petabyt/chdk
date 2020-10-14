@@ -3781,13 +3781,16 @@ int sig_match_focus_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     const insn_match_t match_ldr[]={
         {MATCH_INS(LDR, 2), {MATCH_OP_REG(R0), MATCH_OP_MEM_ANY}},
+        {MATCH_INS(CBZ, 2), {MATCH_OP_REG(R0), MATCH_OP_IMM_ANY}},
         {ARM_INS_ENDING}
     };
-    if(!insn_match_find_next(fw,is,7,match_ldr)) {
+    if(!insn_match_find_next_seq(fw,is,10,match_ldr)) {
         // printf("sig_match_focus_busy: no match LDR\n");
         return 0;
     }
-
+    // rewind to LDR
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,1));
+    disasm_iter(fw,is);
     // check LDR 
     if(is->insn->detail->arm.operands[1].mem.base != rb) {
         // printf("sig_match_focus_busy: no match LDR base\n");
