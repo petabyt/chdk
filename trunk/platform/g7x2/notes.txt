@@ -15,6 +15,5 @@ Development notes:
 - PTP working including live view and UI overlay
 - Edge detection, zebra and histogram work (see note above).
 - MovieRecord task not implemented.
-- FileWrite task not implemented.
 - DNG files created by CHDK do not load correctly in latest Adobe ACR / Lightroom.
   Appears to be an Adobe bug. Files load in RawTherapee, darktable, digikam, and RawDigger.
