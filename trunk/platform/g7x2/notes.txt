@@ -3,6 +3,9 @@ Issues
 - Not a fully working port.
 - Screen update in CHDK menu has problems in record mode (sometimes displays old frame).
 - Memory browser may crash if it tries to dereference an invalid address.
+- Edge overlay and Zebra do not work if the camera is connected to a HDMI display.
+  The viewport becomes 1920x1080; but the UI overlay (bitmap) remains 720x480. The code does not handle this.
+  Zebra may crash the camera if used with HDMI output.
 
 Development notes:
 
@@ -10,9 +13,8 @@ Development notes:
 - Screen draw working, CHDK menus working.
 - Core functionality working. Config save/load, debug menu, games, tools, file browser, scripts etc.
 - PTP working including live view and UI overlay
-- Edge detection, zebra and histogram work.
+- Edge detection, zebra and histogram work (see note above).
 - MovieRecord task not implemented.
-- ExpDrv task not implemented.
 - FileWrite task not implemented.
 - DNG files created by CHDK do not load correctly in latest Adobe ACR / Lightroom.
   Appears to be an Adobe bug. Files load in RawTherapee, darktable, digikam, and RawDigger.

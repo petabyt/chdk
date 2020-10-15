@@ -19,7 +19,7 @@ NHSTUB(Restart                                ,NULL_SUB)
 NHSTUB(SetFileTimeStamp                       ,0xe0374179)
 NHSTUB(TurnOffBackLight                       ,NULL_SUB)
 NHSTUB(TurnOnBackLight                        ,NULL_SUB)
-NHSTUB(apex2us                                ,NULL_SUB)
+NHSTUB(apex2us                                ,0xe0067ab3)
 //NHSTUB(err_init_task                          ,NULL_SUB)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)
@@ -28,6 +28,8 @@ NHSTUB(CancelHPTimer                          ,0xe03f4b5b)
 
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK
 NHSTUB(VTMUnlock                              ,0xe03781d7)  // ??? VTMUnlock string not in FW
+
+NHSTUB(GetActiveViewportBuffer                ,0xe03aa70b)
 
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)
