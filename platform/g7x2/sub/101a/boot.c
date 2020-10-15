@@ -220,11 +220,11 @@ void __attribute__((naked,noinline)) CreateTask_my() {
             "    ldreq   r3, =capt_seq_task\n"      // if so replace with our task function base ptr.
             "    beq     exitHook\n"                // below compares not necessary if this check has found something.
 
-            //"    ldr     r0, =task_ExpDrv\n"
-            //"    cmp     r0, R3\n"
-            //"    itt     eq\n"
-            //"    ldreq   r3, =exp_drv_task\n"
-            //"    beq     exitHook\n"
+            "    ldr     r0, =task_ExpDrv\n"
+            "    cmp     r0, R3\n"
+            "    itt     eq\n"
+            "    ldreq   r3, =exp_drv_task\n"
+            "    beq     exitHook\n"
 
             //"    ldr     r0, =task_DvlpSeq\n"
             //"    cmp     r0, R3\n"
