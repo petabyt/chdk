@@ -14,67 +14,66 @@ extern void task_InitFileModules();
 //extern void task_MovieRecord();
 extern void task_ExpDrv();
 
-void blinker()
-{
-    // green LED
-    volatile int* p = (int*)0xD20801E4;
-
-    // blinker
-    int i;
-    while (1)
-    {
-        *p = 0x24D0002;
-        for(i=0;i<10000000;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-        *p = 0x24C0003;
-        for(i=0;i<10000000;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-    }
-}
-void blinkeraf()
-{
-    // green LED
-    volatile int* p = (int*)0xD20801E8;
-
-    // blinker
-    int i;
-    while (1)
-    {
-        *p = 0x24D0002;
-        for(i=0;i<10000000;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-        *p = 0x24C0003;
-        for(i=0;i<10000000;i++) {
-            asm volatile(
-            "nop\n"
-            );
-        }
-    }
-}
-
-void blinktask(long ua, long ub, long uc, long ud, long ue, long uf)
-{
-    // green LED
-    volatile int* p = (int*)0xD20801E4;
-
-    // blinker
-    while (1)
-    {
-        *p = 0x24D0002;
-        _SleepTask(1000);
-        *p = 0x24C0003;
-        _SleepTask(1000);
-    }
-}
+// void blinker()
+// {
+//     // green LED
+//     volatile int* p = (int*)0xD20801E4;
+// 
+//     // blinker
+//     int i;
+//     while (1)
+//     {
+//         *p = 0x24D0002;
+//         for(i=0;i<10000000;i++) {
+//             asm volatile(
+//             "nop\n"
+//             );
+//         }
+//         *p = 0x24C0003;
+//         for(i=0;i<10000000;i++) {
+//             asm volatile(
+//             "nop\n"
+//             );
+//         }
+//     }
+// }
+// void blinkeraf()
+// {
+//     // green LED
+//     volatile int* p = (int*)0xD20801E8;
+// 
+//     // blinker
+//     int i;
+//     while (1)
+//     {
+//         *p = 0x24D0002;
+//         for(i=0;i<10000000;i++) {
+//             asm volatile(
+//             "nop\n"
+//             );
+//         }
+//         *p = 0x24C0003;
+//         for(i=0;i<10000000;i++) {
+//             asm volatile(
+//             "nop\n"
+//             );
+//         }
+//     }
+// }
+// void blinktask(long ua, long ub, long uc, long ud, long ue, long uf)
+// {
+//     // green LED
+//     volatile int* p = (int*)0xD20801E4;
+// 
+//     // blinker
+//     while (1)
+//     {
+//         *p = 0x24D0002;
+//         _SleepTask(1000);
+//         *p = 0x24C0003;
+//         _SleepTask(1000);
+//     }
+// }
 
 /*----------------------------------------------------------------------
     spytask
@@ -232,11 +231,11 @@ void __attribute__((naked,noinline)) CreateTask_my() {
             //"    ldreq   r3, =developseq_task\n"
             //"    beq     exitHook\n"
 
-            //"    ldr     r0, =task_FileWrite\n"
-            //"    cmp     r0, R3\n"
-            //"    itt     eq\n"
-            //"    ldreq   r3, =filewritetask\n"
-            //"    beq     exitHook\n"
+            "    ldr     r0, =task_FileWrite\n"
+            "    cmp     r0, R3\n"
+            "    itt     eq\n"
+            "    ldreq   r3, =filewritetask\n"
+            "    beq     exitHook\n"
 
             //"    ldr     r0, =task_MovieRecord\n"
             //"    cmp     r0, R3\n"
