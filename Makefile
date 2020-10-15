@@ -272,6 +272,7 @@ allmodules:
 	$(MAKE) -C modules clean all THUMB_FW=
     ifeq ($(NO_T2), )
 		$(MAKE) -C modules clean all THUMB_FW=1
+		$(MAKE) -C modules clean all THUMB_FW=1 DIGIC7=1
     endif
 	$(MAKE) -C CHDK clean all
 
@@ -342,6 +343,7 @@ batch-clean:
 	$(MAKE) -C tools clean
 	$(MAKE) -C modules clean THUMB_FW=
 	$(MAKE) -C modules clean THUMB_FW=1
+	$(MAKE) -C modules clean THUMB_FW=1 DIGIC7=1
 	$(MAKE) -C CHDK clean
 	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 
