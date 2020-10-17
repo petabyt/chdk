@@ -763,3 +763,59 @@
 635 "Log"
 636 "SD test"
 637 "Izlazni tekst   :"
+
+638 "Omoguæi RAW preèicu"
+
+// CPU Info
+639 "CPU Info"
+640 "Zapisivanje %s"
+
+// Sudoku
+641 "Sudoku"
+
+// Sudoku menu (15 chars max)
+642 " Provjeri sudoku "
+643 " Riješi sudoku "
+644 " Novi sudoku "
+645 " Uðite u sudoku "
+646 " Info "
+647 " Izlaz "
+648 " Spremi i Izaði "
+649 " Obriši spremljenu igru "
+
+650 "Èestitamo!"
+651 "Napravili ste to!"
+652 "Sve je u redu!"
+653 "Tada!"
+654 "0 pogrešaka!"
+655 "Info"
+656 "Broj se javlja dva puta"
+657 "Riješeno"
+658 "Nije završeno"
+659 "Nepopravljivo"
+660 "Nema greške"
+661 "Nešto nije u redu..."
+
+// Snake
+662 "Snake"
+663 "Bodovi: %d"
+
+// Module names
+664 "uBASIC Skriptiranje"
+665 "Lua Skriptiranje"
+666 "Detekcija Pokreta"
+667 "Skoèni Izbornik"
+
+668 "VBR Minimalni Bitrate"
+
+669 "Onemoguæi Raw @ Canon RAW"
+
+670 "Obriši Canon prikaz"
+
+671 "Omoguæi video izlaz u REC"
+
+672 "Moguæa greška u Canon ROM!\nPrijavite na CHDK forum."
+673 "Neuspjeli dijelovi:"
+674 "Pritisni OK za ROM dump"
+675 "Provjeri ROM kod uèitavanja"
+
