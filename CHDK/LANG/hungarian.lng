@@ -132,6 +132,8 @@
  99 "Auto görgetés"
 100 "Görgetés késleltetés (s)"
 
+101 "OSD megfordítása"
+
 102 "Reversi"
 103 "Sokoban"
 
@@ -345,6 +347,8 @@
 
  272 "OSD kijelzése ellenörzés módban"
  273 "Task lista kezdete"
+
+ 274 "Rejtett fájlok megjelenítése"
 
  275 "Induláskor értékek alaphelyzetbe"
 
@@ -760,3 +764,58 @@
 635 "Naplózás"
 636 "SD teszt"
 637 "Szövegkiírás  :"
+
+638 "RAW gyorsgomb engedélyezés"
+
+// CPU Info
+639 "CPU infó"
+640 "%s kiírva"
+
+// Sudoku
+641 "Sudoku"
+
+// Sudoku menu (15 chars max)
+642 " Ellenörzés    "
+643 " Megoldás      "
+644 " Új sudoku     "
+645 " Sudoku beírás "
+646 " Infó "
+647 " Kilépés "
+648 " Ment és kilép "
+649 " Mentést töröl "
+
+650 "Gratulálok!"
+651 "Sikerült!"
+652 "Minden helyes!"
+653 "Tadam!"
+654 "0 hiba!"
+655 "Infó"
+656 "Egy szám kétszer szerepel"
+657 "Megoldva"
+658 "Nincs kész"
+659 "Megoldhatatlan"
+660 "Nem találtam hibát"
+661 "Hiba van valahol..."
+
+// Snake
+662 "Snake"
+663 "Pontszám: %d"
+
+// Module names
+664 "uBASIC Scripting"
+665 "Lua Scripting"
+666 "Mozgásérzékelés"
+667 "Elöugró menü"
+
+668 "VBR minimum bitráta"
+
+669 "Canon RAW tiltja a CHDK RAW-ot"
+
+670 "Canon grafika eltüntetése"
+
+671 "Videójel kimenet engedélyezése"
+
+672 "Canon firmware sérülés!\nJelentheted a CHDK fórumában."
+673 "Sérült szakasz:"
+674 "Nyomj OK-t a ROM fájlba írásához"
+675 "Firmware ellenörzés induláskor"
