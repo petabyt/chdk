@@ -136,6 +136,7 @@
  99 "Omoguæi automatsko pomicanje"
 100 "Kašnjenje auto.pomicanja (sec)"
 
+101 "Rotiraj OSD"
 102 "Reversi"
 103 "Sokoban"
 
@@ -210,7 +211,7 @@
 155 "Crtaj! :/"
 
 156 "*** Pogrešan korak ***"
-157 "Nemožeš tu!"
+157 "Ne možeš tu!"
 158 "Mjesto nije prazno!"
 
 163 "*** About ***"
@@ -347,6 +348,7 @@
 
 272 "Prikaži OSD kod pregledavanja"
 273 "Popis zadataka-Start"
+274 "Prikaži sakrivene datoteke"
 
 275 "Obriši stupnjevanje na startu"
 
@@ -517,7 +519,7 @@
 423 "Bljesak na zadnju lamelu"
 424 "DNG format"
 425 "Koristi RAW meðumemoriju"
-426 "Nemogu uèitati/badpixel.bin\nPokreni \nCHDK/SCRIPTS/TEST/badpixel.lua"
+426 "Ne mogu uèitati/badpixel.bin\nPokreni \nCHDK/SCRIPTS/TEST/badpixel.lua"
 427 "Vrijeme spremanja RAW"
 428 "Spoji 4"
 429 "Protivnik:"
@@ -560,7 +562,7 @@
 466 "Prikaži USB info"
 467 "Snimi ROM crash log"
 468 "ERROR: SystemEventInit and System.Create failed"
-469 "ROM crash log se nemože snimiti"
+469 "ROM crash log se ne može snimiti"
 470 "ROM crash log snimljen u ROMLOG.LOG"
 
 471 "Promjena tipa"
@@ -669,8 +671,8 @@
 562 "MENU=User Menu"                        // Len must be <= second string in header format (14)
 563 "SET=Script Menu, SHUTTER=Run Script"   // Len must be <= 35
 564 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
-565 "Manual Focus"
-566 "Hide CHDK OSD while pressed"
+565 "Ruèno fokusiranje"
+566 "Sakrij CHDK OSD kad je pritisnut"
 567 "  * - nedostupno u <ALT> modu  "   // Len must be <= 35
 
 568 "'%s'\ndodano u korisnièki izbornik"
