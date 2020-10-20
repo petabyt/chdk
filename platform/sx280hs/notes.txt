@@ -2,9 +2,6 @@ SX280HS / SX275HS / SX270HS notes
 
 CHDK is a hack, use at your own risk!
 
-This is an ALPHA port. It has some known bugs, and many features and
-combinations of Canon settings have not been tested thoroughly.
-
 Additionally, Digic 6 has significant differences from previously 
 supported models, which means some features are not fully implemented
 and the risk of unforeseen side effects is higher than ports for

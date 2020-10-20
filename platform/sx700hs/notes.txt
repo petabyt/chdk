@@ -1,7 +1,7 @@
 ******************************
 SX700 HS porting notes
 ******************************
-This is an INCOMPLETE, UNFINISHED PORT.
+
 Many features and combinations of Canon settings have not been tested.
 
 CHDK is a hack, use at your own risk!

@@ -1,6 +1,9 @@
 EOS M3 notes
 
-This is an INCOMPLETE, UNFINISHED PORT.
+CHDK is a hack, use at your own risk!
+
+CHDK support for interchangeable lens cameras is incomplete.
+
 Many features and combinations of Canon settings have not been tested.
 Builds are available for firmware 101A and 120F.
 
