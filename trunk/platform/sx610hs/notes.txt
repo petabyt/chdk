@@ -1,7 +1,7 @@
 ************************************
 SX610 HS  Notes
 ************************************
-This is an early alpha port, use at your own risk!
+CHDK is a hack, use at your own risk!
 
 Porting thread https://chdk.setepontos.com/index.php?topic=13355.0
 

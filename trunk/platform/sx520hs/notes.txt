@@ -3,7 +3,7 @@ SX520 Notes
 ************************************
 To enter CHDK <ALT> mode use the [>] Play button.
 
-This is an incomplete alpha port, use at your own risk!
+CHDK is a hack, use at your own risk!
 
 Known issues
 

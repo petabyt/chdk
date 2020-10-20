@@ -1,5 +1,9 @@
 EOS M10 notes
 
+CHDK is a hack, use at your own risk!
+
+CHDK support for interchangeable lens cameras is incomplete.
+
 Default ALT button is the playback button.
 
 The half press zebra shortcut button is "UP" on the 4-way controller.

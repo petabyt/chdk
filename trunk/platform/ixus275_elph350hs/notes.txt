@@ -1,7 +1,8 @@
 ************************************
 Ixus275/Elph350 HS Notes
 ************************************
-This is an early alpha port, use at your own risk!
+CHDK is a hack, use at your own risk!
+
 Porting thread: https://chdk.setepontos.com/index.php?topic=13151.msg133016#msg133016
 
 To enter CHDK <ALT> mode use the [>] Play button.
