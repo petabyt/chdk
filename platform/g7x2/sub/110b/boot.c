@@ -107,7 +107,7 @@ void __attribute__((naked,noinline)) boot() {
             "    beq     loc_boot\n" // let core0 boot
             "    adr     r0, loc_boot\n"
             "    orr     r0, #1\n"
-            "    bl      sub_e0539e68\n" // park core1 then continue at r0
+            "    bl      sub_e0539e64\n" // park core1 then continue at r0
             "loc_boot:\n"
 
             //capdis -f=chdk -s=0xe0020011 -c=65 -stubs PRIMARY.BIN 0xe0000000
@@ -127,9 +127,9 @@ void __attribute__((naked,noinline)) boot() {
 //            "    lsls    r0, r0, #8\n"        // Data
 //            "    b       loc_e0020042\n"      // Data
             "loc_e002003c:\n"
-            "    ldr     r0, =0xe0fd3770\n"
+            "    ldr     r0, =0xe0fd37b8\n"
             "    ldr     r1, =0x00008000\n"
-            "    ldr     r3, =0x0004c618\n"
+            "    ldr     r3, =0x0004c610\n"
             "loc_e0020042:\n"
             "    cmp     r1, r3\n"
             "    itt     lo\n"
@@ -143,7 +143,7 @@ void __attribute__((naked,noinline)) boot() {
             "    it      lo\n"
             "    strlo   r2, [r3], #4\n"
             "    blo     loc_e0020056\n"
-            "    ldr     r0, =0xe1017d88\n" //  **"zH"
+            "    ldr     r0, =0xe1017dc8\n" //  **"zH"
             "    ldr     r1, =0x01900000\n" //  **"zH"
             "    ldr     r3, =0x0190139c\n"
             "loc_e0020066:\n"
@@ -158,7 +158,7 @@ void __attribute__((naked,noinline)) boot() {
             "    ldr     r0, =0x01900000\n" //  **"zH"
             "    ldr     r1, =0x0000139c\n"
             "    bl      sub_e042ec4c\n"
-            "    ldr     r0, =0xe1019124\n"
+            "    ldr     r0, =0xe1019164\n"
             "    ldr     r1, =0xdffc4900\n"
             "    ldr     r3, =0xdffd0908\n"
             "loc_e002008a:\n"
@@ -449,17 +449,17 @@ void __attribute__((naked,noinline)) sub_e0020750_my() {
     asm volatile (
             //capdis -f=chdk -s=0xe0020751 -c=23 -stubs PRIMARY.BIN 0xe0000000
             "    push    {r3, lr}\n"
-            "    bl      sub_e002088c\n"
+            "    bl      sub_e002088c\n" //  return
             "    bl      sub_e0020848\n"
 
             "    mrc     p15, #0, r0, c0, c0, #5\n" // +
             "    ands    r0, r0, #0xf\n"            // +
             "    bne     skip\n"                    // + to be on the safe side, skip this with core1
             "    movs    r0, #1\n"                  // +
-            "    bl      sub_e051e07c\n"            // unblock core1 (needs to be done twice)
+            "    bl      sub_e051e078\n"            // unblock core1 (needs to be done twice)
 
             "    movs    r0, #1\n"
-            "    bl      sub_e051e07c\n"            // unblock core1
+            "    bl      sub_e051e078\n"            // unblock core1
             "skip:\n"                               // +
 
             "    bl      sub_e003e3bc\n"        // IsNormalCameraMode_FW
@@ -468,7 +468,7 @@ void __attribute__((naked,noinline)) sub_e0020750_my() {
             "    bl      sub_dffc9094\n"
             "    ldr     r1, =0x006ce000\n"
             "    movs    r0, #0\n"
-            "    bl      sub_e037e5d0\n"
+            "    bl      sub_e037e5d0\n" //  return 0
             "    ldr     r3, =task_Startup_my\n"    // ->
             "    movs    r0, #0\n"
             "    mov     r2, r0\n"
@@ -493,7 +493,7 @@ void __attribute__((naked,noinline)) sub_e005b418_my() {
             "    movs    r5, #0\n"
             "    mov     sl, r0\n"
             "    mov     r4, r5\n"
-            "    bl      sub_e004e4d2\n"
+            "    bl      sub_e004e4d2\n" //  return
             "    mov.w   r0, #0x168\n"
             "    bl      sub_e004ed2a\n"
             "    movs    r6, #1\n"
@@ -502,7 +502,7 @@ void __attribute__((naked,noinline)) sub_e005b418_my() {
             "    bl      sub_e004ed2a\n"
             "    bic.w   r8, r6, r0\n"
             "    movs    r0, #0\n"
-            "    bl      sub_e004e4ce\n"
+            "    bl      sub_e004e4ce\n" //  return 0x1
             "    cbz     r0, loc_e005b454\n"
             "    mov.w   r0, #0x16c\n"
             "    bl      sub_e004ed2a\n"
@@ -513,7 +513,7 @@ void __attribute__((naked,noinline)) sub_e005b418_my() {
             "    mov     sb, r6\n"
             "    bics    r6, r0\n"
             "    movs    r0, #1\n"
-            "    bl      sub_e004e4ce\n"
+            "    bl      sub_e004e4ce\n" //  return 0x1
             "    cbz     r0, loc_e005b472\n"
             "    mov.w   r0, #0x194\n"
             "    bl      sub_e004ed2a\n"
@@ -525,7 +525,7 @@ void __attribute__((naked,noinline)) sub_e005b418_my() {
             "    orr.w   r1, r5, r6\n"
             "    orrs    r0, r1\n"
             "    orrs    r0, r4\n"
-//            "    beq     loc_e005b49a\n"
+//            "    beq     loc_e005b49a\n" //  return
             "loc_e005b486:\n"
             "    mov     r3, r6\n"
             "    mov     r2, r5\n"
@@ -533,7 +533,7 @@ void __attribute__((naked,noinline)) sub_e005b418_my() {
             "    mov     r0, r7\n"
             "    str     r4, [sp]\n"
 //            "    bl      sub_e004e4d6\n"
-//            "    bl      sub_e004e4d4\n"
+//            "    bl      sub_e004e4d4\n" //  return
             "    movs    r0, #1\n"
             "loc_e005b49a:\n"
             "    pop.w   {r3, r4, r5, r6, r7, r8, sb, sl, fp, pc}\n"
@@ -556,30 +556,30 @@ void __attribute__((naked,noinline)) task_Startup_my() {
             "    bl      sub_dffc96f4\n"
             "loc_e00206f0:\n"
             "    bl      sub_e0020860\n"
-            "    bl      sub_e046e380\n"
-            "    bl      sub_e052fdac\n"
+            "    bl      sub_e046e380\n" //  return
+            "    bl      sub_e052fda8\n"
             // added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
-            "    bl      sub_e04d998a\n" // ref in sub_e04d9c14 before "SDPower.c" string
+            "    bl      sub_e04d9986\n" // ref in sub_e04d9c10 before "SDPower.c" string
 //            "    bl      sub_e046e3dc\n"    // - diskboot
             "    bl      sub_e005a122\n"
             "    bl      sub_e0425880\n"
             "    bl      sub_e0020924\n"
             "    bl      sub_e00208be\n"
-            "    bl      sub_e052fde2\n"
+            "    bl      sub_e052fdde\n"
             "    bl      sub_e0056650\n"
             "    bl      sub_e0425886\n"
             "    bl      sub_e005b33e_my\n"     // -> taskcreate_physw
             "    BL      CreateTask_spytask\n"  // +
             "    bl      sub_e0297df6\n"
             "    bl      sub_e042589c\n"
-            "    bl      sub_e052fd44\n"
-            "    bl      sub_e04914a0\n"
+            "    bl      sub_e052fd40\n"
+            "    bl      sub_e04914c0\n"
             "    bl      sub_e005b870\n"
             "    bl      sub_e005a0d2\n"
-            "    bl      sub_e049145c\n"
-            "    bl      sub_e0020928\n"
+            "    bl      sub_e049147c\n"
+            "    bl      sub_e0020928\n" //  return
             "    bl      sub_e037bccc\n"
-            "    bl      sub_e049142e\n"
+            "    bl      sub_e049144e\n"
             "    pop.w   {r4, lr}\n"
             "    b.w     sub_e013a496\n"    // + jump to FW
     );
@@ -598,7 +598,7 @@ void __attribute__((naked,noinline)) sub_e005b33e_my() {
             "    ldr     r4, =0x00008370\n"
             "    ldr     r0, [r4, #4]\n"
             "    cmp     r0, #0\n"
-            "    bne     loc_e005b36a\n"
+            "    bne     loc_e005b36a\n" //  return
             "    movs    r1, #1\n"
 //            "    ldr     r3, =0xe005b319\n" // -
 //            "    lsls    r2, r1, #0xb\n"  // -
@@ -620,8 +620,8 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
             //capdis -f=chdk -s=0xe04200b1 -c=18 -stubs PRIMARY.BIN 0xe0000000
             "    push    {r4, r5, r6, lr}\n"
             "    movs    r0, #6\n"
-            "    bl      sub_e037b34c\n"
-            "    bl      sub_e049681c\n"
+            "    bl      sub_e037b34c\n" //  return
+            "    bl      sub_e049683c\n"
             "    movs    r4, r0\n"
             "    movw    r5, #0x5006\n"
             "    beq     loc_e04200cc\n"
@@ -629,10 +629,10 @@ void __attribute__((naked,noinline)) init_file_modules_task() {
             "    mov     r0, r5\n"
             "    bl      _PostLogicalEventToUI\n"
             "loc_e04200cc:\n"
-            "    bl      sub_e0496844\n"
+            "    bl      sub_e0496864\n"
             "    BL      core_spytask_can_start\n" // + CHDK: Set "it's-safe-to-start" flag for spytask
             "    cmp     r4, #0\n"
-            "    bne     loc_e04200e0\n"
+            "    bne     loc_e04200e0\n" //  return
             "    mov     r0, r5\n"
             "    pop.w   {r4, r5, r6, lr}\n"
             "    movs    r1, #1\n"
@@ -648,7 +648,7 @@ void __attribute__((naked,noinline)) kbd_p2_f_my() {
     asm volatile(
             //capdis -f=chdk -s=0xe005b079 -c=77 -stubs PRIMARY.BIN 0xe0000000
             "    push.w  {r4, r5, r6, r7, r8, lr}\n"
-            "    ldr     r6, =0x0004e46c\n"
+            "    ldr     r6, =0x0004e464\n"
             "    sub     sp, #0x18\n"
             "    mov     r7, sp\n"
             "    subs    r6, #0xc\n"
@@ -656,7 +656,7 @@ void __attribute__((naked,noinline)) kbd_p2_f_my() {
             "loc_e005b086:\n"
             "    ldrb.w  r0, [sp, #0x10]\n"
             "    mov     r3, sp\n"
-            "    ldr     r1, =0x0004e46c\n"
+            "    ldr     r1, =0x0004e464\n"
             "    add     r2, sp, #0xc\n"
             "    subs    r1, #0x18\n"
             "    bl      sub_e004eb64\n"
@@ -679,13 +679,13 @@ void __attribute__((naked,noinline)) kbd_p2_f_my() {
             "    bge     loc_e005b0a2\n"
             "loc_e005b0ba:\n"
             "    add     r1, sp, #0x10\n"
-            "    ldr     r0, =0x0004e46c\n"
+            "    ldr     r0, =0x0004e464\n"
             "    subs    r0, #0xc\n"
             "    bl      sub_e004e820\n"
             "    cmp     r0, #0\n"
             "    bne     loc_e005b086\n"
             "    movs    r4, #0\n"
-            "    ldr.w   r8, =0x0004e46c\n"
+            "    ldr.w   r8, =0x0004e464\n"
             "loc_e005b0ce:\n"
             "    movs    r5, #0\n"
             "    ldr.w   r0, [r6, r4, lsl #2]\n"
@@ -698,7 +698,7 @@ void __attribute__((naked,noinline)) kbd_p2_f_my() {
             "    lsls    r0, r0, #0x1f\n"
             "    beq     loc_e005b11e\n"
             "    add.w   r0, r5, r4, lsl #5\n"
-            "    ldr     r1, =0x0004e46c\n"
+            "    ldr     r1, =0x0004e464\n"
             "    mov     r3, sp\n"
             "    uxtb    r0, r0\n"
             "    subs    r1, #0x18\n"
@@ -761,7 +761,7 @@ void __attribute__((naked,noinline)) sub_e004e5ee_my() {
             "    beq     no_scroll\n" // +
 
             "    pop.w   {r4, lr}\n"
-            "    b.w     sub_e0517004\n"    // + jump to FW
+            "    b.w     sub_e0517000\n"    // + jump to FW
 
             "no_scroll:\n" // +
             "    pop     {r4, pc}\n" // +
@@ -773,7 +773,7 @@ void __attribute__((naked,noinline)) kbd_p1_f_cont_my ()
 {
     asm volatile(
             //capdis -f=chdk -s=0xe005b633 -c=18 -jfw -stubs PRIMARY.BIN 0xe0000000
-            "    ldr     r6, =0x0004e448\n"
+            "    ldr     r6, =0x0004e440\n"
             "    movs    r1, #2\n"
             "    mov     r5, sp\n"
             "    add.w   r3, r6, #0x24\n"
@@ -788,7 +788,7 @@ void __attribute__((naked,noinline)) kbd_p1_f_cont_my ()
             "    subs    r1, r1, #1\n"
             "    bpl     loc_e005b63c\n"
             "    mov     r0, r5\n"
-            "    ldr     r2, =0x0004e448\n"
+            "    ldr     r2, =0x0004e440\n"
             "    adds    r2, #0x18\n"
             "    sub.w   r1, r2, #0xc\n"
             "    bl      sub_e005b13c_my\n" // -> some physical status is re-read here (not into physw_status)
@@ -805,7 +805,7 @@ void __attribute__((naked,noinline)) sub_e005b13c_my ()
             //capdis -f=chdk -s=0xe005b13d -c=4 -jfw -stubs PRIMARY.BIN 0xe0000000
             "    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}\n"
             "    mov     r5, r0\n"
-            "    ldr     r4, =0x0004e46c\n"
+            "    ldr     r4, =0x0004e464\n"
             "    ldr     r0, =physw0_override\n" // +
             "    ldr.w   r0, [r0]\n" // + use CHDK override value
             //"    mov.w   r0, #-1\n"           // -

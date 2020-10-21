@@ -39,7 +39,7 @@ filewritetask()
 {
     asm volatile (
             //capdis -f=chdk -s=0xe03af92b -c=42 -stubs PRIMARY.BIN 0xe0000000
-            "    ldr     r5, =0x00036344\n"
+            "    ldr     r5, =0x00036340\n"
             "    push    {r3, lr}\n"
             "loc_e03af92e:\n"
             "    movs    r2, #0\n"
@@ -127,7 +127,7 @@ sub_e03af6a4_my() {
             "    lsls    r0, r0, #0x1d\n"
             "    bpl     loc_e03af77a\n"
             "loc_e03af6b6:\n"
-            "    ldr     r6, =0x00036344\n"
+            "    ldr     r6, =0x00036340\n"
             "    ldr     r0, [r6, #0x1c]\n"
             "    cbz     r0, loc_e03af6be\n"
             "    blx     r0\n"
@@ -285,7 +285,7 @@ sub_e03afc4c_my() {
             "    add.w   r0, r5, r0, lsl #3\n"
             "    ldrd    r7, r6, [r0, #0x18]\n"
             "    cbz     r6, loc_e03afcaa\n"
-            "    ldr.w   sl, =0x00036344\n"
+            "    ldr.w   sl, =0x00036340\n"
             "    mov     r4, r6\n"
             "    mov.w   sb, #0x1000000\n"
             "loc_e03afc6c:\n"
@@ -366,7 +366,7 @@ sub_e03af7dc_my() {
             "    mov     r4, r0\n"
             "    ldr     r0, [r0, #0x50]\n"
             "    sub     sp, #0x3c\n"
-            "    ldr     r5, =0x00036344\n"
+            "    ldr     r5, =0x00036340\n"
             "    add.w   r7, r4, #0x5c\n"
             "    lsls    r1, r0, #0x1e\n"
             "    bmi     loc_e03af7f4\n"

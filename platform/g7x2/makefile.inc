@@ -26,7 +26,7 @@ MAXRAMADDR = 0x0fffffff
 NEED_ENCODED_DISKBOOT=16
 
 # Found @e0018b20 & @e0e74828
-KEYSYS=d6
+KEYSYS=d4i
 
 # generated FI2 needs word-based checksum
 FI2FLAGS=W

@@ -3,6 +3,9 @@
 #include "lolevel.h"
 #include "live_view.h"
 
+// Dummy variable - actual zoom_status not found
+int zoom_status;
+
 extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];
 

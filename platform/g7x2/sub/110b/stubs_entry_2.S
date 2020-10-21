@@ -48,10 +48,10 @@ NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead
 // Missed by finsig - need to check
 NHSTUB(_sqrt                                ,0xdffcf241)
 NHSTUB(SetHPTimerAfterNow                   ,0xe03f4ac1)
-NHSTUB(strcat                               ,0xe04968ad)
+NHSTUB(strcat                               ,0xe0484f7b)
 NHSTUB(strchr                               ,0xe045197f)
 
 DEF(task_FsIoNotifyTask                     ,0xe00f2b5d)
 
-NHSTUB(get_ptp_buf_size                     ,0xe053364f)
-NHSTUB(get_ptp_file_buf                     ,0xe0556e23)
+NHSTUB(get_ptp_buf_size                     ,0xe053364b)
+NHSTUB(get_ptp_file_buf                     ,0xe0556e1f)
