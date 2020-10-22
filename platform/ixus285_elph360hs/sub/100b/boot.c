@@ -206,8 +206,7 @@ void __attribute__((naked,noinline)) sub_FF0203C4_my() {
    // Replacement of sub_ for correct power-on.
    // (short press = playback mode, long press = record mode)
    // value and pointer from sub_FF073448 ixus285
-   // TODO
-   *(int*)(0x2dc8) = (*(int*)0xC022F484)&0x80000 ? 0x40000 : 0x20000;
+   *(int*)(0x2dc8) = (*(int*)0xC022F48C)&0x80000 ? 0x80000 : 0x40000;
 
 asm volatile (
 "    LDR     R0, =0xFF02043C \n"
