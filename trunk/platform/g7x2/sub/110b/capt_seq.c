@@ -911,7 +911,6 @@ void __attribute__((naked,noinline)) sub_e005348c_my() {
             "    ldr     r1, =0xe005381c\n" //  *"SsStandardCaptureSeq.c"
             "    bl      sub_dffc96f4\n"
             "loc_e00536fc:\n"
-            "    BL      capt_seq_hook_raw_here\n"  // +
             "    mov     r0, r4\n"
             "    bl      sub_e004b562\n"
             "    mov     r0, r4\n"
@@ -931,6 +930,7 @@ void __attribute__((naked,noinline)) sub_e005348c_my() {
             "    ldr     r1, =0xe005381c\n" //  *"SsStandardCaptureSeq.c"
             "    bl      sub_dffc96f4\n"
             "loc_e0053730:\n"
+            "    BL      capt_seq_hook_raw_here\n"  // +
             "    ldrh    r0, [r7]\n"
             "    sub.w   r1, r0, #0x4000\n"
             "    subs    r1, #0x45\n"
