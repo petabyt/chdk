@@ -292,8 +292,6 @@
 
     #undef CAM_UNLOCK_ANALOG_AV_IN_REC          // define to enable analog video out in rec mode for cameras without native support
                                                 // ANALOG_AV_IDX and ANALOG_AV_FLAG must be identified. Some cameras crash if AF point zoom enabled
-
-    #undef  CAM_HAS_HIGH_SPEED_CONT             // Camera has high speed continuous shooting mode. Set this value to the drive_mode number used by the Camera for high-speed mode
  
 // Base 'market' ISO value. Most (all?) DryOS R49 and later use 200, use tests/isobase.lua to check
 #if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL >= 49 // CAM_DRYOS_REL defined on command line, not from platform_camera.h

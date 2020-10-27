@@ -36,3 +36,15 @@ int UnlockMF(void)
   }
   return(0);
 }
+
+// Override to handle high-speed continuous drive mode so code and scripts detect camera is in continuous shooting mode
+long _GetPropertyCase(long opt_id, void *buf, long bufsize)
+{
+    extern long _GetPropertyCase_FW(long opt_id, void *buf, long bufsize);
+    long rv = _GetPropertyCase_FW(opt_id, buf, bufsize);
+    // Fake drive mode 1 if camera set to high speed mode
+    if (opt_id == PROPCASE_DRIVE_MODE)
+        if (*((short*)buf) == 4)
+            *((short*)buf) = 1;
+    return rv;
+}

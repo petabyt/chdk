@@ -218,7 +218,7 @@ NHSTUB(GetKbdState                            ,0xe004e73b) //  0
 NHSTUB(GetMemInfo                             ,0xe0589bad) //  0
 NHSTUB(GetOpticalTemperature                  ,0xe0401223) //  0
 NHSTUB(GetParameterData                       ,0xe02725cf) //  0
-NHSTUB(GetPropertyCase                        ,0xe036af69) //  0
+//NHSTUB(GetPropertyCase                      ,0xe036af69) //  0            Overridden
 NHSTUB(GetSystemTime                          ,0xe0569c53) //  0
 NHSTUB(GetVRAMHPixelsSize                     ,0xe040bdf5) //  0
 NHSTUB(GetVRAMVPixelsSize                     ,0xe040bdfd) //  0

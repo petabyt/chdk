@@ -143,8 +143,6 @@
 
     #define CAM_PTP_USE_NATIVE_BUFFER           1   // use firmware buffers to avoid problems with uncached memory
 
-    #define CAM_HAS_HIGH_SPEED_CONT             4   // Camera has high speed continuous shooting mode. DRIVE_MODE propcase = 4 in this mode
-
     // TODO: Below needs tp be checked
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
