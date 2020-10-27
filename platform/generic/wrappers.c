@@ -89,18 +89,6 @@ long get_property_case(long id, void *buf, long bufsize)
         return r;
     }
 #endif
-#if defined (CAM_HAS_HIGH_SPEED_CONT)
-    // G7X2 has high-speed continuous mode which sets PROPCASE_DRIVE_MODE to 4
-    // This is not handled by the code & scripts to detect continuous mode.
-    // This hack overrides the value returned to set it to 1 so that continuous mode is detected.
-    if (id == PROPCASE_DRIVE_MODE)
-    {
-        long rv = _GetPropertyCase(id, buf, bufsize);
-        // Fake drive mode 1 if camera set to high speed mode
-        if (*((short*)buf) == CAM_HAS_HIGH_SPEED_CONT) *((short*)buf) = 1;
-        return rv;
-    }
-#endif
     return _GetPropertyCase(id, buf, bufsize);
 }
 

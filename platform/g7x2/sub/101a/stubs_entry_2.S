@@ -40,6 +40,10 @@ NHSTUB(SetZoomActuatorSpeedPercent            ,NULL_SUB)
 NHSTUB(UnsetZoomForMovie                      ,NULL_SUB)
 NHSTUB(WriteSDCard                            ,NULL_SUB)
 
+// Use overide function for GetPropertyCase to handle high-speed continuous mode
+IGNORE(GetPropertyCase)
+NHSTUB(GetPropertyCase_FW                   ,0xe036af69)
+
 // Incorrect by finsig - need to check
 
 // Does not exist
