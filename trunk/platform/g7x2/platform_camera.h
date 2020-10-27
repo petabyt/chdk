@@ -25,9 +25,6 @@
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1   // Camera has built-in ND filter (in addition to iris)
 
-    #undef  CAM_KEY_PRESS_DELAY
-    #define CAM_KEY_PRESS_DELAY                 60  // delay after a press
-
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
     #define CAM_ALT_BUTTON_NAMES                { "WiFi", "Video", "Playback" }
     #define CAM_ALT_BUTTON_OPTIONS              { KEY_WIFI, KEY_VIDEO, KEY_PLAYBACK }
@@ -140,6 +137,14 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
 
+    #define CAM_EXT_TV_RANGE                    1
+
+    #define CAM_HAS_FILEWRITETASK_HOOK          1
+
+    #define CAM_PTP_USE_NATIVE_BUFFER           1   // use firmware buffers to avoid problems with uncached memory
+
+    #define CAM_HAS_HIGH_SPEED_CONT             4   // Camera has high speed continuous shooting mode. DRIVE_MODE propcase = 4 in this mode
+
     // TODO: Below needs tp be checked
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
@@ -157,10 +162,6 @@
     #define CAM_VIDEO_QUALITY_ONLY              1
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_USE_ZOOM_FOR_MF
-
-    #define CAM_EXT_TV_RANGE                    1
-
-    #define CAM_HAS_FILEWRITETASK_HOOK          1
 
     //#define CAM_QUALITY_OVERRIDE                1
 
@@ -183,7 +184,5 @@
  
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_MF  1
-
-    #define CAM_PTP_USE_NATIVE_BUFFER           1   // use firmware buffers to avoid problems with uncached memory
 
 //--------------------------------------------------
