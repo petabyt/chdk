@@ -76,6 +76,15 @@ extern void task_FsIoNotifyTask();
 //     }
 // }
 
+// Get current active processor core
+void __attribute__((naked,noinline)) get_core() {
+    asm volatile (
+            "    mrc     p15, #0, r0, c0, c0, #5\n"
+            "    ands    r0, #0xf\n"
+            "    bx      lr\n"
+    );
+}
+
 /*----------------------------------------------------------------------
     spytask
 -----------------------------------------------------------------------*/

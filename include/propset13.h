@@ -36,7 +36,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_DIGITAL_ZOOM_MODE               99         // Digital Zoom Mode/State 0 = off, 1=standard, 2 = 1.5x, 3 = 2.0x
 #define PROPCASE_DIGITAL_ZOOM_POSITION           103
-#define PROPCASE_DRIVE_MODE                      110        // 0 = single, 1 = cont
+#define PROPCASE_DRIVE_MODE                      110        // 0 = single, 1 = cont, 4 = high-speed continuous (G7X2)
 #define PROPCASE_OVEREXPOSURE                    111
 #define PROPCASE_DISPLAY_MODE                    113
 #define PROPCASE_EV_CORRECTION_1                 115
@@ -64,9 +64,14 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_IMAGE_FORMAT                    221        // 0 = RAW, 1 = JPEG, 2 = RAW+JPEG (g7x)
 #define PROPCASE_RESOLUTION                      229        // 0 = L, 2 = M1, 3 = M2, 5 = S
 #define PROPCASE_ORIENTATION_SENSOR              230
-#define PROPCASE_TIMER_MODE                      234        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom
-#define PROPCASE_TIMER_DELAY                     235        // timer delay in msec
-#define PROPCASE_CUSTOM_SHARPNESS                236        // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_TIMER_MODE                      235        // 0 = OFF, 1 = 2 sec, 2 = 10 sec, 3 = Custom
+#define PROPCASE_TIMER_DELAY                     236        // timer delay in msec
+#define PROPCASE_CUSTOM_SHARPNESS_STRENGTH       509        // Canon Menu slide bar values: 0 - 7
+#define PROPCASE_CUSTOM_SHARPNESS_FINENESS       510        // Canon Menu slide bar values: 1 - 5
+#define PROPCASE_CUSTOM_SHARPNESS_THRESHOLD      511        // Canon Menu slide bar values: 0 - 7
+#define PROPCASE_CUSTOM_CONTRAST                 512        // Canon Menu slide bar values: -4 - 4 (byte value: 252 - 4)
+#define PROPCASE_CUSTOM_SATURATION               513        // Canon Menu slide bar values: -4 - 4 (byte value: 252 - 4)
+#define PROPCASE_CUSTOM_COLORTONE                514        // Canon Menu slide bar values: -4 - 4 (byte value: 252 - 4)
 
 #define PROPCASE_SUBJECT_DIST1                   257
 #define PROPCASE_SV_MARKET                       258
