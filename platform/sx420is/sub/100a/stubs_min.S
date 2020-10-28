@@ -20,4 +20,6 @@ DEF(recreview_hold,                 0xA1D8+0x1C)   //sub_FF25CDB4 blackhole
 // see NRTBL.SetDarkSubType, 0xB464 + 0x4  sub_FF2ADB1C blackhole
 DEF(_nrflag, 0xB468)
 
+DEF(av_override_semaphore         ,0x0000d8b4) // MoveIrisWithAv
+
 
