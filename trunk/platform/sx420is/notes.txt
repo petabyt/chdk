@@ -7,7 +7,7 @@ This is an early alpha port, use at your own risk!
 Porting thread: https://chdk.setepontos.com/index.php?topic=13472.msg137505#msg137505
 
 To enter CHDK <ALT> mode use the [>] Play button.
-This may be changed to Video in the options
+This may be changed to Video or Wifi in the options
 
 This camera has adjustable aperture, no ND filter.
 
@@ -21,6 +21,5 @@ main overrides (TV,AV,ISO) - OK
 ZEBRA - OK
 
 More testing is needed:
-RAW-DNG
 PTP extension  : http://chdk.wikia.com/wiki/PTP_Extension
 

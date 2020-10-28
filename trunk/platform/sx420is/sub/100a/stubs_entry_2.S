@@ -25,5 +25,6 @@ NHSTUB(TurnOnBackLight, NULLSUB)
 NHSTUB(init_focus_eventflag,                0xFF4681D4) //blackhole
 NHSTUB(init_nd_eventflag,                   0xFF33506C) //blackhole
 NHSTUB(init_nd_semaphore,                   0xFF371910) //blackhole
+NHSTUB(CreateBinarySemaphoreStrictly,0x006b7d0c) // for av_override_semaphore
 
 

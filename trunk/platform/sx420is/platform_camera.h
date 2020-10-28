@@ -31,11 +31,10 @@
     #define CAM_JPEG_WIDTH                  5152    
     #define CAM_JPEG_HEIGHT                 3864    
 
-	//TODO
-    #define CAM_ACTIVE_AREA_X1              0      
-    #define CAM_ACTIVE_AREA_Y1              0      
-    #define CAM_ACTIVE_AREA_X2              5248 
-    #define CAM_ACTIVE_AREA_Y2              3920 
+    #define CAM_ACTIVE_AREA_X1              8      
+    #define CAM_ACTIVE_AREA_Y1              16      
+    #define CAM_ACTIVE_AREA_X2              5192 
+    #define CAM_ACTIVE_AREA_Y2              3904 
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT                0x40000000     
@@ -53,6 +52,8 @@
     -12829, 1000000,  530507, 1000000,   50537, 1000000, \
       5181, 1000000,   48183, 1000000,  245014, 1000000
     #define cam_CalibrationIlluminant1      1       // Daylight
+	
+    #define CAM_AV_OVERRIDE_IRIS_FIX            1   // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
 
     #undef  CAM_USE_ZOOM_FOR_MF
     #undef  CAM_HAS_MANUAL_FOCUS
@@ -81,8 +82,8 @@
 
     #define CAM_ADJUSTABLE_ALT_BUTTON           1
 
-    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video" }
-    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO }
+    #define CAM_ALT_BUTTON_NAMES                { "Playback", "Video", "Wifi" }
+    #define CAM_ALT_BUTTON_OPTIONS              { KEY_PLAYBACK, KEY_VIDEO, KEY_WIFI }
 
     
     #undef  CAM_USB_EVENTID
@@ -104,8 +105,6 @@
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60  // delay after a press - Required by zoom_in/zoom_out buttons
 
-
-    #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 
