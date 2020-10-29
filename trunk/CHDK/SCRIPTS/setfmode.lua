@@ -122,7 +122,7 @@ function main()
 	focus:init()
 	local mode = ui_sd_mode_t.value
 	if mode == 'Ovr' then
-		if not focus:enable_override() then
+		if not focus:enable_override('MF') then
 			print('no usable mode')
 			return
 		end
