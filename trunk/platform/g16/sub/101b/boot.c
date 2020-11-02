@@ -240,8 +240,18 @@ void __attribute__((naked,noinline)) CreateTask_my() {
 
 // G16 1.01b  0xfc05e00d 61
 void __attribute__((naked,noinline)) sub_fc05e00c_my() {
+
+    // see sub_fc07e98, sub_fc071392, sub_fc0e97f8
+    if (*(int*)(0xd20b0000 + 0x97 * 4) & 0x10000) {
+        // GPIO 0x10 (aka ON/OFF button) is not pressed -> play
+        *(int*)(0x9494+0x4) = 0x200000;
+    }
+    else {
+        // GPIO 0x10 is pressed -> rec
+        *(int*)(0x9494+0x4) = 0x100000;
+    }
+    
     asm volatile (
-// no GPIO checks needed with 0x12345678 set, native fw handles long press
 "    push    {r4, lr}\n"
 #if defined(CHDK_NOT_IN_CANON_HEAP)
 "    ldr     r4, =0x003077e0\n"         // heap start, modify here
@@ -400,7 +410,7 @@ void __attribute__((naked,noinline)) sub_fc05e5a2_my() {
 "loc_fc05e5b8:\n"
 "    movs    r0, #0\n"
 "loc_fc05e5ba:\n"
-"    bl      sub_fc070e98\n" // power-on mode handling & startupchecks here, no override needed with 0x12345678 set
+"    bl      sub_fc070e98_my\n" // --->> power-on mode handling & startupchecks here
 "    cbnz    r0, loc_fc05e5c6\n"
 "    bl      sub_fc05e692\n"
 "loc_fc05e5c4:\n"
@@ -425,6 +435,41 @@ void __attribute__((naked,noinline)) sub_fc05e5a2_my() {
 ".ltorg\n"
     );
 }
+
+// G16 1.01b  0xfc070e99 25
+void __attribute__((naked,noinline)) sub_fc070e98_my() { 
+    asm volatile (
+"    push.w  {r2, r3, r4, r5, r6, r7, r8, lr}\n"
+"    mov.w   r8, #0\n"
+"    mov     r7, r0\n"
+"    mov     r6, r8\n"
+"    bl      sub_fc07138e\n"
+"    movs    r0, #0x97\n"
+"    bl      sub_fc06ecba\n"
+"    movs    r4, #1\n"
+"    bic.w   r5, r4, r0\n"
+"    movs    r0, #0x98\n"
+"    bl      sub_fc06ecba\n"
+"    bics    r4, r0\n"
+"    cbz     r7, loc_fc070ec4\n"
+"    orrs.w  r0, r5, r4\n"
+//"    beq     loc_fc070ede\n"              // this check fails and results in shutdown
+"loc_fc070ec4:\n"
+"    bl      sub_fc0b5a00\n"
+"    movs    r3, #0\n"
+"    mov     r2, r0\n"
+"    strd    r8, r6, [sp]\n"
+"    mov     r1, r4\n"
+"    mov     r0, r5\n"
+//"    bl      sub_fc071392\n"              // startup checks
+//"    bl      sub_fc071390\n"              // nullsub
+"    movs    r0, #1\n"
+"loc_fc070ede:\n"
+"    pop.w   {r2, r3, r4, r5, r6, r7, r8, pc}\n"
+
+ ".ltorg\n"
+     );
+ }
 
 // G16 1.01b  0xfc05e53d 26
 // task_Startup 0xfc05e53d
