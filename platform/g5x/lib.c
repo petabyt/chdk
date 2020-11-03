@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "lolevel.h"
 #include "live_view.h"
+#include "levent.h"
 
 // Dummy variable - actual zoom_status not found
 int zoom_status;
@@ -43,9 +44,15 @@ char *camera_jpeg_count_str()
 
 void shutdown()
 {
-    // TODO:
-    while (1)
-        ;
+    debug_led(1);
+    PostLogicalEventForNotPowerType(levent_id_for_name("PressPowerButton"),0);
+    while(1) msleep(100);
+}
+
+void _Restart(unsigned option)
+{
+    // Firmware _Restart() function does not work; but forcing camera to 'boot' our PS.FI2 seems to work, although it takes around 10 seconds to restart.
+    _reboot_fw_update("A/PS.FI2");
 }
 
 #define LED_PR 0xd20b0994 // green LED on the back
