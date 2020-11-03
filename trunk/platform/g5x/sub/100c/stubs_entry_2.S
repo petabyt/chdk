@@ -15,7 +15,6 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xFC3BA1E7)
 NHSTUB(GetImageFolder                         ,0xfc39d619)
 NHSTUB(MakeSDCardBootable                     ,0xFC3B6873)
 NHSTUB(RenameFile_Fut                         ,0xFC3B8D51)
-NHSTUB(Restart                                ,0xFC0C306F)
 NHSTUB(SetFileTimeStamp                       ,0xFC3B5ECB)
 NHSTUB(TurnOffBackLight                       ,0xFC15BB35)  // Does not do anything?
 NHSTUB(TurnOnBackLight                        ,0xFC15BB31)  // Does not do anything?
@@ -34,6 +33,9 @@ NHSTUB(GetActiveViewportBuffer                ,0xfc108e67)
 NHSTUB(displayblankscreen,                     0xFC3532CF)
 NHSTUB(undisplayblankscreen,                   0xFC35336D)
 
+// Does not work - use workaround in lib.c
+IGNORE(Restart)
+//NHSTUB(Restart                                ,0xFC0C306F)
 
 // Ignore event proc versions, use inner functions from wrapper
 IGNORE(PutInNdFilter)
