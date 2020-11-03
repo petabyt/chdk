@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "lolevel.h"
 #include "live_view.h"
+#include "levent.h"
 
 // Dummy variable - actual zoom_status not found
 int zoom_status;
@@ -44,17 +45,17 @@ char *camera_jpeg_count_str()
 
 void shutdown()
 {
-    // TODO:
-    while (1)
-        ;
+    debug_led(1);
+    PostLogicalEventForNotPowerType(levent_id_for_name("PressPowerButton"),0);
+    while(1) msleep(100);
 }
 
-#define LED_PR 0xd20b0994 // green LED on the back
+#define LED_PR 0xD20801E4   // green LED on the back
 
 void debug_led(int state)
 {
     volatile long *p = (void*) LED_PR;
-    *p = ((state) ? 0x4d0002 : 0x4c0003);
+    *p = ((state) ? 0x24D0002 : 0x24C0003);
 }
 
 // Power Led = first entry in table (led 0)

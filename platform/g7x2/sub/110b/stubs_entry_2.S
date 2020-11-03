@@ -15,7 +15,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,NULL_SUB)
 NHSTUB(GetImageFolder                         ,0xe0355015)
 NHSTUB(MakeSDCardBootable                     ,NULL_SUB)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
-NHSTUB(Restart                                ,NULL_SUB)
+NHSTUB(Restart                                ,0xe005b973)  // Does not work - only accepts 7 as the parameter value (firmware update)
 NHSTUB(SetFileTimeStamp                       ,0xe0374179)
 NHSTUB(TurnOffBackLight                       ,NULL_SUB)
 NHSTUB(TurnOnBackLight                        ,NULL_SUB)
@@ -23,7 +23,7 @@ NHSTUB(apex2us                                ,0xe0067ab3)
 //NHSTUB(err_init_task                          ,NULL_SUB)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)
-NHSTUB(reboot_fw_update                       ,NULL_SUB)
+NHSTUB(reboot_fw_update                       ,0xe0526843)  // Does not work !!! Asserts if try to load PS.FI2 file.
 NHSTUB(CancelHPTimer                          ,0xe03f4b5b)
 
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK

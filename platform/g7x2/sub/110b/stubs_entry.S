@@ -170,11 +170,13 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xe0355015
 //NHSTUB(PT_PlaySound                         ,0xe037e475) //  0        *** != 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xe0370e69
+//NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xe005b973
 //NHSTUB(ScreenLock                           ,0xe03780e3) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xe0374179
 //NHSTUB(_sqrt                                ,0x00000000) //  0        *** != 0xdffcf241
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xe0067ab3
+//NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xe0526843
 //NHSTUB(strcat                               ,0x00000000) //  0        *** != 0xe0484f7b
 //NHSTUB(strchr                               ,0x00000000) //  0        *** != 0xe045197f
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xe03f4b5b
@@ -246,7 +248,6 @@ NHSTUB(PutOutNdFilter                         ,0xe05924bf) //  0
 NHSTUB(Read                                   ,0xe0451397) //  0
 NHSTUB(ReadFastDir                            ,0xe03fa8ff) //  0
 NHSTUB(Rec2PB                                 ,0xe035e00f) //  0
-//NHSTUB(Restart                              ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetAE_ShutterSpeed                     ,0xe0583d25) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xe04d0647) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xe037ca81) //  0
@@ -295,7 +296,6 @@ NHSTUB(closedir                               ,0xe03fa829) //  0
 NHSTUB(get_fstype                             ,0xe0374bcf) //  0
 NHSTUB(qsort                                  ,0xe041ca3f) //  0
 NHSTUB(rand                                   ,0xe052b613) //  0
-//NHSTUB(reboot_fw_update                     ,0x00000000) //  0            == 0x00000000
 NHSTUB(set_control_event                      ,0xe0371a61) //  0
 NHSTUB(srand                                  ,0xe052b60d) //  0
 NHSTUB(stat                                   ,0xe03740bd) //  0
