@@ -326,32 +326,32 @@ ENDFUNC
 ENDFILE
 
 //-------------------------- MOVIE_REC.C ----------------------------------------------------------
+// disabled because it reportedly doesn't work
+//FILE movie_rec.c
 
-FILE movie_rec.c
-
->>> file=../movie_rec_hdr.c
->>>
+//>>> file=../movie_rec_hdr.c
+//>>>
 //////////////////////////////////////////////////////////////
 // movie_record_task - based on A1400
 //////////////////////////////////////////////////////////////
-<<<
-FUNC sig=task_MovieRecord name=movie_record_task
-ASM
-FW 59
->>>
-"    BL      unlock_optical_zoom\n" // added
-<<<
-FW 4
->>>
-"    LDR     R0, =video_compression_rate \n" // added
-"    BL      set_quality \n"                 // added
-"    BL      mute_on_zoom \n"                // added
-<<<
-FW $
-ENDASM
-ENDFUNC
+//<<<
+//FUNC sig=task_MovieRecord name=movie_record_task
+//ASM
+//FW 59
+//>>>
+//"    BL      unlock_optical_zoom\n" // added
+//<<<
+//FW 4
+//>>>
+//"    LDR     R0, =video_compression_rate \n" // added
+//"    BL      set_quality \n"                 // added
+//"    BL      mute_on_zoom \n"                // added
+//<<<
+//FW $
+//ENDASM
+//ENDFUNC
 
-ENDFILE
+//ENDFILE
 
 //-------------------------- FILEWRITE.C ----------------------------------------------------------
 FILE filewrite.c

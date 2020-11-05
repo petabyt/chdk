@@ -1,4 +1,5 @@
-// Powershot N Facebook
+// Powershot N 
+// currently disabled because it likely requires the more complicated code similar to other propset 6 cameras
 #include "conf.h"
 
 void change_video_tables(int a, int b){ }

@@ -1051,7 +1051,7 @@ asm volatile (
 "    STRNEH  R1, [SP, #0x24] \n"
 "    BNE     loc_FF12A8B4 \n"
 "    ADD     R0, SP, #0x10 \n"
-"    BL      sub_FF12BE9C \n"
+"    BL      sub_FF12BE9C /*_get_current_exp*/ \n"
 "    LDRH    R0, [SP, #0x10] \n"
 "    STRH    R0, [SP, #0x1C] \n"
 "    LDRH    R0, [SP, #0x18] \n"

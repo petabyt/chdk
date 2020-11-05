@@ -24,7 +24,7 @@ Camera has many 'creative' modes that also apply to video - effects of CHDK unkn
 
 Things to be done :
 ******************
-  video :               enabled  - digest mode seems to crash - video quality does not change file size 
+  video :               Bitrate / quality controls are not supported
   platform_camera.h :   several values at end of file still to be checked 
   shooting.c :          aperture_sizes_table  shutter_speeds_table  iso_table not customized for the N
 

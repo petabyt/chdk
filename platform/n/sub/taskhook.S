@@ -19,10 +19,10 @@
 "    BEQ     exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
-"    LDR     R0, =task_MovieRecord\n"
-"    CMP     R0, R3\n"
-"    LDREQ   R3, =movie_record_task\n"
-"    BEQ     exitHook\n"
+//"    LDR     R0, =task_MovieRecord\n"
+//"    CMP     R0, R3\n"
+//"    LDREQ   R3, =movie_record_task\n"
+//"    BEQ     exitHook\n"
 
 /*** INSTALL init_file_modules_task() hook ***/
 "    LDR     R0, =task_InitFileModules\n"
