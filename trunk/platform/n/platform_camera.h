@@ -1,7 +1,7 @@
 
 // Camera - Powershot N - platform_camera.h
 
-// This file contains the various settings values specific to the IXUS240/ELPH320HS camera.
+// This file contains the various settings values specific to the PowerShot N camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -108,7 +108,8 @@
 
     #undef  CAM_VIDEO_CONTROL
     #define CAM_HAS_VIDEO_BUTTON            1
-    #define CAM_VIDEO_QUALITY_ONLY          1
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+//    #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME
