@@ -14,8 +14,10 @@ extern void _GetKbdState(long*);
     { 0, KEY_SHOOT_FULL      ,0x0000000c }, // Found @0xff5e5a20, levent 0x01
     { 0, KEY_SHOOT_FULL_ONLY ,0x00000008 }, // Found @0xff5e5a20, levent 0x01
     { 0, KEY_SHOOT_HALF      ,0x00000004 }, // Found @0xff5e5a18, levent 0x00
-	{ 0, KEY_ZOOM_IN         ,0x00000100 }, // joandrade
-    { 0, KEY_ZOOM_OUT        ,0x00000800 }, // joandrade
+    { 0, KEY_ZOOM_IN         ,0x00000100 }, // full speed
+    { 0, KEY_ZOOM_IN         ,0x00000200 }, // low speed
+    { 0, KEY_ZOOM_OUT        ,0x00000800 }, // full speed
+    { 0, KEY_ZOOM_OUT        ,0x00000400 }, // low speed
     { 0, KEY_AUTO            ,0x00008000 }, // joandrade
 //    { 2, KEY_POWER           ,0x00000020 }, // Found @0xff5e5a60, levent 0x100
     { 2, KEY_WIFI            ,0x00000040 }, // joandrade
