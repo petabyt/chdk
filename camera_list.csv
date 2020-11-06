@@ -331,7 +331,7 @@ sx40hs,100i,,,
 sx400is,100b,ALPHA,,
 sx410is,100c,,,
 sx410is,100b,,100c,
-sx420is,100a,PREALPHA,,SKIP_AUTOBUILD
+sx420is,100a,BETA,,
 sx430is,100b,ALPHA,,SKIP_AUTOBUILD
 sx50hs,100b,,,
 sx50hs,100c,,,
