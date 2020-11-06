@@ -1,7 +1,7 @@
 ************************************
 A2600 Notes
 ************************************
-Porting thread:
+Porting thread: https://chdk.setepontos.com/index.php?topic=11030
 
 To enter CHDK <ALT> mode use the Playback [>] button.
 
