@@ -1,3 +1,8 @@
+************************************
+IXUS110 / SD960 Notes
+************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=9133.0
+
 Camera has no adjustable aperture, only an ND filter.
 - As a wide screen model, it has some issues: 
     Operation with TV out is not supported (right side of CHDK OSD is clipped, zebra, histogram wrong)
@@ -13,3 +18,5 @@ Camera has no adjustable aperture, only an ND filter.
 Other notes
 - Some overrides (Tv?) may be ignored for the first shot after a play -> rec mode transition.
 - The camera may engage the ND filter in bright light, but take the picture without it (not CHDK related).
+- A user reported a bricked camera using CHDK, possibly due to loading a build for the worng firmware version:
+  https://chdk.setepontos.com/index.php?topic=10559.0
