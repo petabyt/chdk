@@ -6,7 +6,7 @@ This may be changed to Video in the options
 
 This camera does not have an adjustable aperture. It does have an ND filter
 
-This is an early alpha port, use at your own risk!
+CHDK is a hack, use at your own risk!
 
 
 For Developers
