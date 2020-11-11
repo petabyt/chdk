@@ -1,6 +1,8 @@
 ************************************
 IXUS255 / ELPH330HS Notes 
 ************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=10150.0
+
 To enter CHDK <ALT> mode use the [>] Play button.
 This may be changed to the Video button in the options.
 

@@ -1,6 +1,8 @@
 ************************************
 IXUS135 / ELPH120 Notes
 ************************************
+Porting thread (IXUS132 and 135): https://chdk.setepontos.com/index.php?topic=10457.0
+
 To enter CHDK <ALT> mode use the [>] Play button.
 This may be changed to Video in the options
 

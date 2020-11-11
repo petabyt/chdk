@@ -1,6 +1,8 @@
 ************************************
 SX510 Notes
 ************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=10984.0
+
 To enter CHDK <ALT> mode use the [>] Play button.
 This may be changed to Video in the options
 
