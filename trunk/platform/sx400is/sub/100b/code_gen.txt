@@ -50,7 +50,7 @@ FUNC ref=0 length=27
     // Similar to ixus160: http://chdk.setepontos.com/index.php?topic=12321.msg123724#msg123724
     // look at power-on switch sub_FF86AE74 (FF8687CC) 
     // value and pointer from sub_FF86A770
-    *(int*)(0x2978+0x4) = (*(int*)0xC022F484)&0x20000 ? 0x400000 : 0x200000;
+    *(int*)(0x2978+0x4) = (*(int*)0xC022F48C)&0x100000 ? 0x400000 : 0x200000;
 
 <<<
 ASM
