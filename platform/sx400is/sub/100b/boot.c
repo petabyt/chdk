@@ -210,7 +210,7 @@ void __attribute__((naked,noinline)) sub_FF8203C4_my() {
     // Similar to ixus160: http://chdk.setepontos.com/index.php?topic=12321.msg123724#msg123724
     // look at power-on switch sub_FF86AE74 (FF8687CC) 
     // value and pointer from sub_FF86A770
-    *(int*)(0x2978+0x4) = (*(int*)0xC022F484)&0x20000 ? 0x400000 : 0x200000;
+    *(int*)(0x2978+0x4) = (*(int*)0xC022F48C)&0x100000 ? 0x400000 : 0x200000;
 
 asm volatile (
 "    LDR     R0, =0xFF82043C \n"
@@ -394,7 +394,7 @@ asm volatile (
 "    LDR     R1, =0x60E000 \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF838E34 \n"
-"    BL      sub_FF82A7A8 \n"
+"    BL      sub_FF82A7A8 /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF828554.
