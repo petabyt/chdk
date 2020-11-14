@@ -22,9 +22,9 @@ protocol version history
 2.4 - live view protocol 2.1
 2.5 - remote capture
 2.6 - script execution flags
-2.7 - IN DEVELOPMENT live view protocol 2.2
-2.8 - IN DEVELOPMENT GetMemory extensions
-2.9 - IN DEVELOPMENT Canon raw remote capture
+2.7 - live view protocol 2.2
+2.8 - GetMemory extensions
+2.9 - Canon raw remote capture
 */
 
 #define PTP_OC_CHDK 0x9999
