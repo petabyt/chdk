@@ -28,7 +28,7 @@ protocol version history
 < 2.0 - development versions
 2.0 - initial release, chdk 1.1
 2.1 - added palette type 4 - 16 entry VUYA, 2 bit alpha
-2.2 - in development digic 6 support. Added LV_ASPECT_3_2, LV_FB_YUV8B and LV_FB_YUV8C formats
+2.2 - digic 6-7 support. Added LV_ASPECT_3_2, LV_FB_YUV8B and LV_FB_YUV8C formats
 */
 
 
