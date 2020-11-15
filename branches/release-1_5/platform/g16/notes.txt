@@ -1,0 +1,8 @@
+G16 P-ID 0x3274 (12916)	G16	DIGIC VI DRYOS 2.3 release #0052 2013	
+
+- PAUSE_FOR_FILE_COUNTER option disabled - seems to work fine without it
+- no firmware update loading
+- movie features are not supported
+- RAW/DNG in the various scene modes not tested
+- recreview_hold is just "review mode" - see note in stubs_min.S
+

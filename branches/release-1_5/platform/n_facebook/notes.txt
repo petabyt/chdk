@@ -1,0 +1,38 @@
+************************************
+Powershot N Facebook Notes
+************************************
+Note : this is essentially the same camera as the Powershot N with the wifi code changed to connect to Facebook
+
+CHDK Wiki Page :  http://chdk.wikia.com/wiki/Powershot_N
+Porting thread: http://chdk.setepontos.com/index.php?topic=11460
+
+Camera will boot with firmware update method if microSD card has ps.fi2 file in root of SD card.
+
+Camera will autoboot ("SD Card Lock") if microSD card slot cover is left open  and card is 
+prepared like a normal SD card for CHDK.
+
+<ALT> mode switch is the "wifi enable" switch above the "Playback" button. Short press for <ALT> and
+long press for wifi enable function.
+
+Camera will not switch from playback to shooting by pressing the shutter ring (unrelated to CHDK). Pressing
+the play button in playback mode enables shooting mode.
+
+
+Know bugs & issues
+******************
+Camera may not be capabile of AFL or MF. Seems to be no way to disable Continuous AF mode.
+Camera has many 'creative' modes that also apply to video - effects of CHDK unknown at this point.
+
+
+Things to be done :
+******************
+  video :               Bitrate / quality controls are not supported
+  platform_camera.h :   several values at end of file still to be checked 
+  shooting.c :          aperture_sizes_table  shutter_speeds_table  iso_table not customized for the N
+
+
+For Developers
+**************
+   void led_on() { *(int*)0xc022c30c = ( (*(int*)0xc022c30c) & 0xffffffcf ) | 0x20; }
+   void led_off() { *(int*)0xc022c30c = (*(int*)0xc022c30c) & 0xffffffcf; }
+

@@ -1,0 +1,13 @@
+************************************
+A495 Notes
+************************************
+Porting thread: http://chdk.setepontos.com/index.php?topic=5570.0
+
+Playback (>) key switch to ALT mode and back. 
+Press longer for switching between Play/Shoot mode
+
+KNOWN BUGS
+**********
+Remote capture: Last chunk not recognized when camera is set to continuous mode
+http://chdk.setepontos.com/index.php?topic=4338.msg112314#msg112314
+http://chdk.wikia.com/wiki/User:Nafraf/RemoteShootIssues

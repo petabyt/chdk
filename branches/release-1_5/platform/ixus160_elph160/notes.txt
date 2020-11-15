@@ -1,0 +1,44 @@
+************************************
+IXUS160 / ELPH160 Notes 
+************************************
+Porting thread: http://chdk.setepontos.com/index.php?topic=12321
+
+To enter CHDK <ALT> mode use the [>] Play button.
+
+This is a beta port, use at your own risk!
+
+WARNING
+During early development of this port, one camera suffered an unrecoverable
+hardware failure apparently connected to a CHDK crash. Another camera suffered
+a similar failure but was eventually recovered. See discussion starting at
+http://chdk.setepontos.com/index.php?topic=12321.msg123736#msg123736
+for details.
+Several possible causes were identified and fixed, but the actual cause has
+not been conclusively identified.
+
+Use of CHDK is always at your own risk.
+
+TESTED
+******
+Filewrite task
+RAW/DNG shooting
+PTP support
+Overrides
+
+NOT IMPLEMENTED
+***************
+video stuff
+exmem support
+
+KNOWN BUGS
+**********
+Dark frame control: changes to this setting only take effect _after_ the next shot
+
+ 
+THANKS
+******
+
+This port could not have been done without the help of the CHDK folks.
+Without any specific order, thanks to reyalp, waterwingz, srsa_4c;
+Thanks to amavroidis for donating the camera to help testing;
+Thanks to markvandenborre for testing my billions of failures;

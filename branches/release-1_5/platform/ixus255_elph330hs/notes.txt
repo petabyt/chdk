@@ -1,0 +1,45 @@
+************************************
+IXUS255 / ELPH330HS Notes 
+************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=10150.0
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to the Video button in the options.
+
+This camera does not have an adjustable aperture. It does have an ND filter.
+
+This is an beta port. Use at your own risk!
+
+TESTED
+******
+RAW / DNG capture
+Edge overlay
+Histogram
+Zebra
+Bracketing
+Extra long exposure
+ND filter state
+USB remote
+Grids
+Motion detection
+Games
+ISO override
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
+exmem support (note, camera has ~1.7MB regular heap free on startup with CHDK)
+
+OTHER ISSUES
+************
+Subject distance override is only available with AF lock set
+If the alt key is set to video, the raw / debug shortcut will not work
+
+KNOWN BUGS
+**********
+None
+
+CREDITS
+*******
+Ported by Matthew Petroff (http://www.mpetroff.net/).
+Based on IXUS140 / ELPH130 port.

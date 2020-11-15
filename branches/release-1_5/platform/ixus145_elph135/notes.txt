@@ -1,0 +1,16 @@
+************************************
+IXUS145/ELPH135 Notes
+************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=12144.msg119308#msg119308
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+KNOWN BUGS
+**********
+-
+
+For Developers
+**************
+- File counter is a variable not a param (see ixus140 port)

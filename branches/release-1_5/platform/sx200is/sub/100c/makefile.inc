@@ -1,0 +1,40 @@
+#PLATFORMID=0x31C0
+PLATFORMID=12736
+
+PLATFORMOS=dryos
+
+ROMBASEADDR=0xFF810000
+MAXRAMADDR=0x03FFFFFF
+
+# Force EXMEM on
+override OPT_EXMEM_MALLOC=1
+# Force load CHDK in EXMEM
+#override OPT_CHDK_IN_EXMEM=1
+
+# Set up size variables for EXMEM
+EXMEM_HEAP_SKIP=0x2F7600	#(0x44000000-0x43D08A00) from sub_FF86F0C4 = size of video buffers in EXMEM area
+EXMEM_BUFFER_SIZE=0x400000	# Amount of EXMEM memory to allocate for CHDK = 4MB
+
+# Force ARAM on
+override OPT_ARAM_MALLOC=1
+# Force load CHDK in ARAM
+override OPT_CHDK_IN_ARAM=1
+
+# Set up size variables for AgentRAM
+ARAM_HEAP_START=0x34e000
+ARAM_HEAP_SIZE=0x32000
+
+ifdef OPT_CHDK_IN_EXMEM
+MEMISOSTART=0x39089e0		# MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 0x20 (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
+else
+ifdef OPT_CHDK_IN_ARAM
+MEMISOSTART=$(ARAM_HEAP_START)
+else
+MEMISOSTART=0x12351C
+endif
+endif
+
+NEED_ENCODED_DISKBOOT=2
+KEYSYS=d4
+
+PLATFORMOSVER=31

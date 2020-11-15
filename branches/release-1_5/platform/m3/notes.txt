@@ -1,0 +1,67 @@
+EOS M3 notes
+
+CHDK is a hack, use at your own risk!
+
+CHDK support for interchangeable lens cameras is incomplete.
+
+Many features and combinations of Canon settings have not been tested.
+Builds are available for firmware 101A and 120F.
+
+Please post bug reports and patches in the porting thread
+https://chdk.setepontos.com/index.php?topic=12542.0
+
+Keys
+- M-Fn is the default alt button, and is assigned to PRINT in CHDK code.
+- Video and Info (Display) may also be used for alt
+- Info assigned to Display for CHDK keyboard input and script.
+- AE Lock and AF Adjust are assigned to zoom out and zoom in
+  respectively for CHDK keyboard input and script. They do not control the lens zoom.
+
+Notes
+
+- Video bitrate can be adjusted (CBR, VBR). Maximum possible video bitrate is approx. 41000 kbit/s
+
+- Clean overlay is possible for HDMI output purposes: See "Video Parameters" -> "Clear Canon overlays"
+  "Rec": Canon overlay is removed upon entering shooting (aka rec) mode
+  "MviRec": Canon overlay is removed when recording video
+  CHDK overlay needs to be removed separately, in the "CHDK Settings" menu.
+  For more info, visit https://chdk.setepontos.com/index.php?topic=13489
+
+- This camera can switch on itself after a user-initiated delay. This feature can be used from a user-written Lua script.
+  For more details and the script, see https://chdk.setepontos.com/index.php?topic=12542.msg137151#msg137151
+
+Issues:
+
+- CHDK overlay drawing is slow
+- many GUI modules don't respect screen resolution
+- Edge overlay does not erase properly when shown live
+- Zebra "Draw Over Zebra" and Restore options are non-functional
+- Some games don't draw correctly
+- movie features are not supported
+- Only simple_movie_status is implemented, so features or scripts that rely on
+direct access to the movie_status variable do not work
+- Tv overrides do not work in some cases
+- mode map is incomplete, getting / setting mode from script or PTP may fail
+
+TESTED:
+
+PTP play/rec switch
+raw and remote hooks (in normal still shooting modes, broken some special modes)
+USB remote - plug test / remote hook only
+CHDK raw / DNG (in P, M, Tv, Av modes. AUTO not well tested, many others broken)
+ - Attempting to use CHDK DNG in modes other than P, M, Tv, Av is not recommended 
+PTP remote shoot with JPEG / CHDK DNG
+ - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
+ - If Canon raw + jpeg is enabled, the jpeg will be written to the card
+ - May fail in special scene modes (not extensively tested)
+Motion detection - preliminary
+PTP live view - preliminary, requires client with live view protocol 2.2 (chdkptp r723 or later)
+
+NOT IMPLEMENTED:
+
+dark frame control
+reboot with firmware update file
+script hard shutdown (shut_down(1))
+booting with .fi2, camera crashes
+subject distance (focus) override
+Zoom control with set_zoom (lenses don't have software zoom control)

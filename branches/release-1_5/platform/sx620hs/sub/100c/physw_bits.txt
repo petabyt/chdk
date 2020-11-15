@@ -1,0 +1,30 @@
+levent 0xffffffff, 0x00000400, index 0
+levent 0xffffffff, 0x00000800, index 0
+levent 0xffffffff, 0x00080000, index 0
+levent 0xffffffff, 0x40000000, index 1
+levent 0x00000000, 0x00000008, index 2 (non-inverted logic)
+levent 0x00000001, 0x00000010, index 2 (non-inverted logic)
+levent 0x00000100, 0x00000020, index 2 (non-inverted logic)
+levent 0x00000103, 0x00000040, index 2 (non-inverted logic)
+levent 0x00000101, 0x00000080, index 2 (non-inverted logic)
+levent 0x00000015, 0x00000200, index 2 (non-inverted logic)
+levent 0x00000002, 0x00000400, index 2 (non-inverted logic)
+levent 0x0000000a, 0x00000800, index 2 (non-inverted logic)
+levent 0x00000008, 0x00001000, index 2 (non-inverted logic)
+levent 0x00000006, 0x00002000, index 2 (non-inverted logic)
+levent 0x00000009, 0x00004000, index 2 (non-inverted logic)
+levent 0x00000007, 0x00008000, index 2 (non-inverted logic)
+levent 0x8000050d, 0x00010000, index 2
+levent 0x8000050b, 0x00020000, index 2
+levent 0x80000501, 0x00040000, index 2
+levent 0x80000500, 0x00080000, index 2
+levent 0x00000400, 0x00100000, index 2 (non-inverted logic)
+levent 0x00000309, 0x00200000, index 2 (non-inverted logic)
+levent 0x0000030a, 0x00400000, index 2
+levent 0x00000305, 0x00800000, index 2
+levent 0x00000302, 0x01000000, index 2
+levent 0xffffffff, 0x02000000, index 2 (non-inverted logic)
+levent 0xffffffff, 0x04000000, index 2
+levent 0x0000030f, 0x08000000, index 2
+levent 0xffffffff, 0x10000000, index 2
+levent 0xffffffff, 0x20000000, index 2
