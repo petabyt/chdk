@@ -1,5 +1,8 @@
 Detailed change history is available from subversion https://www.assembla.com/code/chdk/subversion/commits
 
+=1.6=
+Unstable development branch. Significant changes should be recorded below.
+
 =1.5=
 Current stable, released Nov 15, 2020 as 1.5.1
 Development planning thread http://chdk.setepontos.com/index.php?topic=12684.0
