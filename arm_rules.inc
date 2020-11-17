@@ -26,6 +26,30 @@ SIZE=$(CROSS_COMPILE)size
 GCC_VERSION=$(shell $(CC) -dumpversion)
 GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 
+# check for valid GCC version.
+# Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
+ifndef DISABLE_GCC_VERSION_CHECK
+    VALID_GCC=0
+    ifeq ($(GCC_VERSION_MAJOR),3)
+        VALID_GCC=1
+    endif
+    ifeq ($(GCC_VERSION_MAJOR),4)
+        VALID_GCC=1
+    endif
+    ifeq ($(GCC_VERSION_MAJOR),5)
+        VALID_GCC=1
+    endif
+    ifeq ($(VALID_GCC),0)
+        ifndef THUMB_FW
+            # Pre DIGIC 6 - must use old GCC
+            $(error Invalid GCC version. CHDK build requires GCC 3, 4 or 5)
+        else
+            # DIGIC 6 & 7 - can use new GCC; but not fully tested
+            $(warning Unsupported GCC version. CHDK recommends GCC 3, 4 or 5. Other versions are at your own risk.)
+        endif
+    endif
+endif
+
 # -msoft-float is used per default but object files are marked as hard-float
 # -fno-schedule-insns2 for this gcc bug http://gcc.gnu.org/bugzilla/show_bug.cgi?id=38644
 # technically not required for gcc >= 4.6.3, and probably not required for vxworks cams
