@@ -148,7 +148,7 @@ void  h_usrRoot()			// sub_FF811A70
     );
 }
 
-static int jogdial_is_stopped = 0;
+int jogdial_is_stopped = 0;
 
 void set_jogdial_is_stopped () {
     extern int jogdial_stopped; // from kbd.c
