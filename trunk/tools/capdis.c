@@ -883,7 +883,7 @@ static void do_dis_range(firmware *fw,
             do_adr_label(fw,branch_list,is,dis_opts);
             if(!(dis_opts & DIS_OPT_FMT_OBJDUMP) // objdump format puts these on same line as instruction
                 && (dis_opts & (DIS_OPT_DETAIL_ADDR | DIS_OPT_DETAIL_BIN))) {
-                printf(comment_start);
+                printf("%s",comment_start);
                 if(dis_opts & DIS_OPT_DETAIL_ADDR) {
                     printf(" 0x%"PRIx64"",is->insn->address);
                 }
@@ -922,9 +922,9 @@ TODO most constants are decimal, while capstone defaults to hex
                 }
                 if(dis_opts & DIS_OPT_DETAIL_BIN) {
                     if(is->insn->size == 2) {
-                        printf("%04x     ",*(unsigned short *)is->insn->bytes);
+                        printf("%02x%02x     ",is->insn->bytes[1],is->insn->bytes[0]);
                     } else if(is->insn->size == 4) {
-                        printf("%04x %04x",*(unsigned short *)is->insn->bytes,*(unsigned short *)(is->insn->bytes+2));
+                        printf("%02x%02x %02x%02x",is->insn->bytes[1],is->insn->bytes[0],is->insn->bytes[3],is->insn->bytes[2]);
                     }
                 }
                 printf(" \t%s", insn_mnemonic);

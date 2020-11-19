@@ -101,7 +101,7 @@ int load_dump(const char *dumpname,const char *base, dump_t *dump)
     }
 
     if ((p = malloc(st.st_size)) == NULL ) {
-        fprintf(stderr,"error: unable to allocate %lu bytes\n",st.st_size);
+        fprintf(stderr,"error: unable to allocate %lu bytes\n",(unsigned long)st.st_size);
         return 0;
     }
 

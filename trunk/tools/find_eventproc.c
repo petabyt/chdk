@@ -19,7 +19,7 @@ int find_event_proc(dump_t *dump,char *name)
 	unsigned found=0;
 	while(find_cstring(dump,&str_offset,name)) {
 		str_addr=offset_to_ptr(dump,str_offset);
-		int i=0;
+		unsigned i=0;
 		while(find_word_aligned(dump,&i,str_addr)) {
 			uint32_t pfunc = dump->pw[i+1];
 			// TODO better check for valid code, or even check against ref dump
