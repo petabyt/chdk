@@ -980,8 +980,8 @@ static void no_signal_task(){
             char l_dat_gps[12];   
             strncpy( l_tim ,      g_d_tim,    10 );         
             strncpy( l_dat ,      g_d_dat,    12 );
-            strncpy( l_dat_gps ,  g_d_dat_gps,10 );
-            strncpy( l_tim_gps ,  g_d_tim_gps,12 );
+            strncpy( l_tim_gps ,  g_d_tim_gps,10 );
+            strncpy( l_dat_gps ,  g_d_dat_gps,12 );
         unlock(1);       
     
         if ( ((((int)conf.gps_2D_3D_fix) == 1) && (l_stat == 1)) || \
@@ -1457,10 +1457,10 @@ void gps_waypoint(){
         char l_dat[12];
         char l_tim_gps[10];
         char l_dat_gps[12];   
-        strncpy( l_tim ,      g_d_tim,     10 );         
+        strncpy( l_tim ,      g_d_tim,     10 );
         strncpy( l_dat ,      g_d_dat,     12 );
-        strncpy( l_dat_gps ,  g_d_dat_gps, 10 );
-        strncpy( l_tim_gps ,  g_d_tim_gps, 12 );        
+        strncpy( l_tim_gps ,  g_d_tim_gps, 10 );
+        strncpy( l_dat_gps ,  g_d_dat_gps, 12 );
     unlock(4);
         
     if ((l_stat >= ((int)conf.gps_2D_3D_fix)) || ((((int)conf.gps_2D_3D_fix) == 3) && (l_stat == 2)))

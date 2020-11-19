@@ -450,9 +450,9 @@ void raw_merge_end(void)
     if (strcmp(namebuf, dest) == 0)
     {
         if (strncmp(n, "IMG", 3) == 0)
-            strncpy(n, "CRW", 3);
+            memcpy(n, "CRW", 3);
         else
-            strncpy(n, "IMG", 3);
+            memcpy(n, "IMG", 3);
     }
 
     started();

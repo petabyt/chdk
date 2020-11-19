@@ -377,7 +377,7 @@ void patch_bad_pixel(unsigned int x,unsigned  int y) {
                         val=get_raw_pixel(x+i, y+j);
                         if (val) {sum+=val; nzero++;}
                     }
-                if (nzero) set_raw_pixel(x,y,sum/nzero);
+            if (nzero) set_raw_pixel(x,y,sum/nzero);
         } else if (conf.bad_pixel_removal==2)  // or this makes RAW converter (internal/external)
             set_raw_pixel(x,y,0);
     }
