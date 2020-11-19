@@ -149,7 +149,7 @@ librawop_sym* librawop = &default_librawop;
 static void* saved_edgebuf = 0;
 static int saved_edgestate = 0;
 
-void module_restore_edge(void **buf, int *state) { *buf = saved_edgebuf; *state = saved_edgestate; }
+int module_restore_edge(void **buf) { *buf = saved_edgebuf; return saved_edgestate; }
 void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_edgestate = state; }
 
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"

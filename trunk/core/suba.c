@@ -66,15 +66,15 @@ typedef struct {
 static cell*
 check_cell(const allocator *suba, cell* c, char *fn, int ln)
 {
-	if (suba && (c > (cell*)suba) && (c < (cell*)((char*)suba + suba->size))) {
-	    if (c->h.magic != CELL_MAGIC)
-	        DebugAssert("Corrupt cell header", ln);
-		return c;
-	}
-	char buf[200];
-	sprintf(buf, "%s bad cell - %x %x", fn, c, suba);
-	DebugAssert(buf, ln);
-	return NULL;
+    if (suba && (c > (cell*)suba) && (c < (cell*)((char*)suba + suba->size))) {
+        if (c->h.magic != CELL_MAGIC)
+            DebugAssert("Corrupt cell header", ln);
+        return c;
+    }
+    char buf[200];
+    sprintf(buf, "%s bad cell - %x %x", fn, c, suba);
+    DebugAssert(buf, ln);
+    return NULL;
 }
 #else
 #define check_cell(s, c, f, l) (c)

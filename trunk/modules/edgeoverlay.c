@@ -898,7 +898,7 @@ ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
 //---------------------------------------------------------
 int _module_loader( unsigned int* chdk_export_list )
 {
-    module_restore_edge((void**)&edgebuf, (int*)&fsm_state);
+    fsm_state = module_restore_edge((void**)&edgebuf);
     return 0;
 }
 
