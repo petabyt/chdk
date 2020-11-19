@@ -129,11 +129,11 @@ int main(int argc, char**argv)
 	isize = (npixels*12)/8;
 	if(isize > st.st_size) {
 		fprintf(stderr,"%s: ERROR: dimensions too large for input file (%u*%u*12)/8=%u > %lu\n", 
-				argv[0],width,height,isize,st.st_size);
+				argv[0],width,height,isize,(unsigned long)st.st_size);
 		exit(1);
 	} else if ( isize < st.st_size) {
 		fprintf(stderr,"%s: WARNING: dimensions smaller than input file (%u*%u*12)/8=%u < %lu\n", 
-				argv[0],width,height,isize,st.st_size);
+				argv[0],width,height,isize,(unsigned long)st.st_size);
 	}
 
 	if(!rgb && !split_yuv) {
@@ -209,7 +209,7 @@ int main(int argc, char**argv)
 		assert(out_data);
 
 		prgb_data = out_data;
-		p_yuv = in_data;
+		p_yuv = (uint8_t*)in_data;
 
 		sprintf(rgbname,"%s-%d.RGB",oname,owidth);
 
