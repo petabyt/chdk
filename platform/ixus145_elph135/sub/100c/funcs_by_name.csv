@@ -183,6 +183,11 @@
 0xff89aed8,CtrlMan_ChangeZOrder_FW
 0xff883c34,CzDebugPrint_FW
 0xff883c48,CzDebugPrintToFile_FW
+0xff820234,dcache_clean_flush_and_disable
+0xff820300,dcache_clean_flush_range
+0xff8202a0,dcache_clean_range
+0xff82020c,dcache_flush_and_enable
+0xff820284,dcache_flush_range
 0x006b59c0,DebugAssert
 0xff89ad34,DeleteController_FW
 0xff826b70,DeleteDirectory_Fut
@@ -645,6 +650,9 @@
 0xff8369c4,HardwareDefect_FW
 0xff836970,HardwareDefectWithRestart_FW
 0xff9982b4,HwOcReadICAPCounter
+0xff8201e4,icache_disable_and_flush
+0xff8201bc,icache_flush_and_enable
+0xff820384,icache_flush_range
 0xff849670,ImagerActivate
 0xff9652e0,InactivateAdjLog_FW
 0xff990fe4,InitializeAdjustmentFunction_FW

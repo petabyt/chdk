@@ -94,6 +94,14 @@
 0x006dbf88,_ffltu
 0x006dc008,_fmul
 0x006dc508,_scalbn
+0xff0201bc,icache_flush_and_enable
+0xff0201e4,icache_disable_and_flush
+0xff02020c,dcache_flush_and_enable
+0xff020234,dcache_clean_flush_and_disable
+0xff020284,dcache_flush_range
+0xff0202a0,dcache_clean_range
+0xff020300,dcache_clean_flush_range
+0xff020384,icache_flush_range
 0xff020b68,memShow_FW
 0xff022a9c,task_ClockSave
 0xff0235b0,get_self_task_errno_pointer

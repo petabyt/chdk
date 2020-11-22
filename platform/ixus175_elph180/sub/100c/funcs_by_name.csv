@@ -200,6 +200,11 @@
 0xff8a0d8c,CtrlMan_ChangeZOrder_FW
 0xff888d98,CzDebugPrint_FW
 0xff888dac,CzDebugPrintToFile_FW
+0xff820234,dcache_clean_flush_and_disable
+0xff820300,dcache_clean_flush_range
+0xff8202a0,dcache_clean_range
+0xff82020c,dcache_flush_and_enable
+0xff820284,dcache_flush_range
 0xffae7210,DcmTfMeasure_FW
 0xffae72cc,DcmTfMeasureForSD_FW
 0xffae6e0c,DcmWowFla_FW
@@ -738,6 +743,9 @@
 0xff93d9fc,handle_PTP_OC_SetObjectProtection
 0xff837138,HardwareDefect_FW
 0xff9b3530,HwOcReadICAPCounter
+0xff8201e4,icache_disable_and_flush
+0xff8201bc,icache_flush_and_enable
+0xff820384,icache_flush_range
 0xff849520,ImagerActivate
 0xff97daac,InactivateAdjLog_FW
 0xff9ab808,InitializeAdjustmentFunction_FW

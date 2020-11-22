@@ -187,6 +187,11 @@
 0xff08768c,CtrlMan_ChangeZOrder_FW
 0xff1c2908,CzDebugPrint_FW
 0xff1c291c,CzDebugPrintToFile_FW
+0xff000234,dcache_clean_flush_and_disable
+0xff000300,dcache_clean_flush_range
+0xff0002a0,dcache_clean_range
+0xff00020c,dcache_flush_and_enable
+0xff000284,dcache_flush_range
 0xff04c614,Dcdc_Bl_Pwr_Ctrl_FW
 0xff04cdac,Dcdc_Down_Avs_Voltage_Step_FW
 0xff04cde0,Dcdc_Get_Avs_Voltage_Step_FW
@@ -851,6 +856,9 @@
 0xff1dd000,HwOcReadICAPCounter
 0xff04e058,i2c_read_proc_FW
 0xff04e0d8,i2c_write_proc_FW
+0xff0001e4,icache_disable_and_flush
+0xff0001bc,icache_flush_and_enable
+0xff000384,icache_flush_range
 0xff02ce7c,ImagerActivate
 0xff198570,InactivateAdjLog_FW
 0xff1d77dc,InitializeAdjustmentFunction_FW

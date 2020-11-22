@@ -198,6 +198,11 @@
 0xff8a19b0,CtrlMan_ChangeZOrder_FW
 0xff88740c,CzDebugPrint_FW
 0xff887420,CzDebugPrintToFile_FW
+0xff820234,dcache_clean_flush_and_disable
+0xff820300,dcache_clean_flush_range
+0xff8202a0,dcache_clean_range
+0xff82020c,dcache_flush_and_enable
+0xff820284,dcache_flush_range
 0xffacfc5c,DcmTfMeasure_FW
 0xffacfd18,DcmTfMeasureForSD_FW
 0xffacf84c,DcmWowFla_FW
@@ -814,6 +819,9 @@
 0xffb70edc,HitISLensToMechaEdge_FW
 0xffb712bc,HitISMechaEdgeInOpenControl_FW
 0xff9a3704,HwOcReadICAPCounter
+0xff8201e4,icache_disable_and_flush
+0xff8201bc,icache_flush_and_enable
+0xff820384,icache_flush_range
 0xff84b1c0,ImagerActivate
 0xff96b808,InactivateAdjLog_FW
 0xff99bd00,InitializeAdjustmentFunction_FW

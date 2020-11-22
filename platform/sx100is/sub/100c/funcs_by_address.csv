@@ -1,3 +1,8 @@
+0xffc005ec,cache_flush_and_enable
+0xffc0064c,cache_clean_flush_and_disable
+0xffc006d4,cache_flush_range
+0xffc00758,cache_clean_flush_range
+0xffc007e0,cache_clean_range
 0xffc02140,DisableDispatch_low
 0xffc0216c,EnableDispatch_low
 0xffc021c0,get_self_task_id
