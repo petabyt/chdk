@@ -70,6 +70,11 @@
 0x006b0fd0,_sqrt
 0x006b1144,_dsub
 0x006b1eb8,_scalbn
+0xf800075c,cache_flush_and_enable
+0xf80007bc,cache_clean_flush_and_disable
+0xf8000844,cache_flush_range
+0xf80008c8,cache_clean_flush_range
+0xf8000964,cache_clean_range
 0xf8000d88,memShow_FW
 0xf8002d40,strncpy
 0xf8002d7c,strncmp

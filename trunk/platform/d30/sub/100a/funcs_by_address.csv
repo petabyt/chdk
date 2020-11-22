@@ -94,6 +94,11 @@
 0x0047fa4c,_ffltu
 0x0047facc,_fmul
 0x0047ffcc,_scalbn
+0xff0007c4,cache_flush_and_enable
+0xff000824,cache_clean_flush_and_disable
+0xff0008ac,cache_flush_range
+0xff000930,cache_clean_flush_range
+0xff0009cc,cache_clean_range
 0xff000df4,memShow_FW
 0xff002d64,strncpy
 0xff002da0,strncmp

@@ -51,6 +51,11 @@
 0xffad59cc,Bat_Save_FW
 0xffad59b8,Bat_VIN_FW
 0xff849de0,BeepDrive_FW
+0xff810644,cache_clean_flush_and_disable
+0xff810750,cache_clean_flush_range
+0xff8107d8,cache_clean_range
+0xff8105e4,cache_flush_and_enable
+0xff8106cc,cache_flush_range
 0xffad001c,CalcLog10
 0xffad0058,CalcLog10_FW
 0xffad7790,CalcLoopGain_FW

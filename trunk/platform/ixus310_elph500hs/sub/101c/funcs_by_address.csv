@@ -1,4 +1,9 @@
 0x000b5110,task_AdditionAgent
+0xff00079c,cache_flush_and_enable
+0xff0007fc,cache_clean_flush_and_disable
+0xff000884,cache_flush_range
+0xff000908,cache_clean_flush_range
+0xff0009a4,cache_clean_range
 0xff000dcc,memShow_FW
 0xff002ab8,DisableDispatch_low
 0xff002ae4,EnableDispatch_low
