@@ -509,6 +509,21 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "PauseTimeOfSystem", OPTIONAL|UNUSED }, // name from ixus30
     { "ResumeTimeOfSystem", OPTIONAL|UNUSED }, // name from ixus30
 
+    { "cache_flush_and_enable", OPTIONAL|UNUSED }, // older dryos
+    { "cache_clean_flush_and_disable", OPTIONAL|UNUSED }, // older dryos
+    { "cache_flush_range", OPTIONAL|UNUSED }, // older dryos
+    { "cache_clean_flush_range", OPTIONAL|UNUSED }, // older dryos
+    { "cache_clean_range", OPTIONAL|UNUSED }, // older dryos
+
+    { "icache_flush_and_enable", OPTIONAL|UNUSED }, // newer dryos
+    { "icache_disable_and_flush", OPTIONAL|UNUSED }, // newer dryos
+    { "dcache_flush_and_enable", OPTIONAL|UNUSED }, // newer dryos
+    { "dcache_clean_flush_and_disable", OPTIONAL|UNUSED }, // newer dryos
+    { "dcache_flush_range", OPTIONAL|UNUSED }, // newer dryos
+    { "dcache_clean_range", OPTIONAL|UNUSED }, // newer dryos
+    { "dcache_clean_flush_range", OPTIONAL|UNUSED }, // newer dryos
+    { "icache_flush_range", OPTIONAL|UNUSED }, // newer dryos
+
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
     { "DispCon_ShowBitmapColorBar", UNUSED },
@@ -1049,6 +1064,193 @@ int find_GetTimeFromRTC_and_more(firmware *fw, int i)
             fwAddMatch(fw,fadr,32,0,122);
             return 1;
         }
+    }
+
+    return 0;
+}
+
+int find_arm_cache_funcs(firmware *fw, int ii)
+{
+    static int cfe=0, ccfd=0, cfr=0, ccfr=0, ccr=0;
+    static int beenhere = 0;
+    int i, j=0;
+    if (!beenhere)
+    {
+        beenhere++;
+        if (ii != 2)
+        {
+            j = get_saved_sig(fw,"cache_flush_range");
+        }
+        if (j >= 0 && cfr == 0)
+        {
+            cfr = adr2idx(fw,func_names[j].val);
+            i = cfr - 1;
+            while (i > cfr - 0x100)
+            {
+                if (fwval(fw,i) == 0xe3500000) // cmp r0, #0
+                {
+                    if (ccfd == 0)
+                    {
+                        ccfd = i;
+                    }
+                    else if (cfe == 0)
+                    {
+                        cfe = i;
+                        break;
+                    }
+                }
+                i--;
+            }
+            i = cfr + 1;
+            while (i < cfr + 0x140)
+            {
+                if (fwval(fw,i) == 0xe3500000) // cmp r0, #0
+                {
+                    if (ccfr == 0)
+                    {
+                        ccfr = i;
+                    }
+                    else if (ccr == 0)
+                    {
+                        ccr = i;
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+        else if (ccr == 0)
+        {
+            if (ii != 4)
+            {
+                j = get_saved_sig(fw,"cache_clean_range");
+            }
+            if (j >= 0)
+            {
+                ccr = adr2idx(fw,func_names[j].val);
+                i = ccr - 1;
+                while (i > ccr - 0x300)
+                {
+                    if (fwval(fw,i) == 0xe3500000) // cmp r0, #0
+                    {
+                        if (ccfr == 0)
+                        {
+                            ccfr = i;
+                        }
+                        else if (cfr == 0)
+                        {
+                            cfr = i;
+                        }
+                        else if (ccfd == 0)
+                        {
+                            ccfd = i;
+                        }
+                        else if (cfe == 0)
+                        {
+                            cfe = i;
+                            break;
+                        }
+                    }
+                    i--;
+                }
+            }
+        }
+    }
+    if (cfe&&ccfd&&cfr&&ccfr&&ccr)
+    {
+        i = 0;
+        switch (ii)
+        {
+            case 0: i = cfe; break;
+            case 1: i = ccfd; break;
+            case 2: i = cfr; break;
+            case 3: i = ccfr; break;
+            case 4: i = ccr; break;
+        }
+        uint32_t fadr = idx2adr(fw, i);
+        fwAddMatch(fw,fadr,32,0,122);
+        return 1;
+    }
+
+    return 0;
+}
+
+int find_arm_cache_funcs2(firmware *fw, int ii)
+{
+    static int ife=0, idf=0, dfe=0, dcfd=0, dfr=0, dcr=0, dcfr=0, ifr=0;
+    static int beenhere = 0;
+    int i, j=0;
+    if (!beenhere)
+    {
+        beenhere++;
+        j = get_saved_sig(fw,"dcache_flush_range");
+        if (j >= 0 && dfr == 0)
+        {
+            dfr = adr2idx(fw,func_names[j].val);
+            i = dfr - 1;
+            while (i > dfr - 0x100)
+            {
+                if (fwval(fw,i) == 0xe10f3000) // mrs r3, cpsr
+                {
+                    if (dcfd == 0)
+                    {
+                        dcfd = i;
+                    }
+                    else if (dfe == 0)
+                    {
+                        dfe = i;
+                    }
+                    else if (idf == 0)
+                    {
+                        idf = i;
+                    }
+                    else if (ife == 0)
+                    {
+                        ife = i;
+                        break;
+                    }
+                }
+                i--;
+            }
+            i = dfr + 1;
+            while (i < dfr + 0x140)
+            {
+                if (fwval(fw,i) == 0xe3510a02) // cmp r1, #0x2000
+                {
+                    if (dcr == 0)
+                    {
+                        dcr = i;
+                    }
+                    else if (dcfr == 0)
+                    {
+                        dcfr = i;
+                    }
+                    else if (ifr == 0)
+                    {
+                        ifr = i;
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+    }
+    if (ife&&idf&&dfe&&dcfd&&dfr&&dcr&&dcfr&&ifr)
+    {
+        i = 0;
+        switch (ii)
+        {
+            case 0: i = ife; break;
+            case 1: i = idf; break;
+            case 2: i = dfe; break;
+            case 3: i = dcfd; break;
+            case 4: i = dcr; break;
+            case 5: i = dcfr; break;
+            case 6: i = ifr; break;
+        }
+        uint32_t fadr = idx2adr(fw, i);
+        fwAddMatch(fw,fadr,32,0,122);
+        return 1;
     }
 
     return 0;
@@ -2592,6 +2794,9 @@ string_sig string_sigs[] =
     { 9, "MoveOpticalZoomAt", "PT_MoveOpticalZoomAt_FW", 0,                1,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,    3 },
     { 9, "MoveOpticalZoomAt", "SS.MoveOpticalZoomAt_FW", 0,                0,    0,    0,    0,    0,    0,    0,    0,    0,    3,    5,    5,    5,    5,    5,    5 },
     { 9, "SetVideoOutType", "SetVideoOutType_FW", 0,                       1,    1,    1,    1,    1,    1,    1,    1,    1,    2,    2,    2,    2,    2,    2,    2 },
+    { 9, "cache_flush_range", "AllocateUncacheableMemory", 0,              0,    0,   12,   12,   12,   12,   12,   12,   12,   12,   12,    0,    0,    0,    0,    0 },
+    { 9, "cache_clean_range", "AllocateUncacheableMemory", 0,              9,    9,    9,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0 },
+    { 9, "dcache_flush_range", "AllocateUncacheableMemory", 0,             0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   11,   11,   11,   11,   11,   11 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54   R55   R57   R58   R59
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
@@ -2770,6 +2975,18 @@ string_sig string_sigs[] =
     { 22, "GetTimeFromRTC", (char*)find_GetTimeFromRTC_and_more, 0},
     { 22, "GetValidSystemCalender", (char*)find_GetTimeFromRTC_and_more, 1},
     { 22, "SetValidSystemCalender", (char*)find_GetTimeFromRTC_and_more, 2},
+    { 22, "cache_flush_and_enable", (char*)find_arm_cache_funcs, 0},
+    { 22, "cache_clean_flush_and_disable", (char*)find_arm_cache_funcs, 1},
+    { 22, "cache_flush_range", (char*)find_arm_cache_funcs, 2},
+    { 22, "cache_clean_flush_range", (char*)find_arm_cache_funcs, 3},
+    { 22, "cache_clean_range", (char*)find_arm_cache_funcs, 4},
+    { 22, "icache_flush_and_enable", (char*)find_arm_cache_funcs2, 0},
+    { 22, "icache_disable_and_flush", (char*)find_arm_cache_funcs2, 1},
+    { 22, "dcache_flush_and_enable", (char*)find_arm_cache_funcs2, 2},
+    { 22, "dcache_clean_flush_and_disable", (char*)find_arm_cache_funcs2, 3},
+    { 22, "dcache_clean_range", (char*)find_arm_cache_funcs2, 4},
+    { 22, "dcache_clean_flush_range", (char*)find_arm_cache_funcs2, 5},
+    { 22, "icache_flush_range", (char*)find_arm_cache_funcs2, 6},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 23, "UnregisterInterruptHandler", "HeadInterrupt1", 76,                    1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
