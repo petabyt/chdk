@@ -12,7 +12,8 @@ NHSTUB(ExpCtrlTool_StartContiAE,               0xfc2bb61b)
 NHSTUB(ExpCtrlTool_StopContiAE,                0xfc2bb7b1)
 NHSTUB(Feof_Fut,                               0xfc38a329)
 NHSTUB(Fflush_Fut,                             0xfc38a351)
-NHSTUB(GetDrive_TotalClusters,                 0xfc076ab3)
+NHSTUB(GetDrive_TotalClusters,                 0xFC38935B)
+//NHSTUB(GetDrive_FreeClusters,                  0xfc076ab3) // also updates while recording, but is rather heavy
 NHSTUB(GetFocusLensSubjectDistanceFromLens,    0xfc360e8b) // useless, returns zero
 NHSTUB(MoveFocusLensToDistance,                0xfc43e66f) // MoveFocusLensWithDistance_FW, seems to do nothing useful (calls lots of emptied functions)
 NHSTUB(PT_PlaySound,                           0xfc38c91f) // no longer an eventproc?

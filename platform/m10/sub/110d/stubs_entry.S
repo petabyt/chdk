@@ -165,7 +165,7 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfce67974
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc2bb7b1
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc38a329
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc38a351
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc076ab3
+//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc38935b
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc360e8b
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc3134bd
 //NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3896e9
