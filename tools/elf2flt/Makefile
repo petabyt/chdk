@@ -7,11 +7,11 @@ HOSTCFLAGS+=-Wno-format
 all: elf2flt$(EXE) fltdump$(EXE)
 
 elf2flt$(EXE): myio.o elf-arm.o elfflt.o main.o
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 fltdump$(EXE): fltdump.o myio.o
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 clean:

@@ -6,7 +6,7 @@ HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include
 HOSTLDOPTS=-lm
 
 %.a:
-	@echo $^ \-\> $@
+	@echo $^ '->' $@
 	$(HOSTAR) rcs $@ $^
 
 # these are always built for hostlua, you can hide them from scripts by setting 
@@ -36,11 +36,11 @@ all: $(LUA_A) $(LUA_T) $(LUAC_T)
 $(LUA_A): $(OBJS)
 
 $(LUA_T): $(LUA_O) $(LUA_A)
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) -o $@ $(HOSTCFLAGS) $(LUA_O) $(LUA_A) $(HOSTLDOPTS)
 
 $(LUAC_T): $(LUAC_O) $(LUA_A)
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) -o $@ $(HOSTCFLAGS) $(LUAC_O) $(LUA_A) $(HOSTLDOPTS)
 
 

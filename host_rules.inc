@@ -5,24 +5,19 @@ HOSTAR=ar
 HOSTCFLAGS=-g -O2 -Wall -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -I$(modules)
 
 ifdef OPT_WARNINGS
-    ifeq ($(GCC_VERSION_MAJOR),3)
-        HOSTCFLAGS+=-Wwrite-strings -Wsign-compare -Wunused -Wno-unused-parameter
-    endif
-    ifeq ($(GCC_VERSION_MAJOR),4)
-        #HOSTCFLAGS+=-Wextra -fdiagnostics-show-option -Wno-missing-field-initializers -Wunused -Wno-unused-parameter
-    endif
+    HOSTCFLAGS+=-Wextra -fdiagnostics-show-option -Wno-missing-field-initializers -Wunused -Wno-unused-parameter
 endif
 
 %.o: %.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
 
 %.o: $(modules)/%.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
 
 %.o: $(llua)/%.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
 
 .dep/%.d: %.c .dep

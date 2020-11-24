@@ -16,12 +16,12 @@ $Olibcore.a: $(OBJS)
 
 $Omodule_load.o: $(modules)/module_load.c $(modules)/module_load.h $(modules)/module_exportlist.h
 $Omodule_hashlist.o: $(modules)/module_hashlist.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -fno-builtin -c -o $@ $<
 
-$(modules)/module_hashlist.c: $(modules)/module_exportlist.c $(modules)/module_exportlist$(ABI).inc $(tools)/makeexport$(EXE)
-	@echo $< \-\> $@
-	$(tools)/makeexport$(EXE) $(modules)/module_exportlist.h $(modules)/exportlist.inc $(modules)/module_hashlist.c $(modules)/module_exportlist.c $(modules)/module_exportlist$(ABI).inc
+$(modules)/module_hashlist.c: $(modules)/module_exportlist.c $(modules)/module_exportlist.inc $(tools)/makeexport$(EXE)
+	@echo $< '->' $@
+	$(tools)/makeexport$(EXE) $(modules)/module_exportlist.h $(modules)/exportlist.inc $(modules)/module_hashlist.c $(modules)/module_exportlist.c $(modules)/module_exportlist.inc
 
 clean:
 	rm -f $O*.* *.o *.a

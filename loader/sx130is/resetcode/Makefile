@@ -2,7 +2,7 @@ topdir=../../../
 
 include $(topdir)makefile_cam.inc
 
-LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,--no-define-common,-EL,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(RESTARTSTART)
+LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-EL,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(RESTARTSTART)
 
 all: main.bin
 

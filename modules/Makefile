@@ -4,11 +4,6 @@ include $(topdir)makefile_modules.inc
 
 SUBDIRS=$(llua) $(lubasic) $(larmutil) $(lmath) $(llang) $(lfont) $(lcore) $(llibc)
 
-OBJ_ISDIGIT=
-ifeq ($(GCC_VERSION_MAJOR),3)
-    OBJ_ISDIGIT+= $(llibc)/$Oissmth.o
-endif
-
 CFLAGS+=-fno-reorder-functions
 
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,0x24 -r -Wl,-d
@@ -28,7 +23,7 @@ FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids
 all: $(FLTS)
 
 $O%.flt: $(llibc)/$Olibc.a
-	@echo \-\> $@
+	@echo '->' $@
 	mkdir -p $O
 	$(CC) $(CFLAGS) -o $O$*.elf -Wl,--start-group $^ -Wl,--end-group $(LDOPTS)
     ifdef OPT_GEN_MODULE_DUMPS
@@ -39,15 +34,15 @@ $O%.flt: $(llibc)/$Olibc.a
     endif
 
 $O%.o: games/%.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 $Onothumb.o: nothumb.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
 $Oreversebytes.o: reversebytes.S
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -marm -nostdinc -c -o $@ $<
 
 $Ocalend.flt: $Ogui_calendar.o
@@ -58,7 +53,7 @@ $Omemview.flt: $Ogui_debug.o
 $Opalette.flt: $Ogui_palette.o
 $Ompopup.flt: $Ogui_mpopup.o
 $Otxtread.flt: $Ogui_read.o
-$Oedgeovr.flt: $Oedgeoverlay.o $Obitvector.o $(OBJ_ISDIGIT)
+$Oedgeovr.flt: $Oedgeoverlay.o $Obitvector.o
 $Ozebra.flt: $Ozebra.o
 $Ohisto.flt: $Ohistogram.o
 $Oshothist.flt: $Oshot_histogram.o

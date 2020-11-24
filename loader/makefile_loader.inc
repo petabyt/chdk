@@ -3,7 +3,7 @@ topdir=../../
 
 include $(topdir)makefile_cam.inc
 
-LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,--no-define-common,-EL,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(MEMBASEADDR)
+LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-EL,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(MEMBASEADDR)
 
 CORE_FILE=$(camfw)/main.bin
 

@@ -11,14 +11,6 @@ ZIPDATE=date -R
 
 include makefile_cam.inc
 
-# skip thumb-2 ports when using old arm-elf toolchains
-# used in the batch-zip and batch-zip-complete targets
-ifndef OPT_USE_GCC_EABI
-    NO_T2=-not2
-else
-    NO_T2=
-endif
-
 BUILD_SVNREV:=$(shell svnversion -cn $(topdir) | $(ESED) 's/[0-9]*:([0-9]+)[MPS]*/\1/')
 ifeq ($(BUILD_SVNREV), )
 	BUILD_SVNREV:=$(DEF_SVN_REF)
@@ -104,20 +96,11 @@ else
 endif
 
 
-.PHONY: toolchaincheck
-toolchaincheck:
-    ifdef THUMB_FW
-        ifndef OPT_USE_GCC_EABI
-			$(error ERROR Thumb-2 ports require OPT_USE_GCC_EABI and arm-none-eabi toolchain)
-        endif
-    endif
-
-
 .PHONY: fir
 fir: version firsub
 
 
-firsub: toolchaincheck platformcheck all
+firsub: platformcheck all
 	mkdir -p $(bin)
 	cp $(loader)/main.bin $(bin)/main.bin
     ifdef OPT_ZERO100K
@@ -128,7 +111,7 @@ firsub: toolchaincheck platformcheck all
         endif
     endif
     ifdef FW_UPD_FILE
-		@echo \-\> $(FW_UPD_FILE)
+		@echo '->' $(FW_UPD_FILE)
         ifeq ($(PLATFORMOS),vxworks)
 			$(PAKWIF) $(FW_UPD_FILE) $(bin)/main.bin $(TARGET_PID) 0x01000101
         endif
@@ -137,7 +120,7 @@ firsub: toolchaincheck platformcheck all
         endif
     endif
     ifdef NEED_ENCODED_DISKBOOT
-		@echo dance \-\> DISKBOOT.BIN ver $(NEED_ENCODED_DISKBOOT)
+		@echo dance '->' DISKBOOT.BIN ver $(NEED_ENCODED_DISKBOOT)
 		$(ENCODE_DISKBOOT) $(bin)/main.bin $(bin)/DISKBOOT.BIN $(NEED_ENCODED_DISKBOOT) 
 		rm $(bin)/main.bin
     else
@@ -158,7 +141,7 @@ firzip: version firzipsub
 
 
 firzipsub: infoline clean firsub
-	@echo \-\> $(VER)-$(ZIP_SMALL)
+	@echo '->' $(VER)-$(ZIP_SMALL)
 	rm -f $(bin)/$(VER)-$(ZIP_SMALL)
 	LANG=C echo "CHDK-$(VER) for $(TARGET_CAM) fw:$(TARGET_FW) build:$(BUILD_NUMBER)-$(BUILD_SVNREV) date:`$(ZIPDATE)`" | \
 		zip -9jz $(bin)/$(VER)-$(ZIP_SMALL) $(bin)/DISKBOOT.BIN $(FW_UPD_FILE) > $(DEVNULL)
@@ -167,7 +150,7 @@ firzipsub: infoline clean firsub
 
 
 firzipsubcopy: infoline
-	@echo \-\> $(VER)-$(ZIP_SMALL) as a copy of $(VER)-$(ZIP_SMALL_BASE)
+	@echo '->' $(VER)-$(ZIP_SMALL) as a copy of $(VER)-$(ZIP_SMALL_BASE)
 	rm -f $(bin)/$(VER)-$(ZIP_SMALL)
 	cp $(bin)/$(VER)-$(ZIP_SMALL_BASE) $(bin)/$(VER)-$(ZIP_SMALL)
 
@@ -182,12 +165,12 @@ firzipsubcomplete: infoline clean firsub
 	 printf " PID:$(TARGET_PID)\r\nbuild:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`\r\n\r\n*** Camera specific notes ***\r\n" ) > $(doc)/camnotes.txt
 	cat $(cam)/notes.txt >> $(doc)/camnotes.txt
 	cat $(doc)/1_intro.txt $(doc)/camnotes.txt $(doc)/2_installation.txt $(doc)/3_faq.txt $(doc)/4_urls.txt $(doc)/5_gpl.txt $(doc)/6_ubasic_copyright.txt > $(doc)/readme.txt
-	@echo \-\> $(ZIP_SMALL)
+	@echo '->' $(ZIP_SMALL)
 	rm -f $(bin)/$(ZIP_SMALL)
 	LANG=C echo "CHDK-$(VER) for $(TARGET_CAM) fw:$(TARGET_FW) build:$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) date:`$(ZIPDATE)`" | \
 		zip -9jz $(bin)/$(ZIP_SMALL) $(bin)/DISKBOOT.BIN $(FW_UPD_FILE) $(doc)/changelog.txt $(doc)/readme.txt $(doc)/camnotes.txt > $(DEVNULL)
 	rm -f $(bin)/DISKBOOT.BIN $(FW_UPD_FILE)
-	@echo \-\> $(ZIP_FULL)
+	@echo '->' $(ZIP_FULL)
 	cp -f $(bin)/$(ZIP_SMALL) $(bin)/$(ZIP_FULL)
 	zip -9 $(bin)/$(ZIP_SMALL) $(chdk)/MODULES/* > $(DEVNULL)
 	zip -9j $(bin)/$(ZIP_FULL) $(tools)/vers.req > $(DEVNULL)
@@ -195,8 +178,8 @@ firzipsubcomplete: infoline clean firsub
 
 
 firzipsubcompletecopy: infoline
-	@echo \-\> $(ZIP_FULL) as a copy of $(ZIP_FULL_BASE)
-	@echo \-\> $(ZIP_SMALL) as a copy of $(ZIP_SMALL_BASE)
+	@echo '->' $(ZIP_FULL) as a copy of $(ZIP_FULL_BASE)
+	@echo '->' $(ZIP_SMALL) as a copy of $(ZIP_SMALL_BASE)
 	rm -f $(bin)/$(ZIP_SMALL)
 	rm -f $(bin)/$(ZIP_FULL)
 	cp $(bin)/$(ZIP_SMALL_BASE) $(bin)/$(ZIP_SMALL)
@@ -270,10 +253,8 @@ alltools:
 # for batch builds, build modules once, instead of once for every firmware
 allmodules:
 	$(MAKE) -C modules clean all THUMB_FW=
-    ifeq ($(NO_T2), )
-		$(MAKE) -C modules clean all THUMB_FW=1
-		$(MAKE) -C modules clean all THUMB_FW=1 DIGIC7=1
-    endif
+	$(MAKE) -C modules clean all THUMB_FW=1
+	$(MAKE) -C modules clean all THUMB_FW=1 DIGIC7=1
 	$(MAKE) -C CHDK clean all
 
 # define targets to batch build all cameras & firmware versions
@@ -292,13 +273,13 @@ batch: version alltools allmodules
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 batch-zip: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST) $(NO_T2)
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsub $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(bin)/caminfo.txt
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)
 
 batch-zip-complete: version alltools allmodules
-	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST) $(NO_T2)
+	SKIP_TOOLS=1 SKIP_MODULES=1 SKIP_CHDK=1 sh tools/auto_build.sh $(MAKE) firzipsubcomplete $(CAMERA_LIST)
 	@echo "**** Summary of memisosizes"
 	cat $(bin)/caminfo.txt
 	rm -f $(bin)/caminfo.txt > $(DEVNULL)

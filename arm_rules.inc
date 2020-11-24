@@ -1,18 +1,6 @@
 # ARM GCC rules
 
-ifdef OPT_USE_GCC_EABI
-    CROSS_COMPILE=arm-none-eabi-
-    ifndef THUMB_FW
-        ARCH=-march=armv5te
-    else
-        ARCH=
-    endif
-    ABI=_eabi
-else
-    CROSS_COMPILE=arm-elf-
-    ARCH=
-    ABI=_elf
-endif
+CROSS_COMPILE=arm-none-eabi-
 
 CC=$(CROSS_COMPILE)gcc
 OBJCOPY=$(CROSS_COMPILE)objcopy
@@ -30,9 +18,6 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
 ifndef DISABLE_GCC_VERSION_CHECK
     VALID_GCC=0
-    ifeq ($(GCC_VERSION_MAJOR),3)
-        VALID_GCC=1
-    endif
     ifeq ($(GCC_VERSION_MAJOR),4)
         VALID_GCC=1
     endif
@@ -42,10 +27,10 @@ ifndef DISABLE_GCC_VERSION_CHECK
     ifeq ($(VALID_GCC),0)
         ifndef THUMB_FW
             # Pre DIGIC 6 - must use old GCC
-            $(error Invalid GCC version. CHDK build requires GCC 3, 4 or 5)
+            $(error Invalid GCC version. CHDK build requires GCC 4 or 5)
         else
             # DIGIC 6 & 7 - can use new GCC; but not fully tested
-            $(warning Unsupported GCC version. CHDK recommends GCC 3, 4 or 5. Other versions are at your own risk.)
+            $(warning Unsupported GCC version. CHDK recommends GCC 4 or 5. Other versions are at your own risk.)
         endif
     endif
 endif
@@ -57,16 +42,13 @@ endif
 CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 # for gcc >= v3, we want to allow use of strd etc
 ifndef THUMB_FW
-    ifeq ($(GCC_VERSION_MAJOR),3)
-        CFLAGS+=-march=armv5te
-    endif
     ifeq ($(GCC_VERSION_MAJOR),4)
         # TODO should be -mcpu, but breaks things ATM
-        CFLAGS+=-mtune=arm946e-s $(ARCH)
+        CFLAGS+=-mtune=arm946e-s -march=armv5te
     endif
     ifeq ($(GCC_VERSION_MAJOR),5)
         # TODO should be -mcpu, but breaks things ATM
-        CFLAGS+=-mtune=arm946e-s $(ARCH)
+        CFLAGS+=-mtune=arm946e-s -march=armv5te
     endif
 else
     ifdef DIGIC7
@@ -157,9 +139,6 @@ CFLAGS+=-DOPT_DISABLE_CAM_ERROR=0
 endif
 
 ifdef OPT_WARNINGS
-     ifeq ($(GCC_VERSION_MAJOR),3)
-           CFLAGS+=-Wwrite-strings -Wsign-compare -Wunused -Wno-unused-parameter
-     endif
      ifeq ($(GCC_VERSION_MAJOR),4)
            CFLAGS+=-Wextra -fdiagnostics-show-option -Wno-missing-field-initializers -Wunused -Wno-unused-parameter
      endif
@@ -180,24 +159,12 @@ endif
 
 # Architecture version for modules (to prevent loading on wrong build)
 ifndef THUMB_FW
-    ifdef OPT_USE_GCC_EABI
-        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
-    else
-        CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB
-    endif
+    CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
 else
     ifdef DIGIC7
-        ifdef OPT_USE_GCC_EABI
-            CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
-        else
-            CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB2A
-        endif
+        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
     else
-        ifdef OPT_USE_GCC_EABI
-            CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2
-        else
-            CFLAGS+=-DOPT_ARCHITECTURE=GCC_ELF_THUMB2
-        endif
+        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2
     endif
 endif
 
