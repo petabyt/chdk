@@ -67,9 +67,6 @@ OPT_GEN_STUBS=1
 # Create module .elf and .flt dump files
 #OPT_GEN_MODULE_DUMPS=1
 
-# Define this to use EABI instead of ELF for the GCC ABI
-#OPT_USE_GCC_EABI=1
-
 # Define this to disable runtime compatibility check in loader
 #OPT_DISABLE_COMPAT_CHECK=1
 

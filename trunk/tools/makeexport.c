@@ -137,7 +137,7 @@ int process_file(const char *name, FILE *out_txt)
 //
 // @tsv - Utility to convert export list to different required format
 //
-// USAGE:   makeexport module_exportlist.h exportlist.inc module_hashlist.c module_exportlist.c module_exportlist$(ABI).inc
+// USAGE:   makeexport module_exportlist.h exportlist.inc module_hashlist.c module_exportlist.c module_exportlist.inc
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char **argv )

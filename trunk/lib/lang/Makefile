@@ -12,7 +12,7 @@ $Oliblang.a: $(OBJS)
 $Olang.o: lang_str.h $(core)/gui_lang.h
 
 lang_str.h: $(tools)/makelang$(EXE) $(chdk)/LANG/english.lng $(chdk)/LANG/$(OPT_DEFAULT_LANG).lng $(core)/gui_lang.h
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(tools)/makelang$(EXE) $(core)/gui_lang.h $(chdk)/LANG/english.lng $(chdk)/LANG/$(OPT_DEFAULT_LANG).lng > lang_str.h
 
 clean:

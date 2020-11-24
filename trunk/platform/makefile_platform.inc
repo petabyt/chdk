@@ -6,10 +6,8 @@ include $(topdir)makefile_cam.inc
 # Change CPU architecture to ARM V4 if building with GCC EABI
 # Otherwise incorrect wrapper calls to firmware functions are generated
 # not needed for DIGIC 6
-ifdef OPT_USE_GCC_EABI
-    ifndef THUMB_FW
-        ARCHFLAGS+=-march=armv4
-    endif
+ifndef THUMB_FW
+    ARCHFLAGS+=-march=armv4
 endif
 
 ifdef THUMB_FW
@@ -31,7 +29,7 @@ shooting.o: shooting.c ../generic/shooting.c
 wrappers.o: wrappers.c ../generic/wrappers.c
 
 platform_palette.o: $(PALETTE_FILES)
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 

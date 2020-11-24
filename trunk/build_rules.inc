@@ -2,60 +2,60 @@
 
 # rule for building .o from .c in the same directory
 %.o: %.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) $(ARCHFLAGS) -nostdinc -c -o $@ $<
 
 # rule for building .o in $O sub-directory from .c in the current directory
 $O%.o: %.c
 	mkdir -p $O
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 # rule for building .o from .c in the same directory - forces THUMB build
 %.thm.o: %.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -mthumb -nostdinc -c -o $@ $<
 
 # rule for building .o from .c in the 'core' directory
 $O%.o: $(core)/%.c
 	mkdir -p $O
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 # rule for building .o from .c in the 'core' directory - forces THUMB build
 %.thm.o: $(core)/%.c
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -mthumb -nostdinc -c -o $@ $<
 
 # rule for building .o from .c in the 'modules' directory
 $O%.o: $(modules)/%.c
 	mkdir -p $O
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 # rule for building .o from .S in the same directory
 %.o: %.S
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 # rule for building .o in $O sub-directory from .S in the current directory
 $O%.o: %.S
 	mkdir -p $O
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 	
 # rule for building .a
 %.a:
-	@echo $^ \-\> $@
+	@echo $^ '->' $@
 	$(AR) rcs $@ $^
 
 %.bin: %.elf
-	@echo $< \-\> $@
+	@echo $< '->' $@
 	$(OBJDUMP) -j .text -j .data -j .bss -z -d -r -f -h $< > $@.dump
 	$(OBJCOPY) -O binary $< $@
 
 %.elf:
-	@echo \-\> $@
+	@echo '->' $@
 	$(CC) $(CFLAGS) -o $@ $^ $(LDOPTS)
 	( $(NM) $@ | grep ' U ' > $@.syms ) && exit 1 || exit 0
 
