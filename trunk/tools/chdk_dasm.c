@@ -482,7 +482,7 @@ static char * reg(char * op, char c, t_value n) {
 /* op = num(op,n) appends n in decimal or &n in hex
  * depending on whether n<decmax. It's assumed that n>=0.
  */
-static char * num(char * op, t_value w, int decmax)
+static char * num(char * op, t_value w, t_value decmax)
 {
     char tmpbuf[16] ;
     char * tptr ;

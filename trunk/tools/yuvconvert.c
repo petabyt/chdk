@@ -73,7 +73,7 @@ int main(int argc, char**argv)
 
 	unsigned i;
 
-	for(i = 1; i < argc; i++) {
+	for(i = 1; i < (unsigned)argc; i++) {
 		if ( strncmp(argv[i],"-h=",3) == 0 ) {
 			height=atoi(argv[i]+3);
 		}

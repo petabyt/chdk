@@ -932,7 +932,7 @@ int find_get_ptp_file_buf(firmware *fw, string_sig *sig, int j)
         && isBL(fw,j+4))) {
         return 0;
     }
-    int file_buf_id = get_ptp_file_buf_id(fw);
+    uint32_t file_buf_id = get_ptp_file_buf_id(fw);
     if(ALUop2(fw,j) != file_buf_id || ALUop2(fw,j+3) != file_buf_id) {
         return 0;
     }
@@ -2220,7 +2220,7 @@ int find_get_ptp_buf_size(firmware *fw)
     int k=adr2idx(fw,func_names[j].val);
     int k_max=k+80;
     uint32_t adr=0;
-    int file_buf_id=get_ptp_file_buf_id(fw);
+    uint32_t file_buf_id=get_ptp_file_buf_id(fw);
  
     for(; k < k_max;k++) {
         // look for
@@ -4059,7 +4059,7 @@ void find_matches(firmware *fw, const char *curr_name)
             {
                 fail = 0;
                 success = 0;
-                for (s = sig; s->offs != -1; s++)
+                for (s = sig; s->offs != 0xFFFFFFFF; s++)
                 {
                     if ((p[s->offs] & s->mask) != s->value)
                         fail++;
@@ -4070,7 +4070,7 @@ void find_matches(firmware *fw, const char *curr_name)
                 if (((p[sig->offs] & sig->mask) != sig->value) && (sig->offs == 0) && (sig->value == 0xe92d0000)) success = 0;
                 if (success > fail)
                 {
-                    if (s->mask == -2)
+                    if (s->mask == 0xFFFFFFFE)
                     {
                         int end_branch = 0;
                         int idx = 0;
@@ -4088,7 +4088,7 @@ void find_matches(firmware *fw, const char *curr_name)
                         int success2 = 0;
                         //fprintf(stderr,"\t%s %d %08x %08x %d %d\n",curr_name,idx,idx2adr(fw,idx),idx2adr(fw,i+n->off),success,fail);
                         s++;
-                        for (; s->offs != -1; s++)
+                        for (; s->offs != 0xFFFFFFFF; s++)
                         {
                             if (!end_branch || (p1[s->offs] & s->mask) != s->value){
                                 fail2++;
@@ -4118,7 +4118,7 @@ void find_matches(firmware *fw, const char *curr_name)
                         (strcmp(curr_name, "GetDrive_TotalClusters") == 0))
                     {
                         int fnd = 0;
-                        for (s = sig; s->offs != -1; s++)
+                        for (s = sig; s->offs != 0xFFFFFFFF; s++)
                         {
                             if (isLDR_PC_cond(fw,n->off+i+s->offs))
                             {
@@ -4856,7 +4856,7 @@ void find_lib_vals(firmware *fw)
         {
             if (isLDR(fw,k+fbd[f][0]) && isLDR(fw,k+fbd[f][1]) && isLDR(fw,k+fbd[f][2]))
             {
-                int reg = fw->buf[k+fbd[f][2]] & 0x000F0000;    // Index register used
+                uint32_t reg = fw->buf[k+fbd[f][2]] & 0x000F0000;    // Index register used
                 int ka = 0;
                 if (((fw->buf[k+fbd[f][0]] & 0x0000F000) << 4) == reg)      { ka = k+fbd[f][0]; }
                 else if (((fw->buf[k+fbd[f][1]] & 0x0000F000) << 4) == reg) { ka = k+fbd[f][1]; }
@@ -4938,7 +4938,7 @@ int print_exmem_types(firmware *fw)
         return 1;
     bprintf("// EXMEM types:\n");
     int ii = adr2idx(fw, exm_typ_tbl);
-    int n;
+    uint32_t n;
     for (n=0; n<exm_typ_cnt; n++)
     {
         bprintf("// %s %i\n",adr2ptr(fw, fwval(fw,ii+n)),n);
@@ -5228,7 +5228,7 @@ int match_palette_data3(firmware *fw, int k, uint32_t palette_data, uint32_t v2)
 {
     if (isLDR_PC(fw, k) && (LDR2val(fw,k) == palette_data) && isLDR_PC(fw,k-1) && isLDR_PC(fw,k-6) && isLDR(fw,k-5))
     {
-        int palette_control = LDR2val(fw,k-6);
+        uint32_t palette_control = LDR2val(fw,k-6);
         int ptr_offset = fwOp2(fw,k-5);
         uint32_t fadr = find_inst_rev(fw, isSTMFD_LR, k-7, 30);
         if (fadr > 0)
@@ -6034,7 +6034,7 @@ int find_ctypes(firmware *fw, int k)
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0x10, 0x10, 0x10, 0x10, 0x20
     };
 
-    if (k < (fw->size*4 - sizeof(ctypes)))
+    if ((uint32_t)k < (fw->size*4 - sizeof(ctypes)))
     {
         if (memcmp(((char*)fw->buf)+k,ctypes,sizeof(ctypes)) == 0)
         {
@@ -6047,7 +6047,7 @@ int find_ctypes(firmware *fw, int k)
 
 int match_nrflag3(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
-    if (isBL(fw,k) && (idxFollowBranch(fw,k,0x01000001) == v1))
+    if (isBL(fw,k) && (idxFollowBranch(fw,k,0x01000001) == (int)v1))
     {
         // Found call to function, work out R3 value passed in
         int ofst1 = 0;
@@ -6668,7 +6668,7 @@ int find_task_related_info(firmware *fw)
     {
         // special case: some r50 cams have the string in RAM and all references point there
         u = idx2adr(fw,i);
-        if ( (u > fw->base_copied) && ((u-fw->base_copied)/4 < fw->size2))
+        if ( (u > fw->base_copied) && ((u-fw->base_copied)/4 < (uint32_t)fw->size2))
         {
             i = adr2idx(fw, fw->base2 + (u-fw->base_copied));
             j = find_nxt_str_ref(fw, i, -1);
@@ -6981,7 +6981,7 @@ void find_propset(firmware *fw)
     
     bprintf("\n// Known propcases\n");
     
-    int n;
+    uint32_t n;
     for (n=0; n<PROPCASE_HANDLED_COUNT; n++)
     {
         used += knownprops[n].use>0?1:0;
@@ -7016,7 +7016,7 @@ void find_propset(firmware *fw)
     }
     bprintf("// Guessed propset: ");
     int m = 0;
-    int fmax = 0;
+    uint32_t fmax = 0;
     int okay = 0;
     for (n=1; n<KNOWN_PROPSET_COUNT; n++)
     {
@@ -7278,7 +7278,7 @@ int match_GetSDProtect(firmware *fw, int k, int v)
 
 void find_key_vals(firmware *fw)
 {
-    int k,k1;
+    uint32_t k,k1;
 
     out_hdr = 1;
     add_blankline();
@@ -7306,7 +7306,7 @@ void find_key_vals(firmware *fw)
     }
     if (tadr != 0)
     {
-        int tsiz = 2;
+        uint32_t tsiz = 2;
         if (fw->buf[adr2idx(fw,tadr)+2] == 0) tsiz = 3;
 
         uint32_t madr = fw->base + (fw->size*4-4);
@@ -7321,7 +7321,7 @@ void find_key_vals(firmware *fw)
                 }
             }
         }
-        int tlen = (madr - tadr) / 4;
+        uint32_t tlen = (madr - tadr) / 4;
         if (tsiz == 2)
         {
             k1 = adr2idx(fw,tadr);

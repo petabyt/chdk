@@ -335,7 +335,7 @@ static void describe_str(firmware *fw, char *comment, uint32_t adr)
     *p++='"';
     char *e;
     int trunc=0;
-    if(strlen(s) < r) {
+    if((int)strlen(s) < r) {
         e=p+strlen(s);
     } else {
         // not enough space for ellipsis, give up
@@ -697,7 +697,7 @@ static void do_tbb_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
     } else {
         printf("branchtable_%08x:\n",adr);
     }
-    int i=0;
+    uint32_t i=0;
     while(i < ti->count) {
         uint8_t *p=adr2ptr(fw,adr);
         if(!p) {
@@ -759,7 +759,7 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
     } else {
         printf("branchtable_%08x:\n",adr);
     }
-    int i=0;
+    uint32_t i=0;
     while(i < ti->count) {
         uint16_t *p=(uint16_t *)adr2ptr(fw,adr);
         if(!p) {
@@ -796,7 +796,7 @@ static void do_tbh_data(firmware *fw, iter_state_t *is, unsigned dis_opts, tbx_i
 static void do_tbx_pass1(firmware *fw, iter_state_t *is, struct llist **branch_list, unsigned dis_opts, tbx_info_t *ti)
 {
     uint32_t adr=ti->start;
-    int i=0;
+    uint32_t i=0;
     while(i < ti->count) {
         uint8_t *p=adr2ptr(fw,adr);
         if(!p) {

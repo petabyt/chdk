@@ -79,7 +79,7 @@ static int get_hexstring( void *dst, const char *str, int len )
 		return -1;
 	}
 	if( !p ) return -1;
-	if( strlen( str ) != len*2 ){
+	if( strlen( str ) != (size_t)len*2 ){
 		printf( "Hex length mismatch in \"%s\"!\n", str );
 		return -1;
 	}
@@ -117,7 +117,7 @@ static int fi2rec_size(uint32_t dryos_ver)
 static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , uint32_t pid, uint32_t dryos_ver,
                    int32_t cs_words)
 {
-	unsigned long i;
+	uLongf i;
 	size_t flen;
 	uint32_t cs;
 	FILE *fi, *fo;
@@ -177,7 +177,7 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 	}
 	memset( buf, 0xFF, i );
 	i -= 4;
-	if( Z_OK !=    compress( buf + 4, (uLongf*)&i, upkbuf, flen ) ){ 
+	if( Z_OK !=    compress( buf + 4, &i, upkbuf, flen ) ){ 
 		printf( "Data compression error\n" );
 		return -1;
 	}
@@ -190,10 +190,10 @@ static int fi2enc( char *infname, char *outfname, uint32_t *key, uint32_t *iv , 
 	pblk = buf;									
     if (cs_words) {
         uint32_t *wbuf = (uint32_t*)buf;
-        for( i = 0; i < (int)fi2rec.len/4; i++) cs += wbuf[i];	// update block checksum
+        for( i = 0; i < fi2rec.len/4; i++) cs += wbuf[i];	// update block checksum
     }
     else {
-        for( i = 0; i < (int)fi2rec.len; i++) cs += buf[i];	// update block checksum
+        for( i = 0; i < fi2rec.len; i++) cs += buf[i];	// update block checksum
     }
 
 	free( upkbuf ); upkbuf = NULL;

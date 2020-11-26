@@ -235,7 +235,7 @@ ptp_op_name_t ptp_op_names[]={
 };
 
 const char *get_ptp_op_name(uint32_t op) {
-    int i;
+    unsigned i;
     for(i=0;i<(sizeof(ptp_op_names)/sizeof(ptp_op_name_t)); i++) {
         if(op==ptp_op_names[i].op) {
             return ptp_op_names[i].name;

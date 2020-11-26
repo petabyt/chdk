@@ -302,7 +302,7 @@ int main(int argc, char **argv)
     printf("static FuncSig func_sig_%s[] = {\n",proc_name);
 
     finish = 0;
-    for (i=0;i<size;++i){
+    for (i=0;i<(int)size;++i){
         tbuf[0]=0;
        	for (j=0;instrs[j].inst | instrs[j].mask;j++){
 	    if ((buf[i] & instrs[j].mask) == instrs[j].inst){

@@ -866,7 +866,7 @@ int get_TBx_PC_info(firmware *fw,iter_state_t *is, tbx_info_t *ti)
         // TODO lots of other ways condition code or reg could be changed in between
         if(found_bhs && fw->is->insn->id == ARM_INS_CMP) {
             // cmp with correct operands, assume number of jumptable entries
-            if(fw->is->insn->detail->arm.operands[0].reg == i_reg 
+            if((arm_reg)fw->is->insn->detail->arm.operands[0].reg == i_reg 
                 || fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
                 max_count = fw->is->insn->detail->arm.operands[1].imm;
             }
@@ -1517,7 +1517,7 @@ int find_and_get_var_ldr(firmware *fw,
         seq_count++;
         // firmware may use add/sub to get actual firmware base address
         if(isADDx_imm(is->insn) || isSUBx_imm(is->insn)) {
-            if(is->insn->detail->arm.operands[0].reg != r.reg_base) {
+            if((arm_reg)is->insn->detail->arm.operands[0].reg != r.reg_base) {
                 continue;
             }
             if(isADDx_imm(is->insn)) {
@@ -1543,10 +1543,10 @@ int find_and_get_var_ldr(firmware *fw,
             // printf("find_and_get_var_ldr: bail B*\n");
             return 0;
         }
-        if(is->insn->id != ARM_INS_LDR || is->insn->detail->arm.operands[1].reg != r.reg_base) {
+        if(is->insn->id != ARM_INS_LDR || (arm_reg)is->insn->detail->arm.operands[1].reg != r.reg_base) {
             // other operation on with base reg as first operand, give up
             // simplistic, many other things could affect reg
-            if(is->insn->detail->arm.operands[0].type == ARM_OP_REG && is->insn->detail->arm.operands[0].reg == r.reg_base) {
+            if(is->insn->detail->arm.operands[0].type == ARM_OP_REG && (arm_reg)is->insn->detail->arm.operands[0].reg == r.reg_base) {
                 // printf("find_and_get_var_ldr: bail mod base\n");
                 return 0;
             }
@@ -1786,7 +1786,7 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
         // specific registers requested?
         if(match->operands[i].reg1 != ARM_REG_INVALID) {
             if(insn->detail->arm.operands[i].type == ARM_OP_REG) {
-                if(insn->detail->arm.operands[i].reg != match->operands[i].reg1) {
+                if((arm_reg)insn->detail->arm.operands[i].reg != match->operands[i].reg1) {
                     return 0;
                 }
             } else if(insn->detail->arm.operands[i].type == ARM_OP_MEM) {
@@ -1954,7 +1954,7 @@ void fw_add_adr_range(firmware *fw, uint32_t start, uint32_t end, uint32_t src_s
         fprintf(stderr,"fw_add_adr_range: end 0x%08x <= start 0x%08x\n",end,start);
         return;
     }
-    int len=end-start;
+    uint32_t len=end-start;
     if(len > 0xFFFFFFFF - src_start) {
         fprintf(stderr,"fw_add_adr_range: range too long %d\n",len);
         return;
@@ -1992,7 +1992,7 @@ void find_dryos_vers(firmware *fw)
         if(fw->dryos_ver_count == FW_MAX_DRYOS_VERS) {
             fprintf(stderr,"WARNING hit FW_MAX_DRYOS_VERS\n");
         }
-        int i;
+        uint32_t i;
         int match_i;
         uint32_t min_adr = 0xFFFFFFFF;
         
@@ -2046,7 +2046,7 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     }
 
     // adjust to ensure base_adr + size doesn't overflow
-    if(0xFFFFFFFF - base_adr < fw->size8) {
+    if((int)(0xFFFFFFFF - base_adr) < fw->size8) {
         fprintf(stderr,"adjusted dump size 0x%08x->",fw->size8);
         fw->size8 = 0xFFFFFFFC - base_adr;
         fprintf(stderr,"0x%08x\n",fw->size8);

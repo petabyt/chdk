@@ -852,7 +852,7 @@ int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
     if (isBL(fw,k))
     {
-        int n = idxFollowBranch(fw, k, 0x01000001);
+        uint32_t n = idxFollowBranch(fw, k, 0x01000001);
         if (n == v1)
             return k;
     }
@@ -865,7 +865,7 @@ int find_B(firmware *fw, int k, uint32_t v1, uint32_t v2)
 {
     if (isB(fw,k))
     {
-        int n = idxFollowBranch(fw, k, 0x00000001);
+        uint32_t n = idxFollowBranch(fw, k, 0x00000001);
         if (n == v1)
             return k;
     }
@@ -1074,7 +1074,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
         //                             IXUS 700    IXUS 30/40  IXUS 50     Other
         uint32_t vx_name_offsets[] = { 0xFFD70110, 0xFFD70120, 0xFFF80110, 0xFFFE0110 };
         uint32_t vx_pid_offsets[] =  { 0xFFD70130, 0xFFD7014E, 0xFFF80130, 0xFFFE0130 };
-        for (i=0; i<sizeof(vx_name_offsets)/sizeof(vx_name_offsets[0]); i++)
+        for (i=0; i<(int)(sizeof(vx_name_offsets)/sizeof(vx_name_offsets[0])); i++)
         {
             int k = adr2idx(fw,vx_name_offsets[i]);
             if (idx_valid(fw,k) && (strncmp((char*)fwadr(fw,k),"Canon ",6) == 0))
