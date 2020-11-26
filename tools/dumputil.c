@@ -116,7 +116,7 @@ int load_dump(const char *dumpname,const char *base, dump_t *dump)
     rcnt=fread(p, 1, st.st_size, dumpfile);
     fclose(dumpfile);
 
-    if (rcnt != st.st_size) {
+    if (rcnt != (size_t)st.st_size) {
         fprintf(stderr,"error: unable to read %s\n",dumpname);
 		free(p);
         return 0;

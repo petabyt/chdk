@@ -27,9 +27,9 @@ typedef struct _stubs
     osig    *makevals;
     osig    *propcases;
 
-    int     min_focus_len;
-    int     max_focus_len;
-    int     propset;
+    uint32_t min_focus_len;
+    uint32_t max_focus_len;
+    uint32_t propset;
 } stub_values;
 
 stub_values* new_stub_values();

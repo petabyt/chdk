@@ -1672,7 +1672,7 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
             ptr_reg = insn->detail->arm.operands[1].mem.base;
             continue;
         }
-        if(ptr_reg == ARM_REG_INVALID || !isLDR_PC(insn) || insn->detail->arm.operands[0].reg != ptr_reg) {
+        if(ptr_reg == ARM_REG_INVALID || !isLDR_PC(insn) || (arm_reg)insn->detail->arm.operands[0].reg != ptr_reg) {
             continue;
         }
         sem_adr=LDR_PC2val(fw,insn);
@@ -2983,7 +2983,7 @@ int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *r
         {ARM_INS_ENDING}
     };
     if(insn_match_find_next_seq(fw,is,1,bm_buf_match)) {
-        if(is->insn->detail->arm.operands[1].reg == desc.reg_base) {
+        if((arm_reg)is->insn->detail->arm.operands[1].reg == desc.reg_base) {
             save_misc_val("bitmap_buffer",desc.adr_adj,is->insn->detail->arm.operands[2].imm,(uint32_t)is->insn->address);
         }
         /*
@@ -3953,7 +3953,7 @@ int sig_match__nrflag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     // firmware may use add/sub to get actual firmware base address
     if(isADDx_imm(is->insn) || isSUBx_imm(is->insn)) {
-        if(is->insn->detail->arm.operands[0].reg != reg_base) {
+        if((arm_reg)is->insn->detail->arm.operands[0].reg != reg_base) {
             printf("sig_match__nrflag: no match ADD/SUB\n");
             return 0;
         }
@@ -3967,7 +3967,7 @@ int sig_match__nrflag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             return 0;
         }
     }
-    if(is->insn->id != ARM_INS_STR || is->insn->detail->arm.operands[1].reg != reg_base) {
+    if(is->insn->id != ARM_INS_STR || (arm_reg)is->insn->detail->arm.operands[1].reg != reg_base) {
         printf("sig_match__nrflag: no match STR\n");
         return 0;
     }
@@ -4487,7 +4487,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     if(sig_type == SIG_NAMED_INSN) {
-        int i;
+        uint32_t i;
         // iter starts on the address given to init
         for(i=0;i<=sig_nth;i++) {
             if(!disasm_iter(fw,is)) {
@@ -5132,7 +5132,7 @@ int process_add_ptp_handler_call(firmware *fw, iter_state_t *is,uint32_t unused)
             if(!isLDR_PC(insn)) {
                 continue;
             }
-            if(insn->detail->arm.operands[0].reg != ptr_reg) {
+            if((arm_reg)insn->detail->arm.operands[0].reg != ptr_reg) {
                 continue;
             }
             // printf("add_ptp_handler LDR PC 0x%08x at 0x%"PRIx64"\n",LDR_PC2val(fw,insn),insn->address);
@@ -5473,7 +5473,7 @@ void output_firmware_vals(firmware *fw)
     }
     if(fw->dryos_ver_count) {
         bprintf("\n// Found DryOS versions:\n");
-        for(i=0;i<fw->dryos_ver_count;i++) {
+        for(i=0;i<(int)fw->dryos_ver_count;i++) {
             bprintf("// 0x%08x %s \"%s\"\n",
                 fw->dryos_ver_list[i], (fw->dryos_ver_list[i] == fw->dryos_ver_adr) ? "main ":"other",
                 (char *)adr2ptr(fw,fw->dryos_ver_list[i]));
@@ -5584,7 +5584,7 @@ void output_propcases(firmware *fw) {
 
     bprintf("// Guessed propset: ");
     int m = 0;
-    int fmax = 0;
+    uint32_t fmax = 0;
     int okay = 0;
     for (n=0; n<KNOWN_PROPSET_COUNT; n++)
     {
@@ -5630,7 +5630,7 @@ void output_exmem_types(firmware *fw)
         return;
     }
     bprintf("// EXMEM types:\n");
-    int n;
+    uint32_t n;
     for (n=0; n<etc->val; n++) {
         char *extyp = (char*)adr2ptr(fw, fw_u32(fw,ett->val+n*4));
         bprintf("// %s %i\n", extyp, n);

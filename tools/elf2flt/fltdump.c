@@ -33,7 +33,7 @@ void dump_section(char* name, unsigned char *ptr, int size )
 }
 
 static 
-void print_offs(char *prefix, int offs,char* postfix)
+void print_offs(char *prefix, uint32_t offs,char* postfix)
 {
     int secoffs = 0;
     char* sect="unkn";
@@ -62,7 +62,7 @@ char* get_flat_string( int32_t offs )
 		return buf;
 	}
 
-    if  ( offs >=flat->reloc_start || offs<flat->data_start )
+    if  ( (uint32_t)offs >=flat->reloc_start || (uint32_t)offs<flat->data_start )
 	  return "";
 
 	strncpy( buf, (char*)flat_buf+offs, sizeof(buf)-1);
@@ -154,11 +154,11 @@ int main(int argc, char **argv)
 		else
 		  	printf(" Platform #%d only.\n", _module_info->chdk_required_platfid );
 	    //printf("->Description: %s\n", get_flat_string(_module_info->description) );
-    	print_offs("->lib                 = ", (int)_module_info->lib,"\n");
-	    //print_offs("->_module_loader()    = ", (int)_module_info->loader,"\n");
-	    //print_offs("->_module_unloader()  = ", (int)_module_info->unloader,"\n");
-	    //print_offs("->_module_can_unload()= ", (int)_module_info->can_unload,"\n");
-	    //print_offs("->_module_exit_alt()  = ", (int)_module_info->exit_alt,"\n");
+    	print_offs("->lib                 = ", _module_info->lib,"\n");
+	    //print_offs("->_module_loader()    = ", _module_info->loader,"\n");
+	    //print_offs("->_module_unloader()  = ", _module_info->unloader,"\n");
+	    //print_offs("->_module_can_unload()= ", _module_info->can_unload,"\n");
+	    //print_offs("->_module_exit_alt()  = ", _module_info->exit_alt,"\n");
 	}
 		
 	if ( !FLAG_DUMP_FLAT )
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 	int i;
     printf("\nDump relocations 0x%x (size=%d):\n",flat->reloc_start,flat_reloc_count*sizeof(uint32_t));
     for( i = 0; i< flat_reloc_count; i++)
-        print_offs("Offs: ",*(int*)(flat_buf+flat->reloc_start+i*sizeof(uint32_t)),"\n");
+        print_offs("Offs: ",*(uint32_t*)(flat_buf+flat->reloc_start+i*sizeof(uint32_t)),"\n");
 
     printf("\nDump imports 0x%x (size=%d):\n",flat->import_start,flat_import_count*sizeof(uint32_t));
     uint32_t *new_import_buf = (uint32_t*)(flat_buf+flat->import_start);

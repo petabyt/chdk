@@ -15,11 +15,11 @@ typedef struct
 
 
 int b_file_preload(char* filename);
-int b_read (int fd, void* buf, unsigned int count);
+int b_read (int fd, void* buf, int count);
 int b_seek(int fd, long offset, int whence);
 char* b_get_buf();
 
-int b_seek_read(unsigned int offset, char *buf, int len);
+int b_seek_read(long offset, char *buf, int len);
 
 int load_import(char* importfile);
 int find_import_symbol(char* sym);

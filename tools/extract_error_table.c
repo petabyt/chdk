@@ -16,7 +16,7 @@ void usage()
 
 void dump_error_table_dry(dump_t *dump,unsigned index)
 {
-    int i;
+    unsigned i;
     for(i=index; i < dump->words - 2 && dump->pw[i+1]; i+=2) {
         printf("E%02d %02d %s\n",(short)(dump->pw[i] >> 16),dump->pw[i]&0xFFFF,deref_string_ptr(dump,(i+1)*4));
     }
@@ -24,7 +24,7 @@ void dump_error_table_dry(dump_t *dump,unsigned index)
 
 void dump_error_table_vx(dump_t *dump,unsigned index)
 {
-    int i;
+    unsigned i;
     for(i=index; i < dump->words - 2 && dump->pw[i+1]; i+=2) {
         printf("E%02d %s\n",dump->pw[i+1],deref_string_ptr(dump,i*4));
     }

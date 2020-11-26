@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 {
 
 	dump_t dump;	
-	unsigned i;
+	int i;
 	const char *dumpname=NULL;
 	const char *base=NULL;
 	unsigned num_procs=0;

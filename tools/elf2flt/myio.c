@@ -46,7 +46,7 @@ int b_file_preload(char* filename)
 }
 
 /*---------------------------------------------------------------------------*/
-int b_read (int fd, void* buf, unsigned int count)
+int b_read (int fd, void* buf, int count)
 {
     if ( (filecuridx+count)> filesize)
         count = filesize - filecuridx;
@@ -67,7 +67,7 @@ int b_seek(int fd, long offset, int whence)
 }
 
 /*---------------------------------------------------------------------------*/
-int b_seek_read(unsigned int offset, char *buf, int len)
+int b_seek_read(long offset, char *buf, int len)
 {
   if (b_seek(1, offset, SEEK_SET) != offset) return -1;
   return b_read(1, buf, len);
@@ -187,7 +187,7 @@ int find_import_symbol(char* sym)
 // Return symbol name by its hash value
 char* get_import_symbol( unsigned symidx )
 {
-	int idx=0;
+	unsigned idx=0;
 
 	for(;idx<symidx;idx++) {
       if (import_hash[idx] == symidx)

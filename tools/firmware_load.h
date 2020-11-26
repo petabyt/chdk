@@ -52,11 +52,11 @@ typedef struct {
     char            *fw_build_time;     // Firmware build time
     int             fwver_idx;          // Index of camera firmware version string
     int             pid;                // Camera ID
-    int             maxram;             // How much memory does the camera have
+    uint32_t        maxram;             // How much memory does the camera have
 	char		    *cam;               // Pointer to camera name string
     char            *ksys;              // Pointer to encryption key
     int             ksys_idx;           // Index of the encryption key in the firmware dump
-    int             dancing_bits;       // Dancing Bits number for the encryption key
+    uint32_t        dancing_bits;       // Dancing Bits number for the encryption key
     int             dancing_bits_idx;   // Index of the dancing bits data in the firmware dump
     uint32_t        data_start;         // Start of DATA section in RAM
     uint32_t        data_init_start;    // Start of initialisation section for DATA in ROM

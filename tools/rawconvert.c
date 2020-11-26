@@ -239,7 +239,7 @@ int main(int argc, char**argv)
 
 	unsigned i;
 
-	for(i = 1; i < argc; i++) {
+	for(i = 1; i < (unsigned)argc; i++) {
 		if ( strncmp(argv[i],"-h=",3) == 0 ) {
 			height=atoi(argv[i]+3);
 		}
@@ -311,7 +311,7 @@ int main(int argc, char**argv)
 	assert(fp);
 
 	rcount=fread(in_data,1,st.st_size,fp);
-	assert(rcount==st.st_size);
+	assert(rcount==(size_t)st.st_size);
 
 	fclose(fp);
 

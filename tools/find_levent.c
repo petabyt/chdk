@@ -15,7 +15,7 @@ void usage()
 
 void dump_levent_table(dump_t *dump,unsigned index)
 {
-	int i;
+	unsigned i;
 	printf("id hex, id dec, name, param\n");
 	for(i=index; i < dump->words - 3 && dump->pw[i]; i+=3) {
 		printf("0x%04x, %5d, %s, %d\n",dump->pw[i+1],

@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
 	if( checkmode == CHECK_FIND) {
 		char *buf;
 		const char *found=NULL;
-		if(size < sizeof(vxworks_start_sig) || size < sizeof(dryos_start_sig)) {
+		if(size < (int)sizeof(vxworks_start_sig) || size < (int)sizeof(dryos_start_sig)) {
 			printf("%s TOO SMALL: 0x%X (%d) bytes\n",dumpname,size,size);
 			fclose(dumpfile);
 			return 1;
@@ -110,12 +110,12 @@ int main(int argc, char **argv) {
 		}
 		fread(buf, 1, size, dumpfile);
 		for(i=0; i<size; i++) {
-			if( i+sizeof(vxworks_start_sig) < size) {
+			if( i+(int)sizeof(vxworks_start_sig) < size) {
 				if(memcmp(buf+i,vxworks_start_sig,sizeof(vxworks_start_sig)) == 0) {
 					found = "VXWORKS";
 				}
 			}
-			if( i+sizeof(dryos_start_sig) < size) {
+			if( i+(int)sizeof(dryos_start_sig) < size) {
 				if(memcmp(buf+i,dryos_start_sig,sizeof(dryos_start_sig)) == 0) {
 					found = "DRYOS";
 				}
@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
 			fclose(dumpfile);
 			exit(2);
 		}
-		if( fread(buf,1,sigsize,dumpfile) != sigsize) {
+		if( (int)fread(buf,1,sigsize,dumpfile) != sigsize) {
 			retval = 0;
 		}
 		else {
