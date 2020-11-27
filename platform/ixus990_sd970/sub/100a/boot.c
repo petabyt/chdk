@@ -501,7 +501,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x200 \n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF86A63C /*_exmem_ualloc*/ \n"
+"    BL      _exmem_ualloc \n"
 "    MOVS    R4, R0 \n"
 "    BNE     loc_FF852F60 \n"
 
@@ -519,7 +519,7 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    BNE     loc_FF852F8C \n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF86A788 /*_exmem_ufree*/ \n"
+"    BL      _exmem_ufree \n"
 "    B       loc_FF852F58 \n"
 
 "loc_FF852F8C:\n"
@@ -597,7 +597,7 @@ asm volatile (
 
 "loc_FF853018:\n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF86A788 /*_exmem_ufree*/ \n"
+"    BL      _exmem_ufree \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF853054 \n"
 "    LDR     R1, [R5, #0x68] \n"

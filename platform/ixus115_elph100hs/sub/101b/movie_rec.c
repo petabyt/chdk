@@ -253,7 +253,7 @@ asm volatile (
 "    LDRNE   R2, =0x6E10 \n"
 "    MOVNE   R1, #0 \n"
 "    MOVNE   R0, #0xD \n"
-"    BLNE    sub_FF88F1F8 \n"
+"    BLNE    _exmem_ualloc \n"
 "    LDR     R0, [R6, #0x4C] \n"
 "    LDR     R5, =0x6E10 \n"
 "    LDR     R8, =0xB2A44 \n"

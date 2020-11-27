@@ -321,7 +321,7 @@ asm volatile (
 "    LDR     R1, =0x3CE000 \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF839330 \n"
-"    BL      sub_FF8390DC \n"
+"    BL      sub_FF8390DC /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF81F804.
@@ -475,7 +475,7 @@ asm volatile (
 "    MOV     R2, #0 \n"
 "    MOV     R1, #0x200 \n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF887EBC /*_exmem_ualloc*/ \n"
+"    BL      _exmem_ualloc \n"
 "    MOVS    R4, R0 \n"
 "    BNE     loc_FF86F1F8 \n"
 
@@ -493,7 +493,7 @@ asm volatile (
 "    CMP     R0, #1 \n"
 "    BNE     loc_FF86F224 \n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF888008 /*_exmem_ufree*/ \n"
+"    BL      _exmem_ufree \n"
 "    B       loc_FF86F1F0 \n"
 
 "loc_FF86F224:\n"
@@ -574,7 +574,7 @@ asm volatile (
 
 "loc_FF86F2B4:\n"
 "    MOV     R0, #2 \n"
-"    BL      sub_FF888008 /*_exmem_ufree*/ \n"
+"    BL      _exmem_ufree \n"
 "    CMP     R4, #0 \n"
 "    BNE     loc_FF86F2F0 \n"
 "    LDR     R1, [R5, #0x64] \n"

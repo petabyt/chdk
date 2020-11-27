@@ -298,7 +298,7 @@ void __attribute__((naked,noinline)) sub_FF00A6BC_my() {
 asm volatile (
 "    STMFD   SP!, {R3,LR} \n"
 "    BL      sub_004777E0 \n"
-"    BL      sub_004779F8 \n"
+"    BL      sub_004779F8 /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =sub_FF00A694_my \n"  // --> Patched. Old value = 0xFF00A694.
@@ -370,7 +370,7 @@ asm volatile (
 "    LDR     R1, =0x3CE000 \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF024374 \n"
-"    BL      sub_004779F8 \n"
+"    BL      sub_004779F8 /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF00A638.
