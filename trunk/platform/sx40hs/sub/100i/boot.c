@@ -366,7 +366,7 @@ asm volatile (
 "    LDR     R1, =0x5CE000 \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF02BB2C \n"
-"    BL      sub_FF02B8D4 \n"
+"    BL      sub_FF02B8D4 /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF00FD34.

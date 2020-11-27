@@ -300,7 +300,7 @@ void __attribute__((naked,noinline)) taskcreate_Startup_my() {
 asm volatile (
 "    STMFD   SP!, {R3,LR} \n"
 "    BL      sub_FF02B744 \n"
-"    BL      sub_FF02B95C \n"
+"    BL      sub_FF02B95C /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =sub_FF00FC64_my \n"  // --> Patched. Old value = 0xFF00FC64.
