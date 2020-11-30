@@ -24,7 +24,7 @@ SokobanConf sconf;
 
 static ConfInfo conf_info[] = {
     CONF_INFO( 1, sconf.sokoban_level,          CONF_DEF_VALUE, i:0),
-    {0,0,0,0,{0}}
+    {0}
 };
 
 void gui_module_menu_kbd_process();
@@ -67,7 +67,7 @@ static const char *level_file_name="A/CHDK/GAMES/SOKOBAN.LEV";
 #define MAX_LEVELS 200
 static unsigned short level_start_list[MAX_LEVELS];
 static unsigned char level_length_list[MAX_LEVELS];
-static unsigned num_levels;
+static int num_levels;
 
 static int need_redraw;
 static int need_redraw_all;
@@ -492,7 +492,7 @@ int _run()
 // PURPOSE:   Perform on-load initialisation
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _module_loader( __attribute__ ((unused))unsigned int* chdk_export_list )
 {
     sconf.sokoban_level = 0;
     config_restore(&conf_info[0], "A/CHDK/MODULES/CFG/sokoban.cfg", 0);
@@ -547,6 +547,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

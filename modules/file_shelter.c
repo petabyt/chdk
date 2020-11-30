@@ -71,6 +71,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/
@@ -571,7 +573,7 @@ void fproc_totalsize(const char *path, const char *file, fs_dirent *de)
 }
 
 // callback function for process_dir, counts directories
-void dproc_count(const char *path, fs_dirent *de)
+void dproc_count(const char *path, __attribute__ ((unused))fs_dirent *de)
 {
     if (whitelist && !iswhitelisted(path)) return;
     storageneed += wordpad(strlen(path) + 1);

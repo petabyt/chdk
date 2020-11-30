@@ -488,6 +488,7 @@ static void bench_measure_text_write() {
  * ARM mode is used due to the ambiguity of thumb mnemonics (sub vs. subs)
  */
 void __attribute__((naked,noinline)) busyloop_thumb(int loops) {
+    (void)loops;
     asm volatile (
 #if defined(__thumb__)
     ".code 16\n"

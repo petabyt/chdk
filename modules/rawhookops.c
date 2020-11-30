@@ -375,7 +375,7 @@ static int rawop_fill_rect(lua_State *L) {
     if(ymax > (unsigned)camera_sensor.raw_rows) {
         ymax = (unsigned)camera_sensor.raw_rows;
     }
-    int x,y;
+    unsigned x,y;
     for(y=ystart; y<ymax; y+=ystep) {
         for(x=xstart; x<xmax; x+=xstep) {
             set_raw_pixel(x,y,val);
@@ -538,7 +538,7 @@ static int rawop_histo_update(lua_State *L) {
     unsigned height=luaL_checknumber(L,5);
     unsigned xstep=luaL_checknumber(L,6);
     unsigned ystep=luaL_checknumber(L,7);
-    unsigned bits=luaL_optnumber(L,8,camera_sensor.bits_per_pixel);
+    int bits=luaL_optnumber(L,8,camera_sensor.bits_per_pixel);
     if(bits > camera_sensor.bits_per_pixel || bits < 1) {
         return luaL_error(L,"invalid bit depth");
     }
@@ -629,7 +629,7 @@ static int rawop_histo_range(lua_State *L) {
     }
 
     unsigned count=0;
-    int i;
+    unsigned i;
     for(i=minval;i<=maxval;i++) {
         count+=h->data[i];
     }

@@ -27,69 +27,69 @@ static const char *two_on_nth_granule(unsigned val) {
 }
 
 const struct cpuinfo_bitfield_desc_s cpuinf_feat0[] = {
-    {4,"ARM inst set"},
-    {4,"Thumb inst set"},
-    {4,"Jazelle inst set"},
-    {4,"ThumbEE inst set"},
-    {16,"-"},
+    {4,"ARM inst set",0},
+    {4,"Thumb inst set",0},
+    {4,"Jazelle inst set",0},
+    {4,"ThumbEE inst set",0},
+    {16,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_feat1[] = {
-    {4,"Programmers' model"},
-    {4,"Security extensions"},
-    {4,"Microcontr. prog model"},
-    {4,"Virt. extensions"},
-    {4,"Generic timer ext."},
-    {12,"-"},
+    {4,"Programmers' model",0},
+    {4,"Security extensions",0},
+    {4,"Microcontr. prog model",0},
+    {4,"Virt. extensions",0},
+    {4,"Generic timer ext.",0},
+    {12,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_dbgfeat[] = {
-    {4,"Coproc. dbg model"},
-    {4,"Coproc. secure dbg model"},
-    {4,"Memory-mapped dbg model"},
-    {4,"Coproc. trace model"},
-    {4,"Memory-mapped trace model"},
-    {4,"Debug model M"},
-    {4,"Perf. monitors"},
-    {4,"-"},
+    {4,"Coproc. dbg model",0},
+    {4,"Coproc. secure dbg model",0},
+    {4,"Memory-mapped dbg model",0},
+    {4,"Coproc. trace model",0},
+    {4,"Memory-mapped trace model",0},
+    {4,"Debug model M",0},
+    {4,"Perf. monitors",0},
+    {4,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mmfr0[] = {
-    {4,"VMSA support"},
-    {4,"PMSA support"},
-    {4,"Cache coherence"},
-    {4,"Outer shareable"},
-    {4,"TCM support"},
-    {4,"Auxiliary registers"},
-    {4,"FCSE support"},
-    {4,"-"},
+    {4,"VMSA support",0},
+    {4,"PMSA support",0},
+    {4,"Cache coherence",0},
+    {4,"Outer shareable",0},
+    {4,"TCM support",0},
+    {4,"Auxiliary registers",0},
+    {4,"FCSE support",0},
+    {4,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mmfr1[] = {
-    {4,"L1 Harvard cache VA"},
-    {4,"L1 unified cache VA"},
-    {4,"L1 Harvard cache s/w"},
-    {4,"L1 unified cache s/w"},
-    {4,"L1 Harvard cache"},
-    {4,"L1 unified cache"},
-    {4,"L1 cache test & clean"},
-    {4,"Branch predictor"},
+    {4,"L1 Harvard cache VA",0},
+    {4,"L1 unified cache VA",0},
+    {4,"L1 Harvard cache s/w",0},
+    {4,"L1 unified cache s/w",0},
+    {4,"L1 Harvard cache",0},
+    {4,"L1 unified cache",0},
+    {4,"L1 cache test & clean",0},
+    {4,"Branch predictor",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mmfr2[] = {
-    {4,"L1 Harvard fg prefetch"},
-    {4,"L1 Harvard bg prefetch"},
-    {4,"L1 Harvard range"},
-    {4,"Harvard TLB"},
-    {4,"Unified TLB"},
-    {4,"Mem barrier"},
-    {4,"WFI stall"},
-    {4,"HW access flag"},
+    {4,"L1 Harvard fg prefetch",0},
+    {4,"L1 Harvard bg prefetch",0},
+    {4,"L1 Harvard range",0},
+    {4,"Harvard TLB",0},
+    {4,"Unified TLB",0},
+    {4,"Mem barrier",0},
+    {4,"WFI stall",0},
+    {4,"HW access flag",0},
     {}
 };
 
@@ -131,88 +131,88 @@ const struct cpuinfo_bitfield_desc_s cpuinf_mmfr3[] = {
     {4,"Cache maintain MVA", mmfr3_cache},
     {4,"Cache maintain set/way", mmfr3_cache},
     {4,"Branch predictor maintenance", mmfr3_bp},
-    {4,"Maintenance broadcast"},
-    {4,"-"},
-    {4,"Transl. table coherent walk"},
+    {4,"Maintenance broadcast",0},
+    {4,"-",0},
+    {4,"Transl. table coherent walk",0},
     {4,"Cached memory size", mmfr3_cms},
     {4,"Supersection support", mmfr3_ss},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar0[] = {
-    {4,"Swap instrs"},
-    {4,"Bitcount instrs"},
-    {4,"Bitfield instrs"},
-    {4,"CmpBranch instrs"},
-    {4,"Coproc instrs"},
-    {4,"Debug instrs"},
-    {4,"Divide instrs"},
-    {4,"-"},
+    {4,"Swap instrs",0},
+    {4,"Bitcount instrs",0},
+    {4,"Bitfield instrs",0},
+    {4,"CmpBranch instrs",0},
+    {4,"Coproc instrs",0},
+    {4,"Debug instrs",0},
+    {4,"Divide instrs",0},
+    {4,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar1[] = {
-    {4,"Endian instrs"},
-    {4,"Exception instrs"},
-    {4,"Exception AR instrs"},
-    {4,"Extend instrs"},
-    {4,"IfThen instrs"},
-    {4,"Immediate instrs"},
-    {4,"Interwork instrs"},
-    {4,"Jazelle instrs"},
+    {4,"Endian instrs",0},
+    {4,"Exception instrs",0},
+    {4,"Exception AR instrs",0},
+    {4,"Extend instrs",0},
+    {4,"IfThen instrs",0},
+    {4,"Immediate instrs",0},
+    {4,"Interwork instrs",0},
+    {4,"Jazelle instrs",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar2[] = {
-    {4,"LoadStore instrs"},
-    {4,"Memhint instrs"},
-    {4,"MultiAccess Interruptible instructions"},
-    {4,"Mult instrs"},
-    {4,"MultS instrs"},
-    {4,"MultU instrs"},
-    {4,"PSR AR instrs"},
-    {4,"Reversal instrs"},
+    {4,"LoadStore instrs",0},
+    {4,"Memhint instrs",0},
+    {4,"MultiAccess Interruptible instructions",0},
+    {4,"Mult instrs",0},
+    {4,"MultS instrs",0},
+    {4,"MultU instrs",0},
+    {4,"PSR AR instrs",0},
+    {4,"Reversal instrs",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar3[] = {
-    {4,"Saturate instrs"},
-    {4,"SIMD instrs"},
-    {4,"SVC instrs"},
-    {4,"SynchPrim instrs"},
-    {4,"TabBranch instrs"},
-    {4,"ThumbCopy instrs"},
-    {4,"TrueNOP instrs"},
-    {4,"T2 Exec Env instrs"},
+    {4,"Saturate instrs",0},
+    {4,"SIMD instrs",0},
+    {4,"SVC instrs",0},
+    {4,"SynchPrim instrs",0},
+    {4,"TabBranch instrs",0},
+    {4,"ThumbCopy instrs",0},
+    {4,"TrueNOP instrs",0},
+    {4,"T2 Exec Env instrs",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar4[] = {
-    {4,"Unprivileged instrs"},
-    {4,"WithShifts instrs"},
-    {4,"Writeback instrs"},
-    {4,"SMC instrs"},
-    {4,"Barrier instrs"},
-    {4,"SynchPrim_instrs_frac"},
-    {4,"PSR_M instrs"},
-    {4,"-"},
+    {4,"Unprivileged instrs",0},
+    {4,"WithShifts instrs",0},
+    {4,"Writeback instrs",0},
+    {4,"SMC instrs",0},
+    {4,"Barrier instrs",0},
+    {4,"SynchPrim_instrs_frac",0},
+    {4,"PSR_M instrs",0},
+    {4,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar5[] = {
-    {32,"-"},
+    {32,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ctr[] = {
     {4,"Icache min words/line", two_on_nth},
-    {10,"(zero)"},
-    {2,"L1 Icache policy"},
+    {10,"(zero)",0},
+    {2,"L1 Icache policy",0},
     {4,"Dcache min words/line", two_on_nth},
     {4,"Exclusives Reservation Granule", two_on_nth_granule},
     {4,"Cache Writeback Granule", two_on_nth_granule},
-    {1,"(zero)"},
-    {3,"(register format)"},
+    {1,"(zero)",0},
+    {3,"(register format)",0},
     {}
 };
 
@@ -236,16 +236,16 @@ const struct cpuinfo_bitfield_desc_s cpuinf_clidr[] = {
     {3,"Cache type, level6", ctype_str},
     {3,"Cache type, level7", ctype_str},
     {3,"Cache type, level8", ctype_str}, // L8 mentioned only in Cortex R4 TRM
-    {3,"Level of coherency"},
-    {3,"Level of unification"},
-    {2,"(zero)"},
+    {3,"Level of coherency",0},
+    {3,"Level of unification",0},
+    {2,"(zero)",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_csselr[] = {
-    {1,"Instruction, not data"},
-    {3,"Level"},
-    {28,"(unknown)"},
+    {1,"Instruction, not data",0},
+    {3,"Level",0},
+    {28,"(unknown)",0},
     {}
 };
 
@@ -262,10 +262,10 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ccsidr[] = {
     {3,"Line size in words", ccsidr_linesize},
     {10,"Associativity", ccsidr_plusone},
     {15,"Number of sets", ccsidr_plusone},
-    {1,"Write allocation"},
-    {1,"Read allocation"},
-    {1,"Write back"},
-    {1,"Write through"},
+    {1,"Write allocation",0},
+    {1,"Read allocation",0},
+    {1,"Write back",0},
+    {1,"Write through",0},
     {}
 };
 
@@ -283,52 +283,52 @@ static const char *cache_tcm_addr_str(unsigned val) {
 }
 
 const struct cpuinfo_bitfield_desc_s cpuinf_tcmreg[] = {
-    {1,"Enabled"},
-    {1,"-"},
+    {1,"Enabled",0},
+    {1,"-",0},
     {5,"Size", cache_tcm_size_str},
-    {5,"-"},
+    {5,"-",0},
     {20,"Base address", cache_tcm_addr_str},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mputype[] = {
-    {1,"S"},
-    {7,"-"},
-    {8,"Num of MPU regions"},
+    {1,"S",0},
+    {7,"-",0},
+    {8,"Num of MPU regions",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mpubase[] = {
-    {32,"Base address"},
+    {32,"Base address",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_sctlr[] = {
-    {1,"MPU Enable"},
-    {1,"Strict Align"},
-    {1,"L1 DCache Enable"},
-    {4,"- (SBO)"},
-    {4,"- (SBZ)"},
-    {1,"Branch Pred Enable"},
-    {1,"L1 ICache Enable"},
-    {1,"High Vector"},
-    {1,"Round Robin"},
-    {1,"- (SBZ)"},
-    {1,"- (SBO)"},
-    {1,"MPU background reg"},
-    {1,"- (SBO)"},
-    {1,"Div0 exception"},
-    {1,"- (SBZ)"},
-    {1,"FIQ Enable"},
-    {2,"- (SBO)"},
-    {1,"VIC"},
-    {1,"CPSR E bit"},
-    {1,"- (SBZ)"},
-    {1,"NMFI"},
-    {1,"TRE"},
-    {1,"AFE"},
-    {1,"Thumb exceptions"},
-    {1,"Endian"},
+    {1,"MPU Enable",0},
+    {1,"Strict Align",0},
+    {1,"L1 DCache Enable",0},
+    {4,"- (SBO)",0},
+    {4,"- (SBZ)",0},
+    {1,"Branch Pred Enable",0},
+    {1,"L1 ICache Enable",0},
+    {1,"High Vector",0},
+    {1,"Round Robin",0},
+    {1,"- (SBZ)",0},
+    {1,"- (SBO)",0},
+    {1,"MPU background reg",0},
+    {1,"- (SBO)",0},
+    {1,"Div0 exception",0},
+    {1,"- (SBZ)",0},
+    {1,"FIQ Enable",0},
+    {2,"- (SBO)",0},
+    {1,"VIC",0},
+    {1,"CPSR E bit",0},
+    {1,"- (SBZ)",0},
+    {1,"NMFI",0},
+    {1,"TRE",0},
+    {1,"AFE",0},
+    {1,"Thumb exceptions",0},
+    {1,"Endian",0},
     {}
 };
 
@@ -350,9 +350,9 @@ static const char *bitfield8(unsigned val) {
 }
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mpusizeen[] = {
-    {1,"Enabled"},
+    {1,"Enabled",0},
     {5,"Size", mpu_region_size_str},
-    {2,"-"},
+    {2,"-",0},
     {8,"Sub-regions disabled", bitfield8},
     {}
 };
@@ -395,15 +395,15 @@ static const char *mpu_rattr(unsigned val) {
 
 const struct cpuinfo_bitfield_desc_s cpuinf_accesscontrol[] = {
     {6,"Region attributes", mpu_rattr},
-    {2,"-"},
+    {2,"-",0},
     {3,"Access permission", regperm_str},
-    {1,"-"},
-    {1,"Execute never"},
+    {1,"-",0},
+    {1,"Execute never",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_generic[] = {
-    {32,"(raw value)"},
+    {32,"(raw value)",0},
     {}
 };
 
@@ -422,9 +422,9 @@ static const char * dbg_version(unsigned val) {
 }
 
 static const struct cpuinfo_bitfield_desc_s cpuinf_dbgdidr[] = {
-    {4,"Revision"},
-    {4,"Variant"},
-    {8,"- (RAZ)"},
+    {4,"Revision",0},
+    {4,"Variant",0},
+    {8,"- (RAZ)",0},
     {4,"Version",dbg_version},
     {4,"Context",ccsidr_plusone},
     {4,"BRP",ccsidr_plusone},
@@ -433,40 +433,40 @@ static const struct cpuinfo_bitfield_desc_s cpuinf_dbgdidr[] = {
 };
 
 static const struct cpuinfo_bitfield_desc_s cpuinf_dbgd_address[] = {
-    {2,"Valid"},
-    {10,"- (UNK)"},
+    {2,"Valid",0},
+    {10,"- (UNK)",0},
     {20,"Address",cache_tcm_addr_str},
     {}
 };
 
 static const struct cpuinfo_bitfield_desc_s cpuinf_dbgdscr[] = {
-    {1,"HALTED"},
-    {1,"RESTARTED"},
-    {4,"MOE"},
-    {1,"SDABORT_l"},
-    {1,"ADABORT_l"},
-    {1,"UND_l"},
-    {1,"FS"},
-    {1,"DBGack"},
-    {1,"INTdis"},
-    {1,"UDCCdis"},
-    {1,"ITRen"},
-    {1,"HDBGen"},
-    {1,"MDBGen"},
-    {1,"SPIDdis"},
-    {1,"SPNIDdis"},
-    {1,"NS"},
-    {1,"ADAdiscard"},
-    {2,"ExtDCCmode"},
-    {2,"- (SBZ)"},
-    {1,"InstrCompl_l"},
-    {1,"PipeAdv"},
-    {1,"TXfull_l"},
-    {1,"RXfull_l"},
-    {1,"- (SBZ)"},
-    {1,"TXfull"},
-    {1,"RXfull"},
-    {1,"- (SBZ)"},
+    {1,"HALTED",0},
+    {1,"RESTARTED",0},
+    {4,"MOE",0},
+    {1,"SDABORT_l",0},
+    {1,"ADABORT_l",0},
+    {1,"UND_l",0},
+    {1,"FS",0},
+    {1,"DBGack",0},
+    {1,"INTdis",0},
+    {1,"UDCCdis",0},
+    {1,"ITRen",0},
+    {1,"HDBGen",0},
+    {1,"MDBGen",0},
+    {1,"SPIDdis",0},
+    {1,"SPNIDdis",0},
+    {1,"NS",0},
+    {1,"ADAdiscard",0},
+    {2,"ExtDCCmode",0},
+    {2,"- (SBZ)",0},
+    {1,"InstrCompl_l",0},
+    {1,"PipeAdv",0},
+    {1,"TXfull_l",0},
+    {1,"RXfull_l",0},
+    {1,"- (SBZ)",0},
+    {1,"TXfull",0},
+    {1,"RXfull",0},
+    {1,"- (SBZ)",0},
     {}
 };
 
@@ -536,7 +536,7 @@ const struct cpuinfo_word_desc_s cpuinfo_desc_pmsa[]={
 };
 
 
-void __attribute__((naked,noinline)) cpuinfo_get_info_pmsa(unsigned *results) {
+void __attribute__((naked,noinline)) cpuinfo_get_info_pmsa(__attribute__ ((unused))unsigned *results) {
     asm (
         ".syntax unified\n"
         ".code 16\n"
@@ -830,41 +830,41 @@ static const char * tlb_entries(unsigned val) {
 const struct cpuinfo_bitfield_desc_s cpuinf_tlbtype[] = {
     {1,"TLB", tlb_unified},
     {2,"TLB entries", tlb_entries},
-    {5,"-"},
-    {8,"Lockable unified or data entries"},
-    {8,"Lockable instruction entries"},
-    {8,"(zero)"},
+    {5,"-",0},
+    {8,"Lockable unified or data entries",0},
+    {8,"Lockable instruction entries",0},
+    {8,"(zero)",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_sctlr_vmsa[] = {
-    {1,"MMU Enable"},
-    {1,"Strict Align"},
-    {1,"Data or Unified Cache Enable"},
-    {1,"CP15 Barrier Enable"},
-    {3,"- (SBO)"},
-    {3,"- (SBZ)"},
-    {1,"SWP/SWPB Enable"},
-    {1,"Branch Pred Enable"},
-    {1,"ICache Enable"},
-    {1,"High Vector"},
-    {1,"Round Robin"},
-    {1,"- (SBZ)"},
-    {1,"- (SBO)"},
-    {1,"HA flag"},
-    {1,"- (SBO)"},
-    {1,"WXN (virt. ext. only)"},
-    {1,"UWXN (virt. ext. only)"},
-    {1,"FIQ Enable"},
-    {2,"- (SBO)"},
-    {1,"VE"},
-    {1,"CPSR E"},
-    {1,"- (SBZ)"},
-    {1,"NMFI"},
-    {1,"TRE"},
-    {1,"AFE"},
-    {1,"Thumb exceptions"},
-    {1,"- (SBZ)"},
+    {1,"MMU Enable",0},
+    {1,"Strict Align",0},
+    {1,"Data or Unified Cache Enable",0},
+    {1,"CP15 Barrier Enable",0},
+    {3,"- (SBO)",0},
+    {3,"- (SBZ)",0},
+    {1,"SWP/SWPB Enable",0},
+    {1,"Branch Pred Enable",0},
+    {1,"ICache Enable",0},
+    {1,"High Vector",0},
+    {1,"Round Robin",0},
+    {1,"- (SBZ)",0},
+    {1,"- (SBO)",0},
+    {1,"HA flag",0},
+    {1,"- (SBO)",0},
+    {1,"WXN (virt. ext. only)",0},
+    {1,"UWXN (virt. ext. only)",0},
+    {1,"FIQ Enable",0},
+    {2,"- (SBO)",0},
+    {1,"VE",0},
+    {1,"CPSR E",0},
+    {1,"- (SBZ)",0},
+    {1,"NMFI",0},
+    {1,"TRE",0},
+    {1,"AFE",0},
+    {1,"Thumb exceptions",0},
+    {1,"- (SBZ)",0},
     {}
 };
 
@@ -876,10 +876,10 @@ const struct cpuinfo_bitfield_desc_s cpuinf_clidr_vmsa[] = {
     {3,"Cache type, level5", ctype_str},
     {3,"Cache type, level6", ctype_str},
     {3,"Cache type, level7", ctype_str},
-    {3,"Level of unification Inner Shareable"},
-    {3,"Level of coherency"},
-    {3,"Level of unification"},
-    {2,"(zero)"},
+    {3,"Level of unification Inner Shareable",0},
+    {3,"Level of coherency",0},
+    {3,"Level of unification",0},
+    {2,"(zero)",0},
     {}
 };
 
@@ -903,57 +903,57 @@ static const char *ttbcr_n(unsigned val) {
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ttbcr[] = {
     {3,"N", ttbcr_n },
-    {1,"(zero)" },
-    {1,"TTBR0 walks disabled" },
-    {1,"TTBR1 walks disabled" },
-    {25,"(zero)" },
-    {1,"Long descriptors" },
+    {1,"(zero)" ,0},
+    {1,"TTBR0 walks disabled" ,0},
+    {1,"TTBR1 walks disabled" ,0},
+    {25,"(zero)" ,0},
+    {1,"Long descriptors" ,0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ttbr0[] = {
-    {1,"IRGN[1]"},
-    {1,"Shareable" },
-    {1,"(impl. defined)" },
-    {2,"RGN (Outer cacheability)" },
-    {1,"NOS (Inner shareable)" },
-    {1,"IRGN[0]" },
+    {1,"IRGN[1]",0},
+    {1,"Shareable" ,0},
+    {1,"(impl. defined)" ,0},
+    {2,"RGN (Outer cacheability)" ,0},
+    {1,"NOS (Inner shareable)" ,0},
+    {1,"IRGN[0]" ,0},
     {25,"Table address", ttbraddr0 },
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ttbr1[] = {
-    {1,"IRGN[1]"},
-    {1,"Shareable" },
-    {1,"(impl. defined)" },
-    {2,"RGN (Outer cacheability)" },
-    {1,"NOS (Inner shareable)" },
-    {1,"IRGN[0]" },
+    {1,"IRGN[1]",0},
+    {1,"Shareable" ,0},
+    {1,"(impl. defined)" ,0},
+    {2,"RGN (Outer cacheability)" ,0},
+    {1,"NOS (Inner shareable)" ,0},
+    {1,"IRGN[0]" ,0},
     {25,"Table address", ttbraddr1 },
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_actlr_vmsa[] = {
-    {1,"Cache & TLB maint. broadcast" },
-    {1,"L2 prefetch enable" },
-    {1,"L1 prefetch enable" },
-    {1,"Write full line of zeroes" },
-    {2,"(zero)"},
-    {1,"SMP" },
-    {1,"Exclusive cache" },
-    {1,"Alloc in one way" },
-    {1,"Parity on" },
-    {22,"-"},
+    {1,"Cache & TLB maint. broadcast" ,0},
+    {1,"L2 prefetch enable" ,0},
+    {1,"L1 prefetch enable" ,0},
+    {1,"Write full line of zeroes" ,0},
+    {2,"(zero)",0},
+    {1,"SMP" ,0},
+    {1,"Exclusive cache" ,0},
+    {1,"Alloc in one way" ,0},
+    {1,"Parity on" ,0},
+    {22,"-",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_cpacr_vmsa[] = {
-    {20,"(zero)"},
-    {2,"CP10 access permission" },
-    {2,"CP11 access permission" },
-    {6,"(zero)"},
-    {1,"D32DIS" },
-    {1,"ASEDIS" },
+    {20,"(zero)",0},
+    {2,"CP10 access permission",0},
+    {2,"CP11 access permission",0},
+    {6,"(zero)",0},
+    {1,"D32DIS",0},
+    {1,"ASEDIS",0},
     {}
 };
 
@@ -1007,7 +1007,7 @@ const struct cpuinfo_word_desc_s cpuinfo_desc_vmsa[]={
     {}
 };
 
-void __attribute__((naked,noinline)) cpuinfo_get_info_vmsa(unsigned *results) {
+void __attribute__((naked,noinline)) cpuinfo_get_info_vmsa(__attribute__ ((unused))unsigned *results) {
     asm (
         ".syntax unified\n"
         ".code 16\n"
@@ -1223,7 +1223,7 @@ int __attribute__((naked,noinline)) cpu_is_vmsa() {
     return 0; // unreachable
 }
 
-void __attribute__((naked,noinline)) get_mmuregs_vmsa(void *p) {
+void __attribute__((naked,noinline)) get_mmuregs_vmsa(__attribute__ ((unused))void *p) {
     asm (
         ".syntax unified\n"
         "MRC    p15, 0, R1,c2,c0,0\n" // TTBR0

@@ -58,7 +58,7 @@ static void process_title(const char *title) {
     register int i=0;
 
     while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
-    while (i<(sizeof(conf.grid_title)-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
+    while (i<(int)(sizeof(conf.grid_title)-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
         conf.grid_title[i]=ptr[i];
         ++i;
     }
@@ -73,7 +73,7 @@ static void process_element(const char *str, int n, grid_elem_type type) {
     long nums[6];
     struct gline  *gptr;
 
-    for (i=0; i<(sizeof(nums)/sizeof(nums[0])) && i<n; ++i) {
+    for (i=0; i<(int)(sizeof(nums)/sizeof(nums[0])) && i<n; ++i) {
         while (ptr[0]==' ' || ptr[0]=='\t' || ptr[0]==',') ++ptr; // whitespaces
         nums[i] = strtol(ptr, &nptr, 0);
         if (nptr == ptr) { // error
@@ -199,7 +199,7 @@ void gui_grid_draw_osd(int force)
 // PURPOSE:   Perform on-load initialisation
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _module_loader( __attribute__ ((unused))unsigned int* chdk_export_list )
 {
     grid_lines_load(conf.grid_lines_file);
     return 0;
@@ -250,6 +250,8 @@ ModuleInfo _module_info =
     ANY_VERSION,                // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

@@ -103,7 +103,9 @@
 #define ZFIX_BOTTOM 30
 
 static unsigned char *img_buf, *scr_buf;
+#ifndef THUMB_FW
 static unsigned char *cur_buf_top, *cur_buf_bot;
+#endif
 static int timer = 0;
 static unsigned char *buf = NULL;
 static int buffer_size;
@@ -237,7 +239,7 @@ static void disp_zebra()
 // pixel wide screen (960 for wide screen models).
 static int draw_zebra_aspect_adjust(int mrec, unsigned int f, color *cls)
 {
-    unsigned int v, s, x, y, over;
+    int v, s, x, y, over;
     static int need_restore=0;
     int viewport_height;
     int viewport_width; 
@@ -335,8 +337,8 @@ static unsigned char get_cur_buf(unsigned int idx) {
 
     a=camera_screen.buffer_size - camera_screen.buffer_width * ZFIX_BOTTOM;
 
-    if (idx < camera_screen.buffer_width * ZFIX_TOP) return(cur_buf_top[idx]);
-    if (idx >= a && idx < camera_screen.buffer_size) return(cur_buf_bot[idx - a]);
+    if (idx < (unsigned)camera_screen.buffer_width * ZFIX_TOP) return(cur_buf_top[idx]);
+    if (idx >= a && idx < (unsigned)camera_screen.buffer_size) return(cur_buf_bot[idx - a]);
     return (COLOR_TRANSPARENT);
 }
 
@@ -345,7 +347,7 @@ static unsigned char get_cur_buf(unsigned int idx) {
 // is equivalent to the CHDK virtual screen width. For older cameras where the screen
 // width is 360 pixels (or 480 for wide screen).
 static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f, color *cls) {
-    unsigned int v, s, x, y, over;
+    int v, s, x, y, over;
     static int need_restore=0;
     int viewport_height;
     int zebra_drawn=0;
@@ -623,7 +625,8 @@ static void disp_zebra()
 // CHDK uses a virtual screen size of 360 x 240 pixels (480x240 for wide screen models)
 static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
 {
-    unsigned int v, s, x, y, over, bitmap_byte;
+    int x, y, over;
+    unsigned int v, bitmap_byte;
     static int need_restore=0;
     int viewport_height;
     int viewport_width; 
@@ -632,12 +635,7 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
     int viewport_xoffset;    // used when image size != viewport size
     int viewport_yoffset;    // used when image size != viewport size
     int zebra_drawn=0;
-    int fd;
-    int fd2;
-    int ll;
-    char bl[80];
     static int d_cnt =0;
-    static int d_wrt =0;
     d_cnt++;
 
     viewport_height = vid_get_viewport_height();
@@ -645,7 +643,6 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
     viewport_byte_width = vid_get_viewport_byte_width();
     viewport_xoffset = vid_get_viewport_display_xoffset(); //columns
     viewport_yoffset = vid_get_viewport_display_yoffset();
-    int  vo=vid_get_viewport_image_offset();
 
     // if not in no-zebra phase of blink mode zebra, draw zebra  
     if (f)
@@ -655,7 +652,7 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
         {
             // clear top & bottom areas of buffer if image height if smaller than viewport
         }
-        int step_x, step_v;
+        int step_x;
         over = 255-conf.zebra_over;
     // start with all transparent, set the whole LCD causes too much blink
     //    set_transparent(0,buffer_size/2); 
@@ -670,7 +667,7 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
             //this can be made more efficient, but for now want clarity 
             for (x=0; x<viewport_width; x+=step_x)
             {
-                register int y1,  uu, vv;
+                register int y1, uu, vv;
                 v = y*(viewport_byte_width)  + x + x ; //v is the byte number in img-buf  0...480,480+320...960,
                 bitmap_byte = (y + viewport_yoffset) * viewport_byte_width + 2*(x + viewport_xoffset);
                 unsigned int ibuf = *(unsigned int*)(&img_buf[v&0xfffffffc]);
@@ -776,10 +773,9 @@ int gui_osd_draw_zebra(int show)
     if (timer==1)
     {
         int ready;
-        static int n=0;
         if (!camera_info.state.mode_rec) ready=1;
         else get_property_case(camera_info.props.shooting, &ready, 4);
-        n=draw_guard_pixel(); // will be 0 in PLAY mode, should be 1 or 2 in REC mode.
+        draw_guard_pixel(); // will be 0 in PLAY mode, should be 1 or 2 in REC mode.
         if(!ready) return 0;
 
     }
@@ -851,6 +847,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     CAM_INFO_VERSION,           // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

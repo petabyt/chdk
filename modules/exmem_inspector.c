@@ -64,6 +64,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/
@@ -103,7 +105,7 @@ static exmem_alloc_info exm_prev[42]; // should be enough
 static exmem_alloc_info eaitmp;
 static int speriod = 2000; // 2000usec
 
-int sampling_proc(int ttime, int param) {
+int sampling_proc(__attribute__ ((unused))int ttime, __attribute__ ((unused))int param) {
     // check if sampling is still enabled, return if not
     if (!sampling) {
         shandle = 0;
@@ -333,7 +335,7 @@ void gui_exmem_draw()
         else
         {
             idx = log_disp_start;
-            while (showidx < camera_screen.height)
+            while (showidx < (unsigned)camera_screen.height)
             {
                 if (idx >= LOG_LEN || exl[idx].tim == 0)
                 {

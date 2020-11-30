@@ -82,12 +82,12 @@ static int lua_script_is_ptp;
 static int ptp_saved_alt_state;
 static int run_first_resume; // 1 first 'resume', 0 = resuming from yield
 static int run_start_tick; // tick count at start of this kbd_task iteration
-static int run_hook_count; // number of calls to the count hook this kbd_task iteration
+static unsigned run_hook_count; // number of calls to the count hook this kbd_task iteration
 #define YIELD_CHECK_COUNT 100 // check for yield every N vm instructions
 #define YIELD_MAX_COUNT_DEFAULT 25 // 25 checks = 2500 vm instructions
 #define YIELD_MAX_MS_DEFAULT 10
 static unsigned yield_max_count;
-static unsigned yield_max_ms;
+static int yield_max_ms;
 static int yield_hook_enabled;
 
 static void lua_script_disable_yield_hook(void) {
@@ -181,7 +181,7 @@ void lua_script_error_ptp(int runtime, const char *err) {
     }
 }
 
-static void lua_count_hook(lua_State *L, lua_Debug *ar)
+static void lua_count_hook(lua_State *L, __attribute__ ((unused))lua_Debug *ar)
 {
     run_hook_count++;
     if( L->nCcalls > L->baseCcalls || !yield_hook_enabled )
@@ -486,7 +486,7 @@ static int luaCB_keyfunc( lua_State* L )
   return lua_yield( L, 0 );
 }
 
-static int luaCB_cls( lua_State* L )
+static int luaCB_cls( __attribute__ ((unused))lua_State* L )
 {
   console_clear();
   return 0;
@@ -504,7 +504,7 @@ static int luaCB_set_console_autoredraw( lua_State* L )
   return 0;
 }
 
-static int luaCB_console_redraw( lua_State* L )
+static int luaCB_console_redraw( __attribute__ ((unused))lua_State* L )
 {
   console_redraw();
   return 0;
@@ -1137,13 +1137,13 @@ static int luaCB_set_exit_key( lua_State* L )
   return 0;
 }
 
-static int luaCB_wheel_right( lua_State* L )
+static int luaCB_wheel_right( __attribute__ ((unused))lua_State* L )
 {
   JogDial_CW();
   return 0;
 }
 
-static int luaCB_wheel_left( lua_State* L )
+static int luaCB_wheel_left( __attribute__ ((unused))lua_State* L )
 {
   JogDial_CCW();
   return 0;
@@ -1344,7 +1344,7 @@ static int luaCB_draw_string( lua_State* L )
   return 0;
 }
 
-static int luaCB_draw_clear( lua_State* L ) {
+static int luaCB_draw_clear( __attribute__ ((unused))lua_State* L ) {
   draw_restore();
   return 0;
 }
@@ -1415,7 +1415,7 @@ static int luaCB_usb_sync_wait( lua_State* L )
   return 0;
 }
 
-static int luaCB_enter_alt( lua_State* L )
+static int luaCB_enter_alt( __attribute__ ((unused))lua_State* L )
 {
   enter_alt();
   // if alt explicitly changed by script, set as 'saved' state
@@ -1425,7 +1425,7 @@ static int luaCB_enter_alt( lua_State* L )
   return 0;
 }
 
-static int luaCB_exit_alt( lua_State* L )
+static int luaCB_exit_alt( __attribute__ ((unused))lua_State* L )
 {
   exit_alt();
   // if alt explicitly changed by script, set as 'saved' state
@@ -1596,7 +1596,7 @@ static int luaCB_shot_histo_enable( lua_State* L )
   return 0;
 }
 
-static int luaCB_shot_histo_write_to_file( lua_State* L )
+static int luaCB_shot_histo_write_to_file( __attribute__ ((unused))lua_State* L )
 {
     libshothisto->write_to_file();
     return 0;
@@ -1881,7 +1881,7 @@ static int luaCB_raw_merge_add_file( lua_State* L )
     return 1;
 }
 
-static int luaCB_raw_merge_end( lua_State* L )
+static int luaCB_raw_merge_end( __attribute__ ((unused))lua_State* L )
 {
     librawop->raw_merge_end();
     return 0;
@@ -2306,7 +2306,7 @@ static int luaCB_get_config_value( lua_State* L ) {
             break;
             case CONF_INT_PTR:
                 lua_createtable(L, 0, configVal.numb);
-                for( i=0; i<configVal.numb; i++ ) {
+                for( i=0; i<(unsigned)configVal.numb; i++ ) {
                     lua_pushinteger(L, configVal.pInt[i]);
                     lua_rawseti(L, -2, i+1);  //t[i+1]=configVal.pInt[i]
                 }
@@ -2335,7 +2335,7 @@ static int luaCB_get_config_value( lua_State* L ) {
 static int luaCB_set_config_value( lua_State* L ) {
     unsigned int argc = lua_gettop(L);
     unsigned int id, i, j;
-    tConfigVal configVal = {0,0,0,0};  //initialize isXXX
+    tConfigVal configVal = {0};  //initialize isXXX
     
     if( argc>=2 ) {
         id = luaL_checknumber(L, 1);
@@ -2366,7 +2366,7 @@ static int luaCB_set_config_value( lua_State* L ) {
                         }
                         configVal.pInt = malloc(configVal.numb*sizeof(int));
                         if( configVal.pInt ) {
-                            for( j=1; j<=configVal.numb; j++) {
+                            for( j=1; j<=(unsigned)configVal.numb; j++) {
                                 lua_rawgeti(L, i, j);
                                 configVal.pInt[j-1] = lua_tointeger(L, -1);
                                 lua_pop(L, 1);
@@ -3059,7 +3059,7 @@ void register_lua_funcs( lua_State* L )
     lua_pushcfunction( L, r->func );
     lua_setglobal( L, r->name );
   }
-   luaL_dostring(L,"function usb_msg_table_to_string(t)"
+  (void)luaL_dostring(L,"function usb_msg_table_to_string(t)"
                     " local v2s=function(v)"
                         " local t=type(v)"
                         " if t=='string' then return v end"
@@ -3152,6 +3152,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     CAM_SENSOR_VERSION,         // CAM SENSOR version
     CAM_INFO_VERSION,           // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

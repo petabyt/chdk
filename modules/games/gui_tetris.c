@@ -112,7 +112,7 @@ typedef struct StcGame {
 StcGame *createGame();
 void deleteGame(StcGame *pGame);
 int gameInit(StcGame *gameInstance);
-void gameEnd(StcGame *gameInstance);
+void gameEnd();
 void gameUpdate(StcGame *gameInstance);
 
 StcGame *game = 0;
@@ -125,11 +125,11 @@ long mkdir_if_not_exist(const char *dirname)
     return 0;   // Success
 }
 
-int platformInit(StcGame *gameInstance) { return GAME_ERROR_NONE; }
-void platformEnd(StcGame *gameInstance) {}
+int platformInit() { return GAME_ERROR_NONE; }
+void platformEnd() {}
 
 /* Read input device and notify game */
-void platformReadInput(StcGame *gameInstance) {}
+void platformReadInput() {}
 
 int tile_size;
 #define PREVIEW_X (tile_size*15)
@@ -142,7 +142,7 @@ int tmp[BOARD_WIDTH][BOARD_HEIGHT];
 int tmp2[BOARD_WIDTH][BOARD_HEIGHT];
 
 int prevNextBlockType = -1;
-void platformRenderGame(StcGame *gameInstance)
+void platformRenderGame()
 {
     int i, j;
 
@@ -394,7 +394,7 @@ int gameInit(StcGame *game)
 {
     int errorCode;
 
-    errorCode = platformInit(game);
+    errorCode = platformInit();
     if (errorCode == GAME_ERROR_NONE)
     {
         startGame(game);
@@ -403,10 +403,10 @@ int gameInit(StcGame *game)
     return errorCode;
 };
 
-void gameEnd(StcGame *game)
+void gameEnd()
 {
     /* Free platform resources */
-    platformEnd(game);
+    platformEnd();
 }
 
 void deleteGame(StcGame *game)
@@ -671,7 +671,7 @@ void gameUpdate(StcGame *game)
     }
 
     /* Read user input */
-    platformReadInput(game);
+    platformReadInput();
 
     /* Update game state */
     if (game->isOver)
@@ -759,7 +759,7 @@ void gameUpdate(StcGame *game)
         game->systemTime = sysTime;
     }
     /* Draw game state */
-    platformRenderGame(game);
+    platformRenderGame();
 }
 
 void gui_tetris_init()
@@ -865,6 +865,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

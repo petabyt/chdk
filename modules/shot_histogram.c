@@ -167,4 +167,6 @@ ModuleInfo _module_info =
     ANY_VERSION,                // CAM SCREEN version
     CAM_SENSOR_VERSION,         // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };

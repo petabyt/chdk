@@ -41,69 +41,69 @@ static const char *tcmcfg_size_str(unsigned val) {
 
 const struct cpuinfo_bitfield_desc_s cpuinf_cachetype[] = {
     {2,"Icache words/line",cache_words_line_str},
-    {1,"Icache absent"},
-    {3,"Icache assoc"},
+    {1,"Icache absent",0},
+    {3,"Icache assoc",0},
     {4,"Icache size",cache_tcm_size_str},
-    {2,"Reserved0_2"},
+    {2,"Reserved0_2",0},
     {2,"Dcache words/line",cache_words_line_str},
-    {1,"Dcache absent"},
-    {3,"Dcache assoc"},
+    {1,"Dcache absent",0},
+    {3,"Dcache assoc",0},
     {4,"Dcache size",cache_tcm_size_str},
-    {2,"Reserved1_2"},
-    {1,"Harvard/unified"},
-    {4,"Cache type"},
-    {3,"Reserved2_3"},
+    {2,"Reserved1_2",0},
+    {1,"Harvard/unified",0},
+    {4,"Cache type",0},
+    {3,"Reserved2_3",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_tcmtype[] = {
-    {2,"Reserved0_2"},
-    {1,"ITCM absent"},
-    {3,"Reserved1_3"},
+    {2,"Reserved0_2",0},
+    {1,"ITCM absent",0},
+    {3,"Reserved1_3",0},
     {4,"ITCM size",cache_tcm_size_str},
-    {4,"Reserved2_4"},
-    {1,"DTCM absent"},
-    {3,"Reserved3_2"},
+    {4,"Reserved2_4",0},
+    {1,"DTCM absent",0},
+    {3,"Reserved3_2",0},
     {4,"DTCM size",cache_tcm_size_str},
-    {10,"Reserved4_10"},
+    {10,"Reserved4_10",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_control[] = {
-    {1,"Protect enable"},
-    {1,"Reserved0_1"},
-    {1,"Dcache enable"},
-    {4,"Reserved1_4"},
-    {1,"Big endian"},
-    {4,"Reserved2_4"},
-    {1,"Icache enable"},
-    {1,"Alt vector"},
-    {1,"Cache RRR"},
-    {1,"Disble load TBIT"},
-    {1,"DTCM enable"},
-    {1,"DTCM mode"},
-    {1,"ITCM enable"},
-    {1,"ITCM mode"},
-    {12,"Reserved3_12"},
+    {1,"Protect enable",0},
+    {1,"Reserved0_1",0},
+    {1,"Dcache enable",0},
+    {4,"Reserved1_4",0},
+    {1,"Big endian",0},
+    {4,"Reserved2_4",0},
+    {1,"Icache enable",0},
+    {1,"Alt vector",0},
+    {1,"Cache RRR",0},
+    {1,"Disble load TBIT",0},
+    {1,"DTCM enable",0},
+    {1,"DTCM mode",0},
+    {1,"ITCM enable",0},
+    {1,"ITCM mode",0},
+    {12,"Reserved3_12",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_regbits[] = {
-    {1,"Region 0"},
-    {1,"Region 1"},
-    {1,"Region 2"},
-    {1,"Region 3"},
-    {1,"Region 4"},
-    {1,"Region 5"},
-    {1,"Region 6"},
-    {1,"Region 7"},
+    {1,"Region 0",0},
+    {1,"Region 1",0},
+    {1,"Region 2",0},
+    {1,"Region 3",0},
+    {1,"Region 4",0},
+    {1,"Region 5",0},
+    {1,"Region 6",0},
+    {1,"Region 7",0},
     {}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_protreg[] = {
-    {1,"Enable"},
+    {1,"Enable",0},
     {5,"Size",protreg_size_str},
-    {7,"Undef0_7"},
+    {7,"Undef0_7",0},
     {19,"Base",protreg_base_str},
     {}
 };
@@ -121,9 +121,9 @@ const struct cpuinfo_bitfield_desc_s cpuinf_regperms[] = {
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_tcmcfg[] = {
-    {1,"Reserved0_1"},
+    {1,"Reserved0_1",0},
     {5,"Size",tcmcfg_size_str},
-    {7,"Undef0_7"},
+    {7,"Undef0_7",0},
     {19,"Base",protreg_base_str},
     {}
 };
@@ -152,7 +152,7 @@ const struct cpuinfo_word_desc_s cpuinfo_desc[]={
 };
 
 
-void __attribute__((naked,noinline)) cpuinfo_get_info(unsigned *results) {
+void __attribute__((naked,noinline)) cpuinfo_get_info(__attribute__ ((unused))unsigned *results) {
     asm (
         ".code 16\n"
         ".align 2\n"

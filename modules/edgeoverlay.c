@@ -639,7 +639,7 @@ static int draw_edge_overlay()
 
         shutter_fullpress |= kbd_is_key_pressed(KEY_SHOOT_FULL);
 
-        if ((unsigned)(y_off-y_min) < (y_max-y_min)) // is the same as ((y_off > y_min) && (y_off < y_max)) // do not draw outside of allowed area
+        if ((y_off > y_min) && (y_off < y_max)) // do not draw outside of allowed area
         {
             const int y_edgebuf = (y-y_min) * viewport_width;
 
@@ -647,7 +647,7 @@ static int draw_edge_overlay()
             {
                 x_off = x + xoffset;
 
-                if ((unsigned)(x_off-x_min) < (x_max-x_min)) // is the same as  ((x_off > x_min) && (x_off < x_max)) // do not draw outside of allowed area
+                if ((x_off > x_min) && (x_off < x_max)) // do not draw outside of allowed area
                 {
                     // Draw a pixel to the screen wherever we detected an edge.
                     // If there is no edge based on the newest data, but there is one painted on the screen
@@ -896,7 +896,7 @@ ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
 // PURPOSE:   Perform on-load initialisation
 // RETURN VALUE: 1 error, 0 ok
 //---------------------------------------------------------
-int _module_loader( unsigned int* chdk_export_list )
+int _module_loader( __attribute__ ((unused))unsigned int* chdk_export_list )
 {
     fsm_state = module_restore_edge((void**)&edgebuf);
     return 0;
@@ -959,6 +959,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     CAM_INFO_VERSION,           // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/
