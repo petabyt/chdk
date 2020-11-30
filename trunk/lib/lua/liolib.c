@@ -500,7 +500,7 @@ static int g_write (lua_State *L, FILE *f, int arg) {
     else {
       size_t l;
       const char *s = luaL_checklstring(L, arg, &l);
-      status = status && (fwrite(s, sizeof(char), l, f) == l);
+      status = status && ((size_t)fwrite(s, sizeof(char), l, f) == l);
     }
   }
   return pushresult(L, status, NULL);

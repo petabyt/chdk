@@ -9,8 +9,8 @@
 #define RBF_MAX_NAME        64
 #define UBUFFER_SIZE        256 // Amount of uncached memory to allocate for file reading
 //-------------------------------------------------------------------
-static unsigned int RBF_HDR_MAGIC1 = 0x0DF00EE0;
-static unsigned int RBF_HDR_MAGIC2 = 0x00000003;
+static int RBF_HDR_MAGIC1 = 0x0DF00EE0;
+static int RBF_HDR_MAGIC2 = 0x00000003;
 
 // Header as seperate structure so it can be directly loaded from the font file easily
 // structure layout maps to file layout - do not change !
