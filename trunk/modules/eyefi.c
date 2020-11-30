@@ -382,7 +382,7 @@ char *eyefi_statusName(int n)
         "success"
     };
 
-    if (n<0 || n>=sizeof(eyefi_status)/sizeof(*eyefi_status))
+    if (n<0 || n>=(int)(sizeof(eyefi_status)/sizeof(*eyefi_status)))
         return "?";
 
     return eyefi_status[n];
@@ -399,7 +399,7 @@ static char eyefi_selectedNetwork[ESSID_LEN+1];
 static char eyefi_password[PWD_LEN+1];
 
 // Exit module
-static void eyefi_exit(unsigned int button)
+static void eyefi_exit(__attribute__ ((unused))unsigned int button)
 {
     running = 0;
     gui_set_need_restore();
@@ -677,4 +677,6 @@ ModuleInfo _module_info =
     ANY_VERSION,                // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };

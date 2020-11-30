@@ -64,7 +64,7 @@ static const struct Keynames {
 
 __attribute__((short_call)) int script_keyid_by_name (const char *n)
 {
-    int i;
+    unsigned i;
     for (i=0;i<sizeof(keynames)/sizeof(keynames[0]);i++)
     if (strcmp(keynames[i].keyname,n) == 0)
         return keynames[i].keyid;

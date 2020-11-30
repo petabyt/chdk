@@ -285,7 +285,7 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small)
     twoColors hc = user_color(conf.histo_color);
     twoColors hc2 = user_color(conf.histo_color2);
 
-    register unsigned int i, v, threshold;
+    register int i, v, threshold;
     register color cl, cl_over, cl_bg = BG_COLOR(hc);
     coord w=HISTO_WIDTH, h=HISTO_HEIGHT;
 
@@ -510,6 +510,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     CAM_INFO_VERSION,           // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

@@ -255,7 +255,7 @@ static void palette_test()
 
 static void palette_draw()
 {
-    unsigned int x, y, xl, xr;
+    int x, y, xl, xr;
     color c;
     static char buf[64];
     static int cellsize = 0, disptop, dispright, dispbottom;
@@ -394,6 +394,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

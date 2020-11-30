@@ -203,7 +203,7 @@ static void moduleload_error(const char* name, const char* text)
 // To relocate simply update the pointer with initial value + the actual load address of the module.
 static int module_do_relocations(flat_hdr* flat, void* relocbuf, uint32_t reloc_count)
 {
-    int i;
+    uint32_t i;
     unsigned char* buf = (unsigned char*)flat;      // base address of module in memory
     uint32_t* rbuf = (uint32_t*)relocbuf;           // relocation array
 
@@ -246,7 +246,7 @@ static const void* module_find_symbol_address(uint32_t importid)
 // To update each link location add the initial value stored to the link address found in the symbol table.
 static int module_do_imports(flat_hdr* flat, void* relocbuf, uint32_t import_count)
 {
-    int i;
+    uint32_t i;
     unsigned char* buf = (unsigned char*)flat;  // base address of module in memory
     uint32_t* rbuf = (uint32_t*)relocbuf;       // link array
 
@@ -277,9 +277,9 @@ static int module_do_action(int fd, flat_hdr* mod, uint32_t offset, uint32_t seg
 {
     if (segment_size > 0)
     {
-        if (lseek(fd, offset, SEEK_SET) == offset)
+        if (lseek(fd, offset, SEEK_SET) == (int)offset)
         {
-            if (read(fd, buf_load, segment_size) == segment_size)
+            if (read(fd, buf_load, segment_size) == (int)segment_size)
             {
                 // relocate or link module
                 return func(mod, (uint32_t*)buf_load, segment_size >> 2);
@@ -438,7 +438,7 @@ static char* validate(ModuleInfo *mod_info, _version_t ver)
         return msg;
     }
 
-    if (mod_info->chdk_required_platfid && (mod_info->chdk_required_platfid != conf.platformid))
+    if (mod_info->chdk_required_platfid && (mod_info->chdk_required_platfid != (uint32_t)conf.platformid))
     {
         sprintf(msg, "require platfid %d", mod_info->chdk_required_platfid);
         return msg;
@@ -826,7 +826,7 @@ void module_tick_unloader()
 //-----------------------------------------------
 module_entry* module_get_adr(unsigned int idx)
 {
-    if ((idx >= 0) && (idx < MAX_NUM_LOADED_MODULES))
+    if (idx < MAX_NUM_LOADED_MODULES)
         if (modules[idx].hdr)
             return &modules[idx];
     return 0;

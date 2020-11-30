@@ -16,11 +16,11 @@ struct cpuinfo_word_desc_s {
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_id[] = {
-    {4,"Revision"},
-    {12,"Part"},
-    {4,"ARM Arch"},
-    {4,"Variant"},
-    {8,"Implementor"},
+    {4,"Revision",0},
+    {12,"Part",0},
+    {4,"ARM Arch",0},
+    {4,"Variant",0},
+    {8,"Implementor",0},
     {}
 };
 
@@ -110,7 +110,7 @@ int basic_module_init() {
 }
 // =========  MODULE INIT =================
 #include "simple_module.c"
-void cpuinfo_finish(unsigned dummy) {
+void cpuinfo_finish(__attribute__ ((unused))unsigned dummy) {
     running=0;
 }
 
@@ -132,6 +132,8 @@ ModuleInfo _module_info =
     ANY_VERSION,                // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

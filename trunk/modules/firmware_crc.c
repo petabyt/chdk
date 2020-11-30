@@ -88,7 +88,7 @@ int dump_rom(void) {
     return 1;
 }
 
-static void gui_fwc_done(unsigned unused)
+static void gui_fwc_done(__attribute__ ((unused))unsigned unused)
 {
     fwc_state = FWC_STATE_DONE;
 }
@@ -108,14 +108,14 @@ int crc_core(const firmware_crc_desc_t *desc)
 
     int failed = 0;
     char *s = out;
-    int i;
+    unsigned i;
     for(i=0; i < desc->sub_count; i++) {
         if(!strcmp(desc->firmware_ver_ptr,desc->subs[i].canon_sub)) {
             gui_browser_progress_show("ROM CRC",0);
             s += sprintf(out,"%s\n%s %s\n%s\n",
                     lang_str(LANG_FIRMWARE_CRC_FAIL),
                     camera_info.platform, desc->subs[i].canon_sub,lang_str(LANG_FIRMWARE_CRC_FAILED_CHUNKS));
-            int b;
+            unsigned b;
             const firmware_crc_block_t *blocks = desc->subs[i].blocks;
             for(b=0; b < desc->block_count; b++) {
                 gui_browser_progress_show("ROM CRC",100*(b+1)/desc->block_count);
@@ -244,6 +244,8 @@ ModuleInfo _module_info =
     CAM_SCREEN_VERSION,         // CAM SCREEN version
     ANY_VERSION,                // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/

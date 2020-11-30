@@ -83,7 +83,7 @@ int raw_subtract(const char *fromName, const char* fromDir, const char *subName,
 
     int status = 0;
     unsigned short s,d;
-    int i,j;
+    unsigned i,j;
 
     running = 1;
 
@@ -97,7 +97,7 @@ int raw_subtract(const char *fromName, const char* fromDir, const char *subName,
             int len = fromDNG;
             while (len > 0)
             {
-                int l = len;
+                unsigned l = len;
                 if (l > camera_sensor.raw_rowlen) l = camera_sensor.raw_rowlen;
                 fread(bacc, 1, l, ffrom);
                 fwrite(bacc, 1, l, fdest);
@@ -311,7 +311,7 @@ int raw_merge_start(int action)
 
 int raw_merge_add_file(const char * filename)
 {
-    int  src,i,j;
+    unsigned src,i,j;
     FILE *fbrawin=NULL,*fbrawout,*fcraw;
     struct stat st;
 
@@ -416,7 +416,7 @@ int raw_merge_add_file(const char * filename)
 
 void raw_merge_end(void)
 {
-    int src,i,j;
+    unsigned src,i,j;
     FILE *fbraw, *fcraw, *fdng = 0;
     char dest[100];
 
@@ -469,7 +469,7 @@ void raw_merge_end(void)
                 int len = destDNG;
                 while (len > 0)
                 {
-                    int l = len;
+                    unsigned l = len;
                     if (l > camera_sensor.raw_rowlen) l = camera_sensor.raw_rowlen;
                     fread(rawrow, 1, l, fdng);
                     fwrite(rawrow, 1, l, fcraw);
@@ -615,6 +615,8 @@ ModuleInfo _module_info =
     ANY_VERSION,                // CAM SCREEN version
     CAM_SENSOR_VERSION,         // CAM SENSOR version
     ANY_VERSION,                // CAM INFO version
+
+    0,
 };
 
 /*************** END OF AUXILARY PART *******************/
