@@ -36,6 +36,7 @@ KeyMap keymap[] = {
     { 2, KEY_ZOOM_IN    , 0x00000080 },
     { 2, KEY_ZOOM_OUT   , 0x00000040 },
     { 2, KEY_MENU       , 0x01000000 },
+    { 2, KEY_DISPLAY    , 0x00800000 }, // MODE button, actually
     { 0, 0, 0 }
 };
 
