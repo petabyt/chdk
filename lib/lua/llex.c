@@ -176,7 +176,7 @@ static void buffreplace (LexState *ls, char from, char to) {
 }
 
 
-static void trydecpoint (LexState *ls, SemInfo *seminfo) {
+static void trydecpoint (LexState *ls, __attribute__ ((unused))SemInfo *seminfo) {
 #if 0
   /* format error: try to update decimal point separator */
   struct lconv *cv = localeconv();

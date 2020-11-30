@@ -595,7 +595,7 @@ static int ll_seeall (lua_State *L) {
 /* auxiliary mark (for internal use) */
 #define AUXMARK		"\1"
 
-static void setpath (lua_State *L, const char *fieldname, const char *envname,
+static void setpath (lua_State *L, const char *fieldname, __attribute__ ((unused))const char *envname,
                                    const char *def) {
 /* CHDK - no environment vars */
 #if defined(HDK_VERSION)

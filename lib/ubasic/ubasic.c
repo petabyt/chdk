@@ -183,7 +183,7 @@ ubasic_linenumber()
 
 /*---------------------------------------------------------------------------*/
 int
-ubasic_init(const char *program, int is_ptp)
+ubasic_init(const char *program, __attribute__ ((unused))int is_ptp)
 {
   program_ptr = program;
   flag_yield = 0;
@@ -1788,20 +1788,20 @@ static void one_short_param_function(int token, void (*func)(short))
 }
 
 // Call CHDK function 'func' with one int parameter plus a second value 'p2'
-static void one_int_param_plus_const_function(int token, void (*func)(int,short), short p2)
-{
-    accept(token);
-    func(expr(),p2);
-    accept_cr();
-}
+// static void one_int_param_plus_const_function(int token, void (*func)(int,short), short p2)
+// {
+//     accept(token);
+//     func(expr(),p2);
+//     accept_cr();
+// }
 
 // Call CHDK function 'func' with one short parameter plus a second value 'p2'
-static void one_short_param_plus_const_function(int token, void (*func)(short,short), short p2)
-{
-    accept(token);
-    func(expr(),p2);
-    accept_cr();
-}
+// static void one_short_param_plus_const_function(int token, void (*func)(short,short), short p2)
+// {
+//     accept(token);
+//     func(expr(),p2);
+//     accept_cr();
+// }
 
 /*---------------------------------------------------------------------------*/
 
@@ -1928,7 +1928,7 @@ static void reboot_statement() {
 static void set_config_value_statement()
 {
     int id, value;
-    tConfigVal configVal = {0,0,0,0};
+    tConfigVal configVal = {0};
     
     accept(TOKENIZER_SET_CONFIG_VALUE);
     id = expr();
