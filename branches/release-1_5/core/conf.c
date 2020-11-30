@@ -63,15 +63,19 @@ void conf_update_prevent_shutdown(void) {
 }
 
 //-------------------------------------------------------------------
-void clear_values()
-{	
-
+void reset_alt_button()
+{
 #if CAM_ADJUSTABLE_ALT_BUTTON
     extern const char* gui_alt_mode_button_enum(int change, int arg);
     gui_alt_mode_button_enum(0,0); // will reset if not in list of valid alt buttons
 #else
     conf.alt_mode_button = CAM_DEFAULT_ALT_BUTTON; // if not adjustable, force to default
 #endif
+}
+
+void clear_values()
+{
+    reset_alt_button();
 
     if (conf.platformid != PLATFORMID) // the following config entries will be resetted if you switch the camera using the same cfg
     {
@@ -572,9 +576,7 @@ void conf_info_func(unsigned short id)
         set_usb_remote_state();
         break;
     case 220:
-#ifndef CAM_ADJUSTABLE_ALT_BUTTON
-        conf.alt_mode_button = KEY_PRINT;
-#endif
+        reset_alt_button();
         break;
     case 221: 
         conf_update_prevent_shutdown(); 
