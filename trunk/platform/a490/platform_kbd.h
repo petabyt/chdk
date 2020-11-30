@@ -6,8 +6,8 @@
 
 #define KEYS_MASK0 (0x00020000)
 #define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x017001f4)
-#define KEYS_INV2 (0x01700000)
+#define KEYS_MASK2 (0x01f001f4)
+#define KEYS_INV2 (0x01f00000)
 /*
 the 4 button states residing in the upper half of physw_status[2] seem to be inverted
 to handle these correctly, their value needs to be inverted:
