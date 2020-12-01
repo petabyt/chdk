@@ -89,14 +89,14 @@ long kbd_process()
         switch (camera_info.perf.md_af_on_flag)
         {
         case 1:
-            if (get_tick_count() >= (camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay))
+            if (get_tick_count() >= (int)(camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay))
             {
                 camera_info.perf.md_af_on_flag = 2;
                 camera_set_led(camera_info.cam_af_led,1,200);
             }
             break;
         case 2:
-            if (get_tick_count() >= (camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay + camera_info.perf.md_af_on_time))
+            if (get_tick_count() >= (int)(camera_info.perf.md_detect_tick + camera_info.perf.md_af_on_delay + camera_info.perf.md_af_on_time))
             {
                 camera_info.perf.md_af_on_flag = 0;
                 camera_set_led(camera_info.cam_af_led,0,0);

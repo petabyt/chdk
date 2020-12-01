@@ -147,7 +147,7 @@ static ConfInfo user_menu_conf_info[] = {
     CONF_INFO(  2, conf.user_menu_as_root,      CONF_DEF_VALUE, i:0),
     CONF_INFO(  3, conf.user_menu_enable,       CONF_DEF_VALUE, i:0),
 
-    {0,0,0,0,{0}}
+    {0}
 };
 
 void user_menu_conf_info_func(unsigned short id)
@@ -342,7 +342,7 @@ static ConfInfo osd_conf_info[] = {
 
     CONF_INFO( 298, conf.osd_platformid,                           CONF_DEF_VALUE, i:PLATFORMID),
 
-    {0,0,0,0,{0}}
+    {0}
 };
 
 void osd_conf_info_func(unsigned short id)
@@ -537,7 +537,7 @@ static ConfInfo conf_info[] = {
 
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 
-    {0,0,0,0,{0}}
+    {0}
 };
 
 void conf_info_func(unsigned short id)
@@ -622,7 +622,7 @@ static ConfInfo gps_conf_info[] = {
     CONF_INFO( 30, conf.gps_beep_warn,              CONF_DEF_VALUE,     i:0),
     CONF_INFO( 31, conf.gps_on_off,                 CONF_DEF_VALUE,     i:0),
 
-    {0,0,0,0,{0}}
+    {0}
 };
 #endif
 
@@ -1209,12 +1209,12 @@ void config_restore(ConfInfo *ci, const char *filename, void (*info_func)(unsign
             offs = 2 * sizeof(int);
             while (1)
             {
-                if (offs + sizeof(short) > rcnt)
+                if (offs + (int)sizeof(short) > rcnt)
                     break;
                 id = *((short*)(buf + offs));
                 offs += sizeof(short);
 
-                if (offs + sizeof(short) > rcnt)
+                if (offs + (int)sizeof(short) > rcnt)
                     break;
                 size = *((short*)(buf + offs));
                 offs += sizeof(short);
@@ -1264,12 +1264,12 @@ static int config_restore_1_2(const char *filename)
             offs = sizeof(int);
             while (1)
             {
-                if (offs + sizeof(short) > rcnt)
+                if (offs + (int)sizeof(short) > rcnt)
                     break;
                 id = conf_map_1_2[*((short*)(buf + offs))];
                 offs += sizeof(short);
 
-                if (offs + sizeof(short) > rcnt)
+                if (offs + (int)sizeof(short) > rcnt)
                     break;
                 size = *((short*)(buf + offs));
                 offs += sizeof(short);
@@ -1612,37 +1612,36 @@ is raw possible (i.e. valid raw buffer exists in current mode)
 TODO this might be better as a platform lib.c function rather than a bunch of camera.h ifdefs
 */
 int is_raw_possible() {
-    int m = camera_info.state.mode_shooting;
     return !(0   // Return false if any of these tests are true
 #ifdef CAM_DISABLE_RAW_IN_AUTO
-       || (m == MODE_AUTO)                   // some cameras don't have valid raw in auto mode
+       || (camera_info.state.mode_shooting == MODE_AUTO)                   // some cameras don't have valid raw in auto mode
 #endif
 #ifdef CAM_DISABLE_RAW_IN_ISO_3200
-       || (m == MODE_ISO_3200)           // some cameras don't have valid raw in ISO3200 binned mode, not the same as low light
+       || (camera_info.state.mode_shooting == MODE_ISO_3200)           // some cameras don't have valid raw in ISO3200 binned mode, not the same as low light
 #endif
 #ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
        || (shooting_get_resolution()==7)     // True if shooting resolution is 'low light'
 #endif
 #if defined(CAM_DISABLE_RAW_IN_HQ_BURST)
-       || (m == MODE_HIGHSPEED_BURST)    // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
+       || (camera_info.state.mode_shooting == MODE_HIGHSPEED_BURST)    // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
-       || (m == MODE_NIGHT_SCENE)            // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
+       || (camera_info.state.mode_shooting == MODE_NIGHT_SCENE)            // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_DIGITAL_IS)
-       || (m == MODE_DIGITAL_IS)            // True if Digital IS mode (ixus160_elph160 crashes if RAW enabled in this mode)
+       || (camera_info.state.mode_shooting == MODE_DIGITAL_IS)            // True if Digital IS mode (ixus160_elph160 crashes if RAW enabled in this mode)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_HYBRID_AUTO)
-       || (m == MODE_HYBRID_AUTO)            // True if Hybrid Auto mode (SX280HS raw hook conflicts with the saving of digest movie)
+       || (camera_info.state.mode_shooting == MODE_HYBRID_AUTO)            // True if Hybrid Auto mode (SX280HS raw hook conflicts with the saving of digest movie)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_MOVIE_DIGEST) 
-       || (m == MODE_VIDEO_MOVIE_DIGEST)     // True if Movie Digest mode (SX510HS raw hook conflicts with the saving of digest movie)
+       || (camera_info.state.mode_shooting == MODE_VIDEO_MOVIE_DIGEST)     // True if Movie Digest mode (SX510HS raw hook conflicts with the saving of digest movie)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_SPORTS)
-       || (m == MODE_SPORTS)            // True if Sports mode (SX280HS, multiple issues with raw buffer; storing raw makes little sense in this mode anyway)
+       || (camera_info.state.mode_shooting == MODE_SPORTS)            // True if Sports mode (SX280HS, multiple issues with raw buffer; storing raw makes little sense in this mode anyway)
 #endif
 #if defined(CAM_DISABLE_RAW_IN_HDR)
-       || (m == MODE_HDR)            // True if HDR mode (G7X)
+       || (camera_info.state.mode_shooting == MODE_HDR)            // True if HDR mode (G7X)
 #endif
     );
 }

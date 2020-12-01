@@ -255,7 +255,6 @@ static char *load_bitmap(char *datei){
     FILE *fd;
     char *bitmap;
     int bitmap_size;
-    size_t result;
 
     fd = fopen ( datei, "r" );
 
@@ -264,7 +263,7 @@ static char *load_bitmap(char *datei){
     fseek (fd, 0, SEEK_SET);
 
     bitmap = (char*) malloc (sizeof(char)*bitmap_size);
-    result = fread (bitmap,1,bitmap_size,fd);
+    fread (bitmap,1,bitmap_size,fd);
     fclose (fd);
 
     return bitmap;
@@ -358,7 +357,7 @@ static double draw_gps_course_info(int count){             // calculate & displa
 }
 
 // draw animated compass needle on GUI
-static void draw_compass_needle (int angle, double s_w, double c_w, char *bitmap, int extent, int m_x, int m_y, int offset_x, int offset_y, int f_v_1, int f_h_1, int f_v_2, int f_h_2){
+static void draw_compass_needle (int angle, double s_w, double c_w, char *bitmap, int extent, int m_x, int m_y, int offset_x, int offset_y, int f_v_1, int f_v_2){
  
 /*
     char vBuf[32];
@@ -424,7 +423,7 @@ static void draw_compass_needle (int angle, double s_w, double c_w, char *bitmap
 }
 
 // draw animated compass on GUI
-static void draw_compass (char *bitmap, int o_x, int o_y, int f_v_0, int f_h_0, int f_v_1, int f_h_1, int f_v_2, int f_h_2, int f_v_4, int f_h_4){
+static void draw_compass (char *bitmap, int o_x, int o_y, int f_v_0, int f_v_1, int f_v_2, int f_v_4){
 
     if(bitmap)
     {
@@ -484,15 +483,15 @@ static void show_sat_symbol_task(){
         int o_x1=270;
         int o_y1=0;
         int f_v_0;
-        int f_h_0;
+//         int f_h_0;
         int f_v_1;
-        int f_h_1;
+//         int f_h_1;
         int f_v_2;
-        int f_h_2;
+//         int f_h_2;
         int f_v_3;
-        int f_h_3;
+//         int f_h_3;
         int f_v_4;
-        int f_h_4;
+//         int f_h_4;
 
         while (exit_show_task==0) 
         {           
@@ -502,24 +501,24 @@ static void show_sat_symbol_task(){
             my1=0;
 
             f_v_0=COLOR_TRANSPARENT;
-            f_h_0=COLOR_TRANSPARENT;
+//             f_h_0=COLOR_TRANSPARENT;
 
             f_v_1=COLOR_GREEN;
-            f_h_1=COLOR_GREEN;
+//             f_h_1=COLOR_GREEN;
 
             switch (stat)
             {
                 case 0 :
                     f_v_1= COLOR_RED ;
-                    f_h_1= COLOR_RED ;
+//                     f_h_1= COLOR_RED ;
                     break ;
                 case 1 :
                     f_v_1= COLOR_YELLOW ;
-                    f_h_1= COLOR_YELLOW ;
+//                     f_h_1= COLOR_YELLOW ;
                     break ;
                 case 2 :
                     f_v_1= COLOR_GREEN ;
-                    f_h_1= COLOR_GREEN ;
+//                     f_h_1= COLOR_GREEN ;
                     break ;
             }
             
@@ -528,27 +527,27 @@ static void show_sat_symbol_task(){
                 gps_img_data *igps = ( gps_img_data *) camera_jpeg_current_gps();
 
                 f_v_1= COLOR_RED ;
-                f_h_1= COLOR_RED ;
+//                 f_h_1= COLOR_RED ;
                 if (igps->latitudeRef[0] && igps->longitudeRef[0])
                 {
                     f_v_1= COLOR_YELLOW ;
-                    f_h_1= COLOR_YELLOW ;
+//                     f_h_1= COLOR_YELLOW ;
                     if (igps->height[1])
                     {
                         f_v_1= COLOR_GREEN ;
-                        f_h_1= COLOR_GREEN ;
+//                         f_h_1= COLOR_GREEN ;
                     }
                 }
             }
 
             f_v_2= COLOR_BLACK ;
-            f_h_2= COLOR_BLACK ;
+//             f_h_2= COLOR_BLACK ;
 
             f_v_3= COLOR_YELLOW ;
-            f_h_3= COLOR_YELLOW ;
+//             f_h_3= COLOR_YELLOW ;
 
             f_v_4= COLOR_BLUE ;
-            f_h_4= COLOR_BLUE ;
+//             f_h_4= COLOR_BLUE ;
 
             for(pos1=0; pos1<extent1; pos1++)
             {
@@ -720,17 +719,17 @@ static void tracking_icon_task(){
         int o_x1=315;
         int o_y1=0;
         int f_v_0;
-        int f_h_0;
+//         int f_h_0;
         int f_v_1;
-        int f_h_1;
+//         int f_h_1;
         int f_v_2;
-        int f_h_2;
+//         int f_h_2;
         int f_v_3;
-        int f_h_3;
+//         int f_h_3;
         int f_v_4;
-        int f_h_4;
+//         int f_h_4;
         int f_v_5;
-        int f_h_5;
+//         int f_h_5;
         int blink=0;
         int data;
 
@@ -740,22 +739,22 @@ static void tracking_icon_task(){
             my1=0;
 
             f_v_0=COLOR_TRANSPARENT;
-            f_h_0=COLOR_TRANSPARENT;
+//             f_h_0=COLOR_TRANSPARENT;
 
             f_v_1= COLOR_BLACK ;
-            f_h_1= COLOR_BLACK ;
+//             f_h_1= COLOR_BLACK ;
 
             f_v_2= COLOR_BLUE ;
-            f_h_2= COLOR_BLUE ;
+//             f_h_2= COLOR_BLUE ;
 
             f_v_3= COLOR_YELLOW ;
-            f_h_3= COLOR_YELLOW ;
+//             f_h_3= COLOR_YELLOW ;
 
             f_v_4= COLOR_RED ;
-            f_h_4= COLOR_RED ;
+//             f_h_4= COLOR_RED ;
 
             f_v_5= COLOR_GREEN ;
-            f_h_5= COLOR_GREEN ;
+//             f_h_5= COLOR_GREEN ;
 
             int stat = g_d_stat ;
             
@@ -853,7 +852,7 @@ static void no_signal_task(){
         if ( (((time_to_end) % 60)) == 0 )
         {
             bat=get_batt_perc();
-            if (bat <= (int)conf.gps_batt)
+            if (bat <= (unsigned)conf.gps_batt)
             {
                 int zba;
                 for(zba=30; zba>0; zba--)
@@ -1328,19 +1327,19 @@ static void compass_display_task(){
     int m_y = offset_y + 31;
 
     int f_v_0=COLOR_TRANSPARENT;
-    int f_h_0=COLOR_TRANSPARENT;
+//     int f_h_0=COLOR_TRANSPARENT;
 
     int f_v_1=COLOR_BLUE;
-    int f_h_1=COLOR_BLUE;
+//     int f_h_1=COLOR_BLUE;
 
     int f_v_2= COLOR_WHITE ;
-    int f_h_2= COLOR_WHITE ;
+//     int f_h_2= COLOR_WHITE ;
 
     int f_v_3= COLOR_BLACK ;
-    int f_h_3= COLOR_BLACK ;
+//     int f_h_3= COLOR_BLACK ;
 
     int f_v_4= COLOR_BLACK ;
-    int f_h_4= COLOR_BLACK ;
+//     int f_h_4= COLOR_BLACK ;
 
     double old_c_w=cos(0);
     double old_s_w=sin(0);
@@ -1365,26 +1364,26 @@ static void compass_display_task(){
         {
             case 0 : 
                 f_v_1= COLOR_RED ;
-                f_h_1= COLOR_RED ;
+//                 f_h_1= COLOR_RED ;
                 break ;
             case 1 :
                 f_v_1= COLOR_YELLOW ;
-                f_h_1= COLOR_YELLOW ;
+//                 f_h_1= COLOR_YELLOW ;
                 break ;
             case 2 :
                 f_v_1= COLOR_GREEN ;
-                f_h_1= COLOR_GREEN ;
+//                 f_h_1= COLOR_GREEN ;
                 break ;
         }
         
         if (camera_info.state.gui_mode_none)
         {
-            draw_compass (bitmap2, offset_x - 27, offset_y -14, f_v_0, f_h_0, f_v_1, f_h_1, f_v_2, f_h_2, f_v_4, f_h_4);
+            draw_compass (bitmap2, offset_x - 27, offset_y -14, f_v_0, f_v_1, f_v_2, f_v_4);
         }
         if (stat == 2 )
         {
             f_v_1= COLOR_BLUE ;
-            f_h_1= COLOR_BLUE ;
+//             f_h_1= COLOR_BLUE ;
         }
         if (m>=0 && m<180)
         {
@@ -1400,8 +1399,8 @@ static void compass_display_task(){
 
         if (camera_info.state.gui_mode_none)
         {
-            draw_compass_needle (old_angle, old_s_w, old_c_w, bitmap1, extent, m_x, m_y, offset_x, offset_y, f_v_0, f_h_0, f_v_0, f_h_0);
-            draw_compass_needle (m, s_w, c_w, bitmap1, extent, m_x, m_y, offset_x, offset_y, f_v_1, f_h_1, f_v_3, f_h_3);
+            draw_compass_needle (old_angle, old_s_w, old_c_w, bitmap1, extent, m_x, m_y, offset_x, offset_y, f_v_0, f_v_0);
+            draw_compass_needle (m, s_w, c_w, bitmap1, extent, m_x, m_y, offset_x, offset_y, f_v_1, f_v_3);
         }
         old_angle=m;
         old_c_w=cos(w);

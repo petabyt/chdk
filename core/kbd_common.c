@@ -123,6 +123,7 @@ int kbd_force_analog_av(int state)
     forced_analog_av = state;
     return 1;
 #else
+    (void)state;
     return 0;
 #endif
 }

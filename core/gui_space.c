@@ -26,7 +26,7 @@ static void space_color()
     perc = get_space_perc();
     cl = user_color(conf.space_color);
     if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
-        ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
+        ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= (unsigned)conf.space_mb_warn*1024)))
     {
         cl = user_color(conf.osd_color_warn);
     }
@@ -117,7 +117,7 @@ static void gui_space_draw_icon()
     color cl1 = IDX_COLOR_GREEN_DK;
     color cl2 = IDX_COLOR_GREEN;
     if (((conf.space_warn_type == 0) && (perc <= conf.space_perc_warn)) ||
-        ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= conf.space_mb_warn*1024)))
+        ((conf.space_warn_type == 1) && (GetFreeCardSpaceKb() <= (unsigned)conf.space_mb_warn*1024)))
     {
         cl1 = IDX_COLOR_RED_DK;
         cl2 = IDX_COLOR_RED;

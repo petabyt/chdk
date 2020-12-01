@@ -73,7 +73,7 @@ void debug_error(int err_num)
 
 #else
 
-void debug_error(int err_num)
+void debug_error(__attribute__ ((unused))int err_num)
 {
 }
 
@@ -294,7 +294,7 @@ void usb_remote_key( void )
   ---------------------------------------------------------------------------------------------------------*/
 int usb_HPtimer_error_count;
 
-int usb_HPtimer_good(int time, int interval) 
+int usb_HPtimer_good(__attribute__ ((unused))int time, int interval) 
 {
     usb_HPtimer_handle=0;
     start_usb_HPtimer(interval) ;

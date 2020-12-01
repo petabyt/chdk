@@ -87,8 +87,8 @@
 
 static void             dummy_void()    {}
 static int              dummy_int()     { return 0; }
-static char*            dummy_pchar()   { return (char*)0; }
-static unsigned char*   dummy_puchar()  { return (unsigned char*)0; }
+// static char*            dummy_pchar()   { return (char*)0; }
+// static unsigned char*   dummy_puchar()  { return (unsigned char*)0; }
 
 /************* DYNAMIC LIBRARY RAWOPERATION ******/
 

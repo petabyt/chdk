@@ -149,7 +149,7 @@ static void process_title(const char *ptr)
 {
     ptr = skip_whitespace(ptr);
     int l = skip_toeol(ptr) - ptr;
-    if (l >= sizeof(script_title)) l = sizeof(script_title) - 1;
+    if (l >= (int)sizeof(script_title)) l = sizeof(script_title) - 1;
     strncpy(script_title, ptr, l);
     script_title[l] = 0;
 }
@@ -158,7 +158,7 @@ static void process_subtitle(const char *ptr)
 {
     ptr = skip_whitespace(ptr);
     int l = skip_toeol(ptr) - ptr;
-    if (l >= sizeof(script_title)) l = sizeof(script_title) - 1;
+    if (l >= (int)sizeof(script_title)) l = sizeof(script_title) - 1;
     sc_param *p = new_param(0);
     p->desc = malloc(l+1);
     strncpy(p->desc, ptr, l);
@@ -749,7 +749,7 @@ void script_load(const char *fn)
 
 //-------------------------------------------------------------------
 
-static const char* gui_script_param_set_enum(int change, int arg)
+static const char* gui_script_param_set_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[]={ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Default" };
 
@@ -782,7 +782,7 @@ static void gui_load_script_selected(const char *fn)
     }
 }
 
-static void gui_load_script(int arg)
+static void gui_load_script(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_SCRIPT_FILE, conf.script_file, "A/CHDK/SCRIPTS", gui_load_script_selected);
 }
@@ -798,7 +798,7 @@ static void gui_reset_script_default(int arg)
 }
 #endif
 
-static void gui_load_script_default(int arg)
+static void gui_load_script_default(__attribute__ ((unused))int arg)
 {
     script_reset_to_default_params_values();
     gui_update_script_submenu();

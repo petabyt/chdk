@@ -50,7 +50,7 @@ CMenuItem* find_menu_item(CMenu *curr_menu, int itemid )
 
     gui_menu_curr_item = 0;
     while(curr_menu->menu[gui_menu_curr_item].text) {
-        if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == itemid){
+        if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == (unsigned)itemid){
             return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
         }
         if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)

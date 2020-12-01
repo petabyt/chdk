@@ -677,9 +677,9 @@ void gui_osd_draw_temp(int is_osd_edit)
 }
 
 //-------------------------------------------------------------------
+#if CAM_EV_IN_VIDEO
 void gui_osd_draw_ev_video(int is_osd_edit)
 {
-#if CAM_EV_IN_VIDEO
     if (!is_video_recording() && !is_osd_edit) return;
 
     int visible = get_ev_video_avail() || is_osd_edit;
@@ -707,18 +707,20 @@ void gui_osd_draw_ev_video(int is_osd_edit)
     draw_line(x0+33,y0+18,x0+33,y0+22,col);
     draw_line(x0+36,y0+18,x0+36,y0+22,col);
     draw_line(x0+37,y0+19,x0+37,y0+22,col);
-#endif
 }
+#endif
 
 //------------------------------------------------------------------- 
 // Process up/down/left/right/jogdial shortcuts when control options enabled
 static int kbd_use_up_down_left_right_as_fast_switch()
 {
     static long key_pressed = 0;
-    int ev_video = 0;
 
+#if CAM_VIDEO_CONTROL
+    int ev_video = 0;
 #if CAM_EV_IN_VIDEO
     ev_video = get_ev_video_avail(); 
+#endif
 #endif
 
     // One of the control options must be enabled or don't do anything
@@ -1236,7 +1238,7 @@ void gui_draw_debug_vals_osd()
                         sprintf(osd_buf, "%3d: %30d :%2d ", p, r,len);
                     }
                     else {
-                        if (len>=sizeof(s)) count=sizeof(s)-1; else count=len;
+                        if (len>=(int)sizeof(s)) count=sizeof(s)-1; else count=len;
                         get_parameter_data(p, &s, count);
                         s[count]=0;
                         sprintf(osd_buf, "%3d: %30s :%2d ", p, s,len);
@@ -1318,8 +1320,10 @@ void gui_draw_osd_elements(int is_osd_edit, int is_zebra)
         }
     }
 
+#if CAM_EV_IN_VIDEO
     if (!is_zebra)
         gui_osd_draw_ev_video(is_osd_edit);
+#endif
 }
 
 void gui_draw_osd()

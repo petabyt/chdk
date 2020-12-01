@@ -223,6 +223,12 @@ _cam_info camera_info =
 #else
     0,
 #endif
+    { 0 },  // state
+    { 0 },  // perf
+    { 0 },  // dof_values
+#if defined(OPT_FILEIO_STATS)
+    { 0 },  // fileio_stats
+#endif
 };
 
 //==========================================================

@@ -141,7 +141,7 @@ const char* formatDouble (t_format_result result, double value, unsigned length,
     quad integer, fract;
     unsigned integerDigits;
     char* p;
-    int shift = 0;
+    unsigned shift = 0;
     int origLength = length;
 
 #ifndef USE_LLI
