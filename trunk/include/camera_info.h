@@ -45,7 +45,7 @@ typedef struct
     int bits_per_pixel;
     int black_level;
     int white_level;
-    int raw_rows, raw_rowpix, raw_rowlen, raw_size;
+    unsigned raw_rows, raw_rowpix, raw_rowlen, raw_size;
     union                       // DNG JPEG info
     {
         struct

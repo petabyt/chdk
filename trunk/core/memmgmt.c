@@ -29,6 +29,7 @@ static void chdk_heap_init(chdk_heap *h)
     h->size = 0;
 }
 
+#if defined(OPT_EXMEM_MALLOC) || defined(OPT_ARAM_MALLOC)
 static void chdk_heap_create(chdk_heap *h, void *mem, int size, int chdk_in_heap, int heap_testing, char *name)
 {
     if (h)
@@ -68,6 +69,7 @@ static void chdk_heap_create(chdk_heap *h, void *mem, int size, int chdk_in_heap
         }
     }
 }
+#endif
 
 static void* chdk_malloc(chdk_heap *h, unsigned size)
 {

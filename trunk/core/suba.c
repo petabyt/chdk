@@ -307,7 +307,7 @@ suba_alloc(allocator *suba, size_t size, int zero)
 
 	// sanitise size & calc real size needed
 	size = ALIGN(size);
-    int cellsize = ACTUALSIZE(size);
+    size_t cellsize = ACTUALSIZE(size);
     if (cellsize < suba->mincell) cellsize = suba->mincell;
 
 	if (!TakeSemaphore(suba->sem_id, SUBA_SEMAPHORE_TIMEOUT))

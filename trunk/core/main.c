@@ -189,7 +189,7 @@ void core_spytask()
         "A/CHDK/LOGS",
         "A/CHDK/EDGE",
     };
-    for (i = 0; i < sizeof(chdk_dirs) / sizeof(char*); i++)
+    for (i = 0; i < (int)(sizeof(chdk_dirs) / sizeof(char*)); i++)
         mkdir_if_not_exist(chdk_dirs[i]);
 
     no_modules_flag = stat("A/CHDK/MODULES/FSELECT.FLT",0) ? 1 : 0 ;
@@ -272,7 +272,7 @@ void core_spytask()
         dce_prevmode=dce_nowmode;
 #endif
 
-        if ( memdmptick && (get_tick_count() >= memdmptick) )
+        if ( memdmptick && ((unsigned)get_tick_count() >= memdmptick) )
         {
             memdmptick = 0;
             dump_memory();

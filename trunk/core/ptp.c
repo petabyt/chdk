@@ -437,8 +437,8 @@ static long script_start_ptp( char *script )
 }
 
 static int handle_ptp(
-               int h, ptp_data *data, int opcode, int sess_id, int trans_id,
-               int param1, int param2, int param3, int param4, int param5)
+               __attribute__ ((unused))int h, ptp_data *data, __attribute__ ((unused))int opcode, int sess_id, int trans_id,
+               int param1, int param2, int param3, int param4, __attribute__ ((unused))int param5)
 {
   static union {
     char *str;

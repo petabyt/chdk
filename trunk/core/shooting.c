@@ -465,7 +465,7 @@ short shooting_get_iso_override_value()
 int shooting_get_iso_mode()
 {
     short isov = shooting_get_canon_iso_mode();
-    long i;
+    unsigned i;
     for (i=0;i<ISO_SIZE;i++)
     {
         if (iso_table[i].prop_id == isov)
@@ -499,7 +499,7 @@ static void set_iso_mode(int i)
 
 void shooting_set_iso_mode(int v)
 {
-    int i;
+    unsigned i;
     if (v < 50) // CHDK ID
     {
         for (i=0; i<ISO_SIZE; i++)
@@ -652,7 +652,7 @@ static int find_nearest_shutter_speed_entry(short tv96)
     if (tv96 <= shutter_speeds_table[0].prop_id)
         return 0;
 
-    int i;
+    unsigned i;
     for (i=0; i<SS_SIZE-1; i++)
     {
         if ((tv96 > shutter_speeds_table[i].prop_id) && (tv96 <= shutter_speeds_table[i+1].prop_id))
@@ -720,7 +720,7 @@ void shooting_set_user_tv_by_id(int v)
 #if CAM_HAS_USER_TV_MODES
     if (!camera_info.state.mode_play)
     {
-        long i;
+        unsigned i;
         for (i=0;i<SS_SIZE;i++)
         {
             if (shutter_speeds_table[i].id == v)
@@ -731,6 +731,8 @@ void shooting_set_user_tv_by_id(int v)
             }
         }
     }
+#else
+    (void)v;
 #endif
 }
 
@@ -742,6 +744,8 @@ void shooting_set_user_tv_by_id_rel(int v)
         int cv = shooting_get_user_tv_id();
         shooting_set_user_tv_by_id(cv+v);
     }
+#else
+    (void)v;
 #endif
 }
 
@@ -753,6 +757,8 @@ void shooting_set_user_tv96(short tv96)
         tv96 = find_canon_shutter_speed(tv96);
         set_property_case(PROPCASE_USER_TV, &tv96, sizeof(tv96));
     }
+#else
+    (void)tv96;
 #endif
 }
 
@@ -796,7 +802,7 @@ short shooting_get_av96_from_aperture(int aperture)
 // Get Av override value (APEX96)
 short shooting_get_av96_override_value()
 {
-    if (conf.av_override_value<AS_SIZE)
+    if (conf.av_override_value<(int)AS_SIZE)
         return (short) aperture_sizes_table[conf.av_override_value].prop_id;
     return (short) (AV96_MAX+32*(conf.av_override_value-AS_SIZE+1));
 }
@@ -824,7 +830,7 @@ static int find_nearest_aperture_entry(short av96)
     if (av96 <= aperture_sizes_table[0].prop_id)
         return 0;
 
-    int i;
+    unsigned i;
     for (i=0; i<AS_SIZE-1; i++)
     {
         if ((av96 > aperture_sizes_table[i].prop_id) && (av96 <= aperture_sizes_table[i+1].prop_id))
@@ -863,6 +869,8 @@ void shooting_set_av96_direct(short av96, short is_now)
         else
             photo_param_put_off.av96 = av96;
     }
+#else
+    (void)av96; (void)is_now;
 #endif
 }
 
@@ -871,6 +879,8 @@ void shooting_set_av96(short av96, short is_now)
 #if CAM_HAS_IRIS_DIAPHRAGM
     if (!camera_info.state.mode_play)
         shooting_set_av96_direct(find_canon_aperture(av96), is_now);
+#else
+    (void)av96; (void)is_now;
 #endif
 }
 
@@ -897,7 +907,7 @@ int shooting_get_user_av_id()
 void shooting_set_user_av_by_id(int v)
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
-    long i;
+    unsigned i;
     if (!camera_info.state.mode_play)
     {
         for (i=0;i<AS_SIZE;i++)
@@ -910,6 +920,8 @@ void shooting_set_user_av_by_id(int v)
             }
         }
     }
+#else
+    (void)v;
 #endif
 }
 
@@ -921,6 +933,8 @@ void shooting_set_user_av_by_id_rel(int v)
         int cv = shooting_get_user_av_id();
         shooting_set_user_av_by_id(cv+v);
     }
+#else
+    (void)v;
 #endif
 }
 
@@ -932,6 +946,8 @@ void shooting_set_user_av96(short av96)
         av96 = find_canon_aperture(av96);
         set_property_case(PROPCASE_USER_AV, &av96, sizeof(av96));
     }
+#else
+    (void)av96;
 #endif
 }
 
@@ -975,6 +991,8 @@ void shooting_set_nd_filter_state(short v, short is_now)
         else
             photo_param_put_off.nd_filter = v;
     }
+#else
+    (void)v; (void)is_now;
 #endif // CAM_HAS_ND_FILTER
 }
 
@@ -1093,7 +1111,7 @@ int shooting_get_subject_distance_override_value()
 
 int shooting_mode_canon2chdk(int canonmode)
 {
-	int i;
+	unsigned i;
 	for (i=0; i < MODESCNT; i++)
     {
 		if (modemap[i].canonmode == canonmode)
@@ -1104,7 +1122,7 @@ int shooting_mode_canon2chdk(int canonmode)
 
 int shooting_mode_chdk2canon(int hackmode)
 {
-	int i;
+	unsigned i;
 	for (i=0; i < MODESCNT; i++)
     {
 		if (modemap[i].hackmode == hackmode)
@@ -1348,9 +1366,9 @@ void shooting_set_image_quality(int imq)
 #endif
 
 #ifdef CAM_ILC
-void shooting_set_zoom(int v) {}
-void shooting_set_zoom_rel(int v) {}
-void shooting_set_zoom_speed(int v) {}
+void shooting_set_zoom(__attribute__ ((unused))int v) {}
+void shooting_set_zoom_rel(__attribute__ ((unused))int v) {}
+void shooting_set_zoom_speed(__attribute__ ((unused))int v) {}
 #else // not ILC
 void shooting_set_zoom(int v)
 {
@@ -1402,7 +1420,7 @@ void shooting_set_focus(int v, short is_now)
             {
                 s=shooting_get_near_limit_f(v,shooting_get_min_real_aperture(),get_focal_length(lens_get_zoom_point()));
             }
-            if (!conf.dof_use_exif_subj_dist && (s != INFINITY_DIST)) 
+            if (!conf.dof_use_exif_subj_dist && (s != (int)INFINITY_DIST)) 
                 s+=shooting_get_lens_to_focal_plane_width();
             lens_set_focus_pos(s); 
         }
@@ -1415,16 +1433,18 @@ void shooting_video_bitrate_change(int v)
 {
 #if CAM_CHDK_HAS_EXT_VIDEO_MENU
     int m[]={1,2,3,4,5,6,7,8,10,12};  // m[v]/4 = bitrate*1x
-    if (v>=(sizeof(m)/sizeof(m[0])))
+    if (v>=(int)((sizeof(m)/sizeof(m[0]))))
         v=(sizeof(m)/sizeof(m[0]))-1;
     change_video_tables(m[v],4);
+#else
+    (void)v;
 #endif
 }
 #ifdef CAM_MOVIEREC_NEWSTYLE
 void shooting_video_minbitrate_change(int v)
 {
     char m[]={1,2,3,4,5,6,7,8,9,10};  // m[v]/10 = bitrate*1x
-    if (v>=(sizeof(m)/sizeof(m[0])))
+    if (v>=(int)(sizeof(m)/sizeof(m[0])))
         v=(sizeof(m)/sizeof(m[0]))-1;
     change_video_minbitrate(m[v],10);
 }
@@ -1690,6 +1710,7 @@ void set_movie_status(int status)
     }
 #else // CAM_SIMPLE_MOVIE_STATUS
       // no known way to control the recording process
+      (void)status;
 #endif
 }
 

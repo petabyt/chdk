@@ -667,7 +667,7 @@ void usb_video_module_normal()
 
   ===================================================================================================*/
 
-void usb_null_module(int i) {  } ;              // module that does nothing - useful for unused entries in jump table
+void usb_null_module(__attribute__ ((unused))int i) {  } ;              // module that does nothing - useful for unused entries in jump table
 
 
 // play mode jump table for control logic modules - must match gui_USB_control_modes[] in gui.c

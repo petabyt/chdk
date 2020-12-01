@@ -277,7 +277,7 @@ void usb_ricoh_ca1_switch(int usb_state)
    ===================================================================================================*/
 
 
-void usb_null_driver(int i) { return ; } ;
+void usb_null_driver(__attribute__ ((unused))int i) { return ; } ;
 
 void (*usb_driver[NUM_USB_INPUT_DRV])(int) =    // jump table for input drivers - must match gui_USB_switch_types[] in gui.c
     {

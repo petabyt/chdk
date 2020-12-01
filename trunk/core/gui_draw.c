@@ -142,14 +142,14 @@ void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 
 #else // !THUMB_FW
 // not implemented for earlier DIGICs
-unsigned int color_to_rawpx(color cl, unsigned int *op)
+unsigned int color_to_rawpx(__attribute__ ((unused))color cl, __attribute__ ((unused))unsigned int *op)
 {
     return 0;
 }
-void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
+void draw_dblpixel_raw(__attribute__ ((unused))unsigned int offset, __attribute__ ((unused))unsigned int px, __attribute__ ((unused))unsigned int op)
 {
 }
-void set_transparent(unsigned int offst, int n_pixel)
+void set_transparent(__attribute__ ((unused))unsigned int offst, __attribute__ ((unused))int n_pixel)
 {
 }
 #endif // THUMB_FW
@@ -482,6 +482,7 @@ color draw_get_pixel(coord x, coord y)
     }
 #else
     // DIGIC 6 not supported
+    (void)x; (void)y;
     return 0;
 #endif
 }
@@ -497,6 +498,7 @@ color draw_get_pixel_unrotated(coord x, coord y)
 #endif
 #else
     // DIGIC 6 not supported
+    (void)x; (void)y;
     return 0;
 #endif
 }
@@ -642,7 +644,7 @@ static unsigned char* get_cdata(unsigned int *offset, unsigned int *size, const 
     *offset = f->skips >> 4;            // # of blank lines at top
     *size = 16 - (f->skips & 0xF);      // last line of non-blank data
     if (*size == *offset)               // special case for blank char (top == 15 && bottom == 1)
-        *offset++;
+        *offset += 1;
 
     return (unsigned char*)f + sizeof(FontData) - *offset;
 }
@@ -651,7 +653,7 @@ static unsigned char* get_cdata(unsigned int *offset, unsigned int *size, const 
 // DIGIC II...5
 void draw_char(coord x, coord y, const char ch, twoColors cl)
 {
-    int i, ii;
+    unsigned i, ii;
 
     unsigned int offset, size;
     unsigned char *sym = get_cdata(&offset, &size, ch);
@@ -662,7 +664,7 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 
     // Now draw character data
 
-    int j;
+    unsigned j;
     for (j=i; i<size;)
     {
         unsigned int dsym;
@@ -700,12 +702,12 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 // DIGIC 6: "optimizations" to improve speed
 void draw_char(coord x, coord y, const char ch, twoColors cl)
 {
-    int i, ii;
+    unsigned i, ii;
 
     unsigned int offset, size;
     unsigned char *sym = get_cdata(&offset, &size, ch);
-    color fg = FG_COLOR(cl);
-    color bg = BG_COLOR(cl);
+//     color fg = FG_COLOR(cl);
+//     color bg = BG_COLOR(cl);
     unsigned int fw = FONT_WIDTH;
 
     draw_pixel_simple_start(cl);
@@ -721,7 +723,7 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 
     // Now draw character data
 
-    int j;
+    unsigned j;
     for (j=i; i<size;)
     {
         unsigned int dsym;
@@ -785,12 +787,12 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 
 void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
 {
-    int i, ii;
+    unsigned i, ii;
 
     unsigned int offset, size;
     unsigned char *sym = get_cdata(&offset, &size, ch);
-    color fg = FG_COLOR(cl);
-    color bg = BG_COLOR(cl);
+//     color fg = FG_COLOR(cl);
+//     color bg = BG_COLOR(cl);
     unsigned int fw = FONT_REAL_WIDTH;
 
     draw_pixel_simple_start(cl);
@@ -803,7 +805,7 @@ void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
 
     // Now draw character data
 
-    int j;
+    unsigned j;
     for (j=i; i<size;)
     {
         unsigned int dsym;
@@ -854,7 +856,7 @@ void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
 #ifndef THUMB_FW
 void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
 {
-    int i, ii;
+    unsigned i, ii;
 
     twoColors clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
     twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
@@ -867,7 +869,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
-    int j;
+    unsigned j;
     for (j=i=offset; i<size;)
     {
         unsigned int dsym;
@@ -914,7 +916,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
 #ifdef THUMB_FW
 void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
 {
-    int i, ii;
+    unsigned i, ii;
 
     twoColors clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
     twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
@@ -929,7 +931,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
-    int j;
+    unsigned j;
     for (j=i=offset; i<size;)
     {
         unsigned int dsym;

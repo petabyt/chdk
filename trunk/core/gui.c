@@ -72,7 +72,7 @@ void gui_enum_value_change(int *value, int change, unsigned num_items) {
     *value+=change;
     if (*value<0)
         *value = num_items-1;
-    else if (*value>=num_items)
+    else if (*value>=(int)num_items)
         *value = 0;
 }
 
@@ -119,7 +119,7 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
 static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, bracketing_in_continuous_submenu_items };
 
 //-------------------------------------------------------------------
-static const char* gui_USB_switch_types_enum(int change, int arg)
+static const char* gui_USB_switch_types_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "None","OnePush", "TwoPush", "CA-1" };    // note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
     gui_enum_value_change(&conf.remote_switch_type,change,sizeof(modes)/sizeof(modes[0]));
@@ -129,7 +129,7 @@ static const char* gui_USB_switch_types_enum(int change, int arg)
     return modes[conf.remote_switch_type];
 }
 
-static const char* gui_USB_control_modes_enum(int change, int arg)
+static const char* gui_USB_control_modes_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; // note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
     gui_enum_value_change(&conf.remote_control_mode,change,sizeof(modes)/sizeof(modes[0]));
@@ -140,7 +140,7 @@ static const char* gui_USB_control_modes_enum(int change, int arg)
 }
 
 #if CAM_REMOTE_MULTICHANNEL
-static const char* gui_remote_input_types_enum(int change, int arg)
+static const char* gui_remote_input_types_enum(int change, __attribute__ ((unused))int arg)
 {
     static remote_input_desc_t remote_inputs[]={
         {"USB",    REMOTE_INPUT_USB},
@@ -154,7 +154,7 @@ static const char* gui_remote_input_types_enum(int change, int arg)
         {"A/D Ch", REMOTE_INPUT_AD_CHANNEL},
 #endif
     };
-#define NUM_REMOTE_INPUT_TYPES (sizeof(remote_inputs)/sizeof(remote_inputs[0]))
+#define NUM_REMOTE_INPUT_TYPES (int)(sizeof(remote_inputs)/sizeof(remote_inputs[0]))
     int i;
     for(i=0; i<NUM_REMOTE_INPUT_TYPES; i++) {
         if(remote_inputs[i].type == conf.remote_input_channel) {
@@ -351,7 +351,7 @@ static void gui_compare_props(int arg)
 }
 
 // Save camera romlog to A/ROMLOG.LOG file
-static void save_romlog(int arg)
+static void save_romlog(__attribute__ ((unused))int arg)
 {
     extern unsigned _ExecuteEventProcedure(const char *name,...);
 
@@ -360,10 +360,10 @@ static void save_romlog(int arg)
 
     unsigned args[3];
     args[0] = (unsigned)"SystemEventInit";
-    if (call_func_ptr(_ExecuteEventProcedure,args,1) == -1)
+    if (call_func_ptr(_ExecuteEventProcedure,args,1) == (unsigned)-1)
     {
         args[0] = (unsigned)"System.Create";
-        if (call_func_ptr(_ExecuteEventProcedure,args,1) == -1)
+        if (call_func_ptr(_ExecuteEventProcedure,args,1) == (unsigned)-1)
         {
             gui_mbox_init(LANG_ERROR, LANG_SAVE_ROMLOG_INIT_ERROR, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
             return;
@@ -373,7 +373,7 @@ static void save_romlog(int arg)
     args[0] = (unsigned)"GetLogToFile";
     args[1] = (unsigned)"A/ROMLOG.LOG";
     args[2] = 1;
-    if (call_func_ptr(_ExecuteEventProcedure,args,3) == -1)
+    if (call_func_ptr(_ExecuteEventProcedure,args,3) == (unsigned)-1)
     {
         gui_mbox_init(LANG_ERROR, LANG_SAVE_ROMLOG_FAIL, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
     }
@@ -443,7 +443,7 @@ static CMenu debug_submenu = {0x2a,LANG_MENU_DEBUG_TITLE, debug_submenu_items };
 // forward reference
 static CMenuItem gps_submenu_items[];
 
-static void gpx_start_stop(int arg)
+static void gpx_start_stop(__attribute__ ((unused))int arg)
 {
     int i = 0;
     if( conf.gps_on_off ) {  
@@ -461,7 +461,7 @@ static void gpx_start_stop(int arg)
 static void navigate_to_home(int);
 static void navigate_to_image(int);
 
-static void show_compass(int arg)
+static void show_compass(__attribute__ ((unused))int arg)
 {
     int i = 0;
     if( conf.gps_on_off ) {      
@@ -482,7 +482,7 @@ static void show_compass(int arg)
     }
 }
 
-static void navigate_to_image(int arg)
+static void navigate_to_image(__attribute__ ((unused))int arg)
 {
     int i = 0;
     if( conf.gps_on_off ) {      
@@ -505,7 +505,7 @@ static void navigate_to_image(int arg)
     }
 }
 
-static void navigate_to_home(int arg)
+static void navigate_to_home(__attribute__ ((unused))int arg)
 {
     int i = 0;
     if( conf.gps_on_off ) {      
@@ -528,12 +528,12 @@ static void navigate_to_home(int arg)
     }
 }
 
-static void mark_timezone(int arg)
+static void mark_timezone(__attribute__ ((unused))int arg)
 {
     gps_write_timezone();
 }
 
-static void mark_home(int arg)
+static void mark_home(__attribute__ ((unused))int arg)
 {
     gps_write_home();
 }
@@ -651,7 +651,7 @@ static void gui_draw_read_selected(const char *fn)
     }
 }
 
-static void gui_draw_read(int arg)
+static void gui_draw_read(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_TEXT_FILE, conf.reader_file, "A/CHDK/BOOKS", gui_draw_read_selected);
 }
@@ -671,7 +671,7 @@ static void gui_draw_rbf_selected(const char *fn)
     }
 }
 
-static void gui_draw_load_rbf(int arg)
+static void gui_draw_load_rbf(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_FONT_FILE, conf.reader_rbf_file, "A/CHDK/FONTS", gui_draw_rbf_selected);
 }
@@ -793,19 +793,19 @@ static void gui_module_menu(CMenu *m, int type)
     gui_activate_sub_menu(m);
 }
 
-static void gui_games_menu(int arg)
+static void gui_games_menu(__attribute__ ((unused))int arg)
 {
     gui_module_menu(&games_submenu, MTYPE_GAME);
 }
 
-static void gui_tools_menu(int arg)
+static void gui_tools_menu(__attribute__ ((unused))int arg)
 {
     gui_module_menu(&tools_submenu, MTYPE_TOOL);
 }
 
 //-------------------------------------------------------------------
 
-static void gui_menuproc_mkbootdisk(int arg)
+static void gui_menuproc_mkbootdisk(__attribute__ ((unused))int arg)
 {
     mark_filesystem_bootable();
     gui_mbox_init(LANG_INFORMATION, LANG_CONSOLE_TEXT_FINISHED, MBOX_BTN_OK|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, NULL);
@@ -818,14 +818,14 @@ static void card_break_proc(unsigned int btn)
     if (btn==MBOX_BTN_YES) create_partitions();
 }
 
-static void gui_menuproc_break_card(int arg)
+static void gui_menuproc_break_card(__attribute__ ((unused))int arg)
 {
     gui_mbox_init(LANG_WARNING, LANG_PARTITIONS_CREATE_WARNING, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, card_break_proc);
 }
 
 static char* partitions_enum=NULL;
 
-static const char* gui_menuproc_swap_partitions_enum(int change, int arg)
+static const char* gui_menuproc_swap_partitions_enum(int change, __attribute__ ((unused))int arg)
 {
     int new_partition;
     int partition_count = get_part_count();
@@ -877,7 +877,7 @@ static void gui_delete_module_log_callback(unsigned int btn)
         module_log_clear();
 }
 
-static void gui_delete_module_log(int arg)
+static void gui_delete_module_log(__attribute__ ((unused))int arg)
 {
     gui_mbox_init(LANG_WARNING, LANG_MENU_DELETE_MODULE_LOG, MBOX_BTN_YES_NO|MBOX_DEF_BTN2|MBOX_TEXT_CENTER|MBOX_FUNC_RESTORE, gui_delete_module_log_callback);
 }
@@ -894,7 +894,7 @@ static CMenu module_submenu = {0x28,LANG_MENU_MODULES, module_submenu_items };
 
 //-------------------------------------------------------------------
 
-static void gui_draw_fselect(int arg)
+static void gui_draw_fselect(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_FILE_BROWSER, "A", "A", NULL);
 }
@@ -922,7 +922,7 @@ static const char text_raw[] =
 
 static const char* text[TEXT_COUNT];
 
-static void gui_show_build_info(int arg)
+static void gui_show_build_info(__attribute__ ((unused))int arg)
 {
     int comp_text_index = TEXT_COUNT - 1;
     const char *comp = text[comp_text_index];
@@ -930,7 +930,7 @@ static void gui_show_build_info(int arg)
     gui_mbox_init(LANG_MSG_BUILD_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_LEFT, NULL);
 }
 
-static void gui_show_memory_info(int arg)
+static void gui_show_memory_info(__attribute__ ((unused))int arg)
 {
     sprintf(buf, lang_str(LANG_MSG_MEMORY_INFO_TEXT), core_get_free_memory(), camera_info.memisosize, &_start, &_end);
     gui_mbox_init(LANG_MSG_MEMORY_INFO_TITLE, (int)buf, MBOX_FUNC_RESTORE|MBOX_TEXT_CENTER, NULL);
@@ -967,13 +967,13 @@ static void gui_unsafe_io_warning()
 //-------------------------------------------------------------------
 static const char* gui_console_show_enum[]={ "ALT", "Always" };
 
-static void gui_console_clear(int arg)
+static void gui_console_clear(__attribute__ ((unused))int arg)
 {
     console_close();
     gui_mbox_init(LANG_MENU_CONSOLE_CLEAR, LANG_MENU_CONSOLE_RESET, MBOX_BTN_OK|MBOX_TEXT_CENTER, NULL);
 }
 
-static void gui_console_show(int arg)
+static void gui_console_show(__attribute__ ((unused))int arg)
 {
     void display_console();
     display_console();
@@ -1162,7 +1162,7 @@ static CMenu clock_submenu = {0x34,LANG_MENU_OSD_CLOCK_PARAMS_TITLE, clock_subme
 //-------------------------------------------------------------------
 
 #if !CAM_VIDEO_QUALITY_ONLY
-const char* gui_video_bitrate_enum(int change, int arg)
+const char* gui_video_bitrate_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char *modes[]={ "0.25x", "0.5x","0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.5x", "3x"};
 	gui_enum_value_change(&conf.video_bitrate,change,sizeof(modes)/sizeof(modes[0]));
@@ -1174,7 +1174,7 @@ const char* gui_video_bitrate_enum(int change, int arg)
 }
 #endif
 #ifdef CAM_MOVIEREC_NEWSTYLE
-const char* gui_video_min_bitrate_enum(int change, int arg)
+const char* gui_video_min_bitrate_enum(int change, __attribute__ ((unused))int arg)
 {
     gui_enum_value_change(&conf.video_quality,change,10);
 
@@ -1186,13 +1186,13 @@ const char* gui_video_min_bitrate_enum(int change, int arg)
 }
 #endif
 #if CAM_AF_SCAN_DURING_VIDEO_RECORD
-static const char* gui_video_af_key_enum(int change, int arg)
+static const char* gui_video_af_key_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* names[] = CAM_VIDEO_AF_BUTTON_NAMES; 
     static const int keys[] = CAM_VIDEO_AF_BUTTON_OPTIONS; 
     int i; 
  
-    for (i=0; i<sizeof(names)/sizeof(names[0]); ++i) { 
+    for (i=0; i<(int)(sizeof(names)/sizeof(names[0])); ++i) { 
         if (conf.video_af_key==keys[i]) { 
             break; 
         } 
@@ -1201,7 +1201,7 @@ static const char* gui_video_af_key_enum(int change, int arg)
     i+=change; 
     if (i<0) 
         i=(sizeof(names)/sizeof(names[0]))-1; 
-    else if (i>=(sizeof(names)/sizeof(names[0]))) 
+    else if (i>=(int)(sizeof(names)/sizeof(names[0]))) 
         i=0; 
  
     conf.video_af_key = keys[i]; 
@@ -1287,13 +1287,13 @@ static const char* tv_override[]={
     "1/32000", "1/40000", "1/50000", "1/64000","1/80000", "1/100k"
 };
 
-const char* gui_tv_override_value_enum(int change, int arg)
+const char* gui_tv_override_value_enum(int change,__attribute__ ((unused))int arg)
 {
     gui_enum_value_change(&conf.tv_override_value,change,sizeof(tv_override)/sizeof(tv_override[0]));
     return tv_override[conf.tv_override_value]; 
 }
 
-static const char* gui_tv_enum_type_enum(int change, int arg)
+static const char* gui_tv_enum_type_enum(int change, __attribute__ ((unused))int arg)
 {
 #ifdef CAM_EXT_TV_RANGE
     static const char* modes[ ]= { "Ev Step", "ShrtExp", "LongExp" };
@@ -1311,7 +1311,7 @@ static const char* gui_tv_enum_type_enum(int change, int arg)
 }
 
 #if CAM_HAS_IRIS_DIAPHRAGM
-const char* gui_av_override_enum(int change, int arg)
+const char* gui_av_override_enum(int change, __attribute__ ((unused))int arg)
 {
     conf.av_override_value+=change;
     if (conf.av_override_value<0) conf.av_override_value=shooting_get_aperture_sizes_table_size()+CAM_EXT_AV_RANGE-1;
@@ -1323,7 +1323,7 @@ const char* gui_av_override_enum(int change, int arg)
 }
 #endif
 
-const char* gui_subj_dist_override_value_enum(int change, int arg)
+const char* gui_subj_dist_override_value_enum(int change, __attribute__ ((unused))int arg)
 {
     static char buf[9];
 
@@ -1346,7 +1346,7 @@ const char* gui_subj_dist_override_value_enum(int change, int arg)
     return buf; 
 }
 
-const char* gui_subj_dist_override_koef_enum(int change, int arg)
+const char* gui_subj_dist_override_koef_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "Off", "On", "Inf" };
 	const char *rv = gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
@@ -1355,7 +1355,7 @@ const char* gui_subj_dist_override_koef_enum(int change, int arg)
 
 #if defined(OPT_CURVES)
 
-static const char* gui_conf_curve_enum(int change, int arg) {
+static const char* gui_conf_curve_enum(int change, __attribute__ ((unused))int arg) {
     static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
 
     gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
@@ -1375,7 +1375,7 @@ static void gui_load_curve_selected(const char *fn)
 	}
 }
 
-static void gui_load_curve(int arg)
+static void gui_load_curve(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_CURVE_FILE, conf.curve_file, CURVE_DIR, gui_load_curve_selected);
 }
@@ -1457,14 +1457,14 @@ static const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine"
 static const char* gui_hotshoe_override_modes[] = { (char*)LANG_MENU_HOTSHOE_OVERRIDE_OFF, (char*)LANG_MENU_HOTSHOE_EMPTY, (char*)LANG_MENU_HOTSHOE_USED };
 #endif
 
-const char* gui_flash_power_modes_enum(int change, int arg)
+const char* gui_flash_power_modes_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "Min", "Med", "Max" };
 	const char *rv = gui_change_simple_enum(&conf.flash_video_override_power,change,modes,sizeof(modes)/sizeof(modes[0]));
     return rv;
 }
 
-const char* gui_flash_exp_comp_modes_enum(int change, int arg)
+const char* gui_flash_exp_comp_modes_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "-3", "-2.6", "-2.3", "-2", "-1.6", "-1.3", "-1", "-2/3", "-1/3", "0", "+1/3", "+2/3", "+1", "+1.3", "+1.6", "+2", "+2.3", "+2.6", "+3" };
 	const char *rv = gui_change_simple_enum(&conf.flash_exp_comp,change,modes,sizeof(modes)/sizeof(modes[0]));
@@ -1606,12 +1606,12 @@ static void gui_load_edge_selected( const char* fn )
         libedgeovr->load_edge_overlay(fn);
 }
 
-static void gui_menuproc_edge_save(int arg)
+static void gui_menuproc_edge_save(__attribute__ ((unused))int arg)
 {
     libedgeovr->save_edge_overlay();
 }
 
-static void gui_menuproc_edge_load(int arg)
+static void gui_menuproc_edge_load(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_MENU_EDGE_LOAD, EDGE_SAVE_DIR, EDGE_SAVE_DIR, gui_load_edge_selected);
 }
@@ -1644,7 +1644,7 @@ static void gui_grid_lines_load_selected(const char *fn)
     }
 }
 
-static void gui_grid_lines_load(int arg)
+static void gui_grid_lines_load(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_GRID_FILE, conf.grid_lines_file, "A/CHDK/GRIDS", gui_grid_lines_load_selected);
 }
@@ -1666,12 +1666,12 @@ static CMenu grid_submenu = {0x2f,LANG_MENU_GRID_TITLE, grid_submenu_items };
 
 //-------------------------------------------------------------------
 
-static void gui_menu_run_palette(int arg)
+static void gui_menu_run_palette(__attribute__ ((unused))int arg)
 {
     libpalette->show_palette(PALETTE_MODE_DEFAULT, (chdkColor){0,0}, NULL);
 }
 
-static void gui_menu_test_palette(int arg)
+static void gui_menu_test_palette(__attribute__ ((unused))int arg)
 {
     libpalette->show_palette(PALETTE_MODE_TEST, (chdkColor){0,0}, NULL);
 }
@@ -1682,7 +1682,7 @@ static void gui_menu_reset_colors_selected(unsigned int btn)
         resetColors();
 }
 
-static void gui_menu_reset_colors(int arg)
+static void gui_menu_reset_colors(__attribute__ ((unused))int arg)
 {
     gui_mbox_init(LANG_MSG_RESET_COLORS_TITLE,
                   LANG_MSG_RESET_COLORS_TEXT,
@@ -1861,7 +1861,7 @@ static void cb_change_save_raw()
     }
 }
 
-static const char* gui_dng_version(int change, int arg)
+static const char* gui_dng_version(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[]={ "1.3", "1.1" };
 
@@ -1871,7 +1871,7 @@ static const char* gui_dng_version(int change, int arg)
     return modes[conf.dng_version];
 }
 
-static const char* gui_dng_crop_size(int change, int arg)
+static const char* gui_dng_crop_size(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[]={ "JPEG", "Active", "Full" };
 
@@ -1880,7 +1880,7 @@ static const char* gui_dng_crop_size(int change, int arg)
     return modes[conf.dng_crop_size];
 }
 
-static void gui_menuproc_badpixel_create(int arg)
+static void gui_menuproc_badpixel_create(__attribute__ ((unused))int arg)
 {
     libdng->create_badpixel_bin();
 }
@@ -1890,7 +1890,7 @@ static void raw_fselect_cb(const char * filename)
     raw_prepare_develop(filename, 1);
 }
 
-static void gui_raw_develop(int arg)
+static void gui_raw_develop(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_RAW_DEVELOP_SELECT_FILE, "A/DCIM", "A", raw_fselect_cb);
 }
@@ -1976,12 +1976,12 @@ static void gui_draw_lang_selected(const char *fn)
     }
 }
 
-static void gui_draw_load_lang(int arg)
+static void gui_draw_load_lang(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_LANG_FILE, conf.lang_file, "A/CHDK/LANG", gui_draw_lang_selected);
 }
 
-static const char* gui_font_enum(int change, int arg)
+static const char* gui_font_enum(int change, __attribute__ ((unused))int arg)
 {
     extern int num_codepages;
     extern char* codepage_names[];
@@ -2006,7 +2006,7 @@ static void gui_draw_menu_rbf_selected(const char *fn)
     }
 }
 
-static void gui_draw_load_menu_rbf(int arg)
+static void gui_draw_load_menu_rbf(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_FONT_FILE, conf.menu_rbf_file, "A/CHDK/FONTS", gui_draw_menu_rbf_selected);
 }
@@ -2020,12 +2020,12 @@ static void gui_draw_symbol_rbf_selected(const char *fn)
     }
 }
 
-static void gui_draw_load_symbol_rbf(int arg)
+static void gui_draw_load_symbol_rbf(__attribute__ ((unused))int arg)
 {
     libfselect->file_select(LANG_STR_SELECT_SYMBOL_FILE, conf.menu_symbol_rbf_file, "A/CHDK/SYMBOLS", gui_draw_symbol_rbf_selected);
 }
 
-static void gui_menuproc_reset_files(int arg)
+static void gui_menuproc_reset_files(__attribute__ ((unused))int arg)
 {
     conf.lang_file[0] = 0;
     strcpy(conf.menu_symbol_rbf_file,DEFAULT_SYMBOL_FILE);
@@ -2052,7 +2052,7 @@ static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, menu_font_submen
 
 //-------------------------------------------------------------------
 
-static const char* gui_user_menu_show_enum(int change, int arg)
+static const char* gui_user_menu_show_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[]={ "Off", "On", "On Direct" };
 
@@ -2081,7 +2081,7 @@ static CMenu menu_settings_submenu = {0x28,LANG_MENU_MENU_SETTINGS, menu_setting
 
 #if CAM_ADJUSTABLE_ALT_BUTTON
 
-const char* gui_alt_mode_button_enum(int change, int arg)
+const char* gui_alt_mode_button_enum(int change, __attribute__ ((unused))int arg)
 {
 #if defined(CAM_ALT_BUTTON_NAMES) && defined(CAM_ALT_BUTTON_OPTIONS)
     static const char* names[] = CAM_ALT_BUTTON_NAMES;
@@ -2091,7 +2091,7 @@ const char* gui_alt_mode_button_enum(int change, int arg)
 #endif
     int i;
 
-    for (i=0; i<sizeof(names)/sizeof(names[0]); ++i) {
+    for (i=0; i<(int)(sizeof(names)/sizeof(names[0])); ++i) {
         if (conf.alt_mode_button==keys[i]) {
             break;
         }
@@ -2100,7 +2100,7 @@ const char* gui_alt_mode_button_enum(int change, int arg)
     i+=change;
     if (i<0)
         i=(sizeof(names)/sizeof(names[0]))-1;
-    else if (i>=(sizeof(names)/sizeof(names[0])))
+    else if (i>=(int)((sizeof(names)/sizeof(names[0]))))
         i=0;
 
     conf.alt_mode_button = keys[i];
@@ -2109,7 +2109,7 @@ const char* gui_alt_mode_button_enum(int change, int arg)
 #endif
 
 #if CAM_OPTIONAL_EXTRA_BUTTON
-static const char* gui_extra_button_enum(int change, int arg)
+static const char* gui_extra_button_enum(int change, __attribute__ ((unused))int arg)
 {
 #if defined(CAM_EXTRA_BUTTON_NAMES) && defined(CAM_EXTRA_BUTTON_OPTIONS)
     static const char* names[] = CAM_EXTRA_BUTTON_NAMES;
@@ -2119,7 +2119,7 @@ static const char* gui_extra_button_enum(int change, int arg)
 #endif
     int i;
 
-    for (i=0; i<sizeof(names)/sizeof(names[0]); ++i) {
+    for (i=0; i<(int)(sizeof(names)/sizeof(names[0])); ++i) {
         if (conf.extra_button==keys[i]) {
             break;
         }
@@ -2128,7 +2128,7 @@ static const char* gui_extra_button_enum(int change, int arg)
     i+=change;
     if (i<0)
         i=(sizeof(names)/sizeof(names[0]))-1;
-    else if (i>=(sizeof(names)/sizeof(names[0])))
+    else if (i>=(int)(sizeof(names)/sizeof(names[0])))
         i=0;
 
     conf.extra_button = keys[i];
@@ -2137,7 +2137,7 @@ static const char* gui_extra_button_enum(int change, int arg)
 }
 #endif //CAM_OPTIONAL_EXTRA_BUTTON
 
-static const char* gui_raw_toggle_enum(int change, int arg)
+static const char* gui_raw_toggle_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* raw_toggle[]={ "Off", "On", "On+OSD" };
 
@@ -2146,7 +2146,7 @@ static const char* gui_raw_toggle_enum(int change, int arg)
     return raw_toggle[conf.enable_raw_shortcut];
 }
 
-static const char* gui_alt_power_enum(int change, int arg)
+static const char* gui_alt_power_enum(int change, __attribute__ ((unused))int arg)
 {
 // Script option is retained even if scripting is disabled, otherwise conf values will change
 // Equivalent to ALT
@@ -2163,7 +2163,7 @@ static void gui_menuproc_reset_selected(unsigned int btn)
         conf_load_defaults();
 }
 
-static void gui_menuproc_reset(int arg)
+static void gui_menuproc_reset(__attribute__ ((unused))int arg)
 {
     gui_mbox_init(LANG_MSG_RESET_OPTIONS_TITLE, 
                   LANG_MSG_RESET_OPTIONS_TEXT,
@@ -2254,17 +2254,17 @@ const char* gui_on_off_enum(int change, int *conf_val)
 
 #ifdef  CAM_TOUCHSCREEN_UI
 
-const char* gui_override_disable_enum(int change, int arg)
+const char* gui_override_disable_enum(int change, __attribute__ ((unused))int arg)
 {
     return gui_change_simple_enum(&conf.override_disable,change,gui_override_disable_modes,sizeof(gui_override_disable_modes)/sizeof(gui_override_disable_modes[0]));
 }
 
-const char* gui_nd_filter_state_enum(int change, int arg)
+const char* gui_nd_filter_state_enum(int change, __attribute__ ((unused))int arg)
 {
     return gui_change_simple_enum(&conf.nd_filter_state,change,gui_nd_filter_state_modes,sizeof(gui_nd_filter_state_modes)/sizeof(gui_nd_filter_state_modes[0]));
 }
 
-const char* gui_histo_show_enum(int change, int arg)
+const char* gui_histo_show_enum(int change, __attribute__ ((unused))int arg)
 {
     return gui_change_simple_enum(&conf.show_histo,change,gui_histo_show_modes,sizeof(gui_histo_show_modes)/sizeof(gui_histo_show_modes[0]));
 }
@@ -2290,7 +2290,7 @@ static int logo_size, logo_text_width, logo_text_height;
 static void init_splash()
 {
     int i = 0, index = 0;
-    while (index < sizeof(text_raw))
+    while (index < (int)sizeof(text_raw))
     {
         text[i++] = &text_raw[index];
         while (text_raw[index++]) ;

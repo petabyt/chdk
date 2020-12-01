@@ -46,6 +46,7 @@ DIR *opendir_chdk(const char* name, unsigned flags)
         dir->cam_DIR = fw_opendir(name);
     }
 #else
+    (void)flags;
     dir->cam_DIR = fw_opendir(name);
 #endif
 
