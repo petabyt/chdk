@@ -4,7 +4,7 @@
 
 // BEWARE: thumb functions NEED the thumb bit set in the below list (i.e odd addresses only (0x00000001) )
 
-#define NULL_SUB 0x    /*0xfc0210b9*/
+#define NULL_SUB 0xfc0210b9
 
 NHSTUB(apex2us                                ,0xfc3379cf ) // Shutter.c asserts in sub_fc2e0ca2, similar to sx280 sub_fc2a63d6 and g7x sub_fc16e57e
 NHSTUB(CancelHPTimer                          ,0xfc1587cd ) // at 0xfc103e76, in section with "LcdSequence.c" , after TakeSemaphoreStrictly calls
