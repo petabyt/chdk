@@ -31,7 +31,7 @@ void debug_led(int state)
 // A3400IS has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[2]={0,4};
     if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
@@ -130,7 +130,7 @@ void *vid_get_bitmap_active_buffer()
 
 static int af_locked_in_movierec = 0;
 
-void _MakeAFScan(int *a, int b) {
+void _MakeAFScan(__attribute__ ((unused))int *a, __attribute__ ((unused))int b) {
     _DoAFLock();
     af_locked_in_movierec = 1;
 }

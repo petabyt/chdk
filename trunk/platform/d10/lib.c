@@ -56,7 +56,7 @@ second param 0 = solid on, 1 = off, 2-7 blink patterns
 8: no obvious effect, but returns 0 for AF
 >8: If used with AF ASSERT!! LEDDrv.c Line 215, otherwise returns 3
 */
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[]={0,1,9};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

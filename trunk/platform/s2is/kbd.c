@@ -87,6 +87,7 @@ void mykbd_task_proceed_2()
 void __attribute__((naked,noinline))
 mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
     /* WARNING
      * Stack pointer manipulation performed here!
      * This means (but not limited to):

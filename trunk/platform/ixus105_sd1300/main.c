@@ -45,7 +45,7 @@ static const struct {
   {   8,   17300},
   {   9,   20000},
 };
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 // ixus105 focal lenght range 5.0 - 20 mm (35 mm equivalent: 28 - 112 mm)(1/2.3" Type CCD, Scale Factor To 35 mm Equivalent: 5.6)
 // 28/5*10000=56666
 // 112/20*10000=56666

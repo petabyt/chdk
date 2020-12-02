@@ -50,7 +50,7 @@ void debug_led(int state)
 
 // ixus120_sd940 has three LEDs - a dual LED green/orange on back panel and an AF led above lens
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[3]={0,1,9};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

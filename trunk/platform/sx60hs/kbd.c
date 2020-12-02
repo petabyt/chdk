@@ -136,7 +136,7 @@ void my_kbd_read_keys() {
     kbd_update_key_state();
     kbd_update_physw_bits();
 }
-static long *odst;
+
 void kbd_fetch_data(long *dst)
 {
     _GetKbdState(dst);

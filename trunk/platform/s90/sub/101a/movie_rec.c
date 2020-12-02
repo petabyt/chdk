@@ -369,11 +369,9 @@ long CompressionRateTable[]={0x54, 0x51, 0x4D, 0x48, 0x42, 0x3B, 0x32, 0x29, 0x2
 	                         0x6, 0x5, 4, 3, 2, 1};
  
 */ 
-void change_video_tables(int a, int b){
-#if 0
- int i;
- for (i=0;i<24;i++) table[i]=(def_table[i]*a)/b; 
-#endif
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b){
+//  int i;
+//  for (i=0;i<24;i++) table[i]=(def_table[i]*a)/b; 
 } 
 
 

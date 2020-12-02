@@ -54,7 +54,7 @@ void debug_led(int state)
 // 2 = LED blinks slowly
 // 3 = LED blinks fast
 // 5 = LED blinks fast (3 times)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[]={0,4}; // status, AF
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
@@ -189,7 +189,7 @@ void load_chdk_palette()
 // following routines help preventing the "invisible af lock" caused by the movie af scan hack
 static int af_locked_in_movierec = 0;
 
-void _MakeAFScan(int *a, int b) {
+void _MakeAFScan(__attribute__ ((unused))int *a, __attribute__ ((unused))int b) {
     _DoAFLock();
     af_locked_in_movierec = 1;
 }

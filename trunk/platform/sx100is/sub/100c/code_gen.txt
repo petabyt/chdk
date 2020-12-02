@@ -8,12 +8,12 @@ FILE boot.c
 
 void taskCreateHook(int *p) {
     p-=16;
-    if (p[0]==0xffc4e2e0)  p[0]=(int)capt_seq_task;
-    if (p[0]==0xffc98f18)  p[0]=(int)exp_drv_task;
-    if (p[0]==0xffc4ae48)  p[0]=(int)movie_record_task;
-    if (p[0]==0xffdda798)  p[0]=(int)filewritetask;
-    if (p[0]==0xffc6358c)  p[0]=(int)init_file_modules_task;
-    if (p[0]==0xffc3802c)  p[0]=(int)JogDial_task_my;
+    if (p[0]==(int)0xffc4e2e0)  p[0]=(int)capt_seq_task;
+    if (p[0]==(int)0xffc98f18)  p[0]=(int)exp_drv_task;
+    if (p[0]==(int)0xffc4ae48)  p[0]=(int)movie_record_task;
+    if (p[0]==(int)0xffdda798)  p[0]=(int)filewritetask;
+    if (p[0]==(int)0xffc6358c)  p[0]=(int)init_file_modules_task;
+    if (p[0]==(int)0xffc3802c)  p[0]=(int)JogDial_task_my;
 }
 
 void boot()

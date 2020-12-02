@@ -45,6 +45,7 @@ long __attribute__((naked)) wrap_kbd_p1_f();
 void __attribute__((naked,noinline))
 mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
 	/* Initialize our own kbd_new_state[] array with the
 	   current physical status. If we dont do this here,
 	   the G11 will immediate switch off at the first call

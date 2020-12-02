@@ -46,7 +46,7 @@ void shutdown()
 	while(1);
 }
 
-void debug_led(int state)
+void debug_led(__attribute__ ((unused))int state)
 {
 	// using power LED, which defaults to on
 	// for debugging turn LED off if state is 1 and on for state = 0
@@ -58,7 +58,7 @@ void debug_led(int state)
 // IXUS125  has two 'lights'??? - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0) ???
 // AF Assist Lamp = second entry in table (led 1) ????
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
 	static char led_table[2]={0,4};
     if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }

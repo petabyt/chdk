@@ -2,8 +2,6 @@
 #include "platform_palette.h"
 #include "lolevel.h"
 
-static char*    frame_buffer[2];
-
 void vid_bitmap_refresh()
 {
 	extern int full_screen_refresh;
@@ -45,7 +43,7 @@ void debug_led(int state)
 // S100 has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[2]={7,10};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

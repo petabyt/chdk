@@ -1,8 +1,6 @@
 #include "platform.h"
 #include "lolevel.h"
 
-static char*    frame_buffer[2];
-
 
 void shutdown()
 {
@@ -32,7 +30,7 @@ void debug_led(int state)
 }
 
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
 	static char led_table[4]={0,1,9,10};
 
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);

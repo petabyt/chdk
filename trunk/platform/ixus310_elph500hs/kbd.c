@@ -82,19 +82,19 @@ static const char* simulate_power_press(int change, int arg)
 
 KeyMap keymap[] = {
 
-//  { 1, TOUCH_SCREEN       , 0x00000008 }, // Touch screen panel
-    { 1, KEY_ZOOM_IN        , 0x00001000 }, // Found @0xff3d144c, levent 0x02
-    { 1, KEY_ZOOM_OUT       , 0x00008000 }, // Found @0xff3d1454, levent 0x03
-    { 2, KEY_SHOOT_FULL     , 0x00000a00 }, // Found @0xff3d146c, levent 0x01
-    { 2, KEY_SHOOT_FULL_ONLY, 0x00000800 },	// http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
-    { 2, KEY_SHOOT_HALF     , 0x00000200 }, // Found @0xff3d1464, levent 0x00
-    { 2, KEY_POWER           ,0x00001000 }, // Found @0xff3d1474, levent 0x600
-    { 2, KEY_PLAYBACK        ,0x00004000 }, // Found @0xff3d147c, levent 0x601
+//  { 1, TOUCH_SCREEN       , 0x00000008, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Touch screen panel
+    { 1, KEY_ZOOM_IN        , 0x00001000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff3d144c, levent 0x02
+    { 1, KEY_ZOOM_OUT       , 0x00008000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff3d1454, levent 0x03
+    { 2, KEY_SHOOT_FULL     , 0x00000a00, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff3d146c, levent 0x01
+    { 2, KEY_SHOOT_FULL_ONLY, 0x00000800, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },	// http://chdk.setepontos.com/index.php?topic=1444.msg70223#msg70223
+    { 2, KEY_SHOOT_HALF     , 0x00000200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff3d1464, levent 0x00
+    { 2, KEY_POWER           ,0x00001000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff3d1474, levent 0x600
+    { 2, KEY_PLAYBACK        ,0x00004000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff3d147c, levent 0x601
 
-    { 3, KEY_PRINT          , 0x00000001, LB(0,1,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID }, // virtual touch screen key
+    { 3, KEY_PRINT          , 0x00000001, LB(0,1,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 }, // virtual touch screen key
 
-    { 3, KEY_MENU		    , 0x00000002, LB(0,2,1), 0, "Menu",  0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY|MODE_VID },
-	{ 3, KEY_SET		    , 0x00000004, LB(0,3,1), 0, "Set",   0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY|MODE_VID },
+    { 3, KEY_MENU		    , 0x00000002, LB(0,2,1), 0, "Menu",  0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
+	{ 3, KEY_SET		    , 0x00000004, LB(0,3,1), 0, "Set",   0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
 
     { 3, TS_KEY_TOGGLE_RAW  , 0x00000100, RB(1,1,1), 1, "RAW",   0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.save_raw, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
     { 3, TS_KEY_TOGGLE_OSD  , 0x00000200, RB(1,2,1), 1, "OSD",   0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.show_osd, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
@@ -108,14 +108,14 @@ KeyMap keymap[] = {
     { 3, TS_KEY_POWER       , 0x00800000, LB(3,0,1), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 },
 #endif
 #ifdef OPT_DEBUGGING
-    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4,1), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4,1), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, 0, 0, 0 },
 #endif
-    { 3, KEY_DISPLAY	    , 0x00000008, LB(0,4,1), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY },
-    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4,1), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY|MODE_VID },
-    { 3, KEY_UP             , 0x00000010, RB(0,1,2), 0, "\x18",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID},
-    { 3, KEY_LEFT           , 0x00000020, RB(0,2,2), 0, "\x1B",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
-    { 3, KEY_RIGHT          , 0x00000040, RB(0,3,2), 0, "\x1A",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
-    { 3, KEY_DOWN           , 0x00000080, RB(0,4,2), 0, "\x19",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID },
+    { 3, KEY_DISPLAY	    , 0x00000008, LB(0,4,1), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4,1), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
+    { 3, KEY_UP             , 0x00000010, RB(0,1,2), 0, "\x18",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
+    { 3, KEY_LEFT           , 0x00000020, RB(0,2,2), 0, "\x1B",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
+    { 3, KEY_RIGHT          , 0x00000040, RB(0,3,2), 0, "\x1A",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
+    { 3, KEY_DOWN           , 0x00000080, RB(0,4,2), 0, "\x19",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 },
 
     { 3, KEY_UP 		    , 0x00000010, RB(0,0,1), 0, "Man",   "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, &conf.subj_dist_override_koef, 0, &conf.touchscreen_disable_shortcut_controls },
     { 3, KEY_DISPLAY        , 0x00000008, RB(0,1,1), 0, "Max",   "Dist",   GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
@@ -225,7 +225,7 @@ void virtual_buttons()
     {
         //ts_redraw_cnt++;
 
-        int i, x1, y1, x2, y2, ofst, sc, xo, yo;
+        int i, x1, y1, x2, y2, sc, xo, yo;
         int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 
         color c1 = MAKE_COLOR(COLOR_GREY_DK_TRANS, COLOR_WHITE);
@@ -275,7 +275,7 @@ int ts_process_touch()
 {
     int rv = 0, i;
 
-    if (touch_panel_state != 0xFFFFFFFF)
+    if (touch_panel_state != (long)0xFFFFFFFF)
     {
         int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (camera_info.state.mode & MODE_MASK);
 

@@ -9,29 +9,29 @@ void JogDial_task_my(void);
 void taskCreateHook(int *p) { 
  p-=17;
  // taskcreate_CaptSeqTask -> SsShootTask
- if (p[0]==0xFF861CFC)  p[0]=(int)capt_seq_task;
+ if (p[0]==(int)0xFF861CFC)  p[0]=(int)capt_seq_task;
  // task_PhySw
- if (p[0]==0xFF821814)  p[0]=(int)mykbd_task;
+ if (p[0]==(int)0xFF821814)  p[0]=(int)mykbd_task;
  // task_InitFileModules
- if (p[0]==0xFF87C980)  p[0]=(int)init_file_modules_task;
+ if (p[0]==(int)0xFF87C980)  p[0]=(int)init_file_modules_task;
  // via JogDail.c ref (function calls sub_FF..__JogDial.c__14)
- if (p[0]==0xFF846338)  p[0]=(int)JogDial_task_my;
+ if (p[0]==(int)0xFF846338)  p[0]=(int)JogDial_task_my;
  // found @0xFF85E03C (above call to taskcreate_AviWrite)
- if (p[0]==0xFF85E03C)  p[0]=(int)movie_record_task;
+ if (p[0]==(int)0xFF85E03C)  p[0]=(int)movie_record_task;
  // task_ExpDrvTask
- if (p[0]==0xFF8A4608)  p[0]=(int)exp_drv_task;
+ if (p[0]==(int)0xFF8A4608)  p[0]=(int)exp_drv_task;
  // task_FileWriteTask
- if (p[0]==0xFFA1E5C0)  p[0]=(int)filewritetask;
+ if (p[0]==(int)0xFFA1E5C0)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 
  p-=17;
  // task_InitFileModules
- if (p[0]==0xFF87C980)  p[0]=(int)init_file_modules_task;
+ if (p[0]==(int)0xFF87C980)  p[0]=(int)init_file_modules_task;
  // task_ExpDrvTask
- if (p[0]==0xFF8A4608)  p[0]=(int)exp_drv_task;
+ if (p[0]==(int)0xFF8A4608)  p[0]=(int)exp_drv_task;
  // task_FileWriteTask
- if (p[0]==0xFFA1E5C0)  p[0]=(int)filewritetask;
+ if (p[0]==(int)0xFFA1E5C0)  p[0]=(int)filewritetask;
 }
 
 void CreateTask_spytask() {

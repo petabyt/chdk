@@ -14,7 +14,7 @@ long get_vbatt_max()
 //static const int fl_tbl[] = {5800, 6600, 7500, 8600, 10000, 11800, 14300, 18600, 23200};
 //ixus950_sd850 (from EXIF), basically the same as in ixus800_sd700 (4x zoom lens)
   static const int fl_tbl[] = {5800, 6630, 7470, 8640, 9970,  11820, 14330, 18630, 23200};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 #define CF_EFL 60345 // 60345 for 1/2.5" sensor, 47946 for 1/1.8" sensor
 
 const int zoom_points = NUM_FL;

@@ -54,7 +54,7 @@ ROM:FFC24D1C ; End of function sub_FFC24CDC
 */
 
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
 if (led == 4 || led == 7 ) // Green (power) or orange led
 	_LEDDrive(7, state<=1 ? !state : state);
 else if ( led == 9 ) // Red AF-Light

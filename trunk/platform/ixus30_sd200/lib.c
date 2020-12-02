@@ -12,7 +12,7 @@ extern unsigned long _time_orig(unsigned long *timer);
 
 static unsigned long bootuptime = 0;
 
-unsigned long _time(unsigned long *timer) {
+unsigned long _time(__attribute__ ((unused))unsigned long *timer) {
 /*
 the original "time" function doesn't seem to work correctly
 chdk's clock display runs at around 1/7 speed with it (the display is only correct right after bootup)
@@ -267,7 +267,7 @@ void camera_set_led(int led, int state, int bright)
 short get_uiprop_value(unsigned long id)
 {
     // avoid asserts: return 0 if id is above limit
-    if (id >= uiprop_count)
+    if (id >= (unsigned)uiprop_count)
         return 0;
     return _PTM_GetCurrentItem(id);
 }

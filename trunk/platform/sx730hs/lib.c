@@ -41,7 +41,7 @@ void debug_led(int state) {
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
 // orange charge LED does not appear to be controlled by _LEDDrive
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[2]={0,4};
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

@@ -70,6 +70,7 @@ int filewrite_get_file_chunk(char **addr,int *size,unsigned n,int *pos) {
         *pos=fwt_file_offset; //only post file offset for the first chunk in the current queue
     }
 #else
+    (void)n;
     if ((file_curr_session_chunk==0) && (file_last_session)) {
         *pos=0; //only post file offset for the first chunk in the last queue
     }
@@ -158,7 +159,6 @@ void filewrite_main_hook(fwt_data_struct *fwt_data)
 
     file_chunks = &(fwt_data->pdc[0]);
 #ifdef CAM_HAS_CANON_RAW
-    int fmt;
     // for raw enabled cameras, get format from extension
     // A/DCIM/100CANON/IMG_1234.CR2
     if(strcmp(".CR2",&(fwt_data->name[24])) == 0) {

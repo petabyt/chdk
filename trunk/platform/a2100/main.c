@@ -46,7 +46,7 @@ void startup()
 static const int fl_tbl[] = {6400, 6800, 7600, 8800, 10500, 12300, 14100, 18500, 21200, 27100, 30700, 35100, 38400}; 
 
 
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 // sd950 uses wrong value
 // #define CF_EFL 60869
 // ewavr

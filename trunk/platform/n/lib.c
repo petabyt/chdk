@@ -46,7 +46,7 @@ void debug_led(int state)
 }
 
 // powershot N has one LED - on the power button - and a focus assist / camera lamp on the front of the camera
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 {
     static char led_table[3]={0,6,11};  // 0=green power button LED, 6=focus assist lamp (dim), 11=flash LED (bright)
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);

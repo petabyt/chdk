@@ -20,13 +20,13 @@ void CreateTask_spytask() {
 
 void taskCreateHook(int *p) {
 	p-=16;
-	if (p[0]==0xFF821ACC)  p[0]=(int)mykbd_task;
-	if (p[0]==0xFF842A44)  p[0]=(int)jogdial_task_my; 
-	if (p[0]==0xFF85A004)  p[0]=(int)movie_record_task;
-	if (p[0]==0xFF85E03C)  p[0]=(int)capt_seq_task;
-	if (p[0]==0xFF878F84)  p[0]=(int)init_file_modules_task;
-	if (p[0]==0xFF8B6864)  p[0]=(int)exp_drv_task;
-	if (p[0]==0xFFA10248)  p[0]=(int)filewritetask;
+	if (p[0]==(int)0xFF821ACC)  p[0]=(int)mykbd_task;
+	if (p[0]==(int)0xFF842A44)  p[0]=(int)jogdial_task_my; 
+	if (p[0]==(int)0xFF85A004)  p[0]=(int)movie_record_task;
+	if (p[0]==(int)0xFF85E03C)  p[0]=(int)capt_seq_task;
+	if (p[0]==(int)0xFF878F84)  p[0]=(int)init_file_modules_task;
+	if (p[0]==(int)0xFF8B6864)  p[0]=(int)exp_drv_task;
+	if (p[0]==(int)0xFFA10248)  p[0]=(int)filewritetask;
 }
 
 void boot()

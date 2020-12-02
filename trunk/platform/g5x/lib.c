@@ -49,7 +49,7 @@ void shutdown()
     while(1) msleep(100);
 }
 
-void _Restart(unsigned option)
+void _Restart(__attribute__ ((unused))unsigned option)
 {
     // Firmware _Restart() function does not work; but forcing camera to 'boot' our PS.FI2 seems to work, although it takes around 10 seconds to restart.
     _reboot_fw_update("A/PS.FI2");
@@ -64,7 +64,7 @@ void debug_led(int state) {
 
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[2] = { 0, 4 };
     _LEDDrive(led_table[led % sizeof(led_table)], state <= 1 ? !state : state);
 }

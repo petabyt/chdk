@@ -32,7 +32,7 @@ void startup()
 // Ixus130 Focal length: 5mm-20mm, 35mm equivalent 28mm-112mm, so:
 // CF_EFL = 28/5*10000 = 56000 or 112/20*10000 = 56000
 static const int fl_tbl[] = { 5000, 6400, 7400, 9000, 11200, 13000, 15600, 20000 };
-#define NUM_FL (sizeof fl_tbl / sizeof *fl_tbl)
+#define NUM_FL (int)(sizeof fl_tbl / sizeof *fl_tbl)
 #define CF_EFL 56000
 
 const int zoom_points = NUM_FL;

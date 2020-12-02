@@ -8,18 +8,18 @@ void JogDial_task_my(void);
 
 void taskCreateHook(int *p) { 
  p-=17;
- if (p[0]==0xFF86CB80)  p[0]=(int)capt_seq_task;
- if (p[0]==0xFF821764)  p[0]=(int)mykbd_task;
- if (p[0]==0xFF8892BC)  p[0]=(int)init_file_modules_task;
- if (p[0]==0xFF84DAF0)  p[0]=(int)JogDial_task_my;
- if (p[0]==0xFF867D90)  p[0]=(int)movie_record_task;
- if (p[0]==0xFF8B3E4C)  p[0]=(int)exp_drv_task;
+ if (p[0]==(int)0xFF86CB80)  p[0]=(int)capt_seq_task;
+ if (p[0]==(int)0xFF821764)  p[0]=(int)mykbd_task;
+ if (p[0]==(int)0xFF8892BC)  p[0]=(int)init_file_modules_task;
+ if (p[0]==(int)0xFF84DAF0)  p[0]=(int)JogDial_task_my;
+ if (p[0]==(int)0xFF867D90)  p[0]=(int)movie_record_task;
+ if (p[0]==(int)0xFF8B3E4C)  p[0]=(int)exp_drv_task;
 }
 
 void taskCreateHook2(int *p) { 
  p-=17;
- if (p[0]==0xFF8892BC)  p[0]=(int)init_file_modules_task;
- if (p[0]==0xFF8B3E4C)  p[0]=(int)exp_drv_task;
+ if (p[0]==(int)0xFF8892BC)  p[0]=(int)init_file_modules_task;
+ if (p[0]==(int)0xFF8B3E4C)  p[0]=(int)exp_drv_task;
 }
 
 void CreateTask_spytask() {

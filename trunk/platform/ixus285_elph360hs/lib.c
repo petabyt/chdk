@@ -56,7 +56,7 @@ int get_flash_params_count(void) { return 0xf1; }     // Found @0xff237388
 
 
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[]={0,4}; // status, AF
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

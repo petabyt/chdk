@@ -13,7 +13,7 @@ int fsionotify_compfail = 0;	// count of number of times the file handle was alr
 int fsionotify_success  = 0;	// count of number of times the code succeeded
 
 int __attribute__((naked,noinline)) _Open(const char *name, int flags, int mode) {
-
+   (void)name; (void)flags, (void)mode;
    asm volatile (
 				"STMFD   SP!, {R4-R8,LR} \n"
 				"MOV     R6, R0 \n"

@@ -68,7 +68,7 @@ void debug_led(int state)
 // 1/1 - Lower indicator Orange
 // 2/3 - Power LED Green
 // 3/9 - AF Assist Lamp
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[5]={0,1,3,9};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

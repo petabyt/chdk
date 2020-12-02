@@ -47,7 +47,7 @@ extern const char* gui_histo_show_enum(int change, int arg);
 extern const char* gui_override_disable_enum(int change, int arg);
 extern gui_handler scriptGuiHandler;
 
-static const char* ts_user_menu_enable(int change, int arg) 
+static const char* ts_user_menu_enable(int change, __attribute__ ((unused))int arg) 
 { 
     extern void gui_menu_init();
     extern gui_handler* gui_set_mode(gui_handler *) ;
@@ -61,7 +61,7 @@ static const char* ts_user_menu_enable(int change, int arg)
     return 0;
 }
 
-static const char* simulate_playback_press(int change, int arg) 
+static const char* simulate_playback_press(int change, __attribute__ ((unused))int arg) 
 { 
     void levent_set_play(void);
     void levent_set_record(void) ;
@@ -73,20 +73,20 @@ static const char* simulate_playback_press(int change, int arg)
     return 0; 
 } 
  
-static const char* simulate_power_press(int change, int arg) 
+static const char* simulate_power_press(int change, __attribute__ ((unused))int arg) 
 { 
     void camera_shutdown_in_a_second(void); 
     if (change) camera_shutdown_in_a_second(); 
     return 0; 
 } 
 
-static const char* ts_exit_alt(int change, int arg)
+static const char* ts_exit_alt(int change, __attribute__ ((unused))int arg)
 {
     if (change) exit_alt() ;
     return 0;
 }
 
-static const char* ts_run_script(int change, int arg)
+static const char* ts_run_script(int change,__attribute__ ((unused)) int arg)
 {
     if (change) 
     {
@@ -100,39 +100,39 @@ KeyMap keymap[] = {
     // and take the first matching mask. Notice that KEY_SHOOT_HALF is
     // always pressed if KEY_SHOOT_FULL is.
 
-    { 0, KEY_POWER           ,0x00100000 }, // Found @0xff5bdba8, levent 0x100
-    { 2, KEY_SHOOT_FULL      ,0x00000030 }, // Found @0xff5bdbb8, levent 0x01
-    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020 }, // Found @0xff5bdbb8, levent 0x01
-    { 2, KEY_SHOOT_HALF      ,0x00000010 }, // Found @0xff5bdbb0, levent 0x00
-    { 2, KEY_ZOOM_OUT        ,0x00000100 }, // Found @0xff5bdbc0, levent 0x04
-    { 2, KEY_ZOOM_IN         ,0x00000200 }, // Found @0xff5bdbc8, levent 0x03
-    { 2, KEY_PLAYBACK        ,0x00010000 }, // Found @0xff5bdbd8, levent 0x101
-    { 2, KEY_PRINT           ,0x00020000 }, // wifi button - use as default <ALT> key
-//  { 0. KEY_TOUCH_NONE      ,0x10000000 }. // touch screen not touched
-//  { 0, KEY_TOUCH_DOWN      ,0x20000000 }, // touch screen touched
-//  { 2, KEY_CUSTOM_SWITCH   ,0x00002000 }, // Custom Mode Switch
-//  { 2, KEY_SDCARD_DOOR     ,0x00080000 }. // SD card door switch     
+    { 0, KEY_POWER           ,0x00100000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdba8, levent 0x100
+    { 2, KEY_SHOOT_FULL      ,0x00000030, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdbb8, levent 0x01
+    { 2, KEY_SHOOT_FULL_ONLY ,0x00000020, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdbb8, levent 0x01
+    { 2, KEY_SHOOT_HALF      ,0x00000010, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdbb0, levent 0x00
+    { 2, KEY_ZOOM_OUT        ,0x00000100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdbc0, levent 0x04
+    { 2, KEY_ZOOM_IN         ,0x00000200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdbc8, levent 0x03
+    { 2, KEY_PLAYBACK        ,0x00010000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5bdbd8, levent 0x101
+    { 2, KEY_PRINT           ,0x00020000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // wifi button - use as default <ALT> key
+//  { 0. KEY_TOUCH_NONE      ,0x10000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }. // touch screen not touched
+//  { 0, KEY_TOUCH_DOWN      ,0x20000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // touch screen touched
+//  { 2, KEY_CUSTOM_SWITCH   ,0x00002000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Custom Mode Switch
+//  { 2, KEY_SDCARD_DOOR     ,0x00080000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }. // SD card door switch     
 
-    { 3, KEY_MENU           , 0x00000001,   0,    0, 39,  47,  0, "CHDK", "MENU", GUI_MODE_ALT, 100,          MODE_REC|MODE_PLAY },
+    { 3, KEY_MENU           , 0x00000001,   0,    0, 39,  47,  0, "CHDK", "MENU", GUI_MODE_ALT, 100,          MODE_REC|MODE_PLAY, 0, 0, 0 },
     { 3, TS_KEY_EXIT        , 0x00000002,   0,  192, 39, 239,  0, "Exit",  "ALT", GUI_MODE_ALT, 100,          MODE_REC|MODE_PLAY, 0, ts_exit_alt, 0 },
     
     { 3, TS_KEY_USER_MENU   , 0x00000004,   0,   48, 39,  95,  0, "USER",  "MENU",GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, ts_user_menu_enable, 0 },
-    { 3, KEY_SET            , 0x00000008,   0,   96, 39, 143,  0, "PRGM",  0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
+    { 3, KEY_SET            , 0x00000008,   0,   96, 39, 143,  0, "PRGM",  0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, 0, 0 },
 // was DISPLAY but assume blank name means not used, switched to ZOMBIE
-//    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
-    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY },
+//    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,  144, 39, 191,  0, " ",     0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, 0, 0 },
 
-    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,   48, 39,  95,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
-    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,   96, 39, 143,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
-    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, "BACK",  0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY },
+    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,   48, 39,  95,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, TS_KEY_ZOMBIE      , 0x00000020,   0,   96, 39, 143,  0, " ",     0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, "BACK",  0,     GUI_MODE_MENU, GUI_MODE_MENU,  MODE_REC|MODE_PLAY, 0, 0, 0 },
     
-    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, "DISP",  0,     GUI_MODE_SCRIPT, GUI_MODE_OSD,  MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000010,   0,  144, 39, 191,  0, "DISP",  0,     GUI_MODE_SCRIPT, GUI_MODE_OSD,  MODE_REC|MODE_PLAY, 0, 0, 0 },
     
-    { 3, KEY_UP             , 0x00000200, 320,   0, 359,  47,  0, "Up",    0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
-    { 3, KEY_LEFT           , 0x00000400, 320,  48, 359,  95,  0, "Left",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
-    { 3, KEY_SET            , 0x00000800, 320,  96, 359, 143,  0, " Set",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
-    { 3, KEY_RIGHT          , 0x00001000, 320, 144, 359, 191,  0, "Right", 0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
-    { 3, KEY_DOWN           , 0x00002000, 320, 192, 359, 239,  0, "Down",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY },
+    { 3, KEY_UP             , 0x00000200, 320,   0, 359,  47,  0, "Up",    0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_LEFT           , 0x00000400, 320,  48, 359,  95,  0, "Left",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_SET            , 0x00000800, 320,  96, 359, 143,  0, " Set",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_RIGHT          , 0x00001000, 320, 144, 359, 191,  0, "Right", 0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_DOWN           , 0x00002000, 320, 192, 359, 239,  0, "Down",  0,     GUI_MODE_MENU,100, MODE_REC|MODE_PLAY, 0, 0, 0 },
     
     { 3, TS_KEY_SCRIPT_RUN  , 0x00004000, 320,   0, 359,  47,  0, "RUN",   0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, ts_run_script, 0 },
     { 3, TS_KEY_TOGGLE_RAW  , 0x00008000, 320,  48, 359,  95,  1, "RAW",   0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.save_raw, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
@@ -141,7 +141,7 @@ KeyMap keymap[] = {
     { 3, TS_KEY_PLAYBACK    , 0x00040000, 320, 144, 359, 191,  0, "REC/", "PLAY",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, simulate_playback_press, 0 }, 
     { 3, TS_KEY_POWER       , 0x00080000, 320, 192, 359, 239,  0, "OFF",   0,     GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, 0, simulate_power_press, 0 }, 
   
-    { 0, 0, 0 }
+    { 0 }
 };
 
 
@@ -218,7 +218,7 @@ int ts_process_touch()
 {
     int rv = 0, i;
 
-    if (touch_panel_state != 0xFFFFFFFF)
+    if (touch_panel_state != (long)0xFFFFFFFF)
     {
         int guiMode = camera_info.state.gui_mode;
         int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);

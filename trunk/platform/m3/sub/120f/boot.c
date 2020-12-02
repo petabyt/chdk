@@ -28,8 +28,6 @@ extern void _LCDMsg_SetStr (unsigned, char * );
 //extern long _VbattGet();
 
 
-static unsigned message;
-
 void save_romlog2(void)
 {
 	unsigned args[4];
@@ -61,6 +59,8 @@ void save_romlog2(void)
 -----------------------------------------------------------------------*/
 void spytask_my(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
+
 	_SleepTask(2800);
 	save_romlog2();
 
@@ -74,6 +74,7 @@ void spytask_my(long ua, long ub, long uc, long ud, long ue, long uf)
 -----------------------------------------------------------------------*/
 void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
     core_spytask();
 }
 
@@ -904,6 +905,7 @@ asm volatile(
 void __attribute__((naked,noinline)) sub_fc07507e_my() {
 
 extern long kbd_mod_state[];
+(void)kbd_mod_state;
 asm volatile(
 "       push    {r4-r8,lr}\n"
 "       ldr     r4, [r0]\n"

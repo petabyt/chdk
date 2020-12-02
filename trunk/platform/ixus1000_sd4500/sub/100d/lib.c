@@ -86,7 +86,7 @@ int vid_get_viewport_byte_width() {
 
 int vid_get_viewport_width()
 {
-    extern int kbd_debug1;
+    //extern int kbd_debug1;
     //kbd_debug1 = mode_get();
     if (get_movie_status() > 1){return 480;}
     if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1 )	// on 16:9 shoot mode its 1.switch to video is 100

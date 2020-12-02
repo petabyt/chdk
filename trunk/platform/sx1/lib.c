@@ -27,13 +27,13 @@ void shutdown()
 
 #define LED_PR 0xC02200B4
 
-void debug_led(int state)
+void debug_led(__attribute__ ((unused))int state)
 {
 // disable for now, since this is reportedly the AF LED. Someone find the DP please
 // *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[5]={4,5,7,8,9};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

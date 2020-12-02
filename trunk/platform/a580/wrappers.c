@@ -16,7 +16,7 @@ long lens_get_target_distance()
     return _GetCurrentTargetDistance();
 }
 
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 {
         // 0 gr
         // 1 orange

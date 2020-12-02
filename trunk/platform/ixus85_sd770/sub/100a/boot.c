@@ -7,12 +7,12 @@ const char * const new_sa = &_end;
 void taskCreateHook(int *p)
 {
 	p-=16;
-	if (p[0]==0xFF821ACC)  p[0]=(int)mykbd_task; // OK // WORK!
-	if (p[0]==0xFF859DF8)  p[0]=(int)movie_record_task; // OK // WORK!
-	if (p[0]==0xFF85DE30)  p[0]=(int)capt_seq_task; // OK
-	if (p[0]==0xFF87719C)  p[0]=(int)init_file_modules_task; // OK // WORK!
-	if (p[0]==0xFF8B478C)  p[0]=(int)exp_drv_task; // OK
-	if (p[0]==0xFFA0AFE8)  p[0]=(int)filewritetask;
+	if (p[0]==(int)0xFF821ACC)  p[0]=(int)mykbd_task; // OK // WORK!
+	if (p[0]==(int)0xFF859DF8)  p[0]=(int)movie_record_task; // OK // WORK!
+	if (p[0]==(int)0xFF85DE30)  p[0]=(int)capt_seq_task; // OK
+	if (p[0]==(int)0xFF87719C)  p[0]=(int)init_file_modules_task; // OK // WORK!
+	if (p[0]==(int)0xFF8B478C)  p[0]=(int)exp_drv_task; // OK
+	if (p[0]==(int)0xFFA0AFE8)  p[0]=(int)filewritetask;
 }
 
 void CreateTask_spytask()

@@ -62,7 +62,7 @@ void debug_led(int state)
 // IXUS 310 has 2 led values
 // 0/7 - Power LED (Green)
 // 1/11 - AF Assist Lamp
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[2]={7,11};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

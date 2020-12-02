@@ -39,7 +39,7 @@ static const struct {
   {   8,   18190},
   {   9,   22500},
 };
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 // S90 focal lenght range 6.0 - 22.5 mm (35 mm equivalent: 28 - 105 mm)(1/1.7" Type CCD, Scale Factor To 35 mm Equivalent: 4.6)
 // 28/6,0*10000=46666
 // 105/22,5*10000=46666

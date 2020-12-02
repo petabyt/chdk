@@ -25,15 +25,15 @@ const int zoom_points = 1;
 extern int _GetLensCurrentFocalLength(void);
 extern int _GetLensWideFocalLength(void);
 
-int get_effective_focal_length(int zp) {
+int get_effective_focal_length(__attribute__ ((unused))int zp) {
     return _GetLensCurrentFocalLength() * 1600;
 }
 
-int get_focal_length(int zp) {
+int get_focal_length(__attribute__ ((unused))int zp) {
     return _GetLensCurrentFocalLength() * 1000;
 }
 
-int get_zoom_x(int zp) {
+int get_zoom_x(__attribute__ ((unused))int zp) {
     return _GetLensCurrentFocalLength()*100 / (_GetLensWideFocalLength()*100);
 }
 

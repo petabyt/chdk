@@ -9,12 +9,12 @@ void my_touchw_task(void);
 
 void taskCreateHook(int *p) {
     p-=16;
-    if (p[0]==0xff85bd10)  p[0]=(int)capt_seq_task;
-    if (p[0]==0xff8aebf4)  p[0]=(int)exp_drv_task;
-    if (p[0]==0xff85821c)  p[0]=(int)movie_record_task;
-    if (p[0]==0xffa021bc)  p[0]=(int)filewritetask;
-    if (p[0]==0xff870ce8)  p[0]=(int)init_file_modules_task;
-    if (p[0]==0xff8e6dc0)  p[0]=(int)my_touchw_task;
+    if (p[0]==(int)0xff85bd10)  p[0]=(int)capt_seq_task;
+    if (p[0]==(int)0xff8aebf4)  p[0]=(int)exp_drv_task;
+    if (p[0]==(int)0xff85821c)  p[0]=(int)movie_record_task;
+    if (p[0]==(int)0xffa021bc)  p[0]=(int)filewritetask;
+    if (p[0]==(int)0xff870ce8)  p[0]=(int)init_file_modules_task;
+    if (p[0]==(int)0xff8e6dc0)  p[0]=(int)my_touchw_task;
 }
 
 void boot()

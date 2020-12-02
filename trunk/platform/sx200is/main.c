@@ -39,7 +39,7 @@ static const struct {
   { 102,  35900},
   { 125,  60000},
 };
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 
 
 // Focal length range is 5.0 - 60,0 mm, 27.3 - 327.4 in 35-mm equivalent.

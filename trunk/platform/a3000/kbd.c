@@ -38,6 +38,7 @@ long __attribute__((naked)) wrap_kbd_p1_f();
 void __attribute__((noinline))
 mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
 	/* Initialize our own kbd_new_state[] array with the
 	   current physical status. 
 	   */

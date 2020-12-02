@@ -2,8 +2,6 @@
 #include "lolevel.h"
 #include "live_view.h"
 
-static char* frame_buffer[2];
-
 extern int displaytype;
 extern void _LogCameraEvent(int id, const char *fmt,...);
 extern int active_bitmap_buffer;
@@ -13,7 +11,6 @@ extern char* raw_buffers_jpeg[];
 
 void vid_bitmap_refresh() {
 
-    extern int active_bitmap_buffer;
     extern void _transfer_src_overlay(int);
     _transfer_src_overlay(0);
     _transfer_src_overlay(1);
@@ -45,7 +42,7 @@ void debug_led(int state) {
 
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[2]={0,4};
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
@@ -207,7 +204,7 @@ static long vp_xo[5] = { 0, 0, 0, 80, 128 };// should all be even values for edg
 static long vp_yo[5] = {0, 60, 28, 0, 0};
 
 int vid_get_viewport_yoffset() {
-    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
+//     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
         return 0;
 }

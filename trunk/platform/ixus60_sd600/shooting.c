@@ -138,6 +138,4 @@ long get_target_dir_num() {
     return n;
 }
 
-void change_video_tables(int a, int b)
-{
-}
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {}

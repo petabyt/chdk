@@ -43,6 +43,7 @@ void __attribute__((naked,noinline)) sub_FFD53158_my(){
 
 void __attribute__((naked,noinline)) sub_FFD56070_my(long p)
 {
+    (void)p;
     asm volatile (
                 "STMFD   SP!, {R4,LR}\n"
                 "MOV     R4, R0\n"
@@ -78,6 +79,7 @@ void __attribute__((naked,noinline)) sub_FFD56070_my(long p)
 
 void __attribute__((naked,noinline)) sub_FFD5307C_my(long p)
 {
+    (void)p;
     asm volatile (
                 "STMFD   SP!, {R4,R5,LR}\n"
                 "LDR     R3, =0x91AA0\n"

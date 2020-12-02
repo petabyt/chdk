@@ -66,7 +66,6 @@ long __attribute__((naked)) wrap_kbd_p1_f();
 
 static void __attribute__((noinline)) mykbd_task_proceed()
 {
-  int i;
 	while (physw_run){
 		_SleepTask(10);
 		
