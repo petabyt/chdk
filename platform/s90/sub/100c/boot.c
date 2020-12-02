@@ -15,19 +15,19 @@ void JogDial_task_my(void);
 
 void taskCreateHook(int *p) { 
 p-=17;
-if (p[0]==0xFF87A208)  p[0]=(int)capt_seq_task;
-if (p[0]==0xFF96172C)  p[0]=(int)movie_record_task;
-if (p[0]==0xFF8982E8)  p[0]=(int)init_file_modules_task;
-if (p[0]==0xFF8C0E54)  p[0]=(int)exp_drv_task;
-if (p[0]==0xFF85E508)  p[0]=(int)JogDial_task_my;
-if (p[0]==0xFFA78FA0)  p[0]=(int)filewritetask;
+if (p[0]==(int)0xFF87A208)  p[0]=(int)capt_seq_task;
+if (p[0]==(int)0xFF96172C)  p[0]=(int)movie_record_task;
+if (p[0]==(int)0xFF8982E8)  p[0]=(int)init_file_modules_task;
+if (p[0]==(int)0xFF8C0E54)  p[0]=(int)exp_drv_task;
+if (p[0]==(int)0xFF85E508)  p[0]=(int)JogDial_task_my;
+if (p[0]==(int)0xFFA78FA0)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 
 p-=17;
-if (p[0]==0xFF8982E8)  p[0]=(int)init_file_modules_task;
-if (p[0]==0xFF8C0E54)  p[0]=(int)exp_drv_task;
-if (p[0]==0xFFA78FA0)  p[0]=(int)filewritetask;
+if (p[0]==(int)0xFF8982E8)  p[0]=(int)init_file_modules_task;
+if (p[0]==(int)0xFF8C0E54)  p[0]=(int)exp_drv_task;
+if (p[0]==(int)0xFFA78FA0)  p[0]=(int)filewritetask;
 }
 
 void __attribute__((naked,noinline)) boot() {
@@ -365,6 +365,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 
 void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
     core_spytask();
 }
 void CreateTask_spytask() { 

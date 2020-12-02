@@ -29,7 +29,7 @@ void debug_led(int state)
 }
 #define LED_BASE 0xc0220000
 
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 
 {
   int leds[] = {308,304,108,312,108,148,108};

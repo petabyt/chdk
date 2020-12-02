@@ -8,6 +8,7 @@ static long *nrflag = (long*)0x5E64; //a420 @ffd29118
 
 void __attribute__((naked,noinline)) sub_FFD290DC_my(long p)
 {
+  (void)p;
   asm volatile (
               "STMFD   SP!, {R4-R6,LR}\n"
               "LDR     R3, =0x726D4\n"
@@ -33,6 +34,7 @@ void __attribute__((naked,noinline)) sub_FFD290DC_my(long p)
 
 void __attribute__((naked,noinline)) sub_FFD25ECC_my(long p)
 {
+  (void)p;
   asm volatile (
               "STMFD   SP!, {R4,LR}\n"
               "LDR     R4, [R0,#0xC]\n"

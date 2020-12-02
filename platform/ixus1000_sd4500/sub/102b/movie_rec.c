@@ -8,8 +8,7 @@
 // mwvent82: taken from reference sub 100D and adjusted what needs to be adjusted
 //           most location labels are left as 100D with the 'real' 102B locations commented in some cases
 
-void change_video_tables(int a, int b){
-}
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {}
 
 
 void  set_quality(int *x){ // -17 highest; +12 lowest

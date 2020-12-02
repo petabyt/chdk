@@ -39,7 +39,7 @@ void debug_led(int state)
 int get_flash_params_count(void) { return 0x7a; }  // sd970: Found @0xff94ce88
 // values for sd970 found by experiment in CHDKPTP
 // using "=set_led(0,1)"  first parameter: LED number, second: state of the LED: 1 on, 0 off, others blink
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[]={0, // green
                           1, // orange, right
                           2, // yellow, left

@@ -52,7 +52,7 @@ void debug_led(int state)
 //   6         14     ISO LED
 //   7         15     EV LED
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[8]={0,1,2,3,8,9,14,15};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

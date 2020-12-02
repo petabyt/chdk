@@ -54,7 +54,7 @@ ROM:FFC24D1C ; End of function sub_FFC24CDC
 */
 #define LED_BASE 0xc0220000
 
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 
 {
   int leds[] = {16,0,5,4,0,9,0}; // power, backlight bright, backlight normal, af assist

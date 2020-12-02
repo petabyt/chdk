@@ -20,17 +20,17 @@ void boot();
 
 void taskCreateHook(int *p) { 
  p-=16;
- if (p[0]==0xFFC49B38)  p[0]=(int)task_CaptSeqTask_my;		//done
- if (p[0]==0xFFC118BC)  p[0]=(int)mykbd_task;		//done
- if (p[0]==0xFFC5FEA0)  p[0]=(int)task_InitFileModules_my;		//done
- if (p[0]==0xFFC46678)  p[0]=(int)MovieRecord_Task_my;		//done
- if (p[0]==0xFFC91194)  p[0]=(int)exp_drv_task; //done
- if (p[0]==0xFFDCB5A8)  p[0]=(int)filewritetask;
+ if (p[0]==(int)0xFFC49B38)  p[0]=(int)task_CaptSeqTask_my;		//done
+ if (p[0]==(int)0xFFC118BC)  p[0]=(int)mykbd_task;		//done
+ if (p[0]==(int)0xFFC5FEA0)  p[0]=(int)task_InitFileModules_my;		//done
+ if (p[0]==(int)0xFFC46678)  p[0]=(int)MovieRecord_Task_my;		//done
+ if (p[0]==(int)0xFFC91194)  p[0]=(int)exp_drv_task; //done
+ if (p[0]==(int)0xFFDCB5A8)  p[0]=(int)filewritetask;
 }
 
 void taskCreateHook2(int *p) { 
  p-=16;
- if (p[0]==0xFFC5FEA0)  p[0]=(int)task_InitFileModules_my;		//done
+ if (p[0]==(int)0xFFC5FEA0)  p[0]=(int)task_InitFileModules_my;		//done
 }
 
 #define DEBUG_LED 0xC02200C4

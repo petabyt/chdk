@@ -156,7 +156,7 @@ long set_parameter_data(long id, void *buf, long bufsize)
 short __attribute__((weak)) get_uiprop_value(unsigned long id)
 {
     // avoid asserts: return 0 if id is above limit
-    if (id >= uiprop_count)
+    if (id >= (unsigned long)uiprop_count)
         return 0;
     return _PTM_GetCurrentItem(id|0x8000);
 }
@@ -193,8 +193,8 @@ long lens_get_zoom_point()
 }
 
 #ifdef CAM_ILC
-void lens_set_zoom_point(long newpt) {}
-void lens_set_zoom_speed(long newspd) {}
+void lens_set_zoom_point(__attribute__ ((unused))long newpt) {}
+void lens_set_zoom_speed(__attribute__ ((unused))long newspd) {}
 #else // !CAM_ILC
 
 #if defined(CAM_USE_ALT_SET_ZOOM_POINT)
@@ -835,6 +835,7 @@ int errnoOfTaskGet(int tid) {
 #if !CAM_DRYOS
     return _errnoOfTaskGet(tid);
 #else
+    (void)tid;
     return 0;
 #endif
 }
@@ -913,6 +914,7 @@ const char *strerror(int en) {
     sprintf(msg,"errno 0x%X",en);
     return msg;
 #else
+    (void)en;
     return "error";
 #endif
 }
@@ -1132,14 +1134,14 @@ void GetMemInfo(cam_meminfo *camera_meminfo)
     camera_meminfo->free_block_count     = fw_info[7];
 #endif
 #else // vxworks
-extern int sys_mempart_id;
-    int fw_info[5];
+    extern int sys_mempart_id;
     // -1 for invalid
     memset(camera_meminfo,0xFF,sizeof(cam_meminfo));
     if(!_TakeSemaphore(canon_heap_sem,CANON_HEAP_SEM_TIMEOUT)) {
 #ifdef CAM_NO_MEMPARTINFO
         camera_meminfo->free_block_max_size = _memPartFindMax(sys_mempart_id);
 #else
+        int fw_info[5];
         _memPartInfoGet(sys_mempart_id,fw_info);
         // TODO we could fill in start address from _start + MEMISOSIZE, if chdk not in exmem
         // these are guessed, look reasonable on a540
@@ -1456,7 +1458,7 @@ void create_partitions(void){
 #else
 
 // Dummy for scripts if not implemented in camera
-int swap_partitions(int new_partition) { return 0; }
+int swap_partitions(__attribute__ ((unused))int new_partition) { return 0; }
 int get_part_count(void) { return 1; }
 int get_part_type() { return 0; }
 unsigned char get_active_partition(void) { return 1; }
@@ -1714,7 +1716,7 @@ void ExitTask()
 
 // TODO not in sigs for vx yet
 #ifndef CAM_DRYOS
-void __attribute__((weak)) _reboot_fw_update(const char *fw_update)
+void __attribute__((weak)) _reboot_fw_update(__attribute__ ((unused))const char *fw_update)
 {
 	return;
 }
@@ -1839,8 +1841,8 @@ void *vid_get_viewport_active_buffer()
  body is ifdef'd inside the body to allow exporting to modules
  eventproc version may require System.Create()/SystemEventInit first
 */
-void dbg_printf(char *fmt,...) {
 #ifdef DEBUG_LOGGING
+void dbg_printf(char *fmt,...) {
     char s[256];
     __builtin_va_list va;
     __builtin_va_start(va, fmt);
@@ -1863,8 +1865,8 @@ void dbg_printf(char *fmt,...) {
     fwrite(s,strlen(s),1,f);
     fclose(f);
     */
-#endif
 }
+#endif
 
 #ifdef CAM_MISSING_RAND
 /* Some cameras does not have srand()/rand() functions in firmware, and should be aded here.

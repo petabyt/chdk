@@ -47,7 +47,7 @@ void shutdown() {
 int get_flash_params_count(void) { return 0x94; }                          // Found @0xff986190
 
 // based on SX10, values found by experiment
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
   return; // doesn't seem to work
   static char led_table[]={0, // green
                            1, // orange, right

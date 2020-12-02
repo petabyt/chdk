@@ -16,7 +16,7 @@ int *video_mode    = &conf.video_mode;
 
 //long table1[56], table2[12];
 
-void change_video_tables(int a, int b){
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {
 // int i;
 // for (i=0;i<56;i++) table1[i]=(def_table1[i]*a)/b;
 // for (i=0;i<12;i++) table2[i]=(def_table2[i]*a)/b;

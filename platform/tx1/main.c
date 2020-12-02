@@ -34,7 +34,7 @@ static const struct {
     { 124, 65000 },
 };
 
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 #define CF_EFL 6035 
 
 const int zoom_points = 125;

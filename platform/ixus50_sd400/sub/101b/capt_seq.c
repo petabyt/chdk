@@ -11,6 +11,7 @@ static long *nrflag = (long*)0x5760; // value above aMaincapt_c
 
 void __attribute__((naked,noinline)) sub_FF95F4A4_my(long p)
 {
+    (void)p;
     asm volatile (
                 "STMFD   SP!, {R4-R8,LR}\n"
                 "LDR     R3, =0x5758\n"
@@ -39,6 +40,7 @@ void __attribute__((naked,noinline)) sub_FF95F4A4_my(long p)
 
 void __attribute__((naked,noinline)) sub_FF95C440_my(long p)
 {
+    (void)p;
     asm volatile (
                  "STMFD   SP!, {R4,R5,LR}\n"
                  "LDR     R5, [R0,#8]\n"

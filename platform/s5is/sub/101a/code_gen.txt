@@ -8,11 +8,11 @@ FILE boot.c
 
 void taskCreateHook(int *p) {
     p-=16;
-    if (p[0]==0xff866d48)  p[0]=(int)capt_seq_task;
-    if (p[0]==0xff8d3888)  p[0]=(int)exp_drv_task;
-    if (p[0]==0xffa25bd8)  p[0]=(int)filewritetask;
-    if (p[0]==0xff87bff0)  p[0]=(int)init_file_modules_task;
-    if (p[0]==0xff862f10)  p[0]=(int)movie_record_task;    
+    if (p[0]==(int)0xff866d48)  p[0]=(int)capt_seq_task;
+    if (p[0]==(int)0xff8d3888)  p[0]=(int)exp_drv_task;
+    if (p[0]==(int)0xffa25bd8)  p[0]=(int)filewritetask;
+    if (p[0]==(int)0xff87bff0)  p[0]=(int)init_file_modules_task;
+    if (p[0]==(int)0xff862f10)  p[0]=(int)movie_record_task;    
 }
 
 void boot()

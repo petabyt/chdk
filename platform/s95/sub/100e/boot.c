@@ -41,19 +41,19 @@ void taskCreateHook(int *p)
 {
 	p-=17;
 
-	if (p[0] == 0xFF88322C)
+	if (p[0] == (int)0xFF88322C)
 		p[0] = (int) capt_seq_task;
 
-	if (p[0] == 0xFF986420)
+	if (p[0] == (int)0xFF986420)
 		p[0] = (int) movie_record_task;
 
-	if (p[0] == 0xFF8A0AA0)
+	if (p[0] == (int)0xFF8A0AA0)
 		p[0] = (int) init_file_modules_task;
 
-	if (p[0] == 0xFF8CF1A8)
+	if (p[0] == (int)0xFF8CF1A8)
 		p[0] = (int) exp_drv_task;
 
-	if (p[0] == 0xFF865894)
+	if (p[0] == (int)0xFF865894)
 		p[0] = (int) JogDial_task_my;
 }
 
@@ -451,6 +451,7 @@ void __attribute__((naked,noinline)) task_Startup_my()
 -----------------------------------------------------------------------*/
 void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
     core_spytask();
 }
 

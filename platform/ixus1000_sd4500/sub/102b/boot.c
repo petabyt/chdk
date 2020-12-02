@@ -15,6 +15,7 @@ int fsionotify_compfail = 0;	// count of number of times the file handle was alr
 int fsionotify_success  = 0;	// count of number of times the code succeeded
 
 int __attribute__((naked,noinline)) _Open(const char *name, int flags, int mode) {
+   (void)name; (void)flags, (void)mode;
 // eventproc_export_Open ROM FF837FF4 0000006C R . . . . . .
    asm volatile (
 				"STMFD   SP!, {R4-R8,LR} \n"

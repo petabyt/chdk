@@ -14,7 +14,7 @@ long get_vbatt_max()
 
 static const int fl_tbl[] =
 { 5800, 6600, 7900, 9900, 12700, 16000, 19600, 23200 };
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 #define CF_EFL 60345
 
 const int zoom_points= NUM_FL;

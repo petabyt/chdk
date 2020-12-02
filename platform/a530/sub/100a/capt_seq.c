@@ -152,6 +152,7 @@ void __attribute__((naked,noinline)) capt_seq_task(){
 
 void __attribute__((naked,noinline)) sub_FFD37A98_my(long p)
 {
+    (void)p;
 	asm volatile (
 		"STMFD   SP!, {R4-R6,LR}\n"
 		"LDR     R3, =0x64D4C\n"
@@ -179,6 +180,7 @@ void __attribute__((naked,noinline)) sub_FFD37A98_my(long p)
 
 void __attribute__((naked,noinline)) sub_FFD34704_my(long p)
 {
+    (void)p;
 	asm volatile (
 		"STMFD   SP!, {R4,LR}\n"
 		"LDR     R4, [R0,#0xC]\n"

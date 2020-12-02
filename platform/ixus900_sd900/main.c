@@ -9,7 +9,7 @@ long get_vbatt_max() {
 }
 
 static const int fl_tbl[] = {7700, 9000, 10500, 12500, 15600, 18800, 23100};   // EXIF value for each zoom step 
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 #define CF_EFL 48052   // 37/7.7 * 10000
 
 const int zoom_points = NUM_FL;

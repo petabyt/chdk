@@ -50,7 +50,7 @@ int get_usb_bit()
 }
 
 // required because this platform uses KBD_CUSTOM_ALL
-int kbd_force_analog_av(int state)
+int kbd_force_analog_av(__attribute__ ((unused))int state)
 {
     return 0;
 }
@@ -190,7 +190,7 @@ const char* ts_video_ev(int change, int arg)
 
 static char ev_tv[15];
 
-const char* ts_video_tv_dn(int change, int arg)
+const char* ts_video_tv_dn(int change, __attribute__ ((unused))int arg)
 {
     if (change)
     {
@@ -200,7 +200,7 @@ const char* ts_video_tv_dn(int change, int arg)
     return ev_tv;
 }
 
-const char* ts_video_tv_up(int change, int arg)
+const char* ts_video_tv_up(int change, __attribute__ ((unused))int arg)
 {
     if (change)
     {
@@ -212,7 +212,7 @@ const char* ts_video_tv_up(int change, int arg)
 
 static char ev_av[15];
 
-const char* ts_video_av_dn(int change, int arg)
+const char* ts_video_av_dn(int change,__attribute__ ((unused)) int arg)
 {
     if (change)
     {
@@ -222,7 +222,7 @@ const char* ts_video_av_dn(int change, int arg)
     return ev_av;
 }
 
-const char* ts_video_av_up(int change, int arg)
+const char* ts_video_av_up(int change, __attribute__ ((unused))int arg)
 {
     if (change)
     {
@@ -234,7 +234,7 @@ const char* ts_video_av_up(int change, int arg)
 
 static char ev_sv[15];
 
-const char* ts_video_sv_dn(int change, int arg)
+const char* ts_video_sv_dn(int change, __attribute__ ((unused))int arg)
 {
     if (change)
     {
@@ -244,7 +244,7 @@ const char* ts_video_sv_dn(int change, int arg)
     return ev_sv;
 }
 
-const char* ts_video_sv_up(int change, int arg)
+const char* ts_video_sv_up(int change, __attribute__ ((unused))int arg)
 {
     if (change)
     {
@@ -280,16 +280,16 @@ static KeyMap keymap[] = {
     // Order IS important. kbd_get_pressed_key will walk down this table
     // and take the first matching mask. Notice that KEY_SHOOT_HALF is
     // always pressed if KEY_SHOOT_FULL is. --MarcusSt
-//  { 1, TOUCH_SCREEN       , 0x00000008 },  // Touch screen panel
-//    { 1, KEY_POWER           ,0x00800000 }, // Found @0xff5ac2f0, levent 0x100
-    { 1, KEY_PLAYBACK        ,0x01000000 }, // Found @0xff5ac2f8, levent 0x101
-    { 1, KEY_SHOOT_FULL      ,0x06000000 }, // Found @0xff5ac308, levent 0x01
-    { 1, KEY_SHOOT_FULL_ONLY ,0x04000000 }, // Found @0xff5ac308, levent 0x01
-    { 1, KEY_SHOOT_HALF      ,0x02000000 }, // Found @0xff5ac300, levent 0x00
-    { 1, KEY_ZOOM_OUT        ,0x08000000 }, // Found @0xff5ac310, levent 0x03
-    { 1, KEY_ZOOM_IN         ,0x20000000 }, // Found @0xff5ac318, levent 0x02
+//  { 1, TOUCH_SCREEN       , 0x00000008, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  // Touch screen panel
+//  { 1, KEY_POWER           ,0x00800000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac2f0, levent 0x100
+    { 1, KEY_PLAYBACK        ,0x01000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac2f8, levent 0x101
+    { 1, KEY_SHOOT_FULL      ,0x06000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac308, levent 0x01
+    { 1, KEY_SHOOT_FULL_ONLY ,0x04000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac308, levent 0x01
+    { 1, KEY_SHOOT_HALF      ,0x02000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac300, levent 0x00
+    { 1, KEY_ZOOM_OUT        ,0x08000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac310, levent 0x03
+    { 1, KEY_ZOOM_IN         ,0x20000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Found @0xff5ac318, levent 0x02
 
-    { 3, KEY_PRINT          , 0x00000001, LB(0,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID }, // virtual touch screen key
+    { 3, KEY_PRINT          , 0x00000001, LB(0,1), 0, "CHDK",  0,    GUI_MODE_NONE,      100, MODE_REC|MODE_PLAY|MODE_VID, 0, 0, 0 }, // virtual touch screen key
 
     //{ 3, TS_PG_DN, 0x40000000, RB(2,0), 0, "Pg -", 2, GUI_MODE_NONE, GUI_MODE_ALT, MODE_REC|MODE_PLAY|MODE_VID, &conf.debug_propcase_page, ts_pg_dn },
     //{ 3, TS_PG_UP, 0x80000000, RB(1,0), 0, "Pg +", 2, GUI_MODE_NONE, GUI_MODE_ALT, MODE_REC|MODE_PLAY|MODE_VID, &conf.debug_propcase_page, ts_pg_up },
@@ -306,8 +306,8 @@ static KeyMap keymap[] = {
     { 3, TS_KEY_TOGGLE_SV_UP, 0x00200000, RB(4,4), 2, 0,  0,         GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &sv_video, ts_video_sv_up, &conf.touchscreen_disable_video_controls },
     { 3, TS_KEY_TOGGLE_ND   , 0x00004000, LB(0,4), 2, "ND",    0,    GUI_MODE_NONE, GUI_MODE_NONE, MODE_VID, &conf.nd_filter_state, ts_video_nd, &conf.touchscreen_disable_video_controls },
 
-    { 3, KEY_MENU            , 0x00000002, LB(0,2), 0, "Menu",  0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY },
-    { 3, KEY_SET            , 0x00000004, LB(0,3), 0, "Set",   0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY },
+    { 3, KEY_MENU           , 0x00000002, LB(0,2), 0, "Menu",  0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_SET            , 0x00000004, LB(0,3), 0, "Set",   0, GUI_MODE_ALT, 100, MODE_REC|MODE_PLAY, 0, 0, 0 },
 
     { 3, TS_KEY_TOGGLE_RAW  , 0x00000100, RB(1,1), 1, "RAW",   0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.save_raw, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
     { 3, TS_KEY_TOGGLE_OSD  , 0x00000200, RB(1,2), 1, "OSD",   0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.show_osd, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
@@ -321,14 +321,14 @@ static KeyMap keymap[] = {
     { 3, TS_KEY_POWER       , 0x00800000, LB(3,0), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 }, 
 #endif
 #ifdef OPT_DEBUGGING
-    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, 0, 0, 0 },
 #endif
-    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY },
-    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_UP             , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_LEFT           , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_RIGHT          , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
-    { 3, KEY_DOWN           , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Back",  0,    GUI_MODE_MENU,      GUI_MODE_MENU, MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Disp",  0,    GUI_MODE_MENU+1,    100,           MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_UP             , 0x00000010, RB(0,1), 0, "Up",    0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_LEFT           , 0x00000020, RB(0,2), 0, "Left",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_RIGHT          , 0x00000040, RB(0,3), 0, "Right", 0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY, 0, 0, 0 },
+    { 3, KEY_DOWN           , 0x00000080, RB(0,4), 0, "Down",  0,    GUI_MODE_MENU,      100,           MODE_REC|MODE_PLAY, 0, 0, 0 },
 
     { 3, KEY_UP             , 0x00000010, RB(0,1), 0, "Man",   "Focus",  GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, &conf.subj_dist_override_koef, 0, &conf.touchscreen_disable_shortcut_controls },
     { 3, KEY_DISPLAY        , 0x00000008, RB(0,2), 0, "Max",   "Dist",   GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
@@ -336,7 +336,7 @@ static KeyMap keymap[] = {
     { 3, KEY_LEFT           , 0x00000020, RB(2,4), 0, "- Foc.","Factor", GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
     { 3, KEY_RIGHT          , 0x00000040, RB(1,4), 0, "+ Foc.","Factor", GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC, 0, 0, &conf.touchscreen_disable_shortcut_controls },
 
-    { 0, 0, 0 }
+    { 0 }
 };
 
 static int is_button_displayed(int b, int guiMode, int camMode)
@@ -507,7 +507,7 @@ int ts_process_touch()
 {
     int rv = 0, i;
 
-    if (touch_panel_state != 0xFFFFFFFF)
+    if (touch_panel_state != (long)0xFFFFFFFF)
     {
         int guiMode = camera_info.state.gui_mode;
         int camMode = (get_movie_status()==VIDEO_RECORD_IN_PROGRESS) ? MODE_VID : (mode_get() & MODE_MASK);

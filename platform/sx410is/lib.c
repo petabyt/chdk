@@ -46,7 +46,7 @@ int get_flash_params_count(void) { return 0xd4; }
 
 
 
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[]={0,4}; // status, AF
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
@@ -134,7 +134,7 @@ void *vid_get_bitmap_active_palette()
 
 static int af_locked_in_movierec = 0;
 
-void _MakeAFScan(int *a, int b) {
+void _MakeAFScan(__attribute__ ((unused))int *a, __attribute__ ((unused))int b) {
     _DoAFLock();
     af_locked_in_movierec = 1;
 }

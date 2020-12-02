@@ -38,7 +38,7 @@ void debug_led(int state)
 5 LED next to ISO Dial
 6 LED next EV +/- Dial 
 */
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
 	static char led_table[7]={0,1,2,3,10,14,15};
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

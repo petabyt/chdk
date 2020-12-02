@@ -37,19 +37,19 @@ void startup() {
 const int zoom_points = NUM_FL;
 extern unsigned int _GetLensFocalLengthAll(unsigned int*, unsigned int*, unsigned int*);
 
-int get_effective_focal_length(int zp) {
+int get_effective_focal_length(__attribute__ ((unused))int zp) {
 	unsigned int focal [3];
 	_GetLensFocalLengthAll(&focal[0], &focal[1], &focal[2]);
 	return ( (unsigned short)(focal[0]) * 1600  ) ;
 }
 
-int get_focal_length(int zp) {
+int get_focal_length(__attribute__ ((unused))int zp) {
 	unsigned int focal [3];
 	_GetLensFocalLengthAll(&focal[0], &focal[1], &focal[2]);
 	return ((unsigned short)(focal[0]) * 1000);	
 }
         
-int get_zoom_x(int zp) {
+int get_zoom_x(__attribute__ ((unused))int zp) {
 	unsigned int focal [3];
 	_GetLensFocalLengthAll(&focal[0], &focal[1], &focal[2]);
 	return (unsigned short)(focal[0]) * 10 / (unsigned short)(focal[1]) ;

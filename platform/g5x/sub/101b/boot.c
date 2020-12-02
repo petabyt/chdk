@@ -14,21 +14,12 @@ extern void task_InitFileModules ();
 extern void task_ExpDrv ();
 
 /*----------------------------------------------------------------------
- spytask
- -----------------------------------------------------------------------*/
-void
-spytask (long ua, long ub, long uc, long ud, long ue, long uf)
-{
-    core_spytask ();
-}
-
-/*----------------------------------------------------------------------
  CreateTask_spytask
  -----------------------------------------------------------------------*/
 void
 CreateTask_spytask ()
 {
-    _CreateTask ("SpyTask", 0x19, 0x2000, spytask, 0);
+    _CreateTask ("SpyTask", 0x19, 0x2000, core_spytask, 0);
 }
 
 /*----------------------------------------------------------------------

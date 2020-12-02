@@ -17,9 +17,7 @@ void  set_quality (int *x)  // -17 highest; +12 lowest
 /*----------------------------------------------------------------------
 	change_video_tables()
 -----------------------------------------------------------------------*/
-void change_video_tables(int a, int b)
-{
-}
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {}
 
 
 /*----------------------------------------------------------------------

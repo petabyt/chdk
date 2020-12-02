@@ -135,7 +135,7 @@ long get_target_dir_num() {
 char* shooting_get_tv_str()
 {
     short int tvv;
-    long i;
+    unsigned i;
     _GetPropertyCase(PROPCASE_TV, &tvv, sizeof(tvv));
     for (i=0;i<SS_SIZE;i++){
 	if (shutter_speeds_table[i].prop_id >= tvv)
@@ -147,7 +147,7 @@ char* shooting_get_tv_str()
 char* shooting_get_av_str()
 {
     short int avv;
-    long i;
+    unsigned i;
     _GetPropertyCase(PROPCASE_AV, &avv, sizeof(avv));
     for (i=0;i<AS_SIZE;i++){
 	if (aperture_sizes_table[i].prop_id == avv)

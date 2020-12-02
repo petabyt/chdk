@@ -14,7 +14,7 @@ extern void boot();
 extern void mykbd_task(long ua, long ub, long uc, long ud, long ue, long uf);
 extern void kbd_process_task(long ua, long ub, long uc, long ud, long ue, long uf);
 
-static void core_hook_task_create(void *tcb)
+static void core_hook_task_create(__attribute__ ((unused))void *tcb)
 {
 }
 
@@ -38,6 +38,7 @@ static void (*taskfsprev)(
 
 void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
 	{
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
     core_spytask(); // This is the main CHDK loop
 	}
 
@@ -73,6 +74,7 @@ static void capt_seq_hook(
     long p0,    long p1,    long p2,    long p3,    long p4,
     long p5,    long p6,    long p7,    long p8,    long p9)
 	{
+    (void)p0; (void)p1; (void)p2; (void)p3; (void)p4; (void)p5; (void)p6; (void)p7; (void)p8; (void)p9;
     capt_seq_task();
 	}
 
@@ -80,6 +82,7 @@ static void movie_record_hook(
     long p0,    long p1,    long p2,    long p3,    long p4,
     long p5,    long p6,    long p7,    long p8,    long p9)
 	{
+    (void)p0; (void)p1; (void)p2; (void)p3; (void)p4; (void)p5; (void)p6; (void)p7; (void)p8; (void)p9;
     movie_record_task();
 	}
 

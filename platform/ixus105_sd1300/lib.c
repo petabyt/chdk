@@ -57,7 +57,7 @@ void debug_led(int state)
 	p[0]=0x44;
 }
 
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 {
   static char led_table[7]={0,0,1,1,1,9,9};
  if(led >=4 && led <= 10)

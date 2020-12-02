@@ -55,7 +55,7 @@ void shutdown()
 #define LED_PR 0xC0220134	// Power LED
 
 // TODO = this uses power LED, need to disable later (so power LED doesn't flicker)
-void debug_led(int state)
+void debug_led(__attribute__ ((unused))int state)
 {
  //*(int*)LED_PR=state ? 0x46 : 0x44;
 }
@@ -63,7 +63,7 @@ void debug_led(int state)
 // SX30 has two 'lights' - Power LED, and AF assist lamp
 // Power Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
  static char led_table[2]={3,9};
  _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

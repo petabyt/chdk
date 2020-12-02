@@ -15,12 +15,12 @@ FILE boot.c
 
 void taskCreateHook(int *p) {
     p-=16;
-    if (p[0]==0xff861210)  p[0]=(int)capt_seq_task;
-    if (p[0]==0xff8b8b90)  p[0]=(int)exp_drv_task;
-    if (p[0]==0xff85d4c0)  p[0]=(int)movie_record_task;
-    if (p[0]==0xffa2ac90)  p[0]=(int)filewritetask;
-    if (p[0]==0xff877284)  p[0]=(int)init_file_modules_task;
-    if (p[0]==0xff849530)  p[0]=(int)JogDial_task_my;
+    if (p[0]==(int)0xff861210)  p[0]=(int)capt_seq_task;
+    if (p[0]==(int)0xff8b8b90)  p[0]=(int)exp_drv_task;
+    if (p[0]==(int)0xff85d4c0)  p[0]=(int)movie_record_task;
+    if (p[0]==(int)0xffa2ac90)  p[0]=(int)filewritetask;
+    if (p[0]==(int)0xff877284)  p[0]=(int)init_file_modules_task;
+    if (p[0]==(int)0xff849530)  p[0]=(int)JogDial_task_my;
 }
 
 void boot()

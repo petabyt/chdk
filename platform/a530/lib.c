@@ -31,7 +31,7 @@ void debug_led(int state)
 }
 
 #define LED_AF 0xc0220080
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 {
   int leds[] = {12,16,4,8,4,0,4};
   if(led < 4 || led > 10 || led == 6) return;

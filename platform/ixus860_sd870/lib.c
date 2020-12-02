@@ -33,7 +33,7 @@ void debug_led(int state)
 }
 
 //  fe50 10-Aug-2008
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 {
 	// "brigth" not implemented
 	// YELLOW not available

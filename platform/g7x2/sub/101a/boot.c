@@ -77,20 +77,12 @@ extern void task_FsIoNotifyTask();
 // }
 
 /*----------------------------------------------------------------------
-    spytask
------------------------------------------------------------------------*/
-void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
-{
-    core_spytask();
-}
-
-/*----------------------------------------------------------------------
     CreateTask_spytask
 -----------------------------------------------------------------------*/
 void CreateTask_spytask()
 {
 //    _CreateTask("BlinkTask", 0x19, 0x800, blinktask, 0);
-    _CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
+    _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
 }
 
 /*----------------------------------------------------------------------

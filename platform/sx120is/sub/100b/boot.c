@@ -57,13 +57,13 @@ void JogDial_task_my(void);
 
 void taskCreateHook(int *p) { 
  p-=17;
-if (p[0]==0xFFC4F640)  p[0]=(int)capt_seq_task;	
-if (p[0]==0xFFC11638)  p[0]=(int)mykbd_task;
-if (p[0]==0xFFC696AC)  p[0]=(int)init_file_modules_task;
-if (p[0]==0xFFC37070)  p[0]=(int)JogDial_task_my;
-if (p[0]==0xFFD144F0)  p[0]=(int)movie_record_task;
-if (p[0]==0xFFC86E80)  p[0]=(int)exp_drv_task;
-if (p[0]==0xFFDFA744)  p[0]=(int)filewritetask;
+if (p[0]==(int)0xFFC4F640)  p[0]=(int)capt_seq_task;	
+if (p[0]==(int)0xFFC11638)  p[0]=(int)mykbd_task;
+if (p[0]==(int)0xFFC696AC)  p[0]=(int)init_file_modules_task;
+if (p[0]==(int)0xFFC37070)  p[0]=(int)JogDial_task_my;
+if (p[0]==(int)0xFFD144F0)  p[0]=(int)movie_record_task;
+if (p[0]==(int)0xFFC86E80)  p[0]=(int)exp_drv_task;
+if (p[0]==(int)0xFFDFA744)  p[0]=(int)filewritetask;
 }
 
 void CreateTask_spytask() {

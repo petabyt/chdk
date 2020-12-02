@@ -250,7 +250,6 @@ void __attribute__((naked,noinline)) sub_FFD13328_my(){
 	);
 };
 
-void change_video_tables(int a, int b){
-} 
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {} 
 
 

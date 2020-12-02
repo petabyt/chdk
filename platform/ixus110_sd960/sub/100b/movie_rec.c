@@ -1,8 +1,7 @@
 #include "conf.h"
 
 // from sx10
-void change_video_tables(int a, int b){
-}
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {}
 
 // from sx10, not sure if the values are right
 void  set_quality(int *x){ // -17 highest; +12 lowest

@@ -115,7 +115,6 @@ void  h_usrKernelInit() //done	 @ 0xFF81181C in dump
 
 void  h_usrRoot() // 0xFF811B44 in dump  //done
 {
-	volatile long *p;
 	asm volatile (
 	"STMFD   SP!, {R4,R5,LR}\n"
 	"MOV     R5, R0\n"

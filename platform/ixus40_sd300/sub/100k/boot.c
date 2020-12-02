@@ -122,7 +122,7 @@ void  h_usrKernelInit()
 
 void  h_usrRoot()
 {
-	volatile long *p;
+// 	volatile long *p;
 	
 	asm volatile (
 	"STMFD   SP!, {R4,R5,LR}\n"

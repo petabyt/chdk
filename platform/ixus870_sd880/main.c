@@ -29,7 +29,7 @@ void startup()
 
 
 static const int fl_tbl[] = {5000, 5984, 6935, 8118, 9368, 10797, 12524, 14843, 17174, 19998};
-#define NUM_FL (sizeof(fl_tbl)/sizeof(fl_tbl[0]))
+#define NUM_FL (int)(sizeof(fl_tbl)/sizeof(fl_tbl[0]))
 // Calculation taken from ixus980
 // focal length range is 5,0 - 20 mm, 28 - 112 in 35-mm equivalent.
 // So, CF_EFL = 28/5,0*10000=56000 or 112/20*10000=56000

@@ -40,7 +40,7 @@ void debug_led(int state) {
         asm("nop\n nop\n");
 }
 
-void camera_set_led(int led, int state, int bright) {  // camera has three LED's (focus assist lamp & and a green/orange combo LED)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {  // camera has three LED's (focus assist lamp & and a green/orange combo LED)
     static char led_table[3]={0,1,9};
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }

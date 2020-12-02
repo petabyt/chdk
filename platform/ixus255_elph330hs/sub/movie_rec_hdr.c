@@ -1,7 +1,6 @@
 #include "conf.h"
 
-void change_video_tables(int a, int b){
-}
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {}
 
 // not working, see comments in code_gen.txt
 extern int video_compression_rate2;

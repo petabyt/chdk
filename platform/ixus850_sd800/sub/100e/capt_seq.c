@@ -8,6 +8,7 @@ static long *nrflag = (long*)0x6ACC;
 
 void __attribute__((naked,noinline)) sub_FF99BA84_my(long p)
 {
+    (void)p;
     asm volatile (
                 "STMFD   SP!, {R4,LR}\n"
                 "MOV     R4, R0\n"
@@ -45,6 +46,7 @@ void __attribute__((naked,noinline)) sub_FF99BA84_my(long p)
 
 void __attribute__((naked,noinline)) sub_FF998960_my(long p)
 {
+    (void)p;
     asm volatile (
                 "STMFD   SP!, {R4,R5,LR}\n"
                 "LDR     R3, =0xB7CA0\n"

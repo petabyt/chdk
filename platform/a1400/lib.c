@@ -28,7 +28,7 @@ void debug_led(int state)
 // Green Led = first entry in table (led 0)
 // Orange Led = first entry in table (led 0)
 // AF Assist Lamp = second entry in table (led 1)
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[3]={0,1,4};
     if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }

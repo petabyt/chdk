@@ -39,7 +39,7 @@ void debug_led(int state)
     *p = ((state) ? 0x4d0002 : 0x4c0003);
 }
 
-void camera_set_led(int led, int state, int bright)
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright)
 {
     static char led_table[4]={0,1,2,4};     // 0=Green OVF, 1=Orange OVF, 2=Power Switch LED, 4=Focus Assist Lamp
     _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);

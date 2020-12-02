@@ -14,16 +14,16 @@ void task_CaptSeqTask_my();
 
 void taskCreateHook(int *p) { 
 p-=17;
-if (p[0]==0xFFC73674)  p[0]=(int)init_file_modules_task;
-if (p[0]==0xFFC5C198)  p[0]=(int)task_CaptSeqTask_my;
-if (p[0]==0xFFC94FF8)  p[0]=(int)exp_drv_task;
-if (p[0]==0xFFD1381C)  p[0]=(int)movie_record_task;
+if (p[0]==(int)0xFFC73674)  p[0]=(int)init_file_modules_task;
+if (p[0]==(int)0xFFC5C198)  p[0]=(int)task_CaptSeqTask_my;
+if (p[0]==(int)0xFFC94FF8)  p[0]=(int)exp_drv_task;
+if (p[0]==(int)0xFFD1381C)  p[0]=(int)movie_record_task;
 }
 
 void taskCreateHook2(int *p) { 
 p-=17;
-if (p[0]==0xFFC73674)  p[0]=(int)init_file_modules_task;
-if (p[0]==0xFFC94FF8)  p[0]=(int)exp_drv_task;
+if (p[0]==(int)0xFFC73674)  p[0]=(int)init_file_modules_task;
+if (p[0]==(int)0xFFC94FF8)  p[0]=(int)exp_drv_task;
 }
 
 
@@ -350,6 +350,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
 
 void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
 {
+    (void)ua; (void)ub; (void)uc; (void)ud; (void)ue; (void)uf;
     core_spytask();
 }
 void CreateTask_spytask() { 

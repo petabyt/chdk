@@ -3,7 +3,7 @@
 //int *video_quality = &conf.video_quality;
 //int *video_mode    = &conf.video_mode;
 
-void change_video_tables(int a, int b) {
+void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {
     //int i;
     //for (i=0;i<24;i++) table[i]=(def_table[i]*a)/b;
 }

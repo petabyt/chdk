@@ -21,11 +21,11 @@ void CreateTask_spytask()
 
 void taskCreateHook(int *p) {
     p-=16;
-    if (p[0]==0xffc48dc0)  p[0]=(int)capt_seq_task;
-    if (p[0]==0xffc905d4)  p[0]=(int)exp_drv_task;
-    if (p[0]==0xffdc18e4)  p[0]=(int)filewritetask;
-    if (p[0]==0xffc5f114)  p[0]=(int)init_file_modules_task;
-    if (p[0]==0xffc458f4)  p[0]=(int)movie_record_task;
+    if (p[0]==(int)0xffc48dc0)  p[0]=(int)capt_seq_task;
+    if (p[0]==(int)0xffc905d4)  p[0]=(int)exp_drv_task;
+    if (p[0]==(int)0xffdc18e4)  p[0]=(int)filewritetask;
+    if (p[0]==(int)0xffc5f114)  p[0]=(int)init_file_modules_task;
+    if (p[0]==(int)0xffc458f4)  p[0]=(int)movie_record_task;
 }
 
 void boot()

@@ -41,7 +41,7 @@ void debug_led(int state)
 // A495 has 2 led values
 // 0/7 - Power LED Green
 // 1/9 - AF LED Orange
-void camera_set_led(int led, int state, int bright) {
+void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
     static char led_table[2]={7,9};
     if(state<=1) _LEDDrive(led_table[led%sizeof(led_table)], (!state)&1);
 }
