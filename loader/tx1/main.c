@@ -77,7 +77,7 @@ void __attribute__((noreturn)) my_restart()
 
 static void __attribute__((noreturn)) shutdown()
 {
-    volatile long *p = (void*)0xc02200a0;
+//     volatile long *p = (void*)0xc02200a0;
         
     asm(
          "MRS     R1, CPSR\n"
@@ -94,7 +94,7 @@ static void __attribute__((noreturn)) shutdown()
 
 static void __attribute__((noreturn)) panic(int cnt)
 {
-	volatile long *p=(void*)LED_PR;
+// 	volatile long *p=(void*)LED_PR;
 	int i;
 
 	for(;cnt>0;cnt--){

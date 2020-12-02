@@ -17,10 +17,10 @@
 
 void __attribute__((noreturn)) copy_and_restart(void *dst_void, const void *src_void, long length) {
 
-        volatile long *p = (void*)LED_BLUE;       // turned off later, so assumed to be power
+//         volatile long *p = (void*)LED_BLUE;       // turned off later, so assumed to be power
         //volatile long *p2 = (void*)DP2;       // turned off later, so assumed to be power
 
-        int counter;
+//         int counter;
 
         // DEBUG: blink led
         //counter = DELAY; *p = 0x46;  while (counter--) { asm("nop\n nop\n"); };

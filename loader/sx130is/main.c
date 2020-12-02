@@ -11,7 +11,7 @@ extern long blob_copy_and_reset_size;
 void __attribute__((noreturn)) my_restart()
 {
     void __attribute__((noreturn)) (*copy_and_restart)(char *dst, char *src, long length);
-    int i;
+    unsigned i;
 
 	for (i=0; i<(blob_copy_and_reset_size/sizeof(long)); i++){
 	((long*)(RESTARTSTART))[i] = blob_copy_and_reset[i];
