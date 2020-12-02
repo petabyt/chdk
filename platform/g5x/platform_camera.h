@@ -38,6 +38,8 @@
 
     #define CAM_HAS_CMOS                        1
 
+    #define CAM_HAS_JOGDIAL                     1
+
 // not implemented
     #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
     #undef  CAM_VIDEO_CONTROL
