@@ -4,14 +4,14 @@
 
 #define NULL_SUB 0xe0020929 // bx lr
 
-NHSTUB(EnterToCompensationEVF                 ,NULL_SUB)
-NHSTUB(ExitFromCompensationEVF                ,NULL_SUB)
-NHSTUB(ExpCtrlTool_StartContiAE               ,NULL_SUB)
-NHSTUB(ExpCtrlTool_StopContiAE                ,NULL_SUB)
+NHSTUB(EnterToCompensationEVF                 ,0xe0298d6d)
+NHSTUB(ExitFromCompensationEVF                ,0xe0298dad)
+NHSTUB(ExpCtrlTool_StartContiAE               ,0xe02a1a91)
+NHSTUB(ExpCtrlTool_StopContiAE                ,0xe02a1bfd)
 NHSTUB(Feof_Fut                               ,0xe03710c1)
 NHSTUB(Fflush_Fut                             ,0xe03710eb)
 NHSTUB(GetDrive_TotalClusters                 ,0xe0375125)  // function immediately before GetDrive_FreeClusters in ROM
-NHSTUB(GetFocusLensSubjectDistanceFromLens    ,NULL_SUB)
+NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xe0372eeb)
 NHSTUB(GetImageFolder                         ,0xe0355015)
 NHSTUB(MakeSDCardBootable                     ,NULL_SUB)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
