@@ -164,9 +164,14 @@ DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xe0fd7a68
 // there are 101 entries in the table - set NUM_FL to 101
 DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 
+//NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xe0298d6d
+//NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xe0298dad
+//NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xe02a1a91
+//NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xe02a1bfd
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xe03710c1
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xe03710eb
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xe0375125
+//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xe0372eeb
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xe0355015
 //NHSTUB(PT_PlaySound                         ,0xe037e475) //  0        *** != 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xe0370e69
@@ -191,12 +196,8 @@ NHSTUB(DeleteDirectory_Fut                    ,0xe0370f15) //  0
 NHSTUB(DeleteFile_Fut                         ,0xe0370ecb) //  0
 NHSTUB(DoAELock                               ,0xe0298e1d) //  0
 NHSTUB(DoAFLock                               ,0xe02989e7) //  0
-//NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0            == 0x00000000
 NHSTUB2(ExecuteEventProcedure                  ,0xe03703e3) //  0
-//NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0            == 0x00000000
 NHSTUB(ExitTask                               ,0xdffc95af) //  0
-//NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0            == 0x00000000
-//NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fclose_Fut                             ,0xe0370f77) //  0
 NHSTUB(Fgets_Fut                              ,0xe037105b) //  0
 NHSTUB(Fopen_Fut                              ,0xe0370f4f) //  0
@@ -215,7 +216,6 @@ NHSTUB(get_current_nd_value                   ,0xe04fd785) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xe0374c35) //  0
 NHSTUB(GetDrive_FreeClusters                  ,0xe0375149) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xe0372bf5) //  0
-//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0            == 0x00000000
 NHSTUB(GetKbdState                            ,0xe004e73b) //  0
 NHSTUB(GetMemInfo                             ,0xe0589bad) //  0
 NHSTUB(GetOpticalTemperature                  ,0xe0401223) //  0
