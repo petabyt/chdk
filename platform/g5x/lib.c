@@ -206,7 +206,7 @@ int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
 
 /*
- * Needed because bitmap buffer resolution changes when using the EVF
+ * Needed because bitmap buffer resolution changes when using the EVF or HDMI
  * LCD = 720 x 480
  * EVF = 1024 x 768
  * HDMI = 960 x 540
