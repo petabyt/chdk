@@ -205,9 +205,8 @@ int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 int vid_get_aspect_ratio()                      { if (hdmi_out) return LV_ASPECT_16_9; else return LV_ASPECT_3_2; }
 
 /*
- * Needed because bitmap buffer resolution changes when using the EVF
+ * Needed because bitmap buffer resolution changes when using HDMI
  * LCD = 720 x 480
- * EVF = 1024 x 768
  * HDMI = 960 x 540
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
