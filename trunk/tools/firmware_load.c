@@ -848,7 +848,7 @@ int find_nxt_str_ref_alt(firmware *fw, char *str, int ofst, int limit)
 
 // Checks if the instruction at index 'k' is a BL to address 'v1'
 // Used with the 'search_fw' below
-int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int find_BL(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isBL(fw,k))
     {
@@ -861,7 +861,7 @@ int find_BL(firmware *fw, int k, uint32_t v1, uint32_t v2)
 
 // Checks if the instruction at index 'k' is a BL to address 'v1'
 // Used with the 'search_fw' below
-int find_B(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int find_B(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isB(fw,k))
     {

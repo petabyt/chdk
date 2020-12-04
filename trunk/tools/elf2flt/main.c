@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	load_import(filename_import);
 	load_stoplist(filename_stoplist);
       
-    int err = elfloader_load(filename_elf, filename_flt);
+    int err = elfloader_load(filename_flt);
 
 	if ( err == ELFFLT_OUTPUT_ERROR || err == ELFFLT_INPUT_ERROR )
     	PRINTERR(stderr, "elf2flt: Internal error\n");

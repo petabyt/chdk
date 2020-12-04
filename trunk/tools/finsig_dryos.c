@@ -734,7 +734,7 @@ uint32_t apex2us_test[] = { 0x3D09000, 0x3BBA304, 0x3A728D2, 0x3931EF4, 0x37F830
 uint32_t apex2us_test2[] = { 0x3d090000, 0x3bba3040, 0x3a728d1f, 0x3931ef45, 0x37f8302c, 0x36c52a26, 0x3598b852, 0x3472b699, 0 }; // r52+?
 
 // Special case for apex2us
-int match_apex2us(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_apex2us(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1) && ((fwRd(fw,k) == 1) || (fwRd(fw,k) == 2)))
     {
@@ -750,7 +750,7 @@ int match_apex2us(firmware *fw, int k, uint32_t v1, uint32_t v2)
     }
     return 0;
 }
-int match_apex2us2(firmware *fw, int k, uint32_t v1, uint32_t v2) // r52+?
+int match_apex2us2(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2) // r52+?
 {
     if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1) && ((fwRd(fw,k) == 1) || (fwRd(fw,k) == 2)))
     {
@@ -766,7 +766,7 @@ int match_apex2us2(firmware *fw, int k, uint32_t v1, uint32_t v2) // r52+?
     }
     return 0;
 }
-int find_apex2us(firmware *fw, string_sig *sig, int j)
+int find_apex2us(firmware *fw, __attribute__ ((unused))string_sig *sig, int j)
 {
     int i;
     int fnd = 1;
@@ -794,7 +794,7 @@ int find_apex2us(firmware *fw, string_sig *sig, int j)
 }
 
 // Special case for mkdir
-int find_mkdir(firmware *fw, string_sig *sig, int k)
+int find_mkdir(firmware *fw, __attribute__ ((unused))string_sig *sig, int k)
 {
     if (fwval(fw,k) == 0x12CEA600)
     {
@@ -834,7 +834,7 @@ int find_mkdir(firmware *fw, string_sig *sig, int k)
 }
 
 // Special case for _pow
-int find_pow(firmware *fw, string_sig *sig, int j)
+int find_pow(firmware *fw, __attribute__ ((unused))string_sig *sig, int j)
 {
     // Find values passed to _pow
     if ((fwval(fw,j) == 0x00000000) && (fwval(fw,j+1) == 0x40000000) && (fwval(fw,j+2) == 0x00000000) && (fwval(fw,j+3) == 0x408F4000))
@@ -877,7 +877,7 @@ int find_pow(firmware *fw, string_sig *sig, int j)
 }
 
 // Special case for rand
-int find_rand(firmware *fw, string_sig *sig, int j)
+int find_rand(firmware *fw, __attribute__ ((unused))string_sig *sig, int j)
 {
     if (fwval(fw,j) == 0x41C64E6D)
     {
@@ -912,7 +912,7 @@ int get_ptp_file_buf_id(firmware *fw) {
 }
 
 // Special case for get_ptp_file_buf
-int find_get_ptp_file_buf(firmware *fw, string_sig *sig, int j)
+int find_get_ptp_file_buf(firmware *fw, __attribute__ ((unused))string_sig *sig, int j)
 {
     /*
      * looking for
@@ -1321,7 +1321,7 @@ int find_Restart(firmware *fw)
 }
 
 // Special case for 'add_ptp_handler'
-int find_add_ptp_handler(firmware *fw, string_sig *sig, int k)
+int find_add_ptp_handler(firmware *fw, __attribute__ ((unused))string_sig *sig, int k)
 {
     uint32_t vals[] = { 0x9801, 0x9802, 0x9803, 0x9804, 0x9805, 0 };
     uint32_t fadr = 0;
@@ -1480,7 +1480,7 @@ int find_GetImageFolder(firmware *fw)
 }
 
 // Special case for 'GetDrive_ClusterSize'
-int match_GetDrive_ClusterSize(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_GetDrive_ClusterSize(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isBL_cond(fw,k))
     {
@@ -3336,7 +3336,7 @@ int match_strsig5(firmware *fw, string_sig *sig, int j)
 
 // Sig pattern:
 //    Function immediately preceeding string
-int match_strsig6(firmware *fw, string_sig *sig, int j)
+int match_strsig6(firmware *fw, __attribute__ ((unused))string_sig *sig, int j)
 {
     int j1 = find_inst_rev(fw, isSTMFD_LR, j-1, j-1);
     if (j1 > 0)
@@ -3386,7 +3386,7 @@ int match_strsig7(firmware *fw, string_sig *sig, int j)
 // Sig pattern:
 //      Special case for WriteSDCard
 int ofst;
-int match_strsig8(firmware *fw, string_sig *sig, int j)
+int match_strsig8(firmware *fw, __attribute__ ((unused))string_sig *sig, int j)
 {
     int j1;
     uint32_t u1;
@@ -4328,7 +4328,7 @@ void output_modemap(firmware *fw, int k)
     }
 }
 
-int match_modelist(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_modelist(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     if (isBX_LR(fw,k) && (fw->buf[k+4] == fadr))
     {
@@ -4350,7 +4350,7 @@ int match_modelist(firmware *fw, int k, uint32_t fadr, uint32_t v2)
 
 static uint32_t FlashParamsTable_address = 0;
 
-int match_FlashParamsTable2(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_FlashParamsTable2(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (fw->buf[k] == v1)
     {
@@ -4360,7 +4360,7 @@ int match_FlashParamsTable2(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_FlashParamsTable(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_FlashParamsTable(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00010000) && (fw->buf[k+2] == 0xFFFF0002))
     {
@@ -4387,7 +4387,7 @@ void find_modemap(firmware *fw)
 
 //------------------------------------------------------------------------------------------------------------
 
-int match_CAM_UNCACHED_BIT(firmware *fw, int k, int v)
+int match_CAM_UNCACHED_BIT(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if ((fw->buf[k] & 0x0FFFF000) == 0x03C00000)    // BIC
     {
@@ -4680,7 +4680,7 @@ uint32_t find_viewport_address(firmware *fw, int *kout)
     return 0;
 }
 
-int match_vid_get_bitmap_fb(firmware *fw, int k, int v)
+int match_vid_get_bitmap_fb(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if (isBL(fw,k-1) && // BL
         isLDR_PC(fw,k))
@@ -4701,7 +4701,7 @@ int match_vid_get_bitmap_fb(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_get_flash_params_count(firmware *fw, int k, int v)
+int match_get_flash_params_count(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if ((fw->buf[k] & 0xFFF00FFF) == 0xE3C00901)    // BIC Rn, Rn, #0x4000
     {
@@ -4717,7 +4717,7 @@ int match_get_flash_params_count(firmware *fw, int k, int v)
 }
 
 // based on match_get_flash_params_count
-int match_uiprop_count(firmware *fw, int k, int v)
+int match_uiprop_count(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if ((fw->buf[k] & 0xFFF00FFF) == 0xe3c00902)    // BIC Rn, Rn, #0x8000
     {
@@ -4751,7 +4751,7 @@ int match_uiprop_count(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_imager_active(firmware *fw, int k, int v)
+int match_imager_active(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     int gotit = 0;
     int reg = -1;
@@ -5035,7 +5035,7 @@ int find_exmem_alloc_table(firmware *fw)
     return 0;
 }
 
-int match_levent_table(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_levent_table(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if ((fw->buf[k] > fw->base) && (fw->buf[k+1] == 0x00000800) && (fw->buf[k+2] == 0x00000002))
     {
@@ -5049,7 +5049,7 @@ int match_levent_table(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_movie_status(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_movie_status(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isLDR_PC(fw, k) &&                              // LDR R0, =base
         ((fw->buf[k+1] & 0xFE0F0000) == 0xE20F0000) &&  // ADR R1, =sub
@@ -5092,7 +5092,7 @@ int match_movie_status(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_full_screen_refresh(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_full_screen_refresh(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (((fw->buf[k] & 0xFF1FF000) == 0xE51F0000) &&    // LDR R0, =base
         (fw->buf[k+1] == 0xE5D01000) &&                 // LDRB R1, [R0]
@@ -5106,7 +5106,7 @@ int match_full_screen_refresh(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_canon_shoot_menu_active(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_canon_shoot_menu_active(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (((fw->buf[k]   & 0xFF1FF000) == 0xE51F1000) &&  // LDR R1, =base
         ((fw->buf[k+1] & 0xFFFFF000) == 0xE5D10000) &&  // LDRB R0, [R1, #n]
@@ -5132,7 +5132,7 @@ int match_canon_shoot_menu_active(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_playrec_mode(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_playrec_mode(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (((fw->buf[k]    & 0xFF1FF000) == 0xE51F1000) && // LDR R1, =base
         ((fw->buf[k+1]  & 0xFFFFF000) == 0xE5810000) && // STR R0, [R1, #n]
@@ -5157,7 +5157,7 @@ int match_playrec_mode(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_some_flag_for_af_scan(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_some_flag_for_af_scan(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isB(fw,k)   &&  // B loc
         isB(fw,k+1) &&  // B loc
@@ -5183,7 +5183,7 @@ int match_some_flag_for_af_scan(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_palette_data(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_palette_data(firmware *fw, int k, __attribute__ ((unused))uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if ((fw->buf[k] == 0) && (fw->buf[k+1] == 0x00FF0000) &&
         (fw->buf[k+577] == 1) && (fw->buf[k+578] == 0x00FF0000) &&
@@ -5224,7 +5224,7 @@ int match_palette_buffer_offset(firmware *fw, int k)
     return 0;
 }
 
-int match_palette_data3(firmware *fw, int k, uint32_t palette_data, uint32_t v2)
+int match_palette_data3(firmware *fw, int k, uint32_t palette_data, __attribute__ ((unused))uint32_t v2)
 {
     if (isLDR_PC(fw, k) && (LDR2val(fw,k) == palette_data) && isLDR_PC(fw,k-1) && isLDR_PC(fw,k-6) && isLDR(fw,k-5))
     {
@@ -5379,7 +5379,7 @@ int match_SavePaletteData(firmware *fw, int idx, int palette_data)
     return 0;
 }
 
-int match_viewport_address3(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_viewport_address3(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isLDR_PC(fw,k) && (LDR2val(fw,k) == v1))
     {
@@ -5419,7 +5419,7 @@ int match_viewport_address3(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_viewport_address2(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_viewport_address2(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (fw->buf[k] == v1)
     {
@@ -5429,7 +5429,7 @@ int match_viewport_address2(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_viewport_address(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_viewport_address(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (fw->buf[k] == v1)
     {
@@ -5440,7 +5440,7 @@ int match_viewport_address(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_physw_status(firmware *fw, int k, int v)
+int match_physw_status(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if (isLDR_PC(fw,k))
     {
@@ -5450,7 +5450,7 @@ int match_physw_status(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_physw_run(firmware *fw, int k, int v)
+int match_physw_run(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if (isLDR_PC(fw,k))
     {
@@ -5466,7 +5466,7 @@ int match_physw_run(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_canon_menu_active(firmware *fw, int k, int v)
+int match_canon_menu_active(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if (isLDR_PC(fw,k))
     {
@@ -5485,7 +5485,7 @@ int match_canon_menu_active(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_zoom_busy(firmware *fw, int k, int v)
+int match_zoom_busy(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if (isBL(fw,k))
     {
@@ -5534,7 +5534,7 @@ int match_zoom_busy(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_focus_busy(firmware *fw, int k, int v)
+int match_focus_busy(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if ((fw->buf[k] & 0xFFFF0000) == 0xE8BD0000)   // LDMFD
     {
@@ -5593,13 +5593,13 @@ int match_bitmap_buffer2(firmware *fw, int k, int v)
     return 0;
 }
 
-int match_bitmap_buffer(firmware *fw, int k, int v)
+int match_bitmap_buffer(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     search_saved_sig(fw, "ScreenLock", match_bitmap_buffer2, k, 0, 1);
     return 0;
 }
 
-int match_raw_buffer(firmware *fw, int k, uint32_t rb1, uint32_t v2)
+int match_raw_buffer(firmware *fw, int k, uint32_t rb1, __attribute__ ((unused))uint32_t v2)
 {
     if (((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k-2) != 1) && (fwval(fw,k+2) >= fw->uncached_adr)) ||
         ((fwval(fw,k) == rb1) && (fwval(fw,k+4) == rb1) && (fwval(fw,k+20) == rb1)))
@@ -6045,7 +6045,7 @@ int find_ctypes(firmware *fw, int k)
     return 0;
 }
 
-int match_nrflag3(firmware *fw, int k, uint32_t v1, uint32_t v2)
+int match_nrflag3(firmware *fw, int k, uint32_t v1, __attribute__ ((unused))uint32_t v2)
 {
     if (isBL(fw,k) && (idxFollowBranch(fw,k,0x01000001) == (int)v1))
     {
@@ -6090,7 +6090,7 @@ int match_nrflag3(firmware *fw, int k, uint32_t v1, uint32_t v2)
     return 0;
 }
 
-int match_nrflag(firmware *fw, int idx, int v)
+int match_nrflag(firmware *fw, int idx, __attribute__ ((unused))int v)
 {
     int k1, k2, k3;
     int found = 0;
@@ -6132,7 +6132,7 @@ int match_nrflag(firmware *fw, int idx, int v)
     return found;
 }
 
-int match_nrflag2(firmware *fw, int k, int v)
+int match_nrflag2(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     // Found NR_GetDarkSubType function, now follow first BL call.
     if (isBL(fw,k))
@@ -6876,7 +6876,7 @@ void add_prop_hit(int id, uintptr_t name)
 }
 
 // string ref follows GetPropertyCase call
-int match_propsig1a(firmware *fw, int k, uint32_t sadr, uint32_t offset)
+int match_propsig1a(firmware *fw, int k, uint32_t sadr, __attribute__ ((unused))uint32_t offset)
 {
     if (isADR_PC_cond(fw,k) || isLDR_PC_cond(fw,k))   // LDR or ADR ?
     {
@@ -7262,7 +7262,7 @@ void print_kmvals()
     bprintf("//    { 0, 0, 0 }\n//};\n");
 }
 
-int match_GetSDProtect(firmware *fw, int k, int v)
+int match_GetSDProtect(firmware *fw, int k, __attribute__ ((unused))int v)
 {
     if (isB(fw,k))    // B
     {
@@ -7523,7 +7523,7 @@ void add_func_name2(firmware *fw, uint32_t nadr, uint32_t eadr, char *suffix)
     add_func_name(n, eadr, suffix);
 }
 
-int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_eventproc(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     if (isBorBL(fw,k))
     {
@@ -7561,7 +7561,7 @@ int match_eventproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
     return 0;
 }
 
-int match_registerproc2(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_registerproc2(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     int j = k;
     if (isBorBL(fw,k))
@@ -7630,7 +7630,7 @@ int match_registerproc2(firmware *fw, int k, uint32_t fadr, uint32_t v2)
     return 0;
 }
 
-int match_registerproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_registerproc(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     if (isB(fw,k+1) && isMOV_immed(fw,k) && (fwRd(fw,k) == 2))
     {
@@ -7643,7 +7643,7 @@ int match_registerproc(firmware *fw, int k, uint32_t fadr, uint32_t v2)
     return 0;
 }
 
-int match_registerlists(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_registerlists(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     if (isBorBL(fw,k+1) && isLDR_PC(fw,k) && (fwRd(fw,k) == 0))
     {
@@ -7793,7 +7793,7 @@ uint32_t findTaskAddress(firmware *fw, int k, int reg)
     return 0;
 }
 
-int match_createtask(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_createtask(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     // cams with code copied to RAM: use RAM address
     k = idxcorr(fw, k);
@@ -7919,7 +7919,7 @@ int find_ptp_handler_imm(firmware *fw, int k)
     return 0;
 }
 
-int match_ptp_handlers(firmware *fw, int k, uint32_t fadr, uint32_t v2)
+int match_ptp_handlers(firmware *fw, int k, uint32_t fadr, __attribute__ ((unused))uint32_t v2)
 {
     // check for table of opcode, func ptr (word aligned), ...
     if(fwval(fw,k) == 0x1004

@@ -202,7 +202,7 @@ relocate_section( struct relevant_section* base_sect)
       if ( stoplist_check(name) )
 	      { flag_unsafe_sym=1; }
 
-      ret = apply_import( base_sect, &rela, importidx, &s, relidx);
+      ret = apply_import( base_sect, &rela, importidx, &s);
       if (ret != ELFFLT_OK) return ret;
 	}
 	else
@@ -375,7 +375,7 @@ int add_div0_arm()
 
 /*---------------------------------------------------------------------------*/
 int
-elfloader_load(char* filename, char* fltfile)
+elfloader_load(char* fltfile)
 {
   struct elf32_ehdr ehdr;
   struct elf32_shdr shdr;
