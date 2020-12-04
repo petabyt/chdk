@@ -1461,6 +1461,6 @@ t_address find_end(firmware *fw, t_address start)
 
 //------------------------------------------------------------------------------------------------------------
 
-void swiname(t_value w, char * s, size_t sz) { return; }
+void swiname(__attribute__ ((unused))t_value w, __attribute__ ((unused))char * s, __attribute__ ((unused))size_t sz) { return; }
 
 //------------------------------------------------------------------------------------------------------------

@@ -214,8 +214,7 @@ int apply_realloc( struct relevant_section* base_sect,
 int apply_import( struct relevant_section* base_sect, 
 		   struct elf32_rela *rela, 
 		   int importidx, 
-		   struct elf32_sym *sym,
-           int i
+		   struct elf32_sym *sym
 		 )
 {
   unsigned int type  = ELF32_R_TYPE(rela->r_info);

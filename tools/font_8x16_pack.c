@@ -130,7 +130,7 @@ static void check_used(unsigned short *cp)
 
 //-------------------------------------------------------------------
 
-int main(int argc, char **argv)
+int main()
 {
     int i, j, f = 0, cc = 0, r;
     unsigned char uc;

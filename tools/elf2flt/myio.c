@@ -46,7 +46,7 @@ int b_file_preload(char* filename)
 }
 
 /*---------------------------------------------------------------------------*/
-int b_read (int fd, void* buf, int count)
+int b_read (void* buf, int count)
 {
     if ( (filecuridx+count)> filesize)
         count = filesize - filecuridx;
@@ -56,7 +56,7 @@ int b_read (int fd, void* buf, int count)
 }
 
 /*---------------------------------------------------------------------------*/
-int b_seek(int fd, long offset, int whence)
+int b_seek(long offset)
 {
     filecuridx = offset;
     if ( offset < 0 )
@@ -69,8 +69,8 @@ int b_seek(int fd, long offset, int whence)
 /*---------------------------------------------------------------------------*/
 int b_seek_read(long offset, char *buf, int len)
 {
-  if (b_seek(1, offset, SEEK_SET) != offset) return -1;
-  return b_read(1, buf, len);
+  if (b_seek(offset) != offset) return -1;
+  return b_read(buf, len);
 }
 
 char* b_get_buf()

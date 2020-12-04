@@ -15,8 +15,8 @@ typedef struct
 
 
 int b_file_preload(char* filename);
-int b_read (int fd, void* buf, int count);
-int b_seek(int fd, long offset, int whence);
+int b_read (void* buf, int count);
+int b_seek(long offset);
 char* b_get_buf();
 
 int b_seek_read(long offset, char *buf, int len);

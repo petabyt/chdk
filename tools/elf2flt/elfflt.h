@@ -23,7 +23,7 @@
 /**
  * \brief      Load and relocate an ELF file.
  */
-int elfloader_load(char* filename, char* fltfile );
+int elfloader_load(char* fltfile );
 
 
 struct relevant_section {
@@ -75,8 +75,7 @@ int apply_realloc( struct relevant_section* base_sect,
 int apply_import( struct relevant_section* base_sect, 
 		   struct elf32_rela *rela, 
 		   int importidx, 
-		   struct elf32_sym *sym,
-           int symidx
+		   struct elf32_sym *sym
 		 );
 
 #endif /* __ELFFLT_H__ */

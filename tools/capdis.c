@@ -455,7 +455,7 @@ void describe_simple_func(firmware *fw, unsigned dis_opts, char *comment, uint32
 
 // if branch insn fill in / modify ops, comment as needed, return 1
 // TODO code common with do_dis_call should be refactored
-int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
+int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *ops, char *comment)
 {
     uint32_t target = B_target(fw,is->insn);
     char op_pfx[8]="";
@@ -512,7 +512,7 @@ int do_dis_branch(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem,
 }
 
 // if function call insn fill in / modify ops, comment as needed, return 1
-int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *mnem, char *ops, char *comment)
+int do_dis_call(firmware *fw, iter_state_t *is, unsigned dis_opts, char *ops, char *comment)
 {
     if(!((is->insn->id == ARM_INS_BL || is->insn->id == ARM_INS_BLX) 
             && is->insn->detail->arm.operands[0].type == ARM_OP_IMM)) {
@@ -581,10 +581,10 @@ static void do_dis_insn(
     strcpy(ops,insn->op_str);
     comment[0]=0;
     // handle special cases, naming etc
-    if(do_dis_branch(fw,is,dis_opts,mnem,ops,comment)) {
+    if(do_dis_branch(fw,is,dis_opts,ops,comment)) {
         return;
     }
-    if(do_dis_call(fw,is,dis_opts,mnem,ops,comment)) {
+    if(do_dis_call(fw,is,dis_opts,ops,comment)) {
         return;
     }
     if((dis_opts & (DIS_OPT_CONSTS|DIS_OPT_DETAIL_CONST)) && isLDR_PC(insn))  {

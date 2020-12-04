@@ -942,7 +942,7 @@ int sig_match_str_r0_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 
 // find RegisterEventProcedure
-int sig_match_reg_evp(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+int sig_match_reg_evp(firmware *fw, iter_state_t *is, __attribute__ ((unused))sig_rule_t *rule)
 {
     const insn_match_t reg_evp_match[]={
         {MATCH_INS(MOV,   2),  {MATCH_OP_REG(R2),  MATCH_OP_REG(R1)}},
@@ -3533,14 +3533,14 @@ int sig_match_jpeg_count_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 
 // set a boolean misc val if ref is present
-int sig_match_misc_flag_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+int sig_match_misc_flag_named(__attribute__ ((unused))firmware *fw, __attribute__ ((unused))iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t ref=get_saved_sig_val(rule->ref_name);
     save_misc_val(rule->name,(ref)?1:0,0,ref);
     return 1;
 }
 
-int sig_match_cam_has_iris_diaphragm(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+int sig_match_cam_has_iris_diaphragm(__attribute__ ((unused))firmware *fw, __attribute__ ((unused))iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t v;
     uint32_t ref=0;get_saved_sig_val(rule->ref_name);
@@ -4911,7 +4911,7 @@ void add_event_proc(firmware *fw, char *name, uint32_t adr)
 }
 
 // process a call to an 2 arg event proc registration function
-int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
+int process_reg_eventproc_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
     uint32_t regs[4];
     // get r0, r1, backtracking up to 4 instructions
     if((get_call_const_args(fw,is,4,regs)&3)==3) {
@@ -4992,7 +4992,7 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is,uint32_t unused) {
 }
 
 // process a call to event proc table registration
-int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused) {
+int process_eventproc_table_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
     uint32_t regs[4];
     int foundr0 = 0;
     // get r0, backtracking up to 4 instructions
@@ -5051,7 +5051,7 @@ int process_eventproc_table_call(firmware *fw, iter_state_t *is,uint32_t unused)
     return 0;
 }
 
-int process_createtask_call(firmware *fw, iter_state_t *is,uint32_t unused) {
+int process_createtask_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
     //printf("CreateTask call at %"PRIx64"\n",is->insn->address);
     uint32_t regs[4];
     // get r0 (name) and r3 (entry), backtracking up to 10 instructions
@@ -5088,7 +5088,7 @@ int save_ptp_handler_func(firmware *fw,uint32_t op,uint32_t handler) {
     }
     return 1;
 }
-int process_add_ptp_handler_call(firmware *fw, iter_state_t *is,uint32_t unused) {
+int process_add_ptp_handler_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
     uint32_t regs[4];
     // get r0 (opcode) and r1 (handler), backtracking up to 8 instructions
     if((get_call_const_args(fw,is,8,regs)&3)==3) {
@@ -5765,7 +5765,7 @@ void add_kinfo(int r, uint32_t b, const char *nm, uint32_t adr, uint32_t ev, int
     if ((ev <= 1) && (b < kshutter_min_bits)) kshutter_min_bits = b;
 }
 
-uint32_t add_kmval(firmware *fw, uint32_t tadr, int tsiz, int tlen, uint32_t ev, const char *name, uint32_t xtra)
+uint32_t add_kmval(firmware *fw, uint32_t tadr, __attribute__ ((unused))int tsiz, int tlen, uint32_t ev, const char *name, uint32_t xtra)
 {
     uint32_t adr=find_physw_table_entry(fw,tadr,tlen,ev);
     if(!adr) {

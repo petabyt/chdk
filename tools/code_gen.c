@@ -1108,7 +1108,7 @@ void usage(char *err)
 
 op* last_op = 0;
 
-void error(char *fmt, int n)
+void error(__attribute__ ((unused))char *fmt, __attribute__ ((unused))int n)
 {
     if (last_op)
         fprintf(stderr,"Line - %d, Source --> %s\n",last_op->lineno,last_op->source);
