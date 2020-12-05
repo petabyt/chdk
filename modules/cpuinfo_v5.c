@@ -53,7 +53,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_cachetype[] = {
     {1,"Harvard/unified",0},
     {4,"Cache type",0},
     {3,"Reserved2_3",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_tcmtype[] = {
@@ -66,7 +66,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_tcmtype[] = {
     {3,"Reserved3_2",0},
     {4,"DTCM size",cache_tcm_size_str},
     {10,"Reserved4_10",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_control[] = {
@@ -85,7 +85,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_control[] = {
     {1,"ITCM enable",0},
     {1,"ITCM mode",0},
     {12,"Reserved3_12",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_regbits[] = {
@@ -97,7 +97,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_regbits[] = {
     {1,"Region 5",0},
     {1,"Region 6",0},
     {1,"Region 7",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_protreg[] = {
@@ -105,7 +105,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_protreg[] = {
     {5,"Size",protreg_size_str},
     {7,"Undef0_7",0},
     {19,"Base",protreg_base_str},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_regperms[] = {
@@ -117,7 +117,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_regperms[] = {
     {4,"Region 5",regperm_str},
     {4,"Region 6",regperm_str},
     {4,"Region 7",regperm_str},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_tcmcfg[] = {
@@ -125,7 +125,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_tcmcfg[] = {
     {5,"Size",tcmcfg_size_str},
     {7,"Undef0_7",0},
     {19,"Base",protreg_base_str},
-    {}
+    {0}
 };
 
 const struct cpuinfo_word_desc_s cpuinfo_desc[]={
@@ -148,7 +148,7 @@ const struct cpuinfo_word_desc_s cpuinfo_desc[]={
     {"Write buffer", cpuinf_regbits },
     {"DTCM cfg",cpuinf_tcmcfg },
     {"ITCM cfg",cpuinf_tcmcfg },
-    {}
+    {0}
 };
 
 

@@ -21,7 +21,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_id[] = {
     {4,"ARM Arch",0},
     {4,"Variant",0},
     {8,"Implementor",0},
-    {}
+    {0}
 };
 
 static const char *reg_sizes[] = {
