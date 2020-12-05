@@ -167,10 +167,10 @@ static void palette_test()
                         COLOR_MAGENTA   ,COLOR_YELLOW
                 },
                 {
-                        3   ,6  ,9  ,12 ,15,
-                        4   ,7  ,10 ,13 ,16,
-                        5   ,8  ,11 ,14 ,17,
-                        1   ,1  ,1  ,18 ,1
+                        3  ,6  ,9  ,12 ,15,
+                        4  ,7  ,10 ,13 ,16,
+                        5  ,8  ,11 ,14 ,17,
+                        0  ,1  ,2  ,18 ,19
                 }
         };
 
@@ -187,7 +187,7 @@ static void palette_test()
                         "red", "green", "blue", "grey", "yellow",
                         "dk red", "dk green", "dk blue", "dk grey", "dk yellow",
                         "lt red", "lt green", "lt blue", "lt grey", "lt yellow",
-                        "", "", "", "trns grey", ""
+                        "transp", "black", "white", "trns grey", "magenta"
                 }
         };
 
