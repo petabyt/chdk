@@ -139,11 +139,9 @@ CFLAGS+=-DOPT_DISABLE_CAM_ERROR=0
 endif
 
 ifdef OPT_WARNINGS
-     ifeq ($(GCC_VERSION_MAJOR),4)
-           CFLAGS+=-Wextra -fdiagnostics-show-option -Wno-missing-field-initializers -Wunused -Wno-unused-parameter
-     endif
-     ifeq ($(GCC_VERSION_MAJOR),5)
-           CFLAGS+=-Wextra -fdiagnostics-show-option -Wunused
+     CFLAGS+=-Wextra -Wunused
+     ifeq ($(GCC_VERSION_MAJOR),9)
+         CFLAGS+=-Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
      endif
 endif
 

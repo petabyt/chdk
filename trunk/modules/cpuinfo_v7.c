@@ -32,7 +32,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_feat0[] = {
     {4,"Jazelle inst set",0},
     {4,"ThumbEE inst set",0},
     {16,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_feat1[] = {
@@ -42,7 +42,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_feat1[] = {
     {4,"Virt. extensions",0},
     {4,"Generic timer ext.",0},
     {12,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_dbgfeat[] = {
@@ -54,7 +54,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_dbgfeat[] = {
     {4,"Debug model M",0},
     {4,"Perf. monitors",0},
     {4,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mmfr0[] = {
@@ -66,7 +66,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_mmfr0[] = {
     {4,"Auxiliary registers",0},
     {4,"FCSE support",0},
     {4,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mmfr1[] = {
@@ -78,7 +78,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_mmfr1[] = {
     {4,"L1 unified cache",0},
     {4,"L1 cache test & clean",0},
     {4,"Branch predictor",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mmfr2[] = {
@@ -90,7 +90,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_mmfr2[] = {
     {4,"Mem barrier",0},
     {4,"WFI stall",0},
     {4,"HW access flag",0},
-    {}
+    {0}
 };
 
 static const char *mmfr3_cache(unsigned val) {
@@ -136,7 +136,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_mmfr3[] = {
     {4,"Transl. table coherent walk",0},
     {4,"Cached memory size", mmfr3_cms},
     {4,"Supersection support", mmfr3_ss},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar0[] = {
@@ -148,7 +148,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_isar0[] = {
     {4,"Debug instrs",0},
     {4,"Divide instrs",0},
     {4,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar1[] = {
@@ -160,7 +160,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_isar1[] = {
     {4,"Immediate instrs",0},
     {4,"Interwork instrs",0},
     {4,"Jazelle instrs",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar2[] = {
@@ -172,7 +172,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_isar2[] = {
     {4,"MultU instrs",0},
     {4,"PSR AR instrs",0},
     {4,"Reversal instrs",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar3[] = {
@@ -184,7 +184,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_isar3[] = {
     {4,"ThumbCopy instrs",0},
     {4,"TrueNOP instrs",0},
     {4,"T2 Exec Env instrs",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar4[] = {
@@ -196,12 +196,12 @@ const struct cpuinfo_bitfield_desc_s cpuinf_isar4[] = {
     {4,"SynchPrim_instrs_frac",0},
     {4,"PSR_M instrs",0},
     {4,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_isar5[] = {
     {32,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ctr[] = {
@@ -213,7 +213,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ctr[] = {
     {4,"Cache Writeback Granule", two_on_nth_granule},
     {1,"(zero)",0},
     {3,"(register format)",0},
-    {}
+    {0}
 };
 
 static const char *ctype_str(unsigned val) {
@@ -239,14 +239,14 @@ const struct cpuinfo_bitfield_desc_s cpuinf_clidr[] = {
     {3,"Level of coherency",0},
     {3,"Level of unification",0},
     {2,"(zero)",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_csselr[] = {
     {1,"Instruction, not data",0},
     {3,"Level",0},
     {28,"(unknown)",0},
-    {}
+    {0}
 };
 
 static const char *ccsidr_linesize(unsigned val) {
@@ -266,7 +266,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ccsidr[] = {
     {1,"Read allocation",0},
     {1,"Write back",0},
     {1,"Write through",0},
-    {}
+    {0}
 };
 
 static const char *cache_tcm_size_str(unsigned val) {
@@ -288,19 +288,19 @@ const struct cpuinfo_bitfield_desc_s cpuinf_tcmreg[] = {
     {5,"Size", cache_tcm_size_str},
     {5,"-",0},
     {20,"Base address", cache_tcm_addr_str},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mputype[] = {
     {1,"S",0},
     {7,"-",0},
     {8,"Num of MPU regions",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_mpubase[] = {
     {32,"Base address",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_sctlr[] = {
@@ -329,7 +329,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_sctlr[] = {
     {1,"AFE",0},
     {1,"Thumb exceptions",0},
     {1,"Endian",0},
-    {}
+    {0}
 };
 
 static const char *mpu_region_size_str(unsigned val) {
@@ -354,7 +354,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_mpusizeen[] = {
     {5,"Size", mpu_region_size_str},
     {2,"-",0},
     {8,"Sub-regions disabled", bitfield8},
-    {}
+    {0}
 };
 
 static const char *mpu_rattr(unsigned val) {
@@ -399,12 +399,12 @@ const struct cpuinfo_bitfield_desc_s cpuinf_accesscontrol[] = {
     {3,"Access permission", regperm_str},
     {1,"-",0},
     {1,"Execute never",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_generic[] = {
     {32,"(raw value)",0},
-    {}
+    {0}
 };
 
 static const char * dbg_version(unsigned val) {
@@ -429,14 +429,14 @@ static const struct cpuinfo_bitfield_desc_s cpuinf_dbgdidr[] = {
     {4,"Context",ccsidr_plusone},
     {4,"BRP",ccsidr_plusone},
     {4,"WRP",ccsidr_plusone},
-    {}
+    {0}
 };
 
 static const struct cpuinfo_bitfield_desc_s cpuinf_dbgd_address[] = {
     {2,"Valid",0},
     {10,"- (UNK)",0},
     {20,"Address",cache_tcm_addr_str},
-    {}
+    {0}
 };
 
 static const struct cpuinfo_bitfield_desc_s cpuinf_dbgdscr[] = {
@@ -467,7 +467,7 @@ static const struct cpuinfo_bitfield_desc_s cpuinf_dbgdscr[] = {
     {1,"TXfull",0},
     {1,"RXfull",0},
     {1,"- (SBZ)",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_word_desc_s cpuinfo_desc_pmsa[]={
@@ -532,7 +532,7 @@ const struct cpuinfo_word_desc_s cpuinfo_desc_pmsa[]={
     //{"Floating Point System ID register", cpuinf_generic },
     //{"Media and VFP Feature Register 0", cpuinf_generic },
     //{"Media and VFP Feature Register 1", cpuinf_generic },
-    {}
+    {0}
 };
 
 
@@ -834,7 +834,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_tlbtype[] = {
     {8,"Lockable unified or data entries",0},
     {8,"Lockable instruction entries",0},
     {8,"(zero)",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_sctlr_vmsa[] = {
@@ -865,7 +865,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_sctlr_vmsa[] = {
     {1,"AFE",0},
     {1,"Thumb exceptions",0},
     {1,"- (SBZ)",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_clidr_vmsa[] = {
@@ -880,7 +880,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_clidr_vmsa[] = {
     {3,"Level of coherency",0},
     {3,"Level of unification",0},
     {2,"(zero)",0},
-    {}
+    {0}
 };
 
 static const char *ttbraddr0(unsigned val) {
@@ -908,7 +908,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ttbcr[] = {
     {1,"TTBR1 walks disabled" ,0},
     {25,"(zero)" ,0},
     {1,"Long descriptors" ,0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ttbr0[] = {
@@ -919,7 +919,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ttbr0[] = {
     {1,"NOS (Inner shareable)" ,0},
     {1,"IRGN[0]" ,0},
     {25,"Table address", ttbraddr0 },
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_ttbr1[] = {
@@ -930,7 +930,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_ttbr1[] = {
     {1,"NOS (Inner shareable)" ,0},
     {1,"IRGN[0]" ,0},
     {25,"Table address", ttbraddr1 },
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_actlr_vmsa[] = {
@@ -944,7 +944,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_actlr_vmsa[] = {
     {1,"Alloc in one way" ,0},
     {1,"Parity on" ,0},
     {22,"-",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_bitfield_desc_s cpuinf_cpacr_vmsa[] = {
@@ -954,7 +954,7 @@ const struct cpuinfo_bitfield_desc_s cpuinf_cpacr_vmsa[] = {
     {6,"(zero)",0},
     {1,"D32DIS",0},
     {1,"ASEDIS",0},
-    {}
+    {0}
 };
 
 const struct cpuinfo_word_desc_s cpuinfo_desc_vmsa[]={
@@ -1004,7 +1004,7 @@ const struct cpuinfo_word_desc_s cpuinfo_desc_vmsa[]={
     {"TLB lockdown reg", cpuinf_generic },
     {"PRRR", cpuinf_generic },
     {"NMRR", cpuinf_generic },
-    {}
+    {0}
 };
 
 void __attribute__((naked,noinline)) cpuinfo_get_info_vmsa(__attribute__ ((unused))unsigned *results) {
