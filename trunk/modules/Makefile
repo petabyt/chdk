@@ -93,7 +93,7 @@ $Ogui_reversi.o: games/gui_reversi.c games/simple_game.c
 $Ogui_tetris.o: games/gui_tetris.c games/simple_game.c
 $Ogui_snake.o: games/gui_snake.c games/simple_game.c
 
-$Ocpuinfo.o: simple_module.c
+$Ocpuinfo.o: simple_module.c cpuinfo_v5.c cpuinfo_v7.c
 
 $Oshot_histogram.o: shot_histogram.c shot_histogram.h
 
