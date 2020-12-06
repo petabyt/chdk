@@ -19,7 +19,7 @@ static int   filecuridx=0;
 /*---------------------------------------------------------------------------*/
 int b_file_preload(char* filename)
 {
-	int fd;
+    int fd;
 
     filesize=0;
     filecuridx=0;
@@ -27,8 +27,8 @@ int b_file_preload(char* filename)
     fd=open(filename, O_RDONLY|O_BINARY);
     if ( fd <=0 ) return 0;
     filesize = lseek(fd,0,SEEK_END);
-	if ( FLAG_VERBOSE )
-	    printf("File size=%d\n",filesize);
+    if ( FLAG_VERBOSE )
+        printf("File size=%d\n",filesize);
     filebuf=malloc(filesize);    
     if (!filebuf) return 0;
 
@@ -36,13 +36,13 @@ int b_file_preload(char* filename)
     if (lseek(fd, 0, SEEK_SET) != 0) return 0;
     do
     {
-       now = read(fd, filebuf+loaded, filesize-loaded);
-	   loaded+=now;
-	} while (loaded<filesize && now);
+        now = read(fd, filebuf+loaded, filesize-loaded);
+        loaded+=now;
+    } while (loaded<filesize && now);
          
     if ( loaded == filesize )
-    	return loaded;
-	return -loaded;
+        return loaded;
+    return -loaded;
 }
 
 /*---------------------------------------------------------------------------*/

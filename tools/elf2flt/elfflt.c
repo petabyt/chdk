@@ -22,7 +22,7 @@ const int SYMB_SIZE = 60;
 
 struct relevant_section bss, data, rodata, text;
 
-const static unsigned char elf_magic_header[] =
+static const unsigned char elf_magic_header[] =
   {0x7f, 0x45, 0x4c, 0x46,  /* 0x7f, 'E', 'L', 'F' */
    0x01,                    /* Only 32-bit objects. */
    0x01,                    /* Only LSB data. */
@@ -167,11 +167,11 @@ relocate_section( struct relevant_section* base_sect)
     if (ELF32_R_TYPE(rela.r_info) == R_ARM_V4BX)
         continue;
 
-	int symidx = ELF32_R_SYM(rela.r_info);            
-	if ( symidx*sizeof(struct elf32_sym) >= symtabsize ) {
+    int symidx = ELF32_R_SYM(rela.r_info);            
+    if ( symidx*sizeof(struct elf32_sym) >= symtabsize ) {
         PRINTERR(stderr, "elf2flt unknown symbolidx #%d for relocation %s:%d\n", symidx, base_sect->name,relidx);
     	return ELFFLT_INPUT_ERROR;
-	}
+    }
     ret = b_seek_read((symtaboff +
                      sizeof(struct elf32_sym) * symidx),
                     (char *)&s, sizeof(s));
