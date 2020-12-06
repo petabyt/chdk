@@ -5,7 +5,7 @@ HOSTAR=ar
 HOSTCFLAGS=-g -O2 -Wall -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -I$(modules)
 
 ifdef OPT_WARNINGS
-    HOSTCFLAGS+=-Wextra -Wunused -Wno-missing-field-initializers
+    HOSTCFLAGS+=-Wextra -Wunused -Wno-missing-field-initializers -Wno-strict-overflow
 endif
 
 %.o: %.c

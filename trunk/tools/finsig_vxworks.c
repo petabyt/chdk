@@ -4589,7 +4589,7 @@ int match_bitmap_buffer2(firmware *fw, int k, int v)
         int k1 = adr2idx(fw,fadr);
         if (isLDR_PC(fw,k1+1))
         {
-            int reg = (fwval(fw,k1+1) & 0x0000F000) >> 12;
+            uint32_t reg = (fwval(fw,k1+1) & 0x0000F000) >> 12;
             uint32_t adr = LDR2val(fw,k1+1);
             int k2;
             for (k2=k1; k2<k1+32; k2++)
@@ -5468,7 +5468,7 @@ int match_GetSDProtect(firmware *fw, int k, __attribute__ ((unused))int v)
 
 void find_key_vals(firmware *fw)
 {
-    uint32_t k,k1;
+    int k,k1;
 
     out_hdr = 1;
     add_blankline();
@@ -5500,7 +5500,7 @@ void find_key_vals(firmware *fw)
         if (fw->buf[adr2idx(fw,tadr)+2] == 0) tsiz = 3;
 
         uint32_t madr = fw->base + (fw->size*4-4);
-        for (k=0; k<(tadr-fw->base)/4; k++)
+        for (k=0; k<(int)(tadr-fw->base)/4; k++)
         {
             if (isLDR_PC(fw,k))
             {
@@ -5515,7 +5515,7 @@ void find_key_vals(firmware *fw)
         if (tsiz == 2)
         {
             k1 = adr2idx(fw,tadr);
-            for (k=0; k<tlen/3; k+=3)
+            for (k=0; k<(int)tlen/3; k+=3)
             {
                 if ((fw->buf[k1+k+1] == 0xFFFFFFFF) && (fw->buf[k1+k+4] == 0xFFFFFFFF))
                 {
