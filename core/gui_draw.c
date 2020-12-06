@@ -83,14 +83,13 @@ static void draw_pixel_std(unsigned int offset, color cl)
     }
     else // x is even
     {
-        unsigned int u;
-        unsigned int v;
-        CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
         bbu[offs2+1] = y; // Y
-        bbu[offs2+0] = u; // U?
-        bbu[offs2+2] = v; // V?
-
     }
+    unsigned int u;
+    unsigned int v;
+    CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
+    bbu[offs2+0] = u; // U?
+    bbu[offs2+2] = v; // V?
 #endif
 }
 //-------------------------------------------------------------------
@@ -537,6 +536,50 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl)
          }
      }
 }
+
+#ifdef THUMB_FW
+// Draw line scaled x2 in both X and Y co-ords. Used for drawing icons on high res screens
+void draw_line_x2(coord x1, coord y1, coord x2, coord y2, color cl)
+{
+    unsigned char steep = abs(y2 - y1) > abs(x2 - x1);
+    if (steep)
+    {
+        swap(x1, y1);
+        swap(x2, y2);
+    }
+    if (x1 > x2)
+    {
+        swap(x1, x2);
+        swap(y1, y2);
+    }
+    int deltax = x2 - x1;
+    int deltay = abs(y2 - y1);
+    int error = 0;
+    int y = y1;
+    int ystep = (y1 < y2)?2:-2;
+    int x;
+    for (x=x1; x<=x2; x+=2)
+    {
+        if (steep) {
+            draw_pixel(y, x, cl);
+            draw_pixel(y+1, x, cl);
+            draw_pixel(y, x+1, cl);
+            draw_pixel(y+1, x+1, cl);
+        } else {
+            draw_pixel(x, y, cl);
+            draw_pixel(x+1, y, cl);
+            draw_pixel(x, y+1, cl);
+            draw_pixel(x+1, y+1, cl);
+        }
+        error += deltay;
+        if ((error<<1) >= deltax)
+        {
+            y += ystep;
+            error -= deltax;
+        }
+    }
+}
+#endif
 
 //-------------------------------------------------------------------
 void draw_hline(coord x, coord y, int len, color cl)
@@ -1326,25 +1369,28 @@ void draw_button(int x, int y, int w, int str_id, int active)
 
 //-------------------------------------------------------------------
 // Draw an OSD icon from an array of actions
+// For THUMB_FW scale up by 2 times and draw double thickness
 void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
 {
     int x1, y1, x2, y2;
+#ifdef THUMB_FW
+    int thickness = RECT_BORDER2;
+#else
+    int thickness = RECT_BORDER1;
+#endif
     while (1)
     {
-        if (FONT_HEIGHT > 16)
-        {
-            x1 = cmds->x1<<1;
-            y1 = cmds->y1<<1;
-            x2 = cmds->x2<<1;
-            y2 = cmds->y2<<1;
-        }
-        else
-        {
-            x1 = cmds->x1;
-            y1 = cmds->y1;
-            x2 = cmds->x2;
-            y2 = cmds->y2;
-        }
+#ifdef THUMB_FW
+        x1 = cmds->x1<<1;
+        y1 = cmds->y1<<1;
+        x2 = cmds->x2<<1;
+        y2 = cmds->y2<<1;
+#else
+        x1 = cmds->x1;
+        y1 = cmds->y1;
+        x2 = cmds->x2;
+        y2 = cmds->y2;
+#endif
         color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
         color cb = chdk_colors[cmds->cb];
         switch (cmds->action)
@@ -1354,24 +1400,50 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
             return;
         case IA_HLINE:
             draw_hline(x+x1, y+y1, x2, cb);
+#ifdef THUMB_FW
+            draw_hline(x+x1, y+y1+1, x2, cb);
+#endif
             break;
         case IA_VLINE:
             draw_vline(x+x1, y+y1, y2, cb);
+#ifdef THUMB_FW
+            draw_vline(x+x1+1, y+y1, y2, cb);
+#endif
             break;
         case IA_LINE:
+#ifdef THUMB_FW
+            draw_line_x2(x+x1, y+y1, x+x2, y+y2, cb);
+#else
             draw_line(x+x1, y+y1, x+x2, y+y2, cb);
+#endif
             break;
         case IA_RECT:
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1);
+#ifdef THUMB_FW
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness);
+#else
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness);
+#endif
             break;
         case IA_FILLED_RECT:
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1|DRAW_FILLED);
+#ifdef THUMB_FW
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
+#else
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
+#endif
             break;
         case IA_ROUND_RECT:
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1|RECT_ROUND_CORNERS);
+#ifdef THUMB_FW
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
+#else
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
+#endif
             break;
         case IA_FILLED_ROUND_RECT:
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), RECT_BORDER1|DRAW_FILLED|RECT_ROUND_CORNERS);
+#ifdef THUMB_FW
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
+#else
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
+#endif
             break;
         }
         cmds++;
