@@ -22,42 +22,68 @@ typedef enum {
     GRID_ELEM_FILLED_ELLIPSE,
 } grid_elem_type;
 
-struct gline {
+typedef struct _gline {
     grid_elem_type      type;
     coord               x0,y0,x1,y1;
-    color               clf, clb;
-    struct gline        *next;
-};
+    unsigned            clf, clb;
+    struct _gline       *next;
+} gline;
+
+static int   resize;
+static gline *head;
+static gline *last;
 
 static int grid_loading = 0;
 static int interval = GRID_REDRAW_INTERVAL;
-static struct gline *head=NULL, *top=NULL;
-// unused
-#if 0
-static const char *grid_default =
-    "@title Default grid\n"
-    "@line 0,79,359,79,17\n"
-    "@line 0,160,359,160,17\n";
-#endif
 
 //-------------------------------------------------------------------
 static void grid_lines_free_data() {
-    struct gline  *ptr = head, *prev;
-
-    while (ptr) {
-        prev=ptr;
-        ptr=ptr->next;
-        free(prev);
+    while (head) {
+        gline* p  = head;
+        head = head->next;
+        free(p);
     }
-    head=top=NULL;
+}
+
+static void new_grid() {
+    grid_lines_free_data();
+    head = last = 0;
+    resize = (camera_screen.width != 360) || (camera_screen.height != 240);
+}
+
+static gline* new_gline() {
+    gline* p = malloc(sizeof(gline));
+    if (p) {
+        memset(p, 0, sizeof(gline));
+        if (!head) head = p;
+        if (last) last->next = p;
+        last = p;
+    }
+    return p;
 }
 
 //-------------------------------------------------------------------
-static void process_title(const char *title) {
-    register const char *ptr = title;
+static char* skip_whitespace(char* p) {
+    while (*p && (*p == ' ' || *p == '\t' || *p == ',')) p += 1; // skip whitespace or comma
+    return p;
+}
+
+static char* skip_to_eol(char* p) {
+    while (*p && *p != '\n') p += 1; // skip to eol
+    if (*p) p += 1;
+    return p;
+}
+
+static char* skip_token(char* p) {
+    while (*p && *p != ' ' && *p != '\t' && *p != ',' && *p != '\n') p += 1;
+    return p;
+}
+
+//-------------------------------------------------------------------
+static void process_title(char *ptr) {
     register int i=0;
 
-    while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+    ptr = skip_whitespace(ptr);
     while (i<(int)(sizeof(conf.grid_title)-1) && ptr[i] && ptr[i]!='\r' && ptr[i]!='\n') {
         conf.grid_title[i]=ptr[i];
         ++i;
@@ -66,34 +92,76 @@ static void process_title(const char *title) {
 }
 
 //-------------------------------------------------------------------
-static void process_element(const char *str, int n, grid_elem_type type) {
-    register const char *ptr = str;
-    char *nptr;
-    register int i;
+// Check for script colors
+static int get_color(char*p, char** np) {
+    int rv = 0;
+    if (strncmp(p,"trans",5) == 0)              rv = 255+1;
+    else if (strncmp(p,"black",5) == 0)         rv = 255+2;
+    else if (strncmp(p,"white",5) == 0)         rv = 255+3;
+    else if (strncmp(p,"red_dark",8) == 0)      rv = 255+5;
+    else if (strncmp(p,"red_light",9) == 0)     rv = 255+6;
+    else if (strncmp(p,"red",3) == 0)           rv = 255+4;
+    else if (strncmp(p,"green_dark",10) == 0)   rv = 255+8;
+    else if (strncmp(p,"green_light",11) == 0)  rv = 255+9;
+    else if (strncmp(p,"green",5) == 0)         rv = 255+7;
+    else if (strncmp(p,"blue_dark",9) == 0)     rv = 255+11;
+    else if (strncmp(p,"blue_light",10) == 0)   rv = 255+12;
+    else if (strncmp(p,"blue",4) == 0)          rv = 255+10;
+    else if (strncmp(p,"grey_trans",10) == 0)   rv = 255+19;
+    else if (strncmp(p,"grey_dark",9) == 0)     rv = 255+14;
+    else if (strncmp(p,"grey_light",10) == 0)   rv = 255+15;
+    else if (strncmp(p,"grey",4) == 0)          rv = 255+13;
+    else if (strncmp(p,"yellow_dark",11) == 0)  rv = 255+17;
+    else if (strncmp(p,"yellow_light",12) == 0) rv = 255+18;
+    else if (strncmp(p,"yellow",6) == 0)        rv = 255+16;
+    else if (strncmp(p,"magenta",7) == 0)       rv = 255+20;
+    if (rv > 0)
+        while (*p && *p != ' ' && *p != '\t' && *p != ',' && *p != '\n') p += 1;
+    if (np) *np = p;
+    return rv;
+}
+
+static int get_value(char* p, int* failed, int is_color) {
+    int rv = 0;
+    int fnd = 0;
+    char *np = p;
+    rv = strtol(p, &np, 0);
+    if (np != p) fnd = 1;
+    if (!fnd && is_color) {
+        char* np = p;
+        rv = get_color(p, &np);
+        if (np != p) fnd = 1;
+    }
+    *failed = !fnd;
+    return rv;
+}
+
+static void process_element(char *ptr, int n, grid_elem_type type) {
+    int i, failed;
     long nums[6];
-    struct gline  *gptr;
 
     for (i=0; i<(int)(sizeof(nums)/sizeof(nums[0])) && i<n; ++i) {
-        while (ptr[0]==' ' || ptr[0]=='\t' || ptr[0]==',') ++ptr; // whitespaces
-        nums[i] = strtol(ptr, &nptr, 0);
-        if (nptr == ptr) { // error
+        ptr = skip_whitespace(ptr);
+        nums[i] = get_value(ptr, &failed, i >= 4);
+        if (failed) // error
             return;
-        } else {
-            ptr = nptr;
-        }
+        ptr = skip_token(ptr);
     }
 
-    gptr = malloc(sizeof(struct gline));
+    gline* gptr = new_gline();
    
     if (gptr) {
-      gptr->type=type;
-      gptr->x0=nums[0];  gptr->y0=nums[1];
-      gptr->x1=nums[2];  gptr->y1=nums[3];
-      gptr->clf=nums[4]; gptr->clb=nums[5];
-      if (!head) head=gptr;
-      if (top) top->next=gptr;
-      gptr->next=NULL;
-      top=gptr;
+        gptr->type=type;
+        if (resize) {
+            // Scale values for later resizing
+            nums[0] = ((nums[0] << 14) + 180) / 360;
+            nums[1] = ((nums[1] << 14) + 120) / 240;
+            nums[2] = ((nums[2] << 14) + 180) / 360;
+            nums[3] = ((nums[3] << 14) + 120) / 240;
+        }
+        gptr->x0=nums[0];  gptr->y0=nums[1];
+        gptr->x1=nums[2];  gptr->y1=nums[3];
+        gptr->clf=nums[4]; gptr->clb=nums[5];
     }
 }
 
@@ -104,11 +172,11 @@ static int parse_grid_file(char *ptr, int size)
 
     if (size > 0)
     {
-        grid_lines_free_data();
+        new_grid();
 
         while (ptr[0])
         {
-            while (ptr[0]==' ' || ptr[0]=='\t') ++ptr; // whitespaces
+            ptr = skip_whitespace(ptr);
             if (ptr[0]=='@')
             {
                 if (strncmp("@title", ptr, 6)==0) {
@@ -131,8 +199,7 @@ static int parse_grid_file(char *ptr, int size)
                     process_element(ptr, 5, GRID_ELEM_ELLIPSE);
                 }
             }
-            while (ptr[0] && ptr[0]!='\n') ++ptr; // unless end of line
-            if (ptr[0]) ++ptr;
+            ptr = skip_to_eol(ptr);
         }
     }
 
@@ -161,26 +228,46 @@ void gui_grid_draw_osd(int force)
 {
     if (camera_info.state.mode_rec_or_review && conf.show_grid_lines)
     {
-        struct gline *ptr;
-        twoColors col = user_color(conf.grid_color);
+        int xs=0, xo=0, ys=0, yo=0;
+        gline* ptr;
+        twoColors ucol = user_color(conf.grid_color);
 
         if (force || --interval==0) {
-            for (ptr=head; ptr; ptr=ptr->next) {
+            if (resize) {
+                // Grid aspect ratio is 4:3 - fit to 3:2 or 16:9 as needed and center on screen
+                // Note: assumes aspect ratio of screen dimensions matches display aspect ratio
+                xs = (camera_screen.height * 4) / 3;
+                xo = (camera_screen.width - xs) / 2;
+                ys = camera_screen.height;
+                yo = 0;
+            }
+            for (ptr = head; ptr; ptr = ptr->next) {
+                twoColors col = (conf.grid_force_color) ? ucol : MAKE_COLOR(get_script_color(ptr->clb), get_script_color(ptr->clf));
+                int x0 = ptr->x0;
+                int y0 = ptr->y0;
+                int x1 = ptr->x1;
+                int y1 = ptr->y1;
+                if (resize) {
+                    x0 = ((x0 * xs + 8192) >> 14) + xo;
+                    y0 = ((y0 * ys + 8192) >> 14) + yo;
+                    x1 = ((x1 * xs + 8192) >> 14);
+                    y1 = ((y1 * ys + 8192) >> 14);
+                }
                 switch (ptr->type) {
                     case GRID_ELEM_LINE:
-                        draw_line(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?FG_COLOR(col):ptr->clf);
+                        draw_line(x0, y0, x1+xo, y1+yo, col);
                         break;
                     case GRID_ELEM_RECT:
-                        draw_rectangle(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?col:MAKE_COLOR(ptr->clb, ptr->clf), RECT_BORDER1);
+                        draw_rectangle(x0, y0, x1+xo, y1+yo, col, RECT_BORDER1);
                         break;
                     case GRID_ELEM_FILLED_RECT:
-                        draw_rectangle(ptr->x0, ptr->y0, ptr->x1, ptr->y1, (conf.grid_force_color)?col:MAKE_COLOR(ptr->clb, ptr->clf), RECT_BORDER1|DRAW_FILLED);
+                        draw_rectangle(x0, y0, x1+xo, y1+yo, col, RECT_BORDER1|DRAW_FILLED);
                         break;
                     case GRID_ELEM_ELLIPSE:
-                        draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?FG_COLOR(col):ptr->clf, 0);
+                        draw_ellipse(x0, y0, (unsigned int)x1, (unsigned int)y1, col, 0);
                         break;
                     case GRID_ELEM_FILLED_ELLIPSE:
-                        draw_ellipse(ptr->x0, ptr->y0, (unsigned int)(ptr->x1), (unsigned int)(ptr->y1), (conf.grid_force_color)?BG_COLOR(col):ptr->clf, DRAW_FILLED);
+                        draw_ellipse(x0, y0, (unsigned int)x1, (unsigned int)y1, col, DRAW_FILLED);
                         break;
                 }
             }
