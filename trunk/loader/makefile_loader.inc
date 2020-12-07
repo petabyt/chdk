@@ -21,7 +21,11 @@ all: main.bin
 
 main.bin: main.elf
 main.elf: entry.o main.o blobs.o
-blobs.o: $(CORE_FILE) blobs.S
+blobs.o: $(CORE_FILE)
+
+blobs.o: ../generic/blobs.S
+	@echo $< '->' $@
+	$(CC) $(CFLAGS) -nostdinc -c -o $@ $<
 
 clean:
 	rm -f *.o *.bin *.elf *.dump *.elf.syms
