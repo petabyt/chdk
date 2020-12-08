@@ -6,7 +6,7 @@ include $(topdir)makefile_cam.inc
 # Change CPU architecture to ARM V4 if building with GCC EABI
 # Otherwise incorrect wrapper calls to firmware functions are generated
 ifndef THUMB_FW
-    ARCHFLAGS+=-march=armv4
+    ARCHFLAGS+=-march=armv4t
 endif
 
 all: libplatformsub.a main.bin
