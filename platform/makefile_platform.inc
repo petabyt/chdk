@@ -7,7 +7,7 @@ include $(topdir)makefile_cam.inc
 # Otherwise incorrect wrapper calls to firmware functions are generated
 # not needed for DIGIC 6
 ifndef THUMB_FW
-    ARCHFLAGS+=-march=armv4
+    ARCHFLAGS+=-march=armv4t
 endif
 
 ifdef THUMB_FW

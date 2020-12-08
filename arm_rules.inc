@@ -17,44 +17,24 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # check for valid GCC version.
 # Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
 ifndef DISABLE_GCC_VERSION_CHECK
-    VALID_GCC=0
-    ifeq ($(GCC_VERSION_MAJOR),4)
-        VALID_GCC=1
-    endif
-    ifeq ($(GCC_VERSION_MAJOR),5)
-        VALID_GCC=1
-    endif
-    ifeq ($(VALID_GCC),0)
-        ifndef THUMB_FW
-            # Pre DIGIC 6 - must use old GCC
-            $(error Invalid GCC version. CHDK build requires GCC 4 or 5)
-        else
-            # DIGIC 6 & 7 - can use new GCC; but not fully tested
-            $(warning Unsupported GCC version. CHDK recommends GCC 4 or 5. Other versions are at your own risk.)
-        endif
+    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9))
+        $(error Invalid GCC version. CHDK build requires GCC 4, 5, 8 or 9)
     endif
 endif
 
-# -msoft-float is used per default but object files are marked as hard-float
 # -fno-schedule-insns2 for this gcc bug http://gcc.gnu.org/bugzilla/show_bug.cgi?id=38644
 # technically not required for gcc >= 4.6.3, and probably not required for vxworks cams
 # see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
 CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
-# for gcc >= v3, we want to allow use of strd etc
+# for gcc >= v4, we want to allow use of strd etc
+# Also set architecture version for modules (to prevent loading on wrong build)
 ifndef THUMB_FW
-    ifeq ($(GCC_VERSION_MAJOR),4)
-        # TODO should be -mcpu, but breaks things ATM
-        CFLAGS+=-mtune=arm946e-s -march=armv5te
-    endif
-    ifeq ($(GCC_VERSION_MAJOR),5)
-        # TODO should be -mcpu, but breaks things ATM
-        CFLAGS+=-mtune=arm946e-s -march=armv5te
-    endif
+    CFLAGS+=-mtune=arm946e-s -march=armv5te -DOPT_ARCHITECTURE=GCC_EABI_THUMB
 else
     ifdef DIGIC7
-        CFLAGS+=-march=armv7-a -mthumb -DTHUMB_FW
+        CFLAGS+=-march=armv7-a -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
     else
-        CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW
+        CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2
     endif
 endif
 
@@ -139,10 +119,10 @@ CFLAGS+=-DOPT_DISABLE_CAM_ERROR=0
 endif
 
 ifdef OPT_WARNINGS
-     CFLAGS+=-Wextra -Wunused
-     ifeq ($(GCC_VERSION_MAJOR),9)
-         CFLAGS+=-Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
-     endif
+    CFLAGS+=-Wextra -Wunused
+    ifeq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),8 9))
+        CFLAGS+=-Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
+    endif
 endif
 
 ifdef OPT_EXPIRE_TEST
@@ -153,17 +133,6 @@ endif
 
 ifdef OPT_FILEIO_STATS
 CFLAGS+=-DOPT_FILEIO_STATS
-endif
-
-# Architecture version for modules (to prevent loading on wrong build)
-ifndef THUMB_FW
-    CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB
-else
-    ifdef DIGIC7
-        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
-    else
-        CFLAGS+=-DOPT_ARCHITECTURE=GCC_EABI_THUMB2
-    endif
 endif
 
 
