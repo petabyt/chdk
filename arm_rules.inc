@@ -17,8 +17,11 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # check for valid GCC version.
 # Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
 ifndef DISABLE_GCC_VERSION_CHECK
-    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9))
-        $(error Invalid GCC version. CHDK build requires GCC 4, 5, 8 or 9)
+    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9 10))
+        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8 or 9. GCC 10 support is experimental.)
+    endif
+    ifeq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),10))
+        $(warning Unsupported GCC version. CHDK build is supported on GCC 4, 5, 8 or 9. GCC 10 support is experimental.)
     endif
 endif
 
@@ -120,7 +123,7 @@ endif
 
 ifdef OPT_WARNINGS
     CFLAGS+=-Wextra -Wunused
-    ifeq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),8 9))
+    ifeq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),8 9 10))
         CFLAGS+=-Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
     endif
 endif

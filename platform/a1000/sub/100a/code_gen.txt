@@ -304,15 +304,7 @@ ENDFUNC
 FUNC sig=task_ExpDrv name=exp_drv_task
 ASM
 FW 235
->>>
-
-//SKIP DATA
-<<<
-//SKIP 16
-FW 16
->>>
-//END SKIP
-<<<
+SKIP 16
 FW 11
 PATCHSUB ref=0
 FW $
