@@ -1895,7 +1895,6 @@ extern int usb_HPtimer_bad(int, int);
 extern int usb_HPtimer_good(int, int);
 
 int usb_HPtimer_handle=0;
-int usb_HPtimer_error_count=0;
 
 static int ARM_usb_HPtimer_good(int time, int interval) { return usb_HPtimer_good(time, interval); }
 static int ARM_usb_HPtimer_bad(int time, int interval) { return usb_HPtimer_bad(time, interval); }

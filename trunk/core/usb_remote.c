@@ -392,7 +392,9 @@ void set_usb_remote_state()
         rmt_state = RMT_DISABLED ;
         usb_remote_active = 0 ;
     }
-    virtual_remote_state = driver_state = logic_module_state = REMOTE_RESET ;
+    virtual_remote_state = REMOTE_RESET;
+    driver_state = SW_RESET;
+    logic_module_state = LM_RESET;
 }
 
 int handle_usb_remote()

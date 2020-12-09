@@ -60,7 +60,12 @@ endif
 
 .PHONY: infoline
 infoline: platformcheck
+ifdef OPT_WARNINGS
+    # send build info to stderr if OPT_WARNINGS set - useful for redirecting just build warnings to a file while still seeing which camera generated the warning (make batch 2> output.txt)
+	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(TARGET_CAM)-$(TARGET_FW)" 1>&2
+else
 	@echo "**** GCC $(GCC_VERSION) : BUILDING CHDK-$(VER), #$(BUILD_NUMBER)-$(BUILD_SVNREV)$(STATE) FOR $(TARGET_CAM)-$(TARGET_FW)"
+endif
 
 .PHONY: version
 version: FORCE

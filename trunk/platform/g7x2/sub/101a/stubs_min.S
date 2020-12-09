@@ -9,7 +9,6 @@ DEF(raw_buffer_index                ,0x00008578)    // Reference @ 0xe023dc6e
 
 // TODO:
 
-DEF(zoom_status                     ,0x00032818)    // OK found @e024f38a search for "TerminateDeliverToZoomController"
 DEF(recreview_hold                  ,0x00009564)    // OK found @e036417e search for "ShootCon_NotifyComplete"
 
 FAKEDEF(video_compression_rate, 1)

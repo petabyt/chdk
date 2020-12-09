@@ -609,25 +609,6 @@ asm volatile (
 "    BL      sub_FFC811F0 \n"
 "    B       loc_FFC84758 \n"
 
-//SKIP DATA
-"    .long   0xFFC80D34 \n"
-"    ANDEQ   R0, R0, R8, LSR R11 \n"
-"    ANDEQ   R0, R0, R11, ASR#22 \n"
-"    ANDEQ   R0, R0, R8, ASR#23 \n"
-"    ANDEQ   R0, R0, PC, LSR R12 \n"
-"    ANDEQ   R0, R0, SP, ASR#24 \n"
-"    MULEQ   R0, R6, R12 \n"
-"    MULEQ   R0, R11, R12 \n"
-"    ANDEQ   R0, R0, R8, LSL#16 \n"
-"    ANDEQ   R0, R0, R9, LSR#25 \n"
-"    ANDEQ   R0, R0, PC, LSR#25 \n"
-"    ANDEQ   R0, R0, R3, LSL#26 \n"
-"    ANDEQ   R0, R0, R9, LSR#26 \n"
-"    ANDEQ   R0, R0, R12, LSR#26 \n"
-"    .long   0xFFC80D24 \n"
-"    ANDEQ   R0, R0, SP, ASR SP \n"
-//END SKIP
-
 "loc_FFC84640:\n"
 "    BL      sub_FFC81478 \n"
 "    B       loc_FFC84758 \n"
