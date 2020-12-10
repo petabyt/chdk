@@ -167,6 +167,15 @@ static ptp_script_msg *lua_create_usb_msg( lua_State* L, int index, unsigned msg
 
 void lua_script_reset()
 {
+    // in PTP, clean up gui state to ensure not left in script handler
+    if(lua_script_is_ptp) {
+        if(ptp_saved_alt_state) {
+            enter_alt(0); // return to regular "alt" from script GUI mode
+        } else {
+            exit_alt();
+        }
+    }
+
     script_shoot_hooks_reset();
     lua_close( L );
     L = 0;
@@ -256,9 +265,6 @@ void lua_script_finish(lua_State *L)
                 break;
             }
         }
-        if(!ptp_saved_alt_state) {
-            exit_alt();
-        }
     }
 }
 
@@ -268,11 +274,8 @@ int lua_script_start( char const* script, int ptp )
     lua_script_is_ptp = ptp;
     if(ptp) {
         ptp_saved_alt_state = camera_info.state.gui_mode_alt;
-        // put ui in alt state to allow key presses to be sent to script
-        // just setting kbd_blocked leaves UI in a confused state
-        if(!ptp_saved_alt_state) {
-            enter_alt(1);
-        }
+        // put ui in script alt state to allow key presses to be sent to script
+        enter_alt(1);
     }
     L = lua_open();
     luaL_openlibs( L );
