@@ -267,11 +267,11 @@ int lua_script_start( char const* script, int ptp )
     script_shoot_hooks_reset();
     lua_script_is_ptp = ptp;
     if(ptp) {
-        ptp_saved_alt_state = (camera_info.state.gui_mode_alt);
+        ptp_saved_alt_state = camera_info.state.gui_mode_alt;
         // put ui in alt state to allow key presses to be sent to script
         // just setting kbd_blocked leaves UI in a confused state
         if(!ptp_saved_alt_state) {
-            enter_alt();
+            enter_alt(1);
         }
     }
     L = lua_open();
@@ -1417,7 +1417,7 @@ static int luaCB_usb_sync_wait( lua_State* L )
 
 static int luaCB_enter_alt( __attribute__ ((unused))lua_State* L )
 {
-  enter_alt();
+  enter_alt(1);
   // if alt explicitly changed by script, set as 'saved' state
   if(lua_script_is_ptp) {
       ptp_saved_alt_state = 1;

@@ -106,7 +106,7 @@ void core_spytask_can_start() {
 void script_autostart()
 {
     // Tell keyboard task we are in <ALT> mode
-    enter_alt();
+    enter_alt(0);
     // We were called from the GUI task so switch to <ALT> mode before switching to Script mode
     gui_activate_alt_mode();
     // Switch to script mode and start the script running

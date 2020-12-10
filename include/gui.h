@@ -31,6 +31,7 @@ typedef unsigned int gui_mode_t;
 enum ALT_Mode_State {
     ALT_MODE_NORMAL = 0,    // don't change ALT mode
     ALT_MODE_ENTER,         // enter ALT mode
+    ALT_MODE_ENTER_SCRIPT,  // enter SCRIPT mode
     ALT_MODE_LEAVE,         // leave ALT mode
 };
 

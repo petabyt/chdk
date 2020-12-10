@@ -198,7 +198,7 @@ int _run()
     // but entering alt changes gui and requires getting into the main spytask loop
     // solution: abuse the _module_can_unload handler, which is called periodically from the main loop
     running = 1;
-    enter_alt();
+    enter_alt(0);
     return 0;
 }
 

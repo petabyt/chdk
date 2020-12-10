@@ -98,7 +98,7 @@ extern int kbd_force_analog_av(int);
 extern void JogDial_CW(void);
 extern void JogDial_CCW(void);
 
-extern void enter_alt();
+extern void enter_alt(int script_mode);
 extern void exit_alt();
 
 // get HDMI hotplug status from as seen by canon firmware (possibly modified by CHDK)
