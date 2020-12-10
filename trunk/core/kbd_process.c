@@ -62,11 +62,11 @@ int kbd_is_blocked()
     return kbd_blocked;
 }
 
-void enter_alt()
+void enter_alt(int script_mode)
 {
     clear_usb_power();         // Prevent previous USB remote pulse from starting script.
     kbd_blocked = 1;
-    gui_set_alt_mode_state(ALT_MODE_ENTER);
+    gui_set_alt_mode_state(script_mode ? ALT_MODE_ENTER_SCRIPT : ALT_MODE_ENTER);
 }
 
 void exit_alt()
@@ -153,7 +153,7 @@ long kbd_process()
                 {
                     // if start script on alt set, flag to run it
                     if(conf.script_startup==SCRIPT_AUTOSTART_ALT) script_run_on_alt_flag = 1;
-                    enter_alt();
+                    enter_alt(0);
                 }
                 else
                     exit_alt();

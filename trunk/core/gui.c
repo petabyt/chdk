@@ -3065,11 +3065,9 @@ void gui_activate_alt_mode()
     switch (gui_current_alt_state)
     {
     case ALT_MODE_ENTER:
+    case ALT_MODE_ENTER_SCRIPT:
         
-	    if (camera_info.state.state_kbd_script_run)
-	        gui_set_mode(&scriptGuiHandler);
-		else
-	        gui_set_mode(&altGuiHandler);
+        gui_set_mode((gui_current_alt_state == ALT_MODE_ENTER_SCRIPT) ? &scriptGuiHandler : &altGuiHandler);
 
         conf_update_prevent_shutdown();
         
