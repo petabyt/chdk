@@ -2541,10 +2541,14 @@ statement(void)
       set_autostart_statement();
       break;
   case TOKENIZER_EXIT_ALT:
-      one_int_param_function(token, exit_alt);
+      accept(token);
+      exit_alt();
+      accept_cr();
       break;
   case TOKENIZER_ENTER_ALT:
-      one_int_param_function(token, enter_alt);
+      accept(token);
+      enter_alt(1);
+      accept_cr();
       break;      
   case TOKENIZER_SHUT_DOWN:
       shutdown_statement();
