@@ -42,7 +42,6 @@ lfont=$(lib)/font
 llang=$(lib)/lang
 llibc=$(lib)/libc
 llua=$(lib)/lua
-lmath=$(lib)/math
 lubasic=$(lib)/ubasic
 modules=$(topdir)modules
 platform=$(topdir)platform

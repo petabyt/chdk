@@ -994,21 +994,24 @@ void set_clock(int year, int month, int day, int hour, int minute, int second)
 //----------------------------------------------------------------------------
 // Math wrappers
 
-double _log(double x) {
+double log(double x) {
     return __log(x);
 }
 
-double _log10(double x) {
+double log10(double x) {
     return __log10(x);
 }
 
-double _pow(double x, double y) {
+double pow(double x, double y) {
     return __pow(x, y);
 }
 
-double _sqrt(double x) {
+double sqrt(double x) {
     return __sqrt(x);
 }
+
+// log2(x) = log(x) * (1 / log(2))
+double log2(double x) { return (log(x) * ((double)1.44269504088906)); }
 
 //----------------------------------------------------------------------------
 
