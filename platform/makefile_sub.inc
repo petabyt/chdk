@@ -62,11 +62,8 @@ main.bin: main.elf
 
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(MEMISOSTART)
 
-main.elf: entry.o $(cam)/libplatform.a \
-          $(camfw)/libplatformsub.a \
-          $(lfont)/$Olibfont.a $(lmath)/$Olibmath.a \
-          $(llang)/$Oliblang.a $(larmutil)/$Olibarmutil.a \
-          $(lcore)/$Olibcore.a
+main.elf: entry.o $(cam)/libplatform.a $(camfw)/libplatformsub.a \
+          $(lfont)/$Olibfont.a $(llang)/$Oliblang.a $(larmutil)/$Olibarmutil.a $(lcore)/$Olibcore.a
 	@echo '->' $@
 	$(CC) $(CFLAGS) -o $@ -Wl,--start-group $^ -lgcc -Wl,--end-group $(LDOPTS)
 	( $(NM) $@ | grep ' U ' > $@.syms ) && echo "error: unresolved symbols in $@ (see $@.syms)" && exit 1 || exit 0

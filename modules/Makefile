@@ -2,7 +2,7 @@ topdir=../
 
 include $(topdir)makefile_modules.inc
 
-SUBDIRS=$(llua) $(lubasic) $(larmutil) $(lmath) $(llang) $(lfont) $(lcore) $(llibc)
+SUBDIRS=$(llua) $(lubasic) $(larmutil) $(llang) $(lfont) $(lcore) $(llibc)
 
 CFLAGS+=-fno-reorder-functions
 
