@@ -19,8 +19,8 @@ void __attribute__((noreturn)) my_restart()
     asm volatile (
     "mov     r1, %1\n"
     "mov     r0, %0\n"
-    "ldr     r2, =0xfc1267cb\n" // address is OK for 110d, 110f
-    "blx     r2\n"              // caching related routine called at fw startup
+    "ldr     r2, =0xfc1267cb\n" // address is OK for 110d, 110f, 111a
+    "blx     r2\n"              // clean data cache
     "mov     r0, %0\n"
     "add     r0, r0, #1\n"
     "bx      r0\n"
