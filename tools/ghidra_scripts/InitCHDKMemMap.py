@@ -226,7 +226,11 @@ class MBlockOps:
             return
 
         mem = getCurrentProgram().getMemory()
-        mem.createByteMappedBlock(mbdef['name'], addr, src_addr, mbdef['size'])
+        # API changed in 9.2, added "overlay" bool
+        if ghidra.framework.ApplicationVersion(getGhidraVersion()) >= ghidra.framework.ApplicationVersion('9.2'):
+            mem.createByteMappedBlock(mbdef['name'], addr, src_addr, mbdef['size'],False)
+        else:
+            mem.createByteMappedBlock(mbdef['name'], addr, src_addr, mbdef['size'])
         mb_new = getMemoryBlock(addr)
         self.set_attrs(mbdef, mb_new)
 
