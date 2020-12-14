@@ -1,5 +1,4 @@
 #include "camera_info.h"
-#include "stdlib.h"
 #include "lang.h"
 #include "modes.h"
 #include "keyboard.h"

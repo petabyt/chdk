@@ -45,7 +45,6 @@ void crc32(const void *data, unsigned long n_bytes, unsigned long* crc) {
 #include "gui_mbox.h"
 #include "gui_fselect.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 void gui_fwc_draw();
 

@@ -1,5 +1,4 @@
 #include "platform.h"
-#include "stdlib.h"
 #include "touchscreen.h"
 #include "conf.h"
 #include "font.h"

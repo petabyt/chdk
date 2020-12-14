@@ -1,6 +1,5 @@
 
 #include "camera_info.h"
-#include "stdlib.h"
 #include "properties.h"
 #include "task.h"
 #include "modes.h"
@@ -13,9 +12,7 @@
 #include "gps.h"
 #include "gps_math.h"
 
-#include "stddef.h"
 #include "conf.h"
-#include "string.h"
 #include "keyboard.h"
 #include "lang.h"
 #include "levent.h"

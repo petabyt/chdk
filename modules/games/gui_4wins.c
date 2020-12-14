@@ -1,6 +1,5 @@
 //Conect4: Kettmeister, CHDKLover german forum (forum.chdk-treff.de)
 #include "camera_info.h"
-#include "stdlib.h"
 #include "keyboard.h"
 #include "lang.h"
 #include "conf.h"

@@ -5,7 +5,6 @@
   ===================================================================================================*/
 
 #include "camera.h"
-#include "stdlib.h"
 #include "clock.h"
 #include "modes.h"
 #include "conf.h"

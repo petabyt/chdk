@@ -1,5 +1,4 @@
 #include "camera_info.h"
-#include "stdlib.h"
 #include "modes.h"
 #include "clock.h"
 #include "shooting.h"

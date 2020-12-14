@@ -1,5 +1,4 @@
 #include "platform.h"
-#include "stdlib.h"
 #include "core.h"
 #include "conf.h"
 #include "gui_draw.h"

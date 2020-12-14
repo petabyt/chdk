@@ -1,5 +1,4 @@
 #include "camera_info.h"
-#include "stdlib.h"
 #include "conf.h"
 #include "script.h"
 #include "meminfo.h"

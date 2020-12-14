@@ -1,4 +1,3 @@
-#include "stdlib.h"
 #include "camera_info.h"
 #include "math.h"
 #include "conf.h"

@@ -190,7 +190,6 @@ void write_log()
 
 #include "gui_mbox.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 void gui_exmem_menu_kbd_process();
 int gui_exmem_kbd_process();
