@@ -848,7 +848,6 @@ char *help_bootwarn = "Card will lose autoboot if formatted!";
 
 #include "gui_mbox.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 void gui_fileshelter_menu_kbd_process();
 int gui_fileshelter_kbd_process();

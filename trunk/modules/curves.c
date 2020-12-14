@@ -1,6 +1,5 @@
 #include "camera_info.h"
 #include "conf.h"
-#include "stdlib.h"
 #include "shooting.h"
 #include "raw.h"
 #include "gui_lang.h"

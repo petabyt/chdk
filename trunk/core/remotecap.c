@@ -1,5 +1,4 @@
 #include "ptp.h"
-#include "stdlib.h"
 #include "platform.h"
 #include "conf.h"
 #include "remotecap_core.h"

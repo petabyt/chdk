@@ -1,5 +1,4 @@
 #include "camera_info.h"
-#include "stdlib.h"
 #include "debug_led.h"
 #include "sd_card.h"
 #include "gui_mbox.h"

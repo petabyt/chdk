@@ -2,7 +2,6 @@
 #define __CHDK_GPS_MATH_H
 
 #include "camera_info.h"
-#include "stdlib.h"
 #include "math.h"
 #include "gps_math.h"
 

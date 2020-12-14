@@ -2,7 +2,6 @@
 functions for operating on raw framebuffer from script hooks
 */
 #include "camera_info.h"
-#include "stdlib.h"
 #include "conf.h"
 #include "raw.h"
 #include "math.h"

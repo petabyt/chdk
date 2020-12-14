@@ -4,7 +4,6 @@
 #include "modes.h"
 #include "viewport.h"
 #include "shooting.h"
-#include "stdlib.h"
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"

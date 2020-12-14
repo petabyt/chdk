@@ -16,7 +16,6 @@
   ===================================================================================================*/
 
 #include "camera_info.h"
-#include "stdlib.h"
 #include "clock.h"
 #include "modes.h"
 #include "shooting.h"

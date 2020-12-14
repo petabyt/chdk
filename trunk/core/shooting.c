@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "keyboard.h"
 #include "math.h"
-#include "stdlib.h"
 #include "conf.h"
 #include "histogram.h"
 #include "usb_remote.h"

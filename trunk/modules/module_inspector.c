@@ -70,7 +70,6 @@ ModuleInfo _module_info =
 
 #include "gui_mbox.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 void gui_module_menu_kbd_process();
 int gui_module_kbd_process();

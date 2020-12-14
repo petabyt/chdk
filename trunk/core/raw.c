@@ -1,7 +1,6 @@
 #include "platform.h"
 #include "raw_buffer.h"
 #include "conf.h"
-#include "stdlib.h"
 #include "raw.h"
 #include "console.h"
 #include "math.h"
