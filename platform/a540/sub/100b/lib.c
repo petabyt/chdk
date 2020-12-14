@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 char *hook_raw_image_addr()
 {

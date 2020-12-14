@@ -8,7 +8,6 @@
 // run blinker task
 //#define BLINKER 1
 #ifdef BLINKER
-#include "stdlib.h"
 #include "gui.h"
 #include "../../../../core/gui_draw.h"
 #endif

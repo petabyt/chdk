@@ -3,9 +3,6 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
-#include "stdlib.h"
-#include "platform.h"
-#include "stdio.h"
 
 #define PARAM_FILE_COUNTER      0x3A
 

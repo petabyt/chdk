@@ -2,7 +2,6 @@
 #include "platform.h"
 #include "core.h"
 #include "dryos31.h"
-//#include "stdlib.h"
 
 
 extern void task_FileWrite();

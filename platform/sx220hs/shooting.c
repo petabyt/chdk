@@ -3,8 +3,6 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
-#include "stdlib.h"
-#include "platform.h"
 
 #define PARAM_FILE_COUNTER      0x3B       //sx220 changed
 #define PARAM_EXPOSURE_COUNTER  0x02
