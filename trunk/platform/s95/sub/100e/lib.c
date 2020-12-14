@@ -1,5 +1,4 @@
 #include "platform.h"
-#include "stdlib.h"
 #include "lolevel.h"
 
 /*

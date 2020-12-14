@@ -2,7 +2,6 @@
 #include "platform.h"
 #include "core.h"
 #include "conf.h"
-#include "stdlib.h"
 
 static long *nrflag = (long*)0x75B0;  // -> ASM1989 08.21.2010 found at FF972F10
 

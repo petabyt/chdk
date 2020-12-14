@@ -3,8 +3,6 @@
 #include "core.h"
 #include "conf.h"
 #include "keyboard.h"
-#include "stdlib.h"
-#include "platform.h"
 
 #define PARAM_FILE_COUNTER      0x3A // 58 in the debug OSD, converted to hex
 #define PARAM_EXPOSURE_COUNTER  0x02

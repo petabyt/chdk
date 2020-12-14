@@ -1,7 +1,6 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-#include "stdlib.h"
 #include "dryos31.h"
 #define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 const char * const new_sa = &_end;

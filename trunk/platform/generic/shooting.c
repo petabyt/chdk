@@ -3,7 +3,6 @@
 #include "core.h"
 #include "keyboard.h"
 #include "math.h"
-#include "stdlib.h"
 #include "conf.h"
 
 #ifndef CAM_FILE_COUNTER_IS_VAR

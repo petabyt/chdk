@@ -2,7 +2,6 @@
 #include "platform.h"
 #include "core.h"
 #include "dryos31.h"
-//#include "stdlib.h"
 
 #define offsetof(TYPE, MEMBER) ((int) &((TYPE *)0)->MEMBER)
 

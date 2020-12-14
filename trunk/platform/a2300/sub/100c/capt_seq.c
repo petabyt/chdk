@@ -2,7 +2,6 @@
 #include "platform.h"
 #include "core.h"
 #include "conf.h"
-#include "stdlib.h"
 
 static long *nrflag = (long*)(0x8748+0x00);  // Found @ ff9df2d8 & ff9df338
 #define NR_AUTO (0)                          // have to explictly reset value back to 0 to enable auto

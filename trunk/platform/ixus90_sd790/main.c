@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "core.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 extern long link_bss_start;
 extern long link_bss_end;

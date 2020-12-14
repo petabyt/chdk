@@ -5,7 +5,6 @@
 #include "platform.h"
 #include "core.h"
 #include "keyboard.h"
-#include "stdlib.h"
 
 /* Ours stuff */
 extern long link_bss_start;

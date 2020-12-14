@@ -1,6 +1,6 @@
 
-#include <stdlib.h>
-#include <conf.h>
+#include "stdlib.h"
+#include "conf.h"
 
 void dbg_log(char *str);
 

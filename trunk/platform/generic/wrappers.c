@@ -5,7 +5,6 @@
 #include "conf.h"
 #include "math.h"
 #include "levent.h"
-#include "stdlib.h"
 #include "ptp_chdk.h"
 #include "live_view.h"
 #include "usb_remote.h"

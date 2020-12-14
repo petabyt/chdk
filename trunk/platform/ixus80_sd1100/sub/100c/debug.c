@@ -1,6 +1,5 @@
 #include "lolevel.h"
 #include "stdlib.h"
-//#include "core.h"
 #include "script.h"
 #include "console.h"
 // exception handler hooks

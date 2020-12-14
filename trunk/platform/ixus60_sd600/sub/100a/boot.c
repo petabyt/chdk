@@ -1,7 +1,6 @@
 #include "lolevel.h"
 #include "platform.h"
 #include "core.h"
-//#include "stdlib.h"
 
 const char * const new_sa = &_end;
 
