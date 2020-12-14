@@ -23,7 +23,11 @@ def get_pinsn_at(address, thumb=False):
     # variable fails on tab switches (currentProgram is set at import time)
     cp = getCurrentProgram()
     mbi = MemoryBufferImpl(cp.getMemory(),address)
-    pci = ProcessorContextImpl(cp.getProgramContext().getRegisters())
+    # API changed in 9.2
+    if ghidra.framework.ApplicationVersion(getGhidraVersion()) >= ghidra.framework.ApplicationVersion('9.2'):
+        pci = ProcessorContextImpl(cp.getLanguage())
+    else:
+        pci = ProcessorContextImpl(cp.getProgramContext().getRegisters())
 
     treg = pci.getRegister('TMode')
 
