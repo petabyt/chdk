@@ -44,9 +44,9 @@
 #include "script_shoot_hook.h"
 #include "rawhookops.h"
 
-#include "../lib/lua/lualib.h"
-#include "../lib/lua/lauxlib.h"
-#include "../lib/lua/lstate.h"  // for L->nCcalls, baseCcalls
+#include "lualib.h"
+#include "lauxlib.h"
+#include "lstate.h"  // for L->nCcalls, baseCcalls
 
 #ifdef THUMB_FW
 // provide div and mod behavior similar to preivous CPUs for digic 6, instead of triggering exception handler

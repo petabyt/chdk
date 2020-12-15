@@ -1,7 +1,7 @@
 #ifndef LUASCRIPT_H
 #define LUASCRIPT_H
 
-#include "../lib/lua/lua.h"
+#include "lua.h"
 
 extern lua_State* L;
 extern lua_State* Lt;

@@ -4,7 +4,7 @@ include $(topdir)makefile_modules.inc
 
 SUBDIRS=$(llua) $(lubasic) $(larmutil) $(llang) $(lfont) $(lcore) $(llibc)
 
-CFLAGS+=-fno-reorder-functions
+CFLAGS+=-fno-reorder-functions -I$(include)/std -I$(llua)
 
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,0x24 -r -Wl,-d
 

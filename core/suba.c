@@ -12,7 +12,6 @@ Based on suba - sub-allocate memory from larger chunk of memory
 // Rewritten for CHDK.
 
 #include "stdlib.h"
-#include "stddef.h"
 
 #define SUBA_SEMAPHORE_TIMEOUT  1000
 #define SANITY_CHECKS           1
