@@ -6,8 +6,8 @@ functions for operating on raw framebuffer from script hooks
 #include "raw.h"
 #include "math.h"
 
-#include "../lib/lua/lualib.h"
-#include "../lib/lua/lauxlib.h"
+#include "lualib.h"
+#include "lauxlib.h"
 
 extern void set_number_field(lua_State *L, const char *name, int value);
 

@@ -9,9 +9,8 @@ based on http://www.andreadrian.de/c-workshop/index.html
 License GPL 2.0
 */
 
-#include "stdio.h"
 #include "stdlib.h"
-#include "../lib/lua/luaconf.h"
+#include "luaconf.h"
 #include "math.h"
 #include "cordic_math.h"
 
