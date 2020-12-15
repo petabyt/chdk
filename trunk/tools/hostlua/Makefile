@@ -2,7 +2,7 @@ topdir=../../
 
 include $(topdir)makefile_tools.inc
 
-HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I./include
+HOSTCFLAGS+=-DHOST_LUA -DLUA_ANSI -I$(llua)
 HOSTLDOPTS=-lm
 
 %.a:

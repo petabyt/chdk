@@ -35,6 +35,7 @@ typedef unsigned short  twoColors;
 
 //==========================================================
 
+typedef unsigned int size_t;
 #define NULL		((void*)0)
 
 #define SEEK_SET        0

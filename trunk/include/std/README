@@ -1,0 +1,4 @@
+This folder contains header files to replace standard/system header files.
+Used for building Lua and modules that use Lua headers.
+Allows Lua source code to be use mostly unmodified.
+This also allows the CHDK source to be used for building tools/hostlua.

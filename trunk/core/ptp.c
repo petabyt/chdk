@@ -1,6 +1,5 @@
 #include "platform.h"
 #include "camera_info.h"
-#include "stddef.h"
 #include "keyboard.h"
 #include "ptp_chdk.h"
 #include "core.h"
