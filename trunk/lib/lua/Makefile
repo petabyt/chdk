@@ -2,8 +2,6 @@ topdir=../../
 
 include $(topdir)makefile_modules.inc
 
-CFLAGS+=-I$(include)/std
-
 OBJS = $Osetjmp.o \
        $Olapi.o $Olcode.o $Oldebug.o $Oldo.o $Oldump.o $Olfunc.o $Olgc.o $Ollex.o $Olmem.o \
        $Olobject.o $Olopcodes.o $Olparser.o $Olstate.o $Olstring.o $Oltable.o $Oltm.o \

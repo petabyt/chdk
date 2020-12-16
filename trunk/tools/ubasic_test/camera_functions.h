@@ -28,7 +28,6 @@ int get_usb_power(int edge);
 void camera_set_script_autostart(int state);
 void exit_alt();
 
-
-
-
-
+int script_keyid_by_name( const char *name );
+int force_usb_state(int);
+struct tm * get_localtime();

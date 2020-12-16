@@ -8,6 +8,9 @@
 #include "gui_draw.h"
 #include "gui_lang.h"
 #include "bitvector.h"
+#include "time.h"
+#include "dirent.h"
+#include "ctype.h"
 
 #include "edgeoverlay.h"
 #include "module_def.h"

@@ -8,6 +8,7 @@
 #include "gui_menu.h"
 #include "gui_user_menu.h"
 #include "gui_lang.h"
+#include "ctype.h"
 
 #include "gui_palette.h"
 

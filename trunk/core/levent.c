@@ -1,4 +1,6 @@
 #include "stdlib.h"
+#include "stddef.h"
+#include "string.h"
 #include "levent.h"
 
 /* function dealing with "logical events"*/

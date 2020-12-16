@@ -7,6 +7,7 @@
 #include "gui_draw.h"
 #include "gui_batt.h"
 #include "gui_lang.h"
+#include "time.h"
 
 #include "gui_read.h"
 #include "module_def.h"

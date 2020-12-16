@@ -12,6 +12,7 @@
 #include "gui_mbox.h"
 #include "gui_mpopup.h"
 #include "gui_fselect.h"
+#include "ctype.h"
 
 #include "module_load.h"
 #include "module_def.h"

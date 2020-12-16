@@ -34,14 +34,13 @@
 #define DEBUG_PRINTF(...)
 #endif
 
-#ifdef UBASIC_TEST
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#endif
+#include "stdlib.h"
+#include "stddef.h"
+#include "string.h"
+#include "ctype.h"
+#include "stdio.h"
 
 #include "tokenizer.h"
-#include "stdlib.h"
 
 static char const *ptr, *nextptr;
 

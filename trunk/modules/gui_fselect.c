@@ -10,6 +10,9 @@
 #include "gui_mbox.h"
 #include "raw.h"
 #include "conf.h"
+#include "time.h"
+#include "dirent.h"
+#include "ctype.h"
 
 #include "gui_fselect.h"
 #include "raw_merge.h"

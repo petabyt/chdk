@@ -8,6 +8,8 @@
 #include "ptp_chdk.h"
 #include "live_view.h"
 #include "usb_remote.h"
+#include "exmem.h"
+#include "stdio.h"
 
 // arbitrary timeout for canon heap semaphore
 #if !CAM_DRYOS
@@ -410,11 +412,6 @@ short SetAE_ShutterSpeed(short *tv)             { return _SetAE_ShutterSpeed(tv)
 
 //----------------------------------------------------------------------------
 // I/O wrappers
-
-/*int creat (const char *name, int flags)
-{
-    return _creat(name, flags);
-}*/
 
 extern int fileio_semaphore;
 

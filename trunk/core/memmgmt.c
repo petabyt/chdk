@@ -2,6 +2,9 @@
 #include "core.h"
 #include "conf.h"
 #include "gui_draw.h"
+#include "exmem.h"
+#include "semaphore.h"
+#include "ctype.h"
 
 //----------------------------------------------------------------------------
 // Memory wrappers

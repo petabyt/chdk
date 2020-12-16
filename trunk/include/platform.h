@@ -23,6 +23,7 @@
 #include "shutdown.h"
 #include "sound.h"
 #include "task.h"
+#include "time.h"
 
 /******************************************************************/
     

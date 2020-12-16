@@ -18,6 +18,7 @@
 #include "gui_mbox.h"
 #include "modes.h"
 #include "fileutil.h"
+#include "time.h"
 
 #include "module_def.h"
 #include "simple_module.h"

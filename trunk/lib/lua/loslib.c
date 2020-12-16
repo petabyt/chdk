@@ -4,16 +4,13 @@
 ** See Copyright Notice in lua.h
 */
 
-#if 0
 #include <errno.h>
 #include <locale.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
-#ifdef HOST_LUA
-#include <errno.h>
 #include <time.h>
 #include <dirent.h>
+#ifdef HOST_LUA
 #include <sys/stat.h>
 #include <utime.h>
 #endif

@@ -1,6 +1,6 @@
-#ifdef UBASIC_TEST
-
 #include <stdio.h>
+#include <math.h>
+#include <time.h>
 
 static int tv=0, av=0, zoom=0, focus=0, iso=0, raw=0, raw_nr=0,autostart=0; 
 int movie_status=0;
@@ -586,7 +586,330 @@ void reboot(const char *filename)
 
 int mode_is_video(int m)
 {
-printf("*** mode is video %d ***\n",m);
+    printf("*** mode is video %d ***\n",m);
     return 0;
 }
-#endif
+
+int swap_partitions(int new)
+{
+    printf("*** swap_partitions %d ***\n",new);
+    return 1;
+}
+
+void shooting_update_dof_values()
+{
+    printf("*** shooting_update_dof_values ***\n");
+}
+
+short shooting_sv96_real_to_market(short isor)
+{
+    printf("*** shooting_sv96_real_to_market %d ***\n",isor);
+    return isor;
+}
+
+short shooting_sv96_market_to_real(short sv96)
+{
+    printf("*** shooting_sv96_market_to_real %d ***\n",sv96);
+    return sv96;
+}
+
+void shooting_set_playrec_mode(int mode)
+{
+    printf("*** shooting_set_playrec_mode %d ***\n",mode);
+}
+
+short shooting_iso_real_to_market(short isor)
+{
+    printf("*** shooting_iso_real_to_market %d ***\n",isor);
+    return isor;
+}
+
+short shooting_iso_market_to_real(short isom)
+{
+    printf("*** shooting_iso_market_to_real %d ***\n",isom);
+    return isom;
+}
+
+int shooting_is_flash()
+{
+    printf("*** shooting_is_flash ***\n");
+    return 0;
+}
+
+int shooting_in_progress()
+{
+    printf("*** shooting_in_progress ***\n");
+    return 0;
+}
+
+static const double inv_log_2 = 1.44269504088906;   // 1 / log_2
+#define SHOOTING_TV96_INVALID -10000
+
+short shooting_get_tv96_from_shutter_speed(float t)
+{
+    printf("*** shooting_get_tv96_from_shutter_speed %f ***\n",t);
+    if (t > 0)
+    {
+        t = ((96.0 * -log(t)) * inv_log_2);
+        if (t < 0)
+            return (short)(t - 0.5);
+        return (short)(t + 0.5);
+    }
+    return SHOOTING_TV96_INVALID;
+}
+
+short shooting_get_sv96_from_iso(short iso)
+{
+    printf("*** shooting_get_sv96_from_iso %d ***\n",iso);
+    // Equivalent to (short)(log2(iso/3.125)*96+0.5) [APEX equation]
+    if (iso > 0)
+        return (short)( log((double)(iso)*32.0/100.0)*96.0*(inv_log_2)+0.5 );
+    return 0;
+}
+
+float shooting_get_shutter_speed_from_tv96(short tv96)
+{
+    printf("*** shooting_get_shutter_speed_from_tv96 %d ***\n",tv96);
+    return pow(2,((float)(-tv96))/96.0);
+}
+
+short shooting_get_resolution()
+{
+    printf("*** shooting_get_resolution ***\n");
+    return 0;
+}
+
+short shooting_get_real_focus_mode()
+{
+    printf("*** shooting_get_real_focus_mode ***\n");
+    return 0;
+}
+
+short shooting_get_nd_value_ev96()
+{
+    printf("*** shooting_get_nd_value_ev96 ***\n");
+    return 0;
+}
+
+short shooting_get_nd_current_ev96()
+{
+    printf("*** shooting_get_nd_current_ev96 ***\n");
+    return 0;
+}
+
+short shooting_get_min_av96()
+{
+    printf("*** shooting_get_min_av96 ***\n");
+    return -1;
+}
+
+short shooting_get_max_av96()
+{
+    printf("*** shooting_get_max_av96 ***\n");
+    return -1;
+}
+
+short shooting_get_iso_from_sv96(short sv96)
+{
+    printf("*** shooting_get_shutter_speed_from_tv96 %d ***\n",sv96);
+    // APEX equation --> (int)(POWER(2,(iso/96)) * 3.125) + 0.5)
+    return (short)( (double)pow(2, (((double)sv96)/96.0))*100.0/32.0 + 0.5 );
+}
+
+short shooting_get_is_mode()
+{
+    printf("*** shooting_get_is_mode ***\n");
+    return 0;
+}
+
+int shooting_get_imager_active() {
+    printf("*** shooting_get_imager_active ***\n");
+    return 0;
+}
+
+short shooting_get_flash_mode()
+{
+    printf("*** shooting_get_flash_mode ***\n");
+    return 0;
+}
+
+short shooting_get_ev_correction1()
+{
+    printf("*** shooting_get_ev_correction1 ***\n");
+    return 0;
+}
+
+short shooting_get_display_mode()
+{
+    printf("*** shooting_get_display_mode ***\n");
+    return 0;
+}
+
+#define SHOOTING_TV96_INVALID -10000
+
+long shooting_get_current_tv96()
+{
+    printf("*** shooting_get_current_tv96 ***\n");
+    return SHOOTING_TV96_INVALID;
+}
+
+long shooting_get_current_av96()
+{
+    printf("*** shooting_get_current_av96 ***\n");
+    return 0;
+}
+
+short shooting_get_av96_from_aperture(int aperture)
+{
+    printf("*** shooting_get_av96_from_aperture %d ***\n", aperture);
+    return (int)((log((double)aperture/1000.0) * 192 * inv_log_2) + 0.5);
+}
+
+int shooting_get_aperture_from_av96(short av96)
+{
+    printf("*** shooting_get_aperture_from_av96 %d ***\n", av96);
+    if (av96)
+        return (short)((pow(2, ((double)av96)/192.0))*1000.0 + 0.5);
+    return -1;
+}
+
+short shooting_can_focus()
+{
+    printf("*** shooting_can_focus ***\n");
+    return 0;
+}
+
+void set_movie_status(int status)
+{
+    printf("*** set_movie_status %d ***\n", status);
+}
+
+int sd_over_modes()
+{
+    printf("*** sd_over_modes ***\n");
+    return 0;
+}
+
+void script_set_terminate_key(int key, const char *keyname)
+{
+    printf("*** script_set_terminate_key %d %s ***\n", key, keyname);
+}
+
+void script_console_add_error(long str_id)
+{
+    printf("*** script_console_add_error %ld ***\n", str_id);
+}
+
+long lens_get_zoom_point()
+{
+    printf("*** lens_get_zoom_point ***\n");
+    return 0;
+}
+
+int is_video_recording()
+{
+    printf("*** is_video_recording ***\n");
+    return 0;
+}
+
+int is_raw_possible()
+{
+    printf("*** is_raw_possible ***\n");
+    return 0;
+}
+
+int get_movie_status()
+{
+    printf("*** get_movie_status ***\n");
+    return 0;
+}
+
+struct tm *get_localtime()
+{
+    printf("*** get_localtime ***\n");
+    time_t t = time(NULL);
+    return localtime(&t);
+}
+
+int get_focal_length(int zp)
+{
+    printf("*** get_focal_length  %d ***\n", zp);
+    return 0;
+}
+
+int force_usb_state(int state)
+{
+    printf("*** force_usb_state  %d ***\n", state);
+    return 0;
+}
+
+void enter_alt(int script_mode)
+{
+    printf("*** enter_alt  %d ***\n", script_mode);
+}
+
+long action_top(int n)
+{
+    printf("*** action_top  %d ***\n", n);
+    return 0;
+}
+
+long action_pop_func(int nParam)
+{
+    printf("*** action_pop_func  %d ***\n", nParam);
+    return 0;
+}
+
+typedef int (*action_func)(void);
+
+void action_push_func(action_func f)
+{
+    printf("*** action_push_func  %ld ***\n", (long)f);
+}
+
+void action_push_shoot(int retry)
+{
+    printf("*** action_push_shoot  %d ***\n", retry);
+}
+
+void DoAELock()
+{
+    printf("*** DoAELock ***\n");
+}
+
+void UnlockAE()
+{
+    printf("*** UnlockAE ***\n");
+}
+
+int DoMFLock()
+{
+    printf("*** DoMFLock ***\n");
+    return 0;
+}
+
+int UnlockMF()
+{
+    printf("*** UnlockMF ***\n");
+    return 0;
+}
+
+void JogDial_CW()
+{
+    printf("*** JogDial_CW ***\n");
+}
+
+void JogDial_CCW()
+{
+    printf("*** JogDial_CW ***\n");
+}
+
+void TurnOnDisplay()
+{
+    printf("*** TurnOnDisplay ***\n");
+}
+
+void TurnOffDisplay()
+{
+    printf("*** TurnOffDisplay ***\n");
+}

@@ -12,6 +12,7 @@
 #include "modules.h"
 #include "module_load.h"
 #include "shooting.h"
+#include "ctype.h"
 
 //------------------------------------------------
 // Notes on the module auto-load system

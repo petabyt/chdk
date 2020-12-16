@@ -1,4 +1,7 @@
 #include "stdlib.h"
+#include "string.h"
+#include "stdio.h"
+#include "ctype.h"
 #include "gui_mbox.h"
 #include "gui.h"
 #include "gui_lang.h"

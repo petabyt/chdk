@@ -1,4 +1,6 @@
 #include "stdlib.h"
+#include "stddef.h"
+#include "string.h"
 #include "lang.h"
 #include "fileutil.h"
 

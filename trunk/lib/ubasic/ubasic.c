@@ -34,37 +34,21 @@
 #define DEBUG_PRINTF(...)
 #endif
 
-#ifdef UBASIC_TEST
-#include "../../include/ubasic.h"
-#include "../../include/platform.h"
-#include "../../include/script.h"
-#include "../../include/shot_histogram.h"
-#include "../../include/levent.h"
-#include "../../include/console.h"
-#include <string.h>
-#include <time.h>
-#include <fcntl.h>
-#include <io.h>
-#include <stdlib.h> /* rand,srand */
-#include "camera_functions.h"
-#else
 #include "camera_info.h"
-#include "conf.h"
-#include "ubasic.h"
-#include "script.h"
-#include "script_key_funcs.h"
 #include "shot_histogram.h"
-#include "stdlib.h"
 #include "levent.h"
+#include "script.h"
 #include "console.h"
-#include "modes.h"
+#include "conf.h"
+#include "lang.h"
+#include "gui_lang.h"
+#include "action_stack.h"
 #include "shooting.h"
 #include "sd_card.h"
 #include "backlight.h"
 #include "battery.h"
 #include "temperature.h"
 #include "clock.h"
-#include "properties.h"
 #include "file_counter.h"
 #include "lens.h"
 #include "debug_led.h"
@@ -73,11 +57,21 @@
 #include "shutdown.h"
 #include "sound.h"
 #include "motion_detector.h"
+
+#include "string.h"
+#include "time.h"
+
+#ifdef UBASIC_TEST
+#include "camera_functions.h"
+Conf conf;                      // TODO: initialisation
+_cam_info camera_info;          // TOTO: initialisation
+#else
+#include "script_key_funcs.h"
+#include "properties.h"
 #endif
-#include "action_stack.h"
+
+#include "ubasic.h"
 #include "tokenizer.h"
-#include "lang.h"
-#include "gui_lang.h"
 
 // Forward references
 int ubasic_get_variable(int varnum);
@@ -557,7 +551,12 @@ static int factor(void)
     accept(TOKENIZER_GET_HISTO_RANGE);
     int from = expr();
     int to = expr();
+#ifdef UBASIC_TEST
+    (void)from; (void)to;
+    r = 0;
+#else
     r = (unsigned short)libshothisto->shot_histogram_get_range(from, to);
+#endif
     break;
   case TOKENIZER_GET_TEMPERATURE:
     accept(TOKENIZER_GET_TEMPERATURE);
@@ -2113,7 +2112,11 @@ static void md_get_cell_diff_statement()
     accept(TOKENIZER_VARIABLE);
     accept_cr();
 
+#ifdef UBASIC_TEST
+    // TODO: add something here for ubasic_test
+#else
     ubasic_set_variable(var, libmotiondetect->md_get_cell_diff(col,row));
+#endif
 }
 
 static void md_get_cell_val_statement()
@@ -2129,7 +2132,11 @@ static void md_get_cell_val_statement()
     accept(TOKENIZER_VARIABLE);
     accept_cr();
 
+#ifdef UBASIC_TEST
+    // TODO: add something here for ubasic_test
+#else
     ubasic_set_variable(var, libmotiondetect->md_get_cell_val(col,row));
+#endif
 }
 
 static void md_detect_motion_statement()
@@ -2211,6 +2218,9 @@ static void md_detect_motion_statement()
 
     accept_cr();
 
+#ifdef UBASIC_TEST
+    // TODO: add something here for ubasic_test
+#else
     libmotiondetect->md_init_motion_detector(
         columns, rows, pixel_measure_mode, detection_timeout, 
         measure_interval, threshold, draw_grid,
@@ -2218,6 +2228,7 @@ static void md_detect_motion_statement()
         clipping_region_column1, clipping_region_row1,
         clipping_region_column2, clipping_region_row2,
         parameters, pixels_step, msecs_before_trigger);
+#endif
 
     flag_yield=1;
 }
@@ -2225,7 +2236,11 @@ static void md_detect_motion_statement()
 /*---------------------------------------------------------------------------*/
 static int _shot_histogram_set(int enable)
 {
+#ifdef UBASIC_TEST
+    return 0;
+#else
     return libshothisto->shot_histogram_set(enable);
+#endif
 }
 
 /*---------------------------------------------------------------------------*/
@@ -2624,16 +2639,24 @@ statement(void)
 
   case TOKENIZER_USB_SYNC_WAIT:
     accept(TOKENIZER_USB_SYNC_WAIT);
+#ifdef UBASIC_TEST
+    // TODO: add something here for ubasic_test
+#else
     if (expr()) usb_sync_wait_flag = 1;
     else        usb_sync_wait_flag = 0;
+#endif
     accept_cr();
     break;
 
   case TOKENIZER_SET_REMOTE_TIMING:
     accept(TOKENIZER_SET_REMOTE_TIMING);
+#ifdef UBASIC_TEST
+    // TODO: add something here for ubasic_test
+#else
     int hpenable= expr();
     if ( hpenable > 0) start_usb_HPtimer(hpenable);
     else stop_usb_HPtimer();
+#endif
     accept_cr();
     break;
 

@@ -4,14 +4,11 @@
 ** See Copyright Notice in lua.h
 */
 
-
-// in stdlib
-#if 0
 #include <errno.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define liolib_c
 #define LUA_LIB
@@ -20,11 +17,6 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
-
-#ifdef HOST_LUA
-#include <errno.h>
-#include <ctype.h>
-#endif
 
 #define IO_INPUT	1
 #define IO_OUTPUT	2

@@ -1,4 +1,6 @@
 #include "stdlib.h"
+#include "string.h"
+#include "versions.h"
 
 //==========================================================
 _chdk_version_t chdk_version;

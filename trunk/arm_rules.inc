@@ -41,7 +41,7 @@ else
     endif
 endif
 
-CFLAGS+=-I$(include) -I$(core) -I$(modules) -I$(cam) $(PLFLAGS)
+CFLAGS+=-I$(include) -I$(include)/std -I$(core) -I$(modules) -I$(cam) $(PLFLAGS)
 CFLAGS+=-DVER_$(VER) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\"
 CFLAGS+=-Wall -Wno-unused -Wno-format
 

@@ -1,19 +1,18 @@
-#ifndef STDDEF_H
-#define STDDEF_H
-
-// CHDK stddef
+#ifndef SEMAPHORE_H
+#define SEMAPHORE_H
 
 // Note: used in modules and platform independent code. 
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //==========================================================
 
-typedef unsigned int size_t;
+// Semaphore & Assert
 
-#define NULL ((void*)0)
+extern void DebugAssert(char*, int);
 
-// For building Lua
-typedef int ptrdiff_t;
+extern int CreateBinarySemaphore(char* name, int init);
+extern int TakeSemaphore(int sem, int timeout);
+extern void GiveSemaphore(int sem);
 
 //---------------------------------------------------------------
 

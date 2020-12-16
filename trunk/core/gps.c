@@ -11,6 +11,7 @@
 #include "file_counter.h"
 #include "gps.h"
 #include "gps_math.h"
+#include "time.h"
 
 #include "conf.h"
 #include "keyboard.h"

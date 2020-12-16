@@ -1,4 +1,5 @@
 #include "camera_info.h"
+#include "color.h"
 #include "keyboard.h"
 #include "conf.h"
 #include "lang.h"

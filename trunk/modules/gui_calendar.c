@@ -5,6 +5,7 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_lang.h"
+#include "time.h"
 
 #include "module_def.h"
 
