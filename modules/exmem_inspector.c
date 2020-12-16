@@ -6,6 +6,8 @@
 #include "simple_module.h"
 #include "clock.h"
 #include "cachebit.h"
+#include "exmem.h"
+#include "time.h"
 
 // =========  MODULE INIT =================
 

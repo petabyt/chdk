@@ -376,8 +376,3 @@ void core_spytask()
         chdk_started_flag=1;
     }
 }
-
-long ftell(FILE *file) {
-    if(!file) return -1;
-    return file->pos;
-}

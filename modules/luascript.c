@@ -32,6 +32,7 @@
 #include "meminfo.h"
 #include "callfunc.h"
 #include "usb_remote.h"
+#include "time.h"
 
 #include "script_api.h"
 #include "curves.h"

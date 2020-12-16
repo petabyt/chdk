@@ -9,6 +9,7 @@
 #include "gui_batt.h"
 #include "gui_mbox.h"
 #include "modes.h"
+#include "time.h"
 
 #include "module_def.h"
 

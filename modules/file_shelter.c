@@ -9,7 +9,10 @@
 #include "conf.h"
 #include "sd_card.h"
 #include "cachebit.h"
-
+#include "exmem.h"
+#include "time.h"
+#include "dirent.h"
+#include "ctype.h"
 
 #define FSCRC_CALC 1 // 1 = file crc check immediately after writing, 0 = no check
 

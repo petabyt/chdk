@@ -14,6 +14,8 @@
 #include "lang.h"
 #include "gui_mbox.h"
 #include "gui_lang.h"
+#include "time.h"
+#include "ctype.h"
 
 #include "simple_module.h"
 #include "module_load.h"

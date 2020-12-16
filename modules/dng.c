@@ -17,6 +17,7 @@
 #include "task.h"
 #include "cachebit.h"
 #include "remotecap.h"
+#include "time.h"
 
 #include "dng.h"
 #include "module_def.h"

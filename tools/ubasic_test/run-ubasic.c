@@ -28,7 +28,8 @@
  *
  */
 
-#include "../../modules/ubasic.h"
+#include "versions.h"
+#include "ubasic.h"
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -50,6 +51,12 @@ for n=1 to b\n\
   click \"right\"\n\
 next n\n\
 return\n";
+
+extern int ubasic_init(const char *program, int is_ptp);
+extern int ubasic_run(void);
+extern int ubasic_linenumber();
+extern int ubasic_error;
+extern const char *ubasic_errstrings[];
 
 /*---------------------------------------------------------------------------*/
 int
@@ -82,10 +89,11 @@ main(int argc, char * argv[])
     }
 
     printf("Program:\n%s\n=====================================\n\n", program);
-    ubasic_init(program);
+    ubasic_init(program,0);
+    int running = SCRIPT_RUN_RUNNING;
     do {
-        ubasic_run();
-    } while(!ubasic_finished());
+        running = ubasic_run();
+    } while(running == SCRIPT_RUN_RUNNING);
 
     if (ubasic_error){
         const char *msg;

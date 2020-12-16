@@ -5,8 +5,9 @@
  * the GNU General Public License ("GPL") version 2 as published by the
  * Free Software Foundation.
  */
-#include <gui.h>
-#include <string.h>
+#include "gui.h"
+#include "string.h"
+#include "ctype.h"
 #include "gui_lang.h"
 #include "gui_mbox.h"
 #include "gui_tbox.h"

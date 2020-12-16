@@ -74,7 +74,6 @@
             feof
             fflush
             fgets
-            ftell
             SetFileAttributes
 
             get_tick_count

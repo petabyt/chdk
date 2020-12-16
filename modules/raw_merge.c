@@ -6,6 +6,7 @@
 #include "gui_lang.h"
 #include "lang.h"
 #include "conf.h"
+#include "time.h"
 
 #include "raw_merge.h"
 #include "module_def.h"

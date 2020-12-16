@@ -23,6 +23,7 @@
 #include "usb_remote.h"
 #include "module_load.h"
 #include "clock.h"
+#include "dirent.h"
 
 // splash screen time
 #if defined(OPT_EXPIRE_TEST)

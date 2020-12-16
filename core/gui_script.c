@@ -4,6 +4,7 @@
 #include "gui_lang.h"
 #include "gui_menu.h"
 #include "fileutil.h"
+#include "ctype.h"
 
 #include "script_api.h"
 #include "gui_fselect.h"

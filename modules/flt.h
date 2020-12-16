@@ -1,6 +1,10 @@
 #ifndef __FLT_H__
 #define __FLT_H__
 
+#if !defined(USE_INT32_FOR_PTRS)
+#include "versions.h"
+#endif
+
 typedef unsigned short  uint16_t;
 typedef short           int16_t;
 typedef unsigned int    uint32_t;

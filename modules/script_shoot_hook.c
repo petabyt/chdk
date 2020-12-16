@@ -1,6 +1,9 @@
 #include "stdlib.h"
+#include "string.h"
+#include "ctype.h"
 #include "script_shoot_hook.h"
 #include "script_api.h"
+
 typedef struct {
     int count; // how many times the hook was called (since script start)
     int timeout; // timeout for blocking

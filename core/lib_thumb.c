@@ -3,6 +3,8 @@
 #include "conf.h"
 #include "gui_draw.h"
 #include "keyboard.h"
+#include "dirent.h"
+#include "ctype.h"
 
 #if defined(CAM_DRYOS)
 #include "chdk-dir.c"

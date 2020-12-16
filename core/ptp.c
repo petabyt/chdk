@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "camera_info.h"
+#include "color.h"
 #include "keyboard.h"
 #include "ptp_chdk.h"
 #include "core.h"
@@ -10,6 +11,7 @@
 #include "meminfo.h"
 #include "modules.h"
 #include "callfunc.h"
+#include "stdio.h"
 
 #include "remotecap_core.h"
 
