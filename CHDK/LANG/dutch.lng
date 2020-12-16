@@ -1,8 +1,9 @@
 // CHDK language file
-// Formaat van de taalregel:
+// Opmaak van de taalregel:
+// double: 513 = 515 / 514 = 516
 // <id> "<tekst>"
-//   <id>   - moet een positief getal zijn
-//   <text> - een tekst tussen aanhalingstekens
+//   <id>   - is een positief getal
+//   <text> - beschrijving tussen aanhalingstekens
   
   1 "Hoofdmenu"
 
@@ -129,7 +130,7 @@
 103 "Sokoban"
 
 104 "*** Basisinstellingen ***"
-105 "Ben je ZEKER om te herstellen?"
+105 "Weet je ZEKER dat je wilt herstellen?"
 
 106 "*** Versie-info ***"
 107 "CHDK-ver: %s, #%s\nDatum:    %s\nTijd:    %s\nCamera:  %s\nFW Vers: %s\nCompiler: %s"
@@ -199,7 +200,7 @@
 155 "Remise! :/"
 
 156 "*** Verkeerde zet ***"
-157 "Hier mag je niet!"
+157 "Dit mag niet!"
 158 "Deze cel is niet vrij!"
 
 163 "*** Over ***"
@@ -520,7 +521,7 @@
 430 "Mens"
 431 "Speler 1 won het spel"
 432 "Speler 2 won het spel"
-433 "I versloeg je"
+433 "Ik heb je verslagen"
 434 "Het werd gelijkspel"
 
 435 "Raw uit @ RandBedekking"
@@ -545,3 +546,277 @@
 451 "Herstel bestanden"
 452 "Herstart camera..."
 453 "Forceer handm. flits"
+
+454 "Verbeter JPEG Quality"
+455 "Bij fout, herstart Lua"
+456 "Filter randen"
+457 "Laat altijd zien"
+458 "   Pano overlap (%)"
+459 "Maak badpixel.bin"
+460 "Je moet REC-mode\n instellen om dit te doen."
+461 "%s uitgezet in versie"
+462 "Aanraakscherm functies overschrijven"
+463 "Video AE bediening"
+464 "<Alt> Snelkoppeling Knoppen"
+465 "USB info"
+466 "Laat USB info zien"
+467 "Sla ROM vastlopers op"
+468 "FOUT: SystemEventInit en System.Create niet gelukt"
+469 "ROM crash log kan niet worden opgeslagen"
+470 "ROM crash log opgeslagen naar ROMLOG.LOG"
+
+471 "Schakelaar Type"
+472 "Controle Methode"
+473 "Opties"
+
+474 "Tekst blok settings"
+475 "Kies textbox charmap"
+476 "Meer ->"
+477 "Maak map"
+478 "Hernoem"
+479 "Voer de naam in van de map:"
+480 "Voer een nieuwe bestandsnaam in:"
+481 "Verwijder map"
+
+482 "Huidige persoonlijke curve"
+483 "Tetris"
+484 "Laat partitie nummer zien"
+485 "Video zonder tijds limiet"
+486 "De sensor kan oververhit raken tijdens lange opnames!"
+
+//GPS Start---------------------------------
+487 "GPS Instellingen"
+488 "Ga naar huidige foto"
+489 "Geef de kompas weer"
+490 "Laat geo-coordinaten zien"
+491 "Geef de hoogte weer"
+492 "Sla locatie op met iedere JPG"
+493 "GPX-Track - Tijd Interval"
+494 "Start GPX-TRACK Opname"
+495 "Stop GPX-TRACK Opname"
+496 "Verberg Kompas"
+497 "Zet navigeren naar foto uit"
+498 "Wacht Tijd voor GPS-Signaal"
+499 "Kompas    - Voorbeeld interval"
+500 "Navigatie - Voorbeeld interval"
+501 "Tijd om naar afspeel-instelling te gaan"
+502 "Tijd om achtergrond verlichting uit te zetten"
+503 "Algemeen     - Instellingen"
+504 "GPS pauze test interval"
+505 "Terugstellen van kompas"
+506 "Loggen    - Instellingen"
+507 "Labelen    - Instellingen"
+508 "Navigatie - Instellingen"
+509 "Afsluiten op % batterij niveau"
+510 "Verlaat Labelen - Korte waarde"
+511 "0 - 2D-3D Fix"
+512 "Knipperende LED Tijdens Verlaat Labelen"
+513 "Ga naar afspeel-instelling"
+514 "Zet achtergrond verlichting uit"
+513 "Ga naar afspeel-instelling"
+514 "Zet achtergrond verlichting uit"
+517 "Tijd om naar afspeel-instelling te gaan"
+518 "Tijd totdat achtergrond verlichting uit gaat"
+519 "Laat GPS Status zien"
+520 "Geef alarm bij laag voltage"
+521 "Zet positie als thuis locatie" 
+522 "Navigeer naar huis"
+523 "Zet positie als huidige tijdzone"
+524 "Laat historie symbool zien"
+525 "Zet navigatie naar huis uit"
+526 "Controleer verandering van Tijdzone"
+527 "Geluids Waarschuwingen            "
+528 "Zet CHDK GPS functies aan"
+529	"Geen GPS!"
+530	"Tijdzone is verandert!"
+531	"Batterij onder ingestelde waarde!"
+532	"Camera zal over %02d seconden afsluiten!"
+533	"Automatisch Afsluiten gestopt!"
+534	"Camera wacht op de GPS voor %01d:%02d"
+535	"Naar huis navigeren Loc\n is niet mogelijk!"
+536	"Kan niet naar foto navigeren: %s!"
+537	"Afstand:    = %i m"
+538	"Tijdsduur:    = %i:%i:%i"
+539	"Snelheid:        = %s km/h"
+540	"Richting:   = %i°"
+541	"Doel: = %i°"
+542	"Navigatie naar foto %s gestart"
+543	"lat=%s - long=%s "
+544	"richting = %i°"
+545	"Navigatie naar huis gestart"
+//GPS End-----------------------------------------
+
+546 "Standaard kortste Sluiter Tijd"
+547 "Standaard hoogste ISO waarde"
+548 "OverBelichting Compensatie"
+549 "OverBelichting Pixel Percentage"
+
+550 "Annuleren [Half indrukken]"
+
+551 "Zet programma start aan"
+
+552 "Zet Zoom Assistent knop uit"
+
+553 "DNG versie"
+554 "Menu Instellingen"
+555 "Laat <ALT> Help Scherm zien"
+556 "  Help Scherm vertraging"
+557 "CHDK Instellingen"
+
+// <ALT> mode help screen text
+558 "%-20s %-14s"                           // Header format, adjust if needed; but total len must be 35
+559 "<ALT> Sneltoetsen"                       // Len must be <= first string in header format (20)
+560 "Sluiter half ingedrukt +"                  // Len must be <= first string in header format (20)
+561 "MENU=CHDK Menu"                        // Len must be <= second string in header format (14)
+562 "MENU=Gebruiker Menu"                        // Len must be <= second string in header format (14)
+563 "SET=Programma Menu, SLUITER=Start Programma"   // Len must be <= 35
+564 "Focus  %5s=Inf.  %5s=HyperFocal"       // Len must be <= 35
+565 "Handmatige Focus"
+566 "Verberg CHDK OSD wanneer ingedrukt"
+567 "  * - niet beschikbaar in <ALT> instelling  "   // Len must be <= 35
+
+568 "'%s'\ntoegevoegd aan het Gebruikers Menu"
+569 "Gebruikers Menu is vol"
+
+570 "SD Kaart"
+571 "Taal & Lettertype"
+
+572 "Voeg programma toe aan het Gebruikers Menu"
+
+573 "Focus Oneindig"
+574 "Verander Focus Verhouding"
+
+575 "AAN/UIT Knop in <ALT> instelling"
+
+576 "Modules"
+577 "Module Controleur"
+578 "Zet Registreren aan"
+579 "Verwijder Module Register"
+
+580 "Aktiveer Half-Ingedrukte Sneltoetsen"
+581 "<< Sneltoetsen niet aktief  >>"
+
+582 "Console"
+583 "Laat console zien in"
+584 "Verberg N sec. na laaatste verandering"
+585 "Herstart console"
+586 "Geef laatste console weer"
+587 "Console maat & positie herijken."
+
+588 "RAM Dump instellingen"
+589 "Start Adres"
+590 "Dump Size (0 = ALL RAM)"
+591 "Dump Delay (s)"
+
+592 "Geen ruimte om de module te starten\n'%s'"
+593 "Module\n'%s'\nwerkt niet in 'simple' instelling"
+
+594 "Voeg \n%s\nin Gebruikers Menu?"
+595 "Verwijder\n%s\nvan Gebruikers Menu?"
+596 "Verwijder en voeg knoppen in Menu toe"
+597 "Voeg module aan het Gebruikers Menu toe"
+598 "Verwijder huidige item van Gebruikers Menu"
+
+599 "EyeFi Instellingen"
+600 "EyeFi Bediening"
+601 "Beschikbare netwerken"
+602 "Ingestelde netwerken"
+603 "Niet gelukt"
+604 "Succes"
+605 "Verkeerd wachtwoord?"
+606 "Netwerk toegevoegd"
+607 "Problemen met instellen netwerk"
+608 "Voeg netwerk toe"
+609 "Test netwerk?"
+610 "Wachtwoord"
+611 "Fout bij starten eyefi"
+612 "Niet genoeg geheugen"
+613 "Geen Eyefi Kaart gevonden"
+614 "Kan het netwerk niet verwijderen"
+615 "Netwerk verwijderd"
+616 "Weet je het zeker?"
+617 "Eyefi wlan aan"	
+618 "Eyefi wlan uit"
+619 "Forceer eyefi wlan aan"
+620 "Forceer eyefi wlan uit"
+621 "Kan netwerk niet vinden"
+622 "Geen network gevonden"
+
+623 "Invoer kanaal"
+624 "FOUT: MISSENDE MODULES"
+
+625 "DNG Krimp Maat"
+
+626 "Hotshoe overschrijven"
+627 "In gebruik"
+628 "Leeg"
+629 "Uit"
+
+630 "CHDK Kleur Test"
+
+631 "Herijk Alle Kleuren"
+632 "Weet je ZEKER dat \nalle kleuren standaard instellingen moeten krijgen?"
+
+633 "Zet lange bestandsnaam ondersteuning uit"
+
+// additional benchmark module strings
+// Combined length of next 3 must be less than 31 characters
+634 "START"
+635 "Log"
+636 "SD Test"
+637 "Tekst uitvoer   :"
+
+638 "Zet RAW keuze Snelkoppeling aan"
+
+// CPU Info
+639 "CPU Info"
+640 "Schreef %s"
+
+// Sudoku
+641 "Sudoku"
+
+// Sudoku menu (15 chars max)
+642 " Check sudoku "
+643 " Solve sudoku "
+644 " New sudoku "
+645 " Enter sudoku "
+646 " Info "
+647 " Exit "
+648 " Save and Exit "
+649 " Del save game "
+
+650 "Congratulations!"
+651 "You did it!"
+652 "Everything's correct!"
+653 "Tada!"
+654 "0 mistakes!"
+655 "Info"
+656 "A number occurs twice"
+657 "Solved"
+658 "Not complete"
+659 "Not solvable"
+660 "Couldn't find a mistake"
+661 "There's something wrong here..."
+
+// Snake
+662 "Snake"
+663 "Points: %d"
+
+// Module names
+664 "uBASIC Scripting"
+665 "Lua Scripting"
+666 "Motion Detection"
+667 "Popup Menu"
+
+668 "VBR Minimale Bitsnelheid"
+
+669 "Zet Raw @ Canon RAW uit"
+
+670 "Wis Canon Overtrek"
+
+671 "Zet video uit in rec. aan"
+
+672 "Mogelijke Canon ROM corruptie!\nLaat dit aub weten op het CHDK forum."
+673 "Niet gelukte blokken:"
+674 "Klik OK om de ROM te dumpen"
+675 "Checksum ROM bij start"
