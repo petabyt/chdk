@@ -2,10 +2,6 @@
 THUMB_FW=1
 # update build rules for Digic 7 ARM changes
 DIGIC7=1
-DIGIC=70
-
-# Camera has YUV bitmap buffer with 2x horizontal & vertical scaling required to convert CHDK co-ordinates to bitmap co-ordninates
-BITMAP_YUV2=1
 
 PLATFORMID=12988
 
@@ -38,4 +34,3 @@ FI2FLAGS=W
 # BLINK_LED_GPIO=0xD20801E4
 
 DIGIC = 70
-
