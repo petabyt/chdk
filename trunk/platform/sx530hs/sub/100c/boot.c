@@ -218,13 +218,11 @@ asm volatile (
 "    BEQ     exitHook\n"                // below compares not necessary if this check has found something.
 
 /*** INSTALL exp_drv_task() hook ***/
-// hook not fully implemented in capt_seq.c - reyalp
-/*
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    BEQ     exitHook\n"
-*/
+
 
 /*** INSTALL filewrite() hook ***/
 //"    LDR     R0, =task_FileWrite\n"
