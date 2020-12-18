@@ -21,9 +21,6 @@ FI2FLAGS=W
 
 PLATFORMOSVER=57
 
-# mandatory for DIGIC 6
-MEMBASEADDR=0x8000
-
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfff20270
 # below 2 commented lines are used by tools/compatbuilder.sh

@@ -7,9 +7,6 @@ PLATFORMOS=dryos
 
 PLATFORMOSVER=58
 
-# mandatory for DIGIC 6
-MEMBASEADDR=0x8000
-
 # start of firmware
 ROMBASEADDR=0xE0000000
 

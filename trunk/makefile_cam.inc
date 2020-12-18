@@ -5,13 +5,17 @@ include $(topdir)makefile_base.inc
 # Load camera firmware settings
 ifdef PLATFORMSUB
   include $(camfw)/makefile.inc
+
   ifndef MEMBASEADDR
-    MEMBASEADDR=0x1900
+    ifdef THUMB_FW
+      MEMBASEADDR=0x8000
+    else
+      MEMBASEADDR=0x1900
+    endif
   endif
+
   PLFLAGS=-DMEMBASEADDR=$(MEMBASEADDR) -DMEMISOSTART=$(MEMISOSTART) -DMEMISOSIZE=$(MEMISOSIZE) -DCAM_DIGIC=$(DIGIC)
-  ifdef RESTARTSTART
-    PLFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
-  endif
+
   ifeq ($(PLATFORMOS),dryos)
     ifeq ($(PLATFORMOSVER),)
       $(error PLATFORMOSVER not defined for DryOS cam)
