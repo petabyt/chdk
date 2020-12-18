@@ -16,7 +16,7 @@ do
     srcfwo=${srcfw}
     if [ "${state}" != "" ]; then state=_${state}; fi
     if [ "${srcfw}" = "" ]; then srcfw=${fw}; fi
-    if [ "$4" = "-noskip" ] && [ ${srcfw} != ${fw} ] && [ "$2" != "os-camera-list-entry" ]; then jmp=1; else jmp=0; fi
+    if [ "$4" = "-noskip" ] && [ ${srcfw} != ${fw} ] && [ "$2" != "os-camera-list-entry" ] && [ "$2" != "cam-info" ]; then jmp=1; else jmp=0; fi
     if ( [ "$2" = "firzipsub" ] || [ "$2" = "firzipsubcomplete" ] ) && [ ${srcfw} != ${fw} ] ; then cpy="copy"; else cpy=""; fi
     if [ ${jmp} -eq 0 ] ; then
       $1 -s --no-print-directory TARGET_FW=${fw} PLATFORM=${cam} PLATFORMSUB=${srcfw} STATE=${state} SRCFW=${srcfwo} SKIP_AUTOBUILD=${skip} ${2}${cpy} || exit 1

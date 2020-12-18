@@ -17,6 +17,12 @@ ifdef PLATFORMSUB
       $(error PLATFORMOSVER not defined for DryOS cam)
     endif
   endif
+
+  # MAXRAMADDR used in gui_debug.c for controlling memory browser allowed address ranges
+  # override in platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc to set camera specific value
+  ifndef MAXRAMADDR
+    MAXRAMADDR=0x1FFFFFF
+  endif
 endif
 
 ifndef TARGET_CAM
@@ -32,13 +38,7 @@ ifeq ($(TARGET_PID),)
 override TARGET_PID=$(PLATFORMID)
 endif
 
-# Used in gui_debug.c for controlling memory browser allowed address ranges
-# override in platform/$(PLATFORM)/sub/$(PLATFORMSUB)/makefile.inc to set camera specific value
-ifdef MAXRAMADDR
 PLFLAGS+=-DMAXRAMADDR=$(MAXRAMADDR)
-else
-PLFLAGS+=-DMAXRAMADDR=0x1FFFFFF
-endif
 ifdef ROMBASEADDR
 PLFLAGS+=-DROMBASEADDR=$(ROMBASEADDR)
 else
