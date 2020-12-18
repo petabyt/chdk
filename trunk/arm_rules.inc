@@ -34,7 +34,7 @@ CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 ifndef THUMB_FW
     CFLAGS+=-mtune=arm946e-s -march=armv5te -DOPT_ARCHITECTURE=GCC_EABI_THUMB
 else
-    ifdef DIGIC7
+    ifdef ARMV7A
         CFLAGS+=-march=armv7-a -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
     else
         CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2
