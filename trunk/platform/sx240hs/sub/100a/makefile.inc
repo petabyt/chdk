@@ -6,9 +6,6 @@ PLATFORMID=12869
 
 PLATFORMOS=dryos
 
-# size of memory region for CHDK
-RESTARTSTART=0x50000
-
 # points to the start of the memory pool used by the firmware
 ifdef OPT_CHDK_IN_EXMEM
 MEMISOSTART=0xF8E67E0  # MAXRAMADDR+1 - EXMEM_HEAP_SKIP - EXMEM_BUFFER_SIZE - 32(0x20) (exmem allocates 64 bytes extra, 32 before and 32 after block allocated)
