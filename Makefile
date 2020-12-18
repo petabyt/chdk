@@ -335,3 +335,14 @@ batch-clean:
 
 batch-run-code-gen:
 	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) run-code-gen $(CAMERA_LIST) -noskip
+
+cam-info:
+	$(MAKE) -C $(camfw) cam-info
+
+camera-info:
+	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) cam-info $(CAMERA_LIST) -noskip > camera_info.tmp
+	echo CAMERA,FIRMWARE,STATUS,SOURCE_FW,SOURCE_CAM,AUTOBUILD,PLATFORMID,OS,OSVER,DIGIC,ROMBASEADDR,MEMBASEADDR,MAXRAMADDR,KEYSYS,FI2FLAGS,DANCING_BITS,THUMB_FW,ARAM_MALLOC,ARAM_HEAP_START,ARAM_HEAP_SIZE,CHDK_IN_ARAM,EXMEM_MALLOC,EXMEM_HEAP_SKIP,EXMEM_BUFFER_SIZE,CHDK_IN_EXMEM > camera_info.csv
+	sort -t ',' -k10,10 -k8,8r -k9,9 -k 7,7 camera_info.tmp >> camera_info.csv
+	echo >> camera_info.csv
+	echo Generated file - run \'make camera-info\' to update >> camera_info.csv
+	rm camera_info.tmp
