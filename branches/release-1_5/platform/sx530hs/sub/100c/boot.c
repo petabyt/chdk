@@ -217,13 +217,11 @@ asm volatile (
 "    BEQ     exitHook\n"                // below compares not necessary if this check has found something.
 
 /*** INSTALL exp_drv_task() hook ***/
-// hook not fully implemented in capt_seq.c - reyalp
-/*
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    BEQ     exitHook\n"
-*/
+
 
 /*** INSTALL filewrite() hook ***/
 //"    LDR     R0, =task_FileWrite\n"
@@ -461,7 +459,7 @@ asm volatile (
 "    LDR     R1, =0x60E000 \n"
 "    MOV     R0, #0 \n"
 "    BL      sub_FF03822C \n"
-"    BL      sub_006B8E18 \n"
+"    BL      sub_006B8E18 /*_EnableDispatch*/ \n"
 "    MOV     R3, #0 \n"
 "    STR     R3, [SP] \n"
 "    LDR     R3, =task_Startup_my \n"  // --> Patched. Old value = 0xFF0279DC.
