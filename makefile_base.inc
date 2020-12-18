@@ -56,14 +56,20 @@ ENCODE_DISKBOOT=$(tools)/dancingbits$(EXE)
 # Load camera settings (optional)
 ifdef PLATFORM
   -include $(cam)/makefile.inc
+  # update build rules for Digic 7 ARM changes
+  ifndef ARMV7A
+    ifeq ($(DIGIC),$(filter $(DIGIC),70))
+      ARMV7A=1
+    endif
+  endif
 endif
 
 # Sub-directory for object and dump files
-# used by modules build
+# used by modules and libraries build
 ifndef THUMB_FW
     O=.o/
 else
-    ifndef DIGIC7
+    ifndef ARMV7A
         O=.o2/
     else
         O=.o3/

@@ -1,7 +1,5 @@
 # mandatory for DIGIC 6 and later
 THUMB_FW=1
-# update build rules for Digic 7 ARM changes
-DIGIC7=1
 
 PLATFORMID=12988
 
