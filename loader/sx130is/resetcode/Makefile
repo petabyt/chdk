@@ -2,6 +2,8 @@ topdir=../../../
 
 include $(topdir)makefile_cam.inc
 
+CFLAGS+=-DRESTARTSTART=$(RESTARTSTART)
+
 LDOPTS=-nostdlib -Wl,--allow-shlib-undefined -Wl,-EL,-T,$(tools)/link-boot.ld -Wl,-N,-Ttext,$(RESTARTSTART)
 
 all: main.bin

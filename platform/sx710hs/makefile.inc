@@ -16,8 +16,6 @@ NEED_ENCODED_DISKBOOT=13
 
 KEYSYS=d4g
 
-MEMBASEADDR=0x8000
-
 #
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfff20270

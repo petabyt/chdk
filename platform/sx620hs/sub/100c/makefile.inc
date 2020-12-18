@@ -2,9 +2,6 @@ PLATFORMID=12995
 PLATFORMOS=dryos
 PLATFORMOSVER=58
 
-# address where wif or diskboot code will be loaded by camera
-MEMBASEADDR=0x1900
-
 # start of firmware
 ROMBASEADDR=0xff010000
 
