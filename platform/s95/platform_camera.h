@@ -100,4 +100,7 @@
 
     #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
 
+    #undef  CAM_KEY_PRESS_DELAY
+    #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
+
 //--------------------------------------------------
