@@ -1,9 +1,9 @@
 =Introduction=
-The chdkbuild directory contains Dockerfile for a CHDK build environment in a
+The chdkbuild directory contains a Dockerfile for a CHDK build environment in a
 Docker (https://www.docker.com/) container. This can be used on Windows, Linux
 and Mac.
 
-If you don't already use docker, installing and configuring just to build
+If you don't already use docker, installing and configuring it just to build
 CHDK may not be the best choice. Other options are described on
 https://chdk.fandom.com/wiki/For_Developers
 
