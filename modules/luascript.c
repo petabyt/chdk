@@ -87,7 +87,7 @@ static unsigned run_hook_count; // number of calls to the count hook this kbd_ta
 #define YIELD_MAX_COUNT_DEFAULT 25 // 25 checks = 2500 vm instructions
 #define YIELD_MAX_MS_DEFAULT 10
 static unsigned yield_max_count;
-static int yield_max_ms;
+static unsigned yield_max_ms;
 static int yield_hook_enabled;
 
 static void lua_script_disable_yield_hook(void) {
@@ -195,7 +195,7 @@ static void lua_count_hook(lua_State *L, __attribute__ ((unused))lua_Debug *ar)
     run_hook_count++;
     if( L->nCcalls > L->baseCcalls || !yield_hook_enabled )
         return;
-    if(run_hook_count >= yield_max_count || get_tick_count() - run_start_tick >= yield_max_ms)
+    if(run_hook_count >= yield_max_count || (unsigned)(get_tick_count() - run_start_tick) >= yield_max_ms)
         lua_yield( L, 0 );
 }
 
