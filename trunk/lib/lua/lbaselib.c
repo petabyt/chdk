@@ -512,6 +512,10 @@ static const luaL_Reg base_funcs[] = {
 ** =======================================================
 */
 
+// CHDK - disable coroutine lib,
+// CHDK scheduling uses a coroutine in a way not compatible
+// with using them in Lua script
+#ifdef HOST_LUA
 #define CO_RUN	0	/* running */
 #define CO_SUS	1	/* suspended */
 #define CO_NOR	2	/* 'normal' (it resumed another coroutine) */
@@ -646,7 +650,7 @@ static const luaL_Reg co_funcs[] = {
 };
 
 /* }====================================================== */
-
+#endif // CHDK  - disable coroutine lib
 
 static void auxopen (lua_State *L, const char *name,
                      lua_CFunction f, lua_CFunction u) {
@@ -680,7 +684,10 @@ static void base_open (lua_State *L) {
 
 LUALIB_API int luaopen_base (lua_State *L) {
   base_open(L);
+// CHDK - disable coroutine lib
+#ifdef HOST_LUA
   luaL_register(L, LUA_COLIBNAME, co_funcs);
+#endif
   return 2;
 }
 
