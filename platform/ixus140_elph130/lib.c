@@ -224,8 +224,8 @@ int vid_get_viewport_fullscreen_height()
             return 480; // all other playback is 480
         }
     } else {
-        if(vot == 0) {
-            return 480; // rec without video out
+        if(vot == 0 && camera_info.state.mode_shooting != MODE_FISHEYE) {
+            return 480; // rec without video out, except FISHEYE which is always 240
         } else {
             return 240;
         }
@@ -263,7 +263,7 @@ void load_chdk_palette()
 {
     extern int active_palette_buffer;
     // Only load for the standard record and playback palettes
-    // 0 = rec, 4 = func menu, 5 = playback, 6 = menu (play or rec), 
+    // 0 = rec, 4 = func menu, 5 = playback, 6 = menu (play or rec),
     if ((active_palette_buffer == 0) || (active_palette_buffer == 5) || (active_palette_buffer == 4))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
