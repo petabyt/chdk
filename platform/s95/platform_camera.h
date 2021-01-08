@@ -103,4 +103,7 @@
     #undef  CAM_KEY_PRESS_DELAY
     #define CAM_KEY_PRESS_DELAY                 60      // delay after a press
 
+    #undef  CAM_AF_LED
+    #define CAM_AF_LED                          2   // Index of AF led in camera_set_led function
+
 //--------------------------------------------------
