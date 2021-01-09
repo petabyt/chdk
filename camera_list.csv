@@ -248,6 +248,7 @@ ixus990_sd970,100a,BETA,,
 ixus990_sd970,100b,ALPHA,100a,SKIP_AUTOBUILD
 ixusizoom_sd30,100h,,,
 ixusizoom_sd30,100g,,,
+ixusizoom_sd30,100e,,100g,
 ixusizoom_sd30,100f,,100g,
 ixusw_sd430,110a,BETA,,
 n,100a,,,
