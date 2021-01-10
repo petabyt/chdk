@@ -1,6 +1,3 @@
-# mandatory for DIGIC 6
-THUMB_FW=1
-
 PLATFORMID=12979
 
 PLATFORMOS=dryos
