@@ -106,7 +106,7 @@ camera_env.package = {
     loaded={}
 }
 -- mark stuff that would be loaded on cam as loaded
-for i,k in ipairs({'string','debug','package','_G','io','table','math','coroutine','imath'}) do
+for i,k in ipairs({'string','debug','package','_G','io','table','math',--[['coroutine',]]'imath'}) do
     camera_env.package.loaded[k] = package.loaded[k]
 end
 -- make a version of require that runs the module in the camera environment
