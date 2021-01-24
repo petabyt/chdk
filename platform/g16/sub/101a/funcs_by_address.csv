@@ -1071,6 +1071,7 @@
 0xfc2a1608,j_TakeSemaphore
 0xfc2a1610,j_DeleteSemaphore
 0xfc2a1640,j_createsemaphore_low
+0xfc2a1650,j_takesemaphore_low
 0xfc2a1670,j_DebugAssert
 0xfc2a1690,j_dry_memcpy
 0xfc2a1698,j_bzero

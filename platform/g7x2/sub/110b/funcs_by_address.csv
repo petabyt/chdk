@@ -1,5 +1,6 @@
 0xdffc6385,CreateTask_low
 0xdffc6807,givesemaphore_low
+0xdffc682f,takesemaphore_low
 0xdffc9293,SleepTask
 0xdffc9293,SleepTask_FW
 0xdffc93bb,CreateTask
