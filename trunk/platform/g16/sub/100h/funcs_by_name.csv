@@ -1101,6 +1101,7 @@
 0xfc0b7a9d,j_stopIPAddressing_FW
 0xfc30e147,j_strcmp_FW
 0xfc2a15e0,j_TakeSemaphore
+0xfc2a1628,j_takesemaphore_low
 0xfc2a1550,j_TakeSemaphoreStrictly
 0xfc0b7a8f,j_termComDiscovery_FW
 0xfc0ef971,j_Terminatedccd_FW

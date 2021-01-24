@@ -1052,6 +1052,7 @@
 0xfc29b3fc,j_DeleteEventFlag
 0xfc29b404,j_WaitForAnyEventFlag
 0xfc29b40c,j_CreateEventFlagStrictly
+0xfc29b434,j_takesemaphore_low
 0xfc29b444,j_DebugAssert
 0xfc29b464,j_dry_memcpy
 0xfc29b46c,j_bzero

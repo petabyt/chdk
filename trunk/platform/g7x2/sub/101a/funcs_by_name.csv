@@ -2112,6 +2112,7 @@
 0xe0552513,System.Delete_FW
 0xdffca0cf,TakeSemaphore
 0xdffca0cf,TakeSemaphore_FW
+0xdffc682f,takesemaphore_low
 0xdffca2ad,TakeSemaphoreStrictly
 0xe007156d,task__tgTask
 0xe04918b1,task_Accelerometer

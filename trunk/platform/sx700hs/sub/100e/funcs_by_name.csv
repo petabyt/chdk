@@ -1100,6 +1100,7 @@
 0xfc0a867d,j_stopIPAddressing_FW
 0xfc30f9cf,j_strcmp_FW
 0xfc29b39c,j_TakeSemaphore
+0xfc29b434,j_takesemaphore_low
 0xfc29b30c,j_TakeSemaphoreStrictly
 0xfc0a866f,j_termComDiscovery_FW
 0xfc0d5d17,j_Terminatedccd_FW
