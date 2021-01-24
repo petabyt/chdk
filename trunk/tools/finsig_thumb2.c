@@ -406,8 +406,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 //    { "deletesemaphore_low", UNUSED },
     { "givesemaphore_low", OPTIONAL|UNUSED}, // OPT_CONSOLE_REDIR_ENABLED
     { "takesemaphore_low", OPTIONAL|UNUSED },
-    { "bzero" }, // 
-    { "memset32" }, // actually jump to 2nd instruction of bzero 
+    { "bzero" }, //
+    { "memset32" }, // actually jump to 2nd instruction of bzero
     { "get_dial_hw_position", OPTIONAL },
 
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
@@ -455,7 +455,7 @@ typedef struct {
     char*   name;   // name
     int     id;     // propcase id, as found
     int     use;    // 0: informational only; 1: use for propset guess AND print as #define; 2: use for propset guess
-    
+
     int     id_ps6; // id in propset 6
     int     id_ps7; // id in propset 7
     int     id_ps8; // id in propset 8
@@ -553,6 +553,7 @@ misc_val_t misc_vals[]={
     { "palette_control",    MISC_VAL_OPTIONAL},
     { "palette_buffer_ptr", MISC_VAL_OPTIONAL},
     { "active_palette_buffer",MISC_VAL_OPTIONAL},
+    { "live_free_cluster_count",MISC_VAL_OPTIONAL},
     { "CAM_UNCACHED_BIT",   MISC_VAL_NO_STUB},
     { "physw_event_table",  MISC_VAL_NO_STUB},
     { "uiprop_count",       MISC_VAL_DEF_CONST},
@@ -822,7 +823,7 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
         match_fns[1].fn=search_calls_multi_end;
         match_fns[2].adr=0;
     }
-    return fw_search_insn(fw,is,search_disasm_calls_multi,0,match_fns,is->adr + max_offset);
+    return fw_search_insn(fw,is,search_disasm_calls_veneer_multi,0,match_fns,is->adr + max_offset);
 }
 // is the insn pointed to by is a call to "name" or one of it's veneers?
 // note: inefficient, should not be used for large searches
@@ -911,7 +912,7 @@ int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 
-// match 
+// match
 // r0=ref value
 //...
 // bl=<our func>
@@ -1007,7 +1008,7 @@ int sig_match_reg_evp_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 break;
             }
         }
-    } 
+    }
     // found candidate function
     if(dd_enable_p) {
         disasm_iter_init(fw,is,dd_enable_p); // start at found func
@@ -1388,7 +1389,7 @@ int sig_match_screenunlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // printf("sig_match_screenunlock: no ScreenLock\n");
         return 0;
     }
-    
+
     // expect tail call to ScreenUnlock
     const insn_match_t match_end[]={
         {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
@@ -1505,7 +1506,7 @@ int sig_match_physw_misc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_match_physw_misc: disasm failed\n");
         return 0;
     }
-    
+
     // look for kbd_p1_f
     if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
         return 0;
@@ -2932,7 +2933,7 @@ int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t 
             // some cameras load r0 through a base reg, try alternate match
             // r3 == 3 and r2 or r1 found and in ROM
             if((found_regs & 0x8) && regs[3] == 4) {
-                if((found_regs & 0x2 && regs[1] > fw->rom_code_search_min_adr) 
+                if((found_regs & 0x2 && regs[1] > fw->rom_code_search_min_adr)
                     || (found_regs & 0x4 && regs[2] > fw->rom_code_search_min_adr)) {
                     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
                 }
@@ -2973,7 +2974,7 @@ int sig_match_transfer_src_overlay(firmware *fw, iter_state_t *is, sig_rule_t *r
     // adding active_bitmap_buffer here
     // note 4 bytes after value used on many ports, but the value normally sent to transfer_src_overlay
     save_misc_val("active_bitmap_buffer",desc.adr_adj,desc.off,(uint32_t)is->insn->address);
-    // pick up bitmap_buffer 
+    // pick up bitmap_buffer
     // expect
     // ldr rx,[reg bitmap buffer]
     // add r0, <reg from bitmap buffer>, const
@@ -3061,7 +3062,7 @@ int sig_match_zicokick_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return  0;
     }
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-    
+
     // search for string ref
     if(!fw_search_insn(fw,is,search_disasm_str_ref,0,rule->ref_name,(uint32_t)is->adr+SEARCH_NEAR_REF_RANGE)) {
         printf("sig_match_zicokick_52: failed to find insn ref %s\n",rule->ref_name);
@@ -3097,7 +3098,7 @@ int sig_match_zicokick_gt52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return  0;
     }
     disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-    
+
     // search for string ref
     if(!fw_search_insn(fw,is,search_disasm_str_ref,0,rule->ref_name,(uint32_t)is->adr+SEARCH_NEAR_REF_RANGE)) {
         printf("sig_match_zicokick_gt52: failed to find insn ref %s\n",rule->ref_name);
@@ -3413,7 +3414,7 @@ int sig_match_levent_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // printf("sig_match_levent_table: no match bl 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
-    
+
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
 
@@ -3480,7 +3481,7 @@ int sig_match_flash_param_table(firmware *fw, iter_state_t *is, sig_rule_t *rule
         // printf("sig_match_flash_param_table: no match sub 1 bl\n");
         return 0;
     }
-    
+
     // follow
     disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
     // first instruction should load address
@@ -3707,7 +3708,7 @@ int sig_match_get_canon_mode_list(firmware *fw, iter_state_t *is, sig_rule_t *ru
         return 0;
     }
     return save_sig_with_j(fw,rule->name,adr);
-} 
+}
 
 int sig_match_zoom_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -3728,7 +3729,7 @@ int sig_match_zoom_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     uint32_t base=LDR_PC2val(fw,is->insn);
     arm_reg rb=is->insn->detail->arm.operands[0].reg;
-    
+
     // look for first TakeSemaphoreStrictly
     if(!find_next_sig_call(fw,is,40,"TakeSemaphoreStrictly")) {
         // printf("sig_match_zoom_busy: no match TakeSemaphoreStrictly\n");
@@ -3739,7 +3740,7 @@ int sig_match_zoom_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 0;
     }
     // assume next instruction is ldr
-    if(is->insn->id != ARM_INS_LDR 
+    if(is->insn->id != ARM_INS_LDR
         || is->insn->detail->arm.operands[0].reg != ARM_REG_R0
         || is->insn->detail->arm.operands[1].mem.base != rb) {
         // printf("sig_match_zoom_busy: no match LDR\n");
@@ -3773,7 +3774,7 @@ int sig_match_focus_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     uint32_t base=LDR_PC2val(fw,is->insn);
     arm_reg rb=is->insn->detail->arm.operands[0].reg;
-    
+
     // look for first TakeSemaphoreStrictly
     if(!find_next_sig_call(fw,is,50,"TakeSemaphoreStrictly")) {
         // printf("sig_match_focus_busy: no match TakeSemaphoreStrictly\n");
@@ -3791,7 +3792,7 @@ int sig_match_focus_busy(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // rewind to LDR
     disasm_iter_init(fw,is,adr_hist_get(&is->ah,1));
     disasm_iter(fw,is);
-    // check LDR 
+    // check LDR
     if(is->insn->detail->arm.operands[1].mem.base != rb) {
         // printf("sig_match_focus_busy: no match LDR base\n");
         return 0;
@@ -4206,6 +4207,75 @@ int sig_match_palette_vars(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+int sig_match_live_free_cluster_count(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // dry >= 58 wraps close in some semaphore calls
+    if (fw->dryos_ver >= 58) {
+        // find third function call
+        if(!insn_match_find_nth(fw,is,22,3,match_bl_blximm)) {
+            printf("sig_match_live_free_cluster_count: no match bl0 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    }
+
+    // find third function call
+    if(!insn_match_find_nth(fw,is,22,3,match_bl_blximm)) {
+        printf("sig_match_live_free_cluster_count: no match bl1 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+
+    if(!find_next_sig_call(fw,is,20,"get_fstype")) {
+        printf("sig_match_live_free_cluster_count: no get_fstype 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+
+    // find second function call
+    if(!insn_match_find_nth(fw,is,12,2,match_bl_blximm)) {
+        printf("sig_match_live_free_cluster_count: no match bl2 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+
+    // find second LDR [pc ..]
+    if(!insn_match_find_next(fw,is,3,match_ldr_pc)) {
+        printf("sig_match_live_free_cluster_count: no match ldr1 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+
+    if(!insn_match_find_next(fw,is,3,match_ldr_pc)) {
+        printf("sig_match_live_free_cluster_count: no match ldr2 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+//    uint32_t ldr_reg = is->insn->detail->arm.operands[0].reg;
+    uint32_t base = LDR_PC2val(fw,is->insn);
+
+    if(!find_next_sig_call(fw,is,16,"takesemaphore_low")) {
+        printf("sig_match_live_free_cluster_count: no takesemaphore_low 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    const insn_match_t match_ldrd_r2_r0[]={
+        {MATCH_INS(LDRD,   3),  {MATCH_OP_REG(R2), MATCH_OP_REG(R0), MATCH_OP_ANY}},
+        {ARM_INS_ENDING}
+    };
+
+    if(!insn_match_find_next(fw,is,50,match_ldrd_r2_r0)) {
+        printf("sig_match_live_free_cluster_count: no match ldrd 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    // +4 because var is 2nd word of ldrd load
+    save_misc_val(rule->name,base,is->insn->detail->arm.operands[2].mem.disp + 4,(uint32_t)is->insn->address);
+    return 1;
+
+}
+
 int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4238,7 +4308,7 @@ int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
-// find Nth function call within max_insns ins of string ref, 
+// find Nth function call within max_insns ins of string ref,
 // returns address w/thumb bit set according to current state of call instruction
 // modifies is and potentially fw->is
 uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4300,7 +4370,7 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     printf("find_call_near_str: no match %s\n",rule->name);
     return 0;
 }
-                                
+
 // find Nth function call within max_insns ins of string ref
 int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -4336,7 +4406,7 @@ int sig_match_prop_string(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         // semaphore version of GetPropertyCase, looking for r1
         myreg = 1;
     }
-    
+
     // re-init 'is' to current address minus at least 8 insts
     const int hl = 8;
     disasm_iter_init(fw,is,call_adr - hl*4);
@@ -4376,7 +4446,7 @@ int is_immediate_ret_sub(firmware *fw,iter_state_t *is_init)
     return 0;
 }
 
-// match last function called by already matched sig, 
+// match last function called by already matched sig,
 // either the last bl/blximmg before pop {... pc}
 // or b after pop {... lr}
 // param defines min and max number of insns
@@ -4465,7 +4535,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // no offset, just save match as is
     // TODO might want to validate anyway
     if(sig_type == SIG_NAMED_ASIS) {
-        sig_match_named_save_sig(fw,rule->name,ref_adr,sig_flags); 
+        sig_match_named_save_sig(fw,rule->name,ref_adr,sig_flags);
         return 1;
     }
     const insn_match_t *insn_match;
@@ -4503,7 +4573,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     if(insn_match_find_nth(fw,is,15 + sig_nth_range*sig_nth,sig_nth,insn_match)) {
         uint32_t adr = B_BL_BLXimm_target(fw,is->insn);
         if(adr) {
-            // BLX, set thumb bit 
+            // BLX, set thumb bit
             if(is->insn->id == ARM_INS_BLX) {
                 // curently not thumb, set in target
                 if(!is->thumb) {
@@ -4527,7 +4597,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             } else {
                 printf("sig_match_named: disasm failed in j_ check at %s 0x%08x\n",rule->name,adr);
             }
-            sig_match_named_save_sig(fw,rule->name,adr,sig_flags); 
+            sig_match_named_save_sig(fw,rule->name,adr,sig_flags);
             return 1;
         } else {
             printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
@@ -4542,7 +4612,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 #define SIG_DRY_MAX(max_rel) 0,(max_rel)
 #define SIG_DRY_RANGE(min_rel,max_rel) (min_rel),(max_rel)
 // bootstrap sigs:
-// Used to find the minimum needed to for find_generic_funcs to get generic task and eventproc matches 
+// Used to find the minimum needed to for find_generic_funcs to get generic task and eventproc matches
 // order is important
 sig_rule_t sig_rules_initial[]={
 // function         CHDK name                   ref name/string         func param          dry rel
@@ -4819,7 +4889,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(3,SUB),SIG_DRY_MAX(52)},
 {sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(4,SUB),SIG_DRY_RANGE(53,57)},// VTMReduuce fails on M10
 {sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(5,SUB),SIG_DRY_MIN(58)},// additional call
-//{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduuce"/*sic*/,SIG_NEAR_BEFORE(6,1),SIG_DRY_RANGE(58,58)}, 
+//{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduuce"/*sic*/,SIG_NEAR_BEFORE(6,1),SIG_DRY_RANGE(58,58)},
 //{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduce",SIG_NEAR_BEFORE(6,1),SIG_DRY_MIN(59)},  // canon fixed the typo, works on sx730 but others have diff code
 {sig_match_named,"GraphicSystemCoreFinish","GraphicSystemCoreFinish_helper",SIG_NAMED_SUB},
 {sig_match_named,"mzrm_createmsg","GraphicSystemCoreFinish",SIG_NAMED_SUB},
@@ -4862,6 +4932,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_file_counter_var,"file_counter_var","file_counter_var_init",},
 {sig_match_var_struct_get,"displaytype",       "get_displaytype",},
 {sig_match_palette_vars,"palette_control",     "transfer_src_overlay_helper",0,SIG_DRY_MAX(58)},// Dry59 code is different
+{sig_match_live_free_cluster_count,"live_free_cluster_count","Close",},
 {NULL},
 };
 
@@ -5111,7 +5182,7 @@ int process_add_ptp_handler_call(firmware *fw, iter_state_t *is, __attribute__ (
             if(insn->detail->arm.operands[0].reg != ARM_REG_R0
                 || insn->detail->arm.operands[1].mem.base == ARM_REG_PC
                 // shift isn't set correctly under capstone 3, not required for current cams
-                /*|| insn->detail->arm.operands[1].shift.value != 3*/) { 
+                /*|| insn->detail->arm.operands[1].shift.value != 3*/) {
                 continue;
             }
             ptr_reg = insn->detail->arm.operands[1].mem.base;
@@ -5225,7 +5296,7 @@ void find_exception_handlers(firmware *fw, iter_state_t *is)
         }
     }
     // both d6 and d7 appear to have an ARM instruction in reset, and thumb in the remaining
-    // which appears contrary to arm documentation (ARM DDI 0406C.c (ID051414) 
+    // which appears contrary to arm documentation (ARM DDI 0406C.c (ID051414)
     // On digic 6, Reset appears to be an infinte loop, so must not be expected in any case
     disasm_iter_init(fw, is, ex_vec);
     disasm_iter(fw, is);
@@ -5345,7 +5416,7 @@ void find_ctypes(firmware *fw)
         fprintf(stderr,"WARNING cytpes pointer not found, defaulting to first\n");
         match_i = 0;
     }
-    save_misc_val("ctypes",ctypes_matches[match_i],0,min_adr); 
+    save_misc_val("ctypes",ctypes_matches[match_i],0,min_adr);
 }
 
 void print_misc_val_makefile(const char *name)
@@ -5544,7 +5615,7 @@ void output_propcases(firmware *fw) {
     uint32_t used=0;
     uint32_t hits[KNOWN_PROPSET_COUNT];
     const uint32_t ps_offset = 6;
-    
+
     memset(hits, 0, KNOWN_PROPSET_COUNT*sizeof(uint32_t));
 
     bprintf("// Known propcases\n");
@@ -5727,7 +5798,7 @@ void print_kval(firmware *fw, uint32_t tadr, int tcount, uint32_t ev, const char
     }
     physw_table_entry_t v;
     get_physw_table_entry(fw,adr,&v);
-    
+
     char fn[100], rn[100];
     strcpy(fn,name); strcat(fn,sfx);
     strcpy(rn,name); strcat(rn,"_IDX");
@@ -5854,7 +5925,7 @@ void do_km_vals(firmware *fw, uint32_t tadr,int tsiz,int tlen)
     uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
     add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
     add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
-    
+
     add_kmval(fw,tadr,tsiz,tlen,0x101,"KEY_PLAYBACK",0);
     add_kmval(fw,tadr,tsiz,tlen,0x100,"KEY_POWER",0);
 
@@ -5948,7 +6019,7 @@ void output_physw_vals(firmware *fw) {
     write_physw_event_table_dump(fw,physw_tbl,physw_tbl_len);
 
     bprintf("// Values below go in 'platform_kbd.h':\n");
-    if (fw->dryos_ver >= 58) 
+    if (fw->dryos_ver >= 58)
     {
         // Event ID's have changed in DryOS 58 **********
         print_kval(fw,physw_tbl,physw_tbl_len,0x30A,"SD_READONLY","_FLAG");
@@ -5958,7 +6029,7 @@ void output_physw_vals(firmware *fw) {
         print_kval(fw,physw_tbl,physw_tbl_len,0x300,"ANALOG_AV","_FLAG");
     }
     else
-    { 
+    {
         print_kval(fw,physw_tbl,physw_tbl_len,0x20A,"SD_READONLY","_FLAG");
         print_kval(fw,physw_tbl,physw_tbl_len,0x202,"USB","_MASK");
         print_kval(fw,physw_tbl,physw_tbl_len,0x205,"BATTCOVER","_FLAG");
@@ -6186,7 +6257,7 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
             }
         }
     }
-    else 
+    else
     {
         if (sig->flags & MISC_VAL_OPTIONAL) return;
         bprintf("// %s not found",sig->name);
@@ -6399,7 +6470,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"Error opening output file %s\n",argv[3]);
         exit(1);
     }
-    
+
 
     // find ctypes - previously separate from regular sig matches to set code search limit
     find_ctypes(&fw);
