@@ -182,6 +182,7 @@ DEF(av_override_semaphore             ,0x0003deac) // Found @0xfc44c830
 //DEF(palette_control                   ,0x000136c8),          stubs_min = 0x000136c8 (0x136c8)
 //DEF(palette_buffer_ptr                ,0x000136e0),          stubs_min = 0x000136e0 (0x136e0)
 //DEF(active_palette_buffer             ,0x000136d8),          stubs_min = 0x000136d8 (0x136d8)
+DEF(live_free_cluster_count           ,0x00178558) // (0x178520+0x38) Found @0xfc067480
 DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277b06
 DEF(exmem_alloc_table                 ,0x0005a474) // Found @0xfc07882a
 DEF(exmem_types_table                 ,0xfcc53658) // Found @0xfc07882e
