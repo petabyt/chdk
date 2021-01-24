@@ -22,7 +22,7 @@ NHSTUB(CancelHPTimer,							0xfc126b7d) // At fc0f20c8, following LcdSequence, T
 //NHSTUB(get_dial_hw_position,					0xfc110d61) // kbd_p1_f_cont->fc086ab4->fc08b5cc, 4 for jogdial
 NHSTUB(PT_PlaySound,							0xfc3061b9) // via call from fc34f91c to fc3505da, similar to g7x fc41fef8
 
-// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,	0xfc54dd23) // InitializeAdjustmentSystem->fc5422f8->fc54dd22 event flag matches MoveFocusLensToDistance
 // NO nd
@@ -47,3 +47,4 @@ NHSTUB(reboot_fw_update,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
 
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c

@@ -25,13 +25,13 @@ NHSTUB(CancelHPTimer,							0xfc158e25) // At 0xfc0cd6b0, following LcdSequence,
 
 NHSTUB(get_dial_hw_position,					0xfc491e7d) // kbd_p1_f_cont->fc075c1c->fc077438->func 4=rear dial, 5=front dial
 
-// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,	0xfc4f3bd7) // InitializeAdjustmentSystem->fc3d31c4->fc4f3bd6 event flag matches MoveFocusLensToDistance
 NHSTUB(init_nd_eventflag,		0xfc4f3ce9) // InitializeAdjustmentSystem->fc3d31c4->fc4f3ce8 event flag matches PutInNdFilter
 NHSTUB(CreateBinarySemaphoreStrictly,0x010e5bb7) // for av_override_semaphore
 
-// gets raw address and other stuff for next shot, stores in structure pointed to by r1 
+// gets raw address and other stuff for next shot, stores in structure pointed to by r1
 // via sub_fc1e58d8, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc184310 to get raw address
 NHSTUB(captseq_raw_addr_init,0xfc152773)
 
@@ -49,3 +49,4 @@ NHSTUB(reboot_fw_update,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
 
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c

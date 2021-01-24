@@ -95,7 +95,7 @@ void *vid_get_viewport_fb_d()    {
     // based on suggestion from 62ndidiot in https://chdk.setepontos.com/index.php?topic=12532.msg129914#msg129914
     extern void *current_fb_d;
     return current_fb_d;
-} 
+}
 
 extern void* viewport_buffers[];
 /*
@@ -294,3 +294,12 @@ char *camera_jpeg_count_str()
     extern char jpeg_count_str[];
 	return jpeg_count_str;
 }
+
+// get free cluster info directly
+// also updated during video recording
+unsigned long _GetDrive_FreeClusters(__attribute__ ((unused))int drive)
+{
+    extern unsigned long live_free_cluster_count;
+    return live_free_cluster_count;
+}
+
