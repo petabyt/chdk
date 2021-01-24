@@ -4794,8 +4794,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 {sig_match_near_str,"createsemaphore_low",      "intr_sem",             SIG_NEAR_AFTER(3,1)},
-// probably only matched on cameras with wifi code in firmware, but catches veneers
-{sig_match_near_str,"takesemaphore_low",        "sem_test_callback",    SIG_NEAR_AFTER(12,2)},
+// old match, malloc gets more cams and veneers
+//{sig_match_near_str,"takesemaphore_low",        "sem_test_callback",    SIG_NEAR_AFTER(12,2)},
+{sig_match_named,"takesemaphore_low",        "malloc",                  SIG_NAMED_SUB},
 // not using Strictly, to pick up veneers
 {sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3)},
 {sig_match_near_str,"CreateCountingSemaphoreStrictly","DvlpSeqTask",    SIG_NEAR_BEFORE(18,3)},
