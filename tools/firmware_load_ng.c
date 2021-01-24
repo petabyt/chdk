@@ -368,7 +368,7 @@ return firmware address of 32 bit value, starting at address "start", up to max
 */
 uint32_t find_u32_adr_range(firmware *fw, uint32_t val, uint32_t start,uint32_t maxadr)
 {
-    // TODO 
+    // TODO
     if(start == 0) {
         start=fw->base;
     }
@@ -562,14 +562,14 @@ int isRETx(cs_insn *insn)
             && insn->detail->arm.operands[0].reg == ARM_REG_LR) {
         return 1;
     }
-    
+
     // TODO LDR pc, [sp], imm is somewhat common, but could also be function pointer call
-    
+
     // POP. capstone translates LDMFD   SP!,... in arm code to pop
     if(insn->id == ARM_INS_POP) {
         int i;
         for(i=0; i < insn->detail->arm.op_count; i++) {
-            if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+            if(insn->detail->arm.operands[i].type == ARM_OP_REG
                 && insn->detail->arm.operands[i].reg == ARM_REG_PC) {
                 return 1;
             }
@@ -594,7 +594,7 @@ int isPUSH_LR(cs_insn *insn)
     }
     int i;
     for(i=0; i < insn->detail->arm.op_count; i++) {
-        if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+        if(insn->detail->arm.operands[i].type == ARM_OP_REG
             && insn->detail->arm.operands[i].reg == ARM_REG_LR) {
             return 1;
         }
@@ -610,7 +610,7 @@ int isPOP_LR(cs_insn *insn)
     }
     int i;
     for(i=0; i < insn->detail->arm.op_count; i++) {
-        if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+        if(insn->detail->arm.operands[i].type == ARM_OP_REG
             && insn->detail->arm.operands[i].reg == ARM_REG_LR) {
             return 1;
         }
@@ -626,7 +626,7 @@ int isPOP_PC(cs_insn *insn)
     }
     int i;
     for(i=0; i < insn->detail->arm.op_count; i++) {
-        if(insn->detail->arm.operands[i].type == ARM_OP_REG 
+        if(insn->detail->arm.operands[i].type == ARM_OP_REG
             && insn->detail->arm.operands[i].reg == ARM_REG_PC) {
             return 1;
         }
@@ -827,7 +827,7 @@ uint32_t B_BL_BLXimm_target(__attribute__ ((unused))firmware *fw, cs_insn *insn)
 
 // get the (likely) range of jumptable entries from a pc relative TBB or TBH instruction
 // returns 0 on error or if instruction is not TBB/TBH
-// returns 1 if instruction is TBB/TBH [PC,...] 
+// returns 1 if instruction is TBB/TBH [PC,...]
 int get_TBx_PC_info(firmware *fw,iter_state_t *is, tbx_info_t *ti)
 {
     if(!(is->insn->id == ARM_INS_TBH || is->insn->id == ARM_INS_TBB) || is->insn->detail->arm.operands[0].mem.base != ARM_REG_PC) {
@@ -866,7 +866,7 @@ int get_TBx_PC_info(firmware *fw,iter_state_t *is, tbx_info_t *ti)
         // TODO lots of other ways condition code or reg could be changed in between
         if(found_bhs && fw->is->insn->id == ARM_INS_CMP) {
             // cmp with correct operands, assume number of jumptable entries
-            if((arm_reg)fw->is->insn->detail->arm.operands[0].reg == i_reg 
+            if((arm_reg)fw->is->insn->detail->arm.operands[0].reg == i_reg
                 || fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
                 max_count = fw->is->insn->detail->arm.operands[1].imm;
             }
@@ -1139,7 +1139,7 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
                 return 0;
             }
             p_adr=(uint32_t *)adr2ptr(fw,(uint32_t)adr);
-        } 
+        }
         //printf("br:0x%08x-0x%08x\n",ptr2adr(fw,(uint8_t *)br->p),ptr2adr(fw,(uint8_t *)(br->p+br->len)));
         while(adr < adr_chunk_end) {
             if(disasm_iter(fw,is)) {
@@ -1214,7 +1214,7 @@ uint32_t search_disasm_str_ref(firmware *fw, iter_state_t *is, __attribute__ ((u
 }
 
 // search for calls/jumps to immediate addresses
-// thumb bit in address should be set appropriately 
+// thumb bit in address should be set appropriately
 // returns 1 if found, address can be obtained from insn
 uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, __attribute__ ((unused))void *unused)
 {
@@ -1244,6 +1244,32 @@ uint32_t search_disasm_calls_multi(firmware *fw, iter_state_t *is, __attribute__
     if(sub) {
         while(data->adr) {
             if(data->adr == sub) {
+                return data->fn(fw,is,sub);
+            }
+            data++;
+        }
+    }
+    return 0;
+}
+
+// as above, but check for single level of veneer
+uint32_t search_disasm_calls_veneer_multi(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused, void *userdata)
+{
+    search_calls_multi_data_t *data=(search_calls_multi_data_t *)userdata;
+    uint32_t sub=get_branch_call_insn_target(fw,is);
+    if(sub) {
+        while(data->adr) {
+            if(data->adr == sub) {
+                return data->fn(fw,is,sub);
+            }
+            data++;
+        }
+        uint32_t veneer=0;
+        fw_disasm_iter_single(fw,sub);
+        veneer=get_branch_call_insn_target(fw,fw->is);
+        data=(search_calls_multi_data_t *)userdata;
+        while(data->adr) {
+            if(data->adr == veneer) {
                 return data->fn(fw,is,sub);
             }
             data++;
@@ -1307,13 +1333,13 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
         arm_insn insn_id = fw->is->insn->id;
         // BL, BLX etc will trash r0-r3
         // only break on unconditional - optimistic, could produce incorrect results
-        if((insn_id == ARM_INS_BL || insn_id == ARM_INS_BLX 
+        if((insn_id == ARM_INS_BL || insn_id == ARM_INS_BLX
             // B/BX could mean execution goes somewhere totally different, but in practice it often just skipping over a word of data...
-             /*|| insn_id == ARM_INS_B || insn_id == ARM_INS_BX*/) 
+             /*|| insn_id == ARM_INS_B || insn_id == ARM_INS_BX*/)
              && fw->is->insn->detail->arm.cc == ARM_CC_AL) {
             break;
         }
-        
+
         // if the first op isn't REG, continue
         // TODO lots of instructions could affect reg even if not first op
         if(fw->is->insn->detail->arm.operands[0].type != ARM_OP_REG) {
@@ -1400,7 +1426,7 @@ uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
         return adr;
     }
     // an immediate move to ip (R12), candidate for multi-instruction veneer
-    if((is_init->insn->id == ARM_INS_MOV || is_init->insn->id == ARM_INS_MOVW) 
+    if((is_init->insn->id == ARM_INS_MOV || is_init->insn->id == ARM_INS_MOVW)
         && is_init->insn->detail->arm.operands[0].reg == ARM_REG_IP
         && is_init->insn->detail->arm.operands[1].type == ARM_OP_IMM) {
         adr = is_init->insn->detail->arm.operands[1].imm;
@@ -1434,7 +1460,7 @@ uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
 }
 
 /*
-return target of any single instruction branch or function call instruction, 
+return target of any single instruction branch or function call instruction,
 with thumb bit set appropriately
 returns 0 if current instruction not branch/call
 */
@@ -1532,12 +1558,12 @@ int find_and_get_var_ldr(firmware *fw,
         } else {
             r.adj=0;
         }
-        // try to bail out if base reg trashed 
+        // try to bail out if base reg trashed
         // BL, BLX etc will trash r0-r3, B, BX go somewhere else
         // only break on unconditional - optimistic, could produce incorrect results
         // can't account for branches into searched code
         if((r.reg_base >= ARM_REG_R0 && r.reg_base <= ARM_REG_R3)
-                && (is->insn->id == ARM_INS_BL || is->insn->id == ARM_INS_BLX 
+                && (is->insn->id == ARM_INS_BL || is->insn->id == ARM_INS_BLX
                     || is->insn->id == ARM_INS_B || is->insn->id == ARM_INS_BX)
                 && is->insn->detail->arm.cc == ARM_CC_AL) {
             // printf("find_and_get_var_ldr: bail B*\n");
@@ -1566,7 +1592,7 @@ int find_and_get_var_ldr(firmware *fw,
 }
 
 /*
-check for, and optionally return information about 
+check for, and optionally return information about
 functions with return values that can be completely determined
 from disassembly
 uses fw->is
@@ -1604,7 +1630,7 @@ int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_d
     if(match_ftype & MATCH_SIMPLE_FUNC_IMM) {
         // check mov r0, #imm
         if(insn_match_any(fw->is->insn,match_mov_r0_imm)) {
-            found_val = fw->is->insn->detail->arm.operands[1].imm; 
+            found_val = fw->is->insn->detail->arm.operands[1].imm;
             found = MATCH_SIMPLE_FUNC_IMM;
             // fprintf(stderr,"check_simple_func: found IMM\n");
             if(!fw_disasm_iter(fw)) {
@@ -1995,7 +2021,7 @@ void find_dryos_vers(firmware *fw)
         uint32_t i;
         int match_i;
         uint32_t min_adr = 0xFFFFFFFF;
-        
+
         // ref should easily be in the first 8M (most near start but g7x2 at >0x500000)
         uint32_t maxadr = (fw->rom_code_search_max_adr - 0x800000 > fw->base)?fw->base + 0x800000:fw->rom_code_search_max_adr;
         // look for pointer to dryos version nearest to main ROM start, before the string itself
@@ -2033,7 +2059,7 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     if (f == NULL)
     {
         fprintf(stderr,"Error opening %s\n",filename);
-        exit(1);        
+        exit(1);
     }
     fseek(f,0,SEEK_END);
     fw->size8 = ftell(f);
@@ -2060,7 +2086,7 @@ void firmware_load(firmware *fw, const char *filename, uint32_t base_adr,int fw_
     fw->buf8 = malloc(fw->size8);
     if(!fw->buf8) {
         fprintf(stderr,"malloc %d failed\n",fw->size8);
-        exit(1);        
+        exit(1);
     }
     fread(fw->buf8, 1, fw->size8, f);
     fclose(f);
@@ -2246,7 +2272,7 @@ void find_exception_vec(firmware *fw, iter_state_t *is)
         {MATCH_INS(MCR, 6), {MATCH_OP_PIMM(15),MATCH_OP_IMM(0),MATCH_OP_REG_ANY,MATCH_OP_CIMM(12),MATCH_OP_CIMM(0),MATCH_OP_IMM(0)}},
         {ARM_INS_ENDING}
     };
-    
+
     // reset to main fw start
     disasm_iter_init(fw, is, fw->base + fw->main_offs + 12 + fw->thumb_default);
     if(!insn_match_find_next(fw,is,4,match_bl_mcr)) {
@@ -2267,7 +2293,7 @@ void find_exception_vec(firmware *fw, iter_state_t *is)
         ra = is->insn->detail->arm.operands[0].reg;
         va = is->insn->detail->arm.operands[1].imm;
         disasm_iter(fw, is);
-        if(is->insn->id != ARM_INS_MOVT 
+        if(is->insn->id != ARM_INS_MOVT
             || is->insn->detail->arm.operands[0].reg != ra
             || is->insn->detail->arm.operands[1].type != ARM_OP_IMM) {
             return;
@@ -2285,7 +2311,7 @@ void find_exception_vec(firmware *fw, iter_state_t *is)
         rb = is->insn->detail->arm.operands[0].reg;
         vb = is->insn->detail->arm.operands[1].imm;
         disasm_iter(fw, is);
-        if(is->insn->id != ARM_INS_MOVT 
+        if(is->insn->id != ARM_INS_MOVT
             || is->insn->detail->arm.operands[0].reg != rb
             || is->insn->detail->arm.operands[1].type != ARM_OP_IMM) {
             return;
@@ -2302,7 +2328,7 @@ void find_exception_vec(firmware *fw, iter_state_t *is)
         // printf("ex vec 0x%08x-0x%08x\n",va,vb);
 
     } else if(is->insn->id == ARM_INS_MCR) {
-        // digic 7 = mcr ... 
+        // digic 7 = mcr ...
         fw->arch_flags |= FW_ARCH_FL_VMSA;
         // rewind 1
         disasm_iter_init(fw, is, adr_hist_get(&is->ah,1));
@@ -2362,12 +2388,12 @@ void firmware_init_data_ranges(firmware *fw)
             }
             base2_found=1;
             // known values
-            if( dst_start != 0x003f1000 && 
-                dst_start != 0x00431000 && 
-                dst_start != 0x00471000 && 
-                dst_start != 0x00685000 && 
-                dst_start != 0x00671000 && 
-                dst_start != 0x006b1000 && 
+            if( dst_start != 0x003f1000 &&
+                dst_start != 0x00431000 &&
+                dst_start != 0x00471000 &&
+                dst_start != 0x00685000 &&
+                dst_start != 0x00671000 &&
+                dst_start != 0x006b1000 &&
                 dst_start != 0x010c1000 &&
                 dst_start != 0x010e1000 &&
                 dst_start != 0x01900000) {
