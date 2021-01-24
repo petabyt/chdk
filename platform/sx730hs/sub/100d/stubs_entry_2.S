@@ -11,7 +11,7 @@ NHSTUB(SetFileTimeStamp,						0xfc3517db) // "
 NHSTUB(SetFileAttributes,						0xfc351823) // after SetFileTimeStamp in ROM
 NHSTUB(RenameFile_Fut,							0xfc34c739) // Ghidra exact
 NHSTUB(MakeSDCardBootable,						0xfc3529fd) // Ghidra implied, "BOOTDISK" string
-NHSTUB(GetFocusLensSubjectDistanceFromLens,		0xfc3344e3) // Ghidra implied, fc131dbe like sx710 fc141b0c 
+NHSTUB(GetFocusLensSubjectDistanceFromLens,		0xfc3344e3) // Ghidra implied, fc131dbe like sx710 fc141b0c
 
 NHSTUB(GetImageFolder,							0xfc32f40f) // based on ref to fc3344e2 (ref "%s/%3d%s"), exact match sx710 fc31152e
 
@@ -20,7 +20,7 @@ NHSTUB(LogCameraEvent,							0xfc32c407) // debugging, from func csv
 NHSTUB(GetDrive_TotalClusters,					0xfc352637) // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(CancelHPTimer,							0xfc3b35b9) // fc368cf4 ref to UITimer, similar to sx710 fc301a54
 
-// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,					0xfc52e91b) // InitializeAdjustmentSystem->fc4415c8->fc52e91a event flag matches MoveFocusLensToDistance
 NHSTUB(CreateBinarySemaphoreStrictly,         	0xfc34ba19) // from csv
@@ -53,4 +53,6 @@ NHSTUB(reboot_fw_update,NULL_SUB)
 // from sx280 These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
+
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c
 

@@ -8,7 +8,7 @@
 #define RET0		0xfc02041f	// mov r0, #0 ; bx lr
 
 // *** FOUND for sx700v100e ***
-NHSTUB(Feof_Fut,	0xfc2d7d95) // sx700v100e from CreateJumptable, after Fgets and Fseek @ fc45bc5c 
+NHSTUB(Feof_Fut,	0xfc2d7d95) // sx700v100e from CreateJumptable, after Fgets and Fseek @ fc45bc5c
 
 NHSTUB(Fflush_Fut,	0xfc2d7dbd) // sx700v100e Found directly after Feof_Fut in ROM
 
@@ -29,18 +29,18 @@ NHSTUB(apex2us,		0xfc313637) // sx700v100e Shutter.c asserts @ fc1495ca -> fc149
 
 NHSTUB(GetDrive_TotalClusters,	0xfc307985) // sx700v100e found function immediately before GetDrive_FreeClusters in ROM
 
-NHSTUB(LogCameraEvent,		0xfc306b6f) // sx700v100e found debugging, from func csv 
+NHSTUB(LogCameraEvent,		0xfc306b6f) // sx700v100e found debugging, from func csv
 
-NHSTUB(CancelHPTimer,		0xfc1360f5) // sx700v100e At fc0e3f42, following LcdSequence, TakeSemaphoreStrictly calls similar to g7x fc0cd6b0 
+NHSTUB(CancelHPTimer,		0xfc1360f5) // sx700v100e At fc0e3f42, following LcdSequence, TakeSemaphoreStrictly calls similar to g7x fc0cd6b0
 
-NHSTUB(get_dial_hw_position,	0xfc364be9) // sx700v100e kbd_p1_f_cont->fc06e0ce->fc06be36, 4 for jogdial 
+NHSTUB(get_dial_hw_position,	0xfc364be9) // sx700v100e kbd_p1_f_cont->fc06e0ce->fc06be36, 4 for jogdial
 
 
-// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 // see https://chdk.setepontos.com/index.php?topic=12516.0
-NHSTUB(init_focus_eventflag,	0xfc45d487) // sx700v100e InitializeAdjustmentSystem->fc40e0e4->fc45d486 event flag matches MoveFocusLensToDistance 
+NHSTUB(init_focus_eventflag,	0xfc45d487) // sx700v100e InitializeAdjustmentSystem->fc40e0e4->fc45d486 event flag matches MoveFocusLensToDistance
 
-NHSTUB(init_nd_eventflag,	0xfc45d591) // sx700v100e InitializeAdjustmentSystem->fc542300->fc45d590 event flag matches PutInNdFilter 
+NHSTUB(init_nd_eventflag,	0xfc45d591) // sx700v100e InitializeAdjustmentSystem->fc542300->fc45d590 event flag matches PutInNdFilter
 
 NHSTUB(CreateBinarySemaphoreStrictly,           0x010c5b6b) // from csv // sx700v100e
 
@@ -72,3 +72,4 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 //NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c

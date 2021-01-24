@@ -27,18 +27,18 @@ NHSTUB(apex2us,				0xfc31375f) // sx700v100e Shutter.c asserts @ fc1499d0 for li
 
 NHSTUB(GetDrive_TotalClusters,	0xfc307aad) // sx700v100d found function immediately before GetDrive_FreeClusters in ROM
 
-NHSTUB(LogCameraEvent,		0xfc306c97) // sx700v100d debugging, from func csv 
+NHSTUB(LogCameraEvent,		0xfc306c97) // sx700v100d debugging, from func csv
 
-NHSTUB(CancelHPTimer,		0xfc1361c1) //sx700v100d At fc0e3fa2, following LcdSequence, TakeSemaphoreStrictly calls similar to g7x fc0cd6b0 
+NHSTUB(CancelHPTimer,		0xfc1361c1) //sx700v100d At fc0e3fa2, following LcdSequence, TakeSemaphoreStrictly calls similar to g7x fc0cd6b0
 
-NHSTUB(get_dial_hw_position,	0xfc364d11) // sx700v100d kbd_p1_f_cont->fc06e0ce->fc06be36, 4 for jogdial 
+NHSTUB(get_dial_hw_position,	0xfc364d11) // sx700v100d kbd_p1_f_cont->fc06e0ce->fc06be36, 4 for jogdial
 
 
-// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 // see https://chdk.setepontos.com/index.php?topic=12516.0
-NHSTUB(init_focus_eventflag,	0xfc45d5f7) // sx700v100d InitializeAdjustmentSystem->fc40e254->fc45d5f6 event flag matches MoveFocusLensToDistance 
+NHSTUB(init_focus_eventflag,	0xfc45d5f7) // sx700v100d InitializeAdjustmentSystem->fc40e254->fc45d5f6 event flag matches MoveFocusLensToDistance
 
-NHSTUB(init_nd_eventflag,	0xfc45d701) //0xfc45d591// sx700v100d InitializeAdjustmentSystem->fc40e254->fc45d700 event flag matches PutInNdFilter 
+NHSTUB(init_nd_eventflag,	0xfc45d701) //0xfc45d591// sx700v100d InitializeAdjustmentSystem->fc40e254->fc45d700 event flag matches PutInNdFilter
 
 NHSTUB(CreateBinarySemaphoreStrictly,           0x010c5b6b) // from csv // sx700v100e
 
@@ -70,4 +70,6 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 //NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
+
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c
 

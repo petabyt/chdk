@@ -21,7 +21,7 @@ NHSTUB(LogCameraEvent,							0xfc32c3df) // debugging, from func csv
 NHSTUB(GetDrive_TotalClusters,					0xfc35260f) // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(CancelHPTimer,							0xfc3b3591) // Ghidra exact
 
-// required because DryOS >=54 functions assert on unitialized event flag, sem etc 
+// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 // see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag,					0xfc52e8f3) // InitializeAdjustmentSystem->fc4415a0->fc52e8f2 event flag matches MoveFocusLensToDistance
 NHSTUB(CreateBinarySemaphoreStrictly,         	0xfc34b9f1) // from csv
@@ -55,3 +55,4 @@ NHSTUB(reboot_fw_update,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
 
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c
