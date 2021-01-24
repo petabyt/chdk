@@ -4254,19 +4254,19 @@ int sig_match_live_free_cluster_count(firmware *fw, iter_state_t *is, sig_rule_t
         printf("sig_match_live_free_cluster_count: no match ldr2 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
-//    uint32_t ldr_reg = is->insn->detail->arm.operands[0].reg;
     uint32_t base = LDR_PC2val(fw,is->insn);
 
     if(!find_next_sig_call(fw,is,16,"takesemaphore_low")) {
         printf("sig_match_live_free_cluster_count: no takesemaphore_low 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
-    const insn_match_t match_ldrd_r2_r0[]={
-        {MATCH_INS(LDRD,   3),  {MATCH_OP_REG(R2), MATCH_OP_REG(R0), MATCH_OP_ANY}},
+    const insn_match_t match_ldr_ldrd[]={
+        {MATCH_INS(LDR,   2),  {MATCH_OP_REG_ANY, MATCH_OP_ANY}},
+        {MATCH_INS(LDRD,   3),  {MATCH_OP_REG_ANY, MATCH_OP_REG_ANY, MATCH_OP_ANY}},
         {ARM_INS_ENDING}
     };
 
-    if(!insn_match_find_next(fw,is,50,match_ldrd_r2_r0)) {
+    if(!insn_match_find_next_seq(fw,is,50,match_ldr_ldrd)) {
         printf("sig_match_live_free_cluster_count: no match ldrd 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
