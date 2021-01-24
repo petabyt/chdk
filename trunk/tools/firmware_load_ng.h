@@ -43,20 +43,20 @@ typedef struct bufrange {
 
 // TODO may want to make run-time adjustable
 #define ADR_HIST_SIZE 64
-typedef struct { 
+typedef struct {
     // circular buffer of previous adr values, for backtracking
     // use addresses rather than insn, because you might want to scan with detail off and then backtrack with on
     // addresses have thumb bit set when disassembling in thumb mode
     int cur; // index of current address, after iter
     int count; // total number of valid entries
-    uint32_t adrs[ADR_HIST_SIZE]; 
+    uint32_t adrs[ADR_HIST_SIZE];
 } adr_hist_t;
 
 // state for disassembly iteration
 typedef struct {
     const uint8_t *code; // pointer into buffer for code
     uint64_t adr; // firmware address - must be 64 bit for capstone iter, never has thumb bit set
-                  // points to the next instruction to disassemble, insn->address gives the most 
+                  // points to the next instruction to disassemble, insn->address gives the most
                   // recently disassembled address
     size_t size; // remaining code size
     cs_insn *insn; // cached instruction
@@ -69,7 +69,7 @@ typedef struct {
 // struct for regions of ROM that are copied elsewhere
 typedef struct {
     uint8_t *buf;
-    uint32_t start;     // copied / relocated firmware address 
+    uint32_t start;     // copied / relocated firmware address
     uint32_t src_start; // source ROM firmware address
     int bytes; // size in bytes
     int type;   // ADR_RANGE_* define
@@ -111,11 +111,11 @@ typedef struct {
     uint32_t        data_start;         // Start address of DATA section in RAM
     uint32_t        data_init_start;    // Start address of initialisation section for DATA in ROM
     int             data_len;           // Length of data section in bytes
-    
+
     // address ranges for ROM and copied data
     int             adr_range_count;
     adr_range_t     adr_ranges[FW_MAX_ADR_RANGES];
-    
+
     // convenience values to optimize code searching
     uint32_t        rom_code_search_min_adr; // minimum ROM address for normal code searches (i.e. firmware start)
     uint32_t        rom_code_search_max_adr; // max ROM address for normal code searches, i.e. before copied data / code if known
@@ -418,7 +418,7 @@ uint32_t search_disasm_const_ref(firmware *fw, iter_state_t *is, uint32_t val, v
 uint32_t search_disasm_str_ref(firmware *fw, iter_state_t *is, uint32_t val, void *str);
 
 // search for calls/jumps to immediate addresses
-// thumb bit in address should be set appropriately 
+// thumb bit in address should be set appropriately
 // returns 1 if found, address can be obtained from insn
 uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void *unused);
 
@@ -427,7 +427,7 @@ uint32_t search_disasm_calls(firmware *fw, iter_state_t *is, uint32_t val, void 
 typedef int (*search_calls_multi_fn)(firmware *fw, iter_state_t *is, uint32_t adr);
 
 // structure used to define functions searched for, and functions to handle matches
-// fn should be address with thumb bit set appropriately 
+// fn should be address with thumb bit set appropriately
 typedef struct {
     uint32_t adr;
     search_calls_multi_fn fn;
@@ -440,6 +440,9 @@ int search_calls_multi_end(firmware *fw, iter_state_t *is, uint32_t adr);
 // if adr is found in null terminated search_calls_multi_data array, returns fn return value
 // otherwise 0
 uint32_t search_disasm_calls_multi(firmware *fw, iter_state_t *is, uint32_t unused, void *userdata);
+
+// as above, but check for single level of veneers
+uint32_t search_disasm_calls_veneer_multi(firmware *fw, iter_state_t *is, uint32_t unused, void *userdata);
 
 // ****** utilities for extracting register values ******
 /*
@@ -468,7 +471,7 @@ does not check CBx, since it would generally be part of a function not a veneer
 uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init);
 
 /*
-return target of any single instruction branch or function call instruction, 
+return target of any single instruction branch or function call instruction,
 with thumb bit set appropriately
 returns 0 if current instruction not branch/call
 */
@@ -493,7 +496,7 @@ TODO similar code for STR would be useful, but in many cases would have to handl
 typedef struct {
     arm_reg reg_base;
     arm_reg reg_val;
-    uint32_t adr_base; // address from original LDR 
+    uint32_t adr_base; // address from original LDR
     uint32_t adr_adj; // address adjusted by adj if present, normally struct address useful for stubs comments
     uint32_t adr_final; // full address
     // offsets are guaranteed to be small
@@ -508,7 +511,7 @@ int find_and_get_var_ldr(firmware *fw,
                             var_ldr_desc_t *result);
 
 /*
-check for, and optionally return information about 
+check for, and optionally return information about
 functions with return values that can be completely determined
 from disassembly
 uses fw->is
@@ -544,7 +547,7 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
 typedef struct {
     arm_op_type type; // ARM_OP_... REG, IMM, MEM support additional tests
     arm_reg reg1; // reg for register type operands, base for mem
-    uint32_t flags; // 
+    uint32_t flags; //
     int32_t imm;  // immediate value for imm, disp for mem
     arm_reg reg2; // index reg form mem
 } op_match_t;
