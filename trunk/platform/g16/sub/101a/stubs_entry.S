@@ -160,6 +160,7 @@ DEF(displaytype                       ,0x00009038) // (0x9020+0x18) Found @0xfc1
 DEF(palette_control                   ,0x00013bc4) // Found @0xfc30a91c
 DEF(palette_buffer_ptr                ,0x00013be0) // (0x13bc4+0x1c) Found @0xfc30a93a
 DEF(active_palette_buffer             ,0x00013bd4) // (0x13bc4+0x10) Found @0xfc30a922
+DEF(live_free_cluster_count           ,0x000f2968) // (0xf2930+0x38) Found @0xfc062654
 DEF_CONST(uiprop_count                      ,0x00000094) // Found @0xfc0cc5c0
 DEF(exmem_alloc_table                 ,0x0003a828) // Found @0xfc071a0e
 DEF(exmem_types_table                 ,0xfcbc6194) // Found @0xfc071a12

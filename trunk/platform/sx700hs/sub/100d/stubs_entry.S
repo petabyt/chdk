@@ -157,6 +157,7 @@ DEF(active_bitmap_buffer              ,0x0000c784) // (0xc754+0x30) Found @0xfc3
 DEF(palette_control                   ,0x00014b2c) // Found @0xfc308b58
 DEF(palette_buffer_ptr                ,0x00014b44) // (0x14b2c+0x18) Found @0xfc308b76
 DEF(active_palette_buffer             ,0x00014b3c) // (0x14b2c+0x10) Found @0xfc308b5e
+DEF(live_free_cluster_count           ,0x0015f270) // (0x15f238+0x38) Found @0xfc0617a4
 DEF_CONST(uiprop_count                      ,0x0000009d) // Found @0xfc0bb6b8
 DEF(exmem_alloc_table                 ,0x00037a40) // Found @0xfc06e71e
 DEF(exmem_types_table                 ,0xfcc41c3c) // Found @0xfc06e722
