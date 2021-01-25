@@ -769,6 +769,7 @@
 0xe005b5c7,GetSDProtect_FW
 0xe0585479,GetSecond_FW
 0xe037165b,GetSelfControllerHandle_FW
+0xdffca179,GetSemaphoreValue
 0xe0591da7,GetSensorPreGain_FW
 0xe05916dd,GetShutterSpeedRegularMaxLimit_FW
 0xe05916ef,GetShutterSpeedRegularMinLimit_FW

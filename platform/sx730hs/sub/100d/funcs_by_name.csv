@@ -824,6 +824,7 @@
 0xfc589ae3,GetSDProtect_FW
 0xfc52d603,GetSecond_FW
 0xfc32057b,GetSelfControllerHandle_FW
+0xfc363055,GetSemaphoreValue
 0xfc52e349,GetSensorPreGain_FW
 0xfc531171,GetShakeTripod_FW
 0xfc52afa3,GetShutterSpeedRegularMaxLimit_FW
