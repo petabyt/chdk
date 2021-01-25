@@ -1059,6 +1059,7 @@
 0xfc362f85,TakeSemaphore_FW
 0xfc362ffd,GiveSemaphore
 0xfc362ffd,GiveSemaphore_FW
+0xfc36302d,GetSemaphoreValue
 0xfc3630d5,EngDrvRead
 0xfc3688af,task_CtrlSrv
 0xfc3690b9,SleepTask
