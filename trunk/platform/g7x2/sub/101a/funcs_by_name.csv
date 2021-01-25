@@ -2309,6 +2309,7 @@
 0xe0378993,transfer_src_overlay_helper
 0xdffc9f3f,TryPostMessageQueue
 0xdffc9e73,TryReceiveMessageQueue
+0xdffca09f,TryTakeSemaphore
 0xe0585845,TurnOffCamera_FW
 0xe043985d,TurnOffDisplay
 0xe005b7b1,TurnOffE1_FW
