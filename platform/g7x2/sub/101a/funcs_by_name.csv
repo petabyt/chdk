@@ -214,6 +214,7 @@
 0xe03709d9,CreateProxyOfEventProcedure_FW
 0xdffcac09,CreateRecursiveLock
 0xdffca279,CreateRecursiveLockStrictly
+0xdffc6769,createsemaphore_low
 0xdffc93bb,CreateTask
 0xdffc95d9,CreateTask_alt
 0xdffc93bb,CreateTask_FW
