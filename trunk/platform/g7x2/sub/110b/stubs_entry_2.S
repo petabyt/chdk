@@ -44,6 +44,8 @@ NHSTUB(WriteSDCard                            ,NULL_SUB)
 IGNORE(GetPropertyCase)
 NHSTUB(GetPropertyCase_FW                   ,0xe036af69)
 
+IGNORE(GetDrive_FreeClusters) // replaced in lib.c
+
 // Incorrect by finsig - need to check
 
 // Does not exist
