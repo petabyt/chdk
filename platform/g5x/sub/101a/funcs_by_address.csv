@@ -1097,6 +1097,8 @@
 0xfc3ae3ab,j_PTM_SetProprietyEnable_FW
 0xfc3ae3bf,j_PTM_BackupUIProperty_FW
 0xfc3af9cb,get_current_exp
+0xfc3b5ae1,Open_low
+0xfc3b5b65,Close_low
 0xfc3b5b9d,Write
 0xfc3b5b9d,Write_FW
 0xfc3b5bdb,Open

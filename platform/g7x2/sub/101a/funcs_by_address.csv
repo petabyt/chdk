@@ -608,6 +608,8 @@
 0xe0373d07,StartLogOut_FW
 0xe0373d11,IsLogOutType_FW
 0xe0373d17,GetCurrentMaximumLogSize_FW
+0xe0373d81,Open_low
+0xe0373e05,Close_low
 0xe0373e3d,Write
 0xe0373e3d,Write_FW
 0xe0373e7b,Open
