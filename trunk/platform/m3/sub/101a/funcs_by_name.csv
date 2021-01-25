@@ -2541,6 +2541,7 @@
 0xfc084305,task_RemCPUSwChk
 0xfc44e97d,task_ResizeTask
 0xfc251fc1,task_SceneDetectTask
+0x010e1739,task_SD1stInit
 0xfc2447f9,task_SelectFuncController
 0xfc435fd5,task_SetGeoTagExecution
 0xfc18ad8f,task_ShutterSoundTask

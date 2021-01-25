@@ -1,3 +1,5 @@
+0x010e12bf,SDCardUHSActive_FW
+0x010e1a37,task_SD1stInit
 0x010f53f0,dry_memcpy
 0x010f54d8,bzero
 0x010f54dc,memset32

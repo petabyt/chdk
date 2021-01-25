@@ -4,6 +4,8 @@
 0x010e1255,GetTimeOfSystem_FW
 0x010e1589,LocalTime
 0x010e1691,strftime
+0x010e179d,task_SD1stInit
+0x010e2a09,SDCardUHSActive_FW
 0x010ee231,j_mktime_ext
 0x010f4bf0,dry_memcpy
 0x010f4cd8,bzero

@@ -1670,6 +1670,7 @@
 0xfc30a249,ScreenLock
 0xfc1849c1,screenlock_helper
 0xfc30a287,ScreenUnlock
+0x010e29f3,SDCardUHSActive_FW
 0xfc5427ef,SDump_FW
 0xfc56ab25,SearchBCentralPosition_FW
 0xfc56ab25,SearchISLensCentralPosition_FW
@@ -2225,6 +2226,7 @@
 0xfc43cf5f,task_SAlbumPlay
 0xfc20d193,task_ScenarioMaker
 0xfc169273,task_SceneDetectTask
+0x010e17b5,task_SD1stInit
 0xfc15f521,task_SelectFuncController
 0xfc20639d,task_SetGeoTagExecution
 0xfc07b423,task_ShutterSoundTask

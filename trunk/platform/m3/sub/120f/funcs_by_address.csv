@@ -3,6 +3,7 @@
 0x010e11e3,time
 0x010e124d,GetTimeOfSystem_FW
 0x010e1515,LocalTime
+0x010e1739,task_SD1stInit
 0x010e2859,ChangeSDPortVoltage_FW
 0x010f3c59,j_mktime_ext
 0x01100328,dry_memcpy
