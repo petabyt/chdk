@@ -32,6 +32,7 @@
 0xdffca023,CreateCountingSemaphore_FW
 0xdffca05d,DeleteSemaphore
 0xdffca05d,DeleteSemaphore_FW
+0xdffca09f,TryTakeSemaphore
 0xdffca0cf,TakeSemaphore
 0xdffca0cf,TakeSemaphore_FW
 0xdffca149,GiveSemaphore
