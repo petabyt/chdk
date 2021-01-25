@@ -1759,6 +1759,7 @@
 0xfc1ba527,Scene.TestKidMove_FW
 0xfc1ba461,Scene.TestSunset_FW
 0xfc11a9a9,screenlock_helper
+0x010e2a09,SDCardUHSActive_FW
 0xfc662e4f,SDump_FW
 0xfc66a101,SearchBCentralPosition_FW
 0xfc66a101,SearchISLensCentralPosition_FW
@@ -2313,6 +2314,7 @@
 0xfc55d081,task_SAlbumStillPlayer
 0xfc2814df,task_ScenarioMaker
 0xfc1bc8e3,task_SceneDetectTask
+0x010e179d,task_SD1stInit
 0xfc105759,task_SelectFuncController
 0xfc2790c3,task_SetGeoTagExecution
 0xfc091b0d,task_ShutterSoundTask

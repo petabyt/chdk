@@ -1770,6 +1770,7 @@
 0xfc3484e9,ScreenLock
 0xfc0a74bb,screenlock_helper
 0xfc3485f3,ScreenUnlock
+0x010e12bf,SDCardUHSActive_FW
 0xfc4428f3,SDump_FW
 0xfc530d59,SearchBCentralPosition_FW
 0xfc530d59,SearchISLensCentralPosition_FW
@@ -2379,6 +2380,7 @@
 0xfc4b4b25,task_SAlbumStillPlayer
 0xfc23a37b,task_ScenarioMaker
 0xfc16fae9,task_SceneDetectTask
+0x010e1a37,task_SD1stInit
 0xfc18debf,task_ShutterSoundTask
 0xfc4a90b7,task_SMAL_Enumeration
 0xfc2986f9,task_SoundRecMusic
