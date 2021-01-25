@@ -272,3 +272,11 @@ int check_gui_needs_redraw()
     }
     return 0;
 }
+
+// get free cluster info directly
+// also updated during video recording
+unsigned long _GetDrive_FreeClusters(__attribute__ ((unused))int drive)
+{
+    extern unsigned long live_free_cluster_count;
+    return live_free_cluster_count;
+}
