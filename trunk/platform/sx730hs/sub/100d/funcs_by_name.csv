@@ -188,6 +188,7 @@
 0xfc35151b,Close
 0xfc3a918b,close
 0xfc35151b,Close_FW
+0xfc3514ad,Close_low
 0xfc5108f1,CloseConsole_FW
 0xfc436c21,closedir
 0xfc43f8b1,CloseMechaShutter_FW
@@ -1583,6 +1584,7 @@
 0xfc3514dd,Open
 0xfc3a911b,open
 0xfc3514dd,Open_FW
+0xfc351425,Open_low
 0xfc510837,OpenConsole_FW
 0xfc436c59,OpenFastDir
 0xfc35170b,OpenForScrip_FW

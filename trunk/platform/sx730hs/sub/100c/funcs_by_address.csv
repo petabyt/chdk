@@ -990,6 +990,8 @@
 0xfc34c92f,Fseek_Fut
 0xfc34c92f,Fseek_Fut_FW
 0xfc350f37,task_BleA
+0xfc3513fd,Open_low
+0xfc351485,Close_low
 0xfc3514b5,Open
 0xfc3514b5,Open_FW
 0xfc3514f3,Close
