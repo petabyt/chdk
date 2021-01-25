@@ -4732,7 +4732,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_kbd_state, "GetKbdState",        "kbd_read_keys"},
 {sig_match_create_jumptable, "CreateJumptable", "InitializeAdjustmentSystem_FW"},
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly","Fopen_Fut"},
-{sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]"},
+// string switched between Dry58p3 and Dry58p9
+{sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]",         0,              SIG_DRY_MAX(58)},
+{sig_match_get_semaphore_value,"GetSemaphoreValue","BlankRaw(%d)",      0,              SIG_DRY_MIN(58)},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW",              0,              SIG_DRY_MAX(57)},
 {sig_match_open,    "open",                     "Open_low",             0,              SIG_DRY_MIN(58)},
