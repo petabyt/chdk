@@ -431,6 +431,9 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "imager_active_callback", OPTIONAL|UNUSED }, // helper
     { "file_counter_var_init", OPTIONAL|UNUSED }, // helper
     { "get_displaytype", OPTIONAL|UNUSED }, // for camera bitmap res change
+    // dry >= 58 wrap "Open" and "Close" in additional functions
+    { "Close_low", OPTIONAL|UNUSED },
+    { "Open_low", OPTIONAL|UNUSED },
 
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
@@ -1779,54 +1782,6 @@ int sig_match_open(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
-// find low level open for dryos >= 58
-// TODO not verified it works as expected
-int sig_match_open_gt_57(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    if(!init_disasm_sig_ref(fw,is,rule)) {
-        return 0;
-    }
-    if(!find_next_sig_call(fw,is,38,"TakeSemaphoreStrictly")) {
-        return 0;
-    }
-    // looking for next call
-    // this should be equivalent to previous versions Open, without the extra semaphore wrapper
-    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
-        return 0;
-    }
-    // follow
-    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
-    // match same pattern as normal
-    if(!insn_match_find_next_seq(fw,is,48,match_open_mov_call)) {
-        return 0;
-    }
-    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-}
-
-// find low level close for dryos >= 58
-// TODO not verified it works as expected
-int sig_match_close_gt_57(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    if(!init_disasm_sig_ref(fw,is,rule)) {
-        return 0;
-    }
-    if(!find_next_sig_call(fw,is,34,"TakeSemaphoreStrictly")) {
-        return 0;
-    }
-    // looking for next call
-    // this should be equivalent to previous versions Close, without the extra semaphore wrapper
-    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
-        return 0;
-    }
-    // follow
-    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
-    // first call
-    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
-        return 0;
-    }
-    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-}
-
 
 // AllocateUncacheableMemory
 int sig_match_umalloc(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4212,15 +4167,6 @@ int sig_match_live_free_cluster_count(firmware *fw, iter_state_t *is, sig_rule_t
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
-    // dry >= 58 wraps close in some semaphore calls
-    if (fw->dryos_ver >= 58) {
-        // find third function call
-        if(!insn_match_find_nth(fw,is,22,3,match_bl_blximm)) {
-            printf("sig_match_live_free_cluster_count: no match bl0 0x%"PRIx64"\n",is->insn->address);
-            return 0;
-        }
-        disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
-    }
 
     // find third function call
     if(!insn_match_find_nth(fw,is,22,3,match_bl_blximm)) {
@@ -4639,13 +4585,15 @@ sig_rule_t sig_rules_initial[]={
 // Run after find_generic_funcs. Order is important
 sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param          dry rel
-{sig_match_named,   "SetParameterData",         "PTM_BackupUIProperty_FW", 0, SIG_DRY_MIN(58)},
+{sig_match_named,   "SetParameterData",         "PTM_BackupUIProperty_FW", 0,               SIG_DRY_MIN(58)},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcLog10",                "CalcLog10_FW",         SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcSqrt",                 "CalcSqrt_FW",          SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
+{sig_match_named,   "Close_low",                "Close",                SIG_NAMED_NTH(3,SUB),SIG_DRY_MIN(58)},
 {sig_match_named,   "close",                    "Close",                SIG_NAMED_SUB,      SIG_DRY_MAX(57)},
+{sig_match_named,   "close",                    "Close_low",            SIG_NAMED_SUB,      SIG_DRY_MIN(58)},
 {sig_match_named,   "DoAELock",                 "SS.DoAELock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "DoAFLock",                 "SS.DoAFLock_FW",       SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Fclose_Fut",               "Fclose_Fut_FW",},
@@ -4679,6 +4627,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "MoveIrisWithAv",           "MoveIrisWithAv_FW",},
 {sig_match_named,   "MoveZoomLensWithPoint",    "MoveZoomLensWithPoint_FW",},
 {sig_match_named,   "Open",                     "Open_FW",},
+{sig_match_named,   "Open_low",                 "Open",                SIG_NAMED_NTH(3,SUB),SIG_DRY_MIN(58)},
 {sig_match_named,   "PostLogicalEventForNotPowerType",  "PostLogicalEventForNotPowerType_FW",},
 {sig_match_named,   "PostLogicalEventToUI",     "PostLogicalEventToUI_FW",},
 {sig_match_named,   "PT_MFOn",                  "SS.MFOn_FW",           SIG_NAMED_JMP_SUB},
@@ -4786,9 +4735,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]"},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW",              0,              SIG_DRY_MAX(57)},
-{sig_match_open_gt_57,"open",                   "Open_FW",              0,              SIG_DRY_MIN(58)},
-// match close for dryos 58 and later
-{sig_match_close_gt_57,"close",                 "Close_FW",             0,              SIG_DRY_MIN(58)},
+{sig_match_open,    "open",                     "Open_low",             0,              SIG_DRY_MIN(58)},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
@@ -4932,8 +4879,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_file_counter_init,"file_counter_var_init","task_InitFileModules",},
 {sig_match_file_counter_var,"file_counter_var","file_counter_var_init",},
 {sig_match_var_struct_get,"displaytype",       "get_displaytype",},
-{sig_match_palette_vars,"palette_control",     "transfer_src_overlay_helper",0,SIG_DRY_MAX(58)},// Dry59 code is different
-{sig_match_live_free_cluster_count,"live_free_cluster_count","Close",},
+{sig_match_palette_vars,"palette_control",     "transfer_src_overlay_helper",0, SIG_DRY_MAX(58)},// Dry59 code is different
+{sig_match_live_free_cluster_count,"live_free_cluster_count","Close",0,         SIG_DRY_MAX(57)},
+{sig_match_live_free_cluster_count,"live_free_cluster_count","Close_low",0,     SIG_DRY_MIN(58)},
 {NULL},
 };
 
