@@ -37,8 +37,6 @@ NHSTUB(undisplayblankscreen,                   0xFC3533AD)
 IGNORE(Restart)
 //NHSTUB(Restart                                ,0xFC0C306F)
 
-IGNORE(GetDrive_FreeClusters) // replaced in lib.c
-
 // Ignore event proc versions, use inner functions from wrapper
 IGNORE(PutInNdFilter)
 IGNORE(PutOutNdFilter)
