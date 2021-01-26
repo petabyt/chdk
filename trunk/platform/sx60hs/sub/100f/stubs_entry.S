@@ -218,7 +218,6 @@ NHSTUB(GetCurrentShutterSpeed                 ,0xfc16d4e3) //  0
 NHSTUB(GetUsableMaxAv                         ,0xfc1c1c61) //  0
 NHSTUB(GetUsableMinAv                         ,0xfc1c1c4f) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc33200b) //  0
-NHSTUB(GetDrive_FreeClusters                  ,0xfc33250f) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc2fa8df) //  0
 NHSTUB(GetKbdState                            ,0xfc0707e9) //  0
 NHSTUB(GetMemInfo                             ,0xfc41e355) //  0

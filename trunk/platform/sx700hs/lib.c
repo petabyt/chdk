@@ -267,13 +267,3 @@ char *camera_jpeg_count_str()
     extern char jpeg_count_str[];
 	return jpeg_count_str;
 }
-
-// get free cluster info directly
-// also updated during video recording
-unsigned long _GetDrive_FreeClusters(__attribute__ ((unused))int drive)
-{
-    extern unsigned long live_free_cluster_count;
-    return live_free_cluster_count;
-}
-
-

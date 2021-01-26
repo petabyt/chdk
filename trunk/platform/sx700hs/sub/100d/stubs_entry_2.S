@@ -70,6 +70,3 @@ NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 
 //NHSTUB(RefreshPhysicalScreen                ,0x00000000) //  0            == 0x00000000
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
-
-IGNORE(GetDrive_FreeClusters) // replaced in lib.c
-

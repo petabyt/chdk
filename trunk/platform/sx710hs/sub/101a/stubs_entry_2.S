@@ -45,5 +45,3 @@ NHSTUB(reboot_fw_update,NULL_SUB)
 // from sx280 These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
-
-IGNORE(GetDrive_FreeClusters) // replaced in lib.c

@@ -154,7 +154,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
     { "get_current_nd_value", OPTIONAL },
     { "GetDrive_ClusterSize" },
-    { "GetDrive_FreeClusters" },
+    { "GetDrive_FreeClusters", UNUSED }, // live_free_cluster_count variable is used instead
     { "GetDrive_TotalClusters" },
     { "GetFocusLensSubjectDistance" },
     { "GetFocusLensSubjectDistanceFromLens" },

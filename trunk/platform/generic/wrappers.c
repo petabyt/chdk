@@ -818,7 +818,14 @@ int rename(const char *oldname, const char *newname) {
 }
 
 unsigned int GetFreeCardSpaceKb(void){
-	return (_GetDrive_FreeClusters(0)*(_GetDrive_ClusterSize(0)>>9))>>1;
+// get free clusters directly for digic >= 6, updates during video recording
+#ifdef THUMB_FW
+    extern unsigned long live_free_cluster_count;
+    unsigned long free_clusters = live_free_cluster_count;
+#else
+    unsigned long free_clusters = _GetDrive_FreeClusters(0);
+#endif
+	return (free_clusters*(_GetDrive_ClusterSize(0)>>9))>>1;
 }
 
 unsigned int GetTotalCardSpaceKb(void){
