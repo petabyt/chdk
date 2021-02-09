@@ -18,10 +18,7 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
 ifndef DISABLE_GCC_VERSION_CHECK
     ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9 10))
-        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8 or 9. GCC 10 support is experimental.)
-    endif
-    ifeq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),10))
-        $(warning Unsupported GCC version. CHDK build is supported on GCC 4, 5, 8 or 9. GCC 10 support is experimental.)
+        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8, 9 or 10.)
     endif
 endif
 
