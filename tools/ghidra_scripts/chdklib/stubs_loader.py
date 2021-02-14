@@ -187,7 +187,7 @@ class StubsFileParser:
 
         #if re.match('0x[0-9A-Fa-f]+$',m.group(2)):
         #    val = int(m.group(2),16)
-        #elif re.match('[0-9]+$',m.group(2)): 
+        #elif re.match('[0-9]+$',m.group(2)):
         #    val = int(m.group(2),10)
         #else:
         #    val = m.group(2)
@@ -343,7 +343,7 @@ class StubsData:
 # src = source file
 # srctype = NHSTUB, DEF etc or CSV
 # name = funtion / var name
-# adrbase = address, possibly modified by adr_offset 
+# adrbase = address, possibly modified by adr_offset
 # comment = comment scraped from source file or generated
 # adr_offset = offset from adr recorded in stub value for documentation purposes
     def add_stubs_value(self, vtype, src, srctype, name, adr_base, comment=None,adr_offset=0):
@@ -375,6 +375,7 @@ class StubsData:
         for r in csv.reader(open(fname)):
             adr = int(r[0],16)
             name = r[1].rstrip()
+            name = name.replace(' ','_') # some very old cams have spaces at the end of eventproc names, which end up before the _FW
             # (stubs_entry_2) column
             if len(r) > 2:
                 comment = r[2]
