@@ -224,6 +224,7 @@
 0xff8aa61c,ShutterTool.GetFirstCurtainTimeForCapture_FW
 0xff8aa628,ShutterTool.SetFirstCurtainTimeForAdjust_FW
 0xff8aa66c,ShutterTool.SetFirstCurtainTimeForCapture_FW
+0xff8ab658,get_current_deltasv
 0xff8ab908,ImgGainTool.EnablePrint_FW
 0xff8ab920,ImgGainTool.DisablePrint_FW
 0xff8ab934,ImgGainTool.SetDeltaGain_FW
@@ -285,6 +286,7 @@
 0xff8b40f8,WbThumb.DumpFstpas_FW
 0xff8b4118,WbThumb.DumpWbThumb_FW
 0xff8b4138,WbThumb.DumpObinteg_FW
+0xff8b4b84,GetCurrentDriveBaseSvValue
 0xff8b57ac,DoMovieFrameCapture
 0xff8b6a3c,Capture.Photo_FW
 0xff8b6aec,Capture.DarkSub_FW

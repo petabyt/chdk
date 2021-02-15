@@ -1099,6 +1099,7 @@
 0xfc3ae3ab,j_PTM_SetProprietyEnable_FW
 0xfc3ae3bf,j_PTM_BackupUIProperty_FW
 0xfc3af9cb,get_current_exp
+0xfc3afd7f,GetCurrentDriveBaseSvValue
 0xfc3b5ae1,Open_low
 0xfc3b5b65,Close_low
 0xfc3b5b9d,Write
@@ -1344,6 +1345,7 @@
 0xfc4683ef,ChangeImagerToAstroMetamorphose_FW
 0xfc46840b,j_E2LatOn_FW
 0xfc46840f,ChangeAutoSlowShutterEnable_FW
+0xfc469d1b,get_current_deltasv
 0xfc470b9f,GetCurrentShutterSpeed
 0xfc470b9f,GetCurrentShutterSpeed_FW
 0xfc470e97,GetCurrentExposureTime_FW

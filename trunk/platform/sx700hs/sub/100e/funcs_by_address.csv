@@ -667,6 +667,7 @@
 0xfc14975f,GetCurrentShutterSpeed
 0xfc14975f,GetCurrentShutterSpeed_FW
 0xfc149a09,GetCurrentExposureTime_FW
+0xfc14a0cb,get_current_deltasv
 0xfc14c983,task_WBIntegTask
 0xfc152d7b,ExpCtrlTool.SetExpMode_FW
 0xfc152dad,ExpCtrlTool.SoundDevTest_FW
@@ -1092,6 +1093,7 @@
 0xfc2cfbd9,GetFocusLensResetPosition_FW
 0xfc2cfbe5,GetFocusLensResetDefaultPosition_FW
 0xfc2d6991,get_current_exp
+0xfc2d6cc3,GetCurrentDriveBaseSvValue
 0xfc2d7439,mzrm_createmsg
 0xfc2d752d,mzrm_sendmsg
 0xfc2d7ba7,DeleteFile_Fut

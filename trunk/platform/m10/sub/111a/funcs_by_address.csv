@@ -1182,6 +1182,7 @@
 0xfc209a9f,task_DetSeqT
 0xfc209fa9,task_DetSeqSadT
 0xfc20da63,GraphicSystemCoreFinish_helper
+0xfc20f5a7,get_current_deltasv
 0xfc211863,task_BrtMsrTask
 0xfc212871,task_ExpEventTask
 0xfc212947,ExpCtrlTool.SetExpMode_FW
@@ -1491,6 +1492,7 @@
 0xfc314e68,j_dry_memcpy
 0xfc314fad,mzrm_createmsg
 0xfc3150a1,mzrm_sendmsg
+0xfc317ad7,GetCurrentDriveBaseSvValue
 0xfc33970f,PowerOffIris_FW
 0xfc339905,GetIrisAv_FW
 0xfc339931,GetIrisCurrentAv_FW

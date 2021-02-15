@@ -644,6 +644,7 @@
 0xff0c71c8,memcpy
 0xff0c71c8,memcpy_FW
 0xff0c7314,strrchr
+0xff0d9220,GetCurrentDriveBaseSvValue
 0xff0dd710,DoMovieFrameCapture
 0xff0dddbc,task_OBCtrlTask
 0xff0e0df0,task_DetectMoveTask
@@ -721,6 +722,7 @@
 0xff131890,task_SsgMainTask
 0xff131a60,task_SsgPeriodTask
 0xff1363e0,task__tgTask
+0xff1377f0,get_current_deltasv
 0xff13a318,task_LiveImageTask
 0xff13b2f4,GetCurrentShutterSpeed
 0xff13b2f4,GetCurrentShutterSpeed_FW

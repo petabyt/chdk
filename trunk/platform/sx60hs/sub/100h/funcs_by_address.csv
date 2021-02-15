@@ -738,6 +738,7 @@
 0xfc16d50b,GetCurrentShutterSpeed
 0xfc16d50b,GetCurrentShutterSpeed_FW
 0xfc16d7b7,GetCurrentExposureTime_FW
+0xfc16de7b,get_current_deltasv
 0xfc1735e1,task_BrtMsrTask
 0xfc174b9f,ExpCtrlTool.SetExpMode_FW
 0xfc174bd1,ExpCtrlTool.SoundDevTest_FW
@@ -1331,6 +1332,7 @@
 0xfc2facc3,IsFocusLensOutSidePosition_FW
 0xfc2face1,GetFocusResetPosition_FW
 0xfc2fad41,GetFocusDefaultResetPosition_FW
+0xfc2fb395,GetCurrentDriveBaseSvValue
 0xfc2fd1c9,SetCurrentCaptureModeType
 0xfc2fd1c9,SetCurrentCaptureModeType_FW
 0xfc2fe15f,GetCurrentCaptureModeType_FW

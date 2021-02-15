@@ -527,7 +527,9 @@
 0xff893644,GetCurrentShutterSpeed
 0xff893644,GetCurrentShutterSpeed_FW
 0xff893978,GetCurrentExposureTime_FW
+0xff8942e0,get_current_deltasv
 0xff896f34,task_WBIntegTask
+0xff898e48,GetCurrentDriveBaseSvValue
 0xff89a180,DoMovieFrameCapture
 0xff89bee0,task_AfIntSrvTask
 0xff8a9664,task_BrtMsrTask

@@ -736,6 +736,7 @@
 0xfc16e733,GetCurrentShutterSpeed
 0xfc16e733,GetCurrentShutterSpeed_FW
 0xfc16e9df,GetCurrentExposureTime_FW
+0xfc16f0a3,get_current_deltasv
 0xfc17614f,ExpCtrlTool.SetExpMode_FW
 0xfc176181,ExpCtrlTool.SoundDevTest_FW
 0xfc176299,task_OBCtrlTask
@@ -1210,6 +1211,7 @@
 0xfc31ff19,GetFocusResetPosition_FW
 0xfc31ff73,GetFocusDefaultResetPosition_FW
 0xfc321abf,get_current_exp
+0xfc321e5b,GetCurrentDriveBaseSvValue
 0xfc3253c5,mzrm_createmsg
 0xfc3254b9,mzrm_sendmsg
 0xfc325b33,DeleteFile_Fut
