@@ -1138,6 +1138,7 @@
 0xfc207369,task_DetSeqT
 0xfc207875,task_DetSeqSadT
 0xfc20b393,GraphicSystemCoreFinish_helper
+0xfc20ceab,get_current_deltasv
 0xfc20f82f,ExpCtrlTool.SetExpMode_FW
 0xfc20f861,ExpCtrlTool.SoundDevTest_FW
 0xfc211fcb,task_DetectMoveTask
@@ -1422,6 +1423,7 @@
 0xfc302400,j_WaitForAnyEventFlag
 0xfc302410,j_DebugAssert
 0xfc302418,j_bzero
+0xfc3069f3,GetCurrentDriveBaseSvValue
 0xfc317163,task_ISMainTask
 0xfc317559,ISInitMotion_FW
 0xfc317703,GetISPWMFrequency_FW

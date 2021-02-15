@@ -491,6 +491,7 @@
 0xfc137cad,E2LatOn_FW
 0xfc139461,task_SsgMainTask
 0xfc1396b5,task_SsgPeriodTask
+0xfc13c98d,get_current_deltasv
 0xfc13feb7,task_LiveImageTask
 0xfc14185f,task_SyncPeriod
 0xfc1418cf,task_SynchTask
@@ -923,6 +924,7 @@
 0xfc33459f,IsFocusLensOutSidePosition_FW
 0xfc3345bd,GetFocusResetPosition_FW
 0xfc334617,GetFocusDefaultResetPosition_FW
+0xfc334d0d,GetCurrentDriveBaseSvValue
 0xfc33cc1b,UIFS_IsAvailableShots_FW
 0xfc33d109,UIFS_GetStillShotableNumber_FW
 0xfc33d10d,UIFS_GetMovieRecoadableNumber_FW

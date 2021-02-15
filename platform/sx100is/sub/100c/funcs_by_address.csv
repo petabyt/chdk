@@ -599,8 +599,10 @@
 0xffc77b80,GetCurrentShutterSpeed
 0xffc77b80,GetCurrentShutterSpeed_FW
 0xffc77e5c,GetCurrentExposureTime_FW
+0xffc787b4,get_current_deltasv
 0xffc78804,ImgGainTool.IsValidDeltaSv_FW
 0xffc7b2a0,task_WBIntegTask
+0xffc7d140,GetCurrentDriveBaseSvValue
 0xffc7e348,DoMovieFrameCapture
 0xffc7e7a0,task_AfIntSrvTask
 0xffc8c504,AFTool.PrintStateLog_FW

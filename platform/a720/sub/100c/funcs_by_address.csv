@@ -600,8 +600,10 @@
 0xffc730fc,GetCurrentShutterSpeed
 0xffc730fc,GetCurrentShutterSpeed_FW
 0xffc733d8,GetCurrentExposureTime_FW
+0xffc73d30,get_current_deltasv
 0xffc73d80,ImgGainTool.IsValidDeltaSv_FW
 0xffc7681c,task_WBIntegTask
+0xffc786bc,GetCurrentDriveBaseSvValue
 0xffc79830,DoMovieFrameCapture
 0xffc79c88,task_AfIntSrvTask
 0xffc84aec,AFTool.PrintStateLog_FW

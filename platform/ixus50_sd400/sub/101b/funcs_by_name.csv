@@ -508,6 +508,7 @@
 0xff8146d4,FreeUncacheableMemory
 0xff86dbdc,Fseek_Fut
 0xff86db44,Fwrite_Fut
+0xff8b95d4,get_current_deltasv
 0xff90a0bc,get_current_exp
 0xffa51958,get_current_nd_value
 0xffa5196c,get_nd_value
@@ -538,6 +539,7 @@
 0xffa70948,GetCurrentAvValue_FW
 0xff99abc8,GetCurrentCaptureModeType_FW
 0xff958b10,GetCurrentDigitalZoomPosition_FW
+0xff8c0b90,GetCurrentDriveBaseSvValue
 0xffa5ef04,GetCurrentEncoderPosition_FW
 0xffa705dc,GetCurrentExposureTime_FW
 0xff9589a0,GetCurrentFocalLength_FW

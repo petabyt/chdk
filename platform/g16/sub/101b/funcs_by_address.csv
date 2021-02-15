@@ -694,6 +694,8 @@
 0xfc1676dd,task_DetSeqSadT
 0xfc16bf07,task_FmidTask
 0xfc17230f,GraphicSystemCoreFinish_helper
+0xfc173f2b,get_current_deltasv
+0xfc1746df,GetCurrentDriveBaseSvValue
 0xfc177f69,task_BrtMsrTask
 0xfc1793a7,ExpCtrlTool.SetExpMode_FW
 0xfc181117,task_WBLPFace

@@ -384,6 +384,7 @@
 0xff020d1c,Fseek_Fut_FW
 0xff020c7c,Fwrite_Fut
 0xff020c7c,Fwrite_Fut_FW
+0xff09e258,get_current_deltasv
 0xff0b3ae0,get_current_exp
 0xff2d6574,get_current_nd_value
 0xff05dcd8,get_fstype
@@ -440,6 +441,7 @@
 0xff173c90,GetCurrentAvValue_FW
 0xff088e54,GetCurrentCaptureModeType_FW
 0xff2a5fbc,GetCurrentCcdTemp_FW
+0xff0a42a8,GetCurrentDriveBaseSvValue
 0xff3591fc,GetCurrentDriveBaseSvValue_FW
 0xff09d94c,GetCurrentExposureTime_FW
 0xff172e80,GetCurrentFocusLensPosition_FW

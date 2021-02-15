@@ -486,6 +486,7 @@
 0xfc301d3b,Fwrite_Fut
 0xfc301d3b,Fwrite_Fut_FW
 0xfc1198c9,get_canon_mode_list
+0xfc16de7b,get_current_deltasv
 0xfc2dd22b,get_current_exp
 0xfc119805,get_dial_hw_position
 0xfc30472f,get_displaytype
@@ -545,6 +546,7 @@
 0xfc14e00d,GetCurrentAvValue_FW
 0xfc2fe15f,GetCurrentCaptureModeType_FW
 0xfc382c63,GetCurrentCcdTemp_FW
+0xfc2fb395,GetCurrentDriveBaseSvValue
 0xfc4b48dd,GetCurrentDriveBaseSvValue_FW
 0xfc16d7b7,GetCurrentExposureTime_FW
 0xfc2fa957,GetCurrentFocusLensPosition_FW

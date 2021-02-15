@@ -361,6 +361,7 @@
 0xffc14c7c,Fut.Save_FW
 0xffc14b10,Fwrite_Fut
 0xffc14b10,Fwrite_Fut_FW
+0xffc73d30,get_current_deltasv
 0xffc92cfc,get_current_exp
 0xffca6f78,get_ptp_buf_size
 0xffd8e040,get_ptp_file_buf
@@ -398,6 +399,7 @@
 0xffcffca8,GetCurrentAvValue_FW
 0xffc62188,GetCurrentCaptureModeType_FW
 0xffc39108,GetCurrentCcdTemp_FW
+0xffc786bc,GetCurrentDriveBaseSvValue
 0xffc733d8,GetCurrentExposureTime_FW
 0xffcfdba4,GetCurrentFocusLensPosition_FW
 0xffcfdba4,GetCurrentFocusPosition_FW

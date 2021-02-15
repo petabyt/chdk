@@ -344,6 +344,7 @@
 0xff93307c,ImgGainTool.GetUserGainLimit_FW
 0xff9330c0,ImgGainTool.GetGain_FW
 0xff933104,ImgGainTool.IsValidDeltaSv_FW
+0xff9338dc,get_current_deltasv
 0xff933d78,ImgPixelTool.SetDeltaPixel_FW
 0xff933ddc,ImgPixelTool.GetCurrentDeltaPixel_FW
 0xff933e20,ImgPixelTool.GetDeltaPixelLimit_FW
@@ -352,6 +353,7 @@
 0xff93d96c,WBInteg.DisableUsageCheck_FW
 0xff93d97c,WBInteg.EnableUsageCheckSS_FW
 0xff93d98c,WBInteg.DisableUsageCheckSS_FW
+0xff93e044,GetCurrentDriveBaseSvValue
 0xff93f2b8,DoMovieFrameCapture
 0xff9415fc,task_AfIntSrvTask
 0xff9422dc,task_AFTask

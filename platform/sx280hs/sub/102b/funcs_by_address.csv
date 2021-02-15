@@ -675,7 +675,9 @@
 0xfc1598ab,GraphicSystemCoreFinish_helper
 0xfc15a7e5,AllocateUncacheableMemory
 0xfc15a811,FreeUncacheableMemory
+0xfc15b557,get_current_deltasv
 0xfc15e241,task_WBIntegTask
+0xfc15f9bd,GetCurrentDriveBaseSvValue
 0xfc163ca3,ExpCtrlTool.SetExpMode_FW
 0xfc1693f3,task_WBLPFace
 0xfc16b9f5,task_OBCtrlTask

@@ -289,6 +289,7 @@
 0xff8abdd4,ShutterTool.SetTvForFix_FW
 0xff8abdfc,ShutterTool.GetLimOfTvForFix_FW
 0xff8abe20,ShutterTool.GetLimOfTvForFixWithAv_FW
+0xff8aca10,get_current_deltasv
 0xff8accb8,ImgGainTool.SetDeltaGain_FW
 0xff8accd8,ImgGainTool.SetUserGain_FW
 0xff8acd10,ImgGainTool.FlushGain_FW
@@ -301,6 +302,7 @@
 0xff8b4d18,WBInteg.DisableUsageCheck_FW
 0xff8b4d28,WBInteg.EnableUsageCheckSS_FW
 0xff8b4d38,WBInteg.DisableUsageCheckSS_FW
+0xff8b5280,GetCurrentDriveBaseSvValue
 0xff8b6318,DoMovieFrameCapture
 0xff8c1730,DevelopTool.DevelopTest_FW
 0xff8c3a68,CdsDrv.SetCdsAdjustmentMode_FW

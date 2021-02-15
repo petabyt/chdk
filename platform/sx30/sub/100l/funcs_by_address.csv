@@ -605,7 +605,9 @@
 0xff8be78c,GetCurrentShutterSpeed
 0xff8be78c,GetCurrentShutterSpeed_FW
 0xff8bea64,GetCurrentExposureTime_FW
+0xff8bf2d0,get_current_deltasv
 0xff8c2e34,task_WBIntegTask
+0xff8c4fc4,GetCurrentDriveBaseSvValue
 0xff8c6204,DoMovieFrameCapture
 0xff8c9530,task_BrtMsrTask
 0xff8cc618,ExpCtrlTool.SetExpMode_FW
