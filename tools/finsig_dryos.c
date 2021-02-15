@@ -345,8 +345,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
     { "get_current_nd_value", OPTIONAL },
+    { "get_current_deltasv", OPTIONAL|UNUSED },
     { "GetUsableAvRange", OPTIONAL|UNUSED },
     { "GetBaseSv", OPTIONAL|UNUSED },
+    { "GetCurrentDriveBaseSvValue", OPTIONAL|UNUSED },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -2050,6 +2052,46 @@ int find_get_current_nd_value(firmware *fw)
     return 0;
 }
 
+// get live view "DeltaSV" value
+int find_get_current_deltasv(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"get_current_exp");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int blcnt, i;
+    // expect
+    // bleq DebugAssert
+    // followed by at least 3 bl with other instructions between
+    // looking for 3rd
+    for(i=0, blcnt=0; i<16 && blcnt < 4; i++) {
+        if(!blcnt) {
+            if(isBL_cond(fw,f1+i)) {
+                blcnt++;
+            } else if(isBL(fw,f1+i)) {
+                return 0;
+            }
+            continue;
+        }
+        if(!isBL(fw,f1+i)) {
+            continue;
+        }
+        blcnt++;
+        if(blcnt == 4) {
+            int f2 = idxFollowBranch(fw,f1+i,0x01000001);
+            // veneer?
+            if(isB(fw,f2)) {
+                f2 = idxFollowBranch(fw,f2,0x00000001);
+            }
+            fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 int find_getcurrentmachinetime(firmware *fw)
 {
     int f1 = get_saved_sig(fw,"SetHPTimerAfterTimeout");
@@ -2545,6 +2587,7 @@ string_sig string_sigs[] =
     {20, "DisableISDriveError", "DisableISDriveError_FW", 1},
     {20, "SetImageMode", "SetImageMode_FW", 0x01000002 },
     {20, "GetVideoOutType", "GetVideoOutType_FW", 1},
+    {20, "GetCurrentDriveBaseSvValue", "GetCurrentDriveBaseSvValue_FW", 0x01000002 },
 
     { 1, "ExportToEventProcedure_FW", "ExportToEventProcedure", 1 },
     { 1, "AllocateMemory", "AllocateMemory", 1 },
@@ -2966,6 +3009,7 @@ string_sig string_sigs[] =
     { 22, "get_self_task_errno_pointer", (char*)find_get_self_task_errno_pointer, 0},
     { 22, "get_nd_value", (char*)find_get_nd_value, 0},
     { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
+    { 22, "get_current_deltasv", (char*)find_get_current_deltasv, 0},
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
     { 22, "DoMovieFrameCapture", (char*)find_DoMovieFrameCapture, 0},
     { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
@@ -2997,6 +3041,7 @@ string_sig string_sigs[] =
     { 23, "GetUsableAvRange", "[AE]Prog Line Error!\n", 20,                      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,},
     { 23, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 7,           -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,}, // two functions satisfy this, either will work for us
     { 23, "DisableDispatch_low", "data abort", 7,                                0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,},
+    { 23, "GetCurrentDriveBaseSvValue", "KeepPreviousExposureWithProgress", 5,   2,      2,      2,      2,      2,      2,      2,     99,     99,     99,     99,     99,     99,     99,     99,     99,},
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },

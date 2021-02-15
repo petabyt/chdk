@@ -349,7 +349,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED|OPTIONAL },
     { "get_current_nd_value", OPTIONAL },
+    { "get_current_deltasv", OPTIONAL|UNUSED },
     { "GetBaseSv", OPTIONAL|UNUSED },
+    { "GetCurrentDriveBaseSvValue", OPTIONAL|UNUSED },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -1161,6 +1163,37 @@ int find_get_current_nd_value(firmware *fw)
     return 1;
 }
 
+// get live view "DeltaSV" value
+int find_get_current_deltasv(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"get_current_exp");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int blcnt, i;
+    // expect
+    // 2x bl DebugAssert
+    // followed by at least 3 bl with other instructions between
+    // looking for 3rd
+    for(i=0, blcnt=0; i<24 && blcnt < 5; i++) {
+        if(!isBL(fw,f1+i)) {
+            continue;
+        }
+        blcnt++;
+        if(blcnt == 5) {
+            int f2 = idxFollowBranch(fw,f1+i,0x01000001);
+            // veneer?
+            if(isB(fw,f2)) {
+                f2 = idxFollowBranch(fw,f2,0x00000001);
+            }
+            fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int find_exmem_ufree(firmware *fw)
 {
 
@@ -1446,6 +1479,30 @@ int find_GetBaseSv(firmware *fw)
         s1 = find_nxt_str_ref(fw, sadr, s1+1);
     }
 
+    return 0;
+}
+
+// get GetCurrentDriveBaseSvValue for old vx
+int find_GetCurrentDriveBaseSvValue(firmware *fw)
+{
+    int f1 = get_saved_sig(fw,"ExpCtrlTool.OneShotAE_FW");
+    if(f1 < 0)
+        return 0;
+
+    f1 = adr2idx(fw, func_names[f1].val);
+    int blcnt, i;
+    // expect 3rd bl
+    for(i=0, blcnt=0; i<12 && blcnt < 3; i++) {
+        if(!isBL(fw,f1+i)) {
+            continue;
+        }
+        blcnt++;
+        if(blcnt == 3) {
+            int f2 = idxFollowBranch(fw,f1+i,0x01000001);
+            fwAddMatch(fw,idx2adr(fw,f2),32,0,122);
+            return 1;
+        }
+    }
     return 0;
 }
 
@@ -1768,6 +1825,7 @@ string_sig string_sigs[] =
     { 7, "LogCameraEvent", "BufAccBeep", 0x01000001 },
     { 7, "LogCameraEvent", "MyCamFunc_PlaySound_MYCAM_COVER_OPEN", 0x01000001 },
     { 7, "exmem_assert", "Type < MAX_NUM_OF_EXMEMORY_TYPE", 0x01000001 },
+    { 7, "GetCurrentDriveBaseSvValue", "KeepPreviousExposureWithProgress", 0x01000003 },
 
     { 8, "WriteSDCard", "Mounter.c", 0 },
 
@@ -1927,7 +1985,9 @@ string_sig string_sigs[] =
     { 22, "GetCurrentMachineTime", (char*)find_getcurrentmachinetime, 0},
     { 22, "get_nd_value", (char*)find_get_nd_value, 0},
     { 22, "get_current_nd_value", (char*)find_get_current_nd_value, 0},
+    { 22, "get_current_deltasv", (char*)find_get_current_deltasv, 0},
     { 22, "GetBaseSv", (char*)find_GetBaseSv, 0},
+    { 22, "GetCurrentDriveBaseSvValue", (char*)find_GetCurrentDriveBaseSvValue, 0 }, // old vx
     { 22, "exmem_free", (char*)find_exmem_free, 0},
     { 22, "exmem_alloc", (char*)find_exmem_alloc, 0},
     { 22, "exmem_ufree", (char*)find_exmem_ufree, 0},
