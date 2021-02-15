@@ -153,6 +153,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
     { "get_current_nd_value", OPTIONAL },
+    { "get_current_deltasv", UNUSED | OPTIONAL },
+    { "GetCurrentDriveBaseSvValue", UNUSED | OPTIONAL },
     { "GetDrive_ClusterSize" },
     { "GetDrive_FreeClusters", UNUSED }, // live_free_cluster_count variable is used instead
     { "GetDrive_TotalClusters" },
@@ -1254,6 +1256,33 @@ int sig_match_get_current_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *r
     disasm_iter(fw,is);
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
+
+int sig_match_get_current_deltasv(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,36,"GetCurrentShutterSpeed_FW")) {
+        printf("sig_match_get_current_deltasv: no match GetCurrentShutterSpeed_FW\n");
+        return 0;
+    }
+    // bl <func we want>
+    // strh r0, [rN,4]
+    const insn_match_t match_bl_strh[]={
+        {MATCH_INS(BL,MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS(STRH,2), {MATCH_OP_REG(R0),  MATCH_OP_MEM(INVALID,INVALID,0x4)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,8,match_bl_strh)) {
+        printf("sig_match_get_current_deltasv: match failed\n");
+        return 0;
+    }
+    // rewind one for call
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,1));
+    disasm_iter(fw,is);
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 
 int sig_match_imager_active_callback(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -4715,6 +4744,9 @@ sig_rule_t sig_rules_main[]={
 // alternate match because "exec" lands near a literal pool on some cams
 {sig_match_near_str,"bzero",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(8,2)|SIG_NEAR_INDIRECT},
 //{sig_match_near_str,"bzero",                    "FromDate",             SIG_NEAR_BEFORE(2,1)},
+// eventproc on most cams, but not EOS Ms
+{sig_match_named,   "GetCurrentDriveBaseSvValue","GetCurrentDriveBaseSvValue_FW",SIG_NAMED_NTH(1,SUB)},
+{sig_match_near_str,"GetCurrentDriveBaseSvValue","IsExecutePreConti",   SIG_NEAR_AFTER(7,2)},
 {sig_match_named,   "memset32",                 "bzero",                SIG_NAMED_NTH(1,INSN)},
 {sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
@@ -4855,6 +4887,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
 {sig_match_get_current_exp,"get_current_exp","ShowCurrentExp_FW",},
 {sig_match_get_current_nd_value,"get_current_nd_value","get_current_exp",},
+{sig_match_get_current_deltasv,"get_current_deltasv","get_current_exp",},
 {sig_match_imager_active_callback,"imager_active_callback","ImagerActivate",},
 {sig_match_imager_active,"imager_active","imager_active_callback",},
 {sig_match_get_dial_hw_position,"get_dial_hw_position","kbd_p1_f",},
