@@ -69,9 +69,7 @@ __stdcall void RefreshPhysicalScreen(int f);
 __stdcall void Unmount_FileSystem(void);
 __stdcall void Mount_FileSystem(void);
 __stdcall void SleepTask(int msec);
-__stdcall int CreateTask (const char *name, int prio, int stack_size /*?*/,
-                        void *entry, int parm /*?*/);
-__stdcall void SleepTask(int msec);
+__stdcall int CreateTask (const char *name, int prio, int stack_size, void *entry, int parm /*?*/);
 __stdcall void ExitTask(void);
 __stdcall int taskNameToId(char* taskName); // VxWorks only, task's name first letter must be 't', maximum 10 chars total
 __stdcall const char * taskName(int taskID); // VxWorks only for now
@@ -84,7 +82,7 @@ __stdcall int SetEventFlag(int flag, int what);
 __stdcall int CheckAnyEventFlag(int flag, int mask, int *res);
 __stdcall int GetEventFlagValue(int flag, int *res);
 
-__stdcall int ReceiveMessageQueue(int msgq, int *dst, int unk1 /* maybe size? */);
+__stdcall int ReceiveMessageQueue(int msgq, int *dst, int unk1 /* probably timeout */);
 
 /* Canon stuff with nonoriginal naming */
 __stdcall int GetParameterData(int id, void *buf, int size);
@@ -375,13 +373,12 @@ __stdcall int get_dial_hw_position(int dial);
 // platform / shooting.c
 __stdcall void GetImageFolder(char * out,int filecount,int flags,int time);
 
-// other (sigs etc)
+// other (sigs etc) - many not tested, may not be 100% correct
 __stdcall void * wrapped_malloc(int size);
 __stdcall void * malloc_strictly(int size);
 __stdcall int TakeSemaphoreStrictly(int sem, int timeout, const char *file, int line);
 __stdcall int DeleteSemaphore(int sem);
-__stdcall int CreateTaskStrictly (const char *name, int prio, int stack_size /*?*/,
-                        void *entry, int parm /*?*/);
+__stdcall int CreateTaskStrictly (const char *name, int prio, int stack_size,int (*entry)(), int parm /*?*/);
 __stdcall int CreateEventFlag(const char *name/*?*/, int v);
 __stdcall int CreateEventFlagStrictly(const char *name/*?*/, int v);
 __stdcall int CreateBinarySemaphoreStrictly(const char *name, int v);
@@ -413,4 +410,16 @@ __stdcall int RegisterEventProcTable(const eventproc_table_entry *defs);
 __stdcall int RegisterEventProcTable_alt(const eventproc_table_entry *defs);
 __stdcall unsigned ExecuteEventProcedure_FW(const char *name,...);
 __stdcall int UnRegisterEventProcedure(const char *name);
+__stdcall int CreateTask_low(int (*entry)(),int parm, int unk1, int stack_size, int prio, int unk2, const char *name);
+__stdcall int DeleteEventFlag(int flag);
+__stdcall int CheckAllEventFlag(int flag, int mask, int *res);
+__stdcall int WaitForAllEventFlag(int flag, int what, int timeout);
+__stdcall int RegisterInterruptHandler(const char *name, int int_num, int (*int_handler)(),int unk);
+__stdcall int CreateMessageQueue(const char *name/*?*/, int unk/*size? Flags?*/);
+__stdcall int CreateMessageQueueStrictly(const char *name/*?*/, int unk/*size? Flags?*/);
+__stdcall int TryReceiveMessageQueue(int msgq, int *dst);
+__stdcall int PostMessageQueue(int msgq,int val,int timeout);
+__stdcall int TryPostMessageQueue(int msgq,int val);
+__stdcall int GetNumberOfPostedMessages(int msgq,int *res);
 #endif
+
