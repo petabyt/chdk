@@ -10,7 +10,7 @@ Go to File -> Parse C Source
 * Name your copy something obviously related to CHDK and camera configuration, e.g. chdk-dryos31
 * Select all the header file entries, and use the red X button to delete them
 * Use the green + button to add chdk source/tools/ghidra_scripts/fw_functions.h
-* Adjust to the parse options section to match your platform:
+* Adjust the parse options section to match your platform:
   Remove all entries except
    -D__builtin_va_list=void *
   If your camera uses dryos, add the PLATFORMOSVER value from makefile.inc, like
