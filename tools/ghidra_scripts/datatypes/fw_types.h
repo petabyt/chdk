@@ -103,7 +103,11 @@ typedef struct {
     int handle;
     int (*send_data)(int handle, const char *buf, int part_size, int total_size, int, int, int); // (0xFF9F525C), total_size should be 0 except for the first call
     int (*recv_data)(int handle, char *buf, int size, int, int); // (0xFF9F5500)
+#ifdef VX_OLD_PTP
     int (*send_resp)(int handle, PTPContainer *resp, int zero); // (0xFF9F5688), ixus30/40 needs a third argument, which is always 0
+#else
+    int (*send_resp)(int handle, PTPContainer *resp); // extra param messes up analysis
+#endif
     int (*get_data_size)(int handle); // (0xFF9F5830)
     int (*send_err_resp)(int handle, PTPContainer *resp); // (0xFF9F5784)
     int unknown1; // ???

@@ -18,6 +18,8 @@ Go to File -> Parse C Source
   If your camera uses 3 argument DebugAssert (see platform_camera.h) add
    -DCAM_3ARG_DebugAssert=1
   This applies to some early vxworks, all digic 6, and some other DryOS 52 and later.
+  For ixus30 and ixus 40, add
+   -DVX_OLD_PTP=1
  * Save your parse configuration with the big floppy icon. Note: Parse configurations are global
    within Ghidra, not specific to a particular project or program.
  * Click "Parse to Program", and continue when prompted
