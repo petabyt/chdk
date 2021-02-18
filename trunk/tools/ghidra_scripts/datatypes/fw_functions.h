@@ -21,6 +21,8 @@ DryOS cams:
 -DCAM_DRYOS_REL=<PLATFORMOSVER from makefile.inc
 Some later DryOS and early vxworks
 -DCAM_3ARG_DebugAssert=1
+Ixus 30 / 40
+-DVX_OLD_PTP=1
 
 All (ghidra default)
 -D__builtin_va_list=void *
@@ -32,6 +34,7 @@ without ifdefs.
 #ifndef FW_FUNCTIONS_H
 #define FW_FUNCTIONS_H
 #include "fw_types.h"
+#include "ptp_handlers.h"
 __stdcall int * GetSystemTime(int *t);
 __stdcall int GetZoomLensCurrentPosition(void);
 __stdcall int GetZoomLensCurrentPoint(void);
