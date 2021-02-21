@@ -410,6 +410,10 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "default_assert_handler", OPTIONAL|UNUSED },
     { "default_exception_handler", OPTIONAL|UNUSED },
     { "default_panic_handler", OPTIONAL|UNUSED },
+    { "get_self_task_errno_pointer", OPTIONAL|UNUSED },
+    { "get_self_task_id", OPTIONAL|UNUSED },
+    { "get_task_properties", OPTIONAL|UNUSED },
+    { "dry_error_printf", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -3441,6 +3445,27 @@ int sig_match_default_panic_handler(firmware *fw, iter_state_t *is, sig_rule_t *
     return save_sig_with_j(fw,rule->name,regs[0]);
 }
 
+int sig_match_get_task_properties(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(fw_search_insn(fw,is,search_disasm_str_ref,0,"Occured Time  %s\n",(uint32_t)is->adr+170)) {
+        // expect printf function follow by call
+        if(!find_next_sig_call(fw,is,16,"dry_error_printf")) {
+            printf("get_task_properties: no match dry_error_printf 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+            printf("sig_match_get_task_properties: no match bl 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+    }
+    printf("sig_match_get_task_properties: no match 'Occured Time' 0x%"PRIx64"\n",is->insn->address);
+    return 0;
+}
+
 int sig_match_enable_hdmi_power(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4891,13 +4916,17 @@ sig_rule_t sig_rules_main[]={
 {sig_match_kbd_read_keys, "kbd_read_keys",      "kbd_p1_f"},
 {sig_match_get_kbd_state, "GetKbdState",        "kbd_read_keys"},
 {sig_match_create_jumptable, "CreateJumptable", "InitializeAdjustmentSystem_FW"},
+// also finds DebugAssert
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly","Fopen_Fut"},
+{sig_match_near_str,"dry_error_printf",         "\nSystem Panic: Module = %d, Panic = %d\n",SIG_NEAR_AFTER(2,1)},
 // string switched between Dry58p3 and Dry58p9
 {sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]",         0,              SIG_DRY_MAX(58)},
 {sig_match_get_semaphore_value,"GetSemaphoreValue","BlankRaw(%d)",      0,              SIG_DRY_MIN(58)},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW",              0,              SIG_DRY_MAX(57)},
 {sig_match_open,    "open",                     "Open_low",             0,              SIG_DRY_MIN(58)},
+{sig_match_named,   "get_self_task_errno_pointer","open",               SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "get_self_task_id",         "get_self_task_errno_pointer",SIG_NAMED_NTH(1,SUB)},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
@@ -5018,6 +5047,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_default_assert_handler,"default_assert_handler","init_error_handlers"},
 {sig_match_default_exception_handler,"default_exception_handler","init_error_handlers"},
 {sig_match_default_panic_handler,"default_panic_handler","init_error_handlers"},
+{sig_match_get_task_properties,"get_task_properties","default_assert_handler"},
 {sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
