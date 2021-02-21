@@ -437,6 +437,19 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "Close_low", OPTIONAL|UNUSED },
     { "Open_low", OPTIONAL|UNUSED },
 
+    // underlying functions of F*_Fut functions, for analysis
+    { "fclose_low", OPTIONAL|UNUSED },
+//    { "feof_low", OPTIONAL|UNUSED },
+//    { "fflush_low", OPTIONAL|UNUSED },
+    { "fgets_low", OPTIONAL|UNUSED },
+    { "fopen_low", OPTIONAL|UNUSED },
+    { "fut_prepare", OPTIONAL|UNUSED },
+    { "fut_finish", OPTIONAL|UNUSED },
+    { "fut_flush", OPTIONAL|UNUSED },
+    { "fread_low", OPTIONAL|UNUSED },
+    { "fseek_low", OPTIONAL|UNUSED },
+    { "fwrite_low", OPTIONAL|UNUSED },
+
     { "MFOn", OPTIONAL },
     { "MFOff", OPTIONAL },
     { "PT_MFOn", OPTIONAL },
@@ -1409,6 +1422,32 @@ int sig_match_screenlock_helper(firmware *fw, iter_state_t *is, sig_rule_t *rule
         return 0;
     }
     return save_sig_with_j(fw,rule->name,adr);
+}
+
+int sig_match_fclose_low(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        // printf("sig_match_fclose_low: missing ref\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,24,"strlen")) {
+        // printf("sig_match_fclose_low: no strlen\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,26,"malloc")) {
+        // printf("sig_match_fclose_low: no malloc\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,14,"strcpy")) {
+        // printf("sig_match_fclose_low: no strcpy\n");
+        return 0;
+    }
+
+    if(!insn_match_find_nth(fw,is,12,3,match_bl_blximm)) {
+        // printf("sig_match_fclose_low: no bl\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_screenunlock(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4630,6 +4669,16 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "Fread_Fut",                "Fread_Fut_FW",},
 {sig_match_named,   "Fseek_Fut",                "Fseek_Fut_FW",},
 {sig_match_named,   "Fwrite_Fut",               "Fwrite_Fut_FW",},
+{sig_match_named,   "fopen_low",                "Fopen_Fut",            SIG_NAMED_NTH(3,SUB)},
+{sig_match_named,   "fut_prepare",              "Fopen_Fut",            SIG_NAMED_NTH(1,SUB)},
+{sig_match_named,   "fut_finish",               "Fopen_Fut",            SIG_NAMED_NTH(4,SUB)},
+// high level functions not yet matched
+//{sig_match_named,   "feof_low",                 "Feof_Fut",             SIG_NAMED_NTH(2,SUB)},
+//{sig_match_named,   "fflush_low",               "Fflush_Fut",           SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "fread_low",                "Fread_Fut",            SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "fseek_low",                "Fseek_Fut",            SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "fwrite_low",               "Fwrite_Fut",           SIG_NAMED_NTH(2,SUB)},
+
 {sig_match_named,   "GetAdChValue",             "GetAdChValue_FW",},
 {sig_match_named,   "GetCurrentAvValue",        "GetCurrentAvValue_FW",},
 {sig_match_named,   "GetCurrentShutterSpeed",   "GetCurrentShutterSpeed_FW",},
@@ -4754,6 +4803,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"ImagerActivate",           "Fail ImagerActivate(ErrorCode:%x)\r",SIG_NEAR_BEFORE(6,1)},
 {sig_match_screenlock_helper,"screenlock_helper","UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_named,   "ScreenLock",               "screenlock_helper",SIG_NAMED_SUB},
+{sig_match_fclose_low,"fclose_low",             "Fclose_Fut"},
+{sig_match_named,   "fut_flush",                "fclose_low",          SIG_NAMED_NTH(1,SUB)},
 //{sig_match_screenlock,"ScreenLock",             "UIFS_DisplayFirmUpdateView_FW"},
 {sig_match_screenunlock,"ScreenUnlock",         "screenlock_helper",    0,SIG_DRY_MAX(55)},
 {sig_match_near_str,"ScreenUnlock",             "PB._ErrorRef",         SIG_NEAR_AFTER(8,2)|SIG_NEAR_JMP_SUB,SIG_DRY_RANGE(57,58)},
@@ -4822,6 +4873,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"strtol",                   "prio <task ID> <priority>\n",SIG_NEAR_AFTER(7,1)},
 {sig_match_exec_evp,"ExecuteEventProcedure",    "Can not Execute "},
 {sig_match_fgets_fut,"Fgets_Fut",               "CheckSumAll_FW",},
+{sig_match_named,   "fgets_low",                "Fgets_Fut",            SIG_NAMED_NTH(2,SUB)},
 {sig_match_log,     "_log",                     "_log10",},
 {sig_match_pow_dry_52,"_pow",                   "GetDefectTvAdj_FW",    0,                  SIG_DRY_MAX(52)},
 {sig_match_pow_dry_gt_52,"_pow",                "GetDefectTvAdj_FW",    0,                  SIG_DRY_MIN(53)},
