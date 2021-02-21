@@ -424,5 +424,23 @@ __stdcall int TryReceiveMessageQueue(int msgq, int *dst);
 __stdcall int PostMessageQueue(int msgq,int val,int timeout);
 __stdcall int TryPostMessageQueue(int msgq,int val);
 __stdcall int GetNumberOfPostedMessages(int msgq,int *res);
+
+// lower level file IO functions for the *_Fut system
+__stdcall FILE * fopen_low(const char *filename, const char *mode);
+__stdcall int fclose_low(FILE *f);
+__stdcall int fread_low(void *buf, int elsize, int count, FILE *f);
+__stdcall int fwrite_low(const void *buf, int elsize, int count, FILE *f);
+__stdcall int fseek_low(FILE *f, int offset, int whence);
+__stdcall int fflush_low(FILE *f);
+__stdcall int feof_low(FILE *f);
+__stdcall int fflush_low(FILE *f);
+__stdcall char * fgets_low(char *buf, int n, FILE *f);
+// called at the start of most fut functions, checks path and takes fileio_semaphore
+__stdcall int fut_prepare(const char *name, int unk);
+// called at the end of most fut functions, gives fileio_semaphore
+__stdcall int fut_finish(int unk);
+// even lower level flush, called by _Fut functions, does actual Write
+__stdcall int fut_flush(FILE *f);
+
 #endif
 
