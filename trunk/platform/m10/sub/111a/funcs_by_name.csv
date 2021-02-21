@@ -546,7 +546,9 @@
 0xfc38a847,FAPrintf_FW
 0xfc38a24b,Fclose_Fut
 0xfc38a24b,Fclose_Fut_FW
+0xfc06fe0f,fclose_low
 0xfc38a329,Fgets_Fut
+0xfc06ff8b,fgets_low
 0xfc184815,File.ClearExifInfo_FW
 0xfc184929,File.Create_FW
 0xfc1848e5,File.Delete_AllImg_FW
@@ -557,6 +559,7 @@
 0xfc43f44b,FocusLensStopQuickly_FW
 0xfc38a223,Fopen_Fut
 0xfc38a223,Fopen_Fut_FW
+0xfc06fd75,fopen_low
 0xfc542f1d,FPGA.Bypass_FW
 0xfc542f15,FPGA.Update_FW
 0xfc542f19,FPGA.Ver_FW
@@ -564,13 +567,19 @@
 0xfc0d42b5,fprintWPSEThroughput_FW
 0xfc38a2bd,Fread_Fut
 0xfc38a2bd,Fread_Fut_FW
+0xfc06fe4d,fread_low
 0xfc38d48b,free
 0xfc443965,FreeMemory_FW
 0xfc142911,FreeUncacheableMemory
 0xfc38a35b,Fseek_Fut
 0xfc38a35b,Fseek_Fut_FW
+0xfc07001f,fseek_low
+0xfc38a3fd,fut_finish
+0xfc06fcb7,fut_flush
+0xfc38a3e5,fut_prepare
 0xfc38a2f3,Fwrite_Fut
 0xfc38a2f3,Fwrite_Fut_FW
+0xfc06fef9,fwrite_low
 0xfc0e3dc9,get_canon_mode_list
 0xfc20f5a7,get_current_deltasv
 0xfc362e57,get_current_exp

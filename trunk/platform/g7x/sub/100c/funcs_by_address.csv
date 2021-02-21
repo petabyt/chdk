@@ -124,6 +124,13 @@
 0xfc0659d9,task_UartLog
 0xfc065b49,StartRedirectUART_FW
 0xfc065be9,StopRedirectUART_FW
+0xfc067c1b,fut_flush
+0xfc067cd9,fopen_low
+0xfc067d73,fclose_low
+0xfc067db1,fread_low
+0xfc067e5d,fwrite_low
+0xfc067eef,fgets_low
+0xfc067f83,fseek_low
 0xfc0681df,task_FileScheduleTask
 0xfc069e65,task_ReadScheduleTask
 0xfc06b31d,task_FileWrite
@@ -1227,6 +1234,8 @@
 0xfc325cbd,Fgets_Fut
 0xfc325cef,Fseek_Fut
 0xfc325cef,Fseek_Fut_FW
+0xfc325d79,fut_prepare
+0xfc325d91,fut_finish
 0xfc325fb9,RegisterEventProcedure
 0xfc32600b,RegisterEventProcedure_alt1
 0xfc32600f,UnRegisterEventProcedure

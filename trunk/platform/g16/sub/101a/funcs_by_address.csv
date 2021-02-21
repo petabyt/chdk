@@ -118,6 +118,13 @@
 0xfc05f63d,task_UartLog
 0xfc05f7ad,StartRedirectUART_FW
 0xfc05f84d,StopRedirectUART_FW
+0xfc061aff,fut_flush
+0xfc061bbd,fopen_low
+0xfc061c57,fclose_low
+0xfc061c95,fread_low
+0xfc061d41,fwrite_low
+0xfc061dd3,fgets_low
+0xfc061e67,fseek_low
 0xfc062079,task_FileScheduleTask
 0xfc06385f,task_FileWrite
 0xfc06385f,task_FileWriteTask
@@ -1093,6 +1100,8 @@
 0xfc2b0329,Fgets_Fut
 0xfc2b035b,Fseek_Fut
 0xfc2b035b,Fseek_Fut_FW
+0xfc2b03e5,fut_prepare
+0xfc2b03fd,fut_finish
 0xfc2ba3cb,get_playrec_mode
 0xfc2c1575,EpilogShow_FW
 0xfc2c16a1,EpilogFile_FW

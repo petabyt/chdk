@@ -132,6 +132,13 @@
 0xfc06dbad,task_UartLog
 0xfc06dd1d,StartRedirectUART_FW
 0xfc06ddbd,StopRedirectUART_FW
+0xfc06fcb7,fut_flush
+0xfc06fd75,fopen_low
+0xfc06fe0f,fclose_low
+0xfc06fe4d,fread_low
+0xfc06fef9,fwrite_low
+0xfc06ff8b,fgets_low
+0xfc07001f,fseek_low
 0xfc070277,task_FileScheduleTask
 0xfc07203d,task_ReadScheduleTask
 0xfc0736b3,task_FileWrite
@@ -1627,6 +1634,8 @@
 0xfc38a329,Fgets_Fut
 0xfc38a35b,Fseek_Fut
 0xfc38a35b,Fseek_Fut_FW
+0xfc38a3e5,fut_prepare
+0xfc38a3fd,fut_finish
 0xfc38a6e9,PrintFirmVersion_FW
 0xfc38a70d,PrintFaexeVersioin_FW
 0xfc38a717,CreateFADBGSingalID_FW

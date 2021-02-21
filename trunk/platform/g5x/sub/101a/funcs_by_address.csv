@@ -1151,6 +1151,8 @@
 0xfc3b8f55,Fgets_Fut
 0xfc3b8f87,Fseek_Fut
 0xfc3b8f87,Fseek_Fut_FW
+0xfc3b9011,fut_prepare
+0xfc3b9029,fut_finish
 0xfc3b9ca5,GetFocusLensPullInMaxSpeed_FW
 0xfc3b9f05,GetCurrentTargetDistance_FW
 0xfc3b9f05,GetFocusLensSubjectDistance
@@ -1699,6 +1701,13 @@
 0xfc5ecca7,StopDisplayHDMIForFAMode_FW
 0xfc5eccb5,j_StartDisplayHDMIForFAMode_FW
 0xfc5eccb7,j_StopDisplayHDMIForFAMode_FW
+0xfc5ecfab,fut_flush
+0xfc5ed069,fopen_low
+0xfc5ed103,fclose_low
+0xfc5ed141,fread_low
+0xfc5ed1ed,fwrite_low
+0xfc5ed27f,fgets_low
+0xfc5ed313,fseek_low
 0xfc5ed38b,GetFocusLensCurrentPosition_FW
 0xfc5ed38f,GetFocusLensCurrentPositionWithMotor_FW
 0xfc5ed393,GetFocusLensDriveVoltage_FW

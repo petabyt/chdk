@@ -122,6 +122,13 @@
 0xfc05e71d,task_UartLog
 0xfc05e88d,StartRedirectUART_FW
 0xfc05e92d,StopRedirectUART_FW
+0xfc060c4f,fut_flush
+0xfc060d0d,fopen_low
+0xfc060da7,fclose_low
+0xfc060de5,fread_low
+0xfc060e91,fwrite_low
+0xfc060f23,fgets_low
+0xfc060fb7,fseek_low
 0xfc0611c9,task_FileScheduleTask
 0xfc062c97,task_ReadScheduleTask
 0xfc0640ad,task_FileWrite
@@ -1109,6 +1116,8 @@
 0xfc2d7e2d,Fgets_Fut
 0xfc2d7e5f,Fseek_Fut
 0xfc2d7e5f,Fseek_Fut_FW
+0xfc2d7ee9,fut_prepare
+0xfc2d7f01,fut_finish
 0xfc2dca4f,GetFocusLensPullInMaxSpeed_FW
 0xfc2dcd43,GetCurrentTargetDistance_FW
 0xfc2dcd43,GetFocusLensSubjectDistance

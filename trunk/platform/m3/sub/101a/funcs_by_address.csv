@@ -129,6 +129,13 @@
 0xfc064649,task_UartLog
 0xfc0647b9,StartRedirectUART_FW
 0xfc064859,StopRedirectUART_FW
+0xfc0668db,fut_flush
+0xfc066999,fopen_low
+0xfc066a33,fclose_low
+0xfc066a71,fread_low
+0xfc066b1d,fwrite_low
+0xfc066baf,fgets_low
+0xfc066c43,fseek_low
 0xfc066e9b,task_FileScheduleTask
 0xfc068b89,task_FileWrite
 0xfc068b89,task_FileWriteTask
@@ -1583,6 +1590,8 @@
 0xfc374055,Fgets_Fut
 0xfc374087,Fseek_Fut
 0xfc374087,Fseek_Fut_FW
+0xfc374111,fut_prepare
+0xfc374129,fut_finish
 0xfc374c61,task_CtrlSrv
 0xfc37763b,PT_PlaySound
 0xfc379a79,get_fstype
