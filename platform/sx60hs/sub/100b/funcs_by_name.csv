@@ -325,6 +325,7 @@
 0xfc1d9557,Driver.Create_FW
 0xfc1d9557,Driver_EnableEventProc_FW
 0xfc4b5489,DriveVcmOpenDrive_FW
+0x010e1c35,dry_error_printf
 0x01106a34,dry_memcpy
 0xfc06fbed,drysh_FW
 0xfc07ea17,DummyUSBConnection_FW
@@ -504,6 +505,9 @@
 0xfc30471b,get_displaytype
 0xfc331fb9,get_fstype
 0xfc2d79cf,get_playrec_mode
+0xfc338005,get_self_task_errno_pointer
+0x010e1751,get_self_task_id
+0x010e1b59,get_task_properties
 0xfc1b0fd9,GetAcceleHvPosition_FW
 0xfc141565,GetAccelerometerDataWithCorrect_FW
 0xfc3829f3,GetAccelerometerTemperature_FW
@@ -1115,6 +1119,7 @@
 0xfc2cf3c4,j_DeleteEventFlag
 0xfc2cf2ec,j_DeleteMessageQueue
 0xfc2cf3a4,j_DeleteSemaphore
+0xfc2cf2cc,j_dry_error_printf
 0xfc2cf444,j_dry_memcpy
 0xfc1907a7,j_E2LatOn_FW
 0xfc351d81,j_EF.GetEFModExamDriveType_FW
@@ -1130,6 +1135,8 @@
 0xfc06a36f,j_ExMem.FreeUncacheable_FW
 0xfc06a367,j_ExMem.View_FW
 0xfc336519,j_free
+0xfc2cf18c,j_get_self_task_id
+0xfc2cf19c,j_get_task_properties
 0xfc14165b,j_GetAcceleHvPosition_FW
 0xfc1d9489,j_GetAdChValue_FW
 0xfc0e364d,j_GetAdjTableVersion_FW

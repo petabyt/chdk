@@ -1,4 +1,7 @@
 0x010e1389,CreateTask_low
+0x010e1751,get_self_task_id
+0x010e1b59,get_task_properties
+0x010e1c35,dry_error_printf
 0x010e27c5,createsemaphore_low
 0x010e288b,givesemaphore_low
 0x010e28b3,takesemaphore_low
@@ -1161,8 +1164,10 @@
 0xfc2ef7a4,j_WaitForAnyEventFlagStrictly
 0xfc2ef7bc,j_TryPostMessageQueue
 0xfc2ef7d4,j_WaitForAllEventFlagStrictly
+0xfc2ef7e4,j_get_task_properties
 0xfc2ef7f4,j_WaitForAllEventFlag
 0xfc2ef7fc,j_GetEventFlagValue
+0xfc2ef824,j_get_self_task_id
 0xfc2ef84c,j_SetEventFlag
 0xfc2ef854,j__log10
 0xfc2ef85c,j_CreateBinarySemaphore
@@ -1170,6 +1175,7 @@
 0xfc2ef884,j_time
 0xfc2ef8ac,j_RegisterInterruptHandler
 0xfc2ef8b4,j_TakeSemaphoreStrictly
+0xfc2ef8bc,j_dry_error_printf
 0xfc2ef8d4,j_DeleteMessageQueue
 0xfc2ef8e4,j_GetNumberOfPostedMessages
 0xfc2ef8ec,j_ReceiveMessageQueue
@@ -1401,6 +1407,7 @@
 0xfc3623ef,free
 0xfc362421,strcat
 0xfc362443,strncpy
+0xfc3624a5,get_self_task_errno_pointer
 0xfc3624c9,strcpy
 0xfc3624c9,strcpy_FW
 0xfc3624d9,j_strcmp_FW

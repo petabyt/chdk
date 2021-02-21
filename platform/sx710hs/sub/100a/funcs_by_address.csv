@@ -17,6 +17,9 @@
 0x01103850,_pow
 0x011058d0,_sqrt
 0xbfe10b89,CreateTask_low
+0xbfe10f51,get_self_task_id
+0xbfe11359,get_task_properties
+0xbfe11435,dry_error_printf
 0xbfe11fc5,createsemaphore_low
 0xbfe1208b,givesemaphore_low
 0xbfe120b3,takesemaphore_low
@@ -866,6 +869,7 @@
 0xfc2c7c48,j_CheckAllEventFlag
 0xfc2c7c58,j_CheckAnyEventFlag
 0xfc2c7c60,j_TryReceiveMessageQueue
+0xfc2c7c68,j_dry_error_printf
 0xfc2c7c78,j_createsemaphore_low
 0xfc2c7c88,j_LocalTime
 0xfc2c7c98,j_CreateMessageQueueStrictly
@@ -879,6 +883,8 @@
 0xfc2c7ce8,j_CreateBinarySemaphore
 0xfc2c7cf0,j_DeleteSemaphore
 0xfc2c7d08,j_TakeSemaphore
+0xfc2c7d28,j_get_task_properties
+0xfc2c7d30,j_get_self_task_id
 0xfc2c7d38,j_strftime
 0xfc2c7d48,j_takesemaphore_low
 0xfc2c7d70,j_SleepTask
@@ -1095,6 +1101,7 @@
 0xfc328e89,j_strcmp_FW
 0xfc328e9d,strcmp
 0xfc328e9d,strcmp_FW
+0xfc328f2d,get_self_task_errno_pointer
 0xfc328f51,strlen
 0xfc328f51,strlen_FW
 0xfc328fa5,EngDrvRead
