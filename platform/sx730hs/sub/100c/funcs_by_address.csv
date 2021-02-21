@@ -436,6 +436,11 @@
 0xfc0fb559,SSFS_CompleteSynchroWrite_FW
 0xfc0fb559,SSFS_ShootPicture_FW
 0xfc0fb625,task_SsTask
+0xfc0fbd9b,set_exception_handler
+0xfc0fbda5,set_panic_handler
+0xfc0fbdef,default_assert_handler
+0xfc0fc153,default_exception_handler
+0xfc0fc363,default_panic_handler
 0xfc0fc7cf,ExecuteShutDownPropertyService_FW
 0xfc0fcd09,task_OpePlay
 0xfc0fcdeb,OpLog.Stop_FW
@@ -1125,9 +1130,11 @@
 0xfc3967d7,EF.IsIrisTypeKosaiShibori_FW
 0xfc39f697,task_SAEffect
 0xfc3a818d,memShow_FW
+0xfc3a87f1,init_error_handlers
 0xfc3a88a7,HardwareDefect_FW
 0xfc3a893d,DebugAssert
 0xfc3a8953,DebugAssert2
+0xfc3a895d,set_assert_handler
 0xfc3a90f3,open
 0xfc3a9163,close
 0xfc3a9269,Read

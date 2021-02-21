@@ -1,5 +1,6 @@
 0x010e1001,DebugAssert
 0x010e1017,DebugAssert2
+0x010e1021,set_assert_handler
 0x010e11e3,time
 0x010e124d,GetTimeOfSystem_FW
 0x010e1515,LocalTime
@@ -1004,6 +1005,7 @@
 0xfc1ee4df,close
 0xfc1ee5e5,Read
 0xfc1ee5e5,Read_FW
+0xfc1ee771,init_error_handlers
 0xfc1f02cd,omar_init
 0xfc1f1059,task__imageSensorTask
 0xfc1f159b,task__vBLKTask
@@ -1115,6 +1117,11 @@
 0xfc1f92b1,GetAdjDataAreaAddress_FW
 0xfc1f92b5,SetErasingSensorCleaningArea_FW
 0xfc1f9355,CreateUserSettingMirror_FW
+0xfc1fbc85,set_exception_handler
+0xfc1fbc8f,set_panic_handler
+0xfc1fbcd9,default_assert_handler
+0xfc1fbff7,default_exception_handler
+0xfc1fc1e1,default_panic_handler
 0xfc1fcce9,GetBuildDate_FW
 0xfc1fcced,PrintBuildDate_FW
 0xfc1fccf5,GetBuildTime_FW
@@ -1383,6 +1390,7 @@
 0xfc2fd82d,mzrm_sendmsg
 0xfc30190f,j_GiveSemaphore
 0xfc301e14,j_DebugAssert2
+0xfc301e6c,j_set_assert_handler
 0xfc301f4c,j_CreateCountingSemaphoreStrictly
 0xfc302034,j_AcquireRecursiveLock
 0xfc30206c,j_time

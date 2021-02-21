@@ -192,6 +192,9 @@
 0xfc294885,CzDebugPrintToFile_FW
 0x010c5c8d,DebugAssert
 0x010c5ca3,DebugAssert2
+0xfc0ba931,default_assert_handler
+0xfc0bac4b,default_exception_handler
+0xfc0bae2d,default_panic_handler
 0xfc158c65,DeleteController_FW
 0xfc2b0229,DeleteDirectory_Fut
 0x010c5421,DeleteEventFlag
@@ -837,6 +840,7 @@
 0xfc1418c5,ImagerActivate
 0xfc0b7ab3,imlInitialize_FW
 0xfc2df1e1,InactivateAdjLog_FW
+0xfc0999fd,init_error_handlers
 0xfc05e781,init_ex_drivers
 0xfc09dff5,initComDiscovery_FW
 0xfc1d2211,InitializeAdjustmentFunction_FW
@@ -1093,6 +1097,7 @@
 0xfc2a1548,j_RegisterInterruptHandler
 0xfc2a1340,j_ReleaseRecursiveLock
 0xfc1d1797,j_SDump_FW
+0xfc2a10a0,j_set_assert_handler
 0xfc30811d,j_set_control_event
 0xfc46cac9,j_SetAE_CdsGainValue_FW
 0xfc2a1530,j_SetEventFlag
@@ -1516,7 +1521,10 @@
 0xfc082985,sendDeauth_FW
 0xfc38d519,SendMechaCircuitData_FW
 0xfc020805,SensDefCrowdCheck_FW
+0x010c5cad,set_assert_handler
 0xfc3080ed,set_control_event
+0xfc0ba8dd,set_exception_handler
+0xfc0ba8e7,set_panic_handler
 0xfc46cb2b,SetAdj_AEMode_FW
 0xfc1c09cd,SetAdjAEIntegSmearLimitter_FW
 0xfc46b8b1,SetAdjAFIntegCrwAdd_FW

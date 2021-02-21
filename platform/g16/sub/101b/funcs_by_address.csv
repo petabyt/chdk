@@ -48,6 +48,7 @@
 0x010c5c65,AcquireRecursiveLockStrictly
 0x010c5c8d,DebugAssert
 0x010c5ca3,DebugAssert2
+0x010c5cad,set_assert_handler
 0x010c5f41,time
 0x010c5fab,GetTimeOfSystem_FW
 0x010c6289,LocalTime
@@ -240,6 +241,7 @@
 0xfc08fe6b,NewTaskShell_FW
 0xfc0900d3,atol_FW
 0xfc093e17,task_IMLApp
+0xfc0999fd,init_error_handlers
 0xfc09adc3,handle_PTP_OC_CloseSession
 0xfc09ae29,handle_PTP_OC_OpenSession
 0xfc09aec3,handle_PTP_OC_GetDeviceInfo
@@ -322,6 +324,11 @@
 0xfc0ba569,ChangePowerState_FW
 0xfc0ba5bb,EnableHDMIPower
 0xfc0ba5eb,DisableHDMIPower
+0xfc0ba8dd,set_exception_handler
+0xfc0ba8e7,set_panic_handler
+0xfc0ba931,default_assert_handler
+0xfc0bac4b,default_exception_handler
+0xfc0bae2d,default_panic_handler
 0xfc0bb3cb,UnLoadScript_FW
 0xfc0bb429,Printf_FW
 0xfc0bb433,LoadScript_FW
@@ -1036,6 +1043,7 @@
 0xfc294885,CzDebugPrintToFile_FW
 0xfc2a0673,UIFS_WirelessExecuteSendForever_FW
 0xfc2a0cd7,j_GiveSemaphore
+0xfc2a10a0,j_set_assert_handler
 0xfc2a10d0,j_CreateMessageQueue
 0xfc2a10d8,j_DebugAssert2
 0xfc2a1158,j_CreateCountingSemaphoreStrictly

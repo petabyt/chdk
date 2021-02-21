@@ -237,6 +237,9 @@
 0xfc6617bf,DcmWowFlaForSD_FW
 0x010e1009,DebugAssert
 0x010e101f,DebugAssert2
+0xfc0a6529,default_assert_handler
+0xfc0a6843,default_exception_handler
+0xfc0a6a25,default_panic_handler
 0xfc36dbaf,DeleteController_FW
 0xfc3b8dfd,DeleteDirectory_Fut
 0xbfe14c4d,DeleteEventFlag
@@ -988,6 +991,7 @@
 0xfc4d28c7,IMX183OBClamp.SetDeltaGainThresh_FW
 0xfc4d2911,IMX183OBClamp.SetKidsThresh_FW
 0xfc3bb00f,InactivateAdjLog_FW
+0xfc0a2499,init_error_handlers
 0xfc0669c1,init_ex_drivers
 0xfc1aa5f9,initComDiscovery_FW
 0xfc5e4ba9,InitializeAdjustmentFunction_FW
@@ -1288,6 +1292,7 @@
 0xfc66632f,j_ReloadMechaShutterAdjustment_FW
 0xfc5eca8b,j_ResetNFCSystemArea_FW
 0xfc5e408b,j_SDump_FW
+0xfc34cbc0,j_set_assert_handler
 0xfc39b075,j_set_control_event
 0xfc34d0f4,j_SetEventFlag
 0xfc5e3b59,j_SetStereoSeparation_FW
@@ -1781,7 +1786,10 @@
 0xfc47fca1,sendDeauth_FW
 0xfc660df9,SendMechaCircuitData_FW
 0xfc020bbf,SensDefCrowdCheck_FW
+0x010e1029,set_assert_handler
 0xfc39b045,set_control_event
+0xfc0a64d5,set_exception_handler
+0xfc0a64df,set_panic_handler
 0xfc664729,SetAdj_AEMode_FW
 0xfc4896f3,SetAdjAEIntegSmearLimitter_FW
 0xfc668b53,SetAdjAFIntegCrwAdd_FW
