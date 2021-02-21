@@ -442,5 +442,9 @@ __stdcall int fut_finish(int unk);
 // even lower level flush, called by _Fut functions, does actual Write
 __stdcall int fut_flush(FILE *f);
 
+__stdcall void set_assert_handler(void (*assert_handler)());
+__stdcall void set_exception_handler(void (*exception_handler)());
+__stdcall void set_panic_handler(void (*panic_handler)());
+
 #endif
 
