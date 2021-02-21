@@ -1,7 +1,10 @@
 0xdffc6385,CreateTask_low
+0xdffc6737,get_self_task_id
 0xdffc6769,createsemaphore_low
 0xdffc6807,givesemaphore_low
 0xdffc682f,takesemaphore_low
+0xdffc6d29,get_task_properties
+0xdffc6f91,dry_error_printf
 0xdffc9293,SleepTask
 0xdffc9293,SleepTask_FW
 0xdffc93bb,CreateTask
@@ -769,6 +772,7 @@
 0xe04253ff,task_ITCMainTask
 0xe0425cd7,SetRecAutoShutdownTime_FW
 0xe0425cf5,SetPlayAutoShutdownTime_FW
+0xe042ecd9,get_self_task_errno_pointer
 0xe0431637,screenlock_helper
 0xe043461d,task_MrkSetTask
 0xe0439821,get_displaytype

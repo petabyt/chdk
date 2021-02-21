@@ -16,6 +16,9 @@
 0x010f7ba0,_pow
 0x010f9c20,_sqrt
 0xbfe10b85,CreateTask_low
+0xbfe10f4d,get_self_task_id
+0xbfe11355,get_task_properties
+0xbfe1143d,dry_error_printf
 0xbfe11fcd,createsemaphore_low
 0xbfe12093,givesemaphore_low
 0xbfe120bb,takesemaphore_low
@@ -1015,6 +1018,9 @@
 0xfc34d14c,j_TakeSemaphoreStrictly
 0xfc34d15c,j_CreateBinarySemaphore
 0xfc34d164,j_DeleteSemaphore
+0xfc34d184,j_dry_error_printf
+0xfc34d1a4,j_get_task_properties
+0xfc34d1ac,j_get_self_task_id
 0xfc34d1dc,j_SleepTask
 0xfc34d1ec,j_takesemaphore_low
 0xfc34d20c,j_ClearEventFlag
@@ -1203,6 +1209,7 @@
 0xfc3bf301,strcpy
 0xfc3bf301,strcpy_FW
 0xfc3bf3a5,EngDrvRead
+0xfc3bf4a1,get_self_task_errno_pointer
 0xfc3bf4c5,strlen
 0xfc3bf4c5,strlen_FW
 0xfc3bf91d,j_strcmp_FW

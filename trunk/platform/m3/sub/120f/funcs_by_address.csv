@@ -15,6 +15,9 @@
 0x01103250,_pow
 0x011052d0,_sqrt
 0xbfe10b89,CreateTask_low
+0xbfe10f51,get_self_task_id
+0xbfe11359,get_task_properties
+0xbfe11435,dry_error_printf
 0xbfe11fc5,createsemaphore_low
 0xbfe1208b,givesemaphore_low
 0xbfe120b3,takesemaphore_low
@@ -1412,8 +1415,11 @@
 0xfc302204,j__pow
 0xfc30220c,j_LocalTime
 0xfc302214,j_GetEventFlagValue
+0xfc30221c,j_get_task_properties
 0xfc30223c,j_RegisterInterruptHandler
+0xfc30224c,j_get_self_task_id
 0xfc302284,j_PostMessageQueue
+0xfc30228c,j_dry_error_printf
 0xfc3022a4,j_WaitForAllEventFlag
 0xfc3022b4,j_DeleteMessageQueue
 0xfc3022bc,j_TakeSemaphoreStrictly
@@ -1668,6 +1674,7 @@
 0xfc380375,strcmp_FW
 0xfc3803d3,strlen
 0xfc3803d3,strlen_FW
+0xfc380425,get_self_task_errno_pointer
 0xfc380449,memcmp
 0xfc380449,memcmp_FW
 0xfc3804d3,sprintf_FW

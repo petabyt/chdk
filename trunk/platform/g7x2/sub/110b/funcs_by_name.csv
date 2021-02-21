@@ -314,6 +314,7 @@
 0xe0583245,DoMemToMemDarkSubtraction_FW
 0xe0552035,Driver.Create_FW
 0xe0552035,Driver_EnableEventProc_FW
+0xdffc6f91,dry_error_printf
 0xdffcc598,dry_memcpy
 0xe004c8d9,drysh_FW
 0xe003dd3d,DummyUSBConnection_FW
@@ -479,6 +480,9 @@
 0xe0374bcf,get_fstype
 0xe04fd7ab,get_nd_value
 0xe02f082b,get_playrec_mode
+0xe042ecd9,get_self_task_errno_pointer
+0xdffc6737,get_self_task_id
+0xdffc6d29,get_task_properties
 0xe0257423,GetAcceleHvPosition_FW
 0xe04921b5,GetAccelerometerDataWithCorrect_FW
 0xe055a2e1,GetAccelerometerTemperature_FW

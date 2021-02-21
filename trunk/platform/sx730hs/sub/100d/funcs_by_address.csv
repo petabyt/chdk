@@ -7,6 +7,9 @@
 0x010f85b0,_log10
 0x010fa798,_sqrt
 0xbfe10b85,CreateTask_low
+0xbfe10f4d,get_self_task_id
+0xbfe11355,get_task_properties
+0xbfe1143d,dry_error_printf
 0xbfe11fd1,createsemaphore_low
 0xbfe12097,givesemaphore_low
 0xbfe120bf,takesemaphore_low
@@ -879,9 +882,12 @@
 0xfc2e3435,DisableDebugLogMode_FW
 0xfc2f7651,task_FmidTask
 0xfc2f8d91,get_current_exp
+0xfc301bd4,j_get_task_properties
 0xfc301cfc,j__log10
+0xfc301d54,j_dry_error_printf
 0xfc301d7c,j_createsemaphore_low
 0xfc301d8c,j_CreateTask_low
+0xfc301d9c,j_get_self_task_id
 0xfc301dc4,j_takesemaphore_low
 0xfc301dcc,j_givesemaphore_low
 0xfc301dec,j_dry_memcpy
@@ -1114,6 +1120,7 @@
 0xfc369efd,j_strcmp_FW
 0xfc369f11,strcmp
 0xfc369f11,strcmp_FW
+0xfc369f5d,get_self_task_errno_pointer
 0xfc369f81,sprintf_FW
 0xfc369f93,strncpy
 0xfc369ff9,strlen

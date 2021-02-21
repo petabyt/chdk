@@ -1,4 +1,7 @@
 0x010e1389,CreateTask_low
+0x010e1751,get_self_task_id
+0x010e1b59,get_task_properties
+0x010e1c35,dry_error_printf
 0x010e27c5,createsemaphore_low
 0x010e288b,givesemaphore_low
 0x010e28b3,takesemaphore_low
@@ -1243,7 +1246,9 @@
 0xfc2cf05c,j_AcquireRecursiveLockStrictly
 0xfc2cf064,j_ReleaseRecursiveLock
 0xfc2cf0fc,j_CheckAllEventFlag
+0xfc2cf17c,j_get_self_task_id
 0xfc2cf184,j_TryTakeSemaphore
+0xfc2cf18c,j_get_task_properties
 0xfc2cf1a4,j_GetSemaphoreValue
 0xfc2cf1b4,j_CheckAnyEventFlag
 0xfc2cf1bc,j_WaitForAllEventFlag
@@ -1257,6 +1262,7 @@
 0xfc2cf27c,j_SleepTask
 0xfc2cf294,j_PostMessageQueue
 0xfc2cf2b4,j_RegisterInterruptHandler
+0xfc2cf2bc,j_dry_error_printf
 0xfc2cf2dc,j_DeleteMessageQueue
 0xfc2cf2e4,j_CreateEventFlag
 0xfc2cf2ec,j_GetEventFlagValue
@@ -1524,6 +1530,7 @@
 0xfc337f3f,free
 0xfc337f71,strncpy
 0xfc337f95,strcat
+0xfc337ff5,get_self_task_errno_pointer
 0xfc338019,strcpy
 0xfc338019,strcpy_FW
 0xfc338029,j_strcmp_FW

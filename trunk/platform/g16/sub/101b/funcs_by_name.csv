@@ -272,6 +272,7 @@
 0xfc254a71,DoAFLock
 0xfc1d12ef,Driver.Create_FW
 0xfc1d12ef,Driver_EnableEventProc_FW
+0x010c1cdd,dry_error_printf
 0x010d83b0,dry_memcpy
 0xfc06ed29,drysh_FW
 0xfc1d17a5,Dump32_FW
@@ -425,6 +426,9 @@
 0xfc308e03,get_fstype
 0xfc38ac7d,get_nd_value
 0xfc2ba40b,get_playrec_mode
+0xfc30e259,get_self_task_errno_pointer
+0x010c17df,get_self_task_id
+0x010c1bed,get_task_properties
 0xfc1481ed,GetAccelerometerDataWithCorrect_FW
 0xfc37873d,GetAccelerometerTemperature_FW
 0xfc38e347,GetAccelX_atMechaCpu_FW
@@ -923,6 +927,7 @@
 0xfc2a1588,j_DeleteEventFlag
 0xfc2a1600,j_DeleteMessageQueue
 0xfc2a1650,j_DeleteSemaphore
+0xfc2a1250,j_dry_error_printf
 0xfc2a16d0,j_dry_memcpy
 0xfc1a4a61,j_E2LatOn_FW
 0xfc34ce69,j_EF.IsChargeFull_FW
@@ -937,6 +942,8 @@
 0xfc066b33,j_ExMem.View_FW
 0xfc30d86d,j_free
 0xfc1cba07,j_get_current_nd_value
+0xfc2a1580,j_get_self_task_id
+0xfc2a1460,j_get_task_properties
 0xfc1d1229,j_GetAdChValue_FW
 0xfc0eaf85,j_GetAdjTableVersion_FW
 0xfc1d1225,j_GetAdVBattBottom_FW

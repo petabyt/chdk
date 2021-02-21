@@ -340,6 +340,7 @@
 0xfc5ba86d,DoMemToMemDarkSubtraction_FW
 0xfc189f71,Driver.Create_FW
 0xfc189f71,Driver_EnableEventProc_FW
+0xbfe11435,dry_error_printf
 0x01100a8c,dry_memcpy
 0xfc07d649,drysh_FW
 0xfc07e401,DummyUSBConnection_FW
@@ -590,6 +591,9 @@
 0xfc1f0253,get_displaytype
 0xfc388e15,get_fstype
 0xfc33e157,get_playrec_mode
+0xfc38d629,get_self_task_errno_pointer
+0xbfe10f51,get_self_task_id
+0xbfe11359,get_task_properties
 0xfc23d78b,GetAcceleHvPosition_FW
 0xfc23d791,GetAcceleOrientation_FW
 0xfc1f28a3,GetAccelerometerDataWithCorrect_FW
@@ -1212,6 +1216,7 @@
 0xfc314d34,j_DeleteEventFlag
 0xfc314c6c,j_DeleteMessageQueue
 0xfc314cac,j_DeleteSemaphore
+0xfc314964,j_dry_error_printf
 0xfc314e04,j_dry_memcpy
 0xfc156ef7,j_E2LatOn_FW
 0xfc5153ab,j_EF.GetAdjustPreSvOffset_FW
@@ -1232,6 +1237,8 @@
 0xfc077613,j_ExMem.FreeUncacheable_FW
 0xfc07760b,j_ExMem.View_FW
 0xfc38ccf9,j_free
+0xfc314d44,j_get_self_task_id
+0xfc314b5c,j_get_task_properties
 0xfc1f2999,j_GetAcceleHvPosition_FW
 0xfc1f299d,j_GetAcceleOrientation_FW
 0xfc189ea9,j_GetAdChValue_FW
