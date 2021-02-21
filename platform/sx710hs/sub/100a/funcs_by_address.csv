@@ -128,6 +128,13 @@
 0xfc056f3d,task_UartLog
 0xfc0570ad,StartRedirectUART_FW
 0xfc05714d,StopRedirectUART_FW
+0xfc05916b,fut_flush
+0xfc059229,fopen_low
+0xfc0592c3,fclose_low
+0xfc059301,fread_low
+0xfc0593ad,fwrite_low
+0xfc05943f,fgets_low
+0xfc0594d3,fseek_low
 0xfc05bf99,InitializeTestRec_FW
 0xfc05bfdd,TerminateTestRec_FW
 0xfc05c6b5,Initializedccd_FW
@@ -1044,6 +1051,8 @@
 0xfc326aa5,Fgets_Fut
 0xfc326ad7,Fseek_Fut
 0xfc326ad7,Fseek_Fut_FW
+0xfc326b61,fut_prepare
+0xfc326b79,fut_finish
 0xfc327b5f,GetFocusLensPullInMaxSpeed_FW
 0xfc327eaf,GetCurrentTargetDistance_FW
 0xfc327eaf,GetFocusLensSubjectDistance

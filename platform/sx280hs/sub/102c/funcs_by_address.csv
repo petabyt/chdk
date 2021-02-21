@@ -121,6 +121,13 @@
 0xfc050ed5,task_UartLog
 0xfc051045,StartRedirectUART_FW
 0xfc0510e5,StopRedirectUART_FW
+0xfc053253,fut_flush
+0xfc053311,fopen_low
+0xfc0533ab,fclose_low
+0xfc0533e9,fread_low
+0xfc053495,fwrite_low
+0xfc053527,fgets_low
+0xfc0535bb,fseek_low
 0xfc053903,task_FileScheduleTask
 0xfc05509d,task_FileWrite
 0xfc05509d,task_FileWriteTask
@@ -1123,6 +1130,8 @@
 0xfc28fefd,Fgets_Fut
 0xfc28ff2f,Fseek_Fut
 0xfc28ff2f,Fseek_Fut_FW
+0xfc28ffb9,fut_prepare
+0xfc28ffd1,fut_finish
 0xfc297079,UIFS_GetNumOfOptZoomPos_FW
 0xfc297165,UIFS_MoveZoomTo_FW
 0xfc29778f,SetPropertyCase

@@ -766,6 +766,13 @@
 0xfc2335a9,task_MetaCtgPrsTask
 0xfc2380a5,task_FileManMarkAllTask
 0xfc23a37b,task_ScenarioMaker
+0xfc23bf27,fut_flush
+0xfc23bfe5,fopen_low
+0xfc23c07f,fclose_low
+0xfc23c0bd,fread_low
+0xfc23c169,fwrite_low
+0xfc23c1fb,fgets_low
+0xfc23c28f,fseek_low
 0xfc23c933,task_FilYuvMaker
 0xfc23d19f,task_DecJpgRd
 0xfc242043,task_SAlbumPlay
@@ -993,6 +1000,8 @@
 0xfc34c925,Fgets_Fut
 0xfc34c957,Fseek_Fut
 0xfc34c957,Fseek_Fut_FW
+0xfc34c9e1,fut_prepare
+0xfc34c9f9,fut_finish
 0xfc350f5f,task_BleA
 0xfc351425,Open_low
 0xfc3514ad,Close_low

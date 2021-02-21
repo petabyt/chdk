@@ -574,6 +574,8 @@
 0xe037105b,Fgets_Fut
 0xe037108d,Fseek_Fut
 0xe037108d,Fseek_Fut_FW
+0xe037111d,fut_prepare
+0xe0371135,fut_finish
 0xe0371491,CreateController_FW
 0xe0371517,DeleteController_FW
 0xe03715af,MoveControllerToTopOfZOrder_FW
@@ -1328,6 +1330,13 @@
 0xe0550da5,Edet.Create_FW
 0xe0550de5,EngApp.Delete_FW
 0xe0550e23,EngApp.Create_FW
+0xe05516a9,fut_flush
+0xe0551765,fopen_low
+0xe0551803,fclose_low
+0xe0551841,fread_low
+0xe05518f1,fwrite_low
+0xe0551987,fgets_low
+0xe0551a1f,fseek_low
 0xe0551bb9,j_InitializeMechaUnitExeTest_FW
 0xe0551bbd,j_TerminateMechaUnitExeTest_FW
 0xe0551bc1,j_IsUnitFirmMode_FW
