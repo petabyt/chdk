@@ -446,5 +446,9 @@ __stdcall void set_assert_handler(void (*assert_handler)());
 __stdcall void set_exception_handler(void (*exception_handler)());
 __stdcall void set_panic_handler(void (*panic_handler)());
 
+__stdcall int *get_self_task_errno_pointer(void);
+__stdcall int get_self_task_id(void);
+__stdcall int get_task_properties(int task_id, void *task_props);
+__stdcall void dry_error_printf(const char *fmt,...);
 #endif
 
