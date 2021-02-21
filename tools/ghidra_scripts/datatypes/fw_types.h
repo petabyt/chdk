@@ -113,7 +113,7 @@ typedef struct {
     int unknown1; // ???
     int (*f2)(); // ??? (0xFF8D5B24)
     int (*f3)(); // ??? (0xFF8D5B5C)
-    int more[];
+    int more[1];
     // more??
 } ptp_data;
 
@@ -124,5 +124,23 @@ typedef struct {
     const char *name;
     int (*func)();
 } eventproc_table_entry;
+
+// based on include/std/stdio.h
+// reverse engineered file struct. Appears to be valid for both vxworks and dryos
+// don't use this directly unless you absolutely need to
+// don't EVER try to create one yourself, as this isn't the full structure.
+typedef struct FILE_S {
+    int fd;         // used by Read/Write
+    unsigned len;   // +4 verfied in Fseek_FileStream
+    int unk0;       // +8
+    unsigned pos;   // +0xC verified in Fseek_FileStream
+    /* below not used in CHDK */
+    int unk1;        // +0x10
+    int unk2;        // +0x14
+    char * io_buf;      // +0x18 32k uncached allocated in Fopen_FileStream
+    int unk3;        // +0x20 related to StartFileAccess_Sem
+    char name[127]; // in reality, allocated dynamically but giving length gives better decompilation
+} FILE;
+
 #endif
 
