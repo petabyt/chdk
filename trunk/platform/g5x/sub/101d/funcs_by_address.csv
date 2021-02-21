@@ -1,5 +1,6 @@
 0x010e1009,DebugAssert
 0x010e101f,DebugAssert2
+0x010e1029,set_assert_handler
 0x010e11eb,time
 0x010e1255,GetTimeOfSystem_FW
 0x010e1589,LocalTime
@@ -273,6 +274,7 @@
 0xfc09e93d,task_JpegEncTask
 0xfc0a1475,task_CreateHeaderTask
 0xfc0a168d,drysh_FW
+0xfc0a2499,init_error_handlers
 0xfc0a2531,task_WBCtrl
 0xfc0a3361,ExMem.View_FW
 0xfc0a37f9,exmem_ualloc
@@ -283,6 +285,11 @@
 0xfc0a3927,ExMem.AllocCacheable_FW
 0xfc0a392f,exmem_free
 0xfc0a397d,ExMem.FreeCacheable_FW
+0xfc0a64d5,set_exception_handler
+0xfc0a64df,set_panic_handler
+0xfc0a6529,default_assert_handler
+0xfc0a6843,default_exception_handler
+0xfc0a6a25,default_panic_handler
 0xfc0a6e35,task_OBCtrlTask
 0xfc0a72a1,task_DevelopRawToYuv
 0xfc0a74a5,task_DevelopDist
@@ -968,6 +975,7 @@
 0xfc344613,SetZoomPermitTargetMaxSpeedPPS_FW
 0xfc34462b,GetZoomActuatorCurrentPosition_FW
 0xfc34c72b,j_GiveSemaphore
+0xfc34cc00,j_set_assert_handler
 0xfc34cc94,j_DebugAssert2
 0xfc34ccbc,j_CreateMessageQueue
 0xfc34cddc,j_CreateRecursiveLock

@@ -11,6 +11,7 @@
 0xdffc95d9,CreateTask_alt
 0xdffc96f5,DebugAssert
 0xdffc971b,DebugAssert2
+0xdffc9725,set_assert_handler
 0xdffc974d,CreateEventFlag
 0xdffc9787,DeleteEventFlag
 0xdffc97c5,CheckAnyEventFlag
@@ -216,6 +217,11 @@
 0xe0050eb3,task_ResizeTask
 0xe0052ff5,task_WbSeqTask
 0xe00547ef,task_DistTask
+0xe005544b,set_exception_handler
+0xe0055455,set_panic_handler
+0xe00554a1,default_assert_handler
+0xe00557e5,default_exception_handler
+0xe00559d3,default_panic_handler
 0xe0055d71,ExMem.View_FW
 0xe005604f,exmem_ualloc
 0xe00561d9,ExMem.AllocUncacheable_FW
@@ -226,6 +232,7 @@
 0xe00562dd,exmem_free
 0xe005632b,ExMem.FreeCacheable_FW
 0xe0056439,task_CreateHeaderTask
+0xe0056651,init_error_handlers
 0xe00569d5,task_OpePlay
 0xe0056b09,OpLog.Stop_FW
 0xe0056b1f,OpLog.WriteToROM_FW

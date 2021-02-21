@@ -1,5 +1,6 @@
 0x010e1001,DebugAssert
 0x010e1017,DebugAssert2
+0x010e1021,set_assert_handler
 0x010e11e3,time
 0x010e124d,GetTimeOfSystem_FW
 0x010e1581,LocalTime
@@ -289,6 +290,11 @@
 0xfc087d8b,OpLog.Terminate_FW
 0xfc08b8f5,drysh_FW
 0xfc08cfed,task_WBCtrl
+0xfc08ddb1,set_exception_handler
+0xfc08ddbb,set_panic_handler
+0xfc08de05,default_assert_handler
+0xfc08e11f,default_exception_handler
+0xfc08e301,default_panic_handler
 0xfc08e6cd,ExMem.View_FW
 0xfc08eb35,exmem_ualloc
 0xfc08eb63,ExMem.AllocUncacheable_FW
@@ -302,6 +308,7 @@
 0xfc08f00d,task_DevelopDist
 0xfc08f76b,task_DevelopResize
 0xfc08fbc5,task_DevelopJpeg
+0xfc0917c5,init_error_handlers
 0xfc0918a1,task_OBCtrlTask
 0xfc09fa97,HdmiRegDump_FW
 0xfc09fb0b,CecRegDump_FW
@@ -833,6 +840,7 @@
 0xfc2c19d5,UIFS_GetNumOfOptZoomPos_FW
 0xfc2c1aad,UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW
 0xfc2c7309,j_GiveSemaphore
+0xfc2c7780,j_set_assert_handler
 0xfc2c77e8,j_DebugAssert2
 0xfc2c7810,j_CreateMessageQueue
 0xfc2c7940,j_AcquireRecursiveLock

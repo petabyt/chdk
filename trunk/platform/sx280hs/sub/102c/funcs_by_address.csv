@@ -48,6 +48,7 @@
 0x010c5c15,AcquireRecursiveLockStrictly
 0x010c5c3d,DebugAssert
 0x010c5c53,DebugAssert2
+0x010c5c5d,set_assert_handler
 0x010c5ef1,time
 0x010c5f5b,GetTimeOfSystem_FW
 0x010c6239,LocalTime
@@ -265,6 +266,7 @@
 0xfc09089f,PTM_BackupUIProperty_FW
 0xfc09091f,GetParameterData
 0xfc095787,RegComEventProc_FW
+0xfc095999,init_error_handlers
 0xfc095a35,TurnOffE1_FW
 0xfc095ac9,task_Bye
 0xfc0971d3,handle_PTP_OC_CloseSession
@@ -312,6 +314,11 @@
 0xfc099ec9,ChangePowerState_FW
 0xfc099f1b,EnableHDMIPower
 0xfc099f51,DisableHDMIPower
+0xfc09a249,set_exception_handler
+0xfc09a253,set_panic_handler
+0xfc09a29d,default_assert_handler
+0xfc09a5b7,default_exception_handler
+0xfc09a799,default_panic_handler
 0xfc09b4cb,vsprintf
 0xfc09b4f9,strtolx
 0xfc09b63b,strtol
@@ -1016,6 +1023,7 @@
 0xfc247613,j_IsZoomActuatorResetSensorPlusSide_FW
 0xfc247623,GetZoomActuatorCurrentPosition_FW
 0xfc2514b9,j_GiveSemaphore
+0xfc2516e8,j_set_assert_handler
 0xfc2517b8,j_DebugAssert2
 0xfc2517fc,j_CreateCountingSemaphoreStrictly
 0xfc251834,j_CreateMessageQueue

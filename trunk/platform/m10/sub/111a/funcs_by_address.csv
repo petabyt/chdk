@@ -1,5 +1,6 @@
 0x010e1009,DebugAssert
 0x010e101f,DebugAssert2
+0x010e1029,set_assert_handler
 0x010e11eb,time
 0x010e1255,GetTimeOfSystem_FW
 0x010e1589,LocalTime
@@ -1009,6 +1010,7 @@
 0xfc1ebd63,close
 0xfc1ebe69,Read
 0xfc1ebe69,Read_FW
+0xfc1ebff5,init_error_handlers
 0xfc1ed685,omar_init
 0xfc1ed93b,task_DevelopModule
 0xfc1eeb71,task__imageSensorTask
@@ -1153,6 +1155,11 @@
 0xfc1f6a33,SetErasingSensorCleaningArea_FW
 0xfc1f6a3d,GetAdjDurianFlagSize_FW
 0xfc1f6acf,CreateUserSettingMirror_FW
+0xfc1f8a89,set_exception_handler
+0xfc1f8a93,set_panic_handler
+0xfc1f8add,default_assert_handler
+0xfc1f8df7,default_exception_handler
+0xfc1f8fd9,default_panic_handler
 0xfc1fa1ed,ExecuteShutDownPropertyService_FW
 0xfc1fab6f,task_WdtPrint
 0xfc1fabe1,task_WdtReset
@@ -1451,6 +1458,7 @@
 0xfc310a0b,UIFS_GetNumberOfDisplayedImage_FW
 0xfc3142ef,j_GiveSemaphore
 0xfc314804,j_DebugAssert2
+0xfc314878,j_set_assert_handler
 0xfc314928,j_CreateCountingSemaphoreStrictly
 0xfc314a48,j_AcquireRecursiveLock
 0xfc314a88,j_AcquireRecursiveLockStrictly

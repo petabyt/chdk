@@ -250,6 +250,9 @@
 0xfc2a011b,debugPrintOvserver_FW
 0xfc2a00d7,debugStartOvserver_FW
 0xfc29fc59,debugStopOvserver_FW
+0xfc1fbc69,default_assert_handler
+0xfc1fbf87,default_exception_handler
+0xfc1fc171,default_panic_handler
 0xfc36d86b,DeleteController_FW
 0xbfe14c99,DeleteEventFlag
 0xbfe150b9,DeleteMessageQueue
@@ -1121,6 +1124,7 @@
 0xfc131abf,ImagerActivate
 0xfc0bb4fb,imlInitialize_FW
 0xfc37aee7,InactivateAdjLog_FW
+0xfc1ee641,init_error_handlers
 0xfc0636dd,init_ex_drivers
 0xfc0bfde9,initComDiscovery_FW
 0xfc189fc9,InitializeAdjustmentFunction_FW
@@ -1453,6 +1457,7 @@
 0xfc547c49,j_ReloadEShutterFirstCurtainAdjustment_FW
 0xfc1c01a3,j_ResetNFCSystemArea_FW
 0xfc1894ab,j_SDump_FW
+0xfc301e48,j_set_assert_handler
 0xfc363215,j_set_control_event
 0xfc5a50a5,j_SetAE_CdsGainValue_FW
 0xfc302300,j_SetEventFlag
@@ -1981,7 +1986,10 @@
 0xfc085867,sendDeauth_FW
 0xfc44c91d,SendMechaCircuitData_FW
 0xfc020971,SensDefCrowdCheck_FW
+0x010e1021,set_assert_handler
 0xfc3631e5,set_control_event
+0xfc1fbc15,set_exception_handler
+0xfc1fbc1f,set_panic_handler
 0xfc5a5107,SetAdj_AEMode_FW
 0xfc180c85,SetAdjAEIntegSmearLimitter_FW
 0xfc5a509d,SetAE_CdsGainValue_FW

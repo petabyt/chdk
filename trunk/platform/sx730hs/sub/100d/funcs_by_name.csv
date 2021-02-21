@@ -262,6 +262,9 @@
 0xfc440299,DcmWowFlaForSD_FW
 0xfc3a8965,DebugAssert
 0xfc3a897b,DebugAssert2
+0xfc0fbe17,default_assert_handler
+0xfc0fc17b,default_exception_handler
+0xfc0fc38b,default_panic_handler
 0xfc320435,DeleteController_FW
 0xfc34c7e5,DeleteDirectory_Fut
 0xfc3698a5,DeleteEventFlag
@@ -1035,6 +1038,7 @@
 0xfc0eb613,ImgPlyInitForAdjustLCD_FW
 0xfc095bdd,imlInitialize_FW
 0xfc34c087,InactivateAdjLog_FW
+0xfc3a8819,init_error_handlers
 0xfc05d0c9,init_ex_drivers
 0xfc09e945,initComDiscovery_FW
 0xfc3eae9f,InitializeAdjustmentFunction_FW
@@ -1791,7 +1795,10 @@
 0xfc508abb,sendDeauth_FW
 0xfc43e451,SendMechaCircuitData_FW
 0xfc020ec5,SensDefCrowdCheck_FW
+0xfc3a8985,set_assert_handler
 0xfc340f19,set_control_event
+0xfc0fbdc3,set_exception_handler
+0xfc0fbdcd,set_panic_handler
 0xfc52bfb5,SetAdj_AEMode_FW
 0xfc3df6a5,SetAdjAEIntegSmearLimitter_FW
 0xfc52f60b,SetAdjAFIntegCrwAdd_FW

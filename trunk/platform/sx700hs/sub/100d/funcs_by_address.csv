@@ -48,6 +48,7 @@
 0x010c5c45,AcquireRecursiveLockStrictly
 0x010c5c6d,DebugAssert
 0x010c5c83,DebugAssert2
+0x010c5c8d,set_assert_handler
 0x010c5f21,time
 0x010c5f8b,GetTimeOfSystem_FW
 0x010c6281,LocalTime
@@ -252,6 +253,7 @@
 0xfc09e931,HdmiViewParameter_FW
 0xfc09f171,task_FsIoNotifyTask
 0xfc0a6c5f,RegComEventProc_FW
+0xfc0a6c8d,init_error_handlers
 0xfc0a6d29,TurnOffE1_FW
 0xfc0a6d91,task_Bye
 0xfc0a77db,handle_PTP_OC_CloseSession
@@ -313,6 +315,11 @@
 0xfc0ab3c9,ChangePowerState_FW
 0xfc0ab41b,EnableHDMIPower
 0xfc0ab451,DisableHDMIPower
+0xfc0ab6a5,set_exception_handler
+0xfc0ab6af,set_panic_handler
+0xfc0ab6f9,default_assert_handler
+0xfc0aba13,default_exception_handler
+0xfc0abbf5,default_panic_handler
 0xfc0afa5b,vsprintf
 0xfc0afca9,task_TimerUtility
 0xfc0b038f,handle_PTP_OC_0x9805
@@ -1016,6 +1023,7 @@
 0xfc28ddab,EnableDebugLogMode_FW
 0xfc28ddb5,DisableDebugLogMode_FW
 0xfc29ab53,j_GiveSemaphore
+0xfc29aea8,j_set_assert_handler
 0xfc29af68,j_CreateMessageQueue
 0xfc29afa0,j_DebugAssert2
 0xfc29b010,j_CreateCountingSemaphoreStrictly

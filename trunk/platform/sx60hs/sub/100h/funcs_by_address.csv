@@ -48,6 +48,7 @@
 0x010e5c65,AcquireRecursiveLockStrictly
 0x010e5c8d,DebugAssert
 0x010e5ca3,DebugAssert2
+0x010e5cad,set_assert_handler
 0x010e5e6f,time
 0x010e5ed9,GetTimeOfSystem_FW
 0x010e61a1,LocalTime
@@ -296,6 +297,7 @@
 0xfc0aac07,PTM_BackupUIProperty_FW
 0xfc0aacfd,GetParameterData
 0xfc0b926b,RegComEventProc_FW
+0xfc0b947d,init_error_handlers
 0xfc0b9519,TurnOffCamera_FW
 0xfc0b9519,TurnOffE1_FW
 0xfc0b9589,task_Bye
@@ -528,6 +530,11 @@
 0xfc0e436d,GetProductID_FW
 0xfc0e437d,GetAdjDataAreaAddress_FW
 0xfc0e438d,CreateUserSettingMirror_FW
+0xfc0e46e1,set_exception_handler
+0xfc0e46eb,set_panic_handler
+0xfc0e4735,default_assert_handler
+0xfc0e4a4f,default_exception_handler
+0xfc0e4c31,default_panic_handler
 0xfc0e7c31,sscanf_FW
 0xfc0e7c4d,strtolx
 0xfc0e7d8f,strtol
@@ -1225,6 +1232,7 @@
 0xfc2c5c0f,UIFS_WirelessExecuteSendForever_FW
 0xfc2c61b7,task_Cave2PbTask
 0xfc2ce96f,j_GiveSemaphore
+0xfc2ced84,j_set_assert_handler
 0xfc2cee68,j_DebugAssert2
 0xfc2cee88,j_CreateMessageQueue
 0xfc2cef28,j_CreateCountingSemaphoreStrictly

@@ -220,6 +220,9 @@
 0xfc54131f,DcmWowFlaForSD_FW
 0x010e1001,DebugAssert
 0x010e1017,DebugAssert2
+0xfc08de05,default_assert_handler
+0xfc08e11f,default_exception_handler
+0xfc08e301,default_panic_handler
 0xfc2d28b1,DeleteController_FW
 0xfc32696d,DeleteDirectory_Fut
 0xbfe14ca5,DeleteEventFlag
@@ -917,6 +920,7 @@
 0xfc1204b7,ImagerActivate
 0xfc393737,imlInitialize_FW
 0xfc328ccb,InactivateAdjLog_FW
+0xfc0917c5,init_error_handlers
 0xfc055ff1,init_ex_drivers
 0xfc0ec9d1,initComDiscovery_FW
 0xfc4acc4d,InitializeAdjustmentFunction_FW
@@ -1199,6 +1203,7 @@
 0xfc2c7998,j_ReleaseRecursiveLock
 0xfc4ba31b,j_ResetNFCSystemArea_FW
 0xfc4ac12f,j_SDump_FW
+0xfc2c7780,j_set_assert_handler
 0xfc2ffbe5,j_set_control_event
 0xfc2c7cd0,j_SetEventFlag
 0xfc4abc15,j_SetStereoSeparation_FW
@@ -1691,7 +1696,10 @@
 0xfc3b9ff5,sendDeauth_FW
 0xfc540ab5,SendMechaCircuitData_FW
 0xfc02095b,SensDefCrowdCheck_FW
+0x010e1021,set_assert_handler
 0xfc2ffbb5,set_control_event
+0xfc08ddb1,set_exception_handler
+0xfc08ddbb,set_panic_handler
 0xfc566c39,SetAdj_AEMode_FW
 0xfc3c4097,SetAdjAEIntegSmearLimitter_FW
 0xfc5695d7,SetAdjAFIntegCrwAdd_FW

@@ -231,6 +231,9 @@
 0xe0568293,DcmWowFlaForSD_FW
 0xdffc96f5,DebugAssert
 0xdffc971b,DebugAssert2
+0xe00554a1,default_assert_handler
+0xe00557e5,default_exception_handler
+0xe00559d3,default_panic_handler
 0xe0371517,DeleteController_FW
 0xe0370f15,DeleteDirectory_Fut
 0xdffc9787,DeleteEventFlag
@@ -976,6 +979,7 @@
 0xe0074fbb,IMX183OBClamp.SetDeltaGainThresh_FW
 0xe0074fc5,IMX183OBClamp.SetKidsThresh_FW
 0xe0373cf9,InactivateAdjLog_FW
+0xe0056651,init_error_handlers
 0xe00208bf,init_ex_drivers
 0xe0552f39,InitializeAdjustmentFunction_FW
 0xe0552ef9,InitializeAdjustmentSystem_FW
@@ -1685,7 +1689,10 @@
 0xe0568927,SelectPositionSignal_FW
 0xe05674c9,SendMechaCircuitData_FW
 0xe05af753,SensDefCrowdCheck_FW
+0xdffc9725,set_assert_handler
 0xe0371a61,set_control_event
+0xe005544b,set_exception_handler
+0xe0055455,set_panic_handler
 0xe0583e4b,SetAdj_AEMode_FW
 0xe0537783,SetAdjAEIntegSmearLimitter_FW
 0xe05869d1,SetAdjAFIntegCrwAdd_FW
