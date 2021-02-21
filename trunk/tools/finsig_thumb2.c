@@ -403,6 +403,13 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "zicokick_copy", OPTIONAL|UNUSED }, // used to identify Zico core Xtensa blobs
     { "init_ex_drivers", OPTIONAL|UNUSED }, // used to identify Omar core ARM blobs
     { "omar_init", OPTIONAL|UNUSED }, // used to identify Omar core ARM blobs
+    { "init_error_handlers", OPTIONAL|UNUSED }, // used to identify assert, exception and panic handlers
+    { "set_assert_handler", OPTIONAL|UNUSED },
+    { "set_exception_handler", OPTIONAL|UNUSED },
+    { "set_panic_handler", OPTIONAL|UNUSED },
+    { "default_assert_handler", OPTIONAL|UNUSED },
+    { "default_exception_handler", OPTIONAL|UNUSED },
+    { "default_panic_handler", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -3364,6 +3371,76 @@ int sig_match_omar_init(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return save_sig_with_j(fw,rule->name,fadr);
 }
 
+int sig_match_init_error_handlers(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,64,"init_ex_drivers")) {
+        printf("sig_match_init_error_handlers: no match init_ex_drivers\n");
+        return 0;
+    }
+    if(!insn_match_find_nth(fw,is,4,2,match_bl_blximm)) {
+        printf("sig_match_init_error_handlers: no match bl\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_default_assert_handler(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,14,"set_assert_handler")) {
+        printf("sig_match_default_assert_handler: no match set_assert_handler\n");
+        return 0;
+    }
+    // expect func r0
+    uint32_t regs[4];
+    if((get_call_const_args(fw,is,1,regs)&0x1)!=0x1) {
+        printf("sig_match_default_assert_handler: no match arg\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,regs[0]);
+}
+
+int sig_match_default_exception_handler(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,20,"set_exception_handler")) {
+        printf("sig_match_default_exception_handler: no match set_exception_handler\n");
+        return 0;
+    }
+    // expect func in r0
+    uint32_t regs[4];
+    if((get_call_const_args(fw,is,1,regs)&0x1)!=0x1) {
+        printf("sig_match_default_exception_handler: no match arg\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,regs[0]);
+}
+
+int sig_match_default_panic_handler(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,28,"set_panic_handler")) {
+        printf("sig_match_default_panic_handler: no match set_panic_handler\n");
+        return 0;
+    }
+    // expect func in r0
+    uint32_t regs[4];
+    if((get_call_const_args(fw,is,1,regs)&0x1)!=0x1) {
+        printf("sig_match_default_panic_handler: no match arg\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,regs[0]);
+}
+
 int sig_match_enable_hdmi_power(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4934,6 +5011,13 @@ sig_rule_t sig_rules_main[]={
 {sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
 {sig_match_init_ex_drivers,"init_ex_drivers",   "task_Startup"},
 {sig_match_omar_init,"omar_init",               "init_ex_drivers"},
+{sig_match_init_error_handlers,"init_error_handlers","task_Startup"},
+{sig_match_named,   "set_assert_handler",       "init_error_handlers",          SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "set_exception_handler",    "init_error_handlers",          SIG_NAMED_NTH(3,SUB)},
+{sig_match_named,   "set_panic_handler",        "init_error_handlers",          SIG_NAMED_NTH(4,JMP_SUB)},
+{sig_match_default_assert_handler,"default_assert_handler","init_error_handlers"},
+{sig_match_default_exception_handler,"default_exception_handler","init_error_handlers"},
+{sig_match_default_panic_handler,"default_panic_handler","init_error_handlers"},
 {sig_match_enable_hdmi_power,"EnableHDMIPower", "HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_disable_hdmi_power,"DisableHDMIPower","HecHdmiCecPhysicalCheckForScript_FW"},
 {sig_match_get_nd_value,"get_nd_value",         "PutInNdFilter",},
