@@ -43,6 +43,7 @@
 0xdffca149,GiveSemaphore_FW
 0xdffca179,GetSemaphoreValue
 0xdffca1d1,CreateTaskStrictly
+0xdffca1ef,CreateTaskStrictly_alt
 0xdffca211,CreateMessageQueueStrictly
 0xdffca22b,CreateEventFlagStrictly
 0xdffca245,CreateBinarySemaphoreStrictly
@@ -270,6 +271,7 @@
 0xe005b633,kbd_p1_f_cont
 0xe005b7b1,TurnOffE1_FW
 0xe005b81b,task_Bye
+0xe005bb93,task_HdmiCecTask
 0xe005bce1,ChangePowerState_FW
 0xe005bd31,EnableHDMIPower
 0xe005bd67,DisableHDMIPower
@@ -501,6 +503,7 @@
 0xe02b2a3d,LcdCon_GetLcdParameter_FW
 0xe02b2a6f,LcdCon_ShowLcdParameter_FW
 0xe02b2a95,LcdCon_SaveLcdParameter_FW
+0xe02b34e7,task_BrtCalcTask
 0xe02d0ad9,task_ExpDrv
 0xe02d0ad9,task_ExpDrvTask
 0xe02e548f,EnableDebugLogMode_FW
@@ -760,6 +763,7 @@
 0xe040c4eb,j_GetFaceAuthBinSize_FW
 0xe040c4ef,j_IsOKFaceAuthBinFile_FW
 0xe0414a45,task_SMAL_Enumeration
+0xe0418515,task_ColorSBJTask
 0xe0419079,task_MediaStatusMngr
 0xe04192ef,j_get_current_nd_value
 0xe041ca3f,qsort
@@ -832,6 +836,7 @@
 0xe0463383,vsprintf
 0xe046362b,TP_FirmwareUpdate_FW
 0xe0463661,TP_GetFirmwareVersion_FW
+0xe0463a0b,task_TouchPanel
 0xe0463c41,TouchPanelStartPolling_FW
 0xe0463ca5,TouchPanelStopPolling_FW
 0xe0463e25,TouchPanelExecRawDiffTest_FW

@@ -222,7 +222,6 @@
 0xbfe1558b,CreateRecursiveLockStrictly
 0xbfe11fcd,createsemaphore_low
 0xbfe149e5,CreateTask
-0xbfe15501,CreateTask_alt
 0xbfe149e5,CreateTask_FW
 0xbfe10b85,CreateTask_low
 0xbfe15501,CreateTaskStrictly
@@ -1084,7 +1083,6 @@
 0xfc34ce34,j_CreateRecursiveLockStrictly
 0xfc34d104,j_createsemaphore_low
 0xfc34ce3c,j_CreateTask
-0xfc34d0b4,j_CreateTask_alt
 0xfc34d0b4,j_CreateTaskStrictly
 0xfc08dcf5,j_CreateUserSettingMirror_FW
 0xfc34d264,j_DebugAssert

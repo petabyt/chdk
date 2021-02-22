@@ -315,6 +315,7 @@ NHSTUB(strtolx                                ,0xe04e8371) //  0
    DEF(task_InitFileModules                   ,0xe04200b1) //  0
    DEF(task_MovieRecord                       ,0xe038f12f) //  0
    DEF(task_PhySw                             ,0xe005b319) //  0
+   DEF(task_TouchPanel                        ,0xe0463a0b) //  0
    DEF(task_TricInitTask                      ,0xe025d527) //  0
    DEF(hook_CreateTask                        ,0xdffc93ba) //  0
 NHSTUB(time                                   ,0xdffca509) //  0
