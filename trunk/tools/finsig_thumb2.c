@@ -1191,6 +1191,71 @@ int sig_match_evp_table_veneer(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// like sig_match_str_r0_call, but check whether it's the same as existing func
+int sig_match_createtaskstrictly_alt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_createtaskstrictly_alt: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        if(is->insn->detail->arm.operands[0].reg == ARM_REG_R0) {
+            // printf("sig_match_str_r0_call: %s ref str %s ref 0x%"PRIx64"\n",rule->name,rule->ref_name,is->insn->address);
+            // TODO should check if intervening insn nuke r0
+            if(insn_match_find_next(fw,is,4,match_b_bl_blximm)) {
+                uint32_t adr=get_branch_call_insn_target(fw,is);
+                uint32_t adr2 = get_saved_sig_val("CreateTaskStrictly");
+                // only save IFF not identical to CreateTaskStrictly
+                if(adr == adr2) {
+                    // printf("sig_match_createtaskstrictly_alt: adr == CreateTaskStrictly\n");
+                    return 0;
+                }
+                adr2 = get_saved_sig_val("j_CreateTaskStrictly");
+                if(adr == adr2) {
+                    // printf("sig_match_createtaskstrictly_alt: adr == j_CreateTaskStrictly\n");
+                    return 0;
+                }
+                return save_sig_with_j(fw,rule->name,adr);
+            }
+        }
+    }
+    return 0;
+}
+
+// like named sub, but check if identical to existing CreateTask
+int sig_match_createtask_alt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    // if ref doesn't exist, quietly bail
+    if(!get_saved_sig_val(rule->ref_name)) {
+        return 0;
+    }
+
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,6,match_bl_blximm)) {
+        printf("sig_match_createtask_alt: bl match failed\n");
+        return 0;
+    }
+    uint32_t adr = get_branch_call_insn_target(fw,is);
+    uint32_t adr2 = get_saved_sig_val("CreateTask");
+    // only save IFF not identical to CreateTask
+    if(adr == adr2) {
+        // printf("sig_match_createtask_alt: adr == CreateTask\n");
+        return 0;
+    }
+    adr2 = get_saved_sig_val("j_CreateTask");
+    if(adr == adr2) {
+        // printf("sig_match_createtask_alt: adr == j_CreateTask\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,adr);
+}
+
+
 int sig_match_get_nd_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     // this match is only valid for cameras with both ND and Iris
@@ -4741,11 +4806,11 @@ sig_rule_t sig_rules_initial[]={
 {sig_match_evp_table_veneer,"RegisterEventProcTable_alt","RegisterEventProcTable"},
 {sig_match_evp_table_veneer,"UnRegisterEventProcTable_alt","UnRegisterEventProcTable"},
 {sig_match_str_r0_call,"CreateTaskStrictly",    "LowConsole",},
-{sig_match_str_r0_call,"CreateTaskStrictly_alt","HdmiCecTask",          0,                  SIG_DRY_MIN(59)},
 {sig_match_str_r0_call,"CreateTask",            "EvShel",},
-{sig_match_str_r0_call,"CreateTask_alt",        "PhySw",                0,                  SIG_DRY_MIN(58)},
 {sig_match_named,   "CreateTask_low",           "CreateTask",           (SIG_NAMED_NTH(2,SUB)|SIG_NAMED_NTH_RANGE(10)), SIG_DRY_MAX(52)},
 {sig_match_named,   "CreateTask_low",           "CreateTask",           (SIG_NAMED_NTH(3,SUB)|SIG_NAMED_NTH_RANGE(10)), SIG_DRY_MIN(54)},
+{sig_match_createtaskstrictly_alt,"CreateTaskStrictly_alt","HdmiCecTask",0,                 SIG_DRY_MIN(58)},
+{sig_match_createtask_alt,"CreateTask_alt",     "CreateTaskStrictly_alt",0,                 SIG_DRY_MIN(58)},
 {sig_match_near_str,   "dry_memcpy",            "EP Slot%d",            SIG_NEAR_BEFORE(4,1)},
 {sig_match_add_ptp_handler,"add_ptp_handler",   "PTPtoFAPI_EventProcTask_Try",},
 {NULL},
