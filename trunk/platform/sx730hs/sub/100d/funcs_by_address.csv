@@ -270,6 +270,7 @@
 0xfc0971f7,task_LachesisTest
 0xfc0972a5,task_InitFileModules
 0xfc0972d7,task_CommonDrivers
+0xfc0979a1,is_movie_recording
 0xfc098567,WriteToRom_FW
 0xfc0985d9,EraseRom_FW
 0xfc098661,GetRomID_FW

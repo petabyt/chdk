@@ -570,6 +570,7 @@
 0xfc120141,GetVRAMVPixelsSize_FW
 0xfc120149,GetMovieJpegVRAMHPixelsSize_FW
 0xfc120151,GetMovieJpegVRAMVPixelsSize_FW
+0xfc120681,is_movie_recording
 0xfc120aff,get_displaytype
 0xfc12134f,TurnOnBackLight
 0xfc12138f,TurnOffBackLight

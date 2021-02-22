@@ -964,6 +964,7 @@
 0xfc02156d,InitializeSoundRec_FW
 0xfc143217,InitializeTestRec_FW
 0xfc091c71,InitializeWLAN_FW
+0xfc13d8bb,is_movie_recording
 0xfc3d300d,ISActive_FW
 0xfc4f3635,IsAdjCdsMode_FW
 0xfc3d263d,ISAutoCenter_FW

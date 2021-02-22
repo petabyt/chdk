@@ -861,6 +861,7 @@
 0xfc021381,InitializeSoundRec_FW
 0xfc0ee691,InitializeTestRec_FW
 0xfc0896a5,InitializeWLAN_FW
+0xfc145db1,is_movie_recording
 0xfc3eb20d,IsAdjCdsMode_FW
 0xfc38da19,ISAutoCenter_FW
 0xfc14a257,IsBatteryTemperature_FW

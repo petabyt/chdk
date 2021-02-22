@@ -618,6 +618,7 @@
 0xfc13e7bd,GetMovieJpegVRAMHPixelsSize_FW
 0xfc13e7c5,GetMovieJpegVRAMVPixelsSize_FW
 0xfc13e979,task_WBCtrl
+0xfc1405d1,is_movie_recording
 0xfc140d4f,task_Accelerometer
 0xfc141447,GetSlantData_FW
 0xfc141555,j_GetX_AxisAcceleration_FW

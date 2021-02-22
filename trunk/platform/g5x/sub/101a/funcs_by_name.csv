@@ -1014,6 +1014,7 @@
 0xfc02181d,InitializeSoundRec_FW
 0xfc06c259,InitializeTestRec_FW
 0xfc088a81,InitializeWLAN_FW
+0xfc1595f1,is_movie_recording
 0xfc662835,ISActive_FW
 0xfc6678c9,IsAdjCdsMode_FW
 0xfc661ba9,ISAutoCenter_FW

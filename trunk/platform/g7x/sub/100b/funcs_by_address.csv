@@ -642,6 +642,7 @@
 0xfc13bf01,GetMovieJpegVRAMHPixelsSize_FW
 0xfc13bf09,GetMovieJpegVRAMVPixelsSize_FW
 0xfc13c0c9,task_WBCtrl
+0xfc13d8bb,is_movie_recording
 0xfc13fcc5,GetInputAverageLevel_FW
 0xfc140151,SetStereoSeparation_FW
 0xfc140249,task_Thermometer
