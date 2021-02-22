@@ -477,6 +477,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "SetVideoOutType", OPTIONAL },
     { "GetVideoOutType", OPTIONAL },
 
+    { "is_movie_recording", OPTIONAL|UNUSED },
+
     {0,0,0},
 };
 
@@ -4957,6 +4959,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "MoveOpticalZoomAt",        "SS.MoveOpticalZoomAt_FW",SIG_NAMED_SUB},
 {sig_match_named,   "SetVideoOutType",          "SetVideoOutType_FW",SIG_NAMED_SUB},
 {sig_match_named,   "GetVideoOutType",          "GetVideoOutType_FW"},
+{sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
 // alternate match because "exec" lands near a literal pool on some cams
 {sig_match_near_str,"bzero",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(8,2)|SIG_NEAR_INDIRECT},
 //{sig_match_near_str,"bzero",                    "FromDate",             SIG_NEAR_BEFORE(2,1)},
