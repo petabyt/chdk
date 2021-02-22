@@ -1002,6 +1002,7 @@
 0xe05b04d3,InitializeSoundRec_FW
 0xe00272f3,InitializeTestRec_FW
 0xe0038a55,InitializeWLAN_FW
+0xe024d123,is_movie_recording
 0xe056948b,ISActive_FW
 0xe0591e1f,IsAdjCdsMode_FW
 0xe05686fd,ISAutoCenter_FW

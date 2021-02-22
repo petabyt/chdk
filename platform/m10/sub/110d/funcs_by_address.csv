@@ -476,6 +476,7 @@
 0xfc12a4db,GetVRAMVPixelsSize_FW
 0xfc12a4e3,GetMovieJpegVRAMHPixelsSize_FW
 0xfc12a4eb,GetMovieJpegVRAMVPixelsSize_FW
+0xfc12f963,is_movie_recording
 0xfc131787,task_HdmiCecTask
 0xfc1318d5,ChangePowerState_FW
 0xfc131925,EnableHDMIPower

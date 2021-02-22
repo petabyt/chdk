@@ -414,6 +414,7 @@
 0xe0232f41,task_AlbumReader
 0xe023394f,task_SAEffect
 0xe0236ae1,task_Cave2RecTask
+0xe024d123,is_movie_recording
 0xe02571bf,GetZ_AxisAcceleration_FW
 0xe02571cb,GetY_AxisAcceleration_FW
 0xe02571d7,GetX_AxisAcceleration_FW

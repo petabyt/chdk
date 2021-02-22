@@ -598,6 +598,7 @@
 0xfc134999,GetMovieJpegVRAMVPixelsSize_FW
 0xfc135671,UIFS_StartMovieRecord_FW
 0xfc135687,UIFS_StopMovieRecord_FW
+0xfc135ac1,is_movie_recording
 0xfc135f2b,get_displaytype
 0xfc0d2985,TurnOnBackLight,(stubs_entry_2.s)
 0xfc0d2997,TurnOffBackLight,(stubs_entry_2.s)

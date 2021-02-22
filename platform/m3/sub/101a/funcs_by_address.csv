@@ -545,6 +545,7 @@
 0xfc133da5,GetVRAMVPixelsSize_FW
 0xfc133dad,GetMovieJpegVRAMHPixelsSize_FW
 0xfc133db5,GetMovieJpegVRAMVPixelsSize_FW
+0xfc139337,is_movie_recording
 0xfc13b20b,task_HdmiCecTask
 0xfc13b385,ChangePowerState_FW
 0xfc13b3d5,EnableHDMIPower

@@ -390,6 +390,7 @@
 0xfc0d28dd,GetMovieJpegVRAMVPixelsSize_FW
 0xfc0d4309,task_InitFileModules
 0xfc0d4335,task_CommonDrivers
+0xfc0d5b11,is_movie_recording
 0xfc0d665b,task_HdmiCecTask
 0xfc0d67ad,ChangePowerState_FW
 0xfc0d67fd,EnableHDMIPower

@@ -1147,6 +1147,7 @@
 0xfc0214b9,InitializeSoundRec_FW
 0xfc08e6b7,InitializeTestRec_FW
 0xfc084049,InitializeWLAN_FW
+0xfc139337,is_movie_recording
 0xfc44dfc1,ISActive_FW
 0xfc44d63d,ISAutoCenter_FW
 0xfc44b64b,IsAvailableCZSpeed_FW
