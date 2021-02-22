@@ -450,5 +450,8 @@ __stdcall int *get_self_task_errno_pointer(void);
 __stdcall int get_self_task_id(void);
 __stdcall int get_task_properties(int task_id, void *task_props);
 __stdcall void dry_error_printf(const char *fmt,...);
+__stdcall int CreateTask_alt(const char *name, int prio, int stack_size, void *entry, int parm /*?*/,int core /*?*/);
+__stdcall int CreateTaskStrictly_alt(const char *name, int prio, int stack_size,int (*entry)(), int parm /*?*/,int core /*?*/);
+
 #endif
 
