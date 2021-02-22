@@ -220,6 +220,7 @@
 0xdffc93bb,CreateTask_FW
 0xdffc6385,CreateTask_low
 0xdffca1d1,CreateTaskStrictly
+0xdffca1ef,CreateTaskStrictly_alt
 0xe004542b,CreateUserSettingMirror_FW
 0xe05af727,CrossDefDetect_FW
 0xe037160b,CtrlMan_ChangeZOrder_FW
@@ -2154,6 +2155,7 @@
 0xe04f0eed,task_BA_Task
 0xe0490ea3,task_BatteryTask
 0xe003dad7,task_bomStopPTPIPTask
+0xe02b34e7,task_BrtCalcTask
 0xe005b81b,task_Bye
 0xe0032f57,task_CaptSeq
 0xe0032f57,task_CaptSeqTask
@@ -2161,6 +2163,7 @@
 0xe02e931b,task_Cave2PbTask
 0xe0236ae1,task_Cave2RecTask
 0xe013a3d1,task_ClockSavePU1
+0xe0418515,task_ColorSBJTask
 0xe04200e3,task_CommonDrivers
 0xe050ddb5,task_ComWireless
 0xe052594d,task_ConsoleSvr
@@ -2206,6 +2209,7 @@
 0xe00f2b5d,task_FsIoNotifyTask
 0xe006fda1,task_Gap4
 0xe00b5bc1,task_GapBS
+0xe005bb93,task_HdmiCecTask
 0xe022092d,task_ImagePlaySysConTask
 0xe0222c8d,task_ImageRetryConTask
 0xe04651af,task_ImageStoreTask
@@ -2283,6 +2287,7 @@
 0xe0401021,task_Thermometer
 0xe055b835,task_TimerUtility
 0xe040420d,task_TmgGen
+0xe0463a0b,task_TouchPanel
 0xe0258af1,task_TricDecVTask
 0xe025cb57,task_TricEncMsgTask
 0xe025c22d,task_TricEncVTask
