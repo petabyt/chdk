@@ -913,6 +913,16 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
     return (adr == sig_adr);
 }
 
+// macros for dry_min, dry_max fields
+#define SIG_DRY_MIN(min_rel) (min_rel),0
+#define SIG_DRY_MAX(max_rel) 0,(max_rel)
+#define SIG_DRY_RANGE(min_rel,max_rel) (min_rel),(max_rel)
+#define SIG_DRY_ANY 0,0
+
+// defines for flags field
+#define SIG_NO_D6 1
+#define SIG_NO_D7 2
+
 typedef struct sig_rule_s sig_rule_t;
 typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 // signature matching structure
@@ -923,6 +933,7 @@ struct sig_rule_s {
     int         param;              // function specific param/offset
     int         dryos_min;          // minimum dryos rel (0 = any)
     int         dryos_max;          // max dryos rel to apply this sig to (0 = any)
+    unsigned    flags;              // non rule specific match flags
     // DryOS version specific params / offsets - not used yet
     /*
     int         dryos52_param; // ***** UPDATE for new DryOS version *****
@@ -3413,10 +3424,6 @@ int sig_match_init_ex_drivers(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 int sig_match_omar_init(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
-    // not present on digic 7
-    if (fw->arch_flags & FW_ARCH_FL_VMSA) {
-        return 0;
-    }
     if(!init_disasm_sig_ref(fw,is,rule)) {
         return 0;
     }
@@ -4806,14 +4813,11 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
-#define SIG_DRY_MIN(min_rel) (min_rel),0
-#define SIG_DRY_MAX(max_rel) 0,(max_rel)
-#define SIG_DRY_RANGE(min_rel,max_rel) (min_rel),(max_rel)
 // bootstrap sigs:
 // Used to find the minimum needed to for find_generic_funcs to get generic task and eventproc matches
 // order is important
 sig_rule_t sig_rules_initial[]={
-// function         CHDK name                   ref name/string         func param          dry rel
+// function         CHDK name                   ref name/string         func param          dry rel             match flags
 // NOTE _FW is in the CHDK column, because that's how it is in sig_names
 {sig_match_str_r0_call, "ExportToEventProcedure_FW","ExportToEventProcedure"},
 {sig_match_reg_evp,     "RegisterEventProcedure",},
@@ -5122,7 +5126,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_zicokick_copy,"zicokick_copy",       "zicokick_start"},
 {sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
 {sig_match_init_ex_drivers,"init_ex_drivers",   "task_Startup"},
-{sig_match_omar_init,"omar_init",               "init_ex_drivers"},
+{sig_match_omar_init,"omar_init",               "init_ex_drivers",              0,          SIG_DRY_ANY,        SIG_NO_D7},
 {sig_match_init_error_handlers,"init_error_handlers","task_Startup"},
 {sig_match_named,   "set_assert_handler",       "init_error_handlers",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "set_exception_handler",    "init_error_handlers",          SIG_NAMED_NTH(3,SUB)},
@@ -5169,14 +5173,34 @@ sig_rule_t sig_rules_main[]={
 {NULL},
 };
 
+int sig_rule_applies(firmware *fw, sig_rule_t *rule)
+{
+    // dryos version
+    if((rule->dryos_min && fw->dryos_ver < rule->dryos_min) || (rule->dryos_max && fw->dryos_ver > rule->dryos_max)) {
+        return 0;
+    }
+    // empty flags == all
+    if(!rule->flags) {
+        return 1;
+    }
+    // digic 7 excluded, VMSA
+    if((rule->flags & SIG_NO_D7) && (fw->arch_flags & FW_ARCH_FL_VMSA)) {
+        return 0;
+    }
+    // digic 6 excluded, not VMSA
+    if((rule->flags & SIG_NO_D6) && !(fw->arch_flags & FW_ARCH_FL_VMSA)) {
+        return 0;
+    }
+    return 1;
+}
+
 void run_sig_rules(firmware *fw, sig_rule_t *sig_rules)
 {
     sig_rule_t *rule=sig_rules;
     // for convenience, pass an iter_state to match fns so they don't have to manage
     iter_state_t *is=disasm_iter_new(fw,0);
     while(rule->match_fn) {
-        if((rule->dryos_min && fw->dryos_ver < rule->dryos_min)
-            || (rule->dryos_max && fw->dryos_ver > rule->dryos_max)) {
+        if(!sig_rule_applies(fw,rule)) {
             rule++;
             continue;
         }
