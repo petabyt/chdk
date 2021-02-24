@@ -413,8 +413,8 @@
 0xfc0edfa7,GetZoomLensResetWidePosition_FW
 0xfc0ee1d1,GetCurrentZoomLensPosition_FW
 0xfc0ee1d1,GetCurrentZoomPosition_FW
-0xfc0ee1d1,GetZoomLensCurrentPosition
 0xfc0ee1d1,GetZoomLensCurrentPosition_FW
+0xfc0ee1d1,j_GetZoomLensCurrentPosition
 0xfc0ee23d,GetCurrentZoomLensPoint_FW
 0xfc0ee23d,GetCurrentZoomPoint_FW
 0xfc0ee23d,GetZoomLensCurrentPoint
@@ -671,6 +671,7 @@
 0xfc1823cd,GetLensErrorStatus_FW
 0xfc1824a9,task_ControlLog
 0xfc182785,task_MechaCPUTransfer
+0xfc183349,GetZoomLensCurrentPosition
 0xfc186249,task_MechaNCTask
 0xfc186b09,task_TmgGen
 0xfc18a5e3,task_MovieRecord

@@ -951,8 +951,8 @@
 0xfc1dab47,j_get_current_nd_value
 0xfc1dae5d,GetCurrentZoomLensPosition_FW
 0xfc1dae5d,GetCurrentZoomPosition_FW
-0xfc1dae5d,GetZoomLensCurrentPosition
 0xfc1dae5d,GetZoomLensCurrentPosition_FW
+0xfc1dae5d,j_GetZoomLensCurrentPosition
 0xfc1daec9,GetCurrentZoomLensPoint_FW
 0xfc1daec9,GetCurrentZoomPoint_FW
 0xfc1daec9,GetZoomLensCurrentPoint
@@ -1489,6 +1489,7 @@
 0xfc3cf6ef,get_current_nd_value
 0xfc3cf713,get_nd_value
 0xfc3cf7ff,GetNdMoveTime_FW
+0xfc3cfd1d,GetZoomLensCurrentPosition
 0xfc3d0c99,MoveCZToPoint_FW
 0xfc3d0cbf,MoveCZToWide_FW
 0xfc3d0cdf,MoveCZToTele_FW

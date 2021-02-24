@@ -215,7 +215,7 @@ NHSTUB(GetSystemTime                          ,0xfc442a25) //  0
 NHSTUB(GetVRAMHPixelsSize                     ,0xfc0e0cd5) //  0
 NHSTUB(GetVRAMVPixelsSize                     ,0xfc0e0cdd) //  0
 NHSTUB(GetZoomLensCurrentPoint                ,0xfc0ee23d) //  0
-NHSTUB(GetZoomLensCurrentPosition             ,0xfc0ee1d1) //  0
+NHSTUB(GetZoomLensCurrentPosition             ,0xfc183349) //  0
 NHSTUB(GiveSemaphore                          ,0xfc362ffd) //  0
 NHSTUB(IsStrobeChargeCompleted                ,0xfc11ebbd) //  0
 NHSTUB(LEDDrive                               ,0xfc3e9dc9) //  0
