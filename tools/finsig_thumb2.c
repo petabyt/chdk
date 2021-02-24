@@ -924,9 +924,17 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
 }
 
 // macros for dry_min, dry_max fields
-#define SIG_DRY_MIN(min_rel) (min_rel),0
-#define SIG_DRY_MAX(max_rel) 0,(max_rel)
-#define SIG_DRY_RANGE(min_rel,max_rel) (min_rel),(max_rel)
+#define SIG_DRY_MIN(min_rel) (min_rel)*FW_DRYOS_VER_MUL,0
+#define SIG_DRY_MAX(max_rel) 0,(max_rel)*FW_DRYOS_VER_MUL+(FW_DRYOS_VER_MUL-1)
+#define SIG_DRY_RANGE(min_rel,max_rel) (min_rel)*FW_DRYOS_VER_MUL,\
+                                       (max_rel)*FW_DRYOS_VER_MUL+(FW_DRYOS_VER_MUL-1)
+// patch level specifc
+#define SIG_DRY_MINP(min_rel,min_patch) (min_rel)*FW_DRYOS_VER_MUL + (min_patch),0
+#define SIG_DRY_MAXP(max_rel,max_patch) 0,(max_rel)*FW_DRYOS_VER_MUL + (max_patch)
+#define SIG_DRY_RANGEP(min_rel,min_patch,max_rel,max_patch) \
+                                        (min_rel)*FW_DRYOS_VER_MUL + (min_patch), \
+                                        (max_rel)*FW_DRYOS_VER_MUL + (max_patch)
+
 #define SIG_DRY_ANY 0,0
 
 // defines for flags field
@@ -941,34 +949,10 @@ struct sig_rule_s {
     char        *name;              // function name used in CHDK
     char        *ref_name;          // event / other name to match in the firmware
     int         param;              // function specific param/offset
-    int         dryos_min;          // minimum dryos rel (0 = any)
-    int         dryos_max;          // max dryos rel to apply this sig to (0 = any)
+    int         dryos_min;          // minimum fw->dryos_ver_full version (0 = any)
+    int         dryos_max;          // max fw->dryos_ver_full version to apply this sig to (0 = any)
     unsigned    flags;              // non rule specific match flags
-    // DryOS version specific params / offsets - not used yet
-    /*
-    int         dryos52_param; // ***** UPDATE for new DryOS version *****
-    int         dryos54_param;
-    int         dryos55_param;
-    int         dryos57_param;
-    int         dryos58_param;
-    */
 };
-
-// Get DryOS version specific param
-/*
-int dryos_param(firmware *fw, sig_rule_t *sig)
-{
-    switch (fw->dryos_ver)
-    {
-    case 52:    return sig->dryos52_param;
-    case 54:    return sig->dryos54_param;
-    case 55:    return sig->dryos55_param;
-    case 57:    return sig->dryos57_param;
-    case 58:    return sig->dryos58_param;
-    }
-    return 0;
-}
-*/
 
 // initialize iter state using address from ref_name, print error and return 0 if not found
 int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -5035,7 +5019,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
 
 // not present in d7, inlined in d6 dry 58p9+
-{sig_match_near_str,"data_synchronization_barrier","ER DlphCntInv",     SIG_NEAR_AFTER(3,2),SIG_DRY_MAX(58),    SIG_NO_D7},
+{sig_match_near_str,"data_synchronization_barrier","ER DlphCntInv",     SIG_NEAR_AFTER(3,2),SIG_DRY_MAXP(58,8),    SIG_NO_D7},
 // alternate match because "exec" lands near a literal pool on some cams
 {sig_match_near_str,"bzero",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(8,2)|SIG_NEAR_INDIRECT},
 //{sig_match_near_str,"bzero",                    "FromDate",             SIG_NEAR_BEFORE(2,1)},
@@ -5064,8 +5048,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_take_semaphore_strict, "TakeSemaphoreStrictly","Fopen_Fut"},
 {sig_match_near_str,"dry_error_printf",         "\nSystem Panic: Module = %d, Panic = %d\n",SIG_NEAR_AFTER(2,1)},
 // string switched between Dry58p3 and Dry58p9
-{sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]",         0,              SIG_DRY_MAX(58)},
-{sig_match_get_semaphore_value,"GetSemaphoreValue","BlankRaw(%d)",      0,              SIG_DRY_MIN(58)},
+{sig_match_get_semaphore_value,"GetSemaphoreValue","\tRaw[%i]",         0,              SIG_DRY_MAXP(58,8)},
+{sig_match_get_semaphore_value,"GetSemaphoreValue","BlankRaw(%d)",      0,              SIG_DRY_MINP(58,9)},
 {sig_match_stat,    "stat",                     "A/uartr.req"},
 {sig_match_open,    "open",                     "Open_FW",              0,              SIG_DRY_MAX(57)},
 {sig_match_open,    "open",                     "Open_low",             0,              SIG_DRY_MIN(58)},
@@ -5236,7 +5220,7 @@ sig_rule_t sig_rules_main[]={
 int sig_rule_applies(firmware *fw, sig_rule_t *rule)
 {
     // dryos version
-    if((rule->dryos_min && fw->dryos_ver < rule->dryos_min) || (rule->dryos_max && fw->dryos_ver > rule->dryos_max)) {
+    if((rule->dryos_min && fw->dryos_ver_full < rule->dryos_min) || (rule->dryos_max && fw->dryos_ver_full > rule->dryos_max)) {
         return 0;
     }
     // empty flags == all

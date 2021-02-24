@@ -2040,15 +2040,27 @@ void find_dryos_vers(firmware *fw)
             match_i = 0;
             min_adr = 0;
         }
-        fw->dryos_ver_str = (char *)adr2ptr(fw,fw->dryos_ver_list[match_i]);
-        fw->dryos_ver = atoi((char *)adr2ptr(fw,fw->dryos_ver_list[match_i]+strlen(sig)));
+        fw->dryos_ver_str = (const char *)adr2ptr(fw,fw->dryos_ver_list[match_i]);
+        const char *s = (const char *)adr2ptr(fw,fw->dryos_ver_list[match_i]+strlen(sig));
+        fw->dryos_ver = atoi(s);
+        if(s[4] == '+' && s[5] == 'p') {
+            fw->dryos_ver_patch = atoi(s+6);
+            if(fw->dryos_ver_patch >= FW_DRYOS_VER_MUL) {
+                fprintf(stderr,"WARNING unexpected patch revision %d\n",fw->dryos_ver_patch);
+            }
+        } else {
+            fw->dryos_ver_patch = 0;
+        }
+        fw->dryos_ver_full = fw->dryos_ver * FW_DRYOS_VER_MUL + fw->dryos_ver_patch;
         fw->dryos_ver_adr = fw->dryos_ver_list[match_i];
         fw->dryos_ver_ref_adr = min_adr;
         // fprintf(stderr,"main firmware version %s @ 0x%08x ptr 0x%08x\n",fw->dryos_ver_str,fw->dryos_ver_adr,min_adr);
     } else {
-        fw->dryos_ver=0;
-        fw->dryos_ver_str=NULL;
-        fw->dryos_ver_adr=0;
+        fw->dryos_ver = 0;
+        fw->dryos_ver_patch = 0;
+        fw->dryos_ver_full = 0;
+        fw->dryos_ver_str = NULL;
+        fw->dryos_ver_adr = 0;
     }
 }
 
