@@ -21,6 +21,8 @@
 0x010c5583,ClearEventFlag
 0x010c55a1,GetEventFlagValue
 0x010c55e1,RegisterInterruptHandler
+0x010c5673,j1_GetSRAndDisableInterrupt
+0x010c5677,j1_SetSR
 0x010c56b5,CreateMessageQueue
 0x010c570f,DeleteMessageQueue
 0x010c5765,ReceiveMessageQueue
@@ -58,6 +60,8 @@
 0x010c77bd,CreateRecursiveLock
 0x010c781f,AcquireRecursiveLock
 0x010c78d5,ReleaseRecursiveLock
+0x010d06bd,j2_GetSRAndDisableInterrupt
+0x010d06c7,j2_SetSR
 0x010d0809,j_mktime_ext
 0x010da178,dry_memcpy
 0x010da260,bzero
@@ -579,6 +583,8 @@
 0xfc109baf,task_MechaNCTask
 0xfc10a54b,task_MovieTranscoder
 0xfc10ac11,get_canon_mode_list
+0xfc12de15,GetSRAndDisableInterrupt
+0xfc12de27,SetSR
 0xfc12dfb1,GetMemInfo
 0xfc12e807,task_BatteryTask
 0xfc12ec71,GetVBatVoltage_FW
@@ -1073,9 +1079,11 @@
 0xfc251c4c,j_createsemaphore_low
 0xfc251c9c,j_time
 0xfc251cb4,j_SleepTask
+0xfc251cbc,j_SetSR
 0xfc251cc4,j_WaitForAnyEventFlag
 0xfc251ccc,j_CreateEventFlagStrictly
 0xfc251cdc,j_takesemaphore_low
+0xfc251d0c,j_GetSRAndDisableInterrupt
 0xfc251d14,j_DebugAssert
 0xfc251d3c,j_dry_memcpy
 0xfc251d44,j_bzero
@@ -1233,6 +1241,7 @@
 0xfc2a53f1,PrepareDirectory_x
 0xfc2a549b,PrepareDirectory_1
 0xfc2a549f,PrepareDirectory_0
+0xfc2a555f,_GetSystemTime
 0xfc2a60e1,PostLogicalEventForNotPowerType
 0xfc2a60e1,PostLogicalEventForNotPowerType_FW
 0xfc2a610d,PostLogicalEventToUI

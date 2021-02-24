@@ -21,6 +21,8 @@
 0xbfe11fc5,createsemaphore_low
 0xbfe1208b,givesemaphore_low
 0xbfe120b3,takesemaphore_low
+0xbfe13d6b,j2_GetSRAndDisableInterrupt
+0xbfe13d75,j2_SetSR
 0xbfe14999,SleepTask
 0xbfe14999,SleepTask_FW
 0xbfe14a31,CreateTask
@@ -37,6 +39,8 @@
 0xbfe14e71,ClearEventFlag
 0xbfe14ea1,GetEventFlagValue
 0xbfe14ef5,RegisterInterruptHandler
+0xbfe14fef,j1_GetSRAndDisableInterrupt
+0xbfe14ff3,j1_SetSR
 0xbfe15055,CreateMessageQueue
 0xbfe150b9,DeleteMessageQueue
 0xbfe1511b,ReceiveMessageQueue
@@ -528,6 +532,8 @@
 0xfc11c59d,OpenFastDir
 0xfc11c63d,ReadFastDir
 0xfc11c673,j_closedir
+0xfc13018d,GetSRAndDisableInterrupt
+0xfc13019f,SetSR
 0xfc130877,task_BatteryTask
 0xfc130beb,GetVBatVoltage_FW
 0xfc130beb,VbattGet
@@ -1435,6 +1441,8 @@
 0xfc302300,j_SetEventFlag
 0xfc302308,j_CreateBinarySemaphoreStrictly
 0xfc302318,j_TakeSemaphore
+0xfc302320,j_GetSRAndDisableInterrupt
+0xfc302328,j_SetSR
 0xfc302378,j_createsemaphore_low
 0xfc302380,j__log10
 0xfc3023a8,j_DeleteEventFlag
@@ -1652,6 +1660,7 @@
 0xfc37b629,EpilogFile_FW
 0xfc37b645,task_Epilog
 0xfc37b66f,EpilogMenu_FW
+0xfc37bd0b,_GetSystemTime
 0xfc37befd,strncpy
 0xfc37e7bb,GetLogicalEventName_FW
 0xfc37e801,PostLogicalEventForNotPowerType

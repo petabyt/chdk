@@ -1,3 +1,4 @@
+0xfc2a555f,_GetSystemTime
 0x010dbe08,_log
 0x010dc328,_log10
 0x010dc490,_pow
@@ -673,6 +674,7 @@
 0xfc3dce3d,GetSensorPreGain_FW
 0xfc3dd84b,GetShutterSpeedRegularMaxLimit_FW
 0xfc3dd85d,GetShutterSpeedRegularMinLimit_FW
+0xfc12de15,GetSRAndDisableInterrupt
 0xfc07ce65,getSTAList_FW
 0xfc0a479f,GetStringWithPrompt_FW
 0xfc3b342d,GetStrobePopUpActuatorCurrentState_FW
@@ -898,6 +900,10 @@
 0xfc17196b,IsStrobeChargeCompleted
 0xfc246fdf,IsZoomActuatorResetSensorPlusSide_FW
 0xfc1a12c9,IsZoomLensOutSidePosition_FW
+0x010c5673,j1_GetSRAndDisableInterrupt
+0x010c5677,j1_SetSR
+0x010d06bd,j2_GetSRAndDisableInterrupt
+0x010d06c7,j2_SetSR
 0xfc251b7c,j__log10
 0xfc251b2c,j__pow
 0xfc196ebd,j_AbortAEIntegralValue_FW
@@ -1032,6 +1038,7 @@
 0xfc25186c,j_GetSemaphoreValue
 0xfc3dd85b,j_GetShutterSpeedRegularMaxLimit_FW
 0xfc3dd86d,j_GetShutterSpeedRegularMinLimit_FW
+0xfc251d0c,j_GetSRAndDisableInterrupt
 0xfc3b3769,j_GetStrobePopUpActuatorCurrentState_FW
 0xfc1a7435,j_GetSwitchStatus_FW
 0xfc197ebf,j_GetUsableMaxAv_FW
@@ -1104,6 +1111,7 @@
 0xfc2afe51,j_set_control_event
 0xfc3e05c9,j_SetAE_CdsGainValue_FW
 0xfc251c14,j_SetEventFlag
+0xfc251cbc,j_SetSR
 0xfc1a73cd,j_SetStereoSeparation_FW
 0xfc05784d,j_ShowCameraLog_FW
 0xfc057851,j_ShowCameraLogInfo_FW
@@ -1715,6 +1723,7 @@
 0xfc3dce35,SetSensorPreGain_FW
 0xfc3dd80d,SetShutterSpeed_FW
 0xfc3dd7d5,SetShutterSpeedWithMecha_FW
+0xfc12de27,SetSR
 0xfc071a7f,SetSSIDForFAWLAN_FW
 0xfc138ae7,SetStereoSeparation_FW
 0xfc3b3783,SetStrobePopUpActuatorAmpereLimitMode_FW

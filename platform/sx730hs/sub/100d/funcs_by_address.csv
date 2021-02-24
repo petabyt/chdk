@@ -170,6 +170,8 @@
 0xfc06af67,PTM_BackupUIProperty_FW
 0xfc06afdf,GetParameterData
 0xfc071135,get_canon_mode_list
+0xfc074641,GetSRAndDisableInterrupt
+0xfc074653,SetSR
 0xfc079bc9,LoadParamDataFromAdjTableBin_FW
 0xfc079c75,LoadDataFromAdjTableBin_FW
 0xfc079d07,DeviceUniqueIDCheckSum_FW
@@ -959,6 +961,7 @@
 0xfc34125d,SetScriptMode_FW
 0xfc3412f1,UiEvnt_StartDisguiseCradleStatus_FW
 0xfc3412f9,UiEvnt_StopDisguiseCradleStatus_FW
+0xfc3414c9,_GetSystemTime
 0xfc342ed7,task_EdetSBJTask
 0xfc3445f1,CreateMessageQueue
 0xfc344655,DeleteMessageQueue
@@ -1114,6 +1117,8 @@
 0xfc369beb,ClearEventFlag
 0xfc369c1b,GetEventFlagValue
 0xfc369c79,RegisterInterruptHandler
+0xfc369d9f,j_GetSRAndDisableInterrupt
+0xfc369da3,j_SetSR
 0xfc369de9,strcat
 0xfc369e85,malloc
 0xfc369ebb,free

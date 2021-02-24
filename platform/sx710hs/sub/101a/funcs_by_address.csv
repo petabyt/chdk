@@ -24,6 +24,8 @@
 0xbfe11fc5,createsemaphore_low
 0xbfe1208b,givesemaphore_low
 0xbfe120b3,takesemaphore_low
+0xbfe13db9,j2_GetSRAndDisableInterrupt
+0xbfe13dc3,j2_SetSR
 0xbfe14969,SleepTask
 0xbfe14969,SleepTask_FW
 0xbfe14a3d,CreateTask
@@ -40,6 +42,8 @@
 0xbfe14e7d,ClearEventFlag
 0xbfe14ead,GetEventFlagValue
 0xbfe14f01,RegisterInterruptHandler
+0xbfe14fe7,j1_GetSRAndDisableInterrupt
+0xbfe14feb,j1_SetSR
 0xbfe15035,CreateMessageQueue
 0xbfe15099,DeleteMessageQueue
 0xbfe150fb,ReceiveMessageQueue
@@ -541,6 +545,8 @@
 0xfc110d61,get_dial_hw_position
 0xfc1126fd,task_MechaAlarm
 0xfc11626d,task_MrkSetTask
+0xfc11f6e1,GetSRAndDisableInterrupt
+0xfc11f6f3,SetSR
 0xfc11fb03,RegComEventProc_FW
 0xfc120423,imager_active_callback
 0xfc1204b7,ImagerActivate
@@ -886,6 +892,8 @@
 0xfc2c7cf0,j_CreateBinarySemaphore
 0xfc2c7cf8,j_DeleteSemaphore
 0xfc2c7d10,j_TakeSemaphore
+0xfc2c7d18,j_GetSRAndDisableInterrupt
+0xfc2c7d20,j_SetSR
 0xfc2c7d30,j_get_task_properties
 0xfc2c7d38,j_get_self_task_id
 0xfc2c7d40,j_strftime
@@ -1070,6 +1078,7 @@
 0xfc326adf,Fseek_Fut_FW
 0xfc326b69,fut_prepare
 0xfc326b81,fut_finish
+0xfc326e3b,_GetSystemTime
 0xfc327b67,GetFocusLensPullInMaxSpeed_FW
 0xfc327eb7,GetCurrentTargetDistance_FW
 0xfc327eb7,GetFocusLensSubjectDistance

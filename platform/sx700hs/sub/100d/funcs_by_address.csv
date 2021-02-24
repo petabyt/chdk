@@ -21,6 +21,8 @@
 0x010c54a9,ClearEventFlag
 0x010c54d9,GetEventFlagValue
 0x010c552d,RegisterInterruptHandler
+0x010c5613,j1_GetSRAndDisableInterrupt
+0x010c5617,j1_SetSR
 0x010c5661,CreateMessageQueue
 0x010c56c5,DeleteMessageQueue
 0x010c5727,ReceiveMessageQueue
@@ -58,6 +60,8 @@
 0x010c7701,CreateRecursiveLock
 0x010c7771,AcquireRecursiveLock
 0x010c783f,ReleaseRecursiveLock
+0x010d0797,j2_GetSRAndDisableInterrupt
+0x010d07a1,j2_SetSR
 0x010d094d,j_mktime_ext
 0x010d86b8,dry_memcpy
 0x010d87a0,bzero
@@ -548,6 +552,8 @@
 0xfc0faf31,OpenFastDir
 0xfc0fafd1,ReadFastDir
 0xfc0fb007,j_closedir
+0xfc1195c9,GetSRAndDisableInterrupt
+0xfc1195db,SetSR
 0xfc119acf,open
 0xfc119b3f,close
 0xfc119c45,Read
@@ -1073,6 +1079,8 @@
 0xfc29b498,j_DeleteSemaphore
 0xfc29b4b8,j_time
 0xfc29b4d0,j_createsemaphore_low
+0xfc29b4e0,j_GetSRAndDisableInterrupt
+0xfc29b4e8,j_SetSR
 0xfc29b4f0,j_DeleteEventFlag
 0xfc29b4f8,j_WaitForAnyEventFlag
 0xfc29b500,j_CreateEventFlagStrictly
@@ -1211,6 +1219,7 @@
 0xfc2f1caf,UIFS_StopMovieRecord_FW
 0xfc2f45df,UIFS_GetNumOfOptZoomPos_FW
 0xfc2f46ad,UIFS_MoveZoomTo_FW
+0xfc30052b,_GetSystemTime
 0xfc300a39,task_StartupImage
 0xfc303577,UIFS_IsAvailableShots_FW
 0xfc303a6b,UIFS_GetStillShotableNumber_FW

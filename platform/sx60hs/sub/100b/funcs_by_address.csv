@@ -21,6 +21,8 @@
 0x010e54c9,ClearEventFlag
 0x010e54f9,GetEventFlagValue
 0x010e554d,RegisterInterruptHandler
+0x010e5633,j1_GetSRAndDisableInterrupt
+0x010e5637,j1_SetSR
 0x010e5681,CreateMessageQueue
 0x010e56e5,DeleteMessageQueue
 0x010e5747,ReceiveMessageQueue
@@ -60,6 +62,8 @@
 0x010e68f1,AcquireRecursiveLock
 0x010e69bf,ReleaseRecursiveLock
 0x010e78cd,ChangeSDPortVoltage_FW
+0x010f772d,j2_GetSRAndDisableInterrupt
+0x010f7737,j2_SetSR
 0x010f78c5,j_mktime_ext
 0x01106a34,dry_memcpy
 0x01106b1c,bzero
@@ -593,6 +597,8 @@
 0xfc119383,j_closedir
 0xfc119805,get_dial_hw_position
 0xfc1198c9,get_canon_mode_list
+0xfc1362a9,GetSRAndDisableInterrupt
+0xfc1362bb,SetSR
 0xfc13638d,memShow_FW
 0xfc136d43,open
 0xfc136db3,close
@@ -1280,6 +1286,8 @@
 0xfc2cf37c,j_CreateBinarySemaphoreStrictly
 0xfc2cf39c,j_TakeSemaphore
 0xfc2cf3a4,j_DeleteSemaphore
+0xfc2cf3b4,j_GetSRAndDisableInterrupt
+0xfc2cf3bc,j_SetSR
 0xfc2cf3c4,j_DeleteEventFlag
 0xfc2cf3d4,j_createsemaphore_low
 0xfc2cf3dc,j_CreateEventFlagStrictly
@@ -1469,6 +1477,7 @@
 0xfc322acb,j_PTM_SetProprietyEnable_FW
 0xfc322ae3,j_PTM_BackupUIProperty_FW
 0xfc322aeb,PTM_RestoreUIProperty_FW
+0xfc322ccf,_GetSystemTime
 0xfc322ec1,set_control_event
 0xfc322ef1,j_set_control_event
 0xfc3230af,IsControlEventActive_FW
