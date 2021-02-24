@@ -4876,6 +4876,12 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetOpticalTemperature",    "GetOpticalTemperature_FW",},
 {sig_match_named,   "GetPropertyCase",          "GetPropertyCase_FW",   SIG_NAMED_SUB},
 {sig_match_named,   "GetSystemTime",            "GetSystemTime_FW",},
+{sig_match_named,   "_GetSystemTime",           "GetSystemTime",        SIG_NAMED_SUB},
+// d7 cams have an extra call in _GetSystemTime
+{sig_match_named,   "GetSRAndDisableInterrupt", "_GetSystemTime",       SIG_NAMED_SUB,      SIG_DRY_ANY,    SIG_NO_D7},
+{sig_match_named,   "GetSRAndDisableInterrupt", "_GetSystemTime",       SIG_NAMED_NTH(2,SUB),SIG_DRY_ANY,   SIG_NO_D6},
+{sig_match_named,   "SetSR",                    "_GetSystemTime",       SIG_NAMED_NTH(2,SUB),SIG_DRY_ANY,   SIG_NO_D7},
+{sig_match_named,   "SetSR",                    "_GetSystemTime",       SIG_NAMED_NTH(3,SUB),SIG_DRY_ANY,   SIG_NO_D6},
 {sig_match_named,   "GetUsableMaxAv",           "GetUsableMaxAv_FW",},
 {sig_match_named,   "GetUsableMinAv",           "GetUsableMinAv_FW",},
 // a different match would be needed for older, ND only cams maybe based on "AE Result Tv Setting "
