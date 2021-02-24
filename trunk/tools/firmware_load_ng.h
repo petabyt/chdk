@@ -80,6 +80,9 @@ typedef struct {
 
 #define FW_MAX_DRYOS_VERS 10
 
+// scale factor for combined version + patch
+#define FW_DRYOS_VER_MUL  100
+
 // loaded firmware
 typedef struct {
     union {
@@ -99,7 +102,9 @@ typedef struct {
     int             size32;         // Size of the firmware in 32 bit words
 
     int             dryos_ver;          // main firmware DryOS version number
-    char            *dryos_ver_str;     // main firmware DryOS version string
+    int             dryos_ver_patch;    // main firmware DryOS patch number (e.g 58p3 = 3)
+    int             dryos_ver_full;     // main firmware DryOS version number * FW_DRYOS_VER_MUL + patch level
+    const char      *dryos_ver_str;     // main firmware DryOS version string
     uint32_t        dryos_ver_adr;      // address of main firmware DryOS version string
     uint32_t        dryos_ver_ref_adr;  // address of pointer used to identify main fw string
     uint32_t        dryos_ver_list[FW_MAX_DRYOS_VERS]; // addresses of all found DryOS version strings
