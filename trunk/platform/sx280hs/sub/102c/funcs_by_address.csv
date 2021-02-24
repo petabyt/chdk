@@ -583,8 +583,12 @@
 0xfc109baf,task_MechaNCTask
 0xfc10a54b,task_MovieTranscoder
 0xfc10ac11,get_canon_mode_list
+0xfc12dcd9,dcache_clean_flush_and_disable
+0xfc12dd1f,dcache_flush_range
+0xfc12dde1,icache_flush_range
 0xfc12de15,GetSRAndDisableInterrupt
 0xfc12de27,SetSR
+0xfc12de47,data_synchronization_barrier
 0xfc12dfb1,GetMemInfo
 0xfc12e807,task_BatteryTask
 0xfc12ec71,GetVBatVoltage_FW

@@ -245,6 +245,9 @@
 0xfc020995,CrossDefDetect_FW
 0xfc020999,CrossPickUpDetect_FW
 0xfc36d95f,CtrlMan_ChangeZOrder_FW
+0xfc1301bf,data_synchronization_barrier
+0xfc130051,dcache_clean_flush_and_disable
+0xfc130097,dcache_flush_range
 0x010e1001,DebugAssert
 0x010e1017,DebugAssert2
 0xfc2a014d,debugOvserverNotify_FW
@@ -1126,6 +1129,7 @@
 0xfc5a97b3,HitISLensAgainstTopEdge_FW
 0xfc5a97e3,HitISLensToMechaEdge_FW
 0xfc5a99a5,HitISMechaEdgeInOpenControl_FW
+0xfc130159,icache_flush_range
 0xfc131a2b,imager_active_callback
 0xfc131abf,ImagerActivate
 0xfc0bb4fb,imlInitialize_FW

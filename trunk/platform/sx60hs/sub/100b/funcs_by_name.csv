@@ -217,6 +217,9 @@
 0xfc32124f,CtrlMan_ChangeZOrder_FW
 0xfc2c321b,CzDebugPrint_FW
 0xfc2c3227,CzDebugPrintToFile_FW
+0xfc1362db,data_synchronization_barrier
+0xfc13616d,dcache_clean_flush_and_disable
+0xfc1361b3,dcache_flush_range
 0x010e5c8d,DebugAssert
 0x010e5ca3,DebugAssert2
 0xfc286e03,debugOvserverNotify_FW
@@ -1024,6 +1027,7 @@
 0xfc4010c9,HitISLensAgainstTopEdge_FW
 0xfc4010f9,HitISLensToMechaEdge_FW
 0xfc4012c3,HitISMechaEdgeInOpenControl_FW
+0xfc136275,icache_flush_range
 0xfc13b29b,imager_active_callback
 0xfc13b32f,ImagerActivate
 0xfc0bbe57,imlInitialize_FW

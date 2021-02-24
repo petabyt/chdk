@@ -307,6 +307,9 @@
 0xfc0a3cd9,UIFS_CaptureNoneStop_FW
 0xfc0a6fdd,FmtMenu_ExecuteQuickFormat_FW
 0xfc0a74bb,screenlock_helper
+0xfc0db1dd,dcache_clean_flush_and_disable
+0xfc0db223,dcache_flush_range
+0xfc0db2e5,icache_flush_range
 0xfc0db7e7,task_BatteryTask
 0xfc0dbce3,GetVBatVoltage_FW
 0xfc0dbce3,VbattGet

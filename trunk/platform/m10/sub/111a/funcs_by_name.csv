@@ -250,6 +250,9 @@
 0xfc1f6acf,CreateUserSettingMirror_FW
 0xfc0209a1,CrossDefDetect_FW
 0xfc3625c7,CtrlMan_ChangeZOrder_FW
+0xfc1268d7,data_synchronization_barrier
+0xfc126769,dcache_clean_flush_and_disable
+0xfc1267af,dcache_flush_range
 0x010e1009,DebugAssert
 0x010e101f,DebugAssert2
 0xfc2b0acf,debugOvserverNotify_FW
@@ -1110,6 +1113,7 @@
 0xfc5bfec3,HitISLensAgainstTopEdge_FW
 0xfc5bfef3,HitISLensToMechaEdge_FW
 0xfc5c007d,HitISMechaEdgeInOpenControl_FW
+0xfc126871,icache_flush_range
 0xfc128187,imager_active_callback
 0xfc12821b,ImagerActivate
 0xfc0d2eb3,imlInitialize_FW
