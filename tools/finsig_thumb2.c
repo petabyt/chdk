@@ -423,6 +423,16 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "memset32" }, // actually jump to 2nd instruction of bzero
     { "get_dial_hw_position", OPTIONAL },
 
+//    { "icache_flush_and_enable", OPTIONAL|UNUSED },
+//    { "icache_disable_and_flush", OPTIONAL|UNUSED },
+//    { "dcache_flush_and_enable", OPTIONAL|UNUSED },
+    { "dcache_clean_flush_and_disable", OPTIONAL|UNUSED },
+    { "dcache_flush_range", OPTIONAL|UNUSED },
+//    { "dcache_clean_range", OPTIONAL|UNUSED },
+//    { "dcache_clean_flush_range", OPTIONAL|UNUSED },
+    { "icache_flush_range", OPTIONAL|UNUSED },
+    { "data_synchronization_barrier", OPTIONAL|UNUSED },
+
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
     { "DispCon_ShowBitmapColorBar", UNUSED },
@@ -867,7 +877,7 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
     int i;
     for(i = 1; i<11; i++) {
         // match convention in save_sig_veneers
-        if(i) {
+        if(i>1) {
             sprintf(veneer,"j%d_%s",i-1,name);
         } else {
             sprintf(veneer,"j_%s",name);
@@ -3798,6 +3808,22 @@ int sig_match_cam_uncached_bit(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+int sig_match_dcache_clean_flush_and_disable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,44,"GetSRAndDisableInterrupt")) {
+        printf("sig_match_dcache_clean_flush_and_disable: no GetSRAndDisableInterrupt\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,2,match_bl_blximm)) {
+        printf("sig_match_dcache_clean_flush_and_disable: no bl\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
 int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4143,6 +4169,27 @@ int sig_match_aram_start2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // could sanity check that it looks like a RAM address
     save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
     return 1;
+}
+
+int sig_match_icache_flush_range(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        printf("sig_match_icache_flush_range: missing ref\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,60,"DebugAssert")) {
+        printf("sig_icache_flush_range: no match DebugAssert\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,44,"dcache_flush_range")) {
+        printf("sig_icache_flush_range: no match DebugAssert\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,5,match_bl_blximm)) {
+        printf("sig_icache_flush_range: bl match failed at 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match__nrflag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4838,9 +4885,10 @@ sig_rule_t sig_rules_initial[]={
 };
 
 // main sigs:
-// Run after find_generic_funcs. Order is important
+// Run after find_generic_funcs. Order is important, matches must come after any matches they depend on.
+// Matches that depend only on bootstrap sigs should be first
 sig_rule_t sig_rules_main[]={
-// function         CHDK name                   ref name/string         func param          dry rel
+// function         CHDK name                   ref name/string         func param          dry rel             match flags
 {sig_match_named,   "SetParameterData",         "PTM_BackupUIProperty_FW", 0,               SIG_DRY_MIN(58)},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
@@ -4985,6 +5033,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "SetVideoOutType",          "SetVideoOutType_FW",SIG_NAMED_SUB},
 {sig_match_named,   "GetVideoOutType",          "GetVideoOutType_FW"},
 {sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
+
+// not present in d7, inlined in d6 dry 58p9+
+{sig_match_near_str,"data_synchronization_barrier","ER DlphCntInv",     SIG_NEAR_AFTER(3,2),SIG_DRY_MAX(58),    SIG_NO_D7},
 // alternate match because "exec" lands near a literal pool on some cams
 {sig_match_near_str,"bzero",                    "Canon Degital Camera"/*sic*/,SIG_NEAR_AFTER(8,2)|SIG_NEAR_INDIRECT},
 //{sig_match_near_str,"bzero",                    "FromDate",             SIG_NEAR_BEFORE(2,1)},
@@ -5019,10 +5070,12 @@ sig_rule_t sig_rules_main[]={
 {sig_match_open,    "open",                     "Open_FW",              0,              SIG_DRY_MAX(57)},
 {sig_match_open,    "open",                     "Open_low",             0,              SIG_DRY_MIN(58)},
 {sig_match_named,   "get_self_task_errno_pointer","open",               SIG_NAMED_NTH(2,SUB)},
-{sig_match_named,   "get_self_task_id",         "get_self_task_errno_pointer",SIG_NAMED_NTH(1,SUB)},
+{sig_match_named,   "get_self_task_id",         "get_self_task_errno_pointer",SIG_NAMED_SUB},
 {sig_match_umalloc, "AllocateUncacheableMemory","Fopen_Fut_FW"},
+{sig_match_named,   "dcache_flush_range",       "AllocateUncacheableMemory",SIG_NAMED_NTH(2,SUB)},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
+{sig_match_dcache_clean_flush_and_disable,"dcache_clean_flush_and_disable", "MemoryChecker_FW"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 {sig_match_near_str,"createsemaphore_low",      "termLock",             SIG_NEAR_AFTER(3,1)},
 // old match, malloc gets more cams and veneers
@@ -5116,6 +5169,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_aram_size_gt58,"ARAM_HEAP_SIZE",     "AdditionAgentRAM_FW",  0,                  SIG_DRY_MIN(59)},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
 {sig_match_aram_start2,"ARAM_HEAP_START",       "AdditionAgentRAM_FW",},
+{sig_match_icache_flush_range,"icache_flush_range","AdditionAgentRAM_FW",},
 {sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
 {sig_match_near_str,"transfer_src_overlay_helper","Window_EmergencyRefreshPhysicalScreen",SIG_NEAR_BEFORE(6,1)},
 {sig_match_transfer_src_overlay,"transfer_src_overlay","transfer_src_overlay_helper",},
