@@ -231,6 +231,9 @@
 0xfc36dca3,CtrlMan_ChangeZOrder_FW
 0xfc31a3b3,CzDebugPrint_FW
 0xfc31a3bf,CzDebugPrintToFile_FW
+0xfc150e67,data_synchronization_barrier
+0xfc150cf9,dcache_clean_flush_and_disable
+0xfc150d3f,dcache_flush_range
 0xfc661981,DcmTfMeasure_FW
 0xfc6619fd,DcmTfMeasureForSD_FW
 0xfc661741,DcmWowFla_FW
@@ -987,6 +990,7 @@
 0xfc66a071,HitISLensAgainstTopEdge_FW
 0xfc66a0a1,HitISLensToMechaEdge_FW
 0xfc66a233,HitISMechaEdgeInOpenControl_FW
+0xfc150e01,icache_flush_range
 0xfc44fcc3,imager_active_callback
 0xfc44fd57,ImagerActivate
 0xfc155bc7,imlInitialize_FW

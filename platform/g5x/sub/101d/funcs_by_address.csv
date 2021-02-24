@@ -574,8 +574,12 @@
 0xfc14629d,task_MrkSetTask
 0xfc149b2d,task_CtgTotalTask
 0xfc14a6fb,task_SAEffect
+0xfc150cf9,dcache_clean_flush_and_disable
+0xfc150d3f,dcache_flush_range
+0xfc150e01,icache_flush_range
 0xfc150e35,GetSRAndDisableInterrupt
 0xfc150e47,SetSR
+0xfc150e67,data_synchronization_barrier
 0xfc151413,open
 0xfc151483,close
 0xfc151589,Read

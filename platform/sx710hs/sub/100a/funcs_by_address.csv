@@ -545,8 +545,12 @@
 0xfc110d61,get_dial_hw_position
 0xfc1126fd,task_MechaAlarm
 0xfc11626d,task_MrkSetTask
+0xfc11f5a5,dcache_clean_flush_and_disable
+0xfc11f5eb,dcache_flush_range
+0xfc11f6ad,icache_flush_range
 0xfc11f6e1,GetSRAndDisableInterrupt
 0xfc11f6f3,SetSR
+0xfc11f713,data_synchronization_barrier
 0xfc11fb03,RegComEventProc_FW
 0xfc120423,imager_active_callback
 0xfc1204b7,ImagerActivate

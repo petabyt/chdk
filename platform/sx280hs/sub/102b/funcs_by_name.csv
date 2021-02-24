@@ -190,6 +190,9 @@
 0xfc142b3f,CtrlMan_ChangeZOrder_FW
 0xfc261a91,CzDebugPrint_FW
 0xfc261a9d,CzDebugPrintToFile_FW
+0xfc12de47,data_synchronization_barrier
+0xfc12dcd9,dcache_clean_flush_and_disable
+0xfc12dd1f,dcache_flush_range
 0x010c5c3d,DebugAssert
 0x010c5c53,DebugAssert2
 0xfc09a29d,default_assert_handler
@@ -846,6 +849,7 @@
 0xfc077f4d,i2cdRegRead_FW
 0xfc077f61,i2cdRegWrite_FW
 0xfc077edb,i2cdWrite_FW
+0xfc12dde1,icache_flush_range
 0xfc132c69,imager_active_callback
 0xfc132cfd,ImagerActivate
 0xfc097897,imlInitialize_FW

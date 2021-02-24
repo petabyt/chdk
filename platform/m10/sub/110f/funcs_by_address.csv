@@ -463,8 +463,12 @@
 0xfc11683d,OpenFastDir
 0xfc1168dd,ReadFastDir
 0xfc116913,j_closedir
+0xfc126769,dcache_clean_flush_and_disable
+0xfc1267af,dcache_flush_range
+0xfc126871,icache_flush_range
 0xfc1268a5,GetSRAndDisableInterrupt
 0xfc1268b7,SetSR
+0xfc1268d7,data_synchronization_barrier
 0xfc126d9f,task_BatteryTask
 0xfc12711b,GetVBatVoltage_FW
 0xfc12711b,VbattGet

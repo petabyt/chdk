@@ -597,8 +597,12 @@
 0xfc119383,j_closedir
 0xfc119805,get_dial_hw_position
 0xfc1198c9,get_canon_mode_list
+0xfc13616d,dcache_clean_flush_and_disable
+0xfc1361b3,dcache_flush_range
+0xfc136275,icache_flush_range
 0xfc1362a9,GetSRAndDisableInterrupt
 0xfc1362bb,SetSR
+0xfc1362db,data_synchronization_barrier
 0xfc13638d,memShow_FW
 0xfc136d43,open
 0xfc136db3,close

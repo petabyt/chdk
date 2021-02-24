@@ -552,8 +552,12 @@
 0xfc0faed1,OpenFastDir
 0xfc0faf71,ReadFastDir
 0xfc0fafa7,j_closedir
+0xfc1193c1,dcache_clean_flush_and_disable
+0xfc119407,dcache_flush_range
+0xfc1194c9,icache_flush_range
 0xfc1194fd,GetSRAndDisableInterrupt
 0xfc11950f,SetSR
+0xfc11952f,data_synchronization_barrier
 0xfc119a03,open
 0xfc119a73,close
 0xfc119b79,Read

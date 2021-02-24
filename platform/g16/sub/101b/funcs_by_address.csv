@@ -574,8 +574,12 @@
 0xfc1242b5,ReadFastDir
 0xfc1242eb,j_closedir
 0xfc124511,get_canon_mode_list
+0xfc13c4ad,dcache_clean_flush_and_disable
+0xfc13c4f3,dcache_flush_range
+0xfc13c5b5,icache_flush_range
 0xfc13c5e9,GetSRAndDisableInterrupt
 0xfc13c5fb,SetSR
+0xfc13c61b,data_synchronization_barrier
 0xfc13c6a1,memShow_FW
 0xfc13d057,open
 0xfc13d0c7,close
