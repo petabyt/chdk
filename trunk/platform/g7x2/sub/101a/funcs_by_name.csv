@@ -1,3 +1,4 @@
+0xe0370067,_GetSystemTime
 0xdffcd8c5,_log
 0xdffcdc39,_log10
 0xdffcdd31,_pow
@@ -795,6 +796,7 @@
 0xe025737d,GetSlantAngle_FW
 0xe049203b,GetSlantData_FW
 0xe0568e41,GetSlowWaitTime_FW
+0xdffc4909,GetSRAndDisableInterrupt
 0xe0525ea9,GetStringWithPrompt_FW
 0xe05848b9,GetSumYOfVRAMCenterLine_FW
 0xe005b569,GetSwitchStatus_FW
@@ -1169,6 +1171,7 @@
 0xe05916ff,j_GetShutterSpeedRegularMinLimit_FW
 0xe0492287,j_GetSlantAngle_FW
 0xe04921c3,j_GetSlantData_FW
+0xdffc9ca5,j_GetSRAndDisableInterrupt
 0xe0551fed,j_GetSwitchStatus_FW
 0xe055a6b9,j_GetTotalShootCount_FW
 0xe055ff0d,j_GetUsableAvRange
@@ -1248,6 +1251,7 @@
 0xe055aa85,j_ResetNFCSystemArea_FW
 0xe05524b7,j_SDump_FW
 0xe0371a91,j_set_control_event
+0xdffc9ca9,j_SetSR
 0xe0551f89,j_SetStereoSeparation_FW
 0xe004ed3d,j_ShowCameraLog_FW
 0xe004ed41,j_ShowCameraLogInfo_FW
@@ -1908,6 +1912,7 @@
 0xe059169f,SetShutterSpeed_FW
 0xe0591667,SetShutterSpeedWithMecha_FW
 0xe0568e33,SetSlowWaitTime_FW
+0xdffc491b,SetSR
 0xe003dd03,SetSSIDForFAWLAN_FW
 0xe0492ae9,SetStereoSeparation_FW
 0xe0028583,SetTestRecMasterCxCy_FW

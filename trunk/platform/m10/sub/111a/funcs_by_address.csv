@@ -22,6 +22,8 @@
 0xbfe11fc5,createsemaphore_low
 0xbfe1208b,givesemaphore_low
 0xbfe120b3,takesemaphore_low
+0xbfe13db9,j2_GetSRAndDisableInterrupt
+0xbfe13dc3,j2_SetSR
 0xbfe1496d,SleepTask
 0xbfe1496d,SleepTask_FW
 0xbfe14a41,CreateTask
@@ -38,6 +40,8 @@
 0xbfe14e81,ClearEventFlag
 0xbfe14eb1,GetEventFlagValue
 0xbfe14f05,RegisterInterruptHandler
+0xbfe14feb,j1_GetSRAndDisableInterrupt
+0xbfe14fef,j1_SetSR
 0xbfe15039,CreateMessageQueue
 0xbfe1509d,DeleteMessageQueue
 0xbfe150ff,ReceiveMessageQueue
@@ -459,6 +463,8 @@
 0xfc11683d,OpenFastDir
 0xfc1168dd,ReadFastDir
 0xfc116913,j_closedir
+0xfc1268a5,GetSRAndDisableInterrupt
+0xfc1268b7,SetSR
 0xfc126d9f,task_BatteryTask
 0xfc12711b,GetVBatVoltage_FW
 0xfc12711b,VbattGet
@@ -1501,6 +1507,8 @@
 0xfc314d00,j_CreateBinarySemaphoreStrictly
 0xfc314d10,j_DeleteSemaphore
 0xfc314d30,j_TakeSemaphore
+0xfc314d38,j_GetSRAndDisableInterrupt
+0xfc314d40,j_SetSR
 0xfc314d70,j__log10
 0xfc314d98,j_DeleteEventFlag
 0xfc314da0,j_ClearEventFlag
@@ -1675,6 +1683,7 @@
 0xfc38c59f,ScreenUnlock
 0xfc38c5b7,transfer_src_overlay_helper
 0xfc38c983,PT_PlaySound
+0xfc38cb33,_GetSystemTime
 0xfc38cd59,j_malloc
 0xfc38cd5d,j_free
 0xfc38cd61,malloc_strictly

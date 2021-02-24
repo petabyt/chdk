@@ -1,4 +1,5 @@
 0xfc3adad5,_GetBatteryStatus_FW
+0xfc3414c9,_GetSystemTime
 0x010f8090,_log
 0x010f85b0,_log10
 0x010fa798,_sqrt
@@ -850,6 +851,7 @@
 0xfc3d2eb1,GetSlantAngle_FW
 0xfc3ad7db,GetSlantData_FW
 0xfc440e55,GetSlowWaitTime_FW
+0xfc074641,GetSRAndDisableInterrupt
 0xfc508b05,getSTAList_FW
 0xfc5107fb,GetStringWithPrompt_FW
 0xfc52ca49,GetSumYOfVRAMCenterLine_FW
@@ -1237,6 +1239,7 @@
 0xfc52afc5,j_GetShutterSpeedRegularMinLimit_FW
 0xfc3ad9f7,j_GetSlantAngle_FW
 0xfc3ad935,j_GetSlantData_FW
+0xfc369d9f,j_GetSRAndDisableInterrupt
 0xfc3e9e4d,j_GetSwitchStatus_FW
 0xfc42d1a5,j_GetTotalShootCount_FW
 0xfc3dfd29,j_GetUsableMaxAv_FW
@@ -1322,6 +1325,7 @@
 0xfc3ea32d,j_SDump_FW
 0xfc340f49,j_set_control_event
 0xfc52e125,j_SetLinearDevelopMode_FW
+0xfc369da3,j_SetSR
 0xfc3e9de5,j_SetStereoSeparation_FW
 0xfc5c8489,j_ShowCameraLog_FW
 0xfc5c848d,j_ShowCameraLogInfo_FW
@@ -2020,6 +2024,7 @@
 0xfc52af65,SetShutterSpeed_FW
 0xfc52af2d,SetShutterSpeedWithMecha_FW
 0xfc440c5d,SetSlowWaitTime_FW
+0xfc074653,SetSR
 0xfc06421b,SetSSIDForFAWLAN_FW
 0xfc3af615,SetStereoSeparation_FW
 0xfc0e8fb7,SetTestRecMasterCxCy_FW

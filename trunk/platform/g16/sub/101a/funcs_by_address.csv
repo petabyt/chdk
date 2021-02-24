@@ -21,6 +21,8 @@
 0x010c55b3,ClearEventFlag
 0x010c55d1,GetEventFlagValue
 0x010c5611,RegisterInterruptHandler
+0x010c56b9,j1_GetSRAndDisableInterrupt
+0x010c56bd,j1_SetSR
 0x010c5705,CreateMessageQueue
 0x010c575f,DeleteMessageQueue
 0x010c57b5,ReceiveMessageQueue
@@ -58,6 +60,8 @@
 0x010c77b1,CreateRecursiveLock
 0x010c7813,AcquireRecursiveLock
 0x010c78c9,ReleaseRecursiveLock
+0x010d07b3,j2_GetSRAndDisableInterrupt
+0x010d07bd,j2_SetSR
 0x010d0969,j_mktime_ext
 0x010d83b0,dry_memcpy
 0x010d8498,bzero
@@ -570,6 +574,8 @@
 0xfc12427d,ReadFastDir
 0xfc1242b3,j_closedir
 0xfc1244d9,get_canon_mode_list
+0xfc13c5b1,GetSRAndDisableInterrupt
+0xfc13c5c3,SetSR
 0xfc13c669,memShow_FW
 0xfc13d01f,open
 0xfc13d08f,close
@@ -1094,6 +1100,8 @@
 0xfc2a15f8,j_CreateBinarySemaphoreStrictly
 0xfc2a1608,j_TakeSemaphore
 0xfc2a1610,j_DeleteSemaphore
+0xfc2a1628,j_SetSR
+0xfc2a1638,j_GetSRAndDisableInterrupt
 0xfc2a1640,j_createsemaphore_low
 0xfc2a1650,j_takesemaphore_low
 0xfc2a1670,j_DebugAssert
@@ -1223,6 +1231,7 @@
 0xfc2eab13,GetPropertyCase
 0xfc2ec937,UIFS_GetNumOfOptZoomPos_FW
 0xfc2ecab5,UIFS_MoveZoomTo_FW
+0xfc2fba0f,_GetSystemTime
 0xfc2ff435,UIFS_IsAvailableShots_FW
 0xfc2ff97b,UIFS_GetStillShotableNumber_FW
 0xfc2ff97f,UIFS_GetMovieRecoadableNumber_FW

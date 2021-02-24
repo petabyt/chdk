@@ -1,3 +1,4 @@
+0xfc37c07b,_GetSystemTime
 0x01102bc8,_log
 0x011030e8,_log10
 0x01103250,_pow
@@ -959,6 +960,7 @@
 0xfc54803d,GetShutterSpeedRegularMinLimit_FW
 0xfc245ecd,GetSlantAngle_FW
 0xfc1f429f,GetSlantData_FW
+0xfc130275,GetSRAndDisableInterrupt
 0xfc0858b1,getSTAList_FW
 0xfc0dc983,GetStringWithPrompt_FW
 0xfc5a7885,GetSubCPUCheckSum_FW
@@ -1189,6 +1191,10 @@
 0xfc1bfc59,IsSDDetect_FW
 0xfc4f33e9,IsStrobeChargeCompleted
 0xfc1bfc95,IsStrobePopup_FW
+0xbfe14fef,j1_GetSRAndDisableInterrupt
+0xbfe14ff3,j1_SetSR
+0xbfe13d6b,j2_GetSRAndDisableInterrupt
+0xbfe13d75,j2_SetSR
 0xfc3023a4,j__log10
 0xfc302204,j__pow
 0xfc1804e9,j_AbortAEIntegralValue_FW
@@ -1377,6 +1383,7 @@
 0xfc54804d,j_GetShutterSpeedRegularMinLimit_FW
 0xfc1f44ef,j_GetSlantAngle_FW
 0xfc1f4429,j_GetSlantData_FW
+0xfc302344,j_GetSRAndDisableInterrupt
 0xfc5a7899,j_GetSubCPUCheckSum_FW
 0xfc5a7883,j_GetSubCPUVersion_FW
 0xfc1890e5,j_GetSwitchStatus_FW
@@ -1470,6 +1477,7 @@
 0xfc363481,j_set_control_event
 0xfc5a55bd,j_SetAE_CdsGainValue_FW
 0xfc302324,j_SetEventFlag
+0xfc30234c,j_SetSR
 0xfc18907d,j_SetStereoSeparation_FW
 0xfc06e32d,j_ShowCameraLog_FW
 0xfc06e331,j_ShowCameraLogInfo_FW
@@ -2224,6 +2232,7 @@
 0xfc086973,SetSecurityInvalid_FW
 0xfc547fed,SetShutterSpeed_FW
 0xfc547fb5,SetShutterSpeedWithMecha_FW
+0xfc130287,SetSR
 0xfc07797b,SetSSIDForFAWLAN_FW
 0xfc1f5ba3,SetStereoSeparation_FW
 0xfc08f911,SetTestRecMasterCxCy_FW

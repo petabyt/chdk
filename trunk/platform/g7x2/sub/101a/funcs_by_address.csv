@@ -1,3 +1,5 @@
+0xdffc4909,GetSRAndDisableInterrupt
+0xdffc491b,SetSR
 0xdffc6385,CreateTask_low
 0xdffc6737,get_self_task_id
 0xdffc6769,createsemaphore_low
@@ -25,6 +27,8 @@
 0xdffc9967,ClearEventFlag
 0xdffc9997,GetEventFlagValue
 0xdffc99e5,RegisterInterruptHandler
+0xdffc9ca5,j_GetSRAndDisableInterrupt
+0xdffc9ca9,j_SetSR
 0xdffc9d1d,CreateMessageQueue
 0xdffc9d85,DeleteMessageQueue
 0xdffc9de1,ReceiveMessageQueue
@@ -561,6 +565,7 @@
 0xe036b5a5,StartCameraLog_FW
 0xe036b607,StopCameraLog_FW
 0xe036b641,LogCameraEvent
+0xe0370067,_GetSystemTime
 0xe0370335,RegisterEventProcedure
 0xe0370389,RegisterEventProcedure_alt1
 0xe037038d,UnRegisterEventProcedure
