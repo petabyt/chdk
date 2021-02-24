@@ -35,7 +35,11 @@ without ifdefs.
 #define FW_FUNCTIONS_H
 #include "fw_types.h"
 #include "ptp_handlers.h"
+#ifdef CAM_DRYOS_REL
 __stdcall int * GetSystemTime(int *t);
+#else
+__stdcall int GetSystemTime(void);
+#endif
 __stdcall int GetZoomLensCurrentPosition(void);
 __stdcall int GetZoomLensCurrentPoint(void);
 __stdcall int MoveZoomLensWithPoint(short *pos);
@@ -454,5 +458,10 @@ __stdcall int CreateTask_alt(const char *name, int prio, int stack_size, void *e
 __stdcall int CreateTaskStrictly_alt(const char *name, int prio, int stack_size,int (*entry)(), int parm /*?*/,int core /*?*/);
 
 __stdcall int is_movie_recording(void);
+
+// dryos underlying function, return value is status not time
+__stdcall int _GetSystemTime(int *t);
+__stdcall unsigned GetSRAndDisableInterrupt(void); //note this actually only returns interrupt mask bit
+__stdcall void SetSR(unsigned sr_int_bit); // and this only sets it
 #endif
 
