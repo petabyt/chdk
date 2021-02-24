@@ -801,35 +801,54 @@ void add_func_name(firmware *fw, char *n, uint32_t eadr, char *suffix)
     sig_names[next_sig_entry].name = 0;
 }
 
-// save sig, with up to one level veneer added as j_...
+// save up to 10 veneers starting at adr, return final non-veneer address, or 0 on failure
+uint32_t save_sig_veneers(firmware *fw, const char *name, uint32_t adr)
+{
+    // attempt to disassemble target
+    if(!fw_disasm_iter_single(fw,adr)) {
+        printf("save_sig_veneers: %s disassembly failed at 0x%08x\n",name,adr);
+        return 0;
+    }
+    // handle functions that immediately jump
+    // doesn't check for conditionals, but first insn shouldn't be conditional
+    uint32_t b_adr;
+    int v_cnt;
+    for(v_cnt = 0, b_adr = get_direct_jump_target(fw,fw->is);
+            v_cnt < 10 && b_adr;
+            v_cnt++,b_adr = get_direct_jump_target(fw,fw->is)) {
+        char *buf=malloc(strlen(name)+7);
+        if(v_cnt) {
+            sprintf(buf,"j%d_%s",v_cnt,name);
+        } else { // first level is just j_ for backward compatiblity
+            // TODO could check for existing veeners, allowing for different paths
+            sprintf(buf,"j_%s",name);
+        }
+        add_func_name(fw,buf,adr,NULL); // this is the orignal named address
+        adr=b_adr; // thumb bit already handled by get_direct...
+        if(!fw_disasm_iter_single(fw,adr)) {
+            printf("save_sig_veneers: %s disassembly failed at 0x%08x\n",name,adr);
+            return 0;
+        }
+    }
+    return adr;
+}
+
+// save sig, with veneers added as j_... , j1_... etc
 int save_sig_with_j(firmware *fw, char *name, uint32_t adr)
 {
     if(!adr) {
         printf("save_sig_with_j: %s null adr\n",name);
         return 0;
     }
-    // attempt to disassemble target
-    if(!fw_disasm_iter_single(fw,adr)) {
-        printf("save_sig_with_j: %s disassembly failed at 0x%08x\n",name,adr);
-        return 0;
+    adr = save_sig_veneers(fw, name, adr);
+    if(adr) {
+        save_sig(fw,name,adr);
+        return 1;
     }
-    // handle functions that immediately jump
-    // only one level of jump for now, doesn't check for conditionals, but first insn shouldn't be conditional
-    //uint32_t b_adr=B_target(fw,fw->is->insn);
-    uint32_t b_adr=get_direct_jump_target(fw,fw->is);
-    if(b_adr) {
-        char *buf=malloc(strlen(name)+6);
-        sprintf(buf,"j_%s",name);
-        add_func_name(fw,buf,adr,NULL); // this is the orignal named address
-//        adr=b_adr | fw->is->thumb; // thumb bit from iter state
-        adr=b_adr; // thumb bit already handled by get_direct...
-    }
-    save_sig(fw,name,adr);
-    return 1;
+    return 0;
 }
 
 // find next call to func named "name" or j_name, up to max_offset form the current is address
-// TODO should have a way of dealing with more than one veneer
 // TODO max_offset is in bytes, unlike insn search functions that use insn counts
 int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name)
 {
@@ -840,20 +859,28 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
         return 0;
     }
 
-    search_calls_multi_data_t match_fns[3];
+    search_calls_multi_data_t match_fns[12];
 
     match_fns[0].adr=adr;
     match_fns[0].fn=search_calls_multi_end;
     char veneer[128];
-    sprintf(veneer,"j_%s",name);
-    adr=get_saved_sig_val(veneer);
-    if(!adr) {
-        match_fns[1].adr=0;
-    } else {
-        match_fns[1].adr=adr;
-        match_fns[1].fn=search_calls_multi_end;
-        match_fns[2].adr=0;
+    int i;
+    for(i = 1; i<11; i++) {
+        // match convention in save_sig_veneers
+        if(i) {
+            sprintf(veneer,"j%d_%s",i-1,name);
+        } else {
+            sprintf(veneer,"j_%s",name);
+        }
+        adr=get_saved_sig_val(veneer);
+        if(!adr) {
+            break;
+        } else {
+            match_fns[i].adr=adr;
+            match_fns[i].fn=search_calls_multi_end;
+        }
     }
+    match_fns[i].adr=0;
     return fw_search_insn(fw,is,search_disasm_calls_veneer_multi,0,match_fns,is->adr + max_offset);
 }
 // is the insn pointed to by is a call to "name" or one of it's veneers?
@@ -4688,16 +4715,21 @@ int sig_match_named_last(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
 #define SIG_NAMED_NTH_RANGE(n)   ((SIG_NAMED_NTH_RANGE_MASK&((n)<<SIG_NAMED_NTH_RANGE_SHIFT)))
 
-void sig_match_named_save_sig(firmware *fw,const char *name, uint32_t adr, uint32_t flags)
+int sig_match_named_save_sig(firmware *fw,const char *name, uint32_t adr, uint32_t flags)
 {
-    if(flags & SIG_NAMED_CLEARTHUMB) {
-        adr = ADR_CLEAR_THUMB(adr);
+    adr = save_sig_veneers(fw, name, adr);
+    if(adr) {
+        if(flags & SIG_NAMED_CLEARTHUMB) {
+            adr = ADR_CLEAR_THUMB(adr);
+        }
+        save_sig(fw,name,adr);
+        return 1;
     }
-    save_sig(fw,name,adr);
+    return 0;
 }
 // match already identified function found by name
 // if offset is 1, match the first called function with 20 insn instead (e.g. to avoid eventproc arg handling)
-// initial direct jumps (j_foo) assumed to have been handled
+// veneers are added
 int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t ref_adr = get_saved_sig_val(rule->ref_name);
@@ -4718,8 +4750,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // no offset, just save match as is
     // TODO might want to validate anyway
     if(sig_type == SIG_NAMED_ASIS) {
-        sig_match_named_save_sig(fw,rule->name,ref_adr,sig_flags);
-        return 1;
+        return sig_match_named_save_sig(fw,rule->name,ref_adr,sig_flags);
     }
     const insn_match_t *insn_match;
     if(sig_type == SIG_NAMED_JMP_SUB) {
@@ -4748,8 +4779,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 return 0;
             }
         }
-        sig_match_named_save_sig(fw,rule->name,iter_state_adr(is),sig_flags);
-        return 1;
+        return sig_match_named_save_sig(fw,rule->name,iter_state_adr(is),sig_flags);
     }
 
     // initial 15 is hard coded
@@ -4766,22 +4796,7 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 // preserve current state
                 adr |= is->thumb;
             }
-            disasm_iter_set(fw,is,adr);
-            if(disasm_iter(fw,is)) {
-                // TODO only checks one level
-                uint32_t j_adr=get_direct_jump_target(fw,is);
-                if(j_adr) {
-                    char *buf=malloc(strlen(rule->name)+3);
-                    // add j_ for cross referencing
-                    sprintf(buf,"j_%s",rule->name);
-                    add_func_name(fw,buf,adr,NULL); // add the previous address as j_...
-                    adr=j_adr;
-                }
-            } else {
-                printf("sig_match_named: disasm failed in j_ check at %s 0x%08x\n",rule->name,adr);
-            }
-            sig_match_named_save_sig(fw,rule->name,adr,sig_flags);
-            return 1;
+            return sig_match_named_save_sig(fw,rule->name,adr,sig_flags);
         } else {
             printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
         }
