@@ -4,10 +4,11 @@
 0x010e11eb,time
 0x010e1255,GetTimeOfSystem_FW
 0x010e1589,LocalTime
-0x010e1691,strftime
+0x010e1691,j1_strftime
 0x010e179d,task_SD1stInit
 0x010e2a09,SDCardUHSActive_FW
 0x010ee231,j_mktime_ext
+0x010ee23b,j2_strftime
 0x010f4bf0,dry_memcpy
 0x010f4cd8,bzero
 0x010f4cdc,memset32
@@ -808,8 +809,8 @@
 0xfc1ca8cf,j_get_current_nd_value
 0xfc1cac15,GetCurrentZoomLensPosition_FW
 0xfc1cac15,GetCurrentZoomPosition_FW
-0xfc1cac15,GetZoomLensCurrentPosition
 0xfc1cac15,GetZoomLensCurrentPosition_FW
+0xfc1cac15,j_GetZoomLensCurrentPosition
 0xfc1cac81,GetCurrentZoomLensPoint_FW
 0xfc1cac81,GetCurrentZoomPoint_FW
 0xfc1cac81,GetZoomLensCurrentPoint
@@ -1294,6 +1295,7 @@
 0xfc454689,GetChipVersion_FW
 0xfc45468f,RomCheckSum_FW
 0xfc457239,mktime_ext
+0xfc457269,strftime
 0xfc4575d7,sscanf_FW
 0xfc4575e9,srand
 0xfc4575ef,rand
@@ -1509,6 +1511,7 @@
 0xfc4ea0fd,task_Nd
 0xfc4ea821,get_current_nd_value
 0xfc4ea847,get_nd_value
+0xfc4eadd5,GetZoomLensCurrentPosition
 0xfc504f1f,task_Raw2Ss2YuvTask
 0xfc540f3d,task_TricEncVTask
 0xfc541899,task_TricEncMsgTask

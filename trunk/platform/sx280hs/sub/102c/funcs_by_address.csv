@@ -887,8 +887,8 @@
 0xfc1a07e3,GetStrobePopUpSectionTime_FW
 0xfc1a0c05,GetCurrentZoomLensPosition_FW
 0xfc1a0c05,GetCurrentZoomPosition_FW
-0xfc1a0c05,GetZoomLensCurrentPosition
 0xfc1a0c05,GetZoomLensCurrentPosition_FW
+0xfc1a0c05,j_GetZoomLensCurrentPosition
 0xfc1a0c71,GetCurrentZoomLensPoint_FW
 0xfc1a0c71,GetCurrentZoomPoint_FW
 0xfc1a0c71,GetZoomLensCurrentPoint
@@ -1341,6 +1341,7 @@
 0xfc32dd0f,GetIrisSettingWaitVoltage_FW
 0xfc32dd1f,GetIrisHoldVoltage_FW
 0xfc32eb95,task_MechaShutter
+0xfc32facd,GetZoomLensCurrentPosition
 0xfc331beb,task_Cave2RecTask
 0xfc354e43,task_ReadMultiConTask
 0xfc37062d,SetPMByGpio_FW

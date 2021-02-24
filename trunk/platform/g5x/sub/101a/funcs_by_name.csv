@@ -864,7 +864,7 @@
 0xfc1cb5df,GetZoomDrivingTime_FW
 0xfc1cac81,GetZoomLensCurrentPoint
 0xfc1cac81,GetZoomLensCurrentPoint_FW
-0xfc1cac15,GetZoomLensCurrentPosition
+0xfc4eadb1,GetZoomLensCurrentPosition
 0xfc1cac15,GetZoomLensCurrentPosition_FW
 0xfc661479,GetZoomLensDriveAmpereDac_FW
 0xfc1cb5db,GetZoomLensMechaEdgePosition_FW
@@ -1055,6 +1055,8 @@
 0xfc1cd451,IsUnitFirmMode_FW
 0xfc343fcb,IsZoomActuatorResetSensorPlusSide_FW
 0xfc1cb35b,IsZoomLensOutSidePosition_FW
+0x010e1691,j1_strftime
+0x010ee23b,j2_strftime
 0xfc34d234,j__log10
 0xfc34d0a4,j__pow
 0xfc488e3b,j_AbortAEIntegralValue_FW
@@ -1230,6 +1232,7 @@
 0xfc6614ed,j_GetZoomAmpereLimitOffTime_FW
 0xfc65ea19,j_GetZoomDrivingTime_FW
 0xfc6614bf,j_GetZoomLensCurrentPoint_FW
+0xfc1cac15,j_GetZoomLensCurrentPosition
 0xfc6614c3,j_GetZoomLensCurrentPosition_FW
 0xfc6614cb,j_GetZoomLensMechaEdgePosition_FW
 0xfc6614fd,j_GetZoomLensMinimumSpeedMoveLimitTime_FW
@@ -2193,7 +2196,7 @@
 0xfc3bf8e5,strcmp_FW
 0xfc3bf2b5,strcpy
 0xfc3bf2b5,strcpy_FW
-0x010e1691,strftime
+0xfc457245,strftime
 0xfc3bf479,strlen
 0xfc3bf479,strlen_FW
 0xfc3bf1ab,strncmp

@@ -4,11 +4,12 @@
 0x010e11e3,time
 0x010e124d,GetTimeOfSystem_FW
 0x010e1581,LocalTime
-0x010e1689,strftime
+0x010e1689,j1_strftime
 0x010e17b5,task_SD1stInit
 0x010e289f,ChangeSDPortVoltage_FW
 0x010e29f3,SDCardUHSActive_FW
 0x010f4383,j_mktime_ext
+0x010f438d,j2_strftime
 0x01100a60,dry_memcpy
 0x01100b48,bzero
 0x01100b4c,memset32
@@ -406,8 +407,8 @@
 0xfc0d8197,GetIrisCurrentPosition_FW
 0xfc0d8665,GetCurrentZoomLensPosition_FW
 0xfc0d8665,GetCurrentZoomPosition_FW
-0xfc0d8665,GetZoomLensCurrentPosition
 0xfc0d8665,GetZoomLensCurrentPosition_FW
+0xfc0d8665,j_GetZoomLensCurrentPosition
 0xfc0d86d1,GetCurrentZoomLensPoint_FW
 0xfc0d86d1,GetCurrentZoomPoint_FW
 0xfc0d86d1,GetZoomLensCurrentPoint
@@ -690,6 +691,7 @@
 0xfc170f85,task_MechaCPUTransfer
 0xfc171f95,GetMechaShutterMoveTime_FW
 0xfc171fb3,GetMechaShutterStatus_FW
+0xfc1724dd,GetZoomLensCurrentPosition
 0xfc172f51,GetZoomPiDefaultPosition_FW
 0xfc172f65,GetZoomResetSensorLevel_FW
 0xfc1730c5,GetZoomPiChangePosition_FW
@@ -1229,6 +1231,7 @@
 0xfc396d6f,j_IsBatteryTemperature_FW
 0xfc396f81,task_MovieInit
 0xfc397429,mktime_ext
+0xfc397459,strftime
 0xfc39782d,srand
 0xfc397833,rand
 0xfc39a02b,task_ImgPlyTask

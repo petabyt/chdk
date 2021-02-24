@@ -229,7 +229,7 @@ NHSTUB(GetSystemTime                          ,0xfc662ff5) //  0
 NHSTUB(GetVRAMHPixelsSize                     ,0xfc0c6b11) //  0
 NHSTUB(GetVRAMVPixelsSize                     ,0xfc0c6b19) //  0
 NHSTUB(GetZoomLensCurrentPoint                ,0xfc1caca9) //  0
-NHSTUB(GetZoomLensCurrentPosition             ,0xfc1cac3d) //  0
+NHSTUB(GetZoomLensCurrentPosition             ,0xfc4eadfd) //  0
 NHSTUB(GiveSemaphore                          ,0xbfe15471) //  0
 NHSTUB(IsStrobeChargeCompleted                ,0xfc0c41a7) //  0
 NHSTUB(LEDDrive                               ,0xfc5e3bc9) //  0
@@ -306,7 +306,7 @@ NHSTUB(strcat                                 ,0xfc3bf1d5) //  0
 NHSTUB(strchr                                 ,0xfc16c2a1) //  0
 NHSTUB(strcmp                                 ,0xfc3bf931) //  0
 NHSTUB(strcpy                                 ,0xfc3bf301) //  0
-NHSTUB(strftime                               ,0x010e1691) //  0
+NHSTUB(strftime                               ,0xfc457291) //  0
 NHSTUB(strlen                                 ,0xfc3bf4c5) //  0
 NHSTUB(strncmp                                ,0xfc3bf1f7) //  0
 NHSTUB(strncpy                                ,0xfc3bb0fd) //  0

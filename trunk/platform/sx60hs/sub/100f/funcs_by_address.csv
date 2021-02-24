@@ -970,6 +970,7 @@
 0xfc1cfbcd,j_GetZoomActuatorCurrentICPosition_FW
 0xfc1cfbd1,EnableZoomActuatorSpeedControl_FW
 0xfc1cfbdb,DisableZoomActuatorSpeedControl_FW
+0xfc1d040d,GetZoomLensCurrentPosition
 0xfc1d112f,GetZoomPiDefaultPosition_FW
 0xfc1d1139,GetZoomResetSensorLevel_FW
 0xfc1d1299,GetZoomLensEncPhase_FW
@@ -1330,8 +1331,8 @@
 0xfc2e1785,GetVcmDacOutData_FW
 0xfc2eda75,GetCurrentZoomLensPosition_FW
 0xfc2eda75,GetCurrentZoomPosition_FW
-0xfc2eda75,GetZoomLensCurrentPosition
 0xfc2eda75,GetZoomLensCurrentPosition_FW
+0xfc2eda75,j_GetZoomLensCurrentPosition
 0xfc2edc6b,GetCurrentZoomLensPoint_FW
 0xfc2edc6b,GetCurrentZoomPoint_FW
 0xfc2edc6b,GetZoomLensCurrentPoint

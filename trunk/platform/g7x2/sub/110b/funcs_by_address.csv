@@ -291,8 +291,8 @@
 0xe005efd1,NRTBL.SetTassenType_FW
 0xe005fb09,GetCurrentZoomLensPosition_FW
 0xe005fb09,GetCurrentZoomPosition_FW
-0xe005fb09,GetZoomLensCurrentPosition
 0xe005fb09,GetZoomLensCurrentPosition_FW
+0xe005fb09,j_GetZoomLensCurrentPosition
 0xe005fb75,GetCurrentZoomLensPoint_FW
 0xe005fb75,GetCurrentZoomPoint_FW
 0xe005fb75,GetZoomLensCurrentPoint
@@ -1126,6 +1126,7 @@
 0xe050f8e5,GetIrisHoldVoltage_FW
 0xe0515bdf,handle_PTP_OC_CANON_EOS_GetEvent
 0xe051a273,handle_PTP_OC_CANON_CheckEvent
+0xe051b9d5,GetZoomLensCurrentPosition
 0xe051e69b,SDCardUHSActive_FW
 0xe051fe19,task_TrnsCtrlTask
 0xe0523985,strftime

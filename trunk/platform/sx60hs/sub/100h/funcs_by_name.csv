@@ -902,7 +902,7 @@
 0xfc1d12c9,GetZoomEncPhasePeriodTime_FW
 0xfc2edc93,GetZoomLensCurrentPoint
 0xfc2edc93,GetZoomLensCurrentPoint_FW
-0xfc2eda9d,GetZoomLensCurrentPosition
+0xfc1d0435,GetZoomLensCurrentPosition
 0xfc2eda9d,GetZoomLensCurrentPosition_FW
 0xfc1d12c5,GetZoomLensEncDuty_FW
 0xfc1d12c1,GetZoomLensEncPhase_FW
@@ -1292,6 +1292,7 @@
 0xfc45cda3,j_GetZoomEncPhaseHighTime_FW
 0xfc45cd93,j_GetZoomEncPhasePeriodTime_FW
 0xfc39de43,j_GetZoomLensCurrentPoint_FW
+0xfc2eda9d,j_GetZoomLensCurrentPosition
 0xfc39de47,j_GetZoomLensCurrentPosition_FW
 0xfc39de93,j_GetZoomLensEncDuty_FW
 0xfc39de8f,j_GetZoomLensEncPhase_FW

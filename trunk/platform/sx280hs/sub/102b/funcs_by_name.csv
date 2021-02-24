@@ -710,7 +710,7 @@
 0xfc1a1543,GetZoomDrivingTime_FW
 0xfc1a0c71,GetZoomLensCurrentPoint
 0xfc1a0c71,GetZoomLensCurrentPoint_FW
-0xfc1a0c05,GetZoomLensCurrentPosition
+0xfc32fa51,GetZoomLensCurrentPosition
 0xfc1a0c05,GetZoomLensCurrentPosition_FW
 0xfc3b8627,GetZoomLensDriveAmpereDac_FW
 0xfc1a153f,GetZoomLensMechaEdgePosition_FW
@@ -1043,6 +1043,7 @@
 0xfc247587,j_GetZoomActuatorCurrentPosition_FW
 0xfc3acf77,j_GetZoomDrivingTime_FW
 0xfc3b866d,j_GetZoomLensCurrentPoint_FW
+0xfc1a0c05,j_GetZoomLensCurrentPosition
 0xfc3b8671,j_GetZoomLensCurrentPosition_FW
 0xfc3b8679,j_GetZoomLensMechaEdgePosition_FW
 0xfc3ad53b,j_GetZoomLensResetPlus_FW

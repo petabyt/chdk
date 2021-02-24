@@ -630,8 +630,8 @@
 0xfc12a75f,GetIrisCurrentPosition_FW
 0xfc12ac2d,GetCurrentZoomLensPosition_FW
 0xfc12ac2d,GetCurrentZoomPosition_FW
-0xfc12ac2d,GetZoomLensCurrentPosition
 0xfc12ac2d,GetZoomLensCurrentPosition_FW
+0xfc12ac2d,j_GetZoomLensCurrentPosition
 0xfc12ac99,GetCurrentZoomLensPoint_FW
 0xfc12ac99,GetCurrentZoomPoint_FW
 0xfc12ac99,GetZoomLensCurrentPoint
@@ -883,6 +883,7 @@
 0xfc1ac3cd,task_MechaCPUTransfer
 0xfc1ad621,GetMechaShutterMoveTime_FW
 0xfc1ad63f,GetMechaShutterStatus_FW
+0xfc1ae1a9,GetZoomLensCurrentPosition
 0xfc1af4e3,GetZoomResetSensorLevel_FW
 0xfc1b0825,GetGyroDataRoll_FW
 0xfc1b083b,j_GetGyroDataRoll_FW
