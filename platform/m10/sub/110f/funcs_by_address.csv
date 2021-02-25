@@ -24,6 +24,8 @@
 0xbfe120b3,takesemaphore_low
 0xbfe13db9,j2_GetSRAndDisableInterrupt
 0xbfe13dc3,j2_SetSR
+0xbfe14533,heap_alloc
+0xbfe145f3,heap_free
 0xbfe1496d,SleepTask
 0xbfe1496d,SleepTask_FW
 0xbfe14a41,CreateTask
@@ -1475,6 +1477,8 @@
 0xfc314848,j_set_assert_handler
 0xfc3148f8,j_CreateCountingSemaphoreStrictly
 0xfc314998,j_dry_error_printf
+0xfc3149b8,j_heap_alloc
+0xfc3149c0,j_heap_free
 0xfc314a18,j_AcquireRecursiveLock
 0xfc314a58,j_AcquireRecursiveLockStrictly
 0xfc314a60,j_CreateRecursiveLockStrictly
