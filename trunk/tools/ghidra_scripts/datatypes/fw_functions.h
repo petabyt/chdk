@@ -470,5 +470,8 @@ __stdcall void icache_flush_range(void *addr, unsigned size); // dry >52, or d6/
 __stdcall void dcache_clean_flush_and_disable(void);
 __stdcall void data_synchronization_barrier(void);
 
+__stdcall void heap_alloc(void *heap, unsigned size); // used by malloc and other heaps
+__stdcall void heap_free(void *heap, void *p);
+
 #endif
 
