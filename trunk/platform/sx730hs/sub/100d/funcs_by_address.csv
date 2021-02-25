@@ -13,6 +13,8 @@
 0xbfe11fd1,createsemaphore_low
 0xbfe12097,givesemaphore_low
 0xbfe120bf,takesemaphore_low
+0xbfe144a3,heap_alloc
+0xbfe14563,heap_free
 0xfc020b93,PointDefDetect_FW
 0xfc020c99,MergeAndConvertDefect_FW
 0xfc020e33,PointKizuCheck_FW
@@ -889,6 +891,8 @@
 0xfc2e3435,DisableDebugLogMode_FW
 0xfc2f7651,task_FmidTask
 0xfc2f8d91,get_current_exp
+0xfc301840,j_heap_free
+0xfc301b04,j_heap_alloc
 0xfc301bd4,j_get_task_properties
 0xfc301cfc,j__log10
 0xfc301d54,j_dry_error_printf

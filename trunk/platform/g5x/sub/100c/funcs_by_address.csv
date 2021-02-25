@@ -25,6 +25,8 @@
 0xbfe120bb,takesemaphore_low
 0xbfe14111,j2_GetSRAndDisableInterrupt
 0xbfe1411b,j2_SetSR
+0xbfe1452f,heap_alloc
+0xbfe145ef,heap_free
 0xbfe14969,SleepTask
 0xbfe14969,SleepTask_FW
 0xbfe149e5,CreateTask
@@ -992,6 +994,8 @@
 0xfc34cbc0,j_set_assert_handler
 0xfc34cc54,j_DebugAssert2
 0xfc34cc7c,j_CreateMessageQueue
+0xfc34cc94,j_heap_alloc
+0xfc34cc9c,j_heap_free
 0xfc34cd9c,j_CreateRecursiveLock
 0xfc34cdac,j_GetNumberOfPostedMessages
 0xfc34cdcc,j_AcquireRecursiveLock

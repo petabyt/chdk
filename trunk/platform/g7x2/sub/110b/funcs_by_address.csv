@@ -7,6 +7,8 @@
 0xdffc682f,takesemaphore_low
 0xdffc6d29,get_task_properties
 0xdffc6f91,dry_error_printf
+0xdffc8ea9,heap_alloc
+0xdffc8f65,heap_free
 0xdffc9293,SleepTask
 0xdffc9293,SleepTask_FW
 0xdffc93bb,CreateTask

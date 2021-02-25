@@ -935,6 +935,8 @@
 0xfc3b4441,HdmiChange5VShortState_FW
 0xfc08a5f3,HdmiRegDump_FW
 0xfc0ad2f9,HdmiViewParameter_FW
+0x010e4b87,heap_alloc
+0x010e4c47,heap_free
 0xfc3b4447,HecHdmiCecPhysicalCheckForScript_FW
 0xfc4f5e19,HitISLensAgainstBottomEdge_FW
 0xfc4f5e25,HitISLensAgainstLeftEdge_FW
@@ -1195,6 +1197,8 @@
 0xfc48a2cf,j_GetZoomTelePoint_FW
 0xfc2eef35,j_GiveSemaphore
 0xfc3b44ab,j_HdmiRegDump_FW
+0xfc2ef520,j_heap_alloc
+0xfc2ef528,j_heap_free
 0xfc0c06a1,j_initComDiscovery_FW
 0xfc1e2399,j_InitializeAudio_FW
 0xfc144547,j_Initializedccd_FW

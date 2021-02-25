@@ -5,6 +5,8 @@
 0x010c27b1,createsemaphore_low
 0x010c2877,givesemaphore_low
 0x010c289f,takesemaphore_low
+0x010c4b73,heap_alloc
+0x010c4c33,heap_free
 0x010c4fdd,SleepTask
 0x010c4fdd,SleepTask_FW
 0x010c5075,CreateTask
@@ -1043,6 +1045,8 @@
 0xfc29aea4,j_DebugAssert2
 0xfc29af14,j_CreateCountingSemaphoreStrictly
 0xfc29afcc,j_dry_error_printf
+0xfc29afd4,j_heap_alloc
+0xfc29afdc,j_heap_free
 0xfc29b02c,j_AcquireRecursiveLock
 0xfc29b054,j_CreateRecursiveLock
 0xfc29b084,j_CreateRecursiveLockStrictly

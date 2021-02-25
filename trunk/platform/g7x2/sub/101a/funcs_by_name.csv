@@ -973,6 +973,8 @@
 0xe0059a1f,HdmiRegDump_FW
 0xe0565305,HdmiSetOutputResolusion_FW
 0xe03e38cd,HdmiViewParameter_FW
+0xdffc8ea9,heap_alloc
+0xdffc8f65,heap_free
 0xe056530d,HecHdmiCecPhysicalCheckForScript_FW
 0xe0587ea5,HitISLensAgainstBottomEdge_FW
 0xe0587eb1,HitISLensAgainstLeftEdge_FW
