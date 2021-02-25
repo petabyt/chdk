@@ -477,5 +477,7 @@ __stdcall mzrm_msg * mzrm_createmsg(mzrm_context *ctx, int unk, int msg_type, in
 __stdcall int mzrm_sendmsg(mzrm_context *ctx, mzrm_msg *msg);
 __stdcall void GraphicSystemCoreFinish(void);
 __stdcall int GraphicSystemCoreFinish_helper(void);
+__stdcall void zicokick_copy(void *dst, void *src, unsigned size);
+__stdcall void zicokick_start(void);
 #endif
 
