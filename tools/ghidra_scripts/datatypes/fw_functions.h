@@ -473,5 +473,9 @@ __stdcall void data_synchronization_barrier(void);
 __stdcall void *heap_alloc(void *heap, unsigned size); // used by malloc and other heaps
 __stdcall void heap_free(void *heap, void *p);
 
+__stdcall mzrm_msg * mzrm_createmsg(mzrm_context *ctx, int unk, int msg_type, int payload_size);
+__stdcall int mzrm_sendmsg(mzrm_context *ctx, mzrm_msg *msg);
+__stdcall void GraphicSystemCoreFinish(void);
+__stdcall int GraphicSystemCoreFinish_helper(void);
 #endif
 

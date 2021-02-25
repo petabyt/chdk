@@ -142,5 +142,26 @@ typedef struct FILE_S {
     char name[127]; // in reality, allocated dynamically but giving length gives better decompilation
 } FILE;
 
+
+// first parameter to mzrm_createmsg / mzrm_sendmsg
+typedef struct mzrm_context_s mzrm_context;
+typedef struct mzrm_context_s {
+    int unk0;
+    int sem;
+    unsigned alloc_avail;
+    int unk1;
+    int index1; // probably a circular buffer of some kind?
+    int index2;
+    int unk2[3];
+    void (*maybe_wait_fn)(mzrm_context *ctx);
+    int unk3[2]; // possibly more
+};
+
+typedef struct mzrm_msg_s {
+    int msg_type;
+    int unk;
+    int payload_size;
+    int payload[16]; // actual size varies
+} mzrm_msg;
 #endif
 
