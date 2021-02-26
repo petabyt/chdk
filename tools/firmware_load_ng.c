@@ -825,6 +825,26 @@ uint32_t B_BL_BLXimm_target(__attribute__ ((unused))firmware *fw, cs_insn *insn)
     return 0; // TODO could be valid
 }
 
+// BX PC (mode change, small jump) Does NOT set thumb bit
+uint32_t BX_PC_target(__attribute__ ((unused))firmware *fw, cs_insn *insn)
+{
+    if(insn->id == ARM_INS_BX
+        && insn->detail->arm.operands[0].type == ARM_OP_REG
+        && insn->detail->arm.operands[0].reg == ARM_REG_PC) {
+        if(insn->size == 2) { // thumb
+            // per arms docs, thumb bx pc from unaligned address is "undefined"
+            // assume non-instruction
+            if((insn->address & 2) == 2) {
+                return 0;
+            }
+            return (uint32_t)(insn->address) + 4;
+        } else {
+            return (uint32_t)(insn->address) + 8;
+        }
+    }
+    return 0;
+}
+
 // get the (likely) range of jumptable entries from a pc relative TBB or TBH instruction
 // returns 0 on error or if instruction is not TBB/TBH
 // returns 1 if instruction is TBB/TBH [PC,...]
@@ -1405,6 +1425,7 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
 starting from is_init, look for a direct jump, such as
  B <target>
  LDR PC, [pc, #x]
+ BX PC
  movw ip, #x
  movt ip, #x
  bx ip
@@ -1424,6 +1445,16 @@ uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
     // LDR pc #... thumb is set in the loaded address
     if(adr) {
         return adr;
+    }
+    // BX PC
+    adr=BX_PC_target(fw,is_init->insn);
+    if(adr) {
+        // bx swaps mode
+        if(is_init->thumb) {
+            return ADR_CLEAR_THUMB(adr);
+        } else {
+            return ADR_SET_THUMB(adr);
+        }
     }
     // an immediate move to ip (R12), candidate for multi-instruction veneer
     if((is_init->insn->id == ARM_INS_MOV || is_init->insn->id == ARM_INS_MOVW)
@@ -1490,6 +1521,15 @@ uint32_t get_branch_call_insn_target(firmware *fw, iter_state_t *is)
     adr=LDR_PC_PC_target(fw,is->insn);
     if(adr) {
         return adr;
+    }
+    adr=BX_PC_target(fw,is->insn);
+    if(adr) {
+        // bx swaps mode
+        if(is->thumb) {
+            return ADR_CLEAR_THUMB(adr);
+        } else {
+            return ADR_SET_THUMB(adr);
+        }
     }
     return 0;
 }
