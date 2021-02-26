@@ -416,6 +416,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "dry_error_printf", OPTIONAL|UNUSED },
     { "heap_alloc", OPTIONAL|UNUSED },
     { "heap_free", OPTIONAL|UNUSED },
+    { "umalloc_strictly", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -423,6 +424,9 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "takesemaphore_low", OPTIONAL|UNUSED },
     { "bzero" }, //
     { "memset32" }, // actually jump to 2nd instruction of bzero
+    { "dry_memset", OPTIONAL|UNUSED },
+    { "dry_memzero", OPTIONAL|UNUSED },
+    { "dry_memcpy_bytes", OPTIONAL|UNUSED },
     { "get_dial_hw_position", OPTIONAL },
 
 //    { "icache_flush_and_enable", OPTIONAL|UNUSED },
@@ -3763,6 +3767,101 @@ int sig_match_misc_flag_named(__attribute__ ((unused))firmware *fw, __attribute_
     return 1;
 }
 
+int sig_match_dry_memset(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        printf("sig_match_dry_memset: no bl 1\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_nth(fw,is,12,3,match_bl_blximm)) {
+        printf("sig_match_dry_memset: no match bl 2\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_dry_memzero(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,3,match_bl_blximm)) {
+        printf("sig_match_dry_memset: no bl 1\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,7,match_bl_blximm)) {
+        printf("sig_match_dry_memset: no match bl 2\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+#if 0
+// alt match from dry_memset, doesn't pick up veneer
+int sig_match_dry_memzero(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t match_start[]={
+        {MATCH_INS(AND, 3), {MATCH_OP_REG(R3),  MATCH_OP_REG(R2),   MATCH_OP_IMM(0xff)}},
+        {MATCH_INS(ORR, 3), {MATCH_OP_REG(R2),  MATCH_OP_REG(R3),   MATCH_OP_REG(R3)}},
+        {MATCH_INS(ORR, 3), {MATCH_OP_REG(R2),  MATCH_OP_REG(R2),   MATCH_OP_REG(R2)}},
+        {MATCH_INS(B, 1), {MATCH_OP_IMM_ANY}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next_seq(fw,is,1,match_start)) {
+        printf("sig_match_dry_memzero: no match start\n");
+        return 0;
+    }
+    // dry_memset jumps into this function after the mov r2,0 - assumed ARM
+    uint32_t adr = get_branch_call_insn_target(fw,is) - 4;
+    disasm_iter_init(fw,is,adr);
+    const insn_match_t match_mov_r2_0[]={
+        {MATCH_INS(MOV, 2), {MATCH_OP_REG(R2), MATCH_OP_IMM(0x0)}},
+        {ARM_INS_ENDING}
+    };
+    if(!insn_match_find_next(fw,is,1,match_mov_r2_0)) {
+        printf("sig_match_dry_memzero: no match mov\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,adr);
+}
+#endif
+
+int sig_match_dry_memcpy_bytes(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,7,match_bl_blximm)) {
+        printf("sig_match_dry_memcpy_bytes: no bl 1\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    // expect tail call to dry_memcpy_bytes
+    const insn_match_t match_end[]={
+        {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+        {MATCH_INS_CC(B,AL,MATCH_OPCOUNT_IGNORE)},
+        {ARM_INS_ENDING}
+    };
+
+    if(!insn_match_find_next_seq(fw,is,20,match_end)) {
+        printf("sig_match_dry_memcpy_bytes: no match end\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+
 int sig_match_cam_has_iris_diaphragm(__attribute__ ((unused))firmware *fw, __attribute__ ((unused))iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t v;
@@ -3792,6 +3891,45 @@ int sig_match_cam_uncached_bit(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         return 1;
     }
     return 0;
+}
+
+int sig_match_umalloc_strictly(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_umalloc_strictly: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    if(!fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        printf("sig_match_umalloc_strictly: faild to find ref insn\n");
+        return 0;
+    }
+    if(is->insn->detail->arm.operands[0].reg != ARM_REG_R0) {
+        printf("sig_match_umalloc_strictly: reg mismatch\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,4,match_bl_blximm)) {
+        printf("sig_match_umalloc_strictly: no bl 1\n");
+        return 0;
+    }
+    if(!is_sig_call(fw,is,"CreateTaskStrictly")) {
+        printf("sig_match_umalloc_strictly: no CreateTaskStrictly\n");
+        return 0;
+    }
+    // b included because usually tail call
+    if(!insn_match_find_next(fw,is,6,match_b_bl_blximm)) {
+        printf("sig_match_umalloc_strictly: no bl 1\n");
+        return 0;
+    }
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
+        printf("sig_match_umalloc_strictly: no bl 2\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
 int sig_match_dcache_clean_flush_and_disable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -5031,6 +5169,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetCurrentDriveBaseSvValue","GetCurrentDriveBaseSvValue_FW",SIG_NAMED_NTH(1,SUB)},
 {sig_match_near_str,"GetCurrentDriveBaseSvValue","IsExecutePreConti",   SIG_NEAR_AFTER(7,2)},
 {sig_match_named,   "memset32",                 "bzero",                SIG_NAMED_NTH(1,INSN)},
+{sig_match_dry_memset,"dry_memset",             "ClearDefectTurnTable_FW",0,            SIG_DRY_MIN(53)},
+{sig_match_near_str,"dry_memset",               "[xWiSE] generateRandom Err.\n",SIG_NEAR_BEFORE(8,2),SIG_DRY_MAX(52)},
+{sig_match_dry_memzero,"dry_memzero",           "SetDefaultRecParameter_FW"},
+{sig_match_dry_memcpy_bytes,"dry_memcpy_bytes", "SaveDefectAdjTable_FW",},
 {sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
@@ -5063,6 +5205,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "dcache_flush_range",       "AllocateUncacheableMemory",SIG_NAMED_NTH(2,SUB)},
 {sig_match_ufree,   "FreeUncacheableMemory",    "Fclose_Fut_FW"},
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
+{sig_match_umalloc_strictly,"umalloc_strictly", "DPOFTask"},
 {sig_match_dcache_clean_flush_and_disable,"dcache_clean_flush_and_disable", "MemoryChecker_FW"},
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 {sig_match_near_str,"createsemaphore_low",      "termLock",             SIG_NEAR_AFTER(3,1)},

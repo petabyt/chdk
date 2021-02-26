@@ -479,5 +479,12 @@ __stdcall void GraphicSystemCoreFinish(void);
 __stdcall int GraphicSystemCoreFinish_helper(void);
 __stdcall void zicokick_copy(void *dst, void *src, unsigned size);
 __stdcall void zicokick_start(void);
+
+__stdcall void *umalloc_strictly(unsigned size);
+__stdcall void dry_memset(void *dst, unsigned n, int c);
+__stdcall void dry_memzero(void *dst, unsigned n);
+// like dry_memcpy but additional logic for small n and unaligned
+__stdcall void dry_memcpy_bytes(void *dst, void *src, unsigned n);
+
 #endif
 
