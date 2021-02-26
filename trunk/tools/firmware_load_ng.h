@@ -335,6 +335,9 @@ uint32_t B_BL_target(firmware *fw, cs_insn *insn);
 // as above, but also including BLX imm
 uint32_t B_BL_BLXimm_target(firmware *fw, cs_insn *insn);
 
+// BX PC (mode change, small jump) Does NOT set thumb bit
+uint32_t BX_PC_target(__attribute__ ((unused))firmware *fw, cs_insn *insn);
+
 // results from get_TBx_PC_info
 typedef struct {
     uint32_t start; // address of first jumptable entry
@@ -465,6 +468,7 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
 starting from is_init, look for a direct jump, such as
  B <target>
  LDR PC, [pc, #x]
+ BX PC
  movw ip, #x
  movt ip, #x
  bx ip
