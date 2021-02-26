@@ -67,6 +67,9 @@
 0x010f772d,j2_GetSRAndDisableInterrupt
 0x010f7737,j2_SetSR
 0x010f78c5,j_mktime_ext
+0x011068d0,dry_memcpy_bytes
+0x011069e0,dry_memset
+0x011069f0,dry_memzero
 0x01106a34,dry_memcpy
 0x01106b1c,bzero
 0x01106b20,memset32
@@ -765,6 +768,7 @@
 0xfc16a085,task_DetSeqSadT
 0xfc16cb81,AllocateUncacheableMemory
 0xfc16cbad,FreeUncacheableMemory
+0xfc16cbbf,umalloc_strictly
 0xfc16d4e3,GetCurrentShutterSpeed
 0xfc16d4e3,GetCurrentShutterSpeed_FW
 0xfc16d78f,GetCurrentExposureTime_FW
@@ -1249,6 +1253,8 @@
 0xfc2c5be7,UIFS_WirelessExecuteSendForever_FW
 0xfc2c618f,task_Cave2PbTask
 0xfc2ce947,j_GiveSemaphore
+0xfc2ce97d,j_dry_memcpy_bytes
+0xfc2ce980,j1_dry_memcpy_bytes
 0xfc2ced5c,j_set_assert_handler
 0xfc2cee40,j_DebugAssert2
 0xfc2cee60,j_CreateMessageQueue
@@ -1303,6 +1309,8 @@
 0xfc2cf3d8,j_ClearEventFlag
 0xfc2cf3f8,j_takesemaphore_low
 0xfc2cf408,j_DebugAssert
+0xfc2cf410,j_dry_memset
+0xfc2cf418,j_dry_memzero
 0xfc2cf430,j_dry_memcpy
 0xfc2cf438,j_bzero
 0xfc2d79bb,get_playrec_mode

@@ -65,6 +65,9 @@
 0x010d07b3,j2_GetSRAndDisableInterrupt
 0x010d07bd,j2_SetSR
 0x010d0969,j_mktime_ext
+0x010d8250,dry_memcpy_bytes
+0x010d8360,dry_memset
+0x010d8370,dry_memzero
 0x010d83b0,dry_memcpy
 0x010d8498,bzero
 0x010d849c,memset32
@@ -539,6 +542,7 @@
 0xfc0f922b,strrchr
 0xfc0f9b85,AllocateUncacheableMemory
 0xfc0f9bb1,FreeUncacheableMemory
+0xfc0f9bc3,umalloc_strictly
 0xfc0fbb49,task_WBCR2Calc
 0xfc0fcbc3,task_SsgMainTask
 0xfc0fcdd5,task_SsgPeriodTask
@@ -1059,6 +1063,8 @@
 0xfc29481d,CzDebugPrintToFile_FW
 0xfc2a060b,UIFS_WirelessExecuteSendForever_FW
 0xfc2a0c6f,j_GiveSemaphore
+0xfc2a0ca9,j_dry_memcpy_bytes
+0xfc2a0cac,j1_dry_memcpy_bytes
 0xfc2a1038,j_set_assert_handler
 0xfc2a1068,j_CreateMessageQueue
 0xfc2a1070,j_DebugAssert2
@@ -1113,6 +1119,8 @@
 0xfc2a1618,j_createsemaphore_low
 0xfc2a1628,j_takesemaphore_low
 0xfc2a1648,j_DebugAssert
+0xfc2a1650,j_dry_memset
+0xfc2a1658,j_dry_memzero
 0xfc2a1668,j_dry_memcpy
 0xfc2a1670,j_bzero
 0xfc2a729b,task_FocusEvent

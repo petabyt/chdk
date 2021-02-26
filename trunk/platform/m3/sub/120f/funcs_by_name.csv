@@ -345,6 +345,9 @@
 0xfc18913f,Driver_EnableEventProc_FW
 0xbfe11435,dry_error_printf
 0x01100328,dry_memcpy
+0x011001c4,dry_memcpy_bytes
+0x011002d4,dry_memset
+0x011002e4,dry_memzero
 0xfc07426d,drysh_FW
 0xfc0779b5,DummyUSBConnection_FW
 0xfc1895e9,Dump32_FW
@@ -1197,6 +1200,7 @@
 0xfc1bfc59,IsSDDetect_FW
 0xfc4f33e9,IsStrobeChargeCompleted
 0xfc1bfc95,IsStrobePopup_FW
+0xfc30193c,j1_dry_memcpy_bytes
 0xbfe14fef,j1_GetSRAndDisableInterrupt
 0xbfe14ff3,j1_SetSR
 0xbfe13d6b,j2_GetSRAndDisableInterrupt
@@ -1256,6 +1260,9 @@
 0xfc302314,j_DeleteSemaphore
 0xfc30228c,j_dry_error_printf
 0xfc302414,j_dry_memcpy
+0xfc301939,j_dry_memcpy_bytes
+0xfc3023fc,j_dry_memset
+0xfc3023f4,j_dry_memzero
 0xfc159e9f,j_E2LatOn_FW
 0xfc503463,j_EF.ExtGetIntegValue_FW
 0xfc503325,j_EF.GetEFModExamDriveType_FW
@@ -2749,6 +2756,7 @@
 0xfc2dc30d,UIFS_WirelessExecuteSendForever_FW
 0xfc38b8a3,UIFS_WriteFirmInfoToFile
 0xfc38b8a3,UIFS_WriteFirmInfoToFile_FW
+0xfc1537d3,umalloc_strictly
 0xfc07767d,UndisplayFactoryMode_FW
 0xfc0bf0e3,UnLoadScript_FW
 0xfc0aa85d,UnlockAE

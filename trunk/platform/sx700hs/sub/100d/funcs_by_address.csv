@@ -65,6 +65,9 @@
 0x010d0797,j2_GetSRAndDisableInterrupt
 0x010d07a1,j2_SetSR
 0x010d094d,j_mktime_ext
+0x010d8558,dry_memcpy_bytes
+0x010d8668,dry_memset
+0x010d8678,dry_memzero
 0x010d86b8,dry_memcpy
 0x010d87a0,bzero
 0x010d87a4,memset32
@@ -694,6 +697,7 @@
 0xfc13ed2b,task_AprocBpGenTask
 0xfc148d35,AllocateUncacheableMemory
 0xfc148d61,FreeUncacheableMemory
+0xfc148d73,umalloc_strictly
 0xfc14982b,GetCurrentShutterSpeed
 0xfc14982b,GetCurrentShutterSpeed_FW
 0xfc149ad5,GetCurrentExposureTime_FW
@@ -1040,6 +1044,8 @@
 0xfc28ddab,EnableDebugLogMode_FW
 0xfc28ddb5,DisableDebugLogMode_FW
 0xfc29ab53,j_GiveSemaphore
+0xfc29ab89,j_dry_memcpy_bytes
+0xfc29ab8c,j1_dry_memcpy_bytes
 0xfc29aea8,j_set_assert_handler
 0xfc29af68,j_CreateMessageQueue
 0xfc29afa0,j_DebugAssert2
@@ -1094,6 +1100,8 @@
 0xfc29b500,j_CreateEventFlagStrictly
 0xfc29b528,j_takesemaphore_low
 0xfc29b538,j_DebugAssert
+0xfc29b540,j_dry_memset
+0xfc29b548,j_dry_memzero
 0xfc29b560,j_dry_memcpy
 0xfc29b568,j_bzero
 0xfc29dab7,task_CorctTask

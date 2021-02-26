@@ -9,6 +9,9 @@
 0x010e2a09,SDCardUHSActive_FW
 0x010ee231,j_mktime_ext
 0x010ee23b,j2_strftime
+0x010f4a90,dry_memcpy_bytes
+0x010f4ba0,dry_memset
+0x010f4bb0,dry_memzero
 0x010f4bf0,dry_memcpy
 0x010f4cd8,bzero
 0x010f4cdc,memset32
@@ -732,6 +735,7 @@
 0xfc16ee43,task_Cave2MainTask
 0xfc16f5f1,AllocateUncacheableMemory
 0xfc16f61d,FreeUncacheableMemory
+0xfc16f62f,umalloc_strictly
 0xfc17f417,task_BrtMsrTask
 0xfc183a15,MovieAF.Suspend_FW
 0xfc183a1f,MovieAF.Resume_FW
@@ -991,6 +995,8 @@
 0xfc3445d3,SetZoomPermitTargetMaxSpeedPPS_FW
 0xfc3445eb,GetZoomActuatorCurrentPosition_FW
 0xfc34c6eb,j_GiveSemaphore
+0xfc34c719,j_dry_memcpy_bytes
+0xfc34c71c,j1_dry_memcpy_bytes
 0xfc34cbc0,j_set_assert_handler
 0xfc34cc54,j_DebugAssert2
 0xfc34cc7c,j_CreateMessageQueue
@@ -1042,6 +1048,8 @@
 0xfc34d1cc,j_ClearEventFlag
 0xfc34d1d4,j_DeleteEventFlag
 0xfc34d1e4,j_strftime
+0xfc34d1ec,j_dry_memzero
+0xfc34d1f4,j_dry_memset
 0xfc34d20c,j_CreateEventFlagStrictly
 0xfc34d214,j_WaitForAnyEventFlag
 0xfc34d21c,j__log10

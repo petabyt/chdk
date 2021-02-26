@@ -7,6 +7,9 @@
 0x010e1739,task_SD1stInit
 0x010e2859,ChangeSDPortVoltage_FW
 0x010f3c59,j_mktime_ext
+0x011001c4,dry_memcpy_bytes
+0x011002d4,dry_memset
+0x011002e4,dry_memzero
 0x01100328,dry_memcpy
 0x01100410,bzero
 0x01100414,memset32
@@ -599,6 +602,7 @@
 0xfc14c22d,strrchr
 0xfc1536a5,AllocateUncacheableMemory
 0xfc1536d1,FreeUncacheableMemory
+0xfc1536e3,umalloc_strictly
 0xfc156b23,task_BrtMsrTask
 0xfc157775,task_OBCtrlTask
 0xfc157e25,task_ColorSBJTask
@@ -1406,6 +1410,8 @@
 0xfc2fd721,mzrm_createmsg
 0xfc2fd815,mzrm_sendmsg
 0xfc3018eb,j_GiveSemaphore
+0xfc301915,j_dry_memcpy_bytes
+0xfc301918,j1_dry_memcpy_bytes
 0xfc301df0,j_DebugAssert2
 0xfc301e48,j_set_assert_handler
 0xfc301f28,j_CreateCountingSemaphoreStrictly
@@ -1456,6 +1462,8 @@
 0xfc3023a8,j_DeleteEventFlag
 0xfc3023b0,j_ClearEventFlag
 0xfc3023c8,j_takesemaphore_low
+0xfc3023d0,j_dry_memzero
+0xfc3023d8,j_dry_memset
 0xfc3023f0,j_dry_memcpy
 0xfc3023f8,j_CreateEventFlagStrictly
 0xfc302400,j_WaitForAnyEventFlag

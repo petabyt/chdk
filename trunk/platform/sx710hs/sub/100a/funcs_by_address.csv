@@ -10,6 +10,9 @@
 0x010e29f3,SDCardUHSActive_FW
 0x010f4383,j_mktime_ext
 0x010f438d,j2_strftime
+0x011008fc,dry_memcpy_bytes
+0x01100a0c,dry_memset
+0x01100a1c,dry_memzero
 0x01100a60,dry_memcpy
 0x01100b48,bzero
 0x01100b4c,memset32
@@ -589,6 +592,7 @@
 0xfc12ee13,GraphicSystemCoreFinish_helper
 0xfc12fdf1,AllocateUncacheableMemory
 0xfc12fe1d,FreeUncacheableMemory
+0xfc12fe2f,umalloc_strictly
 0xfc130b67,get_current_deltasv
 0xfc1335f1,task_WBIntegTask
 0xfc137e15,MovieAF.Suspend_FW
@@ -858,6 +862,8 @@
 0xfc2c19cd,UIFS_GetNumOfOptZoomPos_FW
 0xfc2c1aa5,UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW
 0xfc2c7301,j_GiveSemaphore
+0xfc2c7321,j_dry_memcpy_bytes
+0xfc2c7324,j1_dry_memcpy_bytes
 0xfc2c7778,j_set_assert_handler
 0xfc2c77e0,j_DebugAssert2
 0xfc2c7808,j_CreateMessageQueue
@@ -906,6 +912,8 @@
 0xfc2c7d30,j_get_self_task_id
 0xfc2c7d38,j_strftime
 0xfc2c7d48,j_takesemaphore_low
+0xfc2c7d58,j_dry_memzero
+0xfc2c7d68,j_dry_memset
 0xfc2c7d70,j_SleepTask
 0xfc2c7d78,j_dry_memcpy
 0xfc2c7d88,j__log10

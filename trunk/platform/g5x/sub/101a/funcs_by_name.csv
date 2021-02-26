@@ -329,6 +329,9 @@
 0xfc5e3c25,Driver_EnableEventProc_FW
 0xbfe1143d,dry_error_printf
 0x010f4bf0,dry_memcpy
+0x010f4a90,dry_memcpy_bytes
+0x010f4ba0,dry_memset
+0x010f4bb0,dry_memzero
 0xfc0a168d,drysh_FW
 0xfc088315,DummyUSBConnection_FW
 0xfc5e40b1,Dump32_FW
@@ -1063,6 +1066,7 @@
 0xfc1cd451,IsUnitFirmMode_FW
 0xfc343fcb,IsZoomActuatorResetSensorPlusSide_FW
 0xfc1cb35b,IsZoomLensOutSidePosition_FW
+0xfc34c734,j1_dry_memcpy_bytes
 0xbfe14fed,j1_GetSRAndDisableInterrupt
 0xbfe14ff1,j1_SetSR
 0x010e1691,j1_strftime
@@ -1107,6 +1111,9 @@
 0xfc34d13c,j_DeleteSemaphore
 0xfc34d15c,j_dry_error_printf
 0xfc34d26c,j_dry_memcpy
+0xfc34c731,j_dry_memcpy_bytes
+0xfc34d20c,j_dry_memset
+0xfc34d204,j_dry_memzero
 0xfc46840b,j_E2LatOn_FW
 0xfc4ce63d,j_EF.ExtGetIntegValue_FW
 0xfc4ce4fd,j_EF.GetAdjustPreSvOffset_FW
@@ -2502,6 +2509,7 @@
 0xfc334e23,UIFS_WirelessExecuteSendForever_FW
 0xfc119665,UIFS_WriteFirmInfoToFile
 0xfc119665,UIFS_WriteFirmInfoToFile_FW
+0xfc16f62f,umalloc_strictly
 0xfc087fdd,UndisplayFactoryMode_FW
 0xfc0b87d3,UnLoadScript_FW
 0xfc2d39b5,UnlockAE
