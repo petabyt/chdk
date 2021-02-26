@@ -65,6 +65,9 @@
 0x010d06bd,j2_GetSRAndDisableInterrupt
 0x010d06c7,j2_SetSR
 0x010d0809,j_mktime_ext
+0x010da018,dry_memcpy_bytes
+0x010da128,dry_memset
+0x010da138,dry_memzero
 0x010da178,dry_memcpy
 0x010da260,bzero
 0x010da264,memset32
@@ -705,6 +708,7 @@
 0xfc1598ab,GraphicSystemCoreFinish_helper
 0xfc15a7e5,AllocateUncacheableMemory
 0xfc15a811,FreeUncacheableMemory
+0xfc15a823,umalloc_strictly
 0xfc15b557,get_current_deltasv
 0xfc15e241,task_WBIntegTask
 0xfc15f9bd,GetCurrentDriveBaseSvValue
@@ -1038,6 +1042,8 @@
 0xfc24760f,j_GetZoomActuatorCurrentPosition_FW
 0xfc247613,j_IsZoomActuatorResetSensorPlusSide_FW
 0xfc247623,GetZoomActuatorCurrentPosition_FW
+0xfc2513ed,j_dry_memcpy_bytes
+0xfc2513f0,j1_dry_memcpy_bytes
 0xfc2514b9,j_GiveSemaphore
 0xfc2516e8,j_set_assert_handler
 0xfc2517b8,j_DebugAssert2
@@ -1093,6 +1099,8 @@
 0xfc251d64,j_takesemaphore_low
 0xfc251d94,j_GetSRAndDisableInterrupt
 0xfc251d9c,j_DebugAssert
+0xfc251dac,j_dry_memset
+0xfc251db4,j_dry_memzero
 0xfc251dc4,j_dry_memcpy
 0xfc251dcc,j_bzero
 0xfc254719,mzrm_createmsg

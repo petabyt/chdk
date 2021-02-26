@@ -320,6 +320,9 @@
 0xe0552039,Driver_EnableEventProc_FW
 0xdffc6f91,dry_error_printf
 0xdffcc598,dry_memcpy
+0xdffcc618,dry_memcpy_bytes
+0xdffcc4f1,dry_memset
+0xdffcc501,dry_memzero
 0xe004c8d9,drysh_FW
 0xe003dd3d,DummyUSBConnection_FW
 0xe05524c5,Dump32_FW
@@ -1060,6 +1063,7 @@
 0xe055aa53,j_ClearNFCSystemArea_FW
 0xe03fa935,j_closedir
 0xe0044cb9,j_CreateUserSettingMirror_FW
+0xdffcc615,j_dry_memcpy_bytes
 0xe054c38f,j_E2LatOn_FW
 0xe0562897,j_EF.GetAdjustPreSvOffset_FW
 0xe056289b,j_EF.GetEFModExamDriveType_FW
@@ -2420,6 +2424,7 @@
 0xe0303fad,UIFS_WirelessExecuteSendForever_FW
 0xe047181d,UIFS_WriteFirmInfoToFile
 0xe047181d,UIFS_WriteFirmInfoToFile_FW
+0xe046e5af,umalloc_strictly
 0xe003da01,UndisplayFactoryMode_FW
 0xe0401ddd,UnLoadScript_FW
 0xe0298e3b,UnlockAE

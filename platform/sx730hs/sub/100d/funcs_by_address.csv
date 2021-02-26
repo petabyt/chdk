@@ -1,5 +1,8 @@
 0x010e12bf,SDCardUHSActive_FW
 0x010e1a37,task_SD1stInit
+0x010f5290,dry_memcpy_bytes
+0x010f53a0,dry_memset
+0x010f53b0,dry_memzero
 0x010f53f0,dry_memcpy
 0x010f54d8,bzero
 0x010f54dc,memset32
@@ -750,6 +753,7 @@
 0xfc1bd93f,UIFS_StartMoviePlay_FW
 0xfc1d4d4d,AllocateUncacheableMemory
 0xfc1d4d79,FreeUncacheableMemory
+0xfc1d4d8b,umalloc_strictly
 0xfc1ed697,NRTBL.SetDarkSubType_FW
 0xfc1ed6a9,NRTBL.SetDefectCorrectType_FW
 0xfc1ed6bb,NRTBL.SetTassenType_FW
@@ -891,6 +895,8 @@
 0xfc2e3435,DisableDebugLogMode_FW
 0xfc2f7651,task_FmidTask
 0xfc2f8d91,get_current_exp
+0xfc30154d,j_dry_memcpy_bytes
+0xfc301550,j1_dry_memcpy_bytes
 0xfc301840,j_heap_free
 0xfc301b04,j_heap_alloc
 0xfc301bd4,j_get_task_properties
@@ -901,7 +907,9 @@
 0xfc301d9c,j_get_self_task_id
 0xfc301dc4,j_takesemaphore_low
 0xfc301dcc,j_givesemaphore_low
+0xfc301ddc,j_dry_memzero
 0xfc301dec,j_dry_memcpy
+0xfc301df4,j_dry_memset
 0xfc301dfc,j_bzero
 0xfc303199,GetCzDebugFocusMode_FW
 0xfc308d65,task_ZoomEvent

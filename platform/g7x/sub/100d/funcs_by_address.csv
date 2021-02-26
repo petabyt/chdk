@@ -67,6 +67,9 @@
 0x010f776d,j2_GetSRAndDisableInterrupt
 0x010f7777,j2_SetSR
 0x010f7905,j_mktime_ext
+0x01106910,dry_memcpy_bytes
+0x01106a20,dry_memset
+0x01106a30,dry_memzero
 0x01106a74,dry_memcpy
 0x01106b5c,bzero
 0x01106b60,memset32
@@ -576,6 +579,7 @@
 0xfc0eef4f,GraphicSystemCoreFinish_helper
 0xfc0ef0cd,AllocateUncacheableMemory
 0xfc0ef0f9,FreeUncacheableMemory
+0xfc0ef10b,umalloc_strictly
 0xfc0ef2c9,E2LatOn_FW
 0xfc0f1233,ClearNFCSystemArea_FW
 0xfc0f133b,ResetNFCSystemArea_FW
@@ -1156,6 +1160,8 @@
 0xfc2e9bd9,CzDebugPrintToFile_FW
 0xfc2ed557,UIFS_WirelessExecuteSendForever_FW
 0xfc2eef29,j_GiveSemaphore
+0xfc2eef55,j_dry_memcpy_bytes
+0xfc2eef58,j1_dry_memcpy_bytes
 0xfc2ef338,j_set_assert_handler
 0xfc2ef40c,j_CreateMessageQueue
 0xfc2ef42c,j_DebugAssert2
@@ -1210,6 +1216,8 @@
 0xfc2ef9d4,j_SleepTask
 0xfc2ef9e4,j_DebugAssert
 0xfc2ef9ec,j_takesemaphore_low
+0xfc2ef9f4,j_dry_memset
+0xfc2ef9fc,j_dry_memzero
 0xfc2efa1c,j_dry_memcpy
 0xfc2efa24,j_bzero
 0xfc2f77eb,get_playrec_mode
