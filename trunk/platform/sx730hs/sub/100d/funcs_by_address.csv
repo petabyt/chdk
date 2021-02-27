@@ -1,6 +1,7 @@
 0x010e12bf,SDCardUHSActive_FW
 0x010e1a37,task_SD1stInit
 0x010f5290,dry_memcpy_bytes
+0x010f5318,dry_memmove_bytes
 0x010f53a0,dry_memset
 0x010f53b0,dry_memzero
 0x010f53f0,dry_memcpy
@@ -903,6 +904,7 @@
 0xfc301cfc,j__log10
 0xfc301d54,j_dry_error_printf
 0xfc301d7c,j_createsemaphore_low
+0xfc301d84,j_dry_memmove_bytes
 0xfc301d8c,j_CreateTask_low
 0xfc301d9c,j_get_self_task_id
 0xfc301dc4,j_takesemaphore_low

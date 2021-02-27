@@ -9,6 +9,7 @@
 0x010e2a4f,SDCardUHSActive_FW
 0x010f43a1,j_mktime_ext
 0x01100928,dry_memcpy_bytes
+0x011009b0,dry_memmove_bytes
 0x01100a38,dry_memset
 0x01100a48,dry_memzero
 0x01100a8c,dry_memcpy
@@ -1528,6 +1529,7 @@
 0xfc314d3c,j_ClearEventFlag
 0xfc314d44,j_get_self_task_id
 0xfc314d54,j_createsemaphore_low
+0xfc314d6c,j_dry_memmove_bytes
 0xfc314db4,j_takesemaphore_low
 0xfc314dc4,j_dry_memset
 0xfc314dcc,j_dry_memzero

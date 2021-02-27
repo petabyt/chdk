@@ -279,6 +279,7 @@
 0x010c1cdd,dry_error_printf
 0x010d83b0,dry_memcpy
 0x010d8250,dry_memcpy_bytes
+0x010d82d8,dry_memmove_bytes
 0x010d8360,dry_memset
 0x010d8370,dry_memzero
 0xfc06ed29,drysh_FW
@@ -947,6 +948,7 @@
 0xfc2a1250,j_dry_error_printf
 0xfc2a16d0,j_dry_memcpy
 0xfc2a0d11,j_dry_memcpy_bytes
+0xfc2a16a0,j_dry_memmove_bytes
 0xfc2a16b8,j_dry_memset
 0xfc2a16c0,j_dry_memzero
 0xfc1a4a61,j_E2LatOn_FW

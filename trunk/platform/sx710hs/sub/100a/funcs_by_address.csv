@@ -11,6 +11,7 @@
 0x010f4383,j_mktime_ext
 0x010f438d,j2_strftime
 0x011008fc,dry_memcpy_bytes
+0x01100984,dry_memmove_bytes
 0x01100a0c,dry_memset
 0x01100a1c,dry_memzero
 0x01100a60,dry_memcpy
@@ -894,6 +895,7 @@
 0xfc2c7c60,j_TryReceiveMessageQueue
 0xfc2c7c68,j_dry_error_printf
 0xfc2c7c78,j_createsemaphore_low
+0xfc2c7c80,j_dry_memmove_bytes
 0xfc2c7c88,j_LocalTime
 0xfc2c7c98,j_CreateMessageQueueStrictly
 0xfc2c7ca0,j_ReceiveMessageQueue
