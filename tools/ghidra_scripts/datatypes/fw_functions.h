@@ -485,6 +485,8 @@ __stdcall void dry_memset(void *dst, unsigned n, int c);
 __stdcall void dry_memzero(void *dst, unsigned n);
 // like dry_memcpy but additional logic for small n and unaligned
 __stdcall void dry_memcpy_bytes(void *dst, void *src, unsigned n);
+// handles overlap(?)
+__stdcall void dry_memmove_bytes(void *dst, void *src, unsigned n);
 
 #endif
 
