@@ -427,6 +427,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "dry_memset", OPTIONAL|UNUSED },
     { "dry_memzero", OPTIONAL|UNUSED },
     { "dry_memcpy_bytes", OPTIONAL|UNUSED },
+    { "dry_memmove_bytes", OPTIONAL|UNUSED },
     { "get_dial_hw_position", OPTIONAL },
 
 //    { "icache_flush_and_enable", OPTIONAL|UNUSED },
@@ -5173,6 +5174,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"dry_memset",               "[xWiSE] generateRandom Err.\n",SIG_NEAR_BEFORE(8,2),SIG_DRY_MAX(52)},
 {sig_match_dry_memzero,"dry_memzero",           "SetDefaultRecParameter_FW"},
 {sig_match_dry_memcpy_bytes,"dry_memcpy_bytes", "SaveDefectAdjTable_FW",},
+{sig_match_near_str,"dry_memmove_bytes",        "NoOperation BulkOut!Remain.Length = %lu",SIG_NEAR_AFTER(18,3)},
 {sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
