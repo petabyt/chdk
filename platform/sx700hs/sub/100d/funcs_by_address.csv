@@ -66,6 +66,7 @@
 0x010d07a1,j2_SetSR
 0x010d094d,j_mktime_ext
 0x010d8558,dry_memcpy_bytes
+0x010d85e0,dry_memmove_bytes
 0x010d8668,dry_memset
 0x010d8678,dry_memzero
 0x010d86b8,dry_memcpy
@@ -1098,6 +1099,7 @@
 0xfc29b4f0,j_DeleteEventFlag
 0xfc29b4f8,j_WaitForAnyEventFlag
 0xfc29b500,j_CreateEventFlagStrictly
+0xfc29b520,j_dry_memmove_bytes
 0xfc29b528,j_takesemaphore_low
 0xfc29b538,j_DebugAssert
 0xfc29b540,j_dry_memset

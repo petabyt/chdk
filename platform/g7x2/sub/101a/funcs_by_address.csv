@@ -74,6 +74,7 @@
 0xdffcc598,dry_memcpy
 0xdffcc615,j_dry_memcpy_bytes
 0xdffcc618,dry_memcpy_bytes
+0xdffcc6c8,dry_memmove_bytes
 0xdffcd8c5,_log
 0xdffcdc39,_log10
 0xdffcdd31,_pow

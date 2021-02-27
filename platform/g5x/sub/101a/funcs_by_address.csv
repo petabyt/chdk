@@ -10,6 +10,7 @@
 0x010ee231,j_mktime_ext
 0x010ee23b,j2_strftime
 0x010f4a90,dry_memcpy_bytes
+0x010f4b18,dry_memmove_bytes
 0x010f4ba0,dry_memset
 0x010f4bb0,dry_memzero
 0x010f4bf0,dry_memcpy
@@ -1035,6 +1036,7 @@
 0xfc34d0ec,j_TakeSemaphore
 0xfc34d104,j_createsemaphore_low
 0xfc34d10c,j_SetEventFlag
+0xfc34d114,j_dry_memmove_bytes
 0xfc34d124,j_TakeSemaphoreStrictly
 0xfc34d134,j_CreateBinarySemaphore
 0xfc34d13c,j_DeleteSemaphore

@@ -8,6 +8,7 @@
 0x010e2859,ChangeSDPortVoltage_FW
 0x010f3c59,j_mktime_ext
 0x011001c4,dry_memcpy_bytes
+0x0110024c,dry_memmove_bytes
 0x011002d4,dry_memset
 0x011002e4,dry_memzero
 0x01100328,dry_memcpy
@@ -1460,6 +1461,7 @@
 0xfc3023a4,j__log10
 0xfc3023cc,j_DeleteEventFlag
 0xfc3023d4,j_ClearEventFlag
+0xfc3023dc,j_dry_memmove_bytes
 0xfc3023ec,j_takesemaphore_low
 0xfc3023f4,j_dry_memzero
 0xfc3023fc,j_dry_memset

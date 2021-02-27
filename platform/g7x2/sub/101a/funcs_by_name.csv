@@ -321,6 +321,7 @@
 0xdffc6f91,dry_error_printf
 0xdffcc598,dry_memcpy
 0xdffcc618,dry_memcpy_bytes
+0xdffcc6c8,dry_memmove_bytes
 0xdffcc4f1,dry_memset
 0xdffcc501,dry_memzero
 0xe004c8d9,drysh_FW
