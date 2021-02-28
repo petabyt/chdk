@@ -62,9 +62,11 @@
 0x010c77bd,CreateRecursiveLock
 0x010c781f,AcquireRecursiveLock
 0x010c78d5,ReleaseRecursiveLock
+0x010c7991,GetRomID
 0x010d06bd,j2_GetSRAndDisableInterrupt
 0x010d06c7,j2_SetSR
 0x010d0809,j_mktime_ext
+0x010d08d8,j_dcache_flush_and_enable
 0x010da018,dry_memcpy_bytes
 0x010da0a0,dry_memmove_bytes
 0x010da128,dry_memset
@@ -589,6 +591,7 @@
 0xfc109baf,task_MechaNCTask
 0xfc10a54b,task_MovieTranscoder
 0xfc10ac11,get_canon_mode_list
+0xfc12dcb5,dcache_flush_and_enable
 0xfc12dcd9,dcache_clean_flush_and_disable
 0xfc12dd1f,dcache_flush_range
 0xfc12dde1,icache_flush_range
@@ -1046,6 +1049,7 @@
 0xfc251365,j_dry_memcpy_bytes
 0xfc251368,j1_dry_memcpy_bytes
 0xfc251431,j_GiveSemaphore
+0xfc25148b,j_GetRomID
 0xfc251660,j_set_assert_handler
 0xfc251730,j_DebugAssert2
 0xfc251764,j_get_task_properties

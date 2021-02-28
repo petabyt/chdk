@@ -6,10 +6,12 @@
 0x010e1581,LocalTime
 0x010e1689,j1_strftime
 0x010e17b5,task_SD1stInit
+0x010e22a1,GetRomID
 0x010e289f,ChangeSDPortVoltage_FW
 0x010e29f3,SDCardUHSActive_FW
 0x010f4383,j_mktime_ext
 0x010f438d,j2_strftime
+0x010f44b0,j_dcache_flush_and_enable
 0x011008fc,dry_memcpy_bytes
 0x01100984,dry_memmove_bytes
 0x01100a0c,dry_memset
@@ -551,6 +553,7 @@
 0xfc110d61,get_dial_hw_position
 0xfc1126fd,task_MechaAlarm
 0xfc11626d,task_MrkSetTask
+0xfc11f581,dcache_flush_and_enable
 0xfc11f5a5,dcache_clean_flush_and_disable
 0xfc11f5eb,dcache_flush_range
 0xfc11f6ad,icache_flush_range
@@ -865,6 +868,7 @@
 0xfc2c7301,j_GiveSemaphore
 0xfc2c7321,j_dry_memcpy_bytes
 0xfc2c7324,j1_dry_memcpy_bytes
+0xfc2c7375,j_GetRomID
 0xfc2c7778,j_set_assert_handler
 0xfc2c77e0,j_DebugAssert2
 0xfc2c7808,j_CreateMessageQueue

@@ -219,6 +219,7 @@
 0xfc2c323b,CzDebugPrintToFile_FW
 0xfc1362db,data_synchronization_barrier
 0xfc13616d,dcache_clean_flush_and_disable
+0xfc136149,dcache_flush_and_enable
 0xfc1361b3,dcache_flush_range
 0x010e5c8d,DebugAssert
 0x010e5ca3,DebugAssert2
@@ -792,6 +793,7 @@
 0xfc321f09,GetPropertyCase
 0xfc1d9907,GetPropertyCase_FW
 0xfc3fbc6b,GetRawBufferAdd_FW
+0x010e7341,GetRomID
 0xfc0e2233,GetRomID_FW
 0xfc1b0ddb,GetScalar_Acceleration_FW
 0xfc073337,GetSDDetect_FW
@@ -1132,6 +1134,7 @@
 0xfc2cf040,j_CreateTask
 0xfc2cf368,j_CreateTaskStrictly
 0xfc0e3b81,j_CreateUserSettingMirror_FW
+0x010f79e0,j_dcache_flush_and_enable
 0xfc2cf430,j_DebugAssert
 0xfc2cee68,j_DebugAssert2
 0xfc2cf3d8,j_DeleteEventFlag
@@ -1240,6 +1243,7 @@
 0xfc2cf318,j_GetNumberOfPostedMessages
 0xfc143d25,j_GetOpticalTemperature_FW
 0xfc1d956b,j_GetPopupOpen_FW
+0xfc2ceacd,j_GetRomID
 0xfc141561,j_GetScalar_Acceleration_FW
 0xfc1d9527,j_GetSDDetect_FW
 0xfc1d952b,j_GetSDProtect_FW

@@ -1,3 +1,4 @@
+0x01900187,GetRomID
 0xdffc4909,GetSRAndDisableInterrupt
 0xdffc491b,SetSR
 0xdffc6385,CreateTask_low
@@ -540,6 +541,7 @@
 0xe02ee515,handle_PTP_OC_GetDevicePropDesc
 0xe02f082b,get_playrec_mode
 0xe02f31db,add_ptp_handler
+0xe02fd079,j_GetRomID
 0xe0303fad,UIFS_WirelessExecuteSendForever_FW
 0xe030658f,mzrm_createmsg
 0xe0306693,mzrm_sendmsg

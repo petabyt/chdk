@@ -62,9 +62,11 @@
 0x010c77b1,CreateRecursiveLock
 0x010c7813,AcquireRecursiveLock
 0x010c78c9,ReleaseRecursiveLock
+0x010c7985,GetRomID
 0x010d07b3,j2_GetSRAndDisableInterrupt
 0x010d07bd,j2_SetSR
 0x010d0969,j_mktime_ext
+0x010d0a0c,j_dcache_flush_and_enable
 0x010d8250,dry_memcpy_bytes
 0x010d82d8,dry_memmove_bytes
 0x010d8360,dry_memset
@@ -581,6 +583,7 @@
 0xfc1242b5,ReadFastDir
 0xfc1242eb,j_closedir
 0xfc124511,get_canon_mode_list
+0xfc13c489,dcache_flush_and_enable
 0xfc13c4ad,dcache_clean_flush_and_disable
 0xfc13c4f3,dcache_flush_range
 0xfc13c5b5,icache_flush_range
@@ -1066,6 +1069,7 @@
 0xfc2a0cd7,j_GiveSemaphore
 0xfc2a0d11,j_dry_memcpy_bytes
 0xfc2a0d14,j1_dry_memcpy_bytes
+0xfc2a0e4b,j_GetRomID
 0xfc2a10a0,j_set_assert_handler
 0xfc2a10d0,j_CreateMessageQueue
 0xfc2a10d8,j_DebugAssert2

@@ -5,8 +5,10 @@
 0x010e124d,GetTimeOfSystem_FW
 0x010e1515,LocalTime
 0x010e1739,task_SD1stInit
+0x010e2201,GetRomID
 0x010e2859,ChangeSDPortVoltage_FW
 0x010f3c59,j_mktime_ext
+0x010f3dac,j_dcache_flush_and_enable
 0x011001c4,dry_memcpy_bytes
 0x0110024c,dry_memmove_bytes
 0x011002d4,dry_memset
@@ -539,6 +541,7 @@
 0xfc11c685,OpenFastDir
 0xfc11c725,ReadFastDir
 0xfc11c75b,j_closedir
+0xfc130115,dcache_flush_and_enable
 0xfc130139,dcache_clean_flush_and_disable
 0xfc13017f,dcache_flush_range
 0xfc130241,icache_flush_range
@@ -1412,6 +1415,7 @@
 0xfc30190f,j_GiveSemaphore
 0xfc301939,j_dry_memcpy_bytes
 0xfc30193c,j1_dry_memcpy_bytes
+0xfc301989,j_GetRomID
 0xfc301e14,j_DebugAssert2
 0xfc301e6c,j_set_assert_handler
 0xfc301f4c,j_CreateCountingSemaphoreStrictly

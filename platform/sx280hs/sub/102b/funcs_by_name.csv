@@ -192,6 +192,7 @@
 0xfc261a9d,CzDebugPrintToFile_FW
 0xfc12de47,data_synchronization_barrier
 0xfc12dcd9,dcache_clean_flush_and_disable
+0xfc12dcb5,dcache_flush_and_enable
 0xfc12dd1f,dcache_flush_range
 0x010c5c3d,DebugAssert
 0x010c5c53,DebugAssert2
@@ -672,6 +673,7 @@
 0xfc0c64d7,GetProductID_FW
 0xfc297839,GetPropertyCase
 0xfc1a77d3,GetPropertyCase_FW
+0x010c7991,GetRomID
 0xfc0d1bb9,GetRomID_FW
 0xfc060483,GetSDDetect_FW
 0xfc060489,GetSDProtect_FW
@@ -943,6 +945,7 @@
 0xfc251904,j_CreateTask
 0xfc251c0c,j_CreateTaskStrictly
 0xfc0c5dcb,j_CreateUserSettingMirror_FW
+0x010d08d8,j_dcache_flush_and_enable
 0xfc251d14,j_DebugAssert
 0xfc251730,j_DebugAssert2
 0xfc251b8c,j_DeleteEventFlag
@@ -1048,6 +1051,7 @@
 0xfc3e1653,j_GetMovieJpegVRAMVPixelsSize_FW
 0xfc251bf4,j_GetNumberOfPostedMessages
 0xfc138f41,j_GetOpticalTemperature_FW
+0xfc25148b,j_GetRomID
 0xfc1a7443,j_GetSDDetect_FW
 0xfc1a7447,j_GetSDProtect_FW
 0xfc25186c,j_GetSemaphoreValue
