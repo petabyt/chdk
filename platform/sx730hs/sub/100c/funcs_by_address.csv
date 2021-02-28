@@ -318,6 +318,7 @@
 0xfc0db191,dcache_flush_and_enable
 0xfc0db1b5,dcache_clean_flush_and_disable
 0xfc0db1fb,dcache_flush_range
+0xfc0db217,dcache_clean_range
 0xfc0db2bd,icache_flush_range
 0xfc0db7bf,task_BatteryTask
 0xfc0dbcbb,GetVBatVoltage_FW

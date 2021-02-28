@@ -193,6 +193,7 @@
 0xfc294885,CzDebugPrintToFile_FW
 0xfc13c61b,data_synchronization_barrier
 0xfc13c4ad,dcache_clean_flush_and_disable
+0xfc13c50f,dcache_clean_range
 0xfc13c489,dcache_flush_and_enable
 0xfc13c4f3,dcache_flush_range
 0x010c5c8d,DebugAssert

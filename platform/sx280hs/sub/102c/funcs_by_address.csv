@@ -594,6 +594,7 @@
 0xfc12dcb5,dcache_flush_and_enable
 0xfc12dcd9,dcache_clean_flush_and_disable
 0xfc12dd1f,dcache_flush_range
+0xfc12dd3b,dcache_clean_range
 0xfc12dde1,icache_flush_range
 0xfc12de15,GetSRAndDisableInterrupt
 0xfc12de27,SetSR

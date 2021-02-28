@@ -228,6 +228,7 @@
 0xe049413f,CzDebugPrint_FW
 0xe049414b,CzDebugPrintToFile_FW
 0xe042eac3,dcache_clean_flush_and_disable
+0xe042eb75,dcache_clean_range
 0xe042eb19,dcache_flush_range
 0xe05683ef,DcmTfMeasure_FW
 0xe0568471,DcmTfMeasureForSD_FW

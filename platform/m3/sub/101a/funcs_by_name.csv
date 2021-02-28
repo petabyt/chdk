@@ -247,6 +247,7 @@
 0xfc36d95f,CtrlMan_ChangeZOrder_FW
 0xfc1301bf,data_synchronization_barrier
 0xfc130051,dcache_clean_flush_and_disable
+0xfc1300b3,dcache_clean_range
 0xfc13002d,dcache_flush_and_enable
 0xfc130097,dcache_flush_range
 0x010e1001,DebugAssert

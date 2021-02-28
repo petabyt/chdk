@@ -793,6 +793,7 @@
 0xe0425cf5,SetPlayAutoShutdownTime_FW
 0xe042eac3,dcache_clean_flush_and_disable
 0xe042eb19,dcache_flush_range
+0xe042eb75,dcache_clean_range
 0xe042ec4d,icache_flush_range
 0xe042ecd9,get_self_task_errno_pointer
 0xe0431637,screenlock_helper
