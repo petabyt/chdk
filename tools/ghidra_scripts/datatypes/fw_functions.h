@@ -466,6 +466,7 @@ __stdcall void SetSR(unsigned sr_int_bit); // and this only sets it
 
 __stdcall int cache_flush_range(int is_data, void *addr, unsigned size); // dry <=52 on pre-digic 6
 __stdcall void dcache_flush_range(void *addr, unsigned size); // dry >52, or d6/d7
+__stdcall void dcache_clean_range(void *addr, unsigned size); // dry >52, or d6/d7
 __stdcall void icache_flush_range(void *addr, unsigned size); // dry >52, or d6/d7
 __stdcall void dcache_clean_flush_and_disable(void);
 __stdcall void dcache_flush_and_enable(void);
