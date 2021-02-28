@@ -417,6 +417,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "heap_alloc", OPTIONAL|UNUSED },
     { "heap_free", OPTIONAL|UNUSED },
     { "umalloc_strictly", OPTIONAL|UNUSED },
+    { "GetRomID", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -432,7 +433,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 
 //    { "icache_flush_and_enable", OPTIONAL|UNUSED },
 //    { "icache_disable_and_flush", OPTIONAL|UNUSED },
-//    { "dcache_flush_and_enable", OPTIONAL|UNUSED },
+    { "dcache_flush_and_enable", OPTIONAL|UNUSED },
     { "dcache_clean_flush_and_disable", OPTIONAL|UNUSED },
     { "dcache_flush_range", OPTIONAL|UNUSED },
 //    { "dcache_clean_range", OPTIONAL|UNUSED },
@@ -3949,6 +3950,76 @@ int sig_match_dcache_clean_flush_and_disable(firmware *fw, iter_state_t *is, sig
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
 
+int sig_match_get_rom_id(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // two variants, overlapping dryos versions
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_get_rom_id: disasm failed\n");
+        return 0;
+    }
+    if(is->insn->id == ARM_INS_MOV) {
+        if(!disasm_iter(fw,is)) {
+            printf("sig_match_get_rom_id: disasm failed\n");
+            return 0;
+        }
+        if(is->insn->id != ARM_INS_B) {
+            printf("sig_match_get_rom_id: no b\n");
+            return 0;
+        }
+    } else if(is->insn->id == ARM_INS_PUSH) {
+        const insn_match_t match_seq[]={
+            {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+            {MATCH_INS(BL, 1), {MATCH_OP_IMM_ANY}},
+            {MATCH_INS(MOV, 2), {MATCH_OP_REG_ANY,  MATCH_OP_REG_ANY}},
+            {MATCH_INS(POP, MATCH_OPCOUNT_IGNORE)},
+            {MATCH_INS(B, MATCH_OPCOUNT_IGNORE)},
+            {ARM_INS_ENDING}
+        };
+        if(!insn_match_find_next_seq(fw,is,1,match_seq)) {
+            printf("sig_match_get_rom_id: no seq\n");
+            return 0;
+        }
+    } else {
+        printf("sig_match_get_rom_id: no match first insn\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_dcache_flush_and_enable(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,12,"GetSRAndDisableInterrupt")) {
+        printf("sig_match_dcache_flush_and_enable: no GetSRAndDisableInterrupt\n");
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,8,"dcache_clean_flush_and_disable")) {
+        printf("sig_match_dcache_flush_and_enable: no dcache_clean_flush_and_disable\n");
+        return 0;
+    }
+    // some variants have a call in between, others are inline, not dry version specific
+    // expect SetSR just after sig_match_dcache_flush_and_enable
+    if(!find_next_sig_call(fw,is,112,"SetSR")) {
+        printf("sig_match_dcache_flush_and_enable: no SetSR\n");
+        return 0;
+    }
+    // call should be 2 insns before, rewind
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,2));
+    disasm_iter(fw,is);
+    uint32_t adr = get_branch_call_insn_target(fw,is);
+    if(!adr) {
+        printf("sig_match_dcache_flush_and_enable: no match call\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,adr);
+}
+
+
 int sig_match_physw_event_table(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -5209,6 +5280,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_cam_uncached_bit,"CAM_UNCACHED_BIT", "FreeUncacheableMemory"},
 {sig_match_umalloc_strictly,"umalloc_strictly", "DPOFTask"},
 {sig_match_dcache_clean_flush_and_disable,"dcache_clean_flush_and_disable", "MemoryChecker_FW"},
+{sig_match_get_rom_id,"GetRomID",               "GetRomID_FW",},
+{sig_match_dcache_flush_and_enable,"dcache_flush_and_enable", "GetRomID",0,             SIG_DRY_ANY,            SIG_NO_D7}, // d7 code is different
 {sig_match_deletefile_fut,"DeleteFile_Fut",     "Get Err TempPath"},
 {sig_match_near_str,"createsemaphore_low",      "termLock",             SIG_NEAR_AFTER(3,1)},
 // old match, malloc gets more cams and veneers

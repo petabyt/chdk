@@ -468,6 +468,7 @@ __stdcall int cache_flush_range(int is_data, void *addr, unsigned size); // dry 
 __stdcall void dcache_flush_range(void *addr, unsigned size); // dry >52, or d6/d7
 __stdcall void icache_flush_range(void *addr, unsigned size); // dry >52, or d6/d7
 __stdcall void dcache_clean_flush_and_disable(void);
+__stdcall void dcache_flush_and_enable(void);
 __stdcall void data_synchronization_barrier(void);
 
 __stdcall void *heap_alloc(void *heap, unsigned size); // used by malloc and other heaps
@@ -487,6 +488,8 @@ __stdcall void dry_memzero(void *dst, unsigned n);
 __stdcall void dry_memcpy_bytes(void *dst, void *src, unsigned n);
 // handles overlap(?)
 __stdcall void dry_memmove_bytes(void *dst, void *src, unsigned n);
+
+__stdcall int GetRomID(void *adr, int unk);
 
 #endif
 
