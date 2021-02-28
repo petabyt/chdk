@@ -1,5 +1,7 @@
 0x010e12bf,SDCardUHSActive_FW
 0x010e1a37,task_SD1stInit
+0x010e2521,GetRomID
+0x010ee6ec,j_dcache_flush_and_enable
 0x010f5290,dry_memcpy_bytes
 0x010f5318,dry_memmove_bytes
 0x010f53a0,dry_memset
@@ -313,6 +315,7 @@
 0xfc0a3cd9,UIFS_CaptureNoneStop_FW
 0xfc0a6fdd,FmtMenu_ExecuteQuickFormat_FW
 0xfc0a74bb,screenlock_helper
+0xfc0db1b9,dcache_flush_and_enable
 0xfc0db1dd,dcache_clean_flush_and_disable
 0xfc0db223,dcache_flush_range
 0xfc0db2e5,icache_flush_range
@@ -898,6 +901,7 @@
 0xfc2f8d91,get_current_exp
 0xfc30154d,j_dry_memcpy_bytes
 0xfc301550,j1_dry_memcpy_bytes
+0xfc3015e5,j_GetRomID
 0xfc301840,j_heap_free
 0xfc301b04,j_heap_alloc
 0xfc301bd4,j_get_task_properties

@@ -247,6 +247,7 @@
 0xfc36d95f,CtrlMan_ChangeZOrder_FW
 0xfc1301bf,data_synchronization_barrier
 0xfc130051,dcache_clean_flush_and_disable
+0xfc13002d,dcache_flush_and_enable
 0xfc130097,dcache_flush_range
 0x010e1001,DebugAssert
 0x010e1017,DebugAssert2
@@ -947,6 +948,7 @@
 0xfc373499,GetPropertyCase
 0xfc1893df,GetPropertyCase_FW
 0xfc5a4561,GetRawBufferAdd_FW
+0x010e2201,GetRomID
 0xfc0f846d,GetRomID_FW
 0xfc18132b,GetSafBpTableDataSize_FW
 0xfc181327,GetSafCrossTalkTableDataSize_FW
@@ -1253,6 +1255,7 @@
 0xfc3021b0,j_CreateTask
 0xfc3022c0,j_CreateTaskStrictly
 0xfc1f8b3f,j_CreateUserSettingMirror_FW
+0x010f3dac,j_dcache_flush_and_enable
 0xfc302410,j_DebugAssert
 0xfc301df0,j_DebugAssert2
 0xfc3023a8,j_DeleteEventFlag
@@ -1390,6 +1393,7 @@
 0xfc1f625d,j_GetOpticalTemperature_FW
 0xfc18900b,j_GetPopupOpen_FW
 0xfc5a76a5,j_GetPPPVersion_FW
+0xfc301965,j_GetRomID
 0xfc188fc3,j_GetSDDetect_FW
 0xfc188fc7,j_GetSDProtect_FW
 0xfc302130,j_GetSemaphoreValue

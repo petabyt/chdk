@@ -258,6 +258,7 @@
 0xfc43e7a5,CzDebugPrint_FW
 0xfc43e79b,CzDebugPrintToFile_FW
 0xfc0db1b5,dcache_clean_flush_and_disable
+0xfc0db191,dcache_flush_and_enable
 0xfc0db1fb,dcache_flush_range
 0xfc440433,DcmTfMeasure_FW
 0xfc4404af,DcmTfMeasureForSD_FW
@@ -842,6 +843,7 @@
 0xfc3ea239,GetPropertyCase_FW
 0xfc3ea211,GetPropertyCaseEnumForScript_FW
 0xfc52aca5,GetRawBufferAdd_FW
+0x010e2521,GetRomID
 0xfc098661,GetRomID_FW
 0xfc50ae89,GetRotaryEncPulseCounter_FW
 0xfc3ad8d5,GetScalar_Acceleration_FW
@@ -1134,6 +1136,7 @@
 0xfc301d54,j_createsemaphore_low
 0xfc301d64,j_CreateTask_low
 0xfc069151,j_CreateUserSettingMirror_FW
+0x010ee6ec,j_dcache_flush_and_enable
 0xfc301d2c,j_dry_error_printf
 0xfc301dc4,j_dry_memcpy
 0xfc301525,j_dry_memcpy_bytes
@@ -1247,6 +1250,7 @@
 0xfc3afe15,j_GetOpticalMilliTemperature_FW
 0xfc3afe0d,j_GetOpticalTemperature_FW
 0xfc3e9e6d,j_GetPopupOpen_FW
+0xfc3015bd,j_GetRomID
 0xfc3e9e33,j_GetSDDetect_FW
 0xfc3e9e37,j_GetSDProtect_FW
 0xfc52af8b,j_GetShutterSpeedRegularMaxLimit_FW

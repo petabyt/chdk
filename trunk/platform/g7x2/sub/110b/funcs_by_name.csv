@@ -789,6 +789,7 @@
 0xe036af69,GetPropertyCase
 0xe05523e3,GetPropertyCase_FW
 0xe05831cb,GetRawBufferAdd_FW
+0x01900187,GetRomID
 0xe0420425,GetRomID_FW
 0xe04921ad,GetScalar_Acceleration_FW
 0xe005b5c1,GetSDDetect_FW
@@ -1175,6 +1176,7 @@
 0xe0401487,j_GetOpticalMilliTemperature_FW
 0xe0401481,j_GetOpticalTemperature_FW
 0xe0552031,j_GetPopupOpen_FW
+0xe02fd079,j_GetRomID
 0xe0551ff7,j_GetSDDetect_FW
 0xe0551ffb,j_GetSDProtect_FW
 0xe0591739,j_GetShutterSpeedRegularMaxLimit_FW
