@@ -436,7 +436,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "dcache_flush_and_enable", OPTIONAL|UNUSED },
     { "dcache_clean_flush_and_disable", OPTIONAL|UNUSED },
     { "dcache_flush_range", OPTIONAL|UNUSED },
-//    { "dcache_clean_range", OPTIONAL|UNUSED },
+    { "dcache_clean_range", OPTIONAL|UNUSED },
 //    { "dcache_clean_flush_range", OPTIONAL|UNUSED },
     { "icache_flush_range", OPTIONAL|UNUSED },
     { "data_synchronization_barrier", OPTIONAL|UNUSED },
@@ -4911,7 +4911,6 @@ int is_immediate_ret_sub(firmware *fw,iter_state_t *is_init)
 // or b after pop {... lr}
 // param defines min and max number of insns
 // doesn't work on functions that don't push/pop since can't tell if unconditional branch is last
-// TODO should probably be split into a general "find last call of current func"
 #define SIG_NAMED_LAST_MAX_MASK     0x00000FFF
 #define SIG_NAMED_LAST_MIN_MASK     0x00FFF000
 #define SIG_NAMED_LAST_MIN_SHIFT    12
@@ -5391,6 +5390,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_zicokick_gt52,"zicokick_start",      "ZicoKick Start\n",0,SIG_DRY_MIN(53)},
 {sig_match_zicokick_copy,"zicokick_copy",       "zicokick_start"},
 {sig_match_zicokick_values,"zicokick_values",   "zicokick_start"},
+{sig_match_named_last,"dcache_clean_range",     "zicokick_start",               SIG_NAMED_LAST_RANGE(40,58)},
 {sig_match_init_ex_drivers,"init_ex_drivers",   "task_Startup"},
 {sig_match_omar_init,"omar_init",               "init_ex_drivers",              0,          SIG_DRY_ANY,        SIG_NO_D7},
 {sig_match_init_error_handlers,"init_error_handlers","task_Startup"},
