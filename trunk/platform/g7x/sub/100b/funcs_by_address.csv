@@ -634,6 +634,7 @@
 0xfc133d29,dcache_flush_and_enable
 0xfc133d4d,dcache_clean_flush_and_disable
 0xfc133d93,dcache_flush_range
+0xfc133daf,dcache_clean_range
 0xfc133e55,icache_flush_range
 0xfc133e89,GetSRAndDisableInterrupt
 0xfc133e9b,SetSR

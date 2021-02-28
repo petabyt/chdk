@@ -217,6 +217,7 @@
 0xfc2a3389,CzDebugPrintToFile_FW
 0xfc11f713,data_synchronization_barrier
 0xfc11f5a5,dcache_clean_flush_and_disable
+0xfc11f607,dcache_clean_range
 0xfc11f581,dcache_flush_and_enable
 0xfc11f5eb,dcache_flush_range
 0xfc5414d9,DcmTfMeasure_FW
