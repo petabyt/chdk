@@ -1470,7 +1470,7 @@ uint32_t get_direct_jump_target(firmware *fw, iter_state_t *is_init)
         if(!(fw->is->insn->id == ARM_INS_MOVT
             && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_IP
             && fw->is->insn->detail->arm.operands[1].type == ARM_OP_IMM)) {
-// doesn't match second two insn veneer, not really an arror
+// doesn't match second two insn veneer, not really an error
 //            fprintf(stderr,"get_direct_jump_target: not 2 insn ip veneer 0x%"PRIx64"\n",fw->is->insn->address);
             return 0;
         }
@@ -1698,11 +1698,13 @@ int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_d
 }
 
 /*
-advance is trying to find the last function called by a function
-function assumed to push lr, pop lr or pc (many small functions don't!)
-either the last bl/blximmg before pop {... pc}
-or b after pop {... lr}
-after min_insns up to max_insns
+advance iter_state is trying to find the last function called by a function
+function assumed to PUSH LR, POP LR or PC (many small functions don't!)
+either the last BL/BLXimm before pop {... PC}
+or B after POP {... LR}
+MOV or LDR to R0-R3 are allowed between POP LR and the final B
+If a POP occurs before min_insns, the match fails
+Calls before min_insns are ignored
 */
 uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, int max_insns)
 {
@@ -1724,7 +1726,7 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
             push_found=1;
             continue;
         }
-        // ignore everything before push (could be some mov/ldr, shoudln't be any calls)
+        // ignore everything before push (could be some mov/ldr, shouldn't be any calls)
         // TODO may want to allow starting in the middle of a function
         if(!push_found) {
             continue;
@@ -1779,7 +1781,7 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
             if(is->insn->id == ARM_INS_B && is->insn->detail->arm.cc == ARM_CC_AL) {
                 return get_branch_call_insn_target(fw,is);
             }
-            // doen't go more than one insn after pop (could be more, but uncommon)
+            // don't go more than one insn after pop (could be more, but uncommon)
             // printf("find_last_call_from_func: more than one insn after pop 0x%"PRIx64"\n",is->adr);
             return 0;
         }
