@@ -558,7 +558,7 @@ typedef struct {
     arm_reg reg1; // reg for register type operands, base for mem
     uint32_t flags; //
     int32_t imm;  // immediate value for imm, disp for mem
-    arm_reg reg2; // index reg form mem
+    arm_reg reg2; // index reg form mem, or second reg for reg range
 } op_match_t;
 #define MATCH_OP_FL_IMM     0x0001 // use IMM value
 #define MATCH_OP_FL_LAST    0x0002 // ignore all following ops, only check count
@@ -568,6 +568,7 @@ typedef struct {
 #define MATCH_OP_REST_ANY           {ARM_OP_INVALID,ARM_REG_INVALID,    MATCH_OP_FL_LAST,   0,      ARM_REG_INVALID}
 #define MATCH_OP_REG_ANY            {ARM_OP_REG,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_REG(r)             {ARM_OP_REG,    ARM_REG_##r,        0,                  0,      ARM_REG_INVALID}
+#define MATCH_OP_REG_RANGE(r1,r2)   {ARM_OP_REG,    ARM_REG_##r1,       0,                  0,      ARM_REG_##r2}
 #define MATCH_OP_IMM_ANY            {ARM_OP_IMM,    ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
 #define MATCH_OP_IMM(imm)           {ARM_OP_IMM,    ARM_REG_INVALID,    MATCH_OP_FL_IMM,    (imm),  ARM_REG_INVALID}
 #define MATCH_OP_PIMM_ANY           {ARM_OP_PIMM,   ARM_REG_INVALID,    0,                  0,      ARM_REG_INVALID}
