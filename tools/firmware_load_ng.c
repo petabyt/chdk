@@ -1744,7 +1744,7 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
             // no call found, or not found within min
             return 0;
         }
-        // found pop LR, check if next is unconditional B
+        // found pop LR, check if next is allowed tail sequence followed by unconditional B
         if(isPOP_LR(is->insn)) {
             // hit func end with less than min, no match
             if(count < min_insns) {
@@ -1754,6 +1754,27 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
             if(!disasm_iter(fw,is)) {
                 fprintf(stderr,"find_last_call_from_func: disasm failed 0x%"PRIx64"\n",is->adr);
                 return 0;
+            }
+            // allow instructions likely to appear between pop and tail call
+            // MOV or LDR to r0-r3
+            // others are possible e.g arithmetic or LDR r4,=const; LDR r0,[r4, #offset]
+            const insn_match_t match_tail[]={
+                {MATCH_INS(MOV, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
+// MOVS unlikely to be valid, though possible if followed by additional conditional instructions
+// in any case, want to match capstone 4 behavior
+#if CS_API_MAJOR < 4
+                {MATCH_INS(MOV, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
+#endif
+
+                {MATCH_INS(LDR, 2), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_ANY}},
+                {ARM_INS_ENDING}
+            };
+            while(insn_match_any(is->insn,match_tail) && count < max_insns) {
+                if(!disasm_iter(fw,is)) {
+                    fprintf(stderr,"find_last_call_from_func: disasm failed 0x%"PRIx64"\n",is->adr);
+                    return 0;
+                }
+                count++;
             }
             if(is->insn->id == ARM_INS_B && is->insn->detail->arm.cc == ARM_CC_AL) {
                 return get_branch_call_insn_target(fw,is);
@@ -1823,6 +1844,48 @@ int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match)
     return (match->id == ARM_INS_ENDING);
 }
 
+// capstone enum isn't in numeric order, (SP through PC in capstone 4, but probably shouldn't assume)
+static const arm_reg reg_order[] = {
+    ARM_REG_R0,
+    ARM_REG_R1,
+    ARM_REG_R2,
+    ARM_REG_R3,
+    ARM_REG_R4,
+    ARM_REG_R5,
+    ARM_REG_R6,
+    ARM_REG_R7,
+    ARM_REG_R8,
+    ARM_REG_R9,
+    ARM_REG_R10,
+    ARM_REG_R11,
+    ARM_REG_R12,
+    ARM_REG_SP,
+    ARM_REG_LR,
+    ARM_REG_PC,
+};
+
+int reg_in_range(arm_reg r, arm_reg min_reg, arm_reg max_reg)
+{
+    int c = -1, c_min = -1, c_max = -1;
+    int i;
+    for(i=0; i<(int)(sizeof(reg_order)/sizeof(arm_reg)); i++) {
+        if(reg_order[i] == r) {
+            c = i;
+        }
+        if(reg_order[i] == min_reg) {
+            c_min = i;
+        }
+        if(reg_order[i] == max_reg) {
+            c_max = i;
+        }
+    }
+    // any invalid / unlisted regs, false
+    if( c < 0 || c_min < 0 || c_max < 0) {
+        return 0;
+    }
+    return (c >= c_min && c <= c_max);
+}
+
 // check if single insn matches values defined by match
 int insn_match(cs_insn *insn,const insn_match_t *match)
 {
@@ -1844,7 +1907,7 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
     }
     int i;
     // operands
-    for(i=0;i<MATCH_MAX_OPS && i < insn->detail->arm.op_count; i++) {
+    for(i=0; i<MATCH_MAX_OPS && i < insn->detail->arm.op_count; i++) {
         // specific type requested?
         if(match->operands[i].type != ARM_OP_INVALID && insn->detail->arm.operands[i].type != match->operands[i].type) {
             return 0;
@@ -1852,7 +1915,13 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
         // specific registers requested?
         if(match->operands[i].reg1 != ARM_REG_INVALID) {
             if(insn->detail->arm.operands[i].type == ARM_OP_REG) {
-                if((arm_reg)insn->detail->arm.operands[i].reg != match->operands[i].reg1) {
+                // range requested
+                if(match->operands[i].reg2 != ARM_REG_INVALID) {
+                    if(!reg_in_range((arm_reg)insn->detail->arm.operands[i].reg,
+                                        match->operands[i].reg1, match->operands[i].reg2)) {
+                        return 0;
+                    }
+                } else if((arm_reg)insn->detail->arm.operands[i].reg != match->operands[i].reg1) {
                     return 0;
                 }
             } else if(insn->detail->arm.operands[i].type == ARM_OP_MEM) {
@@ -1869,7 +1938,7 @@ int insn_match(cs_insn *insn,const insn_match_t *match)
                 if(insn->detail->arm.operands[i].mem.index != match->operands[i].reg2) {
                     return 0;
                 }
-            } else {
+            } else if(insn->detail->arm.operands[i].type != ARM_OP_REG) { // reg handled above
                 fprintf(stderr,"insn_match: reg2 match requested on operand not reg or mem %d\n",
                         insn->detail->arm.operands[i].type);
             }
