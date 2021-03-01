@@ -130,6 +130,7 @@
 0xfc04f2bb,exception_handler_DataAbort
 0xfc04f2d1,exception_handler_SupervisorCall
 0xfc04f319,exception_handler_FIQ
+0xfc04f3b9,init_task_error
 0xfc04f475,exception_handler_IRQ
 0xfc04f6c5,task_Startup
 0xfc04f909,init_ex_drivers
@@ -220,6 +221,7 @@
 0xfc07205d,IsNormalCameraMode_FW
 0xfc07206b,StartFactoryModeController_FW
 0xfc075d0f,CecViewParameter_FW
+0xfc076099,dry_panic
 0xfc077e95,i2cdRead_FW
 0xfc077edb,i2cdWrite_FW
 0xfc077f4d,i2cdRegRead_FW
