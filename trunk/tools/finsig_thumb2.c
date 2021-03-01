@@ -418,6 +418,9 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "heap_free", OPTIONAL|UNUSED },
     { "umalloc_strictly", OPTIONAL|UNUSED },
     { "GetRomID", OPTIONAL|UNUSED },
+    { "init_task_error", OPTIONAL|UNUSED },
+    { "dry_panic", OPTIONAL|UNUSED },
+    { "dry_panic_low", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -5231,6 +5234,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetVideoOutType",          "GetVideoOutType_FW"},
 {sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
 
+{sig_match_near_str,"init_task_error",          "USER_MEM size checking",SIG_NEAR_AFTER(3,1)},
+{sig_match_named_last,"dry_panic",              "init_task_error",      SIG_NAMED_LAST_RANGE(4,12)},
+{sig_match_named,   "dry_panic_low",            "dry_panic",            SIG_NAMED_NTH(3,SUB),SIG_DRY_ANY,   SIG_NO_D6},
 // not present in d7, inlined in d6 dry 58p9+
 {sig_match_near_str,"data_synchronization_barrier","ER DlphCntInv",     SIG_NEAR_AFTER(3,2),SIG_DRY_MAXP(58,8),    SIG_NO_D7},
 // alternate match because "exec" lands near a literal pool on some cams

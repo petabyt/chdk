@@ -492,5 +492,9 @@ __stdcall void dry_memmove_bytes(void *dst, void *src, unsigned n);
 
 __stdcall int GetRomID(void *adr, int unk);
 
+__stdcall int init_task_error(const char *msg);
+__stdcall int dry_panic(int module, int panic_code);
+__stdcall int dry_panic_low(int module, int panic_code); // d7 does the actual panic print in a lower level function
+
 #endif
 
