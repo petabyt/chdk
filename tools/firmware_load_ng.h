@@ -542,11 +542,13 @@ typedef struct {
 int check_simple_func(firmware *fw, uint32_t adr, int match_ftype, simple_func_desc_t *info);
 
 /*
-advance is trying to find the last function called by a function
-function assumed to push lr, pop lr or pc (many small functions don't!)
-either the last bl/blximmg before pop {... pc}
-or b after pop {... lr}
-after min_insns up to max_insns
+advance iter_state is trying to find the last function called by a function
+function assumed to PUSH LR, POP LR or PC (many small functions don't!)
+either the last BL/BLXimm before pop {... PC}
+or B after POP {... LR}
+MOV or LDR to R0-R3 are allowed between POP LR and the final B
+If a POP occurs before min_insns, the match fails
+Calls before min_insns are ignored
 */
 uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, int max_insns);
 
