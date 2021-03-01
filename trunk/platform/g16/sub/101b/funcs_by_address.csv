@@ -128,6 +128,7 @@
 0xfc05e133,exception_handler_DataAbort
 0xfc05e149,exception_handler_SupervisorCall
 0xfc05e191,exception_handler_FIQ
+0xfc05e231,init_task_error
 0xfc05e2ed,exception_handler_IRQ
 0xfc05e53d,task_Startup
 0xfc05e781,init_ex_drivers
@@ -217,6 +218,7 @@
 0xfc07e979,IsDUIDFixFlag_FW
 0xfc07e9a9,IsNormalCameraMode_FW
 0xfc07e9b7,StartFactoryModeController_FW
+0xfc07f469,dry_panic
 0xfc0813ef,CecViewParameter_FW
 0xfc081845,i2c_read_proc_FW
 0xfc081893,i2c_write_proc_FW

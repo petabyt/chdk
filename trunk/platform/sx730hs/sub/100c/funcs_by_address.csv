@@ -79,6 +79,7 @@
 0xfc05ca63,exception_handler_DataAbort
 0xfc05ca79,exception_handler_SupervisorCall
 0xfc05cac1,exception_handler_FIQ
+0xfc05cb5f,init_task_error
 0xfc05cc1d,exception_handler_IRQ
 0xfc05ccf5,task_Startup
 0xfc05d0c9,init_ex_drivers
@@ -178,6 +179,7 @@
 0xfc06af67,PTM_BackupUIProperty_FW
 0xfc06afdf,GetParameterData
 0xfc071135,get_canon_mode_list
+0xfc0720a9,dry_panic
 0xfc074641,GetSRAndDisableInterrupt
 0xfc074653,SetSR
 0xfc079bc9,LoadParamDataFromAdjTableBin_FW

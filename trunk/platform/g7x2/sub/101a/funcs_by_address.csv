@@ -86,11 +86,14 @@
 0xe00202dd,exception_handler_UndefinedInstruction
 0xe0020307,exception_handler_PrefetchAbort
 0xe0020321,exception_handler_DataAbort
+0xe0020419,init_task_error
 0xe00206d5,task_Startup
 0xe00208bf,init_ex_drivers
 0xe00218ad,task_UartLog
 0xe0021a23,StartRedirectUART_FW
 0xe0021ac7,StopRedirectUART_FW
+0xe0021de7,dry_panic
+0xe0021e17,dry_panic_low
 0xe00272f3,InitializeTestRec_FW
 0xe0027347,TerminateTestRec_FW
 0xe0027ae3,Initializedccd_FW

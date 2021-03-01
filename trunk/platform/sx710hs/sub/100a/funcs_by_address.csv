@@ -139,6 +139,7 @@
 0xfc0559bb,exception_handler_DataAbort
 0xfc0559d1,exception_handler_SupervisorCall
 0xfc055a19,exception_handler_FIQ
+0xfc055ab7,init_task_error
 0xfc055b75,exception_handler_IRQ
 0xfc055dc9,task_Startup
 0xfc055ff1,init_ex_drivers
@@ -273,6 +274,7 @@
 0xfc07f92d,CreateUserSettingMirror_FW
 0xfc080285,task_ResizeTask
 0xfc080c11,task_WbSeqTask
+0xfc081d89,dry_panic
 0xfc08332b,task_JpegEncTask
 0xfc08428d,task_CreateHeaderTask
 0xfc08456f,task_DistTask

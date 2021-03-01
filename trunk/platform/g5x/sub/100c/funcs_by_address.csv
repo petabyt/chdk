@@ -139,6 +139,7 @@
 0xfc06637f,exception_handler_DataAbort
 0xfc066395,exception_handler_SupervisorCall
 0xfc0663dd,exception_handler_FIQ
+0xfc06647b,init_task_error
 0xfc066539,exception_handler_IRQ
 0xfc066779,task_Startup
 0xfc0669c1,init_ex_drivers
@@ -253,6 +254,7 @@
 0xfc08e533,GetAdjDataAreaAddress_FW
 0xfc08e537,GetAdjDurianFlagSize_FW
 0xfc08e57f,CreateUserSettingMirror_FW
+0xfc08f849,dry_panic
 0xfc091b0d,task_ShutterSoundTask
 0xfc091e67,task_DvlpSeqTask
 0xfc093a95,task_ResizeTask

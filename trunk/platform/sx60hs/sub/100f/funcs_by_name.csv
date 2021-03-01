@@ -337,6 +337,7 @@
 0x01106958,dry_memmove_bytes
 0x011069e0,dry_memset
 0x011069f0,dry_memzero
+0xfc0831b5,dry_panic
 0xfc06fbed,drysh_FW
 0xfc07ea17,DummyUSBConnection_FW
 0xfc1d99b9,Dump32_FW
@@ -1044,6 +1045,7 @@
 0xfc23fb2b,InactivateUsmCPU_FW
 0xfc0b947d,init_error_handlers
 0xfc05f651,init_ex_drivers
+0xfc05f0e5,init_task_error
 0xfc0a48d1,initComDiscovery_FW
 0xfc1da4c9,InitializeAdjustmentFunction_FW
 0xfc1da489,InitializeAdjustmentSystem_FW

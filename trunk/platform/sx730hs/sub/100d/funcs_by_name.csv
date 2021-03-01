@@ -359,6 +359,7 @@
 0x010f5318,dry_memmove_bytes
 0x010f53a0,dry_memset
 0x010f53b0,dry_memzero
+0xfc0720a9,dry_panic
 0xfc58b9ed,drysh_FW
 0xfc064255,DummyUSBConnection_FW
 0xfc3ea33b,Dump32_FW
@@ -1058,6 +1059,7 @@
 0xfc34c087,InactivateAdjLog_FW
 0xfc3a8819,init_error_handlers
 0xfc05d0c9,init_ex_drivers
+0xfc05cb5f,init_task_error
 0xfc09e945,initComDiscovery_FW
 0xfc3eae9f,InitializeAdjustmentFunction_FW
 0xfc3eae59,InitializeAdjustmentSystem_FW

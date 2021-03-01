@@ -134,6 +134,7 @@
 0xfc064427,exception_handler_DataAbort
 0xfc06443d,exception_handler_SupervisorCall
 0xfc064485,exception_handler_FIQ
+0xfc064525,init_task_error
 0xfc0645e1,exception_handler_IRQ
 0xfc064831,task_Startup
 0xfc064a91,init_ex_drivers
@@ -229,6 +230,7 @@
 0xfc079dfb,exmem_free
 0xfc079e49,ExMem.FreeCacheable_FW
 0xfc086c7d,CecViewParameter_FW
+0xfc0888a1,dry_panic
 0xfc08a5f3,HdmiRegDump_FW
 0xfc08a667,CecRegDump_FW
 0xfc08ab8d,connect_FW

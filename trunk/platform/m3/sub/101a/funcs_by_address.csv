@@ -139,6 +139,7 @@
 0xfc06306f,exception_handler_DataAbort
 0xfc063085,exception_handler_SupervisorCall
 0xfc0630cd,exception_handler_FIQ
+0xfc06316b,init_task_error
 0xfc063229,exception_handler_IRQ
 0xfc06347d,task_Startup
 0xfc0636dd,init_ex_drivers
@@ -257,6 +258,7 @@
 0xfc086a1b,RecvDeauthPacket_FW
 0xfc086a27,getEepromNum_FW
 0xfc089673,task_PingManager
+0xfc08b8f5,dry_panic
 0xfc08e6b7,InitializeTestRec_FW
 0xfc08e6fb,TerminateTestRec_FW
 0xfc08ee8b,Initializedccd_FW
