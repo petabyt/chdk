@@ -1155,7 +1155,7 @@ uint32_t fw_search_insn(firmware *fw, iter_state_t *is, search_insn_fn f, uint32
         // address is before start of current range, adjust
         if(p_adr < br->p) {
             adr=ptr2adr(fw,(uint8_t *)br->p);
-            if(!disasm_iter_init(fw,is,(uint32_t)adr)) {
+            if(!disasm_iter_init(fw,is,(uint32_t)adr | is->thumb)) {
                 return 0;
             }
             p_adr=(uint32_t *)adr2ptr(fw,(uint32_t)adr);
