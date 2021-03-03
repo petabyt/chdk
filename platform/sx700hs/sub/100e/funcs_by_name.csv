@@ -281,6 +281,7 @@
 0xfc25bebf,DoAFLock
 0xfc1b69c3,Driver.Create_FW
 0xfc1b69c3,Driver_EnableEventProc_FW
+0xfc30fbc5,dry_con_printf
 0x010c1c21,dry_error_printf
 0x010d86b8,dry_memcpy
 0x010d8558,dry_memcpy_bytes

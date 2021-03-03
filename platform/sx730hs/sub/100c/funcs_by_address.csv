@@ -1154,6 +1154,7 @@
 0xfc369f35,get_self_task_errno_pointer
 0xfc369f59,sprintf_FW
 0xfc369f6b,strncpy
+0xfc369f91,dry_con_printf
 0xfc369fd1,strlen
 0xfc369fd1,strlen_FW
 0xfc36a039,memcmp

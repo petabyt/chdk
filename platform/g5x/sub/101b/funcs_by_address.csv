@@ -1255,6 +1255,7 @@
 0xfc3bf9ad,j_free
 0xfc3bf9b1,malloc_strictly
 0xfc3bfa39,sprintf_FW
+0xfc3bfa4d,dry_con_printf
 0xfc40e7cd,APE_DraftDump_FW
 0xfc41d709,zicokick_start
 0xfc41d785,zicokick_copy

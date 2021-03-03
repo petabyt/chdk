@@ -1577,6 +1577,7 @@
 0xfc3380d3,sprintf_FW
 0xfc3380e5,memcmp
 0xfc3380e5,memcmp_FW
+0xfc338171,dry_con_printf
 0xfc3411f5,task_FmidTask
 0xfc344dd3,GraphicSystemCoreFinish
 0xfc346a77,ShutterTool.SetTv_FW

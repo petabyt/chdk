@@ -704,6 +704,7 @@
 0xe037e5d5,j_malloc
 0xe037e5d9,j_free
 0xe037e5dd,malloc_strictly
+0xe037e665,dry_con_printf
 0xe037e6a5,strcpy
 0xe037e6a5,strcpy_FW
 0xe037e6b5,sprintf_FW
