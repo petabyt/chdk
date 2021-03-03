@@ -319,6 +319,7 @@
 0xe0583245,DoMemToMemDarkSubtraction_FW
 0xe0552035,Driver.Create_FW
 0xe0552035,Driver_EnableEventProc_FW
+0xe037e665,dry_con_printf
 0xdffc6f91,dry_error_printf
 0xdffcc598,dry_memcpy
 0xdffcc618,dry_memcpy_bytes

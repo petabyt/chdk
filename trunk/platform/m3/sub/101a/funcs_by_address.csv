@@ -1697,6 +1697,7 @@
 0xfc37eca3,transfer_src_overlay
 0xfc37f5db,ScreenLock
 0xfc37f631,transfer_src_overlay_helper
+0xfc37fd9d,dry_con_printf
 0xfc37fe55,malloc
 0xfc37fe8b,free
 0xfc37febd,strcat

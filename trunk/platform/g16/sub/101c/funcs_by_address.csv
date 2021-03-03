@@ -1338,6 +1338,7 @@
 0xfc30e369,sprintf_FW
 0xfc30e37b,memcmp
 0xfc30e37b,memcmp_FW
+0xfc30e405,dry_con_printf
 0xfc335605,GraphicSystemCoreFinish
 0xfc33beb5,NRTBL.SetDarkSubType_FW
 0xfc33bec9,NRTBL.GetDarkSubType_FW

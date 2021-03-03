@@ -1712,6 +1712,7 @@
 0xfc38cd29,j_malloc
 0xfc38cd2d,j_free
 0xfc38cd31,malloc_strictly
+0xfc38d1fd,dry_con_printf
 0xfc38d23d,strncpy
 0xfc38d261,strcat
 0xfc38d283,strncmp

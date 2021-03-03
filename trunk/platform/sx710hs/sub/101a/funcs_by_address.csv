@@ -1148,6 +1148,7 @@
 0xfc32910d,j_malloc
 0xfc329111,j_free
 0xfc329115,malloc_strictly
+0xfc32919d,dry_con_printf
 0xfc34bb05,task_ReadMultiConTask
 0xfc352895,APE_DraftDump_FW
 0xfc359c8d,zicokick_start

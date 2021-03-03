@@ -1325,6 +1325,7 @@
 0xfc2b7f81,sprintf_FW
 0xfc2b7f93,memcmp
 0xfc2b7f93,memcmp_FW
+0xfc2b801d,dry_con_printf
 0xfc2be691,sscanf_FW
 0xfc2be953,qsort
 0xfc2be999,memset
