@@ -421,6 +421,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "init_task_error", OPTIONAL|UNUSED },
     { "dry_panic", OPTIONAL|UNUSED },
     { "dry_panic_low", OPTIONAL|UNUSED },
+    { "dry_con_printf", OPTIONAL|UNUSED },
 
     { "createsemaphore_low", OPTIONAL|UNUSED },
 //    { "deletesemaphore_low", UNUSED },
@@ -5131,7 +5132,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetUsableMaxAv",           "GetUsableMaxAv_FW",},
 {sig_match_named,   "GetUsableMinAv",           "GetUsableMinAv_FW",},
 // a different match would be needed for older, ND only cams maybe based on "AE Result Tv Setting "
-{sig_match_named,   "GetUsableAvRange",         "GetUsableMinAv", SIG_NAMED_SUB},
+{sig_match_named,   "GetUsableAvRange",         "GetUsableMinAv",       SIG_NAMED_SUB},
 {sig_match_named,   "GetVRAMHPixelsSize",       "GetVRAMHPixelsSize_FW",},
 {sig_match_named,   "GetVRAMVPixelsSize",       "GetVRAMVPixelsSize_FW",},
 {sig_match_named,   "GetZoomLensCurrentPoint",  "GetZoomLensCurrentPoint_FW",},
@@ -5230,9 +5231,10 @@ sig_rule_t sig_rules_main[]={
 // can't use last because func has early return POP
 {sig_match_named,   "ReleaseRecursiveLock",     "StartWDT_FW",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "MoveOpticalZoomAt",        "SS.MoveOpticalZoomAt_FW",SIG_NAMED_SUB},
-{sig_match_named,   "SetVideoOutType",          "SetVideoOutType_FW",SIG_NAMED_SUB},
+{sig_match_named,   "SetVideoOutType",          "SetVideoOutType_FW",   SIG_NAMED_SUB},
 {sig_match_named,   "GetVideoOutType",          "GetVideoOutType_FW"},
 {sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
+{sig_match_named,   "dry_con_printf",           "ShowCameraLogInfo_FW", SIG_NAMED_SUB},
 
 {sig_match_near_str,"init_task_error",          "USER_MEM size checking",SIG_NEAR_AFTER(3,1)},
 {sig_match_named_last,"dry_panic",              "init_task_error",      SIG_NAMED_LAST_RANGE(4,12)},
@@ -5329,7 +5331,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_strrchr,"strrchr",                   "ReadFast_ERROR\n",     SIG_NEAR_BEFORE(18,4)},
 {sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
 {sig_match_near_str,"strcat",                   "String can't be displayed; no more space in buffer",SIG_NEAR_AFTER(5,2)},
-{sig_match_near_str,"strchr",                   "-._~",SIG_NEAR_AFTER(4,1)},
+{sig_match_near_str,"strchr",                   "-._~",                 SIG_NEAR_AFTER(4,1)},
 {sig_match_strncpy, "strncpy",                  "UnRegisterEventProcedure",},
 {sig_match_strncmp, "strncmp",                  "EXFAT   ",},
 {sig_match_strtolx, "strtolx",                  "CheckSumAll_FW",},

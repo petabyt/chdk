@@ -496,5 +496,7 @@ __stdcall int init_task_error(const char *msg);
 __stdcall int dry_panic(int module, int panic_code);
 __stdcall int dry_panic_low(int module, int panic_code); // d7 does the actual panic print in a lower level function
 
+__stdcall void dry_con_printf(const char *fmt,...); // printf to UART
+
 #endif
 
