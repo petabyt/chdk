@@ -2399,7 +2399,7 @@ void find_exception_vec(firmware *fw, iter_state_t *is)
     // reset to main fw start
     disasm_iter_init(fw, is, fw->base + fw->main_offs + 12 + fw->thumb_default);
     if(!insn_match_find_next(fw,is,4,match_bl_mcr)) {
-        printf("no match!\n");
+        // printf("no match!\n");
         return;
     }
     // check which instruction we matched
