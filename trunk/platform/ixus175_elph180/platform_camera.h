@@ -31,7 +31,7 @@
 
     #define CAM_JPEG_WIDTH                  5152
     #define CAM_JPEG_HEIGHT                 3864
-    
+
     #define CAM_ACTIVE_AREA_X1              8 // or 16
     #define CAM_ACTIVE_AREA_Y1              16 // or 26
     #define CAM_ACTIVE_AREA_X2              5182 // or 5184
@@ -42,11 +42,11 @@
 
     #undef  CAM_SENSOR_BITS_PER_PIXEL
     #define CAM_SENSOR_BITS_PER_PIXEL       12
-    
+
     #define CAM_DNG_LENS_INFO               { 50,10, 400,10, 32,10, 69,10 } // See comments in camera.h
-    
+
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue ixus160
-    
+
     //TODO
     #define CAM_COLORMATRIX1                             \
     827547, 1000000, -290458, 1000000, -126086, 1000000, \
@@ -95,7 +95,7 @@
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does not work with raw define this
 
     #define CAM_NEED_SET_ZOOM_DELAY             500 // Define to add a delay after setting the zoom position
-    
+
 //    #undef  CAM_HAS_ERASE_BUTTON
     #undef  CAM_HAS_DISP_BUTTON
     #undef  CAM_DEFAULT_ALT_BUTTON
@@ -109,7 +109,7 @@
 
 	#undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                 0x302   // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
-	
+
 	#undef CAM_AF_LED
     #define CAM_AF_LED                      1
     //#define CAM_VIDEO_QUALITY_ONLY          1
@@ -126,5 +126,7 @@
     //#define CAM_DRIVE_MODE_FROM_TIMER_MODE  1
 
     #define CAM_UNLOCK_ANALOG_AV_IN_REC     1 // define to enable analog video out in rec mode for cameras without native support
-   
+
+    #define CAM_3ARG_DebugAssert            1 // DebugAssert takes 3 arguments
+
 //----------------------------------------------------------
