@@ -112,6 +112,27 @@ class ChecksumInfo:
 
         self.crc32_all()
 
+    def process_custom(self,stubs_data,custom_blocks):
+        smisc = stubs_data.stubs_entry_misc
+        romcode_start = smisc.get('main_fw_start')
+        # not default to get(), may be literal None
+        if not romcode_start:
+            romcode_start = smisc['ar_rom']['start_adr']
+
+        rom_base = smisc['ar_rom']['start_adr']
+
+        for bd in custom_blocks:
+            self.add_block({
+                'name':bd['name'],
+                'start_adr':bd['start_adr'],
+                'offset':bd['start_adr'] - rom_base,
+                'size':bd['end_adr'] - bd['start_adr'],
+            })
+
+        # don't merge, it ignores small spaces
+        #self.merge_blocks()
+
+        self.crc32_all()
 
     def crc32_all(self):
         infomsg(1,'%-10s %-10s %-7s %-10s %s\n'%('start_adr','offset','size','crc32','name'))
@@ -129,7 +150,7 @@ class ChecksumInfo:
         infomsg(1,"%d blocks %d bytes %d%%\n"%(len(self.blocks),self.total_size,100*self.total_size/self.filesize))
 
 
-def process_dump(sub, dump_name,stubs_data):
+def process_dump(sub, dump_name,stubs_data, custom_blocks=None):
     if not os.path.isfile(dump_name):
         warn("missing %s"%(dump_name))
         return
@@ -138,8 +159,11 @@ def process_dump(sub, dump_name,stubs_data):
     if csums.filesize == 0:
         warn("zero size %s"%(dump_name))
         return
-        
-    csums.process_stubs(stubs_data)
+
+    if custom_blocks:
+        csums.process_custom(stubs_data, custom_blocks)
+    else:
+        csums.process_stubs(stubs_data)
 
     canon_sub = (sub[0]+'.'+sub[1:]).upper()
 
@@ -167,6 +191,38 @@ def process_dump(sub, dump_name,stubs_data):
         'csums':csums,
     }
 
+# expects csv of 'start,end' and optionally name
+def load_custom_blocks(csvfile):
+    r = []
+    with open(csvfile) as fh:
+        i = 0
+        for row in csv.DictReader(fh):
+            start_adr = row.get('start')
+            if not start_adr:
+                sys.stderr.write("ERROR: expected column 'start'\n")
+                sys.exit(1)
+
+            end_adr = row.get('end')
+            if not end_adr:
+                sys.stderr.write("ERROR: expected column 'end'\n")
+                sys.exit(1)
+
+            start_adr = int(start_adr,0)
+            end_adr = int(end_adr,0)
+
+            if end_adr <= start_adr:
+                sys.stderr.write("ERROR: end <= start\n")
+                sys.exit(1)
+
+            r.append({
+                'start_adr':start_adr,
+                'end_adr':end_adr,
+                'name':row.get('name',''),
+            })
+
+    return r
+
+
 def fwsums_main():
     argparser = argparse.ArgumentParser(description='''\
 Generate crc32 checks of Canon firmware for the firmware_crc module (fwcrc.flt).
@@ -181,12 +237,13 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
         default=os.path.abspath(os.path.join(self_dir,'..')))
     argparser.add_argument("-d", "--dumps", help="CHDK dumps root, default PRIMARY_ROOT or source platform dir",action='store')
     argparser.add_argument("-o", "--out", help="Output file, default stdout",action='store')
-    argparser.add_argument('-v','--verbose',help="Increase verbosity", action='count',default=0) 
+    argparser.add_argument('-v','--verbose',help="Increase verbosity", action='count',default=0)
     argparser.add_argument("--stubsub", help="Firmware stubs, if copied sub",action='store')
     argparser.add_argument("--stubplat", help="Platform for stubs, if copied platform",action='store')
     argparser.add_argument("--dumpfile", help="specify dump file directly instead of inferring from platform/sub",action='store')
     argparser.add_argument("--camlist", help="camera_list.csv instead of inferring from current tree",action='store')
     argparser.add_argument("--header", help="output as header file",action='store_true', default=False)
+    argparser.add_argument("--custom-blocks", help="CSV defining custom ranges to CRC",action='store')
 
     args = argparser.parse_args()
 
@@ -227,6 +284,14 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
     else:
         camlist = os.path.join(chdk_root,'camera_list.csv')
 
+    custom_blocks = None
+    if args.custom_blocks:
+        # would need to be able to specify per-sub
+        if args.header:
+            sys.stderr.write("ERROR: --custom-blocks cannot be combined with --header\n")
+            sys.exit(1)
+
+        custom_blocks = load_custom_blocks(args.custom_blocks)
 
     stubs_entry_name = os.path.join(plat_dir,'stubs_entry.S')
 
@@ -263,7 +328,7 @@ Module is available from Miscellaneous Stuff -> Tools -> Checksum Canon firmware
 
     else:
         infomsg(1,'%s %s %s\n'%(plat,platsub,dump_name))
-        result = process_dump(platsub,dump_name,stubs_data)
+        result = process_dump(platsub,dump_name,stubs_data,custom_blocks)
         if result:
             r.append(result)
 
@@ -298,7 +363,7 @@ const firmware_crc_desc_t firmware_crc_desc={
 };
 '''%(smisc['fw_ver_info']['verstr_adr'],len(r),len(r[0]['csums'].blocks)))
 
-    
+
     else:
         for b in r[0]['csums'].blocks:
             if b['size']:
