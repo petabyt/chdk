@@ -67,6 +67,7 @@
 0xdffca9c9,j_LocalTime
 0xdffca9cb,j_strftime
 0xdffcac09,CreateRecursiveLock
+0xdffcac7d,AcquireRecursiveLock
 0xdffcad47,ReleaseRecursiveLock
 0xdffcc4f1,dry_memset
 0xdffcc501,dry_memzero

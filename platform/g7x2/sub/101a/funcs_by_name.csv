@@ -4,6 +4,7 @@
 0xdffcdd31,_pow
 0xe04f1139,_ToggleBatteryStatus_FW
 0xe0536e8b,AbortAEIntegralValue_FW
+0xdffcac7d,AcquireRecursiveLock
 0xdffca339,AcquireRecursiveLockStrictly
 0xe0373ceb,ActivateAdjLog_FW
 0xe0583199,ActivateImageDrive_FW
