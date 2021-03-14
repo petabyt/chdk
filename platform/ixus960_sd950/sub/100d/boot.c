@@ -64,6 +64,7 @@ void boot()
 void __attribute__((naked,noinline)) sub_FF8101A4_my() {
     //http://chdk.setepontos.com/index.php/topic,4194.0.html
     *(int*)0x1930=(int)taskCreateHook;
+    *(int*)0x1934=(int)taskCreateHook;
 
     // replacement of sub_FF844050 for correct power-on.
     //(short press = playback mode, long press = record mode)
