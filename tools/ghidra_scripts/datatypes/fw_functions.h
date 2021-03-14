@@ -498,5 +498,7 @@ __stdcall int dry_panic_low(int module, int panic_code); // d7 does the actual p
 
 __stdcall void dry_con_printf(const char *fmt,...); // printf to UART
 
+__stdcall int AcquireRecursiveLock(int lock,int timeout/*?*/);
+__stdcall int AcquireRecursiveLockStrictly(int lock,int timeout/*?*/,const char *file, int line);
 #endif
 
