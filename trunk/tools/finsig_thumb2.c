@@ -5206,7 +5206,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "hook_CreateTask_low",      "CreateTask_low",       SIG_NAMED_CLEARTHUMB},
 {sig_match_named,   "malloc_strictly",          "task_EvShel",          SIG_NAMED_NTH(2,SUB)},
 {sig_match_named,   "DebugAssert2",             "malloc_strictly",      SIG_NAMED_NTH(3,SUB)},
-{sig_match_named,   "AcquireRecursiveLockStrictly","StartWDT_FW",       SIG_NAMED_NTH(1,SUB)},
+// fails on d7 ILCs
+//{sig_match_named,   "AcquireRecursiveLockStrictly","StartWDT_FW",       SIG_NAMED_NTH(1,SUB)},
+{sig_match_named,   "AcquireRecursiveLockStrictly","PTM_AllReset_FW",   SIG_NAMED_SUB},
 {sig_match_named,   "CheckAllEventFlag",        "ChargeStrobeForFA_FW", SIG_NAMED_SUB},
 {sig_match_named,   "ClearEventFlag",           "GetAEIntegralValueWithFix_FW",SIG_NAMED_SUB},
 {sig_match_named,   "CheckAnyEventFlag",        "task_SynchTask",       SIG_NAMED_NTH(2,SUB)},
@@ -5295,7 +5297,8 @@ sig_rule_t sig_rules_main[]={
 //{sig_match_near_str,"takesemaphore_low",        "sem_test_callback",    SIG_NEAR_AFTER(12,2)},
 {sig_match_named,"takesemaphore_low",        "malloc",                  SIG_NAMED_SUB},
 // not using Strictly, to pick up veneers
-{sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3)},
+{sig_match_near_str,"AcquireRecursiveLock",     "not executed\n",SIG_NEAR_BEFORE(20,3),SIG_DRY_ANY,             SIG_NO_D7},
+{sig_match_near_str,"AcquireRecursiveLock",     "COCOA: ERR: QIF AcquireRecursiveLock QifPushmqif failure!!",SIG_NEAR_BEFORE(10,1),SIG_DRY_ANY,             SIG_NO_D6},
 {sig_match_near_str,"CreateCountingSemaphoreStrictly","DvlpSeqTask",    SIG_NEAR_BEFORE(18,3)},
 {sig_match_near_str,"CreateMessageQueue",       "CreateMessageQueue:%ld",SIG_NEAR_BEFORE(7,1)},
 {sig_match_near_str,"CreateEventFlag",          "CreateEventFlag:%ld",  SIG_NEAR_BEFORE(7,1),SIG_DRY_MAX(57)},
