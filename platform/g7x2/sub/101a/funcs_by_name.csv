@@ -2146,6 +2146,7 @@
 0xe04f80b9,StopWDT_FW
 0xe058d0f5,StopZoomEmergency_FW
 0xe0567e2b,StopZoomLens_FW
+0xe04968ad,strcat
 0xe037a0c1,strcmp
 0xe037a0c1,strcmp_FW
 0xe037e6a5,strcpy

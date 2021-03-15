@@ -183,7 +183,6 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(_sqrt                                ,0x00000000) //  0        *** != 0xdffcf241
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xe0067ab3
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xe0526847
-//NHSTUB(strcat                               ,0x00000000) //  0        *** != 0xe04968ad
 //NHSTUB(strchr                               ,0x00000000) //  0        *** != 0xe045197f
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xe03f4b5b
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xe03f4ac1
@@ -299,6 +298,7 @@ NHSTUB(rand                                   ,0xe052b617) //  0
 NHSTUB(set_control_event                      ,0xe0371a61) //  0
 NHSTUB(srand                                  ,0xe052b611) //  0
 NHSTUB(stat                                   ,0xe03740bd) //  0
+//NHSTUB(strcat                               ,0xe04968ad) //  0            == 0xe04968ad
 NHSTUB(strcmp                                 ,0xe037a0c1) //  0
 NHSTUB(strcpy                                 ,0xe037e6a5) //  0
 NHSTUB(strftime                               ,0xe0523989) //  0

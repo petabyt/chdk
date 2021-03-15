@@ -895,6 +895,7 @@
 0xe0484ca5,task_UsbcTask
 0xe0484f45,sscanf_FW
 0xe0484f57,strncpy
+0xe0484f7b,strcat
 0xe0485425,task_MechaCPUTransfer
 0xe048a29b,ShutterTool.SetTv_FW
 0xe048a2a3,ShutterTool.SetTvWithErrMode_FW

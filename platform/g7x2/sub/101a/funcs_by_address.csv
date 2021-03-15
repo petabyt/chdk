@@ -980,6 +980,7 @@
 0xe049632b,GetDISModeParameter_FW
 0xe04963ff,GetFixedPWMOutA_FW
 0xe0496405,GetFixedPWMOutB_FW
+0xe04968ad,strcat
 0xe0498c0d,task_ControlLog
 0xe049e8ad,LCDMsg_SetDrawMode_FW
 0xe049e90b,LCDMsg_SetStr_FW
