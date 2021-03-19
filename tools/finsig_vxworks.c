@@ -349,9 +349,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED|OPTIONAL },
     { "get_current_nd_value", OPTIONAL },
-    { "get_current_deltasv", OPTIONAL|UNUSED },
+    { "get_current_deltasv" },
     { "GetBaseSv", OPTIONAL|UNUSED },
-    { "GetCurrentDriveBaseSvValue", OPTIONAL|UNUSED },
+    { "GetCurrentDriveBaseSvValue" },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -783,16 +783,16 @@ int find_get_ptp_file_buf(firmware *fw, __attribute__ ((unused))string_sig *sig,
     /*
      * looking for
      * MOV r0,#4
-     * BNE 
+     * BNE
      * BL get_ptp_buf_size
      * BIC r1, r0, #1
      * MOV r0,#4
      * BL sub...
     */
-    if(!(isMOV_immed(fw,j) 
+    if(!(isMOV_immed(fw,j)
         && (fwRn(fw,j) == 0)
         && ((fwval(fw,j+1) & 0xFF000000) == 0x1A000000) // BNE
-        && isBL(fw,j+2) 
+        && isBL(fw,j+2)
         && ((fwval(fw,j+3) & 0xFFF00000) == 0xe3C00000) // BIC
         && (ALUop2(fw,j+3) == 1)
         && isMOV_immed(fw,j+4)
@@ -1065,7 +1065,7 @@ int find_get_nd_value(firmware *fw)
         return 0;
     if ( followBranch2(fw,idx2adr(fw,k2),0x01000001) != idx2adr(fw,f2) ) // ClearEventFlag?
         return 0;
-    
+
     // note the folliwng isn't super robust, but only one model
     k1 = idxFollowBranch(fw,k1,0x01000001); // PutInNdFilter_low veneer
     k1 = find_inst(fw,isB,k1,3); // veneer
@@ -1080,7 +1080,7 @@ int find_get_nd_value(firmware *fw)
     if (k1 == -1) {
         return 0;
     }
-    k1 = idxFollowBranch(fw,k1,0x01000001); // 
+    k1 = idxFollowBranch(fw,k1,0x01000001); //
     k1 = find_inst(fw,isBL,k1,2); // get_nd_value
     if (k1 == -1) {
         return 0;
@@ -1255,7 +1255,7 @@ int find_exmem_ualloc(firmware *fw)
     int k = get_saved_sig(fw,"ExMem.AllocCacheable_FW"); // newer cam
     if (k >= 0)
         return 0;
-    k = get_saved_sig(fw,"DebugAssert"); // 
+    k = get_saved_sig(fw,"DebugAssert"); //
     if (k < 0)
         return 0;
     k = adr2idx(fw, func_names[k].val);
@@ -1424,7 +1424,7 @@ int find_GetBaseSv(firmware *fw)
     if (j2 < 0)
         return 0;
     j2 = adr2idx(fw, func_names[j2].val);
-    
+
     int sadr = find_str(fw, "Sensitive.c");
     if (sadr < fw->lowest_idx)
         return 0;
@@ -2010,7 +2010,7 @@ string_sig string_sigs[] =
     { 100, "get_current_exp", "Exp  Av %d, Tv %d, Gain %d\r",0x01000001,                        0x07 },
     { 100, "EnableDispatch", "EnableDispatch : call from interrupt handler", 0,                 3 },
     { 100, "DisableDispatch", "DisableDispatch : call from interrupt handler", 0,               3 },
-    
+
     { 101, "DeleteSemaphore", "DeleteSemaphore", 0 },
     { 101, "CreateCountingSemaphore", "CreateCountingSemaphore", 0 },
     { 101, "TakeSemaphore", "TakeSemaphore", 0 },
@@ -3438,7 +3438,7 @@ int find_modelist(firmware *fw, uint32_t fadr)
     k1 = adr2idx(fw,j1);
     if (k1<0)
         return 0;
-    
+
     bprintf("// Firmware modemap table found @%08x -> ",idx2adr(fw,k1));
     output_modemap(fw,k1,k2-k1);
     return 1;
