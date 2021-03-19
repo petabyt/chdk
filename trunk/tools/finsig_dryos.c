@@ -345,10 +345,10 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_nd_value", OPTIONAL },
     { "get_current_exp", UNUSED | OPTIONAL }, // helper, underlying function of ShowCurrentExp
     { "get_current_nd_value", OPTIONAL },
-    { "get_current_deltasv", OPTIONAL|UNUSED },
+    { "get_current_deltasv", },
     { "GetUsableAvRange", OPTIONAL|UNUSED },
     { "GetBaseSv", OPTIONAL|UNUSED },
-    { "GetCurrentDriveBaseSvValue", OPTIONAL|UNUSED },
+    { "GetCurrentDriveBaseSvValue", },
 
     { "kbd_p1_f" },
     { "kbd_p1_f_cont" },
@@ -924,9 +924,9 @@ int find_get_ptp_file_buf(firmware *fw, __attribute__ ((unused))string_sig *sig,
      * MOV r0,#ptp_file_buf_id
      * bl sub...
     */
-    if(!(isMOV_immed(fw,j) 
+    if(!(isMOV_immed(fw,j)
         && (fwRn(fw,j) == 0)
-        && isBL(fw,j+1) 
+        && isBL(fw,j+1)
         && ((fwval(fw,j+2) & 0xFFF00000) == 0xe3C00000) // BIC
         && (ALUop2(fw,j+2) == 1)
         && isMOV_immed(fw,j+3)
@@ -1591,7 +1591,7 @@ int find_malloc_strictly(firmware *fw)
     if (s1 < s2-16) // the two strings should be close
         s1 = find_Nth_str(fw,"Size: %ld",2); // this string has multiple instances, try the next one
     f1 = adr2idx(fw, func_names[f1].val);
-    
+
     int r1 = find_nxt_str_ref(fw, s1, 0);
     int r2 = find_nxt_str_ref(fw, s2, 0);
     int l1 = 0;
@@ -2003,7 +2003,7 @@ int find_get_current_nd_value_iris(firmware *fw)
         blcnt++;
         if(blcnt == 6) {
             int f2 = idxFollowBranch(fw,f1+i,0x01000001);
-            // non-ND cameras have a call to return 0 
+            // non-ND cameras have a call to return 0
             if(isMOV(fw,f2) && (fwRd(fw,f2) == 0) && (fwOp2(fw,f2) == 0)) // MOV R0, 0
                 return 0;
             // veneer (might be better to require veneer)
@@ -2186,7 +2186,7 @@ int find_DoMovieFrameCapture(firmware *fw)
                             int m = 0;
                             while (m < 4)
                             {
-                                if ((fwval(fw,j3+m) & 0xFE1F0000) == 0xE41F0000) // ldr rx, 
+                                if ((fwval(fw,j3+m) & 0xFE1F0000) == 0xE41F0000) // ldr rx,
                                 {
                                     frsp_argcnt = fwRd(fw,j3+m) + 1; // this should be loaded in the right register directly
                                     frsp_buf = LDR2val(fw,j3+m);
@@ -2195,7 +2195,7 @@ int find_DoMovieFrameCapture(firmware *fw)
                                           (fw->uncached_adr+fw->maxram))) // has to be uncached ram
                                         frsp_buf = 0;
                                 }
-                                if ((fwval(fw,j3+m) & 0xFFF00000) == 0xE3A00000) // mov rx, 
+                                if ((fwval(fw,j3+m) & 0xFFF00000) == 0xE3A00000) // mov rx,
                                 {
                                     uint32_t u1 = ALUop2a(fw,j3+m);
                                     if (u1>fw->uncached_adr && u1<(fw->uncached_adr+fw->maxram))
@@ -2263,7 +2263,7 @@ int find_get_ptp_buf_size(firmware *fw)
     int k_max=k+80;
     uint32_t adr=0;
     uint32_t file_buf_id=get_ptp_file_buf_id(fw);
- 
+
     for(; k < k_max;k++) {
         // look for
         // mov r0,#file_buf_id
@@ -2301,7 +2301,7 @@ int find_GetBaseSv(firmware *fw)
     if (j < 0)
         return 0;
     j = adr2idx(fw, func_names[j].val);
-    
+
     int sadr = find_str(fw, "Sensitive.c");
     if (sadr < fw->lowest_idx)
         return 0;
@@ -2918,7 +2918,7 @@ string_sig string_sigs[] =
     { 19, "WaitForAnyEventFlagStrictly", "PostMessageQueueStrictly", 0,          0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
     { 19, "WaitForAllEventFlagStrictly", "WaitForAnyEventFlagStrictly", 0,       0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x0510 }, // name made up
     { 19, "AcquireRecursiveLockStrictly", "WaitForAllEventFlagStrictly", 0,      0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b }, // name made up
-                                                                                                                                                                                               
+
     { 19, "PostMessageQueue", "TryReceiveMessageQueue", 0,                       0x091f, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 },
     { 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x1021, 0x002c, 0x002c, 0x002c, 0x002c, 0x002c },
     { 19, "DeleteMessageQueue", "CreateMessageQueue", 0,                         0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0027, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000 },
@@ -2958,13 +2958,13 @@ string_sig string_sigs[] =
     { 19, "GetDrive_TotalClusters", "GetDrive_ClusterSize", 0,                   0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000d, 0x000c, 0x000c, 0x000c, 0x000c, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 },
     { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x000a, 0x000a, 0x000a, 0x000a, 0x000a, 0x000b, 0x000b, 0x000b, 0x000b, 0x000b },
     { 19, "GetDrive_FreeClusters", "GetDrive_TotalClusters", 0,                  0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x000b, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001 }, // alt r52 (sx510)
-                                                                                                                                                                                               
+
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002c,-0x002d,-0x0c2d,-0x0c2d,-0x0c2d,-0x0e2d },
     { 19, "time", "GetTimeOfSystem_FW", 0,                                       0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001,-0x002d, 0x0001, 0x0001,-0x0b2d, 0x0001, 0x0001 }, // alt r52 (sx510), r57 (ixus275)
     { 19, "IsInvalidTime", "GetValidSystemCalender", 0,                          0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008, 0x4008 },
     { 19, "PauseTimeOfSystem", "GetValidSystemCalender", 0,                      0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e, 0x400e },
     { 19, "ResumeTimeOfSystem", "GetValidSystemCalender", 0,                     0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012, 0x4012 },
-                                                                                                                                                                                                       
+
     { 19, "CalcLog10", "CalcLog10_FW", 0,                                       -0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f,-0x100f },
     { 19, "_dfixu", "_dfix", 0,                                                  0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c, 0x1f2c },
     { 19, "_dsub", "_sqrt", 0,                                                   0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d, 0x165d },
@@ -6791,13 +6791,13 @@ void find_AdditionAgent_RAM(firmware *fw)
         int n;
         for (n=1; n<16; n++)
         {
-            if (fwval(fw,j1+n) == 0xe3500a32) // cmp  r0, #0x32000 
+            if (fwval(fw,j1+n) == 0xe3500a32) // cmp  r0, #0x32000
             {
                 ramsize = 0x32000;
                 sizeloc = idx2adr(fw,j1+n);
                 break;
             }
-            else if (fwval(fw,j1+n) == 0xe3500a22) // cmp  r0, #0x22000 
+            else if (fwval(fw,j1+n) == 0xe3500a22) // cmp  r0, #0x22000
             {
                 ramsize = 0x22000;
                 sizeloc = idx2adr(fw,j1+n);
@@ -6882,7 +6882,7 @@ typedef struct {
     int     num;    // internal id from enum
     int     id;     // propcase id, as found
     int     use;    // 0: informational only; 1: use for propset guess AND print as #define; 2: use for propset guess
-    
+
     int     id_ps2; // id in propset 2
     int     id_ps3; // id in propset 3
     int     id_ps4; // id in propset 4
@@ -7019,13 +7019,13 @@ void find_propset(firmware *fw)
 {
     uint32_t used=0;
     uint32_t hits[KNOWN_PROPSET_COUNT];
-    
+
     memset(hits, 0, KNOWN_PROPSET_COUNT*sizeof(uint32_t));
-    
+
     find_prop_matches(fw);
-    
+
     bprintf("\n// Known propcases\n");
-    
+
     uint32_t n;
     for (n=0; n<PROPCASE_HANDLED_COUNT; n++)
     {
@@ -7386,7 +7386,7 @@ void find_key_vals(firmware *fw)
         print_physw_raw_vals(fw, tadr, tsiz, tlen);
 #endif
         bprintf("// Bitmap masks and physw_status index values for SD_READONLY and USB power flags (for kbd.c).\n");
-        if (fw->dryos_ver >= 58) 
+        if (fw->dryos_ver >= 58)
         {
             // Event ID's have changed again in DryOS 58 **********
             print_kval(fw,tadr,tsiz,tlen,0x30A,"SD_READONLY","_FLAG");
@@ -7416,7 +7416,7 @@ void find_key_vals(firmware *fw)
         uint32_t key_half = add_kmval(fw,tadr,tsiz,tlen,0,"KEY_SHOOT_HALF",0);
         add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL",key_half);
         add_kmval(fw,tadr,tsiz,tlen,1,"KEY_SHOOT_FULL_ONLY",0);
-        
+
         if (fw->dryos_ver == 52)  // unclear if this applies any other ver
         {
             add_kmval(fw,tadr,tsiz,tlen,3,"KEY_ZOOM_IN",0);
@@ -8179,7 +8179,7 @@ void output_firmware_vals(firmware *fw)
     }
 
     find_AdditionAgent_RAM(fw);
-    
+
     bprintf("\n");
 
     uint32_t u = fw->base+fw->fsize*4;
