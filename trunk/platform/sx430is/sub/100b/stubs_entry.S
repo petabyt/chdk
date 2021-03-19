@@ -268,6 +268,8 @@ NHSTUB(add_ptp_handler                        ,0xff1585fc) //121
 NHSTUB(apex2us                                ,0xff2ef70c) //121
 NHSTUB(err_init_task                          ,0xff0248d0) //111
 NHSTUB(free                                   ,0xff025840) //112
+NHSTUB(get_current_deltasv                    ,0xff12ae84) //122
+NHSTUB(GetCurrentDriveBaseSvValue             ,0xff0d47f8) //120
 NHSTUB(kbd_p1_f                               ,0xff02d154) //109
 NHSTUB(kbd_p1_f_cont                          ,0xff02d160) //109
 NHSTUB(kbd_p2_f                               ,0xff02c800) //109

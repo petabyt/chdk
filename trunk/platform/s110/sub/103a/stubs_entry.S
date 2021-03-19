@@ -294,6 +294,8 @@ NHSTUB(exmem_ufree                            ,0xf80d1508) //101
 NHSTUB(free                                   ,0xf8002f54) //112
 NHSTUB(get_nd_value                           ,0xf84251b4) //122
 NHSTUB(get_current_nd_value                   ,0xf8425184) //122
+NHSTUB(get_current_deltasv                    ,0xf80f7d2c) //122
+NHSTUB(GetCurrentDriveBaseSvValue             ,0xf80fe178) //120
 NHSTUB(kbd_p1_f                               ,0xf8021558) //109
 NHSTUB(kbd_p1_f_cont                          ,0xf8021564) //109
 NHSTUB(kbd_p2_f                               ,0xf8020cfc) //109

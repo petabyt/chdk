@@ -272,6 +272,8 @@ NHSTUB(err_init_task                          ,0xff8248cc) //111
 NHSTUB(free                                   ,0xff82583c) //112
 NHSTUB(get_nd_value                           ,0xffae9ce4) //123
 NHSTUB(get_current_nd_value                   ,0xffae9c84) //122
+NHSTUB(get_current_deltasv                    ,0xff91c99c) //122
+NHSTUB(GetCurrentDriveBaseSvValue             ,0xff8c63a4) //120
 NHSTUB(kbd_p1_f                               ,0xff82cec0) //109
 NHSTUB(kbd_p1_f_cont                          ,0xff82cecc) //109
 NHSTUB(kbd_p2_f                               ,0xff82c5c4) //109
