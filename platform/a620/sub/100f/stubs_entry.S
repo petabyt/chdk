@@ -177,6 +177,8 @@ NHSTUB(apex2us                                ,0xffc98f9c) //  1
 NHSTUB(close                                  ,0xffec2b80) //109
 NHSTUB(exmem_ualloc                           ,0xffc02830) //122
 NHSTUB(exmem_ufree                            ,0xffc0287c) //122
+NHSTUB(get_current_deltasv                    ,0xffc99f94) //122
+NHSTUB(GetCurrentDriveBaseSvValue             ,0xffca2890) //107
 NHSTUB(kbd_p1_f                               ,0xffc16164) //  1
 NHSTUB(kbd_p1_f_cont                          ,0xffc16170) //109
 NHSTUB(kbd_p2_f                               ,0xffc16548) //  1

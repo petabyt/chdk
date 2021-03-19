@@ -218,6 +218,8 @@ NHSTUB(GetUsableMaxAv                         ,0xfc5e2925) //  0
 NHSTUB(GetUsableMinAv                         ,0xfc5e2913) //  0
 NHSTUB(get_nd_value                           ,0xfc4ea847) //  0
 NHSTUB(get_current_nd_value                   ,0xfc4ea821) //  0
+NHSTUB(get_current_deltasv                    ,0xfc469d3f) //  0
+NHSTUB(GetCurrentDriveBaseSvValue             ,0xfc3afda3) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc3b6eaf) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc3b9f29) //  0
 NHSTUB(GetKbdState                            ,0xfc09b723) //  0
