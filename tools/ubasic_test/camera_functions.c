@@ -759,6 +759,18 @@ long shooting_get_current_av96()
     return 0;
 }
 
+long shooting_get_current_base_sv96()
+{
+    printf("*** shooting_get_current_base_sv96 ***\n");
+    return 0;
+}
+
+long shooting_get_current_delta_sv96()
+{
+    printf("*** shooting_get_current_delta_sv96 ***\n");
+    return 0;
+}
+
 short shooting_get_av96_from_aperture(int aperture)
 {
     printf("*** shooting_get_av96_from_aperture %d ***\n", aperture);

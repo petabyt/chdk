@@ -383,6 +383,8 @@ long shooting_get_current_tv96()
     return _GetCurrentShutterSpeed();
 }
 long shooting_get_current_av96()    { return _GetCurrentAvValue(); }
+long shooting_get_current_delta_sv96() { return _get_current_deltasv(); }
+long shooting_get_current_base_sv96() { return _GetCurrentDriveBaseSvValue(); }
 
 long IsStrobeChargeCompleted()      { return _IsStrobeChargeCompleted(); }
 void SetCurrentCaptureModeType()    { _SetCurrentCaptureModeType(); }
