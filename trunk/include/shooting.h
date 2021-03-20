@@ -187,6 +187,8 @@ extern void PutInNdFilter();
 extern void PutOutNdFilter();
 extern long shooting_get_current_av96();
 extern long shooting_get_current_tv96();
+extern long shooting_get_current_delta_sv96();
+extern long shooting_get_current_base_sv96();
 extern long IsStrobeChargeCompleted();
 extern void SetCurrentCaptureModeType();
 extern int shooting_get_imager_active();

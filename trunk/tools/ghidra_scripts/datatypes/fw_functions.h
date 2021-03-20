@@ -55,6 +55,8 @@ __stdcall short get_nd_value(void);
 __stdcall short get_current_nd_value(void);
 __stdcall int GetCurrentShutterSpeed(void);
 __stdcall int GetCurrentAvValue(void);
+__stdcall int get_current_deltasv(void);
+__stdcall int GetCurrentDriveBaseSvValue(void);
 __stdcall short GetUsableMinAv(void);
 __stdcall short GetUsableMaxAv(void);
 __stdcall int GetCurrentTargetDistance(void);

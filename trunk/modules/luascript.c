@@ -771,6 +771,21 @@ static int luaCB_get_current_tv96( lua_State* L )
   return 1;
 }
 
+// get live view "delta sv" value: APEX*96 offset from base value
+static int luaCB_get_current_delta_sv96( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_current_delta_sv96() );
+  return 1;
+}
+
+// get live view "drive base sv" value: APEX*96 base value
+static int luaCB_get_current_base_sv96( lua_State* L )
+{
+  lua_pushnumber( L, shooting_get_current_base_sv96() );
+  return 1;
+}
+
+
 // get the exposure value of the ND filter, or 0 if not present
 static int luaCB_get_nd_value_ev96( lua_State* L )
 {
@@ -2835,6 +2850,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_nd_current_ev96)
     FUNC(get_current_av96)
     FUNC(get_current_tv96)
+    FUNC(get_current_delta_sv96)
+    FUNC(get_current_base_sv96)
     FUNC(get_imager_active)
     FUNC(get_canon_image_format)
     FUNC(get_canon_raw_support)

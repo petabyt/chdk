@@ -705,6 +705,14 @@ static int factor(void)
     accept(TOKENIZER_GET_CURRENT_TV96);
     r = shooting_get_current_tv96();
     break;
+  case TOKENIZER_GET_CURRENT_DELTA_SV96:
+    accept(TOKENIZER_GET_CURRENT_DELTA_SV96);
+    r = shooting_get_current_delta_sv96();
+    break;
+  case TOKENIZER_GET_CURRENT_BASE_SV96:
+    accept(TOKENIZER_GET_CURRENT_BASE_SV96);
+    r = shooting_get_current_base_sv96();
+    break;
   case TOKENIZER_GET_IMAGER_ACTIVE:
     accept(TOKENIZER_GET_IMAGER_ACTIVE);
     r = shooting_get_imager_active();

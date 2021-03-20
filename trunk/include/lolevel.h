@@ -30,6 +30,8 @@ extern short _get_current_nd_value(void);
 extern volatile long focus_busy;
 extern long _GetCurrentShutterSpeed();
 extern long _GetCurrentAvValue();
+extern long _get_current_deltasv(void);
+extern long _GetCurrentDriveBaseSvValue(void);
 extern short _GetUsableMinAv(void);
 extern short _GetUsableMaxAv(void);
 extern long _GetCurrentTargetDistance();
