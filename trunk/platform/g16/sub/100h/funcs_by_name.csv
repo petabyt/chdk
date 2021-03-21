@@ -1927,6 +1927,7 @@
 0xfc15fa69,strncmp
 0xfc30e123,strncpy
 0xfc0f922b,strrchr
+0xfc15faa5,strstr
 0xfc0f915f,strtol
 0xfc0f901d,strtolx
 0xfc46cea5,SwitchOffDisplay_FW

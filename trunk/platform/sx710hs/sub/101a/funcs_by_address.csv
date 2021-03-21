@@ -1269,6 +1269,7 @@
 0xfc397459,strftime
 0xfc39782d,srand
 0xfc397833,rand
+0xfc39787b,strstr
 0xfc39a02b,task_ImgPlyTask
 0xfc39a1dd,task_ImgPlyTsk2
 0xfc39eda9,task_DetSeqT

@@ -844,6 +844,7 @@
 0xe0451397,Read
 0xe0451397,Read_FW
 0xe045165f,task_MovieInit
+0xe045197f,strchr
 0xe04519d5,task_OBCtrlTask
 0xe045be0d,imager_active_callback
 0xe045bea3,ImagerActivate
@@ -1109,6 +1110,7 @@
 0xe04f7ff5,task_WdtPU1Check
 0xe04f807b,StartWDT_FW
 0xe04f80b9,StopWDT_FW
+0xe04f8217,strstr
 0xe04fa755,task_MovieTranscoder
 0xe04fd055,task_Nd
 0xe04fd789,get_current_nd_value

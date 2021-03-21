@@ -2147,6 +2147,7 @@
 0xe058d141,StopZoomEmergency_FW
 0xe0567e97,StopZoomLens_FW
 0xe0484f7b,strcat
+0xe045197f,strchr
 0xe037a0c1,strcmp
 0xe037a0c1,strcmp_FW
 0xe037e6a5,strcpy
@@ -2157,6 +2158,7 @@
 0xe0422079,strncmp
 0xe0484f57,strncpy
 0xe04b23d9,strrchr
+0xe04f8213,strstr
 0xe04e84cb,strtol
 0xe04e8371,strtolx
 0xe058426d,SwitchOffDisplay_FW

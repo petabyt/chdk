@@ -728,6 +728,7 @@
 0xfc15f645,strftime
 0xfc15fa69,strncmp
 0xfc15fa93,strchr
+0xfc15faa5,strstr
 0xfc161d7d,task_AprocMainTask
 0xfc161dfb,task_AprocBpPwmTask
 0xfc161e5b,task_AprocBpGenTask
