@@ -189,7 +189,10 @@ int find_bytes_all(firmware *fw, const void *bytes, size_t len, uint32_t adr, ui
 // NOTE only handles ROM addresses
 uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr);
 
-// as above, but without terminating null
+// as above, but ending within range of LDR pc or ADR from main fw code
+uint32_t find_next_str_bytes_main_fw(firmware *fw, const char *str, uint32_t adr);
+
+// as find_next_str_bytes, but without terminating null
 uint32_t find_next_substr_bytes(firmware *fw, const char *str, uint32_t adr);
 
 // find a string within range of LDR pc or ADR, starting from main fw
@@ -518,6 +521,19 @@ int find_and_get_var_ldr(firmware *fw,
                             int max_seq_insns,
                             arm_reg match_val_reg, // ARM_REG_INVALID for any
                             var_ldr_desc_t *result);
+/*
+find call that receives specified constant in specified r0-r3 reg
+search starting from is to max_search_bytes
+allow up to max_gap_insns between constant load and call, generally small (4-8 max)
+returns address of call with thumb bit set according to mode, or 0 on failure
+modifies is and fw->is
+*/
+int find_const_ref_call(firmware *fw,
+                            iter_state_t *is,
+                            int max_search_bytes,
+                            int max_gap_insns, // insns between ref and call
+                            arm_reg match_reg, // must be R0-R3
+                            uint32_t val);
 
 /*
 check for, and optionally return information about
