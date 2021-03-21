@@ -193,8 +193,7 @@ uint32_t find_next_str_bytes_range(firmware *fw, const char *str, uint32_t adr,u
     return find_next_bytes_range(fw,str,strlen(str)+1,adr,max_adr);
 }
 
-// find a string within range of LDR pc or ADR, starting from main fw
-uint32_t find_str_bytes_main_fw(firmware *fw, const char *str)
+uint32_t find_next_str_bytes_main_fw(firmware *fw, const char *str, uint32_t adr)
 {
     // max is end of fw code + 4096, assuming it fits in fw
     // while early code could technically load from base - 1k, unlikely
@@ -204,8 +203,13 @@ uint32_t find_str_bytes_main_fw(firmware *fw, const char *str)
     } else {
         max_adr = fw->base + fw->size8;
     }
-    // +1 to include the null in memcmp
-    return find_next_bytes_range(fw,str,strlen(str)+1,fw->rom_code_search_min_adr,max_adr);
+    return find_next_bytes_range(fw,str,strlen(str)+1,adr,max_adr);
+}
+
+// find a string within range of LDR pc or ADR, starting from main fw
+uint32_t find_str_bytes_main_fw(firmware *fw, const char *str)
+{
+    return find_next_str_bytes_main_fw(fw,str,fw->rom_code_search_min_adr);
 }
 
 uint32_t find_next_str_bytes(firmware *fw, const char *str, uint32_t adr)
@@ -1627,6 +1631,50 @@ int find_and_get_var_ldr(firmware *fw,
         r.adr_final = r.adr_adj + r.off;
         memcpy(result,&r,sizeof(r));
         return 1;
+    }
+    return 0;
+}
+
+/*
+find call that receives specified constant in specified r0-r3 reg
+search starting from is to max_search_bytes
+allow up to max_gap_insns between constant load and call, generally small (4-8 max)
+returns address of call with thumb bit set according to mode, or 0 on failure
+*/
+int find_const_ref_call(firmware *fw,
+                            iter_state_t *is,
+                            int max_search_bytes,
+                            int max_gap_insns,
+                            arm_reg match_reg, // must be R0-R3
+                            uint32_t val)
+
+{
+    if(match_reg < ARM_REG_R0 || match_reg > ARM_REG_R3) {
+        fprintf(stderr,"find_const_ref_call: invalid match_reg %d\n",match_reg);
+        return 0;
+    }
+    if(max_gap_insns >= ADR_HIST_SIZE) {
+        fprintf(stderr,"find_const_ref_call: invalid max_gap_insns %d\n",max_gap_insns);
+        return 0;
+    }
+    // search for a ref to constant
+    while(fw_search_insn(fw,is,search_disasm_const_ref,val,NULL,(uint32_t)(is->adr+max_search_bytes))) {
+        uint32_t next_adr = (uint32_t)is->adr;
+        // search for next bl / blx
+        // could search include b for tail calls, but hard to distinguish
+        if(insn_match_find_next(fw,is,max_gap_insns,match_bl_blximm)) {
+            uint32_t reg_num = match_reg - ARM_REG_R0;
+            uint32_t reg_bit = 1 << reg_num;
+            uint32_t regs[4];
+            // backtrack to find out if const ref ends up in desired reg
+            if((get_call_const_args(fw,is,max_gap_insns,regs)&reg_bit)==reg_bit) {
+                if(regs[reg_num] == val) {
+                    return iter_state_adr(is);
+                }
+            }
+        }
+        // not matched, restore is and advance one instruction
+        disasm_iter_init(fw,is,next_adr | is->thumb);
     }
     return 0;
 }
