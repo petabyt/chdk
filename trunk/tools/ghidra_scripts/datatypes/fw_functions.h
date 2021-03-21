@@ -502,5 +502,6 @@ __stdcall void dry_con_printf(const char *fmt,...); // printf to UART
 
 __stdcall int AcquireRecursiveLock(int lock,int timeout/*?*/);
 __stdcall int AcquireRecursiveLockStrictly(int lock,int timeout/*?*/,const char *file, int line);
+__stdcall int strstr(const char *s1, const char *s2);
 #endif
 
