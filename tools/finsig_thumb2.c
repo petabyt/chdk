@@ -28,6 +28,9 @@
                                 | (((n)<<SIG_NEAR_COUNT_SHIFT)&SIG_NEAR_COUNT_MASK))
 #define SIG_NEAR_BEFORE(max_insns,n) (SIG_NEAR_AFTER(max_insns,n)|SIG_NEAR_REV)
 
+#define SIG_STRCALL_ARG_MASK    0x3
+#define SIG_STRCALL_ARG(arg_num) (arg_num)
+
 /* copied from finsig_dryos.c */
 char    out_buf[32*1024] = "";
 int     out_len = 0;
@@ -282,6 +285,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "strrchr" },
     { "strtol" },
     { "strtolx" },
+    { "strstr", UNUSED|OPTIONAL},
 
     { "task_CaptSeq" },
     { "task_DvlpSeqTask", OPTIONAL },
@@ -2836,7 +2840,7 @@ int sig_match_qsort(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 // ...
 // strcpy
 // ...
-// strchr
+// strrchr
 // ...
 // DeleteDirectory_Fut
 int sig_match_deletedirectory_fut(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -4848,6 +4852,40 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// find call that recieves string sig->ref_name in reg
+// returns address w/thumb bit set according to current state of call instruction
+// modifies is and potentially fw->is
+// does not currently handle indirect refs
+// handles multiple instances of string
+uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    arm_reg reg = ARM_REG_R0 + (rule->param & SIG_STRCALL_ARG_MASK);
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name); // direct string must be near actual code
+    if(!str_adr) {
+        printf("find_str_arg_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return 0;
+    }
+
+    do {
+        disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+        uint32_t call_adr = find_const_ref_call(fw, is, SEARCH_NEAR_REF_RANGE*2, 8, reg, str_adr);
+        if(call_adr) {
+            return call_adr;
+        }
+        str_adr = find_next_str_bytes_main_fw(fw,rule->ref_name, str_adr+strlen(rule->ref_name));
+    } while (str_adr);
+    printf("find_str_arg_call: no match %s\n",rule->name);
+    return 0;
+}
+
+int sig_match_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t call_adr = find_str_arg_call(fw,is,rule);
+    if(call_adr) {
+        return save_sig_match_call(fw, rule, call_adr);
+    }
+    return 0;
+}
 
 int sig_match_prop_string(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
@@ -5238,6 +5276,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
 {sig_match_named,   "dry_con_printf",           "ShowCameraLogInfo_FW", SIG_NAMED_SUB},
 
+{sig_match_str_arg_call,"strstr",               "AUTPLAY",              SIG_STRCALL_ARG(1)},
+{sig_match_named_last,"strchr",                 "strstr",               SIG_NAMED_LAST_RANGE(14,22)},
 {sig_match_near_str,"init_task_error",          "USER_MEM size checking",SIG_NEAR_AFTER(3,1)},
 {sig_match_named_last,"dry_panic",              "init_task_error",      SIG_NAMED_LAST_RANGE(4,12)},
 {sig_match_named,   "dry_panic_low",            "dry_panic",            SIG_NAMED_NTH(3,SUB),SIG_DRY_ANY,   SIG_NO_D6},
@@ -5335,7 +5375,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_time,    "time",                     "<UseAreaSize> DataWidth : %d , DataHeight : %d\r\n",},
 {sig_match_near_str,"strcat",                   "String can't be displayed; no more space in buffer",SIG_NEAR_AFTER(5,2),SIG_DRY_MAX(52)},
 {sig_match_near_str,"strcat",                   "/api/getimagelist",    SIG_NEAR_AFTER(4,1),SIG_DRY_MIN(53)},
-{sig_match_near_str,"strchr",                   "-._~",                 SIG_NEAR_AFTER(4,1)},
+//{sig_match_near_str,"strchr",                   "-._~",                 SIG_NEAR_AFTER(4,1)}, // ref not in d7 main fw
 {sig_match_strncpy, "strncpy",                  "UnRegisterEventProcedure",},
 {sig_match_strncmp, "strncmp",                  "EXFAT   ",},
 {sig_match_strtolx, "strtolx",                  "CheckSumAll_FW",},
