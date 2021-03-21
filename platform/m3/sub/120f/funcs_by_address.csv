@@ -1172,6 +1172,7 @@
 0xfc20039d,memcpy_FW
 0xfc20045b,strncmp
 0xfc200485,strchr
+0xfc200497,strstr
 0xfc2019ab,task_AprocMainTask
 0xfc201a37,task_AprocBpPwmTask
 0xfc201a97,task_AprocBpGenTask

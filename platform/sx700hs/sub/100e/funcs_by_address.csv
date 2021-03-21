@@ -699,6 +699,7 @@
 0xfc13c7db,strtol
 0xfc13c813,strncmp
 0xfc13c83d,strchr
+0xfc13c84f,strstr
 0xfc13eb73,task_AprocMainTask
 0xfc13ebff,task_AprocBpPwmTask
 0xfc13ec5f,task_AprocBpGenTask

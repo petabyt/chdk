@@ -2128,6 +2128,7 @@
 0xfc506f21,atol_FW
 0xfc506f29,strtolx
 0xfc50706b,strtol
+0xfc50709b,strstr
 0xfc507757,task_TskCocoa2
 0xfc50775d,task_TskCocoa1
 0xfc507763,task_TskCocoa0

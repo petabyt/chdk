@@ -2467,6 +2467,7 @@
 0xfc2003ef,strncmp
 0xfc37befd,strncpy
 0xfc14c22d,strrchr
+0xfc20042b,strstr
 0xfc14c21f,strtol
 0xfc14c0dd,strtolx
 0xfc431d35,SubCPUMemoryDump_FW

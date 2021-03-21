@@ -1930,6 +1930,7 @@
 0xfc14aa15,strncmp
 0xfc2b7e71,strncpy
 0xfc0d3387,strrchr
+0xfc38f98d,strstr
 0xfc09b63b,strtol
 0xfc09b4f9,strtolx
 0xfc3e0ae5,SwitchOffDisplay_FW

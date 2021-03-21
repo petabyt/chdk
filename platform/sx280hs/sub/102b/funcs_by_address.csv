@@ -1391,6 +1391,7 @@
 0xfc373355,task_TricEncMsgTask
 0xfc373d31,task_TricInitTask
 0xfc38e929,memShow_FW
+0xfc38f8fd,strstr
 0xfc390175,task_ImgPlyTask
 0xfc390b4b,task_DevelopModule
 0xfc3911cd,task_FaceScoreTask

@@ -1334,6 +1334,7 @@
 0xfc4575ff,sscanf_FW
 0xfc457611,srand
 0xfc457617,rand
+0xfc45765f,strstr
 0xfc459903,task_ImgPlyTask
 0xfc459ab5,task_ImgPlyTsk2
 0xfc45f2af,task_DetSeqT

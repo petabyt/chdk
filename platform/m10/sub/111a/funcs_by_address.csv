@@ -1216,6 +1216,7 @@
 0xfc2019a5,memcpy
 0xfc2019a5,memcpy_FW
 0xfc201a63,strchr
+0xfc201a75,strstr
 0xfc203bc1,task_AprocMainTask
 0xfc203c3f,task_AprocBpPwmTask
 0xfc203ca3,task_AprocBpGenTask

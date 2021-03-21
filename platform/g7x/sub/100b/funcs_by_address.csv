@@ -769,6 +769,7 @@
 0xfc161a83,rand
 0xfc161acb,strncmp
 0xfc161af5,strchr
+0xfc161b07,strstr
 0xfc163e33,task_AprocMainTask
 0xfc163ebf,task_AprocBpPwmTask
 0xfc163f1f,task_AprocBpGenTask
