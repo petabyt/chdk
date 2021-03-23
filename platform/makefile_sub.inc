@@ -3,6 +3,12 @@ topdir=../../../../
 
 include $(topdir)makefile_cam.inc
 
+# Disable GCC 10 optimisation that prevents build from booting on some cameras.
+# See https://chdk.setepontos.com/index.php?topic=14281.0
+ifeq ($(GCC_VERSION_MAJOR),10)
+    CFLAGS+=-fno-tree-loop-distribute-patterns
+endif
+
 # Change CPU architecture to ARM V4 if building with GCC EABI
 # Otherwise incorrect wrapper calls to firmware functions are generated
 ifndef THUMB_FW
