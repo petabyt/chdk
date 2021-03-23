@@ -300,7 +300,7 @@ NHSTUB(set_control_event                      ,0xe0371a61) //  0
 NHSTUB(srand                                  ,0xe052b60d) //  0
 NHSTUB(stat                                   ,0xe03740bd) //  0
 NHSTUB(strcat                                 ,0xe0484f7b) //  0
-//NHSTUB(strchr                               ,0xe045197f) //  0            == 0xe045197f
+NHSTUB(strchr                                 ,0xe045197f) //  0
 NHSTUB(strcmp                                 ,0xe037a0c1) //  0
 NHSTUB(strcpy                                 ,0xe037e6a5) //  0
 NHSTUB(strftime                               ,0xe0523985) //  0
