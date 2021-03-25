@@ -328,7 +328,8 @@ extern void _reboot_fw_update(const char* bootfile);
 extern int _add_ptp_handler(int, void*, int);
 extern void _set_control_event(int);
 extern void _PB2Rec();
-extern void _Rec2PB();
+/* DryOS 54 and later Rec2PB appears expects argument, levent or -1 for none. String ref "AC:Rec2PB x Repost" */
+extern void _Rec2PB(int event); 
 extern int _get_ptp_buf_size(int slot);
 extern char *_get_ptp_file_buf(void);
 
