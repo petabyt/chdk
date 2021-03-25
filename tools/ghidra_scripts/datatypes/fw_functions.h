@@ -321,7 +321,12 @@ __stdcall void reboot_fw_update(const char* bootfile);
 __stdcall int add_ptp_handler(int opcode, ptp_handler handler, int unk);
 __stdcall void set_control_event(int);
 __stdcall void PB2Rec(void);
+
+#if CAM_DRYOS_REL < 54
 __stdcall void Rec2PB(void);
+#else
+__stdcall void Rec2PB(int event);
+#endif
 __stdcall int get_ptp_buf_size(int slot);
 __stdcall char * get_ptp_file_buf(void);
 
