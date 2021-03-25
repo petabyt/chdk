@@ -1735,7 +1735,7 @@ int __attribute__((weak)) switch_mode_usb(int mode)
 {
 #ifdef CAM_CHDK_PTP
     if ( mode == 0 ) {
-        _Rec2PB();
+        _Rec2PB(-1);
         _set_control_event(0x80000000|CAM_USB_EVENTID);
     } else if ( mode == 1 ) {
         _set_control_event(CAM_USB_EVENTID);
