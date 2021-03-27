@@ -148,6 +148,9 @@
 
     #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
 
+    // this camera shares firmware with wifi enabled sx530, but does not have hardware
+    #undef CAM_HAS_WIFI
+
 //----------------------------------------------------------
     #undef  CAM_DEFAULT_MENU_CURSOR_BG
     #undef  CAM_DEFAULT_MENU_CURSOR_FG

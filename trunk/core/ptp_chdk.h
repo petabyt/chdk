@@ -11,6 +11,7 @@
 // PTP constants - only need to be defined in CHDK, not PC side
 #define PTP_RC_OK 0x2001
 #define PTP_RC_GeneralError 0x2002
+#define PTP_RC_OperationNotSupported 0x2005
 #define PTP_RC_ParameterNotSupported 0x2006
 #define PTP_RC_InvalidParameter 0x201D
 

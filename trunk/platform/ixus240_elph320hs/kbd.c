@@ -54,6 +54,14 @@ int kbd_force_analog_av(__attribute__ ((unused))int state)
     return 0;
 }
 
+int get_usb_bit_physw_mod(void)
+{
+    if((physw_status[USB_IDX] & USB_MASK) == USB_MASK) {
+        return 1;
+    }
+    return 0;
+}
+
 #define TS_KEY_TOGGLE_RAW   200
 #define TS_KEY_TOGGLE_ZEBRA 201
 #define TS_KEY_TOGGLE_HISTO 202

@@ -214,4 +214,6 @@
     #define CAM_HAS_CANON_RAW                   1   // has native Canon raw
     #define CAM_CLEAN_OVERLAY                   1
 
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
 //--------------------------------------------------

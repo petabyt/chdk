@@ -469,15 +469,6 @@ void __attribute__((naked,noinline)) platformsub_kbd_fetch_data_my()
 
 /****************/
 
-// TODO should add forced_usb_port support
-int usb_power_status_override(int status){
-    if (conf.remote_enable) {
-        return status &~USB_MASK;
-    }
-    return status;
-}
-
-
 //hack to get a second thread for the keyboard:
 //purpose: check if kbd_new_data flag is set 
 void kbd_process_task()

@@ -111,7 +111,9 @@
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1
 	
 	#define CAM_3ARG_DebugAssert                1
-    
+
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
 //----------------------------------------------------------
     #undef  CAM_DEFAULT_MENU_CURSOR_BG
     #undef  CAM_DEFAULT_MENU_CURSOR_FG

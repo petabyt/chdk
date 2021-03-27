@@ -148,6 +148,8 @@
 
     #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
 
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
 //----------------------------------------------------------
     #undef  CAM_DEFAULT_MENU_CURSOR_BG
     #undef  CAM_DEFAULT_MENU_CURSOR_FG

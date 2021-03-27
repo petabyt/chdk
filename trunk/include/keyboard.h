@@ -105,6 +105,8 @@ extern void exit_alt();
 int get_hdmi_hpd_physw_mod(void);
 // get analog video status from as seen by canon firmware (possibly modified by CHDK)
 int get_analog_av_physw_mod(void);
+// get USB bit from as seen by canon firmware (possibly modified by CHDK)
+int get_usb_bit_physw_mod(void);
 /******************************************************************/
 
 #endif

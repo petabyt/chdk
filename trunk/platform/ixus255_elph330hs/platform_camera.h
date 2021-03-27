@@ -145,4 +145,6 @@
 
     #define CAM_NEED_SET_ZOOM_DELAY          150    // Define to add a delay after setting the zoom position
 
+    #define CAM_HAS_WIFI                    1       // Camera has wifi support
+
 //----------------------------------------------------------
