@@ -623,6 +623,7 @@ misc_val_t misc_vals[]={
     { "CAM_HAS_ND_FILTER",  MISC_VAL_NO_STUB},
     { "CAM_IS_ILC",         MISC_VAL_NO_STUB}, // used for finsig code that wants to check for interchangeable lens
     { "CAM_HAS_IRIS_DIAPHRAGM",MISC_VAL_NO_STUB},
+    { "CAM_HAS_WIFI",       MISC_VAL_NO_STUB},
     { "exmem_alloc_table",  },
     { "exmem_types_table",  },
     { "exmem_type_count",   MISC_VAL_DEF_CONST},
@@ -5297,6 +5298,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_near_str,"dry_memmove_bytes",        "NoOperation BulkOut!Remain.Length = %lu",SIG_NEAR_AFTER(18,3)},
 {sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
 {sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
+{sig_match_misc_flag_named,"CAM_HAS_WIFI",      "task_ComWireless",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
 {sig_match_near_str,"ImagerActivate",           "Fail ImagerActivate(ErrorCode:%x)\r",SIG_NEAR_BEFORE(6,1)},
 {sig_match_screenlock_helper,"screenlock_helper","UIFS_DisplayFirmUpdateView_FW"},
@@ -6166,6 +6168,10 @@ void output_platform_vals(firmware *fw) {
 
     if(get_misc_val_value("CAM_IS_ILC")) {
         bprintf("//#define CAM_ILC 1 // Camera is interchangeable lens\n");
+    }
+
+    if(get_misc_val_value("CAM_HAS_WIFI")) {
+        bprintf("//#define CAM_HAS_WIFI 1 // Firmware has wifi support (only define if camera has hardware)\n");
     }
 
 
