@@ -4678,6 +4678,11 @@ void find_platform_vals(firmware *fw)
 
     find_DebugAssert_argcount(fw);
 
+    k = get_saved_sig(fw,"task_ComWireless");
+    if (k >= 0) {
+        bprintf("//#define CAM_HAS_WIFI 1 // Firmware has wifi support (only define if camera has hardware)\n");
+    }
+
     k = get_saved_sig(fw,"task_FileWrite");
     if (k >= 0)
     {
