@@ -196,4 +196,6 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1
 
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
 //--------------------------------------------------

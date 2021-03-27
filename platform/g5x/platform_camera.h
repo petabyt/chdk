@@ -187,5 +187,7 @@
 
     #define CAM_NEED_SET_ZOOM_DELAY             300
 
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
 
 //--------------------------------------------------

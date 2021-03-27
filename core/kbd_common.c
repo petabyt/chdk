@@ -17,6 +17,9 @@ KBD_CUSTOM_UPDATE_KEY_STATE
 * non-standard manipulation of other physw bits (SD readonly, USB etc)
 KBD_CUSTOM_UPDATE_PHYSW_BITS
 
+* use a function seperate from normal keyboard bits to overide / track USB state
+* used for ixus 30, 40, 50, 500
+KBD_USB_OVERRIDE_FUNC
 
 * use logical event to simulate "video" button from script
 * for touchscreen cameras without a physical video button
@@ -41,7 +44,7 @@ SD_READONLY_FLAG
 ** physw_status index for readonly bit
 SD_READONLY_IDX
 
-** USB +5v bit
+** USB +5v bit (1 = USB +5v present)
 USB_MASK
 ** physw_status index for USB bit
 USB_IDX
@@ -52,7 +55,7 @@ USB_MMIO
 
 ** battery cover override - requires additional supporting code
 BATTCOVER_IDX
-BATTCOVER_FLAG 
+BATTCOVER_FLAG
 
 * override SD card door for cameras micro-sd cams that use it for autoboot
 SD_DOOR_OVERRIDE 1
@@ -127,6 +130,39 @@ int kbd_force_analog_av(int state)
     return 0;
 #endif
 }
+
+#ifdef KBD_USB_OVERRIDE_FUNC
+// track status of USB as seen by firmware, for get_usb_bit_physw_mod
+static int usb_status_mod;
+
+int usb_power_status_override(int status){
+    int r;
+    if (forced_usb_port) {
+        r = status | USB_MASK;
+    } else if (conf.remote_enable) {
+        r = status &~USB_MASK;
+    } else {
+        r = status;
+    }
+    usb_status_mod = (r & USB_MASK)?1:0;
+    return r;
+}
+
+// get USB bit from as seen by canon firmware (possibly modified by CHDK)
+int get_usb_bit_physw_mod(void)
+{
+    return usb_status_mod;
+}
+
+#else // KBD_USB_OVERRIDE_FUNC
+int get_usb_bit_physw_mod(void)
+{
+    if(physw_status[USB_IDX] & USB_MASK) {
+        return 1;
+    }
+    return 0;
+}
+#endif
 
 #ifndef KBD_CUSTOM_UPDATE_KEY_STATE
 
@@ -226,7 +262,7 @@ void kbd_update_physw_bits(void)
     if (forced_usb_port) {
         physw_status[USB_IDX] = physw_status[USB_IDX] | USB_MASK;
     }
-#ifdef ANALOG_AV_FLAG 
+#ifdef ANALOG_AV_FLAG
     // 1 force on, 2 = force off, other = don't touch
     if (forced_analog_av == 1) {
         physw_status[ANALOG_AV_IDX] &= ~(ANALOG_AV_FLAG);
@@ -269,10 +305,10 @@ void kbd_update_physw_bits(void)
 // if the port reads an MMIO directly to get USB +5v status, use generic get_usb_bit
 // others must define in platform kbd.c
 #ifdef USB_MMIO
-int get_usb_bit() 
+int get_usb_bit()
 {
     volatile int *mmio = (void*)USB_MMIO;
-    return(( *mmio & USB_MASK)==USB_MASK); 
+    return(( *mmio & USB_MASK)==USB_MASK);
 }
 #endif
 
@@ -290,7 +326,7 @@ void kbd_key_press(long key)
         is_video_key_pressed = 1;
         // TODO not clear if this should return, or set state too
         return;
-    }    
+    }
 #endif
     int i;
     for (i=0;keymap[i].hackkey;i++){

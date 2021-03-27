@@ -1,6 +1,6 @@
-// Camera - sx260hs - platform_camera.h
+// Camera - sx270hs / sx275hs / sx280hs - platform_camera.h
 
-// This file contains the various settings values specific to the SX260HS camera.
+// This file contains the various settings values specific to the SX280HS camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
 
 // If adding a new settings value put a suitable default in 'include/camera.h',
@@ -101,7 +101,7 @@
     #define CAM_SCREEN_WIDTH                    640 // Width of bitmap screen in CHDK co-ordinates (360 or 480)
     #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
     #define CAM_SUPPORT_BITMAP_RES_CHANGE       1
-    
+
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
@@ -129,7 +129,7 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
-    #define CAM_HAS_MOVIE_DIGEST_MODE           1 
+    #define CAM_HAS_MOVIE_DIGEST_MODE           1
 
     #define CAM_NEED_SET_ZOOM_DELAY             300
 
@@ -137,12 +137,17 @@
 
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
- 
+
 // AF led, for MD test code
     #undef CAM_AF_LED
     #define CAM_AF_LED                          1
 
     #define CAM_SD_OVER_IN_AF  1
     #define CAM_SD_OVER_IN_MF  1
- 
+
+// sx270 shares same firmware + CHDK source but does not have WIFI hardware
+#if PLATFORMID != 12896
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+#endif
+
 //--------------------------------------------------

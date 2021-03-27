@@ -115,4 +115,6 @@
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME
 
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
 //--------------------------------------------------

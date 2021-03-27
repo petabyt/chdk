@@ -141,4 +141,7 @@
     #define CAM_SD_OVER_IN_AFL              1
     #define CAM_SD_OVER_IN_MF               1
 
+    // this camera shares firmware with wifi enabled ixus135_elph120, but does not have hardware
+    #undef CAM_HAS_WIFI
+
 //----------------------------------------------------------

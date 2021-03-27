@@ -134,13 +134,3 @@ long my_kbd_read_keys(long x)
  if (kbd_process() == 0) return x; else return (kbd_new_state[1]&~KEYS_MASK1) | (kbd_mod_state[1] & KEYS_MASK1);
 }
 
-extern int forced_usb_port;
-int usb_power_status_override(int status){
-    if (forced_usb_port) {
-        return status | USB_MASK;
-    }
-	if (conf.remote_enable) {
-		return status &~USB_MASK;
-	}
-    return status;
-}
