@@ -118,6 +118,7 @@ DEF(jpeg_count_str                          ,0x00181248) // Found @0xff2b4948
 //#define CAM_UNCACHED_BIT  0x40000000 // Found @0xff03a200
 //#define CAM_DATE_FOLDER_NAMING 0x080 // Found @0xff39bf4c (pass as 3rd param to GetImageFolder)
 //#define PARAM_CAMERA_NAME 3 // Found @0xff83ff50
+//#define CAM_HAS_WIFI 1 // Firmware has wifi support (only define if camera has hardware)
 
 // Below goes in 'filewrite.c' or 'platform_camera.h':
 //#define MAX_CHUNKS_FOR_FWT 7 // Found @0xff3b66b0
