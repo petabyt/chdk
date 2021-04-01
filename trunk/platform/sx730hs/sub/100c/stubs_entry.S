@@ -144,6 +144,7 @@ DEF(focus_busy                        ,0x00013be4) // (0x13bdc+0x8) Found @0xfc3
 DEF(imager_active                     ,0x0000858c) // (0x8588+0x4) Found @0xfc3aa324
 DEF(canon_menu_active                 ,0x0000ce74) // (0xce6c+0x8) Found @0xfc31fdfc
 DEF(file_counter_var                  ,0x000138e0) // Found @0xfc17d074
+DEF(cameracon_state                   ,0x000089c0) // (0x89b0+0x10) Found @0xfc31bd9c
 DEF(_nrflag                           ,0x0001c508) // (0x1c504+0x4) Found @0xfc1ed66e
 DEF(av_override_semaphore             ,0x00020cdc) // Found @0xfc43fa30
 DEF(active_bitmap_buffer              ,0x0000ce28) // (0xcddc+0x4c) Found @0xfc348e00

@@ -448,8 +448,10 @@
 0xfc0e43fb,VbattGet
 0xfc0e43fb,VbattGet_FW
 0xfc0e46b1,task_ClockSave
+0xfc0e6efd,cameracon_set_state
 0xfc0e7401,PB2Rec
 0xfc0e7433,Rec2PB
+0xfc0e83ff,cameracon_get_state
 0xfc0e848d,UIFS_CancelStoreLensTimer_FW
 0xfc0e86d1,j_Rec2PB
 0xfc0e95b1,GetAdVBattBottom_FW

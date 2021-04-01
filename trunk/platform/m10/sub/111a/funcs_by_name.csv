@@ -75,6 +75,8 @@
 0xfc5baff9,CalculatePeakFromLeastSquareResult_FW
 0xfc5bb01f,CalculatePow2FromApex_FW
 0xfc09851d,CalculateTestRecYUVData_FW
+0xfc3419d7,cameracon_get_state
+0xfc33f949,cameracon_set_state
 0xfc5bb46f,CancelAdj_AEMode_FW
 0xfc4d87db,CancelExStrobeMode_FW
 0xfc43f1fd,CancelFocusLensMaxSpeedLimit_FW

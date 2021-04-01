@@ -1577,8 +1577,10 @@
 0xfc33eac5,RegisterEventProcTable_alt
 0xfc33eac9,j_UnRegisterEventProcTable
 0xfc33eac9,UnRegisterEventProcTable_alt
+0xfc33f949,cameracon_set_state
 0xfc33ffe1,PB2Rec
 0xfc340025,Rec2PB
+0xfc3419d7,cameracon_get_state
 0xfc341a67,UIFS_CancelStoreLensTimer_FW
 0xfc341eed,j_Rec2PB
 0xfc35b719,PPP.Log_FW

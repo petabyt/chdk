@@ -1082,8 +1082,10 @@
 0xfc3644c7,ShutdownRecModeMenu_FW
 0xfc364643,ShutdownPlayModeMenu_FW
 0xfc3646f3,ShutdownPlayModeMenuWithoutPbRedraw_FW
+0xfc3648d5,cameracon_set_state
 0xfc364f2b,PB2Rec
 0xfc364f6f,Rec2PB
+0xfc366673,cameracon_get_state
 0xfc366701,UIFS_CancelStoreLensTimer_FW
 0xfc366989,j_Rec2PB
 0xfc368b9d,task_StartupImage
