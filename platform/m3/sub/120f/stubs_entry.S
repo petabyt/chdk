@@ -175,6 +175,7 @@ DEF(jpeg_count_str                    ,0x0016cc9c) // Found @0xfc1a0b60
 DEF(imager_active                     ,0x000086c4) // (0x86c0+0x4) Found @0xfc131b24
 //DEF(canon_menu_active                 ,0x0000c1ac),          stubs_min = 0x0000c1ac (0x0000c1ac)
 //DEF(file_counter_var                  ,0x00012484),          stubs_min = 0x00012484 (0x00012484)
+DEF(cameracon_state                   ,0x00008b14) // (0x8b04+0x10) Found @0xfc32c494
 DEF(_nrflag                           ,0x000287dc) // (0x287d4+0x8) Found @0xfc3f574e
 DEF(av_override_semaphore             ,0x0003deac) // Found @0xfc44c830
 //DEF(active_bitmap_buffer              ,0x0000c170), ** != ** stubs_min = 0x0000c16c (0xC16C)

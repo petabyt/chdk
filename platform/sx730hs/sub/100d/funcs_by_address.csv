@@ -928,6 +928,8 @@
 0xfc3093b9,IsZoomActuatorResetSensorPlusSide_FW
 0xfc309b7b,get_playrec_mode
 0xfc31b623,task_CorctTask
+0xfc31bc4d,cameracon_set_state
+0xfc31bdc5,cameracon_get_state
 0xfc31c56b,PB2Rec
 0xfc31c639,Rec2PB
 0xfc31e0e7,UIFS_CancelStoreLensTimer_FW

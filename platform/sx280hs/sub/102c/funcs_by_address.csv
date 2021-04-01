@@ -377,8 +377,10 @@
 0xfc0ba575,Read_FW
 0xfc0ba701,task_ClockSave
 0xfc0bb4e7,task__imageSensorTask
+0xfc0c0449,cameracon_set_state
 0xfc0c0985,PB2Rec
 0xfc0c09b7,Rec2PB
+0xfc0c1999,cameracon_get_state
 0xfc0c1a9b,UIFS_CancelStoreLensTimer_FW
 0xfc0c1ca7,j_Rec2PB
 0xfc0c33c1,GetAdVBattBottom_FW

@@ -141,6 +141,7 @@
 DEF(imager_active                     ,0x00008624) // (0x8620+0x4) Found @0xfc132c7a
 //DEF(canon_menu_active                 ,0x0000ac58),          stubs_min = 0x0000ac58 (0x0000ac58)
 //DEF(file_counter_var                  ,0x000102dc),          stubs_min = 0x000102dc (0x000102dc)
+DEF(cameracon_state                   ,0x00008918) // (0x8908+0x10) Found @0xfc0c1998
 DEF(av_override_semaphore             ,0x0001bfa0) // Found @0xfc3b7e2c
 DEF(active_bitmap_buffer              ,0x0000ac14) // (0xabdc+0x38) Found @0xfc143c7e
 //DEF(displaytype                       ,0x00008eb8),          stubs_min = 0x00008eb8 (0x8eb8)

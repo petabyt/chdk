@@ -1524,8 +1524,10 @@
 0xfc3282f5,RegisterEventProcTable_alt
 0xfc3282f9,j_UnRegisterEventProcTable
 0xfc3282f9,UnRegisterEventProcTable_alt
+0xfc32a341,cameracon_set_state
 0xfc32a9a1,PB2Rec
 0xfc32a9e7,Rec2PB
+0xfc32c495,cameracon_get_state
 0xfc32c525,UIFS_CancelStoreLensTimer_FW
 0xfc32ca13,j_Rec2PB
 0xfc32df25,StartPlayModeMenu_FW

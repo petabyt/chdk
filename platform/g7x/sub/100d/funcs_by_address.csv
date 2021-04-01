@@ -506,8 +506,10 @@
 0xfc0d0613,GetStringWithPrompt_FW
 0xfc0d064f,OpenConsole_FW
 0xfc0d0709,CloseConsole_FW
+0xfc0de56d,cameracon_set_state
 0xfc0deac5,PB2Rec
 0xfc0deb09,Rec2PB
+0xfc0e003d,cameracon_get_state
 0xfc0e0129,UIFS_CancelStoreLensTimer_FW
 0xfc0e03df,j_Rec2PB
 0xfc0e1035,GetAdVBattBottom_FW

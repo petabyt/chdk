@@ -400,8 +400,10 @@
 0xfc0bbda1,PTM_IsEnableItem_FW
 0xfc0bbe2f,PTM_BackupUIProperty_FW
 0xfc0bbeaf,GetParameterData
+0xfc0cd299,cameracon_set_state
 0xfc0cd7a9,PB2Rec
 0xfc0cd7e7,Rec2PB
+0xfc0ceb2f,cameracon_get_state
 0xfc0cebc1,UIFS_CancelStoreLensTimer_FW
 0xfc0cef43,j_Rec2PB
 0xfc0cf6ed,GetAdVBattBottom_FW

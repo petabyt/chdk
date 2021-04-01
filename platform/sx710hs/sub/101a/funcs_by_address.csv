@@ -938,8 +938,10 @@
 0xfc2c8209,handle_PTP_OC_GetDevicePropDesc
 0xfc2c88b3,add_ptp_handler
 0xfc2c98cf,DispSwCon_TurnOffDisplayDevice_FW
+0xfc2cf7bd,cameracon_set_state
 0xfc2cfd3d,PB2Rec
 0xfc2cfd7f,Rec2PB
+0xfc2d1217,cameracon_get_state
 0xfc2d1311,UIFS_CancelStoreLensTimer_FW
 0xfc2d15a9,j_Rec2PB
 0xfc2d1e71,StartPlayModeMenu_FW
