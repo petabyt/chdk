@@ -34,6 +34,7 @@
 0xffa89794,CalculateLog2ToApex_FW
 0xffa8c8b8,CalculatePeakPositionByLeastSquare_FW
 0xffa897c8,CalculatePow2FromApex_FW
+0xff9840d8,cameracon_set_state
 0xffa8e148,CancelAdj_AEMode_FW
 0xffa88510,CancelAdjCdsMode_FW
 0xffa7f7f4,CancelFocusLensMaxSpeedLimit_FW

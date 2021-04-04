@@ -789,6 +789,7 @@
 0xff991cfc,UIFS_SetCradleSetting_FW
 0xff991fe0,UI_RegistDebugEventProc_FW
 0xff992cf0,task_StartupImage
+0xff9939e4,cameracon_set_state
 0xff9946fc,PB2Rec
 0xff99473c,Rec2PB
 0xff997208,task_InitFileModules

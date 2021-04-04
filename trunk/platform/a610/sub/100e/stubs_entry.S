@@ -38,6 +38,7 @@ DEF(exmem_types_table                       ,0xffc01d94) // Found @0xffc01d94
 DEF_CONST(exmem_type_count                  ,0x0000000d)
 DEF(imager_active                           ,0x000054b4) // Found @0xffcb2a14 (0x54b4 + 0)
 DEF_CONST(uiprop_count                      ,0x00000057) // Found @0xffd4d30c
+DEF(cameracon_state                         ,0x00007770) // Found @0xffd6eab8
 
 // Values below go in 'lib.c':
 //int get_flash_params_count(void) { return 0x5e; }                          // Found @0xffd4e368
