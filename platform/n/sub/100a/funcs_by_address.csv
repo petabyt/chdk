@@ -279,6 +279,7 @@
 0xff07fab0,task_LachesisTest
 0xff08010c,task_startRedirectUARTTask
 0xff080310,task_fprintSNRTask
+0xff080ae0,cameracon_set_state
 0xff082920,UIFS_CancelStoreLensTimer_FW
 0xff082af4,PB2Rec
 0xff082b3c,Rec2PB

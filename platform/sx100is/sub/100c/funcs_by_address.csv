@@ -567,6 +567,7 @@
 0xffc6035c,PTM_RestoreUIProperty_FW
 0xffc60378,PTM_NotifyStartRemoteCapture_FW
 0xffc604d0,PTM_NotifyEndRemoteCapture_FW
+0xffc60fe8,cameracon_set_state
 0xffc61598,Rec2PB
 0xffc6296c,PB2Rec
 0xffc6358c,task_InitFileModules

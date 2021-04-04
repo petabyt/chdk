@@ -503,8 +503,10 @@
 0xffc647bc,PTM_RestoreUIProperty_FW
 0xffc647d8,PTM_NotifyStartRemoteCapture_FW
 0xffc64930,PTM_NotifyEndRemoteCapture_FW
+0xffc65478,cameracon_set_state
 0xffc65a2c,PB2Rec
 0xffc65a80,Rec2PB
+0xffc66c98,cameracon_get_state
 0xffc67a68,task_InitFileModules
 0xffc67aa0,task_CommonDrivers
 0xffc6a8c4,SetCurrentCaptureModeType

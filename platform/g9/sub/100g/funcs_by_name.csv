@@ -66,6 +66,7 @@
 0xffa0cf94,CalculatePeakFromLeastSquareResult_FW
 0xffa0f168,CalculatePeakPositionByLeastSquare_FW
 0xffa0cfe4,CalculatePow2FromApex_FW
+0xff874a74,cameracon_set_state
 0xffa10718,CancelAdj_AEMode_FW
 0xffa0bef0,CancelAdjCdsMode_FW
 0xff832a0c,CancelBPFForBestPintCorrect_FW

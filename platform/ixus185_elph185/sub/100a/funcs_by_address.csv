@@ -296,7 +296,9 @@
 0xff8519e4,GetMovieJpegVRAMHPixelsSize_FW
 0xff8519f0,GetMovieJpegVRAMVPixelsSize_FW
 0xff851bc8,task_WBCtrl
+0xff85a814,cameracon_set_state
 0xff85af64,Rec2PB
+0xff85c710,cameracon_get_state
 0xff85c7fc,UIFS_CancelStoreLensTimer_FW
 0xff85ca40,PB2Rec
 0xff85d4ec,task_InitFileModules

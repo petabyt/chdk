@@ -600,6 +600,8 @@
 0xff887930,j_PTM_SetProprietyEnable_FW
 0xff887948,j_PTM_BackupUIProperty_FW
 0xff88794c,PTM_RestoreUIProperty_FW
+0xff888290,cameracon_set_state
+0xff889b38,cameracon_get_state
 0xff889c28,UIFS_CancelStoreLensTimer_FW
 0xff889df4,PB2Rec
 0xff889e34,Rec2PB
