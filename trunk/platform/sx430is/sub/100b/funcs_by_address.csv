@@ -313,8 +313,10 @@
 0xff05e27c,task_fprintSNRTask
 0xff05e6ec,task_fprintRCTask
 0xff05ebe0,task_LachesisTest
+0xff05efb4,cameracon_set_state
 0xff05f8b4,PB2Rec
 0xff05f914,Rec2PB
+0xff061cc8,cameracon_get_state
 0xff061dd8,UIFS_CancelStoreLensTimer_FW
 0xff062d2c,task_InitFileModules
 0xff062d6c,task_CommonDrivers

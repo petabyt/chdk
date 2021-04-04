@@ -354,8 +354,10 @@
 0xff05db7c,task_RedirectUARTTask
 0xff05dcb0,task_fprintSNRTask
 0xff05e3f8,task_LachesisTest
+0xff05e874,cameracon_set_state
 0xff05effc,PB2Rec
 0xff05f054,Rec2PB
+0xff0612b8,cameracon_get_state
 0xff06139c,UIFS_CancelStoreLensTimer_FW
 0xff061c60,task_InitFileModules
 0xff061c98,task_CommonDrivers

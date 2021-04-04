@@ -66,6 +66,8 @@
 0xffe61244,CalculatePeakFromLeastSquareResult_FW
 0xffe61294,CalculatePow2FromApex_FW
 0xffc3fb20,CalculateTestRecYUVData_FW
+0xffc689c8,cameracon_get_state
+0xffc67310,cameracon_set_state
 0xffe6554c,CancelAdj_AEMode_FW
 0xffe5fec0,CancelAdjCdsMode_FW
 0xffe63958,CancelBPFilterForBP_FW

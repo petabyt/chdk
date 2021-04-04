@@ -686,6 +686,7 @@
 0xff878dc8,PTM_BackupUIProperty_FW
 0xff878de0,PTM_SetProprietyEnable_FW
 0xff879410,UiMemory_Show_FW
+0xff8798d4,cameracon_set_state
 0xff87b3e0,PB2Rec
 0xff87b420,Rec2PB
 0xff87bff0,task_InitFileModules

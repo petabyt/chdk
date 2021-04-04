@@ -258,6 +258,8 @@
 0xf806334c,LeaveWLANNetwork_FW
 0xf8063ff0,task_LachesisTest
 0xf80644e0,task_fprintSNRTask
+0xf8064b78,cameracon_set_state
+0xf80669f4,cameracon_get_state
 0xf8066b30,UIFS_CancelStoreLensTimer_FW
 0xf8066d40,PB2Rec
 0xf8066d80,Rec2PB

@@ -68,6 +68,8 @@
 0xffb70718,CalculatePow2FromApex_FW
 0xffac530c,CalculateProtractorATanData_FW
 0xff8703dc,CalculateTestRecYUVData_FW
+0xff89ee8c,cameracon_get_state
+0xff89d614,cameracon_set_state
 0xffb74968,CancelAdj_AEMode_FW
 0xffb6f2f4,CancelAdjCdsMode_FW
 0xffb72db4,CancelBPFilterForBP_FW

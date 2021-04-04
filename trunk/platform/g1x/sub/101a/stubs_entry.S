@@ -70,6 +70,7 @@ DEF(exmem_types_table                       ,0xff66633c) // Found @0x000042a4
 DEF_CONST(exmem_type_count                  ,0x00000016)
 DEF(imager_active                           ,0x00002074) // Found @0xff0418f0 (0x2070 + 4)
 DEF_CONST(uiprop_count                      ,0x00000087) // Found @0xff205b28
+DEF(cameracon_state                         ,0x00004b54) // Found @0xff0982fc
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x40685000; }             // Found @0xff0501b8

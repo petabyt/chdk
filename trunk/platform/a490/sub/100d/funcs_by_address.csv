@@ -480,6 +480,8 @@
 0xffc6d7f8,j_PTM_SetProprietyEnable_FW
 0xffc6d810,j_PTM_BackupUIProperty_FW
 0xffc6d814,PTM_RestoreUIProperty_FW
+0xffc6e140,cameracon_set_state
+0xffc6f6dc,cameracon_get_state
 0xffc6f998,PB2Rec
 0xffc6f9d8,Rec2PB
 0xffc70464,task_InitFileModules

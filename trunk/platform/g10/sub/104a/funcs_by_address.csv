@@ -521,7 +521,9 @@
 0xff87f908,PTM_RestoreUIProperty_FW
 0xff87f924,PTM_NotifyStartRemoteCapture_FW
 0xff87fa8c,PTM_NotifyEndRemoteCapture_FW
+0xff880674,cameracon_set_state
 0xff880c28,Rec2PB
+0xff881f58,cameracon_get_state
 0xff8822ec,PB2Rec
 0xff882ea8,task_InitFileModules
 0xff882ee0,task_CommonDrivers

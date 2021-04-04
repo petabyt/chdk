@@ -503,8 +503,10 @@
 0xffc5d318,j_PTM_SetProprietyEnable_FW
 0xffc5d330,j_PTM_BackupUIProperty_FW
 0xffc5d334,PTM_RestoreUIProperty_FW
+0xffc5de38,cameracon_set_state
 0xffc5e3ec,PB2Rec
 0xffc5e440,Rec2PB
+0xffc5f5ec,cameracon_get_state
 0xffc60268,task_InitFileModules
 0xffc602a0,task_CommonDrivers
 0xffc6301c,SetCurrentCaptureModeType
