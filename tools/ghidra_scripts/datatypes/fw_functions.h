@@ -511,5 +511,9 @@ __stdcall int strstr(const char *s1, const char *s2);
 
 __stdcall void cameracon_set_state(int state);
 __stdcall int cameracon_get_state(void);
+
+__stdcall int IsControlEventActive_FW(int event);
+__stdcall void *CreateController_FW(void *controller_fn, int unk);
+__stdcall int DeleteController_FW(void *controller);
 #endif
 
