@@ -560,6 +560,9 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "SetVideoOutType", OPTIONAL },
     { "GetVideoOutType", OPTIONAL },
 
+    { "cameracon_set_state", UNUSED }, // made up name, helper for cameracon_state variable
+    { "cameracon_get_state", OPTIONAL|UNUSED }, // for information only, match doesn't work on early dry
+
     { 0, 0, 0 }
 };
 
@@ -3042,6 +3045,9 @@ string_sig string_sigs[] =
     { 23, "ImagerActivate", "Fail ImagerActivate(ErrorCode:%x)\r", 7,           -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,}, // two functions satisfy this, either will work for us
     { 23, "DisableDispatch_low", "data abort", 7,                                0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,      0,},
     { 23, "GetCurrentDriveBaseSvValue", "KeepPreviousExposureWithProgress", 5,   2,      2,      2,      2,      2,      2,      2,     99,     99,     99,     99,     99,     99,     99,     99,     99,},
+    { 23, "cameracon_set_state", "AC:PB2Rec", 5,                                 1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
+    { 23, "cameracon_get_state", "ex:PB", 5,                                    99,     99,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1 },
+    { 23, "cameracon_get_state", "exchange:PB", 5,                              99,     99,     -1,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99 }, // a1000 uses this string
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },
@@ -5702,6 +5708,34 @@ int match_fileiosem(firmware *fw, int k, uint32_t fadr, uint32_t nadr)
     return 0;
 }
 
+int match_cameracon_state(firmware *fw, int k, __attribute__ ((unused))int v)
+{
+    /*
+     * expect
+     * LDR  Rn, =const
+     * MOV  Rm, 0
+     * STR  Rm, [Rn + 0x10] (or 0x1c, on ixus1000)
+     */
+    if (isLDR_PC(fw,k))
+    {
+        uint32_t base = LDR2val(fw,k);
+        int k1;
+        for (k1=k+1; k1<k+4; k1++)
+        {
+            if (isSTR(fw,k1))
+            {
+                uint32_t ofst = fw->buf[k1] & 0x00000FFF;
+                if(ofst == 0x10 || (fw->dryos_ver == 45 && ofst == 0x1c)) {
+                    print_stubs_min(fw,"cameracon_state",base+ofst,idx2adr(fw,k));
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+
 // Search for things that go in 'stubs_min.S'
 void find_stubs_min(firmware *fw)
 {
@@ -6066,6 +6100,8 @@ void find_stubs_min(firmware *fw)
 
     // Find UI property count
     search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
+
+    search_saved_sig(fw, "cameracon_set_state", match_cameracon_state, 0, 1, 1);
 }
 
 //------------------------------------------------------------------------------------------------------------
