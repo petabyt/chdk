@@ -530,6 +530,8 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "get_ptp_buf_size", OPTIONAL },
     { "get_ptp_file_buf", OPTIONAL },
 
+    { "cameracon_set_state", OPTIONAL|UNUSED }, // made up name, helper for cameracon_state variable
+
     { 0, 0, 0 }
 };
 
@@ -1995,6 +1997,8 @@ string_sig string_sigs[] =
     { 22, "get_ptp_buf_size", (char*)find_get_ptp_buf_size, 0},
     { 22, "Remove", (char*)find_Remove, 0},
 
+    { 23, "cameracon_set_state", "AC:PB2Rec", 8,                                 1,},
+
     //                                                                                          Vx
     { 100, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                                     10 },
     { 100, "DebugAssert", "\aAssert: File %s,  Expression %s,  Line %d\n", 0,                   14 }, // ixus30,40
@@ -2777,6 +2781,55 @@ int find_strsig19(firmware *fw, string_sig *sig)
 
     return 0;
 }
+// Sig pattern:
+//      Str ref -   xDRnn Rx, =str_ptr
+//            ...
+//                  BL  func
+//            ...
+//      String      DCB "str"
+// offset: interpreted as max search distance
+// dryos_ofst: 0 for 1st B/BL after str ref, 1 for 2nd, etc.; -1 for 1st preceding, etc...; disable with 99
+// based on method 7
+int match_strsig23a(firmware *fw, int k, uint32_t sadr, uint32_t maxdist)
+{
+    if (isADR_PC_cond(fw,k) || isLDR_PC_cond(fw,k)) // LDR or ADR ?
+    {
+        uint32_t padr;
+        if (isLDR_PC_cond(fw,k)) // LDR ?
+            padr = LDR2val(fw,k);
+        else
+            padr = ADR2adr(fw,k);
+        if (padr == sadr)
+        {
+            int j2;
+            if (dryos_ofst < 0)
+            {
+                j2 = find_Nth_inst_rev(fw, isBorBL, k, maxdist, -dryos_ofst);
+            }
+            else
+            {
+                j2 = find_Nth_inst(fw, isBorBL, k+1, maxdist, dryos_ofst+1);
+            }
+            if (j2 > 0)
+            {
+                uint32_t fa = idx2adr(fw,j2);
+                fa = followBranch2(fw,fa,0x01000001);
+                fwAddMatch(fw,fa,32,0,123);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+int match_strsig23(firmware *fw, string_sig *sig, int j)
+{
+    dryos_ofst = vxworks_offset(fw,sig);
+
+    if (dryos_ofst == 99)
+        return 0;
+
+    return search_fw(fw, match_strsig23a, idx2adr(fw,j), sig->offset, 2);
+}
 
 // Sig pattern (Vx specific?):
 //      Func            -   func
@@ -2975,6 +3028,7 @@ int find_strsig(firmware *fw, string_sig *sig)
         }
     case 21:    return fw_process(fw, sig, (int (*)(firmware*, string_sig*, int))(sig->ev_name));
     case 22:    return ((int (*)(firmware*))(sig->ev_name))(fw);
+    case 23:    return fw_string_process(fw, sig, match_strsig23, 1);
     case 100:   return fw_string_process(fw, sig, match_strsig100, 0);
     case 101:   return fw_string_process(fw, sig, match_strsig101, 0);
     case 102:   return fw_string_process(fw, sig, match_strsig102, 0);
@@ -4707,6 +4761,39 @@ int match_raw_buffer(firmware *fw, int k, uint32_t rb1, __attribute__ ((unused))
     return 0;
 }
 
+int match_cameracon_state(firmware *fw, int k, __attribute__ ((unused))int v)
+{
+    /*
+     * expect
+     * ldr     r3, =const
+     * mov     r5, r0
+     * cmp     ip, #0xa
+     * mov     r2, #0
+     * ldr     r0, ="CameraConState.c"
+     * mov     r1, #const
+     * str     r5, [r3]
+     *
+     * regs seem to be the same on all cams with this code
+     */
+    if (isLDR_PC(fw,k))
+    {
+        int rd = fwRd(fw,k);
+        if(rd != 3) {
+            return 0;
+        }
+        uint32_t base = LDR2val(fw,k);
+        k += 6;
+        uint32_t ofst = fw->buf[k] & 0x00000FFF;
+        if (isSTR(fw,k) && fwRd(fw,k) == 5 && fwRn(fw,k) == rd && ofst == 0)
+        {
+            print_stubs_min(fw,"cameracon_state",base,idx2adr(fw,k));
+        }
+    }
+
+    return 0;
+}
+
+
 uint32_t frsp_buf = 0;
 uint32_t frsp_buf_at = 0;
 int find_DoMovieFrameCapture_buf(firmware *fw)
@@ -5123,6 +5210,8 @@ void find_stubs_min(firmware *fw)
 
     // Find UI property count
     search_saved_sig(fw, "PTM_SetCurrentItem", match_uiprop_count, 0, 0, 30);
+
+    search_saved_sig(fw, "cameracon_set_state", match_cameracon_state, 0, 3, 1);
 }
 
 //------------------------------------------------------------------------------------------------------------
