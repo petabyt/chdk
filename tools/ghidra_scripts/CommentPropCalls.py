@@ -10,7 +10,7 @@
 
 # License: GPL
 #
-# Copyright 2020 reyalp (at) gmail.com
+# Copyright 2020-2021 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,15 +30,13 @@ import os
 import re
 
 from chdklib.logutil import infomsg, warn
-from chdklib.defines_loader import PropsetData
 
-from chdklib.calldescriber import CallDescriber
+from chdklib.calldescriber import PropCallDescriber
 
 def comment_prop_calls():
     filename = str(askFile("platform_camera.h or propsetN.h","select"))
-    pd = PropsetData(filename) 
 
-    cd = CallDescriber(filename)
+    cd = PropCallDescriber(filename)
     funcs = ['GetPropertyCase','SetPropertyCase']
     for fname in funcs:
         for ref in getReferencesTo(getSymbol(fname,None).getAddress()):

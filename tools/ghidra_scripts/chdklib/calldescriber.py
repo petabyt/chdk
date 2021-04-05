@@ -1,6 +1,6 @@
 # License: GPL
 #
-# Copyright 2020 reyalp (at) gmail.com
+# Copyright 2020-2021 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ from chdklib.defines_loader import PropsetData
 
 from chdklib.regsanalyzer import RegsAnalyzer
 
-funcdesc = {
+prop_funcdesc = {
     'GetPropertyCase':{
         'r0':{
             'type':'PROPCASE_ID',
@@ -50,17 +50,17 @@ funcdesc = {
     },
 }
 
-class CallDescriber:
-    def __init__(self,filename):
-        self.pd = PropsetData(filename)
+class CallDescriber(object):
+    def __init__(self, funcdesc):
         self.ra = RegsAnalyzer(currentProgram, monitor)
+        self.funcdesc = funcdesc
 
     def describe_call(self,addr,fname):
         # TODO could pick up func name from Ghidra by getting target of b/bl at addr
-        fdesc = funcdesc.get(fname)
+        fdesc = self.funcdesc.get(fname)
         if not fdesc:
             raise ValueError('unknown func %s'%(fname))
-            
+
         reg_ids = sorted(list(fdesc))
         regs = self.ra.getRegs(reg_ids,addr)
         if not regs:
@@ -68,49 +68,62 @@ class CallDescriber:
             infomsg(0,'%s %s Call not in function?\n'%(addr,fname))
             return
 
-        res = {}
-
         results = []
         for r in reg_ids:
-            arg_type = fdesc[r]['type']
-            reg = regs[r]
-            res = {
-                'type':arg_type,
-            }
-            results.append(res)
-
-            if reg is None:
-                res['desc'] = 'unk'
-                res['val'] = None
-                if arg_type == 'PROPCASE_ID':
-                    res['prop_name'] = ''
-                continue
-
-            res['val'] = reg.getValue()
-
-            if arg_type == 'PROPCASE_ID':
-                res['prop_name'] = ''
-                if reg.isRegisterRelativeValue():
-                    infomsg(2,'%s reg rel PROPCASE_ID %s for %s\n'%(addr,r,fname))
-                    res['desc'] = 'unk'
-                else:
-                    prop_id = reg.getValue()
-                    if prop_id in self.pd.by_id:
-                        res['prop_name'] = self.pd.by_id.get(prop_id,str(prop_id))
-                        res['desc'] = '%s (%d)'%(res['prop_name'],prop_id)
-                    else:
-                        res['desc'] = str(prop_id)
-            elif arg_type == 'INT':
-                if reg.isRegisterRelativeValue():
-                    infomsg(2,'%s reg rel INT %s for %s\n'%(addr,r,fname))
-                    res['desc'] = 'unk'
-                else:
-                    res['desc'] = str(reg.getValue())
-            # TODO strings and things
-            else:
-                if reg.isRegisterRelativeValue():
-                    res['desc'] = str(reg.getRelativeRegister()) + ' %#x'%(reg.getValue())
-                else:
-                    res['desc'] = '%#x'%(reg.getValue())
+            results.append(self.describe_reg(regs[r],fdesc[r]))
 
         return results
+
+    def describe_reg(self,reg,rdesc):
+        arg_type = rdesc['type']
+        res = {
+            'type':arg_type,
+        }
+        if reg is None:
+            res['desc'] = 'unk'
+            res['val'] = None
+            return res
+
+
+        res['val'] = reg.getValue()
+
+        if arg_type == 'INT':
+            if reg.isRegisterRelativeValue():
+                infomsg(2,'%s reg rel INT %s for %s\n'%(addr,r,fname))
+                res['desc'] = 'unk'
+            else:
+                res['desc'] = str(reg.getValue())
+        # TODO strings and things
+        else:
+            if reg.isRegisterRelativeValue():
+                res['desc'] = str(reg.getRelativeRegister()) + ' %#x'%(reg.getValue())
+            else:
+                res['desc'] = '%#x'%(reg.getValue())
+
+        return res
+
+class PropCallDescriber(CallDescriber):
+    def __init__(self,filename):
+        super(PropCallDescriber,self).__init__(prop_funcdesc)
+        self.pd = PropsetData(filename)
+
+    def describe_reg(self,reg,rdesc):
+        res = super(PropCallDescriber,self).describe_reg(reg,rdesc)
+
+        if res['type'] == 'PROPCASE_ID':
+            res['prop_name'] = ''
+            if res['val'] is None:
+                return res
+
+            if reg.isRegisterRelativeValue():
+                infomsg(2,'%s reg rel PROPCASE_ID %s for %s\n'%(addr,r,fname))
+                res['desc'] = 'unk'
+            else:
+                prop_id = reg.getValue()
+                if prop_id in self.pd.by_id:
+                    res['prop_name'] = self.pd.by_id.get(prop_id,str(prop_id))
+                    res['desc'] = '%s (%d)'%(res['prop_name'],prop_id)
+                else:
+                    res['desc'] = str(prop_id)
+
+        return res
