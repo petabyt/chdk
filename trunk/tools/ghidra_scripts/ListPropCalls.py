@@ -34,12 +34,12 @@ import re
 from chdklib.logutil import infomsg, warn
 from chdklib.defines_loader import PropsetData
 
-from chdklib.calldescriber import CallDescriber
+from chdklib.calldescriber import PropCallDescriber
 
 def list_prop_calls():
     filename = str(askFile("platform_camera.h or propsetN.h","select"))
     instr = str(askString("Propcases","Names, numbers or *")).upper()
-    pd = PropsetData(filename) 
+    pd = PropsetData(filename)
     prop_ids = []
     do_all = False
 
@@ -65,7 +65,7 @@ def list_prop_calls():
             warn('no valid IDs specified, exiting')
             return
 
-    infomsg(0,"Searching for") 
+    infomsg(0,"Searching for")
     msg = []
     if do_all:
         msg.append('all known')
@@ -73,11 +73,11 @@ def list_prop_calls():
         if prop_id in pd.by_id:
             msg.append("%s (%d)"%(pd.by_id[prop_id],prop_id))
         else:
-            msg.append("%d"%(prop_id)) 
+            msg.append("%d"%(prop_id))
 
     infomsg(0," %s from propset %d\n"%(', '.join(msg),pd.propset))
 
-    cd = CallDescriber(filename)
+    cd = PropCallDescriber(filename)
     funcs = ['GetPropertyCase','SetPropertyCase']
     for fname in funcs:
         for ref in getReferencesTo(getSymbol(fname,None).getAddress()):
