@@ -22,33 +22,9 @@ from __main__ import *
 import chdklib.logutil
 from chdklib.logutil import infomsg, warn
 from chdklib.defines_loader import PropsetData
+from chdklib.leventutil import get_levent_data
 
 from chdklib.regsanalyzer import RegsAnalyzer
-
-prop_funcdesc = {
-    'GetPropertyCase':{
-        'r0':{
-            'type':'PROPCASE_ID',
-        },
-        'r1':{
-            'type':'OUT_PTR',
-        },
-        'r2':{
-            'type':'INT',
-        },
-    },
-    'SetPropertyCase':{
-        'r0':{
-            'type':'PROPCASE_ID',
-        },
-        'r1':{
-            'type':'IN_PTR',
-        },
-        'r2':{
-            'type':'INT',
-        },
-    },
-}
 
 class CallDescriber(object):
     def __init__(self, funcdesc):
@@ -102,6 +78,31 @@ class CallDescriber(object):
 
         return res
 
+prop_funcdesc = {
+    'GetPropertyCase':{
+        'r0':{
+            'type':'PROPCASE_ID',
+        },
+        'r1':{
+            'type':'OUT_PTR',
+        },
+        'r2':{
+            'type':'INT',
+        },
+    },
+    'SetPropertyCase':{
+        'r0':{
+            'type':'PROPCASE_ID',
+        },
+        'r1':{
+            'type':'IN_PTR',
+        },
+        'r2':{
+            'type':'INT',
+        },
+    },
+}
+
 class PropCallDescriber(CallDescriber):
     def __init__(self,filename):
         super(PropCallDescriber,self).__init__(prop_funcdesc)
@@ -127,3 +128,62 @@ class PropCallDescriber(CallDescriber):
                     res['desc'] = str(prop_id)
 
         return res
+
+levent_funcdesc = {
+    'PostLogicalEventToUI':{
+        'r0':{
+            'type':'LEVENT_ID',
+        },
+        'r1':{
+            'type':'INT',
+        },
+    },
+    'PostLogicalEventForNotPowerType':{
+        'r0':{
+            'type':'LEVENT_ID',
+        },
+        'r1':{
+            'type':'INT',
+        },
+    },
+    'IsControlEventActive_FW':{
+        'r0':{
+            'type':'LEVENT_ID',
+        },
+    },
+    'SetLogicalEventActive':{
+        'r0':{
+            'type':'LEVENT_ID',
+        },
+        'r1':{
+            'type':'INT',
+        },
+    },
+}
+
+class LeventCallDescriber(CallDescriber):
+    def __init__(self):
+        super(LeventCallDescriber,self).__init__(levent_funcdesc)
+        self.ld = get_levent_data()
+
+    def describe_reg(self,reg,rdesc):
+        res = super(LeventCallDescriber,self).describe_reg(reg,rdesc)
+
+        if res['type'] == 'LEVENT_ID':
+            res['levent_name'] = ''
+            if res['val'] is None:
+                return res
+
+            if reg.isRegisterRelativeValue():
+                infomsg(2,'%s reg rel LEVENT_ID %s for %s\n'%(addr,r,fname))
+                res['desc'] = 'unk'
+            else:
+                levent_id = reg.getValue()
+                if levent_id in self.ld['by_id'] and self.ld['by_id'][levent_id]['name'] != '':
+                    res['levent_name'] = self.ld['by_id'][levent_id]['name']
+                    res['desc'] = '%s (%d)'%(res['levent_name'],levent_id)
+                else:
+                    res['desc'] = str(levent_id)
+
+        return res
+
