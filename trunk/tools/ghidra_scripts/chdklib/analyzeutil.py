@@ -3,7 +3,7 @@ from __main__ import *
 
 from chdklib.logutil import infomsg, warn
 
-from java.math import BigInteger 
+from java.math import BigInteger
 import ghidra.program.model.mem.MemoryBufferImpl as MemoryBufferImpl
 # or ProgramProcessorContext ?
 from ghidra.program.model.lang import ProcessorContextImpl
@@ -74,7 +74,7 @@ def get_tmode_reg_at(address):
     # just return not thumb if TMode not present
     if not tmodeReg:
         return 0
-    
+
     return int(progCtx.getValue(tmodeReg,address,False))
 
 def is_likely_func_start(addr,tmode = None):
@@ -122,3 +122,36 @@ def is_likely_func_start(addr,tmode = None):
 
     return False
 
+# get the int at addr and return it as an addr
+def get_pointer_at(addr):
+    # convert to unsigned
+    return toAddr(getInt(addr) & 0xffffffff)
+
+# return pointer at addr, if value is inside a valid memory block and not null
+# otherwise None
+def get_valid_pointer_at(addr):
+    paddr = get_pointer_at(addr)
+    if getCurrentProgram().getMemory().contains(paddr) and addr.getOffset != 0:
+        return paddr
+
+# get null terminated string starting at addr as python string
+# return None if lenght exceeds maxlen or invalid address encountered
+# empty strings are returned
+def get_cstring_at(addr, maxlen = 256):
+    chrs = []
+    l = 0
+    while l < maxlen:
+        if not getCurrentProgram().getMemory().contains(addr):
+            break
+        try:
+            b = getByte(addr)
+            if b == 0:
+                return ''.join(chrs)
+
+            # chr expects unsigned
+            chrs.append(chr(b & 0xff))
+            l += 1
+            addr = addr.add(1)
+
+        except ghidra.program.model.mem.MemoryAccessException:
+            break
