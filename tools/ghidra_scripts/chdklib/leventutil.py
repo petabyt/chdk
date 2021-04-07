@@ -78,39 +78,32 @@ def get_levent_def_at(addr):
 
     return r
 
-def get_levent_data():
-    addr = toAddr('levent_table')
-    if addr is None:
-        raise ValueError('levent_table not found, check stubs or run ImportCHDKStubs.py')
+class LeventData():
+    def __init__(self):
+        addr = toAddr('levent_table')
+        if addr is None:
+            raise ValueError('levent_table not found, check stubs or run ImportCHDKStubs.py')
 
-    evlist=[]
-    by_name = {}
-    by_id = {}
-    while True:
-        evdef = get_levent_def_at(addr)
-        if evdef is None:
-            break
+        self.list=[]
+        self.by_name = {}
+        self.by_id = {}
+        while True:
+            evdef = get_levent_def_at(addr)
+            if evdef is None:
+                break
 
-        evlist.append(evdef)
+            self.list.append(evdef)
 
-        if evdef['id'] not in by_id:
-            by_id[evdef['id']] = evdef
-        else:
-            warn("dupe event id %x"%(evdef['id']))
-
-        if evdef['name'] != '':
-            if evdef['name'] not in by_name:
-                by_name[evdef['name']] = evdef
+            if evdef['id'] not in self.by_id:
+                self.by_id[evdef['id']] = evdef
             else:
-                warn("dupe event name %s"%(evdef['name']))
+                warn("dupe event id %x"%(evdef['id']))
 
-        addr = addr.add(12)
+            if evdef['name'] != '':
+                if evdef['name'] not in self.by_name:
+                    self.by_name[evdef['name']] = evdef
+                else:
+                    warn("dupe event name %s"%(evdef['name']))
 
-
-    return {
-        'by_name':by_name,
-        'by_id':by_id,
-        'list':evlist,
-    }
-
+            addr = addr.add(12)
 
