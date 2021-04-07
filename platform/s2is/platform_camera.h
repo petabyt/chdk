@@ -72,7 +72,9 @@
 
     // Warning : no know SD override method for this camera
 
-    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works    
+    #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+
+    #undef CAM_PTP_SCREEN_UNLOCK_EVENT  // cam doesn't have cameracon_state identified
 
 //--------------------------------------------------
 

@@ -87,4 +87,6 @@
 
     #define CAM_3ARG_DebugAssert                1   // DebugAssert takes 3 arguments
 
+    #undef CAM_PTP_SCREEN_UNLOCK_EVENT  // cam doesn't have cameracon_state identified
+
 //--------------------------------------------------
