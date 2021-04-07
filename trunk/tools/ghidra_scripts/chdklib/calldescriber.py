@@ -22,7 +22,7 @@ from __main__ import *
 import chdklib.logutil
 from chdklib.logutil import infomsg, warn
 from chdklib.defines_loader import PropsetData
-from chdklib.leventutil import get_levent_data
+from chdklib.leventutil import LeventData
 
 from chdklib.regsanalyzer import RegsAnalyzer
 
@@ -190,7 +190,7 @@ levent_funcdesc = {
 class LeventCallDescriber(CallDescriber):
     def __init__(self):
         super(LeventCallDescriber,self).__init__(levent_funcdesc)
-        self.ld = get_levent_data()
+        self.ld = LeventData()
 
     def describe_reg(self,reg,rdesc):
         res = super(LeventCallDescriber,self).describe_reg(reg,rdesc)
@@ -204,8 +204,8 @@ class LeventCallDescriber(CallDescriber):
                 infomsg(2,'%s reg rel LEVENT_ID %s for %s\n'%(addr,r,fname))
             else:
                 levent_id = reg.getValue()
-                if levent_id in self.ld['by_id'] and self.ld['by_id'][levent_id]['name'] != '':
-                    res.levent_name = self.ld['by_id'][levent_id]['name']
+                if levent_id in self.ld.by_id and self.ld.by_id[levent_id]['name'] != '':
+                    res.levent_name = self.ld.by_id[levent_id]['name']
                     res.desc = '%s (%d)'%(res.levent_name,levent_id)
                 else:
                     res.desc = str(levent_id)
