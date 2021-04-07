@@ -78,18 +78,10 @@ def list_prop_calls():
     infomsg(0," %s from propset %d\n"%(', '.join(msg),pd.propset))
 
     cd = PropCallDescriber(filename)
-    funcs = ['GetPropertyCase','SetPropertyCase']
-    for fname in funcs:
-        for ref in getReferencesTo(getSymbol(fname,None).getAddress()):
-            if not ref.getReferenceType().isCall():
-                continue
-            addr = ref.getFromAddress()
-            desc = cd.describe_call(addr,fname)
-            if desc is None:
-                continue
-            prop_id = desc[0]['val']
-            if (do_all and pd.by_id.get(prop_id)) or prop_id in prop_ids:
-                infomsg(0,'%s %s(%s,%s,%s)\n'%(addr,fname,desc[0]['desc'],desc[1]['desc'],desc[2]['desc']))
+    for desc in cd.describe_all_calls():
+        prop_id = desc.args[0].val
+        if (do_all and pd.by_id.get(prop_id)) or prop_id in prop_ids:
+            infomsg(0,'%s %s(%s,%s,%s)\n'%(desc.addr,desc.fname,desc.args[0].desc,desc.args[1].desc,desc.args[2].desc))
 
 
 list_prop_calls()

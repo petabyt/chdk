@@ -26,6 +26,22 @@ from chdklib.leventutil import get_levent_data
 
 from chdklib.regsanalyzer import RegsAnalyzer
 
+class CallDesc:
+    def __init__(self, addr , fname):
+        self.addr = addr
+        self.fname = fname
+        self.args = []
+
+class CallArgDesc:
+    def __init__(self,reg,rdesc):
+        self.arg_type = rdesc['type']
+        self.desc = 'unk'
+        if reg is None:
+            self.val = None
+        else:
+            self.val = reg.getValue()
+
+
 class CallDescriber(object):
     def __init__(self, funcdesc):
         self.ra = RegsAnalyzer(currentProgram, monitor)
@@ -44,37 +60,48 @@ class CallDescriber(object):
             infomsg(0,'%s %s Call not in function?\n'%(addr,fname))
             return
 
-        results = []
+        results = CallDesc(addr, fname)
         for r in reg_ids:
-            results.append(self.describe_reg(regs[r],fdesc[r]))
+            results.args.append(self.describe_reg(regs[r],fdesc[r]))
 
         return results
 
+    def describe_calls_to(self,fname):
+        faddr = getSymbol(fname,None).getAddress()
+        if faddr is None:
+            infomsg(0,'%s not found, skipping\n'%(fname))
+            return
+        for ref in getReferencesTo(faddr):
+            if not ref.getReferenceType().isCall():
+                continue
+            addr = ref.getFromAddress()
+            desc = self.describe_call(addr,fname)
+            if desc is None:
+                continue
+
+            yield desc
+
+    def describe_all_calls(self):
+        for fname in self.funcdesc.keys():
+            for desc in self.describe_calls_to(fname):
+                yield desc
+
     def describe_reg(self,reg,rdesc):
-        arg_type = rdesc['type']
-        res = {
-            'type':arg_type,
-        }
+        res = CallArgDesc(reg,rdesc)
         if reg is None:
-            res['desc'] = 'unk'
-            res['val'] = None
             return res
 
-
-        res['val'] = reg.getValue()
-
-        if arg_type == 'INT':
+        if res.arg_type == 'INT':
             if reg.isRegisterRelativeValue():
                 infomsg(2,'%s reg rel INT %s for %s\n'%(addr,r,fname))
-                res['desc'] = 'unk'
             else:
-                res['desc'] = str(reg.getValue())
+                res.desc = str(reg.getValue())
         # TODO strings and things
         else:
             if reg.isRegisterRelativeValue():
-                res['desc'] = str(reg.getRelativeRegister()) + ' %#x'%(reg.getValue())
+                res.desc = str(reg.getRelativeRegister()) + ' %#x'%(reg.getValue())
             else:
-                res['desc'] = '%#x'%(reg.getValue())
+                res.desc = '%#x'%(reg.getValue())
 
         return res
 
@@ -111,21 +138,20 @@ class PropCallDescriber(CallDescriber):
     def describe_reg(self,reg,rdesc):
         res = super(PropCallDescriber,self).describe_reg(reg,rdesc)
 
-        if res['type'] == 'PROPCASE_ID':
-            res['prop_name'] = ''
-            if res['val'] is None:
+        if res.arg_type == 'PROPCASE_ID':
+            res.prop_name = ''
+            if res.val is None:
                 return res
 
             if reg.isRegisterRelativeValue():
                 infomsg(2,'%s reg rel PROPCASE_ID %s for %s\n'%(addr,r,fname))
-                res['desc'] = 'unk'
             else:
                 prop_id = reg.getValue()
                 if prop_id in self.pd.by_id:
-                    res['prop_name'] = self.pd.by_id.get(prop_id,str(prop_id))
-                    res['desc'] = '%s (%d)'%(res['prop_name'],prop_id)
+                    res.prop_name = self.pd.by_id.get(prop_id,str(prop_id))
+                    res.desc = '%s (%d)'%(res.prop_name,prop_id)
                 else:
-                    res['desc'] = str(prop_id)
+                    res.desc = str(prop_id)
 
         return res
 
@@ -169,21 +195,20 @@ class LeventCallDescriber(CallDescriber):
     def describe_reg(self,reg,rdesc):
         res = super(LeventCallDescriber,self).describe_reg(reg,rdesc)
 
-        if res['type'] == 'LEVENT_ID':
-            res['levent_name'] = ''
-            if res['val'] is None:
+        if res.arg_type == 'LEVENT_ID':
+            res.levent_name = ''
+            if res.val is None:
                 return res
 
             if reg.isRegisterRelativeValue():
                 infomsg(2,'%s reg rel LEVENT_ID %s for %s\n'%(addr,r,fname))
-                res['desc'] = 'unk'
             else:
                 levent_id = reg.getValue()
                 if levent_id in self.ld['by_id'] and self.ld['by_id'][levent_id]['name'] != '':
-                    res['levent_name'] = self.ld['by_id'][levent_id]['name']
-                    res['desc'] = '%s (%d)'%(res['levent_name'],levent_id)
+                    res.levent_name = self.ld['by_id'][levent_id]['name']
+                    res.desc = '%s (%d)'%(res.levent_name,levent_id)
                 else:
-                    res['desc'] = str(levent_id)
+                    res.desc = str(levent_id)
 
         return res
 

@@ -37,19 +37,8 @@ def comment_prop_calls():
     filename = str(askFile("platform_camera.h or propsetN.h","select"))
 
     cd = PropCallDescriber(filename)
-    funcs = ['GetPropertyCase','SetPropertyCase']
-    for fname in funcs:
-        for ref in getReferencesTo(getSymbol(fname,None).getAddress()):
-            if not ref.getReferenceType().isCall():
-                continue
-            addr = ref.getFromAddress()
-            desc = cd.describe_call(addr,fname)
-            if desc is None:
-                continue
-            # TODO might want to label all, for calculated values?
-            if desc[0].get('prop_name'):
-                # TODO handle existing?
-                setEOLComment(addr,'%s,%s,%s'%(desc[0]['desc'],desc[1]['desc'],desc[2]['desc']))
-
+    for desc in cd.describe_all_calls():
+        if desc.args[0].prop_name != '':
+            setEOLComment(desc.addr,'%s,%s,%s'%(desc.args[0].desc,desc.args[1].desc,desc.args[2].desc))
 
 comment_prop_calls()

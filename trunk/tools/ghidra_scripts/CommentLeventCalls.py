@@ -34,19 +34,12 @@ from chdklib.calldescriber import LeventCallDescriber
 
 def comment_levent_calls():
     cd = LeventCallDescriber()
-    for fname in cd.funcdesc.keys():
-        for ref in getReferencesTo(getSymbol(fname,None).getAddress()):
-            if not ref.getReferenceType().isCall():
-                continue
-            addr = ref.getFromAddress()
-            desc = cd.describe_call(addr,fname)
-            if desc is None:
-                continue
-            if desc[0].get('levent_name'):
-                if len(desc) == 2:
-                    setEOLComment(addr,'%s,%s'%(desc[0]['desc'],desc[1]['desc']))
-                else:
-                    setEOLComment(addr,'%s'%(desc[0]['desc']))
+    for desc in cd.describe_all_calls():
+        if desc.args[0].levent_name != '':
+            if len(desc.args) == 2:
+                setEOLComment(desc.addr,'%s,%s'%(desc.args[0].desc,desc.args[1].desc))
+            else:
+                setEOLComment(desc.addr,'%s'%(desc.args[0].desc))
 
 
 comment_levent_calls()
