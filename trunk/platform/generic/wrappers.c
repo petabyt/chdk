@@ -1730,6 +1730,28 @@ void __attribute__((weak)) _reboot_fw_update(__attribute__ ((unused))const char 
 }
 #endif
 
+#ifdef CAM_PTP_SCREEN_UNLOCK_EVENT
+// function to take the camera out of the black screen mode
+// triggered by ptp GetObjectHandles
+static void do_ptp_screen_unlock(void)
+{
+    extern int cameracon_state;
+    int t;
+    // if in a transition state, wait up to 500ms for it to change
+    for(t = 0; cameracon_state > 4 && t < 50; t++) {
+        msleep(10);
+    }
+    // if in "black screen" ptp state, send event to switch to regular playback
+    if(cameracon_state == 3) {
+        PostLogicalEventToUI(CAM_PTP_SCREEN_UNLOCK_EVENTID,0);
+    }
+    // wait for state change triggered by event to complete
+    for(t = 0; cameracon_state != 2 && t < 100; t++) {
+        msleep(10);
+    }
+}
+#endif
+
 #ifdef CAM_DRYOS
 int __attribute__((weak)) switch_mode_usb(int mode)
 {
@@ -1739,6 +1761,9 @@ int __attribute__((weak)) switch_mode_usb(int mode)
         _set_control_event(0x80000000|CAM_USB_EVENTID);
     } else if ( mode == 1 ) {
         _set_control_event(CAM_USB_EVENTID);
+#ifdef CAM_PTP_SCREEN_UNLOCK_EVENT
+        do_ptp_screen_unlock();
+#endif
         _PB2Rec();
     } else return 0;
     return 1;
@@ -1758,6 +1783,9 @@ int __attribute__((weak)) switch_mode_usb(int mode)
 #ifdef CAM_USB_EVENTID_VXWORKS
         _SetScriptMode(1); // needed to override event
         _SetLogicalEventActive(CAM_USB_EVENTID_VXWORKS,0); // set levent "ConnectUSBCable" inactive
+#endif
+#ifdef CAM_PTP_SCREEN_UNLOCK_EVENT
+        do_ptp_screen_unlock();
 #endif
         levent_set_record();
     } else return 0;

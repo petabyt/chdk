@@ -238,6 +238,8 @@
                                                 // this is the logical event "ConnectUSBCable", usually 0x1085
                                                 // different from CAM_USB_EVENTID since it should be undefined on most cameras
 
+    #define CAM_PTP_SCREEN_UNLOCK_EVENT 1       // define to allow sending event in switch_mode_usb
+
     #undef  CAM_NEED_SET_ZOOM_DELAY             // Define to add a delay after setting the zoom position before resetting the focus position in shooting_set_zoom 
                                                 // ignored if CAM_REFOCUS_AFTER_ZOOM is 0 (default when CAM_USE_ALT_SET_ZOOM_POINT set)
 
@@ -441,6 +443,17 @@
 #if defined(CAM_USE_OPTICAL_MAX_ZOOM_STATUS) && !defined(CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO)
     #error "CAM_USE_OPTICAL_MAX_ZOOM_STATUS requires CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO"
 #endif
+
+
+#ifdef CAM_PTP_SCREEN_UNLOCK_EVENT
+// set default values based on OS. Could add the ability to override by
+// setting ID in CAM_PTP_SCREEN_UNLOCK_EVENT, but not currently needed
+#ifdef CAM_DRYOS
+#define CAM_PTP_SCREEN_UNLOCK_EVENTID 4482
+#else
+#define CAM_PTP_SCREEN_UNLOCK_EVENTID 4418
+#endif // CAM_DRYOS
+#endif // CAM_PTP_SCREEN_UNLOCK_EVENT
 
 //==========================================================
 // END of Camera-dependent settings

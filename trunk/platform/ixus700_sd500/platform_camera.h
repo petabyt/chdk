@@ -78,4 +78,6 @@
     #define ISO_REAL_TO_MARKET_SHIFT        13
     #define ISO_REAL_TO_MARKET_ROUND        4096
 
+    #undef CAM_PTP_SCREEN_UNLOCK_EVENT  // cam doesn't have cameracon_state identified
+
 //--------------------------------------------------
