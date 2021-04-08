@@ -31,6 +31,8 @@ General camera and CHDK port information
 - Using CHDK started via the "firmware update" method has not been fully tested.
   Report any problems in the porting thread.
 
+- GPS data in DNGs is supported on SX280. Full CHDK GPS support is not implemented.
+
 - Porting thread: https://chdk.setepontos.com/index.php?topic=11550
 
 Issues

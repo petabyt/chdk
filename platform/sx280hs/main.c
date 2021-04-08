@@ -18,6 +18,10 @@ void startup() {
     // initialize .bss senment
     while (bss<&link_bss_end)
         *bss++ = 0;
+#if PLATFORMID == 12895
+    // GPS support lite (DNG only) for sx280
+    camera_info.props.gps = PROPCASE_GPS;
+#endif
     boot();
 }
 
