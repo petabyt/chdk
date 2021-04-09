@@ -506,6 +506,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetVideoOutType", OPTIONAL },
 
     { "is_movie_recording", OPTIONAL|UNUSED },
+    { "IsWirelessConnect", OPTIONAL },
 
     {0,0,0},
 };
@@ -5282,6 +5283,8 @@ sig_rule_t sig_rules_main[]={
 
 {sig_match_near_str,"cameracon_set_state",      "AC:ChkCom2PB",         SIG_NEAR_BEFORE(4,1),},
 {sig_match_near_str,"cameracon_get_state",      "DlvrUSBCnct",          SIG_NEAR_AFTER(5,2)},
+{sig_match_near_str,"IsWirelessConnect",        "WiFiDisconnect",       SIG_NEAR_BEFORE(6,1),SIG_DRY_MAX(52)},
+{sig_match_near_str,"IsWirelessConnect",        "USBDisconnect",        SIG_NEAR_BEFORE(6,1),SIG_DRY_MIN(54)},
 {sig_match_var_struct_get,"cameracon_state",    "cameracon_get_state",},
 {sig_match_str_arg_call,"strstr",               "AUTPLAY",              SIG_STRCALL_ARG(1)},
 {sig_match_named_last,"strchr",                 "strstr",               SIG_NAMED_LAST_RANGE(14,22)},
