@@ -1185,6 +1185,7 @@
 0xfc152295,IsStrobeChargeCompleted
 0xfc1cb60d,IsStrobePopup_FW
 0xfc438a35,IsUnitFirmMode_FW
+0xfc31d8c1,IsWirelessConnect
 0xfc3142b8,j1_dry_memcpy_bytes
 0xbfe14feb,j1_GetSRAndDisableInterrupt
 0xbfe14fef,j1_SetSR

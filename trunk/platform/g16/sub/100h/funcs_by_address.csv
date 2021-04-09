@@ -615,6 +615,7 @@
 0xfc1449c1,GetVRAMVPixelsSize_FW
 0xfc1449c9,GetMovieJpegVRAMHPixelsSize_FW
 0xfc1449d1,GetMovieJpegVRAMVPixelsSize_FW
+0xfc144f9f,IsWirelessConnect
 0xfc145981,UIFS_StartMovieRecord_FW
 0xfc145997,UIFS_StopMovieRecord_FW
 0xfc145db1,is_movie_recording

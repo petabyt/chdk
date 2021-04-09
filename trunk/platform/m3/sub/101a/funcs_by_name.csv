@@ -1208,6 +1208,7 @@
 0xfc1bfb29,IsSDDetect_FW
 0xfc4f3041,IsStrobeChargeCompleted
 0xfc1bfb65,IsStrobePopup_FW
+0xfc357ae3,IsWirelessConnect
 0xfc301918,j1_dry_memcpy_bytes
 0xbfe14fef,j1_GetSRAndDisableInterrupt
 0xbfe14ff3,j1_SetSR

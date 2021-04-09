@@ -1549,6 +1549,7 @@
 0xfc314fad,mzrm_createmsg
 0xfc3150a1,mzrm_sendmsg
 0xfc317ad7,GetCurrentDriveBaseSvValue
+0xfc31d925,IsWirelessConnect
 0xfc33970f,PowerOffIris_FW
 0xfc339905,GetIrisAv_FW
 0xfc339931,GetIrisCurrentAv_FW

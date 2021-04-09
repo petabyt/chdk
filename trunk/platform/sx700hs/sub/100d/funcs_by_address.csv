@@ -1252,6 +1252,7 @@
 0xfc303577,UIFS_IsAvailableShots_FW
 0xfc303a6b,UIFS_GetStillShotableNumber_FW
 0xfc303a6f,UIFS_GetMovieRecoadableNumber_FW
+0xfc304723,IsWirelessConnect
 0xfc305f3f,GetLogicalEventName_FW
 0xfc305f85,PostLogicalEventForNotPowerType
 0xfc305f85,PostLogicalEventForNotPowerType_FW

@@ -1022,6 +1022,7 @@
 0xfc0fec25,IsRomLogAvailable_FW
 0xfc489dcb,IsSDDetect_FW
 0xfc1862a5,IsStrobeChargeCompleted
+0xfc352767,IsWirelessConnect
 0xfc2c2d21,IsZoomActuatorResetSensorPlusSide_FW
 0xfc1db5a3,IsZoomLensOutSidePosition_FW
 0xfc2eef58,j1_dry_memcpy_bytes

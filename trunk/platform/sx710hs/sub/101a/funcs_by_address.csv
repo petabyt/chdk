@@ -865,6 +865,7 @@
 0xfc2a5629,SetZoomSpeedCheckStopTime_FW
 0xfc2a5637,SetZoomPermitTargetMaxSpeedPPS_FW
 0xfc2a564f,GetZoomActuatorCurrentPosition_FW
+0xfc2c0535,IsWirelessConnect
 0xfc2c1627,UIFS_MoveZoomTo_FW
 0xfc2c19d5,UIFS_GetNumOfOptZoomPos_FW
 0xfc2c1aad,UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW

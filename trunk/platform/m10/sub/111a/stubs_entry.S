@@ -324,3 +324,4 @@ NHSTUB(EnableHDMIPower                        ,0xfc131925) //  0
 NHSTUB(DisableHDMIPower                       ,0xfc131955) //  0
 NHSTUB(SetVideoOutType                        ,0xfc5bb8a1) //  0
 NHSTUB(GetVideoOutType                        ,0xfc5bb80d) //  0
+NHSTUB(IsWirelessConnect                      ,0xfc31d925) //  0

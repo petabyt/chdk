@@ -1103,6 +1103,7 @@
 0xfc0fe7a9,IsRomLogAvailable_FW
 0xfc382fc5,IsSDDetect_FW
 0xfc13ad3f,IsStrobeChargeCompleted
+0xfc330097,IsWirelessConnect
 0xfc2ee425,IsZoomLensOutSidePosition_FW
 0xfc2ce984,j1_dry_memcpy_bytes
 0x010e5633,j1_GetSRAndDisableInterrupt
