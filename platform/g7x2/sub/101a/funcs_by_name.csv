@@ -1061,6 +1061,7 @@
 0xe055aa0b,IsSDDetect_FW
 0xe053b423,IsStrobeChargeCompleted
 0xe03fbedd,IsUnitFirmMode_FW
+0xe036787b,IsWirelessConnect
 0xe02e6073,IsZoomActuatorResetSensorPlusSide_FW
 0xe0060269,IsZoomLensOutSidePosition_FW
 0xe0536eaf,j_AbortAEIntegralValue_FW

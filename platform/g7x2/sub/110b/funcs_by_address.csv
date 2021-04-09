@@ -570,6 +570,7 @@
 0xe0363de7,UIFS_IsAvailableShots_FW
 0xe036434b,UIFS_GetStillShotableNumber_FW
 0xe036434f,UIFS_GetMovieRecoadableNumber_FW
+0xe036787b,IsWirelessConnect
 0xe0368075,get_current_exp
 0xe036a599,GetCurrentDriveBaseSvValue
 0xe036ae25,SetPropertyCase

@@ -1073,6 +1073,7 @@
 0xfc5eca6f,IsSDDetect_FW
 0xfc0c41a7,IsStrobeChargeCompleted
 0xfc1cd479,IsUnitFirmMode_FW
+0xfc368171,IsWirelessConnect
 0xfc343ff3,IsZoomActuatorResetSensorPlusSide_FW
 0xfc1cb383,IsZoomLensOutSidePosition_FW
 0xfc34c75c,j1_dry_memcpy_bytes

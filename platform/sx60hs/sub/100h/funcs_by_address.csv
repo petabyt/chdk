@@ -1517,6 +1517,7 @@
 0xfc3231db,UiEvnt_StopDisguiseCradleStatus_FW
 0xfc32cd91,UIFS_GetNumberOfDisplayedImage_FW
 0xfc32f0ff,task_StartupImage
+0xfc3300bb,IsWirelessConnect
 0xfc331fcd,get_fstype
 0xfc332033,GetDrive_ClusterSize
 0xfc332537,GetDrive_FreeClusters

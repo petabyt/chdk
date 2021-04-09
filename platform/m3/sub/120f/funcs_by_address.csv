@@ -1541,6 +1541,7 @@
 0xfc34db21,UIFS_GetMovieRecoadableNumber_FW
 0xfc353fad,UIFS_StartMovieRecord_FW
 0xfc353fc3,UIFS_StopMovieRecord_FW
+0xfc357c97,IsWirelessConnect
 0xfc35925b,DispSwCon_TurnOffDisplayDevice_FW
 0xfc35c5f7,UIFS_GetNumberOfDisplayedImage_FW
 0xfc35df43,get_displaytype

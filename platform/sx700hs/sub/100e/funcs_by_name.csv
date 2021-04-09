@@ -915,6 +915,7 @@
 0xfc40d8bd,ISPanModeStop_FW
 0xfc0ec5e9,IsRomLogAvailable_FW
 0xfc16c6a3,IsStrobeChargeCompleted
+0xfc30461f,IsWirelessConnect
 0xfc2427db,IsZoomActuatorResetSensorPlusSide_FW
 0xfc12b29d,IsZoomLensOutSidePosition_FW
 0xfc29aa90,j1_dry_memcpy_bytes

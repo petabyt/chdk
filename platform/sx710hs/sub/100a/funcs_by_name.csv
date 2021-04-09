@@ -1002,6 +1002,7 @@
 0xfc4ba293,IsSDDetect_FW
 0xfc0e7e8d,IsStrobeChargeCompleted
 0xfc174a1d,IsUnitFirmMode_FW
+0xfc2c052d,IsWirelessConnect
 0xfc2a5005,IsZoomActuatorResetSensorPlusSide_FW
 0xfc0d8dab,IsZoomLensOutSidePosition_FW
 0xfc2c7324,j1_dry_memcpy_bytes

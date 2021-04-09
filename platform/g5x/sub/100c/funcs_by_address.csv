@@ -1088,6 +1088,7 @@
 0xfc36665b,cameracon_get_state
 0xfc3666e9,UIFS_CancelStoreLensTimer_FW
 0xfc366971,j_Rec2PB
+0xfc368131,IsWirelessConnect
 0xfc368b85,task_StartupImage
 0xfc36db29,CreateController_FW
 0xfc36dbaf,DeleteController_FW

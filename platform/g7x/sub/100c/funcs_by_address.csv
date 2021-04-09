@@ -1390,6 +1390,7 @@
 0xfc34b757,SetScriptMode_FW
 0xfc34b7eb,UiEvnt_StartDisguiseCradleStatus_FW
 0xfc34b7f3,UiEvnt_StopDisguiseCradleStatus_FW
+0xfc352767,IsWirelessConnect
 0xfc3566d9,task_StartupImage
 0xfc357691,get_fstype
 0xfc3576f7,GetDrive_ClusterSize
