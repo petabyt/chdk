@@ -516,6 +516,6 @@ __stdcall int IsControlEventActive_FW(int event);
 __stdcall void *CreateController_FW(void *controller_fn, int unk);
 __stdcall int DeleteController_FW(void *controller);
 
-__stdcall int _IsWirelessConnect(void); // returns 1 if wireless active (from scanning for AP to PTP/IP disconnect)
+__stdcall int IsWirelessConnect(void); // returns 1 if wireless active (from scanning for AP to PTP/IP disconnect)
 #endif
 
