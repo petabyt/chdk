@@ -322,6 +322,7 @@
 0xff05c894,UIFS_CancelStoreLensTimer_FW
 0xff05d330,task_InitFileModules
 0xff05d368,task_CommonDrivers
+0xff0602b4,IsWirelessConnect
 0xff061584,UIFS_StartMovieRecord_FW
 0xff0615a8,UIFS_StopMovieRecord_FW
 0xff064bf0,UIFS_IsAvailableShots_FW

@@ -265,6 +265,7 @@
 0xf8066d80,Rec2PB
 0xf80675a8,task_InitFileModules
 0xf80675e0,task_CommonDrivers
+0xf806a32c,IsWirelessConnect
 0xf806b230,UIFS_StartMovieRecord_FW
 0xf806b254,UIFS_StopMovieRecord_FW
 0xf806d12c,UnsetZoomForMovie

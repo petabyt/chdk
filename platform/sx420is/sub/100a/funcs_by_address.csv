@@ -329,6 +329,7 @@
 0xff05f530,task_InitFileModules
 0xff05f570,task_CommonDrivers
 0xff0605e0,DispSwCon_TurnOffDisplay_FW
+0xff061fa8,IsWirelessConnect
 0xff064984,UIFS_StartMovieRecord_FW
 0xff0649a8,UIFS_StopMovieRecord_FW
 0xff068418,UIFS_IsAvailableShots_FW

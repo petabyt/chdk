@@ -651,6 +651,7 @@
 0xff0bf0c4,Rec2PB
 0xff0bf930,task_InitFileModules
 0xff0bf968,task_CommonDrivers
+0xff0c29bc,IsWirelessConnect
 0xff0c2ef0,SetCurrentCaptureModeType
 0xff0c2ef0,SetCurrentCaptureModeType_FW
 0xff0c4a70,GetCurrentCaptureModeType_FW

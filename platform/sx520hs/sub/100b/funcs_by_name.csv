@@ -980,6 +980,7 @@
 0xff0a8a10,IsRomLogAvailable_FW
 0xff3910dc,IsSDDetect_FW
 0xff10022c,IsStrobeChargeCompleted
+0xff065854,IsWirelessConnect
 0xff208b88,IsZoomActuatorResetSensorPlusSide_FW
 0xff095e6c,IsZoomLensOutSidePosition_FW
 0xff1d25d8,j_AbortAEIntegralValue_FW
