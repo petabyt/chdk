@@ -983,6 +983,7 @@
 0xff377bcc,IsSDDetect_FW
 0xff1095d4,IsStrobeChargeCompleted
 0xff3b0730,IsUnitFirmMode_FW
+0xff063cfc,IsWirelessConnect
 0xff3ada6c,IsZoomActuatorResetSensorPlusSide_FW
 0xff207c80,IsZoomLensOutSidePosition_FW
 0xff1d3988,j_AbortAEIntegralValue_FW

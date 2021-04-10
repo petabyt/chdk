@@ -839,6 +839,7 @@
 0xff3e5728,ISPanModeStop_FW
 0xff21d6d8,IsRomLogAvailable_FW
 0xff1129b8,IsStrobeChargeCompleted
+0xff0c29bc,IsWirelessConnect
 0xff3b50e8,IsZoomActuatorResetSensorPlusSide_FW
 0xff1e3ad0,IsZoomLensOutSidePosition_FW
 0xff2143b8,j_BeepDrive_FW

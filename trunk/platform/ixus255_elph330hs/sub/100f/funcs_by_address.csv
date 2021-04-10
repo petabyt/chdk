@@ -286,6 +286,7 @@
 0xff082cd8,Rec2PB
 0xff08360c,task_InitFileModules
 0xff083644,task_CommonDrivers
+0xff085cf0,IsWirelessConnect
 0xff086bd8,UIFS_StartMovieRecord_FW
 0xff086bfc,UIFS_StopMovieRecord_FW
 0xff08a2b4,UIFS_IsAvailableShots_FW

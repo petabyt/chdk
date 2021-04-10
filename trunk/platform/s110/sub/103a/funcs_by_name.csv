@@ -878,6 +878,7 @@
 0xf8453de0,ISPanModeStop_FW
 0xf826be8c,IsRomLogAvailable_FW
 0xf8136bcc,IsStrobeChargeCompleted
+0xf806a32c,IsWirelessConnect
 0xf8426efc,IsZoomActuatorResetSensorPlusSide_FW
 0xf82303b0,IsZoomLensOutSidePosition_FW
 0xf81fcb90,j_AbortAEIntegralValue_FW

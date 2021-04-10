@@ -345,3 +345,4 @@ NHSTUB(get_ptp_buf_size                       ,0xff12d60c) //122
 NHSTUB(get_ptp_file_buf                       ,0xff2ea98c) //121
 NHSTUB(SetVideoOutType                        ,0xff44b30c) //109
 NHSTUB(GetVideoOutType                        ,0xff44b21c) //120
+NHSTUB(IsWirelessConnect                      ,0xff0410a8) //122
