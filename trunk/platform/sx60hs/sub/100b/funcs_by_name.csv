@@ -1384,6 +1384,7 @@
 0xfc322acb,j_PTM_SetProprietyEnable_FW
 0xfc06a30d,j_PutsCameraLogEvent_FW
 0xfc336549,j_pvm_free
+0xfc33653d,j_pvm_init_pool
 0xfc336545,j_pvm_malloc
 0xfc332a9b,j_Read_FW
 0xfc0dfdb3,j_Rec2PB
@@ -1789,6 +1790,7 @@
 0xfc06250f,pvm_free
 0xfc062611,pvm_get_largest_free_block_size
 0xfc33654d,pvm_get_largest_free_block_size_ptr
+0xfc0624b5,pvm_init_pool
 0xfc062587,pvm_malloc
 0xfc4374ad,qsort
 0xfc3fbca3,QuietImageDrive_FW
