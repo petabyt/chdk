@@ -141,6 +141,7 @@
 0xfc0659d9,task_UartLog
 0xfc065b49,StartRedirectUART_FW
 0xfc065be9,StopRedirectUART_FW
+0xfc0679b9,pvm_init_pool
 0xfc067a13,pvm_free
 0xfc067a8b,pvm_malloc
 0xfc067b15,pvm_get_largest_free_block_size
@@ -1443,6 +1444,7 @@
 0xfc360255,j_malloc
 0xfc360259,j_free
 0xfc36025d,malloc_strictly
+0xfc36027d,j_pvm_init_pool
 0xfc360285,j_pvm_malloc
 0xfc360289,j_pvm_free
 0xfc36028d,pvm_get_largest_free_block_size_ptr
