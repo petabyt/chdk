@@ -86,6 +86,9 @@
 0xfc05dc35,task_UartLog
 0xfc05dda5,StartRedirectUART_FW
 0xfc05de45,StopRedirectUART_FW
+0xfc0617ab,pvm_free
+0xfc061823,pvm_malloc
+0xfc0618ad,pvm_get_largest_free_block_size
 0xfc063f17,DisplayFactoryMode_FW
 0xfc063f1d,UndisplayFactoryMode_FW
 0xfc063fe9,IsFAWLANRunning_FW
@@ -974,6 +977,10 @@
 0xfc3345e5,GetFocusResetPosition_FW
 0xfc33463f,GetFocusDefaultResetPosition_FW
 0xfc334d35,GetCurrentDriveBaseSvValue
+0xfc338655,ui_malloc_default
+0xfc338697,ui_free_default
+0xfc3386f5,ui_malloc
+0xfc3386fb,ui_free
 0xfc33cc43,UIFS_IsAvailableShots_FW
 0xfc33d131,UIFS_GetStillShotableNumber_FW
 0xfc33d135,UIFS_GetMovieRecoadableNumber_FW
@@ -1067,6 +1074,9 @@
 0xfc3519ed,j_malloc
 0xfc3519f1,j_free
 0xfc3519f5,malloc_strictly
+0xfc351a1d,j_pvm_malloc
+0xfc351a21,j_pvm_free
+0xfc351a25,pvm_get_largest_free_block_size_ptr
 0xfc3520f7,get_fstype
 0xfc35215d,GetDrive_ClusterSize
 0xfc35265b,GetDrive_FreeClusters

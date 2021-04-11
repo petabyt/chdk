@@ -141,6 +141,9 @@
 0xfc060561,task_UartLog
 0xfc0606d1,StartRedirectUART_FW
 0xfc060771,StopRedirectUART_FW
+0xfc06250f,pvm_free
+0xfc062587,pvm_malloc
+0xfc062611,pvm_get_largest_free_block_size
 0xfc062717,fut_flush
 0xfc0627d5,fopen_low
 0xfc06286f,fclose_low
@@ -1485,6 +1488,10 @@
 0xfc31ca91,UIFS_IsAvailableShots_FW
 0xfc31cfb1,UIFS_GetStillShotableNumber_FW
 0xfc31cfb5,UIFS_GetMovieRecoadableNumber_FW
+0xfc31f46d,ui_malloc_default
+0xfc31f4af,ui_free_default
+0xfc31f50d,ui_malloc
+0xfc31f513,ui_free
 0xfc3210fb,CreateController_FW
 0xfc32116d,DeleteController_FW
 0xfc321207,MoveControllerToTopOfZOrder_FW
@@ -1560,6 +1567,9 @@
 0xfc336529,j_malloc
 0xfc33652d,j_free
 0xfc336531,malloc_strictly
+0xfc336559,j_pvm_malloc
+0xfc33655d,j_pvm_free
+0xfc336561,pvm_get_largest_free_block_size_ptr
 0xfc3366a5,task_CtrlSrv
 0xfc3370b1,transfer_src_overlay
 0xfc3379fd,ScreenLock

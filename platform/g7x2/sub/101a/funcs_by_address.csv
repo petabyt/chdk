@@ -95,6 +95,9 @@
 0xe0021ac7,StopRedirectUART_FW
 0xe0021de7,dry_panic
 0xe0021e17,dry_panic_low
+0xe002432d,pvm_free
+0xe00243a3,pvm_malloc
+0xe002442b,pvm_get_largest_free_block_size
 0xe00272f3,InitializeTestRec_FW
 0xe0027347,TerminateTestRec_FW
 0xe0027ae3,Initializedccd_FW
@@ -625,6 +628,10 @@
 0xe0371d17,SetScriptMode_FW
 0xe0371dab,UiEvnt_StartDisguiseCradleStatus_FW
 0xe0371db3,UiEvnt_StopDisguiseCradleStatus_FW
+0xe0371e69,ui_malloc_default
+0xe0371eab,ui_free_default
+0xe0371f09,ui_malloc
+0xe0371f0f,ui_free
 0xe03729a1,GetFocusLensPullInMaxSpeed_FW
 0xe0372bf5,GetCurrentTargetDistance_FW
 0xe0372bf5,GetFocusLensSubjectDistance
@@ -708,6 +715,9 @@
 0xe037e5d5,j_malloc
 0xe037e5d9,j_free
 0xe037e5dd,malloc_strictly
+0xe037e605,j_pvm_malloc
+0xe037e609,j_pvm_free
+0xe037e60d,pvm_get_largest_free_block_size_ptr
 0xe037e665,dry_con_printf
 0xe037e6a5,strcpy
 0xe037e6a5,strcpy_FW
