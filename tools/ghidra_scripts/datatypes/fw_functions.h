@@ -517,5 +517,17 @@ __stdcall void *CreateController_FW(void *controller_fn, int unk);
 __stdcall int DeleteController_FW(void *controller);
 
 __stdcall int IsWirelessConnect(void); // returns 1 if wireless active (from scanning for AP to PTP/IP disconnect)
+
+// on dryos 43+, ui_malloc calls through a pointer in the data segment
+// _default is the default value of the pointer, other is the function that calls through the pointer
+__stdcall void *ui_malloc(unsigned size);
+__stdcall void *ui_malloc_default(unsigned size);
+__stdcall void ui_free(void *p);
+__stdcall void ui_free_default(void *p);
+__stdcall void *pvm_malloc(void *pool, unsigned size);
+__stdcall void pvm_free(void *pool, void *p);
+__stdcall void pvm_get_largest_free_block_size_ptr(void *pool, unsigned *free_size);
+__stdcall int pvm_get_largest_free_block_size(void *pool);
+
 #endif
 

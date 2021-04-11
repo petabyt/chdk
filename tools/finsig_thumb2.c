@@ -508,6 +508,17 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "is_movie_recording", OPTIONAL|UNUSED },
     { "IsWirelessConnect", OPTIONAL },
 
+    { "ui_malloc", OPTIONAL|UNUSED },
+    { "ui_malloc_default", OPTIONAL|UNUSED },
+    { "ui_free", OPTIONAL|UNUSED },
+    { "ui_free_default", OPTIONAL|UNUSED },
+
+    // made up names, see https://chdk.setepontos.com/index.php?topic=11246.0
+    { "pvm_get_largest_free_block_size_ptr", OPTIONAL|UNUSED }, // wrapper for following that puts return ptr arg
+    { "pvm_get_largest_free_block_size", OPTIONAL|UNUSED },
+    { "pvm_malloc", OPTIONAL|UNUSED },
+    { "pvm_free", OPTIONAL|UNUSED },
+
     {0,0,0},
 };
 
@@ -631,6 +642,9 @@ misc_val_t misc_vals[]={
     { "exmem_alloc_table",  },
     { "exmem_types_table",  },
     { "exmem_type_count",   MISC_VAL_DEF_CONST},
+    { "ui_malloc_ptr",      MISC_VAL_NO_STUB}, // currently only used to find functions
+    { "ui_free_ptr",        MISC_VAL_NO_STUB},
+
     {0,0,0},
 };
 
@@ -4486,6 +4500,54 @@ int sig_match_var_struct_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 1;
 }
 
+// get the address used by a function that does
+// ldr r1 =base
+// ldr r1 [rx, offset]
+// bx r1
+int sig_match_ui_mem_func_ptr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    uint32_t fadr=is->adr;
+    var_ldr_desc_t desc;
+    if(!find_and_get_var_ldr(fw, is, 1, 4, ARM_REG_R1, &desc)) {
+        printf("sig_match_var_struct_get: no match ldr\n");
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_var_struct_get: disasm failed\n");
+        return 0;
+    }
+    const insn_match_t match_bx_r1[]={
+        {MATCH_INS(BX,   1),  {MATCH_OP_REG(R1),}},
+        {ARM_INS_ENDING}
+    };
+
+    // TODO could check for other RET type instructions
+    if(!insn_match(is->insn,match_bx_r1)) {
+        printf("sig_match_var_struct_get: no match BX R1\n");
+        return 0;
+    }
+    save_misc_val(rule->name,desc.adr_adj,desc.off,fadr);
+    return 1;
+}
+
+// get the sig from the memory addressed by specified stubs_misc
+int sig_match_func_ptr_val(firmware *fw, __attribute__ ((unused))iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t adr = get_misc_val_value(rule->ref_name);
+    if(!adr) {
+        return 0;
+    }
+    uint32_t *vp = (uint32_t *)adr2ptr_with_data(fw,adr);
+    if(!vp) {
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,*vp);
+}
+
+
 int sig_match_av_over_sem(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     // don't bother on ND-only cams
@@ -5280,6 +5342,16 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetVideoOutType",          "GetVideoOutType_FW"},
 {sig_match_named,   "is_movie_recording",       "UIFS_StopMovieRecord_FW",SIG_NAMED_SUB},
 {sig_match_named,   "dry_con_printf",           "ShowCameraLogInfo_FW", SIG_NAMED_SUB},
+{sig_match_named,   "ui_malloc",                "CreateController_FW",  SIG_NAMED_SUB},
+{sig_match_ui_mem_func_ptr,"ui_malloc_ptr",     "ui_malloc", },
+{sig_match_func_ptr_val, "ui_malloc_default",   "ui_malloc_ptr", },
+{sig_match_named,   "pvm_malloc",               "ui_malloc_default",    SIG_NAMED_NTH(2,SUB)},
+{sig_match_named,   "pvm_get_largest_free_block_size_ptr","ui_malloc_default",SIG_NAMED_NTH(3,SUB)},
+{sig_match_named,   "pvm_get_largest_free_block_size","pvm_get_largest_free_block_size_ptr",SIG_NAMED_SUB},
+{sig_match_named,   "ui_free",                  "CreateController_FW",  SIG_NAMED_NTH(3,SUB)},
+{sig_match_ui_mem_func_ptr,"ui_free_ptr",       "ui_free",},
+{sig_match_func_ptr_val, "ui_free_default",     "ui_free_ptr", },
+{sig_match_named_last,"pvm_free",               "ui_free_default",      SIG_NAMED_LAST_RANGE(11,16)},
 
 {sig_match_near_str,"cameracon_set_state",      "AC:ChkCom2PB",         SIG_NEAR_BEFORE(4,1),},
 {sig_match_near_str,"cameracon_get_state",      "DlvrUSBCnct",          SIG_NEAR_AFTER(5,2)},
