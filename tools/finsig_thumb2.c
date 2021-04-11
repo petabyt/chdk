@@ -518,6 +518,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "pvm_get_largest_free_block_size", OPTIONAL|UNUSED },
     { "pvm_malloc", OPTIONAL|UNUSED },
     { "pvm_free", OPTIONAL|UNUSED },
+    { "pvm_init_pool", OPTIONAL|UNUSED },
 
     {0,0,0},
 };
@@ -5352,6 +5353,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_ui_mem_func_ptr,"ui_free_ptr",       "ui_free",},
 {sig_match_func_ptr_val, "ui_free_default",     "ui_free_ptr", },
 {sig_match_named_last,"pvm_free",               "ui_free_default",      SIG_NAMED_LAST_RANGE(11,16)},
+{sig_match_near_str,"pvm_init_pool",            "\n%ld-byte from heap\n",SIG_NEAR_BEFORE(14,3)},
 
 {sig_match_near_str,"cameracon_set_state",      "AC:ChkCom2PB",         SIG_NEAR_BEFORE(4,1),},
 {sig_match_near_str,"cameracon_get_state",      "DlvrUSBCnct",          SIG_NEAR_AFTER(5,2)},
