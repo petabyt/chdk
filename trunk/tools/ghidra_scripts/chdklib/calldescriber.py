@@ -93,7 +93,7 @@ class CallDescriber(object):
 
         if res.arg_type == 'INT':
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel INT %s for %s\n'%(addr,r,fname))
+                infomsg(2,'%s reg rel INT %s\n'%(addr,r))
             else:
                 res.desc = str(reg.getValue())
         # TODO strings and things
@@ -144,7 +144,7 @@ class PropCallDescriber(CallDescriber):
                 return res
 
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel PROPCASE_ID %s for %s\n'%(addr,r,fname))
+                infomsg(2,'%s reg rel PROPCASE_ID %s\n'%(addr,r))
             else:
                 prop_id = reg.getValue()
                 if prop_id in self.pd.by_id:
@@ -201,7 +201,7 @@ class LeventCallDescriber(CallDescriber):
                 return res
 
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel LEVENT_ID %s for %s\n'%(addr,r,fname))
+                infomsg(2,'%s reg rel LEVENT_ID %s\n'%(addr,r))
             else:
                 levent_id = reg.getValue()
                 if levent_id in self.ld.by_id and self.ld.by_id[levent_id]['name'] != '':
@@ -209,6 +209,48 @@ class LeventCallDescriber(CallDescriber):
                     res.desc = '%s (%d)'%(res.levent_name,levent_id)
                 else:
                     res.desc = str(levent_id)
+
+        return res
+
+mzrm_funcdesc = {
+    'mzrm_createmsg':{
+        'r0':{
+            'type':'IN_PTR',
+        },
+        'r1':{
+            'type':'INT',
+        },
+        'r2':{
+            'type':'MZRM_ID',
+        },
+        'r3':{
+            'type':'INT',
+        },
+    },
+}
+
+class MzrmCallDescriber(CallDescriber):
+    def __init__(self,mzrmdata):
+        super(MzrmCallDescriber,self).__init__(mzrm_funcdesc)
+        self.data = mzrmdata
+
+    def describe_reg(self,reg,rdesc):
+        res = super(MzrmCallDescriber,self).describe_reg(reg,rdesc)
+
+        if res.arg_type == 'MZRM_ID':
+            res.mzrm_name = ''
+            if res.val is None:
+                return res
+
+            if reg.isRegisterRelativeValue():
+                infomsg(2,'%s reg rel MZRM_ID %s\n'%(addr,r))
+            else:
+                mzrm_id = reg.getValue()
+                if mzrm_id in self.data.by_id and not self.data.by_id[mzrm_id].unk:
+                    res.mzrm_name = self.data.by_id[mzrm_id].name
+                    res.desc = '%s (%d)'%(res.mzrm_name,mzrm_id)
+                else:
+                    res.desc = str(mzrm_id)
 
         return res
 
