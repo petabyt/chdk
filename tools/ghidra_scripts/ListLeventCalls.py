@@ -58,13 +58,13 @@ def list_levent_calls():
                         break
 
             if event_id is None:
-                warn('ignoring unknown event id %s'%(prop_name))
+                warn('ignoring unknown event id %s'%(s))
             else:
                 event_ids.append(event_id)
 
-        if len(event_ids) == 0 and not do_all:
-            warn('no valid IDs specified, exiting')
-            return
+    if len(event_ids) == 0 and not do_all:
+        warn('no valid IDs specified, exiting')
+        return
 
     infomsg(0,"Searching for")
     msg = []

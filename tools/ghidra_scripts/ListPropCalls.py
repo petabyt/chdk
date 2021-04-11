@@ -61,9 +61,9 @@ def list_prop_calls():
             else:
                 prop_ids.append(prop_id)
 
-        if len(prop_ids) == 0 and not do_all:
-            warn('no valid IDs specified, exiting')
-            return
+    if len(prop_ids) == 0 and not do_all:
+        warn('no valid IDs specified, exiting')
+        return
 
     infomsg(0,"Searching for")
     msg = []
