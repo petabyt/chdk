@@ -139,6 +139,9 @@
 0xfc05e71d,task_UartLog
 0xfc05e88d,StartRedirectUART_FW
 0xfc05e92d,StopRedirectUART_FW
+0xfc060a47,pvm_free
+0xfc060abf,pvm_malloc
+0xfc060b49,pvm_get_largest_free_block_size
 0xfc060c4f,fut_flush
 0xfc060d0d,fopen_low
 0xfc060da7,fclose_low
@@ -1241,6 +1244,10 @@
 0xfc2e5e57,BeepDrive_FW
 0xfc2e5e6b,BeepDriveComp_FW
 0xfc2e5e7f,BeepDriveStop_FW
+0xfc2ed5f9,ui_malloc_default
+0xfc2ed63b,ui_free_default
+0xfc2ed699,ui_malloc
+0xfc2ed69f,ui_free
 0xfc2ef4e3,SetPropertyCase
 0xfc2ef619,GetPropertyCase
 0xfc2f1c99,UIFS_StartMovieRecord_FW
@@ -1318,6 +1325,9 @@
 0xfc30f8bd,j_malloc
 0xfc30f8c1,j_free
 0xfc30f8c5,malloc_strictly
+0xfc30f8ed,j_pvm_malloc
+0xfc30f8f1,j_pvm_free
+0xfc30f8f5,pvm_get_largest_free_block_size_ptr
 0xfc30f98d,EngDrvRead
 0xfc30fa89,get_self_task_errno_pointer
 0xfc30faa1,strcat

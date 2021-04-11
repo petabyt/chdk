@@ -146,6 +146,9 @@
 0xfc056f3d,task_UartLog
 0xfc0570ad,StartRedirectUART_FW
 0xfc05714d,StopRedirectUART_FW
+0xfc058f63,pvm_free
+0xfc058fdb,pvm_malloc
+0xfc059065,pvm_get_largest_free_block_size
 0xfc05916b,fut_flush
 0xfc059229,fopen_low
 0xfc0592c3,fclose_low
@@ -971,6 +974,10 @@
 0xfc2e3e9d,PostEventShootSeqToUI_FW
 0xfc2e3ed5,ShowLogicalEventName_FW
 0xfc2ec113,task_EdetSBJTask
+0xfc2eef8d,ui_malloc_default
+0xfc2eefcf,ui_free_default
+0xfc2ef02d,ui_malloc
+0xfc2ef033,ui_free
 0xfc2f28d1,PutsCameraLogEvent_FW
 0xfc2f2901,ShowCameraLogInfo_FW
 0xfc2f2947,ShowCameraLog_FW
@@ -1151,6 +1158,9 @@
 0xfc32910d,j_malloc
 0xfc329111,j_free
 0xfc329115,malloc_strictly
+0xfc32913d,j_pvm_malloc
+0xfc329141,j_pvm_free
+0xfc329145,pvm_get_largest_free_block_size_ptr
 0xfc32919d,dry_con_printf
 0xfc34bb05,task_ReadMultiConTask
 0xfc352895,APE_DraftDump_FW

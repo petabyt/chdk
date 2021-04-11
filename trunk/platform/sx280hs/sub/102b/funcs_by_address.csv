@@ -138,6 +138,9 @@
 0xfc050ed5,task_UartLog
 0xfc051045,StartRedirectUART_FW
 0xfc0510e5,StopRedirectUART_FW
+0xfc05304b,pvm_free
+0xfc0530c3,pvm_malloc
+0xfc05314d,pvm_get_largest_free_block_size
 0xfc053253,fut_flush
 0xfc053311,fopen_low
 0xfc0533ab,fclose_low
@@ -1155,6 +1158,10 @@
 0xfc27db65,EpilogFile_FW
 0xfc27db81,task_Epilog
 0xfc27dbab,EpilogMenu_FW
+0xfc288159,ui_malloc_default
+0xfc28819b,ui_free_default
+0xfc2881f9,ui_malloc
+0xfc2881ff,ui_free
 0xfc28879b,get_current_exp
 0xfc28b39d,GetFaceAuthBinAddr_FW
 0xfc28b3a1,GetFaceAuthBinSize_FW
@@ -1313,6 +1320,9 @@
 0xfc2b7b7d,j_malloc
 0xfc2b7b81,j_free
 0xfc2b7b85,malloc_strictly
+0xfc2b7bad,j_pvm_malloc
+0xfc2b7bb1,j_pvm_free
+0xfc2b7bb5,pvm_get_largest_free_block_size_ptr
 0xfc2b7cab,EngDrvRead
 0xfc2b7dd1,j_strcmp_FW
 0xfc2b7de5,strcmp

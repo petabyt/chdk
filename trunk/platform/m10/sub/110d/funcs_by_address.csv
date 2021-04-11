@@ -149,6 +149,9 @@
 0xfc06dbad,task_UartLog
 0xfc06dd1d,StartRedirectUART_FW
 0xfc06ddbd,StopRedirectUART_FW
+0xfc06faaf,pvm_free
+0xfc06fb27,pvm_malloc
+0xfc06fbb1,pvm_get_largest_free_block_size
 0xfc06fcb7,fut_flush
 0xfc06fd75,fopen_low
 0xfc06fe0f,fclose_low
@@ -1645,6 +1648,10 @@
 0xfc3794c5,SetScriptMode_FW
 0xfc379559,UiEvnt_StartDisguiseCradleStatus_FW
 0xfc379561,UiEvnt_StopDisguiseCradleStatus_FW
+0xfc38397d,ui_malloc_default
+0xfc3839bf,ui_free_default
+0xfc383a1d,ui_malloc
+0xfc383a23,ui_free
 0xfc385883,GetLogicalEventName_FW
 0xfc3858c9,PostLogicalEventForNotPowerType
 0xfc3858c9,PostLogicalEventForNotPowerType_FW
@@ -1716,6 +1723,9 @@
 0xfc38ccf5,j_malloc
 0xfc38ccf9,j_free
 0xfc38ccfd,malloc_strictly
+0xfc38cd25,j_pvm_malloc
+0xfc38cd29,j_pvm_free
+0xfc38cd2d,pvm_get_largest_free_block_size_ptr
 0xfc38d1c9,dry_con_printf
 0xfc38d209,strncpy
 0xfc38d22d,strcat

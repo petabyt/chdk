@@ -146,6 +146,9 @@
 0xfc067791,task_UartLog
 0xfc067901,StartRedirectUART_FW
 0xfc0679a1,StopRedirectUART_FW
+0xfc06963f,pvm_free
+0xfc0696b7,pvm_malloc
+0xfc069741,pvm_get_largest_free_block_size
 0xfc06c259,InitializeTestRec_FW
 0xfc06c299,TerminateTestRec_FW
 0xfc06c96f,Initializedccd_FW
@@ -1135,6 +1138,10 @@
 0xfc39c74f,EpilogFile_FW
 0xfc39c76b,task_Epilog
 0xfc39c795,EpilogMenu_FW
+0xfc3a5d19,ui_malloc_default
+0xfc3a5d5b,ui_free_default
+0xfc3a5db9,ui_malloc
+0xfc3a5dbf,ui_free
 0xfc3adb23,PTM_AllResetToFactorySetting_FW
 0xfc3adb2f,j_PTM_AllReset_FW
 0xfc3adb3f,PTM_RestoreUIProperty_FW
@@ -1257,6 +1264,9 @@
 0xfc3bf96d,j_malloc
 0xfc3bf971,j_free
 0xfc3bf975,malloc_strictly
+0xfc3bf99d,j_pvm_malloc
+0xfc3bf9a1,j_pvm_free
+0xfc3bf9a5,pvm_get_largest_free_block_size_ptr
 0xfc3bf9fd,sprintf_FW
 0xfc3bfa11,dry_con_printf
 0xfc40e791,APE_DraftDump_FW

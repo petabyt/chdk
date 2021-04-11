@@ -141,6 +141,9 @@
 0xfc0659d9,task_UartLog
 0xfc065b49,StartRedirectUART_FW
 0xfc065be9,StopRedirectUART_FW
+0xfc067a13,pvm_free
+0xfc067a8b,pvm_malloc
+0xfc067b15,pvm_get_largest_free_block_size
 0xfc067c1b,fut_flush
 0xfc067cd9,fopen_low
 0xfc067d73,fclose_low
@@ -1366,6 +1369,10 @@
 0xfc3474cb,CtrlMan_ChangeZOrder_FW
 0xfc34751b,GetSelfControllerHandle_FW
 0xfc34872f,DispSwCon_TurnOffDisplayDevice_FW
+0xfc349de9,ui_malloc_default
+0xfc349e2b,ui_free_default
+0xfc349e89,ui_malloc
+0xfc349e8f,ui_free
 0xfc34a64f,SetPropertyCase
 0xfc34a783,GetPropertyCase
 0xfc34ade3,PTM_AllResetToFactorySetting_FW
@@ -1436,6 +1443,9 @@
 0xfc360261,j_malloc
 0xfc360265,j_free
 0xfc360269,malloc_strictly
+0xfc360291,j_pvm_malloc
+0xfc360295,j_pvm_free
+0xfc360299,pvm_get_largest_free_block_size_ptr
 0xfc360b31,EngDrvRead
 0xfc360e4d,task_CtrlSrv
 0xfc361697,transfer_src_overlay

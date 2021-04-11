@@ -1134,6 +1134,8 @@
 0xfc307359,j_PTM_SetCurrentItem_FW
 0xfc3073d3,j_PTM_SetProprietyEnable_FW
 0xfc066ad9,j_PutsCameraLogEvent_FW
+0xfc30d89d,j_pvm_free
+0xfc30d899,j_pvm_malloc
 0xfc3099bb,j_Read_FW
 0xfc0e86d1,j_Rec2PB
 0xfc2a1610,j_ReceiveMessageQueue
@@ -1467,6 +1469,10 @@
 0xfc3eb4d3,PutOutNdFilter
 0xfc3eb4d3,PutOutNdFilter_FW
 0xfc308435,PutsCameraLogEvent_FW
+0xfc0618f7,pvm_free
+0xfc0619f9,pvm_get_largest_free_block_size
+0xfc30d8a1,pvm_get_largest_free_block_size_ptr
+0xfc06196f,pvm_malloc
 0xfc40b7fd,qsort
 0xfc1a4963,QuietImager_FW
 0xfc11d12b,rand
@@ -2119,6 +2125,10 @@
 0xfc2cfc75,TurnOnVideoOutMode_FW
 0xfc40a3a3,UI.Create_FW
 0xfc409919,UI.CreatePublic_FW
+0xfc2eeba7,ui_free
+0xfc2eeb43,ui_free_default
+0xfc2eeba1,ui_malloc
+0xfc2eeb01,ui_malloc_default
 0xfc40a3a3,UI_RegistDebugEventProc_FW
 0xfc40a391,UI_ShowStateOfRecMode_FW
 0xfc308373,UiEvnt_SetLogicalEventActive_FW
