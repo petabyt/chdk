@@ -1,6 +1,8 @@
 # Ghidra needs this in a module to access standard stuff
 from __main__ import *
 
+import re
+
 from chdklib.logutil import infomsg, warn
 
 from java.math import BigInteger
@@ -77,7 +79,7 @@ def get_tmode_reg_at(address):
 
     return int(progCtx.getValue(tmodeReg,address,False))
 
-def is_likely_func_start(addr,tmode = None):
+def is_likely_func_start(addr,tmode = None, require_push = False):
     """check if code at addr looks like a function start, or trivial function. tmode taken from program if not set"""
     if tmode is None:
         tmode = get_tmode_reg_at(addr)
@@ -113,6 +115,9 @@ def is_likely_func_start(addr,tmode = None):
     else:
         if ((op == 'stmdb' and a0[0:3] == 'sp!') or (op == 'str' and  a0 == 'lr' and a1 == '[sp,#-0x4]!')):
             return True
+
+    if require_push:
+        return False
 
     # not a push, check immediate return
     if (op == 'bx' and a0 == 'lr') or (op == 'mov' and a0 == 'pc' and a1 == 'lr'):
