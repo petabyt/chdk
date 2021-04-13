@@ -47,14 +47,14 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ISO_MODE                        149
 #define PROPCASE_METERING_MODE                   157        // 0 = Evaluative, 1 = Spot, 2 = Center weighted avg
 #define PROPCASE_VIDEO_FRAMERATE                 167        // 1=25, 0=30 (elph130), may crash if doesn't match what canon uses for current resolution
-#define PROPCASE_VIDEO_RESOLUTION                170        // 4=1280x720, 2=640x480 (elph130)
+#define PROPCASE_VIDEO_RESOLUTION                170        // 4=1280x720, 2=640x480 (elph130) 5=1920x1080 (elph340)
 #define PROPCASE_CUSTOM_BLUE                     176        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_GREEN                    177        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_RED                      178        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_SKIN_TONE                179        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_MY_COLORS                       187        // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
 #define PROPCASE_ND_FILTER_STATE                 195        // 0 = out, 1 = in
-#define PROPCASE_OPTICAL_ZOOM_POSITION           198 
+#define PROPCASE_OPTICAL_ZOOM_POSITION           198
 #define PROPCASE_EXPOSURE_LOCK                   209     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
 #define PROPCASE_EV_CORRECTION_2                 210
 #define PROPCASE_IS_FLASH_READY                  211
