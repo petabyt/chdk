@@ -83,13 +83,17 @@ void *vid_get_viewport_live_fb()
 }
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-// camera appears to use 240 when recording FHD video and Fishy mode, 480 otherwise
+// camera appears to use 240 when recording FHD video and Fisheye mode, 480 otherwise
 int vid_get_viewport_yscale() {
     if (camera_info.state.mode_play) {
         return 2;
     }
-    if (is_video_recording() && shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 5) {
-        return 1;
+    if (is_video_recording()) {
+        // FHD video
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 5) {
+            return 1;
+        }
+        return 2;
     }
     if (camera_info.state.mode_shooting == MODE_FISHEYE) {
         return 1;
@@ -113,7 +117,7 @@ long vid_get_viewport_height()
         return 240;
     }
     extern int _GetVRAMVPixelsSize();
-    // HD video is apparently 180 on a 240 display
+    // FHD video is apparently 180 on a 240 display
     int h = _GetVRAMVPixelsSize();
     if (vid_get_viewport_yscale() == 1) {
         return h;
