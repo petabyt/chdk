@@ -42,6 +42,11 @@ def clean_empty_func(fm,f):
         infomsg(0,'entry inside data %s\n'%(f_entry))
         return True
 
+    # if no instruction, don't re-create
+    if not getInstructionAt(f_entry):
+        infomsg(0,'entry not code %s\n'%(f_entry))
+        return True
+
     mb = getMemoryBlock(f_entry)
     if not mb:
         infomsg(0,'entry not in memblock!? %s\n'%(f_entry))
@@ -64,6 +69,7 @@ def clean_empty_func(fm,f):
         b = f_new.getBody()
         if b.getMinAddress() == b.getMaxAddress():
             infomsg(0,'still zero size %s\n'%(f_entry))
+            fm.removeFunction(f_entry)
             return False
 
         return True
@@ -77,12 +83,16 @@ def clean_empty_funcs_main():
     found_count = 0
     clean_count = 0
     fm=currentProgram.getFunctionManager()
+    monitor.initialize(fm.getFunctionCount())
     for f in fm.getFunctions(True):
         b = f.getBody()
         if b.getMinAddress() == b.getMaxAddress():
             found_count += 1
             if clean_empty_func(fm,f):
                 clean_count += 1
+
+        monitor.incrementProgress(1)
+        monitor.checkCanceled()
 
     infomsg(0,"found %d cleaned %d\n"%(found_count, clean_count))
 
