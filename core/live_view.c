@@ -43,7 +43,7 @@ int live_view_get_data(ptp_data *data, int flags)
     lv.lv.bmo_desc_start = 0;
 #endif
 
-    // update camera_screen values to increase chance they will be consistent 
+    // update camera_screen values to increase chance they will be consistent
     // with values obtained directly from fw functions
     mode_get();
 
@@ -103,6 +103,8 @@ int live_view_get_data(ptp_data *data, int flags)
             lv.lv.palette_type = vid_get_palette_type();
             lv.lv.palette_data_start = total_size;
             total_size += pal_size;
+        } else {
+            lv.lv.palette_data_start = lv.lv.palette_type = 0;
         }
     }
     else
