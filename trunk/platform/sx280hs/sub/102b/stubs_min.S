@@ -51,3 +51,5 @@ DEF(jog_hw_pos,                             0xd9854004) // found by browsing the
 //FAKEDEF(enabled_refresh_physical_screen,    1)
 
 DEF(displaytype,                            0x8eb8) //0x8ea4 + 0x14, found  @ fc135f2a (GetDisplayType)
+
+DEF(task_AGPSDownloader, 0xFC07BA67)

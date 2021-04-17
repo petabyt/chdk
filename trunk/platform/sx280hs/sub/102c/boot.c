@@ -17,6 +17,7 @@ extern void task_InitFileModules();
 extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
+extern void task_AGPSDownloader();
 
 /*----------------------------------------------------------------------
     spytask
@@ -144,6 +145,14 @@ asm volatile (
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
 
+#if PLATFORMID == 12895
+"    LDR     R0, =task_AGPSDownloader\n"
+"    CMP     R0, R3\n"
+"    itt     eq\n"
+"    LDREQ   R3, =agps_downloader_task\n"
+"    orreq   r3, #1\n"
+"    BEQ     exitHook\n"
+#endif
 
 
 "    LDR     R0, =task_MovieRecord\n"
@@ -667,5 +676,84 @@ void __attribute__((naked,noinline)) tricinittask() {
     );
 }
 
+#if PLATFORMID == 12895 // sx280 only
+// following supplies new URL for up-to-date AGPS data
 
+void update_url() {
+    strcpy(*(char**)(0xd1bc+0x1c),"http://epodownload.mediatek.com/EPO.DAT");
+}
+
+void __attribute__((naked,noinline)) agps_downloader_task() {
+    asm volatile(
+// capdis -f=chdk -s=task_AGPSDownloader -c=44 -stubs PRIMARY.BIN 0xfc000000
+// task_AGPSDownloader 0xfc07ba67
+"    push    {r3, r4, r5, r6, r7, lr}\n"
+"    movs    r4, #0\n"
+"    ldr     r7, =0x0000d1bc\n"
+"    subs    r6, r4, #1\n"
+"    b       loc_fc07bad6\n"
+"loc_fc07ba70:\n"
+"    ldr     r0, [r7]\n"
+"    movs    r2, #0\n"
+"    mov     r1, sp\n"
+"    blx     sub_fc251c84\n" // j_ReceiveMessageQueue
+"    mov     r4, r0\n"
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc07ba8a\n"
+"    movs    r2, #0xf2\n"
+"    movs    r0, #0\n"
+"    ldr     r1, =0xfc07bc48\n" //  *"AGPSDownloader.c"
+"    blx     sub_fc251d9c\n" // j_DebugAssert
+"loc_fc07ba8a:\n"
+"    ldr     r0, [r7, #0x14]\n"
+"    adds    r0, r0, #1\n"
+"    bne     loc_fc07ba94\n"
+"    mov     r5, r6\n"
+"    b       loc_fc07ba98\n"
+"loc_fc07ba94:\n"
+"    ldr     r0, [sp]\n"
+"    ldr     r5, [r0]\n"
+"loc_fc07ba98:\n"
+"    ldr     r0, [sp]\n"
+"    bl      sub_fc2b7bfc\n" // j_free
+"    cmp     r5, #7\n"
+"    bhs     loc_fc07bad6\n"
+"    tbb     [pc, r5]\n" // (jumptable r5 7 elements)
+"branchtable_fc07baa6:\n"
+"    .byte((loc_fc07baae - branchtable_fc07baa6) / 2)\n" // (case 0)
+"    .byte((loc_fc07bab4 - branchtable_fc07baa6) / 2)\n" // (case 1)
+"    .byte((loc_fc07baba - branchtable_fc07baa6) / 2)\n" // (case 2)
+"    .byte((loc_fc07bac0 - branchtable_fc07baa6) / 2)\n" // (case 3)
+"    .byte((loc_fc07bac6 - branchtable_fc07baa6) / 2)\n" // (case 4)
+"    .byte((loc_fc07bacc - branchtable_fc07baa6) / 2)\n" // (case 5)
+"    .byte((loc_fc07bad2 - branchtable_fc07baa6) / 2)\n" // (case 6)
+".align 1\n"
+"loc_fc07baae:\n"
+"    bl      sub_fc07b9bc\n"
+"    bl      update_url\n"      // +
+"    b       loc_fc07bad6\n"
+"loc_fc07bab4:\n"
+"    bl      sub_fc07b918\n"
+"    b       loc_fc07bad6\n"
+"loc_fc07baba:\n"
+"    bl      sub_fc07b848\n"
+"    b       loc_fc07bad6\n"
+"loc_fc07bac0:\n"
+"    bl      sub_fc07b70e\n"
+"    b       loc_fc07bad6\n"
+"loc_fc07bac6:\n"
+"    bl      sub_fc07b5b8\n"
+"    b       loc_fc07bad6\n"
+"loc_fc07bacc:\n"
+"    bl      sub_fc07bb5c\n"
+"    b       loc_fc07bad6\n"
+"loc_fc07bad2:\n"
+"    bl      sub_fc07b4d0\n"
+"loc_fc07bad6:\n"
+"    lsls    r0, r4, #0x1f\n"
+"    beq     loc_fc07ba70\n"
+"    pop     {r3, r4, r5, r6, r7, pc}\n"
+    );
+}
+#endif // sx280
 
