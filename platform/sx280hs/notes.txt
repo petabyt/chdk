@@ -33,6 +33,10 @@ General camera and CHDK port information
 
 - GPS data in DNGs is supported on SX280. Full CHDK GPS support is not implemented.
 
+- Canon has ceased providing updated AGPS data for the SX280. CHDK provides a replacement URL,
+  http://epodownload.mediatek.com/EPO.DAT
+  The AGPS updater in Canon menu will use the replacement URL when CHDK is running.
+
 - Porting thread: https://chdk.setepontos.com/index.php?topic=11550
 
 Issues
@@ -43,21 +47,6 @@ Issues
   - "I-contrast" is enabled in Canon menu
 
 - CHDK overlay drawing is slow, Canon display updates make the CHDK OSD blink
-- some games do not display correctly
 - PTP remote shoot can misbehave in certain shooting modes (sports mode, high speed burst mode, ...):
   when using continuous shooting (rs -cont or rs -quick in chdkptp), the number of actual shots
   may be larger than the requested number, the last shot from such a series may end up on card
-
-
-Old development notes
-
-- the current overlay drawing method is slow, should be replaced
-  (overlay is 16bpp yuv, a separate 8bpp opacity buffer has to be written too)
-- screen refresh method is not optimal, slow, the guard pixel gets erased each time the battery warning blinks
-
-- don't forget to transform pc-relative loads into ldr instructions when using objdump output
-- when using ldr pc, =... always check the target instruction set and use the appropriate thumb bit
-- always check the instruction set of every needed fw function and use the appropriate thumb bit (for stubs)
-- be careful with jumptables, 'tbb' may run out of addressable space when inserting new instructions into fw code
-- tbb jumptables have to be explicitly aligned, the assembler won't notice alignment problems
-- objdump tends to lose sync when it tries to disassemble data blocks, some instructions need to be recovered manually
