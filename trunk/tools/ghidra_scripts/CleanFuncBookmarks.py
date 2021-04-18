@@ -84,7 +84,7 @@ def clean_func_exists(b):
 
     # check if function has already been created starting at this address
     sym = getSymbolAt(addr)
-    if sym and sym.getSymbolType() == SymbolType.FUNCTION: 
+    if sym and sym.getSymbolType() == SymbolType.FUNCTION:
         infomsg(0,'already a function %s\n'%(addr));
         return True
 
@@ -112,7 +112,7 @@ def clean_code_from_opref(b):
 
     # check if function has already been created starting at this address
     sym = getSymbolAt(addr)
-    if sym and sym.getSymbolType() == SymbolType.FUNCTION: 
+    if sym and sym.getSymbolType() == SymbolType.FUNCTION:
         infomsg(0,'already a function %s\n'%(addr));
         return True
 
@@ -141,7 +141,7 @@ def func_bookmark_clean_main():
             clean_count += 1
             if g_options['remove_resolved'] and not g_options['pretend']:
                 bmm.removeBookmark(b)
-    
+
     infomsg(0,"checked %d cleaned %d\n"%(check_count, clean_count))
 
 func_bookmark_clean_main()
