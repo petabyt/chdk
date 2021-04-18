@@ -442,3 +442,13 @@ def get_cstring_at(addr, maxlen = 256):
 
         except ghidra.program.model.mem.MemoryAccessException:
             break
+
+# iterator over references from function body
+# loosely based on FunctionDB.java getReferencesFromBody
+def get_refs_from_addrset(addrs):
+    refman = getCurrentProgram().getReferenceManager()
+    for addr in addrs.getAddresses(True):
+        refs = refman.getReferencesFrom(addr)
+        for r in refs:
+            yield r
+
