@@ -163,5 +163,21 @@ typedef struct mzrm_msg_s {
     int payload_size;
     int payload[16]; // actual size varies
 } mzrm_msg;
+
+typedef int (*controller_fn)(void *controller_data, int event_id, void *unk1, void *unk2);
+typedef struct controller_s controller_t;
+struct controller_s {
+    controller_fn fn;
+    void *data;
+    controller_t *next;
+#if defined(CAM_DRYOS_REL)
+#if CAM_DRYOS_REL <= 52
+    int unk[2]; // all <= r52 seem to be 5 words total
+#else
+    int unk[7]; // actual size varies, g*x and M cams seem to be 10 words total, others mostly 5
+#else
+    int unk; // vx appears to always be 4 words total
+#endif
+};
 #endif
 
