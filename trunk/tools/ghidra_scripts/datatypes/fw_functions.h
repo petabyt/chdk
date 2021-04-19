@@ -513,8 +513,11 @@ __stdcall void cameracon_set_state(int state);
 __stdcall int cameracon_get_state(void);
 
 __stdcall int IsControlEventActive_FW(int event);
-__stdcall void *CreateController_FW(void *controller_fn, int unk);
-__stdcall int DeleteController_FW(void *controller);
+__stdcall controller_t *CreateController_FW(controller_fn *fn, void *controller_data);
+__stdcall int DeleteController_FW(controller_t *controller);
+__stdcall int MoveControllerToTopOfZOrder_FW(controller_t *controller);
+__stdcall int CtrlMan_ChangeZOrder_FW(controller_t *controller,int order);
+__stdcall controller_t *GetSelfControllerHandle_FW(void);
 
 __stdcall int IsWirelessConnect(void); // returns 1 if wireless active (from scanning for AP to PTP/IP disconnect)
 
