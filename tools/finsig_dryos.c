@@ -526,6 +526,11 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "dcache_clean_flush_range", OPTIONAL|UNUSED }, // newer dryos
     { "icache_flush_range", OPTIONAL|UNUSED }, // newer dryos
 
+    // various dryos memory functions, made up names
+    { "bzero", OPTIONAL|UNUSED },
+    { "dry_memzero", OPTIONAL|UNUSED },
+    { "dry_memcpy", OPTIONAL|UNUSED },
+
     // Other stuff needed for finding misc variables - don't export to stubs_entry.S
     { "GetSDProtect", UNUSED },
     { "DispCon_ShowBitmapColorBar", UNUSED },
@@ -2882,6 +2887,7 @@ string_sig string_sigs[] =
     { 9, "cache_flush_range", "AllocateUncacheableMemory", 0,              0,    0,   12,   12,   12,   12,   12,   12,   12,   12,   12,    0,    0,    0,    0,    0 },
     { 9, "cache_clean_range", "AllocateUncacheableMemory", 0,              9,    9,    9,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0 },
     { 9, "dcache_flush_range", "AllocateUncacheableMemory", 0,             0,    0,    0,    0,    0,    0,    0,    0,    0,    0,   11,   11,   11,   11,   11,   11 },
+    { 9, "bzero", "exec_FW", 0,                                            6,    6,    6,    6,    6,    6,    6,    6,    6,    6,    6,    6,    6,    6,    6,    6 },
 
     //                                                                   R20   R23   R31   R39   R43   R45   R47   R49   R50   R51   R52   R54   R55   R57   R58   R59
 //    { 11, "DebugAssert", "\nAssert: File %s Line %d\n", 0,                 5,    5,    5,    5,    5,    5,    5,    5,    5,    5,    1,    6 },
@@ -3088,6 +3094,8 @@ string_sig string_sigs[] =
     { 23, "cameracon_set_state", "AC:PB2Rec", 5,                                 1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
     { 23, "cameracon_get_state", "ex:PB", 5,                                    99,     99,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1 },
     { 23, "cameracon_get_state", "exchange:PB", 5,                              99,     99,     -1,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99,     99 }, // a1000 uses this string
+    { 23, "dry_memzero", "pErrorAdr = 0x%lX : %02X\n\n", 6,                      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1,      1 },
+    { 23, "dry_memcpy", "ClassRequest, bRequest=%#02x\r\n", 4,                  -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1 },
 
     //                                                                           R20     R23     R31     R39     R43     R45     R47     R49     R50     R51     R52     R54     R55     R57     R58     R59
     { 24, "get_string_by_id", "StringID[%d] is not installed!!\n", 64,           0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0xf000, 0x0000, 0x0000, 0x0000, 0xf000 },
