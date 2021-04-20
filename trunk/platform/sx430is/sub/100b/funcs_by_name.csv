@@ -57,6 +57,7 @@
 0xff474730,Bat_VIN_FW
 0xff07314c,BeepDrive_FW
 0xff07316c,BeepDriveComp_FW
+0x006d9b7c,bzero
 0xff471d20,CalcLog10
 0xff471d5c,CalcLog10_FW
 0xff47b668,CalcLoopGain_FW
@@ -299,6 +300,8 @@
 0xff0d609c,DoMovieFrameCapture
 0xff1f4874,Driver.Create_FW
 0xff1f4874,Driver_EnableEventProc_FW
+0x006d9a98,dry_memcpy
+0x006d9a58,dry_memzero
 0xff034b18,drysh_FW
 0xff02dc74,DummyUSBConnection_FW
 0xff1f4dbc,Dump32_FW
@@ -962,6 +965,7 @@
 0xff33f830,IsSDDetect_FW
 0xff0db6c0,IsStrobeChargeCompleted
 0xff1e4bec,IsUnitFirmMode_FW
+0xff066cfc,IsWirelessConnect
 0xff3751c8,IsZoomActuatorResetSensorPlusSide_FW
 0xff1e34d4,IsZoomLensOutSidePosition_FW
 0xff1b1568,j_AbortAEIntegralValue_FW

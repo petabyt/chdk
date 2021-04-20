@@ -3,6 +3,9 @@
 0x006b1b40,EnableDispatch_low
 0x006b1b94,get_self_task_id
 0x006b21d8,get_task_properties
+0x006ba9d0,dry_memzero
+0x006baa10,dry_memcpy
+0x006baaf4,bzero
 0x006bab48,_divmod_signed_int
 0x006bafe0,_divmod_unsigned_int
 0x006bb388,_log

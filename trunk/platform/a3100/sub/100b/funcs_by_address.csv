@@ -1607,6 +1607,9 @@
 0xffac40a0,MoveDCMotorCCW_FW
 0xffac4110,SetDCMotorWaitTime_FW
 0xffac4bf4,GetFocusLensResetVoltage_FW
+0xffad58e4,dry_memcpy
+0xffad59d8,bzero
+0xffad5a30,dry_memzero
 0xffad5a74,_divmod_signed_int
 0xffad5bd8,_log10
 0xffad5d48,_pow

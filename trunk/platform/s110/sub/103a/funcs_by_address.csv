@@ -65,6 +65,8 @@
 0x006994c4,LocalTime
 0x0069991c,time
 0x006999cc,GetTimeOfSystem_FW
+0x006ab800,dry_memzero
+0x006ab840,dry_memcpy
 0x006ae840,_log
 0x006b0fb8,_drsb
 0x006b0fd0,_sqrt
@@ -2072,6 +2074,7 @@
 0xf8556fb4,task_ImageRetryConTask
 0xf8594918,task_ReadFileTask
 0xf8648128,_divmod_signed_int
+0xf8648158,bzero
 0xf86481f0,GetSRAndDisableInterrupt
 0xf86481f8,SetSR
 0xf86482b0,_divmod_unsigned_int

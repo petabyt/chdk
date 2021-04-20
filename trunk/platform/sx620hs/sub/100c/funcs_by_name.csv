@@ -59,6 +59,7 @@
 0xff07bbd4,BatteryMilliTempCheck_FW
 0xff074c40,BeepDrive_FW
 0xff074c60,BeepDriveComp_FW
+0x006dc0d0,bzero
 0xff072520,CalcAccelerometerAtanAngle_FW
 0xff4f239c,CalcLog10
 0xff4f23d8,CalcLog10_FW
@@ -298,6 +299,8 @@
 0xff0e1b68,DoMovieFrameCapture
 0xff224664,Driver.Create_FW
 0xff224664,Driver_EnableEventProc_FW
+0x006dbfec,dry_memcpy
+0x006dbfac,dry_memzero
 0xff03410c,drysh_FW
 0xff02d0f4,DummyUSBConnection_FW
 0xff224bb8,Dump32_FW

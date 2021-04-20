@@ -1533,6 +1533,9 @@
 0xffe5d414,SetZoomLensICDriveData_FW
 0xffe5e740,task_AviRead
 0xffe605e8,task_AviPlay
+0xffe722dc,dry_memcpy
+0xffe723d0,bzero
+0xffe72428,dry_memzero
 0xffe7246c,_divmod_signed_int
 0xffe725d0,_log10
 0xffe72740,_pow

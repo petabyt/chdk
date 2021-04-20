@@ -52,6 +52,7 @@
 0xffa10ffc,Bat_VIN_FW
 0xff84c9f4,BeepDrive_FW
 0xff84ca08,BeepDriveComp_FW
+0xffa92c10,bzero
 0xff810660,cache_clean_flush_and_disable
 0xff81076c,cache_clean_flush_range
 0xff8107f4,cache_clean_range
@@ -239,6 +240,8 @@
 0xff9c5838,DrawDialogItem_FW
 0xff9c4d0c,DrawStringToDialog_FW
 0xff913a88,Driver_EnableEventProc_FW
+0xffa92b1c,dry_memcpy
+0xffa92c68,dry_memzero
 0xff814e84,drysh_FW
 0xffa4108c,Dump32_FW
 0xffa40f48,Dump_FW

@@ -68,6 +68,9 @@
 0x006b9ad8,LocalTime
 0x006ba9e4,WriteSDCard
 0x006bb054,task_SD1stInit
+0x006dbfac,dry_memzero
+0x006dbfec,dry_memcpy
+0x006dc0d0,bzero
 0x006dc124,_divmod_signed_int
 0x006dd780,_divmod_unsigned_int
 0x006df1d8,_log

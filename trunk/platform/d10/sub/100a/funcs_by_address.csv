@@ -1559,6 +1559,9 @@
 0xffab8c08,task_AviRead
 0xffac65dc,task_EfctConTask
 0xffac6638,task_EfctConLowTask
+0xffacbec8,dry_memcpy
+0xffacbfbc,bzero
+0xffacc014,dry_memzero
 0xffacc058,_divmod_signed_int
 0xffacc2cc,_log10
 0xffacc43c,_pow

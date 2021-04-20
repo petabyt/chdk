@@ -1923,6 +1923,9 @@
 0xffb79934,j_GetVcmDacOutData_FW
 0xffb7a67c,task_AviRead
 0xffb8a92c,task_ReadFileTask
+0xffb92658,dry_memcpy
+0xffb9274c,bzero
+0xffb927a4,dry_memzero
 0xffb927e8,_divmod_signed_int
 0xffb92bf4,_log10
 0xffb92d64,_pow

@@ -1750,6 +1750,9 @@
 0xffb850f8,task_TmgGen
 0xffb86d10,task_AviRead
 0xffb95dfc,task_ReadFileTask
+0xffb9f254,dry_memcpy
+0xffb9f348,bzero
+0xffb9f3a0,dry_memzero
 0xffb9f3e4,_divmod_signed_int
 0xffb9f900,_log10
 0xffb9fa70,_pow

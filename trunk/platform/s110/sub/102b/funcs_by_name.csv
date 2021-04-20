@@ -55,6 +55,7 @@
 0xf8519f8c,Bat_VIN_FW
 0xf80797e4,BeepDrive_FW
 0xf8079804,BeepDriveComp_FW
+0xf8648174,bzero
 0xf80007bc,cache_clean_flush_and_disable
 0xf80008c8,cache_clean_flush_range
 0xf8000964,cache_clean_range
@@ -282,6 +283,8 @@
 0xf82629fc,Driver.Create_FW
 0xf82629fc,Driver_EnableEventProc_FW
 0xf81c0824,drv_is_rx_sense_active_FW
+0x006ab840,dry_memcpy
+0x006ab800,dry_memzero
 0xf800430c,drysh_FW
 0xf8454780,DspDataTranster_FW
 0xf8454790,DspProgTranster_FW

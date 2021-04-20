@@ -2120,6 +2120,9 @@
 0xff3ffe88,j_GetVcmDacOutData_FW
 0xff401314,task_MovRead
 0xff426d0c,task_ReadFileTask
+0xff42fc00,dry_memzero
+0xff42fc40,dry_memcpy
+0xff42fd24,bzero
 0xff42fd78,_divmod_signed_int
 0xff42ff5c,_divmod_unsigned_int
 0xff430308,_log

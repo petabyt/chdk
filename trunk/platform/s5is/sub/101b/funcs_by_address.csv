@@ -1710,6 +1710,9 @@
 0xffa73a7c,TerminateSoundRec_FW
 0xffa77368,task_CtgTotalTask
 0xffa82360,task_EffctDrv
+0xffa92b1c,dry_memcpy
+0xffa92c10,bzero
+0xffa92c68,dry_memzero
 0xffa92cac,_divmod_signed_int
 0xffa92e10,_log10
 0xffa92f80,_pow

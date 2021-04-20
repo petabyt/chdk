@@ -5,6 +5,9 @@
 0x006b21d4,get_task_properties
 0x006b8324,WriteSDCard
 0x006b89b4,task_SD1stInit
+0x006d9a58,dry_memzero
+0x006d9a98,dry_memcpy
+0x006d9b7c,bzero
 0x006d9bd0,_divmod_signed_int
 0x006db22c,_divmod_unsigned_int
 0x006dc020,_log
@@ -321,6 +324,7 @@
 0xff062d2c,task_InitFileModules
 0xff062d6c,task_CommonDrivers
 0xff063c4c,DispSwCon_TurnOffDisplay_FW
+0xff066cfc,IsWirelessConnect
 0xff0676b8,UiToCom_SetDebug_FW
 0xff0687bc,UIFS_StartMovieRecord_FW
 0xff0687e0,UIFS_StopMovieRecord_FW

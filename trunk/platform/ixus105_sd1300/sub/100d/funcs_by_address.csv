@@ -1609,6 +1609,9 @@
 0xffe8f960,task_AviRead
 0xffe918d8,task_AviPlay
 0xffe9f47c,task_EfctConTask
+0xffea2ec0,dry_memcpy
+0xffea2fb4,bzero
+0xffea300c,dry_memzero
 0xffea3050,_divmod_signed_int
 0xffea31b4,_log10
 0xffea3324,_pow

@@ -56,6 +56,7 @@
 0xff4c79ec,Bat_VIN_FW
 0xff07270c,BeepDrive_FW
 0xff07272c,BeepDriveComp_FW
+0x006dace4,bzero
 0xff070638,CalcAccelerometerAtanAngle_FW
 0xff4c4fbc,CalcLog10
 0xff4c4ff8,CalcLog10_FW
@@ -298,6 +299,8 @@
 0xff0e5dcc,DoMovieFrameCapture
 0xff21a28c,Driver.Create_FW
 0xff21a28c,Driver_EnableEventProc_FW
+0x006dac00,dry_memcpy
+0x006dabc0,dry_memzero
 0xff033a74,drysh_FW
 0xff02caf0,DummyUSBConnection_FW
 0xff21a7bc,Dump32_FW

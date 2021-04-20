@@ -1617,6 +1617,9 @@
 0xffaeedc0,GetFocusLensResetVoltage_FW
 0xffaf14fc,task_MovRead
 0xffaf2e18,task_AviRead
+0xffb07944,dry_memcpy
+0xffb07a38,bzero
+0xffb07a90,dry_memzero
 0xffb07ad4,_divmod_signed_int
 0xffb07c38,_log10
 0xffb07da8,_pow
