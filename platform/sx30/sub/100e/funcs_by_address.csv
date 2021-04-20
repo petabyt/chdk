@@ -1920,6 +1920,9 @@
 0xffb796d0,j_GetVcmDacOutData_FW
 0xffb7a418,task_AviRead
 0xffb8a6c8,task_ReadFileTask
+0xffb923f4,dry_memcpy
+0xffb924e8,bzero
+0xffb92540,dry_memzero
 0xffb92584,_divmod_signed_int
 0xffb92990,_log10
 0xffb92b00,_pow

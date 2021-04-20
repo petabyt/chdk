@@ -1800,6 +1800,9 @@
 0xffaecba8,task_MovRead
 0xffaee1e8,task_AviRead
 0xffaf1520,StartDtExecuteMenu_FW
+0xffb002c8,dry_memcpy
+0xffb003bc,bzero
+0xffb00414,dry_memzero
 0xffb00458,_divmod_signed_int
 0xffb006cc,_log10
 0xffb0083c,_pow

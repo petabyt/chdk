@@ -1542,6 +1542,9 @@
 0xffe516d4,task_AviPlay
 0xffe5cc18,task_EfctConTask
 0xffe5cc74,task_EfctConLowTask
+0xffe606c8,dry_memcpy
+0xffe607bc,bzero
+0xffe60814,dry_memzero
 0xffe60858,_divmod_signed_int
 0xffe60acc,_log10
 0xffe60c3c,_pow

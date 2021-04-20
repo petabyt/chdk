@@ -1594,6 +1594,9 @@
 0xffaf0d1c,task_MovRead
 0xffaf2328,task_AviRead
 0xffaf5600,StartDtExecuteMenu_FW
+0xffb05150,dry_memcpy
+0xffb05244,bzero
+0xffb0529c,dry_memzero
 0xffb052e0,_divmod_signed_int
 0xffb05554,_log10
 0xffb056c4,_pow

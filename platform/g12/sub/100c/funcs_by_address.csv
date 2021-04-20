@@ -1742,6 +1742,9 @@
 0xffb9841c,task_TmgGen
 0xffb9a034,task_AviRead
 0xffbaa248,task_ReadFileTask
+0xffbb3230,dry_memcpy
+0xffbb3324,bzero
+0xffbb337c,dry_memzero
 0xffbb33c0,_divmod_signed_int
 0xffbb38dc,_log10
 0xffbb3a4c,_pow

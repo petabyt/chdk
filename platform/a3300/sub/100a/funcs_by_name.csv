@@ -53,6 +53,7 @@
 0xffb1eedc,Bat_VIN_FW
 0xff85f2d8,BeepDrive_FW
 0xff85f2f8,BeepDriveComp_FW
+0xffb58ae0,bzero
 0xff8107fc,cache_clean_flush_and_disable
 0xff810908,cache_clean_flush_range
 0xff8109a4,cache_clean_range
@@ -245,6 +246,8 @@
 0xff8b3a30,DoMovieFrameCapture
 0xff96aefc,Driver.Create_FW
 0xff96aefc,Driver_EnableEventProc_FW
+0xffb589fc,dry_memcpy
+0xffb589bc,dry_memzero
 0xff815f58,drysh_FW
 0xff96b2d4,Dump32_FW
 0xff96b2c4,Dump_FW

@@ -1470,6 +1470,9 @@
 0xffa93e28,SetDCMotorWaitTime_FW
 0xffa94940,GetFocusLensResetVoltage_FW
 0xffa99cb8,StartDtExecuteMenu_FW
+0xffaa4c98,dry_memcpy
+0xffaa4d8c,bzero
+0xffaa4de4,dry_memzero
 0xffaa4e28,_divmod_signed_int
 0xffaa4f8c,_log10
 0xffaa50fc,_pow

@@ -1864,6 +1864,9 @@
 0xffb1ec24,j_GetVcmLogTrigger_FW
 0xffb20294,task_MovRead
 0xffb218e0,task_AviRead
+0xffb36790,dry_memcpy
+0xffb36884,bzero
+0xffb368dc,dry_memzero
 0xffb36920,_divmod_signed_int
 0xffb36bd4,_log10
 0xffb36d44,_pow

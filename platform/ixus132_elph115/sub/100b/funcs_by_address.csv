@@ -68,6 +68,9 @@
 0x0067f6b0,LocalTime
 0x0067fb58,time
 0x0067fc08,GetTimeOfSystem_FW
+0x00695280,dry_memzero
+0x006952c0,dry_memcpy
+0x006953a4,bzero
 0x006953f8,_divmod_signed_int
 0x00696a14,_divmod_unsigned_int
 0x00697808,_log

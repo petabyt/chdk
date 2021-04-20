@@ -1302,6 +1302,9 @@
 0xffe4aad0,GetFocusLensResetVoltage_FW
 0xffe4b67c,SetZoomLensICDriveData_FW
 0xffe4f20c,StartDtExecuteMenu_FW
+0xffe58c74,dry_memcpy
+0xffe58d68,bzero
+0xffe58dc0,dry_memzero
 0xffe58e04,_divmod_signed_int
 0xffe58f68,_log10
 0xffe590d8,_pow
