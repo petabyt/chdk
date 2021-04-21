@@ -2,8 +2,9 @@ Issues:
 
 - Movie features are not supported. Movie_status is wrong.
 - Not all features have been tested fully, expect issues and crashes.
-- Edge detection does not work when using the EVF.
-- If the 'AF Method' is set to 'Face+Traking' (Canon SHOOT3 menu), then the CHDK UI and OSD will flicker a lot more when in record mode.
+- Edge detection does not work correctly when using the EVF.
+- CHDKPTP live view does not work if using the EVF.
+- If the 'AF Method' is set to 'Face+Tracking' (Canon SHOOT3 menu), then the CHDK UI and OSD will flicker a lot more when in record mode.
   To minimise flickering, use '1-point AF', or open the CHDK menu in playback mode, or open the Canon menu first before using the CHDK menu.
   If using Face+Tracking AF it is probably best to turn off the CHDK OSD elements (battery, clock, etc).
 

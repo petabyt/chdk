@@ -129,27 +129,17 @@ void *vid_get_viewport_live_fb()
 
 int vid_get_viewport_width()
 {
-    extern int _GetVRAMHPixelsSize();
-    if (camera_info.state.mode_play)
-    {
-        return 720;
-    }
-    return _GetVRAMHPixelsSize();
+    return camera_screen.width;
 }
 
 long vid_get_viewport_height()
 {
-    extern int _GetVRAMVPixelsSize();
-    if (camera_info.state.mode_play)
-    {
-        return 480;
-    }
-    return _GetVRAMVPixelsSize();
+    return camera_screen.height;
 }
 
 int vid_get_viewport_byte_width()
 {
-    return 736*2;     // buffer is 736 wide (720 image pixels) UYVY
+    return vid_get_viewport_buffer_width_proper()*2;
 }
 
 int vid_get_viewport_display_xoffset()
@@ -197,11 +187,32 @@ int vid_get_viewport_display_yoffset()
 }
 
 // Functions for PTP Live View system
+extern int displaytype;
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
-int vid_get_viewport_fullscreen_width()         { return 720; }
-int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_viewport_buffer_width_proper()      { return 736; }
+int vid_get_viewport_fullscreen_width()         { return vid_get_viewport_width(); }
+int vid_get_viewport_fullscreen_height()        { return vid_get_viewport_height(); }
+int vid_get_viewport_buffer_width_proper()
+{
+    switch (displaytype)
+    {
+        case 6:
+        case 7:
+            // HDMI
+            if (camera_info.state.mode_play)
+                return 960;
+            return 1920;
+            break;
+        case 11:
+            // EVF
+            return 1024;
+            break;
+        default:
+            // LCD
+            return 736;
+            break;
+    }
+}
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
 
@@ -215,7 +226,6 @@ int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
  */
 void update_screen_dimensions()
 {
-    extern int displaytype;
     static int old_displaytype = -1;
 
     if (old_displaytype != displaytype)
