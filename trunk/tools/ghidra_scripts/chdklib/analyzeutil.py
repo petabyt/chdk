@@ -321,10 +321,10 @@ def is_likely_func_start(addr,tmode = None, require_push = False, disassemble = 
     tmode taken from program if not set
     if disassemble is false, assumes program is already disassembled, tmode ignored
     """
-    if tmode is None:
-        tmode = get_tmode_reg_at(addr)
-
     if disassemble:
+        if tmode is None:
+            tmode = get_tmode_reg_at(addr)
+
         insn = get_pinsn_at(addr,tmode)
     else:
         insn = getInstructionAt(addr)
