@@ -4,13 +4,12 @@ from __main__ import *
 from chdklib.logutil import infomsg, warn
 
 from chdklib.analyzeutil import (
-    is_likely_before_push_insn,
-    is_likely_after_pop_insn,
     is_likely_func_start,
     is_likely_tail_call,
     get_insn_ops_text,
     get_pinsn_at,
-    get_tmode_reg_at
+    get_tmode_reg_at,
+    get_insn_desc,
 )
 
 # for analyzeutil is_likely_before_push_insn
@@ -63,13 +62,11 @@ before_push_a540_100b_data=[
 
 def do_before_push_list(l):
     for v in l:
-        addr = toAddr(v[0])
-        # insn = getInstructionAt(addr)
         # disassemble directly to force tmode, allow checking invalid
-        insn = get_pinsn_at(addr,v[2])
-        r = is_likely_before_push_insn(insn)
+        idesc = get_insn_desc(v[0],disassemble=True,dis_tmode=v[2])
+        r = idesc.is_likely_before_push()
         if r != v[1]:
-            warn('before_push fail %s %s != %s %s'%(addr,r,v[1],insn))
+            warn('before_push fail %s %s != %s %s'%(v[0],r,v[1],idesc.insn))
 
 after_pop_g7x_100d_data=[
     ['fc0e4ca2', True, 1, 'mov', ['r0', '#0x0']],
@@ -87,13 +84,11 @@ after_pop_a540_100b_data=[
 
 def do_after_pop_list(l):
     for v in l:
-        addr = toAddr(v[0])
-        # insn = getInstructionAt(addr)
         # disassemble directly to force tmode, allow checking invalid
-        insn = get_pinsn_at(addr,v[2])
-        r = is_likely_after_pop_insn(insn)
+        idesc = get_insn_desc(v[0],disassemble=True,dis_tmode=v[2])
+        r = idesc.is_likely_after_pop()
         if r != v[1]:
-            warn('after_pop fail %s %s != %s %s'%(addr,r,v[1],insn))
+            warn('after_pop fail %s %s != %s %s'%(v[0],r,v[1],idesc.insn))
 
 # note, doesn't exercise options. Could store kwargs in list
 likely_func_start_g7x_100d_data=[
@@ -117,7 +112,7 @@ def do_likely_func_start_list(l):
         addr = toAddr(v[0])
         r = is_likely_func_start(addr)
         if r != v[1]:
-            warn('tail_call fail %s %s != %s'%(addr,r,v[1]))
+            warn('func_start fail %s %s != %s'%(addr,r,v[1]))
 
 
 likely_tail_call_g7x_100d_data=[
@@ -169,7 +164,7 @@ def test_a540():
 def check_before_push_insn(a,force=None):
     addr = toAddr(a)
     if force is None:
-        insn = getInstructionAt(addr)
+        disassemble = False
         tmode = get_tmode_reg_at(addr)
     else:
         if force == 't':
@@ -178,41 +173,42 @@ def check_before_push_insn(a,force=None):
             tmode = 0
         else:
             tmode = get_tmode_reg_at(addr)
-        insn = get_pinsn_at(addr,tmode)
+        disassemble = True
 
-    ops = get_insn_ops_text(insn)
-    mne = insn.getMnemonicString()
-    r = is_likely_before_push_insn(insn)
-    rstr = "['%s', %s, %d, '%s', [%s]],"%(addr, r, tmode, mne, ', '.join(["'%s'"%format(x) for x in ops]))
+    idesc = get_insn_desc(addr,disassemble=disassemble,dis_tmode=tmode)
+    if idesc is None:
+        return 'no instruction at %s'%(addr)
+
+    r = idesc.is_likely_before_push()
+    rstr = "['%s', %s, %d, '%s', [%s]],"%(addr, r, tmode, idesc.mnemonic, ', '.join(["'%s'"%format(x) for x in idesc.ops]))
     return rstr
 
 # helper to check for func start seq
 # > from chdklib.tests import check_func_start as cfs
 # > cfs('ffdeadbe')
 def check_func_start(a, **kwargs):
-    addr = toAddr(a)
-    r = is_likely_func_start(addr, **kwargs)
-    return "['%s', %s],"%(addr,r)
+    r = is_likely_func_start(toAddr(a), **kwargs)
+    return "['%s', %s],"%(a,r)
 
 # helper for interactive testing in console
 # output suitable for table above
 # > from chdklib.tests import check_after_pop_insn as capi
 # > capi('ffdeadbe')
-def check_after_pop_insn(a,force=None):
+def check_after_pop_insn(a,**kwargs):
     addr = toAddr(a)
-    insn = getInstructionAt(addr)
-    tmode = get_tmode_reg_at(addr)
 
-    ops = get_insn_ops_text(insn)
-    mne = insn.getMnemonicString()
-    r = is_likely_after_pop_insn(insn)
-    rstr = "['%s', %s, %d, '%s', [%s]],"%(addr, r, tmode, mne, ', '.join(["'%s'"%format(x) for x in ops]))
+    idesc = get_insn_desc(addr,**kwargs)
+    if idesc is None:
+        return 'no instruction at %s'%(addr)
+    r = idesc.is_likely_after_pop()
+    rstr = "['%s', %s, %d, '%s', [%s]],"%(addr, r, idesc.tmode, idesc.mnemonic, ', '.join(["'%s'"%format(x) for x in idesc.ops]))
     return rstr
 
 
 # helper to check for tail call seq
+# > from chdklib.tests import check_tail_call as ctc
+# > ctc('ffdeadbe')
 def check_tail_call(a, **kwargs):
-    addr = toAddr(a)
-    r = is_likely_tail_call(addr, **kwargs)
-    return "['%s', %s],"%(addr,r)
+    r = is_likely_tail_call(toAddr(a), **kwargs)
+    return "['%s', %s],"%(a,r)
 
