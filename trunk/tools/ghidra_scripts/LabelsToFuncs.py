@@ -29,6 +29,7 @@ from chdklib.analyzeutil import is_likely_func_start, is_likely_tail_call, is_pu
 
 g_options = {
     'pretend':False,
+    'verbose':False,
 }
 
 def do_make_func(addr):
@@ -46,11 +47,11 @@ def process_thumb_label(s):
     # normal function start, already disassembled
     # TODO without push probably OK for ptr refs (switches may be bad?)
     if is_likely_func_start(addr, require_push = False, disassemble = False):
-        # for inspecting non-trivial cases
-        # if not is_push_lr(getInstructionAt(addr)):
-        #    infomsg(0,'%s thumb data notpush\n'%(addr));
-        # else:
-        #    infomsg(0,'%s thumb data func\n'%(addr));
+        if g_options['verbose']:
+            if not is_push_lr(getInstructionAt(addr)):
+               infomsg(0,'%s thumb data notpush\n'%(addr));
+            else:
+               infomsg(0,'%s thumb data func\n'%(addr));
         return do_make_func(addr)
 
     # TODO check conflicting data and disassemble if needed
@@ -60,47 +61,54 @@ def process_thumb_label(s):
 def process_insn_label(s):
     # check references to address:
     addr = s.getAddress()
-    has_jump = False
-    has_data = False
+    jump_refs = None
     for ref in s.getReferences():
+        # data is least restrictive conditions, so process immediately
+        if ref.getReferenceType().isData():
+            # Pointer refs should mostly be a function if code, don't require push
+            # note switches have both jump and data, but should be eliminated in main loop
+            if is_likely_func_start(addr, require_push = False, disassemble = False):
+                if g_options['verbose']:
+                    if not is_push_lr(getInstructionAt(addr)):
+                       infomsg(0,'%s data notpush\n'%(addr));
+                    else:
+                       infomsg(0,'%s data func\n'%(addr));
+                return do_make_func(addr)
         # if there's a jump, check if it looks like the start of a function (push et al)
         # if reference type is call, Ghidra should have already detected function
         # don't check for unconditional vs conditional since conditional is somewhat common
-        if ref.getReferenceType().isJump():
-            has_jump = True
-        elif ref.getReferenceType().isData():
-            has_data = True
+        elif ref.getReferenceType().isJump():
+            if not jump_refs:
+                jump_refs = [ref]
+            else:
+                jump_refs.append(ref)
 
-    # data ref, check for func without requiring push
-    # note switches have both, but should be eliminated in main loop
-    if has_data:
-        # Pointer refs should mostly be a function if code, don't require push
-        if is_likely_func_start(addr, require_push = False, disassemble = False):
-            # for inspecting non-trivial cases
-            # if not is_push_lr(getInstructionAt(addr)):
-            #    infomsg(0,'%s data notpush\n'%(addr));
-            # else:
-            #    infomsg(0,'%s data func\n'%(addr));
-            return do_make_func(addr)
-    elif has_jump:
-        if is_likely_func_start(addr, require_push = True, disassemble = False):
-            # for inspecting non-trivial cases
-            # if not is_push_lr(getInstructionAt(addr)):
-            #    infomsg(0,'%s notpush\n'%(addr));
-            # else:
-            #    infomsg(0,'%s func\n'%(addr));
-            return do_make_func(addr)
+    if jump_refs is None:
+        return False
 
-        # if source looks like a tail call, don't require func start include push
-        if is_likely_tail_call(ref.getFromAddress()) and is_likely_func_start(addr, require_push = False, disassemble = False):
-            # for inspecting non-trivial cases
-            # prev_insn = getInstructionAt(ref.getFromAddress()).getPrevious()
-            # if not is_pop_lr(prev_insn):
-            #    infomsg(0,'%s notpop\n'%(addr));
-            # else:
-            #    infomsg(0,'%s tailcall\n'%(addr));
+    # if target is valid sequence with a push lr, done
+    if is_likely_func_start(addr, require_push = True, disassemble = False):
+        if g_options['verbose']:
+            if not is_push_lr(getInstructionAt(addr)):
+               infomsg(0,'%s notpush\n'%(addr));
+            else:
+               infomsg(0,'%s func\n'%(addr));
+        return do_make_func(addr)
+
+    # check for valid start without push
+    if not is_likely_func_start(addr, require_push = False, disassemble = False):
+        return False
+
+    # check if any jump ref is a likely tail call
+    for ref in jump_refs:
+        if is_likely_tail_call(ref.getFromAddress()):
+            if g_options['verbose']:
+                prev_insn = getInstructionAt(ref.getFromAddress()).getPrevious()
+                if not is_pop_lr(prev_insn):
+                   infomsg(0,'%s notpop\n'%(addr));
+                else:
+                   infomsg(0,'%s tailcall\n'%(addr));
             return do_make_func(addr)
-    # TODO id veneers/thunks
 
     return False
 

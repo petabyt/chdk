@@ -81,216 +81,7 @@ def get_tmode_reg_at(address):
 
 def get_insn_ops_text(insn):
     """return nmnemonic and operands as list of strings"""
-    r=[]
-    i = 0
-    while True:
-        op = insn.getDefaultOperandRepresentation(i)
-        if op == '<UNSUPPORTED>':
-            return r
-        r.append(op)
-        i += 1
-
-def is_likely_before_push_insn(insn):
-    """
-    is instruction likely to appear before push in a function
-    note conditionals are allowed and occasionally appear
-    not comprehensive or rigorous
-    """
-    mne = insn.getMnemonicString()
-    ops = get_insn_ops_text(insn)
-
-    # all matched instructions have at least mnemonic + 2 operands
-    if len(ops) <= 1:
-        return False
-
-    # special case for sub sp,#const / sub sp,sp,#const, before checks below
-    if mne == 'sub' and ops[0] == 'sp' and re.match('sp|#',ops[1]):
-        return True
-
-    # if ops 0-3 are reg > r3, bail
-    # technically r12/ip could be allowed
-    # shifters are part of the operand in ghidra
-    if re.match('r[4-9]|r1[0-5]|sp|ip|lr|pc',ops[0]):
-        return False
-
-    if re.match('r[4-9]|r1[0-5]|sp|ip|lr|pc',ops[1]):
-        return False
-
-    # shift by non-allowed reg
-    if re.search('(?:lsr|lsl|asr|ror) (?:r[4-9]|r1[0-5]|sp|ip|lr|pc)',ops[1]):
-        return False
-
-    if len(ops) > 2:
-        if re.match('r[4-9]|r1[0-5]|sp|ip|lr|pc',ops[2]):
-            return False
-        if re.search('(?:lsr|lsl|asr|ror) (?:r[4-9]|r1[0-5]|sp|ip|lr|pc)',ops[2]):
-            return False
-
-    # in armv5 ghidra treats register offset ldr/str as a signle operand, like [r1,r2,lsl #0x2]
-    if (mne[0:3] == 'ldr' or mne[0:3] == 'str') and re.search(',(r[4-9]|r1[0-5]|sp|ip|lr|pc)',ops[1]):
-        return False
-
-    # special case to bail early on common bad instructions
-    # mov r0,r0 is all zeros in thumb
-    if len(ops) == 2 and mne == 'mov' and ops[0] == 'r0' and ops[1] == 'r0':
-        return False
-
-    # all zeros in arm
-    if len(ops) == 3 and mne == 'andeq' and ops[0] == 'r0' and ops[1] == 'r0' and ops[2] == 'r0':
-        return False
-
-    # could be valid but rare and don't want to hit ldr/str cases below
-    if mne[0:4] == 'ldrd':
-        return False
-
-    if mne[0:4] == 'strd':
-        return False
-
-    # ldr, ldrh etc into r0-r3, from r0-r3, or PC
-    # ghidra formats ldr rn, [pc...] as ldr rn, [0xblah]
-    # on others, [rn,#disp], even if disp is 0x0
-    if mne[0:3] == 'ldr' and re.match('\[(?:0x|r[0-3],)',ops[1]):
-        return True
-
-    # ghidra treats register offset as 3 reg args and constant,
-    # out of range regs would be caught above
-    if mne[0:3] == 'ldr' and len(ops) == 4:
-        return True
-
-    # str uncommon before push, but legal and common funcs without push
-    if mne[0:3] == 'str' and re.match('\[r[0-3],',ops[1]):
-        return True
-
-    # ghidra treats register offset as 3 reg args and constant,
-    # out of range regs would be caught above
-    if mne[0:3] == 'str' and len(ops) == 4:
-        return True
-
-    # ghidra uses adr, adr.w mnemonics
-    if mne[0:3] == 'adr':
-        return True
-
-    # the following all rely on the initial address checks to ensure
-    # up to 3 reg or shifter operands are acceptable
-    # grouped for readability only
-
-    # moves
-    if re.match('mov|cpy|mvn',mne):
-        return True
-
-    # arithmetic
-    if re.match('add|rsb|sub',mne):
-        return True
-
-    # bitwise
-    if re.match('and|asr|bic|bfi|eor|lsl|lsr|orr|ror|ubfx',mne):
-        return True
-
-    # comparisons
-    if re.match('cmn|cmp|teq|tst',mne):
-        return True
-
-    return False
-
-# mostly copy/paste from is_likely_before_push_insn
-def is_likely_after_pop_insn(insn):
-    """
-    is instruction likely to appear after pop, before tail call
-    conditionals are allowed
-    not comprehensive or rigorous
-    """
-    mne = insn.getMnemonicString()
-    ops = get_insn_ops_text(insn)
-
-    # all matched instructions have at least mnemonic + 2 operands
-    if len(ops) <= 1:
-        return False
-
-    # if ops 0-3 are reg > r3, bail
-    # technically r12/ip could be allowed
-    # shifters are part of the operand in ghidra
-    if re.match('r[4-9]|r1[0-5]|sp|ip|lr|pc',ops[0]):
-        return False
-
-    if re.match('r[4-9]|r1[0-5]|sp|ip|lr|pc',ops[1]):
-        return False
-
-    # shift by non-allowed reg
-    if re.search('(?:lsr|lsl|asr|ror) (?:r[4-9]|r1[0-5]|sp|ip|lr|pc)',ops[1]):
-        return False
-
-    if len(ops) > 2:
-        if re.match('r[4-9]|r1[0-5]|sp|ip|lr|pc',ops[2]):
-            return False
-        if re.search('(?:lsr|lsl|asr|ror) (?:r[4-9]|r1[0-5]|sp|ip|lr|pc)',ops[2]):
-            return False
-
-    # in armv5 ghidra treats register offset ldr/str as a signle operand, like [r1,r2,lsl #0x2]
-    if (mne[0:3] == 'ldr' or mne[0:3] == 'str') and re.search(',(r[4-9]|r1[0-5]|sp|ip|lr|pc)',ops[1]):
-        return False
-
-    # special case to bail early on common bad instructions
-    # mov r0,r0 is all zeros in thumb
-    if len(ops) == 2 and mne == 'mov' and ops[0] == 'r0' and ops[1] == 'r0':
-        return False
-
-    # all zeros in arm
-    if len(ops) == 3 and mne == 'andeq' and ops[0] == 'r0' and ops[1] == 'r0' and ops[2] == 'r0':
-        return False
-
-    # could be valid but rare and don't want to hit ldr/str cases below
-    if mne[0:4] == 'ldrd':
-        return False
-
-    if mne[0:4] == 'strd':
-        return False
-
-    # ldr, ldrh etc into r0-r3, from r0-r3, or PC
-    # ghidra formats ldr rn, [pc...] as ldr rn, [0xblah]
-    # on others, [rn,#disp], even if disp is 0x0
-    if mne[0:3] == 'ldr' and re.match('\[(?:0x|r[0-3],)',ops[1]):
-        return True
-
-    # ghidra treats register offset as 3 reg args and constant,
-    # out of range regs would be caught above
-    if mne[0:3] == 'ldr' and len(ops) == 4:
-        return True
-
-    # str uncommon before push, but legal and common funcs without push
-    if mne[0:3] == 'str' and re.match('\[r[0-3],',ops[1]):
-        return True
-
-    # ghidra treats register offset as 3 reg args and constant,
-    # out of range regs would be caught above
-    if mne[0:3] == 'str' and len(ops) == 4:
-        return True
-
-    # ghidra uses adr, adr.w mnemonics
-    if mne[0:3] == 'adr':
-        return True
-
-    # the following all rely on the initial address checks to ensure
-    # up to 3 reg or shifter operands are acceptable
-    # grouped for readability only
-
-    # moves
-    if re.match('mov|cpy|mvn',mne):
-        return True
-
-    # arithmetic
-    if re.match('add|rsb|sub',mne):
-        return True
-
-    # bitwise
-    if re.match('and|asr|bic|bfi|eor|lsl|lsr|orr|ror|ubfx',mne):
-        return True
-
-    # comparisons
-    if re.match('cmn|cmp|teq|tst',mne):
-        return True
-
-    return False
-
+    return [ insn.getDefaultOperandRepresentation(j) for j in range(0,insn.getNumOperands()) ]
 
 def is_push_lr(insn):
     mne = insn.getMnemonicString()
@@ -314,6 +105,383 @@ def is_pop_lr(insn):
         return True
     return False
 
+class InsnDescriber:
+    # to match instructions and split from conditionals etc
+    # not comprehensive, not all captures a valid for all instructions
+    # note contrary to ARM UAL, ghidra puts S after condition like andeqs
+    match_mne_dataproc = re.compile(
+        "(add|adc|mla|mls|mul|rsb|sub|sbc|sdiv|udiv"
+        "|and|asr|bic|bfi|eor|lsl|lsr|orn|orr|ror|rrx|rsc|sxtb|sxth|ubfx|uxth)"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?"
+    )
+    match_mne_mov = re.compile(
+        "(adr|movt|movw|mov|cpy|mvn)"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?"
+    )
+    match_mne_cmp = re.compile(
+        "(cmn|cmp|teq|tst)"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+    )
+    match_mne_b = re.compile(
+        "(bx|blx|bl|b)"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+    )
+    match_mne_cond_misc = re.compile(
+        "(mrs|msr)"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?"
+    )
+    match_mne_ldst = re.compile(
+        "(ldr|str)([bhd])?(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+    )
+    match_mne_pushpop = re.compile(
+        "(push|pop)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+    )
+    match_mne_ldmstm = re.compile(
+        "(ldm|stm)(db|ia|fd|da|fa|ea|ed)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+    )
+    match_mne_nosfx_misc = re.compile(
+        "(cbz|cbnz)"
+    )
+
+    likely_before_push_mne_base={
+        "add", "adc", "mla", "mls", "mul", "rsb", "sub", "sbc", "sdiv", "udiv",
+        "cmn", "cmp", "teq", "tst",
+        "and", "asr", "bic", "bfi", "eor", "lsl", "lsr", "orn", "orr", "ror", "rrx", "rsc", "sxtb", "sxth", "ubfx", "uxth",
+        "adr", "movt", "movw", "mov", "cpy", "mvn",
+        "ldr", "str"
+    }
+    likely_after_pop_mne_base={
+        "add", "adc", "mla", "mls", "mul", "rsb", "sub", "sbc", "sdiv", "udiv",
+        "cmn", "cmp", "teq", "tst",
+        "and", "asr", "bic", "bfi", "eor", "lsl", "lsr", "orn", "orr", "ror", "rrx", "rsc", "sxtb", "sxth", "ubfx", "uxth",
+        "adr", "movt", "movw", "mov", "cpy", "mvn",
+        "ldr", "str"
+    }
+
+    # match regs allowed to be freely modified in a function
+    #match_no_preserve_regs = re.compile(
+    #    "(?:^|[^a-z])(?:r[0-3]|r12)(?:[^a-z]|$)"
+    #)
+
+    # match regs not allowed to be freely modified in a function
+    # sp, pc is questionable, but probably want to handle explicitly
+    # r12 not included
+    match_preserve_regs = re.compile(
+        "(?:^|[^a-z])(?:r[4-9]|r1[01]|sp|lr|pc)(?:[^a-z]|$)"
+    )
+
+    def __init__(self,insn, tmode):
+        self.insn = insn
+        self.tmode = tmode
+        self.mnemonic = insn.getMnemonicString()
+        self.n_ops = insn.getNumOperands()
+        self.ops = [ insn.getDefaultOperandRepresentation(j) for j in range(0,self.n_ops) ]
+        self.cache = {}
+
+    def parse_mne(self):
+        m = self.match_mne_dataproc.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'dataproc'
+            self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(2)
+            self.cache['s'] = m.group(3)
+            self.cache['q'] = m.group(4)
+            return
+
+        m = self.match_mne_mov.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'mov'
+            self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(2)
+            self.cache['s'] = m.group(3)
+            self.cache['q'] = m.group(4)
+            return
+
+        # below do not have s suffix
+        self.cache['s'] = None
+
+        m = self.match_mne_cmp.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'cmp'
+            self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(2)
+            self.cache['q'] = m.group(3)
+            return
+
+        m = self.match_mne_b.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'b'
+            self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(2)
+            self.cache['q'] = m.group(3)
+            return
+
+        m = self.match_mne_cond_misc.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'condmisc'
+            self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(2)
+            self.cache['q'] = None
+            return
+
+        m = self.match_mne_ldst.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'ldst'
+            if m.group(2):
+                self.cache['mne'] = m.group(1) + m.group(2) # bhd suffix
+            else:
+                self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(3)
+            self.cache['q'] = m.group(4)
+            return
+
+        m = self.match_mne_pushpop.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'pushpop'
+            self.cache['mne'] = m.group(1)
+            self.cache['mne_base'] = m.group(1)
+            self.cache['cc'] = m.group(2)
+            self.cache['q'] = m.group(3)
+            return
+
+        m = self.match_mne_ldmstm.match(self.mnemonic)
+        if m:
+            self.cache['mne_group'] = 'ldmstm'
+            self.cache['mne'] = m.group(1) + m.group(2) #ldm + fd etc
+            self.cache['mne_base'] = m.group(1) # ldm/stm alone
+            self.cache['cc'] = m.group(3)
+            self.cache['q'] = m.group(4)
+            return
+
+        self.cache['mne'] = None
+        self.cache['mne_group'] = None
+        self.cache['mne_base'] = None
+        self.cache['cc'] = None
+        self.cache['q'] = None
+
+    def get_mne(self):
+        if not 'mne' in self.cache:
+            self.parse_mne()
+        return self.cache['mne']
+
+    def get_mne_base(self):
+        if not 'mne_base' in self.cache:
+            self.parse_mne()
+        return self.cache['mne_base']
+
+    def get_mne_group(self):
+        if not 'mne_group' in self.cache:
+            self.parse_mne()
+        return self.cache['mne_group']
+
+    def get_cc(self):
+        if not 'cc' in self.cache:
+            self.parse_mne()
+        return self.cache['cc']
+
+    def get_s(self):
+        if not 's' in self.cache:
+            self.parse_mne()
+        return self.cache['s']
+
+    def sets_flags(self):
+        group = self.get_mne_group()
+        if group == 'cmp':
+            return True
+        if self.get_s() == 's':
+            return True
+        return False
+
+    def uses_preserve_regs(self):
+        if not 'uses_preserve_regs' in self.cache:
+            for o in self.ops:
+                if self.match_preserve_regs.search(o):
+                    self.cache['uses_preserve_regs'] = True
+                    return True
+            self.cache['uses_preserve_regs'] = False
+        return self.cache['uses_preserve_regs']
+
+    def is_likely_bogus_insn(self):
+        mne = self.get_mne()
+        # all zero instructions
+        if self.tmode:
+            if mne == 'mov' and self.n_ops == 2 and self.ops[0] == 'r0' and self.ops[1] == 'r0':
+                return True
+        else:
+            if mne == 'and' and self.get_cc() == 'eq' and self.n_ops == 3 and self.ops[0] == 'r0' and self.ops[1] == 'r0' and self.ops[2] == 'r0':
+                return True
+        # various things that don't make sense with PC
+        if self.n_ops > 0 and self.ops[0] == 'pc':
+            group = self.get_mne_group()
+            # most arimetic / bitwise ops into PC
+            if group == 'dataproc' and self.mne != 'add':
+                return True
+
+            # load / store other than single word of PC
+            if group == 'ldst':
+                if mne == 'ldrb' or mne == 'lrdh' or mne == 'ldrd':
+                    return True
+                if mne == 'strb' or mne == 'strh' or mne == 'strd':
+                    return True
+
+            if group == 'cmp':
+                return True
+
+            if mne == 'movt':
+                return True
+
+        return False
+
+    def is_pop_lr(self):
+        if 'pop_lr' in self.cache:
+            return self.cache['pop_lr']
+
+        mne = self.get_mne()
+        if mne == 'pop' and re.search('lr',self.ops[0]):
+            r = True
+        elif mne == 'ldmia' and self.ops[0][0:3] == 'sp!' and re.search('lr',self.ops[0]):
+            r = True
+        elif mne == 'ldr' and self.ops[0] == 'lr' and self.ops[1] == '[sp],#0x4':
+            r = True
+        else:
+            r = False
+        self.cache['pop_lr'] = r
+        return r
+
+    def is_push_lr(self):
+        if 'push_lr' in self.cache:
+            return self.cache['push_lr']
+
+        mne = self.get_mne()
+        if mne == 'push' and re.search('lr',self.ops[0]):
+            r = True
+        elif mne == 'stmdb' and self.ops[0][0:3] == 'sp!' and re.search('lr',self.ops[0]):
+            r = True
+        elif mne == 'str' and self.ops[0] == 'lr' and self.ops[1] == '[sp,#-0x4]!':
+            r = True
+        else:
+            r = False
+        self.cache['push_lr'] = r
+        return r
+
+    def is_likely_before_push(self):
+        if 'likely_before_push' in self.cache:
+            return self.cache['likely_before_push']
+
+        mne_base = self.get_mne_base()
+        if not mne_base in self.likely_before_push_mne_base:
+            r = False
+        else:
+            mne = self.get_mne()
+
+            # special case for sub sp,#const / sub sp,sp,#const, before checks below
+            if mne == 'sub' and self.ops[0] == 'sp' and re.match('sp|#',self.ops[1]):
+                r = True
+            elif self.uses_preserve_regs():
+                r = False
+            elif self.is_likely_bogus_insn():
+                r = False
+            else:
+                r = True
+
+        self.cache['likely_before_push'] = r
+        return r
+
+    def is_likely_after_pop(self):
+        if 'likely_after_pop' in self.cache:
+            return self.cache['likely_after_pop']
+
+        mne_base = self.get_mne_base()
+        if not mne_base in self.likely_after_pop_mne_base:
+            r = False
+        else:
+            mne = self.get_mne()
+
+            # special case for sub sp,#const / sub sp,sp,#const, before checks below
+            if self.uses_preserve_regs():
+                r = False
+            elif self.is_likely_bogus_insn():
+                r = False
+            else:
+                r = True
+
+        self.cache['likely_after_pop'] = r
+        return r
+
+    # is return, excluding pops
+    def is_ret(self):
+        mne = self.get_mne()
+        if (mne == 'bx' and self.ops[0] == 'lr') or (mne == 'mov' and self.ops[0] == 'pc' and self.ops[1] == 'lr'):
+            return True
+
+    # is a branch to a constant value, including ldr pc, cb[n]z, excluding switches
+    def is_imm_branch(self):
+        mne = self.get_mne()
+
+        if mne == 'b':
+            return True
+
+        if mne == 'bx' and self.ops[0][0:2] == '0x':
+            return True
+
+        if mne == 'ldr' and self.ops[0] == 'pc' and self.ops[1][0:2] == '0x':
+            return True
+
+        if self.tmode and (mne == 'cbz' or mne == 'cbnz'):
+            return True
+
+        return False
+
+
+# get InsnDescriber for instruction, address or convertable to address, or None
+# if disassemble is true, get instruction from program bytes,
+# using arm/thumb state from dis_tmode if set
+def get_insn_desc(spec, disassemble=False, dis_tmode=None):
+    insn = None
+    if spec is None:
+        return None
+    elif isinstance(spec,ghidra.program.database.code.InstructionDB):
+        insn = spec
+        tmode = get_tmode_reg_at(insn.getAddress())
+    elif isinstance(spec,ghidra.app.util.PseudoInstruction):
+        insn = spec
+        # for pseudoinstructions, we can't get tmode from insn (or I don't know how without original context)
+        if dis_tmode is None:
+            tmode = get_tmode_reg_at(addr)
+        else:
+            tmode = dis_tmode
+
+    elif isinstance(spec,ghidra.program.model.address.GenericAddress):
+        addr = spec
+    else:
+        t = type(spec)
+        if t == str or t == int or t == long:
+            addr = toAddr(spec)
+        else:
+            raise ValueError('expected instruction, address, string, int or long')
+
+    if insn is None:
+        if disassemble:
+            if dis_tmode is None:
+                tmode = get_tmode_reg_at(addr)
+            else:
+                tmode = dis_tmode
+
+            insn = get_pinsn_at(addr,tmode)
+        else:
+            tmode = get_tmode_reg_at(addr)
+            insn = getInstructionAt(addr)
+
+        if insn is None:
+            return None
+
+    return InsnDescriber(insn,tmode)
 
 def is_likely_func_start(addr,tmode = None, require_push = False, disassemble = True):
     """
@@ -321,41 +489,30 @@ def is_likely_func_start(addr,tmode = None, require_push = False, disassemble = 
     tmode taken from program if not set
     if disassemble is false, assumes program is already disassembled, tmode ignored
     """
-    if disassemble:
-        if tmode is None:
-            tmode = get_tmode_reg_at(addr)
-
-        insn = get_pinsn_at(addr,tmode)
-    else:
-        insn = getInstructionAt(addr)
-
-    if not insn:
+    idesc = get_insn_desc(addr, disassemble = disassemble, dis_tmode = tmode)
+    if not idesc:
         return False
-
+    # first instruction of func shouldn't be conditional
+    if idesc.get_cc():
+        return False
     # check for a few common instructions before push
     for i in range(0,3):
-        if is_likely_before_push_insn(insn):
-            addr = addr.add(insn.length)
-            if disassemble:
-                insn = get_pinsn_at(addr,tmode)
-            else:
-                insn = getInstructionAt(addr)
-            if not insn:
+        if idesc.is_likely_before_push():
+            addr = addr.add(idesc.insn.length)
+            idesc = get_insn_desc(addr, disassemble = disassemble, dis_tmode = tmode)
+            if not idesc:
                 return False
         else:
             break
 
-    if is_push_lr(insn):
+    if idesc.is_push_lr():
         return True
 
     if require_push:
         return False
 
-    mne = insn.getMnemonicString()
-    ops = get_insn_ops_text(insn)
-
     # not a push, check immediate return
-    if (mne == 'bx' and ops[0] == 'lr') or (mne == 'mov' and ops[0] == 'pc' and ops[1] == 'lr'):
+    if idesc.is_ret():
         return True
 
     return False
@@ -367,34 +524,39 @@ def is_likely_tail_call(addr, allow_conditional = True, allow_start_no_pop = Fal
     check if code at and preceding addr looks like a jump after a pop
     code must already be disassembled
     """
-    insn = getInstructionAt(addr)
-    if not insn:
-        return False
-
-    mne = insn.getMnemonicString()
-
-    # TODO could allow ldr pc etc, but firmware generally uses b
-    if mne != 'b' and mne != 'b.w':
-        if not allow_conditional:
-            return False
-
-    if not re.match('b(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?',mne):
-        return False
-
-
     # branch is at function start
-    # probably a veneer, which will be handled elsewhere
+    # probably a veneer, which should be handled separately
     if getFunctionAt(addr):
+        return False
+
+    idesc = get_insn_desc(addr)
+    if not idesc:
+        return False
+
+    if not idesc.is_imm_branch():
+        return False
+
+    mne = idesc.get_mne()
+    # unlikely for tail calls
+    if idesc.tmode and (mne == 'cbz' or mne == 'cbnz'):
+        return False
+
+    br_cc = idesc.get_cc()
+
+    if br_cc and not allow_conditional:
         return False
 
     # check for a few common instructions between branch and pop
     for i in range(0,3):
-        insn = insn.getPrevious()
-        if not insn:
+        idesc = get_insn_desc(idesc.insn.getPrevious())
+        if not idesc:
             return False
-        if is_likely_after_pop_insn(insn):
+        if idesc.is_likely_after_pop():
+            # Instruction right before tail call shouldn't set flags, unless branch is conditional
+            if i == 0 and not br_cc and idesc.sets_flags():
+                return False
             # don't backtrack past the start of a function
-            if getFunctionAt(insn.getAddress()):
+            if getFunctionAt(idesc.insn.getAddress()):
                 if allow_start_no_pop:
                     return True
                 else:
@@ -403,11 +565,10 @@ def is_likely_tail_call(addr, allow_conditional = True, allow_start_no_pop = Fal
         else:
             break
 
-    if is_pop_lr(insn):
+    if idesc.is_pop_lr():
         return True
 
     return False
-
 
 # get the int at addr and return it as an addr
 def get_pointer_at(addr):
@@ -443,7 +604,7 @@ def get_cstring_at(addr, maxlen = 256):
         except ghidra.program.model.mem.MemoryAccessException:
             break
 
-# iterator over references from function body
+# iterator over references from function body or other address set
 # loosely based on FunctionDB.java getReferencesFromBody
 def get_refs_from_addrset(addrs):
     refman = getCurrentProgram().getReferenceManager()
