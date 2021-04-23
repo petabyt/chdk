@@ -40,10 +40,14 @@
 #ifndef THUMB_FW
 // Define how many viewport blocks to step in each loop iteration. Each block is 6 bytes (UYVYYY) or 4 image pixels
 #define	HISTO_STEP_SIZE	6
+#define	HISTO_DOT_SIZE	3
 #else
 // Define how many viewport blocks to step in each loop iteration. Each block is 4 bytes (UYVY) or 2 image pixels
 #define	HISTO_STEP_SIZE	4
+// digic 6 CHDK screen is ~480 lines instead for 240
+#define	HISTO_DOT_SIZE	5
 #endif
+#define	HISTO_DOT_PAD	(HISTO_DOT_SIZE + 2)
 
 static unsigned char histogram[5][HISTO_WIDTH];             // RGBYG
 static unsigned short *histogram_proc[5] = { 0,0,0,0,0 };   // RGBYG (unsigned short is large enough provided HISTO_STEP_SIZE >= 3)
@@ -103,12 +107,12 @@ void histogram_process()
     // Select transform function
     switch (conf.histo_mode)
     {
-        case HISTO_MODE_LOG: 
-            histogram_transform = logarithmic; 
+        case HISTO_MODE_LOG:
+            histogram_transform = logarithmic;
             break;
-        case HISTO_MODE_LINEAR: 
+        case HISTO_MODE_LINEAR:
         default:
-            histogram_transform = identity; 
+            histogram_transform = identity;
             break;
     }
 
@@ -288,12 +292,12 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small)
     register color cl, cl_over, cl_bg = BG_COLOR(hc);
     coord w=HISTO_WIDTH, h=HISTO_HEIGHT;
 
-    switch (hist) 
+    switch (hist)
     {
-        case HISTO_R: 
+        case HISTO_R:
             cl=COLOR_RED;
             break;
-        case HISTO_G: 
+        case HISTO_G:
             cl=COLOR_GREEN;
             break;
         case HISTO_B:
@@ -435,11 +439,13 @@ void gui_osd_draw_histo(int is_osd_edit)
         {
             if (under_exposed && conf.show_overexp)
             {
-                draw_ellipse(conf.histo_pos.x+5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2), DRAW_FILLED);
+                draw_ellipse(conf.histo_pos.x+HISTO_DOT_PAD, conf.histo_pos.y+HISTO_DOT_PAD,
+                                HISTO_DOT_SIZE, HISTO_DOT_SIZE, BG_COLOR(hc2), DRAW_FILLED);
             }
             if (over_exposed && conf.show_overexp)
             {
-                draw_ellipse(conf.histo_pos.x+HISTO_WIDTH-5, conf.histo_pos.y+5, 3, 3, BG_COLOR(hc2), DRAW_FILLED);
+                draw_ellipse(conf.histo_pos.x+HISTO_WIDTH-HISTO_DOT_PAD, conf.histo_pos.y+HISTO_DOT_PAD,
+                            HISTO_DOT_SIZE, HISTO_DOT_SIZE, BG_COLOR(hc2), DRAW_FILLED);
             }
         }
         if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
