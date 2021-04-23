@@ -23,9 +23,17 @@
 
 import datetime
 from ghidra.program.model.symbol import SymbolType
+from ghidra.program.model.symbol.Namespace import GLOBAL_NAMESPACE_ID
 
 from chdklib.logutil import infomsg, warn
-from chdklib.analyzeutil import is_likely_func_start, is_likely_tail_call, is_push_lr, is_pop_lr
+from chdklib.analyzeutil import (
+    is_likely_func_start,
+    is_likely_tail_call,
+    is_push_lr,
+    is_pop_lr,
+    get_insn_desc,
+    set_tmode_reg_at
+)
 
 g_options = {
     'pretend':False,
@@ -38,14 +46,13 @@ def do_make_func(addr):
         return createFunction(addr,None) != None
     return True
 
-def process_thumb_label(s):
-    t_addr = s.getAddress()
-    addr = t_addr.subtract(1)
+def process_thumb_insn_label(addr):
     # already part of a function, done
+    # TODO could check for incorrect inclusion from tail call
     if getFunctionContaining(addr):
         return False
     # normal function start, already disassembled
-    # TODO without push probably OK for ptr refs (switches may be bad?)
+    # without push seems OK, switches excluded in main loop
     if is_likely_func_start(addr, require_push = False, disassemble = False):
         if g_options['verbose']:
             if not is_push_lr(getInstructionAt(addr)):
@@ -54,9 +61,70 @@ def process_thumb_label(s):
                infomsg(0,'%s thumb data func\n'%(addr));
         return do_make_func(addr)
 
-    # TODO check conflicting data and disassemble if needed
-
     return False
+
+def process_thumb_notdis_label(addr,t_addr):
+    # no instruction, look for possible code
+    for ref in getReferencesTo(t_addr):
+        idesc = get_insn_desc(ref.getFromAddress())
+        if idesc is None:
+            continue
+        # tbb instructions create weird refs
+        # also don't want anything ref'd by lrdb
+        # mvn almost always constants that look like addresses
+        # mov could be suspect, but also valid since ghidra tracks load + mov
+        mne = idesc.get_mne()
+        if mne == 'tbb' or mne == 'tbh' or mne == 'ldrb' or mne == 'mvn':
+            # infomsg(0,"%s skip ref %s\n"%(addr,mne))
+            return False
+
+    if not is_likely_func_start(addr, require_push = False, disassemble = True, tmode = True):
+        return False
+
+    # infomsg(0,"%s dis thumb\n"%(addr))
+    bad_data = getDataAt(t_addr)
+    if bad_data:
+        if g_options['verbose']:
+            infomsg(0,'%s remove data %s\n'%(t_addr,bad_data))
+        if not g_options['pretend']:
+            removeData(bad_data)
+    else:
+        # check for data containing
+        bad_data = getDataContaining(addr)
+        # if it's also unaligned, assume bad
+        # could check for other signs of validity, but already have valid func start
+        if bad_data and (bad_data.getAddress().getOffset() & 1 == 1):
+            if g_options['verbose']:
+                infomsg(0,'%s remove containing data %s\n'%(t_addr,bad_data))
+            if not g_options['pretend']:
+                removeData(bad_data)
+
+    # if existing function without disassembled code, remove and try to recreate
+    old_fn = getFunctionAt(addr)
+    if old_fn:
+        # infomsg(0,'%s remove func\n'%(addr))
+        if not g_options['pretend']:
+            removeFunction(old_fn)
+
+    if not g_options['pretend']:
+        # set thumb since this case is only used when address has thumb bit set
+        set_tmode_reg_at(addr,1)
+        if not disassemble(addr):
+            warn("%s dis fail"%(addr))
+            return False
+
+    if g_options['verbose']:
+        infomsg(0,'%s thumb data dis func\n'%(addr));
+    return do_make_func(addr)
+
+
+def process_thumb_label(s):
+    t_addr = s.getAddress()
+    addr = t_addr.subtract(1)
+    if getInstructionAt(addr):
+        return process_thumb_insn_label(addr)
+    else:
+        return process_thumb_notdis_label(addr,t_addr)
 
 def process_insn_label(s):
     # check references to address:
@@ -135,7 +203,7 @@ def labels_to_funcs_main():
             continue
 
         # ignore non-global symbols like switch cases
-        if str(s.getParentNamespace()) != 'Global':
+        if s.getParentNamespace().getID() != GLOBAL_NAMESPACE_ID:
             continue
 
         addr = s.getAddress()
@@ -144,11 +212,6 @@ def labels_to_funcs_main():
         mb = mem.getBlock(addr)
         if not mb or not mb.isExecute():
             continue
-
-        # creating functions appears to reset monitor state
-        if monitor.getMaximum() != prog_max:
-            monitor.setMaximum(prog_max)
-            monitor.setProgress(symbol_count)
 
         found_count += 1
         if is_thumb2 and (addr.offset & 1):
@@ -161,6 +224,12 @@ def labels_to_funcs_main():
                 monitor.setMessage(s.getName())
                 if process_insn_label(s):
                     create_count += 1
+
+        # creating functions appears to reset monitor state
+        if monitor.getMaximum() != prog_max:
+            monitor.setMaximum(prog_max)
+            monitor.setProgress(symbol_count)
+
 
     infomsg(0,"symbols %d checked %d created %d in %0.1f sec\n"%(
         symbol_count,
