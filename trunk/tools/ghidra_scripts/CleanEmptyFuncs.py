@@ -30,11 +30,11 @@ g_options = {
     'pretend':False,
 }
 
-def clean_empty_func(fm,f):
+def clean_empty_func(f):
     f_entry = f.getEntryPoint()
     infomsg(0,'empty func %s\n'%(f_entry))
     if not g_options['pretend']:
-        fm.removeFunction(f_entry)
+        removeFunction(f)
 
     # if the function is inside data or non-code memory block
     # don't try to recreate
@@ -69,7 +69,7 @@ def clean_empty_func(fm,f):
         b = f_new.getBody()
         if b.getMinAddress() == b.getMaxAddress():
             infomsg(0,'still zero size %s\n'%(f_entry))
-            fm.removeFunction(f_entry)
+            removeFunction(f)
             return False
 
         return True
@@ -88,7 +88,7 @@ def clean_empty_funcs_main():
         b = f.getBody()
         if b.getMinAddress() == b.getMaxAddress():
             found_count += 1
-            if clean_empty_func(fm,f):
+            if clean_empty_func(f):
                 clean_count += 1
 
         monitor.incrementProgress(1)
