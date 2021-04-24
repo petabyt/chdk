@@ -83,8 +83,7 @@
 //    #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
-    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1   // Bitmap resolution changes when switching to EVF
-    #define CAM_DETECT_BITMAP_UPDATE            1   // camera can detect if CHDK needs to be redrawn
+    #define CAM_HAS_DISPLAY_REFRESH_FLAG        1   // 'display_needs_refresh' variable is available to trigger CHDK UI update
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
@@ -156,6 +155,8 @@
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1
 
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
     // TODO: Below needs to be checked
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
@@ -186,8 +187,5 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE           1 
 
     #define CAM_NEED_SET_ZOOM_DELAY             300
-
-    #define CAM_HAS_WIFI                        1   // Camera has wifi support
-
 
 //--------------------------------------------------

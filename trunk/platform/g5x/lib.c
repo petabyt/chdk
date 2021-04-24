@@ -127,13 +127,22 @@ void *vid_get_viewport_live_fb()
     return _GetActiveViewportBuffer();
 }
 
+extern int displaytype;
+#define HDMI_OUT_REC    (((displaytype == 6) || (displaytype == 7)) || !!camera_info.state.mode_play)
+
 int vid_get_viewport_width()
 {
+    // Check HDMI output, camera in REC mode.
+    if (HDMI_OUT_REC)
+        return 1620;
     return camera_screen.width;
 }
 
 long vid_get_viewport_height()
 {
+    // Check HDMI output, camera in REC mode.
+    if (HDMI_OUT_REC)
+        return 1080;
     return camera_screen.height;
 }
 
@@ -187,73 +196,41 @@ int vid_get_viewport_display_yoffset()
 }
 
 // Functions for PTP Live View system
-extern int displaytype;
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
 int vid_get_viewport_fullscreen_width()         { return vid_get_viewport_width(); }
 int vid_get_viewport_fullscreen_height()        { return vid_get_viewport_height(); }
 int vid_get_viewport_buffer_width_proper()
 {
-    switch (displaytype)
-    {
-        case 6:
-        case 7:
-            // HDMI
-            if (camera_info.state.mode_play)
-                return 960;
-            return 1920;
-            break;
-        case 11:
-            // EVF
-            return 1024;
-            break;
-        default:
-            // LCD
-            return 736;
-            break;
-    }
+    // Check HDMI output, camera in REC mode.
+    if (HDMI_OUT_REC)
+        return 1920;
+    return camera_screen.buffer_width;
 }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
 
+int display_needs_refresh = 0;
+
 /*
- * Needed because bitmap buffer resolution changes when using the EVF or HDMI
+ * Called when Canon is updating UI, via dry_memcpy patch.
+ * Sets flag for CHDK to update it's UI.
+ * Also needed because bitmap buffer resolution changes when using the EVF or HDMI
  * LCD = 720 x 480
  * EVF = 1024 x 768
  * HDMI = 960 x 540
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
  */
-void update_screen_dimensions()
+void update_ui(unsigned short* ximr_context)
 {
-    static int old_displaytype = -1;
-
-    if (old_displaytype != displaytype)
+    // Update screen dimensions
+    if (camera_screen.buffer_width != ximr_context[28])
     {
-        old_displaytype = displaytype;
-
-        switch (displaytype)
-        {
-            case 6:
-            case 7:
-                // HDMI
-                camera_screen.width = 960;
-                camera_screen.height = 540;
-                camera_screen.buffer_width = 960;
-                break;
-            case 11:
-                // EVF
-                camera_screen.width = 1024;
-                camera_screen.height = 768;
-                camera_screen.buffer_width = 1024;
-                break;
-            default:
-                // LCD
-                camera_screen.width = 720;
-                camera_screen.height = 480;
-                camera_screen.buffer_width = 736;
-                break;
-        }
+        camera_screen.width = ximr_context[328];
+        camera_screen.height = ximr_context[329];
+        camera_screen.buffer_width = ximr_context[28];
+        camera_screen.buffer_height = ximr_context[30];
 
         // Reset OSD offset and width
         camera_screen.disp_right = camera_screen.width - 1;
@@ -261,24 +238,10 @@ void update_screen_dimensions()
 
         // Update other values
         camera_screen.physical_width = camera_screen.width;
-        camera_screen.buffer_height = camera_screen.height;
         camera_screen.size = camera_screen.width * camera_screen.height;
         camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
     }
-}
 
-/*
- * Check if active_bitmap_buffer has changed. Used to force CHDK UI redraw.
- * If AF Method set to Face+Tracking active_bitmap_buffer is constantly changing causing severe flickering issues with CHDK UI.
- * This reduces the flickering; but does not eliminate it.
- */
-int check_gui_needs_redraw()
-{
-    static int last_bitmap_buffer = 0;
-    if (active_bitmap_buffer != last_bitmap_buffer)
-    {
-        last_bitmap_buffer = active_bitmap_buffer;
-        return 1;
-    }
-    return 0;
+    // Tell CHDK UI that display needs update
+    display_needs_refresh = 1;
 }

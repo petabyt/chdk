@@ -257,8 +257,6 @@
 
     #undef  CAM_SUPPORT_BITMAP_RES_CHANGE       // port can adapt to resolution change of the bitmap buffer (when composite or hdmi output is used)
 
-    #undef  CAM_DETECT_BITMAP_UPDATE            // camera can detect if CHDK UI needs to be redrawn
-
     #undef  CAM_ZOOM_ASSIST_BUTTON_CONTROL      // Activate menu option to enable/disable the zoom assist button on the SX30/SX40
                                                 // For other cameras, requires additional support code in kbd.c (see the SX30 or SX40 version)
 
@@ -298,6 +296,8 @@
     #undef CAM_HAS_WIFI                         // Camera has wifi support. Note in some cases Canon uses the same firmware
                                                 // for models with and without wireless hardware. Where possible, this define
                                                 // should reflect the actual hardware
+
+    #undef CAM_HAS_DISPLAY_REFRESH_FLAG         // 'display_needs_refresh' variable is available to trigger CHDK UI update.
 
 // Base 'market' ISO value. Most (all?) DryOS R49 and later use 200, use tests/isobase.lua to check
 #if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL >= 49 // CAM_DRYOS_REL defined on command line, not from platform_camera.h

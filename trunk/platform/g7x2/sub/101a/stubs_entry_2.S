@@ -42,7 +42,10 @@ NHSTUB(WriteSDCard                            ,NULL_SUB)
 
 // Use overide function for GetPropertyCase to handle high-speed continuous mode
 IGNORE(GetPropertyCase)
-NHSTUB(GetPropertyCase_FW                   ,0xe036af69)
+NHSTUB(GetPropertyCase_FW                     ,0xe036af69)
+
+   DEF(hook_dry_memcpy                        ,0xdffcc598)  // ARM address of RAM dry_memcpy function for patching
+   DEF(canon_ui_update_ret_adr                ,0xe01c572f)  // Thumb address to check against LR register to detect dry_memcpy call from Canon UI update
 
 // Incorrect by finsig - need to check
 
