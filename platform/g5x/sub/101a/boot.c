@@ -64,6 +64,8 @@ boot ()
             "    strlo   r2, [r1], #4\n"
             "    blo     loc_fc020046\n"
 
+            "    blx     patch_dry_memcpy\n"
+
             // Install CreateTask patch
             "    adr     r0, patch_CreateTask\n" // Patch data
             "    ldm     r0, {r1,r2}\n" // Get two patch instructions
@@ -92,6 +94,48 @@ boot ()
             "patch_CreateTask:\n"
             "    ldr.w   pc, [pc,#0]\n" // Do jump to absolute address CreateTask_my
             "    .long   CreateTask_my + 1\n" // has to be a thumb address
+    );
+}
+
+/*************************************************************/
+/*
+    Patch dry_memcpy function. Checks if called from function that is updating the Canon UI.
+    Updates CHDK bitmap settings and sets flag to update CHDK UI.
+ */
+void __attribute__((naked,noinline,target("arm")))
+patch_dry_memcpy ()
+{
+    asm volatile (
+            // Install dry-memcpy patch
+            "    adr     r0, patch_dry_memcpy_ins\n"    // Patch data
+            "    ldm     r0, {r1,r2}\n"                 // Get two patch instructions
+            "    ldr     r0, =hook_dry_memcpy\n"        // Address to patch, thumb bit is clear in stubs_entry.S
+            "    stm     r0, {r1,r2}\n"                 // Store patch instructions
+            "    bx      lr\n"
+
+            "patch_dry_memcpy_ins:\n"
+            "    ldr     pc, [pc,#-4]\n"    // Do jump to absolute address dry_memcpy_my
+            "    .long   dry_memcpy_my\n"   // has to be an ARM address
+
+            "dry_memcpy_my:\n"
+            "    push    {r0, r1, r2, lr}\n"
+            //LR = Return address
+            "    ldr     r0, =canon_ui_update_ret_adr\n"    // Is return address in function that handles Ximr context?
+            "    cmp     r0, lr\n"
+            "    bne     exit_dry_memcpy_patch\n"
+
+            //R1 = Ximr context buffer
+            "    mov     r0, r1\n"
+            "    blx     update_ui\n"
+
+            "exit_dry_memcpy_patch:\n"
+            // restore overwritten register(s)
+            "    pop     {r0, r1, r2, lr}\n"
+            // Execute overwritten instructions from original code, then jump to firmware
+            "    stmdb   sp!,{r4, lr}\n"
+            "    subs    r2,r2,#0x20\n"
+            "    ldr     pc, =(hook_dry_memcpy + 8)\n" // Continue in firmware
+            ".ltorg\n"
     );
 }
 

@@ -34,8 +34,22 @@
     }
 
 extern volatile char *opacity_buffer[];
+extern char* bitmap_buffer[];
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+extern int active_bitmap_buffer;
+#endif
+
+#else
+
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+extern char* bitmap_buffer[];
+extern int active_bitmap_buffer;
+#else
+static char* frame_buffer[2];
+#endif
 
 #endif
+
 //-------------------------------------------------------------------
 // used to prevent draw_restore from being called until tick reached
 // to avoid crashes on video out change
@@ -44,12 +58,6 @@ int draw_restore_suspend_tick;
 void            (*draw_pixel_proc)(unsigned int offset, color cl);
 void            (*draw_pixel_proc_norm)(unsigned int offset, color cl);
 
-#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
-extern char* bitmap_buffer[];
-extern int active_bitmap_buffer;
-#else
-static char* frame_buffer[2];
-#endif
 //-------------------------------------------------------------------
 
 static void draw_pixel_std(unsigned int offset, color cl)
@@ -57,23 +65,24 @@ static void draw_pixel_std(unsigned int offset, color cl)
 #ifndef THUMB_FW
     // drawing on 8bpp paletted overlay
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
-	bitmap_buffer[active_bitmap_buffer][offset] = cl;
+    bitmap_buffer[active_bitmap_buffer][offset] = cl;
 #else
-	frame_buffer[0][offset] = frame_buffer[1][offset] = cl;
+    frame_buffer[0][offset] = frame_buffer[1][offset] = cl;
 #endif
 #else
     // DIGIC 6, drawing on 16bpp YUV overlay
 
-#ifndef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
-#error DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY is required for DIGIC 6 ports
-#endif
-
-    int active_buffer_index =  active_bitmap_buffer & 1;
-    unsigned char *obu = (unsigned char *)(&opacity_buffer[active_buffer_index][0]);
-    unsigned char *bbu = (unsigned char *)(&bitmap_buffer[active_buffer_index][0]);
     unsigned int y;
     unsigned int o;
     CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,y,o);
+    unsigned int u;
+    unsigned int v;
+    CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
+
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    int active_buffer_index =  active_bitmap_buffer & 1;
+    unsigned char *obu = (unsigned char *)(&opacity_buffer[active_buffer_index][0]);
+    unsigned char *bbu = (unsigned char *)(&bitmap_buffer[active_buffer_index][0]);
     obu[offset] = o;
     register unsigned int offs2 = (offset>>1)<<2;
     if (offset&1) // x is odd
@@ -84,11 +93,27 @@ static void draw_pixel_std(unsigned int offset, color cl)
     {
         bbu[offs2+1] = y; // Y
     }
-    unsigned int u;
-    unsigned int v;
-    CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
     bbu[offs2+0] = u; // U?
     bbu[offs2+2] = v; // V?
+#else
+    opacity_buffer[0][offset] = o;
+    opacity_buffer[1][offset] = o;
+    register unsigned int offs2 = (offset>>1)<<2;
+    if (offset&1) // x is odd
+    {
+        (bitmap_buffer[0])[offs2+3] = y; // Y
+        (bitmap_buffer[1])[offs2+3] = y; // Y
+    }
+    else // x is even
+    {
+        (bitmap_buffer[0])[offs2+1] = y; // Y
+        (bitmap_buffer[1])[offs2+1] = y; // Y
+    }
+    (bitmap_buffer[0])[offs2+0] = u; // U?
+    (bitmap_buffer[1])[offs2+0] = u; // U?
+    (bitmap_buffer[0])[offs2+2] = v; // V?
+    (bitmap_buffer[1])[offs2+2] = v; // V?
+#endif
 #endif
 }
 //-------------------------------------------------------------------
@@ -107,11 +132,17 @@ void set_transparent(unsigned int offst, int n_pixel)
     unsigned int offset = offst>>2;
     unsigned int w_pattern = 0x00800080;
 
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     int active_buffer_index = active_bitmap_buffer & 1;
 
     _memset32(&bitmap_buffer[active_buffer_index][offst], n_pixel<<1, w_pattern);
     _bzero((char*)&opacity_buffer[active_buffer_index][offset], n_pixel);
-
+#else
+    _memset32(&bitmap_buffer[0][offst], n_pixel<<1, w_pattern);
+    _bzero((char*)&opacity_buffer[0][offset], n_pixel);
+    _memset32(&bitmap_buffer[1][offst], n_pixel<<1, w_pattern);
+    _bzero((char*)&opacity_buffer[1][offset], n_pixel);
+#endif
 }
 
 // translate single byte CHDK color to a whole yuv unit (2 pixels)
@@ -130,12 +161,19 @@ unsigned int color_to_rawpx(color cl, unsigned int *op)
 // drawing offset is pixel offset, calculated by caller
 void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 {
-    int active_buffer_index =  active_bitmap_buffer & 1;
     offset >>= 2;
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    int active_buffer_index =  active_bitmap_buffer & 1;
     unsigned short * opbuf = (unsigned short*)(opacity_buffer[active_buffer_index]);
     unsigned int * bmbuf = (unsigned int*)(bitmap_buffer[active_buffer_index]);
     bmbuf[offset] = px;
     opbuf[offset] = op | (op<<8);
+#else
+    ((unsigned short*)bitmap_buffer[0])[offset] = px;
+    ((unsigned short*)opacity_buffer[0])[offset] = op | (op<<8);
+    ((unsigned short*)bitmap_buffer[1])[offset] = px;
+    ((unsigned short*)opacity_buffer[1])[offset] = op | (op<<8);
+#endif
 }
 
 #else // !THUMB_FW
@@ -185,17 +223,21 @@ void update_draw_proc()
 // drawing is done directly, drawing function replacement is not supported
 // OSD rotation is respected
 
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 static unsigned char *current_opacity_buf;
 static unsigned char *current_bitmap_buf;
+#endif
 static unsigned char yuvclr[8]; // order of bytes: background u,y,v,opacity; foreground u,y,v,opacity
 
 // sets up decoded colors and buffer addresses for the following drawing operation
 static void draw_pixel_simple_start(twoColors tc)
 {
-    color cl;
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     int active_buffer_index =  active_bitmap_buffer & 1;
     current_opacity_buf = (unsigned char *)(&opacity_buffer[active_buffer_index][0]);
     current_bitmap_buf = (unsigned char *)(&bitmap_buffer[active_buffer_index][0]);
+#endif
+    color cl;
     cl = BG_COLOR(tc);
     CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,yuvclr[1],yuvclr[3]);
     CALC_YUV_CHROMA_FOR_COLOR(cl,yuvclr[0],yuvclr[2]);
@@ -208,8 +250,6 @@ static void draw_pixel_simple_start(twoColors tc)
 static void draw_1pixel_simple(coord x, coord y, int px, int vrepeat)
 {
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y+vrepeat >= camera_screen.height)/* || ((x == 0) && (y == 0))*/) return;
-    unsigned char *obu = current_opacity_buf;
-    unsigned char *bbu = current_bitmap_buf;
     unsigned int offset = y * camera_screen.buffer_width + x;
     int plus = camera_screen.buffer_width;
     if (conf.rotate_osd)
@@ -218,17 +258,31 @@ static void draw_1pixel_simple(coord x, coord y, int px, int vrepeat)
         plus = -plus;
     }
 
+#ifndef CAM_HAS_DISPLAY_REFRESH_FLAG
     if (!offset) return; // skip guard pixel
+#endif
 
     int fg = px<<2;
     register unsigned int offs2 = (offset>>1)<<2;
-    
+
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    unsigned char *obu = current_opacity_buf;
+    unsigned char *bbu = current_bitmap_buf;
+#endif
+
     if (offset&1) // x is odd
     {
         while (1)
         {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
             obu[offset] = yuvclr[fg+3];
             bbu[offs2+3] = yuvclr[fg+1]; // Y
+#else
+            opacity_buffer[0][offset] = yuvclr[fg+3];
+            bitmap_buffer[0][offs2+3] = yuvclr[fg+1]; // Y
+            opacity_buffer[1][offset] = yuvclr[fg+3];
+            bitmap_buffer[1][offs2+3] = yuvclr[fg+1]; // Y
+#endif
             if (!vrepeat) return;
             vrepeat--;
             offset += plus;
@@ -239,10 +293,21 @@ static void draw_1pixel_simple(coord x, coord y, int px, int vrepeat)
     {
         while (1)
         {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
             obu[offset] = yuvclr[fg+3];
             bbu[offs2+1] = yuvclr[fg+1]; // Y
             bbu[offs2+0] = yuvclr[fg]; // U
             bbu[offs2+2] = yuvclr[fg+2]; // V
+#else
+            opacity_buffer[0][offset] = yuvclr[fg+3];
+            bitmap_buffer[0][offs2+1] = yuvclr[fg+1]; // Y
+            bitmap_buffer[0][offs2+0] = yuvclr[fg]; // U
+            bitmap_buffer[0][offs2+2] = yuvclr[fg+2]; // V
+            opacity_buffer[1][offset] = yuvclr[fg+3];
+            bitmap_buffer[1][offs2+1] = yuvclr[fg+1]; // Y
+            bitmap_buffer[1][offs2+0] = yuvclr[fg]; // U
+            bitmap_buffer[1][offs2+2] = yuvclr[fg+2]; // V
+#endif
             if (!vrepeat) return;
             vrepeat--;
             offset += plus;
@@ -276,21 +341,31 @@ static void draw_2pixels_simple(coord x, coord y, int px, int vrepeat)
         y2 = px&1?4+1:0+1;
     }
 
+#ifndef CAM_HAS_DISPLAY_REFRESH_FLAG
     if (!offset) return; // skip guard pixel
+#endif
 
     co = yuvclr[y1+3]+(yuvclr[y1+3]<<8);
     yuv = (*(unsigned int*)(&yuvclr[y1]) & 0xffffff) + (yuvclr[y2]<<24);
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     unsigned short *obu = (unsigned short *)current_opacity_buf;
     unsigned int *bbu = (unsigned int *)current_bitmap_buf;
+#endif
     while (1)
     {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
         obu[offset] = co;
         bbu[offset] = yuv;
+#else
+        ((unsigned short *)opacity_buffer[0])[offset] = co;
+        ((unsigned int *)bitmap_buffer[0])[offset] = yuv;
+        ((unsigned short *)opacity_buffer[1])[offset] = co;
+        ((unsigned int *)bitmap_buffer[1])[offset] = yuv;
+#endif
         if (!vrepeat) return;
         vrepeat--;
         offset += plus;
     }
-
 }
 
 void draw_hline_simple(coord x, coord y, int len, int px)
@@ -298,7 +373,6 @@ void draw_hline_simple(coord x, coord y, int len, int px)
     if ((y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
     if (x < 0) { len += x; x = 0; }
     if ((x + len) > camera_screen.width) len = camera_screen.width - x;
-    /*if ((x == 0) && (y == 0)) { x++; len--; }   // Skip guard pixel*/
 
     register unsigned int offset = y * camera_screen.buffer_width + (x);
     if (conf.rotate_osd)
@@ -306,26 +380,36 @@ void draw_hline_simple(coord x, coord y, int len, int px)
         offset = rotate_base - offset - len;
     }
 
+#ifndef CAM_HAS_DISPLAY_REFRESH_FLAG
     // Skip guard pixel
     if (!offset)
     {
         offset++;
         len--;
     }
+#endif
 
     int fg = px<<2;
     if (offset & 1)
     {
+        register unsigned int offs2 = (offset>>1)<<2;
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
         unsigned char *obu = current_opacity_buf;
         unsigned char *bbu = current_bitmap_buf;
-        register unsigned int offs2 = (offset>>1)<<2;
         obu[offset] = yuvclr[fg+3];
         bbu[offs2+3] = yuvclr[fg+1]; // Y
+#else
+        opacity_buffer[0][offset] = yuvclr[fg+3];
+        bitmap_buffer[0][offs2+3] = yuvclr[fg+1]; // Y
+        opacity_buffer[1][offset] = yuvclr[fg+3];
+        bitmap_buffer[1][offs2+3] = yuvclr[fg+1]; // Y
+#endif
         offset++;
         len--;
     }
     unsigned short co = yuvclr[fg+3]+(yuvclr[fg+3]<<8);
     unsigned int yuv = (*(unsigned int*)(&yuvclr[fg]) & 0xffffff) + (yuvclr[fg+1]<<24);
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     unsigned short *obud = (unsigned short *)current_opacity_buf;
     unsigned int *bbud = (unsigned int *)current_bitmap_buf;
     for (; len>0; len-=2, offset+=2)
@@ -333,14 +417,30 @@ void draw_hline_simple(coord x, coord y, int len, int px)
         obud[offset>>1] = co;
         bbud[offset>>1] = yuv;
     }
+#else
+    for (; len>0; len-=2, offset+=2)
+    {
+        ((unsigned short *)opacity_buffer[0])[offset>>1] = co;
+        ((unsigned int *)bitmap_buffer[0])[offset>>1] = yuv;
+        ((unsigned short *)opacity_buffer[1])[offset>>1] = co;
+        ((unsigned int *)bitmap_buffer[1])[offset>>1] = yuv;
+    }
+#endif
     if (len == -1)
     {
         offset--;
+        register unsigned int offs2 = (offset>>1)<<2;
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
         unsigned char *obu = current_opacity_buf;
         unsigned char *bbu = current_bitmap_buf;
-        register unsigned int offs2 = (offset>>1)<<2;
         obu[offset] = yuvclr[fg+3];
         bbu[offs2+3] = yuvclr[fg+1]; // Y
+#else
+        opacity_buffer[0][offset] = yuvclr[fg+3];
+        bitmap_buffer[0][offs2+3] = yuvclr[fg+1]; // Y
+        opacity_buffer[1][offset] = yuvclr[fg+3];
+        bitmap_buffer[1][offs2+3] = yuvclr[fg+1]; // Y
+#endif
     }
 }
 
@@ -377,12 +477,23 @@ int draw_test_guard()
 
 void draw_set_guard()
 {
+#ifndef CAM_HAS_DISPLAY_REFRESH_FLAG
     opacity_buffer[active_bitmap_buffer][0] = 0x42;
+#endif
 }
 
 int draw_test_guard()
 {
+#ifdef CAM_HAS_DISPLAY_REFRESH_FLAG
+    extern int display_needs_refresh;
+    if (display_needs_refresh)
+    {
+        display_needs_refresh = 0;
+        return 0;
+    }
+#else
     if (opacity_buffer[active_bitmap_buffer][0] != 0x42) return 0;
+#endif
     return 1;
 }
 
@@ -390,9 +501,11 @@ int draw_test_guard()
 //-------------------------------------------------------------------
 void draw_init()
 {
+#ifndef THUMB_FW
 #ifndef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     frame_buffer[0] = vid_get_bitmap_fb();
     frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
+#endif
 #endif
     draw_set_draw_proc(NULL);
 
@@ -586,6 +699,7 @@ void draw_hline(coord x, coord y, int len, color cl)
     if ((y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
     if (x < 0) { len += x; x = 0; }
     if ((x + len) > camera_screen.width) len = camera_screen.width - x;
+#ifndef CAM_HAS_DISPLAY_REFRESH_FLAG
     if (conf.rotate_osd)
     {
         if ((y == camera_screen.height-1) && ((x+len) >= camera_screen.width-1)) { x--; len--; }   // Skip guard pixel
@@ -594,6 +708,7 @@ void draw_hline(coord x, coord y, int len, color cl)
     {
         if ((y == 0) && (x == 0)) { x++; len--; }   // Skip guard pixel
     }
+#endif
     register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
     len = ASPECT_XCORRECTION(len);      // Scale the line length if needed
     for (; len>0; len--, offset++)

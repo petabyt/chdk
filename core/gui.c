@@ -2968,8 +2968,10 @@ gui_handler altGuiHandler = { GUI_MODE_ALT, gui_chdk_draw, gui_chdk_kbd_process,
 
 //-------------------------------------------------------------------
 // Main GUI redraw function, perform common initialisation then calls the redraw handler for the mode
-void gui_redraw(int flag_gui_enforce_redraw)
+void gui_redraw()
 {
+    int flag_gui_enforce_redraw = 0;
+
     if (!draw_test_guard() && (!camera_info.state.gui_mode_none || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();

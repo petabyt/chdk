@@ -54,6 +54,9 @@ NHSTUB(MoveFocusLensToDistance_FW             ,0xfc667c73)
 // via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
 NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
 
+   DEF(hook_dry_memcpy                        ,0x010f4bf0)  // ARM address of RAM dry_memcpy function for patching
+   DEF(canon_ui_update_ret_adr                ,0xfc237ab5)  // Thumb address to check against LR register to detect dry_memcpy call from Canon UI update
+
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)
