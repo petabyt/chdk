@@ -73,6 +73,7 @@ static const struct keyword_token keywords[] = {
   {"case_else",               TOKENIZER_CASE_ELSE},
   {"case",                    TOKENIZER_CASE},
   {"end_select",              TOKENIZER_END_SELECT},
+  {"force_analog_av",         TOKENIZER_FORCE_ANALOG_AV}, // has to come before "for"
   {"for",                     TOKENIZER_FOR},
   {"to",                      TOKENIZER_TO},
   {"next",                    TOKENIZER_NEXT},
@@ -98,13 +99,15 @@ static const struct keyword_token keywords[] = {
   {"set_console_layout",      TOKENIZER_SET_CONSOLE_LAYOUT},
   {"set_console_autoredraw",  TOKENIZER_SET_CONSOLE_AUTOREDRAW},
   {"console_redraw",          TOKENIZER_CONSOLE_REDRAW},
-  {"sleep",                   TOKENIZER_SLEEP}, 
+  {"sleep",                   TOKENIZER_SLEEP},
 
   /* WARNING due to tokenizer limitation longest match must be first */
-// GET  
+// GET
   {"get_av96",                TOKENIZER_GET_AV96},
   {"get_av",                  TOKENIZER_GET_USER_AV_ID}, //FOR COMPATIBILITY
   {"get_bv96",                TOKENIZER_GET_BV96},
+  {"get_canon_image_format",  TOKENIZER_GET_CANON_IMAGE_FORMAT},
+  {"get_canon_raw_support",   TOKENIZER_GET_CANON_RAW_SUPPORT},
   {"get_capture_mode",        TOKENIZER_GET_CAPTURE_MODE},
   {"get_current_av96",        TOKENIZER_GET_CURRENT_AV96},
   {"get_current_tv96",        TOKENIZER_GET_CURRENT_TV96},
@@ -158,7 +161,7 @@ static const struct keyword_token keywords[] = {
   {"get_user_tv96",           TOKENIZER_GET_USER_TV96},
   {"get_video_recording",     TOKENIZER_GET_VIDEO_RECORDING},
   {"get_video_button",        TOKENIZER_GET_VIDEO_BUTTON},
-  {"get_vbatt",               TOKENIZER_GET_VBATT},  
+  {"get_vbatt",               TOKENIZER_GET_VBATT},
   {"get_zoom_steps",          TOKENIZER_GET_ZOOM_STEPS},
   {"get_zoom",                TOKENIZER_GET_ZOOM},
   {"get_exp_count",           TOKENIZER_GET_EXP_COUNT},
@@ -169,6 +172,7 @@ static const struct keyword_token keywords[] = {
   {"set_av_rel",              TOKENIZER_SET_USER_AV_BY_ID_REL}, //FOR COMPATIBILITY
   {"set_av96",                TOKENIZER_SET_AV96},
   {"set_av",                  TOKENIZER_SET_USER_AV_BY_ID}, //FOR COMPATIBILITY
+  {"set_canon_image_format",  TOKENIZER_SET_CANON_IMAGE_FORMAT},
   {"set_capture_mode_canon",  TOKENIZER_SET_CAPTURE_MODE_CANON},
   {"set_capture_mode",        TOKENIZER_SET_CAPTURE_MODE},
   {"set_backlight",           TOKENIZER_SET_BACKLIGHT},
@@ -180,7 +184,7 @@ static const struct keyword_token keywords[] = {
   {"set_iso_real",            TOKENIZER_SET_ISO_REAL},
   {"set_iso",                 TOKENIZER_SET_ISO_MODE}, //FOR COMPATIBILITY
   {"set_led",                 TOKENIZER_SET_LED},
-  {"set_movie_status",        TOKENIZER_SET_MOVIE_STATUS},  
+  {"set_movie_status",        TOKENIZER_SET_MOVIE_STATUS},
   {"set_nd_filter",           TOKENIZER_SET_ND_FILTER},
   {"set_prop",                TOKENIZER_SET_PROP},
   {"set_quality",             TOKENIZER_SET_QUALITY},
@@ -205,15 +209,15 @@ static const struct keyword_token keywords[] = {
   {"set_record",              TOKENIZER_SET_RECORD},
   {"set_config_value",        TOKENIZER_SET_CONFIG_VALUE},
   {"set_yield",               TOKENIZER_SET_YIELD},
-  
+
   {"wait_click",              TOKENIZER_WAIT_CLICK},
   {"is_pressed",              TOKENIZER_IS_PRESSED},
   {"is_key",                  TOKENIZER_IS_KEY},
   {"set_exit_key",            TOKENIZER_SET_EXIT_KEY},
-  
+
   {"wheel_right",             TOKENIZER_WHEEL_RIGHT},
   {"wheel_left",              TOKENIZER_WHEEL_LEFT},
-  
+
   {"@title",                  TOKENIZER_REM},
   {"@subtitle",               TOKENIZER_REM},
   {"@param",                  TOKENIZER_REM},
@@ -233,8 +237,8 @@ static const struct keyword_token keywords[] = {
   {"usb_force_active",        TOKENIZER_FORCE_USB_PRESENT},
   {"usb_sync_wait",           TOKENIZER_USB_SYNC_WAIT},
   {"exit_alt",                TOKENIZER_EXIT_ALT},
-  {"enter_alt",               TOKENIZER_ENTER_ALT}, 
-  {"get_alt_mode",            TOKENIZER_GET_ALT_MODE}, 
+  {"enter_alt",               TOKENIZER_ENTER_ALT},
+  {"get_alt_mode",            TOKENIZER_GET_ALT_MODE},
   {"shut_down",               TOKENIZER_SHUT_DOWN},
 
   {"get_shooting",            TOKENIZER_GET_SHOOTING},
@@ -251,9 +255,9 @@ static const struct keyword_token keywords[] = {
   {"set_aelock",              TOKENIZER_SET_AELOCK},
   {"set_aflock",              TOKENIZER_SET_AFLOCK},
   {"set_mf",                  TOKENIZER_SET_MF},
-  {"is_capture_mode_valid",   TOKENIZER_IS_CAPTURE_MODE_VALID}, 
+  {"is_capture_mode_valid",   TOKENIZER_IS_CAPTURE_MODE_VALID},
   {"reboot",                  TOKENIZER_REBOOT},
-  
+
   // APEX functions
   {"iso_to_sv96",             TOKENIZER_ISO_TO_SV96},
   {"sv96_to_iso",             TOKENIZER_SV96_TO_ISO},
@@ -322,10 +326,10 @@ get_next_token(void)
   if(*ptr == 0) {
     return TOKENIZER_ENDOFINPUT;
   }
-  
-    // UnknStatement should have size, otherwise hanging-up in ubasic.c possible for some cases 
-    nextptr = ptr + 1; 
-  
+
+    // UnknStatement should have size, otherwise hanging-up in ubasic.c possible for some cases
+    nextptr = ptr + 1;
+
   if(isdigit(*ptr)) {
     for(i = 0; i < (MAX_NUMLEN+1); ++i) {
       if(!isdigit(ptr[i])) {
@@ -354,7 +358,7 @@ get_next_token(void)
   } else if((i=singlechar()) != 0) {
     if (i == TOKENIZER_CR){
       // move to next line, and skip all following empty lines as well
-      while (singlechar() == TOKENIZER_CR) 
+      while (singlechar() == TOKENIZER_CR)
       {
         current_line++;
         ptr++;
@@ -391,7 +395,7 @@ get_next_token(void)
     return TOKENIZER_VARIABLE;
   }
 
-  
+
   return TOKENIZER_ERROR;
 }
 /*---------------------------------------------------------------------------*/
@@ -439,7 +443,7 @@ tokenizer_string(char *dest, int len)
 {
   char *string_end;
   int string_len;
-  
+
   if(tokenizer_token() != TOKENIZER_STRING) {
     return;
   }
@@ -460,7 +464,7 @@ tokenizer_label(char *dest, int len)
 {
   char *string_end;
   int string_len;
-  
+
   if(tokenizer_token() != TOKENIZER_LABEL) {
     return;
   }

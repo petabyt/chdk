@@ -596,6 +596,16 @@ static int factor(void)
     r = conf.save_raw;
 #endif    
     break;
+  // get canon raw / jpeg setting
+  case TOKENIZER_GET_CANON_IMAGE_FORMAT:
+    accept(TOKENIZER_GET_CANON_IMAGE_FORMAT);
+    r = shooting_get_canon_image_format();
+    break;
+  // get whether canon firmware supports raw
+  case TOKENIZER_GET_CANON_RAW_SUPPORT:
+    accept(TOKENIZER_GET_CANON_RAW_SUPPORT);
+    r = camera_info.cam_canon_raw;
+    break;
   // get CHDK capture mode value, or 0 if in playback or unknown (broken modemap)
   // NOTE: different from get_mode, since this returns the actual value
   case TOKENIZER_GET_CAPTURE_MODE:
@@ -688,6 +698,10 @@ static int factor(void)
   case TOKENIZER_FORCE_USB_PRESENT:
     accept(TOKENIZER_FORCE_USB_PRESENT);
     r=force_usb_state(expr()) ;
+    break;
+  case TOKENIZER_FORCE_ANALOG_AV:
+    accept(TOKENIZER_FORCE_ANALOG_AV);
+    r=kbd_force_analog_av(expr()) ;
     break;
   case TOKENIZER_GET_ALT_MODE:
     accept(TOKENIZER_GET_ALT_MODE);
@@ -2620,6 +2634,10 @@ statement(void)
 
   case TOKENIZER_SET_RECORD:
       one_int_param_function(token, shooting_set_playrec_mode);
+      break;
+
+  case TOKENIZER_SET_CANON_IMAGE_FORMAT:
+      one_int_param_function(token, (void (*)(int))shooting_set_canon_image_format);
       break;
 
   case TOKENIZER_SET_CAPTURE_MODE:

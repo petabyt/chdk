@@ -2,7 +2,7 @@
 #include <math.h>
 #include <time.h>
 
-static int tv=0, av=0, zoom=0, focus=0, iso=0, raw=0, raw_nr=0,autostart=0; 
+static int tv=0, av=0, zoom=0, focus=0, iso=0, raw=0, raw_nr=0,autostart=0;
 int movie_status=0;
 int shot_histogram_enabled=0;
 int state_kbd_script_run=1;
@@ -179,13 +179,13 @@ int md_init_motion_detector()
     printf("*** md_init_motion_detector ***\n");
 	return 0;
 }
-void camera_set_nr(to) 
+void camera_set_nr(to)
 {
 	raw_nr = to;
     printf("*** set raw nr %d ***\n",raw_nr);
 };
 
-int camera_get_nr(to) 
+int camera_get_nr(to)
 {
     printf("*** get raw nr ***\n");
 	return raw_nr;
@@ -339,7 +339,7 @@ short shooting_get_focus_mode()
     printf("*** shooting_get_focus_mode ***\n");
     return 0;
 }
- 
+
 short shooting_get_focus_state()
 {
     printf("*** shooting_get_focus_state ***\n");
@@ -472,7 +472,7 @@ int shot_histogram_isenabled()
 	return shot_histogram_enabled;
 }
 
-int get_ccd_temp() 
+int get_ccd_temp()
 {
     printf("*** get_ccd_temp ***\n");
 	return 69;
@@ -492,7 +492,7 @@ int get_battery_temp()
 void play_sound()
 {
     printf("*** play_sound ***\n");
-}	
+}
 
 void TurnOnBackLight()
 {
@@ -579,7 +579,7 @@ int conf_setValue(unsigned short id, int configVal) {
     return CONF_VALUE;
 }
 
-void reboot(const char *filename) 
+void reboot(const char *filename)
 {
     printf("*** reboot %s ***\n",filename?filename:"NULL");
 }
@@ -791,6 +791,25 @@ short shooting_can_focus()
     return 0;
 }
 
+int shooting_get_canon_image_format()
+{
+    printf("*** shooting_get_canon_image_format ***\n");
+    return 0;
+}
+
+int shooting_set_canon_image_format(int fmt)
+{
+    printf("*** shooting_set_canon_image_format %d ***\n",fmt);
+    return 0;
+}
+
+
+int shooting_get_canon_raw_support()
+{
+    printf("*** shooting_get_canon_raw_support ***\n");
+    return 0;
+}
+
 void set_movie_status(int status)
 {
     printf("*** set_movie_status %d ***\n", status);
@@ -854,6 +873,13 @@ int force_usb_state(int state)
     printf("*** force_usb_state  %d ***\n", state);
     return 0;
 }
+
+int kbd_force_analog_av(int state)
+{
+    printf("*** force_analog_av  %d ***\n", state);
+    return 0;
+}
+
 
 void enter_alt(int script_mode)
 {
