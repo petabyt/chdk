@@ -110,43 +110,43 @@ class InsnDescriber:
     # not comprehensive, not all captures a valid for all instructions
     # note contrary to ARM UAL, ghidra puts S after condition like andeqs
     match_mne_dataproc = re.compile(
-        "(add|adc|mla|mls|mul|rsb|sub|sbc|sdiv|udiv"
-        "|and|asr|bic|bfi|eor|lsl|lsr|orn|orr|ror|rrx|rsc|sxtb|sxth|ubfx|uxth)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?"
+        "(addw|add|adc|mla|mls|mul|rsb|subw|sub|sbc|sdiv|udiv"
+        "|and|asr|bic|bfc|bfi|clz|eor|lsl|lsr|orn|orr|ror|rrx|rsc|sxtb|sxth|ubfx|uxth)"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
     )
     match_mne_mov = re.compile(
         "(adr|movt|movw|mov|cpy|mvn)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(s)?(\.w)?$"
     )
     match_mne_cmp = re.compile(
         "(cmn|cmp|teq|tst)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_b = re.compile(
         "(bx|blx|bl|b)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_cond_misc = re.compile(
         "(mrs|msr)"
-        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?"
+        "(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?$"
     )
     match_mne_ldst = re.compile(
-        "(ldr|str)([bhd])?(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+        "(ldr|str)(sb|b|sh|h|d)?(t)?(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_pushpop = re.compile(
-        "(push|pop)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+        "(push|pop)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_ldmstm = re.compile(
-        "(ldm|stm)(db|ia|fd|da|fa|ea|ed)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?"
+        "(ldm|stm)(db|ia|fd|da|fa|ea|ed)(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le)?(\.w)?$"
     )
     match_mne_nosfx_misc = re.compile(
-        "(cbz|cbnz)"
+        "(cbz|cbnz)$"
     )
 
     likely_before_push_mne_base={
         "add", "adc", "mla", "mls", "mul", "rsb", "sub", "sbc", "sdiv", "udiv",
         "cmn", "cmp", "teq", "tst",
-        "and", "asr", "bic", "bfi", "eor", "lsl", "lsr", "orn", "orr", "ror", "rrx", "rsc", "sxtb", "sxth", "ubfx", "uxth",
+        "and", "asr", "bic", "bfc", "bfi", "eor", "clz", "lsl", "lsr", "orn", "orr", "ror", "rrx", "rsc", "sxtb", "sxth", "ubfx", "uxth",
         "adr", "movt", "movw", "mov", "cpy", "mvn",
         "ldr", "str"
     }
@@ -154,7 +154,7 @@ class InsnDescriber:
         "add", "adc", "mla", "mls", "mul", "rsb", "sub", "sbc", "sdiv", "udiv",
         "cmn", "cmp", "teq", "tst",
         "and", "asr", "bic", "bfi", "eor", "lsl", "lsr", "orn", "orr", "ror", "rrx", "rsc", "sxtb", "sxth", "ubfx", "uxth",
-        "adr", "movt", "movw", "mov", "cpy", "mvn",
+        "adr", "movt", "mov", "cpy", "mvn",
         "ldr", "str"
     }
 
@@ -182,21 +182,36 @@ class InsnDescriber:
         m = self.match_mne_dataproc.match(self.mnemonic)
         if m:
             self.cache['mne_group'] = 'dataproc'
-            self.cache['mne'] = m.group(1)
-            self.cache['mne_base'] = m.group(1)
+            mne = m.group(1)
+            self.cache['mne'] = mne
+            if mne == 'addw':
+                self.cache['mne_base'] = 'add'
+            elif mne == 'subw':
+                self.cache['mne_base'] = 'sub'
+            else:
+                self.cache['mne_base'] = mne
+
             self.cache['cc'] = m.group(2)
             self.cache['s'] = m.group(3)
             self.cache['q'] = m.group(4)
+
+
             return
 
         m = self.match_mne_mov.match(self.mnemonic)
         if m:
             self.cache['mne_group'] = 'mov'
-            self.cache['mne'] = m.group(1)
-            self.cache['mne_base'] = m.group(1)
+            mne = m.group(1)
+            self.cache['mne'] = mne
+            if mne == 'movw':
+                self.cache['mne_base'] = 'mov'
+            else:
+                self.cache['mne_base'] = mne
+
             self.cache['cc'] = m.group(2)
             self.cache['s'] = m.group(3)
             self.cache['q'] = m.group(4)
+
             return
 
         # below do not have s suffix
@@ -231,14 +246,18 @@ class InsnDescriber:
 
         m = self.match_mne_ldst.match(self.mnemonic)
         if m:
-            self.cache['mne_group'] = 'ldst'
+            if m.group(3):
+                self.cache['mne_group'] = 'ldst_unpriv' # shouldn't occur for real insn in our fw
+            else:
+                self.cache['mne_group'] = 'ldst'
+
             if m.group(2):
                 self.cache['mne'] = m.group(1) + m.group(2) # bhd suffix
             else:
                 self.cache['mne'] = m.group(1)
             self.cache['mne_base'] = m.group(1)
-            self.cache['cc'] = m.group(3)
-            self.cache['q'] = m.group(4)
+            self.cache['cc'] = m.group(4)
+            self.cache['q'] = m.group(5)
             return
 
         m = self.match_mne_pushpop.match(self.mnemonic)
@@ -316,11 +335,17 @@ class InsnDescriber:
         else:
             if mne == 'and' and self.get_cc() == 'eq' and self.n_ops == 3 and self.ops[0] == 'r0' and self.ops[1] == 'r0' and self.ops[2] == 'r0':
                 return True
+
+        group = self.get_mne_group()
+
+        # our firmware runs in supervisor mode
+        if group == 'ldst_unpriv':
+            return True
+
         # various things that don't make sense with PC
         if self.n_ops > 0 and self.ops[0] == 'pc':
-            group = self.get_mne_group()
             # most arimetic / bitwise ops into PC
-            if group == 'dataproc' and self.mne != 'add':
+            if group == 'dataproc' and mne != 'add':
                 return True
 
             # load / store other than single word of PC
