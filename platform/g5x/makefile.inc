@@ -1,8 +1,18 @@
 PLATFORMID=12979
-
 PLATFORMOS=dryos
-
 PLATFORMOSVER=58
+DIGIC = 60
+
+# values for ARAM, from sig finder
+ARAM_HEAP_START=0x006ce000
+ARAM_HEAP_SIZE=0x00022000
+
+# Force ARAM on, but don't load CHDK in ARAM, because size is marginal for core
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=
+
+override OPT_EXMEM_MALLOC=1
+EXMEM_BUFFER_SIZE=0x400000
 
 # start of firmware
 ROMBASEADDR=0xFC000000
@@ -24,6 +34,3 @@ FI2FLAGS=W
 # below 2 commented lines are used by tools/compatbuilder.sh
 # BLINK_LED_CONTROL=4
 # BLINK_LED_GPIO=0xd20b0994
-
-DIGIC = 60
-
