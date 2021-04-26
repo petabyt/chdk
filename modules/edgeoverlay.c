@@ -750,6 +750,11 @@ static void set_offset_from_overlap()
 // (dynamically decompressing it) using draw_edge_overlay().
 void edge_overlay()
 {
+    // Check that viewport dimensions do not exceed bitmap dimensions.
+    // HDMI output may use a larger frame for the image compared to the bitmap we draw on - the code can't handle this.
+    if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
+        return;
+
     // Was the shutter fully pressed the last time we ran?
     // We use this to make sure that the user has released
     // the button before processing the next FullPress event.

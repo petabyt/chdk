@@ -239,7 +239,6 @@ patch_dry_memcpy ()
             "    bne     exit_dry_memcpy_patch\n"
 
             //R1 = Ximr context buffer
-            "upd_ui:\n"
             "    mov     r0, r1\n"
             "    blx     update_ui\n"
 
