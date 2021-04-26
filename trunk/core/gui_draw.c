@@ -169,9 +169,9 @@ void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
     bmbuf[offset] = px;
     opbuf[offset] = op | (op<<8);
 #else
-    ((unsigned short*)bitmap_buffer[0])[offset] = px;
+    ((unsigned int*)bitmap_buffer[0])[offset] = px;
     ((unsigned short*)opacity_buffer[0])[offset] = op | (op<<8);
-    ((unsigned short*)bitmap_buffer[1])[offset] = px;
+    ((unsigned int*)bitmap_buffer[1])[offset] = px;
     ((unsigned short*)opacity_buffer[1])[offset] = op | (op<<8);
 #endif
 }

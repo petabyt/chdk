@@ -1,11 +1,9 @@
 Issues
 
 - Not a fully working port.
-- Screen update in CHDK menu has problems in record mode (sometimes displays old frame).
 - Memory browser may crash if it tries to dereference an invalid address.
-- Edge overlay and Zebra do not work if the camera is connected to a HDMI display.
+- Edge detection and Zebra are disabled if the camera is connected to a HDMI display.
   The viewport becomes 1920x1080; but the UI overlay (bitmap) remains 720x480. The code does not handle this.
-  Zebra may crash the camera if used with HDMI output.
 - Creating and deleting non Canon image files in the A/DCIM image folders may crash the camera. This appears to depend
   on which file IO operations are used. The open/close/write functions appear to be safe, fopen/fclose/fwrite/remove will
   crash after creating or deleting a non Canon image file. Using the A/RAW option for saving CHDK DNG files appears to

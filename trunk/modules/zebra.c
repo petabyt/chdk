@@ -102,13 +102,14 @@
 #define ZFIX_TOP    29
 #define ZFIX_BOTTOM 30
 
-static unsigned char *img_buf, *scr_buf;
+static unsigned char *img_buf;
 #ifndef THUMB_FW
+static unsigned char *scr_buf;
 static unsigned char *cur_buf_top, *cur_buf_bot;
-#endif
-static int timer = 0;
 static unsigned char *buf = NULL;
 static int buffer_size;
+#endif
+static int timer = 0;
 static color cl_under, cl_over;
 
 unsigned char clip8(signed short x){ if (x<0) x=0; else if (x>255) x=255; return x; }
@@ -520,13 +521,13 @@ typedef struct
 } rawcolor_s;
 
 rawcolor_s clr[8];
-
 rawcolor_s rawcl_overunder[3];
+int shown = 0;
 
 // D6 version draws directly, no allocs
 static void gui_osd_zebra_free()
 {
-    buf = NULL;
+    shown = 0;;
 }
 
 // prepare zebra resources, or free them
@@ -550,80 +551,64 @@ static int gui_osd_zebra_init(int show)
 
     if (show)
     {
-        if (!buf)
+        if (!shown)
         {
             timer = 0;
-            scr_buf = vid_get_bitmap_fb();
-            buf = scr_buf;
+            shown = 1;
+            int f;
+            for (f=0; f<8; f++)
+            {
+                clr[f].yuv = color_to_rawpx(cls[f], &(clr[f].op));
+            }
+            rawcl_overunder[1].yuv = color_to_rawpx(cl_under, &(rawcl_overunder[1].op));
+            rawcl_overunder[0].yuv = color_to_rawpx(cl_over, &(rawcl_overunder[0].op));
+            rawcl_overunder[2].yuv = color_to_rawpx(COLOR_TRANSPARENT, &(rawcl_overunder[2].op));
         }
-        int f;
-        for (f=0; f<8; f++)
-        {
-            clr[f].yuv = color_to_rawpx(cls[f], &(clr[f].op));
-        }
-        rawcl_overunder[1].yuv = color_to_rawpx(cl_under, &(rawcl_overunder[1].op));
-        rawcl_overunder[0].yuv = color_to_rawpx(cl_over, &(rawcl_overunder[0].op));
-        rawcl_overunder[2].yuv = color_to_rawpx(COLOR_TRANSPARENT, &(rawcl_overunder[2].op));
     }
     else
     {
-        if (buf) // if zebra was previously on, restore
+        if (shown) // if zebra was previously on, restore
         {
             gui_set_need_restore();
         }
         gui_osd_zebra_free();
     }
-    return (buf != NULL);
-}
-
- 
-
-//-------------------------------------------------------------------
-int draw_guard_pixel() {
-    unsigned char* buffer1 = vid_get_bitmap_fb()+camera_screen.buffer_size/2;
-    unsigned char* buffer2 = buffer1+camera_screen.buffer_size;
-    int has_disappeared=0;
-
-    if (*buffer1!=COLOR_GREEN) has_disappeared=1;
-    if (*buffer2!=COLOR_GREEN) has_disappeared=2;
-    *buffer1 = *buffer2 = COLOR_GREEN;
-    return has_disappeared;
+    return (shown);
 }
 
 //-------------------------------------------------------------------
 // neither OSD nor histogram can be drawn over zebra
 // draw_set_draw_proc() is not respected by the current D6 drawing code anyway
 static void gui_osd_draw_zebra_osd() {
-    switch (conf.zebra_draw_osd) {
-        case ZEBRA_DRAW_NONE:
-            break;
-        case ZEBRA_DRAW_OSD:
-            if (conf.show_osd) {
-                //draw_set_draw_proc(draw_dblpixel_raw);
-               // gui_draw_osd_elements(0,1);
-                //draw_set_draw_proc(NULL);
-            }
-            /* no break here */
-        case ZEBRA_DRAW_HISTO:
-        default:
-            //draw_set_draw_proc(draw_dblpixel_raw);
-            //libhisto->gui_osd_draw_histo(0);
-            //draw_set_draw_proc(NULL);
-            break;
-    }
+//     switch (conf.zebra_draw_osd) {
+//         case ZEBRA_DRAW_NONE:
+//             break;
+//         case ZEBRA_DRAW_OSD:
+//             if (conf.show_osd) {
+//                 draw_set_draw_proc(draw_dblpixel_raw);
+//                 gui_draw_osd_elements(0,1);
+//                 draw_set_draw_proc(NULL);
+//             }
+//             /* no break here */
+//         case ZEBRA_DRAW_HISTO:
+//         default:
+//             draw_set_draw_proc(draw_dblpixel_raw);
+//             libhisto->gui_osd_draw_histo(0);
+//             draw_set_draw_proc(NULL);
+//             break;
+//     }
 }
 
 //-------------------------------------------------------------------
 static void disp_zebra()
 {
     // draw CHDK osd and histogram to buf[] (if enabled in config)
-
     gui_osd_draw_zebra_osd();
 }
 
 //-------------------------------------------------------------------
 // CHDK uses a virtual screen size of 360 x 240 pixels (480x240 for wide screen models)
-static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
+static int draw_zebra_no_aspect_adjust(unsigned int f)
 {
     int x, y, over;
     unsigned int v, bitmap_byte;
@@ -647,7 +632,6 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
     // if not in no-zebra phase of blink mode zebra, draw zebra  
     if (f)
     {
-
         if (viewport_yoffset > 0)
         {
             // clear top & bottom areas of buffer if image height if smaller than viewport
@@ -729,21 +713,17 @@ static int draw_zebra_no_aspect_adjust(int mrec, unsigned int f)
             }
             else
             {
-                // clear buf[] of zebra, only leave Canon OSD
-                if (!mrec)
-                {
-                    // Not REC mode
-                    set_transparent(0, buffer_size/2);  //blink
-                }
+                // clear buf[] of zebra
+                set_transparent(0, camera_screen.buffer_size);  //blink
                 disp_zebra();
             }
             need_restore=0;
         }
         return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
-        // if zebra was drawn
     }
     else
     {
+        // if zebra was drawn
         disp_zebra();
         need_restore=1;
         return 1;
@@ -756,6 +736,11 @@ int gui_osd_draw_zebra(int show)
 {
     unsigned int f;
 
+    // Check that viewport dimensions do not exceed bitmap dimensions.
+    // HDMI output uses a larger frame for the image compared to the bitmap we draw on - the code can't handle this and will crash
+    if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
+        return 0;
+
     if (!gui_osd_zebra_init(show))
         return 0;
 
@@ -765,7 +750,6 @@ int gui_osd_draw_zebra(int show)
 
     if (timer==0)
     {
-        draw_guard_pixel();
         timer = 1;
         return 0;
     }
@@ -775,7 +759,6 @@ int gui_osd_draw_zebra(int show)
         int ready;
         if (!camera_info.state.mode_rec) ready=1;
         else get_property_case(camera_info.props.shooting, &ready, 4);
-        draw_guard_pixel(); // will be 0 in PLAY mode, should be 1 or 2 in REC mode.
         if(!ready) return 0;
 
     }
@@ -792,7 +775,7 @@ int gui_osd_draw_zebra(int show)
         default:                    f = timer&2;    break;
     }
 
-    return draw_zebra_no_aspect_adjust(camera_info.state.mode_rec,f);
+    return draw_zebra_no_aspect_adjust(f);
 }
 
 #endif // THUMB_FW
