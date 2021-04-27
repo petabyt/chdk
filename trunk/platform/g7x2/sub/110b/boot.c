@@ -216,7 +216,7 @@ void __attribute__((naked,noinline)) boot() {
     Patch dry_memcpy function. Checks if called from function that is updating the Canon UI.
     Updates CHDK bitmap settings and sets flag to update CHDK UI.
  */
-void __attribute__((naked,noinline,target("arm")))
+void __attribute__((naked,noinline))
 patch_dry_memcpy ()
 {
     asm volatile (
@@ -227,6 +227,7 @@ patch_dry_memcpy ()
             "    stm     r0, {r1,r2}\n"                 // Store patch instructions
             "    bx      lr\n"
 
+            "    .code   32\n"
             "patch_dry_memcpy_ins:\n"
             "    ldr     pc, [pc,#-4]\n"    // Do jump to absolute address dry_memcpy_my
             "    .long   dry_memcpy_my\n"   // has to be an ARM address
