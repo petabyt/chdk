@@ -28,6 +28,8 @@ extern void _LCDMsg_SetStr (unsigned, char * );
 //extern long _VbattGet();
 
 
+// code to support saving a romlog if started with some key combo
+#ifdef BOOT_ROMLOG_SHORTCUT
 void save_romlog2(void)
 {
 	unsigned args[4];
@@ -42,13 +44,13 @@ void save_romlog2(void)
 
 		args[0] = (unsigned)"GetLogToFile";
 		args[1] = (unsigned)"A/ROMLOG.LOG";
-		args[2] = 1;		
+		args[2] = 1;
 		call_func_ptr(_ExecuteEventProcedure,args,3);
-		
+
 		args[0] = (unsigned)"BeepDrive";
 		args[1] = (unsigned) 0x02;
 		call_func_ptr(_ExecuteEventProcedure,args,2);
-	
+
 		 // *(int*)0xd20b0810  = 0x4d0002;	 // Orange Led = on
 
 }
@@ -66,8 +68,9 @@ void spytask_my(long ua, long ub, long uc, long ud, long ue, long uf)
 
 	while (1){
 	_SleepTask(300);
-	}	
+	}
 }
+#endif // BOOT_ROMLOG_SHORTCUT
 
 /*----------------------------------------------------------------------
     spytask
@@ -84,11 +87,15 @@ void spytask(long ua, long ub, long uc, long ud, long ue, long uf)
 -----------------------------------------------------------------------*/
 void CreateTask_spytask()
 {
-	if ( *(int*)(0x9e78) & 0x00600000 )  
-		{
+    // workaround to avoid crashes on startup triggered by closing the battery cover or after attaching / removing the lens
+    // see https://chdk.setepontos.com/index.php?topic=12542.msg145817#msg145817
+	if ( *(int*)(0x9e78) & 0x00600000 )
+    {
+#ifdef BOOT_ROMLOG_SHORTCUT
 		if (( *(int*)(0xD20BF4A0) & 0x00002000) == 0) _CreateTask("SpyTaskMY", 0x19, 0x2000, spytask_my, 0);
+#endif
 		_CreateTask("SpyTask", 0x19, 0x2000, spytask, 0);
-		}
+    }
 }
 
 ///*----------------------------------------------------------------------
@@ -163,7 +170,7 @@ void __attribute__((naked,noinline)) boot() {
         "bic     r0, #1\n"                  // clear thumb bit
         "stm     r0, {r1,r2}\n"             // Store patch instructions
 
-		"b.w     sub_fc062f48_my\n" // continue 
+		"b.w     sub_fc062f48_my\n" // continue
 
         "patch_CreateTask:\n"
         "ldr.w   pc, [pc,#0]\n"             // Do jump to absolute address CreateTask_my
@@ -173,8 +180,8 @@ void __attribute__((naked,noinline)) boot() {
 
 /*************************************************************/
 void __attribute__((naked,noinline)) CreateTask_my() {
-	
-//   *(int*)0xd20b0810  = 0x4d0002;	
+
+//   *(int*)0xd20b0810  = 0x4d0002;
 asm volatile (
 "    push   {r0}\n"
 
@@ -182,7 +189,7 @@ asm volatile (
 "	ldr r0, =#0x4d0002\n"
 "	ldr r1, =#0xd20b0810\n"    // beam address
 "	str r0, [r1]\n"
-"    pop    {r1}\n" 
+"    pop    {r1}\n"
 */
 
 //R3 = Pointer to task function to create
@@ -194,14 +201,14 @@ asm volatile (
 "    orreq   r3, #1\n"                  // make sure it's a thumb address (may not be needed?)
 "    beq     exitHook\n"                // below compares not necessary if this check has found something.
 
- 
+
 "    LDR     R0, =task_ExpDrv\n"
 "    CMP     R0, R3\n"
 "    itt     eq\n"
 "    LDREQ   R3, =exp_drv_task\n"
 "    orreq   r3, #1\n"
 "    BEQ     exitHook\n"
- 
+
 /*
 "    LDR     R0, =task_DvlpSeq\n"
 "    CMP     R0, R3\n"
@@ -238,7 +245,7 @@ asm volatile (
 "    itt     eq\n"
 "    ldreq   r3, =init_file_modules_task\n"
 "    orreq   r3, #1\n"
-"exitHook:\n" 
+"exitHook:\n"
 
 
 // restore overwritten register(s)
@@ -470,7 +477,7 @@ void __attribute__((naked,noinline)) sub_fc06347d_my() {
     );
 }
 
-//taskcreate_physw   
+//taskcreate_physw
 void __attribute__((naked,noinline)) sub_fc083bea_my() {
     asm volatile (
 "       push    {r3-r5,lr}\n"
