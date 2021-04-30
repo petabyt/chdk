@@ -36,9 +36,10 @@ all values in CORDIC routines are from type 'fixed' (4 byte integer)
 
 typedef long fixed;
 typedef int int4b; //4 byte integer
-enum fcordic {ROTATE, VECTOR};
+
+enum {ROTATE, VECTOR};
 typedef int fcordic;
-enum tangle {RAD, DEG};
+enum {RAD, DEG};
 typedef int tangle;
 
 enum {
@@ -58,30 +59,6 @@ enum {
 #define INT2FIXEDR(X)   (intToFixed((X), 1))
 #define FIXED2INT(X)    (fixedToInt((X), 0))
 #define FIXED2INTR(X)   (fixedToInt((X), 1))
-
-//intern used functions
-LUALIB_API void cordic(tangle t, fcordic f, fixed *x, fixed *y, fixed *z);
-LUALIB_API fixed mulScaled(fixed a, fixed b);
-LUALIB_API fixed divScaled(fixed a, fixed b);
-LUALIB_API int convertToQ1(fixed *x, fixed *y);
-LUALIB_API void convertFromQ1(fixed *x, fixed *y, int q);
-LUALIB_API int rotateToQ1(tangle t, fixed *phi);
-LUALIB_API void rotateFromQ1(tangle t, fixed *phi, int q);
-LUALIB_API fixed cathetus(fixed x);
-/* base CIRCULAR mode, ROTATE */
-LUALIB_API void sincosCordic(tangle t, fixed phi, fixed *sinphi, fixed *cosphi);
-/* base CIRCULAR mode, VECTOR */
-LUALIB_API void atanhypCordic(tangle t, fixed px, fixed py, fixed *phi, fixed *hyp);
-/* functions CIRCULAR mode, ROTATE */
-LUALIB_API fixed sinCordic(tangle t, fixed phi);
-LUALIB_API fixed cosCordic(tangle t, fixed phi);
-LUALIB_API fixed tanCordic(tangle t, fixed phi);
-LUALIB_API void recCordic(tangle t, fixed r, fixed theta, fixed *px, fixed *py);
-/* functions CIRCULAR mode, VECTOR */
-LUALIB_API fixed asinCordic(tangle t, fixed x);
-LUALIB_API fixed acosCordic(tangle t, fixed x);
-LUALIB_API fixed atanCordic(tangle t, fixed x);
-LUALIB_API void polCordic(tangle t, fixed px, fixed py, fixed *r, fixed *theta);
 
 // extern
 // PI/2, PI, 2*PI
