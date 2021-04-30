@@ -11,7 +11,7 @@ fmath library test
 ]]
 
 function str1E3(val)
-    return val:tostr(0);
+    return val:tostr(3);
 end
 
 function printf(...)
