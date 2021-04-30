@@ -26,7 +26,7 @@ fixed ATAN_LIMIT        = 0x36f602be;           // 7035.00536
 fixed FIXED_MAX         = 16383.99999;
 
 // CORDIC main routine
-LUALIB_API void cordic(tangle t, fcordic f, fixed *x, fixed *y, fixed *z) {
+static void cordic(tangle t, fcordic f, fixed *x, fixed *y, fixed *z) {
     long *patan_tab = atan_tab[t];
     long xstep, ystep, zstep = 1;
     int i;
@@ -45,12 +45,12 @@ LUALIB_API void cordic(tangle t, fcordic f, fixed *x, fixed *y, fixed *z) {
 }
 
 // abs(INT_MIN) doesn't work
-LUALIB_API int cordic_abs(int a) {
+static int cordic_abs(int a) {
     if (a < -INT_MAX) a = -INT_MAX;
     return abs(a);
 }
 
-LUALIB_API int cordic_sign(int a) {
+static int cordic_sign(int a) {
     return (a < 0)? -1 : 1;
 }
 
@@ -71,73 +71,53 @@ LUALIB_API fixed muldivScaled(fixed a, fixed b, fixed c) {
     return FIXED(res);
 }
 
-LUALIB_API fixed mulScaled(fixed a, fixed b) {
+static fixed mulScaled(fixed a, fixed b) {
     return muldivScaled(a, b, CORDIC_SCALE);
 }
 
-LUALIB_API fixed divScaled(fixed a, fixed b) {
+static fixed divScaled(fixed a, fixed b) {
     return muldivScaled(CORDIC_SCALE, a, b);
 }
 
-LUALIB_API int convertToQ1(fixed *x, fixed *y) {
-    int fx = (*x >= 0), fy = (*y >= 0);
-    int q = 1;
-    if (!fx && fy) {
-        q = 2;
-    } else if (!fx && !fy) {
-        q = 3;
-    } else if (fx && !fy) {
-        q = 4;
-    }
-    *x = cordic_abs(*x);
-    *y = cordic_abs(*y);
-    return q;
-}
-
-LUALIB_API void convertFromQ1(fixed *x, fixed *y, int q) {
-    int fx = 1, fy = 1;
-    if ((q == 2) || (q == 3)) { fx = -1; }
-    if ((q == 3) || (q == 4)) { fy = -1; }
-    *x = fx * *x;
-    *y = fy * *y;
-}
-
-LUALIB_API int rotateToQ1(tangle t, fixed *phi) {
-    *phi = (*phi % FULL_CIRCLE[t] + FULL_CIRCLE[t]) % FULL_CIRCLE[t];
-    int q = *phi / QUART_CIRCLE[t] + 1;
-    switch(q) {
-        case 2: *phi = HALF_CIRCLE[t] - *phi; break;
-        case 3: *phi = *phi - HALF_CIRCLE[t]; break;
-        case 4: *phi = FULL_CIRCLE[t] - *phi; break;
-    }
-    return q;
-}
-
-LUALIB_API void rotateFromQ1(tangle t, fixed *phi, int q) {
-    switch(q) {
-        case 2: *phi = HALF_CIRCLE[t] - *phi; break;
-        case 3: *phi = HALF_CIRCLE[t] + *phi; break;
-        case 4: *phi = FULL_CIRCLE[t] - *phi; break;
-    }
-}
-
-LUALIB_API fixed cathetus(fixed x) {
+static fixed cathetus(fixed x) {
     return FIXED(sqrt((1 + FLOAT(x)) * (1 - FLOAT(x))));
 }
 
 // base CIRCULAR mode, ROTATE
-LUALIB_API void sincosCordic(tangle t, fixed phi, fixed *sinphi, fixed *cosphi) {
-    int q = rotateToQ1(t, &phi);
+static void sincosCordic(tangle t, fixed phi, fixed *sinphi, fixed *cosphi) {
+    // convert to quadrant 1
+    phi = (phi % FULL_CIRCLE[t] + FULL_CIRCLE[t]) % FULL_CIRCLE[t];
+    int q = phi / QUART_CIRCLE[t] + 1;
+    switch(q) {
+        case 2: phi = HALF_CIRCLE[t] - phi; break;
+        case 3: phi = phi - HALF_CIRCLE[t]; break;
+        case 4: phi = FULL_CIRCLE[t] - phi; break;
+    }
     fixed x = INV_GAIN_CIRCLE[t], y = 0, z = phi;
     cordic(t, ROTATE, &x, &y, &z);
-    convertFromQ1(&x, &y, q);
+    // convert to original quadrant
+    if ((q == 2) || (q == 3)) { x = -x; }
+    if ((q == 3) || (q == 4)) { y = -y; }
     *sinphi = y;
     *cosphi = x;
 }
 
 // base CIRCULAR mode, VECTOR
-LUALIB_API void atanhypCordic(tangle t, fixed px, fixed py, fixed *phi, fixed *hyp) {
-    int q = convertToQ1(&px, &py);
+static void atanhypCordic(tangle t, fixed px, fixed py, fixed *phi, fixed *hyp) {
+    // convert to quadrant 1
+    int fy = (py >= 0);
+    int q = 1;
+    if (px < 0) {
+        if (fy)
+            q = 2;
+        else
+            q = 3;
+    } else if (!fy) {
+        q = 4;
+    }
+    px = cordic_abs(px);
+    py = cordic_abs(py);
+
     int f = 0;
     while (px > ATAN_LIMIT || py > ATAN_LIMIT) {
         px /= 2;
@@ -151,34 +131,37 @@ LUALIB_API void atanhypCordic(tangle t, fixed px, fixed py, fixed *phi, fixed *h
     } else {
         fixed x = px, y = py, z = 0;
         cordic(t, VECTOR, &x, &y, &z);
-        rotateFromQ1(t, &z, q);
-        //shift to [pi; -pi]
-        if ((q == 3) || (q == 4)) { z = z - FULL_CIRCLE[t]; }
+        // convert to original quadrant
+        switch(q) {
+            case 2: z = HALF_CIRCLE[t] - z; break;
+            case 3: z = z - HALF_CIRCLE[t]; break;
+            case 4: z = -z; break;
+        }
         *phi = z;
         *hyp = (f)? 0 : x;
     }
 }
 
 // functions in CIRCULAR mode, ROTATE
-LUALIB_API fixed sinCordic(tangle t, fixed phi) {
+static fixed sinCordic(tangle t, fixed phi) {
     fixed _sin, _cos;
     sincosCordic(t, phi, &_sin, &_cos);
     return _sin;
 }
 
-LUALIB_API fixed cosCordic(tangle t, fixed phi) {
+static fixed cosCordic(tangle t, fixed phi) {
     fixed _sin, _cos;
     sincosCordic(t, phi, &_sin, &_cos);
     return _cos;
 }
 
-LUALIB_API fixed tanCordic(tangle t, fixed phi) {
+static fixed tanCordic(tangle t, fixed phi) {
     fixed _sin, _cos;
     sincosCordic(t, phi, &_sin, &_cos);
     return divScaled(_sin, _cos);
 }
 
-LUALIB_API void recCordic(tangle t, fixed r, fixed theta, fixed *px, fixed *py) {
+static void recCordic(tangle t, fixed r, fixed theta, fixed *px, fixed *py) {
     fixed _sin, _cos;
     sincosCordic(t, theta, &_sin, &_cos);
     *px = mulScaled(r, _cos);
@@ -186,27 +169,27 @@ LUALIB_API void recCordic(tangle t, fixed r, fixed theta, fixed *px, fixed *py) 
 }
 
 // functions in CIRCULAR mode, VECTOR
-LUALIB_API fixed asinCordic(tangle t, fixed x) {
+static fixed asinCordic(tangle t, fixed x) {
     fixed phi, hyp;
     fixed _cos = cathetus(x);
     atanhypCordic(t, _cos, x, &phi, &hyp);
     return phi;
 }
 
-LUALIB_API fixed acosCordic(tangle t, fixed x) {
+static fixed acosCordic(tangle t, fixed x) {
     fixed phi, hyp;
     fixed _sin = cathetus(x);
     atanhypCordic(t, x, _sin, &phi, &hyp);
     return phi;
 }
 
-LUALIB_API fixed atanCordic(tangle t, fixed x) {
+static fixed atanCordic(tangle t, fixed x) {
     fixed phi, hyp;
     atanhypCordic(t, CORDIC_SCALE, x, &phi, &hyp);
     return phi;
 }
 
-LUALIB_API void polCordic(tangle t, fixed px, fixed py, fixed *r, fixed *theta) {
+static void polCordic(tangle t, fixed px, fixed py, fixed *r, fixed *theta) {
     fixed phi, hyp;
     atanhypCordic(t, px, py, &phi, &hyp);
     *theta = phi;

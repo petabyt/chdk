@@ -26,3 +26,6 @@
     __bswapsi2
     __aeabi_ui2d
     __aeabi_d2uiz
+    __aeabi_dcmpeq
+    __aeabi_dcmple
+    __aeabi_dcmpge
