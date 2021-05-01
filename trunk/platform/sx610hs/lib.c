@@ -63,7 +63,7 @@ void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
 
 
 void *vid_get_bitmap_fb()        { return (void*)0x40711000; }             // Found @0xff06da58
-void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             // Found @0xff4c6db0             
+void *vid_get_viewport_fb()      { return (void*)0x40866b80; }             // Found @0xff4c6db0
 void *vid_get_viewport_fb_d()
 {
     extern char *viewport_fb_d;
@@ -75,20 +75,29 @@ extern void* viewport_buffers[];
 
 void *vid_get_viewport_live_fb()
 {
-//    if (MODE_IS_VIDEO(mode_get()) || is_video_recording())
-//        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
-
+    // camera appears to use 8 buffers
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    // verified -1 gives best response
-    return viewport_buffers[(active_viewport_buffer-1)&3];
+    return viewport_buffers[(active_viewport_buffer-1)&7];
 }
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
+// camera appears to use 240 when recording FHD video and Fisheye mode, 480 otherwise
 int vid_get_viewport_yscale() {
+    if (camera_info.state.mode_play) {
+        return 2;
+    }
+    if (is_video_recording()) {
+        // FHD video
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 5) {
+            return 1;
+        }
+        return 2;
+    }
+    if (camera_info.state.mode_shooting == MODE_FISHEYE) {
+        return 1;
+    }
     return 2;
 }
-
-
 
 int vid_get_viewport_width()
 {
@@ -102,23 +111,18 @@ int vid_get_viewport_width()
 
 long vid_get_viewport_height()
 {
-
-    int m = mode_get();
-    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
-
-    if (MODE_IS_VIDEO(m) || is_video_recording())
+    if(camera_info.state.mode_play) {
         return 240;
-
-    if ((m & MODE_MASK) != MODE_PLAY) 
-    {
-        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-        if (aspect_ratio==1 || aspect_ratio==2)
-            return 240;
     }
-    extern int _GetVRAMVPixelsSize();    
-    return ((m & MODE_MASK) == MODE_PLAY)?240:_GetVRAMVPixelsSize()>>1;
-}
+    extern int _GetVRAMVPixelsSize();
+    // FHD video is apparently 180 on a 240 display
+    int h = _GetVRAMVPixelsSize();
+    if (vid_get_viewport_yscale() == 1) {
+        return h;
+    }
 
+    return h>>1;
+}
 
 // viewport width offset table for each aspect ratio
 // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
@@ -126,20 +130,61 @@ static long vp_xo[4] = { 0, 0, 0, 44 };        // should all be even values for 
 
 int vid_get_viewport_display_xoffset()
 {
-    int m = mode_get();
+    if(camera_info.state.mode_play) {
+        return 0;
+    }
     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
 
-    if ((m & MODE_MASK) != MODE_PLAY) {
-        return (vp_xo[aspect_ratio]);
-    }
-    else
+    return (vp_xo[aspect_ratio]);
+}
+
+// viewport height offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_yo[5] = { 0, 30, 13, 0 };
+
+int vid_get_viewport_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
         return 0;
+    }
+    if (is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
+    }
+    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+}
+
+int vid_get_viewport_display_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    if (is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30;
+        }
+    }
+    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset()<<1; }
-int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset()<<1; }
-int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * 2; }
-int vid_get_viewport_fullscreen_height()        { return 480; }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * vid_get_viewport_yscale(); }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * vid_get_viewport_yscale(); }
+
+int vid_get_viewport_fullscreen_height()
+{
+    return 240 * vid_get_viewport_yscale();
+}
+
 int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
