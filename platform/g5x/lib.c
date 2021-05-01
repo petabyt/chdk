@@ -128,22 +128,31 @@ void *vid_get_viewport_live_fb()
 }
 
 extern int displaytype;
-#define HDMI_OUT_REC    (((displaytype == 6) || (displaytype == 7)) || !!camera_info.state.mode_play)
+#define evf_out     (displaytype == 11)
+#define hdmi_out    ((displaytype == 6) || (displaytype == 7))
 
 int vid_get_viewport_width()
 {
-    // Check HDMI output, camera in REC mode.
-    if (HDMI_OUT_REC)
-        return 1620;
-    return camera_screen.width;
+    if (camera_info.state.mode_play)
+    {
+        if (hdmi_out) return 1920;
+        if (evf_out) return 1024;
+        return 720;
+    }
+    extern int _GetVRAMHPixelsSize();
+    return _GetVRAMHPixelsSize();
 }
 
 long vid_get_viewport_height()
 {
-    // Check HDMI output, camera in REC mode.
-    if (HDMI_OUT_REC)
-        return 1080;
-    return camera_screen.height;
+    if (camera_info.state.mode_play)
+    {
+        if (hdmi_out) return 1080;
+        if (evf_out) return 768;
+        return 480;
+    }
+    extern int _GetVRAMVPixelsSize();
+    return _GetVRAMVPixelsSize();
 }
 
 int vid_get_viewport_byte_width()
@@ -156,6 +165,7 @@ int vid_get_viewport_display_xoffset()
     // viewport width offset table for each image size
     // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
     static long vp_xo[5] = { 40, 0, 0, 120};    // should all be even values for edge overlay
+    static long vp_xo_hdmi[5] = { 240, 0, 150, 420};   // should all be even values for edge overlay
 
     if (camera_info.state.mode_play)
     {
@@ -169,6 +179,8 @@ int vid_get_viewport_display_xoffset()
     }
     else
     {
+        if (hdmi_out)
+            return vp_xo_hdmi[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
         return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
@@ -191,6 +203,8 @@ int vid_get_viewport_display_yoffset()
     }
     else
     {
+        if (hdmi_out)
+            return 0;
         return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
@@ -198,19 +212,63 @@ int vid_get_viewport_display_yoffset()
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
-int vid_get_viewport_fullscreen_width()         { return vid_get_viewport_width(); }
-int vid_get_viewport_fullscreen_height()        { return vid_get_viewport_height(); }
+int vid_get_viewport_fullscreen_width()
+{
+    if (hdmi_out) return 1920;
+    if (evf_out) return 1024;
+    return 720;
+}
+int vid_get_viewport_fullscreen_height()
+{
+    if (hdmi_out) return 1080;
+    if (evf_out) return 768;
+    return 480;
+}
 int vid_get_viewport_buffer_width_proper()
 {
-    // Check HDMI output, camera in REC mode.
-    if (HDMI_OUT_REC)
-        return 1920;
-    return camera_screen.buffer_width;
+    if (hdmi_out) return 1920;
+    if (evf_out) return 1024;
+    return 736;
 }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
-int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
+int vid_get_aspect_ratio()                      { if (hdmi_out) return LV_ASPECT_16_9; else return LV_ASPECT_3_2; }
 
 int display_needs_refresh = 0;
+
+// Ximr layer
+typedef struct {
+    unsigned short  unk1[6];
+    unsigned short  color_type;
+    unsigned short  visibility;
+    unsigned short  unk2;
+    unsigned short  src_y;
+    unsigned short  src_x;
+    unsigned short  src_h;
+    unsigned short  src_w;
+    unsigned short  dst_y;
+    unsigned short  dst_x;
+    unsigned short  enabled;
+    unsigned int    marv_sig;
+    unsigned int    bitmap;
+    unsigned int    opacity;
+    unsigned int    color;
+    unsigned int    width;
+    unsigned int    height;
+    unsigned int    unk3;
+} ximr_layer;
+
+// Ximr context
+typedef struct {
+    unsigned int    unk1[14];
+    int             buffer_width;
+    int             buffer_height;
+    unsigned int    unk2[2];
+    ximr_layer      layers[8];
+    unsigned int    unk3[26];
+    short           width;
+    short           height;
+    unsigned int    unk4[27];
+} ximr_context;
 
 /*
  * Called when Canon is updating UI, via dry_memcpy patch.
@@ -222,15 +280,15 @@ int display_needs_refresh = 0;
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
  */
-void update_ui(unsigned short* ximr_context)
+void update_ui(ximr_context* ximr)
 {
     // Update screen dimensions
-    if (camera_screen.buffer_width != ximr_context[28])
+    if (camera_screen.buffer_width != ximr->buffer_width)
     {
-        camera_screen.width = ximr_context[328];
-        camera_screen.height = ximr_context[329];
-        camera_screen.buffer_width = ximr_context[28];
-        camera_screen.buffer_height = ximr_context[30];
+        camera_screen.width = ximr->width;
+        camera_screen.height = ximr->height;
+        camera_screen.buffer_width = ximr->buffer_width;
+        camera_screen.buffer_height = ximr->buffer_height;
 
         // Reset OSD offset and width
         camera_screen.disp_right = camera_screen.width - 1;

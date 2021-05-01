@@ -5,7 +5,6 @@ Issues:
 - Edge detection does not work correctly when using the EVF.
 - Zebra and edge detection are disabled when connected to HDMI.
   The viewport becomes 1920x1080; but the UI overlay (bitmap) remains 720x480. The code does not handle this.
-- CHDKPTP live view does not work correctly if using the EVF.
 - If the 'AF Method' is set to 'Face+Tracking' (Canon SHOOT3 menu), then the CHDK UI and OSD will flicker a lot more when in record mode.
   To minimise flickering, use '1-point AF', or open the CHDK menu in playback mode, or open the Canon menu first before using the CHDK menu.
   If using Face+Tracking AF it is probably best to turn off the CHDK OSD elements (battery, clock, etc).
