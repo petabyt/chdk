@@ -206,6 +206,41 @@ int vid_get_aspect_ratio()                      { if (hdmi_out) return LV_ASPECT
 
 int display_needs_refresh = 0;
 
+// Ximr layer
+typedef struct {
+    unsigned short  unk1[6];
+    unsigned short  color_type;
+    unsigned short  visibility;
+    unsigned short  unk2;
+    unsigned short  src_y;
+    unsigned short  src_x;
+    unsigned short  src_h;
+    unsigned short  src_w;
+    unsigned short  dst_y;
+    unsigned short  dst_x;
+    unsigned short  enabled;
+    unsigned int    marv_sig;
+    unsigned int    bitmap;
+    unsigned int    opacity;
+    unsigned int    color;
+    unsigned int    width;
+    unsigned int    height;
+    unsigned int    unk3;
+} ximr_layer;
+
+// Ximr context
+typedef struct {
+    unsigned int    unk1[14];
+    int             buffer_width;
+    int             buffer_height;
+    unsigned int    unk2[2];
+    ximr_layer      layers[8];
+    unsigned int    unk3[26];
+    short           width;
+    short           height;
+    unsigned int    unk4[27];
+} ximr_context;
+
 /*
  * Called when Canon is updating UI, via dry_memcpy patch.
  * Sets flag for CHDK to update it's UI.
@@ -215,15 +250,15 @@ int display_needs_refresh = 0;
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
  */
-void update_ui(unsigned short* ximr_context)
+void update_ui(ximr_context* ximr)
 {
     // Update screen dimensions
-    if (camera_screen.buffer_width != ximr_context[28])
+    if (camera_screen.buffer_width != ximr->buffer_width)
     {
-        camera_screen.width = ximr_context[328];
-        camera_screen.height = ximr_context[329];
-        camera_screen.buffer_width = ximr_context[28];
-        camera_screen.buffer_height = ximr_context[30];
+        camera_screen.width = ximr->width;
+        camera_screen.height = ximr->height;
+        camera_screen.buffer_width = ximr->buffer_width;
+        camera_screen.buffer_height = ximr->buffer_height;
 
         // Reset OSD offset and width
         camera_screen.disp_right = camera_screen.width - 1;
