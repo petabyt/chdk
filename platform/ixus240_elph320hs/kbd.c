@@ -7,6 +7,7 @@
 #include "gui.h"
 #include "gui_draw.h"
 #include "gui_osd.h"
+#include "levent.h"
 
 
 typedef struct {
@@ -39,6 +40,8 @@ extern void _GetKbdState(long*);
 #define SD_READONLY_IDX     0
 #define USB_MASK            0x40000000 // Found @0xff5ac38c, levent 0x202
 #define USB_IDX             2
+
+#define KBD_SIMULATE_VIDEO_KEY 1 // use logical event to simulate video key
 
 int get_usb_bit()
 {
@@ -323,9 +326,9 @@ static KeyMap keymap[] = {
     { 3, TS_KEY_TOGGLE_HISTO, 0x00001000, RB(2,2), 1, "Hist",  0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.show_histo, gui_histo_show_enum, &conf.touchscreen_disable_shortcut_controls },
     { 3, TS_KEY_TOGGLE_EDGE , 0x00002000, RB(2,3), 1, "Edge",  0, GUI_MODE_ALT, GUI_MODE_ALT, MODE_REC|MODE_PLAY, &conf.edge_overlay_enable, gui_on_off_enum, &conf.touchscreen_disable_shortcut_controls },
 
-#if defined(TS_PLAY_POWER_HACK) 
-    { 3, TS_KEY_PLAYBACK    , 0x00400000, LB(1,0), 0, "PLAY",  0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_playback_press, 0 }, 
-    { 3, TS_KEY_POWER       , 0x00800000, LB(3,0), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 }, 
+#if defined(TS_PLAY_POWER_HACK)
+    { 3, TS_KEY_PLAYBACK    , 0x00400000, LB(1,0), 0, "PLAY",  0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_playback_press, 0 },
+    { 3, TS_KEY_POWER       , 0x00800000, LB(3,0), 0, "OFF",   0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, &playbutton_hack, simulate_power_press, 0 },
 #endif
 #ifdef OPT_DEBUGGING
     { 3, KEY_DISPLAY        , 0x00000008, LB(0,4), 0, "Debug", 0,    GUI_MODE_ALT,       GUI_MODE_ALT,  MODE_REC|MODE_PLAY, 0, 0, 0 },
@@ -349,9 +352,9 @@ static KeyMap keymap[] = {
 static int is_button_displayed(int b, int guiMode, int camMode)
 {
     return (
-            (keymap[b].grp == 3) && 
-            (guiMode >= keymap[b].min_gui_mode) && 
-            (guiMode <= keymap[b].max_gui_mode) && 
+            (keymap[b].grp == 3) &&
+            (guiMode >= keymap[b].min_gui_mode) &&
+            (guiMode <= keymap[b].max_gui_mode) &&
             (camMode & keymap[b].cam_mode_mask) &&
             ((keymap[b].conf_disable == 0) || (*keymap[b].conf_disable == 0))
            );
@@ -615,10 +618,25 @@ void my_kbd_read_keys()
 
 
 /****************/
+#ifdef KBD_SIMULATE_VIDEO_KEY
+static int is_video_key_pressed = 0;
+#endif
+
 
 void kbd_key_press(long key)
 {
     int i;
+
+#ifdef KBD_SIMULATE_VIDEO_KEY
+    if (key == KEY_VIDEO && !is_video_key_pressed)
+    {
+        // TODO define for ID would be more efficient
+        PostLogicalEventToUI(levent_id_for_name("PressMovieButton"),0);
+        is_video_key_pressed = 1;
+        // TODO not clear if this should return, or set state too
+        return;
+    }
+#endif
 
     for (i=0;keymap[i].hackkey;i++) {
         if (keymap[i].hackkey == key)
@@ -631,6 +649,15 @@ void kbd_key_press(long key)
 
 void kbd_key_release(long key)
 {
+#ifdef KBD_SIMULATE_VIDEO_KEY
+    if (key == KEY_VIDEO && is_video_key_pressed)
+    {
+        PostLogicalEventToUI(levent_id_for_name("UnpressMovieButton"),0);
+        is_video_key_pressed = 0;
+        return;
+    }
+#endif
+
     int i;
     for (i=0;keymap[i].hackkey;i++) {
         if (keymap[i].hackkey == key) {
