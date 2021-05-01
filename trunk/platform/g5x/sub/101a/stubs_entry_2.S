@@ -54,8 +54,14 @@ NHSTUB(MoveFocusLensToDistance_FW             ,0xfc667c27)
 // via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
 NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
 
-   DEF(hook_dry_memcpy                        ,0x010f4bf0)  // ARM address of RAM dry_memcpy function for patching
+   DEF(hook_dry_memcpy                        ,0x010f4bf0)  // ARM address of RAM dry_memcpy function for patching. Use 'dry_memcpy' address from sig finder.
    DEF(canon_ui_update_ret_adr                ,0xfc237a8d)  // Thumb address to check against LR register to detect dry_memcpy call from Canon UI update
+                                                            // To find canon_ui_update_ret_adr it is easiest to use the Ghidra de-compile window.
+                                                            //   Start at the transfer_src_overlay function, then go to the last function called
+                                                            //   In this function again go to the last function called.
+                                                            //   Now go to the function called near the end; just before the check of param_6 != 100
+                                                            //   This function should be calling mzrm_createmsg then dry_memcpy.
+                                                            //   Use the address after the dry_memcpy call for the value of canon_ui_update_ret_adr (add 1 for thumb address)
 
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)
