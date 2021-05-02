@@ -52,6 +52,11 @@ NHSTUB(GetPropertyCase_FW                     ,0xe036af69)
                                                             //   Now go to the function called near the end; just before the check of param_6 != 100
                                                             //   This function should be calling mzrm_createmsg then dry_memcpy.
                                                             //   Use the address after the dry_memcpy call for the value of canon_ui_update_ret_adr (add 1 for thumb address)
+   DEF(hdmi_buffer_check_adr                  ,0x4196a000)  // For HDMI output we only want to flag UI updates when layer 0 is set to this buffer address
+                                                            // To find hdmi_buffer_check_adr it is easiest to use the Ghidra de-compile window.
+                                                            //   Start at the transfer_src_overlay function, then go to the last function called
+                                                            //   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
+                                                            //   The value is the second parameter to this function.
 
 // Incorrect by finsig - need to check
 

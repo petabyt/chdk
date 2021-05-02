@@ -252,24 +252,29 @@ typedef struct {
  */
 void update_ui(ximr_context* ximr)
 {
-    // Update screen dimensions
-    if (camera_screen.buffer_width != ximr->buffer_width)
+    // Make sure we are updating the correct layer - skip redundant updates for HDMI out
+    extern unsigned char* hdmi_buffer_check_adr;
+    if ((ximr->layers[0].color_type == 0x0500) || (ximr->layers[0].bitmap == (unsigned int)&hdmi_buffer_check_adr))
     {
-        camera_screen.width = ximr->width;
-        camera_screen.height = ximr->height;
-        camera_screen.buffer_width = ximr->buffer_width;
-        camera_screen.buffer_height = ximr->buffer_height;
+        // Update screen dimensions
+        if (camera_screen.buffer_width != ximr->buffer_width)
+        {
+            camera_screen.width = ximr->width;
+            camera_screen.height = ximr->height;
+            camera_screen.buffer_width = ximr->buffer_width;
+            camera_screen.buffer_height = ximr->buffer_height;
 
-        // Reset OSD offset and width
-        camera_screen.disp_right = camera_screen.width - 1;
-        camera_screen.disp_width = camera_screen.width;
+            // Reset OSD offset and width
+            camera_screen.disp_right = camera_screen.width - 1;
+            camera_screen.disp_width = camera_screen.width;
 
-        // Update other values
-        camera_screen.physical_width = camera_screen.width;
-        camera_screen.size = camera_screen.width * camera_screen.height;
-        camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
+            // Update other values
+            camera_screen.physical_width = camera_screen.width;
+            camera_screen.size = camera_screen.width * camera_screen.height;
+            camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
+        }
+
+        // Tell CHDK UI that display needs update
+        display_needs_refresh = 1;
     }
-
-    // Tell CHDK UI that display needs update
-    display_needs_refresh = 1;
 }
