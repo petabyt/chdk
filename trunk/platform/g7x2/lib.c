@@ -28,13 +28,19 @@ void *vid_get_bitmap_fb()
     return bitmap_buffer[0];
 }
 
+void *vid_get_bitmap_active_buffer()
+{
+    // For live view send YUV instead of RGBA
+    return bitmap_buffer[active_bitmap_buffer];
+}
+
 // the opacity buffer defines opacity for the bitmap overlay's pixels
 // found near BmpDDev.c
 void *opacity_buffer[2] = { (void*)0x7FC40000, (void*)0x7FB80000 };
 
 void *vid_get_opacity_active_buffer()
 {
-    return opacity_buffer[active_bitmap_buffer&1];
+    return opacity_buffer[active_bitmap_buffer];
 }
 
 char *camera_jpeg_count_str()

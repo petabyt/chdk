@@ -28,6 +28,12 @@ void *vid_get_bitmap_fb()
     return bitmap_buffer[0];
 }
 
+void *vid_get_bitmap_active_buffer()
+{
+    // For live view send YUV instead of RGBA
+    return bitmap_buffer[active_bitmap_buffer];
+}
+
 // the opacity buffer defines opacity for the bitmap overlay's pixels
 extern void *opacity_buffer[];
 
