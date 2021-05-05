@@ -167,7 +167,7 @@ void __attribute__((naked,noinline)) boot() {
             "    strlo   r2, [r3], #4\n"
             "    blo     loc_e002009e\n"
 
-            "    blx     patch_dry_memcpy\n"
+            "    blx     patch_mzrm_sendmsg\n"
 
             // Install CreateTask patch
             // use half words in case source or destination not word aligned
@@ -204,45 +204,45 @@ void __attribute__((naked,noinline)) boot() {
 
 /*************************************************************/
 /*
-    Patch dry_memcpy function. Checks if called from function that is updating the Canon UI.
+    Custom function called in mzrm_sendmsg via logging function pointer (normally disabled)
+    Checks if called from function that is updating the Canon UI.
     Updates CHDK bitmap settings and sets flag to update CHDK UI.
- */
+*/
 void __attribute__((naked,noinline))
-patch_dry_memcpy ()
+debug_logging_my(char* fmt, ...)
 {
+    (void)fmt;  // unused parameter
     asm volatile (
-            // Install dry-memcpy patch
-            "    adr     r0, patch_dry_memcpy_ins\n"    // Patch data
-            "    ldm     r0, {r1,r2}\n"                 // Get two patch instructions
-            "    ldr     r0, =hook_dry_memcpy\n"        // Address to patch, thumb bit is clear in stubs_entry.S
-            "    stm     r0, {r1,r2}\n"                 // Store patch instructions
+            //LR = Return address
+            "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
+            "    cmp     r0, lr\n"
+            "    beq     do_ui_update\n"
+            "exit_debug_logging_my:"
             "    bx      lr\n"
 
-            "    .code   32\n"
-            "patch_dry_memcpy_ins:\n"
-            "    ldr     pc, [pc,#-4]\n"    // Do jump to absolute address dry_memcpy_my
-            "    .long   dry_memcpy_my\n"   // has to be an ARM address
-
-            "dry_memcpy_my:\n"
-            "    push    {r0, r1, r2, lr}\n"
-            //LR = Return address
-            "    ldr     r0, =canon_ui_update_ret_adr\n"    // Is return address in function that handles Ximr context?
-            "    cmp     r0, lr\n"
-            "    bne     exit_dry_memcpy_patch\n"
-
-            //R1 = Ximr context buffer
-            "    mov     r0, r1\n"
-            "    blx     update_ui\n"
-
-            "exit_dry_memcpy_patch:\n"
-            // restore overwritten register(s)
-            "    pop     {r0, r1, r2, lr}\n"
-            // Execute overwritten instructions from original code, then jump to firmware
-            "    stmdb   sp!,{r4, r5, r6, r7, r8, lr}\n"
-            "    subs    r2,r2,#0x20\n"
-            "    ldr     pc, =(hook_dry_memcpy + 8)\n" // Continue in firmware
-            ".ltorg\n"
+            "do_ui_update:"
+            "    ldr     r0, [sp,#0x18]\n"              // mzrm_sendmsg 'msg' value (2nd parameter, saved on stack)
+            "    ldr     r1, [r0]\n"                    // message type
+            "    mov     r2, #0x25\n"                   // Ximr update? (3rd parameter to mzrm_createmsg)
+            "    cmp     r1, r2\n"
+            "    bne     exit_debug_logging_my\n"
+            "    add     r0, r0, #16\n"                 // Offset to Ximr context in 'msg'
+            "    b       update_ui\n"
     );
+}
+
+/*
+    Install and enable custom logging function for mzrm_sendmsg.
+*/
+void
+patch_mzrm_sendmsg ()
+{
+    extern int debug_logging_flag;
+    extern void (*debug_logging_ptr)(char* fmt, ...);
+
+    // Each bit in debug_logging_flag enables logging in different areas of the firmware code - only set the bit required for mzrm logging.
+    debug_logging_flag = 0x200;
+    debug_logging_ptr = debug_logging_my;
 }
 
 /*************************************************************/

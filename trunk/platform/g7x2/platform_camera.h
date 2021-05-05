@@ -76,7 +76,6 @@
     #define CAM_FILE_COUNTER_IS_VAR             1     // file counter is variable file_counter_var in stubs, not a param
 
     #undef  CAM_HAS_ERASE_BUTTON
-    #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #define CAM_HAS_DISPLAY_REFRESH_FLAG        1   // 'display_needs_refresh' variable is available to trigger CHDK UI update
     #undef  CAM_BITMAP_WIDTH
