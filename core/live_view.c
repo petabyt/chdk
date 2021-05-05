@@ -93,17 +93,27 @@ int live_view_get_data(ptp_data *data, int flags)
 
 #ifndef THUMB_FW
     int pal_size = 0;
+    char *pal_data = NULL;
     // determine if we will send palette so it can go in one send
     if ( flags & LV_TFR_PALETTE ) // bitmap palette
     {
-        // if no palette, will be set to zero
+        // if no palette defined in port, size will be set to zero
         pal_size = vid_get_palette_size();
         if (pal_size)
         {
-            lv.lv.palette_type = vid_get_palette_type();
-            lv.lv.palette_data_start = total_size;
-            total_size += pal_size;
-        } else {
+            // palette data may be NULL or a small offset while switching outputs
+            // or due to port bugs or other reasons
+            pal_data = vid_get_bitmap_active_palette();
+            if(pal_data > (char *)0x1000) {
+                lv.lv.palette_type = vid_get_palette_type();
+                lv.lv.palette_data_start = total_size;
+                total_size += pal_size;
+            } else {
+                pal_data = 0;
+                pal_size = 0;
+            }
+        }
+        if (!pal_size) {
             lv.lv.palette_data_start = lv.lv.palette_type = 0;
         }
     }
@@ -174,7 +184,7 @@ int live_view_get_data(ptp_data *data, int flags)
     // Send palette data if requested
     if (pal_size)
     {
-        data->send_data(data->handle,vid_get_bitmap_active_palette(),pal_size,0,0,0,0);
+        data->send_data(data->handle,pal_data,pal_size,0,0,0,0);
     }
 #endif
 
