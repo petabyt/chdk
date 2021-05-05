@@ -169,7 +169,10 @@ void *vid_get_bitmap_active_palette()
     // Get Canon 'Color Options' menu setting - used to offset active_palette_buffer value.
     int color_option = 0;
     get_parameter_data(0x1a, &color_option, 1);
-    return (palette_buffer[active_palette_buffer+color_option]+8);
+    void* p = palette_buffer[active_palette_buffer+color_option];
+    // Don't add offset if value is 0
+    if (p) p += 8;
+    return p;
 }
 
 // Function to load CHDK custom colors into active Canon palette
