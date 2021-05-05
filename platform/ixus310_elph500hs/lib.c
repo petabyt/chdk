@@ -20,55 +20,55 @@ char *hook_alt_raw_image_addr()
 char *camera_jpeg_count_str()
 {
     extern char jpeg_count_str[];
-	return jpeg_count_str;
+    return jpeg_count_str;
 }
 
 
 void vid_bitmap_refresh()
 {
-	extern int full_screen_refresh;
-	extern void _ScreenUnlock();
-	extern void _ScreenLock();
+    extern int full_screen_refresh;
+    extern void _ScreenUnlock();
+    extern void _ScreenLock();
 
-	full_screen_refresh |= 3;
-	_ScreenLock();
-	_ScreenUnlock();
+    full_screen_refresh |= 3;
+    _ScreenLock();
+    _ScreenUnlock();
 }
 
 
 void shutdown()
 {
-	volatile long *p = (void*)0xC022001C;    
-	
-	asm(
-		"MRS     R1, CPSR\n"
-		"AND     R0, R1, #0x80\n"
-		"ORR     R1, R1, #0x80\n"
-		"MSR     CPSR_cf, R1\n"
-		:::"r1","r0");
-	
-	*p = 0x44;  // power off.
-	
-	while(1);
+    volatile long *p = (void*)0xC022001C;    
+    
+    asm(
+        "MRS     R1, CPSR\n"
+        "AND     R0, R1, #0x80\n"
+        "ORR     R1, R1, #0x80\n"
+        "MSR     CPSR_cf, R1\n"
+        :::"r1","r0");
+    
+    *p = 0x44;  // power off.
+    
+    while(1);
 }
 
-#define LED_PR 0xC0220110	// Power Indicator
+#define LED_PR 0xC0220110   // Power Indicator
 
 void debug_led(int state)
 {
- *(int*)LED_PR=state ? 0x46 : 0x44;
+    *(int*)LED_PR=state ? 0x46 : 0x44;
 }
 
 // IXUS 310 has 2 led values
 // 0/7 - Power LED (Green)
 // 1/11 - AF Assist Lamp
 void camera_set_led(int led, int state, __attribute__ ((unused))int bright) {
- static char led_table[2]={7,11};
- _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
+    static char led_table[2]={7,11};
+    _LEDDrive(led_table[led%sizeof(led_table)], state<=1 ? !state : state);
 }
 
 int get_flash_params_count(void){
- return 0xA0;	// found in GetParameterData
+    return 0xA0;   // found in GetParameterData
 }
 
 // Viewport and Bitmap values that shouldn't change across firmware versions.
@@ -97,7 +97,7 @@ void *vid_get_viewport_live_fb()
 void *vid_get_viewport_fb_d()
 {
     extern char *viewport_fb_d;
-	return viewport_fb_d;
+    return viewport_fb_d;
 }
 
 // Defined in stubs_min.S
@@ -112,17 +112,17 @@ void *vid_get_bitmap_fb()
 
 // Physical width of viewport row in bytes
 int vid_get_viewport_byte_width() {
-	return 960 * 6 / 4;     // IXUS 310 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
+    return 960 * 6 / 4;     // IXUS 310 - wide screen LCD is 960 pixels wide, each group of 4 pixels uses 6 bytes (UYVYYY)
 }
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 int vid_get_viewport_yscale() {
-	return 2;               // IXUS 310 viewport is 480 pixels high
+    return 2;               // IXUS 310 viewport is 480 pixels high
 }
 
 int vid_get_viewport_width()
 {
-	if (camera_info.state.mode_play)
+    if (camera_info.state.mode_play)
     {
         return 480;
     }
@@ -132,16 +132,16 @@ int vid_get_viewport_width()
 
 int vid_get_viewport_display_xoffset()
 {
-	if (camera_info.state.mode_play)
+    if (camera_info.state.mode_play)
     {
         return 0;
     }
     else 
     {
         // viewport width offset table for each image size
-	    // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-	    static long vp_w[5] = { 60, 0, 36, 104 };				// should all be even values for edge overlay
-	    return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+        static long vp_w[5] = { 60, 0, 36, 104 };               // should all be even values for edge overlay
+        return vp_w[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
     }
 }
 
@@ -166,7 +166,10 @@ void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
     extern char* palette_buffer[];
-    return (palette_buffer[active_palette_buffer]+8);
+    // Get Canon 'Color Options' menu setting - used to offset active_palette_buffer value.
+    int color_option = 0;
+    get_parameter_data(0x1a, &color_option, 1);
+    return (palette_buffer[active_palette_buffer+color_option]+8);
 }
 
 // Function to load CHDK custom colors into active Canon palette
@@ -177,7 +180,7 @@ void load_chdk_palette()
     if ((active_palette_buffer == 0) || (active_palette_buffer == 16))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
-        if (pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
+        if (pal && (pal[CHDK_COLOR_BASE+0] != 0x33ADF62))
         {
             pal[CHDK_COLOR_BASE+0]  = 0x33ADF62;  // Red
             pal[CHDK_COLOR_BASE+1]  = 0x326EA40;  // Dark Red
