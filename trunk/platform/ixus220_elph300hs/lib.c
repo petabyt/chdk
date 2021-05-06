@@ -91,9 +91,12 @@ int vid_get_palette_type()                      { return 3; }
 int vid_get_palette_size()                      { return 256 * 4; }
 
 void *vid_get_bitmap_active_palette() {
-        extern int active_palette_buffer;
-        extern char* palette_buffer[];
-        return (palette_buffer[active_palette_buffer]+8);
+    extern int active_palette_buffer;
+    extern char* palette_buffer[];
+    void* p = palette_buffer[active_palette_buffer];
+    // Don't add offset if value is 0
+    if (p) p += 8;
+    return p;
 }
 
 extern int active_bitmap_buffer;
