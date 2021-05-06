@@ -37,7 +37,7 @@
 #define OSD_HISTO_LAYOUT_Y_argb     5
 #define OSD_HISTO_LAYOUT_BLEND      6
 #define OSD_HISTO_LAYOUT_BLEND_Y    7
-#ifndef THUMB_FW
+#ifndef LARGE_HISTO
 // Define how many viewport blocks to step in each loop iteration. Each block is 6 bytes (UYVYYY) or 4 image pixels
 #define	HISTO_STEP_SIZE	6
 #define	HISTO_DOT_SIZE	3
