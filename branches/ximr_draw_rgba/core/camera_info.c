@@ -113,6 +113,9 @@ _cam_screen camera_screen =
     CAM_TS_MENU_BORDER,
     CAM_MENU_BORDERWIDTH,
     CAM_GUI_FSELECT_SIZE,
+#ifdef CAM_DRAW_RGBA
+    0,0,0,
+#endif // CAM_DRAW_RGBA
 };
 
 _cam_info camera_info =

@@ -163,6 +163,8 @@ void __attribute__((naked,noinline)) boot() {
 "       strcc.w r2, [r3],#4\n"
 "       bcc     loc_fc020070\n"
 
+"       blx     patch_mzrm_sendmsg\n"
+
         // Install CreateTask patch
         "adr     r0, patch_CreateTask\n"    // Patch data
         "ldm     r0, {r1,r2}\n"             // Get two patch instructions
@@ -176,6 +178,49 @@ void __attribute__((naked,noinline)) boot() {
         "ldr.w   pc, [pc,#0]\n"             // Do jump to absolute address CreateTask_my
         ".long   CreateTask_my + 1\n"           // has to be a thumb address
 );
+}
+
+/*************************************************************/
+/*
+    Custom function called in mzrm_sendmsg via logging function pointer (normally disabled)
+    Checks if called from function that is updating the Canon UI.
+    Updates CHDK bitmap settings and sets flag to update CHDK UI.
+*/
+void __attribute__((naked,noinline))
+debug_logging_my(char* fmt, ...)
+{
+    (void)fmt;  // unused parameter
+    asm volatile (
+            //LR = Return address
+            "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
+            "    cmp     r0, lr\n"
+            "    beq     do_ui_update\n"
+            "exit_debug_logging_my:"
+            "    bx      lr\n"
+
+            "do_ui_update:"
+            "    mov     r0, r11\n"                     // mzrm_sendmsg 'msg' value (2nd parameter, saved in r11)
+            "    ldr     r1, [r0]\n"                    // message type
+            "    mov     r2, #0x23\n"                   // Ximr update? (3rd parameter to mzrm_createmsg)
+            "    cmp     r1, r2\n"
+            "    bne     exit_debug_logging_my\n"
+            "    add     r0, r0, #16\n"                 // Offset to Ximr context in 'msg'
+            "    b       update_ui\n"
+    );
+}
+
+/*
+    Install and enable custom logging function for mzrm_sendmsg.
+*/
+void
+patch_mzrm_sendmsg ()
+{
+    extern int debug_logging_flag;
+    extern void (*debug_logging_ptr)(char* fmt, ...);
+
+    // Each bit in debug_logging_flag enables logging in different areas of the firmware code - only set the bit required for mzrm logging.
+    debug_logging_flag = 0x200;
+    debug_logging_ptr = debug_logging_my;
 }
 
 /*************************************************************/

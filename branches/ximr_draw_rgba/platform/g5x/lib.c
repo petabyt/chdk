@@ -239,14 +239,14 @@ int vid_get_viewport_buffer_width_proper()
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 int vid_get_aspect_ratio()                      { if (hdmi_out) return LV_ASPECT_16_9; else return LV_ASPECT_3_2; }
 
-int display_needs_refresh = 0;
-
 // Ximr layer
 typedef struct {
-    unsigned short  unk1[6];
+    unsigned char   unk1[7];
+    unsigned char   scale;
+    unsigned int    unk2;
     unsigned short  color_type;
     unsigned short  visibility;
-    unsigned short  unk2;
+    unsigned short  unk3;
     unsigned short  src_y;
     unsigned short  src_x;
     unsigned short  src_h;
@@ -260,21 +260,60 @@ typedef struct {
     unsigned int    color;
     unsigned int    width;
     unsigned int    height;
-    unsigned int    unk3;
+    unsigned int    unk4;
 } ximr_layer;
 
 // Ximr context
 typedef struct {
-    unsigned int    unk1[14];
+    unsigned short  unk1;
+    unsigned short  width1;
+    unsigned short  height1;
+    unsigned short  unk2[17];
+    unsigned int    output_marv_sig;
+    unsigned int    output_buf;
+    unsigned int    output_opacitybuf;
+    unsigned int    output_color;
     int             buffer_width;
     int             buffer_height;
-    unsigned int    unk2[2];
+    unsigned int    unk3[2];
     ximr_layer      layers[8];
-    unsigned int    unk3[26];
+    unsigned int    unk4[24];
+    unsigned char   denomx;
+    unsigned char   numerx;
+    unsigned char   denomy;
+    unsigned char   numery;
+    unsigned int    unk5;
     short           width;
     short           height;
-    unsigned int    unk4[27];
+    unsigned int    unk6[27];
 } ximr_context;
+
+int display_needs_refresh = 0;
+
+// To find FW_YUV_LAYER_BUF
+//   Start at the transfer_src_overlay function, then go to the last function called
+//   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
+//   The value is the second parameter to this function.
+#define FW_YUV_LAYER_BUF    0x41141000
+#define FW_YUV_LAYER_SIZE   (960*270*2)
+#define CHDK_LAYER_BUF      (FW_YUV_LAYER_BUF+FW_YUV_LAYER_SIZE)
+
+// Max size required
+#define CB_W    480
+#define CB_H    270
+
+unsigned char* chdk_rgba = (unsigned char*)CHDK_LAYER_BUF;
+int chdk_rgba_init = 0;
+int bm_w = CB_W;
+int bm_h = CB_H;
+
+void vid_bitmap_erase()
+{
+    extern void _bzero(unsigned char *s, int n);
+    _bzero(chdk_rgba, bm_w * bm_h * 4);
+}
+
+int last_displaytype;
 
 /*
  * Called when Canon is updating UI, via dry_memcpy patch.
@@ -288,17 +327,38 @@ typedef struct {
  */
 void update_ui(ximr_context* ximr)
 {
+    // Init RGBA buffer
+    if (chdk_rgba_init == 0)
+    {
+        chdk_rgba_init = 1;
+        vid_bitmap_erase();
+        // Force update
+        last_displaytype = -1;
+    }
+
     // Make sure we are updating the correct layer - skip redundant updates for HDMI out
-    extern unsigned char* hdmi_buffer_check_adr;
-    if ((ximr->layers[0].color_type == 0x0500) || (ximr->layers[0].bitmap == (unsigned int)&hdmi_buffer_check_adr))
+    if (ximr->output_buf != (unsigned int)FW_YUV_LAYER_BUF)
     {
         // Update screen dimensions
-        if (camera_screen.buffer_width != ximr->buffer_width)
+        if (last_displaytype != displaytype)
         {
-            camera_screen.width = ximr->width;
-            camera_screen.height = ximr->height;
-            camera_screen.buffer_width = ximr->buffer_width;
-            camera_screen.buffer_height = ximr->buffer_height;
+            last_displaytype = displaytype;
+
+            if (hdmi_out) {
+                bm_w = 480;
+                bm_h = 270;
+            } else if (evf_out) {
+                bm_w = 344;         // ????? display is clipped to 347 - used nearest multiple of 8
+                bm_h = 270;
+            } else {
+                bm_w = 360;
+                bm_h = 240;
+            }
+
+            camera_screen.width = bm_w;
+            camera_screen.height = bm_h;
+            camera_screen.buffer_width = bm_w;
+            camera_screen.buffer_height = bm_h;
 
             // Reset OSD offset and width
             camera_screen.disp_right = camera_screen.width - 1;
@@ -308,9 +368,47 @@ void update_ui(ximr_context* ximr)
             camera_screen.physical_width = camera_screen.width;
             camera_screen.size = camera_screen.width * camera_screen.height;
             camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
+
+            // Values for chdkptp live view
+            camera_screen.yuvbm_width = ximr->width;
+            camera_screen.yuvbm_height = ximr->height;
+            camera_screen.yuvbm_buffer_width = ximr->buffer_width;
+
+            // Clear buffer if size changed
+            extern void gui_set_need_restore();
+            gui_set_need_restore();
+
+            // Tell CHDK UI that display needs update
+            display_needs_refresh = 1;
         }
 
-        // Tell CHDK UI that display needs update
-        display_needs_refresh = 1;
+        if (ximr->layers[0].bitmap == (unsigned int)FW_YUV_LAYER_BUF) {
+            ximr->layers[0].src_h = 270;
+            ximr->layers[0].height = 270;
+            ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
+        }
+
+        if (chdk_rgba != 0)
+        {
+            // Copy canon layer
+            memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+
+            // Remove offset
+            ximr->layers[3].scale = 6;      // x2 scaling in both directions
+            ximr->layers[3].src_w = bm_w;
+            ximr->layers[3].src_h = bm_h;
+            ximr->layers[3].dst_x = 0;
+            ximr->layers[3].dst_y = 0;
+
+            // Set our buffer
+            ximr->layers[3].bitmap = (unsigned int)chdk_rgba;
+            ximr->layers[3].width = bm_w;
+            ximr->layers[3].height = bm_h;
+        }
+    }
+    else
+    {
+        ximr->height = ximr->buffer_height = 270;
+        ximr->denomy = 0x6c;
     }
 }

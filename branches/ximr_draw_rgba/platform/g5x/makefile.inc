@@ -29,6 +29,8 @@ KEYSYS=d5
 # generated FI2 needs word-based checksum
 FI2FLAGS=W
 
+CAM_DRAW_RGBA=1
+
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xFDF20270
 # below 2 commented lines are used by tools/compatbuilder.sh

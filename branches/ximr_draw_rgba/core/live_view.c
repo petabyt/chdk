@@ -70,10 +70,17 @@ int live_view_get_data(ptp_data *data, int flags)
 #else
     lv.bm.fb_type = LV_FB_PAL8;
 #endif
-    lv.bm.buffer_width = camera_screen.buffer_width;
 
+#ifdef CAM_DRAW_RGBA
+    // Use alternate values - if drawing on RGBA bitmap. Liveview still uses the YUV bitmap for display.
+    lv.bm.buffer_width = camera_screen.yuvbm_buffer_width;
+    lv.bm.visible_width = camera_screen.yuvbm_width;
+    lv.bm.visible_height = camera_screen.yuvbm_height;
+#else
+    lv.bm.buffer_width = camera_screen.buffer_width;
     lv.bm.visible_width = camera_screen.physical_width;
     lv.bm.visible_height = camera_screen.height;
+#endif
 
     lv.bm.margin_left = lv.bm.margin_right = lv.bm.margin_top = lv.bm.margin_bot = 0;
 

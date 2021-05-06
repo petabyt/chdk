@@ -4,6 +4,24 @@
 #include "conf.h"       // load OSD_pos & OSD_scale
 #include "palette.h"
 
+//==========================================================
+
+// CAM_DRAW_RGBA must be defined in camera makefile
+
+// Bitmap display for THUMB_FW
+#ifdef THUMB_FW
+    #ifndef CAM_DRAW_RGBA
+        #define CAM_DRAW_YUV
+    #endif
+#endif
+
+// Bitmap display for 8 bit indexed
+#ifndef CAM_DRAW_RGBA
+    #ifndef CAM_DRAW_YUV
+        #define CAM_DRAW_8BIT
+    #endif
+#endif
+
 //-------------------------------------------------------------------
 
 extern  unsigned char   *chdk_colors;
@@ -56,21 +74,21 @@ extern  unsigned char   *chdk_colors;
 #define FONT_REAL_WIDTH         8
 #define FONT_REAL_HEIGHT        16
 
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
 
 #define FONT_WIDTH              8
 #define FONT_HEIGHT             16
 // Name of default symbol file (for reset)
-#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
+#define DEFAULT_SYMBOL_FILE     "A/CHDK/SYMBOLS/icon_10.rbf"
 
-#else // THUMB_FW
+#else // CAM_DRAW_YUV
 
 #define FONT_WIDTH              14
 #define FONT_HEIGHT             32
 // Name of default symbol file (for reset)
-#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_16.rbf"
+#define DEFAULT_SYMBOL_FILE     "A/CHDK/SYMBOLS/icon_16.rbf"
 
-#endif // THUMB_FW
+#endif // CAM_DRAW_YUV
 
 // Text justification & options
 #define TEXT_LEFT               0

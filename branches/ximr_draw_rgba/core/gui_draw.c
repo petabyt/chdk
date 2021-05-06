@@ -9,7 +9,8 @@
 #include "../lib/font/font_8x16_uni_packed.h"
 #undef  GET_FONT_COMPRESSION_MODE
 
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
+
 // macros for computing palette from a single byte color value
 #define CALC_YUV_LUMA_OPACITY_FOR_COLOR(color,luma,opacity) \
     { \
@@ -39,7 +40,14 @@ extern char* bitmap_buffer[];
 extern int active_bitmap_buffer;
 #endif
 
-#else
+#else // !CAM_DRAW_YUV
+#ifdef CAM_DRAW_RGBA
+
+extern unsigned int*    chdk_rgba;
+extern unsigned int     rgba_colors[];
+int                     display_needs_canon_refresh;
+
+#else // CAM_DRAW_RGBA
 
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 extern char* bitmap_buffer[];
@@ -48,7 +56,8 @@ extern int active_bitmap_buffer;
 static char* frame_buffer[2];
 #endif
 
-#endif
+#endif // CAM_DRAW_RGBA
+#endif // CAM_DRAW_YUV
 
 //-------------------------------------------------------------------
 // used to prevent draw_restore from being called until tick reached
@@ -62,14 +71,24 @@ void            (*draw_pixel_proc_norm)(unsigned int offset, color cl);
 
 static void draw_pixel_std(unsigned int offset, color cl)
 {
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
+#ifdef CAM_DRAW_RGBA
+    // Clamp color index
+    cl = cl & 31;
+    // DIGIC 6, drawing on 32bpp RBA overlay
+    if (chdk_rgba[offset] != rgba_colors[cl]) {
+        chdk_rgba[offset] = rgba_colors[cl];
+        display_needs_canon_refresh = 1;
+    }
+#else // CAM_DRAW_RGBA
     // drawing on 8bpp paletted overlay
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     bitmap_buffer[active_bitmap_buffer][offset] = cl;
 #else
     frame_buffer[0][offset] = frame_buffer[1][offset] = cl;
 #endif
-#else
+#endif // CAM_DRAW_RGBA
+#else // CAM_DRAW_YUV
     // DIGIC 6, drawing on 16bpp YUV overlay
 
     unsigned int y;
@@ -114,10 +133,10 @@ static void draw_pixel_std(unsigned int offset, color cl)
     (bitmap_buffer[0])[offs2+2] = v; // V?
     (bitmap_buffer[1])[offs2+2] = v; // V?
 #endif
-#endif
+#endif // CAM_DRAW_YUV
 }
 //-------------------------------------------------------------------
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
 // direct drawing functions for YUV overlay, currently used by the zebra module
 // ATTENTION: these functions do not support guard pixels or rotation
 
@@ -176,7 +195,7 @@ void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 #endif
 }
 
-#else // !THUMB_FW
+#else // !CAM_DRAW_YUV
 // not implemented for earlier DIGICs
 unsigned int color_to_rawpx(__attribute__ ((unused))color cl, __attribute__ ((unused))unsigned int *op)
 {
@@ -188,7 +207,7 @@ void draw_dblpixel_raw(__attribute__ ((unused))unsigned int offset, __attribute_
 void set_transparent(__attribute__ ((unused))unsigned int offst, __attribute__ ((unused))int n_pixel)
 {
 }
-#endif // THUMB_FW
+#endif // CAM_DRAW_YUV
 
 //-------------------------------------------------------------------
 unsigned int rotate_base;
@@ -218,7 +237,7 @@ void update_draw_proc()
 }
 
 //-------------------------------------------------------------------
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
 // pixel drawing functions for YUV, meant to be optimized for greater speed
 // drawing is done directly, drawing function replacement is not supported
 // OSD rotation is respected
@@ -444,10 +463,26 @@ void draw_hline_simple(coord x, coord y, int len, int px)
     }
 }
 
-
-#endif // THUMB_FW
+#endif // CAM_DRAW_YUV
 //-------------------------------------------------------------------
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
+
+#ifdef CAM_DRAW_RGBA
+
+void draw_set_guard() {}
+
+int draw_test_guard()
+{
+    extern int display_needs_refresh;
+    if (display_needs_refresh)
+    {
+        display_needs_refresh = 0;
+        return 0;
+    }
+    return 1;
+}
+
+#else // CAM_DRAW_RGBA
 
 #define GUARD_VAL   COLOR_GREY_DK
 
@@ -473,7 +508,9 @@ int draw_test_guard()
     return 1;
 }
 
-#else // DIGIC 6
+#endif // CAM_DRAW_RGBA
+
+#else // CAM_DRAW_YUV
 
 void draw_set_guard()
 {
@@ -497,16 +534,16 @@ int draw_test_guard()
     return 1;
 }
 
-#endif
+#endif // CAM_DRAW_YUV
 //-------------------------------------------------------------------
 void draw_init()
 {
-#ifndef THUMB_FW
+#ifdef CAM_DRAW_8BIT
 #ifndef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     frame_buffer[0] = vid_get_bitmap_fb();
     frame_buffer[1] = frame_buffer[0] + camera_screen.buffer_size;
 #endif
-#endif
+#endif // CAM_DRAW_YUV
     draw_set_draw_proc(NULL);
 
     draw_set_guard();
@@ -533,6 +570,12 @@ void draw_restore()
     if(draw_is_suspended()) {
         return;
     }
+
+#ifdef CAM_DRAW_RGBA
+    extern void vid_bitmap_erase();
+    vid_bitmap_erase();
+#endif // CAM_DRAW_RGBA
+
     vid_bitmap_refresh();
 
     draw_set_guard();
@@ -573,7 +616,7 @@ void draw_pixel_unrotated(coord x, coord y, color cl)
 //-------------------------------------------------------------------
 color draw_get_pixel(coord x, coord y)
 {
-#ifndef THUMB_FW
+#ifdef CAM_DRAW_8BIT
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
     if (conf.rotate_osd)
     {
@@ -591,27 +634,27 @@ color draw_get_pixel(coord x, coord y)
         return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
 #endif
     }
-#else
+#else // CAM_DRAW_YUV
     // DIGIC 6 not supported
     (void)x; (void)y;
     return 0;
-#endif
+#endif // CAM_DRAW_YUV
 }
 
 color draw_get_pixel_unrotated(coord x, coord y)
 {
-#ifndef THUMB_FW
+#ifdef CAM_DRAW_8BIT
     if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     return bitmap_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
 #else
     return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
 #endif
-#else
+#else //CAM_DRAW_YUV
     // DIGIC 6 not supported
     (void)x; (void)y;
     return 0;
-#endif
+#endif // CAM_DRAW_YUV
 }
 
 //-------------------------------------------------------------------
@@ -649,7 +692,7 @@ void draw_line(coord x1, coord y1, coord x2, coord y2, color cl)
      }
 }
 
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
 // Draw line scaled x2 in both X and Y co-ords. Used for drawing icons on high res screens
 void draw_line_x2(coord x1, coord y1, coord x2, coord y2, color cl)
 {
@@ -691,7 +734,7 @@ void draw_line_x2(coord x1, coord y1, coord x2, coord y2, color cl)
         }
     }
 }
-#endif
+#endif // CAM_DRAW_YUV
 
 //-------------------------------------------------------------------
 void draw_hline(coord x, coord y, int len, color cl)
@@ -806,7 +849,8 @@ static unsigned char* get_cdata(unsigned int *offset, unsigned int *size, const 
     return (unsigned char*)f + sizeof(FontData) - *offset;
 }
 
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
+
 // DIGIC II...5
 void draw_char(coord x, coord y, const char ch, twoColors cl)
 {
@@ -853,9 +897,67 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
     for (; i<FONT_HEIGHT; i++)
         draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
 }
-#endif
 
-#ifdef THUMB_FW
+void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
+{
+    unsigned i, ii;
+
+    twoColors clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
+    twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
+
+    unsigned int offset, size;
+    unsigned char *sym = get_cdata(&offset, &size, ch);
+
+    // First draw blank lines at top
+    if (offset > 0)
+        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+
+    // Now draw character data
+    unsigned j;
+    for (j=i=offset; i<size;)
+    {
+        unsigned int dsym;
+        int rep;
+        unsigned int last;
+        int len;
+#ifdef BUILTIN_FONT_RLE_COMPRESSED
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+        rep = sym[j] & 0x80;
+#else
+        dsym = sym[j];
+        rep = 0;
+#endif
+        while (rep >= 0)
+        {
+            last = dsym & 0x80;
+            len = 1;
+            for (ii=1; ii<FONT_WIDTH; ii++)
+            {
+                if (((dsym << ii) & 0x80) != last)
+                {
+                    draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+                    last = (dsym << ii) & 0x80;
+                    len = 1;
+                }
+                else
+                {
+                    len++;
+                }
+            }
+            draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+            i++;
+            rep -= 0x80;
+        }
+        j++;
+    }
+
+    // Last draw blank lines at bottom
+    if (i < FONT_HEIGHT)
+        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+}
+
+#else // CAM_DRAW_YUV
+
 // DIGIC 6: "optimizations" to improve speed
 void draw_char(coord x, coord y, const char ch, twoColors cl)
 {
@@ -1008,69 +1110,6 @@ void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
     }
 }
 
-#endif // THUMB_FW
-
-#ifndef THUMB_FW
-void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
-{
-    unsigned i, ii;
-
-    twoColors clf = MAKE_COLOR(FG_COLOR(cl),FG_COLOR(cl));
-    twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
-
-    unsigned int offset, size;
-    unsigned char *sym = get_cdata(&offset, &size, ch);
-
-    // First draw blank lines at top
-    if (offset > 0)
-        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
-
-    // Now draw character data
-    unsigned j;
-    for (j=i=offset; i<size;)
-    {
-        unsigned int dsym;
-        int rep;
-        unsigned int last;
-        int len;
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
-        dsym = fontdata_lookup[sym[j] & 0x7f];
-        rep = sym[j] & 0x80;
-#else
-        dsym = sym[j];
-        rep = 0;
-#endif
-        while (rep >= 0)
-        {
-            last = dsym & 0x80;
-            len = 1;
-            for (ii=1; ii<FONT_WIDTH; ii++)
-            {
-                if (((dsym << ii) & 0x80) != last)
-                {
-                    draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-                    last = (dsym << ii) & 0x80;
-                    len = 1;
-                }
-                else
-                {
-                    len++;
-                }
-            }
-            draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-            i++;
-            rep -= 0x80;
-        }
-        j++;
-    }
-
-    // Last draw blank lines at bottom
-    if (i < FONT_HEIGHT)
-        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
-}
-#endif // !THUMB_FW
-
-#ifdef THUMB_FW
 void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, int ysize)
 {
     unsigned i, ii;
@@ -1144,7 +1183,8 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
     if (i < FONT_REAL_HEIGHT)
         draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_REAL_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 }
-#endif // THUMB_FW
+
+#endif // CAM_DRAW_YUV
 //-------------------------------------------------------------------
 // String & text functions
 
@@ -1267,8 +1307,8 @@ int draw_text_justified(coord x, coord y, const char *s, twoColors cl, int max_c
     return rx;
 }
 
+#ifndef CAM_DRAW_YUV
 // Draw single line string, with optiona X and Y scaling
-#ifndef THUMB_FW
 void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize)
 {
     while (*s && (*s != '\n'))
@@ -1283,9 +1323,19 @@ void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize
         }
     }
 }
-#endif
 
-#ifdef THUMB_FW
+// Draw CHDK OSD string at user defined position and scale
+void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale)
+{
+    if ((scale.x == 0) || (scale.y == 0) || ((scale.x == 1) && (scale.y == 1)))
+        draw_string(pos.x+xo, pos.y+yo, s, c);
+    else
+        draw_string_scaled(pos.x+(xo*scale.x), pos.y+(yo*scale.y), s, c, scale.x, scale.y);
+}
+
+#else // CAM_DRAW_YUV
+
+// Draw single line string, with optiona X and Y scaling
 void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize)
 {
     if ((xsize==0) || (ysize==0))
@@ -1317,20 +1367,8 @@ void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize
         }
     }
 }
-#endif
 
 // Draw CHDK OSD string at user defined position and scale
-#ifndef THUMB_FW
-void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale)
-{
-    if ((scale.x == 0) || (scale.y == 0) || ((scale.x == 1) && (scale.y == 1)))
-        draw_string(pos.x+xo, pos.y+yo, s, c);
-    else
-        draw_string_scaled(pos.x+(xo*scale.x), pos.y+(yo*scale.y), s, c, scale.x, scale.y);
-}
-#endif
-
-#ifdef THUMB_FW
 void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale)
 {
     if ((scale.x == 1) && (scale.y == 1))
@@ -1346,7 +1384,7 @@ void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scal
         draw_string_scaled(pos.x+(xo*scale.x), pos.y+(yo*scale.y), s, c, scale.x, scale.y);
     }
 }
-#endif
+#endif // CAM_DRAW_YUV
 
 //-------------------------------------------------------------------
 // Draw single line string at 'character' screen position (row, col)
@@ -1483,28 +1521,28 @@ void draw_button(int x, int y, int w, int str_id, int active)
 
 //-------------------------------------------------------------------
 // Draw an OSD icon from an array of actions
-// For THUMB_FW scale up by 2 times and draw double thickness
+// For CAM_DRAW_YUV scale up by 2 times and draw double thickness
 void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
 {
     int x1, y1, x2, y2;
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
     int thickness = RECT_BORDER2;
-#else
+#else // CAM_DRAW_YUV
     int thickness = RECT_BORDER1;
-#endif
+#endif // CAM_DRAW_YUV
     while (1)
     {
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
         x1 = cmds->x1<<1;
         y1 = cmds->y1<<1;
         x2 = cmds->x2<<1;
         y2 = cmds->y2<<1;
-#else
+#else // CAM_DRAW_YUV
         x1 = cmds->x1;
         y1 = cmds->y1;
         x2 = cmds->x2;
         y2 = cmds->y2;
-#endif
+#endif // CAM_DRAW_YUV
         color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
         color cb = chdk_colors[cmds->cb];
         switch (cmds->action)
@@ -1514,50 +1552,50 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
             return;
         case IA_HLINE:
             draw_hline(x+x1, y+y1, x2, cb);
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_hline(x+x1, y+y1+1, x2, cb);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         case IA_VLINE:
             draw_vline(x+x1, y+y1, y2, cb);
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_vline(x+x1+1, y+y1, y2, cb);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         case IA_LINE:
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_line_x2(x+x1, y+y1, x+x2, y+y2, cb);
-#else
+#else // CAM_DRAW_YUV
             draw_line(x+x1, y+y1, x+x2, y+y2, cb);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         case IA_RECT:
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness);
-#else
+#else // CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         case IA_FILLED_RECT:
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
-#else
+#else // CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         case IA_ROUND_RECT:
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
-#else
+#else // CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         case IA_FILLED_ROUND_RECT:
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
-#else
+#else // CAM_DRAW_YUV
             draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
-#endif
+#endif // CAM_DRAW_YUV
             break;
         }
         cmds++;
@@ -1567,18 +1605,18 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
 //-------------------------------------------------------------------
 
 extern unsigned char ply_colors[];
-extern unsigned char rec_colors[];
 
 unsigned char *chdk_colors = ply_colors;
 
 void set_palette()
 {
-#ifndef THUMB_FW
+#ifdef CAM_DRAW_8BIT
+    extern unsigned char rec_colors[];
     if (camera_info.state.mode_rec)
         chdk_colors = rec_colors;
     else
         chdk_colors = ply_colors;
-#endif
+#endif // CAM_DRAW_YUV
 }
 
 color get_script_color(int cl)

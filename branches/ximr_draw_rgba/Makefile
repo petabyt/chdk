@@ -260,6 +260,8 @@ allmodules:
 	$(MAKE) -C modules clean all THUMB_FW=
 	$(MAKE) -C modules clean all THUMB_FW=1
 	$(MAKE) -C modules clean all THUMB_FW=1 ARMV7A=1
+	$(MAKE) -C modules clean all THUMB_FW=1 CAM_DRAW_RGBA=1
+	$(MAKE) -C modules clean all THUMB_FW=1 ARMV7A=1 CAM_DRAW_RGBA=1
 	$(MAKE) -C CHDK clean all
 
 # define targets to batch build all cameras & firmware versions
@@ -330,6 +332,8 @@ batch-clean:
 	$(MAKE) -C modules clean THUMB_FW=
 	$(MAKE) -C modules clean THUMB_FW=1
 	$(MAKE) -C modules clean THUMB_FW=1 ARMV7A=1
+	$(MAKE) -C modules clean THUMB_FW=1 CAM_DRAW_RGBA=1
+	$(MAKE) -C modules clean THUMB_FW=1 ARMV7A=1 CAM_DRAW_RGBA=1
 	$(MAKE) -C CHDK clean
 	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 

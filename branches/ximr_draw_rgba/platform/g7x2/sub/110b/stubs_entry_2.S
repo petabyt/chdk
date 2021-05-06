@@ -57,10 +57,6 @@ NHSTUB(GetPropertyCase_FW                     ,0xe036af69)
                                                             //   debug_logging_flag is the memory address of the flag value in the if statement.
    DEF(mzrm_sendmsg_ret_adr                   ,0xe030671b)  // Thumb address to check against LR register to detect mzrm_sendmag call from Canon UI update
                                                             //   This is the address immediately after the call to debug_logging_ptrin mzrm_sendmsg (+1 for thumb)
-   DEF(hdmi_buffer_check_adr                  ,0x4196a000)  // For HDMI output we only want to flag UI updates when layer 0 is set to this buffer address
-                                                            //   Start at the transfer_src_overlay function, then go to the last function called
-                                                            //   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
-                                                            //   The value is the second parameter to this function.
 
 // Incorrect by finsig - need to check
 
