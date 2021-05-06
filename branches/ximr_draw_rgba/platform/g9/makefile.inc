@@ -1,0 +1,18 @@
+# Camera settings for the G9
+
+#PLATFORMID=0x315A
+PLATFORMID=12634
+
+PLATFORMOS=dryos
+PLATFORMOSVER=23
+
+KEYSYS=d3
+
+ROMBASEADDR=0xFF810000
+MAXRAMADDR = 0x03FFFFFF
+# below 2 commented lines are used by tools/compatbuilder.sh
+# BLINK_LED_CONTROL=1
+# BLINK_LED_GPIO=0xc022006c
+
+DIGIC = 30# DIGIC III
+

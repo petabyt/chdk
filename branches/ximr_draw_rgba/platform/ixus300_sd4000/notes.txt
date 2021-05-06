@@ -1,0 +1,98 @@
+--- CHDK Canon IXUS 300 HS / Powershot SD 4000 IS / IXY 30S Port -------------------
+Camera:     Canon Powershot SD4000 IS (USA) / IXUS 300HS (Europe) / IXY 30S (Japan)
+P-ID:       12791 (0x31F7)
+Firmware:   1.00d
+Developer:  pixel::doc (http://pixeldoc.kicks-ass.net/)
+
+--- Legal -----------------------------------------------------------
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE
+BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Software or Author are not affiliated in any way with Canon INC.
+Product and Company names mentioned herein may be the trademarks of their respective owners.
+
+--- Notes -----------------------------------------------------------
+Camera does not support ver.req and vers.req .
+Thanks to reyalp, asm1989 and some other guys for their support.
+
+Code in capt_seq.c that "fixes overrides behavior at short shutter press" not enabled. Does not seem to be needed.
+
+--- CHDK ALT Mode ---------------------------------------------------
+Alt button is the PLAYBACK button, long press for original function
+
+--- Links -----------------------------------------------------------
+* http://chdk.wikia.com/
+* http://chdk.wikia.com/wiki/SD4000
+* http://chdk.setepontos.com/index.php?topic=5574.0 - Int. Forum SD4000 Porting Thread
+* http://pixeldoc.kicks-ass.net/projects/chdk/ixus300_sd4000/
+* http://www.canon.com.my/p/EN/114-Digital-Cameras/203-IXUS/1556-Digital-IXUS-300-HS/
+
+
+--- Changelog -------------------------------------------------------
+* 18.08.2010 - I've dumped Firmware 1.00d with CBasic Dumper by reyalP
+* 21.08.2010 - CHDK / Camera does start not after flashing LED
+* 24.08.2010 - CHDK / Camera does start without any Task Hooks but does still crash
+* 26.08.2010 - Source is available on http://github.com/pixeldoc2000/chdk/commits/ixus300_sd4000/
+* 12.09.2010 - Beta v1 is available
+* 20.09.2010 - Beta v2 is available
+* 20.09.2010 - Beta v3 is available
+* 02.10.2010 - Beta v4 is available
+* 06.10.2010 - Beta v5 is available
+* 30.10.2010 - Beta v6 is available
+* 18.12.2010 - Beta v7 is available
+* 30.01.2011 - UART pinout discovered (http://chdk.setepontos.com/index.php?topic=5574.msg60426#msg60426)
+* 31.01.2011 - Beta v8 is available
+  * Fixed crash with script (hooked mykbd_task() without increased stack size)
+  * Added Continous Bracketing fix from chdk2011
+* 01.02.2011 - Beta v9 is available
+* 15.02.2011 - Beta v10 is available
+* 31.05.2011 - Beta v11 is available
+* 01.06.2011 - Source added to SVN at Revision #1196
+* 13.06.2017 - Keymap issues fixed by reyalp - <ALT> key is only the Playback key
+* 07.07.2017 - add custom color palette
+             - fixed SD override code 
+             - fixed dual partition support
+             - rolled in latest sig finder 
+             - changes by waterwings
+* 07.11.2017 - fixed jog dial code so dial movements in <ALT> mode are cleared prior to exiting <ALT>
+             - fixed viewport buffer code so that zebra, histogram, edge overlay, and liveview work correctly
+             - fixed set_led code
+             - cleaned up definitions in platform_camera.h
+             - move all code from ixus300_sd4000/sub/100d/lib.c to ixus300_sd4000/lib.c as none was firmware version specific
+* 07.14.2017 - final cleanups of ToDo items for removal of Beta status
+             
+--- ToDo ------------------------------------------------------------
+* (fixed 08.07.2017) Multi Partition Support (Autoboot CHDK with 2 Partitions on SD-Card)
+* (fixed 08.07.2017) "Debug Parameters -> Create card with two partitions" does cause shutdown (WriteSDCard address wrong?)
+* (fixed 08.07.2017) tweak Color Palette (CAM_BITMAP_PALETTE), CHDK OSD Colors does not fit and are different in playback/record mode
+* (fixed 08.07.2017) ND Filter State not working ?
+* (fixed 08.07.2017) Override Subj. Dist. Value (MF) not working ?
+* (fixed 07.11.2017) Edge Overlay in correct only in Widescreen Setting ("Recording pixels"), else Edge Overleft has left offset
+* (fixed 07.11.2017) Histogram works, but Canon Color Palette does not have required colors for correct display
+* (fixed 07.11.2017) Zebra does not work (shows some shatterd dark (grey) pixel) - http://chdk.setepontos.com/index.php?topic=3410.msg32043#msg32043
+* (fixed 07.11.2017) find PROPCASE_ASPECT_RATIO to fix Zebra & co (and Y-Correction Fix like SX30 suggested by philmoz)
+* (checked ok 07.11.2017) Check Propcase, at least one Propcase has changed (maybe it time for propcase4.h)
+* (checked ok 07.11.2017) test "shoot_full" & "shoot_half" commands behave like they should
+* (checked ok 07.11.2017) Aperture Override aperture not working ?
+* (checked ok 07.11.2017) Remote Function does continuous mode only after second "Remote Shutter" (what is correct behavior on other Cameras?)
+
+* os.remove() does delete files but fail to delete directory (like SX210, G11 and other new cameras too), tested with llibtst.lua
+* only Video Quality Override does work, Video Bitrate Override does nothing (affects more DryOS Cameras?)
+* sometimes Exception (Vector 0x04) on exiting ALT Mode after script execution
+* problems with some scripts (probaly fixed since Stack Size commit)
+
+--- Tested CHDK Functions ------------------------------------------
+* CHDK PTP with ptpcam
+  * Mode Switch (Playback / Record) does work
+  * All functions seems to work
+  * (fixed 07.11.2017) live view not supported
+* create badpixel for DNG without script does work
+* Quality Override "super fine" does work (bigger filesize, less JPG artifacts, correct EXIF)
+* "Make card bootable" does work
+
+
+--- Developer Stuff -------------------------------------------------
+look at notes2.txt

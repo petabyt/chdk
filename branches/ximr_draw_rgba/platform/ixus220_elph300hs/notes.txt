@@ -1,0 +1,16 @@
+************************************
+IXUS220HS / ELPH300HS Notes
+
+The default <ALT> button is PLAY. It can be assigned to VIDEO in CHDK settings.
+
+Long Press the <ALT> button to access the original function.
+
+Booting from FAT32 is supported, so multipartition cards are not required or supported.
+
+This camera has an ND filter and does not have an iris.
+
+Known bugs:
+The camera crashes when PTP is connected. There is no known workaround.
+
+For more information please refer to IXUS200HS/ELPH300HS Porting Thread:
+http://chdk.setepontos.com/index.php?topic=6341

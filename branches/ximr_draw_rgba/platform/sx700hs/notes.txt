@@ -1,0 +1,74 @@
+******************************
+SX700 HS porting notes
+******************************
+
+Many features and combinations of Canon settings have not been tested.
+
+CHDK is a hack, use at your own risk!
+This is a new port for a model with many hardware differences from previously
+supported models, so it is probably higher risk than most.
+
+The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
+version, use ACID or the firminfo Canon Basic script.
+
+No "firmware update" file is included in the autobuild, you must used
+bootable SD card to load. See known bugs below.
+
+Bugs should be reported in the porthing thread
+https://chdk.setepontos.com/index.php?topic=12532.0
+
+******************************
+ACKNOWLEDGEMENTS: I want to thank reyalp, without whose handholding,
+this port would not have been possible.
+******************************
+
+
+General camera and CHDK port information
+****************************************
+
+-- Port was started on Firmware 100E
+
+-- SX700 HS uses propset 6.  The values in some propcases have changed.
+
+-- Does not need CHDK ExpDrv apex2us in order to shoot long
+exposures. Exposures upto 10 minutes have been taken to test this. . Thus
+the CHDK ExpDrv hooks if an #if 0 ... #endif around them in both boot.c
+and capt_seq.c. Uncomment if needed. The assembler code is correct
+for those.
+
+-- A few extra shooting modes are present. These are
+numbers 32831, 32832, 33345, 16943, 16945, 33295. None of
+these is accessible via Canon menu. These were checked with
+set_capture_mode_canon(MODENUM). MODENUM=33295 seemed to
+crash the camera. The only one that was identified is 32831
+(MODE_NIGHT_SNAPSHOT). The rest are in shooting.c but commented out.
+
+
+
+
+TESTED
+******
+Tested:
+Overrides -- Av, Tv
+Bracketed shooting in continuous mode (Av, Tv)
+DNG shooting
+SD override does not work with     //#define CAM_SD_OVER_IN_AF  1
+Scripted shooting (Lua scripts -- isobase, llibtst, hooktest)
+Connected shooting -- ptpchdk
+chdkptp camtests
+chdkptp rsint tested (filewrite)
+
+
+Dark subtraction
+Long Exposure (10 mins)
+
+Not implemented yet:
+Video -- movie rec task
+
+Issues:  
+Ugly display updating (usual DIGIC 6 limitations)
+
+
+
+BUGS
+*********

@@ -1,0 +1,27 @@
+# USB ID: 04a9:318E
+PLATFORMID=12686
+
+PLATFORMOS=dryos
+
+# Force ARAM on for a1000, and load CHDK in ARAM
+override OPT_ARAM_MALLOC=1
+override OPT_CHDK_IN_ARAM=1
+
+# Set up size variables for AgentRAM
+ARAM_HEAP_START=0x2ce000
+ARAM_HEAP_SIZE=0x32000
+
+ifdef OPT_CHDK_IN_ARAM
+MEMISOSTART=$(ARAM_HEAP_START)
+else
+MEMISOSTART=0xd4ec8
+endif
+
+ROMBASEADDR=0xffc00000
+
+NEED_ENCODED_DISKBOOT=1
+
+# FIR (requires correct keys in platform/fi2.inc)
+KEYSYS=d4
+
+PLATFORMOSVER=31

@@ -1,0 +1,95 @@
+EOS M10 notes
+
+CHDK is a hack, use at your own risk!
+
+CHDK support for interchangeable lens cameras is incomplete.
+
+Default ALT button is the playback button.
+
+The half press zebra shortcut button is "UP" on the 4-way controller.
+
+The RAW shortcut (and generic shortcut) button is the VIDEO button.
+
+Notes
+
+- To select a digit in a CHDK menu numeric field, press the shutter halfway
+
+- To achieve card speeds greater than 20MB/s, card is now powered off during CHDK start.
+  This may result in additional startup delay, depending on card. Reports about card issues
+  are welcome in the forum: https://chdk.setepontos.com/index.php?topic=13089.0
+
+- Video bitrate can be adjusted (CBR, VBR). Maximum possible video bitrate is approx. 41000 kbit/s
+
+- Video time based limits are raised to 3 hours
+
+- Clean overlay is possible for HDMI output purposes: See "Video Parameters" -> "Clear Canon overlays"
+  "Rec": Canon overlay is removed upon entering shooting (aka rec) mode
+  "MviRec": Canon overlay is removed when recording video
+  CHDK overlay needs to be removed separately, in the "CHDK Settings" menu.
+  For more info, visit https://chdk.setepontos.com/index.php?topic=13489
+
+- This camera can switch on itself after a user-initiated delay. This feature can be used from a user-written Lua script.
+  For more details and the script, see https://chdk.setepontos.com/index.php?topic=12542.msg137151#msg137151
+
+Issues
+
+- CHDK overlay drawing is slow, can blink excessively when the Canon OSD is updated
+- CHDK overlay flickers (making the CHDK menu unusable) in the following cases:
+  - in hybrid auto mode
+  - when face tracking auto focus enabled
+  - there are animated drawings on the Canon display
+
+- some games don't display correcly
+- some framebuffer related features do not work properly
+    - zebra (some menu options are ignored)
+    - edge overlay (drawings accumulate)
+- CHDK dark frame subtraction control only seems effective when Canon setting is on AUTO
+
+- Exposure overrides may fail to apply when shutter is held halfway down for a while
+    - this does not happen when an AF lens is attached and auto focus succeeds
+    - does not happen in M mode
+    - does not happen when AE is locked using the Canon controls (asterisk on the 4-way controller)
+
+- Exposure overrides may also fail to apply when the shutter is pressed too quickly
+
+- Av override selector in the Enhanced Photo Operations menu has garbage entries
+
+
+Tested (using 15-45 kit lens)
+
+- Exposure overrides in (semi-)manual modes (not very extensively)
+- CHDK RAW/DNG in (semi-)manual modes (Av, Tv, M, P) (not very extensively)
+- PTP play/rec switch
+- llibtst.lua
+- setmode.lua - one failure with default 10ms delay, works with 100ms
+- ubtest.bas
+- hooktest.lua (Av, Tv, M, P)
+- isobase.lua
+- PTP live view (has problems with overlay dimensions, only 3:2 aspect ratio tested)
+- Motion detection (reaction time not tested)
+- USB remote - plug test
+- chdkptp cam tests
+- bracketing in continuous mode - Tv, ISO works, Av also seems to work
+
+Untested
+
+- RAW/DNG, overrides in scene/auto modes
+
+Not implemented
+
+- CHDK touchscreen functionality
+- CHDK mirrorless camera support is not complete
+    - Zoom related functionality is missing (except for focal length display)
+    - Most focus related functions are not working and are untested
+- Filewritetask is not currently supported
+
+Developer notes
+
+- [WORKED AROUND] Camera crashes with "Vector 0x37" (??) exception if spytask starts too soon (??).
+    Guesses: 
+        - too early use of the busyonscreen functions ?
+          Worked around, using a flag from "GUISrv_StartGUISystem_FW".
+          Does not help. Works if _GetLogToFile() is called prior to shooting_init() in spytask.
+        - spytask calls something else too early
+
+

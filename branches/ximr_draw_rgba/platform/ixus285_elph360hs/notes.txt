@@ -1,0 +1,24 @@
+************************************
+ixus285_elph360 Notes
+************************************
+
+This is an early alpha port, use at your own risk!
+
+Porting thread: https://chdk.setepontos.com/index.php?topic=13604.0
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video or Wifi in the options
+
+This camera has only ND filter, no adjustable aperture.
+
+NOTE:
+    exp_drv not implemented, < 1024s probably works without
+	video features are not supported
+	
+Tested:
+PTP - OK
+TV,ISO,SD - OK
+scripts - OK
+RAW/DNG - OK
+zebra - OK
+

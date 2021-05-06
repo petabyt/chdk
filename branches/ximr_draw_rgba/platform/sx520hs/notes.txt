@@ -1,0 +1,29 @@
+************************************
+SX520 Notes
+************************************
+To enter CHDK <ALT> mode use the [>] Play button.
+
+CHDK is a hack, use at your own risk!
+
+Known issues
+
+The camera's "front dial" (scrollwheel on the top) is not supported by CHDK.
+The back dial can be used to scroll in the CHDK menu, but its scroll events go through the Canon UI and may change settings inadvertently.
+
+Developer notes
+
+This port is a copy of the SX530HS port. The 1.00c versions of SX520HS and SX530HS firmwares are virtually identical.
+Any future changes to the original port should probably be reflected here too.
+'SX530' references are kept in source in order to keep differences at a minimum.
+
+The scrollwheel issues need either a developer or a reliable tester, see "JogDial_task_my" in boot.c.
+
+Known differences:
+- No wifi and NFC
+- Long end of zoom is limited (most likely in software)
+- The 'mobile device connection' button is labelled as 'drive mode' button
+- Different PLATFORMID
+
+SX530 porting thread 
+http://chdk.setepontos.com/index.php?topic=12418.0
+
