@@ -195,12 +195,16 @@ void *vid_get_bitmap_active_palette()
 {
     extern int active_palette_buffer;
     extern char* palette_buffer[];
-    char *p = palette_buffer[active_palette_buffer];
+    unsigned char color_option;
+    // on cameras that allow setting UI color scheme,
+    // actual palette is offset by color scheme value
+    get_parameter_data(0x1a,&color_option,1); // from 102a sub_ff2ddd74
+    char *p = palette_buffer[active_palette_buffer + color_option];
     // if null, don't add +4
-    if(!p) {
-        return NULL;
+    if(p) {
+        p+=4;
     }
-    return (p+4);
+    return p;
 }
 
 #ifdef CAM_LOAD_CUSTOM_COLORS
@@ -209,10 +213,9 @@ void load_chdk_palette()
 {
     extern int active_palette_buffer;
     // Only load for the standard record and playback palettes
-    // on most cams rec=0, set menu=4, play=5, menu=6
-    // but per https://chdk.setepontos.com/index.php?topic=9005.msg145877#msg145877
-    // playback may actually be 16, menu 12
-    if ((active_palette_buffer == 0) || (active_palette_buffer == 5))
+    // per https://chdk.setepontos.com/index.php?topic=9005.msg145877#msg145877
+    // rec 0, playback 16, menu 12
+    if ((active_palette_buffer == 0) || (active_palette_buffer == 16))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
         if(pal) {
@@ -232,8 +235,6 @@ void load_chdk_palette()
                 pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
                 pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
 
-                extern char palette_control;
-                palette_control = 1;
                 vid_bitmap_refresh();
             }
         }
