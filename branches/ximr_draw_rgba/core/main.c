@@ -320,9 +320,11 @@ void core_spytask()
                 gui_redraw();
 #ifdef CAM_DRAW_RGBA
                 extern int display_needs_canon_refresh;
-                if (display_needs_canon_refresh) {
-                    display_needs_canon_refresh = 0;
-                    vid_bitmap_refresh();
+                if (!draw_is_suspended()) {
+                    if (display_needs_canon_refresh) {
+                        display_needs_canon_refresh = 0;
+                        vid_bitmap_refresh();
+                    }
                 }
 #endif
             }

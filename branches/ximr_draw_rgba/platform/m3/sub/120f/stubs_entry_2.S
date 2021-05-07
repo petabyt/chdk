@@ -60,6 +60,9 @@ NHSTUB(undisplayblankscreen,                   0xFC3332EB)
 // trial
 NHSTUB(refresh_bitmap_buf_from,                0xfc143435)
 
+NHSTUB(VTMLock                                ,0xfc37f211)
+NHSTUB(VTMUnlock                              ,0xfc37f3e1)
+
 // To find these values it is easiest to use the Ghidra de-compile window.
    DEF(debug_logging_ptr                      ,0x000286c0)  // RAM address of function called by mzrm_sendmsg for logging
                                                             // To find debug_logging_ptr:

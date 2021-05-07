@@ -11,7 +11,7 @@ extern void console_clear();
 extern void console_add_line(const char *str);
 extern void console_draw(int force_redraw);
 extern void console_set_layout(int x1, int y1, int x2, int y2);
-extern void console_redraw();
+extern void console_redraw(int skip_restore);
 extern void console_set_autoredraw(int val);
 
 extern int console_displayed;

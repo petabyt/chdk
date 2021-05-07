@@ -19,6 +19,7 @@ void ubasic_set_as_ret(int md_ret);
 int jump_label(char * label);
 
 static int ubasic_run_restore(void)             { return jump_label("restore"); }
+static int ubasic_refresh_display(void)         { return 0; }
 
 static void _set_variable(char *name, int value,
     __attribute__ ((unused))int isBool, __attribute__ ((unused))int isTable, __attribute__ ((unused))int labelCount, __attribute__ ((unused))const char **labels)
@@ -73,6 +74,7 @@ libscriptapi_sym _libubasic =
     ubasic_set_as_ret,
     ubasic_run_restore,
     ubasic_script_shoot_hook_run,
+    ubasic_refresh_display,
 };
 
 ModuleInfo _module_info =

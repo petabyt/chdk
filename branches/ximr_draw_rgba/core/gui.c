@@ -2360,7 +2360,7 @@ static void gui_draw_splash()
         int mx = 0;
         int my = 0;
         int offset_x = (camera_screen.width-LOGO_WIDTH)>>1;
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
         int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 66 ;
 #else
         int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 42 ;

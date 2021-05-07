@@ -567,14 +567,14 @@ int draw_is_suspended(void)
 //-------------------------------------------------------------------
 void draw_restore()
 {
-    if(draw_is_suspended()) {
-        return;
-    }
-
 #ifdef CAM_DRAW_RGBA
     extern void vid_bitmap_erase();
     vid_bitmap_erase();
 #endif // CAM_DRAW_RGBA
+
+    if(draw_is_suspended()) {
+        return;
+    }
 
     vid_bitmap_refresh();
 

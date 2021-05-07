@@ -18,7 +18,7 @@ void vid_bitmap_refresh()
     _VTMLock();
     int n = active_bitmap_buffer;
     _transfer_src_overlay(n^1);
-    _transfer_src_overlay(n);
+//     _transfer_src_overlay(n);
     _VTMUnlock();
 }
 
@@ -310,7 +310,7 @@ int bm_h = CB_H;
 void vid_bitmap_erase()
 {
     extern void _bzero(unsigned char *s, int n);
-    _bzero(chdk_rgba, bm_w * bm_h * 4);
+    _bzero(chdk_rgba, CB_W * bm_h * 4);
 }
 
 int last_displaytype;
@@ -357,7 +357,7 @@ void update_ui(ximr_context* ximr)
 
             camera_screen.width = bm_w;
             camera_screen.height = bm_h;
-            camera_screen.buffer_width = bm_w;
+            camera_screen.buffer_width = CB_W;
             camera_screen.buffer_height = bm_h;
 
             // Reset OSD offset and width
@@ -375,16 +375,16 @@ void update_ui(ximr_context* ximr)
             camera_screen.yuvbm_buffer_width = ximr->buffer_width;
 
             // Clear buffer if size changed
-            extern void gui_set_need_restore();
-            gui_set_need_restore();
+            vid_bitmap_erase();
 
             // Tell CHDK UI that display needs update
             display_needs_refresh = 1;
         }
 
         if (ximr->layers[0].bitmap == (unsigned int)FW_YUV_LAYER_BUF) {
-            ximr->layers[0].src_h = 270;
-            ximr->layers[0].height = 270;
+            // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
+            ximr->layers[0].src_w = ximr->layers[0].width = 960;
+            ximr->layers[0].src_h = ximr->layers[0].height = 270;
             ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
         }
 
@@ -402,12 +402,14 @@ void update_ui(ximr_context* ximr)
 
             // Set our buffer
             ximr->layers[3].bitmap = (unsigned int)chdk_rgba;
-            ximr->layers[3].width = bm_w;
+            ximr->layers[3].width = CB_W;
             ximr->layers[3].height = bm_h;
         }
     }
     else
     {
+        // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
+        ximr->width = ximr->buffer_width = 960;
         ximr->height = ximr->buffer_height = 270;
         ximr->denomy = 0x6c;
     }

@@ -2,7 +2,11 @@
 #include "lolevel.h"
 #include "live_view.h"
 
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
+
 void vid_bitmap_refresh() {
+/*
     // extern int full_screen_refresh;
     // extern void _ScreenUnlock();
     // extern void _ScreenLock();
@@ -20,6 +24,15 @@ void vid_bitmap_refresh() {
 //  _transfer_src_overlay(active_bitmap_buffer);
     _transfer_src_overlay(0);
     _transfer_src_overlay(1);
+*/
+    extern void _transfer_src_overlay(int);
+    extern void _VTMLock();
+    extern void _VTMUnlock();
+    _VTMLock();
+    int n = active_bitmap_buffer;
+    _transfer_src_overlay(n^1);
+//     _transfer_src_overlay(n);
+    _VTMUnlock();
 }
 
 void shutdown() {
@@ -187,9 +200,6 @@ int vid_get_viewport_display_yoffset() {
     return 0;
 }
 
-extern int active_bitmap_buffer;
-extern char* bitmap_buffer[];
-
 int vid_get_viewport_type() {
 //    if (camera_info.state.mode_play)
         return LV_FB_YUV8B;
@@ -232,6 +242,7 @@ void *vid_get_bitmap_active_palette() {
 }
 
 extern int displaytype;
+#define evf_out     (displaytype == 11)
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
 
 // Ximr layer
@@ -305,7 +316,7 @@ int bm_h = CB_H;
 void vid_bitmap_erase()
 {
     extern void _bzero(unsigned char *s, int n);
-    _bzero(chdk_rgba, bm_w * bm_h * 4);
+    _bzero(chdk_rgba, CB_W * bm_h * 4);
 }
 
 int last_displaytype;
@@ -341,6 +352,9 @@ void update_ui(ximr_context* ximr)
             if (hdmi_out) {
                 bm_w = 480;
                 bm_h = 270;
+            } else if (evf_out) {
+                bm_w = 360;
+                bm_h = 270;
             } else {
                 bm_w = 360;
                 bm_h = 240;
@@ -348,7 +362,7 @@ void update_ui(ximr_context* ximr)
 
             camera_screen.width = bm_w;
             camera_screen.height = bm_h;
-            camera_screen.buffer_width = bm_w;
+            camera_screen.buffer_width = CB_W;
             camera_screen.buffer_height = bm_h;
 
             // Reset OSD offset and width
@@ -366,8 +380,7 @@ void update_ui(ximr_context* ximr)
             camera_screen.yuvbm_buffer_width = ximr->buffer_width;
 
             // Clear buffer if size changed
-            extern void gui_set_need_restore();
-            gui_set_need_restore();
+            vid_bitmap_erase();
 
             // Tell CHDK UI that display needs update
             display_needs_refresh = 1;
@@ -393,7 +406,7 @@ void update_ui(ximr_context* ximr)
 
             // Set our buffer
             ximr->layers[3].bitmap = (unsigned int)chdk_rgba;
-            ximr->layers[3].width = bm_w;
+            ximr->layers[3].width = CB_W;
             ximr->layers[3].height = bm_h;
         }
     }

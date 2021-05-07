@@ -31,6 +31,7 @@ typedef struct
     void    (*set_as_ret)(int as_ret);      // save 'return' value from action stack code (e.g. motion detect, shoot)
     int     (*run_restore)( void );         // run the "restore" function at the end of a script
     void    (*shoot_hook)(int hook);        // run a hook in the shooting process, called from hooked task
+    int     (*refresh_display)( void );     // alert script that screen needs to be refreshed
 } libscriptapi_sym;
 
 extern libscriptapi_sym* libscriptapi;

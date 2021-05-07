@@ -226,10 +226,10 @@ debug_logging_my(char* fmt, ...)
             "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
             "    cmp     r0, lr\n"
             "    beq     do_ui_update\n"
-            "exit_debug_logging_my:"
+            "exit_debug_logging_my:\n"
             "    bx      lr\n"
 
-            "do_ui_update:"
+            "do_ui_update:\n"
             "    ldr     r0, [sp,#0x18]\n"              // mzrm_sendmsg 'msg' value (2nd parameter, saved on stack)
             "    ldr     r1, [r0]\n"                    // message type
             "    mov     r2, #0x25\n"                   // Ximr update? (3rd parameter to mzrm_createmsg)
