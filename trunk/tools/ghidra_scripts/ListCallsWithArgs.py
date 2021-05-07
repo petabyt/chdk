@@ -1,4 +1,4 @@
-# List calls to a function with any of specified constant args
+# List calls to a function with all of specified constant args
 #
 # Jump to location by double clicking the address
 #
@@ -61,6 +61,7 @@ def list_calls_main():
     matches=[]
     regs={}
     msg = []
+    match_arg_count = 0
     for s in re.split('[ ,]+',argstr):
         if n > 3:
             warn('too many arguments, exiting'%(addr))
@@ -81,6 +82,7 @@ def list_calls_main():
         }
         matches.append(match_val)
         if match_val is not None:
+            match_arg_count += 1
             msg.append('0x%x'%(match_val))
         else:
             msg.append('-')
@@ -91,7 +93,8 @@ def list_calls_main():
     if len(regs) == 0:
         warn('no arguments, exiting'%(s))
 
-    infomsg(0,"Searching for %s(%s)\n"%(func.getName(),', '.join(msg)))
+    msg_str = ', '.join(msg)
+    infomsg(0,"Searching for %s(%s)\n"%(func.getName(),msg_str))
 
     funcdesc={
         func.getName():regs
@@ -100,18 +103,15 @@ def list_calls_main():
     cd = CallDescriber(funcdesc)
 
     for desc in cd.describe_all_calls():
-        match = False
-        res = []
+        match_count = 0
         for i,v in enumerate(matches):
             if v is None:
-                res.append('-')
                 continue
 
             if v == desc.args[i].val:
-                res.append('0x%x'%(v))
-                match = True
+                match_count += 1
 
-        if match:
-            infomsg(0,'%s %s(%s)\n'%(desc.addr,desc.fname,', '.join(res)))
+        if match_count == match_arg_count:
+            infomsg(0,'%s %s(%s)\n'%(desc.addr,desc.fname,msg_str))
 
 list_calls_main()
