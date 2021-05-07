@@ -89,12 +89,15 @@ extern int _GetVRAMHPixelsSize(void);
 extern int _GetVRAMVPixelsSize(void);
 
 // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
-// elph130 is 240 when using video out in rec
+// elph130 is 240 when using video out in rec, or in FISHEYE mode
 int vid_get_viewport_yscale() {
-    if (camera_info.state.mode_play || _GetVideoOutType() == 0) {
+    if (camera_info.state.mode_play) {
         return 2;
     }
-    return 1;
+    if(_GetVideoOutType() != 0 || (camera_info.state.mode_shooting == MODE_FISHEYE && !is_video_recording())) {
+        return 1;
+    }
+    return 2;
 }
 
 int vid_get_viewport_width()
@@ -116,11 +119,7 @@ long vid_get_viewport_height()
         }
         return 240;
     }
-    if(vot == 0) {
-        return _GetVRAMVPixelsSize() >> 1;
-    } else {
-        return _GetVRAMVPixelsSize(); // full size is 240 in rec video out
-    }
+    return _GetVRAMVPixelsSize() >> (vid_get_viewport_yscale() - 1);
 }
 
 // viewport width offset table for each image size
@@ -216,19 +215,15 @@ int vid_get_viewport_height_proper()            { return vid_get_viewport_height
 
 int vid_get_viewport_fullscreen_height()
 {
-    int vot = _GetVideoOutType();
     if (camera_info.state.mode_play) {
+        int vot = _GetVideoOutType();
         if(vot == 2) {
             return 576; // PAL in playback is 576
         } else {
             return 480; // all other playback is 480
         }
     } else {
-        if(vot == 0 && camera_info.state.mode_shooting != MODE_FISHEYE) {
-            return 480; // rec without video out, except FISHEYE which is always 240
-        } else {
-            return 240;
-        }
+        return 240<<(vid_get_viewport_yscale()-1);
     }
 }
 int vid_get_palette_type()                      { return 3; }
