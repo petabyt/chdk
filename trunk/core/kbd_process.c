@@ -153,7 +153,7 @@ long kbd_process()
                 {
                     // if start script on alt set, flag to run it
                     if(conf.script_startup==SCRIPT_AUTOSTART_ALT) script_run_on_alt_flag = 1;
-                    enter_alt(0);
+                    enter_alt(camera_info.state.state_kbd_script_run);
                 }
                 else
                     exit_alt();
