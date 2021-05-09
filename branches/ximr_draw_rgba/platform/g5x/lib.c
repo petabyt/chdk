@@ -375,6 +375,8 @@ void update_ui(ximr_context* ximr)
             camera_screen.yuvbm_buffer_width = ximr->buffer_width;
 
             // Clear buffer if size changed
+            extern void gui_set_need_redraw();
+            gui_set_need_redraw();
             vid_bitmap_erase();
 
             // Tell CHDK UI that display needs update

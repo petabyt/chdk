@@ -60,6 +60,8 @@ static long over_exposed;
 
 static long histogram_stage=0;
 
+static int histogram_drawn = 0;
+
 //-------------------------------------------------------------------
 // Histogram calculation functions
 
@@ -461,6 +463,13 @@ void gui_osd_draw_histo(int is_osd_edit)
                 draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
             }
         }
+        
+        histogram_drawn = 1;
+    }
+    else if (histogram_drawn)
+    {
+        histogram_drawn = 0;
+        draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+HISTO_WIDTH+1, conf.histo_pos.y+HISTO_HEIGHT, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
     }
 }
 

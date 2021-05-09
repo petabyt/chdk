@@ -1386,6 +1386,9 @@ static void gui_default_draw(int force_redraw)
     }
 #endif
 
+    if (force_redraw && camera_info.state.state_kbd_script_run)
+        libscriptapi->refresh_display();
+
     if (conf.console_show)
         console_draw(force_redraw);
 }

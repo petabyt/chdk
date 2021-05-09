@@ -28,7 +28,7 @@ static void console_init(int num_lines, int line_length, int x_pos, int y_pos)
 {
     console_max_lines = num_lines;
     console_line_length = line_length;
-    console_y = MAX_CONSOLE_LINES - (y_pos + num_lines) + 1;
+    console_y = MAX_CONSOLE_LINES - (y_pos + num_lines) + 2;
     console_x = x_pos;
 
     console_num_lines = 0;
@@ -169,7 +169,7 @@ void console_set_layout(int x1, int y1, int x2, int y2) //untere linke Ecke(x1,y
         console_num_lines = console_max_lines;
         
     console_x = x1;
-    console_y = MAX_CONSOLE_LINES - y2;
+    console_y = MAX_CONSOLE_LINES - y2 + 1;
 
     if (console_autoredraw)
         console_redraw(0);
