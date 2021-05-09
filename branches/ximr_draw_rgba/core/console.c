@@ -169,7 +169,7 @@ void console_set_layout(int x1, int y1, int x2, int y2) //untere linke Ecke(x1,y
         console_num_lines = console_max_lines;
         
     console_x = x1;
-    console_y = MAX_CONSOLE_LINES - y2 + 1;
+    console_y = y1 + 2;
 
     if (console_autoredraw)
         console_redraw(0);
