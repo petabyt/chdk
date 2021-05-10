@@ -202,6 +202,12 @@ void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 #endif
 }
 
+#else // !THUMB_FW
+// not implemented for earlier DIGICs
+unsigned int color_to_rawpx(__attribute__ ((unused))color cl, __attribute__ ((unused))unsigned int *op) { return 0; }
+void draw_dblpixel_raw(__attribute__ ((unused))unsigned int offset, __attribute__ ((unused))unsigned int px, __attribute__ ((unused))unsigned int op) {}
+void set_transparent(__attribute__ ((unused))unsigned int offst, __attribute__ ((unused))int n_pixel) {}
+
 #endif // THUMB_FW
 
 //-------------------------------------------------------------------
