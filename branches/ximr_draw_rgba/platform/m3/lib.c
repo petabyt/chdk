@@ -5,6 +5,10 @@
 extern int active_bitmap_buffer;
 extern char* bitmap_buffer[];
 
+extern int displaytype;
+#define evf_out     (displaytype == 11)
+#define hdmi_out ((displaytype == 6) || (displaytype == 7))
+
 void vid_bitmap_refresh() {
 /*
     // extern int full_screen_refresh;
@@ -123,6 +127,16 @@ void *vid_get_viewport_fb_d()    {
 extern void* viewport_buffers[];
 extern void *current_viewport_buffer;
 
+int vid_get_aspect_ratio(){
+	if (hdmi_out) {
+		return LV_ASPECT_16_9;
+	} else if (evf_out) {
+		return LV_ASPECT_4_3;
+	} else {
+		return LV_ASPECT_3_2;
+	}
+}
+
 void *vid_get_viewport_live_fb()
 {
 // current_viewport_buffer doesn't seem to be most recent
@@ -140,7 +154,14 @@ int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
     if (camera_info.state.mode_play)
     {
-        return 720;
+	if (hdmi_out) {
+		return 1920;
+	} else if (evf_out) {
+		return 1024;
+	} else {
+		return 736;
+	}
+
     }
 // TODO: currently using actual width rather than half width used on pre d6
 // pixel format is uyvy (16bpp)
@@ -151,7 +172,13 @@ long vid_get_viewport_height() {
     extern int _GetVRAMVPixelsSize();
     if (camera_info.state.mode_play)
     {
-        return 480;
+	if (hdmi_out) {
+		return 1080;
+	} else if (evf_out) {
+		return 768;
+	} else {
+		return 480;
+	};
     }
 	return _GetVRAMVPixelsSize();
 }
@@ -161,8 +188,12 @@ int vid_get_viewport_yoffset() {
     return 0;
 }
 
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-static long vp_xo[5] = { 40, 0, 0, 120, 168 };				// should all be even values for edge overlay
+static long vp_xo[3][5] = {
+// 0=4:3, 1=16:9, 2=3:2, 3=1:1, 4=4:5
+    {  0,     0,     0,   128,     0 }, // EVF 4:3
+    {240,     0,   150,   420,     0 }, // HDMI 16:9
+    { 40,     0,     0,   120,     0 }, // LCD 3x2
+};
 
 int vid_get_viewport_display_xoffset() {
     if (camera_info.state.mode_play)
@@ -172,13 +203,26 @@ int vid_get_viewport_display_xoffset() {
     // video, ignore still res propcase
     if(camera_info.state.mode_video || is_video_recording()) {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
-            return 40;// 4:3 video
+			if (hdmi_out) { // 4:3 video,
+				return 240;
+			} else if (evf_out) {
+				return 0;
+			} else {
+				return 40;
+			};			
         } else {
             return 0; // 16:9 video, no x offset
         }
     }
-    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return vp_xo[vid_get_aspect_ratio()][shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
+
+static long vp_yo[3][5] = {
+// 0=4:3, 1=16:9, 2=3:2, 3=1:1, 4=4:5
+    {  0,     96,    42,     0,     0 }, // EVF 4:3
+    {  0,      0,     0,     0,     0 }, // HDMI 16:9
+    {  0,     36,     0,     0,     0 }, // LCD 3:2
+};
 
 int vid_get_viewport_display_yoffset() {
     if (camera_info.state.mode_play)
@@ -190,14 +234,16 @@ int vid_get_viewport_display_yoffset() {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
             return 0; // 4:3 video, no Y offset
         } else {
-            return 36; // 16:9 video
+			if (hdmi_out) { // 16:9 video,
+				return 0;
+			} else if (evf_out) {
+				return 96;
+			} else {
+				return 36;
+			};            
         }
     }
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)
-    {
-        return 36;
-    }
-    return 0;
+    return vp_yo[vid_get_aspect_ratio()][shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 int vid_get_viewport_type() {
@@ -212,16 +258,41 @@ void *vid_get_bitmap_fb() {
     return bitmap_buffer[0];
 }
 
+
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() ; }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() ; }
-int vid_get_viewport_buffer_width_proper()		{ return camera_screen.buffer_width ; } //(*(int*)(0x00053CBC) );
-int vid_get_viewport_fullscreen_width()			{ return camera_screen.width; }
-int vid_get_viewport_byte_width() 				{ return (camera_screen.buffer_width * 2); }
 
-int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
+int vid_get_viewport_buffer_width_proper(){
+	if (hdmi_out) {
+		return 1920;
+	} else if (evf_out) {
+		return 1024;
+	} else {
+		return 736;
+	}
+}
 
+int vid_get_viewport_fullscreen_width(){
+	if (hdmi_out) {
+		return 1920;
+	} else if (evf_out) {
+		return 1024;
+	} else {
+		return 720;
+	}
+}
+int vid_get_viewport_byte_width() 		{ return (vid_get_viewport_fullscreen_width() * 4); }
+
+int vid_get_viewport_fullscreen_height(){
+	if (hdmi_out) {
+		return 1080;
+	} else if (evf_out) {
+		return 768;
+	} else {
+		return 480;
+	}
+}
 
 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
@@ -241,9 +312,6 @@ void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
 }
 
-extern int displaytype;
-#define evf_out     (displaytype == 11)
-#define hdmi_out ((displaytype == 6) || (displaytype == 7))
 
 // Ximr layer
 typedef struct {

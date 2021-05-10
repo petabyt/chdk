@@ -143,7 +143,7 @@
             draw_vline
 
             // special functions for yuv overlay (DIGIC 6)
-            set_transparent
+            erase_zebra
             draw_dblpixel_raw
             color_to_rawpx
 
