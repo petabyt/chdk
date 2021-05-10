@@ -237,7 +237,12 @@ int vid_get_viewport_buffer_width_proper()
     return 736;
 }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
-int vid_get_aspect_ratio()                      { if (hdmi_out) return LV_ASPECT_16_9; else return LV_ASPECT_3_2; }
+int vid_get_aspect_ratio()
+{
+    if (hdmi_out) return LV_ASPECT_16_9;
+    if (evf_out) return LV_ASPECT_4_3;
+    return LV_ASPECT_3_2;
+}
 
 int display_needs_refresh = 0;
 
