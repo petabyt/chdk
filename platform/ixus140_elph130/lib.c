@@ -134,7 +134,7 @@ int vid_get_viewport_xoffset()
 
 int vid_get_viewport_display_xoffset()
 {
-    if (camera_info.state.mode_play)
+    if (camera_info.state.mode_play || is_video_recording())
     {
         return 0;
     }
@@ -167,11 +167,7 @@ int vid_get_viewport_yoffset()
     {
         return 0;
     }
-    else if (camera_info.state.mode_shooting == MODE_STITCH)
-    {
-        return 0;
-    }
-    // no distinct video mode
+    // no distinct video mode, video uses its own aspect ratio, not still ratio of current mode
     else if (/*mode_is_video(m)*/ is_video_recording())
     {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
@@ -179,6 +175,10 @@ int vid_get_viewport_yoffset()
         } else {
             return 30; // 16:9 video
         }
+    }
+    else if (camera_info.state.mode_shooting == MODE_STITCH)
+    {
+        return 0;
     }
     else
     {
@@ -192,10 +192,6 @@ int vid_get_viewport_display_yoffset()
     {
         return 0;
     }
-    else if (camera_info.state.mode_shooting == MODE_STITCH)
-    {
-        return 72;
-    }
     else if (/*mode_is_video(m)*/ is_video_recording())
     {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
@@ -203,6 +199,10 @@ int vid_get_viewport_display_yoffset()
         } else {
             return 30;
         }
+    }
+    else if (camera_info.state.mode_shooting == MODE_STITCH)
+    {
+        return 72;
     }
     else
     {
