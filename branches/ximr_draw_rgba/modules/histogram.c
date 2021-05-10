@@ -491,7 +491,7 @@ int _module_unloader()
 
 int _module_can_unload()
 {
-    return conf.show_histo == 0;
+    return (conf.show_histo == 0) && (histogram_drawn == 0);
 }
 
 /******************** Module Information structure ******************/

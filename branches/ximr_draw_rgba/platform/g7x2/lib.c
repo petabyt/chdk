@@ -340,6 +340,7 @@ void update_ui(ximr_context* ximr)
             camera_screen.yuvbm_width = ximr->width;
             camera_screen.yuvbm_height = ximr->height;
             camera_screen.yuvbm_buffer_width = ximr->buffer_width;
+            camera_screen.yuvbm_buffer_size = camera_screen.yuvbm_buffer_width * camera_screen.yuvbm_height;
 
             // Clear buffer if size changed
             extern void gui_set_need_redraw();

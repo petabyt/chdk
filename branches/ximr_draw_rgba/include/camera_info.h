@@ -105,7 +105,7 @@ typedef struct
     int     fselect_size_size;                          // file select window file size column width
     int     fselect_time_size;                          // file select window file date column width
 #ifdef CAM_DRAW_RGBA
-    int     yuvbm_width, yuvbm_height, yuvbm_buffer_width; // Size of YUV bitmap screen
+    int     yuvbm_width, yuvbm_height, yuvbm_buffer_width, yuvbm_buffer_size; // Size of YUV bitmap screen
 #endif
 } _cam_screen;
 

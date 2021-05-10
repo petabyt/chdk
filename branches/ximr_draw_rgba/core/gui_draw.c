@@ -9,7 +9,7 @@
 #include "../lib/font/font_8x16_uni_packed.h"
 #undef  GET_FONT_COMPRESSION_MODE
 
-#ifdef CAM_DRAW_YUV
+#ifdef THUMB_FW
 
 // macros for computing palette from a single byte color value
 #define CALC_YUV_LUMA_OPACITY_FOR_COLOR(color,luma,opacity) \
@@ -40,11 +40,13 @@ extern char* bitmap_buffer[];
 extern int active_bitmap_buffer;
 #endif
 
-#else // !CAM_DRAW_YUV
+#endif
+
 #ifdef CAM_DRAW_RGBA
 
 extern unsigned int*    chdk_rgba;
 extern unsigned int     rgba_colors[];
+extern unsigned char    yuv_colors[];
 int                     display_needs_canon_refresh;
 
 #else // CAM_DRAW_RGBA
@@ -57,7 +59,6 @@ static char* frame_buffer[2];
 #endif
 
 #endif // CAM_DRAW_RGBA
-#endif // CAM_DRAW_YUV
 
 //-------------------------------------------------------------------
 // used to prevent draw_restore from being called until tick reached
@@ -135,8 +136,11 @@ static void draw_pixel_std(unsigned int offset, color cl)
 #endif
 #endif // CAM_DRAW_YUV
 }
+
 //-------------------------------------------------------------------
-#ifdef CAM_DRAW_YUV
+// Zebra
+
+#ifdef THUMB_FW
 // direct drawing functions for YUV overlay, currently used by the zebra module
 // ATTENTION: these functions do not support guard pixels or rotation
 
@@ -168,6 +172,9 @@ void set_transparent(unsigned int offst, int n_pixel)
 // opacity is returned via the second argument
 unsigned int color_to_rawpx(color cl, unsigned int *op)
 {
+#ifdef CAM_DRAW_RGBA
+    cl = yuv_colors[cl&31];
+#endif
     unsigned int y,u,v,o;
     CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
     CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,y,o);
@@ -195,19 +202,7 @@ void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 #endif
 }
 
-#else // !CAM_DRAW_YUV
-// not implemented for earlier DIGICs
-unsigned int color_to_rawpx(__attribute__ ((unused))color cl, __attribute__ ((unused))unsigned int *op)
-{
-    return 0;
-}
-void draw_dblpixel_raw(__attribute__ ((unused))unsigned int offset, __attribute__ ((unused))unsigned int px, __attribute__ ((unused))unsigned int op)
-{
-}
-void set_transparent(__attribute__ ((unused))unsigned int offst, __attribute__ ((unused))int n_pixel)
-{
-}
-#endif // CAM_DRAW_YUV
+#endif // THUMB_FW
 
 //-------------------------------------------------------------------
 unsigned int rotate_base;
@@ -599,18 +594,105 @@ void draw_pixel(coord x, coord y, color cl)
    }
 }
 
-void draw_pixel_unrotated(coord x, coord y, color cl)
+//-------------------------------------------------------------------
+// Edge overlay
+
+void draw_or_erase_edge_pixel(coord px, coord py, color cl, int is_draw)
 {
+#ifdef CAM_DRAW_RGBA
+    // Make sure pixel is on screen.
+    if ((px < 0) || (py < 0) || (px >= camera_screen.yuvbm_width) || (py >= camera_screen.yuvbm_height)) return;
+
+    // bitmap buffer offset
+    register unsigned int offset = py * camera_screen.yuvbm_buffer_width + px;
+    
+    // Get YUV color value
+    cl = yuv_colors[cl&31];
+#else
     // Make sure pixel is on screen. Skip top left pixel if screen erase detection is on to avoid triggering the detector.
-    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height) || ((x == 0) && (y == 0))) return;
-    else
-    {
-        register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
-        draw_pixel_proc_norm(offset,   cl);
-#if CAM_USES_ASPECT_CORRECTION
-        draw_pixel_proc_norm(offset+1, cl);  // Draw second pixel if screen scaling is needed
+    if ((px < 0) || (py < 0) || (px >= camera_screen.width) || (py >= camera_screen.height) || ((px == 0) && (py == 0))) return;
+
+    // bitmap buffer offset
+    register unsigned int offset = py * camera_screen.buffer_width + ASPECT_XCORRECTION(px);
 #endif
-   }
+
+#ifdef CAM_DRAW_8BIT
+
+    // See if we need to erase, do nothing if not drawing and current pixel is not edge pixel, otherwise set draw color to transparent.
+    if (!is_draw)
+    {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+        if (bitmap_buffer[active_bitmap_buffer][offset] != cl) return;
+#else
+        if (frame_buffer[0][offset] != cl) return;
+#endif
+        cl = 0;     // Transparent
+    }
+
+    // Draw pixel
+    draw_pixel_proc_norm(offset,   cl);
+#if CAM_USES_ASPECT_CORRECTION
+    draw_pixel_proc_norm(offset+1, cl);  // Draw second pixel if screen scaling is needed
+#endif
+
+#else // !CAM_DRAW_8BIT
+
+    // See if we need to erase, do nothing if not drawing and current pixel is not edge pixel, otherwise set draw color to transparent.
+    if (!is_draw)
+    {
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+        if (opacity_buffer[active_bitmap_buffer&1][offset] != 254) return;
+#else
+        if (opacity_buffer[0][offset] != 254) return;
+#endif
+        cl = 0;     // Transparent
+    }
+
+    unsigned int y;
+    unsigned int o;
+    CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,y,o);
+    unsigned int u;
+    unsigned int v;
+    CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
+
+    if (o == 255) o = 254;  // Adjust opacity so we can test later
+
+    register unsigned int offs2 = (offset>>1)<<2;
+
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    unsigned char *obu = (unsigned char *)(&opacity_buffer[active_bitmap_buffer&1][0]);
+    unsigned char *bbu = (unsigned char *)(&bitmap_buffer[active_bitmap_buffer&1][0]);
+    obu[offset] = o;
+    if (offset&1) // x is odd
+    {
+        bbu[offs2+3] = y; // Y
+    }
+    else // x is even
+    {
+        bbu[offs2+1] = y; // Y
+    }
+    bbu[offs2+0] = u; // U?
+    bbu[offs2+2] = v; // V?
+#else
+    opacity_buffer[0][offset] = o;
+    opacity_buffer[1][offset] = o;
+    if (offset&1) // x is odd
+    {
+        (bitmap_buffer[0])[offs2+3] = y; // Y
+        (bitmap_buffer[1])[offs2+3] = y; // Y
+    }
+    else // x is even
+    {
+        (bitmap_buffer[0])[offs2+1] = y; // Y
+        (bitmap_buffer[1])[offs2+1] = y; // Y
+    }
+    (bitmap_buffer[0])[offs2+0] = u; // U?
+    (bitmap_buffer[1])[offs2+0] = u; // U?
+    (bitmap_buffer[0])[offs2+2] = v; // V?
+    (bitmap_buffer[1])[offs2+2] = v; // V?
+#endif
+
+#endif // !CAM_DRAW_8BIT
 }
 
 //-------------------------------------------------------------------
@@ -635,22 +717,6 @@ color draw_get_pixel(coord x, coord y)
 #endif
     }
 #else // CAM_DRAW_YUV
-    // DIGIC 6 not supported
-    (void)x; (void)y;
-    return 0;
-#endif // CAM_DRAW_YUV
-}
-
-color draw_get_pixel_unrotated(coord x, coord y)
-{
-#ifdef CAM_DRAW_8BIT
-    if ((x < 0) || (y < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return 0;
-#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
-    return bitmap_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
-#else
-    return frame_buffer[0][y * camera_screen.buffer_width + ASPECT_XCORRECTION(x)];
-#endif
-#else //CAM_DRAW_YUV
     // DIGIC 6 not supported
     (void)x; (void)y;
     return 0;

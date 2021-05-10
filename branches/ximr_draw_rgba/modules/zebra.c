@@ -714,7 +714,11 @@ static int draw_zebra_no_aspect_adjust(unsigned int f)
             else
             {
                 // clear buf[] of zebra
+#ifdef CAM_DRAW_RGBA
+                set_transparent(0, camera_screen.yuvbm_buffer_size);  //blink
+#else
                 set_transparent(0, camera_screen.buffer_size);  //blink
+#endif
                 disp_zebra();
             }
             need_restore=0;
@@ -737,9 +741,14 @@ int gui_osd_draw_zebra(int show)
     unsigned int f;
 
     // Check that viewport dimensions do not exceed bitmap dimensions.
-    // HDMI output uses a larger frame for the image compared to the bitmap we draw on - the code can't handle this and will crash
+    // HDMI output may use a larger frame for the image compared to the bitmap we draw on - the code can't handle this.
+#ifdef CAM_DRAW_RGBA
+    if ((vid_get_viewport_width() > camera_screen.yuvbm_width) || (vid_get_viewport_height() > camera_screen.yuvbm_height))
+        return 0;
+#else
     if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
         return 0;
+#endif
 
     if (!gui_osd_zebra_init(show))
         return 0;

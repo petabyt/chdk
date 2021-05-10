@@ -80,6 +80,7 @@
     #define CAM_DATE_FOLDER_NAMING              0x80
     #define CAM_FILE_COUNTER_IS_VAR             1     // file counter is variable file_counter_var in stubs, not a param
 
+    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active YUV bitmap buffer only. Used for edge overlay, other UI drawn on RGBA layer.
     #define CAM_HAS_DISPLAY_REFRESH_FLAG        1   // 'display_needs_refresh' variable is available to trigger CHDK UI update
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
