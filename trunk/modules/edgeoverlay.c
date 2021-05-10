@@ -654,12 +654,7 @@ static int draw_edge_overlay()
                     // Draw a pixel to the screen wherever we detected an edge.
                     // If there is no edge based on the newest data, but there is one painted on the screen
                     // from previous calls, delete it from the screen.
-                    const int bEdge = bv_get(edgebuf, y_edgebuf + x);
-                    // TODO draw_get_pixel_unrotated not implemented for digic 6
-                    const int bDraw = bEdge || (draw_get_pixel_unrotated(x_off+viewport_xoffset, y_off+viewport_yoffset) == cl);
-                    if (bEdge || bDraw)
-                        draw_pixel_unrotated(x_off+viewport_xoffset, y_off+viewport_yoffset, bEdge ? cl : 0);
-
+                    draw_or_erase_edge_pixel(x_off+viewport_xoffset, y_off+viewport_yoffset, cl, bv_get(edgebuf, y_edgebuf + x));
                 }
             }   // for x
         }
@@ -682,8 +677,7 @@ static int draw_edge_overlay()
             for (x = x_min_c; x < x_max_c; ++x)
             {
                 // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
-                if (draw_get_pixel_unrotated(x+viewport_xoffset, y+viewport_yoffset) == cl)
-                    draw_pixel_unrotated(x+viewport_xoffset, y+viewport_yoffset, 0 );
+                draw_or_erase_edge_pixel(x+viewport_xoffset, y+viewport_yoffset, cl, 0);
             }
         }
     }
@@ -700,8 +694,7 @@ static int draw_edge_overlay()
             for (x = x_min; x < x_max; ++x)
             {
                 // if there is an edge drawn on the screen but there is no edge there based on the newest data, delete it from the screen
-                if (draw_get_pixel_unrotated(x+viewport_xoffset, y+viewport_yoffset) == cl)
-                    draw_pixel_unrotated(x+viewport_xoffset, y+viewport_yoffset, 0 );
+                draw_or_erase_edge_pixel(x+viewport_xoffset, y+viewport_yoffset, cl, 0);
             }
         }
     }
