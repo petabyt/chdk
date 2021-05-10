@@ -105,10 +105,8 @@ extern void draw_set_guard();
 extern int draw_test_guard();
 
 extern color draw_get_pixel(coord x, coord y);
-extern color draw_get_pixel_unrotated(coord x, coord y);
-
 extern void draw_pixel(coord x, coord y, color cl);
-extern void draw_pixel_unrotated(coord x, coord y, color cl);
+extern void draw_or_erase_edge_pixel(coord x, coord y, color cl, int is_draw);
 
 extern void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op);
 extern void set_transparent(unsigned int offset, int n_pixel);
