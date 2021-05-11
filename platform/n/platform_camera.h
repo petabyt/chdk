@@ -61,7 +61,7 @@
     #undef  CAM_DISP_ALT_TEXT                               // Turn off <ALT> at bottom of screen in Alt mode - changes button color instead
     #define CAM_TOUCHSCREEN_UI              1               // Enable touch screen U/I
 
-    #undef  CAM_EMUL_KEYPRESS_DELAY         
+    #undef  CAM_EMUL_KEYPRESS_DELAY
     #define CAM_EMUL_KEYPRESS_DELAY         80              // Delay to interpret <alt>-button press as longpress
     #undef  CAM_EMUL_KEYPRESS_DURATION
     #define CAM_EMUL_KEYPRESS_DURATION      10
@@ -93,10 +93,19 @@
     #define CAM_SD_OVER_IN_AFL              1               // probably not going to work well
     #define CAM_SD_OVER_IN_MF               1               //
 
-    #undef  CAM_GUI_FSELECT_SIZE      
+    #undef  CAM_GUI_FSELECT_SIZE
     #define CAM_GUI_FSELECT_SIZE            15, 6, 8       // use narrow columns in file select window gui
 
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works
+
+    #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
+    #undef  CAM_VIDEO_CONTROL
+    #define CAM_HAS_VIDEO_BUTTON            1
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
+
+    #undef CAM_AF_LED
+    #define CAM_AF_LED                      1
 
 //------ Powershot N - fence for values checked as okay - stuff below here not checked yet ---------------
 
@@ -106,14 +115,10 @@
     #define CAM_BRACKETING                  1               // allow disable of RAW saving in native Ev bracketing
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE  1               // use PROPCASE_TIMER_MODE to check for multiple shot custom timer.
 
-    #undef  CAM_VIDEO_CONTROL
-    #define CAM_HAS_VIDEO_BUTTON            1
-    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
 //    #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
     #undef  CAM_CHDK_HAS_EXT_VIDEO_TIME
 
-    #define CAM_HAS_WIFI                        1   // Camera has wifi support
 
 //--------------------------------------------------
