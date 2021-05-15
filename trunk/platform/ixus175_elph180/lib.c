@@ -85,6 +85,28 @@ long vid_get_viewport_height()
   return _GetVRAMVPixelsSize();
 }
 
+int vid_get_viewport_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    // no distinct video mode, video uses its own aspect ratio, not still ratio of current mode
+    if (is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
+    }
+    // UI doesn't have aspect ratio setting, but setting image size to W sets aspect prop to 16:9
+    if(shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1) {
+        return 30;
+    }
+    return 0;
+}
+
 int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * vid_get_viewport_yscale(); }
 
 int vid_get_viewport_fullscreen_height()
