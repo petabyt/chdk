@@ -291,7 +291,7 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 FUNC ref=0
 ASM
-FW 116
+FW 104
 >>> prelabel
 "    BL      wait_until_remote_button_is_released\n"    // added
 "    BL      capt_seq_hook_set_nr\n"                    // added
