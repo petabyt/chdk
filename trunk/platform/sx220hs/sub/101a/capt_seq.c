@@ -435,6 +435,8 @@ asm volatile (
 "loc_FF18D928:\n"
 "    MOV     R0, #2 \n"
 "    BL      sub_FF07EFE8 \n"
+"    BL      wait_until_remote_button_is_released\n"    // added
+"    BL      capt_seq_hook_set_nr\n"                    // added
 
 "loc_FF18D930:\n"
 "    LDRH    R0, [R5] \n"
@@ -449,8 +451,6 @@ asm volatile (
 "    BL      _GetPropertyCase \n"
 "    TST     R0, #1 \n"
 "    MOVNE   R1, #0xBC \n"
-"    BL      wait_until_remote_button_is_released\n"    // added
-"    BL      capt_seq_hook_set_nr\n"                    // added
 "    LDRNE   R0, =0xFF18DAB8 /*'SsCaptureSeq.c'*/ \n"
 "    BLNE    _DebugAssert \n"
 "    LDRH    R0, [SP] \n"
