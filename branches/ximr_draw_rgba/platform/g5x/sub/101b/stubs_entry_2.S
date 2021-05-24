@@ -66,7 +66,7 @@ NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
                                                             //   the debug_logging_ptrvalue.
                                                             //   debug_logging_flag is the memory address of the flag value in the if statement.
    DEF(mzrm_sendmsg_ret_adr                   ,0xfc361fa9)  // Thumb address to check against LR register to detect mzrm_sendmag call from Canon UI update
-                                                            //   This is the address immediately after the call to debug_logging_ptrin mzrm_sendmsg (+1 for thumb)
+                                                            //   This is the address immediately after the call to debug_logging_ptr in mzrm_sendmsg (+1 for thumb)
 
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)

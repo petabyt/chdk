@@ -216,17 +216,19 @@ debug_logging_my(char* fmt, ...)
             //LR = Return address
             "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
             "    cmp     r0, lr\n"
-            "    beq     do_ui_update\n"
+            "    beq     chk_msg_type\n"
             "exit_debug_logging_my:\n"
             "    bx      lr\n"
 
-            "do_ui_update:\n"
+            "chk_msg_type:\n"
             "    ldr     r0, [sp,#0x18]\n"              // mzrm_sendmsg 'msg' value (2nd parameter, saved on stack)
-            "    ldr     r1, [r0]\n"                    // message type
-            "    mov     r2, #0x25\n"                   // Ximr update? (3rd parameter to mzrm_createmsg)
-            "    cmp     r1, r2\n"
+            "    ldr     r1, [r0]\n"
+            "    cmp     r1, 0x25\n"                    // message type XimrExe
+            "    beq     do_ui_update\n"
+            "    cmp     r1, 0x26\n"                    // message type XimrExeGain
             "    bne     exit_debug_logging_my\n"
-            "    add     r0, r0, #16\n"                 // Offset to Ximr context in 'msg'
+            "do_ui_update:\n"
+            "    ldr     r0, [r0,0x0c]\n"               // address of Ximr context in 'msg'
             "    b       update_ui\n"
     );
 }
