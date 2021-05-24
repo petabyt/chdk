@@ -109,7 +109,7 @@ extern void draw_pixel(coord x, coord y, color cl);
 extern void draw_or_erase_edge_pixel(coord x, coord y, color cl, int is_draw);
 
 extern void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op);
-extern void set_transparent(unsigned int offset, int n_pixel);
+extern void erase_zebra();
 extern unsigned int color_to_rawpx(color cl, unsigned int *op);
 
 extern void draw_line(coord x1, coord y1, coord x2, coord y2, color cl);

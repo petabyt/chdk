@@ -35,9 +35,7 @@
 
 extern volatile char *opacity_buffer[];
 extern char* bitmap_buffer[];
-#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
 extern int active_bitmap_buffer;
-#endif
 
 #else
 
@@ -117,31 +115,49 @@ static void draw_pixel_std(unsigned int offset, color cl)
 #endif
 }
 //-------------------------------------------------------------------
+// Zebra
+
 #ifdef THUMB_FW
 // direct drawing functions for YUV overlay, currently used by the zebra module
 // ATTENTION: these functions do not support guard pixels or rotation
 
-// function for setting part of the overlay transparent (DIGIC 6 only), used in zebra module
-// n_pixel is the number of pixels to set
-// offst is the byte offset in bitmap_buffer, 2 bytes per pixel
-void set_transparent(unsigned int offst, int n_pixel)
+// Erase the pixels drawn by the zebra code
+void erase_zebra()
 {
-    extern void _bzero(char *s, int n);
-    extern void _memset32(char *s, int n, unsigned int pattern);
-    //offset is the byte (same as pixel) offset in the opacity buffer
-    unsigned int offset = offst>>2;
-    unsigned int w_pattern = 0x00800080;
-
+    int x, y;
+    int active_buffer_index =  active_bitmap_buffer & 1;
 #ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
-    int active_buffer_index = active_bitmap_buffer & 1;
-
-    _memset32(&bitmap_buffer[active_buffer_index][offst], n_pixel<<1, w_pattern);
-    _bzero((char*)&opacity_buffer[active_buffer_index][offset], n_pixel);
+    unsigned short *obu = (unsigned short *)(&opacity_buffer[active_buffer_index][0]);
+    unsigned int *bbu = (unsigned int *)(&bitmap_buffer[active_buffer_index][0]);
+    for (y = 0; y < vid_get_viewport_height(); y += 1) {
+        for (x = 0; x < vid_get_viewport_width() / 2; x += 1) {
+            if (obu[x] == 0xfdfd) {
+                obu[x] = 0;
+                bbu[x] = 0x00800080;
+            }
+        }
+        obu += vid_get_viewport_buffer_width_proper() / 2;
+        bbu += vid_get_viewport_buffer_width_proper() / 2;
+    }
 #else
-    _memset32(&bitmap_buffer[0][offst], n_pixel<<1, w_pattern);
-    _bzero((char*)&opacity_buffer[0][offset], n_pixel);
-    _memset32(&bitmap_buffer[1][offst], n_pixel<<1, w_pattern);
-    _bzero((char*)&opacity_buffer[1][offset], n_pixel);
+    unsigned short *obu0 = (unsigned short *)(&opacity_buffer[active_buffer_index][0]);
+    unsigned int *bbu0 = (unsigned int *)(&bitmap_buffer[active_buffer_index][0]);
+    unsigned short *obu1 = (unsigned short *)(&opacity_buffer[active_buffer_index^1][0]);
+    unsigned int *bbu1 = (unsigned int *)(&bitmap_buffer[active_buffer_index^1][0]);
+    for (y = 0; y < vid_get_viewport_height(); y += 1) {
+        for (x = 0; x < vid_get_viewport_width() / 2; x += 1) {
+            if (obu0[x] == 0xfdfd) {
+                obu0[x] = 0;
+                bbu0[x] = 0x00800080;
+                obu1[x] = 0;
+                bbu1[x] = 0x00800080;
+            }
+        }
+        obu0 += vid_get_viewport_buffer_width_proper() / 2;
+        bbu0 += vid_get_viewport_buffer_width_proper() / 2;
+        obu1 += vid_get_viewport_buffer_width_proper() / 2;
+        bbu1 += vid_get_viewport_buffer_width_proper() / 2;
+    }
 #endif
 }
 
@@ -152,42 +168,45 @@ unsigned int color_to_rawpx(color cl, unsigned int *op)
     unsigned int y,u,v,o;
     CALC_YUV_CHROMA_FOR_COLOR(cl,u,v);
     CALC_YUV_LUMA_OPACITY_FOR_COLOR(cl,y,o);
-    if (op) *op = o;
+    if (o == 255) o = 253;
+    if (op) *op = o | (o << 8);
     return (u&255)+((y&255)<<8)+((v&255)<<16)+(y<<24);
 }
 
 // function for drawing a whole yuv unit (2 pixels, aligned)
 // opacity is a single byte, used for both pixels
 // drawing offset is pixel offset, calculated by caller
+// Does not overwrite Canon UI
 void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 {
     offset >>= 2;
-#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
     int active_buffer_index =  active_bitmap_buffer & 1;
-    unsigned short * opbuf = (unsigned short*)(opacity_buffer[active_buffer_index]);
-    unsigned int * bmbuf = (unsigned int*)(bitmap_buffer[active_buffer_index]);
-    bmbuf[offset] = px;
-    opbuf[offset] = op | (op<<8);
+#ifdef DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY
+    unsigned short *obu = (unsigned short *)(&opacity_buffer[active_buffer_index][0]);
+    unsigned int *bbu = (unsigned int *)(&bitmap_buffer[active_buffer_index][0]);
+    if ((obu[offset] == 0xfdfd) || ((op != 0) && (obu[offset] == 0))) {
+        bbu[offset] = px;
+        obu[offset] = op;
+    }
 #else
-    ((unsigned int*)bitmap_buffer[0])[offset] = px;
-    ((unsigned short*)opacity_buffer[0])[offset] = op | (op<<8);
-    ((unsigned int*)bitmap_buffer[1])[offset] = px;
-    ((unsigned short*)opacity_buffer[1])[offset] = op | (op<<8);
+    unsigned short *obu0 = (unsigned short *)(&opacity_buffer[active_buffer_index][0]);
+    unsigned int *bbu0 = (unsigned int *)(&bitmap_buffer[active_buffer_index][0]);
+    unsigned short *obu1 = (unsigned short *)(&opacity_buffer[active_buffer_index^1][0]);
+    unsigned int *bbu1 = (unsigned int *)(&bitmap_buffer[active_buffer_index^1][0]);
+    if ((obu0[offset] == 0xfdfd) || ((op != 0) && (obu0[offset] == 0))) {
+        bbu0[offset] = px;
+        obu0[offset] = op;
+        bbu1[offset] = px;
+        obu1[offset] = op;
+    }
 #endif
 }
 
 #else // !THUMB_FW
 // not implemented for earlier DIGICs
-unsigned int color_to_rawpx(__attribute__ ((unused))color cl, __attribute__ ((unused))unsigned int *op)
-{
-    return 0;
-}
-void draw_dblpixel_raw(__attribute__ ((unused))unsigned int offset, __attribute__ ((unused))unsigned int px, __attribute__ ((unused))unsigned int op)
-{
-}
-void set_transparent(__attribute__ ((unused))unsigned int offst, __attribute__ ((unused))int n_pixel)
-{
-}
+unsigned int color_to_rawpx(__attribute__ ((unused))color cl, __attribute__ ((unused))unsigned int *op) { return 0; }
+void draw_dblpixel_raw(__attribute__ ((unused))unsigned int offset, __attribute__ ((unused))unsigned int px, __attribute__ ((unused))unsigned int op) {}
+void erase_zebra() {}
 #endif // THUMB_FW
 
 //-------------------------------------------------------------------
