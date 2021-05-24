@@ -520,8 +520,7 @@ typedef struct
     unsigned int op;
 } rawcolor_s;
 
-rawcolor_s clr[8];
-rawcolor_s rawcl_overunder[3];
+rawcolor_s clr[10];
 int shown = 0;
 
 // D6 version draws directly, no allocs
@@ -560,16 +559,15 @@ static int gui_osd_zebra_init(int show)
             {
                 clr[f].yuv = color_to_rawpx(cls[f], &(clr[f].op));
             }
-            rawcl_overunder[1].yuv = color_to_rawpx(cl_under, &(rawcl_overunder[1].op));
-            rawcl_overunder[0].yuv = color_to_rawpx(cl_over, &(rawcl_overunder[0].op));
-            rawcl_overunder[2].yuv = color_to_rawpx(COLOR_TRANSPARENT, &(rawcl_overunder[2].op));
+            clr[8].yuv = color_to_rawpx(cl_over, &(clr[8].op));
+            clr[9].yuv = color_to_rawpx(cl_under, &(clr[9].op));
         }
     }
     else
     {
         if (shown) // if zebra was previously on, restore
         {
-            gui_set_need_restore();
+            erase_zebra();
         }
         gui_osd_zebra_free();
     }
@@ -636,11 +634,7 @@ static int draw_zebra_no_aspect_adjust(unsigned int f)
         {
             // clear top & bottom areas of buffer if image height if smaller than viewport
         }
-        int step_x;
         over = 255-conf.zebra_over;
-    // start with all transparent, set the whole LCD causes too much blink
-    //    set_transparent(0,buffer_size/2); 
-        step_x = 2; //anything larger makes solid consist of alternating columns...
 
         for (y=0; y<viewport_height ; ++y)
         {
@@ -649,57 +643,41 @@ static int draw_zebra_no_aspect_adjust(unsigned int f)
 // 16:9     f:8 vh:360 vw:640 vbw:1280 vxo:0 vyo:60
 //1x1        f:8 vh:480 vw:480 vbw:1280 vxo:80 vyo:0
             //this can be made more efficient, but for now want clarity 
-            for (x=0; x<viewport_width; x+=step_x)
+            for (x=0; x<viewport_width; x+=2)
             {
-                register int y1, uu, vv;
-                v = y*(viewport_byte_width)  + x + x ; //v is the byte number in img-buf  0...480,480+320...960,
+                v = y*(viewport_byte_width) + x + x ; //v is the byte number in img-buf  0...480,480+320...960,
                 bitmap_byte = (y + viewport_yoffset) * viewport_byte_width + 2*(x + viewport_xoffset);
-                unsigned int ibuf = *(unsigned int*)(&img_buf[v&0xfffffffc]);
-                vv =(signed char)((ibuf&0xff)-128);
-                uu =(signed char)(((ibuf>>16)&0xff)-128);
-                y1 = (unsigned char)((ibuf>>8)&0xff);
 
                 int sel = 0;
-                if (conf.zebra_multichannel)
+                if (!((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
                 {
+                    register int y1, uu, vv;
+                    unsigned int ibuf = *(unsigned int*)(&img_buf[v&0xfffffffc]);
+                    uu = (signed char)((ibuf&0xff)-128);
+                    vv = (signed char)(((ibuf>>16)&0xff)-128);
                     // for simplicity check only first pixel y1
-                    sel = 0;
-                    if (!((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
+                    y1 = (unsigned char)((ibuf>>8)&0xff);
+
+                    if (conf.zebra_multichannel)
                     {
                         if (clip8(((y1<<12) +           vv*5743 + 2048)>>12)>over) sel  = 4; // R
                         if (clip8(((y1<<12) - uu*1411 - vv*2925 + 2048)>>12)>over) sel |= 2; // G
                         if (clip8(((y1<<12) + uu*7258           + 2048)>>12)>over) sel |= 1; // B
                     }
-                    //set two pixels (4 bytes ) to color sel
-                    if (sel > 0 )
-                    {
-                        draw_dblpixel_raw(bitmap_byte,  clr[sel].yuv, clr[sel].op);
-                        zebra_drawn = 1;
-                    }
                     else
                     {
-                        draw_dblpixel_raw(bitmap_byte, 0x800080, 0);
+                        // if y1 is over or under
+                        // set two pixels to over / under color
+                        sel = (y1>over) ? 8 : (y1<conf.zebra_under) ? 9 : 0;
                     }
                 }
-                else if (((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
-                {
-                    // set two pixels transparent 
-                    draw_dblpixel_raw(bitmap_byte, 0x800080, 0); 
-                }
-                else
-                {
-                    // if y1 is over or under
-                    // set two pixels to under color
-                    sel = (y1>over)?0:(y1<conf.zebra_under)?1:2;
-                     //set two pixels (4 bytes ) to either overexposed, underexposed or transparent color
-                    draw_dblpixel_raw(bitmap_byte, rawcl_overunder[sel].yuv, rawcl_overunder[sel].op);
-                    if (sel < 2) {
-                        zebra_drawn = 1;
-                    }
-                }
+                //set two pixels (4 bytes )
+                draw_dblpixel_raw(bitmap_byte, clr[sel].yuv, clr[sel].op);
+                if (sel)
+                    zebra_drawn = 1;
             }
         }
-        if (!zebra_drawn) f=0;
+        if (!zebra_drawn) f = 0;
     }
     // if blink mode is in no-zebra phase OR if there was no over/underexposed pixels to draw zebra on
     if (!f)
@@ -707,16 +685,9 @@ static int draw_zebra_no_aspect_adjust(unsigned int f)
         // if zebra was drawn during previous call of this function
         if (need_restore)
         {
-            if (conf.zebra_restore_screen || conf.zebra_restore_osd)
-            {
-                gui_set_need_restore();
-            }
-            else
-            {
-                // clear buf[] of zebra
-                set_transparent(0, camera_screen.buffer_size);  //blink
-                disp_zebra();
-            }
+            // clear buf[] of zebra
+            erase_zebra();  //blink
+            disp_zebra();
             need_restore=0;
         }
         return !(conf.zebra_restore_screen && conf.zebra_restore_osd);
