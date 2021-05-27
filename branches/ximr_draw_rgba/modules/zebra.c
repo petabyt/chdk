@@ -645,20 +645,21 @@ static int draw_zebra_no_aspect_adjust(unsigned int f)
             //this can be made more efficient, but for now want clarity 
             for (x=0; x<viewport_width; x+=2)
             {
-                register int y1, uu, vv;
-                v = y*(viewport_byte_width)  + x + x ; //v is the byte number in img-buf  0...480,480+320...960,
+                v = y*(viewport_byte_width) + x + x ; //v is the byte number in img-buf  0...480,480+320...960,
                 bitmap_byte = (y + viewport_yoffset) * viewport_byte_width + 2*(x + viewport_xoffset);
-                unsigned int ibuf = *(unsigned int*)(&img_buf[v&0xfffffffc]);
-                vv =(signed char)((ibuf&0xff)-128);
-                uu =(signed char)(((ibuf>>16)&0xff)-128);
-                y1 = (unsigned char)((ibuf>>8)&0xff);
 
                 int sel = 0;
                 if (!((conf.zebra_mode == ZEBRA_MODE_ZEBRA_1 || conf.zebra_mode == ZEBRA_MODE_ZEBRA_2) && (y-x-timer)&f))
                 {
+                    register int y1, uu, vv;
+                    unsigned int ibuf = *(unsigned int*)(&img_buf[v&0xfffffffc]);
+                    uu = (signed char)((ibuf&0xff)-128);
+                    vv = (signed char)(((ibuf>>16)&0xff)-128);
+                    // for simplicity check only first pixel y1
+                    y1 = (unsigned char)((ibuf>>8)&0xff);
+
                     if (conf.zebra_multichannel)
                     {
-                        // for simplicity check only first pixel y1
                         if (clip8(((y1<<12) +           vv*5743 + 2048)>>12)>over) sel  = 4; // R
                         if (clip8(((y1<<12) - uu*1411 - vv*2925 + 2048)>>12)>over) sel |= 2; // G
                         if (clip8(((y1<<12) + uu*7258           + 2048)>>12)>over) sel |= 1; // B
@@ -676,7 +677,7 @@ static int draw_zebra_no_aspect_adjust(unsigned int f)
                     zebra_drawn = 1;
             }
         }
-        if (!zebra_drawn) f=0;
+        if (!zebra_drawn) f = 0;
     }
     // if blink mode is in no-zebra phase OR if there was no over/underexposed pixels to draw zebra on
     if (!f)
@@ -707,14 +708,9 @@ int gui_osd_draw_zebra(int show)
     unsigned int f;
 
     // Check that viewport dimensions do not exceed bitmap dimensions.
-    // HDMI output may use a larger frame for the image compared to the bitmap we draw on - the code can't handle this.
-#ifdef CAM_DRAW_RGBA
-    if ((vid_get_viewport_width() > camera_screen.yuvbm_width) || (vid_get_viewport_height() > camera_screen.yuvbm_height))
-        return 0;
-#else
+    // HDMI output uses a larger frame for the image compared to the bitmap we draw on - the code can't handle this and will crash
     if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
         return 0;
-#endif
 
     if (!gui_osd_zebra_init(show))
         return 0;

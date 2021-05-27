@@ -142,9 +142,7 @@ static void draw_pixel_std(unsigned int offset, color cl)
 // direct drawing functions for YUV overlay, currently used by the zebra module
 // ATTENTION: these functions do not support guard pixels or rotation
 
-// function for setting part of the overlay transparent (DIGIC 6 only), used in zebra module
-// n_pixel is the number of pixels to set
-// offst is the byte offset in bitmap_buffer, 2 bytes per pixel
+// Erase the pixels drawn by the zebra code
 void erase_zebra()
 {
     int x, y;
@@ -202,6 +200,7 @@ unsigned int color_to_rawpx(color cl, unsigned int *op)
 // function for drawing a whole yuv unit (2 pixels, aligned)
 // opacity is a single byte, used for both pixels
 // drawing offset is pixel offset, calculated by caller
+// Does not overwrite Canon UI
 void draw_dblpixel_raw(unsigned int offset, unsigned int px, unsigned int op)
 {
     offset >>= 2;
