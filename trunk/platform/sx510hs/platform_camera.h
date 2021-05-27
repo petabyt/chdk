@@ -72,8 +72,6 @@
     #define CAM_HAS_MOVIE_DIGEST_MODE       1   //See http://chdk.setepontos.com/index.php?topic=9986.msg118892#msg118892
     #define CAM_IS_VID_REC_WORKS            1   // is_video_recording() function works    
 
-    #define CAM_DISABLE_RAW_IN_MOVIE_DIGEST 1 // Camera locks up while saving raw in "Movie Digest" mode https://chdk.setepontos.com/index.php?topic=10984.msg128913#msg128913
-
     // TODO
 //    #define CAM_AF_SCAN_DURING_VIDEO_RECORD   1
 

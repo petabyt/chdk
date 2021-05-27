@@ -22,11 +22,6 @@
 
     #define CAM_PROPSET                         7
 
-    // RAW in hybrid auto actually works if you enable "unsafe IO", otherwise hangs
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw hook not currently called, probably doesn't make sense
-    #define CAM_DISABLE_RAW_IN_HDR              1 // raw hook not currently called, probably doesn't make sense
-
     #define CAM_AV_OVERRIDE_IRIS_FIX            1   // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).
     #define CAM_HAS_NATIVE_ND_FILTER            1   // Camera has built-in ND filter with Canon menu support for enable/disable
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)

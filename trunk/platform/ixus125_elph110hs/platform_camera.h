@@ -63,7 +63,6 @@
 
     #undef  CAM_HAS_ERASE_BUTTON
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
-    #define CAM_DISABLE_RAW_IN_AUTO             1 // Does not appear to have valid raw in AUTO
 
     #define CAM_HAS_MOVIE_DIGEST_MODE           1
 

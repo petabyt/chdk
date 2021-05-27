@@ -100,12 +100,12 @@ const CapturemodeMap modemap[] = {
 { MODE_SMART_SHUTTER        ,16949 }, // smile detection
 { MODE_WINK_SELF_TIMER      ,16950 },
 { MODE_FACE_SELF_TIMER      ,16948 },
-{ MODE_NIGHT_SCENE          ,16953 }, // handheld night scene
+{ MODE_NIGHT_SCENE | MODE_DISABLE_RAW ,16953 }, // handheld night scene
 { MODE_LOWLIGHT             ,16429 },
 { MODE_SNOW                 ,16414 },
 { MODE_FIREWORK             ,16416 },
 { MODE_CREATIVE_EFFECT      ,33299 }, // Creative shot, various sub modes all use same number
-{ MODE_HYBRID_AUTO          ,33298 }, // like movie digest
+{ MODE_HYBRID_AUTO | MODE_DISABLE_RAW ,33298 }, // like movie digest
 { MODE_SPORTS               ,33288 },
 //{                         ,33297 }, // ? seems to be related to face ID
 { MODE_VIDEO_STD             ,2643 }, // standard video on dial

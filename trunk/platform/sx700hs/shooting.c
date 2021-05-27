@@ -103,13 +103,13 @@ const CapturemodeMap modemap[] = {
 { MODE_SMART_SHUTTER        ,16944 }, // smile detection
 //{ MODE_???               ,16945 }, // Smile same as 16944?
 { MODE_HIGHSPEED_BURST       ,16393 }, // 4 hq burst shots
-{ MODE_NIGHT_SCENE          ,16948 }, // handheld night scene
+{ MODE_NIGHT_SCENE | MODE_DISABLE_RAW ,16948 }, // handheld night scene
 { MODE_LOWLIGHT             ,16424 },
 { MODE_SNOW                 ,16412 },
 { MODE_FIREWORK             ,16414 },
 { MODE_CREATIVE_EFFECT      ,33297 }, // Creative shot, various sub modes all use same number
 //{ MODE_???               ,33295 }, // Crashes camera -- Keep the face within the frame, then shoot
-{ MODE_HYBRID_AUTO          ,33296 }, // like movie digest
+{ MODE_HYBRID_AUTO | MODE_DISABLE_RAW ,33296 }, // like movie digest
 { MODE_SPORTS               ,33287 },
 { MODE_VIDEO_STD             ,2634 }, // standard video on dial
 { MODE_VIDEO_IFRAME_MOVIE    ,2641 },
