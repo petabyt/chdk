@@ -52,9 +52,6 @@
     #define cam_CFAPattern                  0x02010100 // Red  Green  Green  Blue
 	
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE     1
-	#define CAM_DISABLE_RAW_IN_HQ_BURST           1  
-	#define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN 1
-	#define CAM_DISABLE_RAW_IN_HYBRID_AUTO        1
 
 
     // C&P from ixus175

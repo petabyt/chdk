@@ -22,10 +22,6 @@
 
     #define CAM_PROPSET                         12
 
-    // g7x RAW in hybrid auto actually works if you enable "unsafe IO", otherwise hangs
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // probably doesn't make sense
-
     #define CAM_HAS_SPORTS_MODE                 1
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1  // for cameras that require _MoveIrisWithAv function to override Av (for bracketing).

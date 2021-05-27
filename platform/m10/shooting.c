@@ -134,12 +134,12 @@ const CapturemodeMap modemap[] = {
 { MODE_SELFIE               ,32806 }, // self portrait
 { MODE_CLOSEUP              ,32807 }, // close-up
 { MODE_FOOD                 ,32808 }, // food
-{ MODE_SPORTS               ,33288 }, // sports
+{ MODE_SPORTS | MODE_DISABLE_RAW ,33288 }, // sports
 { MODE_CREATIVE_EFFECT      ,33289 }, // creative assist
-{ MODE_HYBRID_AUTO          ,33298 }, // like movie digest
+{ MODE_HYBRID_AUTO | MODE_DISABLE_RAW ,33298 }, // like movie digest
 { MODE_FISHEYE              ,33335 }, // fisheye
 { MODE_MINIATURE            ,33336 }, // miniature effect, 34360 during video recording (+1024)
-{ MODE_NIGHT_SCENE          ,33337 }, // handheld night scene
+{ MODE_NIGHT_SCENE | MODE_DISABLE_RAW ,33337 }, // handheld night scene
 { MODE_TOY_CAMERA           ,33339 }, // toy camera effect
 { MODE_SOFTFOCUS            ,33341 }, // soft focus
 { MODE_HDR                  ,33351 }, // hdr

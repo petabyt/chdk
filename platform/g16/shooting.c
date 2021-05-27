@@ -125,7 +125,7 @@ const CapturemodeMap modemap[] = {
 { MODE_BACKGROUND_DEFOCUS    ,8758 }, //
 { MODE_SOFTFOCUS             ,8759 }, //
 { MODE_MONOCHROME            ,8761 }, //
-{ MODE_HDR                   ,8769 }, //
+{ MODE_HDR | MODE_DISABLE_RAW ,8769 }, //
 
 
 { MODE_PORTRAIT             ,16403 }, //
@@ -138,14 +138,14 @@ const CapturemodeMap modemap[] = {
 { MODE_FACE_SELF_TIMER      ,16942 }, //
 { MODE_SMART_SHUTTER        ,16943 }, //
 { MODE_WINK_SELF_TIMER      ,16944 }, //
-{ MODE_NIGHT_SCENE          ,16947 }, //
+{ MODE_NIGHT_SCENE | MODE_DISABLE_RAW ,16947 }, //
 
 { MODE_AUTO                 ,32768 }, //
 { MODE_M                    ,32769 }, //
 { MODE_AV                   ,32770 }, //
 { MODE_TV                   ,32771 }, //
 { MODE_P                    ,32772 }, //
-{ MODE_HYBRID_AUTO          ,33296 }, //
+{ MODE_HYBRID_AUTO | MODE_DISABLE_RAW ,33296 }, //
 
 };
 

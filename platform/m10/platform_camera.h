@@ -22,10 +22,6 @@
     #define CAM_ILC                             1 // Camera uses interchangable lenses (EOS M series)
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1
-    #define CAM_DISABLE_RAW_IN_HQ_BURST         1
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1
-    #define CAM_DISABLE_RAW_IN_SPORTS           1
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #undef CAM_HAS_ND_FILTER                             // Camera does not have built-in ND filter, obviously
     #undef  CAM_KEY_PRESS_DELAY

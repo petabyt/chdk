@@ -35,8 +35,6 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #define CAM_HAS_ND_FILTER               1
 
-    #define  CAM_DISABLE_RAW_IN_ISO_3200    1    // For cameras that don't have valid raw in ISO3200 mode (different from low light)
-
     // long shutter is acutally user TV, may work ?
     #undef  CAM_HAS_USER_TV_MODES
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1

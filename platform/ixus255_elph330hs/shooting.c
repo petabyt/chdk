@@ -119,10 +119,10 @@ const CapturemodeMap modemap[] = {
     { MODE_SMART_SHUTTER,       33327 },
     { MODE_WINK_SELF_TIMER,     33328 },
     { MODE_SMOOTH_SKIN,         33300 },
-    { MODE_HIGHSPEED_BURST,     32776 },
+    { MODE_HIGHSPEED_BURST | MODE_DISABLE_RAW, 32776 },
     { MODE_SOFTFOCUS,           33334 },
     { MODE_VIDEO_SUPER_SLOW,     2633 }, // 3657 when recording
-    { MODE_NIGHT_SCENE,         33331 },
+    { MODE_NIGHT_SCENE | MODE_DISABLE_RAW, 33331 },
 // Not in mode selection
 //    { MODE_VIDEO_STD,           33796 }, // when recording; 33808 when recording in Hybrid Auto
 //    { MODE_VIDEO_MINIATURE,     34354 }, // when recording in miniature mode

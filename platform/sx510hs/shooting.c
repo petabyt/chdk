@@ -118,7 +118,7 @@ const CapturemodeMap modemap[] = {
     { MODE_DISCREET,            32824 },
     { MODE_NIGHT_SCENE,         33331 }, // This mode is not listed in Canon menu
     { MODE_LIVE,                33339 },
-    { MODE_VIDEO_MOVIE_DIGEST,  33340 },
+    { MODE_VIDEO_MOVIE_DIGEST | MODE_DISABLE_RAW, 33340 },
 };
 
 #include "../generic/shooting.c"

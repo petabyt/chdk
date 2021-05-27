@@ -97,7 +97,6 @@
     #define CAM_FILEWRITETASK_SEEKS          1
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1   // For cameras with 'low light' mode that does not work with raw define this
-    #define CAM_DISABLE_RAW_IN_DIGITAL_IS       1   // For cameras with 'Digital IS' mode that does not work with raw define this
 
     #define CAM_NEED_SET_ZOOM_DELAY          300  // Define to add a delay after setting the zoom position
     #define CAM_USE_OPTICAL_MAX_ZOOM_STATUS  1    // Use ZOOM_OPTICAL_MAX to reset zoom_status when switching from digital to optical zoom

@@ -132,7 +132,7 @@ const CapturemodeMap modemap[] = {
 { MODE_TOY_CAMERA            ,8757 },
 { MODE_SOFTFOCUS             ,8758 },
 { MODE_MONOCHROME            ,8760 },
-{ MODE_HIGHSPEED_BURST      ,16393 }, // highspeed burst hq
+{ MODE_HIGHSPEED_BURST | MODE_DISABLE_RAW ,16393 }, // highspeed burst hq
 { MODE_PORTRAIT             ,16403 },
 { MODE_SNOW                 ,16411 },
 { MODE_FIREWORK             ,16413 },
@@ -140,15 +140,15 @@ const CapturemodeMap modemap[] = {
 { MODE_FACE_SELF_TIMER      ,16942 }, // smart shutter, face self timer
 { MODE_SMART_SHUTTER        ,16943 }, // smart shutter, smile detection
 { MODE_WINK_SELF_TIMER      ,16944 }, // smart shutter, wink self timer
-{ MODE_NIGHT_SCENE          ,16947 }, // handheld night scene
-{ MODE_AUTO                 ,32768 },
+{ MODE_NIGHT_SCENE | MODE_DISABLE_RAW ,16947 }, // handheld night scene
+{ MODE_AUTO | MODE_DISABLE_RAW ,32768 },
 { MODE_M                    ,32769 },
 { MODE_AV                   ,32770 },
 { MODE_TV                   ,32771 },
 { MODE_P                    ,32772 },
-{ MODE_HYBRID_AUTO          ,32784 },
+{ MODE_HYBRID_AUTO | MODE_DISABLE_RAW ,32784 },
 { MODE_DISCREET             ,32823 },
-{ MODE_SPORTS               ,33287 },
+{ MODE_SPORTS | MODE_DISABLE_RAW ,33287 },
 { MODE_STITCH               ,33293 }, // stitch, unofficial, may crash
 //{                         ,  33295 }, // crash and lock up :(
 { MODE_SMOOTH_SKIN          ,33300 }, // unofficial?

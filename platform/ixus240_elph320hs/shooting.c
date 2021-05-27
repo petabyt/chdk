@@ -82,7 +82,7 @@ const ISOTable iso_table[] = {
 const CapturemodeMap modemap[] = {
     { MODE_VIDEO_SUPER_SLOW,     2631 },
     { MODE_VIDEO_IFRAME_MOVIE,   2633 },
-    { MODE_AUTO,                32768 },
+    { MODE_AUTO | MODE_DISABLE_RAW, 32768 },
     { MODE_P,                   32772 },
     { MODE_LONG_SHUTTER,        32774 },
     { MODE_HIGHSPEED_BURST,     32776 },

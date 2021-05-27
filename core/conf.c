@@ -1612,36 +1612,10 @@ is raw possible (i.e. valid raw buffer exists in current mode)
 TODO this might be better as a platform lib.c function rather than a bunch of camera.h ifdefs
 */
 int is_raw_possible() {
-    return !(0   // Return false if any of these tests are true
-#ifdef CAM_DISABLE_RAW_IN_AUTO
-       || (camera_info.state.mode_shooting == MODE_AUTO)                   // some cameras don't have valid raw in auto mode
-#endif
-#ifdef CAM_DISABLE_RAW_IN_ISO_3200
-       || (camera_info.state.mode_shooting == MODE_ISO_3200)           // some cameras don't have valid raw in ISO3200 binned mode, not the same as low light
-#endif
+    return !(                                           // Return false if any of these tests are true
+       (camera_info.state.mode & MODE_DISABLE_RAW)      // Disable if bit set in modemap
 #ifdef CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE
-       || (shooting_get_resolution()==7)     // True if shooting resolution is 'low light'
-#endif
-#if defined(CAM_DISABLE_RAW_IN_HQ_BURST)
-       || (camera_info.state.mode_shooting == MODE_HIGHSPEED_BURST)    // True if HQ Burst mode (SX40HS corrupts JPEG images if RAW enabled in this mode)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN)
-       || (camera_info.state.mode_shooting == MODE_NIGHT_SCENE)            // True if HandHeld Night Scene (SX40HS corrupts JPEG images if RAW enabled in this mode)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_DIGITAL_IS)
-       || (camera_info.state.mode_shooting == MODE_DIGITAL_IS)            // True if Digital IS mode (ixus160_elph160 crashes if RAW enabled in this mode)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_HYBRID_AUTO)
-       || (camera_info.state.mode_shooting == MODE_HYBRID_AUTO)            // True if Hybrid Auto mode (SX280HS raw hook conflicts with the saving of digest movie)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_MOVIE_DIGEST) 
-       || (camera_info.state.mode_shooting == MODE_VIDEO_MOVIE_DIGEST)     // True if Movie Digest mode (SX510HS raw hook conflicts with the saving of digest movie)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_SPORTS)
-       || (camera_info.state.mode_shooting == MODE_SPORTS)            // True if Sports mode (SX280HS, multiple issues with raw buffer; storing raw makes little sense in this mode anyway)
-#endif
-#if defined(CAM_DISABLE_RAW_IN_HDR)
-       || (camera_info.state.mode_shooting == MODE_HDR)            // True if HDR mode (G7X)
+       || (shooting_get_resolution()==7)                // True if shooting resolution is 'low light'
 #endif
     );
 }

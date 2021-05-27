@@ -147,15 +147,13 @@
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
-    #define CAM_DISABLE_RAW_IN_HQ_BURST         1 // raw wouldn't make any sense in this mode either
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
-
     #define REMOTE_SYNC_STATUS_LED              -1      // -1 = special value to force code to use debug_led
 
     #define CAM_HAS_FILEWRITETASK_HOOK          1
 
     #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
+    #define CAM_CLEAN_OVERLAY                   1
 
     // TODO: Below needs to be checked
 
@@ -167,8 +165,6 @@
     #define CAM_VIDEO_QUALITY_ONLY              1
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_USE_ZOOM_FOR_MF
-
-    #define CAM_CLEAN_OVERLAY                   1
 
     #define CAM_EXT_TV_RANGE                    1
 

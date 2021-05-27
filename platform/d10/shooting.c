@@ -112,7 +112,7 @@ const CapturemodeMap modemap[] = {
     { MODE_STITCH,             16906 }, // SCN, either direction
     { MODE_COLOR_ACCENT,       16923 },
     { MODE_COLOR_SWAP,         16924 },
-    { MODE_ISO_3200,           16413 },
+    { MODE_ISO_3200 | MODE_DISABLE_RAW, 16413 },
     { MODE_AUTO,               32768 }, 
     { MODE_FOLIAGE,            16403 },
     { MODE_LANDSCAPE,          16396 },

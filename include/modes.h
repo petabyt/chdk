@@ -25,6 +25,8 @@ typedef struct {
 #define MODE_SCREEN_OPENED      0x0400
 #define MODE_SCREEN_ROTATED     0x0800
 
+#define MODE_DISABLE_RAW        0x1000  // Set in modemap to disable RAW / DNG for shooting mode
+
 /* capture mode constants. These are in their own header for easier sed processing*/
 #include "modelist.h"
 

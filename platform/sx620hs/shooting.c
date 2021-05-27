@@ -5,11 +5,11 @@ const CapturemodeMap modemap[] = {
     { MODE_AUTO,                32768 },
     { MODE_P,                   32773 }, 
     { MODE_LONG_SHUTTER,        32775 },
-    { MODE_HIGHSPEED_BURST,     32778 },
+    { MODE_HIGHSPEED_BURST | MODE_DISABLE_RAW, 32778 },
     { MODE_PORTRAIT,            32790 }, 
     { MODE_FIREWORK,            32800 },	
     { MODE_LOWLIGHT,            32813 }, 
-    { MODE_HYBRID_AUTO,         33298 },
+    { MODE_HYBRID_AUTO | MODE_DISABLE_RAW, 33298 },
     { MODE_CREATIVE_EFFECT,     33299 },
 	{ MODE_SUPER_VIVID,         33330 }, 
     { MODE_POSTER_EFFECT,       33331 }, 
@@ -18,7 +18,7 @@ const CapturemodeMap modemap[] = {
     { MODE_WINK_SELF_TIMER,     33334 }, 	
     { MODE_FISHEYE,             33335 }, 
     { MODE_MINIATURE,           33336 }, 
-    { MODE_NIGHT_SCENE,         33337 }, // handheld_night_scene
+    { MODE_NIGHT_SCENE | MODE_DISABLE_RAW, 33337 }, // handheld_night_scene
     { MODE_TOY_CAMERA,          33339 }, 
     { MODE_MONOCHROME,          33343 }, 
 

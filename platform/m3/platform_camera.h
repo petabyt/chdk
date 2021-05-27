@@ -22,10 +22,6 @@
     #define CAM_ILC                             1 // Camera uses interchangable lenses (EOS M series)
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
-    #define CAM_DISABLE_RAW_IN_HQ_BURST         1 // raw wouldn't make any sense in this mode either
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
-    #define CAM_DISABLE_RAW_IN_SPORTS           1 // sports mode seems to use a no-yet-found code path and corrupts JPEG/DNG
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #undef CAM_HAS_ND_FILTER                             // Camera does not have built-in ND filter
     #undef  CAM_KEY_PRESS_DELAY
