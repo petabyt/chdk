@@ -144,6 +144,8 @@
 
     #define CAM_HAS_WIFI                        1   // Camera has wifi support
 
+    #define CAM_CLEAN_OVERLAY                   1
+
     // TODO: Below needs tp be checked
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
