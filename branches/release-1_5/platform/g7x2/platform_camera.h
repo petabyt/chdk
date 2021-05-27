@@ -143,6 +143,8 @@
 
     #define CAM_PTP_USE_NATIVE_BUFFER           1   // use firmware buffers to avoid problems with uncached memory
 
+    #define CAM_CLEAN_OVERLAY                   1
+
     // TODO: Below needs tp be checked
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1 // there's no low light mode, so just in case
