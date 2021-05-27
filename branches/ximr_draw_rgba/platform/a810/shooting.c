@@ -96,7 +96,7 @@ const CapturemodeMap modemap[] = {
     { MODE_TOY_CAMERA,          33331 }, 
     { MODE_MONOCHROME,          33334 },
     { MODE_LIVE,                33336 },
-    { MODE_DIGITAL_IS,          33338 },
+    { MODE_DIGITAL_IS | MODE_DISABLE_RAW, 33338 },
 //  { MODE_VIDEO_STD,           33792 }, // not a real mode - see http://chdk.setepontos.com/index.php?topic=12163.0 
 } ;	
 

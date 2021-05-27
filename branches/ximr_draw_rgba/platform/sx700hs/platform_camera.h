@@ -22,10 +22,6 @@
 
     #define CAM_PROPSET                         6
 
-
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // probably doesn't make sense
-
 // allows CHDK raw exception in sports mode
     #define CAM_HAS_SPORTS_MODE                 1
 

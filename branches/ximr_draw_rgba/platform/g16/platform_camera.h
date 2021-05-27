@@ -20,10 +20,6 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
-    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
-    #define CAM_DISABLE_RAW_IN_HDR              1 // raw hook not currently called, probably doesn't make sense
-
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
     #define CAM_HAS_ND_FILTER                   1           // Camera has built-in ND filter (in addition to iris)
     #undef  CAM_KEY_PRESS_DELAY

@@ -21,10 +21,6 @@
 // don't override them again in here.
 /*gg
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE   1
-    #define CAM_DISABLE_RAW_IN_HQ_BURST         1
-    #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
-    #define CAM_DISABLE_RAW_IN_AUTO             1
-    #define CAM_DISABLE_RAW_IN_SPORTS           1
 */
 // allows CHDK raw exception in sports mode
     #define CAM_HAS_SPORTS_MODE                 1

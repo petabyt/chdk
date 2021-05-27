@@ -121,7 +121,7 @@ const CapturemodeMap modemap[] = {
 { MODE_AV                   ,32771 },
 { MODE_TV                   ,32772 },
 { MODE_P                    ,32773 },
-{ MODE_HDR                  ,8775 },
+{ MODE_HDR | MODE_DISABLE_RAW ,8775 },
 { MODE_NOSTALGIC            ,8753 },
 { MODE_FISHEYE              ,8759 },
 { MODE_MINIATURE            ,8760 },
@@ -138,12 +138,12 @@ const CapturemodeMap modemap[] = {
 { MODE_STAR_PORTRAIT        ,16452 },
 { MODE_STAR_NIGHTSCAPE      ,16453 },
 { MODE_STAR_TRAILS          ,16454 },
-{ MODE_NIGHT_SCENE          ,16953 }, // handheld night scene
+{ MODE_NIGHT_SCENE | MODE_DISABLE_RAW ,16953 }, // handheld night scene
 { MODE_UNDERWATER           ,16929 },
 { MODE_SNOW                 ,16414 },
 { MODE_FIREWORK             ,16416 },
 { MODE_CREATIVE_EFFECT      ,33299 }, // Creative shot, various sub modes all use same number
-{ MODE_HYBRID_AUTO          ,33298 }, // like movie digest
+{ MODE_HYBRID_AUTO | MODE_DISABLE_RAW ,33298 }, // like movie digest. RAW in hybrid auto actually works if you enable "unsafe IO", otherwise hangs
 //{                         ,33297 }, // ???
 { MODE_VIDEO_STD             ,2643 }, // standard video on dial, regardless of res or FPS
 { MODE_VIDEO_IFRAME_MOVIE    ,2650 },

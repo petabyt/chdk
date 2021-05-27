@@ -7,7 +7,7 @@ const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,        32775 },
     { MODE_AUTO,                32768 },
     { MODE_LOWLIGHT,            32813 },
-    { MODE_DIGITAL_IS,          33347 },
+    { MODE_DIGITAL_IS | MODE_DISABLE_RAW, 33347 },
     { MODE_FACE_SELF_TIMER,     33332 },
     { MODE_FISHEYE,             33335 },
     { MODE_TOY_CAMERA,          33339 },

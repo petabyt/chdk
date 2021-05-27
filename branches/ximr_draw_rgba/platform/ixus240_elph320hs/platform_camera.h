@@ -110,7 +110,6 @@
     #undef  CAM_HAS_IRIS_DIAPHRAGM
 
     #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE 1   // For cameras with 'low light' mode that does not work with raw define this
-    #define CAM_DISABLE_RAW_IN_AUTO         1   // For cameras that don't have valid raw in AUTO mode
     #define CAM_HAS_MOVIE_DIGEST_MODE       1   // Changes the values in the 'movie_status' variable if the camera has this mode
 
     #define CAM_LOAD_CUSTOM_COLORS          1   // Enable loading CHDK colors into the camera palette memory/hardware

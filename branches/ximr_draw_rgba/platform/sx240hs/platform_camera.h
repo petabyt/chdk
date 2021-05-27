@@ -109,8 +109,6 @@
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.
 
-    #define CAM_DISABLE_RAW_IN_AUTO             1 // For cameras that don't have valid raw in AUTO mode
-
     #undef  REMOTE_SYNC_STATUS_LED
 //  #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
 
