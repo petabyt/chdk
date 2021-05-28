@@ -146,6 +146,17 @@
 
     #define CAM_CLEAN_OVERLAY                   1
 
+    #define CAM_SD_OVER_IN_AFL                  1
+    #define CAM_SD_OVER_IN_MF                   1
+
+    #undef  CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                     109         // Override min subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                     10543       // Override max subject distance
+
+    #undef  CAM_USB_EVENTID
+    #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
+
     // TODO: Below needs tp be checked
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
@@ -159,15 +170,7 @@
 
     //#define CAM_QUALITY_OVERRIDE                1
 
-    #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     100         // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     1550000     // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
-
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
-
-    #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
     #define CAM_HAS_MOVIE_DIGEST_MODE           1 
 
@@ -175,8 +178,5 @@
 
     #undef  REMOTE_SYNC_STATUS_LED
     // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
- 
-    #define CAM_SD_OVER_IN_AF  1
-    #define CAM_SD_OVER_IN_MF  1
 
 //--------------------------------------------------
