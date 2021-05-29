@@ -69,32 +69,34 @@ void __attribute__((naked,noinline)) mykbd_task()
     _ExitTask();
 }
 
-int jogdial_stopped=0;
+#define DIAL_HW_FRONT 1     // Front dial
+#define DIAL_HW_REAR  4     // Rear dial
+#define DIAL_HW_RING  5     // Lens control ring
+
+int jogdial_stopped = 0;
+extern long dial_positions[6];
 
 int get_dial_hw_position(int dial)
 {
     // mask low bits
-	extern int _get_dial_hw_position(int dial);
-    return _get_dial_hw_position(dial)&~3;
-}
-
-extern long dial_positions[6];
-
-int get_jogdial_counter()
-{
-    int p = get_dial_hw_position(4);
-    return p;
+    extern int _get_dial_hw_position(int dial);
+    return _get_dial_hw_position(dial) & ~3;
 }
 
 long get_jogdial_direction(void)
 {
-    static int new_jogdial=0, old_jogdial=0 ;
+    static int new_jogdial = 0, old_jogdial = 0, new_frontdial = 0, old_frontdial = 0;
+    
+    old_jogdial = new_jogdial;
+    new_jogdial = get_dial_hw_position(DIAL_HW_REAR);
 
-    old_jogdial=new_jogdial;
-    new_jogdial=get_jogdial_counter();
+    old_frontdial = new_frontdial;
+    new_frontdial = get_dial_hw_position(DIAL_HW_FRONT);
 
-    if (old_jogdial>new_jogdial) return JOGDIAL_LEFT;
-    else if (old_jogdial<new_jogdial) return JOGDIAL_RIGHT;
+    if (old_jogdial > new_jogdial) return JOGDIAL_LEFT;
+    else if (old_jogdial < new_jogdial) return JOGDIAL_RIGHT;
+    if (old_frontdial > new_frontdial) return FRONTDIAL_LEFT;  // counter clockwise with camera aimed away from you
+    else if (old_frontdial < new_frontdial) return FRONTDIAL_RIGHT;
     else return 0;
 }
 
@@ -104,7 +106,9 @@ int handle_jogdial()
     if (jogdial_stopped)
     {
         // update positions in RAM
-        dial_positions[0] = dial_positions[3] = get_jogdial_counter();
+        dial_positions[0] = dial_positions[3] = get_dial_hw_position(DIAL_HW_REAR);
+        dial_positions[1] = dial_positions[4] = get_dial_hw_position(DIAL_HW_RING);
+        dial_positions[2] = dial_positions[5] = get_dial_hw_position(DIAL_HW_FRONT);
         return 0;
     }
     return 1;
