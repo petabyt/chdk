@@ -15,8 +15,9 @@ void vid_bitmap_refresh() {
     extern void _transfer_src_overlay(int);
 // works in most cases but can cause "ghosting" in auto mode when canon UI constantly updates
 //  _transfer_src_overlay(active_bitmap_buffer);
-    _transfer_src_overlay(0);
-    _transfer_src_overlay(1);
+    int n = active_bitmap_buffer;
+    _transfer_src_overlay(n);
+    _transfer_src_overlay(n^1);
 }
 
 void shutdown() {

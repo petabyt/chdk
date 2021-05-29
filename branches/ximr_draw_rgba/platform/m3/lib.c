@@ -10,33 +10,10 @@ extern int displaytype;
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
 
 void vid_bitmap_refresh() {
-/*
-    // extern int full_screen_refresh;
-    // extern void _ScreenUnlock();
-    // extern void _ScreenLock();
-    // extern void _displaybusyonscreen();
-    // extern void _undisplaybusyonscreen();
-
-    
-    // clears perfectly but blinks and is asynchronous
-    // _displaybusyonscreen();
-    // _undisplaybusyonscreen();
-    
-    // https://chdk.setepontos.com/index.php?topic=12788.msg133958#msg133958
     extern void _transfer_src_overlay(int);
-// works in most cases but can cause "ghosting" in auto mode when canon UI constantly updates
-//  _transfer_src_overlay(active_bitmap_buffer);
-    _transfer_src_overlay(0);
-    _transfer_src_overlay(1);
-*/
-    extern void _transfer_src_overlay(int);
-    extern void _VTMLock();
-    extern void _VTMUnlock();
-    _VTMLock();
     int n = active_bitmap_buffer;
+    _transfer_src_overlay(n);
     _transfer_src_overlay(n^1);
-//     _transfer_src_overlay(n);
-    _VTMUnlock();
 }
 
 void shutdown() {

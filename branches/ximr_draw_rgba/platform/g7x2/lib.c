@@ -13,13 +13,9 @@ extern char* bitmap_buffer[];
 void vid_bitmap_refresh()
 {
     extern void _transfer_src_overlay(int);
-    extern void _VTMLock();
-    extern void _VTMUnlock();
-    _VTMLock();
     int n = active_bitmap_buffer;
-    _transfer_src_overlay(n^1);
     _transfer_src_overlay(n);
-    _VTMUnlock();
+    _transfer_src_overlay(n^1);
 }
 
 void *vid_get_bitmap_fb()
