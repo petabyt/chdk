@@ -1,0 +1,300 @@
+#include "platform.h"
+#include "conf.h"
+#include "gui_draw.h"
+
+#ifdef CAM_DRAW_RGBA
+
+//-------------------------------------------------------------------
+// For CAM_DRAW_RGBA, first draw the icon on a temporary buffer, then copy to the screen
+// Prevents triggering unnecessary calls to vid_bitmap_refresh from areas where the icon overdraws itself with different colours.
+
+#define swap(v1, v2)   {v1^=v2; v2^=v1; v1^=v2;}
+extern void            (*draw_pixel_proc)(unsigned int offset, color cl);
+
+// Current largest icon size
+#define IW  32
+#define IH  20
+
+static color ibuf[IW*IH];
+static int mw, mh;
+
+static void idraw_hline(coord x, coord y, int len, color cl)
+{
+    if ((y < 0) || (x >= IW) || (y >= IH)) return;
+    if (x < 0) { len += x; x = 0; }
+    if ((x + len) > IW) len = IW - x;
+    if (y >= mh) mh = y + 1;
+    if ((x + len) > mw) mw = x + len;
+    x = y * IW + x;
+    for (; len>0; len--, x++)
+        ibuf[x] = cl;
+}
+
+static void idraw_vline(coord x, coord y, int len, color cl)
+{
+    if ((x < 0) || (x >= IW) || (y >= IH)) return;
+    if (y < 0) { len += y; y = 0; }
+    if ((y + len) > IH) len = IH - y;
+    if (x >= mw) mw = x + 1;
+    if ((y + len) > mh) mh = y + len;
+    y = y * IW + x;
+    for (; len>0; len--, y+=IW)
+        ibuf[y] = cl;
+}
+
+// Generic rectangle
+// 'flags' defines type - filled, round corners, shadow and border thickness
+static void idraw_rectangle(coord x1, coord y1, coord x2, coord y2, twoColors cl, int flags)
+{
+    // Normalise values
+    if (x1 > x2)
+        swap(x1, x2);
+    if (y1 > y2)
+        swap(y1, y2);
+
+    // Check if completely off screen
+    if ((x2 < 0) || (y2 < 0) || (x1 >= IW) || (y1 >= IH))
+        return;
+
+    int round = (flags & RECT_ROUND_CORNERS) ? 1 : 0;
+    int thickness;
+    int i;
+
+    // Edge
+    thickness = flags & RECT_BORDER_MASK;
+    for (i=0; i<thickness; i++)
+    {
+        // Clipping done in draw_hline and draw_vline
+        idraw_vline(x1, y1 + round * 2, y2 - y1 - round * 4 + 1, FG_COLOR(cl));
+        idraw_vline(x2, y1 + round * 2, y2 - y1 - round * 4 + 1, FG_COLOR(cl));
+        idraw_hline(x1 + 1 + round, y1, x2 - x1 - round * 2 - 1, FG_COLOR(cl));
+        idraw_hline(x1 + 1 + round, y2, x2 - x1 - round * 2 - 1, FG_COLOR(cl));
+
+        x1++; x2--;
+        y1++; y2--;
+
+        round = 0;
+    }
+
+    // Fill
+    if (flags & DRAW_FILLED)
+    {
+        // Clip values
+        if (x1 < 0) x1 = 0;
+        if (y1 < 0) y1 = 0;
+        if (x2 >= IW) x2 = IW - 1;
+        if (y2 >= IH) y2 = IH - 1;
+
+        coord y;
+        for (y = y1; y <= y2; ++y)
+            idraw_hline(x1, y, x2 - x1 + 1, BG_COLOR(cl));
+    }
+}
+
+static void idraw_line(coord x1, coord y1, coord x2, coord y2, color cl)
+{
+    unsigned char steep = abs(y2 - y1) > abs(x2 - x1);
+    if (steep)
+    {
+         swap(x1, y1);
+         swap(x2, y2);
+    }
+    if (x1 > x2)
+    {
+         swap(x1, x2);
+         swap(y1, y2);
+    }
+    if (x2 >= mw) { mw = x2 + 1; if (mw > IW) mw = IW; }
+    if (y2 >= mh) { mh = y2 + 1; if (mh > IH) mh = IH; }
+    int deltax = x2 - x1;
+    int deltay = abs(y2 - y1);
+    int error = 0;
+    int y = y1;
+    int ystep = (y1 < y2)?1:-1;
+    int x;
+    for (x=x1; x<=x2; ++x)
+    {
+        if ((x >= 0) && (x < IW) && (y >= 0) && (y < IH)) {
+            if (steep)
+                ibuf[x*IW+y] = cl;
+            else
+                ibuf[y*IW+x] = cl;
+        }
+        error += deltay;
+        if ((error<<1) >= deltax)
+        {
+             y += ystep;
+             error -= deltax;
+        }
+    }
+}
+
+// Draw an OSD icon from an array of actions
+// For CAM_DRAW_RGBA draw on temp buffer first then copy to screen - prevents overdraw from triggering vid_bitmap_refresh unnecessarily.
+void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
+{
+    if ((x >= camera_screen.width) || (y >= camera_screen.height)) return;
+
+    memset(ibuf, 0, IW*IH);
+    mw = 0; mh = 0;
+
+    int x1, y1, x2, y2;
+    int thickness = RECT_BORDER1;
+    int done = 0;
+    while (!done)
+    {
+        x1 = cmds->x1;
+        y1 = cmds->y1;
+        x2 = cmds->x2;
+        y2 = cmds->y2;
+        color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
+        color cb = chdk_colors[cmds->cb];
+        switch (cmds->action)
+        {
+        default:
+        case IA_END:
+            done = 1;
+            break;
+        case IA_HLINE:
+            idraw_hline(x1, y1, x2, cb);
+            break;
+        case IA_VLINE:
+            idraw_vline(x1, y1, y2, cb);
+            break;
+        case IA_LINE:
+            idraw_line(x1, y1, x2, y2, cb);
+            break;
+        case IA_RECT:
+            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness);
+            break;
+        case IA_FILLED_RECT:
+            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
+            break;
+        case IA_ROUND_RECT:
+            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
+            break;
+        case IA_FILLED_ROUND_RECT:
+            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
+            break;
+        }
+        cmds++;
+    }
+
+    x1 = 0;
+    y1 = 0;
+    int w = mw;
+    int h = mh;
+
+    if (x < 0) {
+        x1 = -x;
+        w += x;
+        x = 0;
+        if (w <= 0) return;
+    }
+
+    if (y < 0) {
+        y1 = -y;
+        h += y;
+        y = 0;
+        if (h <= 0) return;
+    }
+
+    int src = y1 * IW + x1;
+    int dst = y * camera_screen.buffer_width + x;
+    for (; h > 0; h -= 1, src += IW, dst += camera_screen.buffer_width) {
+        for (x = 0; x < w; x += 1) {
+            draw_pixel_proc(dst+x, ibuf[src+x]);
+        }
+    }
+}
+
+//-------------------------------------------------------------------
+
+#else //!CAM_DRAW_RGBA
+
+//-------------------------------------------------------------------
+// Draw an OSD icon from an array of actions
+// For CAM_DRAW_YUV scale up by 2 times and draw double thickness
+void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
+{
+    int x1, y1, x2, y2;
+#ifdef CAM_DRAW_YUV
+    int thickness = RECT_BORDER2;
+#else // CAM_DRAW_YUV
+    int thickness = RECT_BORDER1;
+#endif // CAM_DRAW_YUV
+    while (1)
+    {
+#ifdef CAM_DRAW_YUV
+        x1 = cmds->x1<<1;
+        y1 = cmds->y1<<1;
+        x2 = cmds->x2<<1;
+        y2 = cmds->y2<<1;
+#else // CAM_DRAW_YUV
+        x1 = cmds->x1;
+        y1 = cmds->y1;
+        x2 = cmds->x2;
+        y2 = cmds->y2;
+#endif // CAM_DRAW_YUV
+        color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
+        color cb = chdk_colors[cmds->cb];
+        switch (cmds->action)
+        {
+        default:
+        case IA_END:
+            return;
+        case IA_HLINE:
+            draw_hline(x+x1, y+y1, x2, cb);
+#ifdef CAM_DRAW_YUV
+            draw_hline(x+x1, y+y1+1, x2, cb);
+#endif // CAM_DRAW_YUV
+            break;
+        case IA_VLINE:
+            draw_vline(x+x1, y+y1, y2, cb);
+#ifdef CAM_DRAW_YUV
+            draw_vline(x+x1+1, y+y1, y2, cb);
+#endif // CAM_DRAW_YUV
+            break;
+        case IA_LINE:
+#ifdef CAM_DRAW_YUV
+            draw_line_x2(x+x1, y+y1, x+x2, y+y2, cb);
+#else // CAM_DRAW_YUV
+            draw_line(x+x1, y+y1, x+x2, y+y2, cb);
+#endif // CAM_DRAW_YUV
+            break;
+        case IA_RECT:
+#ifdef CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness);
+#else // CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness);
+#endif // CAM_DRAW_YUV
+            break;
+        case IA_FILLED_RECT:
+#ifdef CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
+#else // CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
+#endif // CAM_DRAW_YUV
+            break;
+        case IA_ROUND_RECT:
+#ifdef CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
+#else // CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
+#endif // CAM_DRAW_YUV
+            break;
+        case IA_FILLED_ROUND_RECT:
+#ifdef CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
+#else // CAM_DRAW_YUV
+            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
+#endif // CAM_DRAW_YUV
+            break;
+        }
+        cmds++;
+    }
+}
+
+//-------------------------------------------------------------------
+
+#endif // !CAM_DRAW_RGBA
