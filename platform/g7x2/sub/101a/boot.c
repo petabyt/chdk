@@ -577,6 +577,18 @@ void __attribute__((naked,noinline)) sub_e005b418_my() {
     );
 }
 
+// *** TEMPORARY? workaround ***
+// Init stuff to avoid asserts on cameras running DryOS r54+
+// https://chdk.setepontos.com/index.php?topic=12516.0
+// Execute this only once
+void init_required_fw_features(void)
+{
+    extern void _init_focus_eventflag();
+    _init_focus_eventflag();
+    extern void _init_nd_eventflag();
+    _init_nd_eventflag();
+}
+
 // task_Startup e00206d4
 void __attribute__((naked,noinline)) task_Startup_my() {
     asm volatile (
@@ -607,6 +619,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
             "    bl      sub_e0425886\n"
             "    bl      sub_e005b33e_my\n"     // -> taskcreate_physw
             "    BL      CreateTask_spytask\n"  // +
+            "    bl      init_required_fw_features\n"   // +
             "    bl      sub_e0297df6\n"
             "    bl      sub_e042589c\n"
             "    bl      sub_e052fd44\n"

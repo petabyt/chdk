@@ -628,7 +628,7 @@ void __attribute__((naked,noinline)) task_Startup_my() {
             "    bl      sub_e0425886\n"
             "    bl      sub_e005b33e_my\n"     // -> taskcreate_physw
             "    BL      CreateTask_spytask\n"  // +
-            "    bl      init_required_fw_features\n"
+            "    bl      init_required_fw_features\n"   // +
             "    bl      sub_e0297df6\n"
             "    bl      sub_e042589c\n"
             "    bl      sub_e052fd40\n"
