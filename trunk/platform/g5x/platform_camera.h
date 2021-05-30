@@ -143,9 +143,13 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
 
-//    #define CAM_SD_OVER_IN_AF                   1   // Crashes
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
+
+    #undef  CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                     109         // Override min subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                     10993       // Override max subject distance
 
     #define REMOTE_SYNC_STATUS_LED              -1      // -1 = special value to force code to use debug_led
 
@@ -170,17 +174,10 @@
 
     //#define CAM_QUALITY_OVERRIDE                1
 
-    #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     109         // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     16990       // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
-
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
-
-    #define CAM_HAS_MOVIE_DIGEST_MODE           1 
 
     #define CAM_NEED_SET_ZOOM_DELAY             300
 

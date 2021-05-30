@@ -464,13 +464,16 @@ sub_fc0ecf20_my ()
 // Init stuff to avoid asserts on cameras running DryOS r54+
 // https://chdk.setepontos.com/index.php?topic=12516.0
 // Execute this only once
-//void init_required_fw_features(void)
-//{
+void init_required_fw_features(void)
+{
 //    extern void _init_focus_eventflag();
 //    _init_focus_eventflag();
 //    extern void _init_nd_eventflag();
 //    _init_nd_eventflag();
-//}
+    extern int av_override_semaphore;
+    extern int _CreateBinarySemaphoreStrictly(int x, int y);
+    av_override_semaphore = _CreateBinarySemaphoreStrictly(0,0);
+}
 
 // task_Startup fc066778
 void __attribute__((naked,noinline))
@@ -495,7 +498,7 @@ task_Startup_my ()
             "    bl      sub_fc0ed44e\n"
             "    bl      sub_fc0ece46_my\n" // -> taskcreate_physw
             "    BL      CreateTask_spytask\n"          // +
-//            "    bl      init_required_fw_features\n"   // + TODO: Check if needed on G5X
+            "    bl      init_required_fw_features\n"   // + TODO: Check if needed on G5X
             "    bl      sub_fc2d2a2e\n"
             "    bl      sub_fc0ed464\n"
             "    bl      sub_fc0ec9ac\n"
