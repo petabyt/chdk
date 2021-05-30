@@ -596,6 +596,9 @@ void init_required_fw_features(void)
     _init_focus_eventflag();
     extern void _init_nd_eventflag();
     _init_nd_eventflag();
+    extern int av_override_semaphore;
+    extern int _CreateBinarySemaphoreStrictly(int x, int y);
+    av_override_semaphore = _CreateBinarySemaphoreStrictly(0,0);
 }
 
 // task_Startup e00206d4
