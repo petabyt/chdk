@@ -419,9 +419,22 @@ void update_ui(ximr_context* ximr)
             if (hdmi_out) {
                 bm_w = 480;
                 bm_h = 270;
+                vp_full_width = 1920;
+                vp_full_buf_width = 1920;
+                vp_full_height = 1080;
+                lv_aspect = LV_ASPECT_16_9;
             } else {
                 bm_w = 360;
                 bm_h = 240;
+                // others are unclear, but unlikely to come up in practice
+                vp_full_width = 720;
+                vp_full_buf_width = 736;
+                vp_full_height = 480;
+                if(displaytype == 10) { // LCD is 3:2
+                    lv_aspect = LV_ASPECT_3_2;
+                } else { // TV out is 4:3, low res HDMI looks correct at 4:3
+                    lv_aspect = LV_ASPECT_4_3;
+                }
             }
 
             camera_screen.width = bm_w;
