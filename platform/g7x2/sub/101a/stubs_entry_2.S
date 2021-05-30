@@ -48,6 +48,7 @@ NHSTUB(GetPropertyCase_FW                     ,0xe036af69)
 //// see https://chdk.setepontos.com/index.php?topic=12516.0
 NHSTUB(init_focus_eventflag                   ,0xe059238d)
 NHSTUB(init_nd_eventflag                      ,0xe05924a5)
+NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
 
 // To find these values it is easiest to use the Ghidra de-compile window.
    DEF(debug_logging_ptr                      ,0x000254f4)  // RAM address of function called by mzrm_sendmsg for logging
