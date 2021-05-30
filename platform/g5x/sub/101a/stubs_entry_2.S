@@ -49,6 +49,7 @@ NHSTUB(MoveFocusLensToDistance_FW             ,0xfc667c27)
 //// see https://chdk.setepontos.com/index.php?topic=12516.0
 //NHSTUB(init_focus_eventflag                   ,0xfc667e23) // InitializeAdjustmentSystem->fc662960->fc667e22 event flag matches MoveFocusLensToDistance
 //NHSTUB(init_nd_eventflag                      ,0xfc667f35) // InitializeAdjustmentSystem->fc662948->fc667f34 event flag matches PutInNdFilter
+NHSTUB(CreateBinarySemaphoreStrictly          ,0xbfe15557)
 
 // gets raw address and other stuff for next shot, stores in structure pointed to by r1
 // via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
