@@ -177,6 +177,7 @@ NHSTUB(CreateBinarySemaphore                  ,0xff0280ac) //115
 NHSTUB(CreateTask                             ,0xff025140) //120
 NHSTUB(DebugAssert                            ,0xff025500) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff026d64) //116
+NHSTUB(DeleteSemaphore                        ,0xff028190) //120
 NHSTUB(DoAELock                               ,0xff033624) //120
 NHSTUB(DoAFLock                               ,0xff033264) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff03354c) //104

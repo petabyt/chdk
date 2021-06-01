@@ -200,6 +200,7 @@ NHSTUB(CreateTask                             ,0x010e5089) //  0
 NHSTUB(DebugAssert                            ,0x010e5c8d) //  0
 NHSTUB(DeleteDirectory_Fut                    ,0xfc301c31) //  0
 NHSTUB(DeleteFile_Fut                         ,0xfc301be7) //  0
+NHSTUB(DeleteSemaphore                        ,0x010e59bd) //  0
 NHSTUB(DoAELock                               ,0xfc276775) //  0
 NHSTUB(DoAFLock                               ,0xfc2763b9) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc302119) //  0

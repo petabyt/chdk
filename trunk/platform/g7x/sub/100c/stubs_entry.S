@@ -192,6 +192,7 @@ NHSTUB(CreateTask                             ,0x010e5089) //  0
 NHSTUB(DebugAssert                            ,0x010e5cb9) //  0
 NHSTUB(DeleteDirectory_Fut                    ,0xfc325b7d) //  0
 NHSTUB(DeleteFile_Fut                         ,0xfc325b33) //  0
+NHSTUB(DeleteSemaphore                        ,0x010e59e9) //  0
 NHSTUB(DoAELock                               ,0xfc283949) //  0
 NHSTUB(DoAFLock                               ,0xfc2835af) //  0
 //NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0            == 0x00000000
