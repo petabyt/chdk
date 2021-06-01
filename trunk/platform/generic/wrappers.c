@@ -2039,6 +2039,11 @@ void GiveSemaphore(int sem)
     _GiveSemaphore(sem);
 }
 
+void DeleteSemaphore(int sem)
+{
+    _DeleteSemaphore(sem);
+}
+
 //---------------------------------------------------------------
 // Video out
 #ifdef CAM_UNLOCK_ANALOG_AV_IN_REC
