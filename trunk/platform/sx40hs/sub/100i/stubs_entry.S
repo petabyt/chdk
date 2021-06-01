@@ -189,6 +189,7 @@ NHSTUB(CreateTask                             ,0xff00eaf0) //120
 NHSTUB(DebugAssert                            ,0xff00edc8) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff026fe0) //116
 NHSTUB(DeleteFile_Fut                         ,0xff026efc) //112
+NHSTUB(DeleteSemaphore                        ,0xff02b464) //120
 NHSTUB(DoAELock                               ,0xff0297a8) //120
 NHSTUB(DoAFLock                               ,0xff029330) //120
 NHSTUB(EnterToCompensationEVF                 ,0xff029704) //104
