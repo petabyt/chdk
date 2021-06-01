@@ -82,6 +82,7 @@
 { 12935,3,0xc022d1fc,0xffff0040 }, // ixus150_elph140
 { 12936,3,0xc022d1fc,0xffff0040 }, // ixus145_elph135
 { 12937,3,0xc022d1fc,0xfff40040 }, // ixus265_elph340hs
+{ 12938,3,0xc022d1fc,0xffff0040 }, // ixus155_elph150
 #elif (NEED_ENCODED_DISKBOOT == 13)
 { 12960,4,0xd20b0994,0xfff20270 }, // m10
 { 12966,4,0xd20b0994,0xfff20270 }, // sx710hs
