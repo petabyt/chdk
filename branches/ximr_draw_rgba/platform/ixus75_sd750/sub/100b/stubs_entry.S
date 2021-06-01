@@ -112,6 +112,7 @@ NHSTUB(CreateBinarySemaphore                  ,0xffb1f7a0) //115
 NHSTUB(CreateTask                             ,0xffb201b8) //120
 NHSTUB(DebugAssert                            ,0xffb2c0c4) //1100
 NHSTUB(DeleteFile_Fut                         ,0xffaa0f50) //  1
+NHSTUB(DeleteSemaphore                        ,0xffb1f9a0) //120
 NHSTUB(DoAELock                               ,0xffb06694) //120
 NHSTUB(DoAFLock                               ,0xffb06160) //120
 NHSTUB(ExecuteEventProcedure                  ,0xff814a6c) //  1

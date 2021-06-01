@@ -157,9 +157,9 @@
 
     #define CAM_CLEAN_OVERLAY                   1
 
-    // TODO: Below needs to be checked
-
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
+
+    // TODO: Below needs to be checked
 
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 

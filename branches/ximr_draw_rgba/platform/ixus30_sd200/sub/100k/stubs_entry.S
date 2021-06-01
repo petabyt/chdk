@@ -131,6 +131,7 @@ NHSTUB(CreateTask                             ,0xff823784) //120
 NHSTUB(DebugAssert                            ,0xff814c10) //1100
 NHSTUB(DeleteFile_Fut                         ,0xff8699b4) //  1
 // ALT: NHSTUB(DeleteFile_Fut, 0xfff17058) // 1 10/0
+NHSTUB(DeleteSemaphore                        ,0xff822d4c) //120
 NHSTUB(DoAELock                               ,0xff93e058) //120
 NHSTUB(DoAFLock                               ,0xff93de38) //120
 NHSTUB(ExitTask                               ,0xff823b44) //120

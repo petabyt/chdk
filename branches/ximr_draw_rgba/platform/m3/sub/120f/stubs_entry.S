@@ -226,6 +226,7 @@ NHSTUB(Close                                  ,0xfc37a871) //  0
 //NHSTUB(CreateBinarySemaphore                ,0xbfe1530d) //  0            == 0xbfe1530d
 NHSTUB(CreateTask                             ,0xbfe14a31) //  0
 NHSTUB(DebugAssert                            ,0x010e1001) //  0
+NHSTUB(DeleteSemaphore                        ,0xbfe15391) //  0
 NHSTUB(DoAELock                               ,0xfc0aa83f) //  0
 NHSTUB(DoAFLock                               ,0xfc0aa4a1) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc327d25) //  0

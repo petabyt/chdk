@@ -188,6 +188,7 @@ NHSTUB(Close                                  ,0xfc3898b9) //  0
 NHSTUB(CreateBinarySemaphore                  ,0xbfe152f1) //  0
 NHSTUB(CreateTask                             ,0xbfe14a41) //  0
 NHSTUB(DebugAssert                            ,0x010e1009) //  0
+NHSTUB(DeleteSemaphore                        ,0xbfe15375) //  0
 NHSTUB(DoAELock                               ,0xfc2a618b) //  0
 NHSTUB(DoAFLock                               ,0xfc2a5db7) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc33e4c5) //  0
