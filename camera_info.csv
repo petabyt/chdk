@@ -291,6 +291,7 @@ ixus132_elph115,100b,,,,,12925,dryos,52,40,0xff000000,0x1900,0x03ffffff ,d4d,,10
 ixus150_elph140,100c,,,,,12935,dryos,54,41,0xff810000,0x1900,0x07ffffff,d4f,,12,,,,,,,,,
 ixus145_elph135,100c,,,,,12936,dryos,54,41,0xFF810000,0x1900,0x07ffffff,d4f,,12,,,,,,,,,
 ixus265_elph340hs,100c,ALPHA,,,SKIP,12937,dryos,54,41,0xff010000,0x1900,0x1FFFFFF,d4f,,12,,,,,,,,,
+ixus155_elph150,100b,ALPHA,,,SKIP,12938,dryos,54,41,0xFF810000,0x1900,0x07ffffff,d4f,,12,,,,,,,,,
 sx520hs,100b,,,,,12955,dryos,55,41,0xff010000,0x1900,0x0fffffff ,d4h,,14,,1,0x60e000,0x22000,1,,,,
 sx520hs,100c,,,,,12955,dryos,55,41,0xff010000,0x1900,0x0fffffff ,d4h,,14,,1,0x60e000,0x22000,1,,,,
 sx400is,100b,,,,,12956,dryos,55,41,0xFF810000,0x1900,0x1FFFFFF,d4h,,14 ,,,,,,,,,
