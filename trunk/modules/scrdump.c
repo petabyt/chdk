@@ -265,7 +265,7 @@ static CMenuItem scrdump_submenu_items[] = {
 #else
     MENU_ITEM   (0x5c,(int)"Skip Palette",                  MENUITEM_BOOL,                  &scrdump_skip,         0 ),
 #endif
-    MENU_ITEM   (0x2a,(int)"Dump Start Delay (s)",          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &scrdump_delay, MENU_MINMAX(0, 10)),
+    MENU_ITEM   (0x2a,(int)"Dump Start Delay (s)",          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,   &scrdump_delay, MENU_MINMAX(0, 60)),
     MENU_ITEM   (0x5c,(int)"Exit module",                   MENUITEM_PROC,                  scrdump_menu_exit,      0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
