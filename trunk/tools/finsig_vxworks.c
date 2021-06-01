@@ -233,7 +233,7 @@ func_entry  func_names[MAX_FUNC_ENTRY] =
     { "DebugAssert", OPTIONAL },
     { "DeleteDirectory_Fut", UNUSED|DONT_EXPORT },
     { "DeleteFile_Fut" },
-    { "DeleteSemaphore", UNUSED|DONT_EXPORT },
+    { "DeleteSemaphore", },
     { "DoAELock" },
     { "DoAFLock" },
     { "EnterToCompensationEVF" },
