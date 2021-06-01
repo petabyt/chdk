@@ -167,6 +167,7 @@ extern long _iosDevDelete(void*);
 extern long _iosDrvInstall(void*,void*,void*,void*,void*,void*,void*);
 extern int _TakeSemaphore(int sem, int timeout);
 extern void _GiveSemaphore(int sem);
+extern void _DeleteSemaphore(int sem);
 
 /* misc */
 extern const char aPhysw;
