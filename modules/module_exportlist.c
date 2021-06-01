@@ -438,3 +438,9 @@
             sd_over_modes
 
             &firmware_crc_desc
+            live_view_get_data
+
+            TakeSemaphore
+            GiveSemaphore
+            CreateBinarySemaphore
+            DeleteSemaphore

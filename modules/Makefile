@@ -14,7 +14,8 @@ FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids
      $O_dng.flt $Obenchm.flt $Ocalend.flt $O4wins.flt $Omastmind.flt $Oreversi.flt $Osokoban.flt $O_rawop.flt \
      $Otxtread.flt $Omemview.flt $Omodinsp.flt $Otetris.flt $Osnake.flt $Osudoku.flt $O_tbox.flt $O_osd_le.flt \
      $Oexmemins.flt $Ofshelter.flt $Ofwcrc.flt \
-     $O_hexbox.flt $Oubasic.flt $Olua.flt $Ocpuinfo.flt $Ouseredit.flt $Oeyefi.flt $Ohisto.flt $Oshothist.flt
+     $O_hexbox.flt $Oubasic.flt $Olua.flt $Ocpuinfo.flt $Ouseredit.flt $Oeyefi.flt $Ohisto.flt $Oshothist.flt \
+     $Oscrdump.flt
 
 # Include optional rules for user defined modules
 # Can be used to add additional modules to FLTS and add the rules to build them
@@ -71,6 +72,7 @@ $Oexmemins.flt: $Oexmem_inspector.o
 $Ofshelter.flt: $Ofile_shelter.o
 $Oeyefi.flt: $Oeyefi.o $Omd5.o $Osha1.o
 $Ofwcrc.flt: $Ofirmware_crc.o
+$Oscrdump.flt: $Oscrdump.o
 
 $Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(lubasic)/$Olibubasic.a
 $Olua.flt: $Oluascript.o $Oscript_key_funcs.o $Oscript_shoot_hook.o $Ocordic_math.o $Odbg_dump.o $Orawhookops.o $(llua)/$Oliblua.a
