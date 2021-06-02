@@ -207,7 +207,8 @@ void histogram_process()
             for (i=0, c=0; i<HISTO_WIDTH; ++i, c+=2) { // G
                 // Merge each pair of values into a single value (for width = 128)
                 // Warning: this is optimised for HISTO_WIDTH = 128, don't change the width unless you re-write this code as well.
-#ifndef THUMB_FW
+//#ifndef THUMB_FW
+#ifndef LARGE_HISTO
                 histogram_proc[HISTO_Y][i] = histogram_proc[HISTO_Y][c] + histogram_proc[HISTO_Y][c+1];
                 histogram_proc[HISTO_R][i] = histogram_proc[HISTO_R][c] + histogram_proc[HISTO_R][c+1];
                 histogram_proc[HISTO_G][i] = histogram_proc[HISTO_G][c] + histogram_proc[HISTO_G][c+1];
