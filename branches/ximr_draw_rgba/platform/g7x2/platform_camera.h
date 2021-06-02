@@ -159,8 +159,6 @@
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
 
-    // TODO: Below needs tp be checked
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
@@ -168,13 +166,6 @@
     #undef  CAM_VIDEO_CONTROL
     #undef  CAM_USE_ZOOM_FOR_MF
 
-    //#define CAM_QUALITY_OVERRIDE                1
-
-    //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
-
-    #define CAM_NEED_SET_ZOOM_DELAY             300
-
-    #undef  REMOTE_SYNC_STATUS_LED
-    // #define REMOTE_SYNC_STATUS_LED              0xC022C30C  // TODO specifies an LED that turns on while camera waits for USB remote to sync
+    #define REMOTE_SYNC_STATUS_LED              -1      // -1 = special value to force code to use debug_led
 
 //--------------------------------------------------

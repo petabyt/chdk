@@ -159,8 +159,6 @@
 
     #define CAM_AV_OVERRIDE_IRIS_FIX            1
 
-    // TODO: Below needs to be checked
-
     #define CAM_DRIVE_MODE_FROM_TIMER_MODE      1
 
     #undef  CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO
@@ -170,13 +168,7 @@
 
     #define CAM_EXT_TV_RANGE                    1
 
-    //#define CAM_QUALITY_OVERRIDE                1
-
-    //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
-
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
-
-    #define CAM_NEED_SET_ZOOM_DELAY             300
 
 //--------------------------------------------------
