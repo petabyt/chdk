@@ -9,7 +9,7 @@ DEF(active_palette_buffer,          0x00007aec+0x8) // Guess based on ixus145
 DEF(palette_buffer_ptr,             0x00007aec+0xC) // Guess palette_control+0xC
 DEF(palette_buffer,                 0x000Dca1c) // Found @0xff9b4994
 
-DEF(active_viewport_buffer,         0x000020f4) // sub_ff84d0e0 - by comparison to sx170
+DEF(active_viewport_buffer,         0x00018864) // found @0xff84cff4 - by comparison to ixus265
 DEF(viewport_buffers,               0xffb96e68) // by comparison to ixus145
 
 DEF(bitmap_buffer,                  0x00003ac0+0x20) // Found @0xff8a2c78 (0x3ac0) + @0x (0x20) - by comparison to ixus145
