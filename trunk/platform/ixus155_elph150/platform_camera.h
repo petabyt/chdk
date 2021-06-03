@@ -63,6 +63,7 @@
 
     #define CAM_HAS_VIDEO_BUTTON                1
     #undef  CAM_VIDEO_CONTROL
+    #undef  CAM_CHDK_HAS_EXT_VIDEO_MENU
 
     #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
 
