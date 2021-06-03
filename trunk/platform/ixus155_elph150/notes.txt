@@ -1,10 +1,16 @@
 ************************************
 IXUS155/ELPH150 Notes
 ************************************
+Porting thread:
+https://chdk.setepontos.com/index.php?topic=14376.0
 
 To enter CHDK <ALT> mode use the Playback [>] button.
 
 Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
 
 KNOWN BUGS
 **********
