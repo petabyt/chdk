@@ -25,18 +25,17 @@ void startup()
     boot();
 }
 
-#define NUM_FL      101
-#define NUM_DATA    2
-
+#define NUM_FL      101 // 101 zoom steps
+#define NUM_DATA    2   // 2 words each entry, FL in MM*1000, 100
 extern int focus_len_table[NUM_FL*NUM_DATA];
 
 // Conversion factor lens FL --> 35mm equiv
 // lens      35mm     CF
 // ----      ----     --
-//  5         28      ( 28/ 5) * 60 = 336  (min FL)
-// 25        140      (140/25) * 60 = 336  (max FL)
-#define CF_EFL      336
-#define CF_EFL_DIV  60
+// 4.3       24       (24/4.3) * 43 = 240  (min FL)
+// 43        240      (240/43) * 43 = 240  (max FL)
+#define CF_EFL      240
+#define	CF_EFL_DIV  43
 
 const int zoom_points = NUM_FL;
 
