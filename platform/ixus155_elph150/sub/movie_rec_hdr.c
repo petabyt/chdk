@@ -1,3 +1,6 @@
+/*
+ * note video functions are not implemented in this port and this code is probably non-working
+ */
 #include "conf.h"
 
 void change_video_tables(__attribute__ ((unused))int a, __attribute__ ((unused))int b) {}

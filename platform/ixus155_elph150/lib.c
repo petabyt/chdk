@@ -63,6 +63,7 @@ int vid_get_viewport_width()
 
 long vid_get_viewport_height()
 {
+    extern int _GetVideoOutType(void);
     int vot = _GetVideoOutType();
     if (camera_info.state.mode_play)
     {
@@ -100,7 +101,7 @@ void *vid_get_viewport_live_fb()
     extern void* viewport_buffers[];
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    return viewport_buffers[(active_viewport_buffer-1)&3]; 
+    return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
 int vid_get_palette_type()                      { return 3; }
