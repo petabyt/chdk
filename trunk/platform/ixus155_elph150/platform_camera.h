@@ -26,19 +26,19 @@
     #define CAM_DRYOS_2_3_R47                   1       // Defined for cameras with DryOS version R47 or higher
 
     #undef  CAM_CIRCLE_OF_CONFUSION
-    #define CAM_CIRCLE_OF_CONFUSION             5       // TODO
+    #define CAM_CIRCLE_OF_CONFUSION             5
 
     #define CAM_RAW_ROWPIX    5248 // Found @0xff9640d4
     #define CAM_RAW_ROWS      3920 // Found @0xff9640dc
 
 
-    #define CAM_JPEG_WIDTH                      5152    //To do
-    #define CAM_JPEG_HEIGHT                     3864    //To do
+    #define CAM_JPEG_WIDTH                      5152
+    #define CAM_JPEG_HEIGHT                     3864
 
-    #define CAM_ACTIVE_AREA_X1                  0      //To do
-    #define CAM_ACTIVE_AREA_Y1                  0      //To do
-    #define CAM_ACTIVE_AREA_X2                  5248    //To do
-    #define CAM_ACTIVE_AREA_Y2                  3920    //To do
+    #define CAM_ACTIVE_AREA_X1                  8
+    #define CAM_ACTIVE_AREA_Y1                  16
+    #define CAM_ACTIVE_AREA_X2                  5192
+    #define CAM_ACTIVE_AREA_Y2                  3904
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff825e30
@@ -63,7 +63,7 @@
 
     #define CAM_HAS_VIDEO_BUTTON                1
     #undef  CAM_VIDEO_CONTROL
-    #define CAM_VIDEO_QUALITY_ONLY              1
+
     #define CAM_IS_VID_REC_WORKS                1   // is_video_recording() function works
 
     #define CAM_ZEBRA_NOBUF                     1

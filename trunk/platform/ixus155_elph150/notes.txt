@@ -13,3 +13,4 @@ KNOWN BUGS
 For Developers
 **************
 - File counter is a variable not a param (see ixus140 port)
+- The lens is same as Ix255 https://chdk.setepontos.com/index.php?topic=14376.msg146361#msg146361
