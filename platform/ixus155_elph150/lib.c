@@ -94,7 +94,6 @@ void *vid_get_viewport_fb_d()
     return viewport_fb_d;
 }
 
-//To do
 void *vid_get_viewport_live_fb()
 {
     extern char active_viewport_buffer;
