@@ -617,6 +617,7 @@
 0xfc0f7981,task_LcdConTask
 0xfc0f7a13,LcdCon_StartLcdPeriodicalSetting_FW
 0xfc0f7a2f,LcdCon_StopLcdPeriodicalSetting_FW
+0xfc0f7fab,fw_yuv_layer_buf_helper
 0xfc0f8289,GetLatestHVPosition_FW
 0xfc0f83bf,j_TouchPanelStartPolling_FW
 0xfc0f83c3,j_TouchPanelStopPolling_FW

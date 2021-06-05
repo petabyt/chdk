@@ -358,6 +358,7 @@
 0xfc0b338b,HardwareDefect_FW
 0xfc0b64e9,task_FaceFrame
 0xfc0b920b,task_DevelopModule
+0xfc0bcea7,fw_yuv_layer_buf_helper
 0xfc0bdc45,HdmiViewParameter_FW
 0xfc0bfe37,task_DefMarkRomCopyTask
 0xfc0c0881,LoadParamDataFromAdjTableBin_FW

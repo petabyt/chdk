@@ -582,6 +582,7 @@
 0xfc0f8565,task_LcdConTask
 0xfc0f85f7,LcdCon_StartLcdPeriodicalSetting_FW
 0xfc0f8613,LcdCon_StopLcdPeriodicalSetting_FW
+0xfc0f8bb3,fw_yuv_layer_buf_helper
 0xfc0f8da3,LcdCon_SetCvfDriver_FW
 0xfc0f8dd1,LcdCon_SetCvfAdjParameter_FW
 0xfc0f8e33,LcdCon_GetCvfAdjParameter_FW

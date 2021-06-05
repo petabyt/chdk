@@ -814,6 +814,7 @@
 0xfc1b5741,ExecuteResetFactoryWithRomWrite_FW
 0xfc1b5753,ExecuteResetFactory_FW
 0xfc1b5765,j_ExecuteShutDownPropertyService_FW
+0xfc1b9155,fw_yuv_layer_buf_helper
 0xfc1ba43d,Scene.ForbidContiSceneDetect_FW
 0xfc1ba461,Scene.TestSunset_FW
 0xfc1ba487,Scene.TestBabySmile_FW

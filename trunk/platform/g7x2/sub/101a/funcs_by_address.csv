@@ -415,6 +415,7 @@
 0xe01a7cfb,SoundDevParam_SetATTMode_FW
 0xe01a7d13,SoundDevParam_SetMicSelect_FW
 0xe01afcd3,task_DetSeqChaseT
+0xe01b8d6d,fw_yuv_layer_buf_helper
 0xe01ccb27,GraphicSystemCoreFinish_helper
 0xe01ce281,MovieAF.Suspend_FW
 0xe01ce28b,MovieAF.Resume_FW
