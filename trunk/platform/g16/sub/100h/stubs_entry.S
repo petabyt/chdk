@@ -167,6 +167,9 @@ DEF_CONST(uiprop_count                      ,0x00000094) // Found @0xfc0cc5c0
 DEF(exmem_alloc_table                 ,0x0003a828) // Found @0xfc071a0e
 DEF(exmem_types_table                 ,0xfcbc6144) // Found @0xfc071a12
 DEF_CONST(exmem_type_count                  ,0x0000001f) // Found @0xfcbc6144
+DEF(debug_logging_ptr                 ,0x0001be24) // Found @0xfc42250e
+DEF(debug_logging_flag                ,0x0001be1c) // Found @0xfc422508
+DEF(mzrm_sendmsg_ret_adr              ,0xfc2a840b)
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
 // there are 121 entries in the table - set NUM_FL to 121
