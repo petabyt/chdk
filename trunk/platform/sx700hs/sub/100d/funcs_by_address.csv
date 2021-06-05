@@ -385,6 +385,7 @@
 0xfc0b6721,DisconnectPtpIPService_FW
 0xfc0b6c09,task_WebServiceApp
 0xfc0b7635,task_WSSAPP
+0xfc0b9027,fw_yuv_layer_buf_helper
 0xfc0ba919,task_ConsoleSvr
 0xfc0bac81,RotateConsoleZOder_FW
 0xfc0bad0f,task_LowConsole

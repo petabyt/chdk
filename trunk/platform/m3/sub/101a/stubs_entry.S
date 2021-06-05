@@ -192,6 +192,7 @@ DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcc66ce0
 DEF(debug_logging_ptr                 ,0x000286a0) // Found @0xfc3ee5ca
 DEF(debug_logging_flag                ,0x00028698) // Found @0xfc3ee5c4
 DEF(mzrm_sendmsg_ret_adr              ,0xfc2fd873)
+DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245cf2
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc373f15
 //NHSTUB(DeleteFile_Fut                       ,0x00000000) //  0        *** != 0xfc373ecb
