@@ -604,6 +604,7 @@
 0xfc374129,fut_finish
 0xfc0668db,fut_flush
 0xfc374111,fut_prepare
+0xfc245c65,fw_yuv_layer_buf_helper
 0xfc37401f,Fwrite_Fut
 0xfc37401f,Fwrite_Fut_FW
 0xfc066b1d,fwrite_low

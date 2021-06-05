@@ -789,6 +789,7 @@
 0xfc18606d,task_LcdConTask
 0xfc1860ff,LcdCon_StartLcdPeriodicalSetting_FW
 0xfc18611b,LcdCon_StopLcdPeriodicalSetting_FW
+0xfc186e99,fw_yuv_layer_buf_helper
 0xfc187189,GetDriverInfoEvent_FW
 0xfc1873e7,GPS_SEND_FILE_FW
 0xfc1879e9,GPS_REDIRECT_MON_FW

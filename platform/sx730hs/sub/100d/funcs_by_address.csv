@@ -184,6 +184,7 @@
 0xfc06afdf,GetParameterData
 0xfc071135,get_canon_mode_list
 0xfc0720a9,dry_panic
+0xfc073d51,fw_yuv_layer_buf_helper
 0xfc074641,GetSRAndDisableInterrupt
 0xfc074653,SetSR
 0xfc079bc9,LoadParamDataFromAdjTableBin_FW

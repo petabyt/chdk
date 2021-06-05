@@ -167,6 +167,7 @@ DEF_CONST(exmem_type_count                  ,0x0000001f) // Found @0xfcc41c3c
 DEF(debug_logging_ptr                 ,0x0001b6e8) // Found @0xfc3fe77e
 DEF(debug_logging_flag                ,0x0001b6e0) // Found @0xfc3fe778
 DEF(mzrm_sendmsg_ret_adr              ,0xfc2d7687)
+DEF_CONST(fw_yuv_layer_buf                  ,0x41718600) // Found @0xfc0b909e
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
 // there are 112 entries in the table - set NUM_FL to 112

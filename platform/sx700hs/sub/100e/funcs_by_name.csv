@@ -433,6 +433,7 @@
 0xfc2d7e05,fut_finish
 0xfc060c4f,fut_flush
 0xfc2d7ded,fut_prepare
+0xfc0b8fcf,fw_yuv_layer_buf_helper
 0xfc2d7cfb,Fwrite_Fut
 0xfc2d7cfb,Fwrite_Fut_FW
 0xfc060e91,fwrite_low

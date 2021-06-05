@@ -520,6 +520,7 @@
 0xfc34c9f9,fut_finish
 0xfc23bf27,fut_flush
 0xfc34c9e1,fut_prepare
+0xfc073d51,fw_yuv_layer_buf_helper
 0xfc34c8ef,Fwrite_Fut
 0xfc34c8ef,Fwrite_Fut_FW
 0xfc23c169,fwrite_low

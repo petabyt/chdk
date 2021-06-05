@@ -595,6 +595,7 @@
 0xfc38a3cd,fut_finish
 0xfc06fcb7,fut_flush
 0xfc38a3b5,fut_prepare
+0xfc23d475,fw_yuv_layer_buf_helper
 0xfc38a2c3,Fwrite_Fut
 0xfc38a2c3,Fwrite_Fut_FW
 0xfc06fef9,fwrite_low

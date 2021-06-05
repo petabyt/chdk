@@ -483,6 +483,7 @@
 0xe0371135,fut_finish
 0xe05516a5,fut_flush
 0xe037111d,fut_prepare
+0xe01b8d6d,fw_yuv_layer_buf_helper
 0xe0371023,Fwrite_Fut
 0xe0371023,Fwrite_Fut_FW
 0xe05518ed,fwrite_low
