@@ -72,7 +72,7 @@ long vid_get_viewport_height()
         }
         return 240;
     }
-    return _GetVRAMVPixelsSize() >> (vid_get_viewport_yscale() - 1);
+    return _GetVRAMVPixelsSize();
 }
 
 
@@ -94,7 +94,6 @@ void *vid_get_viewport_fb_d()
     return viewport_fb_d;
 }
 
-//To do
 void *vid_get_viewport_live_fb()
 {
     extern char active_viewport_buffer;
@@ -134,7 +133,7 @@ void load_chdk_palette()
     extern int active_palette_buffer;
     // Only load for the standard record and playback palettes
     // 0 = rec, 4 = func menu, 5 = playback, 6 = menu (play or rec),
-    if ((active_palette_buffer == 0) || (active_palette_buffer == 5) || (active_palette_buffer == 4))
+    if ((active_palette_buffer == 0) || (active_palette_buffer == 5))
     {
         int *pal = (int*)vid_get_bitmap_active_palette();
         if (pal && pal[CHDK_COLOR_BASE+0] != 0x33ADF62)
@@ -152,6 +151,7 @@ void load_chdk_palette()
             pal[CHDK_COLOR_BASE+10] = 0x3A9A917;  // Yellow
             pal[CHDK_COLOR_BASE+11] = 0x3819137;  // Dark Yellow
             pal[CHDK_COLOR_BASE+12] = 0x3DED115;  // Light Yellow
+            pal[CHDK_COLOR_BASE+13] = 0x1F0A0000;  // Transparent dark grey
 
             extern char palette_control;
             palette_control = 1; // note appears to be a bitmask, bit 2 is also used
