@@ -383,6 +383,9 @@ void update_ui(ximr_context* ximr)
             ximr->layers[3].bitmap = (unsigned int)chdk_rgba;
             ximr->layers[3].width = CB_W;
             ximr->layers[3].height = bm_h;
+
+            // Fix for video recording - https://chdk.setepontos.com/index.php?topic=12788.msg146378#msg146378
+            ximr->unk2[0] = 0x500;
         }
     }
     else
