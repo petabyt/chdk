@@ -1636,6 +1636,63 @@ int find_and_get_var_ldr(firmware *fw,
 }
 
 /*
+find instruction or sequence that receives specified constant in specified r0-r3 reg
+search starting from is to max_search_bytes
+allow up to max_gap_insns between constant load and match, generally small (4-8 max)
+returns address of match with thumb bit set according to mode, or 0 on failure
+*/
+int find_const_ref_match(firmware *fw,
+                            iter_state_t *is,
+                            int max_search_bytes,
+                            int max_gap_insns,
+                            arm_reg match_reg, // must be R0-R3
+                            uint32_t val,
+                            const insn_match_t *match,
+                            int match_type)
+{
+    if(match_reg < ARM_REG_R0 || match_reg > ARM_REG_R3) {
+        fprintf(stderr,"find_const_ref_match: invalid match_reg %d\n",match_reg);
+        return 0;
+    }
+    if(max_gap_insns >= ADR_HIST_SIZE) {
+        fprintf(stderr,"find_const_ref_match: invalid max_gap_insns %d\n",max_gap_insns);
+        return 0;
+    }
+    int (*match_fn)(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match);
+    if(match_type == FIND_CONST_REF_MATCH_SEQ) {
+        match_fn = insn_match_find_next_seq;
+    } else if(match_type == FIND_CONST_REF_MATCH_ANY){
+        match_fn = insn_match_find_next;
+    } else {
+        fprintf(stderr,"find_const_ref_match: invalid match_type %d\n",match_type);
+        return 0;
+    }
+    // search for a ref to constant
+    while(fw_search_insn(fw,is,search_disasm_const_ref,val,NULL,(uint32_t)(is->adr+max_search_bytes))) {
+        //printf("find_const_ref_match: match str 0x%"PRIx64"\n",is->adr);
+        uint32_t next_adr = (uint32_t)is->adr;
+        // search for next bl / blx
+        // could search include b for tail calls, but hard to distinguish
+        if(match_fn(fw,is,max_gap_insns,match)) {
+            uint32_t reg_num = match_reg - ARM_REG_R0;
+            uint32_t reg_bit = 1 << reg_num;
+            uint32_t regs[4];
+            //printf("find_const_ref_match: match insn 0x%"PRIx64"\n",reg_num,is->adr);
+            // backtrack to find out if const ref ends up in desired reg
+            if((get_call_const_args(fw,is,max_gap_insns,regs)&reg_bit)==reg_bit) {
+                //printf("find_const_ref_match: match reg r%d 0x%"PRIx64"\n",reg_num,is->adr);
+                if(regs[reg_num] == val) {
+                    return iter_state_adr(is);
+                }
+            }
+        }
+        // not matched, restore is and advance one instruction
+        disasm_iter_init(fw,is,next_adr | is->thumb);
+    }
+    return 0;
+}
+
+/*
 find call that receives specified constant in specified r0-r3 reg
 search starting from is to max_search_bytes
 allow up to max_gap_insns between constant load and call, generally small (4-8 max)
@@ -1649,34 +1706,7 @@ int find_const_ref_call(firmware *fw,
                             uint32_t val)
 
 {
-    if(match_reg < ARM_REG_R0 || match_reg > ARM_REG_R3) {
-        fprintf(stderr,"find_const_ref_call: invalid match_reg %d\n",match_reg);
-        return 0;
-    }
-    if(max_gap_insns >= ADR_HIST_SIZE) {
-        fprintf(stderr,"find_const_ref_call: invalid max_gap_insns %d\n",max_gap_insns);
-        return 0;
-    }
-    // search for a ref to constant
-    while(fw_search_insn(fw,is,search_disasm_const_ref,val,NULL,(uint32_t)(is->adr+max_search_bytes))) {
-        uint32_t next_adr = (uint32_t)is->adr;
-        // search for next bl / blx
-        // could search include b for tail calls, but hard to distinguish
-        if(insn_match_find_next(fw,is,max_gap_insns,match_bl_blximm)) {
-            uint32_t reg_num = match_reg - ARM_REG_R0;
-            uint32_t reg_bit = 1 << reg_num;
-            uint32_t regs[4];
-            // backtrack to find out if const ref ends up in desired reg
-            if((get_call_const_args(fw,is,max_gap_insns,regs)&reg_bit)==reg_bit) {
-                if(regs[reg_num] == val) {
-                    return iter_state_adr(is);
-                }
-            }
-        }
-        // not matched, restore is and advance one instruction
-        disasm_iter_init(fw,is,next_adr | is->thumb);
-    }
-    return 0;
+    return find_const_ref_match(fw,is,max_search_bytes,max_gap_insns,match_reg,val,match_bl_blximm,FIND_CONST_REF_MATCH_ANY);
 }
 
 /*
@@ -1875,6 +1905,16 @@ const insn_match_t match_bl_blximm[]={
 
 const insn_match_t match_bxlr[]={
     {MATCH_INS(BX, 1), {MATCH_OP_REG(LR)}},
+    {ARM_INS_ENDING}
+};
+
+const insn_match_t match_bxreg[]={
+    {MATCH_INS(BX, 1), {MATCH_OP_REG_ANY}},
+    {ARM_INS_ENDING}
+};
+
+const insn_match_t match_blxreg[]={
+    {MATCH_INS(BLX, 1), {MATCH_OP_REG_ANY}},
     {ARM_INS_ENDING}
 };
 

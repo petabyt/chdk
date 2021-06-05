@@ -30,6 +30,11 @@
 
 #define SIG_STRCALL_ARG_MASK    0x3
 #define SIG_STRCALL_ARG(arg_num) (arg_num)
+#define SIG_STRCALL_TYPE_MASK  0xc
+#define SIG_STRCALL_TYPE_SHIFT 2
+#define SIG_STRCALL_CALL_IMM   0
+#define SIG_STRCALL_JMP_REG    4
+#define SIG_STRCALL_CALL_REG   8
 
 /* copied from finsig_dryos.c */
 char    out_buf[32*1024] = "";
@@ -645,6 +650,9 @@ misc_val_t misc_vals[]={
     { "exmem_type_count",   MISC_VAL_DEF_CONST},
     { "ui_malloc_ptr",      MISC_VAL_NO_STUB}, // currently only used to find functions
     { "ui_free_ptr",        MISC_VAL_NO_STUB},
+    { "debug_logging_ptr", }, // debug log function for mzrm, tric calls
+    { "debug_logging_flag", },
+    { "mzrm_sendmsg_ret_adr", }, // return address for hooking log call
 
     {0,0,0},
 };
@@ -1010,6 +1018,7 @@ int init_disasm_sig_ref(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 }
 
 int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule);
+uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule);
 
 // match
 // r0=ref value
@@ -4812,6 +4821,105 @@ int sig_match_live_free_cluster_count(firmware *fw, iter_state_t *is, sig_rule_t
 
 }
 
+int sig_match_debug_logging_ptr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t call_adr = find_str_arg_call(fw,is,rule);
+    if(!call_adr) {
+        printf("sig_match_debug_logging_ptr: no match call\n");
+        return 0;
+    }
+    // is should be pointing at bx instruction, get the register being called
+    arm_reg call_reg = is->insn->detail->arm.operands[0].reg;
+
+    // backtrack until we find ldr into reg
+    int i;
+    for(i=1; i<10; i++) {
+        fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+        cs_insn *insn=fw->is->insn;
+        if((arm_reg)insn->detail->arm.operands[0].reg != call_reg || insn->id == ARM_INS_CMP ) {
+            continue;
+        }
+        // LDR into target reg
+        if(insn->id == ARM_INS_LDR && insn->detail->arm.operands[1].type == ARM_OP_MEM) {
+            arm_reg base_reg = (arm_reg)insn->detail->arm.operands[1].reg;
+            int disp = insn->detail->arm.operands[1].mem.disp;
+            i++;
+            // backtrack one more (assume no gap)
+            fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+            uint32_t adr = LDR_PC2val(fw,fw->is->insn);
+            if(!adr || (arm_reg)fw->is->insn->detail->arm.operands[0].reg != base_reg) {
+                printf("sig_match_debug_logging_ptr: no match ldr2 0x%x 0x%"PRIx64"\n",adr,fw->is->insn->address);
+                return 0;
+            }
+            save_misc_val(rule->name,adr + disp,disp,(uint32_t)fw->is->insn->address);
+            return 1;
+        }
+        printf("sig_match_debug_logging_ptr: reg clobbered 0x%"PRIx64"\n",fw->is->insn->address);
+        return 0;
+    }
+    printf("sig_match_debug_logging_ptr: no match ldr 0x%"PRIx64"\n",fw->is->insn->address);
+    return 0;
+}
+
+int sig_match_debug_logging_flag(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!find_str_arg_call(fw,is,rule)) {
+        printf("sig_match_debug_logging_flag: no match call\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,8,match_ldr_pc)) {
+        printf("sig_match_debug_logging_flag: no match ldr pc 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    uint32_t adr = LDR_PC2val(fw,is->insn);
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_debug_logging_flag: disasm failed\n");
+        return 0;
+    }
+    arm_reg base_reg = (arm_reg)is->insn->detail->arm.operands[1].reg;
+    uint32_t ref_adr = (uint32_t)is->insn->address;
+    if (fw->arch_flags & FW_ARCH_FL_VMSA) {
+        if(is->insn->id != ARM_INS_LDRB) {
+            printf("sig_match_debug_logging_flag: no match ldrb 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+    } else {
+        if(is->insn->id != ARM_INS_LDR) {
+            printf("sig_match_debug_logging_flag: no match ldr 0x%"PRIx64"\n",is->insn->address);
+            return 0;
+        }
+    }
+    if((arm_reg)is->insn->detail->arm.operands[1].reg != base_reg) {
+        printf("sig_match_debug_logging_flag: no match reg 0x%"PRIx64"\n",is->insn->address);
+        return 0;
+    }
+    int disp = (arm_reg)is->insn->detail->arm.operands[1].mem.disp;
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_debug_logging_flag: disasm failed\n");
+        return 0;
+    }
+    if(is->insn->id != ARM_INS_LSL) {
+        printf("sig_match_debug_logging_flag: no match lsl\n");
+        return 0;
+    }
+    save_misc_val(rule->name,adr + disp,disp,ref_adr);
+    return 1;
+}
+int sig_match_mzrm_sendmsg_ret_adr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!find_str_arg_call(fw,is,rule)) {
+        printf("sig_match_mzrm_sendmsg_ret_adr: no match call\n");
+        return 0;
+    }
+    if(!disasm_iter(fw,is)) {
+        printf("sig_match_mzrm_sendmsg_ret_adr: disasm failed\n");
+        return 0;
+    }
+    // address after blx, thumb bit set for current state
+    save_misc_val(rule->name,(uint32_t)is->insn->address | is->thumb,0,0);
+    return 1;
+}
+
 int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -4928,6 +5036,19 @@ int sig_match_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     arm_reg reg = ARM_REG_R0 + (rule->param & SIG_STRCALL_ARG_MASK);
+    int match_type = (rule->param & SIG_STRCALL_TYPE_MASK);
+    const insn_match_t *match;
+    if(match_type == SIG_STRCALL_CALL_IMM) {
+        match = match_bl_blximm;
+    } else if(match_type == SIG_STRCALL_JMP_REG) {
+        match = match_bxreg;
+    } else if(match_type == SIG_STRCALL_CALL_REG) {
+        match = match_blxreg;
+    } else {
+        printf("find_str_arg_call: %s invalid match type %d\n",rule->name,match_type);
+        return 0;
+    }
+
     uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name); // direct string must be near actual code
     if(!str_adr) {
         printf("find_str_arg_call: %s failed to find ref %s\n",rule->name,rule->ref_name);
@@ -4936,13 +5057,13 @@ uint32_t find_str_arg_call(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 
     do {
         disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-        uint32_t call_adr = find_const_ref_call(fw, is, SEARCH_NEAR_REF_RANGE*2, 8, reg, str_adr);
+        uint32_t call_adr = find_const_ref_match(fw, is, SEARCH_NEAR_REF_RANGE*2, 8, reg, str_adr, match, FIND_CONST_REF_MATCH_ANY);
         if(call_adr) {
             return call_adr;
         }
         str_adr = find_next_str_bytes_main_fw(fw,rule->ref_name, str_adr+strlen(rule->ref_name));
     } while (str_adr);
-    printf("find_str_arg_call: no match %s\n",rule->name);
+    printf("find_str_arg_call: no match %s r%d\n",rule->name,reg-ARM_REG_R0);
     return 0;
 }
 
@@ -5573,6 +5694,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_palette_vars,"palette_control",     "transfer_src_overlay_helper",0, SIG_DRY_MAX(58)},// Dry59 code is different
 {sig_match_live_free_cluster_count,"live_free_cluster_count","Close",0,         SIG_DRY_MAX(57)},
 {sig_match_live_free_cluster_count,"live_free_cluster_count","Close_low",0,     SIG_DRY_MIN(58)},
+{sig_match_debug_logging_ptr,"debug_logging_ptr","[GRYP]T: Terminate(Pri): Completed.\n",SIG_STRCALL_ARG(0)|SIG_STRCALL_JMP_REG},
+{sig_match_debug_logging_flag,"debug_logging_flag","[GRYP]E: Terminate(Pri): Event flag delete error.[0x%08x]\n",SIG_STRCALL_ARG(0)|SIG_STRCALL_CALL_REG},
+{sig_match_mzrm_sendmsg_ret_adr,"mzrm_sendmsg_ret_adr","SendMsg   : %d\n",      SIG_STRCALL_ARG(0)|SIG_STRCALL_CALL_REG},
 {NULL},
 };
 
@@ -6890,6 +7014,12 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
     }
     // find best match and report results
     osig* ostub2=find_sig(fw->sv->stubs_min,sig->name);
+    const char *ostub_src = "stubs_min";
+
+    if(!ostub2) {
+        ostub2=find_sig(fw->sv->stubs,sig->name);
+        ostub_src="stubs_entry_2";
+    }
 
     const char *macro = "DEF";
     if(sig->flags & MISC_VAL_DEF_CONST) {
@@ -6901,11 +7031,11 @@ void print_stubs_min_def(firmware *fw, misc_val_t *sig)
         bprintf("//%s(%-34s,0x%08x)",macro,sig->name,sig->val);
         if (sig->val != ostub2->val)
         {
-            bprintf(", ** != ** stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
+            bprintf(", ** != ** %s = 0x%08x (%s)",ostub_src,ostub2->val,ostub2->sval);
         }
         else
         {
-            bprintf(",          stubs_min = 0x%08x (%s)",ostub2->val,ostub2->sval);
+            bprintf(",          %s = 0x%08x (%s)",ostub_src,ostub2->val,ostub2->sval);
         }
     }
     else if(sig->base || sig->offset)
