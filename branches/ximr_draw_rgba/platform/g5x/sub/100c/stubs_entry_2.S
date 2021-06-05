@@ -55,20 +55,6 @@ NHSTUB(CreateBinarySemaphoreStrictly          ,0xbfe15557)
 // via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
 NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
 
-// To find these values it is easiest to use the Ghidra de-compile window.
-   DEF(debug_logging_ptr                      ,0x00022078)  // RAM address of function called by mzrm_sendmsg for logging
-                                                            // To find debug_logging_ptr:
-                                                            //   Start at the mzrm_sendmsg function.
-                                                            //   Find the function call via memory pointer with first parameter = "SendMsg   : %d\n" string
-                                                            //   debug_logging_ptris the memory address that contains the pointer used to make this function call
-   DEF(debug_logging_flag                     ,0x00022070)  // RAM address of flag to enable logging call
-                                                            // To find debug_logging_flag:
-                                                            //   Just before the debug_logging_ptrfound above there is an if statement that tests both a memory value and
-                                                            //   the debug_logging_ptrvalue.
-                                                            //   debug_logging_flag is the memory address of the flag value in the if statement.
-   DEF(mzrm_sendmsg_ret_adr                   ,0xfc361f91)  // Thumb address to check against LR register to detect mzrm_sendmag call from Canon UI update
-                                                            //   This is the address immediately after the call to debug_logging_ptr in mzrm_sendmsg (+1 for thumb)
-
 // These don't exist
 NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)

@@ -189,9 +189,9 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277b06
 DEF(exmem_alloc_table                 ,0x0005a474) // Found @0xfc07882a
 DEF(exmem_types_table                 ,0xfcc53658) // Found @0xfc07882e
 DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcc53658
-//DEF(debug_logging_ptr                 ,0x000286c0),          stubs_entry_2 = 0x000286c0 (0x000286c0)
-//DEF(debug_logging_flag                ,0x000286b8),          stubs_entry_2 = 0x000286b8 (0x000286b8)
-//DEF(mzrm_sendmsg_ret_adr              ,0xfc2fd88b),          stubs_entry_2 = 0xfc2fd88b (0xfc2fd88b)
+DEF(debug_logging_ptr                 ,0x000286c0) // Found @0xfc3ee93a
+DEF(debug_logging_flag                ,0x000286b8) // Found @0xfc3ee934
+DEF(mzrm_sendmsg_ret_adr              ,0xfc2fd88b)
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc374285
 //NHSTUB(DeleteFile_Fut                       ,0x00000000) //  0        *** != 0xfc37423b
