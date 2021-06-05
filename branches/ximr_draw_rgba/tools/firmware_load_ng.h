@@ -521,19 +521,6 @@ int find_and_get_var_ldr(firmware *fw,
                             int max_seq_insns,
                             arm_reg match_val_reg, // ARM_REG_INVALID for any
                             var_ldr_desc_t *result);
-/*
-find call that receives specified constant in specified r0-r3 reg
-search starting from is to max_search_bytes
-allow up to max_gap_insns between constant load and call, generally small (4-8 max)
-returns address of call with thumb bit set according to mode, or 0 on failure
-modifies is and fw->is
-*/
-int find_const_ref_call(firmware *fw,
-                            iter_state_t *is,
-                            int max_search_bytes,
-                            int max_gap_insns, // insns between ref and call
-                            arm_reg match_reg, // must be R0-R3
-                            uint32_t val);
 
 /*
 check for, and optionally return information about
@@ -633,6 +620,12 @@ extern const insn_match_t match_bl_blximm[];
 // match BX LR
 extern const insn_match_t match_bxlr[];
 
+// match BX <any reg>
+extern const insn_match_t match_bxreg[];
+
+// match BLX <any reg>
+extern const insn_match_t match_blxreg[];
+
 // match LDR rx [pc, ...]
 extern const insn_match_t match_ldr_pc[];
 
@@ -653,6 +646,39 @@ int insn_match_seq(firmware *fw, iter_state_t *is, const insn_match_t *match);
 
 // find next matching sequence starting within max_insns
 int insn_match_find_next_seq(firmware *fw, iter_state_t *is, int max_insns, const insn_match_t *match);
+
+#define FIND_CONST_REF_MATCH_ANY 0
+#define FIND_CONST_REF_MATCH_SEQ 1
+/*
+find instruction or sequence that receives specified constant in specified r0-r3 reg
+search starting from is to max_search_bytes
+allow up to max_gap_insns between constant load and match, generally small (4-8 max)
+returns address of match with thumb bit set according to mode, or 0 on failure
+modifies is and fw->is
+*/
+int find_const_ref_match(firmware *fw,
+                            iter_state_t *is,
+                            int max_search_bytes,
+                            int max_gap_insns,
+                            arm_reg match_reg, // must be R0-R3
+                            uint32_t val,
+                            const insn_match_t *match,
+                            int match_type);
+
+/*
+find call that receives specified constant in specified r0-r3 reg
+search starting from is to max_search_bytes
+allow up to max_gap_insns between constant load and call, generally small (4-8 max)
+returns address of call with thumb bit set according to mode, or 0 on failure
+modifies is and fw->is
+*/
+int find_const_ref_call(firmware *fw,
+                            iter_state_t *is,
+                            int max_search_bytes,
+                            int max_gap_insns, // insns between ref and call
+                            arm_reg match_reg, // must be R0-R3
+                            uint32_t val);
+
 
 // ****** utilities for non-disasm searching ******
 // Search the firmware for something. The desired matching is performed using the supplied 'func' function.
