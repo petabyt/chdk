@@ -525,6 +525,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "pvm_free", OPTIONAL|UNUSED },
     { "pvm_init_pool", OPTIONAL|UNUSED },
 
+    { "fw_yuv_layer_buf_helper", UNUSED},
+
     {0,0,0},
 };
 
@@ -653,6 +655,7 @@ misc_val_t misc_vals[]={
     { "debug_logging_ptr", }, // debug log function for mzrm, tric calls
     { "debug_logging_flag", },
     { "mzrm_sendmsg_ret_adr", }, // return address for hooking log call
+    { "fw_yuv_layer_buf",   MISC_VAL_DEF_CONST},
 
     {0,0,0},
 };
@@ -902,9 +905,10 @@ int save_sig_with_j(firmware *fw, char *name, uint32_t adr)
     return 0;
 }
 
+#define FIND_SIG_CALL_NO_UNK_VENEER 1
 // find next call to func named "name" or j_name, up to max_offset form the current is address
 // TODO max_offset is in bytes, unlike insn search functions that use insn counts
-int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name)
+int find_next_sig_call_ex(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name, uint32_t flags)
 {
     uint32_t adr=get_saved_sig_val(name);
 
@@ -934,9 +938,21 @@ int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, cons
             match_fns[i].fn=search_calls_multi_end;
         }
     }
+    search_insn_fn search_fn;
+    if(flags & FIND_SIG_CALL_NO_UNK_VENEER) {
+        search_fn = search_disasm_calls_multi;
+    } else {
+        search_fn = search_disasm_calls_veneer_multi;
+    }
     match_fns[i].adr=0;
-    return fw_search_insn(fw,is,search_disasm_calls_veneer_multi,0,match_fns,is->adr + max_offset);
+    return fw_search_insn(fw,is,search_fn,0,match_fns,is->adr + max_offset);
 }
+// as above, but default flags (resolving unknown veneers)
+int find_next_sig_call(firmware *fw, iter_state_t *is, uint32_t max_offset, const char *name)
+{
+    return find_next_sig_call_ex(fw,is,max_offset,name,0);
+}
+
 // is the insn pointed to by is a call to "name" or one of it's veneers?
 // note: inefficient, should not be used for large searches
 int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
@@ -4920,6 +4936,55 @@ int sig_match_mzrm_sendmsg_ret_adr(firmware *fw, iter_state_t *is, sig_rule_t *r
     return 1;
 }
 
+int sig_match_fw_yuv_layer_buf_52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    // code may have an unconditional branch which find_next_sig_call thinks is a veneer
+    if(!find_next_sig_call_ex(fw,is,54,"get_displaytype",FIND_SIG_CALL_NO_UNK_VENEER)) {
+        printf("sig_match_fw_yuv_layer_buf_52: no match get_displaytype\n");
+        return 0;
+    }
+    printf("match get_displaytype 0x%"PRIx64"\n",is->insn->address);
+    if(!insn_match_find_nth(fw,is,14,2,match_bl_blximm)) {
+        printf("sig_match_fw_yuv_layer_buf_52: no match call\n");
+        return 0;
+    }
+    printf("match 0x%"PRIx64"\n",is->insn->address);
+    uint32_t regs[4];
+    // get r1, backtracking up to 8 instructions
+    if ((get_call_const_args(fw,is,8,regs)&2)!=2) {
+        printf("sig_match_fw_yuv_layer_buf_52: no match const arg\n");
+        return 0;
+    }
+    save_misc_val(rule->name,regs[1],0,(uint32_t)fw->is->insn->address); // fw is has backtracked address
+    return 0;
+}
+
+int sig_match_fw_yuv_layer_buf_gt52(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    if(!find_next_sig_call(fw,is,170,"DebugAssert")) {
+        printf("sig_match_fw_yuv_layer_buf: no match DebugAssert\n");
+        return 0;
+    }
+    if(!insn_match_find_next(fw,is,12,match_bl_blximm)) {
+        printf("sig_match_fw_yuv_layer_buf: no match call\n");
+        return 0;
+    }
+    uint32_t regs[4];
+    // get r1, backtracking up to 8 instructions
+    if ((get_call_const_args(fw,is,8,regs)&2)!=2) {
+        printf("sig_match_fw_yuv_layer_buf: no match const arg\n");
+        return 0;
+    }
+    save_misc_val(rule->name,regs[1],0,(uint32_t)fw->is->insn->address); // fw is has backtracked address
+    return 0;
+}
+
 int sig_match_rom_ptr_get(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     if(!init_disasm_sig_ref(fw,is,rule)) {
@@ -5641,6 +5706,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,"GraphicSystemCoreFinish_helper","transfer_src_overlay",SIG_NAMED_NTH(5,SUB),SIG_DRY_MIN(58)},// additional call
 //{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduuce"/*sic*/,SIG_NEAR_BEFORE(6,1),SIG_DRY_RANGE(58,58)},
 //{sig_match_near_str,"GraphicSystemCoreFinish_helper","VTMReduce",SIG_NEAR_BEFORE(6,1),SIG_DRY_MIN(59)},  // canon fixed the typo, works on sx730 but others have diff code
+{sig_match_named_last,"fw_yuv_layer_buf_helper","transfer_src_overlay",SIG_NAMED_LAST_RANGE(60,85)},
 {sig_match_named,"GraphicSystemCoreFinish","GraphicSystemCoreFinish_helper",SIG_NAMED_SUB},
 {sig_match_named,"mzrm_createmsg","GraphicSystemCoreFinish",SIG_NAMED_SUB},
 {sig_match_named_last,"mzrm_sendmsg","GraphicSystemCoreFinish",SIG_NAMED_LAST_RANGE(10,16)},
@@ -5697,6 +5763,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_debug_logging_ptr,"debug_logging_ptr","[GRYP]T: Terminate(Pri): Completed.\n",SIG_STRCALL_ARG(0)|SIG_STRCALL_JMP_REG},
 {sig_match_debug_logging_flag,"debug_logging_flag","[GRYP]E: Terminate(Pri): Event flag delete error.[0x%08x]\n",SIG_STRCALL_ARG(0)|SIG_STRCALL_CALL_REG},
 {sig_match_mzrm_sendmsg_ret_adr,"mzrm_sendmsg_ret_adr","SendMsg   : %d\n",      SIG_STRCALL_ARG(0)|SIG_STRCALL_CALL_REG},
+{sig_match_fw_yuv_layer_buf_52,"fw_yuv_layer_buf","fw_yuv_layer_buf_helper",0,SIG_DRY_MAX(52)}, // dry52 has different code
+{sig_match_fw_yuv_layer_buf_gt52,"fw_yuv_layer_buf","fw_yuv_layer_buf_helper",0,SIG_DRY_MIN(54)}, // dry52 has different code
 {NULL},
 };
 
