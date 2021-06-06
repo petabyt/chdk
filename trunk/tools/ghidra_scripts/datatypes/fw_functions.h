@@ -533,5 +533,7 @@ __stdcall void pvm_get_largest_free_block_size_ptr(void *pool, unsigned *free_si
 __stdcall int pvm_get_largest_free_block_size(void *pool);
 __stdcall void *pvm_init_pool(void *mem, unsigned size);
 __stdcall PTM_RestoreUIProperty_FW(int id, void *buf, int size); // normally calls GetParameterData
+__stdcall int XimrExe(ximr_context *ximr_ctx);
+__stdcall int XimrExeGain(ximr_context *ximr_ctx,int unk1, int unk2);
 #endif
 
