@@ -270,19 +270,14 @@ typedef struct {
 
 int display_needs_refresh = 0;
 
-// To find FW_YUV_LAYER_BUF
-//   Start at the transfer_src_overlay function, then go to the last function called
-//   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
-//   The value is the second parameter to this function.
-#define FW_YUV_LAYER_BUF    0x41718600
+extern unsigned int fw_yuv_layer_buf;
 #define FW_YUV_LAYER_SIZE   (960*270*2)
-#define CHDK_LAYER_BUF      (FW_YUV_LAYER_BUF+FW_YUV_LAYER_SIZE)
 
 // Max size required
 #define CB_W    480
 #define CB_H    270
 
-unsigned char* chdk_rgba = (unsigned char*)CHDK_LAYER_BUF;
+unsigned char* chdk_rgba = NULL;
 int chdk_rgba_init = 0;
 int bm_w = CB_W;
 int bm_h = CB_H;
@@ -309,6 +304,7 @@ void update_ui(ximr_context* ximr)
     // Init RGBA buffer
     if (chdk_rgba_init == 0)
     {
+        chdk_rgba = (unsigned char*)(fw_yuv_layer_buf + FW_YUV_LAYER_SIZE);
         chdk_rgba_init = 1;
         vid_bitmap_erase();
         // Force update
@@ -316,7 +312,7 @@ void update_ui(ximr_context* ximr)
     }
 
     // Make sure we are updating the correct layer - skip redundant updates for HDMI out
-    if (ximr->output_buf != (unsigned int)FW_YUV_LAYER_BUF)
+    if (ximr->output_buf != fw_yuv_layer_buf)
     {
         // Update screen dimensions
         if (last_displaytype != displaytype)
@@ -360,7 +356,7 @@ void update_ui(ximr_context* ximr)
             display_needs_refresh = 1;
         }
 
-        if (ximr->layers[0].bitmap == (unsigned int)FW_YUV_LAYER_BUF) {
+        if (ximr->layers[0].bitmap == fw_yuv_layer_buf) {
             // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
             ximr->layers[0].src_w = ximr->layers[0].width = 960;
             ximr->layers[0].src_h = ximr->layers[0].height = 270;
