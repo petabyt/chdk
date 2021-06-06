@@ -802,6 +802,7 @@
 0xfc1b3c79,task_LcdConTask
 0xfc1b3d0b,LcdCon_StartLcdPeriodicalSetting_FW
 0xfc1b3d27,LcdCon_StopLcdPeriodicalSetting_FW
+0xfc1b4be1,fw_yuv_layer_buf_helper
 0xfc1b51ed,GetDriverInfoEvent_FW
 0xfc1b52f5,AprocSigProc_SetSigProcByMode_FW
 0xfc1b535f,AprocSigProc_InitialSet_FW

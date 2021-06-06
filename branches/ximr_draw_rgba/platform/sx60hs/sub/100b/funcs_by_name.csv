@@ -509,6 +509,7 @@
 0xfc301e31,fut_finish
 0xfc062717,fut_flush
 0xfc301e19,fut_prepare
+0xfc0f8bb3,fw_yuv_layer_buf_helper
 0xfc301d27,Fwrite_Fut
 0xfc301d27,Fwrite_Fut_FW
 0xfc062959,fwrite_low
