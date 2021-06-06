@@ -32,3 +32,5 @@ override OPT_CHDK_IN_ARAM=
 
 DIGIC = 60
 
+CAM_DRAW_RGBA=1
+
