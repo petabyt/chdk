@@ -214,7 +214,6 @@ void *vid_get_opacity_active_buffer() {
 extern int displaytype;
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
 
-// TODO CHECK STRUCTS
 // Ximr layer
 typedef struct {
     unsigned char   unk1[7];
@@ -274,7 +273,6 @@ int display_needs_refresh = 0;
 extern const unsigned fw_yuv_layer_buf;
 
 #define FW_YUV_LAYER_SIZE   (960*270*2)
-//const int CHDK_LAYER_BUF      (fw_yuv_layer_buf+fw_yuv_layer_size);
 
 // Max size required
 #define CB_W    480
