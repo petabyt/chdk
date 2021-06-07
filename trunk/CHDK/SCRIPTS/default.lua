@@ -54,8 +54,9 @@ prop_langs={
 	[9]={prop=66, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
 	-- 10 id changed, values not changed from 7
 	[10]={prop=68, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
-	-- 11 is untested
-	-- 12 id changed, values not changed
+	-- 11 based on ixus190 report (added later than 12)
+	[11]={prop=69, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
+	-- 12 id changed from 10, values not changed
 	[12]={prop=69, [0]='ENGLISH',[2]='ROMANIAN',[3]='GERMAN',[5]='TURKISH',[6]='FRENCH',[7]='SPANISH',[9]='DUTCH',[10]='GREEK',[13]='RUSSIAN',[15]='PORTUGUESE',[16]='POLISH',[18]='FINNISH',[19]='CZECH',[21]='ITALIAN',[22]='HUNGARIAN',[24]='UKRAINIAN',[26]='INDONESIAN'},
 }
 
@@ -66,7 +67,9 @@ function get_cam_lang()
 		print('unsupported propset '..get_propset())
 		return
 	end
-	local pv=get_prop(p.prop)/256
+	-- one propset11 cam appeared to set upper bit of language byte
+	-- https://chdk.setepontos.com/index.php?topic=13146.msg146335#msg146335
+	local pv=bitand(get_prop(p.prop)/256,0x7f)
 	local lang=p[pv]
 	if not lang then
 		print('unknown language '..get_propset() .. ':'..pv)
@@ -105,7 +108,7 @@ end
 chdk_lang=get_chdk_lang()
 cam_lang=get_cam_lang()
 
--- if CHDK language and camera language both unknown, reset CHDK to default 
+-- if CHDK language and camera language both unknown, reset CHDK to default
 -- matches behavior of original script, unclear if desirable
 if not cam_lang and not chdk_lang then
 	set_chdk_lang_default()
