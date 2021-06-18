@@ -96,17 +96,14 @@ void *vid_get_viewport_fb_d()
     return viewport_fb_d;
 }
 
-//To do
 void *vid_get_viewport_live_fb()
 {
     extern char active_viewport_buffer;
     extern void* viewport_buffers[];
 
-    if (MODE_IS_VIDEO(mode_get()) || is_video_recording())
-        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
-
+    // camera appears to use 4 buffers with in still shooting and video
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
-    return viewport_buffers[(active_viewport_buffer-1)&3]; //After a while MD Last 190 / Min 70 / Max 198 / Avg 179
+    return viewport_buffers[(active_viewport_buffer-1)&3];
 }
 
 int vid_get_palette_type()                      { return 3; }
