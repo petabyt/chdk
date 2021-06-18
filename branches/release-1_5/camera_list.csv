@@ -159,6 +159,7 @@ ixus140_elph130,100a,,,
 ixus140_elph130,100b,,100a,
 ixus145_elph135,100c,,,
 ixus150_elph140,100c,,,
+ixus155_elph150,100b,ALPHA,,
 ixus160_elph160,100a,,,
 ixus160_elph160,100b,,100a,
 ixus170_elph170,100a,ALPHA,,SKIP_AUTOBUILD
