@@ -218,6 +218,8 @@ void *vid_get_opacity_active_buffer() {
 
 extern int displaytype;
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
+#define hdmi_low_res (displaytype == 8)
+#define analog_out ((displaytype == 1) || (displaytype == 2))
 
 // Ximr layer
 typedef struct {
@@ -296,11 +298,13 @@ void vid_bitmap_erase()
 int last_displaytype;
 
 /*
- * Called when Canon is updating UI, via dry_memcpy patch.
+ * Called when Canon is updating UI, via mzrm_sendmsg debug log patch patch.
  * Sets flag for CHDK to update it's UI.
  * Also needed because bitmap buffer resolution changes when using HDMI
- * LCD = 720 x 480
+ * LCD = 640 x 480
+ * TV out = 720 x 480
  * HDMI = 960 x 540
+ * Low res HDMI = 720x480 (on devices not compatible with 1080i)
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
  */
@@ -316,7 +320,7 @@ void update_ui(ximr_context* ximr)
         last_displaytype = -1;
     }
 
-    // Make sure we are updating the correct layer - skip redundant updates for HDMI out
+    // Make sure we are updating the correct layer - skip redundant updates for HDMI / analog out
     if (ximr->output_buf != fw_yuv_layer_buf)
     {
         // Update screen dimensions
@@ -326,7 +330,7 @@ void update_ui(ximr_context* ximr)
 
             if (hdmi_out) {
                 bm_w = 480;
-                bm_h = 270;
+                bm_h = 240; // HDMI final output is 540, but canon firmware scales from 480
                 vp_full_width = 1920;
                 vp_full_buf_width = 1920;
                 vp_full_height = 1080;
@@ -334,8 +338,13 @@ void update_ui(ximr_context* ximr)
             } else {
                 bm_w = 360;
                 bm_h = 240;
-                vp_full_width = 640;
-                vp_full_buf_width = 640;
+                if(analog_out || hdmi_low_res) {
+                    vp_full_width = 720;
+                    vp_full_buf_width = 736;
+                } else {
+                    vp_full_width = 640;
+                    vp_full_buf_width = 640;
+                }
                 vp_full_height = 480;
             }
 
@@ -368,17 +377,15 @@ void update_ui(ximr_context* ximr)
             display_needs_refresh = 1;
         }
 
-        if (ximr->layers[0].bitmap == fw_yuv_layer_buf) {
-            // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
-            ximr->layers[0].src_w = ximr->layers[0].width = 960;
-            ximr->layers[0].src_h = ximr->layers[0].height = 270;
-            ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
+        // sx710 uses layer 1 when rendering YUV buffer
+        if (ximr->layers[1].bitmap == fw_yuv_layer_buf && ximr->layers[1].enabled) {
+            ximr->layers[1].scale = 4;      // x2 scaling vertically for the canon yuv layer
         }
 
         if (chdk_rgba != 0)
         {
-            // Copy canon layer
-            memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+            // Copy canon layer 0 (RGB)
+            memcpy(&ximr->layers[3], &ximr->layers[0], sizeof(ximr_layer));
 
             // Remove offset
             ximr->layers[3].scale = 6;      // x2 scaling in both directions
@@ -398,10 +405,13 @@ void update_ui(ximr_context* ximr)
     }
     else
     {
-        // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
-        ximr->width = ximr->buffer_width = 960;
-        ximr->height = ximr->buffer_height = 270;
-        ximr->denomy = 0x6c;
+        // HDMI and analog AV are both compatible with below
+        ximr->height = ximr->buffer_height = 240;
+        // default when rendering to YUV buffer for both analog and HDMI is numer(x,y)=67 denom(x,y)=60
+        // this scales the rednered image down to allow the full image to have 42x28 margins
+        // note numerator/denominator names are probably backwards
+        // (28*2 + 480) * 60 / 67  = 480
+        ximr->denomy = 30;
     }
 }
 
