@@ -124,6 +124,7 @@ void *vid_get_viewport_live_fb()
 static int vp_full_width = 640;
 static int vp_full_buf_width = 640;
 static int vp_full_height = 480;
+static int lv_aspect = LV_ASPECT_4_3;
 
 int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
@@ -202,6 +203,7 @@ int vid_get_viewport_fullscreen_width()         { return vp_full_width; }
 int vid_get_viewport_fullscreen_height()        { return vp_full_height; }
 int vid_get_viewport_buffer_width_proper()      { return vp_full_buf_width; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
+int vid_get_aspect_ratio()                      { return lv_aspect; }
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
@@ -334,8 +336,10 @@ void update_ui(ximr_context* ximr)
                 vp_full_width = 1920;
                 vp_full_buf_width = 1920;
                 vp_full_height = 1080;
-                /*lv_aspect = LV_ASPECT_16_9;*/ // TODO
+                lv_aspect = LV_ASPECT_16_9;
             } else {
+                // LCD, TV out and low res HDMI should all be 4:3-ish
+                lv_aspect = LV_ASPECT_4_3;
                 bm_w = 360;
                 bm_h = 240;
                 if(analog_out || hdmi_low_res) {
