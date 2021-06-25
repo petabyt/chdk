@@ -311,6 +311,8 @@ char *camera_jpeg_count_str()
 
 extern int displaytype;
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
+#define hdmi_low_res (displaytype == 8)
+#define analog_out ((displaytype == 1) || (displaytype == 2))
 
 // Ximr layer
 typedef struct {
@@ -384,7 +386,7 @@ void vid_bitmap_erase()
 int last_displaytype;
 
 /*
- * Called when Canon is updating UI, via dry_memcpy patch.
+ * Called when Canon is updating UI, via mzrm_sendmsg log patch.
  * Sets flag for CHDK to update it's UI.
  * Also needed because bitmap buffer resolution changes when using HDMI
  * LCD = 720 x 480
@@ -420,15 +422,16 @@ void update_ui(ximr_context* ximr)
                 vp_full_height = 1080;
                 lv_aspect = LV_ASPECT_16_9;
             } else {
-                bm_w = 360;
                 bm_h = 240;
                 // others are unclear, but unlikely to come up in practice
                 vp_full_width = 720;
                 vp_full_buf_width = 736;
                 vp_full_height = 480;
                 if(displaytype == 10) { // LCD is 3:2
+                    bm_w = 360;
                     lv_aspect = LV_ASPECT_3_2;
-                } else { // TV out is 4:3, low res HDMI looks correct at 4:3
+                } else { // analog out is 4:3, low res HDMI looks correct at 4:3
+                    bm_w = 320; // these modes are scaled 9/8 (640*9/8 = 720) in X direction on final output
                     lv_aspect = LV_ASPECT_4_3;
                 }
             }
@@ -462,17 +465,21 @@ void update_ui(ximr_context* ximr)
             display_needs_refresh = 1;
         }
 
-        if (ximr->layers[0].bitmap == fw_yuv_layer_buf) {
-            // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
-            ximr->layers[0].src_w = ximr->layers[0].width = 960;
-            ximr->layers[0].src_h = ximr->layers[0].height = 270;
+        // g7x uses layer 0 in HDMI and layer 1 in TV out when rendering YUV buffer
+        if (ximr->layers[1].bitmap == fw_yuv_layer_buf && ximr->layers[1].enabled) {
+            ximr->layers[1].scale = 4;      // x2 scaling vertically for the canon yuv layer
+        } else if (ximr->layers[0].bitmap == fw_yuv_layer_buf && ximr->layers[0].enabled) {
             ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
         }
 
         if (chdk_rgba != 0)
         {
-            // Copy canon layer
-            memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+            // Copy canon RGB layer, assumed to be whichever of 0,1 is not the YUV layer
+            if(ximr->layers[0].bitmap == fw_yuv_layer_buf && ximr->layers[0].enabled) {
+                memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+            } else {
+                memcpy(&ximr->layers[3], &ximr->layers[0], sizeof(ximr_layer));
+            }
 
             // Remove offset
             ximr->layers[3].scale = 6;      // x2 scaling in both directions
@@ -490,11 +497,14 @@ void update_ui(ximr_context* ximr)
             ximr->unk2[0] = 0x500;
         }
     }
-    else
+    else // rendering to fw_yuv_layer_buf for TV or HDMI out
     {
-        // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
-        ximr->width = ximr->buffer_width = 960;
-        ximr->height = ximr->buffer_height = 270;
-        ximr->denomy = 0x6c;
+        // scale and crop to half height to preserve CHDK buffer
+        if(hdmi_out) {
+            ximr->height = ximr->buffer_height = 270;
+        } else {
+            ximr->height = ximr->buffer_height = 240;
+        }
+        ximr->denomy = ximr->denomy/2;
     }
 }
