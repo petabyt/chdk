@@ -119,6 +119,7 @@ void *vid_get_viewport_live_fb()
 static int vp_full_width = 640;
 static int vp_full_buf_width = 640;
 static int vp_full_height = 480;
+static int lv_aspect = LV_ASPECT_4_3;
 
 int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
@@ -197,6 +198,7 @@ int vid_get_viewport_fullscreen_width()         { return vp_full_width; }
 int vid_get_viewport_fullscreen_height()        { return vp_full_height; }
 int vid_get_viewport_buffer_width_proper()      { return vp_full_buf_width; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
+int vid_get_aspect_ratio()                      { return lv_aspect; }
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
@@ -213,6 +215,7 @@ void *vid_get_opacity_active_buffer() {
 
 extern int displaytype;
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
+#define hdmi_low_res (displaytype == 8)
 
 // Ximr layer
 typedef struct {
@@ -292,11 +295,12 @@ void vid_bitmap_erase()
 int last_displaytype;
 
 /*
- * Called when Canon is updating UI, via dry_memcpy patch.
+ * Called when Canon is updating UI, via mzrm_sendmsg debug log patch patch.
  * Sets flag for CHDK to update it's UI.
  * Also needed because bitmap buffer resolution changes when using HDMI
  * LCD = 720 x 480
  * HDMI = 960 x 540
+ * Low res HDMI = 720x480 (on devices not compatible with 1080i)
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
  */
@@ -322,17 +326,23 @@ void update_ui(ximr_context* ximr)
 
             if (hdmi_out) {
                 bm_w = 480;
-                bm_h = 270;
+                bm_h = 240;
                 vp_full_width = 1920;
                 vp_full_buf_width = 1920;
                 vp_full_height = 1080;
-                /*lv_aspect = LV_ASPECT_16_9;*/ // TODO
+                lv_aspect = LV_ASPECT_16_9;
             } else {
                 bm_w = 360;
                 bm_h = 240;
-                vp_full_width = 640;
-                vp_full_buf_width = 640;
+                if(hdmi_low_res) {
+                    vp_full_width = 720;
+                    vp_full_buf_width = 736;
+                } else {
+                    vp_full_width = 640;
+                    vp_full_buf_width = 640;
+                }
                 vp_full_height = 480;
+                lv_aspect = LV_ASPECT_4_3;
             }
 
             camera_screen.width = bm_w;
@@ -363,18 +373,23 @@ void update_ui(ximr_context* ximr)
             // Tell CHDK UI that display needs update
             display_needs_refresh = 1;
         }
-
-        if (ximr->layers[0].bitmap == fw_yuv_layer_buf) {
-            // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
-            ximr->layers[0].src_w = ximr->layers[0].width = 960;
-            ximr->layers[0].src_h = ximr->layers[0].height = 270;
-            ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
+        // sx730 seems to use layer 1 when rendering YUV buffer
+        if (ximr->layers[1].bitmap == fw_yuv_layer_buf && ximr->layers[1].enabled) {
+            ximr->layers[1].scale = 4;      // x2 scaling vertically for the canon yuv layer
+            // firmware sets to 1024x768
+            if(hdmi_low_res) {
+                ximr->layers[1].src_w = 720;
+                ximr->layers[1].width = 960;
+            } else {
+                ximr->layers[1].src_w = ximr->layers[1].width = 960;
+            }
+            ximr->layers[1].src_h = ximr->layers[1].height = 240;
         }
 
         if (chdk_rgba != 0)
         {
-            // Copy canon layer
-            memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+            // Copy canon layer 0 (RGB)
+            memcpy(&ximr->layers[3], &ximr->layers[0], sizeof(ximr_layer));
 
             // Remove offset
             ximr->layers[3].scale = 6;      // x2 scaling in both directions
@@ -394,10 +409,20 @@ void update_ui(ximr_context* ximr)
     }
     else
     {
-        // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
-        ximr->width = ximr->buffer_width = 960;
-        ximr->height = ximr->buffer_height = 270;
-        ximr->denomy = 0x6c;
+        // override output dimensions, firmware sets buffer to 1024x768 for HDMI out (both FHD and SD)
+        if(hdmi_low_res) {
+            ximr->width = 720;
+            ximr->buffer_width = 960;
+        } else {
+            ximr->width = ximr->buffer_width = 960;
+        }
+        ximr->height = ximr->buffer_height = 240;
+        // default when rendering to YUV buffer for HDMI is numer(x,y)=67 denom(x,y)=60
+        // this scales the rednered image down to allow the full image to have 42x28 margins
+        // note numerator/denominator names are probably backwards
+        // (28*2 + 480) * 60 / 67  = 480
+        ximr->denomy = 30;
+
     }
 }
 
