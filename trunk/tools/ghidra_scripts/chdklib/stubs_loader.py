@@ -363,10 +363,12 @@ class StubsData:
             self.name_map[name].append(sval)
         else:
             self.name_map[name] = [sval]
-        if adr in self.adr_map:
-            self.adr_map[adr].append(sval)
-        else:
-            self.adr_map[adr] = [sval]
+        # consts aren't (necessarily) addresses, don't add to adr_map
+        if vtype != 'const':
+            if adr in self.adr_map:
+                self.adr_map[adr].append(sval)
+            else:
+                self.adr_map[adr] = [sval]
 
     def load_funcs_csv(self,fname):
         self.infomsg(0,"Load csv %s\n"%(fname))
