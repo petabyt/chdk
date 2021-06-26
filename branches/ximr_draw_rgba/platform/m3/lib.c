@@ -259,7 +259,7 @@ int vid_get_viewport_fullscreen_width(){
 		return 720;
 	}
 }
-int vid_get_viewport_byte_width() 		{ return (vid_get_viewport_fullscreen_width() * 4); }
+int vid_get_viewport_byte_width() 		{ return (vid_get_viewport_fullscreen_width() * 2); }
 
 int vid_get_viewport_fullscreen_height(){
 	if (hdmi_out) {
