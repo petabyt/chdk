@@ -3,7 +3,7 @@
 
 // CHDK Viewport & screen buffer interface
 
-// Note: used in modules and platform independent code. 
+// Note: used in modules and platform independent code.
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 /******************************************************************/
@@ -20,13 +20,13 @@ extern void vid_turn_on_updates();
 
 // These define the viewport dimensions both physically and in terms of the CHDK co-ordinate system
 // CHDK works in a 360x240 screen dimension / co-ordinate system
-extern long vid_get_viewport_height();          // Viewport height in CHDK screen pixels 
+extern long vid_get_viewport_height();          // Viewport height in CHDK screen pixels
 extern int vid_get_viewport_width();            // Viewport width in CHDK screen pixels
 extern int vid_get_viewport_xoffset();          // X offset of viewport edge relative to the viewport buffer (in CHDK screen pixels)
 extern int vid_get_viewport_yoffset();          // Y offset of viewport top relative to the viewport buffer (in CHDK screen pixels)
 extern int vid_get_viewport_display_xoffset();  // X offset of viewport edge relative to LCD screen (in CHDK screen pixels)
 extern int vid_get_viewport_display_yoffset();  // Y offset of viewport top relative to LCD screen (in CHDK screen pixels)
-extern int vid_get_viewport_byte_width();       // Physical width of viewport row in bytes
+extern int vid_get_viewport_byte_width();       // Physical width of viewport buffer row in bytes
 extern int vid_get_viewport_yscale();           // Y multiplier for cameras with 480 pixel high viewports (CHDK code assumes 240)
 extern int vid_get_viewport_image_offset();     // Byte offset from start of viewport memory to first displayed pixel
 extern int vid_get_viewport_row_offset();       // Difference between physical width of viewport and displayed width (in bytes)
