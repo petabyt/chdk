@@ -507,7 +507,29 @@ void gui_osd_draw_histo(int is_osd_edit)
     else if (histogram_drawn)
     {
         histogram_drawn = 0;
-        draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+HISTO_WIDTH+1, conf.histo_pos.y+HISTO_HEIGHT, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
+        int h;
+        // erase height based on current histo mode
+        switch (conf.histo_layout)
+        {
+            case OSD_HISTO_LAYOUT_Y:
+            case OSD_HISTO_LAYOUT_BLEND:
+            case OSD_HISTO_LAYOUT_A:
+            default:
+                h = HISTO_HEIGHT;
+                break;
+
+            case OSD_HISTO_LAYOUT_A_Y:
+            case OSD_HISTO_LAYOUT_A_yrgb:
+            case OSD_HISTO_LAYOUT_Y_argb:
+            case OSD_HISTO_LAYOUT_BLEND_Y:
+                h = 2*HISTO_HEIGHT;
+                break;
+            case OSD_HISTO_LAYOUT_R_G_B:
+                h = 3*HISTO_HEIGHT;
+                break;
+        }
+
+        draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+HISTO_WIDTH+1, conf.histo_pos.y+h, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
     }
 }
 
