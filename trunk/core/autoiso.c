@@ -37,22 +37,33 @@ NOTE also used by lua get_live_histo
 */
 int live_histogram_read_y(unsigned short *h)
 {
-    int yscale = vid_get_viewport_yscale();   // Y scale factor (2 for 480 line high lv buffer)
 #ifdef THUMB_FW
     int vp_width = vid_get_viewport_width_proper() * 2;             // X bytes per row
 #else
     int vp_width = vid_get_viewport_width_proper() * 6 / 4;         // X bytes per row
 #endif
-    int vp_height = vid_get_viewport_height_proper() / yscale;      // Number of rows to process (every second row if 480 high lv buffer)
 
-    int total = (vp_width * vp_height) / HISTO_STEP_SIZE;
+    int yscale = vid_get_viewport_yscale();   // Y scale factor (2 for 480 line high lv buffer on pre-d6)
+    int vp_height_full = vid_get_viewport_height_proper();
+    // for large resolutions, increase yscale to avoid overflow
+    if(vp_height_full > 480) {
+        // minimum 2
+        yscale = vp_height_full/240;
+    }
+
+    int vp_height = vp_height_full / yscale;      // Number of rows to process
+
+    // account for cases where step does not exactly divide width
+    int total = ((vp_width + HISTO_STEP_SIZE/2)/HISTO_STEP_SIZE) * vp_height;
+
+    if (h == 0)
+        h = live_histogram_proc;
+
+    memset(h, 0, sizeof(unsigned short)*256);
 
     unsigned char *img = vid_get_viewport_active_buffer();
     if (img)
     {
-        if (h == 0) h = live_histogram_proc;
-        memset(h, 0, sizeof(unsigned short)*256);
-
         int vp_offset = vid_get_viewport_byte_width() * yscale;     // Bytes length of each row (or double row)
         img += vid_get_viewport_image_offset() + 1; // Skip border and move to 1st Y component in each block
 
@@ -65,6 +76,10 @@ int live_histogram_read_y(unsigned short *h)
 //                img[x] = img[x+2] = 255;  // Change sampled values on screen for debugging
             }
         }
+    } else {
+        // if no live buffer, act as if all black
+        // should be rare, generally only happens in playback with video selected
+        h[0] = total; 
     }
 
     return total;
