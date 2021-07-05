@@ -11,12 +11,6 @@
 #include "histogram.h"
 
 //-------------------------------------------------------------------
-//  modify for digic 6
-// 62ndidiot. 2016.02.07
-// double histogram width height for better visibility...should not affect performance
-// since we no longer have to sum pairs of histogram channels
-
-#define HISTOGRAM_IDLE_STAGE        6
 
 // Indexes into the various arrays for calculating the histogram channels
 #define HISTO_R                     0       // Red channel
@@ -39,15 +33,23 @@
 #define OSD_HISTO_LAYOUT_BLEND      6
 #define OSD_HISTO_LAYOUT_BLEND_Y    7
 #ifndef THUMB_FW
-// Define how many viewport blocks to step in each loop iteration. Each block is 6 bytes (UYVYYY) or 4 image pixels
-#define	HISTO_STEP_SIZE	6
 #else
-// Define how many viewport blocks to step in each loop iteration. Each block is 4 bytes (UYVY) or 2 image pixels
-#define	HISTO_STEP_SIZE	4
 #endif
 
+// Approximate number of pixels to sample, subject to minimums step sizes
+// Actual number of samples may exceed target due to rounding/truncation in step calculations
+// Actual total must be less than 64K to allow storing histogram counts in unsigned short
+// 20k based on typical number in earlier implementation
+// cameras typically process 250-600 px/ms uncached, 300-1200 cached
+// NOTE target could be adjusted based on cam_info.cam_digic
+#define HISTO_TARGET_SAMPLES 20000
+// Minimum X step is 4, for alignment with YUV tuples (could technically be 2 on Digic >=6 cams with UYVY viewports)
+#define HISTO_XSTEP_MIN 4
+// Minimum Y step is 2, no need to sample more densely
+#define HISTO_YSTEP_MIN 2
+
 static unsigned char histogram[5][HISTO_WIDTH];             // RGBYG
-static unsigned short *histogram_proc[5] = { 0,0,0,0,0 };   // RGBYG (unsigned short is large enough provided HISTO_STEP_SIZE >= 3)
+static unsigned short *histogram_proc[5] = { 0,0,0,0,0 };   // RGBYG (logic in histogram_process stage 0 ensures unsigned short is large enough)
 unsigned int histo_max[5], histo_max_center[5];             // RGBYG
 static float histo_max_center_invw[5];                      // RGBYG
 
@@ -88,13 +90,62 @@ static void histogram_alloc()
     }
 }
 
+
+/*
+do a single stage of reading YUV data from framebuffer
+Sampled area has margins of one step at top, right and left and bottom
+Each stage samples every 3rd ystep row
+*/
+void histogram_sample_stage(unsigned char *img, int stage, int byte_width, int vis_byte_width, int height, int xstep_bytes, int ystep)
+{
+    // start at stage'th ystep (1-3), plus one step in x
+    unsigned char *p_row = img + stage*ystep*byte_width + xstep_bytes;
+    // end one step short of height
+    unsigned char *p_max = img + byte_width*(height-ystep);
+    // number of from start to end of sampled row
+    // -2 xstep_bytes for margins
+    int row_sample_len = vis_byte_width - 2*xstep_bytes;
+
+    // every 3rd ystep for each stage
+    int ystep_bytes = ystep*byte_width*3;
+
+    for(;p_row < p_max; p_row += ystep_bytes) {
+        // start sample 1 step after start
+        unsigned char *p = p_row;
+        unsigned char *p_row_end = p_row + row_sample_len;
+        for(;p < p_row_end; p+= xstep_bytes) {
+            int y, v, u, hi;
+            y = p[1];
+#ifndef THUMB_FW
+            u = (signed char)p[0];
+            v = (signed char)p[2];
+#else
+            u = (int)p[0] - 128;
+            v = (int)p[2] - 128;
+#endif
+//                p[1] = p[3] = 255;    // Draw columns on screen for debugging
+
+            ++histogram_proc[HISTO_Y][y];                       // Y
+            hi = clip(((y<<12)          + v*5743 + 2048)>>12);  // R
+            ++histogram_proc[HISTO_R][hi];
+            hi = clip(((y<<12) - u*1411 - v*2925 + 2048)>>12);  // G
+            ++histogram_proc[HISTO_G][hi];
+            hi = clip(((y<<12) + u*7258          + 2048)>>12);  // B
+            ++histogram_proc[HISTO_B][hi];
+        }
+    }
+}
+
 void histogram_process()
 {
     static unsigned char *img;
-    static int viewport_size, viewport_width, viewport_row_offset, viewport_height, viewport_step_size;
 
-    register int x, i, hi;
-    int y, v, u, c;
+    static int viewport_byte_width, viewport_height;
+
+    static int viewport_vis_byte_width;
+    static int xstep_bytes, ystep;
+
+    int i, c;
     float (*histogram_transform)(float);
     unsigned int histo_fill[5];
     int histo_main;
@@ -130,28 +181,42 @@ void histogram_process()
     //   5      Calculate the histogram display values
     switch (histogram_stage)
     {
-        case 0:
+        case 0: {
             img = vid_get_viewport_active_buffer();
             if (!img) return;
 
             img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
 
             viewport_height = vid_get_viewport_height_proper();
-            viewport_size = viewport_height * vid_get_viewport_byte_width();
-            // Viewport visible width in bytes
+            viewport_byte_width = vid_get_viewport_byte_width();
+            int viewport_pix_width = vid_get_viewport_width_proper();
+            int total_pixels = viewport_pix_width * viewport_height;
+            int xstep;
+
+            if(total_pixels <= HISTO_XSTEP_MIN*HISTO_YSTEP_MIN*HISTO_TARGET_SAMPLES) {
+                xstep = HISTO_XSTEP_MIN;
+                ystep = HISTO_YSTEP_MIN;
+            } else {
+                // initial y step based on min x step and total samples
+                ystep = total_pixels/(HISTO_XSTEP_MIN*HISTO_TARGET_SAMPLES);
+                // if Y step is large, redistribute some to X, keeping multiple of 4
+                // in practice only hit for FHD HDMI
+                if(ystep >= 5*HISTO_YSTEP_MIN) {
+                    xstep = 2*HISTO_XSTEP_MIN;
+                    ystep >>= 1;
+                } else {
+                    xstep = HISTO_XSTEP_MIN;
+                }
+            }
+
+
 #ifndef THUMB_FW
-            viewport_width = vid_get_viewport_width_proper() * 6 / 4;
+            xstep_bytes = (xstep*3)/2; // 4 pixels = 6 bytes, step is multiple of 4
+            viewport_vis_byte_width = (viewport_pix_width*3)/2;
 #else
-            viewport_width = vid_get_viewport_width_proper() * 4 / 2;
+            xstep_bytes = xstep*2;
+            viewport_vis_byte_width = viewport_pix_width*2;
 #endif
-            // Number of columns to scan - 30 for 720 pixel wide viewport, 40 for widescreen (960 wide).
-            // This give 24 pixel increments between columns.
-            // For pre Digic6 24 pixels = 24 * 6 / 4 bytes = 36 bytes (6 bytes = 4 pixels). Each 'stage' does a column @1/3rd of this width = 12 bytes = 8 pixels.
-            // For Digic6 24 pixels = 24 * 4 / 2 bytes = 48 bytes (4 bytes = 2 pixels). Each 'stage' does a column @1/3rd of this width = 16 bytes = 8 pixels.
-            // We offset all columns by 4 pixels so the first column is not hard against the left edge
-            viewport_step_size = viewport_width / (vid_get_viewport_width_proper() / 24);
-            // Increment to adjust for each row if physical width > visible width
-            viewport_row_offset = vid_get_viewport_row_offset();
 
             for (c=0; c<5; ++c) {
                 memset(histogram_proc[c],0,256*sizeof(unsigned short));
@@ -160,43 +225,15 @@ void histogram_process()
 
             histogram_stage=1;
             break;
+        }
 
         case 1:
         case 2:
-        case 3:
-            x = 0;  // count how many bytes we have done on the current row (to skip unused buffer space at end of each row)
-
-            for (i=(histogram_stage-1)*(viewport_step_size/3)+(viewport_step_size/6); i<viewport_size; i+=viewport_step_size) {
-
-                y = img[i+1];
-#ifndef THUMB_FW
-                u = (signed char)img[i];
-                v = (signed char)img[i+2];
-#else
-                u = (int)img[i] - 128;
-                v = (int)img[i+2] - 128;
-#endif
-//                img[i+1] = img[i+3] = 255;    // Draw columns on screen for debugging
-
-                ++histogram_proc[HISTO_Y][y];                       // Y
-                hi = clip(((y<<12)          + v*5743 + 2048)>>12);  // R
-                ++histogram_proc[HISTO_R][hi];
-                hi = clip(((y<<12) - u*1411 - v*2925 + 2048)>>12);  // G
-                ++histogram_proc[HISTO_G][hi];
-                hi = clip(((y<<12) + u*7258          + 2048)>>12);  // B
-                ++histogram_proc[HISTO_B][hi];
-
-                // Handle case where viewport memory buffer is wider than the actual buffer.
-                x += viewport_step_size;
-                if (x == viewport_width)
-                {
-                    i += viewport_row_offset;
-                    x = 0;
-                }
-            } //loop i
-
+        case 3: {
+            histogram_sample_stage(img, histogram_stage, viewport_byte_width, viewport_vis_byte_width, viewport_height, xstep_bytes, ystep);
             ++histogram_stage;
             break;
+        }
 
         case 4:
             for (i=0, c=0; i<HISTO_WIDTH; ++i, c+=2) { // G
@@ -259,7 +296,7 @@ void histogram_process()
 
             histo_magnification = 0;
             if (conf.histo_auto_ajust) {
-                if (histo_fill[histo_main] < (HISTO_HEIGHT*HISTO_WIDTH)/5) { // try to ajust if average level is less than 20%
+                if (histo_fill[histo_main] < (HISTO_HEIGHT*HISTO_WIDTH)/5) { // try to adjust if average level is less than 20%
                     histo_magnification = (20*HISTO_HEIGHT*HISTO_WIDTH) / histo_fill[histo_main];
                     for (c=0; c<5; ++c) {
                         for (i=0;i<HISTO_WIDTH;i++) {
