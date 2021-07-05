@@ -30,6 +30,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SATURATION               63         //? [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_QUALITY                         65         //Y [m10:untested] 
 #define PROPCASE_CUSTOM_CONTRAST                 67         //? [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_LANGUAGE                        69         // ixus190 (note, values were reported to have high bit of language set)
 #define PROPCASE_FLASH_SYNC_CURTAIN              72         //? 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   73         //Y [m10:zero]
 // TODO M10 has no date stamp option
@@ -54,7 +55,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ISO_MODE                        158			//Y
 #define PROPCASE_METERING_MODE                   166        //Y 0 = Evaluative, 1 = Spot, 2 = Center weighted avg 3 partial
 #define PROPCASE_VIDEO_FRAMERATE                 175        //?Y 0=30, 7=60 (g7x) 1 25
-#define PROPCASE_VIDEO_RESOLUTION                179        //YC 5=1920x1280, 4=1280x720 2=640x480 (g7x)
+#define PROPCASE_VIDEO_RESOLUTION                179        //YC 5=1920x1280, 4=1280x720 2=640x480 (g7x, ixus190)
 #define PROPCASE_CUSTOM_BLUE                     185        //? [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_GREEN                    186        //? [m10:untested] ??Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_CUSTOM_RED                      187        //? [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
