@@ -8,7 +8,7 @@ DEF(active_palette_buffer,          0x000078dc+0x8) // Found @0xff9b11a8 (loc_ff
 DEF(palette_buffer_ptr,             0x000078dc+0xC) // Guess palette_control+0xC
 DEF(palette_buffer,                 0x000d1864) // Found @0xff9b15a0
 
-DEF(active_viewport_buffer,         0x000020f4) // sub_ff84d0e0 - by comparison to sx170
+DEF(active_viewport_buffer,         0x000185e4) // found @0xff84d544
 DEF(viewport_buffers,               0xffba8610) // by comparison to sx170is
 
 DEF(bitmap_buffer,                  0x000039e0+0x20) // Found @0xff89fa4c (0x39e0) + @0x (0x20) - by comparison to ixus140
