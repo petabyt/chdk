@@ -21,7 +21,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // mismatch from propset 6 starts here, +3
 #define PROPCASE_MIN_AV                          28         // 27 is not always min AV.
 // ps6 +4
-#define PROPCASE_USER_AV                         30         // or 29, values differ slightly. 29 appears to have round APEX96 vals, 30 matches PROPCASE_AV
+#define PROPCASE_USER_AV                         29         // 30 matches PROPCASE_AV, but doesn't set M/Av mode value
 #define PROPCASE_BRACKET_MODE                    33         // 0 = 0ff, 1 = exposure, 2 = focus (MF only) (g7x)
 #define PROPCASE_BV                              38
 #define PROPCASE_SHOOTING_MODE                   53         // 54 shows C as distinct mode
@@ -39,7 +39,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 // TODO maybe different from older cams (off / standard are different)
 #define PROPCASE_DIGITAL_ZOOM_MODE               97         // Digital Zoom Mode/State 0 = off, 1=standard, 2 = 1.5x, 3 = 2.0x
 // TODO does not seem to exist in ps7, combined with _MODE
-// #define PROPCASE_DIGITAL_ZOOM_STATE           
+// #define PROPCASE_DIGITAL_ZOOM_STATE
 #define PROPCASE_DIGITAL_ZOOM_POSITION           101        // also 269?
 #define PROPCASE_DRIVE_MODE                      108        // 0 = single, 1 = cont, 2 = cont AF, 3 = "Auto Drive"
 #define PROPCASE_OVEREXPOSURE                    109        // TODO guessed
@@ -63,7 +63,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_CUSTOM_SKIN_TONE                185        // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_MY_COLORS                       193        // 0 = Off, 1 = Vivid, 2 = Neutral, 3 = B/W, 4 = Sepia, 5 = Positive Film, 6 = Lighter Skin Tone, 7 = Darker Skin Tone, 8 = Vivid Red, 9 = Vivid Green, 10 = Vivid Blue, 11 = Custom Color
 #define PROPCASE_ND_FILTER_STATE                 201        // 0 = out, 1 = in
-#define PROPCASE_OPTICAL_ZOOM_POSITION           204 
+#define PROPCASE_OPTICAL_ZOOM_POSITION           204
 #define PROPCASE_EXPOSURE_LOCK                   215        // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
 #define PROPCASE_EV_CORRECTION_2                 216        // g7x ok, ps6 +6
 #define PROPCASE_IS_FLASH_READY                  217        // not certain
@@ -94,7 +94,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_REVIEW_TIME                     371        // Review time 0 = off, -1 = hold, 100 = quick, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                     384        // Number of shots for TIMER_MODE=Custom
 
-// 
+//
 #define PROPCASE_SHOOTING_STATE                  359        // Goes to 1 soon after half press, 2 around when override hook called, 3 after shot start, back to 2 when shoot_full released, back to 0 when half released
 #define PROPCASE_SHOOTING                       1001        // fake, emulated by wrapper using SHOOTING_STATE
 

@@ -29,8 +29,6 @@
 #define HISTO_STEP_SIZE 36
 #endif
 
-static unsigned short live_histogram_proc[256]; // Buffer for histogram
-
 /*
 build histogram of viewport Y values (downsampled by HISTO_STEP_SIZE)
 NOTE also used by lua get_live_histo
@@ -55,9 +53,6 @@ int live_histogram_read_y(unsigned short *h)
 
     // account for cases where step does not exactly divide width
     int total = ((vp_width + HISTO_STEP_SIZE/2)/HISTO_STEP_SIZE) * vp_height;
-
-    if (h == 0)
-        h = live_histogram_proc;
 
     memset(h, 0, sizeof(unsigned short)*256);
 
@@ -85,14 +80,14 @@ int live_histogram_read_y(unsigned short *h)
     return total;
 }
 
-static int live_histogram_get_range(int total,int from, int to)
+static int live_histogram_get_range(unsigned short *histo, int total,int from, int to)
 {
     if (from < 0) from = 0;
     if (to > 255) to = 255;
 
     int rv = 0;
     for(; from<=to; from++)
-        rv += live_histogram_proc[from];
+        rv += histo[from];
 
     return (rv * 100) / total;
 }
@@ -161,12 +156,16 @@ void shooting_set_autoiso(int iso_mode)
     int ev_overexp = 0;
     if (conf.overexp_ev_enum)
     {
-        // No shoot_histogram exist here because no future shot exist yet :)
-        int total = live_histogram_read_y(live_histogram_proc);
+        unsigned short *histo = malloc(256*sizeof(unsigned short));
+        if(histo) {
+            // No shoot_histogram exist here because no future shot exist yet :)
+            int total = live_histogram_read_y(histo);
 
-        // step 32 is 1/3ev for tv96
-        if (live_histogram_get_range(total,255-conf.autoiso2_over,255) >= conf.overexp_threshold)
-            ev_overexp = conf.overexp_ev_enum << 5; 
+            // step 32 is 1/3ev for tv96
+            if (live_histogram_get_range(histo,total,255-conf.autoiso2_over,255) >= conf.overexp_threshold)
+                ev_overexp = conf.overexp_ev_enum << 5; 
+            free(histo);
+        }
     }
 
     float current_shutter = shooting_get_shutter_speed_from_tv96(shooting_get_tv96());
