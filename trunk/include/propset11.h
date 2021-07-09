@@ -13,35 +13,35 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_AE_LOCK                         3          //? 0 = AE not locked, 1 = AE locked
 #define PROPCASE_AF_ASSIST_BEAM                  5          //Y 0=disabled,  1=enabled
-#define PROPCASE_REAL_FOCUS_MODE                 142        //? 0 = AF/AF+MF, 1 = MF, used also for PROPCASE_FOCUS_MODE
+#define PROPCASE_REAL_FOCUS_MODE                 6          // [ixus185] AF=0, macro=1, infinity=3
 #define PROPCASE_AF_FRAME                        8          //Y 1 = one point af, 2 = Face AiAF / Tracking AF
 #define PROPCASE_AF_LOCK                         11         //? [m10:untested] 0 = AF not locked, 1 = AF locked (not verified, g7x AF lock just enables MF at current dist)
 #define PROPCASE_CONTINUOUS_AF                   12         //Y 0 = Continuous AF off, 1 = Continuous AF on (g7x)
 #define PROPCASE_FOCUS_STATE                     18         //Y sx430 1 AF done
 // m10 both AV, not verified which does over and which does exif
 #define PROPCASE_AV2                             22         //Y (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
-#define PROPCASE_AV                              23         //Y sx430 This values causes the actual aperture value to be overriden 
+#define PROPCASE_AV                              23         //Y sx430 This values causes the actual aperture value to be overriden
 #define PROPCASE_MIN_AV                          28         //?seems right M10: 24, 25, 27, 28 (set only after halfshoot) elph180: (27 varies with ND, 24-26=62664)
 #define PROPCASE_USER_AV                         29         //?seems right updates instantly when setting aperture on cam with kit lens
 // no bracketing on m10, propcase assumed to be unchanged
 #define PROPCASE_BRACKET_MODE                    33         //? [m10:untested] 0 = 0ff, 1 = exposure, 2 = focus (MF only) (g7x)
-#define PROPCASE_BV                              40         //? sx430 guessed, but should be this one 
+#define PROPCASE_BV                              40         //? sx430 guessed, but should be this one
 #define PROPCASE_SHOOTING_MODE                   56         //Y-even 57 56 would probably show C as distinct mode but no C mode on M10
 #define PROPCASE_CUSTOM_SATURATION               63         //? [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
-#define PROPCASE_QUALITY                         65         //Y [m10:untested] 
+#define PROPCASE_QUALITY                         65         //Y [m10:untested]
 #define PROPCASE_CUSTOM_CONTRAST                 67         //? [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_LANGUAGE                        69         // ixus190 (note, values were reported to have high bit of language set)
 #define PROPCASE_FLASH_SYNC_CURTAIN              72         //? 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   73         //Y [m10:zero]
 // TODO M10 has no date stamp option
 //#define PROPCASE_DATE_STAMP
-#define PROPCASE_DELTA_SV                        87         //? sx430 
+#define PROPCASE_DELTA_SV                        87         //? sx430
 // no digi zoom on m10
 #define PROPCASE_DIGITAL_ZOOM_MODE               100         //YC [m10:untested] Digital Zoom Mode/State 0 = off, 1=standard, 2 = 1.5x, 3 = 2.0x
-#define PROPCASE_DIGITAL_ZOOM_STATE					104		//???? required in Core/shooting.c was not 
+#define PROPCASE_DIGITAL_ZOOM_STATE					104		//???? required in Core/shooting.c was not
 #define PROPCASE_DIGITAL_ZOOM_POSITION           104        //Y [m10:untested] also 269?
 #define PROPCASE_DRIVE_MODE                      111        //Y 0 = single, 1 = cont
-#define PROPCASE_OVEREXPOSURE                    112        //? [m10:untested] 
+#define PROPCASE_OVEREXPOSURE                    112        //? [m10:untested]
 #define PROPCASE_DISPLAY_MODE                    114			//Y
 #define PROPCASE_EV_CORRECTION_1                 116		//Y
 #define PROPCASE_FLASH_ADJUST_MODE               130        //? seems ok because of 131 [m10:untested]
@@ -79,7 +79,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SV_MARKET                       259        //? sx430
 #define PROPCASE_TV2                             275        //Y (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_TV                              276        //Y sx430 Need to set this value for overrides to work correctly
-#define PROPCASE_USER_TV                         278        //? 
+#define PROPCASE_USER_TV                         278        //?
 #define PROPCASE_WB_MODE                         283        //Y 0 = Auto, 1 = Daylight, 2 = Shade, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 7 = flash, 11 = under water, 6 = Fluorescent H, 9 = Custom 1, 10 = custom 2
 #define PROPCASE_WB_ADJ                          284        //Y [m10:untested]
 #define PROPCASE_SERVO_AF                        310        //Y 0 = Servo AF off, 1 = Servo AF on
