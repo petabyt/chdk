@@ -17,7 +17,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_AF_FRAME                     8 // [sx730: cam] 1 = center, 2 = face or tracking
 #define PROPCASE_AF_LOCK                     11 //
 #define PROPCASE_CONTINUOUS_AF               12 // [sx730: cam]
-#define PROPCASE_FOCUS_STATE                 18 // [sx730: cam] 
+#define PROPCASE_FOCUS_STATE                 18 // [sx730: cam]
 // m10, sx730 both AV, not verified which does over and which does exif
 #define PROPCASE_AV2                         22 //
 #define PROPCASE_AV                          23 //
