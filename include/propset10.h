@@ -13,7 +13,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked
 #define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled
-#define PROPCASE_REAL_FOCUS_MODE                 141        // 0 = AF/AF+MF, 1 = MF, used also for PROPCASE_FOCUS_MODE
+#define PROPCASE_REAL_FOCUS_MODE                 6          // 0 = AF, 1 = Macro, 3 = INF, 4 = MF. Always zero on M cameras
 #define PROPCASE_AF_FRAME                        8          // 1 = one point af, 2 = Face AiAF / Tracking AF
 #define PROPCASE_AF_LOCK                         11         // [m10:untested] 0 = AF not locked, 1 = AF locked (not verified, g7x AF lock just enables MF at current dist)
 #define PROPCASE_CONTINUOUS_AF                   12         // 0 = Continuous AF off, 1 = Continuous AF on (g7x)
@@ -28,20 +28,20 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_BV                              40         // guessed, but should be this one
 #define PROPCASE_SHOOTING_MODE                   55         // 56 would probably show C as distinct mode but no C mode on M10
 #define PROPCASE_CUSTOM_SATURATION               62         // [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
-#define PROPCASE_QUALITY                         64         // [m10:untested] 
+#define PROPCASE_QUALITY                         64         // [m10:untested]
 #define PROPCASE_CUSTOM_CONTRAST                 66         // [m10:untested] Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_LANGUAGE                        68         // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN              71         // 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   72         // [m10:zero]
 // TODO M10 has no date stamp option
 //#define PROPCASE_DATE_STAMP
-#define PROPCASE_DELTA_SV                        86         // [m10:untested] 
+#define PROPCASE_DELTA_SV                        86         // [m10:untested]
 // no digi zoom on m10
 #define PROPCASE_DIGITAL_ZOOM_MODE               99         // [m10:untested] Digital Zoom Mode/State 0 = off, 1=standard, 2 = 1.5x, 3 = 2.0x
 // #define PROPCASE_DIGITAL_ZOOM_STATE
 #define PROPCASE_DIGITAL_ZOOM_POSITION           103        // [m10:untested] also 269?
 #define PROPCASE_DRIVE_MODE                      110        // 0 = single, 1 = cont
-#define PROPCASE_OVEREXPOSURE                    111        // [m10:untested] 
+#define PROPCASE_OVEREXPOSURE                    111        // [m10:untested]
 #define PROPCASE_DISPLAY_MODE                    113
 #define PROPCASE_EV_CORRECTION_1                 115
 #define PROPCASE_FLASH_ADJUST_MODE               129        // [m10:untested]
@@ -79,7 +79,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_SV_MARKET                       257
 #define PROPCASE_TV2                             273        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 #define PROPCASE_TV                              274        // Need to set this value for overrides to work correctly
-#define PROPCASE_USER_TV                         276        // 
+#define PROPCASE_USER_TV                         276        //
 #define PROPCASE_WB_MODE                         281        // 0 = Auto, 1 = Daylight, 2 = Shade, 3 = Cloudy, 4 = Tungsten, 5 = Fluorescent, 7 = flash, 11 = under water, 6 = Fluorescent H, 9 = Custom 1, 10 = custom 2
 #define PROPCASE_WB_ADJ                          282        // [m10:untested]
 #define PROPCASE_SERVO_AF                        308        // 0 = Servo AF off, 1 = Servo AF on
