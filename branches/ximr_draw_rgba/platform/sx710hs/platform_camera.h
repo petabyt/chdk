@@ -20,7 +20,7 @@
 // for information on each setting. If the default values are correct for your camera then
 // don't override them again in here.
 
-    #define CAM_PROPSET                         9 // TODO may not be a complete match
+    #define CAM_PROPSET                         7
 
     #define CAM_HAS_SPORTS_MODE                 1
 
@@ -84,7 +84,7 @@
     -1888, 10000, 10463, 10000, 1645, 10000, \
       286, 10000,   708, 10000, 6145, 10000
 
-    #define cam_CalibrationIlluminant2          21     // D65 
+    #define cam_CalibrationIlluminant2          21     // D65
 
     #define CAM_COLORMATRIX2 \
     13161, 10000, -5451, 10000, -1344, 10000, \
@@ -166,7 +166,7 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
-//    #define CAM_HAS_MOVIE_DIGEST_MODE           1 
+//    #define CAM_HAS_MOVIE_DIGEST_MODE           1
 
 // TODO - haven't checked default values
     #define CAM_NEED_SET_ZOOM_DELAY             300
@@ -182,12 +182,12 @@
     // sx710 - Open circuit = ~4090, 10k ohm = ~1380?, 3.5k = ~600 (56C as bat temp)
     #undef CAM_REMOTE_AtoD_THRESHOLD
     #define CAM_REMOTE_AtoD_THRESHOLD       800 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
- 
+
 // camera crashes if sd override used in AF
 //    #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
- 
+
 // AF led, for MD test code
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1

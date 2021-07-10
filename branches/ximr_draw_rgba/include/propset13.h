@@ -12,7 +12,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked
 #define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled
-#define PROPCASE_REAL_FOCUS_MODE                 141        // 0 = AF/AF+MF, 1 = MF, used also for PROPCASE_FOCUS_MODE
+#define PROPCASE_REAL_FOCUS_MODE                 6          // 0 = Normal AF, 1 = Macro, 4 = MF
 #define PROPCASE_AF_FRAME                        8          // 1 = one point af, 2 = Face AiAF / Tracking AF
 #define PROPCASE_AF_LOCK                         11         // 0 = AF not locked, 1 = AF locked (not verified, g7x AF lock just enables MF at current dist)
 #define PROPCASE_CONTINUOUS_AF                   12         // 0 = Continuous AF off, 1 = Continuous AF on (g7x)
