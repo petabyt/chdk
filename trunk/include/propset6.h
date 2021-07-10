@@ -10,7 +10,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 
 #define PROPCASE_AE_LOCK                         3          // 0 = AE not locked, 1 = AE locked
 #define PROPCASE_AF_ASSIST_BEAM                  5          // 0=disabled,  1=enabled
-#define PROPCASE_REAL_FOCUS_MODE                 6          //??? WIKI|Propcase focus_mode
+#define PROPCASE_REAL_FOCUS_MODE                 6          // 0 = AF, 1 = Macro, 3 = INF, 4
 #define PROPCASE_AF_FRAME                        8          // 1 = FlexiZone, 2 = Face AiAF / Tracking AF
 #define PROPCASE_AF_LOCK                         11         // 0 = AF not locked, 1 = AF locked
 #define PROPCASE_CONTINUOUS_AF                   12         // 0 = Continuous AF off, 1 = Continuous AF on
