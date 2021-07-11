@@ -132,8 +132,7 @@ DEF(jpeg_count_str                          ,0x00111318) // Found @0xff279060
 // #define PROPCASE_SV_MARKET 259
 // //      PROPCASE_SVFIX 260
 // #define PROPCASE_TV 276
-// Guessed propset: uncertain (3 of 8 match), closest to 10
-// Port's propset (11) may be set incorrectly
+// Guessed propset: 11
 
 // Misc stuff
 DEF(ctypes, 0xff5f45d8)
