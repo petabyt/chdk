@@ -1207,6 +1207,7 @@
 0xfc244f41,j_ExecuteShutDownPropertyService_FW
 0xfc2458d9,UIFS_Capture_FW
 0xfc24596b,UIFS_CaptureNoneStop_FW
+0xfc245b99,fw_yuv_layer_buf_helper
 0xfc245d37,GetZ_AxisAcceleration_FW
 0xfc245d43,GetY_AxisAcceleration_FW
 0xfc245d4f,GetX_AxisAcceleration_FW

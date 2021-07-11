@@ -189,6 +189,10 @@ DEF_CONST(uiprop_count                      ,0x000000c7) // Found @0xfc277b36
 DEF(exmem_alloc_table                 ,0x0005a474) // Found @0xfc07882a
 DEF(exmem_types_table                 ,0xfcc53688) // Found @0xfc07882e
 DEF_CONST(exmem_type_count                  ,0x00000021) // Found @0xfcc53688
+DEF(debug_logging_ptr                 ,0x000286c0) // Found @0xfc3ee96a
+DEF(debug_logging_flag                ,0x000286b8) // Found @0xfc3ee964
+DEF(mzrm_sendmsg_ret_adr              ,0xfc2fd8bb)
+DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245c26
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc3742b5
 //NHSTUB(DeleteFile_Fut                       ,0x00000000) //  0        *** != 0xfc37426b
