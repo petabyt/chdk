@@ -175,11 +175,11 @@ struct controller_s {
     int unk[2]; // all <= r52 seem to be 5 words total
 #else
     int unk[7]; // actual size varies, g*x and M cams seem to be 10 words total, others mostly 5
+#endif
 #else
     int unk; // vx appears to always be 4 words total
 #endif
 };
-#endif
 
 // dry52 may be different per https://chdk.setepontos.com/index.php?topic=12788.msg145589#msg145589
 #if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL > 52
