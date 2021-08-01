@@ -888,7 +888,7 @@ short shooting_get_user_av96()
 int shooting_get_user_av_id()
 {
 #if CAM_HAS_IRIS_DIAPHRAGM
-    return aperture_sizes_table[find_nearest_aperture_entry(shooting_get_user_av96())].prop_id;
+    return aperture_sizes_table[find_nearest_aperture_entry(shooting_get_user_av96())].id;
 #else
     return 0;
 #endif
