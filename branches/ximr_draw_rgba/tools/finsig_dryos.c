@@ -6980,25 +6980,28 @@ typedef struct {
     int     id_ps8; // id in propset 8
     int     id_ps9; // id in propset 9
     int     id_ps10;// id in propset 10
+    int     id_ps11;// id in propset 11
+    int     id_ps12;// id in propset 12
+    int     id_ps13;// id in propset 13
 } known_prop_struct;
 
 
-#define KNOWN_PROPSET_COUNT 10
+#define KNOWN_PROPSET_COUNT 13
 
 known_prop_struct knownprops[PROPCASE_HANDLED_COUNT] =
-{   // enum                        id  u ps2 ps3 ps4 ps5 ps6 ps7 ps8 ps9 ps10
-    {PROPCASE_AFSTEP             , -1, 0                                     },
-    {PROPCASE_FOCUS_STATE        , -1, 1, 18, 18, 18, 18, 18, 18, 18, 18,  18},
-    {PROPCASE_AV                 , -1, 1, 23, 23, 23, 23, 23, 23, 23, 23,  23},
-    {PROPCASE_BV                 , -1, 1, 34, 34, 34, 34, 34, 38, 35, 38,  40},
-    {PROPCASE_DELTA_DIGITALGAIN  , -1, 0                                     },
-    {PROPCASE_DELTA_SV           , -1, 1, 79, 79, 79, 79, 79, 84, 81, 84,  86},
-    {PROPCASE_DELTA_ND           , -1, 0                                     },
-    {PROPCASE_EV_CORRECTION_2    , -1, 1,207,209,211,211,210,216,213,216, 218},
-    {PROPCASE_ORIENTATION_SENSOR , -1, 1,219,221,223,223,222,228,225,228, 230},
-    {PROPCASE_SV_MARKET          , -1, 1,246,248,250,250,249,255,252,255, 257},
-    {PROPCASE_SVFIX              , -1, 0                                     },
-    {PROPCASE_TV                 , -1, 1,262,264,266,266,265,272,269,272, 274},
+{   // enum                        id  u ps2 ps3 ps4 ps5 ps6 ps7 ps8 ps9 ps10 ps11 ps12 ps13
+    {PROPCASE_AFSTEP             , -1, 0,  0,  0,  0,  0,  0,  0,  0,  0,   0,  13,  13,  13},
+    {PROPCASE_FOCUS_STATE        , -1, 1, 18, 18, 18, 18, 18, 18, 18, 18,  18,  18,  18,  18},
+    {PROPCASE_AV                 , -1, 1, 23, 23, 23, 23, 23, 23, 23, 23,  23,  23,  23,  23},
+    {PROPCASE_BV                 , -1, 1, 34, 34, 34, 34, 34, 38, 35, 38,  40,  40,  40,  40},
+    {PROPCASE_DELTA_DIGITALGAIN  , -1, 0,  0,  0,  0,  0,  0,  0,  0,  0,   0,  85,  85,  84},
+    {PROPCASE_DELTA_SV           , -1, 1, 79, 79, 79, 79, 79, 84, 81, 84,  86,  87,  87,  86},
+    {PROPCASE_DELTA_ND           , -1, 0,  0,  0,  0,  0,  0,  0,  0,  0,   0,  88,  88,  87},
+    {PROPCASE_EV_CORRECTION_2    , -1, 1,207,209,211,211,210,216,213,216, 218, 219, 220, 218},
+    {PROPCASE_ORIENTATION_SENSOR , -1, 1,219,221,223,223,222,228,225,228, 230, 231, 232, 230},
+    {PROPCASE_SV_MARKET          , -1, 1,246,248,250,250,249,255,252,255, 257, 259, 260, 258},
+    {PROPCASE_SVFIX              , -1, 0,  0,  0,  0,  0,  0,  0,  0,  0,   0, 260,   0, 259},
+    {PROPCASE_TV                 , -1, 1,262,264,266,266,265,272,269,272, 274, 276, 277, 275},
 };
 
 static uintptr_t curr_prop_name;
@@ -7131,6 +7134,9 @@ void find_propset(firmware *fw)
                 if (knownprops[n].id == knownprops[n].id_ps8) hits[8-1] += 1;
                 if (knownprops[n].id == knownprops[n].id_ps9) hits[9-1] += 1;
                 if (knownprops[n].id == knownprops[n].id_ps10) hits[10-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps11) hits[11-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps12) hits[12-1] += 1;
+                if (knownprops[n].id == knownprops[n].id_ps13) hits[13-1] += 1;
             }
             if (knownprops[n].use == 1)
             {
