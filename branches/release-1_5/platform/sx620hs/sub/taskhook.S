@@ -14,10 +14,10 @@
 //"    BEQ     exitHook\n"
 
 /*** INSTALL filewrite() hook ***/
-//"    LDR     R0, =task_FileWrite\n"
-//"    CMP     R0, R3\n"
-//"    LDREQ   R3, =filewritetask\n"
-//"    BEQ     exitHook\n"
+"    LDR     R0, =task_FileWrite\n"
+"    CMP     R0, R3\n"
+"    LDREQ   R3, =filewritetask\n"
+"    BEQ     exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
 //"    LDR     R0, =task_MovieRecord\n"
@@ -36,7 +36,7 @@
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =init_file_modules_task\n"
 
-"exitHook:\n" 
+"exitHook:\n"
 // restore overwritten registers
 "    LDMFD   SP!, {R0}\n"
 // Execute overwritten instructions from original code, then jump to firmware
