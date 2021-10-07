@@ -4,3 +4,6 @@
 
 DIGIC = 50# DIGIC 5
 
+# suppress FI2 since it doesn't work
+override OPT_FI2=
+
