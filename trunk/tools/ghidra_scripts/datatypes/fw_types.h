@@ -232,3 +232,4 @@ typedef struct {
     unsigned int    unk6[27];
 } ximr_context;
 #endif // CAM_DRYOS_REL
+#endif // FW_TYPES_H
