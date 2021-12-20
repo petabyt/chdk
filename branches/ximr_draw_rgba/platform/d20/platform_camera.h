@@ -80,7 +80,6 @@
 
     #undef  CAM_HAS_IRIS_DIAPHRAGM
     #undef  CAM_HAS_ERASE_BUTTON
-    #undef  CAM_HAS_IS                              // Camera does not have an image stabilizer
     #undef  CAM_HAS_MANUAL_FOCUS
 
     #define CAM_HAS_GPS                     1

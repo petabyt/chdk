@@ -304,7 +304,7 @@ asm volatile (
 "    LDR     R0, =0xFCCF0 \n"
 "    MOV     R2, #0x20 \n"
 "    ADD     R1, R4, #0x5C \n"
-"    BL      sub_006BAAFC \n"
+"    BL      sub_006BAAFC /*_dry_memcpy*/ \n"
 "    LDR R3, =current_write_ignored\n"
 "    LDR R3, [R3]\n"
 "    CMP R3, #0\n"

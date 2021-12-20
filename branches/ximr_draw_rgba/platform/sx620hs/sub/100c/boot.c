@@ -165,10 +165,10 @@ asm volatile (
 //"    BEQ     exitHook\n"
 
 /*** INSTALL filewrite() hook ***/
-//"    LDR     R0, =task_FileWrite\n"
-//"    CMP     R0, R3\n"
-//"    LDREQ   R3, =filewritetask\n"
-//"    BEQ     exitHook\n"
+"    LDR     R0, =task_FileWrite\n"
+"    CMP     R0, R3\n"
+"    LDREQ   R3, =filewritetask\n"
+"    BEQ     exitHook\n"
 
 /*** INSTALL movie_record_task() hook ***/
 //"    LDR     R0, =task_MovieRecord\n"
@@ -187,7 +187,7 @@ asm volatile (
 "    CMP     R0, R3\n"
 "    LDREQ   R3, =init_file_modules_task\n"
 
-"exitHook:\n" 
+"exitHook:\n"
 // restore overwritten registers
 "    LDMFD   SP!, {R0}\n"
 // Execute overwritten instructions from original code, then jump to firmware
@@ -260,7 +260,7 @@ asm volatile (
 "    STR     R0, [R1] \n"
 "    MOV     R1, #0x78 \n"
 "    ADD     R0, SP, #4 \n"
-"    BL      sub_006DC0D0 \n"
+"    BL      sub_006DC0D0 /*_bzero*/ \n"
 "    MOV     R0, #0xA0000 \n"
 "    STR     R0, [SP, #8] \n"
 

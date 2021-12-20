@@ -129,6 +129,10 @@
 
     #define CAM_HAS_WIFI                        1   // Camera has wifi support
 
+    // appears identical to elph180, which doesn't use complicated multi pass or seek in normal cases
+    #define CAM_HAS_FILEWRITETASK_HOOK      1       // FileWriteTask hook is available (local file write can be prevented)
+//    #define CAM_FILEWRITETASK_SEEKS         1       // Camera's FileWriteTask can do Lseek() - doesn't seem to be required
+
 //----------------------------------------------------------
     #undef  CAM_DEFAULT_MENU_CURSOR_BG
     #undef  CAM_DEFAULT_MENU_CURSOR_FG
