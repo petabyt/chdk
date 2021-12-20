@@ -260,7 +260,7 @@ asm volatile (
 "    STR     R0, [R1] \n"
 "    MOV     R1, #0x78 \n"
 "    ADD     R0, SP, #4 \n"
-"    BL      sub_006BABE0 \n"
+"    BL      sub_006BABE0 /*_bzero*/ \n"
 "    LDR     R0, =0x82100 \n"
 "    LDR     R2, =0x582D80 \n"
 "    STR     R0, [SP, #8] \n"

@@ -195,7 +195,7 @@ asm volatile (
 "    SUB     SP, SP, #0x74 \n"
 "    MOV     R0, SP \n"
 "    MOV     R1, #0x74 \n"
-"    BL      sub_FFAC7EE0 \n"
+"    BL      sub_FFAC7EE0 /*_bzero*/ \n"
 "    MOV     R0, #0x53000 \n"
 "    STR     R0, [SP, #4] \n"
 
