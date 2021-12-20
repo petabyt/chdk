@@ -282,7 +282,7 @@ asm volatile (
 "    LDR     R0, =0x1628F8 \n"
 "    MOV     R2, #0x20 \n"
 "    ADD     R1, R4, #0x58 \n"
-"    BL      sub_0069035C \n"
+"    BL      sub_0069035C /*_dry_memcpy*/ \n"
 
 //mod start
 "    LDR R3, =current_write_ignored\n"
