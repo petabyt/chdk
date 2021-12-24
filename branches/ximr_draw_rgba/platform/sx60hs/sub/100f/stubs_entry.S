@@ -150,14 +150,14 @@ DEF(jpeg_count_str                    ,0x0019b134) // Found @0xfc10379a
 DEF(zoom_busy                         ,0x0000b85c) // (0xb840+0x1c) Found @0xfc2edaa0
 DEF(focus_busy                        ,0x00013488) // (0x13480+0x8) Found @0xfc2f9df6
 DEF(imager_active                     ,0x00008688) // (0x8684+0x4) Found @0xfc13b2ac
-//DEF(canon_menu_active                 ,0x0000c240),          stubs_min = 0x0000c240 (0x0000c238+0x8)
-//DEF(file_counter_var                  ,0x00013148),          stubs_min = 0x00013148 (0x00013148)
+DEF(canon_menu_active                 ,0x0000c240) // (0xc238+0x8) Found @0xfc2f55ca
+DEF(file_counter_var                  ,0x00013148) // Found @0xfc1c79d8
 DEF(cameracon_state                   ,0x00008a84) // (0x8a74+0x10) Found @0xfc0df9e4
 DEF(_nrflag                           ,0x0001e858) // (0x1e854+0x4) Found @0xfc347a2c
-//DEF(av_override_semaphore             ,0x0002569c),          stubs_min = 0x0002569c (0x0002569c)
-//DEF(active_bitmap_buffer              ,0x0000c200), ** != ** stubs_min = 0x0000c1fc (0xc1fc)
-//DEF(displaytype                       ,0x00009284),          stubs_min = 0x00009284 (0x9284)
-//DEF(bitmap_buffer                     ,0x0000c204),          stubs_min = 0x0000c204 (0xc204)
+DEF(av_override_semaphore             ,0x0002569c) // Found @0xfc39d598
+DEF(active_bitmap_buffer              ,0x0000c200) // (0xc1cc+0x34) Found @0xfc337a6a
+DEF(displaytype                       ,0x00009284) // (0x923c+0x48) Found @0xfc304706
+DEF(bitmap_buffer                     ,0x0000c204) // (0xc1cc+0x38) Found @0xfc337a70
 DEF(palette_control                   ,0x00014bd4) // Found @0xfc333f22
 DEF(palette_buffer_ptr                ,0x00014bec) // (0x14bd4+0x18) Found @0xfc333f3e
 DEF(active_palette_buffer             ,0x00014be4) // (0x14bd4+0x10) Found @0xfc333f26
@@ -173,7 +173,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8c2a
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 1 int value, which is the the zoom focus length.
 // there are 201 entries in the table - set NUM_FL to 201
-//DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec,          stubs_min = 0xfdf317ec (0xfdf317ec)
+DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 
 //NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc2766c5
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc2766ff
