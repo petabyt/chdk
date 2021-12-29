@@ -1,6 +1,6 @@
 #ifndef PROPSET3_H
 #define PROPSET3_H
-/* 
+/*
 constants for propset 3
 WARNING:
  The build uses tools/gen_propset_lua.sed to generate propset3.lua from this file
@@ -29,7 +29,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ISO_MODE                   149
 #define PROPCASE_EXPOSURE_LOCK              208     // Old PROPCASE_SHOOTING value - gets set when set_aelock called or AEL button pressed
 #define PROPCASE_SHOOTING                   301     // This value appears to work better - gets set to 1 when camera has focused and set exposure, returns to 0 after shot
-#define PROPCASE_IS_FLASH_READY             210 
+#define PROPCASE_IS_FLASH_READY             210
 #define PROPCASE_OVEREXPOSURE               103
 #define PROPCASE_SHOOTING_MODE              49
 #define PROPCASE_IS_MODE                    145
@@ -48,7 +48,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_METERING_MODE              155
 #define PROPCASE_WB_MODE                    270     // 0 = Auto, 1 = Daylight, 2 = Cloudy, 3 = Tungsten, 4 = Fluorescent, 5 = Fluorescent H, 7 = Custom
 #define PROPCASE_WB_ADJ                     271
-#define PROPCASE_ASPECT_RATIO               294
+#define PROPCASE_ASPECT_RATIO               298     // unverified, propset2 +4 based offset of nearby propcases
 #define PROPCASE_TIMER_MODE                 225
 #define PROPCASE_OPTICAL_ZOOM_POSITION      197
 #define PROPCASE_VIDEO_RESOLUTION           169
