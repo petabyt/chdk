@@ -17,7 +17,7 @@ HOSTCFLAGS+=-DOPT_LUA_IOLIB -DOPT_LUA_OSLIB -DOPT_LUA_STRLIB
 COMMON_OBJS = lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
 	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o \
 	lundump.o lvm.o lzio.o \
-    lauxlib.o lbaselib.o ldblib.o ltablib.o lmathlib.o limathlib.o \
+	lauxlib.o lbaselib.o ldblib.o ltablib.o lmathlib.o limathlib.o lfmathlib.o \
 	$(LUA_OPTLIB_OBJS) loadlib.o linit.o
 
 OBJS=$(COMMON_OBJS)
