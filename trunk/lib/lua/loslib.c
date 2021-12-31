@@ -253,7 +253,6 @@ static int os_mkdir (lua_State *L) {
 #endif
 }
 
-
 static int get_table_optbool(lua_State *L, int narg, const char *fname, int d)
 {
     int r;
@@ -270,16 +269,45 @@ static int get_table_optbool(lua_State *L, int narg, const char *fname, int d)
 
 /*
   syntax
-    t=os.listdir("name",[showall|opts])
+    t=os.listdir("name"[,opts])
   returns array of filenames, or nil, strerror, errno
-  if showall is true, t includes ".", ".." and deleted entries
+
+  opts may be a boolean or a table
+  if opts is a table, it can contain boolean fields:
+   "showall" - if true, includes ".", ".." and (depending on OS) deleted entries
+   "chdklfn" - if true, returns long file names where possible
+  if opts is a boolean, it is equivalent to "showall" above
+
   NOTE except for the root directory, names ending in / will not work
 */
 static int os_listdir (lua_State *L) {
 #ifdef HOST_LUA
-  // TODO: Not implemented for 'hostlua'
-  (void)L;
-  return 0;
+  DIR *dir;
+  struct dirent *de;
+  const char *dirname = luaL_checkstring(L, 1);
+  int all;
+  if(lua_istable(L,2)) {
+    all=get_table_optbool(L,2,"showall",0);
+    // hostlua does not have lfn stuff, ignore
+    // od_flags=(get_table_optbool(L,2,"chdklfn",1))?OPENDIR_FL_CHDK_LFN:OPENDIR_FL_NONE;
+  } else {
+    all=lua_toboolean(L, 2);
+  }
+  int i=1;
+  dir = opendir(dirname);
+  if(!dir) 
+    return os_pushresult(L, 0 , dirname);
+  lua_newtable(L); 
+  while((de = readdir(dir))) {
+    if(!all && (de->d_name[0] == '\xE5' || (strcmp(de->d_name,".") == 0) || (strcmp(de->d_name,"..") == 0)))
+    continue;
+    lua_pushinteger(L, i);
+    lua_pushstring(L, de->d_name);
+    lua_settable(L,-3);
+    ++i;
+  }
+  closedir(dir);
+  return 1;
 #else
   DIR *dir;
   struct dirent *de;
@@ -357,13 +385,18 @@ static int idir_gc(lua_State *L) {
 
 /*
   syntax
-    iteratator, userdata = os.idir("name"[,all])
+    iteratator, userdata = os.idir("name"[,opts])
   each call to iterator(userdata) returns the next directory entry or nil if all
   entries have been returned
   typical usage
-    for fname in os.idir("name"[,all]) do ...
+    for fname in os.idir("name"[,opts]) do ...
 
-  if all is true, includes ".", ".." and (depending on OS) deleted entries
+  opts may be a boolean or a table
+  if opts is a table, it can contain boolean fields:
+   "showall" - if true, includes ".", ".." and (depending on OS) deleted entries
+   "chdklfn" - if true, returns long file names where possible
+  if opts is a boolean, it is equivalent to "showall" above
+
  NOTES:
   Except for the root directory, names ending in / will not work
   If there is an error opening the directory, the results will be identical to
@@ -386,9 +419,26 @@ static int idir_gc(lua_State *L) {
 */
 static int os_idir (lua_State *L) {
 #ifdef HOST_LUA
-  // TODO: Not implemented for 'hostlua'
-  (void)L;
-  return 0;
+  const char *dirname = luaL_checkstring(L, 1);
+  int all;
+  if(lua_istable(L,2)) {
+    all=get_table_optbool(L,2,"showall",0);
+    // hostlua does not have lfn stuff, ignore
+    // od_flags=(get_table_optbool(L,2,"chdklfn",1))?OPENDIR_FL_CHDK_LFN:OPENDIR_FL_NONE;
+  } else {
+    all=lua_toboolean(L, 2);
+  }
+
+  lua_pushcfunction(L, idir_iter);
+
+  idir_udata_t *ud = lua_newuserdata(L,sizeof(idir_udata_t));
+  ud->dir = opendir(dirname); // may be null, in which case iterator will stop on first iteration
+                              // no obvious way to return error status
+  ud->all = all;
+
+  luaL_getmetatable(L, IDIR_META);
+  lua_setmetatable(L, -2);
+  return 2;
 #else
   const char *dirname = luaL_checkstring(L, 1);
   int all=0,od_flags=OPENDIR_FL_CHDK_LFN;
