@@ -146,6 +146,11 @@
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
 
+    #undef  CAMERA_MIN_DIST
+    #define CAMERA_MIN_DIST                     109         // Override min subject distance
+    #undef  CAMERA_MAX_DIST
+    #define CAMERA_MAX_DIST                     10993       // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
+
     #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN   1 // raw would make absolutely no sense in this mode
     #define CAM_DISABLE_RAW_IN_HQ_BURST         1 // raw wouldn't make any sense in this mode either
     #define CAM_DISABLE_RAW_IN_HYBRID_AUTO      1 // For cameras that lock up while saving raw in "Hybrid Auto" mode
@@ -170,11 +175,6 @@
     #define CAM_EXT_TV_RANGE                    1
 
     //#define CAM_QUALITY_OVERRIDE                1
-
-    #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                     109         // Override min subject distance
-    #undef  CAMERA_MAX_DIST
-    #define CAMERA_MAX_DIST                     16990       // Override max subject distance; manually checked up to 1550388, with MF max 1369863 (double step)
 
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
