@@ -124,12 +124,19 @@ void *vid_get_viewport_live_fb()
     return 0;
 }
 
+// track viewport size changes with display type
+// only different from bitmap for HDMI out, playback only, probably pointless
+static int vp_full_width = 640;
+static int vp_full_buf_width = 640;
+static int vp_full_height = 480;
+static int lv_aspect = LV_ASPECT_4_3;
+
 int vid_get_viewport_width()
 {
     extern int _GetVRAMHPixelsSize();
     if (camera_info.state.mode_play)
     {
-      return camera_screen.physical_width;
+      return vp_full_width;
     }
     return _GetVRAMHPixelsSize();
 }
@@ -139,7 +146,7 @@ long vid_get_viewport_height()
     extern int _GetVRAMVPixelsSize();
     if (camera_info.state.mode_play)
     {
-       return camera_screen.buffer_height;
+       return vp_full_height;
     }
     return _GetVRAMVPixelsSize();
 }
@@ -187,13 +194,19 @@ void *vid_get_bitmap_fb()
     //return (void *)0x41421000; // G16 value based on g7x port
 }
 
+
+int vid_get_viewport_byte_width() {
+    return vp_full_buf_width*2;
+}
+
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
-int vid_get_viewport_byte_width()               { return (640 * 2); }
-int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
-int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; }
+int vid_get_viewport_fullscreen_width()         { return vp_full_width; }
+int vid_get_viewport_fullscreen_height()        { return vp_full_height; }
+int vid_get_viewport_buffer_width_proper()      { return vp_full_buf_width; }
 int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
+int vid_get_aspect_ratio()                      { return lv_aspect; }
 
 void *vid_get_bitmap_active_buffer()
 {
@@ -287,7 +300,7 @@ int last_displaytype;
  * Called when Canon is updating UI, via mzrm_sendmsg log patch.
  * Sets flag for CHDK to update it's UI.
  * Also needed because bitmap buffer resolution changes when using HDMI
- * LCD = 720 x 480
+ * LCD = 640 x 480
  * HDMI = 960 x 540
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
@@ -314,10 +327,18 @@ void update_ui(ximr_context* ximr)
 
             if (hdmi_out) {
                 bm_w = 480;
-                bm_h = 270;
+                bm_h = 240; // HDMI final output is 540, but canon firmware scales from 480
+                vp_full_width = 1920;
+                vp_full_buf_width = 1920;
+                vp_full_height = 1080;
+                lv_aspect = LV_ASPECT_16_9;
             } else {
                 bm_w = 360;
                 bm_h = 240;
+                vp_full_width = 640;
+                vp_full_buf_width = 640;
+                vp_full_height = 480;
+                lv_aspect = LV_ASPECT_4_3;
             }
 
             camera_screen.width = bm_w;
@@ -349,21 +370,15 @@ void update_ui(ximr_context* ximr)
             display_needs_refresh = 1;
         }
 
-        // g7x uses layer 0 in HDMI and layer 1 in TV out when rendering YUV buffer
+        // g16 uses layer 1 when rendering YUV buffer
         if (ximr->layers[1].bitmap == fw_yuv_layer_buf && ximr->layers[1].enabled) {
             ximr->layers[1].scale = 4;      // x2 scaling vertically for the canon yuv layer
-        } else if (ximr->layers[0].bitmap == fw_yuv_layer_buf && ximr->layers[0].enabled) {
-            ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
         }
 
         if (chdk_rgba != 0)
         {
-            // Copy canon RGB layer, assumed to be whichever of 0,1 is not the YUV layer
-            if(ximr->layers[0].bitmap == fw_yuv_layer_buf && ximr->layers[0].enabled) {
-                memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
-            } else {
-                memcpy(&ximr->layers[3], &ximr->layers[0], sizeof(ximr_layer));
-            }
+            // Copy canon RGB layer
+            memcpy(&ximr->layers[3], &ximr->layers[0], sizeof(ximr_layer));
 
             // Remove offset
             ximr->layers[3].scale = 6;      // x2 scaling in both directions
@@ -383,8 +398,8 @@ void update_ui(ximr_context* ximr)
     }
     else // rendering to fw_yuv_layer_buf for TV or HDMI out
     {
-        // scale and crop to half height to preserve CHDK buffer
-        ximr->height = ximr->buffer_height = 270;
-        ximr->denomy = 0x6c;
+        // scale and crop to half height to preserve CHDK buffer (values from sx710hs port)
+        ximr->height = ximr->buffer_height = 240;
+        ximr->denomy = 30;
     }
 }
