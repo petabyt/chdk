@@ -90,6 +90,7 @@ static double* newval(lua_State *L, double v) {
 static int fmath_new (lua_State *L) {
     int n = luaL_checknumber(L, 1);
     int d = luaL_optnumber(L, 2, 1);
+    if (d == 0) luaL_error(L, "divide by 0");
     newval(L, (double)n / (double)d);
     return 1;
 }
@@ -198,11 +199,15 @@ static void cordic(int f, double *x, double *y, double *z) {
     }
 }
 
+#ifndef HOST_LUA
+//chdk: fmod not on math.h
+
 #define trunc(x)    ((double)((int)(x)))
 
 static double fmod(double x, double y) {
     return x - trunc(x / y) * y;
 }
+#endif
 
 static double cathetus(double x) {
     return sqrt((1 + x) * (1 - x));
