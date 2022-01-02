@@ -181,8 +181,7 @@ struct controller_s {
 #endif
 };
 
-// dry52 may be different per https://chdk.setepontos.com/index.php?topic=12788.msg145589#msg145589
-#if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL > 52
+#if defined(CAM_DRYOS_REL)
 // Ximr layer
 typedef struct {
     unsigned char   unk1[7];
@@ -206,7 +205,34 @@ typedef struct {
     unsigned int    height;
     unsigned int    unk4;
 } ximr_layer;
-
+// dry52 different per https://chdk.setepontos.com/index.php?topic=12788.msg145589#msg145589
+// https://chdk.setepontos.com/index.php?topic=12788.msg147551#msg147551
+#if CAM_DRYOS_REL == 52
+// Ximr context
+typedef struct {
+    unsigned short  unk1;
+    unsigned short  width1;
+    unsigned short  height1;
+    unsigned short  unk2[17];
+    unsigned int    output_marv_sig;
+    unsigned int    output_buf;
+    unsigned int    output_opacitybuf;
+    unsigned int    output_color;
+    int             buffer_width;
+    int             buffer_height;
+    unsigned int    unk3[2];
+    ximr_layer      layers[8];
+    unsigned int    unk4[14];
+    unsigned char   denomx;
+    unsigned char   numerx;
+    unsigned char   denomy;
+    unsigned char   numery;
+    unsigned int    unk5;
+    short           width;
+    short           height;
+    unsigned int    unk6[27];
+} ximr_context;
+#else
 // Ximr context
 typedef struct {
     unsigned short  unk1;
@@ -231,5 +257,6 @@ typedef struct {
     short           height;
     unsigned int    unk6[27];
 } ximr_context;
-#endif // CAM_DRYOS_REL
+#endif // dry > 52
+#endif // defined(CAM_DRYOS_REL)
 #endif // FW_TYPES_H
