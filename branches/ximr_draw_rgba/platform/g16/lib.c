@@ -6,10 +6,10 @@ extern int active_bitmap_buffer;
 
 void vid_bitmap_refresh()
 {
-    extern void _transfer_src_overlay(int);
+    extern void transfer_src_overlay_my(int);
     int n = active_bitmap_buffer;
-    _transfer_src_overlay(n);
-    _transfer_src_overlay(n^1);
+    transfer_src_overlay_my(n);
+    transfer_src_overlay_my(n^1);
 }
 
 void shutdown()
