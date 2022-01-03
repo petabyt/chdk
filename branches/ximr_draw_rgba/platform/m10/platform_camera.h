@@ -133,9 +133,6 @@
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        16
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  100
-
     #define CAM_ZEBRA_NOBUF                     1
 
     //#define CAM_QUALITY_OVERRIDE                1
