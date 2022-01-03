@@ -155,9 +155,6 @@
     #define CAM_HAS_FILEWRITETASK_HOOK          1
     //#define CAM_FILEWRITETASK_SEEKS             1
 
-    #undef  CAM_BITMAP_PALETTE
-    #define CAM_BITMAP_PALETTE                  100
-
     #define CAM_ZEBRA_NOBUF                     1
 
     #undef  CAMERA_MIN_DIST
