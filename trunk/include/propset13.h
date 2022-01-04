@@ -29,6 +29,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 //#define PROPCASE_CUSTOM_SATURATION               62         // Canon Menu slide bar values: 255, 254, 0, 1, 2
 #define PROPCASE_QUALITY                         64
 //#define PROPCASE_CUSTOM_CONTRAST                 66         // Canon Menu slide bar values: 255, 254, 0, 1, 2
+#define PROPCASE_LANGUAGE                        68         // Upper byte = language (see default.lua for known values) lowest bit: 0 = NTSC, 1 = PAL
 #define PROPCASE_FLASH_SYNC_CURTAIN              71         // 0 first, 1 second
 #define PROPCASE_SUBJECT_DIST2                   72
 
@@ -84,6 +85,7 @@ DO NOT USE MULTILINE COMMENTS AROUND DEFINES
 #define PROPCASE_ASPECT_RATIO                    310        // also 404, 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
 #define PROPCASE_SV                              357        // (philmoz, May 2011) - this value causes overrides to be saved in JPEG and shown on Canon OSD
 
+#define PROPCASE_REVIEW_TIME                     374        // Review time 0 = off, -1 = hold, otherwise milliseconds
 #define PROPCASE_TIMER_SHOTS                     387        // Number of shots for TIMER_MODE=Custom
 
 #define PROPCASE_SHOOTING_STATE                  362        // Goes to 1 soon after half press, 2 around when override hook called, 3 after shot start, back to 2 when shoot_full released, back to 0 when half released
