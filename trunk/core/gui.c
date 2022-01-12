@@ -2401,8 +2401,8 @@ static void gui_handle_splash(int force_redraw)
             if (force_redraw || (gui_splash == SPLASH_TIME))
                 gui_draw_splash();
 
-        // on half shoot, cancel splash screen
-        if(kbd_is_key_pressed(KEY_SHOOT_HALF)) {
+        // on half shoot or zoom, cancel splash screen
+        if(kbd_is_key_pressed(KEY_SHOOT_HALF) || kbd_is_key_pressed(KEY_ZOOM_IN) || kbd_is_key_pressed(KEY_ZOOM_OUT)) {
             gui_splash = 1;
         }
         if (--gui_splash == 0)
