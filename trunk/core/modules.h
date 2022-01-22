@@ -69,4 +69,8 @@
 //--------------------------
 #include "shot_histogram.h"
 
+// MODULE "Config migration"
+//--------------------------
+#include "conf_migrate.h"
+
 #endif

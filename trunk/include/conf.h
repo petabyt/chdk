@@ -580,6 +580,18 @@ extern int load_config_file(int config_base, const char *filename);
 
 extern void resetColors();
 
+//==========================================================
+
+#define CONF_MAGICK_VALUE   (0x33204741)
+
+typedef struct
+{
+    int         start_id, end_id;
+    ConfInfo    *ci;
+    char        *filename;
+    void        (*info_func)(unsigned short id);
+} confinfo_handler;
+
 //-------------------------------------------------------------------
 
 #endif
