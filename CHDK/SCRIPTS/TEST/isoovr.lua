@@ -22,18 +22,21 @@ constant. This may help determine the working range from images.
 Using shoot mode may cause occasional ASSERTs crashes in FsIoNotify.c due to
 logging, shooting and config saving hitting filehandle limits.
 ]]
+
+conf=require("gen/cnf_core")    
+
 override_test_shoot = (a == 1)
 half_shoot_delay = b
 
 -- ISO values to test, modify to taste 
 iso_test_vals = {50,60,80,100,486,800,972,3200}
 
-iso_over_save = get_config_value(106)
-iso_over_val_save = get_config_value(105)
+iso_over_save = get_config_value(conf.iso_override_koef)
+iso_over_val_save = get_config_value(conf.iso_override_value)
 
 function restore()
-	set_config_value(106,iso_over_save)
-	set_config_value(105,iso_val_save)
+	set_config_value(conf.iso_override_koef,iso_over_save)
+	set_config_value(conf.iso_override_value,iso_val_save)
 end
 
 capmode=require'capmode'
@@ -92,7 +95,7 @@ end
 
 function run_test(start_iso,end_iso)
 	-- don't set any override for initial exposure test
-	set_config_value(106,0)
+	set_config_value(conf.iso_override_koef,0)
 	-- keep tv and AV at fixed at initial values throught test
 	-- will be based on cams current ISO
 	local tv,av
@@ -108,11 +111,11 @@ function run_test(start_iso,end_iso)
 		release('shoot_half')
 	end
 	-- enable iso override
-	set_config_value(106,1)
+	set_config_value(conf.iso_override_koef,1)
 	local log = init_log('A/ISOOVR.CSV',{'exp','iso','sv96','sv96_m','delta_sv'})
 	sleep(100)
 	for i,iso in ipairs(iso_test_vals) do
-		set_config_value(105,iso)
+		set_config_value(conf.iso_override_value,iso)
 		print('test',iso)
 		if override_test_shoot then
 			set_tv96_direct(tv)
