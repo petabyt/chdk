@@ -8,32 +8,9 @@ Usage:
   Tv=get_prop(proptable.TV)
 --]]
 
-if get_propset()==1 then
-  return require("gen/propset1")
-elseif get_propset()==2 then
-  return require("gen/propset2")
-elseif get_propset()==3 then
-  return require("gen/propset3")
-elseif get_propset()==4 then
-  return require("gen/propset4")
-elseif get_propset()==5 then
-  return require("gen/propset5")
-elseif get_propset()==6 then
-  return require("gen/propset6")
-elseif get_propset()==7 then
-  return require("gen/propset7")
-elseif get_propset()==8 then
-  return require("gen/propset8")
-elseif get_propset()==9 then
-  return require("gen/propset9")
-elseif get_propset()==10 then
-  return require("gen/propset10")
-elseif get_propset()==11 then
-  return require("gen/propset11")
-elseif get_propset()==12 then
-  return require("gen/propset12")
-elseif get_propset()==13 then
-  return require("gen/propset13")
+p = get_propset()
+if (p >= 1) and (p <= 13) then
+  return require("gen/propset"..p)
 else
-  error('Unsupported propset ' .. get_propset(), 1)
+  error('Unsupported propset ' .. p, 1)
 end
