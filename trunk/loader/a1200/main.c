@@ -1,7 +1,7 @@
 #include "../generic/check_compat.c"
 
-static void __attribute__((noreturn)) shutdown();
-static void __attribute__((noreturn)) panic(int cnt);
+// static void __attribute__((noreturn)) shutdown();
+// static void __attribute__((noreturn)) panic(int cnt);
 
 extern long *blob_chdk_core;
 extern long *blob_copy_and_reset;
@@ -71,39 +71,39 @@ void __attribute__((noreturn)) my_restart() {
 #define LED_OR  0xC0220010  // orange
 #define LED_AF  0xC022000C  // autofocus (front)
 
-static void __attribute__((noreturn)) shutdown() {
+// static void __attribute__((noreturn)) shutdown() {
+// 
+//     volatile long *p = (void*)LED_OR;       // turned off later
+// 
+//     asm(
+//          "MRS     R1, CPSR\n"
+//          "AND     R0, R1, #0x80\n"
+//          "ORR     R1, R1, #0x80\n"
+//          "MSR     CPSR_cf, R1\n"
+//          :::"r1","r0");
+// 
+//     *p = 0x44;  // led off.
+// 
+//     while(1);
+// }
 
-    volatile long *p = (void*)LED_OR;       // turned off later
-
-    asm(
-         "MRS     R1, CPSR\n"
-         "AND     R0, R1, #0x80\n"
-         "ORR     R1, R1, #0x80\n"
-         "MSR     CPSR_cf, R1\n"
-         :::"r1","r0");
-
-    *p = 0x44;  // led off.
-
-    while(1);
-}
-
-static void __attribute__((noreturn)) panic(int cnt) {
-
-    volatile long *p=(void*)LED_AF;
-    int i;
-
-    for(;cnt>0;cnt--) {
-        p[0]=0x46;  // led on.
-
-        for(i=0;i<0x200000;i++) {
-            asm ("nop\n");
-            asm ("nop\n");
-        }
-        p[0]=0x44;  // led off.
-        for(i=0;i<0x200000;i++) {
-            asm ("nop\n");
-            asm ("nop\n");
-        }
-    }
-    shutdown();
-}
+// static void __attribute__((noreturn)) panic(int cnt) {
+// 
+//     volatile long *p=(void*)LED_AF;
+//     int i;
+// 
+//     for(;cnt>0;cnt--) {
+//         p[0]=0x46;  // led on.
+// 
+//         for(i=0;i<0x200000;i++) {
+//             asm ("nop\n");
+//             asm ("nop\n");
+//         }
+//         p[0]=0x44;  // led off.
+//         for(i=0;i<0x200000;i++) {
+//             asm ("nop\n");
+//             asm ("nop\n");
+//         }
+//     }
+//     shutdown();
+// }
