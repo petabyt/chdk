@@ -2059,3 +2059,12 @@ int GetVideoOutType(void) {
 }
 #endif
 //---------------------------------------------------------------
+
+#ifdef CAM_HAS_GPS
+void GPS_UpdateData() {
+    extern void _GPS_UpdateData();
+    _GPS_UpdateData();
+}
+#endif
+
+//---------------------------------------------------------------
