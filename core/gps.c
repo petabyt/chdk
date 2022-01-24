@@ -293,6 +293,9 @@ static double draw_gps_course_info(int count){             // calculate & displa
     double eta = regressionReverse (&deltareg, 0);                          // estimated time of arrival
     double rest= eta - now;                                                 // Time = arrival time - now
 
+    // TODO: check this???
+    // This may be wrong as the CHDK 'abs' function operates on an int parameter and returns an int value
+    // Conversion of the regressionChange value to an int means the test will be true for any value from -1.0 to 1.0, not -0.5 to 0.5 as the code suggests.
     if (abs(regressionChange (&deltareg))<0.5 || rest < 5.0) rest = 0.0;
 
     if (camera_info.state.gui_mode_none)
