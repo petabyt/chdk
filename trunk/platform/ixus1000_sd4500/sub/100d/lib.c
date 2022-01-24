@@ -98,6 +98,8 @@ int vid_get_viewport_width()
 int vid_get_viewport_display_xoffset()
 {
     if (get_movie_status() > 1){return 0;}
+    // TODO: check this???
+    // MODE_MASK = 0x300 so mode_get()&MODE_MASK can never equal 100 - probably meant to be 0x100 to test for REC mode
 	if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1  || ((mode_get()&MODE_MASK)== 100 ))	
 	   return 0;
 	else
