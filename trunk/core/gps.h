@@ -5,9 +5,6 @@
 
 extern char * camera_jpeg_current_filename();
 extern char * camera_jpeg_current_gps() ;
-extern long   get_target_file_num();
-extern long   mkdir_if_not_exist();
-extern long   kbd_get_pressed_key();
 extern void   GPS_UpdateData();
 extern int    gps_key_trap ;
 
