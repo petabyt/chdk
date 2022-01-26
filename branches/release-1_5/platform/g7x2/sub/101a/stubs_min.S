@@ -9,8 +9,8 @@ DEF(raw_buffer_index                ,0x00008578)    // Reference @ 0xe023dc6e
 
 // TODO:
 
-DEF(zoom_status                     ,0x00032818)    // OK found @e024f38a search for "TerminateDeliverToZoomController"
-DEF(recreview_hold                  ,0x00009564)    // OK found @e036417e search for "ShootCon_NotifyComplete"
+// Does not behave like other cameras - set to 4 when reviewing. Value calculated in kbd.c to simulate expected behaviour.
+DEF(_recreview_hold                 ,0x00009564)    // OK found @e036417e search for "ShootCon_NotifyComplete"
 
 FAKEDEF(video_compression_rate, 1)
 FAKEDEF(canon_shoot_menu_active, 1) // ??? not found
