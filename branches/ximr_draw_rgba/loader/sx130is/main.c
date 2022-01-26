@@ -1,5 +1,5 @@
-static void __attribute__((noreturn)) shutdown();
-static void __attribute__((noreturn)) panic(int cnt);
+// static void __attribute__((noreturn)) shutdown();
+// static void __attribute__((noreturn)) panic(int cnt);
 
 extern long *blob_chdk_core;
 extern long *blob_copy_and_reset;
@@ -24,43 +24,43 @@ void __attribute__((noreturn)) my_restart()
 
 //#define LED_PR 0xC022006C		// no power led on sx130
 
-static void __attribute__((noreturn)) shutdown()
-{
-//    volatile long *p = (void*) LED_PR;
+// static void __attribute__((noreturn)) shutdown()
+// {
+// //    volatile long *p = (void*) LED_PR;
+// 
+//     asm(
+//          "MRS     R1, CPSR\n"
+//          "AND     R0, R1, #0x80\n"
+//          "ORR     R1, R1, #0x80\n"
+//          "MSR     CPSR_cf, R1\n"
+//          :::"r1","r0");
+// 
+// //    *p = 0x44;  // led off.
+// 
+//     while(1);
+// }
 
-    asm(
-         "MRS     R1, CPSR\n"
-         "AND     R0, R1, #0x80\n"
-         "ORR     R1, R1, #0x80\n"
-         "MSR     CPSR_cf, R1\n"
-         :::"r1","r0");
 
-//    *p = 0x44;  // led off.
-
-    while(1);
-}
-
-
-static void __attribute__((noreturn)) panic(int cnt)
-{
-	volatile long *red=(void*) 0xC0220010;	// red(orange) led sx130
-
-	int i;
-
-	for(;cnt>0;cnt--){
-		*red = 0x46;
-
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-			asm ("nop\n");
-		}
-
-		*red = 0x44;
-
-		for(i=0;i<0x200000;i++){
-			asm ("nop\n");
-			asm ("nop\n");
-		}
-	}
-	shutdown();
-}
+// static void __attribute__((noreturn)) panic(int cnt)
+// {
+// 	volatile long *red=(void*) 0xC0220010;	// red(orange) led sx130
+// 
+// 	int i;
+// 
+// 	for(;cnt>0;cnt--){
+// 		*red = 0x46;
+// 
+// 		for(i=0;i<0x200000;i++){
+// 			asm ("nop\n");
+// 			asm ("nop\n");
+// 		}
+// 
+// 		*red = 0x44;
+// 
+// 		for(i=0;i<0x200000;i++){
+// 			asm ("nop\n");
+// 			asm ("nop\n");
+// 		}
+// 	}
+// 	shutdown();
+// }

@@ -143,17 +143,40 @@ fc13498e:   4770        bx  lr
     return _GetVRAMVPixelsSize();
 }
 
+static long vp_xo[5] = { 0, 0,  0,  80, 128 };// should all be even values for edge overlay
+static long vp_yo[5] = { 0, 60, 28, 0,  0};
+
 int vid_get_viewport_yoffset() {
     // this seems to be always 0, buffer always begins with actual display data (widescreen or not)
     return 0;
 }
 
 int vid_get_viewport_display_xoffset() {
-    return 0;
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    if(camera_info.state.mode_video || is_video_recording())
+    {
+        return 0;
+    }
+    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 int vid_get_viewport_display_yoffset() {
-    return 0;
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    // video, ignore still res propcase
+    if(camera_info.state.mode_video || is_video_recording()) {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
+            return 0; // 4:3 video, no Y offset
+        } else {
+            return 60; // 16:9 video
+        }
+    }
+    return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
 
 extern int active_bitmap_buffer;

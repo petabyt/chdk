@@ -351,8 +351,4 @@ extern void _exmem_ufree(unsigned int type);
 extern int _memPartFindMax(int mempart_id); 
 extern int _memPartInfoGet(int mempart_id,int *info);
 
-#ifdef CAM_HAS_GPS
-extern void _GPS_UpdateData();
-#endif
-
 #endif

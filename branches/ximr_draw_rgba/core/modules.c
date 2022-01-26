@@ -845,3 +845,42 @@ libshothisto_sym default_libshothisto=
 
 // Library pointer
 libshothisto_sym* libshothisto = &default_libshothisto;
+
+/************* MODULE Config migrate ******/
+
+#define MODULE_NAME_CONFMIGRATE "_confmig.flt"
+
+// Forward reference
+extern libconfmigrate_sym default_libconfmigrate;
+
+module_handler_t h_confmigrate =
+{
+    (base_interface_t**)&libconfmigrate,
+    &default_libconfmigrate.base,
+    CONF_MIGRATE_VERSION,
+    MODULE_NAME_CONFMIGRATE
+};
+
+static int default_load_old_config(const confinfo_handler *confinfo_handlers)
+{
+    if (module_load(&h_confmigrate))
+        return libconfmigrate->load_old_config(confinfo_handlers);
+    return 0;
+}
+static short default_map_old_id(short id)
+{
+    if (module_load(&h_confmigrate))
+        return libconfmigrate->map_old_id(id);
+    return -1;  // Module not loaded
+}
+
+// Default library - module unloaded
+libconfmigrate_sym default_libconfmigrate=
+{
+    { 0,0,0,0,0 },
+    default_load_old_config,
+    default_map_old_id,
+};
+
+// Library pointer
+libconfmigrate_sym* libconfmigrate = &default_libconfmigrate;

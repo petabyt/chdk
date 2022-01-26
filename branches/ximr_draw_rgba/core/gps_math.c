@@ -19,7 +19,9 @@ double arctan(double x, int n){
     int sign;
     int i;
 
-    if (abs(x) < 1 )
+    // CHDK abs function operates on int values - the cast of 'x' to int is to stop compiler from complaining.
+    // Note: this logic still works as (int)x equals 0 when -1.0 < x < 1.0. (Test could probably be simplified to '(int)x == 0')
+    if (abs((int)x) < 1)
     {
         result = x;
         sign = 0;
@@ -32,8 +34,7 @@ double arctan(double x, int n){
             i+=2;
         } while( (--n) ); // as long as member number is not zero
     }
-
-    if (abs(x) >= 1 )
+    else
     {
         if (x<-1) {result = 3.141592653589793* -0.5; }
         if (x>=1) {result = 3.141592653589793*0.5; }
