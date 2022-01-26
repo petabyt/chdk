@@ -51,6 +51,8 @@ long __attribute__((naked,noinline)) wrap_kbd_p1_f()
     return 0;
 }
 
+int recreview_hold = 0;     // calculated version
+
 // no stack manipulation needed here, since we create the task directly
 void __attribute__((naked,noinline)) mykbd_task()
 {
@@ -58,6 +60,9 @@ void __attribute__((naked,noinline)) mykbd_task()
 
     while (physw_run)
     {
+        extern int _recreview_hold;
+        recreview_hold = _recreview_hold == 4;
+
         _SleepTask(physw_sleep_delay);
 
         if (wrap_kbd_p1_f() == 1)
