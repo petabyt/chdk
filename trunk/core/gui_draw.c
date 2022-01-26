@@ -799,8 +799,14 @@ void draw_vline(coord x, coord y, int len, color cl)
     if ((x < 0) || (x >= camera_screen.width) || (y >= camera_screen.height)) return;
     if (y < 0) { len += y; y = 0; }
     if ((y + len) > camera_screen.height) len = camera_screen.height - y;
-    for (; len>0; len--, y++)
-        draw_pixel(x, y, cl);
+    register unsigned int offset = y * camera_screen.buffer_width + ASPECT_XCORRECTION(x);
+    for (; len>0; len--, offset+=camera_screen.buffer_width)
+    {
+        draw_pixel_proc(offset, cl);
+#if CAM_USES_ASPECT_CORRECTION
+        draw_pixel_proc(offset+1, cl);  // Draw second pixel if screen scaling is needed
+#endif
+    }
 }
 
 //-------------------------------------------------------------------
