@@ -416,6 +416,10 @@ void start_ptp_script()
 {
     if (ptp_script)
     {
+        // Keyboard init
+        camera_info.state.kbd_last_clicked = 0;
+        camera_info.state.kbd_last_checked_time = get_tick_count();
+        kbd_key_release_all();
         module_set_script_lang(0);  // Force Lua script language
         if (libscriptapi->script_start(ptp_script,1))
         {
