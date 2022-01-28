@@ -82,15 +82,6 @@
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active YUV bitmap buffer only. Used for edge overlay, other UI drawn on RGBA layer.
     #define CAM_HAS_DISPLAY_REFRESH_FLAG        1   // 'display_needs_refresh' variable is available to trigger CHDK UI update
-    #undef  CAM_BITMAP_WIDTH
-    #undef  CAM_BITMAP_HEIGHT
-    #undef  CAM_SCREEN_WIDTH
-    #undef  CAM_SCREEN_HEIGHT
-    // Initial settings are for LCD screen
-    #define CAM_BITMAP_WIDTH                    360 // Actual width of bitmap screen in <s>bytes</s> pixels (YUV buffer) [evf = 1024]
-    #define CAM_BITMAP_HEIGHT                   240 // Actual height of bitmap screen in rows [evf = 768]
-    #define CAM_SCREEN_WIDTH                    360 // Width of bitmap screen in CHDK co-ordinates [evf = 1024]
-    #define CAM_SCREEN_HEIGHT                   240 // Height of bitmap screen in CHDK co-ordinates [evf = 768]
 
     #define MKDIR_RETURN_ONE_ON_SUCCESS         1    // mkdir() return 1 on success, 0 on fail.
 
