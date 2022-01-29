@@ -14,12 +14,16 @@
 #define SHOW_HISTO_HALF     3
 
 //-------------------------------------------------------------------
-#ifndef THUMB_FW
+#ifdef THUMB_FW
+    #define LARGE_HISTO 1
+#endif
+
+#ifndef LARGE_HISTO
 #define HISTO_WIDTH                 128 // Note code is optimised for this value, it should not be changed!
 #define HISTO_HEIGHT                50
 #else
 #define HISTO_WIDTH                 256 // Note code is optimised for this value, it should not be changed!
-#define HISTO_HEIGHT               100 
+#define HISTO_HEIGHT                100 
 #endif
 
 #include "flt.h"

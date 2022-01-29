@@ -403,15 +403,7 @@ static void default_histogram_process()
 // Default (unloaded) function(s)
 static void default_gui_osd_draw_histo(int is_osd_edit)
 {
-    if (is_osd_edit ||
-        ((camera_info.state.mode_play || !camera_info.state.mode_video) &&
-         (
-          ((conf.show_histo==SHOW_HISTO_HALF) && camera_info.state.is_shutter_half_press) ||
-          ((conf.show_histo==SHOW_HISTO_REC) && camera_info.state.mode_rec && (recreview_hold==0)) ||
-          ((conf.show_histo==SHOW_HISTO_ALWAYS) && (recreview_hold==0))
-         )
-        )
-       )
+    if (conf.show_histo || is_osd_edit)
     {
         // If load succeeded call module version of function
         if (module_load(&h_histo))
