@@ -18,11 +18,7 @@
 #define HISTO_RGB                   3       // Combined Red, Green and Blue
 #define HISTO_Y                     4       // Luminance (Y) from viewport
 
-// Define type of transform to be done to scale the histogram to fit the available height
-#define HISTO_MODE_LINEAR           0
-#define HISTO_MODE_LOG              1
-
-// Display modes
+// Display modes - must match gui_histo_view_modes in gui.c
 #define OSD_HISTO_LAYOUT_A          0       // A - RGB
 #define OSD_HISTO_LAYOUT_Y          1
 #define OSD_HISTO_LAYOUT_A_Y        2
@@ -31,13 +27,17 @@
 #define OSD_HISTO_LAYOUT_Y_argb     5
 #define OSD_HISTO_LAYOUT_BLEND      6
 #define OSD_HISTO_LAYOUT_BLEND_Y    7
+#define LAYOUT_TYPE_MASK            0x0F
+#define LAYOUT_SMALL                32
+#define LAYOUT_BLEND                64
+
 #ifndef LARGE_HISTO
-#define	HISTO_DOT_SIZE	3
+#define HISTO_DOT_SIZE  3
 #else
 // digic 6 CHDK screen is ~480 lines instead for 240
-#define	HISTO_DOT_SIZE	5
+#define HISTO_DOT_SIZE  5
 #endif
-#define	HISTO_DOT_PAD	(HISTO_DOT_SIZE + 2)
+#define HISTO_DOT_PAD   (HISTO_DOT_SIZE + 2)
 
 // Approximate number of pixels to sample, subject to minimums step sizes
 // Actual number of samples may exceed target due to rounding/truncation in step calculations
@@ -57,12 +57,16 @@ unsigned int histo_max[5], histo_max_center[5];             // RGBYG
 static float histo_max_center_invw[5];                      // RGBYG
 
 static long histo_magnification;
-static long under_exposed;
-static long over_exposed;
+static int under_exposed;
+static int over_exposed;
 
-static long histogram_stage=0;
-
+static int histogram_stage = 0;
 static int histogram_drawn = 0;
+
+// Flags for histogram_drawn variable. Low 12 bits is calculated as histogram height to erase.
+#define HDRAW_READY         0x4000      // Calculations done - histogram ready to draw
+#define HDRAW_MAG           0x2000      // Set if histogram magnification level was drawn
+#define HDRAW_EXP           0x1000      // Set if 'EXP' message drawn
 
 //-------------------------------------------------------------------
 // Histogram calculation functions
@@ -88,13 +92,15 @@ static void histogram_alloc()
     if (histogram_proc[0] == 0)
     {
         histogram_proc[0] = malloc(5 * 256 * sizeof(unsigned short));
-        histogram_proc[1] = histogram_proc[0] + 256;
-        histogram_proc[2] = histogram_proc[1] + 256;
-        histogram_proc[3] = histogram_proc[2] + 256;
-        histogram_proc[4] = histogram_proc[3] + 256;
+        if (histogram_proc[0] != 0)
+        {
+            histogram_proc[1] = histogram_proc[0] + 256;
+            histogram_proc[2] = histogram_proc[1] + 256;
+            histogram_proc[3] = histogram_proc[2] + 256;
+            histogram_proc[4] = histogram_proc[3] + 256;
+        }
     }
 }
-
 
 /*
 do a single stage of reading YUV data from framebuffer
@@ -149,33 +155,19 @@ void histogram_process()
 
     static int viewport_vis_byte_width;
     static int xstep_bytes, ystep;
+    static int exposition_thresh;
 
     int i, c;
     float (*histogram_transform)(float);
-    unsigned int histo_fill[5];
+    unsigned int histo_fill;
     int histo_main;
 
-    long exposition_thresh = camera_screen.size / 500;
-
     // Select transform function
-    switch (conf.histo_mode)
-    {
-        case HISTO_MODE_LOG:
-            histogram_transform = logarithmic;
-            break;
-        case HISTO_MODE_LINEAR:
-        default:
-            histogram_transform = identity;
-            break;
-    }
-
-    // Select which calculated histogram channel determines magnification / scaling
-    if (conf.histo_layout == OSD_HISTO_LAYOUT_Y || conf.histo_layout == OSD_HISTO_LAYOUT_Y_argb)
-        histo_main = HISTO_Y;
-    else
-        histo_main = HISTO_RGB;
+    histogram_transform = conf.histo_mode ? logarithmic : identity;
 
     histogram_alloc();
+    // Check memory was allocated
+    if (histogram_proc[0] == 0) return;
 
     // This function is called in the main spytask loop roughly every 20msec
     // To avoid hogging all the CPU it performs it's work in stages controlled by histogram-stage
@@ -190,7 +182,7 @@ void histogram_process()
             img = vid_get_viewport_active_buffer();
             if (!img) return;
 
-            img += vid_get_viewport_image_offset();		// offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
+            img += vid_get_viewport_image_offset();     // offset into viewport for when image size != viewport size (e.g. 16:9 image on 4:3 LCD)
 
             viewport_height = vid_get_viewport_height_proper();
             viewport_byte_width = vid_get_viewport_byte_width();
@@ -198,7 +190,7 @@ void histogram_process()
             int total_pixels = viewport_pix_width * viewport_height;
             int xstep;
 
-            if(total_pixels <= HISTO_XSTEP_MIN*HISTO_YSTEP_MIN*HISTO_TARGET_SAMPLES) {
+            if (total_pixels <= HISTO_XSTEP_MIN*HISTO_YSTEP_MIN*HISTO_TARGET_SAMPLES) {
                 xstep = HISTO_XSTEP_MIN;
                 ystep = HISTO_YSTEP_MIN;
             } else {
@@ -214,6 +206,10 @@ void histogram_process()
                 }
             }
 
+            // Original calculation was camera_screen.size / 500. Based on most cameras having 320x240 bitmap this = 172.
+            // This does not work for high-res bitmap display (e.g. Digic6 YUV drawing) where camera_screen.size = 720x480 giving exposition_thresh 4 times larger.
+            // Calculation now based on number of sampled pixels with default value still coming out at 172.
+            exposition_thresh = total_pixels / (xstep * ystep * 125);
 
 #ifndef THUMB_FW
             xstep_bytes = (xstep*3)/2; // 4 pixels = 6 bytes, step is multiple of 4
@@ -228,7 +224,7 @@ void histogram_process()
                 histo_max[c] = histo_max_center[c] = 0;
             }
 
-            histogram_stage=1;
+            histogram_stage = 1;
             break;
         }
 
@@ -236,7 +232,7 @@ void histogram_process()
         case 2:
         case 3: {
             histogram_sample_stage(img, histogram_stage, viewport_byte_width, viewport_vis_byte_width, viewport_height, xstep_bytes, ystep);
-            ++histogram_stage;
+            histogram_stage += 1;
             break;
         }
 
@@ -244,7 +240,6 @@ void histogram_process()
             for (i=0, c=0; i<HISTO_WIDTH; ++i, c+=2) { // G
                 // Merge each pair of values into a single value (for width = 128)
                 // Warning: this is optimised for HISTO_WIDTH = 128, don't change the width unless you re-write this code as well.
-//#ifndef THUMB_FW
 #ifndef LARGE_HISTO
                 histogram_proc[HISTO_Y][i] = histogram_proc[HISTO_Y][c] + histogram_proc[HISTO_Y][c+1];
                 histogram_proc[HISTO_R][i] = histogram_proc[HISTO_R][c] + histogram_proc[HISTO_R][c+1];
@@ -273,11 +268,10 @@ void histogram_process()
                 }
             }
 
-            if (histo_max[HISTO_RGB] > 0) { // over- / under- expos
+            if (histo_max[HISTO_RGB] > 0) { // over- / under- exposed
                 under_exposed = (histogram_proc[HISTO_RGB][0]*8
                                 +histogram_proc[HISTO_RGB][1]*4
                                 +histogram_proc[HISTO_RGB][2]) > exposition_thresh;
-
                 over_exposed  = (histogram_proc[HISTO_RGB][HISTO_WIDTH-3]
                                 +histogram_proc[HISTO_RGB][HISTO_WIDTH-2]*4
                                 +histogram_proc[HISTO_RGB][HISTO_WIDTH-1]*8) > exposition_thresh;
@@ -286,24 +280,31 @@ void histogram_process()
                 under_exposed = 1;
             }
 
-            histogram_stage=5;
+            histogram_stage = 5;
             break;
 
         case 5:
+            // Select which calculated histogram channel determines magnification / scaling
+            if (conf.histo_layout == OSD_HISTO_LAYOUT_Y || conf.histo_layout == OSD_HISTO_LAYOUT_Y_argb)
+                histo_main = HISTO_Y;
+            else
+                histo_main = HISTO_RGB;
+
+            histo_fill = 0;
             for (c=0; c<5; ++c) {
-                histo_fill[c]=0;
                 for (i=0; i<HISTO_WIDTH; ++i) {
                     histogram[c][i] = (histogram_transform((float)histogram_proc[c][i]))*histo_max_center_invw[c];
                     if (histogram[c][i] > HISTO_HEIGHT)
                         histogram[c][i] = HISTO_HEIGHT;
-                    histo_fill[c]+=histogram[c][i];
+                    if (c == histo_main)
+                        histo_fill += histogram[c][i];
                 }
             }
 
             histo_magnification = 0;
             if (conf.histo_auto_ajust) {
-                if (histo_fill[histo_main] < (HISTO_HEIGHT*HISTO_WIDTH)/5) { // try to adjust if average level is less than 20%
-                    histo_magnification = (20*HISTO_HEIGHT*HISTO_WIDTH) / histo_fill[histo_main];
+                if (histo_fill < (HISTO_HEIGHT*HISTO_WIDTH)/5) { // try to adjust if average level is less than 20%
+                    histo_magnification = (20*HISTO_HEIGHT*HISTO_WIDTH) / histo_fill;
                     for (c=0; c<5; ++c) {
                         for (i=0;i<HISTO_WIDTH;i++) {
                             histogram[c][i] = histogram[c][i] * histo_magnification / 100;
@@ -314,23 +315,22 @@ void histogram_process()
                 }
             }
 
-            histogram_stage=0;
+            histogram_stage = 0;
+            histogram_drawn |= HDRAW_READY;
             break;
     }
-
 }
 
 //-------------------------------------------------------------------
+// Histogram colors
+color cl_norm, cl_over, cl_bg;
+
 // Histogram display functions
 
-static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small)
+static void gui_osd_draw_single_histo(int hist, coord x, coord y, unsigned int w, unsigned int h, int small)
 {
-    twoColors hc = user_color(conf.histo_color);
-    twoColors hc2 = user_color(conf.histo_color2);
-
-    register int i, v, threshold;
-    register color cl, cl_over, cl_bg = BG_COLOR(hc);
-    coord w=HISTO_WIDTH, h=HISTO_HEIGHT;
+    register unsigned int i, threshold, y1, y2;
+    register color cl;
 
     switch (hist)
     {
@@ -346,79 +346,103 @@ static void gui_osd_draw_single_histo(int hist, coord x, coord y, int small)
         case HISTO_RGB:
         case HISTO_Y:
         default:
-            cl=FG_COLOR(hc);
+            cl=cl_norm;
             break;
     }
 
-    if (small) {
-        h>>=1; w>>=1;
-        for (i=0; i<w; ++i) {
+    for (i=0; i<w; ++i) {
+        if (small)
             threshold = (histogram[hist][i<<1]+histogram[hist][(i<<1)+1])>>2;
-
-            for (v=1; v<h-1; ++v)
-                draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl:cl_bg);
-            cl_over = (threshold==h && conf.show_overexp)?BG_COLOR(hc2):cl;
-            for (; v<h; ++v)
-                draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl_over:cl_bg);
-        }
-    } else {
-        for (i=0; i<w; ++i) {
+        else
             threshold = histogram[hist][i];
+        y2 = y1 = threshold;
+        if (conf.show_overexp && (y1 == h)) { y1 = h - 3; y2 = h; }
 
-            for (v=1; v<h-3; ++v)
-                draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl:cl_bg);
-            cl_over = (threshold==h && conf.show_overexp)?BG_COLOR(hc2):cl;
-            for (; v<h; ++v)
-                draw_pixel(x+1+i, y+h-v, (v<=threshold)?cl_over:cl_bg);
-        }
+        // Draw calculated histogram value
+        if (y1 > 0)
+            draw_vline(x+1+i, y+1+h-y1, y1, cl);
+
+        // Draw over exposure (if required)
+        if (y2 > y1)
+            draw_vline(x+1+i, y+1+h-y2, y2-y1, cl_over);
+
+        // Draw background to fill column unless already filled
+        if (h > y2)
+            draw_vline(x+1+i, y+1, h-y2, cl_bg);
     }
-
-    draw_rectangle(x, y, x+1+w, y+h, hc2, RECT_BORDER1);
-    //Vertical Lines
-    if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+w)*i/5, y, x+(1+w)*i/5, y+h, FG_COLOR(hc2));
 }
 
-//-------------------------------------------------------------------
 static void gui_osd_draw_blended_histo(coord x, coord y)
 {
-    twoColors hc = user_color(conf.histo_color);
-    twoColors hc2 = user_color(conf.histo_color2);
-
-    register unsigned int i, v, red, grn, blu, sel;
-    color cls[] = {
-        BG_COLOR(hc),
-        COLOR_BLUE,
-        COLOR_GREEN,
-        COLOR_CYAN,
-        COLOR_RED,
-        COLOR_MAGENTA,
-        COLOR_YELLOW,
-        COLOR_WHITE
+    register unsigned int i, v, red, grn, blu, sel, y1, y2, y3;
+    static color cls[] = {
+        0,
+        IDX_COLOR_BLUE,
+        IDX_COLOR_GREEN,
+        IDX_COLOR_CYAN,
+        IDX_COLOR_RED,
+        IDX_COLOR_MAGENTA,
+        IDX_COLOR_YELLOW,
+        IDX_COLOR_WHITE
     };
 
     for (i=0; i<HISTO_WIDTH; ++i) {
-        red = histogram[HISTO_R][i];
-        grn = histogram[HISTO_G][i];
-        blu = histogram[HISTO_B][i];
+        // Draw up to 4 lines - one for each color channel plus background to fill unused space.
 
-        for (v=1; v<HISTO_HEIGHT; ++v) {
+        y1 = red = histogram[HISTO_R][i];
+        y2 = grn = histogram[HISTO_G][i];
+        y3 = blu = histogram[HISTO_B][i];
+
+        // sort low to high
+        if (y1 > y2) { v = y1; y1 = y2; y2 = v; }
+        if (y1 > y3) { v = y1; y1 = y3; y3 = v; }
+        if (y2 > y3) { v = y2; y2 = y3; y3 = v; }
+
+        // First line - lowest value if not 0
+        if (y1 > 0) {
             sel = 0;
-
-            if (v < red) sel = 4;
-            if (v < grn) sel |= 2;
-            if (v < blu) sel |= 1;
-
-            draw_pixel(x+1+i, y+HISTO_HEIGHT-v, cls[sel]);
+            if (y1 <= red) sel = 4;
+            if (y1 <= grn) sel |= 2;
+            if (y1 <= blu) sel |= 1;
+            draw_vline(x+1+i, y+1+HISTO_HEIGHT-y1, y1, chdk_colors[cls[sel]]);
         }
+
+        // Second line - middle value if higher than lowest
+        if (y2 > y1) {
+            sel = 0;
+            if (y2 <= red) sel = 4;
+            if (y2 <= grn) sel |= 2;
+            if (y2 <= blu) sel |= 1;
+            draw_vline(x+1+i, y+1+HISTO_HEIGHT-y2, y2-y1, chdk_colors[cls[sel]]);
+        }
+
+        // Third line - highest value if higher than middle value
+        if (y3 > y2) {
+            sel = 0;
+            if (y3 <= red) sel = 4;
+            if (y3 <= grn) sel |= 2;
+            if (y3 <= blu) sel |= 1;
+            draw_vline(x+1+i, y+1+HISTO_HEIGHT-y3, y3-y2, chdk_colors[cls[sel]]);
+        }
+
+        // Draw background to fill column unless already filled
+        if (HISTO_HEIGHT > y3)
+            draw_vline(x+1+i, y+1, HISTO_HEIGHT-y3, cl_bg);
     }
-
-    draw_rectangle(x, y, x+1+HISTO_WIDTH, y+HISTO_HEIGHT, hc2, RECT_BORDER1);
-    //Vertical lines
-    if (conf.histo_show_ev_grid) for (i=1;i<=4;i++) draw_line(x+(1+HISTO_WIDTH)*i/5, y, x+(1+HISTO_WIDTH)*i/5, y+HISTO_HEIGHT, FG_COLOR(hc2));
-
 }
 
 //-------------------------------------------------------------------
+signed char histo_layouts[8][5] = {
+    { HISTO_RGB, -1 },                                                                                      // OSD_HISTO_LAYOUT_A
+    { HISTO_Y, -1 },                                                                                        // OSD_HISTO_LAYOUT_Y
+    { HISTO_RGB, HISTO_Y, -1 },                                                                             // OSD_HISTO_LAYOUT_A_Y
+    { HISTO_R, HISTO_G, HISTO_B, -1 },                                                                      // OSD_HISTO_LAYOUT_R_G_B
+    { HISTO_RGB, HISTO_Y|LAYOUT_SMALL, HISTO_R|LAYOUT_SMALL, HISTO_G|LAYOUT_SMALL, HISTO_B|LAYOUT_SMALL },  // OSD_HISTO_LAYOUT_A_yrgb
+    { HISTO_Y, HISTO_RGB|LAYOUT_SMALL, HISTO_R|LAYOUT_SMALL, HISTO_G|LAYOUT_SMALL, HISTO_B|LAYOUT_SMALL },  // OSD_HISTO_LAYOUT_Y_argb
+    { LAYOUT_BLEND, -1 },                                                                                   // OSD_HISTO_LAYOUT_BLEND
+    { LAYOUT_BLEND, HISTO_Y, -1 },                                                                          // OSD_HISTO_LAYOUT_BLEND_Y
+};
+
 void gui_osd_draw_histo(int is_osd_edit)
 {
     if (is_osd_edit ||
@@ -431,108 +455,95 @@ void gui_osd_draw_histo(int is_osd_edit)
         )
        )
     {
+        // Check if histogram calculation has finished (and not in osd editor).
+        if (!is_osd_edit && ((histogram_drawn & HDRAW_READY) == 0)) return;
+
         twoColors hc = user_color(conf.histo_color);
         twoColors hc2 = user_color(conf.histo_color2);
 
-        switch (conf.histo_layout)
-        {
-            case OSD_HISTO_LAYOUT_Y:
-                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y, 0);
-                break;
-            case OSD_HISTO_LAYOUT_A_Y:
-                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
-                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
-                break;
-            case OSD_HISTO_LAYOUT_R_G_B:
-                gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x, conf.histo_pos.y, 0);
-                gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
-                gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT*2, 0);
-                break;
-            case OSD_HISTO_LAYOUT_A_yrgb:
-                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
-                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 1);
-                gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT, 1);
-                gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-                gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-                break;
-            case OSD_HISTO_LAYOUT_Y_argb:
-                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y, 0);
-                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 1);
-                gui_osd_draw_single_histo(HISTO_R, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT, 1);
-                gui_osd_draw_single_histo(HISTO_G, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-                gui_osd_draw_single_histo(HISTO_B, conf.histo_pos.x+HISTO_WIDTH/2+1, conf.histo_pos.y+HISTO_HEIGHT+HISTO_HEIGHT/2, 1);
-                break;
-            case OSD_HISTO_LAYOUT_BLEND:
-                gui_osd_draw_blended_histo(conf.histo_pos.x, conf.histo_pos.y);
-                break;
-            case OSD_HISTO_LAYOUT_BLEND_Y:
-                gui_osd_draw_blended_histo(conf.histo_pos.x, conf.histo_pos.y);
-                gui_osd_draw_single_histo(HISTO_Y, conf.histo_pos.x, conf.histo_pos.y+HISTO_HEIGHT, 0);
-                break;
-            case OSD_HISTO_LAYOUT_A:
-            default:
-                gui_osd_draw_single_histo(HISTO_RGB, conf.histo_pos.x, conf.histo_pos.y, 0);
-                break;
+        cl_bg = BG_COLOR(hc);
+        cl_norm = FG_COLOR(hc);
+        cl_over = BG_COLOR(hc2);
+
+        // keep flag bits for magnification and 'EXP' warning erase.
+        // low 12 bits is pixel height of histogram rows drawn
+        histogram_drawn &= (HDRAW_MAG | HDRAW_EXP);
+
+        int i;
+        int x = conf.histo_pos.x, y = conf.histo_pos.y, w, h;
+        for (i = 0; i < 5 && histo_layouts[conf.histo_layout][i] >= 0; i += 1) {
+            int l = histo_layouts[conf.histo_layout][i];
+            // Size
+            w = (l & LAYOUT_SMALL) ? HISTO_WIDTH / 2 : HISTO_WIDTH;
+            h = (l & LAYOUT_SMALL) ? HISTO_HEIGHT / 2 : HISTO_HEIGHT;
+            // Draw histogram type
+            if (l & LAYOUT_BLEND)
+                gui_osd_draw_blended_histo(x, y);
+            else
+                gui_osd_draw_single_histo(l & LAYOUT_TYPE_MASK, x, y, w, h, l & LAYOUT_SMALL);
+            // Border
+            draw_rectangle(x, y, x+1+w, y+1+h, hc2, RECT_BORDER1);
+            // Vertical Lines
+            if (conf.histo_show_ev_grid) {
+                int j;
+                for (j=1; j<=4; j+=1) draw_vline(x+(1+w)*j/5, y+1, h, FG_COLOR(hc2));
+            }
+            // Adjust position for next histogram
+            if ((l & LAYOUT_SMALL) && (i & 1)) {
+                x += (w + 1);
+            } else {
+                x = conf.histo_pos.x;
+                y += (h + 1);
+                histogram_drawn += (h + 1);
+            }
         }
 
-        if (conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B)
+        if ((conf.histo_layout != OSD_HISTO_LAYOUT_R_G_B) && conf.show_overexp)
         {
-            if (under_exposed && conf.show_overexp)
+            if (under_exposed)
             {
                 draw_ellipse(conf.histo_pos.x+HISTO_DOT_PAD, conf.histo_pos.y+HISTO_DOT_PAD,
-                                HISTO_DOT_SIZE, HISTO_DOT_SIZE, BG_COLOR(hc2), DRAW_FILLED);
+                             HISTO_DOT_SIZE, HISTO_DOT_SIZE, cl_over, DRAW_FILLED);
             }
-            if (over_exposed && conf.show_overexp)
+            if (over_exposed)
             {
                 draw_ellipse(conf.histo_pos.x+HISTO_WIDTH-HISTO_DOT_PAD, conf.histo_pos.y+HISTO_DOT_PAD,
-                            HISTO_DOT_SIZE, HISTO_DOT_SIZE, BG_COLOR(hc2), DRAW_FILLED);
+                             HISTO_DOT_SIZE, HISTO_DOT_SIZE, cl_over, DRAW_FILLED);
             }
         }
-        if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed))
+
+        if ((conf.show_overexp ) && camera_info.state.is_shutter_half_press && (under_exposed || over_exposed)) {
             draw_string(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, "EXP", hc);
-        if (conf.histo_auto_ajust){
+            histogram_drawn |= HDRAW_EXP;
+        } else if (histogram_drawn & HDRAW_EXP) {
+            draw_rectangle(conf.histo_pos.x+HISTO_WIDTH-FONT_WIDTH*3, conf.histo_pos.y-FONT_HEIGHT, 
+                           conf.histo_pos.x+HISTO_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
+            histogram_drawn ^= HDRAW_EXP;
+        }
+
+        if (conf.histo_auto_ajust) {
+            if (is_osd_edit) histo_magnification = 999;
             if (histo_magnification) {
-                char osd_buf[64];
+                char osd_buf[20];
                 sprintf(osd_buf, " %d.%02dx ", histo_magnification/100, histo_magnification%100);
                 draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, osd_buf, hc);
-            } else if (is_osd_edit){
-                draw_string(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, " 9.99x ", hc);
-            } else {
-                draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
+                histogram_drawn |= HDRAW_MAG;
+            } else if (histogram_drawn & HDRAW_MAG) {
+                draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, 
+                               conf.histo_pos.x+8*FONT_WIDTH, conf.histo_pos.y-1, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
+                histogram_drawn ^= HDRAW_MAG;
             }
         }
-
-        histogram_drawn = 1;
     }
-    else if (histogram_drawn)
+    else if (histogram_drawn & ~HDRAW_READY)
     {
+        // Erase all histogram elements including magnification and 'EXP' warning. Not needed in osd editor
+        if (!is_osd_edit)
+            draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, 
+                           conf.histo_pos.x+HISTO_WIDTH+2, conf.histo_pos.y+(histogram_drawn&0xFFF), MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
         histogram_drawn = 0;
-        int h;
-        // erase height based on current histo mode
-        switch (conf.histo_layout)
-        {
-            case OSD_HISTO_LAYOUT_Y:
-            case OSD_HISTO_LAYOUT_BLEND:
-            case OSD_HISTO_LAYOUT_A:
-            default:
-                h = HISTO_HEIGHT;
-                break;
-
-            case OSD_HISTO_LAYOUT_A_Y:
-            case OSD_HISTO_LAYOUT_A_yrgb:
-            case OSD_HISTO_LAYOUT_Y_argb:
-            case OSD_HISTO_LAYOUT_BLEND_Y:
-                h = 2*HISTO_HEIGHT;
-                break;
-            case OSD_HISTO_LAYOUT_R_G_B:
-                h = 3*HISTO_HEIGHT;
-                break;
-        }
-
-        draw_rectangle(conf.histo_pos.x, conf.histo_pos.y-FONT_HEIGHT, conf.histo_pos.x+HISTO_WIDTH+1, conf.histo_pos.y+h, MAKE_COLOR(COLOR_TRANSPARENT, COLOR_TRANSPARENT), RECT_BORDER0|DRAW_FILLED);
     }
 }
-
 
 // =========  MODULE INIT =================
 
@@ -546,12 +557,19 @@ void gui_osd_draw_histo(int is_osd_edit)
 //---------------------------------------------------------
 int _module_unloader()
 {
+    // Free allocated memory
+    if (histogram_proc[0] != 0)
+    {
+        free(histogram_proc[0]);
+        histogram_proc[0] = 0;
+    }
     return 0;
 }
 
 int _module_can_unload()
 {
-    return (conf.show_histo == 0) && (histogram_drawn == 0);
+    // Unload if turned off and histogram has been erased.
+    return (conf.show_histo == 0) && ((histogram_drawn & ~HDRAW_READY) == 0);
 }
 
 /******************** Module Information structure ******************/
@@ -570,10 +588,10 @@ ModuleInfo _module_info =
 {
     MODULEINFO_V1_MAGICNUM,
     sizeof(ModuleInfo),
-    HISTO_VERSION,				// Module version
+    HISTO_VERSION,              // Module version
 
-    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,			// Requirements of CHDK version
-    ANY_PLATFORM_ALLOWED,		// Specify platform dependency
+    ANY_CHDK_BRANCH, 0, OPT_ARCHITECTURE,           // Requirements of CHDK version
+    ANY_PLATFORM_ALLOWED,       // Specify platform dependency
 
     (int32_t)"Histogram Overlay (dll)",
     MTYPE_EXTENSION,
