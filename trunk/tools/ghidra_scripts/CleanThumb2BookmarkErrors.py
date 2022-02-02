@@ -103,6 +103,9 @@ def check_arm_without_caller(b):
             if not fn:
                 infomsg(4,"arm_without_caller no fun2 %s\n"%(b.getAddress()))
                 return False
+        else:
+            infomsg(0,"arm_without_caller function not found %x %x\n"%(i_addr,f_addr))
+            return False
 
 
     for r in getReferencesTo(fn.getEntryPoint()):
