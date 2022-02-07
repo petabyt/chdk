@@ -7,7 +7,7 @@ typedef struct {
     uint32_t op;
 } ptp_op_name_t;
 
-// names from libgphoto2
+// names mostly from libgphoto2
 // https://github.com/gphoto/libgphoto2/blob/master/camlibs/ptp2/ptp.h as of May 18 2019
 // commented out items with just a number, since we auto-name those already
 ptp_op_name_t ptp_op_names[]={
@@ -106,6 +106,20 @@ ptp_op_name_t ptp_op_names[]={
 {"PTP_OC_CANON_SetDisplayMonitor",  0x9034},
 {"PTP_OC_CANON_PairingComplete",    0x9035},
 {"PTP_OC_CANON_GetWirelessMAXChannel",0x9036},
+// eventproc handler IDs from https://chdk.setepontos.com/index.php?topic=4338.1220
+// + https://github.com/reticulatedpines/magiclantern_simplified/blob/dev/contrib/ptpcam/ptp-eos-oc.h
+{"PTP_OC_CANON_InitiateEventProc0", 0x9050},
+{"PTP_OC_CANON_TerminateEventProc_051", 0x9051},
+{"PTP_OC_CANON_ExecuteEventProc", 0x9052},
+{"PTP_OC_CANON_GetEventProcReturnData", 0x9053},
+{"PTP_OC_CANON_IsEventProcRunning", 0x9057},
+{"PTP_OC_CANON_QuerySizeOfTransparentMemory", 0x9058},
+{"PTP_OC_CANON_LoadTransparentMemory", 0x9059},
+{"PTP_OC_CANON_SaveTransparentMemory", 0x905a},
+{"PTP_OC_CANON_QuickLoadTransparentMemory", 0x905b},
+{"PTP_OC_CANON_InitiateEventProc1", 0x905c},
+{"PTP_OC_CANON_TerminateEventProc_05D", 0x905d},
+// end eventproc handlers
 {"PTP_OC_CANON_GetWebServiceSpec",  0x9068}, /* no args */
 {"PTP_OC_CANON_GetWebServiceData",  0x9069}, /* no args */
 {"PTP_OC_CANON_SetWebServiceData",  0x906A},
