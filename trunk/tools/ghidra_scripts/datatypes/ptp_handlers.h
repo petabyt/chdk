@@ -92,6 +92,17 @@ __stdcall int handle_PTP_OC_CANON_GetMACAddress(int h, ptp_data *data, int opcod
 __stdcall int handle_PTP_OC_CANON_SetDisplayMonitor(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_PairingComplete(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetWirelessMAXChannel(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_InitiateEventProc0(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_TerminateEventProc_051(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_ExecuteEventProc(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_GetEventProcReturnData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_IsEventProcRunning(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_QuerySizeOfTransparentMemory(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_LoadTransparentMemory(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_SaveTransparentMemory(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_QuickLoadTransparentMemory(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_InitiateEventProc1(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_TerminateEventProc_05D(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetWebServiceSpec(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetWebServiceData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_SetWebServiceData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
