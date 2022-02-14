@@ -519,7 +519,7 @@
 0xfc1073d7,handle_PTP_OC_CANON_SendObjectByPath
 0xfc1073d7,handle_PTP_OC_SendObject
 0xfc107571,handle_PTP_OC_CANON_SendPartialObject
-0xfc1076c9,handle_PTP_OC_0x9060
+0xfc1076c9,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xfc107725,handle_PTP_OC_0x9062
 0xfc107d55,task_TrnsCtrlTask
 0xfc108951,task_WSSAPP

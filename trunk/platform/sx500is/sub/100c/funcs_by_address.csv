@@ -705,7 +705,7 @@
 0xff112a6c,handle_PTP_OC_CANON_SendObjectByPath
 0xff112a6c,handle_PTP_OC_SendObject
 0xff112ca8,handle_PTP_OC_CANON_SendPartialObject
-0xff112e98,handle_PTP_OC_0x9060
+0xff112e98,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xff112f3c,handle_PTP_OC_0x9062
 0xff113cec,task_TrnsCtrlTask
 0xff11968c,ExecuteResetFactoryWithRomWrite_FW

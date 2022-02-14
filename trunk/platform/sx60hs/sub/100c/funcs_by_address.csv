@@ -461,7 +461,7 @@
 0xfc0c3fc7,handle_PTP_OC_CANON_SendObjectByPath
 0xfc0c3fc7,handle_PTP_OC_SendObject
 0xfc0c4161,handle_PTP_OC_CANON_SendPartialObject
-0xfc0c42b9,handle_PTP_OC_0x9060
+0xfc0c42b9,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xfc0c4315,handle_PTP_OC_0x9062
 0xfc0c4945,task_TrnsCtrlTask
 0xfc0c59af,ConnectPtpIPService_FW
