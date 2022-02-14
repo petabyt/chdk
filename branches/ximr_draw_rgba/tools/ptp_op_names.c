@@ -442,6 +442,22 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
 
+/* Some Canon cams also support some MTP opcodes, usually 1-5 */
+/* Microsoft / MTP extension codes */
+
+#define PTP_OC_MTP_GetObjectPropsSupported	0x9801
+#define PTP_OC_MTP_GetObjectPropDesc		0x9802
+#define PTP_OC_MTP_GetObjectPropValue		0x9803
+#define PTP_OC_MTP_SetObjectPropValue		0x9804
+#define PTP_OC_MTP_GetObjPropList		0x9805
+#define PTP_OC_MTP_SetObjPropList		0x9806
+#define PTP_OC_MTP_GetInterdependendPropdesc	0x9807
+#define PTP_OC_MTP_SendObjectPropList		0x9808
+#define PTP_OC_MTP_GetObjectReferences		0x9810
+#define PTP_OC_MTP_SetObjectReferences		0x9811
+#define PTP_OC_MTP_UpdateDeviceFirmware		0x9812
+#define PTP_OC_MTP_Skip				0x9820
+
 typedef struct {
     const char *name;
     uint32_t op;
@@ -765,6 +781,19 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_EOS_SetAdapterBatteryReport),
     PTP_OC(PTP_OC_CANON_EOS_FAPIMessageTX),
     PTP_OC(PTP_OC_CANON_EOS_FAPIMessageRX),
+
+    PTP_OC(PTP_OC_MTP_GetObjectPropsSupported),
+    PTP_OC(PTP_OC_MTP_GetObjectPropDesc),
+    PTP_OC(PTP_OC_MTP_GetObjectPropValue),
+    PTP_OC(PTP_OC_MTP_SetObjectPropValue),
+    PTP_OC(PTP_OC_MTP_GetObjPropList),
+    PTP_OC(PTP_OC_MTP_SetObjPropList),
+    PTP_OC(PTP_OC_MTP_GetInterdependendPropdesc),
+    PTP_OC(PTP_OC_MTP_SendObjectPropList),
+    PTP_OC(PTP_OC_MTP_GetObjectReferences),
+    PTP_OC(PTP_OC_MTP_SetObjectReferences),
+    PTP_OC(PTP_OC_MTP_UpdateDeviceFirmware),
+    PTP_OC(PTP_OC_MTP_Skip),
 };
 
 const char *get_ptp_op_name(uint32_t op) {

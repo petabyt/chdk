@@ -305,6 +305,20 @@ __stdcall int handle_PTP_OC_CANON_EOS_SetAdapterBatteryReport(int h, ptp_data *d
 __stdcall int handle_PTP_OC_CANON_EOS_FAPIMessageTX(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_FAPIMessageRX(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 
+/* Microsoft / MTP extension codes */
+__stdcall int handle_PTP_OC_MTP_GetObjectPropsSupported(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_GetObjectPropDesc(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_GetObjectPropValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_SetObjectPropValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_GetObjPropList(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_SetObjPropList(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_GetInterdependendPropdesc(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_SendObjectPropList(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_GetObjectReferences(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_SetObjectReferences(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_UpdateDeviceFirmware(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_MTP_Skip(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+
 /* unnamed handlers from ptpcam list */
 __stdcall int handle_PTP_OC_0x902c(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_0x902e(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
