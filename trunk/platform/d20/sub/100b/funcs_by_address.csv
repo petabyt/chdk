@@ -774,7 +774,7 @@
 0xff10d060,handle_PTP_OC_CANON_SendObjectByPath
 0xff10d060,handle_PTP_OC_SendObject
 0xff10d29c,handle_PTP_OC_CANON_SendPartialObject
-0xff10d48c,handle_PTP_OC_0x9060
+0xff10d48c,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xff10d530,handle_PTP_OC_0x9062
 0xff10de94,task_TrnsCtrlTask
 0xff117fd0,LcdCon_SetLcdBackLightBrightness_FW

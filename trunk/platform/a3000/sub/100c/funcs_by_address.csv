@@ -674,7 +674,7 @@
 0xffcc9dc8,handle_PTP_OC_CANON_SendObjectByPath
 0xffcc9dc8,handle_PTP_OC_SendObject
 0xffcca004,handle_PTP_OC_CANON_SendPartialObject
-0xffcca1dc,handle_PTP_OC_0x9060
+0xffcca1dc,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xffcca280,handle_PTP_OC_0x9062
 0xffccac7c,task_TrnsCtrlTask
 0xffcd5f34,LcdCon_SetLcdDriver_FW
