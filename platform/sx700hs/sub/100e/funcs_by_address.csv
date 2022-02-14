@@ -530,7 +530,7 @@
 0xfc0dfbe7,handle_PTP_OC_CANON_SendObjectByPath
 0xfc0dfbe7,handle_PTP_OC_SendObject
 0xfc0dfd81,handle_PTP_OC_CANON_SendPartialObject
-0xfc0dfed9,handle_PTP_OC_0x9060
+0xfc0dfed9,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xfc0dff35,handle_PTP_OC_0x9062
 0xfc0e1f9f,RequestDisconnectPTPIP_FW
 0xfc0e2025,RequestConnectPTPIP_FW

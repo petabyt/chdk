@@ -403,7 +403,7 @@
 0xfc0c0a33,handle_PTP_OC_CANON_SendObjectByPath
 0xfc0c0a33,handle_PTP_OC_SendObject
 0xfc0c0bcd,handle_PTP_OC_CANON_SendPartialObject
-0xfc0c0d25,handle_PTP_OC_0x9060
+0xfc0c0d25,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xfc0c0d81,handle_PTP_OC_0x9062
 0xfc0c1379,task_TrnsCtrlTask
 0xfc0c2b67,RequestDisconnectPTPIP_FW
