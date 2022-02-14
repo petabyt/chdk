@@ -744,7 +744,7 @@
 0xff14f418,handle_PTP_OC_CANON_SendObjectByPath
 0xff14f418,handle_PTP_OC_SendObject
 0xff14f654,handle_PTP_OC_CANON_SendPartialObject
-0xff14f844,handle_PTP_OC_0x9060
+0xff14f844,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xff14f8e8,handle_PTP_OC_0x9062
 0xff15066c,task_TrnsCtrlTask
 0xff156b18,ExecuteResetFactoryWithRomWrite_FW

@@ -2,7 +2,6 @@
 #ifndef PTP_HANDLERS_H
 #define PTP_HANDLERS_H
 /* PTP v1.0 operation codes */
-__stdcall int handle_PTP_OC_Undefined(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_GetDeviceInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_OpenSession(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CloseSession(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -92,6 +91,7 @@ __stdcall int handle_PTP_OC_CANON_GetMACAddress(int h, ptp_data *data, int opcod
 __stdcall int handle_PTP_OC_CANON_SetDisplayMonitor(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_PairingComplete(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetWirelessMAXChannel(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
 __stdcall int handle_PTP_OC_CANON_InitiateEventProc0(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_TerminateEventProc_051(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_ExecuteEventProc(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -103,13 +103,16 @@ __stdcall int handle_PTP_OC_CANON_SaveTransparentMemory(int h, ptp_data *data, i
 __stdcall int handle_PTP_OC_CANON_QuickLoadTransparentMemory(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_InitiateEventProc1(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_TerminateEventProc_05D(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_GetWebServiceSpec(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_IsNeoKabotanProcMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetWebServiceData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_SetWebServiceData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_DeleteWebServiceData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetRootCertificateSpec(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetRootCertificateData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_SetRootCertificateData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_DeleteRootCertificateData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetGpsMobilelinkObjectInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_SendGpsTagInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_GetTranscodeApproxSize(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -132,6 +135,10 @@ __stdcall int handle_PTP_OC_CANON_EOS_GetObjectTime(int h, ptp_data *data, int o
 __stdcall int handle_PTP_OC_CANON_EOS_SetObjectTime(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_RemoteRelease(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetDevicePropValueEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_SendObjectEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_CreateObject(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_EOS_GetRemoteMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetRemoteMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetEventMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -139,7 +146,6 @@ __stdcall int handle_PTP_OC_CANON_EOS_GetEvent(int h, ptp_data *data, int opcode
 __stdcall int handle_PTP_OC_CANON_EOS_TransferComplete(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_CancelTransfer(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_ResetTransfer(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
-__stdcall int handle_PTP_OC_CANON_EOS_PCHDDCapacity(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetUILock(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_ResetUILock(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_KeepDeviceOn(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -153,11 +159,15 @@ __stdcall int handle_PTP_OC_CANON_EOS_SetProfileToWft(int h, ptp_data *data, int
 __stdcall int handle_PTP_OC_CANON_EOS_BulbStart(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_BulbEnd(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_RequestDevicePropValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
-__stdcall int handle_PTP_OC_CANON_EOS_RemoteReleaseOn(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_RemoteReleaseOff(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_RegistBackgroundImage(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_ChangePhotoStudioMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_GetPartialObjectEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_ReSizeImageData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_GetReSizeData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ReleaseReSizeData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_EOS_ResetMirrorLockupState(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_PopupBuiltinFlash(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_EndGetPartialObjectEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -188,6 +198,9 @@ __stdcall int handle_PTP_OC_CANON_EOS_GetRawDispImage(int h, ptp_data *data, int
 __stdcall int handle_PTP_OC_CANON_EOS_SaveImageRecoveryData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_RequestBLE(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_DrivePowerZoom(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_SendTimeSyncMessage(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_EOS_GetIptcData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetIptcData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_InitiateViewfinder(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -203,9 +216,11 @@ __stdcall int handle_PTP_OC_CANON_EOS_SetLiveAfFrame(int h, ptp_data *data, int 
 __stdcall int handle_PTP_OC_CANON_EOS_TouchAfPosition(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetLvPcFlavoreditMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetLvPcFlavoreditParam(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_RequestSensorCleaning(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_AfCancel(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetImageRecoveryDataEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_GetImageRecoveryListEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_CompleteAutoSendImages(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_NotifyAutoTransferStatus(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_GetReducedObject(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_GetObjectInfo64(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
@@ -215,18 +230,78 @@ __stdcall int handle_PTP_OC_CANON_EOS_GetObjectInfoEx64(int h, ptp_data *data, i
 __stdcall int handle_PTP_OC_CANON_EOS_GetPartialObjectEX64(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_CreateHandle64(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_NotifySaveComplete(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_GetTranscodedBlock(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_TransferCompleteTranscodedBlock(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_NotifyEstimateNumberofImport(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_NotifyNumberofImported(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_GetObjectUrl(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_EOS_NotifyFinish(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_GetWFTData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_SetWFTData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ChangeWFTSettingNumber(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_GetPictureStylePCFlavorParam(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_SetPictureStylePCFlavorParam(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_GetObjectURL(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_SetCAssistMode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_GetCAssistPresetThumb(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetFELock(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_DeleteWFTSettingNumber(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_SetDefaultCameraSetting(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_GetAEData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_SendHostInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_NotifyNetworkError(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_ceresOpenFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresCreateFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresRemoveFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresCloseFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresGetWriteObject(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndReadObject(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresFileAttributesValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresFileTimeValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSeekFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresCreateDirectoryValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresRemoveDirectoryValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndFileInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndFileInfoListEx(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndDriveInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresNotifyDriveStatus(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSplitFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresRenameFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresTruncateFileValue(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_SendCertData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_DistinctionRTC(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_NotifyGpsTimeSyncStatus(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_GetAdapterFirmData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndScanningResult(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndHostInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_NotifyAdapterStatus(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresNotifyNetworkError(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_EOS_AdapterTransferProgress(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_ceresRequestAdapterProperty(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndWpsPinCode(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndWizardInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
 __stdcall int handle_PTP_OC_CANON_EOS_TransferCompleteFTP(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_CancelTransferFTP(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_ceresGetUpdateFileData(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_NotifyUpdateProgress(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndFactoryProperty(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndGpsInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+__stdcall int handle_PTP_OC_CANON_EOS_ceresSEndBtPairingResult(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
+// ML calls this PTP_OC_CANON_EOS_ceresNotifyBtStatus
+__stdcall int handle_PTP_OC_CANON_EOS_NotifyBtStatus(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Magic Lantern
+__stdcall int handle_PTP_OC_CANON_EOS_SendTimeSyncInfo(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
+// ### Gphoto
+__stdcall int handle_PTP_OC_CANON_EOS_SetAdapterBatteryReport(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_FAPIMessageTX(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 __stdcall int handle_PTP_OC_CANON_EOS_FAPIMessageRX(int h, ptp_data *data, int opcode, int sess_id, int trans_id, int param1, int param2, int param3, int param4, int param5);
 

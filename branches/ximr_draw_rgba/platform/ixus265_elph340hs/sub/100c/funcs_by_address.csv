@@ -742,7 +742,7 @@
 0xff15ba38,handle_PTP_OC_CANON_SendObjectByPath
 0xff15ba38,handle_PTP_OC_SendObject
 0xff15bc78,handle_PTP_OC_CANON_SendPartialObject
-0xff15be68,handle_PTP_OC_0x9060
+0xff15be68,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xff15bf0c,handle_PTP_OC_0x9062
 0xff15ce20,task_TrnsCtrlTask
 0xff15dd40,handle_PTP_OC_CANON_EOS_GetStorageIDs

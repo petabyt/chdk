@@ -568,7 +568,6 @@
 0xff8fee34,handle_PTP_OC_0x903b
 0xff8fee74,handle_PTP_OC_0x904b
 0xff8fe490,handle_PTP_OC_0x904c
-0xff8ffa0c,handle_PTP_OC_0x9060
 0xff8ffab0,handle_PTP_OC_0x9062
 0xff8f56c8,handle_PTP_OC_0x9801
 0xff8f5298,handle_PTP_OC_0x9802
@@ -587,6 +586,7 @@
 0xffa15fb8,handle_PTP_OC_CANON_InitiateEventProc0
 0xffa15fb8,handle_PTP_OC_CANON_InitiateEventProc1
 0xffa15cc0,handle_PTP_OC_CANON_IsEventProcRunning
+0xff8ffa0c,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xffa15950,handle_PTP_OC_CANON_LoadTransparentMemory
 0xffa15a84,handle_PTP_OC_CANON_QuerySizeOfTransparentMemory
 0xffa15678,handle_PTP_OC_CANON_QuickLoadTransparentMemory

@@ -1388,7 +1388,7 @@
 0xfc3b3287,handle_PTP_OC_CANON_SendObjectByPath
 0xfc3b3287,handle_PTP_OC_SendObject
 0xfc3b3421,handle_PTP_OC_CANON_SendPartialObject
-0xfc3b3579,handle_PTP_OC_0x9060
+0xfc3b3579,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xfc3b35d5,handle_PTP_OC_0x9062
 0xfc3b3e79,task_TrnsCtrlTask
 0xfc3b7c8b,task_IMLApp

@@ -691,7 +691,7 @@
 0xfc16d44f,handle_PTP_OC_CANON_SendObjectByPath
 0xfc16d44f,handle_PTP_OC_SendObject
 0xfc16d5e9,handle_PTP_OC_CANON_SendPartialObject
-0xfc16d741,handle_PTP_OC_0x9060
+0xfc16d741,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xfc16d79d,handle_PTP_OC_0x9062
 0xfc16ddcd,task_TrnsCtrlTask
 0xfc16eed3,RequestDisconnectPTPIP_FW
