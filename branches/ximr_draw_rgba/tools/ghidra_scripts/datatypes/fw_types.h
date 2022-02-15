@@ -88,7 +88,8 @@ struct __stat   // DryOS >= R59
 
 // from ptp_chdk.h
 typedef struct {
-    int code;
+    unsigned short code;
+    short pad;
     int sess_id;
     int trans_id;
     int num_param;
