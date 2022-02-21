@@ -3,7 +3,7 @@
 
 // CHDK PTP interface (CHDK specific stuff)
 
-// Note: used in modules and platform independent code. 
+// Note: used in modules and platform independent code.
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 #include "ptp.h"
@@ -46,7 +46,7 @@ int add_ptp_handler(int opcode, ptp_handler handler, int unknown);
 
 typedef struct {
     unsigned size;
-    unsigned script_id; // id of script message is to/from 
+    unsigned script_id; // id of script message is to/from
     unsigned type;
     unsigned subtype;
     char data[];
