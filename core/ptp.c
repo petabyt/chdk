@@ -772,7 +772,7 @@ static int handle_ptp(
           break;
         }
         
-        buf = (char *) malloc(s);
+        buf = (char *) malloc(s+1);
         if ( buf == NULL )
         {
           ptp.code = PTP_RC_GeneralError;
@@ -780,6 +780,7 @@ static int handle_ptp(
         }
 
         recv_ptp_data(data,buf,s);
+        buf[s] = 0;
 
         // applies to both running and "interrupted" state, since interrupted means running restore
         if (camera_info.state.state_kbd_script_run) {
