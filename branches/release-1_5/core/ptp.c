@@ -20,7 +20,7 @@ char *get_ptp_file_buf(void);
 
 // process id for scripts, increments before each attempt to run script
 // does not handle wraparound
-static unsigned script_run_id; 
+static unsigned script_run_id;
 
 static int handle_ptp(
                 int h, ptp_data *data, int opcode, int sess_id, int trans_id,
@@ -29,7 +29,7 @@ static int handle_ptp(
 static void init_chdk_ptp()
 {
   int r;
- 
+
   // wait until ptp_handlers_info is initialised and add CHDK PTP interface
   r = 0x17;
   while ( r==0x17 )
@@ -83,7 +83,7 @@ static int recv_ptp_data_init(recv_ptp_data_state_t *rs, int total_size, char *d
     // https://chdk.setepontos.com/index.php?topic=4338.msg140577#msg140577
     // size must also be multiple of 4 due to other issues on some cameras
     // http://chdk.setepontos.com/index.php?topic=6730.msg76760#msg76760
-    rs->buf_size &= 0xFFFFFE00; 
+    rs->buf_size &= 0xFFFFFE00;
     // things will be badly broken if only a few KB free, try to fail gracefully
     if(rs->buf_size < 2048) {
         return 0;
@@ -380,7 +380,7 @@ int ptp_script_write_msg(ptp_script_msg *msg) {
 ptp_script_msg* ptp_script_read_msg(void) {
   ptp_script_msg *msg;
   while(1) {
-    msg = dequeue_script_msg(&msg_q_in); 
+    msg = dequeue_script_msg(&msg_q_in);
     // no messages
     if(!msg) {
         return NULL;
@@ -416,6 +416,10 @@ void start_ptp_script()
 {
     if (ptp_script)
     {
+        // Keyboard init
+        camera_info.state.kbd_last_clicked = 0;
+        camera_info.state.kbd_last_checked_time = get_tick_count();
+        kbd_key_release_all();
         module_set_script_lang(0);  // Force Lua script language
         if (libscriptapi->script_start(ptp_script,1))
         {
@@ -453,7 +457,7 @@ static int handle_ptp(
   ptp.sess_id = sess_id;
   ptp.trans_id = trans_id;
   ptp.num_param = 0;
-  
+
   // handle command
   switch ( param1 )
   {
@@ -590,7 +594,7 @@ static int handle_ptp(
           ptp.code = PTP_RC_GeneralError;
           break;
         }
-        
+
       } else if ( ! (param2 & PTP_CHDK_TD_CLEAR) ) {
         if ( temp_data_kind == 1 )
         {
@@ -670,12 +674,12 @@ static int handle_ptp(
             fclose(f);
         }
         recv_ptp_data_finish(&rs);
-        if(data_size > 0 && ptp.code != PTP_RC_OK && !recv_err) { 
-            flush_recv_ptp_data(data,data_size); 
-        } 
+        if(data_size > 0 && ptp.code != PTP_RC_OK && !recv_err) {
+            flush_recv_ptp_data(data,data_size);
+        }
         break;
       }
-      
+
     case PTP_CHDK_DownloadFile:
       {
         FILE *f;
@@ -767,8 +771,8 @@ static int handle_ptp(
           ptp.code = PTP_RC_ParameterNotSupported;
           break;
         }
-        
-        buf = (char *) malloc(s);
+
+        buf = (char *) malloc(s+1);
         if ( buf == NULL )
         {
           ptp.code = PTP_RC_GeneralError;
@@ -776,12 +780,13 @@ static int handle_ptp(
         }
 
         recv_ptp_data(data,buf,s);
+        buf[s] = 0;
 
         // applies to both running and "interrupted" state, since interrupted means running restore
         if (camera_info.state.state_kbd_script_run) {
             // note script ID is still incremented in this case
             if (param2 & PTP_CHDK_SCRIPT_FL_NOKILL) {
-                // no message is added in this case, since the running script might also be doing 
+                // no message is added in this case, since the running script might also be doing
                 // stuff with messages
                 ptp.param2 = PTP_CHDK_S_ERR_SCRIPTRUNNING;
                 free(buf);
@@ -790,7 +795,7 @@ static int handle_ptp(
             // kill the script
             script_wait_terminate();
         }
-        // empty message queues if requested. 
+        // empty message queues if requested.
         if(param2 & PTP_CHDK_SCRIPT_FL_FLUSH_CAM_MSGS) {
             empty_script_msg_q(&msg_q_out);
         }
@@ -811,7 +816,7 @@ static int handle_ptp(
         }
 
         free(buf);
-        
+
         break;
       }
     case PTP_CHDK_ReadScriptMsg:
@@ -926,7 +931,7 @@ static int handle_ptp(
             } else {
                 // send directly using send_data to avoid multiple send calls
                 data->send_data(data->handle,rcgd_addr,rcgd_size,rcgd_size,0,0,0);
-                
+
                 ptp.param1 = rcgd_size; //size
                 if(rcgd_status == REMOTECAP_CHUNK_STATUS_MORE) {
                     ptp.param2 = 1;
@@ -947,6 +952,6 @@ static int handle_ptp(
 
   // send response
   data->send_resp( data->handle, &ptp, 0 );
-  
+
   return 1;
 }

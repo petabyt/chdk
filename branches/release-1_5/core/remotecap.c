@@ -9,7 +9,7 @@
 #include "cachebit.h"
 
 #define HOOK_WAIT_MAX_DEFAULT 3000 // timeout for remotecap hooks, in 10ms sleeps = 30 sec
-static int hook_wait_max=HOOK_WAIT_MAX_DEFAULT; 
+static int hook_wait_max=HOOK_WAIT_MAX_DEFAULT;
 
 static int available_image_data=0; // type of data available
 
@@ -55,7 +55,7 @@ int remotecap_get_target(void) {
 /*
 set hook timeout in ms
 */
-void remotecap_set_timeout(int timeout) 
+void remotecap_set_timeout(int timeout)
 {
     if(timeout <= 0) {
         hook_wait_max = HOOK_WAIT_MAX_DEFAULT;
@@ -98,7 +98,7 @@ int remotecap_set_target( int type, int lstart, int lcount )
 {
     // fail if invalid / unsupported type requested,
     // or current mode cannot support requested types
-    if ((type & ~remotecap_get_target_support()) 
+    if ((type & ~remotecap_get_target_support())
         || !camera_info.state.mode_rec
         || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())
 #ifdef CAM_HAS_CANON_RAW
@@ -169,7 +169,7 @@ int filewrite_get_file_chunk(char **addr,unsigned *size, unsigned n, int *pos);
 void remotecap_raw_available(char *rawadr) {
     // get file number as early as possible, before blocking
     // but don't set until after so it doesn't change value for remotecap_is_ready
-    int next_file_num = get_target_file_num(); 
+    int next_file_num = get_target_file_num();
 /*
 ensure raw hook is blocked until any prevous remotecap shot is finished or times out
 if prevous times out, remotecap settings will be cleared due to the time out, so no
@@ -220,15 +220,15 @@ timeout value, but it ensures that we don't block indefinitely.
     }
 
     started();
-    
+
     raw_chunk.address=(unsigned int)ADR_TO_UNCACHED(rawadr+startline*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8);
     raw_chunk.length=linecount*CAM_RAW_ROWPIX*CAM_SENSOR_BITS_PER_PIXEL/8;
-  
+
     if(!remotecap_wait(PTP_CHDK_CAPTURE_RAW)) {
         remotecap_reset();
     }
     remotecap_type_complete(PTP_CHDK_CAPTURE_RAW);
-    
+
     finished();
 }
 
@@ -294,7 +294,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
 {
     int status = REMOTECAP_CHUNK_STATUS_LAST; // default = no more chunks
     *pos = -1; // default = sequential
-    
+
     switch (fmt & remotecap_get_target() & available_image_data)
     {
         case PTP_CHDK_CAPTURE_RAW: //raw
@@ -308,7 +308,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
             fwt_curr_chunk+=1;
             if(fwt_last_status != REMOTECAP_FWT_CHUNK_STATUS_LAST) {
                 status = REMOTECAP_CHUNK_STATUS_MORE;
-            } 
+            }
 #ifdef CAM_HAS_CANON_RAW
             else {
                 fwt_curr_chunk=0;
