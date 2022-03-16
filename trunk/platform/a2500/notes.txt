@@ -7,6 +7,8 @@ To enter CHDK <ALT> mode use the Playback [>] button.
 
 Playback [>] or Help [?] button can be configured as <ALT> mode button.
 
+Battery temperature A/D is supported as an alternate remote input.
+
 
 KNOWN BUGS
 **********
