@@ -105,6 +105,8 @@
 
     #define REMOTE_SYNC_STATUS_LED 0xC0220094       // specifies an LED that turns on while camera waits for USB remote to sync
 
+    #define CAM_REMOTE_AtoD_CHANNEL         5   // Camera supports using 3rd battery terminal as well as USB for remote - value = A/D channel to poll
+
 //    #undef  CAM_AF_LED
 //    #define CAM_AF_LED                          0   // Index of AF led in camera_set_led function
 
