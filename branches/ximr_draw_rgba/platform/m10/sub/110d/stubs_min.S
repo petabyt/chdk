@@ -33,6 +33,7 @@ DEF(viewport_buffers                            ,0xfc62318c) // ref to fc62317c 
 
 DEF(displaytype                                 ,0x9740) // 0x96f0 + 0x50, GetDisplayType
 
+DEF(disptype_changing                           ,0x8c54) // see FC35FE94 in 101d
 DEF(current_fb_d                                ,0xF564) // @fc177872, 0xf53c + 0x28
 
 DEF(simple_movie_status                         ,0xb000) // 0xaf10 + 0x80 + 0x70 @FC0FDA32
@@ -45,3 +46,5 @@ DEF(canon_gui_started_flag                      ,0xb918) // see GUISrv_StartGUIS
 DEF(palette_buffer_ptr                          ,0x13540) // FC3599BC, FC3599D8
 DEF(active_palette_buffer                       ,0x13538) // FC3599BC, FC3599C0
 DEF(palette_control                             ,0x13528) // FC359B20, FC359B40
+
+DEF(assert_func_fw                              ,0x8420)

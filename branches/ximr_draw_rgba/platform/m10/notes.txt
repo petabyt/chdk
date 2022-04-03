@@ -33,16 +33,6 @@ Notes
 
 Issues
 
-- CHDK overlay drawing is slow, can blink excessively when the Canon OSD is updated
-- CHDK overlay flickers (making the CHDK menu unusable) in the following cases:
-  - in hybrid auto mode
-  - when face tracking auto focus enabled
-  - there are animated drawings on the Canon display
-
-- some games don't display correcly
-- some framebuffer related features do not work properly
-    - zebra (some menu options are ignored)
-    - edge overlay (drawings accumulate)
 - CHDK dark frame subtraction control only seems effective when Canon setting is on AUTO
 
 - Exposure overrides may fail to apply when shutter is held halfway down for a while
@@ -54,6 +44,7 @@ Issues
 
 - Av override selector in the Enhanced Photo Operations menu has garbage entries
 
+- Low resolution HDMI modes are not currently supported. Use CHDK 1.5 if you need them.
 
 Tested (using 15-45 kit lens)
 

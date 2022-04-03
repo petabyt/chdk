@@ -45,6 +45,7 @@ NHSTUB(GetLensCurrentFocalLength,              0xfc43fab5)
 NHSTUB(GetLensWideFocalLength,                 0xfc43fac7)
 //NHSTUB(GetLensTeleFocalLength,                 0xfc43fad9)
 // GetDisplayType 0xfc1f0252, see "DisplayType : %d"
+NHSTUB(send_ximrexe,                           0xFC3EB7BD)
 
 NHSTUB(LogCameraEvent,                         0xfc362abf)
 NHSTUB(GetLogToFile,                           0xfc18db55)

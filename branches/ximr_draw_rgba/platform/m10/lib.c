@@ -2,11 +2,24 @@
 #include "lolevel.h"
 #include "live_view.h"
 
+extern int displaytype;
+#define hdmi_1080 ((displaytype == 6) || (displaytype == 7))
+#define hdmi_480 ((displaytype == 8) || (displaytype == 9))
+#define lcd_480 (displaytype == 10)
+
 void vid_bitmap_refresh() {
-    extern void _transfer_src_overlay(int);
-    _transfer_src_overlay(0);
-    _transfer_src_overlay(1);
+    if (hdmi_1080 || /*hdmi_480 ||*/ lcd_480) {
+        extern void _transfer_src_overlay(int);
+        extern int disptype_changing; // fw var set between "DispSw: Start" and "DispSw: Done"
+        if (!disptype_changing) {
+            _transfer_src_overlay(0);
+        }
+        if (!disptype_changing) {
+            _transfer_src_overlay(1);
+        }
+    }
 }
+
 
 void shutdown() {
 //***TODO***
@@ -211,7 +224,6 @@ void *vid_get_opacity_active_buffer() {
  */
 void update_screen_dimensions() {
     // see sub_fc177316 in 110d for the values
-    extern int displaytype;
     static int old_displaytype = -1;
 
     if (old_displaytype == displaytype) {
@@ -277,4 +289,195 @@ char *camera_jpeg_count_str()
 {
     extern char jpeg_count_str[];
     return jpeg_count_str;
+}
+
+// ximr stuff below
+
+// Ximr layer
+typedef struct {
+    unsigned char   unk1[7];
+    unsigned char   scale;
+    unsigned int    unk2;
+    unsigned short  color_type;
+    unsigned short  visibility;
+    unsigned short  unk3;
+    unsigned short  src_y;
+    unsigned short  src_x;
+    unsigned short  src_h;
+    unsigned short  src_w;
+    unsigned short  dst_y;
+    unsigned short  dst_x;
+    unsigned short  enabled;
+    unsigned int    marv_sig;
+    unsigned int    bitmap;
+    unsigned int    opacity;
+    unsigned int    color;
+    unsigned int    width;
+    unsigned int    height;
+    unsigned int    unk4;
+} ximr_layer;
+
+// Ximr context
+typedef struct {
+    unsigned short  unk1;
+    unsigned short  width1;
+    unsigned short  height1;
+    unsigned short  unk5;
+    unsigned int    unk6[9];
+    unsigned int    output_buf;
+    unsigned int    output_opacitybuf;
+    unsigned int    output_color;
+    int             buffer_width;
+    int             buffer_height;
+    unsigned int    unk2[2];
+    ximr_layer      layers[8];
+    unsigned int    unk3[24];
+    unsigned char   denomx;
+    unsigned char   numerx;
+    unsigned char   denomy;
+    unsigned char   numery;
+    unsigned int    unk7;
+    short           width;
+    short           height;
+    unsigned int    unk4[27];
+} ximr_context;
+
+static ximr_context last_ximr[2];
+static int ximr_saved[2] = {0, 0};
+static int ximr_kind = 0;
+
+int display_needs_refresh = 0;
+
+#define FW_YUV_LAYER_BUF 0x41141000
+#define FW_YUV_LAYER_SIZE (960*270*2)
+#define FW_YUV_LAYER_FULLSIZE (960*270*2+960*270)
+#define CHDK_LAYER_BUF (((FW_YUV_LAYER_BUF+FW_YUV_LAYER_FULLSIZE)+0xff)&0xffffff00)
+
+unsigned char* chdk_rgba = 0;
+int chdk_rgba_init = 0;
+int bm_w;
+int bm_h;
+
+void vid_bitmap_erase()
+{
+    extern void _memset32(unsigned char *s, int n, unsigned int pattern);
+    _memset32(chdk_rgba, bm_w * bm_h * 4, 0);
+}
+
+int last_displaytype;
+
+/*
+ * Called when Canon is updating UI, via mzrm_sendmsg custom logging function.
+ * Sets flag for CHDK to update its UI.
+ * Also needed because bitmap buffer resolution changes when using HDMI
+ * LCD = 720 x 480
+ * HDMI = 960 x 540
+ */
+/*
+ * TODO: HDMI 480p differences:
+ * - 1st layer rgba, 2nd layer yuv -> 1st layer descriptor is to be copied
+ * 
+ */
+int ximr1, ximr2;
+void update_ui(ximr_context* ximr, int msgid)
+{
+    // Init RGBA buffer
+    if (chdk_rgba_init == 0)
+    {
+        chdk_rgba_init = 1;
+        chdk_rgba = (unsigned char*)CHDK_LAYER_BUF;
+        last_displaytype = -1;
+        ximr1 = ximr2 = 0;
+    }
+    if (msgid == 0x25) {
+        ximr1++;
+    }
+    else if (msgid == 0x26) {
+        ximr2++;
+    }
+
+    // Make sure we are updating the correct layer - skip redundant updates for HDMI out
+    if (ximr->output_buf != (unsigned int)FW_YUV_LAYER_BUF)
+    {
+        //_memcpy(0x40000000,ximr,0x300); // debug
+        ximr->unk5 = 0x500; // trial to fix movierec overlay glitch - it works
+        // Update screen dimensions
+        if (last_displaytype != displaytype)
+        {
+            last_displaytype = displaytype;
+
+            if (ximr->buffer_width == 0x3c0) {
+                bm_w = 480;
+                bm_h = 270;
+            } else {
+                bm_w = 360;
+                bm_h = 240;
+            }
+
+            camera_screen.width = bm_w;
+            camera_screen.height = bm_h;
+            camera_screen.buffer_width = bm_w;
+            camera_screen.buffer_height = bm_h;
+
+            // Reset OSD offset and width
+            camera_screen.disp_right = camera_screen.width - 1;
+            camera_screen.disp_width = camera_screen.width;
+
+            // Update other values
+            camera_screen.physical_width = camera_screen.width;
+            camera_screen.size = camera_screen.width * camera_screen.height;
+            camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
+
+            // Values for chdkptp live view
+            camera_screen.yuvbm_width = ximr->width;
+            camera_screen.yuvbm_height = ximr->height;
+            camera_screen.yuvbm_buffer_width = ximr->buffer_width;
+            camera_screen.yuvbm_buffer_size = camera_screen.yuvbm_buffer_width * camera_screen.yuvbm_height;
+
+            // Clear buffer if size changed
+            vid_bitmap_erase();
+
+            // Tell CHDK UI that display needs update
+            display_needs_refresh = 1;
+        }
+
+        if (ximr->layers[0].bitmap == (unsigned int)FW_YUV_LAYER_BUF) {
+            ximr->layers[0].opacity = (unsigned int)(FW_YUV_LAYER_BUF+FW_YUV_LAYER_SIZE);
+            ximr->layers[0].src_h = 270;
+            ximr->layers[0].height = 270;
+            ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
+        }
+
+        if (chdk_rgba != 0)
+        {
+            // Copy canon layer
+            memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+
+            // Remove offset
+            ximr->layers[3].scale = 6;      // x2 scaling
+            ximr->layers[3].src_w = bm_w;
+            ximr->layers[3].src_h = bm_h;
+            ximr->layers[3].dst_x = 0;
+            ximr->layers[3].dst_y = 0;
+
+            // Set our buffer
+            ximr->layers[3].bitmap = (unsigned int)chdk_rgba;
+            ximr->layers[3].width = bm_w;
+            ximr->layers[3].height = bm_h;
+        }
+        unsigned act = 0;
+        if (ximr->output_buf == (unsigned int)bitmap_buffer[1]) {
+            act = 1;
+        }
+        _memcpy(&last_ximr[act], ximr, sizeof(ximr_context));
+        ximr_saved[act] = 1;
+        ximr_kind = msgid;
+    }
+    else
+    {
+        // _memcpy(0x40000300,ximr,0x300); // debug
+        ximr->output_opacitybuf = (unsigned int)(FW_YUV_LAYER_BUF+FW_YUV_LAYER_SIZE);
+        ximr->height = ximr->buffer_height = 270;
+        ximr->denomy = 0x6c;
+    }
 }

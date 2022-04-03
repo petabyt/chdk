@@ -1,5 +1,3 @@
-# mandatory for DIGIC 6
-THUMB_FW=1
 
 PLATFORMID=12960
 
@@ -31,4 +29,5 @@ ARAM_HEAP_START = 0x0074e000 #  Found @0xfc18ec9c
 ARAM_HEAP_SIZE = 0x00022000 #  Found @0xfc18ec76
 
 DIGIC = 60
+CAM_DRAW_RGBA=1
 
