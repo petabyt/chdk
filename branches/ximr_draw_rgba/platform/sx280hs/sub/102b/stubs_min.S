@@ -42,6 +42,7 @@ DEF(bitmap_buffer, 0xac18) // ?, struct starts @ 0xabdc
 // FAKEDEF(active_viewport_buffer, 1) // ?
 DEF(current_fb_d                            ,0x0000d960) // 0xd940 + 0x20, found @0xfc186624 (102b), similar to 0xfc1ba452 in g7x 100d
 DEF(current_viewport_buffer                 ,0x000087b4) // 0x86f4 + 0xc0 (@0xfc1349a4), contains viewport address that updates at ~30fps in rec mode, 0 or last rec value in pb
+DEF(disptype_changing                           ,0x8a84) // see FC2B2012 in 102b
 DEF(viewport_buffers                        ,0xfc4d3568) // from memory search
 
 DEF(jog_position,                           0xdb48) // 0xdb34 +0x14, +0x18

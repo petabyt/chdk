@@ -1,6 +1,3 @@
-# mandatory for DIGIC 6
-THUMB_FW=1
-
 # next line is for the compatibility check, as comment
 # PLATFORMID @ 0xfff60040
 # below 2 commented lines are used by tools/compatbuilder.sh
@@ -9,3 +6,4 @@ THUMB_FW=1
 
 DIGIC = 60
 
+CAM_DRAW_RGBA=1

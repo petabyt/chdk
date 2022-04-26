@@ -96,12 +96,58 @@ void __attribute__((naked,noinline)) boot() {
 "    it      cc\n"
 "    strcc.w r2, [r3], #4\n"
 "    bcc.n   loc_fc020056\n" // zero-fill the above area
+
+"    blx     patch_mzrm_sendmsg\n" // +
+
 "    b.w     sub_fc04f194_my\n" // continue 
 
         "patch_CreateTask:\n"
         "ldr.w   pc, [pc,#0]\n"             // Do jump to absolute address CreateTask_my
         ".long   CreateTask_my + 1\n"           // has to be a thumb address
 );
+}
+
+/*************************************************************/
+/*
+    Custom function called in mzrm_sendmsg via logging function pointer (normally disabled)
+    Checks if called from function that is updating the Canon UI.
+    Updates CHDK bitmap settings and sets flag to update CHDK UI.
+*/
+void __attribute__((naked,noinline))
+debug_logging_my(char* fmt, ...)
+{
+    (void)fmt;  // unused parameter
+    asm volatile (
+            //LR = Return address
+            "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
+            "    cmp     r0, lr\n"
+            "    beq     chk_msg_type\n"
+            "exit_debug_logging_my:\n"
+            "    bx      lr\n"
+
+            "chk_msg_type:\n"
+            // mzrm_sendmsg 'msg' value (2nd parameter, saved in r11)
+            "    ldr     r1, [r11]\n"                   // message type
+            "    cmp     r1, 0x1d\n"                    // message type XimrExe
+            "    bne     exit_debug_logging_my\n"
+            "do_ui_update:\n"
+            "    ldr     r0, [r11,0x0c]\n"              // address of Ximr context in 'msg'
+            "    b       update_ui\n"
+    );
+}
+
+/*
+    Install and enable custom logging function for mzrm_sendmsg.
+*/
+void
+patch_mzrm_sendmsg ()
+{
+    extern int debug_logging_flag;
+    extern void (*debug_logging_ptr)(char* fmt, ...);
+
+    // Each bit in debug_logging_flag enables logging in different areas of the firmware code - only set the bit required for mzrm logging.
+    debug_logging_flag = 0x100;
+    debug_logging_ptr = debug_logging_my;
 }
 
 /*************************************************************/
