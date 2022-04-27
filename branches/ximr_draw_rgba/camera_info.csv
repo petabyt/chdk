@@ -376,6 +376,7 @@ sx420is,100a,BETA,,,,12991,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,
 ixus175_elph180,100a,,100c,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100b,,100c,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100c,,,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
+sx620hs,100a,ALPHA,,,SKIP,12995,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 sx620hs,100b,,,,,12995,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 sx620hs,100c,ALPHA,,,,12995,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 g5x,100c,,,,,12979,dryos,58,60,0xFC000000,0x8000,0x3fffffff,d5,W,15,1,1,0x006ce000,0x00022000,,1,,0x400000,,10

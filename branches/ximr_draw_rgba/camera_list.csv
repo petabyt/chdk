@@ -355,6 +355,7 @@ sx60hs,100f,,,
 sx60hs,100g,,100f,
 sx60hs,100h,,,
 sx610hs,100a,,,
+sx620hs,100a,ALPHA,,SKIP_AUTOBUILD
 sx620hs,100b,,,
 sx620hs,100c,ALPHA,,
 tx1,100g,,,
