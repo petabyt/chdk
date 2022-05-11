@@ -73,7 +73,9 @@ char *hook_alt_raw_image_addr()
     return raw_buffers[((active_raw_buffer&1)^1)];
 }
 
-int vph=480, vpw=640, vpbw=640, vpbh=480;
+static int vph=480, vpw=640, vpbw=640, vpbh=480;
+static int lv_aspect = LV_ASPECT_4_3;
+
 /*
     Playback mode framebuffers (uyvy_d6)
     resolution according to output device (HDMI case unknown, there's space for full HD)
@@ -198,6 +200,7 @@ int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_displa
 int vid_get_viewport_fullscreen_height()        { return vph; } // may not be always ok
 int vid_get_viewport_buffer_width_proper()      { return vpbw; } // may not be always ok
 int vid_get_viewport_byte_width()               { return vpbw * 2; } // may not be always ok
+int vid_get_aspect_ratio()                      { return lv_aspect; }
 
 int vid_get_viewport_type() {
     /*
@@ -398,9 +401,11 @@ void update_ui(ximr_context* ximr, int msgid)
             if (ximr->buffer_width == 960) {
                 bm_w = 480;
                 bm_h = 240;
+                lv_aspect = LV_ASPECT_16_9;
             } else {
                 bm_w = 360;
                 bm_h = 240;
+                lv_aspect = LV_ASPECT_4_3;
             }
 
             camera_screen.width = bm_w;
