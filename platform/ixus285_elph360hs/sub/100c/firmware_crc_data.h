@@ -1,0 +1,1 @@
+#define FIRMWARE_CRC_DISABLED 1
