@@ -9,6 +9,7 @@
 #include "string.h"
 #include "ctype.h"
 #include "gui_lang.h"
+#include "gui_draw.h"
 #include "gui_mbox.h"
 #include "gui_tbox.h"
 #include "gui_mpopup.h"
