@@ -2,6 +2,7 @@
 #include "debug_led.h"
 #include "sd_card.h"
 #include "gui_mbox.h"
+#include "gui_draw.h"
 #include "raw.h"
 #include "gui_lang.h"
 #include "lang.h"
