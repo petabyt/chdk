@@ -172,16 +172,3 @@ int gui_mbox_touch_handler(int sx, int sy)
     }
     return 0;
 }
-
-//-------------------------------------------------------------------
-
-void gui_browser_progress_show(const char* msg, const unsigned int perc)
-{
-    coord x=60, y=100;
-    unsigned int w=240, h=40;
-
-    draw_rectangle(x, y, x+w, y+h, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), RECT_BORDER1|DRAW_FILLED|RECT_SHADOW3); // main box
-    draw_string_justified(x, y+2, msg, MAKE_COLOR(COLOR_GREY, COLOR_WHITE), 0, w, TEXT_CENTER); //title text
-    draw_rectangle(x+10, y+4+FONT_HEIGHT, x+w-10, y+h-10, MAKE_COLOR(COLOR_BLACK, COLOR_WHITE), RECT_BORDER1|DRAW_FILLED); // progress rect
-    draw_rectangle(x+11, y+5+FONT_HEIGHT, x+11+(w-22)*perc/100, y+h-11, MAKE_COLOR(COLOR_RED, COLOR_RED), RECT_BORDER0|DRAW_FILLED); // progress bar
-}

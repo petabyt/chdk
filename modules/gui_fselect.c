@@ -1130,7 +1130,7 @@ static void fselect_marked_paste_cb(unsigned int btn)
 
                 ++i;
                 if (marked_items.count)
-                    gui_browser_progress_show(lang_str(LANG_FSELECT_PROGRESS_TITLE),i*100/marked_items.count);
+                    draw_progress_bar(lang_str(LANG_FSELECT_PROGRESS_TITLE),i*100/marked_items.count);
 
                 int copied = copy_file(marked_items.dir, ptr->name, items.dir, ptr->name, 0);
 
@@ -1194,7 +1194,7 @@ static void fselect_marked_delete_cb(unsigned int btn)
             started();
             ++del_cnt;
             if (cnt)
-                gui_browser_progress_show(lang_str(LANG_FSELECT_PROGRESS_TITLE),del_cnt*100/cnt);
+                draw_progress_bar(lang_str(LANG_FSELECT_PROGRESS_TITLE),del_cnt*100/cnt);
             delete_file(items.dir, ptr->name);
             finished();
         }
@@ -1215,7 +1215,7 @@ static void fselect_chdk_replace_cb(unsigned int btn)
     if (btn == MBOX_BTN_YES)
     {
         copy_file(items.dir, selected->name, "A", "DISKBOOT.BIN", 1);
-        gui_browser_progress_show("Please reboot",100);
+        draw_progress_bar("Please reboot",100);
     }
 }
 
@@ -1311,7 +1311,7 @@ void process_dng_to_raw_files(void)
             if (ptr->marked && ptr->isvalid && !ptr->isdir)
             {
                 sprintf(selected_file, "%s/%s", items.dir, ptr->name);
-                gui_browser_progress_show(selected_file, (i++)*100/fselect_real_marked_count()) ;
+                draw_progress_bar(selected_file, (i++)*100/fselect_real_marked_count()) ;
                 libdng->convert_dng_to_chdk_raw(selected_file);
             }
     }

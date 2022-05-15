@@ -133,6 +133,8 @@ extern void draw_button(int x, int y, int w, int str_id, int active);
 
 extern void draw_txt_string(coord col, coord row, const char *str, twoColors cl);
 
+extern void draw_progress_bar(const char* msg, const unsigned int perc);
+
 extern void draw_suspend(int ms);
 extern int draw_is_suspended(void);
 extern void draw_restore();

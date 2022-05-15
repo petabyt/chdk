@@ -495,7 +495,7 @@ static void confirm_add_network_cb(unsigned int btn)
     if (btn==MBOX_BTN_YES)
     {
         n = eyefi_testNetwork(eyefi_selectedNetwork, eyefi_password);
-        gui_browser_progress_show("testing network",5);
+        draw_progress_bar("testing network",5);
         for (i=0; i<50; i++)
         {
             msleep(10);
@@ -507,12 +507,12 @@ static void confirm_add_network_cb(unsigned int btn)
             }
             if (eyefi_buf.status <= EYEFI_SUCCESS)
             {
-                gui_browser_progress_show(eyefi_statusName(eyefi_buf.status),(eyefi_buf.status*100)/(EYEFI_SUCCESS+1));
+                draw_progress_bar(eyefi_statusName(eyefi_buf.status),(eyefi_buf.status*100)/(EYEFI_SUCCESS+1));
                 if (eyefi_buf.status == EYEFI_SUCCESS)
                     break;
             }
             else
-                gui_browser_progress_show("????",50);
+                draw_progress_bar("????",50);
         }
 
         if (eyefi_buf.status != EYEFI_SUCCESS)
@@ -522,7 +522,7 @@ static void confirm_add_network_cb(unsigned int btn)
         }
     }
 
-    gui_browser_progress_show("adding network", 95);
+    draw_progress_bar("adding network", 95);
     n = eyefi_addNetwork(eyefi_selectedNetwork, eyefi_password);
     if (n > 0)
         gui_mbox_init(LANG_SUCCESS,LANG_NETWORK_ADDED,MBOX_BTN_OK,eyefi_exit);

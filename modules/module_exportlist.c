@@ -141,6 +141,7 @@
             draw_rectangle
             draw_hline
             draw_vline
+            draw_progress_bar
 
             // special functions for yuv overlay (DIGIC 6)
             erase_zebra
@@ -154,7 +155,6 @@
             gui_default_kbd_process_menu_btn
             get_batt_perc
             gui_mbox_init
-            gui_browser_progress_show
             gui_enum_value_change
             gui_set_need_restore
             gui_load_user_menu_script
