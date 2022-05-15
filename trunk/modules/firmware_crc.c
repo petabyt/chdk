@@ -110,14 +110,14 @@ int crc_core(const firmware_crc_desc_t *desc)
     unsigned i;
     for(i=0; i < desc->sub_count; i++) {
         if(!strcmp(desc->firmware_ver_ptr,desc->subs[i].canon_sub)) {
-            gui_browser_progress_show("ROM CRC",0);
+            draw_progress_bar("ROM CRC",0);
             s += sprintf(out,"%s\n%s %s\n%s\n",
                     lang_str(LANG_FIRMWARE_CRC_FAIL),
                     camera_info.platform, desc->subs[i].canon_sub,lang_str(LANG_FIRMWARE_CRC_FAILED_CHUNKS));
             unsigned b;
             const firmware_crc_block_t *blocks = desc->subs[i].blocks;
             for(b=0; b < desc->block_count; b++) {
-                gui_browser_progress_show("ROM CRC",100*(b+1)/desc->block_count);
+                draw_progress_bar("ROM CRC",100*(b+1)/desc->block_count);
                 // truncated dump could have zero sized blocks
                 if(blocks[b].size != 0) {
                     unsigned long fw_crc = 0;
@@ -152,13 +152,13 @@ void gui_fwc_draw()
             gui_mbox_init(LANG_WARNING, (int)out, MBOX_BTN_OK|MBOX_BTN_CANCEL|MBOX_FUNC_RESTORE, gui_fwc_dump_dialog );
             break;
         case FWC_STATE_DUMP:
-            gui_browser_progress_show("Write PRIMARY.BIN",10); // LIES!
+            draw_progress_bar("Write PRIMARY.BIN",10); // LIES!
             if(dump_rom()) {
                 fwc_state = FWC_STATE_DUMP_OK;
             } else {
                 fwc_state = FWC_STATE_DUMP_FAIL;
             }
-            gui_browser_progress_show("Write PRIMARY.BIN",100);
+            draw_progress_bar("Write PRIMARY.BIN",100);
             break;
         case FWC_STATE_DUMP_OK:
             fwc_state = FWC_STATE_DIALOG;

@@ -260,9 +260,9 @@ int raw_subtract(const char *fromName, const char* fromDir, const char *subName,
             if (fromDNG) reverse_bytes_order2((char*)bacc, (char*)bacc, camera_sensor.raw_rowlen);
             fwrite(bacc, 1, camera_sensor.raw_rowlen, fdest);
             if ((j & 0x1F) == 0)
-                gui_browser_progress_show(namebuf, j*100/camera_sensor.raw_rows);
+                draw_progress_bar(namebuf, j*100/camera_sensor.raw_rows);
         }
-        gui_browser_progress_show(namebuf, 100);
+        draw_progress_bar(namebuf, 100);
         finished();
         status = 1;
     }
@@ -395,7 +395,7 @@ int raw_merge_add_file(const char * filename)
 
                     fwrite(row, 1, camera_sensor.raw_rowpix*sizeof(unsigned short), fbrawout);
                     if ((j & 0x1F) == 0)
-                        gui_browser_progress_show(filename, j*100/camera_sensor.raw_rows);
+                        draw_progress_bar(filename, j*100/camera_sensor.raw_rows);
                 }
                 raw_count++;
                 strcpy(namebuf,filename);
@@ -550,7 +550,7 @@ void raw_merge_end(void)
                 if (destDNG) reverse_bytes_order2((char*)rawrow, (char*)rawrow, camera_sensor.raw_rowlen);
                 fwrite(rawrow, 1, camera_sensor.raw_rowlen, fcraw);
                 if ((j & 0x1F) == 0)
-                    gui_browser_progress_show(dest, j*100/camera_sensor.raw_rows);
+                    draw_progress_bar(dest, j*100/camera_sensor.raw_rows);
             }
             fclose(fcraw);
         }
