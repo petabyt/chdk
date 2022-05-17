@@ -22,16 +22,12 @@ FWVERADDR=$(shell grep "Firmware Ver" stubs_entry.S | \
 
 #OBJS= should be defined in */sub/*/Makefile for camera files
 #add platform dependent 'core' files (build as THUMB)
-OBJS+=main.thm.o gui_draw.thm.o gui_icon.thm.o memmgmt.thm.o \
+OBJS+=main.thm.o gui_draw.thm.o memmgmt.thm.o \
      gui.thm.o kbd_process.thm.o kbd_common.thm.o conf.thm.o gui_osd.thm.o raw.thm.o usb_sync.thm.o\
      shooting.thm.o camera_info.thm.o remotecap.thm.o lib_thumb.thm.o lang_str.thm.o ptp.thm.o\
      firmware_crc_data.thm.o
 
-gui_draw.thm.o: $(core)/gui_draw.c $(lfont)/font_8x16_uni_packed.h
-	@echo $< '->' $@
-	$(CC) $(CFLAGS) -nostdinc -mthumb -c -o $@ $<
-
-gui_icon.thm.o: $(core)/gui_icon.c $(lfont)/font_8x16_uni_packed.h
+gui_draw.thm.o: $(core)/gui_draw.c $(core)/gui_draw_shapes.c $(core)/gui_draw_text.c  $(core)/gui_draw_8bit.c $(core)/gui_draw_rgba.c $(core)/gui_draw_yuv.c $(lfont)/font_8x16_uni_packed.h
 	@echo $< '->' $@
 	$(CC) $(CFLAGS) -nostdinc -mthumb -c -o $@ $<
 

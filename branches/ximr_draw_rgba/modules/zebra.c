@@ -709,13 +709,8 @@ int gui_osd_draw_zebra(int show)
 
     // Check that viewport dimensions do not exceed bitmap dimensions.
     // HDMI output uses a larger frame for the image compared to the bitmap we draw on - the code can't handle this and will crash
-#ifdef CAM_DRAW_RGBA
-    if ((vid_get_viewport_width() > camera_screen.yuvbm_width) || (vid_get_viewport_height() > camera_screen.yuvbm_height))
+    if ((vid_get_viewport_width() > CAMERA_SCREEN_YUV_WIDTH) || (vid_get_viewport_height() > CAMERA_SCREEN_YUV_HEIGHT))
         return 0;
-#else
-    if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
-        return 0;
-#endif
 
     if (!gui_osd_zebra_init(show))
         return 0;

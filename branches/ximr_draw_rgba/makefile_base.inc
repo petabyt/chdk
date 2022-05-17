@@ -75,13 +75,13 @@ ifndef THUMB_FW
     O=.o/
 else
     ifndef ARMV7A
-        ifndef CAM_DRAW_RGBA
+        ifdef CAM_DRAW_YUV
             O=.o2/
         else
             O=.o4/
         endif
     else
-        ifndef CAM_DRAW_RGBA
+        ifdef CAM_DRAW_YUV
             O=.o3/
         else
             O=.o5/

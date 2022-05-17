@@ -27,19 +27,22 @@ endif
 # see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
 CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 # for gcc >= v4, we want to allow use of strd etc
-# Also set architecture version for modules (to prevent loading on wrong build)
+# Also set architecture version for modules (to prevent loading on wrong build), and set platform drawing method.
 ifndef THUMB_FW
-    CFLAGS+=-mtune=arm946e-s -march=armv5te -DOPT_ARCHITECTURE=GCC_EABI_THUMB
+    CFLAGS+=-mtune=arm946e-s -march=armv5te -DOPT_ARCHITECTURE=GCC_EABI_THUMB -DCAM_DRAW_8BIT
 else
     ifdef ARMV7A
         CFLAGS+=-march=armv7-a -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
     else
         CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2
     endif
-endif
 
-ifdef CAM_DRAW_RGBA
-    CFLAGS+=-DCAM_DRAW_RGBA
+    # Default for DIGIC 6 and later is CAM_DRAW_RGBA. Add CAM_DRAW_YUV to platform makefile to override.
+    ifdef CAM_DRAW_YUV
+        CFLAGS+=-DCAM_DRAW_YUV
+    else
+        CFLAGS+=-DCAM_DRAW_RGBA
+    endif
 endif
 
 CFLAGS+=-I$(include) -I$(include)/std -I$(core) -I$(modules) -I$(cam)

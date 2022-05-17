@@ -10,8 +10,6 @@
 #define SD_READONLY_IDX     1
 #define USB_MASK            0x00800000 // Found @FC6CEADC, levent 0x302
 #define USB_IDX             2
-#define HOTSHOE_FLAG        0x00010000 // Found @0xfc6ceb08, levent 0x304
-#define HOTSHOE_IDX         2
 
 #define CAM_HAS_JOGDIAL     1
 

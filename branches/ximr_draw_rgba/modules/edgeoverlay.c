@@ -745,13 +745,8 @@ void edge_overlay()
 {
     // Check that viewport dimensions do not exceed bitmap dimensions.
     // HDMI output may use a larger frame for the image compared to the bitmap we draw on - the code can't handle this.
-#ifdef CAM_DRAW_RGBA
-    if ((vid_get_viewport_width() > camera_screen.yuvbm_width) || (vid_get_viewport_height() > camera_screen.yuvbm_height))
+    if ((vid_get_viewport_width() > CAMERA_SCREEN_YUV_WIDTH) || (vid_get_viewport_height() > CAMERA_SCREEN_YUV_HEIGHT))
         return;
-#else
-    if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
-        return;
-#endif
 
     // Was the shutter fully pressed the last time we ran?
     // We use this to make sure that the user has released

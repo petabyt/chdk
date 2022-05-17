@@ -111,6 +111,17 @@ typedef struct
 
 extern _cam_screen camera_screen;
 
+// Some macros to simplify code
+#ifdef  CAM_DRAW_RGBA
+    #define CAMERA_SCREEN_YUV_WIDTH         camera_screen.yuvbm_width
+    #define CAMERA_SCREEN_YUV_HEIGHT        camera_screen.yuvbm_height
+    #define CAMERA_SCREEN_YUV_BUFFER_WIDTH  camera_screen.yuvbm_buffer_width
+#else
+    #define CAMERA_SCREEN_YUV_WIDTH         camera_screen.width
+    #define CAMERA_SCREEN_YUV_HEIGHT        camera_screen.height
+    #define CAMERA_SCREEN_YUV_BUFFER_WIDTH  camera_screen.buffer_width
+#endif
+
 typedef struct
 {
     unsigned int    tick_count;         // tick count of last call to function

@@ -4,24 +4,6 @@
 #include "conf.h"       // load OSD_pos & OSD_scale
 #include "palette.h"
 
-//==========================================================
-
-// CAM_DRAW_RGBA must be defined in camera makefile
-
-// Bitmap display for THUMB_FW
-#ifdef THUMB_FW
-    #ifndef CAM_DRAW_RGBA
-        #define CAM_DRAW_YUV
-    #endif
-#endif
-
-// Bitmap display for 8 bit indexed
-#ifndef CAM_DRAW_RGBA
-    #ifndef CAM_DRAW_YUV
-        #define CAM_DRAW_8BIT
-    #endif
-#endif
-
 //-------------------------------------------------------------------
 
 extern  unsigned char   *chdk_colors;
@@ -122,7 +104,7 @@ extern void update_draw_proc();
 extern void draw_set_guard();
 extern int draw_test_guard();
 
-extern color draw_get_pixel(coord x, coord y);
+// extern color draw_get_pixel(coord x, coord y);   // Not used
 extern void draw_pixel(coord x, coord y, color cl);
 extern void draw_or_erase_edge_pixel(coord x, coord y, color cl, int is_draw);
 
@@ -189,6 +171,11 @@ typedef struct
 
 // Draw an icon from a list of actions
 extern void draw_icon_cmds(coord x, coord y, icon_cmd *cmds);
+
+//-------------------------------------------------------------------
+
+// Swap two integer values
+#define swap(v1, v2)   {v1^=v2; v2^=v1; v1^=v2;}
 
 //-------------------------------------------------------------------
 #endif

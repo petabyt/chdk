@@ -14,10 +14,8 @@
 #define SHOW_HISTO_HALF     3
 
 //-------------------------------------------------------------------
-#ifdef THUMB_FW
-    #ifndef CAM_DRAW_RGBA
-        #define LARGE_HISTO 1
-    #endif
+#ifdef CAM_DRAW_YUV
+    #define LARGE_HISTO 1
 #endif
 
 #ifndef LARGE_HISTO

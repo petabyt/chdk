@@ -181,7 +181,6 @@ int main()
             }
             else
             {
-
                 font_data[f++] = (top << 4) | bottom;
 
                 printf("/*%04x*/ 0x%02x,", orig_font_data[i].charcode, (top << 4) | bottom);
@@ -190,22 +189,37 @@ int main()
                 {
                     if (!lte)
                     {
-                        font_data[f++] = orig_font_data[i].data[j] & 0xFF;
-                        printf(" 0x%02x,",orig_font_data[i].data[j] & 0xFF);
+                        font_data[f++] = orig_font_data[i].data[j];
+                        printf(" 0x%02x,",orig_font_data[i].data[j]);
                     }
                     else
                     {
                         // lookup-table based encoding
-                        uc = orig_font_data[i].data[j] & 0xFF;
-                        font_data[f] = fdata_usage[uc]; // byte's index in lookup table
-                        if ( (j > top) && (font_data[f] == font_data[f-1]) )
+                        uc = orig_font_data[i].data[j];
+                        int cnt = 1;
+                        int k;
+                        for (k = j + 1; (k < 16 - bottom) && (uc == orig_font_data[i].data[k]); k++)
                         {
-                            // repetition found inside glyph data, set bit7 of previous byte
-                            font_data[f-1] = font_data[f-1] | 0x80;
+                            cnt += 1;
+                        }
+                        if (cnt == 1)
+                        {
+                            font_data[f] = fdata_usage[uc]; // byte's index in lookup table
+                            f++;
+                        }
+                        else if ((cnt == 2) || (fontdata_ltlength >= 112))
+                        {
+                            font_data[f] = fdata_usage[uc] | 0x80; // byte's index in lookup table with bit 7 set
+                            f++;
+                            j++;
                         }
                         else
                         {
+                            font_data[f] = (cnt-1) | 0xf0; // repeat count
                             f++;
+                            font_data[f] = fdata_usage[uc]; // byte's index in lookup table
+                            f++;
+                            j += (cnt - 1);
                         }
                     }
                 }
@@ -299,7 +313,10 @@ int main()
 
     if (lte)
     {
-        printf("#define BUILTIN_FONT_RLE_COMPRESSED 1\n\n");
+        if (fontdata_ltlength < 112)
+            printf("#define BUILTIN_FONT_RLE_COMPRESSED_V2 1\n\n");
+        else
+            printf("#define BUILTIN_FONT_RLE_COMPRESSED 1\n\n");
     }
 
     return 0;

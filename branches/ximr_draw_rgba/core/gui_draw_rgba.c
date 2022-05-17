@@ -1,15 +1,50 @@
-#include "platform.h"
-#include "conf.h"
-#include "gui_draw.h"
 
-#ifdef CAM_DRAW_RGBA
+// Low level routines that are highly dependant on hardware drawing method  - 8 bit indexed drawing system
+// File selectively included into gui_draw.c
+
+//-------------------------------------------------------------------
+
+// Pixel drawing
+
+extern unsigned int*    chdk_rgba;
+extern unsigned int     rgba_colors[];
+extern unsigned char    yuv_colors[];
+int                     display_needs_canon_refresh;
+
+// Draw pixel on screen
+static void draw_pixel_std(unsigned int offset, color cl)
+{
+    // DIGIC 6, drawing on 32bpp RGBA overlay
+    // Clamp color index
+    cl = cl & 31;
+    if (chdk_rgba[offset] != rgba_colors[cl]) {
+        chdk_rgba[offset] = rgba_colors[cl];
+        display_needs_canon_refresh = 1;
+    }
+}
+
+//-------------------------------------------------------------------
+
+// Handle guard pixel
+
+void draw_set_guard() {}    // Not used for RGBA drawing
+
+int draw_test_guard()
+{
+    extern int display_needs_refresh;
+    if (display_needs_refresh)
+    {
+        display_needs_refresh = 0;
+        return 0;
+    }
+    return 1;
+}
 
 //-------------------------------------------------------------------
 // For CAM_DRAW_RGBA, first draw the icon on a temporary buffer, then copy to the screen
 // Prevents triggering unnecessary calls to vid_bitmap_refresh from areas where the icon overdraws itself with different colours.
 
-#define swap(v1, v2)   {v1^=v2; v2^=v1; v1^=v2;}
-extern void            (*draw_pixel_proc)(unsigned int offset, color cl);
+extern void (*draw_pixel_proc)(unsigned int offset, color cl);
 
 // Current largest icon size
 #define IW  32
@@ -209,92 +244,3 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
 }
 
 //-------------------------------------------------------------------
-
-#else //!CAM_DRAW_RGBA
-
-//-------------------------------------------------------------------
-// Draw an OSD icon from an array of actions
-// For CAM_DRAW_YUV scale up by 2 times and draw double thickness
-void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
-{
-    int x1, y1, x2, y2;
-#ifdef CAM_DRAW_YUV
-    int thickness = RECT_BORDER2;
-#else // CAM_DRAW_YUV
-    int thickness = RECT_BORDER1;
-#endif // CAM_DRAW_YUV
-    while (1)
-    {
-#ifdef CAM_DRAW_YUV
-        x1 = cmds->x1<<1;
-        y1 = cmds->y1<<1;
-        x2 = cmds->x2<<1;
-        y2 = cmds->y2<<1;
-#else // CAM_DRAW_YUV
-        x1 = cmds->x1;
-        y1 = cmds->y1;
-        x2 = cmds->x2;
-        y2 = cmds->y2;
-#endif // CAM_DRAW_YUV
-        color cf = chdk_colors[cmds->cf];       // Convert color indexes to actual colors
-        color cb = chdk_colors[cmds->cb];
-        switch (cmds->action)
-        {
-        default:
-        case IA_END:
-            return;
-        case IA_HLINE:
-            draw_hline(x+x1, y+y1, x2, cb);
-#ifdef CAM_DRAW_YUV
-            draw_hline(x+x1, y+y1+1, x2, cb);
-#endif // CAM_DRAW_YUV
-            break;
-        case IA_VLINE:
-            draw_vline(x+x1, y+y1, y2, cb);
-#ifdef CAM_DRAW_YUV
-            draw_vline(x+x1+1, y+y1, y2, cb);
-#endif // CAM_DRAW_YUV
-            break;
-        case IA_LINE:
-#ifdef CAM_DRAW_YUV
-            draw_line_x2(x+x1, y+y1, x+x2, y+y2, cb);
-#else // CAM_DRAW_YUV
-            draw_line(x+x1, y+y1, x+x2, y+y2, cb);
-#endif // CAM_DRAW_YUV
-            break;
-        case IA_RECT:
-#ifdef CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness);
-#else // CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness);
-#endif // CAM_DRAW_YUV
-            break;
-        case IA_FILLED_RECT:
-#ifdef CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
-#else // CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
-#endif // CAM_DRAW_YUV
-            break;
-        case IA_ROUND_RECT:
-#ifdef CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
-#else // CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
-#endif // CAM_DRAW_YUV
-            break;
-        case IA_FILLED_ROUND_RECT:
-#ifdef CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2+1, y+y2+1, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
-#else // CAM_DRAW_YUV
-            draw_rectangle(x+x1, y+y1, x+x2, y+y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
-#endif // CAM_DRAW_YUV
-            break;
-        }
-        cmds++;
-    }
-}
-
-//-------------------------------------------------------------------
-
-#endif // !CAM_DRAW_RGBA
