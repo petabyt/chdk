@@ -897,46 +897,54 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 {
     unsigned i, ii;
 
+    twoColors clb = MAKE_COLOR(BG_COLOR(cl),BG_COLOR(cl));
+
     unsigned int offset, size;
     unsigned char *sym = get_cdata(&offset, &size, ch);
 
     // First draw blank lines at top
-    for (i=0; i<offset; i++)
-        draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
+    if (offset > 0)
+        draw_rectangle(x,y,x+FONT_WIDTH-1,y+offset-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
 
     unsigned j;
-    for (j=i; i<size;)
+    for (j=i=offset; i<size;)
     {
         unsigned int dsym;
         int rep;
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
-        dsym = fontdata_lookup[sym[j] & 0x7f];
-        rep = sym[j] & 0x80;
-#else
-        dsym = sym[j];
-        rep = 0;
-#endif
-        for (ii=0; ii<FONT_WIDTH; ii++)
+#if defined(BUILTIN_FONT_RLE_COMPRESSED_V2)
+        if (sym[j] > 0xF0)
         {
-            draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
+            rep = (sym[j] & 0x0F) + 1;
+            j++;
         }
-        if (rep)
+        else
         {
-            i++;
+            rep = (sym[j] & 0x80) ? 2 : 1;
+        }
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+#elif defined(BUILTIN_FONT_RLE_COMPRESSED)
+        rep = (sym[j] & 0x80) ? 2 : 1;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+#else
+        rep = 1;
+        dsym = sym[j];
+#endif
+        j++;
+        for (; rep > 0; rep--)
+        {
             for (ii=0; ii<FONT_WIDTH; ii++)
             {
                 draw_pixel(x+ii, y+i, (dsym & (0x80>>ii))? FG_COLOR(cl) : BG_COLOR(cl));
             }
+            i++;
         }
-        i++;
-        j++;
     }
 
     // Last draw blank lines at bottom
-    for (; i<FONT_HEIGHT; i++)
-        draw_hline(x, y+i, FONT_WIDTH, BG_COLOR(cl));
+    if (i < FONT_HEIGHT)
+        draw_rectangle(x,y+i,x+FONT_WIDTH-1,y+FONT_HEIGHT-1,clb,RECT_BORDER0|DRAW_FILLED);
 }
 #endif
 
@@ -948,8 +956,6 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
 
     unsigned int offset, size;
     unsigned char *sym = get_cdata(&offset, &size, ch);
-//     color fg = FG_COLOR(cl);
-//     color bg = BG_COLOR(cl);
     unsigned int fw = FONT_WIDTH;
 
     draw_pixel_simple_start(cl);
@@ -970,13 +976,26 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
     {
         unsigned int dsym;
         int rep;
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
+#if defined(BUILTIN_FONT_RLE_COMPRESSED_V2)
+        if (sym[j] > 0xF0)
+        {
+            rep = (sym[j] & 0x0F) + 1;
+            j++;
+        }
+        else
+        {
+            rep = (sym[j] & 0x80) ? 2 : 1;
+        }
         dsym = fontdata_lookup[sym[j] & 0x7f];
-        rep = sym[j] & 0x80;
+#elif defined(BUILTIN_FONT_RLE_COMPRESSED)
+        rep = (sym[j] & 0x80) ? 2 : 1;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
 #else
+        rep = 1;
         dsym = sym[j];
-        rep = 0;
 #endif
+        j++;
+
         {
             // upscaling 8 pixels to 14
             ii = 0;
@@ -991,7 +1010,7 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
             dsym = ii;
         }
 
-        while (rep >= 0)
+        for (; rep > 0; rep--)
         {
             unsigned int px;
             unsigned int yt = y+(i<<1);
@@ -1010,11 +1029,8 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
             {
                 draw_1pixel_simple(x+ii-1, yt, dsym&1, 1);
             }
-            rep -= 0x80;
             i++;
         }
-
-        j++;
     }
 
     // Last draw blank lines at bottom
@@ -1033,8 +1049,6 @@ void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
 
     unsigned int offset, size;
     unsigned char *sym = get_cdata(&offset, &size, ch);
-//     color fg = FG_COLOR(cl);
-//     color bg = BG_COLOR(cl);
     unsigned int fw = FONT_REAL_WIDTH;
 
     draw_pixel_simple_start(cl);
@@ -1052,15 +1066,27 @@ void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
     {
         unsigned int dsym;
         int rep;
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
+#if defined(BUILTIN_FONT_RLE_COMPRESSED_V2)
+        if (sym[j] > 0xF0)
+        {
+            rep = (sym[j] & 0x0F) + 1;
+            j++;
+        }
+        else
+        {
+            rep = (sym[j] & 0x80) ? 2 : 1;
+        }
         dsym = fontdata_lookup[sym[j] & 0x7f];
-        rep = sym[j] & 0x80;
+#elif defined(BUILTIN_FONT_RLE_COMPRESSED)
+        rep = (sym[j] & 0x80) ? 2 : 1;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
 #else
+        rep = 1;
         dsym = sym[j];
-        rep = 0;
 #endif
+        j++;
 
-        while (rep >= 0)
+        for (; rep > 0; rep--)
         {
             unsigned int px;
             unsigned int yt = y+(i);
@@ -1079,11 +1105,8 @@ void draw_char_unscaled(coord x, coord y, const char ch, twoColors cl)
             {
                 draw_1pixel_simple(x+ii-1, yt, dsym&1, 0);
             }
-            rep -= 0x80;
             i++;
         }
-
-        j++;
     }
 
     // Last draw blank lines at bottom
@@ -1108,7 +1131,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
 
     // First draw blank lines at top
     if (offset > 0)
-        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
     unsigned j;
@@ -1118,40 +1141,47 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         int rep;
         unsigned int last;
         int len;
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
-        dsym = fontdata_lookup[sym[j] & 0x7f];
-        rep = sym[j] & 0x80;
-#else
-        dsym = sym[j];
-        rep = 0;
-#endif
-        while (rep >= 0)
+#if defined(BUILTIN_FONT_RLE_COMPRESSED_V2)
+        if (sym[j] > 0xF0)
         {
-            last = dsym & 0x80;
-            len = 1;
-            for (ii=1; ii<FONT_WIDTH; ii++)
-            {
-                if (((dsym << ii) & 0x80) != last)
-                {
-                    draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-                    last = (dsym << ii) & 0x80;
-                    len = 1;
-                }
-                else
-                {
-                    len++;
-                }
-            }
-            draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-            i++;
-            rep -= 0x80;
+            rep = (sym[j] & 0x0F) + 1;
+            j++;
         }
+        else
+        {
+            rep = (sym[j] & 0x80) ? 2 : 1;
+        }
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+#elif defined(BUILTIN_FONT_RLE_COMPRESSED)
+        rep = (sym[j] & 0x80) ? 2 : 1;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
+#else
+        rep = 1;
+        dsym = sym[j];
+#endif
         j++;
+        last = dsym & 0x80;
+        len = 1;
+        for (ii=1; ii<FONT_WIDTH; ii++)
+        {
+            if (((dsym << ii) & 0x80) != last)
+            {
+                draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+rep*ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+                last = (dsym << ii) & 0x80;
+                len = 1;
+            }
+            else
+            {
+                len++;
+            }
+        }
+        draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+rep*ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+        i += rep;
     }
 
     // Last draw blank lines at bottom
     if (i < FONT_HEIGHT)
-        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_HEIGHT*ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 }
 #endif // !THUMB_FW
 
@@ -1170,7 +1200,7 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
 
     // First draw blank lines at top
     if (offset > 0)
-        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+        draw_rectangle(x,y,x+FONT_WIDTH*xsize-1,y+offset*ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 
     // Now draw character data
     unsigned j;
@@ -1181,13 +1211,26 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         unsigned int last;
         int len;
         unsigned int lastmask = 1 << (FONT_WIDTH-1);
-#ifdef BUILTIN_FONT_RLE_COMPRESSED
+#if defined(BUILTIN_FONT_RLE_COMPRESSED_V2)
+        if (sym[j] > 0xF0)
+        {
+            rep = (sym[j] & 0x0F) + 1;
+            j++;
+        }
+        else
+        {
+            rep = (sym[j] & 0x80) ? 2 : 1;
+        }
         dsym = fontdata_lookup[sym[j] & 0x7f];
-        rep = sym[j] & 0x80;
+#elif defined(BUILTIN_FONT_RLE_COMPRESSED)
+        rep = (sym[j] & 0x80) ? 2 : 1;
+        dsym = fontdata_lookup[sym[j] & 0x7f];
 #else
+        rep = 1;
         dsym = sym[j];
-        rep = 0;
 #endif
+        j++;
+
         {
             // upscaling 8 pixels to 14
             ii = 0;
@@ -1201,33 +1244,29 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
             ii += (dsym&128)?0x2000:0;
             dsym = ii;
         }
-        while (rep >= 0)
+
+        last = dsym & lastmask;
+        len = 1;
+        for (ii=1; ii<FONT_WIDTH; ii++)
         {
-            last = dsym & lastmask;
-            len = 1;
-            for (ii=1; ii<FONT_WIDTH; ii++)
+            if (((dsym << ii) & lastmask) != last)
             {
-                if (((dsym << ii) & lastmask) != last)
-                {
-                    draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-                    last = (dsym << ii) & lastmask;
-                    len = 1;
-                }
-                else
-                {
-                    len++;
-                }
+                draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+rep*ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+                last = (dsym << ii) & lastmask;
+                len = 1;
             }
-            draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
-            i++;
-            rep -= 0x80;
+            else
+            {
+                len++;
+            }
         }
-        j++;
+        draw_rectangle(x+(ii-len)*xsize,y+i*ysize,x+ii*xsize-1,y+i*ysize+rep*ysize-1,(last)?clf:clb,RECT_BORDER0|DRAW_FILLED);
+        i += rep;
     }
 
     // Last draw blank lines at bottom
     if (i < FONT_REAL_HEIGHT)
-        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_REAL_HEIGHT*ysize+ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
+        draw_rectangle(x,y+i*ysize,x+FONT_WIDTH*xsize-1,y+FONT_REAL_HEIGHT*ysize-1,clb,RECT_BORDER0|DRAW_FILLED);
 }
 #endif // THUMB_FW
 //-------------------------------------------------------------------

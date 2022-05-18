@@ -5,7 +5,7 @@
 
 typedef struct {
     int charcode;
-    char data[16];
+    unsigned char data[16];
     int isUsed;     // set if char is used in any codepages
 } origFontData;
 
