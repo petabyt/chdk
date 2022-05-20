@@ -436,13 +436,12 @@ void draw_char(coord x, coord y, const char ch, twoColors cl)
         {
             rep = (sym[j] & 0x0F) + 1;
             j++;
-            dsym = fontdata_lookup[sym[j]];
         }
         else
         {
             rep = (sym[j] & 0x80) ? 2 : 1;
-            dsym = fontdata_lookup[sym[j] & 0x7f];
         }
+        dsym = fontdata_lookup[sym[j] & 0x7f];
 #elif defined(BUILTIN_FONT_RLE_COMPRESSED)
         rep = (sym[j] & 0x80) ? 2 : 1;
         dsym = fontdata_lookup[sym[j] & 0x7f];
@@ -494,13 +493,12 @@ void draw_char_scaled(coord x, coord y, const char ch, twoColors cl, int xsize, 
         {
             rep = (sym[j] & 0x0F) + 1;
             j++;
-            dsym = fontdata_lookup[sym[j]];
         }
         else
         {
             rep = (sym[j] & 0x80) ? 2 : 1;
-            dsym = fontdata_lookup[sym[j] & 0x7f];
         }
+        dsym = fontdata_lookup[sym[j] & 0x7f];
 #elif defined(BUILTIN_FONT_RLE_COMPRESSED)
         rep = (sym[j] & 0x80) ? 2 : 1;
         dsym = fontdata_lookup[sym[j] & 0x7f];
