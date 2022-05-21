@@ -2978,11 +2978,12 @@ void gui_redraw()
 
 #ifdef CAM_DRAW_RGBA
     // If switched to play mode or opened canon menu then erase CHDK UI in case it does not need to be redrawn
-    static int last_canon_menu_or_play;
-    int canon_menu_or_play = (canon_menu_active != (int)&canon_menu_active-4) || camera_info.state.mode_play;
-    if (canon_menu_or_play && !last_canon_menu_or_play)
+    static int last_canon_menu, last_mode_play;
+    int canon_menu = (canon_menu_active != (int)&canon_menu_active-4);
+    if ((canon_menu && !last_canon_menu) || (camera_info.state.mode_play && !last_mode_play))
         gui_set_need_restore();
-    last_canon_menu_or_play = canon_menu_or_play;
+    last_canon_menu = canon_menu;
+    last_mode_play = camera_info.state.mode_play;
 #endif
 
     if (!draw_test_guard() && (!camera_info.state.gui_mode_none || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
