@@ -1361,7 +1361,7 @@ static void gui_default_draw(int force_redraw)
     if (half_disp_press) 
         return;
 
-    if (conf.zebra_draw)
+    if (conf.zebra_draw && (canon_menu_active==(int)&canon_menu_active-4))
         if (libzebra->gui_osd_draw_zebra((conf.zebra_draw >= 1 && camera_info.state.is_shutter_half_press && camera_info.state.mode_photo)
             || (conf.zebra_draw == 2 && camera_info.state.mode_rec)
             || (conf.zebra_draw == 3)))

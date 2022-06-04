@@ -476,8 +476,12 @@ int gui_osd_draw_zebra(int show)
     {
         int ready;
         static int n=0;
-        if (!camera_info.state.mode_rec) ready=1;
-        else get_property_case(camera_info.props.shooting, &ready, 4);
+        if (!camera_info.state.mode_rec || conf.zebra_draw > 1) {
+            ready=1;
+        }
+        else {
+            get_property_case(camera_info.props.shooting, &ready, 4);
+        }
         n=draw_guard_pixel(); // will be 0 in PLAY mode, should be 1 or 2 in REC mode.
         if(!ready) return 0;
         if (cur_buf_top)
@@ -728,8 +732,12 @@ int gui_osd_draw_zebra(int show)
     if (timer==1)
     {
         int ready;
-        if (!camera_info.state.mode_rec) ready=1;
-        else get_property_case(camera_info.props.shooting, &ready, 4);
+        if (!camera_info.state.mode_rec || conf.zebra_draw > 1) {
+            ready=1;
+        }
+        else {
+            get_property_case(camera_info.props.shooting, &ready, 4);
+        }
         if(!ready) return 0;
 
     }
