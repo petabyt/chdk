@@ -1,5 +1,5 @@
 
-// Low level routines that are highly dependant on hardware drawing method  - 8 bit indexed drawing system
+// Low level routines that are highly dependant on hardware drawing method  - RGBA drawing system
 // File selectively included into gui_draw.c
 
 //-------------------------------------------------------------------
