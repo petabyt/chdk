@@ -15,7 +15,7 @@ FLTS=$Ofselect.flt $Oedgeovr.flt $Ocurves.flt $Ompopup.flt $Opalette.flt $Ogrids
      $Otxtread.flt $Omemview.flt $Omodinsp.flt $Otetris.flt $Osnake.flt $Osudoku.flt $O_tbox.flt $O_osd_le.flt \
      $Oexmemins.flt $Ofshelter.flt $Ofwcrc.flt \
      $O_hexbox.flt $Oubasic.flt $Olua.flt $Ocpuinfo.flt $Ouseredit.flt $Oeyefi.flt $Ohisto.flt $Oshothist.flt \
-     $Oscrdump.flt $O_confmig.flt
+     $Oscrdump.flt $O_confmig.flt $Orawevhst.flt
 
 # Include optional rules for user defined modules
 # Can be used to add additional modules to FLTS and add the rules to build them
@@ -74,6 +74,7 @@ $Oeyefi.flt: $Oeyefi.o $Omd5.o $Osha1.o
 $Ofwcrc.flt: $Ofirmware_crc.o
 $Oscrdump.flt: $Oscrdump.o
 $O_confmig.flt: $Oconf_migrate.o
+$Orawevhst.flt: $Oraw_ev_histo.o
 
 $Oubasic.flt: $Oubasic.o $Oscript_key_funcs.o $(lubasic)/$Olibubasic.a
 $Olua.flt: $Oluascript.o $Oscript_key_funcs.o $Oscript_shoot_hook.o $Ocordic_math.o $Odbg_dump.o $Orawhookops.o $(llua)/$Oliblua.a
@@ -99,6 +100,7 @@ $Ogui_snake.o: games/gui_snake.c games/simple_game.c
 $Ocpuinfo.o: simple_module.c cpuinfo_v5.c cpuinfo_v7.c
 
 $Oshot_histogram.o: shot_histogram.c shot_histogram.h
+$Oraw_ev_histo.o: raw_ev_histo.c raw_ev_histo.h
 
 clean:
 	rm -f $O*.* *.o *.flt *.dump

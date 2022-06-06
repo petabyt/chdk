@@ -22,11 +22,12 @@
 #define MENUITEM_WARNING        15  // Same as MENUITEM_TEXT but text in Yellow
 
 // Flags, which describe limits of F_INT value
-#define MENUITEM_F_MASK         0x00f0
+#define MENUITEM_F_MASK         0x08f0
 #define MENUITEM_F_UNSIGNED     0x0010
 #define MENUITEM_F_MIN          0x0020
 #define MENUITEM_F_MAX          0x0040
 #define MENUITEM_F_MINMAX       0x0060
+#define MENUITEM_F_EVEN         0x0800  // Allow only even values
 
 // Value, which specify specific kind of argument
 #define MENUITEM_ARG_MASK       0x0300

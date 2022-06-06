@@ -90,6 +90,16 @@ _cam_sensor camera_sensor =
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 #endif
     DNG_BADPIXEL_VALUE_LIMIT,
+#if   cam_CFAPattern == 0x02010100  // R G G B
+//     R      G1     G2     B
+    { {0,0}, {1,0}, {0,1}, {1,1} },
+#elif cam_CFAPattern == 0x01020001  // G R B G
+    { {1,0}, {0,0}, {1,1}, {0,1} },
+#elif cam_CFAPattern == 0x01000201  // G B R G
+    { {0,1}, {0,0}, {1,1}, {1,0} },
+#elif cam_CFAPattern == 0x00010102  // B G G R
+    { {1,1}, {1,0}, {0,1}, {0,0} },
+#endif
 };
 
 _cam_screen camera_screen =

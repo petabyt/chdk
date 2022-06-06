@@ -71,9 +71,9 @@ int live_view_get_data(ptp_data *data, int flags)
     lv.bm.fb_type = LV_FB_PAL8;
 #endif
 
-    lv.bm.buffer_width = CAMERA_SCREEN_YUV_BUFFER_WIDTH;
-    lv.bm.visible_width = CAMERA_SCREEN_YUV_WIDTH;
-    lv.bm.visible_height = CAMERA_SCREEN_YUV_HEIGHT;
+    lv.bm.buffer_width = CAMERA_SCREEN_BM_BUFFER_WIDTH;
+    lv.bm.visible_width = CAMERA_SCREEN_BM_PHYS_WIDTH;
+    lv.bm.visible_height = CAMERA_SCREEN_BM_HEIGHT;
 
     lv.bm.margin_left = lv.bm.margin_right = lv.bm.margin_top = lv.bm.margin_bot = 0;
 

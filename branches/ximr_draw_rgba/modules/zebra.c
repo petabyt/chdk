@@ -582,23 +582,19 @@ static int gui_osd_zebra_init(int show)
 // neither OSD nor histogram can be drawn over zebra
 // draw_set_draw_proc() is not respected by the current D6 drawing code anyway
 static void gui_osd_draw_zebra_osd() {
-//     switch (conf.zebra_draw_osd) {
-//         case ZEBRA_DRAW_NONE:
-//             break;
-//         case ZEBRA_DRAW_OSD:
-//             if (conf.show_osd) {
-//                 draw_set_draw_proc(draw_dblpixel_raw);
-//                 gui_draw_osd_elements(0,1);
-//                 draw_set_draw_proc(NULL);
-//             }
-//             /* no break here */
-//         case ZEBRA_DRAW_HISTO:
-//         default:
-//             draw_set_draw_proc(draw_dblpixel_raw);
-//             libhisto->gui_osd_draw_histo(0);
-//             draw_set_draw_proc(NULL);
-//             break;
-//     }
+    switch (conf.zebra_draw_osd) {
+        case ZEBRA_DRAW_NONE:
+            break;
+        case ZEBRA_DRAW_OSD:
+            if (conf.show_osd) {
+                gui_draw_osd_elements(0,1);
+            }
+            /* no break here */
+        case ZEBRA_DRAW_HISTO:
+        default:
+            libhisto->gui_osd_draw_histo(0);
+            break;
+    }
 }
 
 //-------------------------------------------------------------------
@@ -713,7 +709,7 @@ int gui_osd_draw_zebra(int show)
 
     // Check that viewport dimensions do not exceed bitmap dimensions.
     // HDMI output uses a larger frame for the image compared to the bitmap we draw on - the code can't handle this and will crash
-    if ((vid_get_viewport_width() > CAMERA_SCREEN_YUV_WIDTH) || (vid_get_viewport_height() > CAMERA_SCREEN_YUV_HEIGHT))
+    if ((vid_get_viewport_width() > CAMERA_SCREEN_BM_WIDTH) || (vid_get_viewport_height() > CAMERA_SCREEN_BM_HEIGHT))
         return 0;
 
     if (!gui_osd_zebra_init(show))

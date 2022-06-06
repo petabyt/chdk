@@ -312,10 +312,10 @@ void draw_or_erase_edge_pixel(coord px, coord py, color cl, int is_draw)
 #endif
 
     // Make sure pixel is on screen.
-    if ((px < 0) || (py < 0) || (px >= CAMERA_SCREEN_YUV_WIDTH) || (py >= CAMERA_SCREEN_YUV_HEIGHT)) return;
+    if ((px < 0) || (py < 0) || (px >= CAMERA_SCREEN_BM_WIDTH) || (py >= CAMERA_SCREEN_BM_HEIGHT)) return;
 
     // bitmap buffer offset
-    register unsigned int offset = py * CAMERA_SCREEN_YUV_BUFFER_WIDTH + ASPECT_XCORRECTION(px);
+    register unsigned int offset = py * CAMERA_SCREEN_BM_BUFFER_WIDTH + ASPECT_XCORRECTION(px);
 
 #ifdef CAM_DRAW_RGBA    
     // Get YUV color value

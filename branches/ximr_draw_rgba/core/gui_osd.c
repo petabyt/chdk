@@ -14,6 +14,7 @@
 #include "histogram.h"
 #include "usb_remote.h"
 #include "modules.h"
+#include "raw_ev_histo.h"
 
 //-------------------------------------------------------------------
 
@@ -1366,6 +1367,15 @@ static void gui_default_draw(int force_redraw)
             || (conf.zebra_draw == 2 && camera_info.state.mode_rec)
             || (conf.zebra_draw == 3)))
 		    return; // if zebra drawn, we're done
+
+    if ((conf.raw_ev_histo_enable & 2) && camera_info.state.mode_play && (canon_menu_active==(int)&canon_menu_active-4))
+    {
+        librawevhisto->draw();
+    }
+    else
+    {
+        librawevhisto->erase();
+    }
 
 #if !CAM_SHOW_OSD_IN_SHOOT_MENU
     if (!(conf.show_osd && (canon_menu_active==(int)&canon_menu_active-4) && (canon_shoot_menu_active==0))) return;

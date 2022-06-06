@@ -86,7 +86,14 @@ typedef struct
     int has_forwardmatrix2;
     int forward_matrix2[18];    // DNG Camera Forward Matrix 1
     int dng_badpixel_value_limit;
+    short cfa_offsets[4][2];
 } _cam_sensor;
+
+// cfa_offsets indexes
+#define CFA_R  0
+#define CFA_G1 1
+#define CFA_G2 2
+#define CFA_B  3
 
 extern _cam_sensor camera_sensor;
 
@@ -113,13 +120,15 @@ extern _cam_screen camera_screen;
 
 // Some macros to simplify code
 #ifdef  CAM_DRAW_RGBA
-    #define CAMERA_SCREEN_YUV_WIDTH         camera_screen.yuvbm_width
-    #define CAMERA_SCREEN_YUV_HEIGHT        camera_screen.yuvbm_height
-    #define CAMERA_SCREEN_YUV_BUFFER_WIDTH  camera_screen.yuvbm_buffer_width
+    #define CAMERA_SCREEN_BM_WIDTH         camera_screen.yuvbm_width
+    #define CAMERA_SCREEN_BM_PHYS_WIDTH    camera_screen.yuvbm_width
+    #define CAMERA_SCREEN_BM_HEIGHT        camera_screen.yuvbm_height
+    #define CAMERA_SCREEN_BM_BUFFER_WIDTH  camera_screen.yuvbm_buffer_width
 #else
-    #define CAMERA_SCREEN_YUV_WIDTH         camera_screen.width
-    #define CAMERA_SCREEN_YUV_HEIGHT        camera_screen.height
-    #define CAMERA_SCREEN_YUV_BUFFER_WIDTH  camera_screen.buffer_width
+    #define CAMERA_SCREEN_BM_WIDTH         camera_screen.width
+    #define CAMERA_SCREEN_BM_PHYS_WIDTH    camera_screen.physical_width
+    #define CAMERA_SCREEN_BM_HEIGHT        camera_screen.height
+    #define CAMERA_SCREEN_BM_BUFFER_WIDTH  camera_screen.buffer_width
 #endif
 
 typedef struct
