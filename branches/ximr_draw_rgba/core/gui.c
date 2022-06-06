@@ -1952,9 +1952,10 @@ static const char* gui_zebra_mode_modes[] = { "Blink 1", "Blink 2", "Blink 3", "
 #ifndef THUMB_FW
 static const char* gui_zebra_draw_osd_modes[] = { "Nothing", "Histo", "OSD" };
 #endif
+static const char* gui_zebra_draw_modes[] =                 { "Don't", "Shoot", "Rec", "Always" };
 
 static CMenuItem zebra_submenu_items[] = {
-    MENU_ITEM(0x5c,LANG_MENU_ZEBRA_DRAW,              MENUITEM_BOOL,                            &conf.zebra_draw, 0 ),
+    MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_DRAW,             &conf.zebra_draw, gui_zebra_draw_modes ),
     MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_MODE,             &conf.zebra_mode, gui_zebra_mode_modes ),
     MENU_ITEM(0x58,LANG_MENU_ZEBRA_UNDER,             MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zebra_under,   MENU_MINMAX(0, 32) ),
     MENU_ITEM(0x57,LANG_MENU_ZEBRA_OVER,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zebra_over,    MENU_MINMAX(0, 32) ),
