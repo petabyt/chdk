@@ -62,7 +62,7 @@ class CallDescriber(object):
 
         results = CallDesc(addr, fname)
         for r in reg_ids:
-            results.args.append(self.describe_reg(regs[r],fdesc[r]))
+            results.args.append(self.describe_reg(regs[r],fdesc[r],r,addr))
 
         return results
 
@@ -86,14 +86,14 @@ class CallDescriber(object):
             for desc in self.describe_calls_to(fname):
                 yield desc
 
-    def describe_reg(self,reg,rdesc):
+    def describe_reg(self,reg,rdesc,rname,addr):
         res = CallArgDesc(reg,rdesc)
         if reg is None:
             return res
 
         if res.arg_type == 'INT':
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel INT %s\n'%(addr,r))
+                infomsg(2,'%s reg rel INT %s\n'%(addr,rname))
             else:
                 res.desc = str(reg.getValue())
         # TODO strings and things
@@ -135,8 +135,8 @@ class PropCallDescriber(CallDescriber):
         super(PropCallDescriber,self).__init__(prop_funcdesc)
         self.pd = PropsetData(filename)
 
-    def describe_reg(self,reg,rdesc):
-        res = super(PropCallDescriber,self).describe_reg(reg,rdesc)
+    def describe_reg(self,reg,rdesc,rname,addr):
+        res = super(PropCallDescriber,self).describe_reg(reg,rdesc,rname,addr)
 
         if res.arg_type == 'PROPCASE_ID':
             res.prop_name = ''
@@ -144,7 +144,7 @@ class PropCallDescriber(CallDescriber):
                 return res
 
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel PROPCASE_ID %s\n'%(addr,r))
+                infomsg(2,'%s reg rel PROPCASE_ID %s\n'%(addr,rname))
             else:
                 prop_id = reg.getValue()
                 if prop_id in self.pd.by_id:
@@ -192,8 +192,8 @@ class LeventCallDescriber(CallDescriber):
         super(LeventCallDescriber,self).__init__(levent_funcdesc)
         self.ld = LeventData()
 
-    def describe_reg(self,reg,rdesc):
-        res = super(LeventCallDescriber,self).describe_reg(reg,rdesc)
+    def describe_reg(self,reg,rdesc,rname,addr):
+        res = super(LeventCallDescriber,self).describe_reg(reg,rdesc,rname,addr)
 
         if res.arg_type == 'LEVENT_ID':
             res.levent_name = ''
@@ -201,7 +201,7 @@ class LeventCallDescriber(CallDescriber):
                 return res
 
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel LEVENT_ID %s\n'%(addr,r))
+                infomsg(2,'%s reg rel LEVENT_ID %s\n'%(addr,rname))
             else:
                 levent_id = reg.getValue()
                 if levent_id in self.ld.by_id and self.ld.by_id[levent_id]['name'] != '':
@@ -234,8 +234,8 @@ class MzrmCallDescriber(CallDescriber):
         super(MzrmCallDescriber,self).__init__(mzrm_funcdesc)
         self.data = mzrmdata
 
-    def describe_reg(self,reg,rdesc):
-        res = super(MzrmCallDescriber,self).describe_reg(reg,rdesc)
+    def describe_reg(self,reg,rdesc,rname,addr):
+        res = super(MzrmCallDescriber,self).describe_reg(reg,rdesc,rname,addr)
 
         if res.arg_type == 'MZRM_ID':
             res.mzrm_name = ''
@@ -243,7 +243,7 @@ class MzrmCallDescriber(CallDescriber):
                 return res
 
             if reg.isRegisterRelativeValue():
-                infomsg(2,'%s reg rel MZRM_ID %s\n'%(addr,r))
+                infomsg(2,'%s reg rel MZRM_ID %s\n'%(addr,rname))
             else:
                 mzrm_id = reg.getValue()
                 if mzrm_id in self.data.by_id and not self.data.by_id[mzrm_id].unk:
