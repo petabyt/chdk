@@ -498,7 +498,7 @@ asm volatile (
 "    BL      mbr_read_dryos\n"      //  total sectors count in R0 before and after call
 
 // Start of DataGhost's FAT32 autodetection code
-// Policy: If there is a partition which has type W95 FAT32, use the first one of those for image storage
+// Policy: If there is a partition which has type FAT32 or exFat, use the first one of those for image storage
 // According to the code below, we can use R1, R2, R3 and R12.
 // LR wasn't really used anywhere but for storing a part of the partition signature. This is the only thing
 // that won't work with an offset, but since we can load from LR+offset into LR, we can use this to do that :)
