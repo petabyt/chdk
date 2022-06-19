@@ -527,6 +527,11 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
 
     { "fw_yuv_layer_buf_helper", UNUSED},
 
+    { "get_ef_lens_name", OPTIONAL|UNUSED },
+    { "get_ef_lens_wide_fl", OPTIONAL|UNUSED },
+    { "get_ef_lens_tele_fl", OPTIONAL|UNUSED },
+    { "GetLensIDValue", OPTIONAL|UNUSED },
+
     {0,0,0},
 };
 
@@ -1000,6 +1005,8 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
 // defines for flags field
 #define SIG_NO_D6 1
 #define SIG_NO_D7 2
+#define SIG_ILC_ONLY 4
+#define SIG_NONILC_ONLY 8
 
 typedef struct sig_rule_s sig_rule_t;
 typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
@@ -5380,6 +5387,10 @@ sig_rule_t sig_rules_initial[]={
 // Matches that depend only on bootstrap sigs should be first
 sig_rule_t sig_rules_main[]={
 // function         CHDK name                   ref name/string         func param          dry rel             match flags
+// these only depend on tasks, put first to allow checks in later sigs
+{sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
+{sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
+{sig_match_misc_flag_named,"CAM_HAS_WIFI",      "task_ComWireless",},
 {sig_match_named,   "SetParameterData",         "PTM_BackupUIProperty_FW", 0,               SIG_DRY_MIN(58)},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
 {sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
@@ -5434,7 +5445,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "Read",                     "Read_FW",},
 {sig_match_named,   "LEDDrive",                 "LEDDrive_FW",},
 {sig_match_named,   "LockMainPower",            "LockMainPower_FW",},
-{sig_match_named,   "MoveFocusLensToDistance",  "MoveFocusLensToDistance_FW",},
+{sig_match_named,   "MoveFocusLensToDistance",  "MoveFocusLensToDistance_FW",0,         SIG_DRY_ANY, SIG_NONILC_ONLY},
 {sig_match_named,   "MoveIrisWithAv",           "MoveIrisWithAv_FW",},
 {sig_match_named,   "MoveZoomLensWithPoint",    "MoveZoomLensWithPoint_FW",},
 {sig_match_named,   "Open",                     "Open_FW",},
@@ -5445,8 +5456,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "PT_MFOff",                 "SS.MFOff_FW",          SIG_NAMED_JMP_SUB},
 {sig_match_named,   "PT_MoveDigitalZoomToWide", "SS.MoveDigitalZoomToWide_FW", SIG_NAMED_JMP_SUB},
 {sig_match_named,   "PT_MoveOpticalZoomAt",     "SS.MoveOpticalZoomAt_FW",},
-{sig_match_named,   "PutInNdFilter",            "PutInNdFilter_FW",},
-{sig_match_named,   "PutOutNdFilter",           "PutOutNdFilter_FW",},
+{sig_match_named,   "PutInNdFilter",            "PutInNdFilter_FW",     0,              SIG_DRY_ANY, SIG_NONILC_ONLY},
+{sig_match_named,   "PutOutNdFilter",           "PutOutNdFilter_FW",    0,              SIG_DRY_ANY, SIG_NONILC_ONLY},
 {sig_match_named,   "SetAE_ShutterSpeed",       "SetAE_ShutterSpeed_FW",},
 {sig_match_named,   "SetAutoShutdownTime",      "SetAutoShutdownTime_FW",},
 {sig_match_named,   "SetCurrentCaptureModeType","SetCurrentCaptureModeType_FW",},
@@ -5565,9 +5576,6 @@ sig_rule_t sig_rules_main[]={
 {sig_match_dry_memzero,"dry_memzero",           "SetDefaultRecParameter_FW"},
 {sig_match_dry_memcpy_bytes,"dry_memcpy_bytes", "SaveDefectAdjTable_FW",},
 {sig_match_near_str,"dry_memmove_bytes",        "NoOperation BulkOut!Remain.Length = %lu",SIG_NEAR_AFTER(18,3)},
-{sig_match_misc_flag_named,"CAM_IS_ILC",        "task_EFLensComTask",},
-{sig_match_misc_flag_named,"CAM_HAS_ND_FILTER", "task_Nd",},
-{sig_match_misc_flag_named,"CAM_HAS_WIFI",      "task_ComWireless",},
 {sig_match_cam_has_iris_diaphragm,"CAM_HAS_IRIS_DIAPHRAGM","task_IrisEvent",},
 {sig_match_near_str,"ImagerActivate",           "Fail ImagerActivate(ErrorCode:%x)\r",SIG_NEAR_BEFORE(6,1)},
 {sig_match_screenlock_helper,"screenlock_helper","UIFS_DisplayFirmUpdateView_FW"},
@@ -5735,6 +5743,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_imager_active,"imager_active","imager_active_callback",},
 {sig_match_get_dial_hw_position,"get_dial_hw_position","kbd_p1_f",},
 {sig_match_near_str,"get_displaytype","DisplayType : %d\r\n",SIG_NEAR_BEFORE(5,1)},
+{sig_match_near_str,"get_ef_lens_name","LENS NAME: %s (Size: %ld Byte)\n",      SIG_NEAR_BEFORE(3,1),SIG_DRY_ANY,   SIG_ILC_ONLY},
+{sig_match_near_str,"get_ef_lens_wide_fl","Wide FocalLength = %ld mm\n",        SIG_NEAR_BEFORE(3,1),SIG_DRY_ANY,   SIG_ILC_ONLY},
+{sig_match_near_str,"get_ef_lens_tele_fl","Tele FocalLength = %ld mm\n",        SIG_NEAR_BEFORE(3,1),SIG_DRY_ANY,   SIG_ILC_ONLY},
+{sig_match_named,"GetLensIDValue","GetLensIDValue_FW",                          0,                   SIG_DRY_ANY,   SIG_ILC_ONLY},
 {sig_match_prop_string,"PROPCASE_AFSTEP", "\n\rError : GetAFStepResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_FOCUS_STATE", "\n\rError : GetAFResult",SIG_NEAR_BEFORE(7,1)},
 {sig_match_prop_string,"PROPCASE_AV", "\n\rError : GetAvResult",SIG_NEAR_BEFORE(7,1)},
@@ -5784,6 +5796,13 @@ int sig_rule_applies(firmware *fw, sig_rule_t *rule)
     }
     // digic 6 excluded, not VMSA
     if((rule->flags & SIG_NO_D6) && !(fw->arch_flags & FW_ARCH_FL_VMSA)) {
+        return 0;
+    }
+    // only valid after ILC detect
+    if((rule->flags & SIG_ILC_ONLY) && !get_misc_val_value("CAM_IS_ILC")) {
+        return 0;
+    }
+    if((rule->flags & SIG_NONILC_ONLY) && get_misc_val_value("CAM_IS_ILC")) {
         return 0;
     }
     return 1;
