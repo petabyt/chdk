@@ -613,6 +613,9 @@
 0xfc3606df,get_current_exp
 0xfc1c188d,get_dial_hw_position
 0xfc35dd57,get_displaytype
+0xfc2cc467,get_ef_lens_name
+0xfc2cc69b,get_ef_lens_tele_fl
+0xfc2cc695,get_ef_lens_wide_fl
 0xfc379a79,get_fstype
 0xfc325ca3,get_playrec_mode
 0xfc3800b5,get_self_task_errno_pointer
@@ -897,6 +900,7 @@
 0xfc25d62f,GetLensErrorStatus_FW
 0xfc5a8427,GetLensExtenderSerialNumberValue_FW
 0xfc25d0d5,GetLensExtenderTypeValue_FW
+0xfc2cc6a1,GetLensIDValue
 0xfc25d165,GetLensIDValue_FW
 0xfc5a83c7,GetLensSerialNumberValue_FW
 0xfc25d11f,GetLensTypeValue_FW
@@ -1211,6 +1215,7 @@
 0xfc1bfb65,IsStrobePopup_FW
 0xfc357ae3,IsWirelessConnect
 0xfc301918,j1_dry_memcpy_bytes
+0xfc2f3fa1,j1_GetLensIDValue
 0xbfe14fef,j1_GetSRAndDisableInterrupt
 0xbfe14ff3,j1_SetSR
 0xbfe13d6b,j2_GetSRAndDisableInterrupt
@@ -1294,6 +1299,7 @@
 0xfc06e39b,j_ExMem.FreeUncacheable_FW
 0xfc06e393,j_ExMem.View_FW
 0xfc37a3f1,j_free
+0xfc2f3fc3,j_get_ef_lens_name
 0xfc302228,j_get_self_task_id
 0xfc3021f8,j_get_task_properties
 0xfc1f4483,j_GetAcceleHvPosition_FW
@@ -1386,6 +1392,7 @@
 0xfc44c7f7,j_GetLensErrorStatus_FW
 0xfc5a8911,j_GetLensExtenderSerialNumberValue_FW
 0xfc5a890b,j_GetLensExtenderTypeValue_FW
+0xfc25d165,j_GetLensIDValue
 0xfc5a8903,j_GetLensIDValue_FW
 0xfc5a890f,j_GetLensSerialNumberValue_FW
 0xfc5a8907,j_GetLensTypeValue_FW

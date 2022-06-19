@@ -1311,6 +1311,7 @@
 0xfc251387,GetLensTypeValue_FW
 0xfc2513cd,GetLensID_FW
 0xfc2513cd,GetLensIDValue_FW
+0xfc2513cd,j_GetLensIDValue
 0xfc251897,GetLensErrorStatus_FW
 0xfc255e9f,task_TskCocoa2
 0xfc255ea5,task_TskCocoa1
@@ -1407,6 +1408,8 @@
 0xfc29609f,EFLensCom.ResetFocusPulse_FW
 0xfc29609f,ResetEFLensFocus_FW
 0xfc296aab,EFLensCom.UpdateStatus_FW
+0xfc296e91,j1_GetLensIDValue
+0xfc296eb3,j_get_ef_lens_name
 0xfc2974c9,IsEFLensMFSwOn_FW
 0xfc29b847,task_MetaCtg
 0xfc2a55a1,MoveOpticalZoomAt
@@ -1469,6 +1472,10 @@
 0xfc2b24bd,BeepDriveComp_FW
 0xfc2b24d1,BeepDriveStop_FW
 0xfc2cc717,task_WBIntegTask
+0xfc2dbe97,get_ef_lens_name
+0xfc2dc0c3,get_ef_lens_wide_fl
+0xfc2dc0c9,get_ef_lens_tele_fl
+0xfc2dc0cf,GetLensIDValue
 0xfc2e974b,EnableDebugLogMode_FW
 0xfc2e9755,DisableDebugLogMode_FW
 0xfc2ed4bf,LcdCon_SetLcdDriver_FW
