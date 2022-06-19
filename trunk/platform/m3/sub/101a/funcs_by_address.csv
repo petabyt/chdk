@@ -1277,6 +1277,7 @@
 0xfc25d0d5,GetLensExtenderTypeValue_FW
 0xfc25d11f,GetLensTypeValue_FW
 0xfc25d165,GetLensIDValue_FW
+0xfc25d165,j_GetLensIDValue
 0xfc25d62f,GetLensErrorStatus_FW
 0xfc25e95f,GetTRIPODModeFlagbyIS_FW
 0xfc2619d5,task_MovieEditor
@@ -1397,6 +1398,10 @@
 0xfc2b69cd,task_WBIntegTask
 0xfc2bc92d,task_ExpDrv
 0xfc2bc92d,task_ExpDrvTask
+0xfc2cc467,get_ef_lens_name
+0xfc2cc695,get_ef_lens_wide_fl
+0xfc2cc69b,get_ef_lens_tele_fl
+0xfc2cc6a1,GetLensIDValue
 0xfc2dc36d,UIFS_WirelessExecuteSendForever_FW
 0xfc2dd96f,EnableDebugLogMode_FW
 0xfc2dd979,DisableDebugLogMode_FW
@@ -1418,6 +1423,8 @@
 0xfc2f2aa3,EFLensCom.Disconnect_FW
 0xfc2f30b3,EFLensCom.ResetFocusPulse_FW
 0xfc2f3b25,EFLensCom.UpdateStatus_FW
+0xfc2f3fa1,j1_GetLensIDValue
+0xfc2f3fc3,j_get_ef_lens_name
 0xfc2f461f,IsEFLensMFSwOn_FW
 0xfc2f4b07,task_Cave2PbTask
 0xfc2fd721,mzrm_createmsg
