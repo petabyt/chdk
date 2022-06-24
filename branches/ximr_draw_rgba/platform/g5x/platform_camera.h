@@ -162,4 +162,6 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
+    #define CAM_HAS_PLAYBACK_IMAGE_NO           1
+
 //--------------------------------------------------

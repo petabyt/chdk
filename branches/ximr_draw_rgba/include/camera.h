@@ -290,6 +290,8 @@
 
     #undef CAM_HAS_DISPLAY_REFRESH_FLAG         // 'display_needs_refresh' variable is available to trigger CHDK UI update.
 
+    #undef  CAM_HAS_PLAYBACK_IMAGE_NO           // Can find image number for currently displayed image in playback mode
+
 // Base 'market' ISO value. Most (all?) DryOS R49 and later use 200, use tests/isobase.lua to check
 #if defined(CAM_DRYOS_REL) && CAM_DRYOS_REL >= 49 // CAM_DRYOS_REL defined on command line, not from platform_camera.h
     #define CAM_MARKET_ISO_BASE             200

@@ -537,14 +537,15 @@ static ConfInfo conf_info[] = {
     CONF_INFO(252, conf.check_firmware_crc,                     CONF_DEF_VALUE, i:1),
 
     CONF_INFO(260, conf.raw_ev_histo_enable,                    CONF_DEF_VALUE, i:0),
-    CONF_INFO(261, conf.raw_ev_histo_under_threshold,           CONF_DEF_VALUE, i:4),
+    CONF_INFO(261, conf.raw_ev_histo_under_threshold,           CONF_DEF_VALUE, i:1),
     CONF_INFO(262, conf.raw_ev_histo_over_threshold,            CONF_DEF_VALUE, i:1),
     CONF_INFO(263, conf.raw_ev_histo_width,                     CONF_DEF_VALUE, i:80),
     CONF_INFO(264, conf.raw_ev_histo_height,                    CONF_DEF_VALUE, i:80),
     CONF_INFO(265, conf.raw_ev_histo_xstep,                     CONF_DEF_VALUE, i:16),
     CONF_INFO(266, conf.raw_ev_histo_ystep,                     CONF_DEF_VALUE, i:16),
     CONF_INFO(267, conf.raw_ev_histo_save_log,                  CONF_DEF_VALUE, i:0),
-    CONF_INFO(268, conf.raw_ev_histo_ettr_pct,                  CONF_DEF_VALUE, i:10),  // 1% (Decimal * 10)
+    CONF_INFO(268, conf.raw_ev_histo_ettr_pct,                  CONF_DEF_VALUE, i:1),  // .1% (Decimal * 10)
+    CONF_INFO(269, conf.raw_ev_histo_save_for_image,            CONF_DEF_VALUE, i:0),
 
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 

@@ -308,6 +308,7 @@
             get_exposure_counter
             get_target_dir_name
             get_target_file_num
+            get_playback_image_number
             GetJpgCount
             GetRawCount
             is_raw_possible

@@ -215,7 +215,8 @@ void raw_process(void)
     if (camera_info.state.state_kbd_script_run)
         libshothisto->build_shot_histogram();
 
-    librawevhisto->build();
+    if (is_raw_enabled())       // make sure it is safe to use raw buffers
+        librawevhisto->build();
 
     libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_RAW);
 

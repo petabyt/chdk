@@ -160,4 +160,6 @@
 
     #define REMOTE_SYNC_STATUS_LED              -1      // -1 = special value to force code to use debug_led
 
+    #define CAM_HAS_PLAYBACK_IMAGE_NO           1
+
 //--------------------------------------------------

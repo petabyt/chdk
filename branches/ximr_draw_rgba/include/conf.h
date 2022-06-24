@@ -478,6 +478,7 @@ typedef struct
     int raw_ev_histo_ystep;
     int raw_ev_histo_save_log;
     int raw_ev_histo_ettr_pct;
+    int raw_ev_histo_save_for_image;
 
 } Conf;
 

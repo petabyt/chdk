@@ -1370,7 +1370,7 @@ static void gui_default_draw(int force_redraw)
 
     if ((conf.raw_ev_histo_enable & 2) && camera_info.state.mode_play && (canon_menu_active==(int)&canon_menu_active-4))
     {
-        librawevhisto->draw();
+        librawevhisto->draw(force_redraw);
     }
     else
     {

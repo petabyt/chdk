@@ -7,6 +7,8 @@ DEF(simple_movie_status             ,0x0000bec0)    // 0x0000bde8 + 0x80 + 0x58 
 DEF(raw_buffer_table                ,0xe05d8548)    // Reference @ 0xe023dc6c
 DEF(raw_buffer_index                ,0x00008578)    // Reference @ 0xe023dc6e
 
+DEF(playback_image_number           ,0x00157690)    // Image number of current image shown in play mode
+
 // TODO:
 
 // Does not behave like other cameras - set to 4 when reviewing. Value calculated in kbd.c to simulate expected behaviour.

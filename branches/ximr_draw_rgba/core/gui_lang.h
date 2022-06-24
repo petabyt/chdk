@@ -814,8 +814,9 @@
 #define LANG_MENU_RAW_EV_HISTO_OVER_THRESH      684
 #define LANG_MENU_RAW_EV_HISTO_SAVE_LOG         685
 #define LANG_MENU_RAW_EV_HISTO_ETTR_PCT         686
+#define LANG_MENU_RAW_EV_HISTO_SAVE_FOR_IMG     687
 
-#define GUI_LANG_ITEMS                          686
+#define GUI_LANG_ITEMS                          687
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

@@ -822,5 +822,6 @@
 682 "  Y step"
 683 "Under exp. < BLACK +"
 684 "Over exp. > WHITE -"
-685 "Save EV histogram log"
+685 "Write EV histogram log"
 686 "ETTR over exp. %"
+687 "Save for each image"

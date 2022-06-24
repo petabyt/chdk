@@ -18,7 +18,7 @@ typedef struct
 
     void (*load)(int);
     void (*build)();
-    void (*draw)();
+    void (*draw)(int force_redraw);
     void (*erase)();
 } librawevhisto_sym;
 

@@ -1851,6 +1851,9 @@ static CMenuItem raw_ev_histo_submenu_items[] = {
     MENU_ITEM(0x57,LANG_MENU_RAW_EV_HISTO_OVER_THRESH,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_over_threshold,  MENU_MINMAX(1, 8) ),
     MENU_ITEM(0x57,LANG_MENU_RAW_EV_HISTO_ETTR_PCT,     MENUITEM_ENUM|MENUITEM_DECIMAL,gui_raw_ev_ettr_enum, &conf.raw_ev_histo_ettr_pct ),
     MENU_ITEM(0x5c,LANG_MENU_RAW_EV_HISTO_SAVE_LOG,     MENUITEM_BOOL,      &conf.raw_ev_histo_save_log, 0 ),
+#ifdef CAM_HAS_PLAYBACK_IMAGE_NO
+    MENU_ITEM(0x5c,LANG_MENU_RAW_EV_HISTO_SAVE_FOR_IMG, MENUITEM_BOOL,      &conf.raw_ev_histo_save_for_image, 0 ),
+#endif
     MENU_ITEM(0x0,LANG_MENU_RAW_EV_HISTO_SAMPLE_AREA,   MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x5e,LANG_MENU_RAW_EV_HISTO_WIDTH,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_width,   MENU_MINMAX(10, 100) ),
     MENU_ITEM(0x5e,LANG_MENU_RAW_EV_HISTO_HEIGHT,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_height,  MENU_MINMAX(10, 100) ),
@@ -2750,7 +2753,7 @@ void gui_chdk_draw(int force_redraw)
 
     if (conf.raw_ev_histo_enable & 1)
     {
-        librawevhisto->draw();
+        librawevhisto->draw(force_redraw);
     }
     else
     {

@@ -11,6 +11,7 @@ long get_exposure_counter();
 long get_file_next_counter();
 void get_target_dir_name(char*);
 long get_target_file_num();
+char* get_playback_image_number();
 
 #endif
 
