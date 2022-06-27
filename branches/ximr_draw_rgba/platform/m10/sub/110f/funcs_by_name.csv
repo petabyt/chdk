@@ -22,6 +22,7 @@
 0xfc51564f,AFTool.SetAFLogType_FW
 0xfc515653,AFTool.SetDebugAFSequence_FW
 0xfc515633,AFTool.StoreAFixPosition_FW
+0xfc2f0f21,AllocateEFlensComBuffer
 0xfc44393b,AllocateMemory_FW
 0xfc1428e5,AllocateUncacheableMemory
 0xfc2b02c3,ApMoniSel_FW
@@ -387,6 +388,8 @@
 0xfc51541d,EF.StartInternalMainFlash_FW
 0xfc5153ef,EF.StartInternalPreFlash_FW
 0xfc51533d,EF.StopEFCharge_FW
+0xfc295c0d,EFLens_Send
+0xfc29401d,EFLens_Send_low
 0xfc4313d7,EFLensCom.AFMFSwState_FW
 0xfc431403,EFLensCom.ChangeEF2Sync_FW
 0xfc43184d,EFLensCom.ChangeSync2EF_FW
@@ -755,7 +758,9 @@
 0xfc5bf873,GetFADLDriveSettingNumPattern_FW
 0xfc5bf881,GetFADLDriveSettingStartFrequency_FW
 0xfc5bf8c7,GetFADLDriveSettingSweepTime_FW
+0xfc5bde9f,GetFALensInfoData
 0xfc5beae7,GetFALensInfoData_FW
+0xfc2dd46f,GetFALensInfoData_vals
 0xfc4d89ed,GetFaMechaShutterPiTime_FW
 0xfc1fadd3,GetFirmwareVersion_FW
 0xfc43f46b,GetFocusLensCarrierFrequency_FW
@@ -874,12 +879,14 @@
 0xfc43fab5,GetLensCurrentFocalLength_FW
 0xfc251867,GetLensErrorStatus_FW
 0xfc5be467,GetLensExtenderSerialNumberValue_FW
+0xfc2dc0bf,GetLensExtenderTypeValue
 0xfc25130d,GetLensExtenderTypeValue_FW
 0xfc25139d,GetLensID_FW
 0xfc2dc09f,GetLensIDValue
 0xfc25139d,GetLensIDValue_FW
 0xfc5be407,GetLensSerialNumberValue_FW
 0xfc43fad9,GetLensTeleFocalLength_FW
+0xfc2dc0a5,GetLensTypeValue
 0xfc251357,GetLensTypeValue_FW
 0xfc43fac7,GetLensWideFocalLength_FW
 0xfc5bdc89,GetLinearDevelopMode_FW
@@ -1193,6 +1200,7 @@
 0xfc31d8f5,IsWirelessConnect
 0xfc3142ec,j1_dry_memcpy_bytes
 0xfc296e61,j1_GetLensIDValue
+0xfc2937fb,j1_GetLensTypeValue
 0xbfe14feb,j1_GetSRAndDisableInterrupt
 0xbfe14fef,j1_SetSR
 0xbfe13db9,j2_GetSRAndDisableInterrupt
@@ -1358,11 +1366,13 @@
 0xfc5bebcb,j_GetLensC_REV_FW
 0xfc43fa57,j_GetLensErrorStatus_FW
 0xfc5beb55,j_GetLensExtenderSerialNumberValue_FW
+0xfc2939cd,j_GetLensExtenderTypeValue
 0xfc5beb4f,j_GetLensExtenderTypeValue_FW
 0xfc43fab1,j_GetLensID_FW
 0xfc25139d,j_GetLensIDValue
 0xfc5beb47,j_GetLensIDValue_FW
 0xfc5beb53,j_GetLensSerialNumberValue_FW
+0xfc251357,j_GetLensTypeValue
 0xfc5beb4b,j_GetLensTypeValue_FW
 0xfc5bdc9b,j_GetLinearDevelopMode_FW
 0xfc515609,j_GetMacroSupportZoomPoint_FW
@@ -1943,6 +1953,7 @@
 0xfc5be4bf,RegistLensName_FW
 0xfc0d39cf,RegPTPCmd_FW
 0xfc0d39e3,RegPTPIPCmd_FW
+0xfc2f0f79,ReleaseEFlensComBuffer
 0xbfe159eb,ReleaseRecursiveLock
 0xfc5bb0fb,ReloadColorAdjustment_FW
 0xfc5bdb01,ReloadDefectAdjustmentData_FW

@@ -537,5 +537,21 @@ __stdcall PTM_RestoreUIProperty_FW(int id, void *buf, int size); // normally cal
 __stdcall int XimrExe(ximr_context *ximr_ctx);
 __stdcall int XimrExeGain(ximr_context *ximr_ctx,int unk1, int unk2);
 #endif
+// ILC specific functions
+__stdcall void get_ef_lens_name(char **name, unsigned char *len);
+__stdcall short get_ef_lens_wide_fl(void);
+__stdcall short get_ef_lens_tele_fl(void);
+__stdcall short GetLensIDValue(void);
+__stdcall int GetLensTypeValue(void);
+__stdcall int GetLensExtenderTypeValue(void);
+__stdcall void GetFALensInfoData(void *fa_lens_info); // TODO struct
+__stdcall void GetFALensInfoData_vals(void *fa_lens_info_vals); // TODO struct, different than previous
+__stdcall void *AllocateEFlensComBuffer(int unk);
+__stdcall void ReleaseEFlensComBuffer(void *efcom_buf);
+__stdcall void EFLens_Send(void *efcom_buf);
+#if CAM_DRYOS_REL >= 59
+__stdcall void EFLens_Send_low(int unk, void *efcom_buf);
+#else
+__stdcall void EFLens_Send_low(int unk1, int unk2, void *efcom_buf);
 #endif
 

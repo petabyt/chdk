@@ -1275,6 +1275,7 @@
 0xfc25ccb9,task_LensInfo
 0xfc25d009,GetLensExtenderTypeValue_FW
 0xfc25d053,GetLensTypeValue_FW
+0xfc25d053,j_GetLensTypeValue
 0xfc25d099,GetLensIDValue_FW
 0xfc25d099,j_GetLensIDValue
 0xfc25d563,GetLensErrorStatus_FW
@@ -1401,6 +1402,9 @@
 0xfc2cc60f,get_ef_lens_wide_fl
 0xfc2cc615,get_ef_lens_tele_fl
 0xfc2cc61b,GetLensIDValue
+0xfc2cc621,GetLensTypeValue
+0xfc2cc63b,GetLensExtenderTypeValue
+0xfc2cd9ff,GetFALensInfoData_vals
 0xfc2dc33d,UIFS_WirelessExecuteSendForever_FW
 0xfc2dd93f,EnableDebugLogMode_FW
 0xfc2dd949,DisableDebugLogMode_FW
@@ -1417,9 +1421,13 @@
 0xfc2ef9c9,EFLensCom.StartOCKick_FW
 0xfc2ef9f9,EFLensCom.StopOCKick_FW
 0xfc2efa11,EFLensCom.DebugPrint_FW
+0xfc2f0857,j1_GetLensTypeValue
+0xfc2f0a19,j_GetLensExtenderTypeValue
 0xfc2f0e29,task_EFLensComTask
+0xfc2f0ff1,EFLens_Send_low
 0xfc2f194f,GetEFLensFocusPositionWithoutLensCom_FW
 0xfc2f2acf,EFLensCom.Disconnect_FW
+0xfc2f2c3b,EFLens_Send
 0xfc2f3129,EFLensCom.ResetFocusPulse_FW
 0xfc2f3b87,EFLensCom.UpdateStatus_FW
 0xfc2f3fe3,j1_GetLensIDValue
@@ -1825,6 +1833,8 @@
 0xfc436375,task_SetGeoTagExecution
 0xfc4391f3,task_FilYuvMaker
 0xfc439a5f,task_DecJpgRd
+0xfc43d137,AllocateEFlensComBuffer
+0xfc43d195,ReleaseEFlensComBuffer
 0xfc43d1e1,MountCtrl.CheckDTEF_FW
 0xfc43d217,MountCtrl.CheckMIF_FW
 0xfc43da95,EFLensTool.Initialize_FW
@@ -2685,6 +2695,7 @@
 0xfc5a8183,SetMechaShutterCorrectMode_FW
 0xfc5a8235,MoveFocusDistance_FW
 0xfc5a824b,LoadFBAdjValue_FW
+0xfc5a83a7,GetFALensInfoData
 0xfc5a890f,GetLensSerialNumberValue_FW
 0xfc5a896f,GetLensExtenderSerialNumberValue_FW
 0xfc5a89c7,RegistLensName_FW
