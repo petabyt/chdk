@@ -1309,6 +1309,7 @@
 0xfc250fbd,task_LensInfo
 0xfc25130d,GetLensExtenderTypeValue_FW
 0xfc251357,GetLensTypeValue_FW
+0xfc251357,j_GetLensTypeValue
 0xfc25139d,GetLensID_FW
 0xfc25139d,GetLensIDValue_FW
 0xfc25139d,j_GetLensIDValue
@@ -1401,8 +1402,12 @@
 0xfc292989,EFLensCom.StartOCKick_FW
 0xfc2929b9,EFLensCom.StopOCKick_FW
 0xfc2929d1,EFLensCom.DebugPrint_FW
+0xfc2937fb,j1_GetLensTypeValue
+0xfc2939cd,j_GetLensExtenderTypeValue
 0xfc293e57,task_EFLensComTask
+0xfc29401d,EFLens_Send_low
 0xfc295aa5,EFLensCom.Disconnect_FW
+0xfc295c0d,EFLens_Send
 0xfc295e13,SuspendLensCyclicStatusCom_FW
 0xfc295e63,ResumeLensCyclicStatusCom_FW
 0xfc29606f,EFLensCom.ResetFocusPulse_FW
@@ -1476,6 +1481,9 @@
 0xfc2dc093,get_ef_lens_wide_fl
 0xfc2dc099,get_ef_lens_tele_fl
 0xfc2dc09f,GetLensIDValue
+0xfc2dc0a5,GetLensTypeValue
+0xfc2dc0bf,GetLensExtenderTypeValue
+0xfc2dd46f,GetFALensInfoData_vals
 0xfc2e971b,EnableDebugLogMode_FW
 0xfc2e9725,DisableDebugLogMode_FW
 0xfc2ed48f,LcdCon_SetLcdDriver_FW
@@ -1487,6 +1495,8 @@
 0xfc2ed64f,LcdCon_GetLcdParameter_FW
 0xfc2ed681,LcdCon_ShowLcdParameter_FW
 0xfc2ed6a7,LcdCon_SaveLcdParameter_FW
+0xfc2f0f21,AllocateEFlensComBuffer
+0xfc2f0f79,ReleaseEFlensComBuffer
 0xfc2fa00f,handle_PTP_OC_ResetDevicePropValue
 0xfc2fa165,handle_PTP_OC_SetDevicePropValue
 0xfc2fa253,handle_PTP_OC_GetDevicePropValue
@@ -2656,6 +2666,7 @@
 0xfc5bdc9b,j_GetLinearDevelopMode_FW
 0xfc5bdd2d,MoveFocusDistance_FW
 0xfc5bdd43,LoadFBAdjValue_FW
+0xfc5bde9f,GetFALensInfoData
 0xfc5be407,GetLensSerialNumberValue_FW
 0xfc5be467,GetLensExtenderSerialNumberValue_FW
 0xfc5be4bf,RegistLensName_FW
