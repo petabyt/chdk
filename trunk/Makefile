@@ -1,7 +1,5 @@
 topdir=./
 
-tmp:=$(shell echo "BUILD_SVNREV := $(DEF_SVN_REF)" > revision.inc)
-
 # can override on command line or *buildconf.inc for custom subsets
 CAMERA_LIST=camera_list.csv
 
@@ -11,19 +9,8 @@ ZIPDATE=date -R
 
 include makefile_cam.inc
 
-BUILD_SVNREV:=$(shell svnversion -cn $(topdir) | $(ESED) 's/[0-9]*:([0-9]+)[MPS]*/\1/')
+BUILD_SVNREV:=$(shell svnversion -cn $(topdir) 2> /dev/null | $(ESED) 's/[^0-9^:]//g' | $(ESED) 's/[0-9]*:([0-9]+)/\1/')
 ifeq ($(BUILD_SVNREV), )
-	BUILD_SVNREV:=$(DEF_SVN_REF)
-endif
-#for CHDK-Shell up to svn revision 1.6
-ifeq ($(BUILD_SVNREV), exported)
-	BUILD_SVNREV:=$(DEF_SVN_REF)
-endif
-ifeq ($(BUILD_SVNREV), exportiert)
-	BUILD_SVNREV:=$(DEF_SVN_REF)
-endif
-#for CHDK-Shell svn revision 1.7
-ifeq ($(BUILD_SVNREV), Unversioned directory)
 	BUILD_SVNREV:=$(DEF_SVN_REF)
 endif
 tmp:=$(shell echo "BUILD_SVNREV := $(BUILD_SVNREV)" > revision.inc)
