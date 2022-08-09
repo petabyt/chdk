@@ -12,8 +12,8 @@
 
 int running = 0;
 
-#define EV_MAX14    104   // Max # of slots for 14 bit cameras.
-#define BH          31
+#define EV_MAX14    104     // Max # of slots for 14 bit cameras.
+#define BH          31      // Height of histogram area drawn on screen
 
 typedef struct
 {
