@@ -450,6 +450,9 @@
 0xfc440165,EFLensCom.SyncComFocusInfo_FW
 0xfc4401d9,EFLensCom.SyncComFocusStatus_FW
 0xfc2f3b25,EFLensCom.UpdateStatus_FW
+0xfc43dfd9,EFLensCom_FocusSearchFar
+0xfc43dfff,EFLensCom_FocusSearchNear
+0xfc2f32eb,EFLensCom_MoveFocus
 0xfc43d86d,EFLensTool.Cmd.Clear_FW
 0xfc43d803,EFLensTool.Cmd.GetRcvData_FW
 0xfc43d76f,EFLensTool.Cmd.Send_FW
@@ -750,6 +753,7 @@
 0xfc379fe3,GetDrive_FreeClusters
 0xfc179295,GetDriverInfoEvent_FW
 0xfc086a27,getEepromNum_FW
+0xfc5a85c7,GetEFLensFocusPositionWithLensCom
 0xfc5a85c7,GetEFLensFocusPositionWithLensCom_FW
 0xfc2f18bd,GetEFLensFocusPositionWithoutLensCom_FW
 0xfc5a76bd,GetEFUSEData_FW

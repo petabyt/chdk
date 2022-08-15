@@ -549,6 +549,11 @@ __stdcall void GetFALensInfoData_vals(void *fa_lens_info_vals); // TODO struct, 
 __stdcall void *AllocateEFlensComBuffer(int unk);
 __stdcall void ReleaseEFlensComBuffer(void *efcom_buf);
 __stdcall void EFLens_Send(void *efcom_buf);
+__stdcall int EFLensCom_MoveFocus(short target, unsigned char speed, void *callback, void *cb_data);
+__stdcall int EFLensCom_FocusSearchNear(void);
+__stdcall int EFLensCom_FocusSearchFar(void);
+__stdcall int GetEFLensFocusPositionWithLensCom(void);
+
 #if CAM_DRYOS_REL >= 59
 __stdcall void EFLens_Send_low(int unk, void *efcom_buf);
 #else
