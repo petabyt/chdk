@@ -1429,6 +1429,7 @@
 0xfc2f2a9f,EFLensCom.Disconnect_FW
 0xfc2f2c0b,EFLens_Send
 0xfc2f30f9,EFLensCom.ResetFocusPulse_FW
+0xfc2f3315,EFLensCom_MoveFocus
 0xfc2f3b57,EFLensCom.UpdateStatus_FW
 0xfc2f3fb3,j1_GetLensIDValue
 0xfc2f3fd5,j_get_ef_lens_name
@@ -1865,7 +1866,9 @@
 0xfc43e28d,EFLensCom.GetFocalLength_FW
 0xfc43e2cf,EFLensCom.DistanceInfo_FW
 0xfc43e349,EFLensCom.FocusSearchFar_FW
+0xfc43e349,EFLensCom_FocusSearchFar
 0xfc43e36f,EFLensCom.FocusSearchNear_FW
+0xfc43e36f,EFLensCom_FocusSearchNear
 0xfc43e395,j_EFLensCom.ResetFocusPulse_FW
 0xfc43e399,EFLensCom.GetPO_FW
 0xfc43e433,EFLensCom.GetNewPO_FW
@@ -2699,6 +2702,7 @@
 0xfc5a88df,GetLensSerialNumberValue_FW
 0xfc5a893f,GetLensExtenderSerialNumberValue_FW
 0xfc5a8997,RegistLensName_FW
+0xfc5a8adf,GetEFLensFocusPositionWithLensCom
 0xfc5a8adf,GetEFLensFocusPositionWithLensCom_FW
 0xfc5a8af7,SaveFBAdjValue_FW
 0xfc5a8b03,j_LoadFBAdjValue_FW
