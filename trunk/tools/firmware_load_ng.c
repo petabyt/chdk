@@ -1780,7 +1780,7 @@ advance iter_state is trying to find the last function called by a function
 function assumed to PUSH LR, POP LR or PC (many small functions don't!)
 either the last BL/BLXimm before pop {... PC}
 or B after POP {... LR}
-MOV or LDR to R0-R3 are allowed between POP LR and the final B
+MOV, ADR, ADD, SUB and LDR to R0-R3 are allowed between POP LR and the final B
 If a POP occurs before min_insns, the match fails
 Calls before min_insns are ignored
 */
@@ -1836,8 +1836,8 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
                 return 0;
             }
             // allow instructions likely to appear between pop and tail call
-            // MOV or LDR to r0-r3
-            // others are possible e.g arithmetic or LDR r4,=const; LDR r0,[r4, #offset]
+            // MOV, ADR, ADD/SUB or LDR to r0-r3
+            // others are possible
             const insn_match_t match_tail[]={
                 {MATCH_INS(MOV, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
 // MOVS unlikely to be valid, though possible if followed by additional conditional instructions
@@ -1847,6 +1847,11 @@ uint32_t find_last_call_from_func(firmware *fw, iter_state_t *is,int min_insns, 
 #endif
 
                 {MATCH_INS(LDR, 2), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_ANY}},
+                {MATCH_INS(ADR, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
+                {MATCH_INS(ADD, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
+                {MATCH_INS(ADDW, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
+                {MATCH_INS(SUB, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
+                {MATCH_INS(SUBW, MATCH_OPCOUNT_ANY), {MATCH_OP_REG_RANGE(R0,R3), MATCH_OP_REST_ANY}},
                 {ARM_INS_ENDING}
             };
             while(insn_match_any(is->insn,match_tail) && count < max_insns) {
