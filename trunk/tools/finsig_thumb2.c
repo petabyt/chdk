@@ -539,6 +539,10 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "ReleaseEFlensComBuffer", OPTIONAL|UNUSED },
     { "EFLens_Send", OPTIONAL|UNUSED },
     { "EFLens_Send_low", OPTIONAL|UNUSED },
+    { "EFLensCom_MoveFocus", OPTIONAL|UNUSED },
+    { "EFLensCom_FocusSearchNear", OPTIONAL|UNUSED },
+    { "EFLensCom_FocusSearchFar", OPTIONAL|UNUSED },
+    { "GetEFLensFocusPositionWithLensCom", OPTIONAL|UNUSED },
 
     {0,0,0},
 };
@@ -5431,6 +5435,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetBatteryTemperature",    "GetBatteryTemperature_FW",},
 {sig_match_named,   "GetCCDTemperature",        "GetCCDTemperature_FW",},
 {sig_match_named,   "GetFocusLensSubjectDistance","GetFocusLensSubjectDistance_FW",SIG_NAMED_JMP_SUB},
+{sig_match_named,   "EFLensCom_FocusSearchNear","EFLensCom.FocusSearchNear_FW",SIG_NAMED_ASIS,SIG_DRY_ANY,SIG_ILC_ONLY},
+{sig_match_named,   "EFLensCom_FocusSearchFar", "EFLensCom.FocusSearchFar_FW",SIG_NAMED_ASIS,SIG_DRY_ANY,SIG_ILC_ONLY},
+{sig_match_named,   "GetEFLensFocusPositionWithLensCom","GetEFLensFocusPositionWithLensCom_FW",SIG_NAMED_ASIS,SIG_DRY_ANY,SIG_ILC_ONLY},
 {sig_match_named,   "GetLensExtenderTypeValue", "GetLensExtenderTypeValue_FW",SIG_NAMED_SUB,SIG_DRY_ANY,    SIG_ILC_ONLY},
 {sig_match_named,   "GetLensTypeValue",         "GetLensTypeValue_FW",  0,                  SIG_DRY_ANY,    SIG_ILC_ONLY},
 {sig_match_named,   "GetFALensInfoData",        "GetFALensInfoData_FW", SIG_NAMED_SUB ,     SIG_DRY_ANY,    SIG_ILC_ONLY},
@@ -5441,6 +5448,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "EFLens_Send_low",          "EFLens_Send",(SIG_NAMED_NTH(4,SUB)|SIG_NAMED_NTH_RANGE(10)),SIG_DRY_RANGE(57,57),SIG_ILC_ONLY},
 {sig_match_named,   "EFLens_Send_low",          "EFLens_Send",(SIG_NAMED_NTH(2,SUB)),       SIG_DRY_RANGE(59,59),SIG_ILC_ONLY},
 {sig_match_named,   "ReleaseEFlensComBuffer",   "EFLensCom.FocusSearchFar_FW",SIG_NAMED_NTH(3,SUB),SIG_DRY_ANY,SIG_ILC_ONLY},
+{sig_match_named_last,"EFLensCom_MoveFocus",    "EFLensCom.MoveFocus_FW",SIG_NAMED_LAST_RANGE(10,18),SIG_DRY_ANY,SIG_ILC_ONLY},
 
 {sig_match_named,   "GetOpticalTemperature",    "GetOpticalTemperature_FW",},
 {sig_match_named,   "GetPropertyCase",          "GetPropertyCase_FW",   SIG_NAMED_SUB},
