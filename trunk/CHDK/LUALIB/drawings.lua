@@ -10,70 +10,67 @@ SCREEN_DRAWINGS={}
 
 draw={}
 
-draw.add = function( d_type, p1, p2, p3, p4, p5, p6, p7 )
-    local n=table.getn(SCREEN_DRAWINGS)+1
+-- Don't change the order of the color names in this array - array index is mapped to color value
+draw.colors={
+    "trans","black","white",
+    "red","red_dark","red_light",
+    "green","green_dark","green_light",
+    "blue","blue_dark","blue_light",
+    "grey","grey_dark","grey_light",
+    "yellow","yellow_dark","yellow_light",
+    "grey_trans", "magenta"
+}
+
+draw.make_color = function(c)
+    -- return numeric ID for named color, or original value if not matched
+    for i=1,table.getn(draw.colors) do
+        if (c == draw.colors[i]) then
+            return i+255
+            end
+        end
+    return c
+    end
+
+local function _set( n, d_type, p1, p2, p3, p4, p5, p6, p7 )
     if d_type=="pixel" then
-        SCREEN_DRAWINGS[n]={"p",p1,p2,p3}--x,y,cl
+        SCREEN_DRAWINGS[n]={"p",p1,p2,draw.make_color(p3)}--x,y,cl
         return n;
         end
     if d_type=="line" then
-        SCREEN_DRAWINGS[n]={"l",p1,p2,p3,p4,p5}--x1,y1,x2,y2,cl
+        SCREEN_DRAWINGS[n]={"l",p1,p2,p3,p4,draw.make_color(p5)}--x1,y1,x2,y2,cl
         return n;
         end
     if d_type=="rect" then
-        SCREEN_DRAWINGS[n]={"r",p1,p2,p3,p4,p5,p6}--x1,y1,x2,y2,cl,th
+        SCREEN_DRAWINGS[n]={"r",p1,p2,p3,p4,draw.make_color(p5),p6}--x1,y1,x2,y2,cl,th
         return n;
         end
     if d_type=="rectf" then
-        SCREEN_DRAWINGS[n]={"rf",p1,p2,p3,p4,p5,p6,p7}--x1,y1,x2,y2,clf,clb,th
+        SCREEN_DRAWINGS[n]={"rf",p1,p2,p3,p4,draw.make_color(p5),draw.make_color(p6),p7}--x1,y1,x2,y2,clf,clb,th
         return n;
         end
     if d_type=="elps" then
-        SCREEN_DRAWINGS[n]={"e",p1,p2,p3,p4,p5}--x,y,a,b,cl
+        SCREEN_DRAWINGS[n]={"e",p1,p2,p3,p4,draw.make_color(p5)}--x,y,a,b,cl
         return n;
         end
     if d_type=="elpsf" then
-        SCREEN_DRAWINGS[n]={"ef",p1,p2,p3,p4,p5}--x,y,a,b,clf
+        SCREEN_DRAWINGS[n]={"ef",p1,p2,p3,p4,draw.make_color(p5)}--x,y,a,b,clf
         return n;
         end
     if d_type=="string" then
-        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,p4,p5,p6,p7} --x,y,string,foreg_cl,backgr_cl,fontsizeX,fontsizeY
+        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,draw.make_color(p4),draw.make_color(p5),p6,p7} --x,y,string,foreg_cl,backgr_cl,fontsizeX,fontsizeY
         return n;
         end
     return false
     end
 
+draw.add = function( d_type, p1, p2, p3, p4, p5, p6, p7 )
+    local n=table.getn(SCREEN_DRAWINGS)+1
+    return _set(n, d_type, p1, p2, p3, p4, p5, p6, p7)
+    end
+
 draw.replace = function( n, d_type, p1, p2, p3, p4, p5, p6, p7 )
     draw.remove(n)
-    if d_type=="pixel" then
-        SCREEN_DRAWINGS[n]={"p",p1,p2,p3}--x,y,cl
-        return n;
-        end
-    if d_type=="line" then
-        SCREEN_DRAWINGS[n]={"l",p1,p2,p3,p4,p5}--x1,y1,x2,y2,cl
-        return n;
-        end
-    if d_type=="rect" then
-        SCREEN_DRAWINGS[n]={"r",p1,p2,p3,p4,p5,p6}--x1,y1,x2,y2,cl,th
-        return n;
-        end
-    if d_type=="rectf" then
-        SCREEN_DRAWINGS[n]={"rf",p1,p2,p3,p4,p5,p6,p7}--x1,y1,x2,y2,clf,clb,th
-        return n;
-        end
-    if d_type=="elps" then
-        SCREEN_DRAWINGS[n]={"e",p1,p2,p3,p4,p5}--x,y,a,b,cl
-        return n;
-        end
-    if d_type=="elpsf" then
-        SCREEN_DRAWINGS[n]={"ef",p1,p2,p3,p4,p5}--x,y,a,b,cl
-        return n;
-        end
-    if d_type=="string" then
-        SCREEN_DRAWINGS[n]={"s",p1,p2,p3,p4,p5,p6,p7}--x,y,string,foreg_cl,backgr_cl,fontsizeX,fontsizeY
-        return n;
-        end
-    return false
+    return _set(n, d_type, p1, p2, p3, p4, p5, p6, p7)
     end
 
 draw.get_params = function(n)
@@ -95,66 +92,32 @@ draw.get_params = function(n)
 
 draw.overdraw = function()
     for i=1,table.getn(SCREEN_DRAWINGS) do
-        local d_type=SCREEN_DRAWINGS[i][1]
-        if d_type=="p" then
-            local x=SCREEN_DRAWINGS[i][2]
-            local y=SCREEN_DRAWINGS[i][3]
-            local c=SCREEN_DRAWINGS[i][4]
-            draw_pixel(x,y,draw.make_color(c))
-            end
-        if d_type=="l" then
-            local x1=SCREEN_DRAWINGS[i][2]
-            local y1=SCREEN_DRAWINGS[i][3]
-            local x2=SCREEN_DRAWINGS[i][4]
-            local y2=SCREEN_DRAWINGS[i][5]
-            local c=SCREEN_DRAWINGS[i][6]
-            draw_line(x1,y1,x2,y2,draw.make_color(c))
-            end
-        if d_type=="r" then
-            local x1=SCREEN_DRAWINGS[i][2]
-            local y1=SCREEN_DRAWINGS[i][3]
-            local x2=SCREEN_DRAWINGS[i][4]
-            local y2=SCREEN_DRAWINGS[i][5]
-            local c=SCREEN_DRAWINGS[i][6]
-            local t=SCREEN_DRAWINGS[i][7]
-            draw_rect(x1,y1,x2,y2,draw.make_color(c),t)
-            end
-        if d_type=="rf" then
-            local x1=SCREEN_DRAWINGS[i][2]
-            local y1=SCREEN_DRAWINGS[i][3]
-            local x2=SCREEN_DRAWINGS[i][4]
-            local y2=SCREEN_DRAWINGS[i][5]
-            local cf=SCREEN_DRAWINGS[i][6]
-            local cb=SCREEN_DRAWINGS[i][7]
-            local t=SCREEN_DRAWINGS[i][8]
-            draw_rect_filled(x1,y1,x2,y2,draw.make_color(cf),draw.make_color(cb),t)
-            end
-        if d_type=="e" then
-            local x=SCREEN_DRAWINGS[i][2]
-            local y=SCREEN_DRAWINGS[i][3]
-            local a=SCREEN_DRAWINGS[i][4]
-            local b=SCREEN_DRAWINGS[i][5]
-            local c=SCREEN_DRAWINGS[i][6]
-            draw_ellipse(x,y,a,b,draw.make_color(c))
-            end
-        if d_type=="ef" then
-            local x=SCREEN_DRAWINGS[i][2]
-            local y=SCREEN_DRAWINGS[i][3]
-            local a=SCREEN_DRAWINGS[i][4]
-            local b=SCREEN_DRAWINGS[i][5]
-            local c=SCREEN_DRAWINGS[i][6]
-            draw_ellipse_filled(x,y,a,b,draw.make_color(c))
-            end
-        if d_type=="s" then
-            local x=SCREEN_DRAWINGS[i][2]
-            local y=SCREEN_DRAWINGS[i][3]
-            local s=SCREEN_DRAWINGS[i][4]
-            local cf=SCREEN_DRAWINGS[i][5]
-            local cb=SCREEN_DRAWINGS[i][6]
-            local fontx=SCREEN_DRAWINGS[i][7]
-            local fonty=SCREEN_DRAWINGS[i][8]
-            if ( fontx == nil ) then draw_string(x,y,s,draw.make_color(cf),draw.make_color(cb)) -- faster if no scaling
-            else draw_string(x,y,s,draw.make_color(cf),draw.make_color(cb),fontx,fonty) end         
+        local p = SCREEN_DRAWINGS[i]
+        if (p ~= nil) then
+            local t=p[1]
+            local x=p[2]
+            local y=p[3]
+            if t=="p" then
+                draw_pixel(x,y,p[4])
+                end
+            if t=="l" then
+                draw_line(x,y,p[4],p[5],p[6])
+                end
+            if t=="r" then
+                draw_rect(x,y,p[4],p[5],p[6],p[7])
+                end
+            if t=="rf" then
+                draw_rect_filled(x,y,p[4],p[5],p[6],p[7],p[8])
+                end
+            if t=="e" then
+                draw_ellipse(x,y,p[4],p[5],p[6])
+                end
+            if t=="ef" then
+                draw_ellipse_filled(x,y,p[4],p[5],p[6])
+                end
+            if t=="s" then
+                draw_string(x,y,p[4],p[5],p[6],p[7],p[8])
+                end
             end
         end
     end
@@ -162,30 +125,6 @@ draw.overdraw = function()
 draw.redraw = function()
     draw_clear()  --note: it's not "draw.clear()" from this module but "draw_clear()" - a lua command!
     draw.overdraw()
-    end
-
-draw.make_color = function(c)
-    --note - c variable changes type if it's a correct string!
-    if (c=="trans")         then c=255+1 end
-    if (c=="black")         then c=255+2 end
-    if (c=="white")         then c=255+3 end
-    if (c=="red")           then c=255+4 end
-    if (c=="red_dark")      then c=255+5 end
-    if (c=="red_light")     then c=255+6 end
-    if (c=="green")         then c=255+7 end
-    if (c=="green_dark")    then c=255+8 end
-    if (c=="green_light")   then c=255+9 end
-    if (c=="blue")          then c=255+10 end
-    if (c=="blue_dark")     then c=255+11 end
-    if (c=="blue_light")    then c=255+12 end
-    if (c=="grey")          then c=255+13 end
-    if (c=="grey_dark")     then c=255+14 end
-    if (c=="grey_light")    then c=255+15 end
-    if (c=="yellow")        then c=255+16 end
-    if (c=="yellow_dark")   then c=255+17 end
-    if (c=="yellow_light")  then c=255+18 end
-    if (c=="grey_trans")    then c=255+19 end
-    return c
     end
 
 draw.remove = function(n)
