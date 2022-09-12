@@ -3,10 +3,10 @@
 @chdk_version 1.3
 
 @param a 1st color
-@default a 160
+@default a 258
 
 @param b 2nd color
-@default b 162
+@default b 265
 
 --]]
 
@@ -25,7 +25,6 @@ numof_rect=300
 rect_size=10
 w=200
 h=200
-colors={"trans","black","white","red","red_dark","red_light","green","green_dark","green_light","blue","blue_dark","blue_light","grey","grey_dark","grey_light","yellow","yellow_dark","yellow_light"}
 
 
 print("Press any key...")
@@ -36,8 +35,8 @@ wait_click(0)
 for i=1,numof_rect do
     x=math.random(1,w)
     y=math.random(1,h)
-    c=math.random(1,table.getn(colors))
-    draw.add("rect",x,y,x+rect_size,y+rect_size,colors[c])
+    c=math.random(1,table.getn(draw.colors))
+    draw.add("rect",x,y,x+rect_size,y+rect_size,draw.colors[c])
     end
 
 draw.redraw()
