@@ -114,7 +114,7 @@ static void delete_orphans()
             {
                 char fn[64];
                 sprintf(fn, "A/CHDK/RAWHST/%s", de->d_name);
-                if (!find_image(fn, 0))
+                if (!find_image(de->d_name, 0))
                     remove(fn);
             }
         }
