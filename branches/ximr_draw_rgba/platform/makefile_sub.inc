@@ -90,10 +90,16 @@ distclean: clean
 	rm -f stubs_entry.S stubs_auto.S
 	rm -rf .dep
 
+ifdef THUMB_FW
+    CODEGEN_EXE=$(tools)/code_gen2$(EXE)
+else
+    CODEGEN_EXE=$(tools)/code_gen$(EXE)
+endif
+
 run-code-gen:
 	@echo $^ '->' $@
 	if [ -s $(TARGET_PRIMARY) ] && [ -s code_gen.txt ] ; then \
-	  $(tools)/code_gen $(ROMBASEADDR) code_gen.txt $(TARGET_PRIMARY) $(ALT_ROMBASEADDR) ; \
+	  $(CODEGEN_EXE) $(ROMBASEADDR) code_gen.txt $(TARGET_PRIMARY) $(ALT_ROMBASEADDR) ; \
 	else \
 	  echo CAUTION! code_gen cannot be run due to target firmware binary or code_gen.txt not found! ; \
 	fi ; \

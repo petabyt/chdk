@@ -8,16 +8,13 @@ EXES=makeexport$(EXE) pakwif$(EXE) finsig_vxworks$(EXE) finsig_dryos$(EXE) gensi
      dancingbits$(EXE) font_8x16_pack$(EXE) makelang$(EXE) code_gen$(EXE) gen_conf_lua$(EXE)
 
 ifeq ($(OPT_CAPSTONE_TOOLS),1)
-EXES+=finsig_thumb2$(EXE)
+EXES+=finsig_thumb2$(EXE) code_gen2$(EXE) capdis$(EXE)
 endif
 
 all: $(EXES)
 
 # not needed by batch builds, not built by default
 EXTRA_EXES=rawconvert$(EXE) yuvconvert$(EXE) find_levent$(EXE) find_eventproc$(EXE) dumpchk$(EXE) extract_error_table$(EXE)
-ifeq ($(OPT_CAPSTONE_TOOLS),1)
-EXTRA_EXES+=capdis$(EXE)
-endif
 
 extras: $(EXTRA_EXES)
 
@@ -82,6 +79,10 @@ makelang$(EXE): makelang.o
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
 code_gen$(EXE): code_gen.o stubs_load.o firmware_load.o chdk_dasm.o
+	@echo $^ '->' $@
+	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
+
+code_gen2$(EXE): code_gen2.o stubs_load.o
 	@echo $^ '->' $@
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
 
