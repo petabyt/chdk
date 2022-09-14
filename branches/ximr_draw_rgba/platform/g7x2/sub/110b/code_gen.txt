@@ -1,0 +1,490 @@
+//-------------------------- BOOT.C ---------------------------------------------------------------
+
+FILE boot.c
+
+>>> file=../boot_hdr.c
+
+FUNC start=0xe0020011 length=65 name=boot
+ASM
+>>>
+            "    mrc     p15, #0, r0, c0, c0, #5\n"
+            "    ands    r0, #0xf\n"
+            "    beq     loc_boot\n" // let core0 boot
+            "    adr     r0, loc_boot\n"
+            "    orr     r0, #1\n"
+            "    bl      sub_e0539e64\n" // park core1 then continue at r0
+            "loc_boot:\n"
+
+<<<
+FW 10
+PATCHSUB ref=0
+SKIP 3
+FW 42
+>>>
+
+            "    blx     patch_mzrm_sendmsg\n"
+
+            // Install CreateTask patch
+            // use half words in case source or destination not word aligned
+            "    adr     r0, patch_CreateTask\n"    // src: Patch data
+            "    ldr     r1, =hook_CreateTask\n"    // dest: Address to patch
+            "    add     r2, r0, #8\n"              // two words
+            "patch_hook_loop:\n"
+            "    ldrh    r3, [r0],#2\n"
+            "    strh    r3, [r1],#2\n"
+            "    cmp     r0,r2\n"
+            "    blo     patch_hook_loop\n"
+
+<<<
+FW 6
+REM -
+REM -
+REM -
+>>>
+            "    b       loc_e0020032\n" // +
+
+            // CreateTask patch, must be aligned as the original
+            "    .align  2\n"
+            "    .short  0\n" // added for alignment
+            "patch_CreateTask:\n"
+            "    ldr.w   pc, _createtask_my\n"      // Do jump to absolute address CreateTask_my
+            "_createtask_my:\n"
+            "    .long   CreateTask_my + 1\n"       // has to be a thumb address
+            "    .align  1\n"
+<<<
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=81
+>>>
+
+    if (*(int*)(0xd2082000 + 0x168) & 0x10000) {
+        // see FUN_e004e4d6, FUN_e004e4d6
+        // GPIO 0x10 (aka ON/OFF button) is not pressed -> play
+        *(int*)(0x9914+0x8) = 0x100000;
+    }
+    else {
+        // GPIO 0x10 is pressed -> rec
+        *(int*)(0x9914+0x8) = 0x80000;
+    }
+
+<<<
+ASM
+FW
+>>>
+#if defined(CHDK_NOT_IN_CANON_HEAP)
+<<<
+FW
+>>>
+#else
+            "    ldr     r0, =new_sa\n"             // +
+            "    ldr     r0, [r0]\n"                // +
+            "    add     r0, #7\n"                  // +
+#endif
+<<<
+FW $-4
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=47
+ASM
+FW $-1
+PATCHSUB ref=0
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=23
+ASM
+FW 3
+>>>
+
+            "    mrc     p15, #0, r0, c0, c0, #5\n" // +
+            "    ands    r0, r0, #0xf\n"            // +
+            "    bne     skip\n"                    // + to be on the safe side, skip this with core1
+            "    movs    r0, #1\n"                  // +
+            "    bl      sub_e051e078\n"            // unblock core1 (needs to be done twice)
+
+<<<
+FW 2
+>>>
+            "skip:\n"                               // +
+
+<<<
+FW
+PATCHSUB ref=0 comment="-> power-on mode handling & startupchecks here"
+FW 5
+PATCHSUB ref=1 name=task_Startup_my
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=44
+ASM
+FW $-10
+REM
+FW $-4
+REM
+REM
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=1 length=34
+ASM
+FW 13
+>>>
+            // added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
+            "    bl      sub_e04d9986\n" // ref in sub_e04d9c10 before "SDPower.c" string
+<<<
+REM "- diskboot"
+FW 7
+PATCHSUB ref=0 comment="-> taskcreate_physw"
+>>>
+            "    BL      CreateTask_spytask\n"  // +
+            "    bl      init_required_fw_features\n"   // +
+<<<
+FW $-1
+BSUB
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=18
+ASM
+FW 10
+PATCHSUB name=mykbd_task
+PATCHVAL value=13 comment="Increase stack size"
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=task_InitFileModules length=18 name=init_file_modules_task
+ASM
+FW 10
+PATCHSUB ref=0
+>>>
+            "    BL      core_spytask_can_start\n" // + CHDK: Set "it's-safe-to-start" flag for spytask
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=3 jfw
+ASM
+FW 2
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=25 jfw
+ASM
+FW $-2
+PATCHSUB ref=0
+FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=10 jfw
+ASM
+FW 6
+BSUB
+FW $-2
+PATCHSUB ref=0
+FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=108
+ASM
+FW 30
+>>> file=../FAT32_detect.S
+FW 8
+REM "replaced below"
+REM "replaced below"
+>>>
+            "    ldrb.w  ip, [lr, #0x1fe]\n"    // replace instructions above
+            "    ldrb.w  r4, [lr, #0x1ff]\n"    // replace instructions above
+<<<
+FW 4
+SKIP 26
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=kbd_p2_f length=77 name=kbd_p2_f_my
+ASM
+FW $-3
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=13
+ASM
+FW $-2
+>>>
+
+            "    bl      handle_jogdial\n" // +
+            "    cmp     r0, #0\n" // +
+            "    beq     no_scroll\n" // +
+
+<<<
+FW $-1
+BSUB
+>>>
+
+            "no_scroll:\n" // +
+            "    pop     {r4, pc}\n" // +
+<<<
+ENDASM
+ENDFUNC
+
+FUNC sig=kbd_p1_f_cont length=18 jfw name=kbd_p1_f_cont_my
+ASM
+FW $-2
+PATCHSUB ref=0 comment="-> some physical status is re-read here (not into physw_status)"
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=4 jfw
+ASM
+FW 3
+>>>
+            "    ldr     r0, =physw0_override\n" // +
+            "    ldr.w   r0, [r0]\n" // + use CHDK override value
+<<<
+REM -
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=task_TricInitTask length=35 name=task_TricInitTask_my
+ASM
+FW $-5
+BSUB
+FW
+BSUB
+>>>
+
+            "    ldr     r0, =0xd2050074\n" // +
+            "    ldr     r0, [r0]\n"        // + nonzero when core already running
+            "    subs    r0, #0\n"          // +
+            "    beq     tric1\n"           // +
+            "    ldr     r0, [r4]\n"        // +
+            "    mov     r1, #0x80\n"       // +
+            "    bl      _SetEventFlag\n"   // + core already initialized, set the SmacIdleCmp eventflag here
+            "tric1:\n"                      // +
+
+<<<
+FW
+BSUB
+ENDASM
+ENDFUNC
+
+FUNC sig=task_FsIoNotifyTask length=20 name=task_FsIoNotifyTask_my
+ASM
+FW $-2
+>>>
+            "    bl      check_fsio_skip\n" // +
+            "    cbnz    r0, loc_skip\n"    // +
+            "    ldr     r0, [sp]\n"        // +
+<<<
+FW
+>>>
+            "loc_skip:\n"                   // +
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- CAPT_SEQ.C ---------------------------------------------------------------
+
+FILE capt_seq.c
+
+>>> file=../capt_seq_hdr.c
+
+FUNC sig=task_CaptSeq length=178 name=capt_seq_task
+ASM
+FW 34
+>>>
+            "    bl      shooting_expo_param_override\n" // +
+<<<
+FW 4
+PATCHSUB ref=0 comment="-> nr?, remote hook, raw hook (quick, no half press)"
+FW 2
+PATCHSUB ref=1 comment="-> nr?, remote hook, raw hook
+FW
+SKIP 9
+FW $-13
+>>> prelabel
+            "    bl      capt_seq_hook_set_nr\n" //  dark frame control
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=46
+ASM
+FW $-9
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=1 length=41
+ASM
+FW $-14
+PATCHSUB ref=1
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=1 length=178
+ASM
+FW $-10
+PATCHSUB
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=293
+ASM
+FW 2
+>>>
+            "    bl      captseq_get_raw_addr\n"  // +
+<<<
+FW 119
+>>>
+            "    bl      wait_until_remote_button_is_released\n"    // + remote hook
+<<<
+FW $-39
+>>>
+            "    bl      capt_seq_hook_raw_here\n"  // +
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=task_ExpDrv length=510 name=exp_drv_task
+ASM
+FW 102
+BSUB
+FW 156
+SKIP 25
+FW 47
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=104
+ASM
+FW 38
+PATCHSUB ref=0
+FW 5
+REM -
+SKIP 15
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=23 jfw
+ASM
+FW $-2
+PATCHSUB name=apex2us
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- FILEWRITE.C ----------------------------------------------------------
+
+FILE filewrite.c
+
+>>> file=../filewrite_hdr.c
+
+FUNC sig=task_FileWrite length=42 name=filewritetask
+ASM
+FW $-22
+PATCHSUB ref=0
+FW $-4
+PATCHSUB ref=1
+FW $-2
+PATCHSUB ref=2
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=126
+ASM
+FW 2
+>>>
+
+            //hook placed here to avoid conditional branch a few instructions below (watch out for registers!)
+            //"  mov   r0, r4\n"      //data block start, commented out as R0 is already holding what we need
+            "    bl filewrite_main_hook\n"
+            "    mov     r0, r4\n"      //restore register(s)
+
+<<<
+FW 44
+PATCHSUB name=fwt_open
+FW 32
+>>>
+
+            // TODO looks equivalent to G7X, not verified that it's required
+            //mod start
+            "    LDR     r3, =current_write_ignored\n"
+            "    LDR     r3, [r3]\n"
+            "    cbnz    r3,loc_C\n" // jump over the next block
+            //mod end
+
+<<<
+FW 7
+>>>
+            "loc_C:\n"  // +
+<<<
+FW 12
+BSUB
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=1 length=64
+ASM
+FW 27
+PATCHSUB name=fwt_write
+FW $-1
+BSUB
+ENDASM
+ENDFUNC
+
+FUNC ref=2 length=140
+ASM
+FW 41
+>>>
+            "loc_D:\n"
+<<<
+PATCHSUB name=fwt_close
+FW 8
+>>>
+
+            //mod start
+            "    LDR R3, =current_write_ignored\n"
+            "    LDR R3, [R3]\n"
+            "    cbz R3, loc_E\n"
+            "    b       loc_D\n" // jump over the next block
+            "loc_E:\n"
+            //mod end
+
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
