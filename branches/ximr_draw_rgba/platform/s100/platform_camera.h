@@ -49,6 +49,7 @@
     #define CAM_VIDEO_QUALITY_ONLY          1
     #define CAM_HAS_MOVIE_DIGEST_MODE       1
     #define CAM_SHOW_OSD_IN_SHOOT_MENU      1
+    #define CAM_MULTIPART                   1
 
     #define CAM_HAS_ND_FILTER               1
     #define  CAM_HAS_NATIVE_ND_FILTER       1

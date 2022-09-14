@@ -1,3 +1,209 @@
+//-------------------------- BOOT.C ---------------------------------------------------------------
+
+FILE boot.c
+
+>>> file=../boot_hdr.c
+
+FUNC start=0xFF00000C length=88 name=boot
+ASM
+FW $-1
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=27
+>>>
+
+    //http://chdk.setepontos.com/index.php/topic,4194.0.html
+    *(int*)0x1938=(int)taskHook;
+    *(int*)0x193C=(int)taskHook; // need this for startup in Playback mode (otherwise init_file_modules_task doesn't hook properly)
+
+    *(int*)(0x26E0+0x4) = (*(int*)0xC022F48C)&4 ? 0x200000 : 0x100000;
+
+<<<
+ASM
+FW $-1
+PATCHSUB ref=0
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 7
+>>>
+
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+<<<
+FW
+>>>
+#else
+"    LDR     R0, =new_sa\n"   // otherwise use patched value
+"    LDR     R0, [R0]\n"      // 
+#endif
+
+<<<
+FW 30
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW $-1
+PATCHSUB ref=0 name=taskcreate_Startup_my
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 5
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 9
+PATCHSUB ref=0
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 39
+REM "power button & startup, see sub_FF000364_my"
+FW 8
+PATCHSUB ref=0 name=task_Startup_my
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 3
+REM "don't start DISKBOOT.BIN again"
+FW 4
+>>>
+"    BL      CreateTask_spytask \n" // added
+// we do this here rather than hook so we don't waste the original stack
+<<<
+PATCHSUB ref=0 name=taskcreatePhySw_my
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=22
+ASM
+FW 7
+PATCHSUB name=mykbd_task
+PATCHVAL value=0x2000 comment="stack size for new task_PhySw so we don't have to do stack switch"
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=task_InitFileModules name=init_file_modules_task
+ASM
+FW 7
+PATCHSUB ref=0
+>>>
+"    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=5
+ASM
+FW $-1
+PATCHSUB ref=0
+->FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=22
+ASM
+FW $-1
+PATCHSUB ref=0
+->FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=11
+ASM
+FW $-1
+PATCHSUB ref=0
+->FW
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 40
+>>> file=../FAT32_detect.S
+FW 20
+REM "replaced below"
+REM "replaced below"
+>>>
+"    LDRB    R12, [LR,#0x1FE]\n"    // replace instructions above
+"    LDRB    R4, [LR,#0x1FF]\n"     // replace instructions above
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=task_RotaryEncoder name=JogDial_task_my
+ASM
+FW 6
+>>> prelabel
+
+// Save pointer for kbd.c routine
+"    ADD     R10, SP, #0x18 \n"
+"    LDR     R9, =jog_position \n"
+"    STR     R10, [R9] \n"
+
+<<<
+FW 42
+>>>
+//------------------  added code ---------------------
+"labelA:\n"
+"    LDR     R0, =jogdial_stopped\n"
+"    LDR     R0, [R0]\n"
+"    CMP     R0, #1\n"
+"    BNE     labelB\n"
+"    MOV     R0, #40\n"
+"    BL      _SleepTask\n"
+"    B       labelA\n"
+"labelB:\n"
+//------------------  original code ------------------
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+
+FILE movie_rec.c
+
+>>> file=../movie_rec_hdr.c
+
+FUNC sig=task_MovieRecord name=movie_record_task
+ASM
+FW 67
+>>>
+"    LDR     R0, =0x9C3C \n"         //added, see FF1CC398
+"    BL      set_quality \n"         //added
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
 //-------------------------- CAPT_SEQ.C -----------------------------------------------------------
 
 FILE capt_seq.c
