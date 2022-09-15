@@ -36,6 +36,8 @@
     #define CAM_DRYOS_2_3_R47                   1
     #define CAM_PROPSET                         9
 
+    #define CAM_MULTIPART                       1
+
     #define CAM_RAW_ROWPIX                      6112 //6096
     #define CAM_RAW_ROWS                        4060 //4056
 

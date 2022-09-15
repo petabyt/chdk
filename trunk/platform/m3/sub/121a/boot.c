@@ -517,7 +517,7 @@ void __attribute__((naked,noinline)) init_file_modules_task() { //sub_FC0F79A0_m
 "    mov     r0, r5\n"
 "    bl      sub_fc37ebd4\n"
 "loc_fc0f79b6:\n"
-"    bl      sub_fc0f9e16\n"
+"    bl      sub_fc0f9e16_my\n"
 "    BL      core_spytask_can_start\n" // + CHDK: Set "it's-safe-to-start" flag for spytask
 "    cmp     r4, #0\n"
 "    bne     loc_fc0f79ca\n" //  return
@@ -529,6 +529,219 @@ void __attribute__((naked,noinline)) init_file_modules_task() { //sub_FC0F79A0_m
 "    pop     {r4, r5, r6, pc}\n"
 ".ltorg\n"
     );
+}
+
+/*************************************************************/
+//** sub_fc0f9e16_my @ 0xFC0F9E17, length=4 jfw
+void __attribute__((naked,noinline)) sub_fc0f9e16_my() {
+asm volatile (
+"    movs    r0, #3\n"
+"    push    {r4, lr}\n"
+"    bl      sub_fc37a126_my\n" // Patched (was sub_fc37a126)
+"    ldr     pc, =0xfc0f9e1f\n" // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** sub_fc37a126_my @ 0xFC37A127, length=26 jfw
+void __attribute__((naked,noinline)) sub_fc37a126_my() {
+asm volatile (
+"    push.w  {r4, r5, r6, r7, r8, lr}\n"
+"    mov     r6, r0\n"
+"    bl      sub_fc37a0f8\n"
+"    ldr     r1, =0x000581f8\n"
+"    mov     r5, r0\n"
+"    add.w   r4, r1, r0, lsl #7\n"
+"    ldr     r0, [r4, #0x6c]\n"
+"    lsls    r0, r0, #0x1d\n"
+"    bpl     loc_fc37a14c\n"
+"    movw    r2, #0xa73\n"
+"    ldr     r1, =0xfc379be0\n" //  *"Mounter.c"
+"    movs    r0, #0\n"
+"    blx     sub_fc302464\n" // j_DebugAssert
+"loc_fc37a14c:\n"
+"    mov     r1, r6\n"
+"    mov     r0, r5\n"
+"    bl      sub_fc379a56\n"
+"    ldr     r0, [r4, #0x38]\n"
+"    bl      sub_fc37a66e\n"
+"    cbnz    r0, loc_fc37a160\n"
+"    movs    r0, #0\n"
+"    str     r0, [r4, #0x6c]\n"
+"loc_fc37a160:\n"
+"    mov     r0, r5\n"
+"    bl      sub_fc379aae\n"
+"    mov     r0, r5\n"
+"    bl      sub_fc379cf6_my\n" // Patched (was sub_fc379cf6)
+"    ldr     pc, =0xfc37a16d\n" // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** sub_fc379cf6_my @ 0xFC379CF7, length=11 jfw
+void __attribute__((naked,noinline)) sub_fc379cf6_my() {
+asm volatile (
+"    push    {r4, r5, r6, lr}\n"
+"    mov     r5, r0\n"
+"    ldr     r0, =0x000581f8\n"
+"    add.w   r4, r0, r5, lsl #7\n"
+"    ldr     r0, [r4, #0x6c]\n"
+"    lsls    r0, r0, #0x1e\n"
+"    bmi     sub_fc379d28\n" //  return 0x1 // jump to FW
+"    ldr     r0, [r4, #0x38]\n"
+"    mov     r1, r5\n"
+"    bl      sub_fc379b0c_my\n" // Patched (was sub_fc379b0c)
+"    ldr     pc, =0xfc379d0f\n" // Continue in firmware
+);
+}
+
+/*************************************************************/
+//** sub_fc379b0c_my @ 0xFC379B0D, length=112 
+void __attribute__((naked,noinline)) sub_fc379b0c_my() {
+asm volatile (
+"    push.w  {r4, r5, r6, r7, r8, sb, sl, lr}\n"
+"    mov     sl, r0\n"
+"    ldr     r0, =0x000581f8\n"
+"    mov.w   r8, #0\n"
+"    add.w   r5, r0, r1, lsl #7\n"
+"    mov     r6, r8\n"
+"    mov     sb, r8\n"
+"    ldr     r0, [r5, #0x3c]\n"
+"    cmp     r0, #7\n"
+"    bhs     loc_fc379c0e\n"
+"    tbb     [pc, r0]\n" // (jumptable r0 7 elements)
+"branchtable_fc379b2a:\n"
+"    .byte((loc_fc379b42 - branchtable_fc379b2a) / 2)\n" // (case 0)
+"    .byte((loc_fc379b32 - branchtable_fc379b2a) / 2)\n" // (case 1)
+"    .byte((loc_fc379b32 - branchtable_fc379b2a) / 2)\n" // (case 2)
+"    .byte((loc_fc379b32 - branchtable_fc379b2a) / 2)\n" // (case 3)
+"    .byte((loc_fc379b32 - branchtable_fc379b2a) / 2)\n" // (case 4)
+"    .byte((loc_fc379c0a - branchtable_fc379b2a) / 2)\n" // (case 5)
+"    .byte((loc_fc379b32 - branchtable_fc379b2a) / 2)\n" // (case 6)
+".align 1\n"
+"loc_fc379b32:\n"
+"    movs    r2, #0\n"
+"    movw    r1, #0x200\n"
+"    movs    r0, #2\n"
+"    bl      _exmem_ualloc\n"
+"    movs    r4, r0\n"
+"    bne     loc_fc379b48\n"
+"loc_fc379b42:\n"
+"    movs    r0, #0\n"
+"loc_fc379b44:\n"
+"    pop.w   {r4, r5, r6, r7, r8, sb, sl, pc}\n"
+"loc_fc379b48:\n"
+"    ldr     r7, [r5, #0x50]\n"
+"    movs    r2, #1\n"
+"    movs    r1, #0\n"
+"    mov     r3, r4\n"
+"    mov     r0, sl\n"
+"    blx     r7\n"
+"    cmp     r0, #1\n"
+"    bne     loc_fc379b60\n"
+"    movs    r0, #2\n"
+"    bl      _exmem_ufree\n"
+"    b       loc_fc379b42\n" //  return 0
+"loc_fc379b60:\n"
+"    ldr     r1, [r5, #0x64]\n"
+"    mov     r0, sl\n"
+"    blx     r1\n"
+
+"    mov     r1, r4\n"              //  pointer to MBR in r1
+"    bl      mbr_read_dryos\n"      //  total sectors count in r0 before and after call
+
+// Start of DataGhost's FAT32 autodetection code (Digic6+ version by philmoz)
+// Policy: If there is a partition which has type FAT32 or exFat, use the first one of those for image storage
+// According to the code below, we can use r1, r2, r3 and r12.
+// LR wasn't really used anywhere but for storing a part of the partition signature. This is the only thing
+// that won't work with an offset, but since we can load from LR+offset into LR, we can use this to do that :)
+"    mov     r7, r4\n"              // Copy the MBR start address so we have something to work with
+"    mov     lr, r4\n"              // Save old offset for MBR signature
+"    mov     r1, #1\n"              // Note the current partition number
+"    b       dg_sd_fat32_enter\n"   // We actually need to check the first partition as well, no increments yet!
+"dg_sd_fat32:\n"
+"    cmp     r1, #4\n"              // Did we already see the 4th partition?
+"    beq     dg_sd_fat32_end\n"     // Yes, break. We didn't find anything, so don't change anything.
+"    add     r7, r7, #0x10\n"       // Second partition
+"    add     r1, r1, #1\n"          // Second partition for the loop
+"dg_sd_fat32_enter:\n"
+"    ldrb.w  r2, [r7, #0x1BE]\n"    // Partition status
+"    ldrb.w  r3, [r7, #0x1C2]\n"    // Partition type (FAT32 = 0xB)
+"    cmp     r3, #0xB\n"            // Is this a FAT32 partition?
+"    beq     dg_sd_valid\n"
+"    cmp     r3, #0xC\n"            // Not 0xB, is it 0xC (FAT32 LBA) then?
+"    beq     dg_sd_valid\n"
+"    cmp     r3, #0x7\n"            // exFat?
+"    bne     dg_sd_fat32\n"         // No, it isn't. Loop again.
+"dg_sd_valid:\n"
+"    cmp     r2, #0x00\n"           // It is, check the validity of the partition type
+"    beq     dg_sd_ok\n"
+"    cmp     r2, #0x80\n"
+"    bne     dg_sd_fat32\n"         // Invalid, go to next partition
+"dg_sd_ok:\n"
+                                    // This partition is valid, it's the first one, bingo!
+"    mov     r4, r7\n"              // Move the new MBR offset for the partition detection.
+
+"dg_sd_fat32_end:\n"
+// End of DataGhost's FAT32 autodetection code
+
+"    ldr.w   r2, [r4, #0x1c7]\n"
+"    mov     r1, r0\n"
+"    ldrb.w  r0, [r4, #0x1c6]\n"
+"    ldr.w   r7, [r4, #0x1cb]\n"
+"    orr.w   r0, r0, r2, lsl #8\n"
+"    ldrb.w  r2, [r4, #0x1ca]\n"
+"    ldrb.w  r3, [r4, #0x1be]\n"
+"    orr.w   r2, r2, r7, lsl #8\n"
+//"    ldrb.w  r7, [r4, #0x1fe]\n" // replaced below
+//"    ldrb.w  r4, [r4, #0x1ff]\n" // replaced below
+"    ldrb.w  r7, [lr, #0x1fe]\n"    // replace instructions above
+"    ldrb.w  r4, [lr, #0x1ff]\n"    // replace instructions above
+"    cbz     r3, loc_fc379b92\n"
+"    cmp     r3, #0x80\n"
+"    bne     loc_fc379ba4\n"
+"loc_fc379b92:\n"
+"    cmp     r1, r0\n"
+"    blo     loc_fc379ba4\n"
+"    adds    r3, r0, r2\n"
+"    cmp     r3, r1\n"
+"    bhi     loc_fc379ba4\n"
+"    cmp     r7, #0x55\n"
+"    bne     loc_fc379ba4\n"
+"    cmp     r4, #0xaa\n"
+"    beq     loc_fc379bec\n"
+"loc_fc379ba4:\n"
+"    mov     r4, sb\n"
+"    b       loc_fc379bf2\n"
+"loc_fc379bec:\n"
+"    movs    r4, #1\n"
+"    mov     r8, r0\n"
+"    mov     r6, r2\n"
+"loc_fc379bf2:\n"
+"    movs    r0, #2\n"
+"    bl      _exmem_ufree\n"
+"    cbnz    r4, loc_fc379c1c\n"
+"    ldr     r1, [r5, #0x64]\n"
+"    mov.w   r8, #0\n"
+"    mov     r0, sl\n"
+"    blx     r1\n"
+"    mov     r6, r0\n"
+"    b       loc_fc379c1c\n"
+"    b       loc_fc379c0e\n"
+"loc_fc379c0a:\n"
+"    movs    r6, #0x40\n"
+"    b       loc_fc379c1c\n"
+"loc_fc379c0e:\n"
+"    movw    r2, #0x688\n"
+"    ldr     r1, =0xfc379be0\n" //  *"Mounter.c"
+"    movs    r0, #0\n"
+"    blx     sub_fc302464\n" // j_DebugAssert
+"loc_fc379c1c:\n"
+"    strd    r6, sb, [r5, #0x48]\n"
+"    movs    r0, #1\n"
+"    str.w   r8, [r5, #0x44]\n"
+"    b       loc_fc379b44\n" //  return
+);
 }
 
 void __attribute__((naked,noinline)) kbd_p2_f_my() { // sub_FC083914
