@@ -215,7 +215,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245c26
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc37ab35
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc37aaed
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2783f1
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfcc9a3a3
+//NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0x010e2bed
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc3f457f
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc3331c7
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc06316b
