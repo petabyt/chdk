@@ -13,7 +13,7 @@ NHSTUB(Fflush_Fut                             ,0xe03710eb)
 NHSTUB(GetDrive_TotalClusters                 ,0xe0375125)  // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xe0372eeb)  // Calls 'GetFocusLensSubjectDistance', a couple of functions before 'GetFocusLensAvCoefficient_FW'
 NHSTUB(GetImageFolder                         ,0xe0355015)
-NHSTUB(MakeSDCardBootable                     ,NULL_SUB)
+NHSTUB(MakeSDCardBootable                     ,0xe03754ef)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
 NHSTUB(Restart                                ,0xe005b973)  // Does not work - only accepts 7 as the parameter value (firmware update)
 NHSTUB(SetFileTimeStamp                       ,0xe0374179)
@@ -25,6 +25,7 @@ NHSTUB(apex2us                                ,0xe0067ab3)
 //NHSTUB(realloc                                ,NULL_SUB)
 NHSTUB(reboot_fw_update                       ,0xe0526843)  // Does not work !!! Asserts if try to load PS.FI2 file.
 NHSTUB(CancelHPTimer                          ,0xe03f4b5b)
+NHSTUB(WriteSDCard                            ,0xe051e963)
 
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK
 NHSTUB(VTMUnlock                              ,0xe03781d7)  // ??? VTMUnlock string not in FW
@@ -38,7 +39,6 @@ NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent            ,NULL_SUB)
 NHSTUB(UnsetZoomForMovie                      ,NULL_SUB)
-NHSTUB(WriteSDCard                            ,NULL_SUB)
 
 // Use overide function for GetPropertyCase to handle high-speed continuous mode
 IGNORE(GetPropertyCase)
