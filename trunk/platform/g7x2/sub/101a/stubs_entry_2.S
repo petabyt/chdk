@@ -13,7 +13,6 @@ NHSTUB(Fflush_Fut                             ,0xe03710eb)
 NHSTUB(GetDrive_TotalClusters                 ,0xe0375125)  // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xe0372eeb)
 NHSTUB(GetImageFolder                         ,0xe0355015)
-NHSTUB(MakeSDCardBootable                     ,0xe03754ef)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
 NHSTUB(Restart                                ,0xe005b973)  // Does not work - only accepts 7 as the parameter value (firmware update)
 NHSTUB(SetFileTimeStamp                       ,0xe0374179)

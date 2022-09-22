@@ -1306,7 +1306,9 @@
 0xfc308517,LogCameraEvent
 0xfc308db3,get_fstype
 0xfc308e19,GetDrive_ClusterSize
+0xfc309295,MakeSDCardBootableStrictly
 0xfc309349,GetDrive_FreeClusters
+0xfc309733,MakeSDCardBootable
 0xfc3097cd,Open
 0xfc3097cd,Open_FW
 0xfc309851,Close

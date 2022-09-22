@@ -13,7 +13,6 @@ NHSTUB(Fflush_Fut                             ,0xfc3b9005)
 NHSTUB(GetDrive_TotalClusters                 ,0xfc3b738f) // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xfc3ba223)
 NHSTUB(GetImageFolder                         ,0xfc39d655)
-NHSTUB(MakeSDCardBootable                     ,0xfc3b68af)
 NHSTUB(RenameFile_Fut                         ,0xfc3b8d8d)
 NHSTUB(SetFileTimeStamp                       ,0xfc3b5f07)
 NHSTUB(TurnOffBackLight                       ,0xFC15BB35)  // Does not do anything?

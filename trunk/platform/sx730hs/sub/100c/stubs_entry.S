@@ -169,7 +169,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc073dc0
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc35260f
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc3344bb
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc32f3e7
-//NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc3529d5
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc34c711
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc3517fb
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3517b3
@@ -231,6 +230,7 @@ NHSTUB(LEDDrive                               ,0xfc3e9dc9) //  0
 NHSTUB(LocalTime                              ,0xfc3b3ad5) //  0
 NHSTUB(LockMainPower                          ,0xfc0fdddf) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc351867) //  0
+//NHSTUB(MakeSDCardBootable                   ,0xfc3529d5) //  0            == 0xfc3529d5
 NHSTUB(MoveFocusLensToDistance                ,0xfc52e705) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc43fa1d) //  0
 NHSTUB(MoveZoomLensWithPoint                  ,0xfc43fd63) //  0

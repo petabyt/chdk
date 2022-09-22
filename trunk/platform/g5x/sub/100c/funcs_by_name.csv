@@ -1521,6 +1521,8 @@
 0xfc021257,MakeDefectTurnTable_FW
 0xfc3b5f83,MakeDirectory_Fut
 0xfc66306d,MakeScriptDisk_FW
+0xfc3b7719,MakeSDCardBootable
+0xfc3b72c5,MakeSDCardBootableStrictly
 0xfc3bf235,malloc
 0xfc3bf975,malloc_strictly
 0xfc020ee9,MarkPointDefData_FW
