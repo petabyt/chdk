@@ -38,7 +38,7 @@ NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)
 NHSTUB(SetZoomActuatorSpeedPercent            ,NULL_SUB)
 NHSTUB(UnsetZoomForMovie                      ,NULL_SUB)
-NHSTUB(WriteSDCard                            ,NULL_SUB)
+NHSTUB(WriteSDCard                            ,0xe051e963)
 
 // Use overide function for GetPropertyCase to handle high-speed continuous mode
 IGNORE(GetPropertyCase)
