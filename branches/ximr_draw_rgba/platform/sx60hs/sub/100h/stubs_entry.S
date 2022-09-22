@@ -184,7 +184,6 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc332513
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fabe9
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba85
-//NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc332875
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b85
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc0b96e5
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc332c29
@@ -242,6 +241,7 @@ NHSTUB(LEDDrive                               ,0xfc1d94bd) //  0
 NHSTUB(LocalTime                              ,0x010e61a1) //  0
 NHSTUB(LockMainPower                          ,0xfc15c413) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xfc332c7f) //  0
+//NHSTUB(MakeSDCardBootable                   ,0xfc332875) //  0            == 0xfc332875
 NHSTUB(MoveFocusLensToDistance                ,0xfc4b4d2f) //  0
 NHSTUB(MoveIrisWithAv                         ,0xfc39d5ad) //  0
 NHSTUB(MoveZoomLensWithPoint                  ,0xfc39dd77) //  0

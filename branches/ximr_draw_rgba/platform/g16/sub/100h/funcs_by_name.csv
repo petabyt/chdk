@@ -1283,6 +1283,8 @@
 0xfc390c95,MakeBootDisk_FW
 0xfc309aeb,MakeDirectory_Fut
 0xfc390ca1,MakeScriptDisk_FW
+0xfc3096e3,MakeSDCardBootable
+0xfc309245,MakeSDCardBootableStrictly
 0xfc30e25d,malloc
 0xfc30d7d1,malloc_strictly
 0xfc1d101b,Mecha.Create_FW

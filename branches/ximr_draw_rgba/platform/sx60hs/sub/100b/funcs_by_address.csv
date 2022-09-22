@@ -1529,7 +1529,9 @@
 0xfc3300a7,IsWirelessConnect
 0xfc331fb9,get_fstype
 0xfc33201f,GetDrive_ClusterSize
+0xfc33246f,MakeSDCardBootableStrictly
 0xfc332523,GetDrive_FreeClusters
+0xfc33280d,MakeSDCardBootable,(stubs_entry_2.s)
 0xfc3328fd,Open
 0xfc3328fd,Open_FW
 0xfc332981,Close

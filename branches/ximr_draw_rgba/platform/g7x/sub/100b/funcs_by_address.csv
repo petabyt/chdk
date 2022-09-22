@@ -1403,7 +1403,9 @@
 0xfc3566e5,task_StartupImage
 0xfc35769d,get_fstype
 0xfc357703,GetDrive_ClusterSize
+0xfc357b53,MakeSDCardBootableStrictly
 0xfc357c07,GetDrive_FreeClusters
+0xfc357f71,MakeSDCardBootable
 0xfc35800d,Open
 0xfc35800d,Open_FW
 0xfc358091,Close

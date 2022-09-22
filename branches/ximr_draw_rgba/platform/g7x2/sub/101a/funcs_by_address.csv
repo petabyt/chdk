@@ -678,7 +678,9 @@
 0xe0374355,PrepareDirectory_0
 0xe0374bcf,get_fstype
 0xe0374c35,GetDrive_ClusterSize
+0xe0375097,MakeSDCardBootableStrictly
 0xe0375149,GetDrive_FreeClusters
+0xe03754ef,MakeSDCardBootable
 0xe03756bf,StartPlayModeMenu_FW
 0xe03756d9,StartRecModeMenu_FW
 0xe0375785,ShutdownRecModeMenu_FW

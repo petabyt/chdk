@@ -184,7 +184,7 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3324ff
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fabd5
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba07
-//NHSTUB(MakeSDCardBootable                   ,0x00000000) //  0        *** != 0xfc33280d
+//NHSTUB(MakeSDCardBootable                   ,0xfc332861) //  0        *** != 0xfc33280d
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b71
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc0b96e5
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc332c15

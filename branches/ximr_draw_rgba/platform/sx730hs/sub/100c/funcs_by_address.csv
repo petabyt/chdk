@@ -1082,7 +1082,9 @@
 0xfc3519fd,pvm_get_largest_free_block_size_ptr
 0xfc3520cf,get_fstype
 0xfc352135,GetDrive_ClusterSize
+0xfc352581,MakeSDCardBootableStrictly
 0xfc352633,GetDrive_FreeClusters
+0xfc3529d5,MakeSDCardBootable
 0xfc353859,EpilogShow_FW
 0xfc353985,EpilogFile_FW
 0xfc3539a1,task_Epilog

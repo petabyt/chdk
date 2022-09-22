@@ -186,6 +186,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "LockMainPower" },
     { "Lseek", UNUSED|LIST_ALWAYS },
     { "MakeDirectory_Fut" },
+    { "MakeSDCardBootableStrictly", UNUSED|DONT_EXPORT },
     { "MakeSDCardBootable", OPTIONAL },
     { "MoveFocusLensToDistance" },
     { "MoveIrisWithAv", OPTIONAL },
@@ -5804,6 +5805,10 @@ sig_rule_t sig_rules_main[]={
 {sig_match_mzrm_sendmsg_ret_adr,"mzrm_sendmsg_ret_adr","SendMsg   : %d\n",      SIG_STRCALL_ARG(0)|SIG_STRCALL_CALL_REG},
 {sig_match_fw_yuv_layer_buf_52,"fw_yuv_layer_buf","fw_yuv_layer_buf_helper",0,SIG_DRY_MAX(52)}, // dry52 has different code
 {sig_match_fw_yuv_layer_buf_gt52,"fw_yuv_layer_buf","fw_yuv_layer_buf_helper",0,SIG_DRY_MIN(54)}, // dry52 has different code
+
+{sig_match_named,   "MakeSDCardBootableStrictly",         "MakeBootDisk_FW",             SIG_NAMED_SUB},
+{sig_match_named,   "MakeSDCardBootable",                 "MakeSDCardBootableStrictly",  SIG_NAMED_NTH(3,JMP_SUB)},
+
 {NULL},
 };
 
