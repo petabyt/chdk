@@ -157,6 +157,9 @@
                                                       Up to 20 patch references can be saved.
         BSUB                                        - Converts current branch/jump instruction destination from loc_XXXXXXXX to sub_XXXXXXXX
         LEADING "???"                               - Sets the string prefix added before each line output - default is 12 spaces. Can be adjusted to suit or match other code.
+        DASM start=X length=N                       - starts a new disassembly in the curent FUNC at the specified start address and length
+                                                      useful when functions contain data blocks within them that can confuse capdis.
+        LBL                                         - output a 'loc_XXXXXXXX' label at the current address.
 
     Examples can be found in the G7X2 port
  */
@@ -317,6 +320,8 @@ void print_args()
 #define REM_OP      12
 #define SKIP_OP     13
 #define BSUB_OP     14
+#define DASM_OP     15
+#define LBL_OP      16
 
 typedef struct _op
 {
@@ -496,8 +501,39 @@ void parse_FUNC()
         }
         else
         {
-        fprintf(stderr,"????? '%s'",largs[n]);
+            fprintf(stderr,"????? '%s'",largs[n]);
             chk_args(-1,"Invalid FUNC argument",p);
+        }
+    }
+}
+
+// Continue disassembly at a new address and length
+//  - sets up addresses & length
+//  - does pass 1 & 2 of the disassembly to get the labels
+//  - writes the function start to the source
+void parse_DASM()
+{
+    op *p = new_op(DASM_OP);
+    int n;
+
+    for (n=1; n<largc; n++)
+    {
+        if (strcmp(largs[n], "start") == 0)
+        {
+            p->func_start = strtoul(largs[++n],0,0);
+        }
+        else if (strcmp(largs[n], "length") == 0)
+        {
+            p->func_len = strtoul(largs[++n],0,0);
+        }
+        else if (strcmp(largs[n], "jfw") == 0)
+        {
+            p->do_jump_fw = 1;
+        }
+        else
+        {
+            fprintf(stderr,"????? '%s'",largs[n]);
+            chk_args(-1,"Invalid DASM argument",p);
         }
     }
 }
@@ -506,6 +542,12 @@ void parse_FUNC()
 void parse_ENDFUNC()
 {
     new_op(ENDFUNC_OP);
+}
+
+// Output a label at current address
+void parse_LBL()
+{
+    new_op(LBL_OP);
 }
 
 // Writes the 'asm...' stuff to the file
@@ -936,6 +978,63 @@ void op_FUNC(op *p)
     addr = p->func_start;
 }
 
+// Continue disassembly at new address and length:
+//  - sets up addresses & length
+//  - calls capdis to generate the text disassembly
+//  - writes the function start to the source
+void op_DASM(op *p)
+{
+    in_func = 1;
+    
+    if (p->func_start == 0) chk_args(-1,"Missing DASM start address",p);
+
+    if (p->func_len == 0)
+    {
+        op *n = p->next;
+        int cont = 1;
+        while (n && cont)
+        {
+            switch (n->operation)
+            {
+            case FW_OP:
+                if (n->fw_is_func_end_offset)
+                {
+                    cont = 0;
+                    p->func_len = 0;
+                }
+                else
+                {
+                    p->func_len += n->op_len;
+                }
+                break;
+            case PATCHSUB_OP:
+            case PATCHVAL_OP:
+            case REM_OP:
+                p->func_len++;
+                break;
+            case SKIP_OP:
+                p->func_len += n->op_len;
+                break;
+            case ENDFUNC_OP:
+                cont = 0;
+                break;
+            }
+            n = n->next;
+        }
+
+        if (p->func_len == 0)
+        {
+            chk_args(-1,"Missing DASM end address or length",p);
+        }
+    }
+
+    disassemble1(p);
+
+    fprintf(outfile,"\n//** @ 0x%08X, length=%d %s\n", p->func_start, func_len, p->do_jump_fw ? "jfw" : "" ) ;
+
+    addr = p->func_start;
+}
+
 // Disassemble a block of firmware code to the file
 void op_FW(op *p)
 {
@@ -990,6 +1089,9 @@ void do_ops(op *p)
     case FUNC_OP:
         op_FUNC(p);
         break;
+    case DASM_OP:
+        op_DASM(p);
+        break;
     case ENDFUNC_OP:
         // End function, writes the function end to the file
         fprintf(outfile,"}\n");
@@ -1024,6 +1126,9 @@ void do_ops(op *p)
         // Generate a B instruction to jump back to the firmware code at the current address
         disassemble_jumpfw();
         break;
+    case LBL_OP:
+        fprintf(outfile, "%s\"loc_%08x:\\n\"\n", options.leading, addr);
+        break;
     }
 }
 
@@ -1057,6 +1162,8 @@ void parse_ops()
         if (run_op("SKIP",      parse_SKIP))       return;
         if (run_op("BSUB",      parse_BSUB))       return;
         if (run_op("LEADING",   parse_LEADING))    return;
+        if (run_op("DASM",      parse_DASM))       return;
+        if (run_op("LBL",       parse_LBL))        return;
     }
 }
 
