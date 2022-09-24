@@ -537,6 +537,7 @@
 0xfc40e5d9,GetDramTypeError_FW
 0xfc3075a3,GetDrive_ClusterSize
 0xfc307ad1,GetDrive_FreeClusters
+0xfc307aad,GetDrive_TotalClusters
 0xfc19253d,GetDriverInfoEvent_FW
 0xfc083c31,getEepromNum_FW
 0xfc4047af,GetEFuseData_FW

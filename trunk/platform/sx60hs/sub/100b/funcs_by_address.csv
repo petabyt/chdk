@@ -1530,6 +1530,7 @@
 0xfc331fb9,get_fstype
 0xfc33201f,GetDrive_ClusterSize
 0xfc33246f,MakeSDCardBootableStrictly
+0xfc3324ff,GetDrive_TotalClusters
 0xfc332523,GetDrive_FreeClusters
 0xfc33280d,MakeSDCardBootable,(stubs_entry_2.s)
 0xfc3328fd,Open

@@ -1083,6 +1083,7 @@
 0xfc3520f7,get_fstype
 0xfc35215d,GetDrive_ClusterSize
 0xfc3525a9,MakeSDCardBootableStrictly
+0xfc352637,GetDrive_TotalClusters
 0xfc35265b,GetDrive_FreeClusters
 0xfc3529fd,MakeSDCardBootable
 0xfc353881,EpilogShow_FW

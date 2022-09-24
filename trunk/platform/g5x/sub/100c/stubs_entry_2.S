@@ -10,7 +10,6 @@ NHSTUB(ExpCtrlTool_StartContiAE               ,0xFC2CDB5B)
 NHSTUB(ExpCtrlTool_StopContiAE                ,0xFC2CDD4D)
 NHSTUB(Feof_Fut                               ,0xFC3B8FA1)
 NHSTUB(Fflush_Fut                             ,0xFC3B8FC9)
-NHSTUB(GetDrive_TotalClusters                 ,0xFC3B7353) // function immediately before GetDrive_FreeClusters in ROM
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xFC3BA1E7)
 NHSTUB(GetImageFolder                         ,0xfc39d619)
 NHSTUB(RenameFile_Fut                         ,0xFC3B8D51)

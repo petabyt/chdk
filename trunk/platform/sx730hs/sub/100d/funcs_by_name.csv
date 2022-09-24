@@ -655,6 +655,7 @@
 0xfc441bad,GetDramTypeError_FW
 0xfc35215d,GetDrive_ClusterSize
 0xfc35265b,GetDrive_FreeClusters
+0xfc352637,GetDrive_TotalClusters
 0xfc3d3771,GetDriverInfoEvent_FW
 0xfc52dd8d,GetEFUSEData_FW
 0xfc42ceeb,GetEFuseData_FW

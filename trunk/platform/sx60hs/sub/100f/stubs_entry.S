@@ -181,7 +181,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8c2a
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f47
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc301dad
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc301dd5
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3324eb
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fabc1
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba5d
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b5d
@@ -226,6 +225,7 @@ NHSTUB(GetUsableMinAv                         ,0xfc1c1c4f) //  0
 NHSTUB(get_current_deltasv                    ,0xfc16de53) //  0
 NHSTUB(GetCurrentDriveBaseSvValue             ,0xfc2fb36d) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc33200b) //  0
+//NHSTUB(GetDrive_TotalClusters               ,0xfc3324eb) //  0            == 0xfc3324eb
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc2fa8df) //  0
 NHSTUB(GetKbdState                            ,0xfc0707e9) //  0
 NHSTUB(GetMemInfo                             ,0xfc41e355) //  0

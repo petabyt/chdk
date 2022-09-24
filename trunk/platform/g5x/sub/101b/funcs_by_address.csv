@@ -1181,6 +1181,7 @@
 0xfc3b6e49,get_fstype
 0xfc3b6eaf,GetDrive_ClusterSize
 0xfc3b7301,MakeSDCardBootableStrictly
+0xfc3b738f,GetDrive_TotalClusters
 0xfc3b73b3,GetDrive_FreeClusters
 0xfc3b7755,MakeSDCardBootable
 0xfc3b796d,RegisterEventProcedure

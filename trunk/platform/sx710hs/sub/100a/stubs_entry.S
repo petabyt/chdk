@@ -174,7 +174,6 @@ DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c
 
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc326b09
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc326b31
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc316d4f
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc3281b3
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc310b01
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3268b9
@@ -215,6 +214,7 @@ NHSTUB(GetUsableMinAv                         ,0xfc53a757) //  0
 NHSTUB(get_current_deltasv                    ,0xfc130b67) //  0
 NHSTUB(GetCurrentDriveBaseSvValue             ,0xfc31584f) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc31686f) //  0
+//NHSTUB(GetDrive_TotalClusters               ,0xfc316d4f) //  0            == 0xfc316d4f
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc327eaf) //  0
 NHSTUB(GetKbdState                            ,0xfc086c39) //  0
 NHSTUB(GetMemInfo                             ,0xfc565271) //  0

@@ -202,7 +202,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245bf6
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc2aadc9
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc374429
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc374451
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc06bf33
+//NHSTUB(GetDrive_TotalClusters               ,0xfc37a32f) //  0        *** != 0xfc06bf33
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc35ff17
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc303c65
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc44bb9d

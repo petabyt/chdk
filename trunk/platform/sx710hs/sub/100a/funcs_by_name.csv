@@ -581,6 +581,7 @@
 0xfc542673,GetDramTypeError_FW
 0xfc31686f,GetDrive_ClusterSize
 0xfc316d73,GetDrive_FreeClusters
+0xfc316d4f,GetDrive_TotalClusters
 0xfc163489,GetDriverInfoEvent_FW
 0xfc3bb169,getEepromNum_FW
 0xfc568541,GetEFUSEData_FW

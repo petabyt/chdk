@@ -1404,6 +1404,7 @@
 0xfc35769d,get_fstype
 0xfc357703,GetDrive_ClusterSize
 0xfc357b53,MakeSDCardBootableStrictly
+0xfc357be3,GetDrive_TotalClusters
 0xfc357c07,GetDrive_FreeClusters
 0xfc357f71,MakeSDCardBootable
 0xfc35800d,Open

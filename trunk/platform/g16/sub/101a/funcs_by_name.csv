@@ -538,6 +538,7 @@
 0xfc390941,GetDramTypeError_FW
 0xfc308e19,GetDrive_ClusterSize
 0xfc309349,GetDrive_FreeClusters
+0xfc309325,GetDrive_TotalClusters
 0xfc1b51ed,GetDriverInfoEvent_FW
 0xfc37876f,GetEFuseData_FW
 0x010c55d1,GetEventFlagValue

@@ -630,6 +630,7 @@
 0xfc662cc1,GetDramTypeError_FW
 0xfc3b6e73,GetDrive_ClusterSize
 0xfc3b7377,GetDrive_FreeClusters
+0xfc3b7353,GetDrive_TotalClusters
 0xfc481c9d,GetDriverInfoEvent_FW
 0xfc480e19,getEepromNum_FW
 0xfc666065,GetEFUSEData_FW

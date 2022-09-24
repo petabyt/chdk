@@ -1674,6 +1674,7 @@
 0xfc379a79,get_fstype
 0xfc379adf,GetDrive_ClusterSize
 0xfc379f2f,MakeSDCardBootableStrictly
+0xfc06bf33,GetDrive_TotalClusters,(stubs_entry_2.s)
 0xfc379fe3,GetDrive_FreeClusters
 0xfc37a34d,MakeSDCardBootable
 0xfc37a3ed,j_malloc

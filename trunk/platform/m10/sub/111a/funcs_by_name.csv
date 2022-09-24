@@ -738,6 +738,7 @@
 0xfc4436bd,GetDramTypeError_FW
 0xfc388edf,GetDrive_ClusterSize
 0xfc3893e3,GetDrive_FreeClusters
+0xfc3893bf,GetDrive_TotalClusters
 0xfc23dfd1,GetDriverInfoEvent_FW
 0xfc08f5f1,getEepromNum_FW
 0xfc5be647,GetEFLensFocusPositionWithLensCom
