@@ -64,13 +64,8 @@ NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
                                                             //   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
                                                             //   The value is the second parameter to this function.
 
-// Incorrect by finsig - need to check
-
 // Does not exist
 NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead code merged into EngDrvRead_FW !!! TODO: enable use of EngDrvRead_FW in code
-
-// Missed by finsig - need to check
-NHSTUB(SetHPTimerAfterNow                   ,0xe03f4ac1)
 
 DEF(task_FsIoNotifyTask                     ,0xe00f2b5d)
 

@@ -1814,6 +1814,7 @@
 0xe05695ab,SetGyroHPFINOffsetRoll_FW
 0xe0568fb1,SetGyroHPFINOffsetYaw_FW
 0xe05853a7,SetHour_FW
+0xe03f4ac1,SetHPTimerAfterNow
 0xe0551fff,SetIgnoreAVJACK_FW
 0xe0585249,SetImageMode_FW
 0xe0585233,SetInputVoltage_FW
