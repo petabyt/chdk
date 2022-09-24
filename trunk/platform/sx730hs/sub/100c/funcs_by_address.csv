@@ -819,7 +819,6 @@
 0xfc24aa7d,task_ImageRetryConTask
 0xfc255e85,task_ISMainTask
 0xfc256147,ISInitMotion_FW
-0xfc25635b,GetFocusLensSubjectDistanceFromLensHelper
 0xfc2567d5,GetISPWMFreqData_FW
 0xfc2567d5,GetISPWMFrequency_FW
 0xfc2567dd,GetISPWMPeriod_FW
@@ -1084,7 +1083,6 @@
 0xfc3519fd,pvm_get_largest_free_block_size_ptr
 0xfc3520cf,get_fstype
 0xfc352135,GetDrive_ClusterSize
-0xfc352581,MakeSDCardBootableStrictly
 0xfc35260f,GetDrive_TotalClusters
 0xfc352633,GetDrive_FreeClusters
 0xfc3529d5,MakeSDCardBootable

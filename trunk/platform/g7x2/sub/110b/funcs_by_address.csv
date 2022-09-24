@@ -679,7 +679,6 @@
 0xe0374355,PrepareDirectory_0
 0xe0374bcf,get_fstype
 0xe0374c35,GetDrive_ClusterSize
-0xe0375097,MakeSDCardBootableStrictly
 0xe0375125,GetDrive_TotalClusters
 0xe0375149,GetDrive_FreeClusters
 0xe03754ef,MakeSDCardBootable
@@ -985,7 +984,6 @@
 0xe049415f,StopAndSaveCzLog_FW
 0xe049416b,CzDebugPrintToFile_FW
 0xe0494d6f,task_IS_GetExposureTimingTask
-0xe0495413,GetFocusLensSubjectDistanceFromLensHelper
 0xe0495421,task_ISMainTask
 0xe04956f1,ISInitMotion_FW
 0xe0495cdd,GetISPWMFreqData_FW

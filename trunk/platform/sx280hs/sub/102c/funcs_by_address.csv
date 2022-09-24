@@ -1133,7 +1133,6 @@
 0xfc261b25,CzDebugPrintToFile_FW
 0xfc26e651,task_ISMainTask
 0xfc26e8b3,ISInitMotion_FW
-0xfc26eaa9,GetFocusLensSubjectDistanceFromLensHelper
 0xfc26ece9,GetISPWMFrequency_FW
 0xfc26ed45,StartISLocalAutoCenter_FW
 0xfc26ed6b,StartISLocalHallAdjust_FW
@@ -1261,7 +1260,6 @@
 0xfc2a3705,task_StartupImage
 0xfc2a464d,get_fstype
 0xfc2a46b3,GetDrive_ClusterSize
-0xfc2a4b53,MakeSDCardBootableStrictly
 0xfc2a4be3,GetDrive_TotalClusters
 0xfc2a4c07,GetDrive_FreeClusters
 0xfc2a4fe3,MakeSDCardBootable

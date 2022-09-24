@@ -358,7 +358,6 @@
 0xfc0c78a3,GetRomID_FW
 0xfc0c85dd,task_ISMainTask
 0xfc0c887b,ISInitMotion_FW
-0xfc0c8abf,GetFocusLensSubjectDistanceFromLensHelper
 0xfc0c8dd7,GetISPWMFreqData_FW
 0xfc0c8dd7,GetISPWMFrequency_FW
 0xfc0c8ddb,GetISPWMPeriod_FW
@@ -1181,7 +1180,6 @@
 0xfc3b6159,task_CtrlSrv
 0xfc3b6e49,get_fstype
 0xfc3b6eaf,GetDrive_ClusterSize
-0xfc3b7301,MakeSDCardBootableStrictly
 0xfc3b738f,GetDrive_TotalClusters
 0xfc3b73b3,GetDrive_FreeClusters
 0xfc3b7755,MakeSDCardBootable

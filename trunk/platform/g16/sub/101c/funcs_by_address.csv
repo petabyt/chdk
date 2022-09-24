@@ -1210,7 +1210,6 @@
 0xfc2cffeb,get_current_exp
 0xfc2d0dfd,task_ISMainTask
 0xfc2d1035,ISInitMotion_FW
-0xfc2d12d7,GetFocusLensSubjectDistanceFromLensHelper
 0xfc2d15a5,GetISPWMFrequency_FW
 0xfc2d15fb,StartISLocalAutoCenter_FW
 0xfc2d1621,StartISLocalHallAdjust_FW
@@ -1308,7 +1307,6 @@
 0xfc308567,LogCameraEvent
 0xfc308e03,get_fstype
 0xfc308e69,GetDrive_ClusterSize
-0xfc3092e5,MakeSDCardBootableStrictly
 0xfc309375,GetDrive_TotalClusters
 0xfc309399,GetDrive_FreeClusters
 0xfc309783,MakeSDCardBootable

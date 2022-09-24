@@ -570,7 +570,6 @@
 0xfc2c751f,GetFocusLensSubjectDistance
 0xfc38ccdd,GetFocusLensSubjectDistance_FW
 0xfc2c7819,GetFocusLensSubjectDistanceFromLens
-0xfc2d12d7,GetFocusLensSubjectDistanceFromLensHelper
 0xfc38ccef,GetFocusLensSubjectDistanceNumber_FW
 0xfc1cb107,GetFocusPiSensorLevel_FW
 0xfc2c78e1,GetFocusResetPosition_FW
@@ -1287,7 +1286,6 @@
 0xfc309b8b,MakeDirectory_Fut
 0xfc390d51,MakeScriptDisk_FW
 0xfc309783,MakeSDCardBootable
-0xfc3092e5,MakeSDCardBootableStrictly
 0xfc30e2fd,malloc
 0xfc30d871,malloc_strictly
 0xfc1d1083,Mecha.Create_FW

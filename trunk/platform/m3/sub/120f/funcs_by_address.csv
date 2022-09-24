@@ -1515,7 +1515,6 @@
 0xfc317a3b,GetGyroHPFINPitch_FW
 0xfc317a41,GetGyroHPFINYaw_FW
 0xfc317b7d,GetDISModeParameter_FW
-0xfc317bd3,GetFocusLensSubjectDistanceFromLensHelper
 0xfc317c3d,GetFixedPWMOutA_FW
 0xfc317c43,GetFixedPWMOutB_FW
 0xfc318c5d,PowerOffIris_FW
@@ -1676,7 +1675,6 @@
 0xfc379743,ui_free
 0xfc379de9,get_fstype
 0xfc379e4f,GetDrive_ClusterSize
-0xfc37a29f,MakeSDCardBootableStrictly
 0xfc37a32f,GetDrive_TotalClusters
 0xfc37a353,GetDrive_FreeClusters
 0xfc37a6bd,MakeSDCardBootable

@@ -655,7 +655,6 @@
 0xfc2fa8e3,GetFocusLensSubjectDistance
 0xfc39d2bd,GetFocusLensSubjectDistance_FW
 0xfc2fabc5,GetFocusLensSubjectDistanceFromLens
-0xfc2c116f,GetFocusLensSubjectDistanceFromLensHelper
 0xfc39d2cf,GetFocusLensSubjectDistanceNumber_FW
 0xfc1ccadd,GetFocusPiSensorLevel_FW
 0xfc2facbd,GetFocusResetPosition_FW
@@ -1570,7 +1569,6 @@
 0xfc332c5b,MakeDirectory_Fut
 0xfc3a4789,MakeScriptDisk_FW
 0xfc332851,MakeSDCardBootable
-0xfc33245f,MakeSDCardBootableStrictly
 0xfc337f09,malloc
 0xfc33650d,malloc_strictly
 0xfc020d17,MarkPointDefData_FW

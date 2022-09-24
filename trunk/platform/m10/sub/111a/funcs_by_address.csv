@@ -1389,7 +1389,6 @@
 0xfc27d563,GetGyroHPFINPitch_FW
 0xfc27d569,GetGyroHPFINYaw_FW
 0xfc27d5dd,GetDISModeParameter_FW
-0xfc27d641,GetFocusLensSubjectDistanceFromLensHelper
 0xfc27dbd7,PTM_AllReset_FW
 0xfc27ddf5,PTM_GetWorkingCaptureMode_FW
 0xfc27de01,PTM_SetCurrentItem_FW
@@ -1684,7 +1683,6 @@
 0xfc38828f,GetPropertyCase
 0xfc388e79,get_fstype
 0xfc388edf,GetDrive_ClusterSize
-0xfc38932f,MakeSDCardBootableStrictly
 0xfc3893bf,GetDrive_TotalClusters
 0xfc3893e3,GetDrive_FreeClusters
 0xfc38974d,MakeSDCardBootable

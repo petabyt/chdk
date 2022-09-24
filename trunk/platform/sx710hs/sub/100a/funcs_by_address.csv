@@ -772,7 +772,6 @@
 0xfc2369ef,task_IS_ActiveShadCompTask
 0xfc237089,task_ISMainTask
 0xfc237389,ISInitMotion_FW
-0xfc2375bd,GetFocusLensSubjectDistanceFromLensHelper
 0xfc237943,GetISPWMFrequency_FW
 0xfc237947,GetISPWMPeriod_FW
 0xfc23799f,StartISLocalAutoCenter_FW
@@ -1034,7 +1033,6 @@
 0xfc3160eb,get_current_exp
 0xfc316809,get_fstype
 0xfc31686f,GetDrive_ClusterSize
-0xfc316cbf,MakeSDCardBootableStrictly
 0xfc316d4f,GetDrive_TotalClusters
 0xfc316d73,GetDrive_FreeClusters
 0xfc3170dd,MakeSDCardBootable
