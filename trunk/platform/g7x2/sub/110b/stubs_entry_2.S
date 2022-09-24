@@ -31,7 +31,6 @@ NHSTUB(VTMUnlock                              ,0xe03781d7)  // ??? VTMUnlock str
 NHSTUB(GetActiveViewportBuffer                ,0xe03aa70b)
 
 // These don't exist
-NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)
 NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)

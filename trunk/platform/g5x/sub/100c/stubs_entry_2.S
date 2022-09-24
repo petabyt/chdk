@@ -72,7 +72,6 @@ NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
                                                             //   The value is the second parameter to this function.
 
 // These don't exist
-NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)
 NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)

@@ -717,6 +717,7 @@
 0xe037ca81,SetCurrentCaptureModeType
 0xe037ca81,SetCurrentCaptureModeType_FW
 0xe037dbed,GetCurrentCaptureModeType_FW
+0xe037e475,PT_PlaySound
 0xe037e5d5,j_malloc
 0xe037e5d9,j_free
 0xe037e5dd,malloc_strictly

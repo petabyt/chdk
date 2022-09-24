@@ -1710,6 +1710,7 @@
 0xfc2d4a6d,PT_MFOn
 0xfc2d2efb,PT_MoveDigitalZoomToWide
 0xfc5e4b05,PT_MoveOpticalZoomAt
+0xfc3bde51,PT_PlaySound
 0xfc2a6007,PTM_AllReset_FW
 0xfc3adb87,PTM_AllResetToFactorySetting_FW
 0xfc2a6cff,PTM_BackupUIProperty_FW

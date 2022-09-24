@@ -183,7 +183,6 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc3b8fe1
 //NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc3ba1ff
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc39d631
-//NHSTUB(PT_PlaySound                         ,0xfc3bde05) //  0        *** != 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3b8d69
 //NHSTUB(ScreenLock                           ,0xfc3bec91) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xfc3becc7) //  0        *** != 0x00000000
@@ -253,6 +252,7 @@ NHSTUB(PB2Rec                                 ,0xfc364f2b) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2d2ed3) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc5e4ab9) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc2d2d09) //  0
+NHSTUB(PT_PlaySound                           ,0xfc3bde05) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3bd751) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc3bd785) //  0
 //NHSTUB(PutInNdFilter                        ,0xfc667edd) //  0            Overridden

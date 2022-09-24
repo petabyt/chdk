@@ -1248,6 +1248,7 @@
 0xfc3bd785,PostLogicalEventToUI_FW
 0xfc3bd883,PostEventShootSeqToUI_FW
 0xfc3bd8b5,ShowLogicalEventName_FW
+0xfc3bde05,PT_PlaySound
 0xfc3be169,transfer_src_overlay
 0xfc3be5df,VTM_ShrinkLayoutForFinder_FW
 0xfc3becdf,transfer_src_overlay_helper
