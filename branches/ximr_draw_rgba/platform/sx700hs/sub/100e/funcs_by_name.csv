@@ -537,6 +537,7 @@
 0xfc40e469,GetDramTypeError_FW
 0xfc30747b,GetDrive_ClusterSize
 0xfc3079a9,GetDrive_FreeClusters
+0xfc307985,GetDrive_TotalClusters
 0xfc192471,GetDriverInfoEvent_FW
 0xfc083c31,getEepromNum_FW
 0xfc40463f,GetEFuseData_FW
@@ -569,6 +570,7 @@
 0xfc4097fd,GetFocusLensSettingWaitVoltage_FW
 0xfc2dcc47,GetFocusLensSubjectDistance
 0xfc40c76d,GetFocusLensSubjectDistance_FW
+0xfc2dcf41,GetFocusLensSubjectDistanceFromLens
 0xfc40c77f,GetFocusLensSubjectDistanceNumber_FW
 0xfc1abe0d,GetFocusPiSensorLevel_FW
 0xfc2dd041,GetFocusResetPosition_FW
@@ -1283,7 +1285,6 @@
 0xfc30819b,MakeDirectory_Fut
 0xfc40e815,MakeScriptDisk_FW
 0xfc307d93,MakeSDCardBootable
-0xfc3078f5,MakeSDCardBootableStrictly
 0xfc30fac1,malloc
 0xfc30f79d,malloc_strictly
 0xfc020d03,MarkPointDefData_FW

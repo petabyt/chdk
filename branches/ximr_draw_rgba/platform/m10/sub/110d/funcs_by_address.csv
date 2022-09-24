@@ -1623,6 +1623,7 @@
 0xfc360b95,GetFocusLensPullInMaxSpeed_FW
 0xfc360d0b,GetFocusLensSubjectDistance
 0xfc360d3f,GetFocusLensCurrentPosition_FW
+0xfc360e8b,GetFocusLensSubjectDistanceFromLens
 0xfc3623e9,CreateController_FW
 0xfc36246f,DeleteController_FW
 0xfc362507,MoveControllerToTopOfZOrder_FW
@@ -1683,7 +1684,7 @@
 0xfc38822b,GetPropertyCase
 0xfc388e15,get_fstype
 0xfc388e7b,GetDrive_ClusterSize
-0xfc3892cb,MakeSDCardBootableStrictly
+0xfc38935b,GetDrive_TotalClusters
 0xfc38937f,GetDrive_FreeClusters
 0xfc3896e9,MakeSDCardBootable
 0xfc389801,Open

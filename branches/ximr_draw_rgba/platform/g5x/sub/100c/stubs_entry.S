@@ -181,10 +181,7 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc2cdd4d
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc3b8fa1
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc3b8fc9
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3b7353
-//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc3ba1e7
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc39d619
-//NHSTUB(PT_PlaySound                         ,0xfc3bdded) //  0        *** != 0x00000000
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3b8d51
 //NHSTUB(ScreenLock                           ,0xfc3bec79) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xfc3becaf) //  0        *** != 0x00000000
@@ -227,7 +224,9 @@ NHSTUB(get_current_nd_value                   ,0xfc4ea7e5) //  0
 NHSTUB(get_current_deltasv                    ,0xfc469d03) //  0
 NHSTUB(GetCurrentDriveBaseSvValue             ,0xfc3afd67) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc3b6e73) //  0
+NHSTUB(GetDrive_TotalClusters                 ,0xfc3b7353) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc3b9eed) //  0
+NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xfc3ba1e7) //  0
 NHSTUB(GetKbdState                            ,0xfc09b723) //  0
 NHSTUB(GetMemInfo                             ,0xfc675335) //  0
 NHSTUB(GetOpticalTemperature                  ,0xfc4538c7) //  0
@@ -253,6 +252,7 @@ NHSTUB(PB2Rec                                 ,0xfc364f13) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xfc2d2ed3) //  0
 NHSTUB(PT_MoveOpticalZoomAt                   ,0xfc5e4aa1) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xfc2d2d09) //  0
+NHSTUB(PT_PlaySound                           ,0xfc3bdded) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xfc3bd739) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xfc3bd76d) //  0
 //NHSTUB(PutInNdFilter                        ,0xfc667ec5) //  0            Overridden

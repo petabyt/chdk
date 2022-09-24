@@ -10,8 +10,6 @@ NHSTUB(ExpCtrlTool_StartContiAE               ,0xe02a1a91)
 NHSTUB(ExpCtrlTool_StopContiAE                ,0xe02a1bfd)
 NHSTUB(Feof_Fut                               ,0xe03710c1)
 NHSTUB(Fflush_Fut                             ,0xe03710eb)
-NHSTUB(GetDrive_TotalClusters                 ,0xe0375125)  // function immediately before GetDrive_FreeClusters in ROM
-NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xe0372eeb)
 NHSTUB(GetImageFolder                         ,0xe0355015)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
 NHSTUB(Restart                                ,0xe005b973)  // Does not work - only accepts 7 as the parameter value (firmware update)
@@ -32,7 +30,6 @@ NHSTUB(VTMUnlock                              ,0xe03781d7)  // ??? VTMUnlock str
 NHSTUB(GetActiveViewportBuffer                ,0xe03aa70b)
 
 // These don't exist
-NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)
 NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)
@@ -55,7 +52,6 @@ NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
 NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead code merged into EngDrvRead_FW !!! TODO: enable use of EngDrvRead_FW in code
 
 // Missed by finsig - need to check
-NHSTUB(_sqrt                                ,0xdffcf241)
 NHSTUB(SetHPTimerAfterNow                   ,0xe03f4ac1)
 
 DEF(task_FsIoNotifyTask                     ,0xe00f2b5d)

@@ -630,6 +630,7 @@
 0xfc662cd9,GetDramTypeError_FW
 0xfc3b6e8b,GetDrive_ClusterSize
 0xfc3b738f,GetDrive_FreeClusters
+0xfc3b736b,GetDrive_TotalClusters
 0xfc481cb5,GetDriverInfoEvent_FW
 0xfc480e31,getEepromNum_FW
 0xfc66607d,GetEFUSEData_FW
@@ -663,6 +664,7 @@
 0xfc5ffc15,GetFocusLensResetVoltage_FW
 0xfc3b9f05,GetFocusLensSubjectDistance
 0xfc6604f5,GetFocusLensSubjectDistance_FW
+0xfc3ba1ff,GetFocusLensSubjectDistanceFromLens
 0xfc660507,GetFocusLensSubjectDistanceNumber_FW
 0xfc48d1b5,GetFocusPiSensorLevel_FW
 0xfc3ba31d,GetFocusResetPosition_FW
@@ -1522,7 +1524,6 @@
 0xfc3b5f9b,MakeDirectory_Fut
 0xfc663085,MakeScriptDisk_FW
 0xfc3b7731,MakeSDCardBootable
-0xfc3b72dd,MakeSDCardBootableStrictly
 0xfc3bf24d,malloc
 0xfc3bf98d,malloc_strictly
 0xfc020ee9,MarkPointDefData_FW
@@ -1709,6 +1710,7 @@
 0xfc2d4a45,PT_MFOn
 0xfc2d2ed3,PT_MoveDigitalZoomToWide
 0xfc5e4ab9,PT_MoveOpticalZoomAt
+0xfc3bde05,PT_PlaySound
 0xfc2a5fdf,PTM_AllReset_FW
 0xfc3adb3b,PTM_AllResetToFactorySetting_FW
 0xfc2a6cd7,PTM_BackupUIProperty_FW

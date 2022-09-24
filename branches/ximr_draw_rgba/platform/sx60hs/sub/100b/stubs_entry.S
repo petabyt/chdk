@@ -181,8 +181,6 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f57
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc301dc1
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc301de9
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3324ff
-//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fabd5
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba07
 //NHSTUB(MakeSDCardBootable                   ,0xfc332861) //  0        *** != 0xfc33280d
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b71
@@ -225,7 +223,9 @@ NHSTUB(GetUsableMinAv                         ,0xfc1c1c5f) //  0
 NHSTUB(get_current_deltasv                    ,0xfc16de53) //  0
 NHSTUB(GetCurrentDriveBaseSvValue             ,0xfc2fb381) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc33201f) //  0
+//NHSTUB(GetDrive_TotalClusters               ,0xfc3324ff) //  0            == 0xfc3324ff
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc2fa8f3) //  0
+//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xfc2fabd5) //  0            == 0xfc2fabd5
 NHSTUB(GetKbdState                            ,0xfc0707e9) //  0
 NHSTUB(GetMemInfo                             ,0xfc41e369) //  0
 NHSTUB(GetOpticalTemperature                  ,0xfc143c1f) //  0

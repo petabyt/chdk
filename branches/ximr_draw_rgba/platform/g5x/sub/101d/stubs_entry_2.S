@@ -10,8 +10,6 @@ NHSTUB(ExpCtrlTool_StartContiAE               ,0xfc2cdb83)
 NHSTUB(ExpCtrlTool_StopContiAE                ,0xfc2cdd75)
 NHSTUB(Feof_Fut                               ,0xfc3b9005)
 NHSTUB(Fflush_Fut                             ,0xfc3b902d)
-NHSTUB(GetDrive_TotalClusters                 ,0xfc3b73b7) // function immediately before GetDrive_FreeClusters in ROM
-NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xfc3ba24b)
 NHSTUB(GetImageFolder                         ,0xfc39d67d)
 NHSTUB(RenameFile_Fut                         ,0xfc3b8db5)
 NHSTUB(SetFileTimeStamp                       ,0xfc3b5f2f)
@@ -55,7 +53,6 @@ NHSTUB(CreateBinarySemaphoreStrictly          ,0xbfe15557)
 NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
 
 // These don't exist
-NHSTUB(PT_PlaySound                           ,NULL_SUB)
 NHSTUB(ScreenLock                             ,NULL_SUB)
 NHSTUB(ScreenUnlock                           ,NULL_SUB)
 NHSTUB(SetFileAttributes                      ,NULL_SUB)

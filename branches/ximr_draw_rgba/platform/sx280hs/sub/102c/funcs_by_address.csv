@@ -1173,6 +1173,7 @@
 0xfc28c613,GetFocusLensSubjectDistance
 0xfc28c663,GetCurrentFocusLensPosition_FW
 0xfc28c663,GetCurrentFocusPosition_FW
+0xfc28c8d7,GetFocusLensSubjectDistanceFromLens
 0xfc28c94f,GetFocusLensAvCoefficient_FW
 0xfc28c991,IsFocusLensOutSidePosition_FW
 0xfc28c9af,GetFocusResetPosition_FW
@@ -1259,7 +1260,7 @@
 0xfc2a3705,task_StartupImage
 0xfc2a464d,get_fstype
 0xfc2a46b3,GetDrive_ClusterSize
-0xfc2a4b53,MakeSDCardBootableStrictly
+0xfc2a4be3,GetDrive_TotalClusters
 0xfc2a4c07,GetDrive_FreeClusters
 0xfc2a4fe3,MakeSDCardBootable
 0xfc2a507d,Open

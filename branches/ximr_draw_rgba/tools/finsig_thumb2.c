@@ -85,6 +85,7 @@ void write_output()
 #define BAD_MATCH      0x08
 #define EV_MATCH       0x10
 #define LIST_ALWAYS    0x20
+#define DONT_SAVE_CSV  0x40
 // force an arm veneer (NHSTUB2)
 #define ARM_STUB       0x80
 #define DONT_EXPORT_ILC 0x100
@@ -167,6 +168,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetDrive_FreeClusters", UNUSED }, // live_free_cluster_count variable is used instead
     { "GetDrive_TotalClusters" },
     { "GetFocusLensSubjectDistance" },
+    { "GetFocusLensSubjectDistanceFromLensHelper", UNUSED|DONT_EXPORT|DONT_SAVE_CSV },
     { "GetFocusLensSubjectDistanceFromLens" },
     { "GetImageFolder", OPTIONAL },
     { "GetKbdState" },
@@ -186,7 +188,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "LockMainPower" },
     { "Lseek", UNUSED|LIST_ALWAYS },
     { "MakeDirectory_Fut" },
-    { "MakeSDCardBootableStrictly", UNUSED|DONT_EXPORT },
+    { "MakeSDCardBootableStrictly", UNUSED|DONT_EXPORT|DONT_SAVE_CSV },
     { "MakeSDCardBootable", OPTIONAL },
     { "MoveFocusLensToDistance" },
     { "MoveIrisWithAv", OPTIONAL },
@@ -1951,7 +1953,21 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
         return 0;
     }
-    return save_sig_with_j(fw,"GetDrive_FreeClusters",get_branch_call_insn_target(fw,is));
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    int rv = save_sig_with_j(fw,"GetDrive_FreeClusters",adr);
+
+    // GetDrive_TotalClusters is function immediately before GetDrive_FreeClusters
+    adr -= 40;
+    fw_disasm_iter_single(fw,adr);
+    for (i=0; i<10; i+=1) {
+        if (fw->is->insn->id == ARM_INS_PUSH && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R4) {
+            save_sig_with_j(fw,"GetDrive_TotalClusters",(fw->is->insn->address) | is->thumb);
+            break;
+        }
+        fw_disasm_iter(fw);
+    }
+    
+    return rv;
 }
 
 int sig_match_get_semaphore_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
@@ -2540,9 +2556,14 @@ int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             return 0;
         }
     }
+    uint32_t adr = (uint32_t)is->adr|is->thumb;
     // second call/branch (seems to be bhs)
     if(!insn_match_find_nth(fw,is,12,2,match_b_bl_blximm)) {
-        return 0;
+        // not second call, reset and try first
+        disasm_iter_init(fw,is,adr);
+        if(!insn_match_find_nth(fw,is,8,1,match_bl_blximm)) {
+            return 0;
+        }
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }
@@ -5809,6 +5830,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "MakeSDCardBootableStrictly",         "MakeBootDisk_FW",             SIG_NAMED_SUB},
 {sig_match_named,   "MakeSDCardBootable",                 "MakeSDCardBootableStrictly",  SIG_NAMED_NTH(3,JMP_SUB)},
 
+{sig_match_named,   "GetFocusLensSubjectDistanceFromLensHelper",    "SetISFocusLensDistance_FW",                    SIG_NAMED_SUB},
+{sig_match_named,   "GetFocusLensSubjectDistanceFromLens",          "GetFocusLensSubjectDistanceFromLensHelper",    SIG_NAMED_SUB},
+
 {NULL},
 };
 
@@ -7074,7 +7098,7 @@ void write_funcs(firmware *fw, char *filename, sig_entry_t *fns[], int (*compare
         }
         if (fns[k]->val != 0)
         {
-            if (fns[k]->flags & BAD_MATCH)
+            if (fns[k]->flags & (BAD_MATCH|DONT_SAVE_CSV))
             {
                 osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
                 if (ostub2 && ostub2->val)

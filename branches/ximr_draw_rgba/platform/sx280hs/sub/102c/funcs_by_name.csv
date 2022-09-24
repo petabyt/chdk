@@ -519,6 +519,7 @@
 0xfc3b95c9,GetDramTypeError_FW
 0xfc2a46b3,GetDrive_ClusterSize
 0xfc2a4c07,GetDrive_FreeClusters
+0xfc2a4be3,GetDrive_TotalClusters
 0xfc187189,GetDriverInfoEvent_FW
 0xfc3aca03,GetEFuseData_FW
 0x010c55a1,GetEventFlagValue
@@ -549,6 +550,7 @@
 0xfc32c571,GetFocusLensSettingWaitVoltage_FW
 0xfc28c613,GetFocusLensSubjectDistance
 0xfc3b7aa9,GetFocusLensSubjectDistance_FW
+0xfc28c8d7,GetFocusLensSubjectDistanceFromLens
 0xfc3b7abb,GetFocusLensSubjectDistanceNumber_FW
 0xfc19f063,GetFocusPiSensorLevel_FW
 0xfc28c9af,GetFocusResetPosition_FW
@@ -1278,7 +1280,6 @@
 0xfc2a53eb,MakeDirectory_Fut
 0xfc3b997d,MakeScriptDisk_FW
 0xfc2a4fe3,MakeSDCardBootable
-0xfc2a4b53,MakeSDCardBootableStrictly
 0xfc2b7f31,malloc
 0xfc2b7c01,malloc_strictly
 0xfc1a722b,Mecha.Create_FW

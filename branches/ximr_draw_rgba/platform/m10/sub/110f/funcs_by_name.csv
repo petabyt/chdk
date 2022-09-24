@@ -738,6 +738,7 @@
 0xfc44368d,GetDramTypeError_FW
 0xfc388eaf,GetDrive_ClusterSize
 0xfc3893b3,GetDrive_FreeClusters
+0xfc38938f,GetDrive_TotalClusters
 0xfc23dfa1,GetDriverInfoEvent_FW
 0xfc08f5f1,getEepromNum_FW
 0xfc5be617,GetEFLensFocusPositionWithLensCom
@@ -1672,7 +1673,6 @@
 0xfc389ba3,MakeDirectory_Fut
 0xfc443a39,MakeScriptDisk_FW
 0xfc38971d,MakeSDCardBootable
-0xfc3892ff,MakeSDCardBootableStrictly
 0xfc38d425,malloc
 0xfc38cd31,malloc_strictly
 0xfc020c17,MarkPointDefData_FW

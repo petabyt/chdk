@@ -1393,6 +1393,7 @@
 0xfc2fa907,GetFocusLensSubjectDistance
 0xfc2fa957,GetCurrentFocusLensPosition_FW
 0xfc2fa957,GetCurrentFocusPosition_FW
+0xfc2fabe9,GetFocusLensSubjectDistanceFromLens
 0xfc2facc3,IsFocusLensOutSidePosition_FW
 0xfc2face1,GetFocusResetPosition_FW
 0xfc2fad41,GetFocusDefaultResetPosition_FW
@@ -1529,7 +1530,7 @@
 0xfc3300bb,IsWirelessConnect
 0xfc331fcd,get_fstype
 0xfc332033,GetDrive_ClusterSize
-0xfc332483,MakeSDCardBootableStrictly
+0xfc332513,GetDrive_TotalClusters
 0xfc332537,GetDrive_FreeClusters
 0xfc332875,MakeSDCardBootable
 0xfc332911,Open

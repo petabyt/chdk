@@ -181,8 +181,6 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f47
 //NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc301db1
 //NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc301dd9
-//NHSTUB(GetDrive_TotalClusters               ,0x00000000) //  0        *** != 0xfc3324ef
-//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0x00000000) //  0        *** != 0xfc2fabc5
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba61
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b61
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xfc0b96e5
@@ -224,7 +222,9 @@ NHSTUB(GetUsableMinAv                         ,0xfc1c1c4f) //  0
 NHSTUB(get_current_deltasv                    ,0xfc16de53) //  0
 NHSTUB(GetCurrentDriveBaseSvValue             ,0xfc2fb371) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xfc33200f) //  0
+//NHSTUB(GetDrive_TotalClusters               ,0xfc3324ef) //  0            == 0xfc3324ef
 NHSTUB(GetFocusLensSubjectDistance            ,0xfc2fa8e3) //  0
+//NHSTUB(GetFocusLensSubjectDistanceFromLens  ,0xfc2fabc5) //  0            == 0xfc2fabc5
 NHSTUB(GetKbdState                            ,0xfc0707e9) //  0
 NHSTUB(GetMemInfo                             ,0xfc41e359) //  0
 NHSTUB(GetOpticalTemperature                  ,0xfc143c1f) //  0

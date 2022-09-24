@@ -1180,7 +1180,7 @@
 0xfc3b6135,task_CtrlSrv
 0xfc3b6e25,get_fstype
 0xfc3b6e8b,GetDrive_ClusterSize
-0xfc3b72dd,MakeSDCardBootableStrictly
+0xfc3b736b,GetDrive_TotalClusters
 0xfc3b738f,GetDrive_FreeClusters
 0xfc3b7731,MakeSDCardBootable
 0xfc3b7949,RegisterEventProcedure
@@ -1219,6 +1219,7 @@
 0xfc3b9f05,GetFocusLensSubjectDistance
 0xfc3b9f55,GetCurrentFocusLensPosition_FW
 0xfc3b9f55,GetCurrentFocusPosition_FW
+0xfc3ba1ff,GetFocusLensSubjectDistanceFromLens
 0xfc3ba277,GetFocusLensAvCoefficient_FW
 0xfc3ba2ff,IsFocusLensOutSidePosition_FW
 0xfc3ba31d,GetFocusResetPosition_FW
@@ -1247,6 +1248,7 @@
 0xfc3bd785,PostLogicalEventToUI_FW
 0xfc3bd883,PostEventShootSeqToUI_FW
 0xfc3bd8b5,ShowLogicalEventName_FW
+0xfc3bde05,PT_PlaySound
 0xfc3be169,transfer_src_overlay
 0xfc3be5df,VTM_ShrinkLayoutForFinder_FW
 0xfc3becdf,transfer_src_overlay_helper

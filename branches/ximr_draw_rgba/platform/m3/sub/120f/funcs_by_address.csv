@@ -1607,6 +1607,7 @@
 0xfc35fc39,GetFocusLensPullInMaxSpeed_FW
 0xfc35fd97,GetFocusLensSubjectDistance
 0xfc35fdcb,GetFocusLensCurrentPosition_FW
+0xfc35ff17,GetFocusLensSubjectDistanceFromLens
 0xfc36039f,GetCurrentShutterSpeed
 0xfc36039f,GetCurrentShutterSpeed_FW
 0xfc3605ff,GetCurrentExposureTime_FW
@@ -1674,7 +1675,7 @@
 0xfc379743,ui_free
 0xfc379de9,get_fstype
 0xfc379e4f,GetDrive_ClusterSize
-0xfc37a29f,MakeSDCardBootableStrictly
+0xfc37a32f,GetDrive_TotalClusters
 0xfc37a353,GetDrive_FreeClusters
 0xfc37a6bd,MakeSDCardBootable
 0xfc37a75d,j_malloc
