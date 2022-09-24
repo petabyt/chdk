@@ -85,6 +85,7 @@ void write_output()
 #define BAD_MATCH      0x08
 #define EV_MATCH       0x10
 #define LIST_ALWAYS    0x20
+#define DONT_SAVE_CSV  0x40
 // force an arm veneer (NHSTUB2)
 #define ARM_STUB       0x80
 #define DONT_EXPORT_ILC 0x100
@@ -167,7 +168,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetDrive_FreeClusters", UNUSED }, // live_free_cluster_count variable is used instead
     { "GetDrive_TotalClusters" },
     { "GetFocusLensSubjectDistance" },
-    { "GetFocusLensSubjectDistanceFromLensHelper", UNUSED|DONT_EXPORT },
+    { "GetFocusLensSubjectDistanceFromLensHelper", UNUSED|DONT_EXPORT|DONT_SAVE_CSV },
     { "GetFocusLensSubjectDistanceFromLens" },
     { "GetImageFolder", OPTIONAL },
     { "GetKbdState" },
@@ -187,7 +188,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "LockMainPower" },
     { "Lseek", UNUSED|LIST_ALWAYS },
     { "MakeDirectory_Fut" },
-    { "MakeSDCardBootableStrictly", UNUSED|DONT_EXPORT },
+    { "MakeSDCardBootableStrictly", UNUSED|DONT_EXPORT|DONT_SAVE_CSV },
     { "MakeSDCardBootable", OPTIONAL },
     { "MoveFocusLensToDistance" },
     { "MoveIrisWithAv", OPTIONAL },
@@ -7092,7 +7093,7 @@ void write_funcs(firmware *fw, char *filename, sig_entry_t *fns[], int (*compare
         }
         if (fns[k]->val != 0)
         {
-            if (fns[k]->flags & BAD_MATCH)
+            if (fns[k]->flags & (BAD_MATCH|DONT_SAVE_CSV))
             {
                 osig* ostub2 = find_sig(fw->sv->stubs,fns[k]->name);
                 if (ostub2 && ostub2->val)
