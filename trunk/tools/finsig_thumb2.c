@@ -1951,7 +1951,21 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
     if(!insn_match_find_next(fw,is,10,match_bl_blximm)) {
         return 0;
     }
-    return save_sig_with_j(fw,"GetDrive_FreeClusters",get_branch_call_insn_target(fw,is));
+    uint32_t adr=get_branch_call_insn_target(fw,is);
+    int rv = save_sig_with_j(fw,"GetDrive_FreeClusters",adr);
+
+    // GetDrive_TotalClusters is function immediately before GetDrive_FreeClusters
+    adr -= 40;
+    fw_disasm_iter_single(fw,adr);
+    for (i=0; i<10; i+=1) {
+        if (fw->is->insn->id == ARM_INS_PUSH && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R4) {
+            save_sig_with_j(fw,"GetDrive_TotalClusters",(fw->is->insn->address) | is->thumb);
+            break;
+        }
+        fw_disasm_iter(fw);
+    }
+    
+    return rv;
 }
 
 int sig_match_get_semaphore_value(firmware *fw, iter_state_t *is, sig_rule_t *rule)
