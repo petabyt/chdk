@@ -751,7 +751,7 @@
 0xfc450b25,GetDramTypeError_FW
 0xfc379e4f,GetDrive_ClusterSize
 0xfc37a353,GetDrive_FreeClusters
-0xfc06bf33,GetDrive_TotalClusters,(stubs_entry_2.s)
+0xfc37a32f,GetDrive_TotalClusters
 0xfc1793bd,GetDriverInfoEvent_FW
 0xfc086a27,getEepromNum_FW
 0xfc5a8adf,GetEFLensFocusPositionWithLensCom
