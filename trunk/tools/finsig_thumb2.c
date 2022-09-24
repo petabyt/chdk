@@ -167,6 +167,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "GetDrive_FreeClusters", UNUSED }, // live_free_cluster_count variable is used instead
     { "GetDrive_TotalClusters" },
     { "GetFocusLensSubjectDistance" },
+    { "GetFocusLensSubjectDistanceFromLensHelper", UNUSED|DONT_EXPORT },
     { "GetFocusLensSubjectDistanceFromLens" },
     { "GetImageFolder", OPTIONAL },
     { "GetKbdState" },
@@ -5822,6 +5823,9 @@ sig_rule_t sig_rules_main[]={
 
 {sig_match_named,   "MakeSDCardBootableStrictly",         "MakeBootDisk_FW",             SIG_NAMED_SUB},
 {sig_match_named,   "MakeSDCardBootable",                 "MakeSDCardBootableStrictly",  SIG_NAMED_NTH(3,JMP_SUB)},
+
+{sig_match_named,   "GetFocusLensSubjectDistanceFromLensHelper",    "SetISFocusLensDistance_FW",                    SIG_NAMED_SUB},
+{sig_match_named,   "GetFocusLensSubjectDistanceFromLens",          "GetFocusLensSubjectDistanceFromLensHelper",    SIG_NAMED_SUB},
 
 {NULL},
 };
