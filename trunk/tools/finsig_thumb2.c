@@ -2556,9 +2556,14 @@ int sig_match_sqrt(firmware *fw, iter_state_t *is, sig_rule_t *rule)
             return 0;
         }
     }
+    uint32_t adr = (uint32_t)is->adr|is->thumb;
     // second call/branch (seems to be bhs)
     if(!insn_match_find_nth(fw,is,12,2,match_b_bl_blximm)) {
-        return 0;
+        // not second call, reset and try first
+        disasm_iter_init(fw,is,adr);
+        if(!insn_match_find_nth(fw,is,8,1,match_bl_blximm)) {
+            return 0;
+        }
     }
     return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
 }

@@ -70,7 +70,6 @@ NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
 NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead code merged into EngDrvRead_FW !!! TODO: enable use of EngDrvRead_FW in code
 
 // Missed by finsig - need to check
-NHSTUB(_sqrt                                ,0xdffcf241)
 NHSTUB(SetHPTimerAfterNow                   ,0xe03f4ac1)
 
 DEF(task_FsIoNotifyTask                     ,0xe00f2b5d)

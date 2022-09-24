@@ -80,6 +80,7 @@
 0xdffcd8c5,_log
 0xdffcdc39,_log10
 0xdffcdd31,_pow
+0xdffcf241,_sqrt
 0xe0020011,exception_handler_Reset
 0xe002023d,exception_handler_SupervisorCall
 0xe002023f,exception_handler_FIQ
