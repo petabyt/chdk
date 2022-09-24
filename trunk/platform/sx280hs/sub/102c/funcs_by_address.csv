@@ -1133,6 +1133,7 @@
 0xfc261b25,CzDebugPrintToFile_FW
 0xfc26e651,task_ISMainTask
 0xfc26e8b3,ISInitMotion_FW
+0xfc26eaa9,GetFocusLensSubjectDistanceFromLensHelper
 0xfc26ece9,GetISPWMFrequency_FW
 0xfc26ed45,StartISLocalAutoCenter_FW
 0xfc26ed6b,StartISLocalHallAdjust_FW
@@ -1173,6 +1174,7 @@
 0xfc28c613,GetFocusLensSubjectDistance
 0xfc28c663,GetCurrentFocusLensPosition_FW
 0xfc28c663,GetCurrentFocusPosition_FW
+0xfc28c8d7,GetFocusLensSubjectDistanceFromLens
 0xfc28c94f,GetFocusLensAvCoefficient_FW
 0xfc28c991,IsFocusLensOutSidePosition_FW
 0xfc28c9af,GetFocusResetPosition_FW

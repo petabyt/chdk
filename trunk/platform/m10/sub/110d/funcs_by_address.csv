@@ -1389,6 +1389,7 @@
 0xfc27d533,GetGyroHPFINPitch_FW
 0xfc27d539,GetGyroHPFINYaw_FW
 0xfc27d5ad,GetDISModeParameter_FW
+0xfc27d611,GetFocusLensSubjectDistanceFromLensHelper
 0xfc27dba7,PTM_AllReset_FW
 0xfc27ddc5,PTM_GetWorkingCaptureMode_FW
 0xfc27ddd1,PTM_SetCurrentItem_FW
@@ -1623,6 +1624,7 @@
 0xfc360b95,GetFocusLensPullInMaxSpeed_FW
 0xfc360d0b,GetFocusLensSubjectDistance
 0xfc360d3f,GetFocusLensCurrentPosition_FW
+0xfc360e8b,GetFocusLensSubjectDistanceFromLens
 0xfc3623e9,CreateController_FW
 0xfc36246f,DeleteController_FW
 0xfc362507,MoveControllerToTopOfZOrder_FW

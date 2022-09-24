@@ -358,6 +358,7 @@
 0xfc0c78a3,GetRomID_FW
 0xfc0c85dd,task_ISMainTask
 0xfc0c887b,ISInitMotion_FW
+0xfc0c8abf,GetFocusLensSubjectDistanceFromLensHelper
 0xfc0c8dd7,GetISPWMFreqData_FW
 0xfc0c8dd7,GetISPWMFrequency_FW
 0xfc0c8ddb,GetISPWMPeriod_FW
@@ -1220,6 +1221,7 @@
 0xfc3b9eed,GetFocusLensSubjectDistance
 0xfc3b9f3d,GetCurrentFocusLensPosition_FW
 0xfc3b9f3d,GetCurrentFocusPosition_FW
+0xfc3ba1e7,GetFocusLensSubjectDistanceFromLens
 0xfc3ba25f,GetFocusLensAvCoefficient_FW
 0xfc3ba2e7,IsFocusLensOutSidePosition_FW
 0xfc3ba305,GetFocusResetPosition_FW

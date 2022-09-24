@@ -1241,6 +1241,7 @@
 0xfc3053dd,task_IS_ActiveShadCompTask
 0xfc305a2f,task_ISMainTask
 0xfc305ca9,ISInitMotion_FW
+0xfc305eef,GetFocusLensSubjectDistanceFromLensHelper
 0xfc306247,GetISPWMFrequency_FW
 0xfc30624b,GetISPWMPeriod_FW
 0xfc3062a9,StartISLocalAutoCenter_FW
@@ -1269,6 +1270,7 @@
 0xfc31fb03,GetFocusLensSubjectDistance
 0xfc31fb53,GetCurrentFocusLensPosition_FW
 0xfc31fb53,GetCurrentFocusPosition_FW
+0xfc31fdfd,GetFocusLensSubjectDistanceFromLens
 0xfc31fe7d,GetFocusLensAvCoefficient_FW
 0xfc31fefb,IsFocusLensOutSidePosition_FW
 0xfc31ff19,GetFocusResetPosition_FW

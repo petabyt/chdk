@@ -639,6 +639,7 @@
 0xe0372bf5,GetFocusLensSubjectDistance
 0xe0372c45,GetCurrentFocusLensPosition_FW
 0xe0372c45,GetCurrentFocusPosition_FW
+0xe0372eeb,GetFocusLensSubjectDistanceFromLens
 0xe0372f63,GetFocusLensAvCoefficient_FW
 0xe0372fe9,IsFocusLensOutSidePosition_FW
 0xe0373007,GetFocusResetPosition_FW
@@ -984,6 +985,7 @@
 0xe049415f,StopAndSaveCzLog_FW
 0xe049416b,CzDebugPrintToFile_FW
 0xe0494d6f,task_IS_GetExposureTimingTask
+0xe0495413,GetFocusLensSubjectDistanceFromLensHelper
 0xe0495421,task_ISMainTask
 0xe04956f1,ISInitMotion_FW
 0xe0495cdd,GetISPWMFreqData_FW

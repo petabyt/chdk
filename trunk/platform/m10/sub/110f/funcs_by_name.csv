@@ -788,6 +788,7 @@
 0xfc560d1b,GetFocusLensSettingWaitVoltage_FW
 0xfc360d3f,GetFocusLensSubjectDistance
 0xfc43f2bb,GetFocusLensSubjectDistance_FW
+0xfc27d611,GetFocusLensSubjectDistanceFromLensHelper
 0xfc43f2cd,GetFocusLensSubjectDistanceNumber_FW
 0xfc13750f,GetFocusStartZoomPosition_FW
 0xfc5bd6b9,GetFPGABinSize_FW

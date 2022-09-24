@@ -819,6 +819,7 @@
 0xfc24aaa5,task_ImageRetryConTask
 0xfc255ead,task_ISMainTask
 0xfc25616f,ISInitMotion_FW
+0xfc256383,GetFocusLensSubjectDistanceFromLensHelper
 0xfc2567fd,GetISPWMFreqData_FW
 0xfc2567fd,GetISPWMFrequency_FW
 0xfc256805,GetISPWMPeriod_FW
@@ -974,6 +975,7 @@
 0xfc3341e9,GetFocusLensSubjectDistance
 0xfc334239,GetCurrentFocusLensPosition_FW
 0xfc334239,GetCurrentFocusPosition_FW
+0xfc3344e3,GetFocusLensSubjectDistanceFromLens
 0xfc334565,GetFocusLensAvCoefficient_FW
 0xfc3345c7,IsFocusLensOutSidePosition_FW
 0xfc3345e5,GetFocusResetPosition_FW

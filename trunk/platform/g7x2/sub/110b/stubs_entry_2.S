@@ -10,7 +10,6 @@ NHSTUB(ExpCtrlTool_StartContiAE               ,0xe02a1a91)  // function that use
 NHSTUB(ExpCtrlTool_StopContiAE                ,0xe02a1bfd)  // function that uses "StopContiAE" string
 NHSTUB(Feof_Fut                               ,0xe03710c1)
 NHSTUB(Fflush_Fut                             ,0xe03710eb)
-NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xe0372eeb)  // Calls 'GetFocusLensSubjectDistance', a couple of functions before 'GetFocusLensAvCoefficient_FW'
 NHSTUB(GetImageFolder                         ,0xe0355015)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
 NHSTUB(Restart                                ,0xe005b973)  // Does not work - only accepts 7 as the parameter value (firmware update)

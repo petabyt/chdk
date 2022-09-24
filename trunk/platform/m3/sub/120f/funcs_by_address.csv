@@ -1515,6 +1515,7 @@
 0xfc317a3b,GetGyroHPFINPitch_FW
 0xfc317a41,GetGyroHPFINYaw_FW
 0xfc317b7d,GetDISModeParameter_FW
+0xfc317bd3,GetFocusLensSubjectDistanceFromLensHelper
 0xfc317c3d,GetFixedPWMOutA_FW
 0xfc317c43,GetFixedPWMOutB_FW
 0xfc318c5d,PowerOffIris_FW
@@ -1607,6 +1608,7 @@
 0xfc35fc39,GetFocusLensPullInMaxSpeed_FW
 0xfc35fd97,GetFocusLensSubjectDistance
 0xfc35fdcb,GetFocusLensCurrentPosition_FW
+0xfc35ff17,GetFocusLensSubjectDistanceFromLens
 0xfc36039f,GetCurrentShutterSpeed
 0xfc36039f,GetCurrentShutterSpeed_FW
 0xfc3605ff,GetCurrentExposureTime_FW
