@@ -80,6 +80,7 @@
 0xfc5a565b,CancelAdj_AEMode_FW
 0xfc4ca9bb,CancelExStrobeMode_FW
 0xfc44c2e7,CancelFocusLensMaxSpeedLimit_FW
+0xfc1fcc21,CancelHPTimer
 0xfc5a43d1,CancelImageDrive_FW
 0xfc159dd9,CancelImager_FW
 0xfc5aa129,CancelLoopGainCalc_FW

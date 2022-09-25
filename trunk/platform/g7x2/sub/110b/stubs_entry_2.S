@@ -21,7 +21,6 @@ NHSTUB(apex2us                                ,0xe0067ab3)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)
 NHSTUB(reboot_fw_update                       ,0xe0526843)  // Does not work !!! Asserts if try to load PS.FI2 file.
-NHSTUB(CancelHPTimer                          ,0xe03f4b5b)
 NHSTUB(WriteSDCard                            ,0xe051e963)
 
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK

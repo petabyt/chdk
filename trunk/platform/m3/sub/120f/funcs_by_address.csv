@@ -1153,6 +1153,7 @@
 0xfc1fbcd9,default_assert_handler
 0xfc1fbff7,default_exception_handler
 0xfc1fc1e1,default_panic_handler
+0xfc1fcc21,CancelHPTimer
 0xfc1fcce9,GetBuildDate_FW
 0xfc1fcced,PrintBuildDate_FW
 0xfc1fccf5,GetBuildTime_FW

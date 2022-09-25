@@ -20,7 +20,6 @@ NHSTUB(err_init_task                          ,0xFC06647B)
 NHSTUB(mkdir                                  ,0xfc3b5fe7)
 NHSTUB(realloc                                ,0xfc5e5385)
 NHSTUB(reboot_fw_update                       ,0xfc28b9a5)
-NHSTUB(CancelHPTimer                          ,0xFC165D89)
 
 NHSTUB(VTMLock                                ,0xfc3be3e7)
 NHSTUB(VTMUnlock                              ,0xfc3be60f)
