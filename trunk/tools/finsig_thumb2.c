@@ -5836,6 +5836,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLensHelper",    "SetISFocusLensDistance_FW",                    SIG_NAMED_SUB},
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLens",          "GetFocusLensSubjectDistanceFromLensHelper",    SIG_NAMED_SUB},
 
+{sig_match_named,   "CancelHPTimer",    "task_TouchPanel",      SIG_NAMED_NTH(8,SUB)},
+
 {NULL},
 };
 
