@@ -81,6 +81,7 @@
 0xfc5bb46f,CancelAdj_AEMode_FW
 0xfc4d87db,CancelExStrobeMode_FW
 0xfc43f1fd,CancelFocusLensMaxSpeedLimit_FW
+0xfc1faa85,CancelHPTimer
 0xfc5ba17f,CancelImageDrive_FW
 0xfc156e29,CancelImager_FW
 0xfc5bdcb1,CancelLinearDevelopMode_FW

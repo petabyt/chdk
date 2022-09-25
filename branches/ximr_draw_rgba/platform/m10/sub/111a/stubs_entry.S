@@ -183,7 +183,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc23d51a
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc1b1d0f
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc327437
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc3274cd
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1faa85
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc1fa9ed
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc1428e5) //  0
@@ -317,6 +316,7 @@ NHSTUB(time                                   ,0x010e11eb) //  0
 NHSTUB(vsprintf                               ,0xfc1049bf) //  0
 NHSTUB(EngDrvRead                             ,0xfc38d31d) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc372171) //  0
+//NHSTUB(CancelHPTimer                        ,0xfc1faa85) //  0            == 0xfc1faa85
 NHSTUB(SetEventFlag                           ,0xbfe14e53) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc38baad) //  0
 NHSTUB(bzero                                  ,0x01100b74) //  0

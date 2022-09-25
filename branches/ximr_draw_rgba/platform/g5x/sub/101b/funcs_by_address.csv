@@ -732,6 +732,7 @@
 0xfc164f6b,GetIrisPRResetPosition_FW
 0xfc1654f1,ExecuteShutDownPropertyService_FW
 0xfc165cf1,SetHPTimerAfterNow
+0xfc165d89,CancelHPTimer
 0xfc165e73,task_WdtPrint
 0xfc165ee5,task_WdtReset
 0xfc165f61,StartWDT_FW

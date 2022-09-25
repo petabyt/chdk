@@ -3146,42 +3146,45 @@ int sig_match_get_num_posted_messages(firmware *fw, iter_state_t *is, sig_rule_t
 int sig_match_set_hp_timer_after_now(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
-    if(!str_adr) {
+    if (!str_adr) {
         printf("sig_match_set_hp_timer_after_now: failed to find ref %s\n",rule->ref_name);
         return 0;
     }
-    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
-    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
-        if(!find_next_sig_call(fw,is,20,"ClearEventFlag")) {
-            // printf("sig_match_set_hp_timer_after_now: failed to find ClearEventFlag\n");
-            continue;
-        }
-        // find 3rd call
-        if(!insn_match_find_nth(fw,is,13,3,match_bl_blximm)) {
-            // printf("sig_match_set_hp_timer_after_now: no match bl 0x%"PRIx64"\n",is->insn->address);
-            continue;
-        }
-        // check call args, expect r0 = 70000
-        uint32_t regs[4];
-        uint32_t found_regs = get_call_const_args(fw,is,6,regs);
-        if((found_regs&0x1)!=0x1) {
-            // some cameras load r0 through a base reg, try alternate match
-            // r3 == 3 and r2 or r1 found and in ROM
-            if((found_regs & 0x8) && regs[3] == 4) {
-                if((found_regs & 0x2 && regs[1] > fw->rom_code_search_min_adr)
-                    || (found_regs & 0x4 && regs[2] > fw->rom_code_search_min_adr)) {
-                    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
-                }
+    while (str_adr) {
+        disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+        while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+            if(!find_next_sig_call(fw,is,20,"ClearEventFlag")) {
+                // printf("sig_match_set_hp_timer_after_now: failed to find ClearEventFlag\n");
+                continue;
             }
-            // printf("sig_match_set_hp_timer_after_now: failed to match args 0x%"PRIx64"\n",is->insn->address);
-            continue;
+            // find 3rd call
+            if(!insn_match_find_nth(fw,is,13,3,match_bl_blximm)) {
+                // printf("sig_match_set_hp_timer_after_now: no match bl 0x%"PRIx64"\n",is->insn->address);
+                continue;
+            }
+            // check call args, expect r0 = 70000
+            uint32_t regs[4];
+            uint32_t found_regs = get_call_const_args(fw,is,6,regs);
+            if((found_regs&0x1)!=0x1) {
+                // some cameras load r0 through a base reg, try alternate match
+                // r3 == 3 and r2 or r1 found and in ROM
+                if((found_regs & 0x8) && regs[3] == 4) {
+                    if((found_regs & 0x2 && regs[1] > fw->rom_code_search_min_adr)
+                        || (found_regs & 0x4 && regs[2] > fw->rom_code_search_min_adr)) {
+                        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+                    }
+                }
+                // printf("sig_match_set_hp_timer_after_now: failed to match args 0x%"PRIx64"\n",is->insn->address);
+                continue;
+            }
+            // r1, r2 should be func pointers but may involve reg-reg moves that get_call_const_args doesn't track
+            if(regs[0] != 70000) {
+                // printf("sig_match_set_hp_timer_after_now: args mismatch 0x%08x 0x%08x 0x%"PRIx64"\n",regs[0],regs[1],is->insn->address);
+                continue;
+            }
+            return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
         }
-        // r1, r2 should be func pointers but may involve reg-reg moves that get_call_const_args doesn't track
-        if(regs[0] != 70000) {
-            // printf("sig_match_set_hp_timer_after_now: args mismatch 0x%08x 0x%08x 0x%"PRIx64"\n",regs[0],regs[1],is->insn->address);
-            continue;
-        }
-        return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+        str_adr = find_next_str_bytes_main_fw(fw,rule->ref_name,str_adr+8);
     }
     return 0;
 }
@@ -5832,6 +5835,8 @@ sig_rule_t sig_rules_main[]={
 
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLensHelper",    "SetISFocusLensDistance_FW",                    SIG_NAMED_SUB},
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLens",          "GetFocusLensSubjectDistanceFromLensHelper",    SIG_NAMED_SUB},
+
+{sig_match_named,   "CancelHPTimer",    "task_TouchPanel",      SIG_NAMED_NTH(8,SUB)},
 
 {NULL},
 };

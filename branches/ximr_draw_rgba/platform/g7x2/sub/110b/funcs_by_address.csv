@@ -755,6 +755,8 @@
 0xe03eaa55,UIFS_CaptureNoneStop_FW
 0xe03ece73,FmtMenu_ExecuteQuickFormat_FW
 0xe03f2fd5,task_ReadMultiConTask
+0xe03f4ac1,SetHPTimerAfterNow
+0xe03f4b5b,CancelHPTimer
 0xe03fa829,closedir
 0xe03fa861,OpenFastDir
 0xe03fa8ff,ReadFastDir

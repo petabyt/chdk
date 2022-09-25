@@ -92,6 +92,7 @@
 0xfc6687ef,CancelBPFilterForBP_FW
 0xfc664463,CancelExStrobeMode_FW
 0xfc660483,CancelFocusLensMaxSpeedLimit_FW
+0xfc165d89,CancelHPTimer
 0xfc664013,CancelImageDrive_FW
 0xfc468389,CancelImager_FW
 0xfc66a505,CancelLoopGainCalc_FW

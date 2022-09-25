@@ -1192,6 +1192,7 @@
 0xfc1f8def,default_exception_handler
 0xfc1f8fd1,default_panic_handler
 0xfc1fa1e5,ExecuteShutDownPropertyService_FW
+0xfc1faa7d,CancelHPTimer
 0xfc1fab67,task_WdtPrint
 0xfc1fabd9,task_WdtReset
 0xfc1fac55,StartWDT_FW

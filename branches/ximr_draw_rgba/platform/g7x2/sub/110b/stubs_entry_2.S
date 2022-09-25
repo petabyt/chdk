@@ -21,7 +21,6 @@ NHSTUB(apex2us                                ,0xe0067ab3)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)
 NHSTUB(reboot_fw_update                       ,0xe0526843)  // Does not work !!! Asserts if try to load PS.FI2 file.
-NHSTUB(CancelHPTimer                          ,0xe03f4b5b)
 NHSTUB(WriteSDCard                            ,0xe051e963)
 
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK
@@ -46,13 +45,8 @@ NHSTUB(init_focus_eventflag                   ,0xe05923d9)
 NHSTUB(init_nd_eventflag                      ,0xe05924f1)
 NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
 
-// Incorrect by finsig - need to check
-
 // Does not exist
 NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead code merged into EngDrvRead_FW !!! TODO: enable use of EngDrvRead_FW in code
-
-// Missed by finsig - need to check
-NHSTUB(SetHPTimerAfterNow                   ,0xe03f4ac1)
 
 DEF(task_FsIoNotifyTask                     ,0xe00f2b5d)
 

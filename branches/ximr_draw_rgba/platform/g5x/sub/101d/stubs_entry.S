@@ -192,7 +192,6 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc06647b
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc5e5385
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc28b9a5
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc165d89
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc16f619) //  0
 NHSTUB(Close                                  ,0xfc3b5c63) //  0
@@ -337,6 +336,7 @@ NHSTUB(vsprintf                               ,0xfc0f5b3b) //  0
 NHSTUB(EngDrvRead                             ,0xfc3bf3a5) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc3ae385) //  0
 NHSTUB(DisableISDriveError                    ,0xfc661e21) //  0
+NHSTUB(CancelHPTimer                          ,0xfc165d89) //  0
 NHSTUB(SetHPTimerAfterNow                     ,0xfc165cf1) //  0
 NHSTUB(SetEventFlag                           ,0xbfe14df7) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc3be1b5) //  0

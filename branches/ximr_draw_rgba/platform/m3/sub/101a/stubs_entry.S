@@ -219,7 +219,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245cf2
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc4f9f61
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc450121
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc33308d
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1fcbb1
 //NHSTUB(SetHPTimerAfterNow                   ,0x00000000) //  0        *** != 0xfc1fcb19
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc1536a5) //  0
@@ -352,6 +351,7 @@ NHSTUB(vsprintf                               ,0xfc0d7383) //  0
 NHSTUB(EngDrvRead                             ,0xfc37ff31) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc36e567) //  0
 NHSTUB(DisableISDriveError                    ,0xfc44da2d) //  0
+//NHSTUB(CancelHPTimer                        ,0xfc1fcbb1) //  0            == 0xfc1fcbb1
 NHSTUB(SetEventFlag                           ,0xbfe14e43) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc37eca3) //  0
 NHSTUB(bzero                                  ,0x01100410) //  0

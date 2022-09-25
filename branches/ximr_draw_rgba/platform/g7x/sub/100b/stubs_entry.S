@@ -184,7 +184,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8022
 //NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc382693
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc345879
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc345911
-//NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc158e25
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc0ef0cd) //  0
 NHSTUB(Close                                  ,0xfc358091) //  0
@@ -337,6 +336,7 @@ NHSTUB(vsprintf                               ,0xfc0c38cf) //  0
 NHSTUB(EngDrvRead                             ,0xfc360b31) //  0
 NHSTUB(PTM_GetCurrentItem                     ,0xfc34b2ab) //  0
 NHSTUB(DisableISDriveError                    ,0xfc3d2a39) //  0
+//NHSTUB(CancelHPTimer                        ,0xfc158e25) //  0            == 0xfc158e25
 NHSTUB(SetHPTimerAfterNow                     ,0xfc158d8d) //  0
 NHSTUB(SetEventFlag                           ,0x010e549b) //  0
 NHSTUB(transfer_src_overlay                   ,0xfc361697) //  0

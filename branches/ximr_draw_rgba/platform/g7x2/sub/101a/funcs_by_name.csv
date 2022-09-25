@@ -86,6 +86,7 @@
 0xe0586683,CancelBPFilterForBP_FW
 0xe0591b4b,CancelExStrobeMode_FW
 0xe0566a7d,CancelFocusLensMaxSpeedLimit_FW
+0xe03f4b5b,CancelHPTimer
 0xe0583055,CancelImageDrive_FW
 0xe054c2c1,CancelImager_FW
 0xe05882c7,CancelLoopGainCalc_FW
@@ -1814,6 +1815,7 @@
 0xe056953f,SetGyroHPFINOffsetRoll_FW
 0xe0568f45,SetGyroHPFINOffsetYaw_FW
 0xe058535b,SetHour_FW
+0xe03f4ac1,SetHPTimerAfterNow
 0xe0552003,SetIgnoreAVJACK_FW
 0xe05851fd,SetImageMode_FW
 0xe05851e7,SetInputVoltage_FW
