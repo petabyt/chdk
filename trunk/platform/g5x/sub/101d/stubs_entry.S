@@ -166,9 +166,9 @@ DEF_CONST(uiprop_count                      ,0x000000d7) // Found @0xfc2a63fe
 DEF(exmem_alloc_table                 ,0x00047438) // Found @0xfc0a3386
 DEF(exmem_types_table                 ,0xfceb1098) // Found @0xfc0a338a
 DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xfceb1098
-//DEF(debug_logging_ptr                 ,0x00022078),          stubs_entry_2 = 0x00022078 (0x00022078)
-//DEF(debug_logging_flag                ,0x00022070),          stubs_entry_2 = 0x00022070 (0x00022070)
-//DEF(mzrm_sendmsg_ret_adr              ,0xfc361fd1),          stubs_entry_2 = 0xfc361fd1 (0xfc361fd1)
+DEF(debug_logging_ptr                 ,0x00022078) // Found @0xfc236b72
+DEF(debug_logging_flag                ,0x00022070) // Found @0xfc236b6c
+DEF(mzrm_sendmsg_ret_adr              ,0xfc361fd1)
 DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc1b922a
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
