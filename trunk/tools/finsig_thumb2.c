@@ -5866,6 +5866,8 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "apex2usHelper",    "ConvertTvToExposureTime_FW",   SIG_NAMED_JMP_SUB},
 {sig_match_named,   "apex2us",          "apex2usHelper",                SIG_NAMED_NTH(3,JMP_SUB)},
 
+{sig_match_named,   "err_init_task",    "init_task_error" },
+
 {NULL},
 };
 
