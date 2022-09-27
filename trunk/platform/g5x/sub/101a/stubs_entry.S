@@ -179,8 +179,6 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc2d3927
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc2cdb5b
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc2cdd4d
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc3b8fb9
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc3b8fe1
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc39d631
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3b8d69
 //NHSTUB(ScreenLock                           ,0xfc3bec91) //  0        *** != 0x00000000
@@ -206,6 +204,8 @@ NHSTUB(DoAFLock                               ,0xfc2d3509) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc3b79f5) //  0
 NHSTUB(ExitTask                               ,0xbfe14bc7) //  0
 NHSTUB(Fclose_Fut                             ,0xfc3b8e77) //  0
+NHSTUB(Feof_Fut                               ,0xfc3b8fb9) //  0
+NHSTUB(Fflush_Fut                             ,0xfc3b8fe1) //  0
 NHSTUB(Fgets_Fut                              ,0xfc3b8f55) //  0
 NHSTUB(Fopen_Fut                              ,0xfc3b8e4f) //  0
 NHSTUB(Fread_Fut                              ,0xfc3b8ee9) //  0

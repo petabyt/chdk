@@ -574,6 +574,8 @@
 0xfc3742e7,Fclose_Fut
 0xfc3742e7,Fclose_Fut_FW
 0xfc066a33,fclose_low
+0xfc374429,Feof_Fut
+0xfc374451,Fflush_Fut
 0xfc3743c5,Fgets_Fut
 0xfc066baf,fgets_low
 0xfc183055,File.ClearExifInfo_FW

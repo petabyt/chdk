@@ -452,6 +452,8 @@
 0xfc325beb,Fclose_Fut
 0xfc325beb,Fclose_Fut_FW
 0xfc067d73,fclose_low
+0xfc325d2d,Feof_Fut
+0xfc325d55,Fflush_Fut
 0xfc325cc9,Fgets_Fut
 0xfc067eef,fgets_low
 0xfc1d0bdd,File.ClearExifInfo_FW

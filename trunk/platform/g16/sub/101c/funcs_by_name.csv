@@ -400,6 +400,8 @@
 0xfc2b028b,Fclose_Fut
 0xfc2b028b,Fclose_Fut_FW
 0xfc061c57,fclose_low
+0xfc2b03cd,Feof_Fut
+0xfc2b03f5,Fflush_Fut
 0xfc2b0369,Fgets_Fut
 0xfc061dd3,fgets_low
 0xfc1c2e49,File.ClearExifInfo_FW

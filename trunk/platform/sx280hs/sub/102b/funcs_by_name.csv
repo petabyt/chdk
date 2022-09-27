@@ -392,6 +392,8 @@
 0xfc28fdaf,Fclose_Fut
 0xfc28fdaf,Fclose_Fut_FW
 0xfc0533ab,fclose_low
+0xfc28fef1,Feof_Fut
+0xfc28ff19,Fflush_Fut
 0xfc28fe8d,Fgets_Fut
 0xfc053527,fgets_low
 0xfc199cf5,File.ClearExifInfo_FW

@@ -615,6 +615,8 @@
 0xe037105b,Fgets_Fut
 0xe037108d,Fseek_Fut
 0xe037108d,Fseek_Fut_FW
+0xe03710c1,Feof_Fut
+0xe03710eb,Fflush_Fut
 0xe037111d,fut_prepare
 0xe0371135,fut_finish
 0xe0371491,CreateController_FW

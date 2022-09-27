@@ -179,8 +179,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8c2a
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc27670f
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc264e15
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f57
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc301dc1
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc301de9
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba07
 //NHSTUB(MakeSDCardBootable                   ,0xfc332861) //  0        *** != 0xfc33280d
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b71
@@ -208,6 +206,8 @@ NHSTUB(DoAFLock                               ,0xfc2763a1) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc302105) //  0
 NHSTUB(ExitTask                               ,0x010e526b) //  0
 NHSTUB(Fclose_Fut                             ,0xfc301c7f) //  0
+//NHSTUB(Feof_Fut                             ,0xfc301dc1) //  0            == 0xfc301dc1
+//NHSTUB(Fflush_Fut                           ,0xfc301de9) //  0            == 0xfc301de9
 NHSTUB(Fgets_Fut                              ,0xfc301d5d) //  0
 NHSTUB(Fopen_Fut                              ,0xfc301c57) //  0
 NHSTUB(Fread_Fut                              ,0xfc301cf1) //  0

@@ -1716,6 +1716,8 @@
 0xfc38a329,Fgets_Fut
 0xfc38a35b,Fseek_Fut
 0xfc38a35b,Fseek_Fut_FW
+0xfc38a38d,Feof_Fut
+0xfc38a3b5,Fflush_Fut
 0xfc38a3e5,fut_prepare
 0xfc38a3fd,fut_finish
 0xfc38a6e9,PrintFirmVersion_FW

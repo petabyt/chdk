@@ -200,8 +200,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245bf6
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc0aa6a7
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc2aab75
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc2aadc9
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc374429
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc374451
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc303c65
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc44bb9d
 //NHSTUB(PutInNdFilter                        ,0x00000000) //  0        *** != 0xfc44d241
@@ -232,6 +230,8 @@ NHSTUB(DoAFLock                               ,0xfc0aa4a1) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc327d25) //  0
 NHSTUB(ExitTask                               ,0xbfe14c13) //  0
 NHSTUB(Fclose_Fut                             ,0xfc3742e7) //  0
+//NHSTUB(Feof_Fut                             ,0xfc374429) //  0            == 0xfc374429
+//NHSTUB(Fflush_Fut                           ,0xfc374451) //  0            == 0xfc374451
 NHSTUB(Fgets_Fut                              ,0xfc3743c5) //  0
 NHSTUB(Fopen_Fut                              ,0xfc3742bf) //  0
 NHSTUB(Fread_Fut                              ,0xfc374359) //  0

@@ -8,8 +8,6 @@ NHSTUB(EnterToCompensationEVF                 ,0xe0298d6d)  // function that use
 NHSTUB(ExitFromCompensationEVF                ,0xe0298dad)  // function that uses "ExpOff" string
 NHSTUB(ExpCtrlTool_StartContiAE               ,0xe02a1a91)  // function that uses "StartContiAE" string
 NHSTUB(ExpCtrlTool_StopContiAE                ,0xe02a1bfd)  // function that uses "StopContiAE" string
-NHSTUB(Feof_Fut                               ,0xe03710c1)
-NHSTUB(Fflush_Fut                             ,0xe03710eb)
 NHSTUB(GetImageFolder                         ,0xe0355015)
 NHSTUB(RenameFile_Fut                         ,0xe0370e69)
 NHSTUB(Restart                                ,0xe005b973)  // Does not work - only accepts 7 as the parameter value (firmware update)

@@ -172,8 +172,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc0bcf1e
 // there are 112 entries in the table - set NUM_FL to 112
 DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c
 
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc326b11
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc326b39
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc310b09
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3268c1
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc317499
@@ -198,6 +196,8 @@ NHSTUB(ExitTask                               ,0xbfe14c1f) //  0
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fclose_Fut                             ,0xfc3269cf) //  0
+//NHSTUB(Feof_Fut                             ,0xfc326b11) //  0            == 0xfc326b11
+//NHSTUB(Fflush_Fut                           ,0xfc326b39) //  0            == 0xfc326b39
 NHSTUB(Fgets_Fut                              ,0xfc326aad) //  0
 NHSTUB(Fopen_Fut                              ,0xfc3269a7) //  0
 NHSTUB(Fread_Fut                              ,0xfc326a41) //  0

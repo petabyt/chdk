@@ -1115,6 +1115,8 @@
 0xfc326aa5,Fgets_Fut
 0xfc326ad7,Fseek_Fut
 0xfc326ad7,Fseek_Fut_FW
+0xfc326b09,Feof_Fut
+0xfc326b31,Fflush_Fut
 0xfc326b61,fut_prepare
 0xfc326b79,fut_finish
 0xfc326e33,_GetSystemTime
