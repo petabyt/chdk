@@ -187,7 +187,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41815800) // Found @0xfc1b4c20
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc309a9d
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc0ccdf1
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfc10e525
-//NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc523811
+//NHSTUB(err_init_task                        ,0xfc05e231) //  0        *** != 0xfc523811
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc4c5acd
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc390561
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc158795

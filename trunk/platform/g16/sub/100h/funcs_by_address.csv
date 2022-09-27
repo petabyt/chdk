@@ -128,6 +128,7 @@
 0xfc05e133,exception_handler_DataAbort
 0xfc05e149,exception_handler_SupervisorCall
 0xfc05e191,exception_handler_FIQ
+0xfc5237bd,err_init_task,(stubs_entry_2.s)
 0xfc05e231,init_task_error
 0xfc05e2ed,exception_handler_IRQ
 0xfc05e53d,task_Startup

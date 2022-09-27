@@ -353,6 +353,7 @@
 0xfc0ec5f5,EraseLogSector_FW
 0xfc0d00bb,EraseRom_FW
 0xfc1b69ad,EraseSignature_FW
+0xfc05d275,err_init_task
 0xfc0a8e15,ErrorTest_Disconnect_FW
 0xfc0a8dcb,ErrorTest_Succession_FW
 0xfc40beed,EscapeFocusLens_FW

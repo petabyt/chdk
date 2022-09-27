@@ -400,6 +400,7 @@
 0xfc0fec31,EraseLogSector_FW
 0xfc0e1a4b,EraseRom_FW
 0xfc1e243d,EraseSignature_FW
+0xfc064525,err_init_task
 0xfc0c0e4f,ErrorTest_Disconnect_FW
 0xfc0c0e05,ErrorTest_Succession_FW
 0xfc3d0e51,EscapeFocusLens_FW

@@ -134,6 +134,7 @@
 0xfc064427,exception_handler_DataAbort
 0xfc06443d,exception_handler_SupervisorCall
 0xfc064485,exception_handler_FIQ
+0xfc064525,err_init_task
 0xfc064525,init_task_error
 0xfc0645e1,exception_handler_IRQ
 0xfc064831,task_Startup

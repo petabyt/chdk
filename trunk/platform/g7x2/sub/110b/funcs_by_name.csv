@@ -405,6 +405,7 @@
 0xe005aa37,EraseLogSector_FW
 0xe0420389,EraseRom_FW
 0xe0552029,EraseSignature_FW
+0xe0020419,err_init_task
 0xe0566235,EscapeFocusLens_FW
 0xe0020321,exception_handler_DataAbort
 0xe002023f,exception_handler_FIQ

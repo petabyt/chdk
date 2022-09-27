@@ -344,6 +344,7 @@
 0xfc0a3af9,EraseLogSector_FW
 0xfc0d1b31,EraseRom_FW
 0xfc1a789f,EraseSignature_FW
+0xfc04f3b9,err_init_task
 0xfc3b71d5,EscapeFocusLens_FW
 0xfc04f2bb,exception_handler_DataAbort
 0xfc04f319,exception_handler_FIQ

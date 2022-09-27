@@ -139,6 +139,7 @@
 0xfc06306f,exception_handler_DataAbort
 0xfc063085,exception_handler_SupervisorCall
 0xfc0630cd,exception_handler_FIQ
+0xfc06316b,err_init_task
 0xfc06316b,init_task_error
 0xfc063229,exception_handler_IRQ
 0xfc06347d,task_Startup

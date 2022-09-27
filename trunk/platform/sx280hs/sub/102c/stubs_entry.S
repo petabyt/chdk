@@ -176,7 +176,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41815800) // Found @0xfc186ed8
 //NHSTUB(TurnOffBackLight                     ,0xfc136705) //  0        *** != 0xfc0d2997
 //NHSTUB(TurnOnBackLight                      ,0xfc1366c7) //  0        *** != 0xfc0d2985
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfc19bb17
-//NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc04f3b9
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc42ae41
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3352b1
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc1423c9
@@ -274,6 +273,7 @@ NHSTUB(add_ptp_handler                        ,0xfc0df5c3) //  0
 //NHSTUB(apex2us                              ,0xfc0a950f) //  0            == 0xfc0a950f
 NHSTUB(close                                  ,0xfc0ba46f) //  0
 NHSTUB(displaybusyonscreen                    ,0xfc14a149) //  0
+//NHSTUB(err_init_task                        ,0xfc04f3b9) //  0            == 0xfc04f3b9
 NHSTUB(exmem_alloc                            ,0xfc062729) //  0
 NHSTUB(exmem_ualloc                           ,0xfc0624fb) //  0
 NHSTUB(exmem_ufree                            ,0xfc0626df) //  0

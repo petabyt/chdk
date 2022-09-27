@@ -283,6 +283,7 @@ NHSTUB(_sqrt                                  ,0x0110ba18) //  0
 NHSTUB(add_ptp_handler                        ,0xfc0f38b7) //  0
 //NHSTUB(apex2us                              ,0xfc382687) //  0            == 0xfc382687
 NHSTUB(close                                  ,0xfc13443b) //  0
+NHSTUB(err_init_task                          ,0xfc064525) //  0
 NHSTUB(exmem_alloc                            ,0xfc079dbb) //  0
 NHSTUB(exmem_ualloc                           ,0xfc079cc5) //  0
 NHSTUB(exmem_ufree                            ,0xfc079d7f) //  0

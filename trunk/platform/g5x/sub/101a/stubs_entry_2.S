@@ -13,7 +13,6 @@ NHSTUB(RenameFile_Fut                         ,0xfc3b8d69)
 NHSTUB(SetFileTimeStamp                       ,0xfc3b5ee3)
 NHSTUB(TurnOffBackLight                       ,0xFC15BB35)  // Does not do anything?
 NHSTUB(TurnOnBackLight                        ,0xFC15BB31)  // Does not do anything?
-NHSTUB(err_init_task                          ,0xFC06647B)
 NHSTUB(mkdir                                  ,0xfc3b5f9b)
 NHSTUB(realloc                                ,0xfc5e5339)
 NHSTUB(reboot_fw_update                       ,0xFC28B97D)

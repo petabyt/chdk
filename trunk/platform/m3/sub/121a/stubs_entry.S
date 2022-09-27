@@ -212,7 +212,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245c26
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2783f1
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0x010e2bed
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc3331c7
-//NHSTUB(err_init_task                        ,0x00000000) //  0        *** != 0xfc06316b
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc4fa339
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc4504e1
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc33325d
@@ -301,6 +300,7 @@ NHSTUB(_sqrt                                  ,0x011052d0) //  0
 NHSTUB(add_ptp_handler                        ,0xfc16bacf) //  0
 //NHSTUB(apex2us                              ,0xfc3f457f) //  0            == 0xfc3f457f
 NHSTUB(close                                  ,0xfc1ee4e7) //  0
+//NHSTUB(err_init_task                        ,0xfc06316b) //  0            == 0xfc06316b
 NHSTUB(exmem_alloc                            ,0xfc078d63) //  0
 NHSTUB(exmem_ualloc                           ,0xfc078c6d) //  0
 NHSTUB(exmem_ufree                            ,0xfc078d27) //  0

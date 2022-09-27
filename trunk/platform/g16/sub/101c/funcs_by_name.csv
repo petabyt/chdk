@@ -352,6 +352,7 @@
 0xfc0c887d,EraseLogSector_FW
 0xfc0e9cd1,EraseRom_FW
 0xfc1d12e1,EraseSignature_FW
+0xfc52386d,err_init_task,(stubs_entry_2.s)
 0xfc38c45d,EscapeFocusLens_FW
 0xfc05e133,exception_handler_DataAbort
 0xfc05e191,exception_handler_FIQ

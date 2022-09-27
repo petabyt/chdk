@@ -134,6 +134,7 @@
 0xfc05efe7,exception_handler_DataAbort
 0xfc05effd,exception_handler_SupervisorCall
 0xfc05f045,exception_handler_FIQ
+0xfc05f0e5,err_init_task
 0xfc05f0e5,init_task_error
 0xfc05f1a1,exception_handler_IRQ
 0xfc05f3f1,task_Startup

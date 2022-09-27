@@ -419,6 +419,7 @@
 0xfc0bc805,EraseLogSector_FW
 0xfc0c7823,EraseRom_FW
 0xfc5e3c01,EraseSignature_FW
+0xfc06647b,err_init_task
 0xfc15634b,ErrorTest_Disconnect_FW
 0xfc156301,ErrorTest_Succession_FW
 0xfc65fb6f,EscapeFocusLens_FW

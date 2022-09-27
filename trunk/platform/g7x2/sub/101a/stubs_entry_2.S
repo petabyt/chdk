@@ -14,7 +14,6 @@ NHSTUB(Restart                                ,0xe005b973)  // Does not work - o
 NHSTUB(SetFileTimeStamp                       ,0xe0374179)
 NHSTUB(TurnOffBackLight                       ,NULL_SUB)
 NHSTUB(TurnOnBackLight                        ,NULL_SUB)
-//NHSTUB(err_init_task                          ,NULL_SUB)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)
 NHSTUB(reboot_fw_update                       ,0xe0526847)  // Does not work !!! Asserts if try to load PS.FI2 file.
