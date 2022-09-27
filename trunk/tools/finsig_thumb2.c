@@ -244,6 +244,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "_pow" },
     { "_sqrt" },
     { "add_ptp_handler" },
+    { "apex2usHelper", UNUSED|DONT_EXPORT|DONT_SAVE_CSV },
     { "apex2us" },
     { "close" },
     { "displaybusyonscreen", OPTIONAL },
@@ -5861,6 +5862,9 @@ sig_rule_t sig_rules_main[]={
 
 {sig_match_named_next_func, "Feof_Fut", "Fseek_Fut" },
 {sig_match_named_next_func, "Fflush_Fut", "Feof_Fut" },
+
+{sig_match_named,   "apex2usHelper",    "ConvertTvToExposureTime_FW",   SIG_NAMED_JMP_SUB},
+{sig_match_named,   "apex2us",          "apex2usHelper",                SIG_NAMED_NTH(3,JMP_SUB)},
 
 {NULL},
 };
