@@ -1602,6 +1602,7 @@
 0xfc338149,dry_con_printf
 0xfc3411cd,task_FmidTask
 0xfc344dab,GraphicSystemCoreFinish
+0xfc3468bb,apex2us
 0xfc346a4f,ShutterTool.SetTv_FW
 0xfc346a57,ShutterTool.SetTvWithErrMode_FW
 0xfc346af7,ShutterTool.CheckTv_FW

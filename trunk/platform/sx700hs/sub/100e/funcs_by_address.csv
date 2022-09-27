@@ -1354,6 +1354,7 @@
 0xfc30fb3b,memcmp_FW
 0xfc30fbc5,dry_con_printf
 0xfc311baf,GraphicSystemCoreFinish
+0xfc313637,apex2us
 0xfc3145f3,NRTBL.SetDarkSubType_FW
 0xfc314605,NRTBL.SetDefectCorrectType_FW
 0xfc314617,NRTBL.SetTassenType_FW

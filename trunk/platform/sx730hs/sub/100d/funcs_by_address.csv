@@ -791,6 +791,7 @@
 0xfc1f4d43,EF.SetChargeMode_FW
 0xfc1f9879,task_ExpDrvSubTask
 0xfc210df7,task_GapBS
+0xfc21985b,apex2us
 0xfc222f69,task_WSSAPP
 0xfc22ef61,task_FA_GyroInfo
 0xfc231a2f,StartTestRecLog_FW

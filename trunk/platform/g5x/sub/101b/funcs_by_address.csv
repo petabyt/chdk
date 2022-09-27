@@ -869,6 +869,7 @@
 0xfc234c33,task_FmidTask
 0xfc23792b,GraphicSystemCoreFinish
 0xfc24280d,task_ExpDrvSubTask
+0xfc25f5cb,apex2us
 0xfc273bcb,StartTestRecLog_FW
 0xfc273bd7,StopTestRecLog_FW
 0xfc274aad,task_MetaCtgPrsTask

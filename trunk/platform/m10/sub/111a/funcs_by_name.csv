@@ -25,6 +25,7 @@
 0xfc2f0f51,AllocateEFlensComBuffer
 0xfc44396b,AllocateMemory_FW
 0xfc1428e5,AllocateUncacheableMemory
+0xfc1b1d0f,apex2us
 0xfc2b02f3,ApMoniSel_FW
 0xfc17a651,AprocSigProc_ALC_FW
 0xfc17a66f,AprocSigProc_ALCReset_FW

@@ -375,6 +375,7 @@
 0xfc0a479f,GetStringWithPrompt_FW
 0xfc0a47db,OpenConsole_FW
 0xfc0a4895,CloseConsole_FW
+0xfc0a950f,apex2us
 0xfc0ba3ff,open
 0xfc0ba46f,close
 0xfc0ba575,Read

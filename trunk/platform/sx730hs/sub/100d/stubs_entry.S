@@ -170,7 +170,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc073dc0
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3517db
 //NHSTUB(SetParameterData                     ,0xfc06af67) //  0        *** != 0x00000000
 //NHSTUB(_pow                                 ,0x00000000) //  0        *** != 0x010f8718
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc21985b
 //NHSTUB(exmem_alloc                          ,0x00000000) //  0        *** != 0xfc3b2e05
 //NHSTUB(exmem_ualloc                         ,0x00000000) //  0        *** != 0xfc3b2d79
 //NHSTUB(exmem_ufree                          ,0x00000000) //  0        *** != 0xfc3b2dd5
@@ -274,6 +273,7 @@ NHSTUB(_log                                   ,0x010f8090) //  0
 NHSTUB(_log10                                 ,0x010f85b0) //  0
 NHSTUB(_sqrt                                  ,0x010fa798) //  0
 NHSTUB(add_ptp_handler                        ,0xfc32224b) //  0
+//NHSTUB(apex2us                              ,0xfc21985b) //  0            == 0xfc21985b
 NHSTUB(close                                  ,0xfc3a918b) //  0
 NHSTUB(free                                   ,0xfc369ebb) //  0
 NHSTUB(kbd_p1_f                               ,0xfc589b47) //  0

@@ -1773,6 +1773,7 @@
 0xfc3f4321,Capture.Mem2MemDefMarkWholeSerial_FW
 0xfc3f4327,Capture.SaveCrwWholeSerial_FW
 0xfc3f4349,Capture.PubHeadDirectMode_FW
+0xfc3f454f,apex2us
 0xfc3f46e3,ShutterTool.SetTv_FW
 0xfc3f46eb,ShutterTool.SetTvWithErrMode_FW
 0xfc3f478b,ShutterTool.CheckTv_FW

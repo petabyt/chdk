@@ -24,6 +24,7 @@
 0xfc18aaa3,AFTool.StoreAFixPosition_FW
 0xfc3a4687,AllocateMemory_FW
 0xfc16cb81,AllocateUncacheableMemory
+0xfc3468bb,apex2us
 0xfc2865fd,ApMoniSel_FW
 0xfc1b1aa7,AprocSigProc_ALC_FW
 0xfc1b1abd,AprocSigProc_ALCReset_FW

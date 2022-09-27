@@ -1362,6 +1362,7 @@
 0xfc30e2db,memcmp_FW
 0xfc30e365,dry_con_printf
 0xfc335565,GraphicSystemCoreFinish
+0xfc33792f,apex2us
 0xfc33be15,NRTBL.SetDarkSubType_FW
 0xfc33be29,NRTBL.GetDarkSubType_FW
 0xfc33be4f,NRTBL.SetDefectCorrectType_FW

@@ -179,7 +179,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8022
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc325ad1
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc358319
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3582d1
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc382687
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc0ef0cd) //  0
 NHSTUB(Close                                  ,0xfc358085) //  0
@@ -282,6 +281,7 @@ NHSTUB(_log10                                 ,0x01109830) //  0
 NHSTUB(_pow                                   ,0x01109998) //  0
 NHSTUB(_sqrt                                  ,0x0110ba18) //  0
 NHSTUB(add_ptp_handler                        ,0xfc0f38b7) //  0
+//NHSTUB(apex2us                              ,0xfc382687) //  0            == 0xfc382687
 NHSTUB(close                                  ,0xfc13443b) //  0
 NHSTUB(exmem_alloc                            ,0xfc079dbb) //  0
 NHSTUB(exmem_ualloc                           ,0xfc079cc5) //  0

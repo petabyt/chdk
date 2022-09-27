@@ -182,7 +182,6 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xe0374179
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xe051e967
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xe0067ab3
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xe0526847
 
 NHSTUB(AllocateUncacheableMemory              ,0xe046e571) //  0
@@ -279,6 +278,7 @@ NHSTUB(_log10                                 ,0xdffcdc39) //  0
 NHSTUB(_pow                                   ,0xdffcdd31) //  0
 NHSTUB(_sqrt                                  ,0xdffcf241) //  0
 NHSTUB(add_ptp_handler                        ,0xe02f31db) //  0
+//NHSTUB(apex2us                              ,0xe0067ab3) //  0            == 0xe0067ab3
 NHSTUB(close                                  ,0xe0451293) //  0
 NHSTUB(exmem_alloc                            ,0xe005629b) //  0
 NHSTUB(exmem_ualloc                           ,0xe005604f) //  0

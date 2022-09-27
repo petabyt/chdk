@@ -750,6 +750,7 @@
 0xfc1a1175,UIFS_StartMoviePlay_FW
 0xfc1bfe37,task_FmidTask
 0xfc1c7093,GraphicSystemCoreFinish
+0xfc1c8c7b,apex2us
 0xfc1ce311,task_ExpDrvSubTask
 0xfc1f3387,task_OhyIntegTask
 0xfc1fc199,task_FA_GyroInfo

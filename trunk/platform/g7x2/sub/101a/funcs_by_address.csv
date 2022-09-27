@@ -337,6 +337,7 @@
 0xe006500d,GetZoomPiSensorLevel_FW
 0xe006503d,GetFocusPiSensorLevel_FW
 0xe006506d,GetIrisPiSensorLevel_FW
+0xe0067ab3,apex2us
 0xe0068629,task_SsgMainTask
 0xe0068877,task_SsgPeriodTask
 0xe006a469,task_AlgStgAlg
@@ -2362,6 +2363,7 @@
 0xe058d743,SetZoomAmpereLimitOffTimeForAdjustZoom_FW
 0xe058d74d,j_GetZoomPiDefaultPosition_FW
 0xe058d751,j_GetZoomPiChangePosition_FW
+0xe0591625,j_apex2usHelper
 0xe0591629,ConvertTvToExposureTime_FW
 0xe059163d,j_GetCurrentExposureTime_FW
 0xe0591649,j_GetCurrentShutterSpeed_FW

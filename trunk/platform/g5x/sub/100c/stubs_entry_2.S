@@ -13,7 +13,6 @@ NHSTUB(RenameFile_Fut                         ,0xFC3B8D51)
 NHSTUB(SetFileTimeStamp                       ,0xFC3B5ECB)
 NHSTUB(TurnOffBackLight                       ,0xFC15BB35)  // Does not do anything?
 NHSTUB(TurnOnBackLight                        ,0xFC15BB31)  // Does not do anything?
-NHSTUB(apex2us                                ,0xfc25f5cb)
 NHSTUB(err_init_task                          ,0xFC06647B)
 NHSTUB(mkdir                                  ,0xFC3B5F83)
 NHSTUB(realloc                                ,0xFC5E5321)

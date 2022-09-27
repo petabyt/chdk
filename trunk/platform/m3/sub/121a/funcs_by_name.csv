@@ -26,6 +26,7 @@
 0xfc43d137,AllocateEFlensComBuffer
 0xfc450d9f,AllocateMemory_FW
 0xfc15379d,AllocateUncacheableMemory
+0xfc3f457f,apex2us
 0xfc24b797,AprocSigProc_ALC_FW
 0xfc24b7ad,AprocSigProc_ALCReset_FW
 0xfc24b74d,AprocSigProc_DCCut_FW

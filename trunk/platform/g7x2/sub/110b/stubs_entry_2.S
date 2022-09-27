@@ -14,7 +14,6 @@ NHSTUB(Restart                                ,0xe005b973)  // Does not work - o
 NHSTUB(SetFileTimeStamp                       ,0xe0374179)
 NHSTUB(TurnOffBackLight                       ,NULL_SUB)
 NHSTUB(TurnOnBackLight                        ,NULL_SUB)
-NHSTUB(apex2us                                ,0xe0067ab3)
 //NHSTUB(err_init_task                          ,NULL_SUB)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)

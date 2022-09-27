@@ -32,6 +32,7 @@
 0xfc662f87,AllocateMemory_FW
 0xfc16f5f1,AllocateUncacheableMemory
 0xfc40e7a9,APE_DraftDump_FW
+0xfc25f5cb,apex2us
 0xfc2e1c55,ApMoniSel_FW
 0xfc0d7609,AprocSigProc_ALC_FW
 0xfc0d7627,AprocSigProc_ALCReset_FW

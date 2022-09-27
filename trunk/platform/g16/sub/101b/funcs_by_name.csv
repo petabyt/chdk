@@ -19,6 +19,7 @@
 0xfc352a9d,AFTool.GetEVal_FW
 0xfc390c31,AllocateMemory_FW
 0xfc0f9b8d,AllocateUncacheableMemory
+0xfc3379cf,apex2us
 0xfc2ce2c5,ApMoniSel_FW
 0xfc1b5421,AprocSigProc_ALC_FW
 0xfc1b5437,AprocSigProc_ALCReset_FW

@@ -955,6 +955,7 @@
 0xfc1a053b,LCDRect_Delete_FW
 0xfc1a7cf5,memset
 0xfc1a7cf5,memset_FW
+0xfc1b1d07,apex2us
 0xfc1b4df5,task_ExpDrvSubTask
 0xfc1ca8fd,GetAdjAcceleration_FW
 0xfc1ca909,ReloadProtractorAdjustment_FW
