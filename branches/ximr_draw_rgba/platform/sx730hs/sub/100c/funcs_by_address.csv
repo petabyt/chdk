@@ -79,6 +79,7 @@
 0xfc05ca63,exception_handler_DataAbort
 0xfc05ca79,exception_handler_SupervisorCall
 0xfc05cac1,exception_handler_FIQ
+0xfc05cb5f,err_init_task
 0xfc05cb5f,init_task_error
 0xfc05cc1d,exception_handler_IRQ
 0xfc05ccf5,task_Startup
@@ -791,6 +792,7 @@
 0xfc1f4d1b,EF.SetChargeMode_FW
 0xfc1f9851,task_ExpDrvSubTask
 0xfc210dcf,task_GapBS
+0xfc219833,apex2us
 0xfc222f41,task_WSSAPP
 0xfc22ef39,task_FA_GyroInfo
 0xfc231a07,StartTestRecLog_FW
@@ -1053,6 +1055,8 @@
 0xfc34c8fd,Fgets_Fut
 0xfc34c92f,Fseek_Fut
 0xfc34c92f,Fseek_Fut_FW
+0xfc34c961,Feof_Fut
+0xfc34c989,Fflush_Fut
 0xfc34c9b9,fut_prepare
 0xfc34c9d1,fut_finish
 0xfc350f37,task_BleA

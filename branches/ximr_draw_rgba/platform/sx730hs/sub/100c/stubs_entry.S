@@ -164,15 +164,12 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc073dc0
 // there are 127 entries in the table - set NUM_FL to 127
 //DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c,          stubs_min = 0xfdf3167c (0xfdf3167c)
 
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc34c961
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc34c989
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc32f3e7
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc34c711
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc3517fb
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3517b3
 //NHSTUB(SetParameterData                     ,0xfc06af67) //  0        *** != 0x00000000
 //NHSTUB(_pow                                 ,0x00000000) //  0        *** != 0x010f8718
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc219833
 //NHSTUB(exmem_alloc                          ,0x00000000) //  0        *** != 0xfc3b2ddd
 //NHSTUB(exmem_ualloc                         ,0x00000000) //  0        *** != 0xfc3b2d51
 //NHSTUB(exmem_ufree                          ,0x00000000) //  0        *** != 0xfc3b2dad
@@ -196,6 +193,8 @@ NHSTUB(ExitTask                               ,0xfc35c399) //  0
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fclose_Fut                             ,0xfc34c81f) //  0
+//NHSTUB(Feof_Fut                             ,0xfc34c961) //  0            == 0xfc34c961
+//NHSTUB(Fflush_Fut                           ,0xfc34c989) //  0            == 0xfc34c989
 NHSTUB(Fgets_Fut                              ,0xfc34c8fd) //  0
 NHSTUB(Fopen_Fut                              ,0xfc34c7f7) //  0
 NHSTUB(Fread_Fut                              ,0xfc34c891) //  0
@@ -274,7 +273,9 @@ NHSTUB(_log                                   ,0x010f8090) //  0
 NHSTUB(_log10                                 ,0x010f85b0) //  0
 NHSTUB(_sqrt                                  ,0x010fa798) //  0
 NHSTUB(add_ptp_handler                        ,0xfc322223) //  0
+//NHSTUB(apex2us                              ,0xfc219833) //  0            == 0xfc219833
 NHSTUB(close                                  ,0xfc3a9163) //  0
+NHSTUB(err_init_task                          ,0xfc05cb5f) //  0
 NHSTUB(free                                   ,0xfc369e93) //  0
 NHSTUB(kbd_p1_f                               ,0xfc589b1f) //  0
 NHSTUB(kbd_p1_f_cont                          ,0xfc589b27) //  0

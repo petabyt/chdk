@@ -175,8 +175,6 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xe0298dad
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xe02a1a91
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xe02a1bfd
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xe03710c1
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xe03710eb
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xe0355015
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xe0370e69
 //NHSTUB(Restart                              ,0x00000000) //  0        *** != 0xe005b973
@@ -184,7 +182,6 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xe0374179
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xe051e963
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xe0067ab3
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xe0526843
 
 NHSTUB(AllocateUncacheableMemory              ,0xe046e571) //  0
@@ -200,6 +197,8 @@ NHSTUB(DoAFLock                               ,0xe02989e7) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xe03703e3) //  0
 NHSTUB(ExitTask                               ,0xdffc95af) //  0
 NHSTUB(Fclose_Fut                             ,0xe0370f77) //  0
+NHSTUB(Feof_Fut                               ,0xe03710c1) //  0
+NHSTUB(Fflush_Fut                             ,0xe03710eb) //  0
 NHSTUB(Fgets_Fut                              ,0xe037105b) //  0
 NHSTUB(Fopen_Fut                              ,0xe0370f4f) //  0
 NHSTUB(Fread_Fut                              ,0xe0370feb) //  0
@@ -279,7 +278,9 @@ NHSTUB(_log10                                 ,0xdffcdc39) //  0
 NHSTUB(_pow                                   ,0xdffcdd31) //  0
 NHSTUB(_sqrt                                  ,0xdffcf241) //  0
 NHSTUB(add_ptp_handler                        ,0xe02f31db) //  0
+NHSTUB(apex2us                                ,0xe0067ab3) //  0
 NHSTUB(close                                  ,0xe0451293) //  0
+NHSTUB(err_init_task                          ,0xe0020419) //  0
 NHSTUB(exmem_alloc                            ,0xe005629b) //  0
 NHSTUB(exmem_ualloc                           ,0xe005604f) //  0
 NHSTUB(exmem_ufree                            ,0xe005625f) //  0

@@ -88,6 +88,7 @@
 0xe00202dd,exception_handler_UndefinedInstruction
 0xe0020307,exception_handler_PrefetchAbort
 0xe0020321,exception_handler_DataAbort
+0xe0020419,err_init_task
 0xe0020419,init_task_error
 0xe00206d5,task_Startup
 0xe00208bf,init_ex_drivers
@@ -337,6 +338,7 @@
 0xe006500d,GetZoomPiSensorLevel_FW
 0xe006503d,GetFocusPiSensorLevel_FW
 0xe006506d,GetIrisPiSensorLevel_FW
+0xe0067ab3,apex2us
 0xe0068629,task_SsgMainTask
 0xe0068877,task_SsgPeriodTask
 0xe006a469,task_AlgStgAlg
@@ -615,6 +617,8 @@
 0xe037105b,Fgets_Fut
 0xe037108d,Fseek_Fut
 0xe037108d,Fseek_Fut_FW
+0xe03710c1,Feof_Fut
+0xe03710eb,Fflush_Fut
 0xe037111d,fut_prepare
 0xe0371135,fut_finish
 0xe0371491,CreateController_FW
@@ -2360,6 +2364,7 @@
 0xe058d78f,SetZoomAmpereLimitOffTimeForAdjustZoom_FW
 0xe058d799,j_GetZoomPiDefaultPosition_FW
 0xe058d79d,j_GetZoomPiChangePosition_FW
+0xe0591671,j_apex2usHelper
 0xe0591675,ConvertTvToExposureTime_FW
 0xe0591689,j_GetCurrentExposureTime_FW
 0xe0591695,j_GetCurrentShutterSpeed_FW

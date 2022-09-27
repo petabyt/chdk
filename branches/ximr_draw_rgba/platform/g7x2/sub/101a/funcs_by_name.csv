@@ -23,6 +23,7 @@
 0xe047a317,AFTool.StoreAFixPosition_FW
 0xe0569bc5,AllocateMemory_FW
 0xe046e571,AllocateUncacheableMemory
+0xe0067ab3,apex2us
 0xe02a9a87,ApMoniSel_FW
 0xe017115f,AprocSigProc_ALC_FW
 0xe017117d,AprocSigProc_ALCReset_FW
@@ -404,6 +405,7 @@
 0xe005aa37,EraseLogSector_FW
 0xe0420389,EraseRom_FW
 0xe055202d,EraseSignature_FW
+0xe0020419,err_init_task
 0xe05661c9,EscapeFocusLens_FW
 0xe0020321,exception_handler_DataAbort
 0xe002023f,exception_handler_FIQ
@@ -457,6 +459,8 @@
 0xe0370f77,Fclose_Fut
 0xe0370f77,Fclose_Fut_FW
 0xe0551803,fclose_low
+0xe03710c1,Feof_Fut
+0xe03710eb,Fflush_Fut
 0xe037105b,Fgets_Fut
 0xe0551987,fgets_low
 0xe0464269,File.ClearExifInfo_FW
@@ -1070,6 +1074,7 @@
 0xe02e6073,IsZoomActuatorResetSensorPlusSide_FW
 0xe0060269,IsZoomLensOutSidePosition_FW
 0xe0536eaf,j_AbortAEIntegralValue_FW
+0xe0591625,j_apex2usHelper
 0xe0551f7d,j_BeepDrive_FW
 0xe0551f81,j_BeepDriveComp_FW
 0xe0551f85,j_BeepDriveStop_FW

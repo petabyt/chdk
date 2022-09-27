@@ -130,6 +130,7 @@
 0xfc04f2bb,exception_handler_DataAbort
 0xfc04f2d1,exception_handler_SupervisorCall
 0xfc04f319,exception_handler_FIQ
+0xfc04f3b9,err_init_task
 0xfc04f3b9,init_task_error
 0xfc04f475,exception_handler_IRQ
 0xfc04f6c5,task_Startup
@@ -375,6 +376,7 @@
 0xfc0a479f,GetStringWithPrompt_FW
 0xfc0a47db,OpenConsole_FW
 0xfc0a4895,CloseConsole_FW
+0xfc0a950f,apex2us
 0xfc0ba3ff,open
 0xfc0ba46f,close
 0xfc0ba575,Read
@@ -1191,6 +1193,8 @@
 0xfc28fe8d,Fgets_Fut
 0xfc28febf,Fseek_Fut
 0xfc28febf,Fseek_Fut_FW
+0xfc28fef1,Feof_Fut
+0xfc28ff19,Fflush_Fut
 0xfc28ff49,fut_prepare
 0xfc28ff61,fut_finish
 0xfc296ffd,UIFS_GetNumOfOptZoomPos_FW

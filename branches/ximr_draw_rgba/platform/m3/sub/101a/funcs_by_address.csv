@@ -139,6 +139,7 @@
 0xfc06306f,exception_handler_DataAbort
 0xfc063085,exception_handler_SupervisorCall
 0xfc0630cd,exception_handler_FIQ
+0xfc06316b,err_init_task
 0xfc06316b,init_task_error
 0xfc063229,exception_handler_IRQ
 0xfc06347d,task_Startup
@@ -1665,6 +1666,8 @@
 0xfc374055,Fgets_Fut
 0xfc374087,Fseek_Fut
 0xfc374087,Fseek_Fut_FW
+0xfc3740b9,Feof_Fut
+0xfc3740e1,Fflush_Fut
 0xfc374111,fut_prepare
 0xfc374129,fut_finish
 0xfc374c61,task_CtrlSrv
@@ -1770,6 +1773,7 @@
 0xfc3f3fb1,Capture.Mem2MemDefMarkWholeSerial_FW
 0xfc3f3fb7,Capture.SaveCrwWholeSerial_FW
 0xfc3f3fd9,Capture.PubHeadDirectMode_FW
+0xfc3f41df,apex2us
 0xfc3f4373,ShutterTool.SetTv_FW
 0xfc3f437b,ShutterTool.SetTvWithErrMode_FW
 0xfc3f441b,ShutterTool.CheckTv_FW

@@ -179,8 +179,6 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc27670f
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc264e15
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc264f57
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc301dc1
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc301de9
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc30ba07
 //NHSTUB(MakeSDCardBootable                   ,0xfc332861) //  0        *** != 0xfc33280d
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc301b71
@@ -189,7 +187,6 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc332bcd
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc322ae3
 //NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfcd1d6a7
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc3468cf
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc319685
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3a118b
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc31971d
@@ -208,6 +205,8 @@ NHSTUB(DoAFLock                               ,0xfc2763a1) //  0
 NHSTUB2(ExecuteEventProcedure                  ,0xfc302105) //  0
 NHSTUB(ExitTask                               ,0x010e526b) //  0
 NHSTUB(Fclose_Fut                             ,0xfc301c7f) //  0
+//NHSTUB(Feof_Fut                             ,0xfc301dc1) //  0            == 0xfc301dc1
+//NHSTUB(Fflush_Fut                           ,0xfc301de9) //  0            == 0xfc301de9
 NHSTUB(Fgets_Fut                              ,0xfc301d5d) //  0
 NHSTUB(Fopen_Fut                              ,0xfc301c57) //  0
 NHSTUB(Fread_Fut                              ,0xfc301cf1) //  0
@@ -283,7 +282,9 @@ NHSTUB(_log10                                 ,0x011096b8) //  0
 NHSTUB(_pow                                   ,0x01109820) //  0
 NHSTUB(_sqrt                                  ,0x0110b8a0) //  0
 NHSTUB(add_ptp_handler                        ,0xfc0f4933) //  0
+//NHSTUB(apex2us                              ,0xfc3468cf) //  0            == 0xfc3468cf
 NHSTUB(close                                  ,0xfc136db3) //  0
+NHSTUB(err_init_task                          ,0xfc05f0e5) //  0
 NHSTUB(exmem_alloc                            ,0xfc07127f) //  0
 NHSTUB(exmem_ualloc                           ,0xfc071189) //  0
 NHSTUB(exmem_ufree                            ,0xfc071243) //  0

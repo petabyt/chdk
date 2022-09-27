@@ -142,6 +142,7 @@
 0xfc06c627,exception_handler_DataAbort
 0xfc06c63d,exception_handler_SupervisorCall
 0xfc06c685,exception_handler_FIQ
+0xfc06c723,err_init_task
 0xfc06c723,init_task_error
 0xfc06c7e1,exception_handler_IRQ
 0xfc06ca35,task_Startup
@@ -955,6 +956,7 @@
 0xfc1a053b,LCDRect_Delete_FW
 0xfc1a7cf5,memset
 0xfc1a7cf5,memset_FW
+0xfc1b1d07,apex2us
 0xfc1b4df5,task_ExpDrvSubTask
 0xfc1ca8fd,GetAdjAcceleration_FW
 0xfc1ca909,ReloadProtractorAdjustment_FW
@@ -1716,6 +1718,8 @@
 0xfc38a2f9,Fgets_Fut
 0xfc38a32b,Fseek_Fut
 0xfc38a32b,Fseek_Fut_FW
+0xfc38a35d,Feof_Fut
+0xfc38a385,Fflush_Fut
 0xfc38a3b5,fut_prepare
 0xfc38a3cd,fut_finish
 0xfc38a6b9,PrintFirmVersion_FW

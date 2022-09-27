@@ -128,6 +128,7 @@
 0xfc05e133,exception_handler_DataAbort
 0xfc05e149,exception_handler_SupervisorCall
 0xfc05e191,exception_handler_FIQ
+0xfc5237bd,err_init_task,(stubs_entry_2.s)
 0xfc05e231,init_task_error
 0xfc05e2ed,exception_handler_IRQ
 0xfc05e53d,task_Startup
@@ -1157,6 +1158,8 @@
 0xfc2b0301,Fgets_Fut
 0xfc2b0333,Fseek_Fut
 0xfc2b0333,Fseek_Fut_FW
+0xfc2b0365,Feof_Fut
+0xfc2b038d,Fflush_Fut
 0xfc2b03bd,fut_prepare
 0xfc2b03d5,fut_finish
 0xfc2ba3a3,get_playrec_mode
@@ -1360,6 +1363,7 @@
 0xfc30e2db,memcmp_FW
 0xfc30e365,dry_con_printf
 0xfc335565,GraphicSystemCoreFinish
+0xfc33792f,apex2us
 0xfc33be15,NRTBL.SetDarkSubType_FW
 0xfc33be29,NRTBL.GetDarkSubType_FW
 0xfc33be4f,NRTBL.SetDefectCorrectType_FW

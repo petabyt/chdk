@@ -139,6 +139,7 @@
 0xfc0559bb,exception_handler_DataAbort
 0xfc0559d1,exception_handler_SupervisorCall
 0xfc055a19,exception_handler_FIQ
+0xfc055ab7,err_init_task
 0xfc055ab7,init_task_error
 0xfc055b75,exception_handler_IRQ
 0xfc055dc9,task_Startup
@@ -750,6 +751,7 @@
 0xfc1a117d,UIFS_StartMoviePlay_FW
 0xfc1bfe3f,task_FmidTask
 0xfc1c709b,GraphicSystemCoreFinish
+0xfc1c8c83,apex2us
 0xfc1ce319,task_ExpDrvSubTask
 0xfc1f338f,task_OhyIntegTask
 0xfc1fc1a1,task_FA_GyroInfo
@@ -1115,6 +1117,8 @@
 0xfc326aad,Fgets_Fut
 0xfc326adf,Fseek_Fut
 0xfc326adf,Fseek_Fut_FW
+0xfc326b11,Feof_Fut
+0xfc326b39,Fflush_Fut
 0xfc326b69,fut_prepare
 0xfc326b81,fut_finish
 0xfc326e3b,_GetSystemTime

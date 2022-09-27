@@ -19,6 +19,7 @@
 0xfc352a4d,AFTool.GetEVal_FW
 0xfc390be1,AllocateMemory_FW
 0xfc0f9b85,AllocateUncacheableMemory
+0xfc33797f,apex2us
 0xfc2ce285,ApMoniSel_FW
 0xfc1b53e1,AprocSigProc_ALC_FW
 0xfc1b53f7,AprocSigProc_ALCReset_FW
@@ -351,6 +352,7 @@
 0xfc0c887d,EraseLogSector_FW
 0xfc0e9cd1,EraseRom_FW
 0xfc1d12a1,EraseSignature_FW
+0xfc523811,err_init_task,(stubs_entry_2.s)
 0xfc38c401,EscapeFocusLens_FW
 0xfc05e133,exception_handler_DataAbort
 0xfc05e191,exception_handler_FIQ
@@ -400,6 +402,8 @@
 0xfc2b024b,Fclose_Fut
 0xfc2b024b,Fclose_Fut_FW
 0xfc061c57,fclose_low
+0xfc2b038d,Feof_Fut
+0xfc2b03b5,Fflush_Fut
 0xfc2b0329,Fgets_Fut
 0xfc061dd3,fgets_low
 0xfc1c2e09,File.ClearExifInfo_FW

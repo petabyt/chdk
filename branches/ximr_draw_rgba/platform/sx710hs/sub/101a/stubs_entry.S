@@ -172,13 +172,10 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc0bcf1e
 // there are 112 entries in the table - set NUM_FL to 112
 DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c
 
-//NHSTUB(Feof_Fut                             ,0x00000000) //  0        *** != 0xfc326b11
-//NHSTUB(Fflush_Fut                           ,0x00000000) //  0        *** != 0xfc326b39
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc310b09
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3268c1
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc317499
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc317451
-//NHSTUB(apex2us                              ,0x00000000) //  0        *** != 0xfc1c8c83
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc126b7d
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc12fdf1) //  0
@@ -198,6 +195,8 @@ NHSTUB(ExitTask                               ,0xbfe14c1f) //  0
 //NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0            == 0x00000000
 //NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fclose_Fut                             ,0xfc3269cf) //  0
+//NHSTUB(Feof_Fut                             ,0xfc326b11) //  0            == 0xfc326b11
+//NHSTUB(Fflush_Fut                           ,0xfc326b39) //  0            == 0xfc326b39
 NHSTUB(Fgets_Fut                              ,0xfc326aad) //  0
 NHSTUB(Fopen_Fut                              ,0xfc3269a7) //  0
 NHSTUB(Fread_Fut                              ,0xfc326a41) //  0
@@ -278,7 +277,9 @@ NHSTUB(_log10                                 ,0x011036e8) //  0
 NHSTUB(_pow                                   ,0x01103850) //  0
 NHSTUB(_sqrt                                  ,0x011058d0) //  0
 NHSTUB(add_ptp_handler                        ,0xfc2c88b3) //  0
+//NHSTUB(apex2us                              ,0xfc1c8c83) //  0            == 0xfc1c8c83
 NHSTUB(close                                  ,0xfc38d6e7) //  0
+NHSTUB(err_init_task                          ,0xfc055ab7) //  0
 NHSTUB(exmem_alloc                            ,0xfc08ec2b) //  0
 NHSTUB(exmem_ualloc                           ,0xfc08eb35) //  0
 NHSTUB(exmem_ufree                            ,0xfc08ebef) //  0

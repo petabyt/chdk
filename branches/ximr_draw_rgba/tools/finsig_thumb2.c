@@ -244,6 +244,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "_pow" },
     { "_sqrt" },
     { "add_ptp_handler" },
+    { "apex2usHelper", UNUSED|DONT_EXPORT|DONT_SAVE_CSV },
     { "apex2us" },
     { "close" },
     { "displaybusyonscreen", OPTIONAL },
@@ -5395,6 +5396,27 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// match already identified function found by name, select next func as result
+int sig_match_named_next_func(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t adr = get_saved_sig_val(rule->ref_name);
+    if(!adr) {
+        printf("sig_match_named_next_func: missing %s\n",rule->ref_name);
+        return 0;
+    }
+    adr += 32;
+    int i;
+    fw_disasm_iter_single(fw,adr);
+    for (i=0; i<20; i+=1) {
+        if (fw->is->insn->id == ARM_INS_PUSH && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R4) {
+            return save_sig_with_j(fw,rule->name,(fw->is->insn->address) | is->thumb);
+        }
+        fw_disasm_iter(fw);
+    }
+    
+    return 0;
+}
+
 // bootstrap sigs:
 // Used to find the minimum needed to for find_generic_funcs to get generic task and eventproc matches
 // order is important
@@ -5837,6 +5859,14 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLens",          "GetFocusLensSubjectDistanceFromLensHelper",    SIG_NAMED_SUB},
 
 {sig_match_named,   "CancelHPTimer",    "task_TouchPanel",      SIG_NAMED_NTH(8,SUB)},
+
+{sig_match_named_next_func, "Feof_Fut", "Fseek_Fut" },
+{sig_match_named_next_func, "Fflush_Fut", "Feof_Fut" },
+
+{sig_match_named,   "apex2usHelper",    "ConvertTvToExposureTime_FW",   SIG_NAMED_JMP_SUB},
+{sig_match_named,   "apex2us",          "apex2usHelper",                SIG_NAMED_NTH(3,JMP_SUB)},
+
+{sig_match_named,   "err_init_task",    "init_task_error" },
 
 {NULL},
 };

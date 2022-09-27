@@ -23,6 +23,7 @@
 0xfc542927,AllocateMemory_FW
 0xfc12fdf1,AllocateUncacheableMemory
 0xfc352895,APE_DraftDump_FW
+0xfc1c8c83,apex2us
 0xfc27f977,ApMoniSel_FW
 0xfc163775,AprocSigProc_ALC_FW
 0xfc163793,AprocSigProc_ALCReset_FW
@@ -388,6 +389,7 @@
 0xfc0ac1b9,EraseLogSector_FW
 0xfc0d6b4f,EraseRom_FW
 0xfc4abcbd,EraseSignature_FW
+0xfc055ab7,err_init_task
 0xfc393ebb,ErrorTest_Disconnect_FW
 0xfc393e71,ErrorTest_Succession_FW
 0xfc53f57f,EscapeFocusLens_FW
@@ -442,6 +444,8 @@
 0xfc3269cf,Fclose_Fut
 0xfc3269cf,Fclose_Fut_FW
 0xfc0592c3,fclose_low
+0xfc326b11,Feof_Fut
+0xfc326b39,Fflush_Fut
 0xfc326aad,Fgets_Fut
 0xfc05943f,fgets_low
 0xfc4aac9d,File.ClearExifInfo_FW
