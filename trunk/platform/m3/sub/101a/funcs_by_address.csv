@@ -305,6 +305,8 @@
 0xfc0a9ed5,SS.GetDigitalZoomPosition_FW
 0xfc0aa4a1,DoAFLock
 0xfc0aa4d1,UnlockAF
+0xfc0aa66b,EnterToCompensationEVF
+0xfc0aa6a7,ExitFromCompensationEVF
 0xfc0aa83f,DoAELock
 0xfc0aa85d,UnlockAE
 0xfc0ab61d,PT_MFOn
@@ -1398,6 +1400,8 @@
 0xfc2a1bbf,BeepDrive_FW
 0xfc2a1bd3,BeepDriveComp_FW
 0xfc2a1be7,BeepDriveStop_FW
+0xfc2aac61,ExpCtrlTool_StartContiAE
+0xfc2aaeb5,ExpCtrlTool_StopContiAE
 0xfc2b69cd,task_WBIntegTask
 0xfc2bc92d,task_ExpDrv
 0xfc2bc92d,task_ExpDrvTask

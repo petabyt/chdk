@@ -175,6 +175,10 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8022
 // there are 101 entries in the table - set NUM_FL to 101
 //DEF(focus_len_table                         ,0xfdf2deb4) // Found @0xfdf2deb4,          stubs_min = 0xfdf2deb4 (0xfdf2deb4)
 
+//NHSTUB(EnterToCompensationEVF               ,0xfc2837b3) //  0        *** != 0x00000000
+//NHSTUB(ExitFromCompensationEVF              ,0xfc2837ef) //  0        *** != 0x00000000
+//NHSTUB(ExpCtrlTool_StartContiAE             ,0xfc27a5b1) //  0        *** != 0x00000000
+//NHSTUB(ExpCtrlTool_StopContiAE              ,0xfc27a749) //  0        *** != 0x00000000
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc320ebf
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc325ad1
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc358319
@@ -190,12 +194,8 @@ NHSTUB(DeleteFile_Fut                         ,0xfc325b33) //  0
 NHSTUB(DeleteSemaphore                        ,0x010e59e9) //  0
 NHSTUB(DoAELock                               ,0xfc283949) //  0
 NHSTUB(DoAFLock                               ,0xfc2835af) //  0
-//NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0            == 0x00000000
 NHSTUB2(ExecuteEventProcedure                  ,0xfc326065) //  0
-//NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0            == 0x00000000
 NHSTUB(ExitTask                               ,0x010e526b) //  0
-//NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0            == 0x00000000
-//NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0            == 0x00000000
 NHSTUB(Fclose_Fut                             ,0xfc325bdf) //  0
 //NHSTUB(Feof_Fut                             ,0xfc325d21) //  0            == 0xfc325d21
 //NHSTUB(Fflush_Fut                           ,0xfc325d49) //  0            == 0xfc325d49

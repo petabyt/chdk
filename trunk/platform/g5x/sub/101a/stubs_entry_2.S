@@ -4,10 +4,6 @@
 
 #define NULL_SUB 0xFC066A49 // bx lr
 
-NHSTUB(EnterToCompensationEVF                 ,0xFC2D38E5)
-NHSTUB(ExitFromCompensationEVF                ,0xFC2D3927)
-NHSTUB(ExpCtrlTool_StartContiAE               ,0xFC2CDB5B)
-NHSTUB(ExpCtrlTool_StopContiAE                ,0xFC2CDD4D)
 NHSTUB(GetImageFolder                         ,0xfc39d631)
 NHSTUB(RenameFile_Fut                         ,0xfc3b8d69)
 NHSTUB(SetFileTimeStamp                       ,0xfc3b5ee3)

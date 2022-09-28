@@ -346,6 +346,7 @@
 0xfc021063,EngDrvRead_FW
 0xfc02107b,EngDrvReadDump_FW
 0xfc1b7df1,EngineDriver.Create_FW
+0xfc25c275,EnterToCompensationEVF
 0xfc2c8251,EpilogFile_FW
 0xfc2c8297,EpilogMenu_FW
 0xfc2c8125,EpilogShow_FW
@@ -384,6 +385,7 @@
 0xfc0d59c3,ExecuteTestRecSD_FW
 0xfc0d5a0d,ExecuteTestRecSw1_FW
 0xfc0d59fd,ExecuteTestRecWithInteg_FW
+0xfc25c2af,ExitFromCompensationEVF
 0x010c5249,ExitTask
 0x010c5249,ExitTask_FW
 0xfc06ec25,ExMem.AllocCacheable_FW
@@ -398,6 +400,8 @@
 0xfc06ebb1,exmem_ufree
 0xfc152e47,ExpCtrlTool.SetExpMode_FW
 0xfc152e79,ExpCtrlTool.SoundDevTest_FW
+0xfc24d425,ExpCtrlTool_StartContiAE
+0xfc24d505,ExpCtrlTool_StopContiAE
 0xfc2de1bf,ExportToEventProcedure_FW
 0xfc1b798b,FA.Create_FW
 0xfc1b797f,FA.Delete_FW

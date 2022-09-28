@@ -1039,12 +1039,16 @@
 0xfc226b3b,task_ExpDrvTask
 0xfc23b385,task_AFTask
 0xfc23c20b,GetMacroSupportZoomPoint_FW
+0xfc2428d1,ExpCtrlTool_StartContiAE
+0xfc2429b1,ExpCtrlTool_StopContiAE
 0xfc246a03,task_WBIntegTask
 0xfc25432d,MoveOpticalZoomAt
 0xfc25442d,PT_MoveDigitalZoomToWide
 0xfc2545a7,SS.GetDigitalZoomPosition_FW
 0xfc254a09,DoAFLock
 0xfc254a39,UnlockAF
+0xfc254c45,EnterToCompensationEVF
+0xfc254c81,ExitFromCompensationEVF
 0xfc254ccf,DoAELock
 0xfc254ced,UnlockAE
 0xfc255cad,PT_MFOn

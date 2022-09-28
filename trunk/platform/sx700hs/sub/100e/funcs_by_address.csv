@@ -1045,11 +1045,15 @@
 0xfc242d35,j_IsZoomActuatorResetSensorPlusSide_FW
 0xfc242d4b,SetZoomSpeedCheckStopTime_FW
 0xfc242d65,GetZoomActuatorCurrentPosition_FW
+0xfc24d359,ExpCtrlTool_StartContiAE
+0xfc24d439,ExpCtrlTool_StopContiAE
 0xfc25b63d,MoveOpticalZoomAt
 0xfc25b817,PT_MoveDigitalZoomToWide
 0xfc25b8a7,SS.GetDigitalZoomPosition_FW
 0xfc25bebf,DoAFLock
 0xfc25bee7,UnlockAF
+0xfc25c1a9,EnterToCompensationEVF
+0xfc254ce9,ExitFromCompensationEVF,(stubs_entry_2.s)
 0xfc25c231,DoAELock
 0xfc25c24f,UnlockAE
 0xfc25d123,PT_MFOn

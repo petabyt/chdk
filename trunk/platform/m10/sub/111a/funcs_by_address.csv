@@ -1426,6 +1426,8 @@
 0xfc2a5825,SS.GetDigitalZoomPosition_FW
 0xfc2a5de7,DoAFLock
 0xfc2a5e17,UnlockAF
+0xfc2a5fcf,EnterToCompensationEVF
+0xfc2a6011,ExitFromCompensationEVF
 0xfc2a61bb,DoAELock
 0xfc2a61d9,UnlockAE
 0xfc2a6f4d,PT_MFOn
@@ -1480,6 +1482,8 @@
 0xfc2b24a9,BeepDrive_FW
 0xfc2b24bd,BeepDriveComp_FW
 0xfc2b24d1,BeepDriveStop_FW
+0xfc2bb67f,ExpCtrlTool_StartContiAE
+0xfc2bb815,ExpCtrlTool_StopContiAE
 0xfc2cc717,task_WBIntegTask
 0xfc2dbe97,get_ef_lens_name
 0xfc2dc0c3,get_ef_lens_wide_fl
