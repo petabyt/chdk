@@ -1170,11 +1170,15 @@
 0xfc255985,task_AFTask
 0xfc256a4b,GetMacroSupportZoomPoint_FW
 0xfc25910d,task_MoviePlay
+0xfc264e83,ExpCtrlTool_StartContiAE
+0xfc264f6f,ExpCtrlTool_StopContiAE
 0xfc275a99,MoveOpticalZoomAt
 0xfc275c6f,PT_MoveDigitalZoomToWide
 0xfc275cff,SS.GetDigitalZoomPosition_FW
 0xfc2763b9,DoAFLock
 0xfc2763e9,UnlockAF
+0xfc2766ed,EnterToCompensationEVF
+0xfc276727,ExitFromCompensationEVF
 0xfc276775,DoAELock
 0xfc276793,UnlockAE
 0xfc277783,PT_MFOn

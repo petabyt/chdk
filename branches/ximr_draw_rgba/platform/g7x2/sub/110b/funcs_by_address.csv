@@ -466,11 +466,15 @@
 0xe0298353,SS.GetDigitalZoomPosition_FW
 0xe02989e7,DoAFLock
 0xe0298a17,UnlockAF
+0xe0298d6d,EnterToCompensationEVF
+0xe0298dad,ExitFromCompensationEVF
 0xe0298e1d,DoAELock
 0xe0298e3b,UnlockAE
 0xe0299ea5,PT_MFOn
 0xe0299ed9,PT_MFOff
 0xe029a115,SS.SetAvailShot_FW
+0xe02a1a91,ExpCtrlTool_StartContiAE
+0xe02a1bfd,ExpCtrlTool_StopContiAE
 0xe02a7257,SoundDevSetSyncRate_FW
 0xe02a7609,task_SoundTsk
 0xe02a7725,InitializeAudio_FW

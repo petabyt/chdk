@@ -917,11 +917,15 @@
 0xfc2b9441,task_AFTask
 0xfc2ba531,GetMacroSupportZoomPoint_FW
 0xfc2c7f15,task_MoviePlay
+0xfc2cdb83,ExpCtrlTool_StartContiAE
+0xfc2cdd75,ExpCtrlTool_StopContiAE
 0xfc2d2d31,MoveOpticalZoomAt
 0xfc2d2efb,PT_MoveDigitalZoomToWide
 0xfc2d2f8b,SS.GetDigitalZoomPosition_FW
 0xfc2d3531,DoAFLock
 0xfc2d3561,UnlockAF
+0xfc2d390d,EnterToCompensationEVF
+0xfc2d394f,ExitFromCompensationEVF
 0xfc2d39bf,DoAELock
 0xfc2d39dd,UnlockAE
 0xfc2d4a6d,PT_MFOn

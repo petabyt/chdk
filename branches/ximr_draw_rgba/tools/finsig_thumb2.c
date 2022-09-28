@@ -5417,6 +5417,38 @@ int sig_match_named_next_func(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     return 0;
 }
 
+// Match function using string
+int sig_match_func_using_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t str_adr = find_str_bytes_main_fw(fw,rule->ref_name);
+    if(!str_adr) {
+        printf("sig_match_func_using_str: %s failed to find ref %s\n",rule->name,rule->ref_name);
+        return  0;
+    }
+
+    disasm_iter_init(fw,is,(ADR_ALIGN4(str_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
+    // Find references to string
+    while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,str_adr+SEARCH_NEAR_REF_RANGE)) {
+        // string reference address
+        uint32_t ref_adr = is->insn->address | is->thumb;
+        // back up a bit
+        fw_disasm_iter_single(fw,ref_adr - rule->param);
+        int i;
+        // Search for push {r4,...} instruction
+        for (i=0; i<rule->param; i+=1) {
+            if (fw->is->insn->id == ARM_INS_PUSH && fw->is->insn->detail->arm.operands[0].reg == ARM_REG_R4) {
+                // Push instruction address
+                uint32_t f_adr = (fw->is->insn->address) | fw->is->thumb;
+                // If push is after string reference use string reference address as function start
+                if (f_adr > ref_adr) f_adr = ref_adr;
+                return save_sig_with_j(fw,rule->name,f_adr);
+            }
+            fw_disasm_iter(fw);
+        }
+    }
+    return 0;
+}
+
 // bootstrap sigs:
 // Used to find the minimum needed to for find_generic_funcs to get generic task and eventproc matches
 // order is important
@@ -5867,6 +5899,11 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "apex2us",          "apex2usHelper",                SIG_NAMED_NTH(3,JMP_SUB)},
 
 {sig_match_named,   "err_init_task",    "init_task_error" },
+
+{sig_match_func_using_str,  "EnterToCompensationEVF",   "ExpOn",        8 },
+{sig_match_func_using_str,  "ExitFromCompensationEVF",  "ExpOff",       8 },
+{sig_match_func_using_str,  "ExpCtrlTool_StartContiAE", "StartContiAE", 30 },
+{sig_match_func_using_str,  "ExpCtrlTool_StopContiAE",  "StopContiAE",  28 },
 
 {NULL},
 };

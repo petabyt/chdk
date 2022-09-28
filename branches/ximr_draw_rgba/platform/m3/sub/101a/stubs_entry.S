@@ -196,10 +196,6 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245cf2
 
 //NHSTUB(DeleteDirectory_Fut                  ,0x00000000) //  0        *** != 0xfc373f15
 //NHSTUB(DeleteFile_Fut                       ,0x00000000) //  0        *** != 0xfc373ecb
-//NHSTUB(EnterToCompensationEVF               ,0x00000000) //  0        *** != 0xfc0aa66b
-//NHSTUB(ExitFromCompensationEVF              ,0x00000000) //  0        *** != 0xfc0aa6a7
-//NHSTUB(ExpCtrlTool_StartContiAE             ,0x00000000) //  0        *** != 0xfc2aac61
-//NHSTUB(ExpCtrlTool_StopContiAE              ,0x00000000) //  0        *** != 0xfc2aaeb5
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc303c41
 //NHSTUB(MoveFocusLensToDistance              ,0x00000000) //  0        *** != 0xfc44b80d
 //NHSTUB(PutInNdFilter                        ,0x00000000) //  0        *** != 0xfc44ceb1
@@ -225,8 +221,12 @@ NHSTUB(DebugAssert                            ,0x010e1001) //  0
 NHSTUB(DeleteSemaphore                        ,0xbfe15391) //  0
 NHSTUB(DoAELock                               ,0xfc0aa83f) //  0
 NHSTUB(DoAFLock                               ,0xfc0aa4a1) //  0
+//NHSTUB(EnterToCompensationEVF               ,0xfc0aa66b) //  0            == 0xfc0aa66b
 NHSTUB2(ExecuteEventProcedure                  ,0xfc327cc5) //  0
+//NHSTUB(ExitFromCompensationEVF              ,0xfc0aa6a7) //  0            == 0xfc0aa6a7
 NHSTUB(ExitTask                               ,0xbfe14c13) //  0
+//NHSTUB(ExpCtrlTool_StartContiAE             ,0xfc2aac61) //  0            == 0xfc2aac61
+//NHSTUB(ExpCtrlTool_StopContiAE              ,0xfc2aaeb5) //  0            == 0xfc2aaeb5
 NHSTUB(Fclose_Fut                             ,0xfc373f77) //  0
 //NHSTUB(Feof_Fut                             ,0xfc3740b9) //  0            == 0xfc3740b9
 //NHSTUB(Fflush_Fut                           ,0xfc3740e1) //  0            == 0xfc3740e1
