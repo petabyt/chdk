@@ -518,6 +518,7 @@
 0xfc0fb169,UIFS_StartClockMode_FW
 0xfc0fb173,UIFS_EndClockMode_FW
 0xfc0fb17d,UIFS_SetCradleSetting_FW
+0xfc0fb17f,j_UIFS_WriteFirmInfoToFile_FW
 0xfc0fb183,j_UIFS_GetMovieRecoadableNumber_FW
 0xfc0fb187,j_UIFS_GetStillShotableNumber_FW
 0xfc0fb18b,UIFS_ChangeShootState_FW
@@ -541,6 +542,8 @@
 0xfc0fbe29,UI_ShowStateOfRecMode_FW
 0xfc0fbe3b,UI.Create_FW
 0xfc0fbe3b,UI_RegistDebugEventProc_FW
+0xfc0fc5d9,UIFS_WriteFirmInfoToFile
+0xfc0fc5d9,UIFS_WriteFirmInfoToFile_FW
 0xfc104a01,LCDMsg_SetStr_FW
 0xfc104abf,LCDMsg_SetNum_FW
 0xfc104b43,LCDMsg_SwDisp_FW

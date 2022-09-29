@@ -1023,6 +1023,8 @@ int is_sig_call(firmware *fw, iter_state_t *is, const char *name)
 #define SIG_NO_D7 2
 #define SIG_ILC_ONLY 4
 #define SIG_NONILC_ONLY 8
+#define SIG_OPTIONAL 16
+
 
 typedef struct sig_rule_s sig_rule_t;
 typedef int (*sig_match_fn)(firmware *fw, iter_state_t *is, sig_rule_t *rule);
@@ -5324,7 +5326,8 @@ int sig_match_named(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t ref_adr = get_saved_sig_val(rule->ref_name);
     if(!ref_adr) {
-        printf("sig_match_named: missing %s\n",rule->ref_name);
+        if (!(rule->flags & SIG_OPTIONAL))
+            printf("sig_match_named: missing %s\n",rule->ref_name);
         return 0;
     }
     uint32_t sig_type = rule->param & SIG_NAMED_TYPE_MASK;
@@ -5484,7 +5487,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_misc_flag_named,"CAM_HAS_WIFI",      "task_ComWireless",},
 {sig_match_named,   "SetParameterData",         "PTM_BackupUIProperty_FW", 0,               SIG_DRY_MIN(58)},
 {sig_match_named,   "ExitTask",                 "ExitTask_FW",},
-{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB},
+{sig_match_named,   "EngDrvRead",               "EngDrvRead_FW",        SIG_NAMED_JMP_SUB, 0, 0, SIG_OPTIONAL },
 {sig_match_named,   "CalcLog10",                "CalcLog10_FW",         SIG_NAMED_JMP_SUB},
 {sig_match_named,   "CalcSqrt",                 "CalcSqrt_FW",          SIG_NAMED_JMP_SUB},
 {sig_match_named,   "Close",                    "Close_FW",},
@@ -5604,7 +5607,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "strlen",                   "strlen_FW",},
 {sig_match_named,   "task_CaptSeq",             "task_CaptSeqTask",},
 {sig_match_named,   "task_ExpDrv",              "task_ExpDrvTask",},
-{sig_match_named,   "task_FileWrite",           "task_FileWriteTask",},
+{sig_match_named,   "task_FileWrite",           "task_FileWriteTask", 0, 0, 0, SIG_OPTIONAL },
 //{sig_match_named,   "task_MovieRecord",         "task_MovieRecord",},
 //{sig_match_named,   "task_PhySw",               "task_PhySw",},
 {sig_match_named,   "vsprintf",                 "sprintf_FW",           SIG_NAMED_SUB},
@@ -5746,7 +5749,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_wait_all_eventflag_strict,"WaitForAllEventFlagStrictly","EF.StartInternalMainFlash_FW"},
 {sig_match_near_str,"DeleteSemaphore",          "DeleteSemaphore passed",SIG_NEAR_BEFORE(3,1)},
 {sig_match_get_num_posted_messages,"GetNumberOfPostedMessages","task_CtgTotalTask"},
-{sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1),SIG_DRY_MAX(58)},
+{sig_match_near_str,"LocalTime",                "%Y-%m-%dT%H:%M:%S",    SIG_NEAR_BEFORE(5,1),SIG_DRY_MAX(57)},
 {sig_match_near_str,"LocalTime",                "%Y.%m.%d %H:%M:%S",    SIG_NEAR_BEFORE(5,1)},
 {sig_match_near_str,"strftime",                 "%Y/%m/%d %H:%M:%S",    SIG_NEAR_AFTER(3,1)},
 {sig_match_near_str,"OpenFastDir",              "OpenFastDir_ERROR\n",  SIG_NEAR_BEFORE(5,1)},
@@ -5890,7 +5893,7 @@ sig_rule_t sig_rules_main[]={
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLensHelper",    "SetISFocusLensDistance_FW",                    SIG_NAMED_SUB},
 {sig_match_named,   "GetFocusLensSubjectDistanceFromLens",          "GetFocusLensSubjectDistanceFromLensHelper",    SIG_NAMED_SUB},
 
-{sig_match_named,   "CancelHPTimer",    "task_TouchPanel",      SIG_NAMED_NTH(8,SUB)},
+{sig_match_named,   "CancelHPTimer",    "task_TouchPanel",      SIG_NAMED_NTH(8,SUB), 0, 0, SIG_OPTIONAL },
 
 {sig_match_named_next_func, "Feof_Fut", "Fseek_Fut" },
 {sig_match_named_next_func, "Fflush_Fut", "Feof_Fut" },
@@ -5982,11 +5985,21 @@ void add_event_proc(firmware *fw, char *name, uint32_t adr)
 
 // process a call to an 2 arg event proc registration function
 int process_reg_eventproc_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
+    static uint32_t last_adr = 0;
+
+    uint32_t fadr = get_saved_sig_val("RegisterEventProcTable");
+    if (fadr) {
+        // Ignore call inside 'RegisterEventProcTable'
+        if ((is->insn->address - fadr) < 10)
+            return 0;
+    }
+    
     uint32_t regs[4];
     // get r0, r1, backtracking up to 4 instructions
     if((get_call_const_args(fw,is,4,regs)&3)==3) {
         // TODO follow ptr to verify code, pick up underlying functions
         if(isASCIIstring(fw,regs[0])) {
+            last_adr = is->insn->address | is->thumb;
             char *nm=(char *)adr2ptr(fw,regs[0]);
             add_event_proc(fw,nm,regs[1]);
             //add_func_name(fw,nm,regs[1],NULL);
@@ -6052,7 +6065,65 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is, __attribute__ ((u
             }
         }
         else {
-            printf("failed to get export/register eventproc args at 0x%"PRIx64"\n",adr);
+            // Reset to previous eventproc call and look for branch in the sequence
+            //      bl eventproc_call   // previous
+            //      ldr/adr r1, func_address
+            //      b  xxx
+            //          ...
+            //   xxx:
+            //      adr r0, func_name
+            //      bl eventproc_call   // current
+            // or
+            //      bl eventproc_call   // previous
+            //      ldr/adr r1, func_address
+            //      adr r0, func_name
+            //      b  xxx
+            //          ...
+            //   xxx:
+            //      bl eventproc_call   // current
+            disasm_iter_init(fw,is,last_adr);
+            disasm_iter(fw,is);
+            disasm_iter(fw,is);
+            int found = 0;
+            if (is->insn->detail->arm.operands[0].reg == ARM_REG_R1) {
+                uint8_t* r0_adr = 0;    // ptr to func name
+                uint32_t r1_adr = 0;    // func adress
+                if (isLDR_PC(is->insn)) {
+                    r1_adr = LDR_PC2val(fw,is->insn);
+                } else if (isADRx(is->insn)) {
+                    r1_adr = ADRx2adr(fw,is->insn);
+                }
+                if (r1_adr) {
+                    disasm_iter(fw, is);
+                    if (isADRx(is->insn) && (is->insn->detail->arm.operands[0].reg == ARM_REG_R0)) {
+                        r0_adr = adr2ptr(fw,ADR2adr(fw,is->insn));
+                        if (insn_match_find_next(fw,is,1,match_b)) {
+                            uint32_t badr=get_branch_call_insn_target(fw,is);
+                            disasm_iter_init(fw, is, badr);
+                            disasm_iter(fw, is);
+                        }
+                    } else {
+                        disasm_iter_init(fw, is, adr_hist_get(&is->ah,1));
+                        disasm_iter(fw, is);
+                        if (insn_match_find_next(fw,is,1,match_b)) {
+                            uint32_t badr=get_branch_call_insn_target(fw,is);
+                            disasm_iter_init(fw, is, badr);
+                            disasm_iter(fw, is);
+                            if (isADRx(is->insn) && (is->insn->detail->arm.operands[0].reg == ARM_REG_R0)) {
+                                r0_adr = adr2ptr(fw,ADR2adr(fw,is->insn));
+                                disasm_iter(fw, is);
+                            }
+                        }
+                    }
+                    if (r0_adr && (is->insn->address == adr)) {
+                        add_event_proc(fw,(char*)r0_adr,r1_adr);
+                        found = 1;
+                    }
+                }
+            }
+            if (!found) {
+                printf("failed to get export/register eventproc args at 0x%"PRIx64"\n",adr);
+            }
         }
         // restore address in 'is' to avoid infinite loop
         disasm_iter_init(fw,is,adr | adr_thumb);
@@ -6092,7 +6163,7 @@ int process_eventproc_table_call(firmware *fw, iter_state_t *is, __attribute__ (
         disasm_iter_init(fw,is,ca);
         disasm_iter(fw,is);
     }
-    if(foundr0) {
+    if(foundr0 && regs[0]) {
         // include tables in RAM data
         uint32_t *p=(uint32_t*)adr2ptr_with_data(fw,regs[0]);
         //printf("found eventproc table 0x%08x\n",regs[0]);

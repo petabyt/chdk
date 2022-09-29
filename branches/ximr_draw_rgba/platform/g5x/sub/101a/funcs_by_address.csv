@@ -4,6 +4,7 @@
 0x010e11eb,time
 0x010e1255,GetTimeOfSystem_FW
 0x010e1589,LocalTime
+0x010e168f,j1_LocalTime
 0x010e1691,j1_strftime
 0x010e179d,task_SD1stInit
 0x010e2285,GetRomID
@@ -437,6 +438,7 @@
 0xfc0dbb33,UIFS_IsAutoPopupDownStrobe_FW
 0xfc0dbb37,UIFS_IsAvailableAvTvMode_FW
 0xfc0dbb3b,UIFS_IsAvailablePowerZoom_FW
+0xfc0dbc53,UIFS_SetDialStillRec_FW
 0xfc0dbc6d,UIFS_SetDialMovieRec_FW
 0xfc0dbc9b,UIFS_SetDialPlay_FW
 0xfc0dbcb5,UIFS_OpenPopupStrobe_FW
@@ -960,6 +962,7 @@
 0xfc2e167f,SoundDevSetSpVol_FW
 0xfc2e1689,SoundDevSetSpkpwmVol_FW
 0xfc2e1829,SoundDevBeepGenGain_FW
+0xfc2e182f,SoundDevLineOut_FW
 0xfc2e1835,SoundDevSetRecPath_FW
 0xfc2e1845,SoundDevSetBeepPWMMuteParam_FW
 0xfc2e185f,SoundDevPlayOpSound_FW
@@ -1048,7 +1051,6 @@
 0xfc34d054,j_ReceiveMessageQueue
 0xfc34d094,j_CheckAllEventFlag
 0xfc34d0a4,j__pow
-0xfc34d0ac,j_LocalTime
 0xfc34d0b4,j_CreateTaskStrictly
 0xfc34d0bc,j_CreateBinarySemaphoreStrictly
 0xfc34d0cc,j_WaitForAllEventFlag
@@ -1068,6 +1070,7 @@
 0xfc34d1c4,j_takesemaphore_low
 0xfc34d1e4,j_ClearEventFlag
 0xfc34d1ec,j_DeleteEventFlag
+0xfc34d1f4,j_LocalTime
 0xfc34d1fc,j_strftime
 0xfc34d204,j_dry_memzero
 0xfc34d20c,j_dry_memset

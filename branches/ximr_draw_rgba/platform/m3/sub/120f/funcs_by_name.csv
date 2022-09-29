@@ -27,6 +27,7 @@
 0xfc450d6f,AllocateMemory_FW
 0xfc153795,AllocateUncacheableMemory
 0xfc3f454f,apex2us
+0xfc29f849,ApMoniSel_FW
 0xfc24b767,AprocSigProc_ALC_FW
 0xfc24b77d,AprocSigProc_ALCReset_FW
 0xfc24b71d,AprocSigProc_DCCut_FW

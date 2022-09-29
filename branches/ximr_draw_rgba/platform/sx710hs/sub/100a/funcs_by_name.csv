@@ -1309,6 +1309,7 @@
 0xfc0fb161,j_UIFS_StartMovieRecord_FW
 0xfc0fb165,j_UIFS_StopMovieRecord_FW
 0xfc0fb389,j_UIFS_WirelessExecuteSendForever_FW
+0xfc0fb17f,j_UIFS_WriteFirmInfoToFile_FW
 0xfc5669d3,j_UnregistColorMatrix_FW
 0xfc326475,j_UnRegisterEventProcTable
 0xfc4abc15,j_VbattGet_FW
@@ -2435,6 +2436,8 @@
 0xfc0fb139,UIFS_StopPostingUIEvent_FW
 0xfc0fb0c1,UIFS_UnmountExtFlash_FW
 0xfc29bc03,UIFS_WirelessExecuteSendForever_FW
+0xfc0fc5d9,UIFS_WriteFirmInfoToFile
+0xfc0fc5d9,UIFS_WriteFirmInfoToFile_FW
 0xfc12fe2f,umalloc_strictly
 0xfc078255,UndisplayFactoryMode_FW
 0xfc0a786b,UnLoadScript_FW

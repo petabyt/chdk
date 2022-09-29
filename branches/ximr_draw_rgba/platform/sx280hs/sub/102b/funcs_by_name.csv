@@ -1149,6 +1149,7 @@
 0xfc3e03c1,j_RegistColorMatrix_FW
 0xfc251bcc,j_RegisterInterruptHandler
 0xfc25192c,j_ReleaseRecursiveLock
+0xfc1a78a9,j_SDump_FW
 0xfc251660,j_set_assert_handler
 0xfc2afe51,j_set_control_event
 0xfc3e05c9,j_SetAE_CdsGainValue_FW
@@ -1576,6 +1577,7 @@
 0xfc3939bd,screenlock_helper
 0xfc143c0b,ScreenUnlock
 0xfc08f7d1,SdDrv_SetSSCG_FW
+0xfc3b96af,SDump_FW
 0xfc3e3a29,SearchBCentralPosition_FW
 0xfc3e3a29,SearchISLensCentralPosition_FW
 0xfc3dee0f,SelectAdjBPFilter_FW

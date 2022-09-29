@@ -1090,6 +1090,7 @@
 0xfc1cb35b,IsZoomLensOutSidePosition_FW
 0xfc34c734,j1_dry_memcpy_bytes
 0xbfe14fed,j1_GetSRAndDisableInterrupt
+0x010e168f,j1_LocalTime
 0xbfe14ff1,j1_SetSR
 0x010e1691,j1_strftime
 0xbfe14111,j2_GetSRAndDisableInterrupt
@@ -1317,7 +1318,7 @@
 0xfc0d86a7,j_LoadDUIDCheckSum_FW
 0xfc665fbb,j_LoadFactoryNumber_FW
 0xfc66602d,j_LoadSerialNumber_FW
-0xfc34d0ac,j_LocalTime
+0xfc34d1f4,j_LocalTime
 0xfc3bf985,j_malloc
 0xfc5e409b,j_MemoryChecker_FW
 0x010ee231,j_mktime_ext
@@ -2124,6 +2125,7 @@
 0xfc2e1223,SoundDevClearPath_FW
 0xfc2e1aff,SoundDevDumpChIn0_FW
 0xfc2e10a9,SoundDevInitMusic_FW
+0xfc2e182f,SoundDevLineOut_FW
 0xfc2e0a27,SoundDevMovPlayMuteForStoryHighlight_FW
 0xfc10b581,SoundDevParam_SetATTMode_FW
 0xfc2e15a1,SoundDevPlayMusic_FW
@@ -2539,6 +2541,7 @@
 0xfc0dbde7,UIFS_SetCradleSetting_FW
 0xfc0dbc6d,UIFS_SetDialMovieRec_FW
 0xfc0dbc9b,UIFS_SetDialPlay_FW
+0xfc0dbc53,UIFS_SetDialStillRec_FW
 0xfc0dbfd1,UIFS_SetTouchOperation_FW
 0xfc0dbdd3,UIFS_StartClockMode_FW
 0xfc20921b,UIFS_StartMoviePlay_FW

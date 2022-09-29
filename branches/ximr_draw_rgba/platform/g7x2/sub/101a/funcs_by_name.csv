@@ -1277,6 +1277,7 @@
 0xe03775cb,j_PTM_NextItem_FW
 0xe03775cf,j_PTM_PrevItem_FW
 0xe03775b3,j_PTM_SetCurrentItem_FW
+0xe03775eb,j_PTM_SetProprietyEnable_FW
 0xe004ed49,j_PutsCameraLogEvent_FW
 0xe037e609,j_pvm_free
 0xe037e5fd,j_pvm_init_pool
@@ -1324,6 +1325,7 @@
 0xe04da129,j_UIFS_GetStillShotableNumber_FW
 0xe04da2df,j_UIFS_IsAvailableShots_FW
 0xe04da0c1,j_UIFS_MoveZoomTo_FW
+0xe04da0c5,j_UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW
 0xe04da37b,j_UIFS_PlayTrimExecuteAllImageSize_FW
 0xe04da325,j_UIFS_StartMoviePlay_FW
 0xe04da103,j_UIFS_StartMovieRecord_FW
@@ -1633,6 +1635,7 @@
 0xe0376ce7,PTM_RestoreUIProperty_FW
 0xe037741b,PTM_SetCurrentCaptureMode_FW
 0xe0271b9b,PTM_SetCurrentItem_FW
+0xe02721fb,PTM_SetProprietyEnable_FW
 0xe059244d,PutInNdFilter
 0xe059244d,PutInNdFilter_FW
 0xe0592473,PutOutNdFilter
@@ -2052,6 +2055,7 @@
 0xe02a992b,SoundDevDumpChIn0_FW
 0xe02a8ed9,SoundDevInitMusic_FW
 0xe02a9667,SoundDevLineOut_FW
+0xe02a884b,SoundDevMovPlayMuteForStoryHighlight_FW
 0xe01a7cfb,SoundDevParam_SetATTMode_FW
 0xe01a7d13,SoundDevParam_SetMicSelect_FW
 0xe02a93d7,SoundDevPlayMusic_FW
@@ -2446,6 +2450,7 @@
 0xe04da2e3,UIFS_IsOperationEvent_FW
 0xe04da033,UIFS_MountExtFlash_FW
 0xe03514cd,UIFS_MoveZoomTo_FW
+0xe0351a3d,UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW
 0xe04d9fed,UIFS_OpenPopupStrobe_FW
 0xe04e58d9,UIFS_PlayTrimExecuteAllImageSize_FW
 0xe04da343,UIFS_PostBatAuthNG_FW
