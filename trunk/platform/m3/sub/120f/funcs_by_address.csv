@@ -1362,6 +1362,7 @@
 0xfc29f49f,SoundDevRecMusicOnDramTest_FW
 0xfc29f577,SoundDevDumpChIn0_FW
 0xfc29f7b9,SoundDevPlayOpSound_FW
+0xfc29f849,ApMoniSel_FW
 0xfc29f88d,SoundDevSetSyncRate_FW
 0xfc29f8b3,SoundDevSetSpVol_FW
 0xfc29f8bd,SoundDevSetMovieRecPath_FW

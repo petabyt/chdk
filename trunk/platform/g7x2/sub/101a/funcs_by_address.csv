@@ -454,6 +454,7 @@
 0xe0271b9b,PTM_SetCurrentItem_FW
 0xe0271e69,PTM_NextItem_FW
 0xe0271e6d,PTM_PrevItem_FW
+0xe02721fb,PTM_SetProprietyEnable_FW
 0xe02723e3,PTM_IsEnableItem_FW
 0xe02724e3,PTM_BackupUIProperty_FW
 0xe02724e3,SetParameterData
@@ -483,6 +484,7 @@
 0xe02a86e3,SoundDevSetBgmMixRate_FW
 0xe02a8701,SoundDevSetBgmData_FW
 0xe02a8839,SoundDevBgmFadeOut_FW
+0xe02a884b,SoundDevMovPlayMuteForStoryHighlight_FW
 0xe02a8dad,TurnOnVideoOutMode_FW
 0xe02a8ddd,TurnOffVideoOutMode_FW
 0xe02a8ea3,BeepDrive_FW
@@ -570,6 +572,7 @@
 0xe034000f,GetFocusLensFinalStopSettingTime_FW
 0xe03514cd,UIFS_MoveZoomTo_FW
 0xe0351951,UIFS_GetNumOfOptZoomPos_FW
+0xe0351a3d,UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW
 0xe0356633,UIFS_StartMovieRecord_FW
 0xe0356649,UIFS_StopMovieRecord_FW
 0xe035b13f,task_CorctTask
@@ -708,6 +711,7 @@
 0xe03775cb,j_PTM_NextItem_FW
 0xe03775cf,j_PTM_PrevItem_FW
 0xe03775e3,j_PTM_IsEnableItem_FW
+0xe03775eb,j_PTM_SetProprietyEnable_FW
 0xe0377603,j_PTM_BackupUIProperty_FW
 0xe0377dbb,transfer_src_overlay
 0xe0378993,transfer_src_overlay_helper
@@ -1083,6 +1087,7 @@
 0xe04da079,UIFS_ConnectVideo_FW
 0xe04da09d,UIFS_DisconnectVideo_FW
 0xe04da0c1,j_UIFS_MoveZoomTo_FW
+0xe04da0c5,j_UIFS_MoveZoomToPositionWithTaskSwCtrlServ_FW
 0xe04da0c9,j_UIFS_GetNumOfOptZoomPos_FW
 0xe04da0cd,UIFS_StopPostingUIEvent_FW
 0xe04da0cf,UIFS_RestartPostingUIEvent_FW

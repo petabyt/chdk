@@ -984,6 +984,7 @@
 0xfc1a7897,j_MemoryChecker_FW
 0xfc1a789b,j_VerifyByte_FW
 0xfc1a789f,EraseSignature_FW
+0xfc1a78a9,j_SDump_FW
 0xfc1a78ad,Dump_FW
 0xfc1a78b7,Dump32_FW
 0xfc1a78c3,Poke32_FW
@@ -1882,6 +1883,7 @@
 0xfc3b9529,GetDramRfu_FW
 0xfc3b9531,GetDramDensity_FW
 0xfc3b9539,GetDramTypeError_FW
+0xfc3b96af,SDump_FW
 0xfc3b97d3,FreeMemory_FW
 0xfc3b97d9,AllocateMemory_FW
 0xfc3b97eb,Peek32_FW

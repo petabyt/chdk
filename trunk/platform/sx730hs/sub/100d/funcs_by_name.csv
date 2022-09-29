@@ -447,6 +447,7 @@
 0xfc05ca4d,exception_handler_PrefetchAbort
 0xfc05ca79,exception_handler_SupervisorCall
 0xfc05ca29,exception_handler_UndefinedInstruction
+0xfc442a59,exec_FW
 0xfc42ce75,ExecuteAvs_FW
 0xfc0e8e49,Executedccd_FW
 0xfc0213d9,ExecuteDefectRec_FW
@@ -1162,6 +1163,7 @@
 0xfc1f4c51,j_EF.GetEFModExamDriveType_FW
 0xfc1f4d09,j_EF.IsChargeFull_FW
 0xfc1f4c55,j_EF.IsIrisTypeKosaiShibori_FW
+0xfc3ea37b,j_exec_FW
 0xfc0e94d7,j_Executedccd_FW
 0xfc0e94d3,j_ExecuteDigicon_FW
 0xfc0a04fb,j_ExecuteShutDownPropertyService_FW
@@ -2540,6 +2542,7 @@
 0xfc193823,UIFS_CtrlManControllerAnytimeTop_FW
 0xfc193a61,UIFS_DisconnectVideo_FW
 0xfc193d77,UIFS_DisplayFirmUpdateView_FW
+0xfc193ad9,UIFS_EndClockMode_FW
 0xfc193ba9,UIFS_GetAvItem_FW
 0xfc193b2b,UIFS_GetAvItemCount_FW
 0xfc193c35,UIFS_GetCurrentAvString_FW

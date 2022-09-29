@@ -732,6 +732,7 @@
 0xfc193ac7,j_UIFS_StartMovieRecord_FW
 0xfc193acb,j_UIFS_StopMovieRecord_FW
 0xfc193acf,UIFS_StartClockMode_FW
+0xfc193ad9,UIFS_EndClockMode_FW
 0xfc193ae3,UIFS_SetCradleSetting_FW
 0xfc193ae5,j_UIFS_WriteFirmInfoToFile_FW
 0xfc193ae9,j_UIFS_GetMovieRecoadableNumber_FW
@@ -1531,6 +1532,7 @@
 0xfc3ea369,j_Peek16_FW
 0xfc3ea36d,j_Peek8_FW
 0xfc3ea371,Wait_FW
+0xfc3ea37b,j_exec_FW
 0xfc3ea37f,ShowAllTaskInfo_FW
 0xfc3ea389,System.Delete_FW
 0xfc3ea981,System.Create_FW
@@ -2115,6 +2117,7 @@
 0xfc442a47,Peek8_FW
 0xfc442a4d,GetSystemTime
 0xfc442a4d,GetSystemTime_FW
+0xfc442a59,exec_FW
 0xfc442b1d,MakeBootDisk_FW
 0xfc442b29,MakeScriptDisk_FW
 0xfc458207,task_Raw2Ss2YuvTask
