@@ -6015,6 +6015,53 @@ void add_event_proc(firmware *fw, char *name, uint32_t adr)
     add_func_name(fw,name,adr,"_FW");
 }
 
+uint32_t process_reg_eventproc_call_loop_check(firmware *fw, iter_state_t *is, uint64_t adr) {
+    // check for special case: one of the 2 arg eventprocs is used in loop to register a table
+
+    // using the existing 'is' iterator
+    uint32_t tbla = 0;
+    int ar = -1;
+    // go back at most 10 instructions
+    int backtrack = 10;
+    if (backtrack > is->ah.count) backtrack = is->ah.count-1;
+    disasm_iter_init(fw,is,adr_hist_get(&is->ah,backtrack));
+    // search for ldr reg, =address where address is higher in ROM (supposed to be the eventproc table)
+    while(1) {
+        if (!disasm_iter(fw,is)) break;
+        if (is->insn->address >= adr) break;
+        if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].type == ARM_OP_MEM) {
+            uint32_t u = LDR_PC2val(fw,is->insn);
+            if ((u<fw->base+fw->size8) && (u>adr) && (!isASCIIstring(fw,u))) {
+                ar = is->insn->detail->arm.operands[0].reg;
+                tbla = u;
+                break;
+            }
+        }
+    }
+    // search for found register appearing later in an add instruction
+    while (ar >= 0) {
+        if (!disasm_iter(fw,is)) break;
+        if (is->insn->address >= adr) break;
+        if (is->insn->id == ARM_INS_ADD && is->insn->detail->arm.operands[1].reg == ar) {
+            return tbla;
+            //printf("found loop eventproc table at 0x%"PRIx64"\n",is->insn->address);
+            break;
+        }
+        if (is->insn->id == ARM_INS_B) {
+            // if jumping over data, follow branches
+            disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+            disasm_iter(fw,is);
+            disasm_iter(fw,is);
+            disasm_iter(fw,is);
+            if (is->insn->id == ARM_INS_B) {
+                disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+            }
+        }
+    }
+
+    return 0;
+}
+
 // process a call to an 2 arg event proc registration function
 int process_reg_eventproc_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
     static uint32_t last_adr = 0;
@@ -6040,41 +6087,30 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is, __attribute__ ((u
             printf("eventproc name not string at 0x%"PRIx64"\n",is->insn->address);
         }
     } else {
-        // check for special case: one of the 2 arg eventprocs is used in loop to register a table
-
-        // using the existing 'is' iterator
-        // first, address is backed up
-        uint64_t adr = is->insn->address;
+        // Save for later
         uint32_t adr_thumb = is->thumb;
-        uint32_t tbla = 0;
-        int ar = -1;
-        int found = 0;
-        // go back a 10 instructions
-        disasm_iter_init(fw,is,adr_hist_get(&is->ah,10));
-        // search for ldr reg, =address where address is higher in ROM (supposed to be the eventproc table)
-        while(1) {
-            if (!disasm_iter(fw,is)) break;
-            if (is->insn->address >= adr) break;
-            if (is->insn->id == ARM_INS_LDR && is->insn->detail->arm.operands[1].type == ARM_OP_MEM) {
-                uint32_t u = LDR_PC2val(fw,is->insn);
-                if ((u<fw->base+fw->size8) && (u>adr) && (!isASCIIstring(fw,u))) {
-                    ar = is->insn->detail->arm.operands[0].reg;
-                    tbla = u;
-                    break;
+        uint64_t adr = is->insn->address;
+
+        // check for special case: one of the 2 arg eventprocs is used in loop to register a table
+        uint32_t tbla = process_reg_eventproc_call_loop_check(fw, is, adr);
+
+        if (!tbla) {
+            // Not found - back up further and look for branch instruction that jumps over data
+            disasm_iter_init(fw,is,(adr - 220) | adr_thumb);
+            disasm_iter(fw,is);
+            int i;
+            for (i = 0; i < 20; i += 1) {
+                if (insn_match_find_next(fw,is,1,match_b)) {
+                    uint32_t badr = get_branch_call_insn_target(fw,is);
+                    if ((badr - adr) < 8) {
+                        tbla = process_reg_eventproc_call_loop_check(fw, is, adr);
+                        break;
+                    }
                 }
             }
         }
-        // search for found register appearing later in an add instruction
-        while(ar >= 0) {
-            if (!disasm_iter(fw,is)) break;
-            if (is->insn->address >= adr) break;
-            if (is->insn->id == ARM_INS_ADD && is->insn->detail->arm.operands[1].reg == ar) {
-                found = 1;
-                //printf("found loop eventproc table at 0x%"PRIx64"\n",is->insn->address);
-                break;
-            }
-        }
-        if (found) {
+
+        if (tbla) {
             // following is taken from process_eventproc_table_call
             uint32_t *p=(uint32_t*)adr2ptr_with_data(fw,tbla);
             if(p) {
