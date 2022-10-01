@@ -2373,7 +2373,6 @@
 0xe058d743,SetZoomAmpereLimitOffTimeForAdjustZoom_FW
 0xe058d74d,j_GetZoomPiDefaultPosition_FW
 0xe058d751,j_GetZoomPiChangePosition_FW
-0xe0591625,j_apex2usHelper
 0xe0591629,ConvertTvToExposureTime_FW
 0xe059163d,j_GetCurrentExposureTime_FW
 0xe0591649,j_GetCurrentShutterSpeed_FW

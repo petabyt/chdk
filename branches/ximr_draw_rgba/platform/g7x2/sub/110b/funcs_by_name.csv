@@ -1078,7 +1078,6 @@
 0xe02e6073,IsZoomActuatorResetSensorPlusSide_FW
 0xe0060269,IsZoomLensOutSidePosition_FW
 0xe0536eab,j_AbortAEIntegralValue_FW
-0xe0591671,j_apex2usHelper
 0xe0551f79,j_BeepDrive_FW
 0xe0551f7d,j_BeepDriveComp_FW
 0xe0551f81,j_BeepDriveStop_FW
