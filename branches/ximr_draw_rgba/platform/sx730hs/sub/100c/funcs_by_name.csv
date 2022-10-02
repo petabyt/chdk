@@ -2321,6 +2321,7 @@
 0xfc362f85,TakeSemaphore_FW
 0xbfe120bf,takesemaphore_low
 0xfc34ba59,TakeSemaphoreStrictly
+0xfc41715b,task__cntFlashTask
 0xfc0de145,task__imageSensorTask
 0xfc3c5fed,task__tgTask
 0xfc3ad085,task_Accelerometer
@@ -2330,6 +2331,7 @@
 0xfc3b6db7,task_AprocBpGenTask
 0xfc3b6d53,task_AprocBpPwmTask
 0xfc3b6cd5,task_AprocMainTask
+0xfc3b5f25,task_AprocMusicTask
 0xfc3b6e1b,task_AprocVaif3Task
 0xfc170855,task_AutoShutterMan
 0xfc50ec75,task_AutoTrimming
@@ -2373,6 +2375,7 @@
 0xfc49b01d,task_DvlpCs
 0xfc18f013,task_DvlpSeqTask
 0xfc342eaf,task_EdetSBJTask
+0xfc11e9ef,task_EFChargeT
 0xfc0ef915,task_EISMainTask
 0xfc16eaf1,task_EncRemoteEVFJpgTask
 0xfc3539a1,task_Epilog
@@ -2414,6 +2417,8 @@
 0xfc0971f7,task_LachesisTest
 0xfc16636d,task_LcdConTask
 0xfc0e4d39,task_LEDCon
+0xfc3b00fb,task_LensController
+0xfc3b02bd,task_LensController
 0xfc13feb7,task_LiveImageTask
 0xfc51066f,task_LowConsole
 0xfc4395a9,task_MechaAlarm

@@ -325,6 +325,8 @@
 0xfc0b2377,NRTBL.SetDefectCorrectType_FW
 0xfc0b2389,NRTBL.SetTassenType_FW
 0xfc0b278f,HardwareDefect_FW
+0xfc0b29c5,task_LensController
+0xfc0b2b75,task_LensController
 0xfc0b326f,IsLensOutside_FW
 0xfc0b3289,GetFocusStartZoomPosition_FW
 0xfc0b3291,GetMechaCondition_FW
@@ -346,6 +348,7 @@
 0xfc0c2e99,TurnOffE1_FW
 0xfc0c2f03,task_Bye
 0xfc0c32ff,task_DevelopModule
+0xfc0c3e47,task_EFChargeT
 0xfc0c41a7,EF.IsChargeFull_FW
 0xfc0c41a7,IsStrobeChargeCompleted
 0xfc0c67df,LiveImageTool.GetDzoomPosition_FW
@@ -376,6 +379,7 @@
 0xfc0c9453,GetDISModeParameter_FW
 0xfc0c950d,GetFixedPWMOutA_FW
 0xfc0c9513,GetFixedPWMOutB_FW
+0xfc0cc2cd,task_AprocMusicTask
 0xfc0cd07d,task_AprocMainTask
 0xfc0cd0fb,task_AprocBpPwmTask
 0xfc0cd15f,task_AprocBpGenTask
@@ -1374,6 +1378,7 @@
 0xfc46139f,task_TskCocoa2
 0xfc4613a5,task_TskCocoa1
 0xfc4613ab,task_TskCocoa0
+0xfc465bad,task__cntFlashTask
 0xfc466a53,ExpCtrlTool.SetExpMode_FW
 0xfc466a85,ExpCtrlTool.SoundDevTest_FW
 0xfc466b45,AFTool.GetEVal_FW

@@ -297,6 +297,8 @@
 0xe005bce1,ChangePowerState_FW
 0xe005bd31,EnableHDMIPower
 0xe005bd67,DisableHDMIPower
+0xe005c13f,task_LensController
+0xe005c2f7,task_LensController
 0xe005c9e3,IsLensOutside_FW
 0xe005c9fd,GetFocusStartZoomPosition_FW
 0xe005ca05,GetMechaCondition_FW
@@ -384,6 +386,7 @@
 0xe011c033,GetFaceAuthBinSize_FW
 0xe011c039,IsOKFaceAuthBinFile_FW
 0xe013a3d1,task_ClockSavePU1
+0xe016c461,task_AprocMusicTask
 0xe016d2d1,task_AprocMainTask
 0xe016d3b3,task_AprocBpGenTask
 0xe016d415,task_AprocVaif3Task
@@ -1291,6 +1294,7 @@
 0xe05377a3,AttachIntegCrawData_FW
 0xe05378c3,GetCrawDataAddr_FW
 0xe05387f5,task_FilYuvMaker
+0xe053b255,task_EFChargeT
 0xe053b423,EF.IsChargeFull_FW
 0xe053b423,IsStrobeChargeCompleted
 0xe053c133,task_NfcConTask
@@ -2322,6 +2326,7 @@
 0xe05882eb,SetISPWMFreqData_FW
 0xe05882f7,j_GetISPWMFreqData_FW
 0xe0589b61,GetMemInfo
+0xe058c697,task__cntFlashTask
 0xe058c9e5,GetCurrentAdjImgDriveType_FW
 0xe058c9f1,GetCurrentImgDrvMode_FW
 0xe058ca0b,ConvertAEIntegDrvTypeToAdjImgDriveType_FW

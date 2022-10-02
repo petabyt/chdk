@@ -338,6 +338,8 @@
 0xfc0a041d,task_EncRemoteEVFJpgTask
 0xfc0a05f1,task_FsIoNotifyTask
 0xfc0a3863,task_MovieRecord
+0xfc0a62e1,task_LensController
+0xfc0a6499,task_LensController
 0xfc0a6b93,IsLensOutside_FW
 0xfc0a6bad,GetFocusStartZoomPosition_FW
 0xfc0a6bb5,GetMechaCondition_FW
@@ -446,6 +448,7 @@
 0xfc0de941,atol_FW
 0xfc0e595d,task_BrtMsrTask
 0xfc0e65f5,task_DetectMoveTask
+0xfc0e7cc3,task_EFChargeT
 0xfc0e7e8d,EF.IsChargeFull_FW
 0xfc0e7e8d,IsStrobeChargeCompleted
 0xfc0e9a6f,task_SsgMainTask
@@ -601,6 +604,7 @@
 0xfc129fcd,memcpy_FW
 0xfc12a061,strchr
 0xfc12a073,strrchr
+0xfc12af37,task_AprocMusicTask
 0xfc12bbed,task_AprocMainTask
 0xfc12bc6f,task_AprocBpPwmTask
 0xfc12bcd7,task_AprocBpGenTask
@@ -1479,6 +1483,7 @@
 0xfc3e0673,ShutterTool.SetExpTimeForFix_FW
 0xfc3e0689,ShutterTool.GetLimOfTvForFix_FW
 0xfc3e069b,ShutterTool.GetLimOfTvForFixWithAv_FW
+0xfc3e3f6d,task__cntFlashTask
 0xfc3e459d,EF.StartEFCharge_FW
 0xfc3e45d5,EF.StopEFCharge_FW
 0xfc3e45df,EF.SetEFChargeTimeOut_FW

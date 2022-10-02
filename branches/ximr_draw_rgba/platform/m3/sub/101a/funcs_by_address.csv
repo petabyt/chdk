@@ -453,6 +453,9 @@
 0xfc0f8363,WriteToRom_FW
 0xfc0f83cb,EraseRom_FW
 0xfc0f846d,GetRomID_FW
+0xfc0f8597,task_LensController
+0xfc0f8683,task_LensController
+0xfc0f873f,task_LensController
 0xfc0f8a29,IsLensOutside_FW
 0xfc0f8a43,GetFocusStartZoomPosition_FW
 0xfc0fb621,task_FaceFrame
@@ -1198,6 +1201,7 @@
 0xfc214519,FPGA.Bypass_FW
 0xfc214ad1,FPGA.Log_FW
 0xfc21538b,task_DevelopModule
+0xfc21ed21,task__cntFlashTask
 0xfc221bf1,task_AfIntSrvTask
 0xfc2362e7,task_Gap3rd
 0xfc238df7,CanceltDfeCorrectMode_FW
@@ -2332,8 +2336,10 @@
 0xfc4ca669,ChargeStrobeForFA_FW
 0xfc4ca697,StopStrobeChargeForFA_FW
 0xfc4ca6ab,ExecuteInternalPreFlash_FW
+0xfc4f2cf5,task_EFChargeT
 0xfc4f3041,EF.IsChargeFull_FW
 0xfc4f3041,IsStrobeChargeCompleted
+0xfc4f3f2b,task_AprocMusicTask
 0xfc4f50a7,task_ImgPlyTask
 0xfc4f5259,task_ImgPlyTsk2
 0xfc4f9c37,UIFS_StartMoviePlay_FW

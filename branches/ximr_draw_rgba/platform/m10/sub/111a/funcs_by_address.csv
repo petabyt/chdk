@@ -534,6 +534,9 @@
 0xfc133923,TouchPanelStartPrintPosition_FW
 0xfc133933,TouchPanelStopPrintPosition_FW
 0xfc135287,task_EdetSBJTask
+0xfc13706b,task_LensController
+0xfc137157,task_LensController
+0xfc137213,task_LensController
 0xfc1374f5,IsLensOutside_FW
 0xfc13750f,GetFocusStartZoomPosition_FW
 0xfc137513,GetMechaCondition_FW
@@ -551,6 +554,7 @@
 0xfc146bb5,task_OBCtrlTask
 0xfc147147,task_DetectMoveTask
 0xfc1482a9,task_ColorSBJTask
+0xfc1520c7,task_EFChargeT
 0xfc152295,EF.IsChargeFull_FW
 0xfc152295,IsStrobeChargeCompleted
 0xfc153cef,task_Gap3rd
@@ -1224,6 +1228,7 @@
 0xfc2019a5,memcpy_FW
 0xfc201a63,strchr
 0xfc201a75,strstr
+0xfc202f07,task_AprocMusicTask
 0xfc203bc1,task_AprocMainTask
 0xfc203c3f,task_AprocBpPwmTask
 0xfc203ca3,task_AprocBpGenTask
@@ -1814,6 +1819,7 @@
 0xfc3ef477,NRTBL.SetDarkSubType_FW
 0xfc3ef489,NRTBL.SetDefectCorrectType_FW
 0xfc3ef49b,NRTBL.SetTassenType_FW
+0xfc3f972f,task__cntFlashTask
 0xfc411df7,task_GapBS
 0xfc422f9d,HdmiSetOutputResolusion_FW
 0xfc422f9f,HdmiChange5VShortState_FW

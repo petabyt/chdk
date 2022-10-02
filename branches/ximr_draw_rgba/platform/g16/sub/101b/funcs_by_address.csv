@@ -528,6 +528,8 @@
 0xfc0ef97f,ResetRegistNoticeCBR_FW
 0xfc0ef989,RegistFirmScanNoticeCBR_FW
 0xfc0effe7,IsLensOutside_FW
+0xfc0effff,task_LensController
+0xfc0f063f,task_LensController
 0xfc0f1105,GetFocusStartZoomPosition_FW
 0xfc0f160d,task_SsStartupTask
 0xfc0f24ab,task_CaptSeq
@@ -608,6 +610,7 @@
 0xfc13e481,omar_init
 0xfc13e5b5,task_WBCtrl
 0xfc13f47b,task_DevelopModule
+0xfc141111,task_EFChargeT
 0xfc1413bb,EF.IsChargeFull_FW
 0xfc1413bb,IsStrobeChargeCompleted
 0xfc141831,imager_active_callback
@@ -737,6 +740,7 @@
 0xfc15faa1,strncmp
 0xfc15facb,strchr
 0xfc15fadd,strstr
+0xfc16111b,task_AprocMusicTask
 0xfc161db5,task_AprocMainTask
 0xfc161e33,task_AprocBpPwmTask
 0xfc161e93,task_AprocBpGenTask
@@ -1374,6 +1378,7 @@
 0xfc33bf03,NRTBL.GetDefectCorrectType_FW
 0xfc33bf29,NRTBL.SetTassenType_FW
 0xfc34977d,DevelopTool.DevelopTest_FW
+0xfc34a543,task__cntFlashTask
 0xfc34cd71,EF.StartEFCharge_FW
 0xfc34cd9f,EF.StopEFCharge_FW
 0xfc34cda9,EF.SetEFChargeTimeOut_FW
