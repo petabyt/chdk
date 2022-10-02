@@ -2525,6 +2525,7 @@
 0xbfe153e5,TakeSemaphore_FW
 0xbfe120b3,takesemaphore_low
 0xbfe15591,TakeSemaphoreStrictly
+0xfc3f972f,task__cntFlashTask
 0xfc21444b,task__furikakeLeoCalcTask
 0xfc1eeb71,task__imageSensorTask
 0xfc230525,task__tgTask
@@ -2535,6 +2536,7 @@
 0xfc203ca3,task_AprocBpGenTask
 0xfc203c3f,task_AprocBpPwmTask
 0xfc203bc1,task_AprocMainTask
+0xfc202f07,task_AprocMusicTask
 0xfc203d07,task_AprocVaif3Task
 0xfc126d9f,task_BatteryTask
 0xfc07e1a1,task_bomStopPTPIPTask
@@ -2571,6 +2573,7 @@
 0xfc18396d,task_DPOFTask
 0xfc10ffbb,task_DvlpSeqTask
 0xfc135287,task_EdetSBJTask
+0xfc1520c7,task_EFChargeT
 0xfc293e87,task_EFLensComTask
 0xfc186ec5,task_EISMainTask
 0xfc0dbcbd,task_EncRemoteEVFJpgTask
@@ -2613,6 +2616,9 @@
 0xfc0d468b,task_LachesisTest
 0xfc176745,task_LcdConTask
 0xfc131a6d,task_LEDCon
+0xfc13706b,task_LensController
+0xfc137157,task_LensController
+0xfc137213,task_LensController
 0xfc250fed,task_LensInfo
 0xfc159473,task_LiveImageTask
 0xfc0deacb,task_LowConsole

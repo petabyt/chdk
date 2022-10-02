@@ -472,6 +472,8 @@
 0xfc0ca323,ResetRegistNoticeCBR_FW
 0xfc0ca32d,RegistFirmScanNoticeCBR_FW
 0xfc0ca8f5,IsLensOutside_FW
+0xfc0ca90d,task_LensController
+0xfc0caf35,task_LensController
 0xfc0cb951,GetFocusStartZoomPosition_FW
 0xfc0cce19,task_SsStartupTask
 0xfc0cdb9f,task_CaptSeq
@@ -716,6 +718,7 @@
 0xfc14a60d,strftime
 0xfc14a9c9,strcat
 0xfc14aa15,strncmp
+0xfc14caef,task_AprocMusicTask
 0xfc14d729,task_AprocMainTask
 0xfc14d7b9,task_AprocBpPwmTask
 0xfc14d819,task_AprocBpGenTask
@@ -732,6 +735,7 @@
 0xfc1693f3,task_WBLPFace
 0xfc16b9f5,task_OBCtrlTask
 0xfc16c473,task_DetectMoveTask
+0xfc1717bb,task_EFChargeT
 0xfc17196b,EF.IsChargeFull_FW
 0xfc17196b,IsStrobeChargeCompleted
 0xfc173567,task_AfIntSrvTask
@@ -1359,6 +1363,7 @@
 0xfc2be999,memset
 0xfc2be999,memset_FW
 0xfc2dc521,GraphicSystemCoreFinish
+0xfc2ef3d7,task__cntFlashTask
 0xfc2ef9cd,EF.StartEFCharge_FW
 0xfc2ef9fb,EF.StopEFCharge_FW
 0xfc2efa05,EF.SetEFChargeTimeOut_FW

@@ -506,6 +506,7 @@
 0xfc11dc29,task_DevelopDist
 0xfc11e18b,task_DevelopResize
 0xfc11e5f9,task_DevelopJpeg
+0xfc11e9ef,task_EFChargeT
 0xfc11ebbd,EF.IsChargeFull_FW
 0xfc11ebbd,IsStrobeChargeCompleted
 0xfc122763,ExpCtrlTool.SetExpMode_FW
@@ -1266,6 +1267,8 @@
 0xfc3afe1f,j_IsCCDTemperature_FW
 0xfc3afe79,j_IsBatteryTemperature_FW
 0xfc3afe7b,StartAllTempMeasurement_FW
+0xfc3b00fb,task_LensController
+0xfc3b02bd,task_LensController
 0xfc3b09c1,IsLensOutside_FW
 0xfc3b09db,GetFocusStartZoomPosition_FW
 0xfc3b09e3,GetMechaCondition_FW
@@ -1294,6 +1297,7 @@
 0xfc3b47f9,memcpy_FW
 0xfc3b48b7,strncmp
 0xfc3b48e1,strchr
+0xfc3b5f25,task_AprocMusicTask
 0xfc3b6cd5,task_AprocMainTask
 0xfc3b6d53,task_AprocBpPwmTask
 0xfc3b6db7,task_AprocBpGenTask
@@ -1569,6 +1573,7 @@
 0xfc3edc27,AdditionAgentRAM_FW
 0xfc3edd1f,EFUSE_ReadData_FW
 0xfc3ee291,qsort
+0xfc41715b,task__cntFlashTask
 0xfc41a03f,LiveImageTool.StartEVF_FW
 0xfc41a045,LiveImageTool.StartEVFFocusJet_FW
 0xfc41a04b,LiveImageTool.StartEVFMF_FW

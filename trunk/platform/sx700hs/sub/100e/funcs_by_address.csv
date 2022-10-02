@@ -480,6 +480,8 @@
 0xfc0d5d23,j_GetdccdFilterValue_FW
 0xfc0d5d25,ResetRegistNoticeCBR_FW
 0xfc0d5d2f,RegistFirmScanNoticeCBR_FW
+0xfc0d62cd,task_LensController
+0xfc0d645f,task_LensController
 0xfc0d6b57,IsLensOutside_FW
 0xfc0d6b71,GetFocusStartZoomPosition_FW
 0xfc0d761f,task_MechaLog
@@ -708,6 +710,7 @@
 0xfc13c813,strncmp
 0xfc13c83d,strchr
 0xfc13c84f,strstr
+0xfc13df97,task_AprocMusicTask
 0xfc13eb73,task_AprocMainTask
 0xfc13ebff,task_AprocBpPwmTask
 0xfc13ec5f,task_AprocBpGenTask
@@ -724,6 +727,7 @@
 0xfc15c9a7,task_WBLPFace
 0xfc15f175,task_OBCtrlTask
 0xfc15fc37,task_DetectMoveTask
+0xfc16c4e7,task_EFChargeT
 0xfc16c6a3,EF.IsChargeFull_FW
 0xfc16c6a3,IsStrobeChargeCompleted
 0xfc16df0d,MovieAF.Suspend_FW
@@ -1364,6 +1368,7 @@
 0xfc314605,NRTBL.SetDefectCorrectType_FW
 0xfc314617,NRTBL.SetTassenType_FW
 0xfc318649,task_ExpDrvSubTask
+0xfc3233bb,task__cntFlashTask
 0xfc324689,EF.StartEFCharge_FW
 0xfc3246c1,EF.StopEFCharge_FW
 0xfc3246cb,EF.SetEFChargeTimeOut_FW

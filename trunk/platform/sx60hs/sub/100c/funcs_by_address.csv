@@ -634,6 +634,7 @@
 0xfc137779,VbattGet_FW
 0xfc137a71,task_ClockSave
 0xfc1394f1,omar_init
+0xfc13aa25,task_EFChargeT
 0xfc13ad3f,EF.IsChargeFull_FW
 0xfc13ad3f,IsStrobeChargeCompleted
 0xfc13b29b,imager_active_callback
@@ -729,6 +730,8 @@
 0xfc14e00d,GetIrisAv_FW
 0xfc14e17b,GetCurrentIrisPosition_FW
 0xfc14e17b,GetIrisCurrentPosition_FW
+0xfc14e511,task_LensController
+0xfc14e6a3,task_LensController
 0xfc14ed9b,IsLensOutside_FW
 0xfc14edb5,GetFocusStartZoomPosition_FW
 0xfc14f8af,task_ExMechaAlarm
@@ -777,6 +780,7 @@
 0xfc161a17,strncmp
 0xfc161a41,strchr
 0xfc161a53,strstr
+0xfc163193,task_AprocMusicTask
 0xfc163d7f,task_AprocMainTask
 0xfc163e0b,task_AprocBpPwmTask
 0xfc163e6b,task_AprocBpGenTask
@@ -799,6 +803,7 @@
 0xfc1789b5,task_DevelopDist
 0xfc179251,task_DevelopResize
 0xfc179afd,task_DevelopJpeg
+0xfc17ac9d,task__cntFlashTask
 0xfc17cd01,MovieAF.Suspend_FW
 0xfc17cd0b,MovieAF.Resume_FW
 0xfc17e793,task_AfIntSrvTask
