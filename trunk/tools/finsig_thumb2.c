@@ -4409,6 +4409,7 @@ int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         printf("sig_aram_start: no match DebugAssert\n");
         return 0;
     }
+    uint32_t m_adr = is->insn->address | is->thumb;
     const insn_match_t match_cmp_bne_ldr[]={
         {MATCH_INS(CMP, 2), {MATCH_OP_REG(R1),MATCH_OP_IMM(0)}},
         {MATCH_INS_CC(B,NE,MATCH_OPCOUNT_IGNORE)},
@@ -4416,46 +4417,23 @@ int sig_match_aram_start(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         {ARM_INS_ENDING}
     };
     if(!insn_match_find_next_seq(fw,is,15,match_cmp_bne_ldr)) {
-        printf("sig_match_aram_start: no match CMP\n");
-        return 0;
+        // Try alternate instruction sequence
+        disasm_iter_init(fw, is, m_adr);
+        const insn_match_t match_cmp_bne_ldr2[]={
+            {MATCH_INS(CMP, 2), {MATCH_OP_REG(R1),MATCH_OP_IMM(0)}},
+            {MATCH_INS_CC(B,NE,MATCH_OPCOUNT_IGNORE)},
+            {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(SP)}},
+            {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(PC)}},
+            {ARM_INS_ENDING}
+        };
+        if(!insn_match_find_next_seq(fw,is,15,match_cmp_bne_ldr2)) {
+            printf("sig_match_aram_start: no match CMP\n");
+            return 0;
+        }
     }
     uint32_t adr=LDR_PC2val(fw,is->insn);
     if(!adr) {
         printf("sig_match_aram_start: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
-        return 0;
-    }
-    // could sanity check that it looks like a RAM address
-    save_misc_val(rule->name,adr,0,(uint32_t)is->insn->address);
-    return 1;
-}
-
-int sig_match_aram_start2(firmware *fw, iter_state_t *is, sig_rule_t *rule)
-{
-    if (get_misc_val_value("ARAM_HEAP_START"))
-        return 0;
-
-    if(!init_disasm_sig_ref(fw,is,rule)) {
-        printf("sig_match_aram_start: missing ref\n");
-        return 0;
-    }
-    if(!find_next_sig_call(fw,is,60,"DebugAssert")) {
-        printf("sig_aram_start2: no match DebugAssert\n");
-        return 0;
-    }
-    const insn_match_t match_cmp_bne_ldr[]={
-        {MATCH_INS(CMP, 2), {MATCH_OP_REG(R1),MATCH_OP_IMM(0)}},
-        {MATCH_INS_CC(B,NE,MATCH_OPCOUNT_IGNORE)},
-        {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(SP)}},
-        {MATCH_INS(LDR, 2), {MATCH_OP_REG_ANY,MATCH_OP_MEM_BASE(PC)}},
-        {ARM_INS_ENDING}
-    };
-    if(!insn_match_find_next_seq(fw,is,15,match_cmp_bne_ldr)) {
-        printf("sig_match_aram_start2: no match CMP\n");
-        return 0;
-    }
-    uint32_t adr=LDR_PC2val(fw,is->insn);
-    if(!adr) {
-        printf("sig_match_aram_start2: no match LDR PC 0x%"PRIx64"\n",is->insn->address);
         return 0;
     }
     // could sanity check that it looks like a RAM address
@@ -5100,6 +5078,7 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
     // TODO should handle multiple instances of string
     disasm_iter_init(fw,is,(ADR_ALIGN4(search_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default); // reset to a bit before where the string was found
     while(fw_search_insn(fw,is,search_disasm_const_ref,str_adr,NULL,search_adr+SEARCH_NEAR_REF_RANGE)) {
+        uint32_t ref_adr = is->insn->address | is->thumb;
         // bactrack looking for preceding call
         if(rule->param & SIG_NEAR_REV) {
             int i;
@@ -5118,6 +5097,37 @@ uint32_t find_call_near_str(firmware *fw, iter_state_t *is, sig_rule_t *rule)
                 return iter_state_adr(is);
             }
         }
+        // Not found - look for previous branch to ref_adr
+        disasm_iter_init(fw, is, (ADR_ALIGN4(ref_adr) - SEARCH_NEAR_REF_RANGE) | fw->thumb_default);
+        int i;
+        for (i=0; i<50; i+=1) {
+            if (insn_match_find_next(fw,is,1,match_b)) {
+                uint32_t b_adr=get_branch_call_insn_target(fw,is);
+                if (b_adr == ref_adr) {
+                    // bactrack looking for preceding call
+                    if(rule->param & SIG_NEAR_REV) {
+                        int i;
+                        int n_calls=0;
+                        for(i=1; i<=max_insns; i++) {
+                            fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+                            if(insn_match_any(fw->is->insn,insn_match)) {
+                                n_calls++;
+                            }
+                            if(n_calls == n) {
+                                return iter_state_adr(fw->is);
+                            }
+                        }
+                    } else {
+                        if(insn_match_find_nth(fw,is,max_insns,n,insn_match)) {
+                            return iter_state_adr(is);
+                        }
+                    }
+                }
+            }
+        }
+        // Reset - second check not matched
+        disasm_iter_init(fw, is, ref_adr);
+        disasm_iter(fw, is);
     }
     printf("find_call_near_str: no match %s\n",rule->name);
     return 0;
@@ -5387,7 +5397,7 @@ uint32_t sig_match_named_find(firmware *fw, iter_state_t *is, sig_rule_t *rule, 
         } else {
             printf("sig_match_named: %s invalid branch target 0x%08x\n",rule->ref_name,adr);
         }
-    } else {
+    } else if (!(rule->flags & SIG_OPTIONAL)) {
         printf("sig_match_named: %s branch not found 0x%08x\n",rule->ref_name,ref_adr);
     }
     return 0;
@@ -5850,7 +5860,6 @@ sig_rule_t sig_rules_main[]={
 {sig_match_aram_size,"ARAM_HEAP_SIZE",          "AdditionAgentRAM_FW",  0,                  SIG_DRY_MAX(58)},
 {sig_match_aram_size_gt58,"ARAM_HEAP_SIZE",     "AdditionAgentRAM_FW",  0,                  SIG_DRY_MIN(59)},
 {sig_match_aram_start,"ARAM_HEAP_START",        "AdditionAgentRAM_FW",},
-{sig_match_aram_start2,"ARAM_HEAP_START",       "AdditionAgentRAM_FW",},
 {sig_match_icache_flush_range,"icache_flush_range","AdditionAgentRAM_FW",},
 {sig_match__nrflag,"_nrflag",                   "NRTBL.SetDarkSubType_FW",},
 {sig_match_near_str,"transfer_src_overlay_helper","Window_EmergencyRefreshPhysicalScreen",SIG_NEAR_BEFORE(6,1)},
