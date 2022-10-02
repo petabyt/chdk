@@ -487,16 +487,23 @@ int isARM(cs_insn *insn)
 }
 
 /*
-is insn a PC relative load?
+is insn a Rn relative load?
 */
-int isLDR_PC(cs_insn *insn)
+int isLDR_Rn(cs_insn *insn, arm_reg r)
 {
     return insn->id == ARM_INS_LDR
            && insn->detail->arm.op_count == 2
            && insn->detail->arm.operands[0].type == ARM_OP_REG
            && insn->detail->arm.operands[1].type == ARM_OP_MEM
-           && insn->detail->arm.operands[1].mem.base == ARM_REG_PC;
+           && insn->detail->arm.operands[1].mem.base == r;
+}
 
+/*
+is insn a PC relative load?
+*/
+int isLDR_PC(cs_insn *insn)
+{
+    return isLDR_Rn(insn, ARM_REG_PC);
 }
 
 /*
@@ -770,7 +777,7 @@ uint32_t LDR_PC_PC_target(firmware *fw, cs_insn *insn)
     return LDR_PC2val(fw,insn);
 }
 
-// return the target of B instruction, or 0 if current instruction isn't BL
+// return the target of B instruction, or 0 if current instruction isn't B
 uint32_t B_target(__attribute__ ((unused))firmware *fw, cs_insn *insn)
 {
     if(insn->id == ARM_INS_B) {
@@ -1324,9 +1331,12 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
     }
     */
 
+    int rn_ldr[4];  // Track ldr Rn,(Rn,offset) instructions
+
     // init regs to zero (to support adds etc)
     for (i=0;i<4;i++) {
-        res[i]=0;
+        res[i] = 0;
+        rn_ldr[i] = 0;
     }
 
     // count includes current instruction (i.e. BL of call)
@@ -1387,6 +1397,11 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
             uint32_t *pv=LDR_PC2valptr(fw,fw->is->insn);
             if(pv) {
                 res[rd_i] += *pv;
+                if (rn_ldr[rd_i]) {
+                    // Later instruction is ldr Rn,(Rn,offset)
+                    pv = (uint32_t *)adr2ptr(fw,res[rd_i]);
+                    res[rd_i] = *pv;
+                }
 //                if(dbg_count) printf("found ldr r%d,=0x%08x\n",rd_i,res[rd_i]);
                 found_bits |=rd_bit;
                 continue;
@@ -1416,9 +1431,18 @@ int get_call_const_args(firmware *fw, iter_state_t *is_init, int max_backtrack, 
                 // pretend reg is not known
                 known_bits ^=rd_bit;
                 // do not set found bit here
-            }/* else {
+            } else if (isLDR_Rn(fw->is->insn, rd)) {
+                // Load register from memory pointed to by itself
+                res[rd_i] = fw->is->insn->detail->arm.operands[1].mem.disp;
+                rn_ldr[rd_i] = 1;
+                // pretend reg is not known
+                known_bits ^=rd_bit;
+            } else if ((insn_id == ARM_INS_SUB) && (fw->is->insn->detail->arm.operands[1].reg == (int)rd)) {
+                // subs Rn,Rn,#x
+                res[rd_i] = res[rd_i] - fw->is->insn->detail->arm.operands[2].imm;
+                // pretend reg is not known
+                known_bits ^=rd_bit;
             }
-            */
         }
     }
 //    if(dbg_count) printf("get_call_const_args found 0x%08x\n",found_bits);

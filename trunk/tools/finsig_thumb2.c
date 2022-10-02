@@ -4989,12 +4989,12 @@ int sig_match_fw_yuv_layer_buf_52(firmware *fw, iter_state_t *is, sig_rule_t *ru
         printf("sig_match_fw_yuv_layer_buf_52: no match get_displaytype\n");
         return 0;
     }
-    printf("match get_displaytype 0x%"PRIx64"\n",is->insn->address);
+//     printf("match get_displaytype 0x%"PRIx64"\n",is->insn->address);
     if(!insn_match_find_nth(fw,is,14,2,match_bl_blximm)) {
         printf("sig_match_fw_yuv_layer_buf_52: no match call\n");
         return 0;
     }
-    printf("match 0x%"PRIx64"\n",is->insn->address);
+//     printf("match 0x%"PRIx64"\n",is->insn->address);
     uint32_t regs[4];
     // get r1, backtracking up to 8 instructions
     if ((get_call_const_args(fw,is,8,regs)&2)!=2) {
@@ -6261,10 +6261,25 @@ int process_eventproc_table_call(firmware *fw, iter_state_t *is, __attribute__ (
 }
 
 int process_createtask_call(firmware *fw, iter_state_t *is, __attribute__ ((unused))uint32_t unused) {
+
+    uint32_t fadr = get_saved_sig_val("CreateTaskStrictly");
+    if (fadr) {
+        // Ignore call inside 'CreateTaskStrictly'
+        if ((is->insn->address - fadr) < 16)
+            return 0;
+    }
+
+    fadr = get_saved_sig_val("AdditionAgentRAM_FW");
+    if (fadr) {
+        // Ignore call inside 'AdditionAgentRAM_FW'
+        if ((is->insn->address - fadr) < 150)
+            return 0;
+    }
+
     //printf("CreateTask call at %"PRIx64"\n",is->insn->address);
     uint32_t regs[4];
     // get r0 (name) and r3 (entry), backtracking up to 10 instructions
-    if((get_call_const_args(fw,is,10,regs)&9)==9) {
+    if((get_call_const_args(fw,is,20,regs)&9)==9) {
         if(isASCIIstring(fw,regs[0])) {
             // TODO
             char *buf=malloc(64);
