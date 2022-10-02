@@ -10,6 +10,7 @@ SCREEN_DRAWINGS={}
 
 draw={}
 
+-- Don't change the order of the color names in this array - array index is mapped to color value
 draw.colors={
     "trans","black","white",
     "red","red_dark","red_light",

@@ -1799,26 +1799,6 @@ static CMenu osd_submenu = {0x22,LANG_MENU_OSD_TITLE, osd_submenu_items };
 
 //-------------------------------------------------------------------
 
-static const char* gui_histo_show_modes[] =                 { "Don't", "Always", "Rec", "Shoot" };
-static const char* gui_histo_view_modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
-static const char* gui_histo_transform_modes[]={ "Linear", "Log" };
-
-static CMenuItem histo_submenu_items[] = {
-    MENU_ENUM2(0x5f,LANG_MENU_HISTO_SHOW,             &conf.show_histo,     gui_histo_show_modes ),
-    MENU_ENUM2(0x6f,LANG_MENU_HISTO_LAYOUT,           &conf.histo_layout,   gui_histo_view_modes ),
-    MENU_ENUM2(0x5f,LANG_MENU_HISTO_MODE,             &conf.histo_mode,     gui_histo_transform_modes ),
-    MENU_ITEM(0x5c,LANG_MENU_HISTO_EXP,               MENUITEM_BOOL,       &conf.show_overexp, 0 ),
-    MENU_ITEM(0x70,LANG_MENU_HISTO_IGNORE_PEAKS,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.histo_ignore_boundary,   MENU_MINMAX(0, 32) ),
-    MENU_ITEM(0x5c,LANG_MENU_HISTO_MAGNIFY,           MENUITEM_BOOL,       &conf.histo_auto_ajust, 0 ),
-    MENU_ITEM(0x5c,LANG_MENU_HISTO_SHOW_EV_GRID,      MENUITEM_BOOL,       &conf.histo_show_ev_grid, 0 ),
-    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
-    {0}
-};
-
-static CMenu histo_submenu = {0x25,LANG_MENU_HISTO_TITLE, histo_submenu_items };
-
-//-------------------------------------------------------------------
-
 // Display & edit an int value as a decimal.
 // Value ranges from 1 - 20; but display shows as N.N (0.1 - 2.0)
 static const char* gui_raw_ev_ettr_enum(int change, int arg)
@@ -1864,6 +1844,27 @@ static CMenuItem raw_ev_histo_submenu_items[] = {
 };
 
 static CMenu raw_ev_histo_submenu = {0x25,LANG_MENU_RAW_EV_HISTO_TITLE, raw_ev_histo_submenu_items };
+
+//-------------------------------------------------------------------
+
+static const char* gui_histo_show_modes[] =                 { "Don't", "Always", "Rec", "Shoot" };
+static const char* gui_histo_view_modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
+static const char* gui_histo_transform_modes[]={ "Linear", "Log" };
+
+static CMenuItem histo_submenu_items[] = {
+    MENU_ENUM2(0x5f,LANG_MENU_HISTO_SHOW,             &conf.show_histo,     gui_histo_show_modes ),
+    MENU_ENUM2(0x6f,LANG_MENU_HISTO_LAYOUT,           &conf.histo_layout,   gui_histo_view_modes ),
+    MENU_ENUM2(0x5f,LANG_MENU_HISTO_MODE,             &conf.histo_mode,     gui_histo_transform_modes ),
+    MENU_ITEM(0x5c,LANG_MENU_HISTO_EXP,               MENUITEM_BOOL,       &conf.show_overexp, 0 ),
+    MENU_ITEM(0x70,LANG_MENU_HISTO_IGNORE_PEAKS,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.histo_ignore_boundary,   MENU_MINMAX(0, 32) ),
+    MENU_ITEM(0x5c,LANG_MENU_HISTO_MAGNIFY,           MENUITEM_BOOL,       &conf.histo_auto_ajust, 0 ),
+    MENU_ITEM(0x5c,LANG_MENU_HISTO_SHOW_EV_GRID,      MENUITEM_BOOL,       &conf.histo_show_ev_grid, 0 ),
+    MENU_ITEM(0x25,LANG_MENU_RAW_EV_HISTO_TITLE,      MENUITEM_SUBMENU,    &raw_ev_histo_submenu, 0 ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu histo_submenu = {0x25,LANG_MENU_HISTO_TITLE, histo_submenu_items };
 
 //-------------------------------------------------------------------
 
@@ -2271,7 +2272,6 @@ static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x24,LANG_MENU_MAIN_RAW_PARAM,             MENUITEM_SUBMENU,   &raw_submenu,       0 ),
     MENU_ITEM   (0x7f,LANG_MENU_EDGE_OVERLAY,               MENUITEM_SUBMENU,   &edge_overlay_submenu, 0 ),
     MENU_ITEM   (0x25,LANG_MENU_MAIN_HISTO_PARAM,           MENUITEM_SUBMENU,   &histo_submenu, 0 ),
-    MENU_ITEM   (0x25,LANG_MENU_RAW_EV_HISTO_TITLE,         MENUITEM_SUBMENU,   &raw_ev_histo_submenu, 0 ),
     MENU_ITEM   (0x26,LANG_MENU_MAIN_ZEBRA_PARAM,           MENUITEM_SUBMENU,   &zebra_submenu,     0 ),
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
     MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),

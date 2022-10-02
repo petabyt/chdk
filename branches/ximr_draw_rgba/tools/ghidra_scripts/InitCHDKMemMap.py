@@ -1,7 +1,7 @@
 # Ghidra script to create memory map from CHDK platform files
 #
 # This script prompts for a platform/sub directory, reads the stubs_entry.S
-# or stubs_entry.S.err file, and creates memory blocks based on the values 
+# or stubs_entry.S.err file, and creates memory blocks based on the values
 # found. It is intended to be run on a freshly loaded firmware dump, before
 # auto-analysis has been started.
 # The generated memory map aims to
@@ -288,7 +288,7 @@ def make_romstarter_mblock(smisc):
     # get memory block containing start addr
     mb_src = getMemoryBlock(rs_start_addr)
     if not mb_src:
-        infomsg(0,'make_romstarter_mblock: no address containing %s\n',rs_start_addr)
+        infomsg(0,'make_romstarter_mblock: no address containing %s\n'%(rs_start_addr))
         return
 
     if mb_src != getMemoryBlock(rs_after_addr):
