@@ -1,7 +1,30 @@
 Detailed change history is available from subversion https://www.assembla.com/code/chdk/subversion/commits
 
 =1.6=
-Unstable development branch. Significant changes should be recorded below.
+Current release candidate
+Development planning thread https://chdk.setepontos.com/index.php?topic=14150.0
+
+Compatibility with 1.5:
+* CHDK 1.5 scripts should be compatible.
+  CHDK 1.6 adds additional functions, but does not significantly change behavior of existing functions. If @chdk_version is not specified in the script header, a warning is displayed and CHDK 1.3 compatible behavior is used.
+* CFG files: CHDK 1.6 uses the same CFG files as 1.5.
+  It should generally be compatible and retain your settings, but if you don't want to risk re-doing your CFG, backing up the CHDK/*.CFG files before updating is recommended. CFGs from earlier versions back to 1.2 should also probably work.
+* Modules, language files and Lua libraries are NOT compatible.
+  You must update these when you update your build, meaning use the "full" download.
+
+Significant changes in 1.6:
+* Support floating point math in Lua with fmath library
+https://chdk.fandom.com/wiki/Lua/Lua_Reference#Floating_point_mathematical_functions_(fmath_library)
+([https://chdk.setepontos.com/index.php?topic=14305.msg145763#msg145763 development thread])
+* Option to show zebra outside of half press
+* Screen recording module
+([https://chdk.setepontos.com/index.php?topic=14347.0 development thread])
+
+New script functions in 1.6:
+
+ get_current_delta_sv96
+ get_current_base_sv96
+ fmath.* functions
 
 =1.5=
 Current stable, released Nov 15, 2020 as 1.5.1
@@ -70,7 +93,7 @@ Significant changes:
   Discussion http://chdk.setepontos.com/index.php?topic=10833.0
 * enhanced script @parameter header including compact format, Boolean values, table support, and full variable names in Lua.
   Documentation: http://chdk.fandom.com/wiki/CHDK_Script_Header#Lua_Shorthand_Parameter_Syntax
-  Discussion: http://chdk.setepontos.com/index.php?topic=12121.0 
+  Discussion: http://chdk.setepontos.com/index.php?topic=12121.0
 * upper and lower case single characters can now be used as @param variables in uBASIC
 * script header now supports @subtitle for better organization in script that use many parameters
 * Lua scripts now "compile" when loaded to reduce memory needed (original script text no longer stored in memory)
@@ -121,7 +144,7 @@ Obsolete, released Dec 18 2014. Implemented new features are listed below :
 * added choice of DNG crop  (full, active, JPG)
 * added ability to enable a high speed timer to improve USB remote timing precision and accuracy
 * added battery third terminal remote trigger capability (enabled for selected cameras only)
-* added hotshoe control capability (for cameras with hotshoes of course) 
+* added hotshoe control capability (for cameras with hotshoes of course)
 
 =1.2=
 Obsolete, released July 30 2013. The following major features were implemented for 1.2.
