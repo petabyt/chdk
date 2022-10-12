@@ -17,8 +17,8 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # check for valid GCC version.
 # Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
 ifndef DISABLE_GCC_VERSION_CHECK
-    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9 10))
-        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8, 9 or 10.)
+    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9 10 11))
+        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8, 9, 10 or 11.)
     endif
 endif
 
@@ -47,7 +47,7 @@ endif
 
 CFLAGS+=-I$(include) -I$(include)/std -I$(core) -I$(modules) -I$(cam)
 CFLAGS+=-DVER_$(VER) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\"
-CFLAGS+=-Wall -Wno-unused -Wno-format
+CFLAGS+=-Wall -Wno-unused -Wno-format -Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
 
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES
