@@ -1,0 +1,26 @@
+****************************************
+A2100 Notes
+****************************************
+DryOS Camera R31
+
+Porting thread: http://chdk.setepontos.com/index.php?topic=7433.msg81924#msg81924
+
+
+
+Development notes:
+---
+- Port rewritten using code_gen tools
+- UI bitmap palette does not work correctly. 
+- Tested by koshy: http://chdk.setepontos.com/index.php?topic=11831.msg117250#msg117250
+
+Canon PowerShow A2100IS
+P-ID:31BE PAL-D
+
+Firmware Ver GM1.00A
+NoError
+
+Jan 5 2009 15:59:12
+
+Adj.Ver.005.009
+
+Known bugs:

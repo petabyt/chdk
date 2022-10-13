@@ -1,0 +1,385 @@
+//-------------------------- BOOT.C ---------------------------------------------------------------
+
+FILE boot.c
+
+>>> file=../boot_hdr.c
+
+FUNC start=0xFF81000C length=86 name=boot
+ASM
+FW $-1
+PATCHSUB ref=0
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=27
+>>>
+
+    *(int*)0x1930=(int)taskCreateHook; 
+    *(int*)0x1934=(int)taskCreateHook2; 
+    *(int*)0x1938=(int)taskCreateHook;
+
+    // Power ON/OFF detection  G10 @FF84A8D0   replacement  for correct power-on.
+    *(int*)(0x25CC+0x04)= (*(int*)0xC02200F8)&1 ? 0x100000 : 0x200000; // replacement  for correct power-on.
+    
+<<<
+ASM
+FW $-1
+PATCHSUB ref=0
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 7
+>>>
+
+#if defined(CHDK_NOT_IN_CANON_HEAP) // use original heap offset if CHDK is loaded in high memory
+<<<
+FW
+>>>
+#else
+"    LDR     R0, =new_sa\n"   // otherwise use patched value
+"    LDR     R0, [R0]\n"      // 
+#endif
+
+<<<
+FW 12
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW $-1
+PATCHSUB name=taskcreate_Startup_my ref=0
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 17
+REM "removed for corrected power-on/off"
+FW 8
+PATCHSUB name=task_Startup_my ref=0
+// ->FW
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+>>>
+    *((volatile int *) LED_PWR) = 0x46;
+<<<
+ASM
+FW 6
+REM "skip starting diskboot.bin"
+FW 5
+ENDASM		 
+>>>
+    CreateTask_spytask();
+<<<
+ASM	 
+PATCHSUB name=CreateTask_PhySw ref=0
+ENDASM
+>>>
+#ifdef BLINKER
+   CreateTask_Blinker();
+#endif
+<<<
+ASM
+FW 3
+>>>
+"    BL       busy_loop \n"   
+<<<
+FW 9
+ENDASM
+ENDFUNC
+
+>>>
+void __attribute__((naked,noinline)) busy_loop() {  // loop hack that allows startup with battery door open
+  asm volatile (
+"   STMFD   SP!, {R4-R6,LR} \n"
+"   LDR     R0, =0x400000 \n"
+"loop1: \n"
+"   nop\n"
+"   SUBS   R0,R0,#1 \n"
+"   BNE    loop1 \n"
+"   LDMFD   SP!, {R4-R6,PC} \n"
+    );
+}
+
+void CreateTask_spytask() { 
+   _CreateTask("SpyTask", 0x19, 0x2000, core_spytask, 0);
+};
+
+<<<
+
+FUNC ref=0
+ASM
+FW 7
+PATCHSUB name=mykbd_task
+PATCHVAL value=0x2000 comment="stack size for new task_PhySw"
+// ->FW
+FW 12
+ENDASM
+ENDFUNC
+>>>
+
+//================init file modules task =========================================
+<<<
+FUNC sig=task_InitFileModules name=init_file_modules_task
+ASM
+FW 7
+PATCHSUB ref=0
+>>>
+"    BL      core_spytask_can_start\n"  // CHDK: Set "it's-safe-to-start" flag for spytask
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 16
+PATCHSUB ref=0
+FW 22
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 13
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 40
+>>> file=../FAT32_detect.S
+FW 7
+REM "replaced below"
+FW 12
+REM "replaced below"
+>>>
+"    LDRB    R12, [LR,#0x1FE]\n"    // replace instructions above
+"    LDRB    LR, [LR,#0x1FF]\n"     // replace instructions above
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC sig=task_RotaryEncoder name=JogDial_task_my
+ASM
+FW 15
+>>>
+//------------------  added code ---------------------
+"sleep_loop:\n"
+"    LDR     R0, =jogdial_stopped\n"
+"    LDR     R0, [R0]\n"
+"    CMP     R0, #1\n"
+"    BNE     sleep_done\n"
+"    MOV     R0, #40\n"
+"    BL      _SleepTask\n"
+"    B       sleep_loop\n"
+"sleep_done:\n"
+//------------------  original code ------------------
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+
+FILE movie_rec.c
+
+>>> file=../movie_rec_hdr.c
+
+FUNC sig=task_MovieRecord name=movie_record_task
+ASM
+FW 38
+>>>
+"    BL      unlock_optical_zoom\n"     // added to unlock the zoom
+<<<
+FW 2
+PATCHSUB ref=0
+FW 25
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM 
+FW 193
+>>> prelabel
+"    LDR     R0, =video_compression_rate\n" //added
+"    BL      set_quality\n"                 //added
+<<<
+FW 22
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- CAPT_SEQ.C -----------------------------------------------------------
+
+FILE capt_seq.c
+
+>>> file=../capt_seq_hdr.c
+
+FUNC sig=task_CaptSeq name=capt_seq_task
+ASM
+FW 59
+>>>
+"    BL      shooting_expo_param_override\n"      // added
+<<<
+FW
+>>>
+"    MOV     R0, #0\n"                          // added
+"    STR     R0, [R4,#0x24]\n"                  // added, fixes overrides behavior at short shutter press (from S95)
+<<<
+FW 21
+PATCHSUB ref=1
+>>>
+"    BL      capt_seq_hook_raw_here\n"
+<<<
+FW 3
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 102
+PATCHSUB ref=1
+FW 1
+>>>
+"    BL      capt_seq_hook_raw_here\n"
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=1
+ASM
+FW 27
+>>>
+"    BL      wait_until_remote_button_is_released\n"
+"    BL      capt_seq_hook_set_nr\n"
+<<<
+->FW
+ENDASM
+ENDFUNC
+
+FUNC sig=task_ExpDrv name=exp_drv_task
+ASM
+FW 243
+SKIP 18
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 47
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 16
+PATCHSUB name=apex2us
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- FILEWRITE.C ----------------------------------------------------------
+FILE filewrite.c
+
+>>> file=../filewrite_hdr.c
+
+//////////////////////////////////////////////////////////////
+// filewritetask
+//////////////////////////////////////////////////////////////
+FUNC sig=task_FileWrite name=filewritetask
+ASM
+FW 8
+>>>
+#ifdef FILEWRITE_DEBUG_LOG
+"ldr     r0, [sp,#8]\n"
+"bl log_fwt_msg\n"
+#endif
+<<<
+FW 35
+PATCHSUB name=fwt_close
+FW 8
+PATCHSUB ref=0 comment="Open stage"
+FW 1
+PATCHSUB ref=1 comment="Write stage"
+FW 1
+PATCHSUB ref=2 comment="Close stage"
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// open stage
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 13
+>>>
+//hook start
+"    STMFD SP!, {R4-R12,LR}\n"
+"    MOV R0, R4\n"
+"    BL filewrite_main_hook\n"
+"    LDMFD SP!, {R4-R12,LR}\n"
+//hook end
+<<<
+FW 3
+PATCHSUB name=fwt_open
+->FW
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// write stage
+//////////////////////////////////////////////////////////////
+FUNC ref=1
+ASM
+FW 43
+PATCHSUB name=fwt_write
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// close stage
+//////////////////////////////////////////////////////////////
+FUNC ref=2
+ASM
+FW 7
+PATCHSUB name=fwt_close
+//->FW
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE

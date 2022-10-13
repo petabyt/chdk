@@ -1,0 +1,52 @@
+SX280HS / SX275HS / SX270HS notes
+
+CHDK is a hack, use at your own risk!
+
+Additionally, Digic 6 has significant differences from previously 
+supported models, which means some features are not fully implemented
+and the risk of unforeseen side effects is higher than ports for
+previous Digic versions.
+
+Firmware version information can be obtained using the VER.REQ method,
+or by using ACID / STICK / exiftool or the firminfo Canon Basic script.
+
+
+General camera and CHDK port information
+
+- Default ALT button is the PLAYBACK button. VIDEO and DISP may also be used
+
+- The half press zebra shortcut button is MENU
+
+- The RAW shortcut (and generic shortcut) button is DISP
+
+- To start in shooting mode, hold down the ON/OFF button
+
+- Only simple_movie_status is implemented, so features or scripts that rely on
+  direct access to the movie_status variable do not work
+
+- Video bitrate can be adjusted (CBR, VBR). Maximum possible video bitrate is approx. 35000 kbit/s
+
+- Video time based limits are raised to 3 hours (only makes sense on external power)
+
+- Using CHDK started via the "firmware update" method has not been fully tested.
+  Report any problems in the porting thread.
+
+- GPS data in DNGs is supported on SX280. Full CHDK GPS support is not implemented.
+
+- Canon has ceased providing updated AGPS data for the SX280. CHDK provides a replacement URL,
+  http://epodownload.mediatek.com/EPO.DAT
+  The AGPS updater in Canon menu will use the replacement URL when CHDK is running.
+
+- Porting thread: https://chdk.setepontos.com/index.php?topic=11550
+
+Issues
+
+- Exposure overrides (and custom auto ISO) will not work correctly when
+  - "AF frame" is set to "tracking AF" in Canon menu
+  - "Servo AF" is enabled in Canon menu
+  - "I-contrast" is enabled in Canon menu
+
+- CHDK overlay drawing is slow, Canon display updates make the CHDK OSD blink
+- PTP remote shoot can misbehave in certain shooting modes (sports mode, high speed burst mode, ...):
+  when using continuous shooting (rs -cont or rs -quick in chdkptp), the number of actual shots
+  may be larger than the requested number, the last shot from such a series may end up on card

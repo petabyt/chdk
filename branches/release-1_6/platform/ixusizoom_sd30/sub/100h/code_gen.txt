@@ -1,0 +1,370 @@
+//-------------------------- BOOT.C ---------------------------------------------------------------
+FILE boot.c
+
+>>>
+#include "lolevel.h"
+#include "platform.h"
+#include "core.h"
+
+/* Ours stuff */
+extern void createHook (void *pNewTcb);
+extern void deleteHook (void *pTcb);
+const char * const new_sa = &_end;
+
+void boot();
+
+/* "relocated" functions */
+void __attribute__((naked,noinline)) h_usrInit();
+void __attribute__((naked,noinline)) h_usrKernelInit();
+void __attribute__((naked,noinline)) h_usrRoot();
+
+void boot()
+{
+    long *canon_data_src = (void*)0xffae8270; // This is the address of the "Startofdata"-4 string on the firmware
+    long *canon_data_dst = (void*)MEMBASEADDR; // This is where the boot data is copiedduring firmware update
+    long canon_data_len = 0xE7D0; // This is the length of data from "Startofdata" to the end of the firmware dump
+    long *canon_bss_start = (void*) (canon_data_len + MEMBASEADDR); //  = 0xEB60 + 0x1900,  just after data
+    long canon_bss_len = MEMISOSTART - (long) canon_bss_start; // The original address of h_usrKernelInit - bss start
+    long i;
+
+    asm volatile (
+    "MRC     p15, 0, R0,c1,c0\n"
+    "ORR     R0, R0, #0x1000\n"
+    "ORR     R0, R0, #4\n"
+    "ORR     R0, R0, #1\n"
+    "MCR     p15, 0, R0,c1,c0\n"
+    :::"r0");
+
+
+    for(i=0;i<canon_data_len/4;i++)
+    canon_data_dst[i]=canon_data_src[i];
+
+    for(i=0;i<canon_bss_len/4;i++)
+    canon_bss_start[i]=0;
+
+    asm volatile (
+    "MRC     p15, 0, R0,c1,c0\n"
+    "ORR     R0, R0, #0x1000\n"
+    "BIC     R0, R0, #4\n"
+    "ORR     R0, R0, #1\n"
+    "MCR     p15, 0, R0,c1,c0\n"
+    :::"r0");
+    
+    h_usrInit();
+}
+
+<<<
+
+FUNC start=0xff811a64 name=h_usrInit length=10
+ASM
+FW $-1
+PATCHSUB ref=0 name=h_usrKernelInit
+ENDASM
+ENDFUNC
+
+FUNC ref=0
+ASM
+FW 23
+REM "-"
+>>>
+
+    "LDR     R0, =h_usrRoot\n" // +
+
+<<<
+FW 1
+REM "-"
+>>>
+
+    "LDR     R2, =new_sa\n"    // +
+    "LDR     R2, [R2]\n"       // +
+
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+FUNC start=0xff811b44 name=h_usrRoot length=21
+ASM
+FW $-2
+ENDASM
+>>>
+
+    _taskCreateHookAdd(createHook);
+    _taskDeleteHookAdd(deleteHook);
+
+    drv_self_hide();
+
+<<<
+ASM
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+//-------------------------- MOVIE_REC.C ----------------------------------------------------------
+FILE movie_rec.c
+
+>>>
+#include "conf.h"
+
+int *video_quality = &conf.video_quality;
+int *video_mode    = &conf.video_mode;
+
+long def_table1[56]={
+0x10000,0xC000,0x5800, 0x2000, 0x1C6A, 0x1550,0x9C5,  0x38D,  0x3C45, 0x2D34, 0x14B8, 0x788,  0x5F60, 0x4788,
+0x20C9, 0xBE1, 0x8661, 0x64C9, 0x2E31, 0x10CB,0xB21A, 0x8594, 0x3D39, 0x1642, 0xE249, 0xA9B8, 0x4DC9, 0x1C48,
+0x117D2,0xD1DF,0x6030, 0x22F9, 0x153D5,0xFEE1,0x74D1, 0x2A79, 0x195F8,0x1307C,0x8B8D, 0x32AA, 0x1E01C,0x16817,
+0xA509, 0x3C01,0x2328E,0x1A5ED,0xC160, 0x4637,0x28C99,0x1E975,0xE054, 0x5190, 0x2F08B,0x2346B,0x102AF,0x5E0E
+};
+
+long def_table2[12]={0xE666,0xACCD,0x4F33,0x1CCD,-0x170A,-0x1148,-0x7EB,-0x2E1,-0x2BC6,-0x20D5,-0xF0C,-0x579};
+
+long table1[56], table2[12];
+
+void change_video_tables(int a, int b){
+ int i;
+ for (i=0;i<56;i++) table1[i]=(def_table1[i]*a)/b;
+ for (i=0;i<12;i++) table2[i]=(def_table2[i]*a)/b;
+}
+
+long CompressionRateTable[]={0x60, 0x5D, 0x5A, 0x57, 0x54, 0x51, 0x4D, 0x48, 0x42, 0x3B, 0x32, 0x29, 0x22, 0x1D, 0x17, 0x14, 0x10, 0xE, 0xB, 9, 7, 6, 5, 4, 3, 2, 1};
+
+<<<
+FUNC sig=task_MovieRecord name=movie_record_task length=64
+ASM
+FW 26
+>>>
+    "BL     unlock_optical_zoom\n"  //+
+<<<
+FW 1
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=109
+ASM
+FW 18
+PATCHSUB ref=0
+FW 66
+PATCHSUB ref=1
+FW $
+>>>
+    ".ltorg \n"
+<<<
+ENDASM
+ENDFUNC
+
+FUNC ref=0 length=296
+ASM
+FW 290
+>>>
+    "B       loc_A \n"          // +
+<<<
+REM "-"
+FW 2
+>>>
+"loc_A: \n"                     // +
+<<<
+FW $
+>>>
+    ".ltorg \n"
+<<<
+ENDASM
+ENDFUNC
+
+FUNC ref=1 length=81
+ASM
+FW 25
+REM "-"
+>>>
+    "LDR     R5, =table1\n"     // +
+<<<
+FW 2
+REM "-"
+>>>
+    "LDR     R4, =table2\n"     // +
+<<<
+FW 15
+REM "-"
+REM "-"
+>>>
+    "CMP     R1, #0x1A\n"       // +
+    "MOVGE   R1, #0x1A\n"       // +
+<<<
+FW 23
+REM "-"
+>>>
+    "LDR     R1, =video_mode\n" // +
+<<<
+FW 1
+REM "-"
+>>>
+    "LDR     R2, =CompressionRateTable\n"   // +
+<<<
+FW 1
+>>>
+    "LDR     R12, [R12]\n"      // +
+<<<
+FW 5
+REM "-"
+>>>
+    "LDREQ   R3, =video_quality\n"          // +
+    "LDREQ   R3, [R3]\n"                    // +
+    "LDREQ   R3, [R3]\n"                    // +
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+ENDFILE
+//-------------------------- CAPT_SEQ.C -----------------------------------------------------------
+FILE capt_seq.c
+
+>>> file=../capt_seq_hdr.c
+
+//////////////////////////////////////////////////////////////
+// capt_seq_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_CaptSeq name=capt_seq_task
+ASM
+FW 32
+>>>
+"    BL      shooting_expo_param_override\n"   // +
+<<<
+FW 2
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// capt_seq_task -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0 length=32
+ASM
+FW 26
+PATCHSUB ref=0
+>>>
+"    BL      capt_seq_hook_raw_here\n"   // +
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// capt_seq_task -> ref=0 -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 12
+>>>
+"    BL      wait_until_remote_button_is_released\n"
+"    BL      capt_seq_hook_set_nr\n"
+<<<
+->FW
+ENDASM
+ENDFUNC
+
+
+//////////////////////////////////////////////////////////////
+// exp_drv_task
+//////////////////////////////////////////////////////////////
+FUNC sig=task_ExpDrv name=exp_drv_task
+ASM
+FW 151
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// exp_drv_task -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 30
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// exp_drv_task -> ref=0 -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 22
+PATCHSUB name=apex2us
+->FW
+ENDASM
+ENDFUNC
+
+ENDFILE
+
+//-------------------------- FILEWRITE.C ----------------------------------------------------------
+FILE filewrite.c
+
+>>> file=../filewrite_hdr.c
+
+//////////////////////////////////////////////////////////////
+// filewritetask
+//////////////////////////////////////////////////////////////
+FUNC sig=task_FileWrite name=filewritetask length=38
+ASM
+FW 12
+PATCHSUB ref=0
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// filewritetask -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 12
+PATCHSUB ref=0
+FW $-1
+>>>
+"    BL      fwt_after_close\n" //+
+<<<
+FW $
+ENDASM
+ENDFUNC
+
+//////////////////////////////////////////////////////////////
+// filewritetask -> ref=0 -> ref=0
+//////////////////////////////////////////////////////////////
+FUNC ref=0
+ASM
+FW 15
+>>>
+//place hook here
+//the task's data block is at [r4] at this point, filename starts at [r4+0x1c]
+//the block can be captured here for a (new) camera with unknown data block structure
+//for ptp remote capture, pass '/null' as filename
+//if writing does not need to be prevented, just continue
+"    STMFD SP!, {R1-R12,LR}\n"
+"    MOV R0, R4\n"
+"    BL filewrite_main_hook\n"
+"    BL filewrite_file_complete\n"
+"    CMP R0, #0\n"
+"    LDRNE R0, =loc_mynull\n" // /null as file name (works only on VxWorks)
+"    LDMFD SP!, {R1-R12,LR}\n"
+"    MOVEQ R0, R5\n" //canon file name
+//hook end
+<<<
+REM "- file name"
+FW $
+>>>
+//mod start
+"loc_mynull:\n"
+".long   0x6c756e2f\n" // "/null"
+".long   0x0000006c\n"
+//mod end
+<<<
+ENDASM
+ENDFUNC
+
+ENDFILE

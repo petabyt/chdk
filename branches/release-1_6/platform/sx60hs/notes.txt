@@ -1,0 +1,91 @@
+******************************
+SX60 HS notes
+******************************
+Many features and combinations of Canon settings have not been tested.
+
+CHDK is a hack, use at your own risk!
+This is a new port for a model with many hardware differences from previously
+supported models, so it is probably higher risk than most.
+
+The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
+version, use ACID or the firminfo Canon Basic script.
+
+No "firmware update" file is included in the autobuild, you must used
+bootable SD card to load. See known bugs below.
+
+Bugs should be reported in the porthing thread
+https://chdk.setepontos.com/index.php?topic=12532.0
+
+General camera and CHDK port information
+****************************************
+SX60 HS has an adjustable aperture only, not an ND filter.
+
+Default alt button is PLAY, VIDEO and WIFI may also be used
+
+To start in shooting mode or wifi connect, hold down the corresponding button
+
+Raw blacklevel appears to be ~128.
+
+SX60 HS uses propset 8.  The values in some propcases have changed.
+
+Preliminary support for PTP Live View, using chdkptp client r712 or later.
+- live buffer is found for motion detection
+- playback viewport buffer(s) for live view video clips are implemented 
+
+TESTED
+******
+llibtst.lua 
+mftest.lua
+setmode.lua - crashes with default 10ms delay, works with 100ms
+ubtest.bas
+hooktest.lua
+isobase.lua
+USB remote - plug test  remote hook only
+CHDK raw / DNG (in P, M, Tv, Av modes). 
+AUTO mode suppresses Canon RAW, however CHDK RAW/DNG is created.
+CHDK ISO Bracketing in Av, Tv, 
+     Aperture and Exposure bracketing
+
+ shut_down(1) shutdowns the camera after a 5-10 second delay
+
+darkframe control: require (ON) or suppress darkframe (OFF), 
+                   or leave up to Canon (AUTO)
+
+short exposures: 0.0001 seconds
+long exposures: 30 seconds
+
+filewrite: directly shoot a picture using chdkptp, and save to PC.
+           note: if Canon RAW is enabled, the saved JPEG will contain the Canon
+                 '.CR2' image.
+CHDK OSD is enabled in shoot mode.
+
+PTP play/rec switch
+raw and remote hooks (in normal still shooting modes, broken some special modes)
+
+RecReviewHold is now implemented.
+CAM_QUALITY_OVERRIDE is now implemented
+
+NOT IMPLEMENTED
+***************
+video controls (movie record task)
+
+
+OTHER ISSUES
+************
+display updating is ugly. Below from sx280hs also applies to sx60hs
+- some framebuffer related features do not work, including
+ - custom auto iso overexposure protection
+- CHDK UI is erased / flashes every time low battery icons
+PROPCASE_RESOLUTION values differ in propset8 0=L 2=M1 3=M2 5=S
+
+KNOWN BUGS
+**********
+- CHDK raw and remote hooks are not called in some special shooting modes (HDR etc) This means script shoot() calls, scripts that use shoot hooks and synced remote do not function correctly in these modes. This mostly affects modes that take multiple exposures for a single jpeg
+- CHDK raw address not correct in most special effect / scene modes
+  Using CHDK DNG in modes with an incorrect raw address may result in memory corruption and
+  potentially even hardware damage.
+- if booted from the firmware update (PS.FI2) method, switching to Hybrid Auto results in a crash. Also, any photo which is the default preview photo will have its orientation rotated by 90 degrees.
+
+THANKS
+******
+* reyalp, srsa_4c, waterwingz for providing patient guidance about so may basic things involved in doing a CHDK digic6 port! 

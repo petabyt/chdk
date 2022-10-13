@@ -1,0 +1,62 @@
+************************************
+SX710 HS notes
+************************************
+CHDK is a hack, use at your own risk!
+
+The VER.REQ method works to obtain the Canon firmware. VERS.REQ does not
+
+
+General camera and CHDK port information
+****************************************
+Default alt button is PLAY. VIDEO and WIFI may also be used
+
+Subject distance (focus) override is available only when MF or AF lock is set
+
+Only simple_movie_status is implemented, so features or scripts that rely on
+direct access to the movie_status variable do not work
+
+When running a script ~600k of RAM is available to CHDK.
+
+This camera has an adjustable aperture and does not have an ND filter.
+
+HDMI hotplug, analog AV detect, and battery temperature A/D are supported
+as alternate remote inputs.
+
+TESTED
+******
+Tv and Av overrides, bracketing in continuous.
+AV override works up to F11 at wide, F22 at max zoom
+Dark frame subtraction control
+llibtst.lua
+Basic PTP: file transfer, play/rec, live view
+chdkptp camtests
+script LED control
+Script shoot
+Script zoom control
+DNG, in P and M modes. May be broken in special scene modes
+script shooting hooks
+ISO override
+Subject distance override
+video status
+Motion detection - Note versions of mdfb2013.lua before 1.3 are not compatible
+PTP remote shoot
+Extra long exposures (>64 sec), tested up to 1000 sec.
+Exposure shorter than 1/3200
+Zebra - Note under threshold must be > ~16, over > ~21
+
+NOT IMPLEMENTED
+***************
+video controls (movie_rec task)
+reboot with firmware update file
+script hard shutdown (shut_down(1))
+
+OTHER ISSUES
+************
+display updating is ugly / has usual Digic 6 limitations
+- Edge overlay does not erase properly when shown live
+- Zebra "Draw Over Zebra" and Restore options are non-functional
+- Some games don't draw correctly
+DNG color matrix is incorrect (copied from sx60hs) but usable
+
+KNOWN BUGS
+**********

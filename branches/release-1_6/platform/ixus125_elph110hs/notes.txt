@@ -1,0 +1,25 @@
+************************************
+IXUS125 / ELPH110HS Notes 
+************************************
+This is a blind port!! Tables in shooting.c were not verified.
+
+Porting thread: http://chdk.setepontos.com/index.php?topic=8085.msg85120#msg85120
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+This port also supports the IXUS127
+
+CHDK RAW/DNG is not available in auto mode
+
+KNOWN BUGS
+**********
+
+For Developers
+**************
+- This is a blind port
+- EXT_VIDEO_TIME not implemented
+- Modemap table is not complete
+- CAM_ACTIVE_AREA_?? not calibrated
+- camera_set_led(): led_table[] indexes not found 
+- Tables in shooting.c were not verified
+

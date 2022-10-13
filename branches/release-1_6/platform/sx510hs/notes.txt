@@ -1,0 +1,34 @@
+************************************
+SX510 Notes
+************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=10984.0
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video in the options
+
+This is an early alpha port, use at your own risk!
+
+TESTED
+******
+Remote capture
+Liveview
+
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
+exmem support
+
+OTHER ISSUES
+************
+Folder naming and file counter use a new method, seem to be working but may have issues
+Not clear if fast press override hack is needed, needs more testing
+
+KNOWN BUGS
+**********
+- DNG color matrix is copy+paste from D10
+- Liveview does not work in fisheye mode
+- Reboot fails sometimes
+- aperture_sizes_table[] is a copy of ixus140
+
+

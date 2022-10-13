@@ -1,0 +1,21 @@
+Issues
+
+- Not a fully working port.
+- Memory browser may crash if it tries to dereference an invalid address.
+- Edge detection and Zebra are disabled if the camera is connected to a HDMI display.
+  The viewport becomes 1920x1080; but the UI overlay (bitmap) remains 720x480. The code does not handle this.
+- Creating and deleting non Canon image files in the A/DCIM image folders may crash the camera. This appears to depend
+  on which file IO operations are used. The open/close/write functions appear to be safe, fopen/fclose/fwrite/remove will
+  crash after creating or deleting a non Canon image file. Using the A/RAW option for saving CHDK DNG files appears to
+  be the safest option.
+
+Development notes:
+
+- Booting via diskboot and firmware update both work.
+- Screen draw working, CHDK menus working.
+- Core functionality working. Config save/load, debug menu, games, tools, file browser, scripts etc.
+- PTP working including live view and UI overlay
+- Edge detection, zebra and histogram work (see note above).
+- MovieRecord task not implemented.
+- DNG files created by CHDK do not load correctly in latest Adobe ACR / Lightroom.
+  Appears to be an Adobe bug. Files load in RawTherapee, darktable, digikam, and RawDigger.

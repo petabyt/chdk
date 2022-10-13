@@ -1,0 +1,22 @@
+************************************
+IXUS155/ELPH150 Notes
+************************************
+Porting thread:
+https://chdk.setepontos.com/index.php?topic=14376.0
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+NOT IMPLEMENTED
+***************
+video functions / movie_rec task
+
+KNOWN BUGS
+**********
+- No known bugs, but mostly untested port.
+
+For Developers
+**************
+- File counter is a variable not a param (see ixus140 port)
+- The lens is same as Ix255 https://chdk.setepontos.com/index.php?topic=14376.msg146361#msg146361

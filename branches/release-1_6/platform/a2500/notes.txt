@@ -1,0 +1,21 @@
+************************************
+A2500 Notes
+************************************
+Porting thread: https://chdk.setepontos.com/index.php?topic=10626.0
+
+To enter CHDK <ALT> mode use the Playback [>] button.
+
+Playback [>] or Help [?] button can be configured as <ALT> mode button.
+
+Battery temperature A/D is supported as an alternate remote input.
+
+
+KNOWN BUGS
+**********
+- Mute on zoom not implemented (Audio IC BU26132).
+- Set quality video does not work
+
+For Developers
+**************
+- Audio IC BU26132
+- File counter is a variable not a param (see ixus140 port)
