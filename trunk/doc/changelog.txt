@@ -1,7 +1,8 @@
 Detailed change history is available from subversion https://www.assembla.com/code/chdk/subversion/commits
 
 =1.6=
-Current release candidate
+Current stable, released Oct 12, 2020 as 1.6.1
+
 Development planning thread https://chdk.setepontos.com/index.php?topic=14150.0
 
 Compatibility with 1.5:
@@ -27,7 +28,7 @@ New script functions in 1.6:
  fmath.* functions
 
 =1.5=
-Current stable, released Nov 15, 2020 as 1.5.1
+Obsolete, released Nov 15, 2020 as 1.5.1
 Development planning thread http://chdk.setepontos.com/index.php?topic=12684.0
 
 Compatibility with 1.4:
