@@ -1,5 +1,8 @@
 Detailed change history is available from subversion https://www.assembla.com/code/chdk/subversion/commits
 
+=1.7=
+Unstable development branch. Significant changes should be recorded below.
+
 =1.6=
 Current stable, released Oct 12, 2020 as 1.6.1
 
