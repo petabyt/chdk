@@ -22,6 +22,20 @@ ifndef DISABLE_GCC_VERSION_CHECK
     endif
 endif
 
+# Disable GCC 10 (and later) optimisation that prevents build from booting on some cameras.
+# See https://chdk.setepontos.com/index.php?topic=14281.0
+ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9))
+    CFLAGS+=-fno-tree-loop-distribute-patterns
+endif
+
+ifdef OPT_WARNINGS
+    CFLAGS+=-Wextra -Wunused
+    # Disable some warnings added in GCC 8
+    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5))
+        CFLAGS+=-Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
+    endif
+endif
+
 # -fno-schedule-insns2 for this gcc bug http://gcc.gnu.org/bugzilla/show_bug.cgi?id=38644
 # technically not required for gcc >= 4.6.3, and probably not required for vxworks cams
 # see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
@@ -47,7 +61,7 @@ endif
 
 CFLAGS+=-I$(include) -I$(include)/std -I$(core) -I$(modules) -I$(cam)
 CFLAGS+=-DVER_$(VER) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\"
-CFLAGS+=-Wall -Wno-unused -Wno-format -Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
+CFLAGS+=-Wall -Wno-unused -Wno-format
 
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES
@@ -123,13 +137,6 @@ ifdef OPT_DISABLE_CAM_ERROR
 CFLAGS+=-DOPT_DISABLE_CAM_ERROR=1
 else
 CFLAGS+=-DOPT_DISABLE_CAM_ERROR=0
-endif
-
-ifdef OPT_WARNINGS
-    CFLAGS+=-Wextra -Wunused
-    ifeq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),8 9 10))
-        CFLAGS+=-Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
-    endif
 endif
 
 ifdef OPT_EXPIRE_TEST
