@@ -37,12 +37,6 @@ NHSTUB(init_focus_eventflag                   ,0xe059238d)
 NHSTUB(init_nd_eventflag                      ,0xe05924a5)
 NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
 
-// To find these values it is easiest to use the Ghidra de-compile window.
-   DEF(hdmi_buffer_check_adr                  ,0x4196a000)  // For HDMI output we only want to flag UI updates when layer 0 is set to this buffer address
-                                                            //   Start at the transfer_src_overlay function, then go to the last function called
-                                                            //   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
-                                                            //   The value is the second parameter to this function.
-
 // Does not exist
 NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead code merged into EngDrvRead_FW !!! TODO: enable use of EngDrvRead_FW in code
 

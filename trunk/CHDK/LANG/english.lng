@@ -812,3 +812,16 @@
 674 "Click OK to dump ROM"
 675 "Checksum ROM at boot"
 
+// RAW EV Histogram
+676 "RAW EV Histogram"
+677 "Show RAW EV Histogram"
+678 "Sensor sampling area:"
+679 "  Width %"
+680 "  Height %"
+681 "  X step"
+682 "  Y step"
+683 "Under exp. < BLACK +"
+684 "Over exp. > WHITE -"
+685 "Write EV histogram log"
+686 "ETTR over exp. %"
+687 "Save for each image"

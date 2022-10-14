@@ -745,7 +745,7 @@ void edge_overlay()
 {
     // Check that viewport dimensions do not exceed bitmap dimensions.
     // HDMI output may use a larger frame for the image compared to the bitmap we draw on - the code can't handle this.
-    if ((vid_get_viewport_width() > camera_screen.width) || (vid_get_viewport_height() > camera_screen.height))
+    if ((vid_get_viewport_width() > CAMERA_SCREEN_BM_WIDTH) || (vid_get_viewport_height() > CAMERA_SCREEN_BM_HEIGHT))
         return;
 
     // Was the shutter fully pressed the last time we ran?

@@ -1082,6 +1082,19 @@ void get_target_dir_name(char *dir) {
 }
 #endif
 
+// Get currently displayed image number.
+// Returns a string in the format DDD-NNNN
+// Where DDD is the base folder number and NNNN is the image number.
+char* get_playback_image_number()
+{
+#ifdef CAM_HAS_PLAYBACK_IMAGE_NO
+    extern char playback_image_number[];
+    return playback_image_number;
+#else
+    return 0;
+#endif
+}
+
 //-------------------------------------------------------------------
 // Convert values to/from APEX 96
 

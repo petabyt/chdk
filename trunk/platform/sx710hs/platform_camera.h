@@ -136,12 +136,12 @@
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
     #undef  CAM_SCREEN_HEIGHT
-    #define CAM_BITMAP_WIDTH                    640 // Actual width of bitmap screen in <s>bytes</s> pixels
-    #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows
-    #define CAM_SCREEN_WIDTH                    640 // Width of bitmap screen in CHDK co-ordinates (360 or 480 pre digic 6, actual width for digic 6)
-    #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 pre digic 6, actual height for digic 6)
-    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1
+    #define CAM_BITMAP_WIDTH                    360 // Actual width of bitmap screen in <s>bytes</s> pixels
+    #define CAM_BITMAP_HEIGHT                   230 // Actual height of bitmap screen in rows
+    #define CAM_SCREEN_WIDTH                    360 // Width of bitmap screen in CHDK co-ordinates (360 or 480 pre digic 6, actual width for digic 6)
+    #define CAM_SCREEN_HEIGHT                   240 // Height of bitmap screen in CHDK co-ordinates (always 240 pre digic 6, actual height for digic 6)
 
+    #define  CAM_HAS_DISPLAY_REFRESH_FLAG       1
 
 // TODO
     #undef  EDGE_HMARGIN

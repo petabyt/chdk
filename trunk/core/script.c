@@ -189,10 +189,13 @@ static int gui_script_kbd_process()
 }
 
 //-------------------------------------------------------------------
-void gui_script_draw()
+void gui_script_draw(int force_redraw)
 {
-    extern void gui_chdk_draw();
-    gui_chdk_draw();
+    if (force_redraw)
+        libscriptapi->refresh_display();
+
+    extern void gui_chdk_draw(int);
+    gui_chdk_draw(force_redraw);
 
     if (camera_info.state.mode_rec || camera_info.state.mode_play)
     {

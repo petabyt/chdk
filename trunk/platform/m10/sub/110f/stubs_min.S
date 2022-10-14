@@ -33,6 +33,7 @@ DEF(viewport_buffers                            ,0xfc6231c0) // ref to fc6231b0 
 
 DEF(displaytype                                 ,0x9740) // 0x96f0 + 0x50, GetDisplayType
 
+DEF(disptype_changing                           ,0x8c54) // see FC35FE94 in 101d
 DEF(current_fb_d                                ,0xF564) // @fc177872, 0xf53c + 0x28
 
 DEF(simple_movie_status                         ,0xb000) // 0xaf10 + 0x80 + 0x70 @FC0FDA32

@@ -383,12 +383,12 @@ typedef struct
     int touchscreen_disable_video_controls;
     int touchscreen_disable_shortcut_controls;
 
-	// Enable USB icon
+    // Enable USB icon
     int usb_info_enable; 
 
-	// gen 2 USB remote
-	int remote_switch_type;
-	int remote_control_mode;
+    // gen 2 USB remote
+    int remote_switch_type;
+    int remote_control_mode;
 
     int ext_video_time;
     
@@ -466,6 +466,19 @@ typedef struct
     int unlock_av_out_in_rec;  // Force video out when in Rec if AV bit is set. Bool
 
     int check_firmware_crc;  // Check firmware CRC on startup. 0 = no. 1 = Check and set to 0. 2 = always
+
+    // RAW EV Histogram
+    int raw_ev_histo_enable;
+    OSD_pos raw_ev_histo_pos;
+    int raw_ev_histo_under_threshold;
+    int raw_ev_histo_over_threshold;
+    int raw_ev_histo_width;
+    int raw_ev_histo_height;
+    int raw_ev_histo_xstep;
+    int raw_ev_histo_ystep;
+    int raw_ev_histo_save_log;
+    int raw_ev_histo_ettr_pct;
+    int raw_ev_histo_save_for_image;
 
 } Conf;
 

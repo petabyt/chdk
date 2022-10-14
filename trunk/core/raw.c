@@ -12,6 +12,7 @@
 #include "remotecap_core.h"
 #include "ptp.h" // for remotecap constants
 #include "script_api.h" // for script hook
+#include "raw_ev_histo.h"
 
 //-------------------------------------------------------------------
 #ifdef CAM_DATE_FOLDER_NAMING
@@ -213,6 +214,9 @@ void raw_process(void)
 
     if (camera_info.state.state_kbd_script_run)
         libshothisto->build_shot_histogram();
+
+    if (is_raw_enabled())       // make sure it is safe to use raw buffers
+        librawevhisto->build();
 
     libscriptapi->shoot_hook(SCRIPT_SHOOT_HOOK_RAW);
 

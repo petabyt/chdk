@@ -803,7 +803,20 @@
 #define LANG_FIRMWARE_CRC_DUMP_ROM              674
 #define LANG_FIRMWARE_CRC_BOOT_MENU             675
 
-#define GUI_LANG_ITEMS                          675
+#define LANG_MENU_RAW_EV_HISTO_TITLE            676
+#define LANG_MENU_RAW_EV_HISTO_ENABLE           677
+#define LANG_MENU_RAW_EV_HISTO_SAMPLE_AREA      678
+#define LANG_MENU_RAW_EV_HISTO_WIDTH            679
+#define LANG_MENU_RAW_EV_HISTO_HEIGHT           680
+#define LANG_MENU_RAW_EV_HISTO_XSTEP            681
+#define LANG_MENU_RAW_EV_HISTO_YSTEP            682
+#define LANG_MENU_RAW_EV_HISTO_UNDER_THRESH     683
+#define LANG_MENU_RAW_EV_HISTO_OVER_THRESH      684
+#define LANG_MENU_RAW_EV_HISTO_SAVE_LOG         685
+#define LANG_MENU_RAW_EV_HISTO_ETTR_PCT         686
+#define LANG_MENU_RAW_EV_HISTO_SAVE_FOR_IMG     687
+
+#define GUI_LANG_ITEMS                          687
 
 //-------------------------------------------------------------------
 extern void gui_lang_init();

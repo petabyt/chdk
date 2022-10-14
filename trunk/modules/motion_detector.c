@@ -800,6 +800,12 @@ void md_draw_grid()
     int xoffset = vid_get_viewport_display_xoffset();   // used when image size != viewport size
     int yoffset = vid_get_viewport_display_yoffset();   // used when image size != viewport size
 
+#ifdef CAM_DRAW_RGBA
+    //Drawing is on a buffer that is 1/2 width & height compared to the viewport.
+    xoffset /= 2;
+    yoffset /= 2;
+#endif
+
     // display area size
     int x_size = camera_screen.width-xoffset * 2;
     int y_size = camera_screen.height-yoffset * 2;

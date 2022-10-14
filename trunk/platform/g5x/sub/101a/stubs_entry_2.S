@@ -43,12 +43,6 @@ NHSTUB(CreateBinarySemaphoreStrictly          ,0xbfe15557)
 // via sub_fc08ec20, sub_fc1e56a6 called from capt_seq_task. Calls sub_fc0d3b56 to get raw address
 NHSTUB(captseq_raw_addr_init                  ,0xfc09bf49)
 
-// To find these values it is easiest to use the Ghidra de-compile window.
-   DEF(hdmi_buffer_check_adr                  ,0x41141000)  // For HDMI output we only want to flag UI updates when layer 0 is set to this buffer address
-                                                            //   Start at the transfer_src_overlay function, then go to the last function called
-                                                            //   Now find the function call just after the "MakeOsdVram.c" DebugAssert call.
-                                                            //   The value is the second parameter to this function.
-
 // These don't exist
 NHSTUB(ScreenLock                             ,NULL_SUB)
 NHSTUB(ScreenUnlock                           ,NULL_SUB)

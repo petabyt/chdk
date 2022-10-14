@@ -58,3 +58,6 @@ NHSTUB(undisplayblankscreen,                   0xFC3332EB)
 
 // trial
 NHSTUB(refresh_bitmap_buf_from,                0xfc143435)
+
+NHSTUB(VTMLock                                ,0xfc37f211)
+NHSTUB(VTMUnlock                              ,0xfc37f3e1)

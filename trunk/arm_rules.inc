@@ -17,8 +17,8 @@ GCC_VERSION_MAJOR=$(firstword $(subst ., ,$(GCC_VERSION)))
 # check for valid GCC version.
 # Add DISABLE_GCC_VERSION_CHECK=1 to localbuildconf.inc if you know what you are doing
 ifndef DISABLE_GCC_VERSION_CHECK
-    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9 10))
-        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8, 9 or 10.)
+    ifneq ($(GCC_VERSION_MAJOR),$(filter $(GCC_VERSION_MAJOR),4 5 8 9 10 11))
+        $(error Invalid GCC version. CHDK build is supported on GCC 4, 5, 8, 9, 10 or 11.)
     endif
 endif
 
@@ -27,20 +27,27 @@ endif
 # see http://chdk.setepontos.com/index.php?topic=8273.msg100205#msg100205
 CFLAGS=-fno-inline -Os -fno-strict-aliasing -fno-schedule-insns2
 # for gcc >= v4, we want to allow use of strd etc
-# Also set architecture version for modules (to prevent loading on wrong build)
+# Also set architecture version for modules (to prevent loading on wrong build), and set platform drawing method.
 ifndef THUMB_FW
-    CFLAGS+=-mtune=arm946e-s -march=armv5te -DOPT_ARCHITECTURE=GCC_EABI_THUMB
+    CFLAGS+=-mtune=arm946e-s -march=armv5te -DOPT_ARCHITECTURE=GCC_EABI_THUMB -DCAM_DRAW_8BIT
 else
     ifdef ARMV7A
         CFLAGS+=-march=armv7-a -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2A
     else
         CFLAGS+=-march=armv7-r -mthumb -DTHUMB_FW -DOPT_ARCHITECTURE=GCC_EABI_THUMB2
     endif
+
+    # Default for DIGIC 6 and later is CAM_DRAW_RGBA. Add CAM_DRAW_YUV to platform makefile to override.
+    ifdef CAM_DRAW_YUV
+        CFLAGS+=-DCAM_DRAW_YUV
+    else
+        CFLAGS+=-DCAM_DRAW_RGBA
+    endif
 endif
 
 CFLAGS+=-I$(include) -I$(include)/std -I$(core) -I$(modules) -I$(cam)
 CFLAGS+=-DVER_$(VER) -DHDK_VERSION=\"$(VER)\" -DBUILD_NUMBER=\"$(BUILD_NUMBER)\" -DBUILD_SVNREV=\"$(BUILD_SVNREV)\"
-CFLAGS+=-Wall -Wno-unused -Wno-format
+CFLAGS+=-Wall -Wno-unused -Wno-format -Wno-builtin-declaration-mismatch -Wno-implicit-fallthrough -Wno-cast-function-type
 
 ifdef OPT_CURVES
 CFLAGS+=-DOPT_CURVES

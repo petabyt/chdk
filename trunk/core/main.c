@@ -316,8 +316,18 @@ void core_spytask()
 
         if ((camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING) || recreview_hold)
         {
-            if (((cnt++) & 3) == 0)
+            if (((cnt++) & 3) == 0) {
                 gui_redraw();
+#ifdef CAM_DRAW_RGBA
+                extern int display_needs_canon_refresh;
+                if (!draw_is_suspended()) {
+                    if (display_needs_canon_refresh) {
+                        display_needs_canon_refresh = 0;
+                        vid_bitmap_refresh();
+                    }
+                }
+#endif
+            }
         }
 
         if (camera_info.state.state_shooting_progress != SHOOTING_PROGRESS_PROCESSING)

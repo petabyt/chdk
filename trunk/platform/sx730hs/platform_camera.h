@@ -86,7 +86,7 @@
     -1888, 10000, 10463, 10000, 1645, 10000, \
       286, 10000,   708, 10000, 6145, 10000
 
-    #define cam_CalibrationIlluminant2          21     // D65 
+    #define cam_CalibrationIlluminant2          21     // D65
 
     #define CAM_COLORMATRIX2 \
     13161, 10000, -5451, 10000, -1344, 10000, \
@@ -133,18 +133,18 @@
     #define CAM_SHOW_OSD_IN_SHOOT_MENU          1
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1           // Draw pixels on active bitmap buffer only.
-   
+
     // seems to be 640x480
     #undef  CAM_BITMAP_WIDTH
     #undef  CAM_BITMAP_HEIGHT
     #undef  CAM_SCREEN_WIDTH
     #undef  CAM_SCREEN_HEIGHT
-    #define CAM_BITMAP_WIDTH                    640 // Actual width of bitmap screen in <s>bytes</s> pixels
-    #define CAM_BITMAP_HEIGHT                   480 // Actual height of bitmap screen in rows
-    #define CAM_SCREEN_WIDTH                    640 // Width of bitmap screen in CHDK co-ordinates (360 or 480 pre digic 6, actual width for digic 6)
-    #define CAM_SCREEN_HEIGHT                   480 // Height of bitmap screen in CHDK co-ordinates (always 240 pre digic 6, actual height for digic 6)
-    #define CAM_SUPPORT_BITMAP_RES_CHANGE       1
-    
+    #define CAM_BITMAP_WIDTH                    360 // Actual width of bitmap screen in <s>bytes</s> pixels
+    #define CAM_BITMAP_HEIGHT                   230 // Actual height of bitmap screen in rows
+    #define CAM_SCREEN_WIDTH                    360 // Width of bitmap screen in CHDK co-ordinates
+    #define CAM_SCREEN_HEIGHT                   240 // Height of bitmap screen in CHDK co-ordinates
+
+    #define  CAM_HAS_DISPLAY_REFRESH_FLAG       1
 
 // TODO
     #undef  EDGE_HMARGIN
@@ -165,9 +165,9 @@
     //#define CAM_CHDK_HAS_EXT_VIDEO_TIME         1
 
     #undef  CAM_USB_EVENTID
-    #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control. 
+    #define CAM_USB_EVENTID                     0x302       // Levent ID for USB control.
 
-//    #define CAM_HAS_MOVIE_DIGEST_MODE           1 
+//    #define CAM_HAS_MOVIE_DIGEST_MODE           1
 
 // didn't try default default values
 // ignored with above
@@ -183,12 +183,12 @@
     // sx710 - Open circuit = ~4090, 10k ohm = ~1380?, 3.5k = ~600 (56C as bat temp)
 //    #undef CAM_REMOTE_AtoD_THRESHOLD
 //    #define CAM_REMOTE_AtoD_THRESHOLD       800 // 3rd battery terminal A/D reading threshold ( lower = 1, higher = 0 )
- 
+
 // camera crashes if sd override used in AF
 //    #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
- 
+
 // AF led, for MD test code
     #undef CAM_AF_LED
     #define CAM_AF_LED                      1

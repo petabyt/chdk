@@ -56,21 +56,21 @@ extern  unsigned char   *chdk_colors;
 #define FONT_REAL_WIDTH         8
 #define FONT_REAL_HEIGHT        16
 
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
 
 #define FONT_WIDTH              8
 #define FONT_HEIGHT             16
 // Name of default symbol file (for reset)
-#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_10.rbf"
+#define DEFAULT_SYMBOL_FILE     "A/CHDK/SYMBOLS/icon_10.rbf"
 
-#else // THUMB_FW
+#else // CAM_DRAW_YUV
 
 #define FONT_WIDTH              14
 #define FONT_HEIGHT             32
 // Name of default symbol file (for reset)
-#define DEFAULT_SYMBOL_FILE "A/CHDK/SYMBOLS/icon_16.rbf"
+#define DEFAULT_SYMBOL_FILE     "A/CHDK/SYMBOLS/icon_16.rbf"
 
-#endif // THUMB_FW
+#endif // CAM_DRAW_YUV
 
 // Text justification & options
 #define TEXT_LEFT               0
@@ -104,7 +104,7 @@ extern void update_draw_proc();
 extern void draw_set_guard();
 extern int draw_test_guard();
 
-extern color draw_get_pixel(coord x, coord y);
+// extern color draw_get_pixel(coord x, coord y);   // Not used
 extern void draw_pixel(coord x, coord y, color cl);
 extern void draw_or_erase_edge_pixel(coord x, coord y, color cl, int is_draw);
 
@@ -171,6 +171,11 @@ typedef struct
 
 // Draw an icon from a list of actions
 extern void draw_icon_cmds(coord x, coord y, icon_cmd *cmds);
+
+//-------------------------------------------------------------------
+
+// Swap two integer values
+#define swap(v1, v2)   {v1^=v2; v2^=v1; v1^=v2;}
 
 //-------------------------------------------------------------------
 #endif

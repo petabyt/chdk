@@ -45,6 +45,7 @@ NHSTUB(GetLensWideFocalLength,                 0xfc43fa93)
 // GetDisplayType 0xfc1f0252, see "DisplayType : %d"
 // vramtransfermanager_lock 0xfc38b9eb
 // vramtransfermanager_unlock 0xfc38b9db
+NHSTUB(send_ximrexe,                           0xFC3EB789)
 
 NHSTUB(LogCameraEvent,                         0xfc362a8b)
 NHSTUB(GetLogToFile,                           0xfc18db55)

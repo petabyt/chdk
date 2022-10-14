@@ -151,14 +151,14 @@ DEF(jpeg_count_str                    ,0x000eb498) // Found @0xfc1189c6
 DEF(zoom_busy                         ,0x000129e0) // (0x129c0+0x20) Found @0xfc1cbad6
 DEF(focus_busy                        ,0x000127b0) // (0x127a8+0x8) Found @0xfc2c68ca
 DEF(imager_active                     ,0x00008710) // (0x870c+0x4) Found @0xfc14180a
-//DEF(canon_menu_active                 ,0x0000c9b4),          stubs_min = 0x0000c9b4 (0x0000c9ac+0x8)
-//DEF(file_counter_var                  ,0x000124f8),          stubs_min = 0x000124f8 (0x000124f8)
+DEF(canon_menu_active                 ,0x0000c9b4) // (0xc9ac+0x8) Found @0xfc2caa52
+DEF(file_counter_var                  ,0x000124f8) // Found @0xfc1c3190
 DEF(cameracon_state                   ,0x000089e8) // (0x89d8+0x10) Found @0xfc0e83fe
 DEF(_nrflag                           ,0x0001c020) // (0x1c014+0xc) Found @0xfc33be14
 DEF(av_override_semaphore             ,0x000231c8) // Found @0xfc38cfa8
-//DEF(active_bitmap_buffer              ,0x0000c980), ** != ** stubs_min = 0x0000c97c (0xC97C)
+DEF(active_bitmap_buffer              ,0x0000c980) // (0xc94c+0x34) Found @0xfc15a9f4
 DEF(displaytype                       ,0x00009038) // (0x9020+0x18) Found @0xfc14623a
-//DEF(bitmap_buffer                     ,0x0000c984),          stubs_min = 0x0000c984 (0xC984)
+DEF(bitmap_buffer                     ,0x0000c984) // (0xc94c+0x38) Found @0xfc15a9fa
 DEF(palette_control                   ,0x00013bc4) // Found @0xfc30a8cc
 DEF(palette_buffer_ptr                ,0x00013be0) // (0x13bc4+0x1c) Found @0xfc30a8ea
 DEF(active_palette_buffer             ,0x00013bd4) // (0x13bc4+0x10) Found @0xfc30a8d2
@@ -174,7 +174,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41815800) // Found @0xfc1b4bf8
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
 // each entry contains 2 int value(s), the first is the zoom focus length.
 // there are 121 entries in the table - set NUM_FL to 121
-//DEF(focus_len_table                         ,0xfdf2bd38) // Found @0xfdf2bd38,          stubs_min = 0xfdf2bd38 (0xfdf2bd38)
+DEF(focus_len_table                         ,0xfdf2bd38) // Found @0xfdf2bd38
 
 //NHSTUB(GetImageFolder                       ,0x00000000) //  0        *** != 0xfc2abc11
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc2b0115

@@ -24,6 +24,7 @@
 #include "module_load.h"
 #include "clock.h"
 #include "dirent.h"
+#include "raw_ev_histo.h"
 
 // splash screen time
 #if defined(OPT_EXPIRE_TEST)
@@ -1651,8 +1652,8 @@ static void gui_grid_lines_load(__attribute__ ((unused))int arg)
 }
 
 static CMenuItem grid_submenu_items[] = {
-    MENU_ITEM(0x2f,LANG_MENU_SHOW_GRID,         MENUITEM_BOOL,		&conf.show_grid_lines, 0 ),
-    MENU_ITEM(0x35,LANG_MENU_GRID_LOAD,         MENUITEM_PROC,		gui_grid_lines_load, 0 ),
+    MENU_ITEM(0x2f,LANG_MENU_SHOW_GRID,         MENUITEM_BOOL,      &conf.show_grid_lines, 0 ),
+    MENU_ITEM(0x35,LANG_MENU_GRID_LOAD,         MENUITEM_PROC,      gui_grid_lines_load, 0 ),
     MENU_ITEM(0x0,LANG_MENU_GRID_CURRENT,       MENUITEM_SEPARATOR, 0, 0 ),
     MENU_ITEM(0x0,(int)conf.grid_title,         MENUITEM_TEXT,      0, 0 ),
     MENU_ITEM(0x0,(int)"",                      MENUITEM_SEPARATOR, 0, 0 ),
@@ -1798,6 +1799,54 @@ static CMenu osd_submenu = {0x22,LANG_MENU_OSD_TITLE, osd_submenu_items };
 
 //-------------------------------------------------------------------
 
+// Display & edit an int value as a decimal.
+// Value ranges from 1 - 20; but display shows as N.N (0.1 - 2.0)
+static const char* gui_raw_ev_ettr_enum(int change, int arg)
+{
+    int *v = (int*)arg;
+
+    *v += change;
+    if (*v < 1) *v = 1;
+    if (*v > 20) *v = 20;
+
+    sprintf(buf, "%d.%d", (int)(*v / 10), (int)(*v % 10));
+
+    return buf;
+}
+
+static const char* gui_raw_ev_enable_enum(int change, __attribute__ ((unused))int arg)
+{
+    static const char* modes[]={ "Don't", "ALT", "Play", "Both" };
+
+    gui_enum_value_change(&conf.raw_ev_histo_enable,change,sizeof(modes)/sizeof(modes[0]));
+
+    librawevhisto->load(conf.raw_ev_histo_enable);
+
+    return modes[conf.raw_ev_histo_enable];
+}
+
+static CMenuItem raw_ev_histo_submenu_items[] = {
+    MENU_ITEM(0x5f,LANG_MENU_RAW_EV_HISTO_ENABLE,       MENUITEM_ENUM,      gui_raw_ev_enable_enum, &conf.raw_ev_histo_enable ),
+    MENU_ITEM(0x58,LANG_MENU_RAW_EV_HISTO_UNDER_THRESH, MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_under_threshold, MENU_MINMAX(1, 16) ),
+    MENU_ITEM(0x57,LANG_MENU_RAW_EV_HISTO_OVER_THRESH,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_over_threshold,  MENU_MINMAX(1, 8) ),
+    MENU_ITEM(0x57,LANG_MENU_RAW_EV_HISTO_ETTR_PCT,     MENUITEM_ENUM|MENUITEM_DECIMAL,gui_raw_ev_ettr_enum, &conf.raw_ev_histo_ettr_pct ),
+    MENU_ITEM(0x5c,LANG_MENU_RAW_EV_HISTO_SAVE_LOG,     MENUITEM_BOOL,      &conf.raw_ev_histo_save_log, 0 ),
+#ifdef CAM_HAS_PLAYBACK_IMAGE_NO
+    MENU_ITEM(0x5c,LANG_MENU_RAW_EV_HISTO_SAVE_FOR_IMG, MENUITEM_BOOL,      &conf.raw_ev_histo_save_for_image, 0 ),
+#endif
+    MENU_ITEM(0x0,LANG_MENU_RAW_EV_HISTO_SAMPLE_AREA,   MENUITEM_SEPARATOR, 0, 0 ),
+    MENU_ITEM(0x5e,LANG_MENU_RAW_EV_HISTO_WIDTH,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_width,   MENU_MINMAX(10, 100) ),
+    MENU_ITEM(0x5e,LANG_MENU_RAW_EV_HISTO_HEIGHT,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.raw_ev_histo_height,  MENU_MINMAX(10, 100) ),
+    MENU_ITEM(0x5e,LANG_MENU_RAW_EV_HISTO_XSTEP,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_F_EVEN,  &conf.raw_ev_histo_xstep,   MENU_MINMAX(2, 64) ),
+    MENU_ITEM(0x5e,LANG_MENU_RAW_EV_HISTO_YSTEP,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX|MENUITEM_F_EVEN,  &conf.raw_ev_histo_ystep,   MENU_MINMAX(2, 64) ),
+    MENU_ITEM(0x51,LANG_MENU_BACK,                      MENUITEM_UP, 0, 0 ),
+    {0}
+};
+
+static CMenu raw_ev_histo_submenu = {0x25,LANG_MENU_RAW_EV_HISTO_TITLE, raw_ev_histo_submenu_items };
+
+//-------------------------------------------------------------------
+
 static const char* gui_histo_show_modes[] =                 { "Don't", "Always", "Rec", "Shoot" };
 static const char* gui_histo_view_modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
 static const char* gui_histo_transform_modes[]={ "Linear", "Log" };
@@ -1810,6 +1859,7 @@ static CMenuItem histo_submenu_items[] = {
     MENU_ITEM(0x70,LANG_MENU_HISTO_IGNORE_PEAKS,      MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.histo_ignore_boundary,   MENU_MINMAX(0, 32) ),
     MENU_ITEM(0x5c,LANG_MENU_HISTO_MAGNIFY,           MENUITEM_BOOL,       &conf.histo_auto_ajust, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_HISTO_SHOW_EV_GRID,      MENUITEM_BOOL,       &conf.histo_show_ev_grid, 0 ),
+    MENU_ITEM(0x25,LANG_MENU_RAW_EV_HISTO_TITLE,      MENUITEM_SUBMENU,    &raw_ev_histo_submenu, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -1919,7 +1969,7 @@ static CMenuItem raw_submenu_items[] = {
 #ifdef OPT_DEBUGGING
     MENU_ITEM   (0x5c,LANG_MENU_RAW_TIMER,                  MENUITEM_BOOL,      &conf.raw_timer,            0 ),
 #endif
-    MENU_ITEM   (0x0 ,(int)"DNG",                           MENUITEM_SEPARATOR,	0,							0 ),
+    MENU_ITEM   (0x0 ,(int)"DNG",                           MENUITEM_SEPARATOR, 0,                          0 ),
     MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
     MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
@@ -1949,7 +1999,7 @@ void cb_zebra_restore_osd()
 }
 
 static const char* gui_zebra_mode_modes[] = { "Blink 1", "Blink 2", "Blink 3", "Solid", "Zebra 1", "Zebra 2" };
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
 static const char* gui_zebra_draw_osd_modes[] = { "Nothing", "Histo", "OSD" };
 #endif
 static const char* gui_zebra_draw_modes[] =                 { "Don't", "Shoot", "Rec", "Always" };
@@ -1961,7 +2011,7 @@ static CMenuItem zebra_submenu_items[] = {
     MENU_ITEM(0x57,LANG_MENU_ZEBRA_OVER,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,  &conf.zebra_over,    MENU_MINMAX(0, 32) ),
     MENU_ITEM(0x28,LANG_MENU_ZEBRA_RESTORE_SCREEN,    MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,      &conf.zebra_restore_screen,     cb_zebra_restore_screen ),
     MENU_ITEM(0x5c,LANG_MENU_ZEBRA_RESTORE_OSD,       MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,      &conf.zebra_restore_osd,        cb_zebra_restore_osd ),
-#ifndef THUMB_FW
+#ifndef CAM_DRAW_YUV
     MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_DRAW_OVER,        &conf.zebra_draw_osd, gui_zebra_draw_osd_modes ),
 #endif
     MENU_ITEM(0x5c,LANG_MENU_ZEBRA_MULTICHANNEL,      MENUITEM_BOOL,                            &conf.zebra_multichannel, 0 ),
@@ -2226,7 +2276,7 @@ static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
     MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),
     MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
-    MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,  	    	    MENUITEM_SUBMENU,   &user_submenu, 0 ),
+    MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,                  MENUITEM_SUBMENU,   &user_submenu, 0 ),
     {0}
 };
 
@@ -2365,7 +2415,7 @@ static void gui_draw_splash()
         int mx = 0;
         int my = 0;
         int offset_x = (camera_screen.width-LOGO_WIDTH)>>1;
-#ifdef THUMB_FW
+#ifdef CAM_DRAW_YUV
         int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 66 ;
 #else
         int offset_y = ((camera_screen.height-LOGO_HEIGHT)>>1) - 42 ;
@@ -2701,6 +2751,15 @@ void gui_chdk_draw(int force_redraw)
         clear_for_title = 0;
     }
 
+    if (conf.raw_ev_histo_enable & 1)
+    {
+        librawevhisto->draw(force_redraw);
+    }
+    else
+    {
+        librawevhisto->erase();
+    }
+
     console_draw(force_redraw);
 }
 
@@ -2977,6 +3036,16 @@ void gui_redraw()
 {
     int flag_gui_enforce_redraw = 0;
 
+#ifdef CAM_DRAW_RGBA
+    // If switched to play mode or opened canon menu then erase CHDK UI in case it does not need to be redrawn
+    static int last_canon_menu, last_mode_play;
+    int canon_menu = (canon_menu_active != (int)&canon_menu_active-4);
+    if ((canon_menu && !last_canon_menu) || (camera_info.state.mode_play && !last_mode_play))
+        gui_set_need_restore();
+    last_canon_menu = canon_menu;
+    last_mode_play = camera_info.state.mode_play;
+#endif
+
     if (!draw_test_guard() && (!camera_info.state.gui_mode_none || gui_splash))     // Attempt to detect screen erase in <Alt> mode, redraw if needed
     {
         draw_set_guard();
@@ -3084,12 +3153,12 @@ void gui_activate_alt_mode()
         // If user menu set to start automatically when <ALT> mode entered 
         // then enter user menu mode, unless a script was paused by exiting 
         // <ALT> mode when the script was running.
-	    gui_user_menu_flag = 0;
-	    if ((conf.user_menu_enable == 2) && !camera_info.state.state_kbd_script_run) {
-		    gui_menu_init(&user_submenu);
-		    gui_set_mode(&menuGuiHandler);
-		    gui_user_menu_flag = 1;
-	    }
+        gui_user_menu_flag = 0;
+        if ((conf.user_menu_enable == 2) && !camera_info.state.state_kbd_script_run) {
+            gui_menu_init(&user_submenu);
+            gui_set_mode(&menuGuiHandler);
+            gui_user_menu_flag = 1;
+        }
         break;
 
     case ALT_MODE_LEAVE:
@@ -3102,7 +3171,7 @@ void gui_activate_alt_mode()
         vid_turn_on_updates();
         gui_set_mode(&defaultGuiHandler);
 
-	    conf_update_prevent_shutdown();
+        conf_update_prevent_shutdown();
         break;
     }
 

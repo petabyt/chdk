@@ -28,7 +28,7 @@ static void console_init(int num_lines, int line_length, int x_pos, int y_pos)
 {
     console_max_lines = num_lines;
     console_line_length = line_length;
-    console_y = y_pos;
+    console_y = MAX_CONSOLE_LINES - (y_pos + num_lines) + 2;
     console_x = x_pos;
 
     console_num_lines = 0;
@@ -68,7 +68,7 @@ void console_clear()
     console_num_lines = 0;
     
     if (console_autoredraw)
-        console_redraw();
+        console_redraw(0);
 }
 
 void console_draw(int force_redraw)
@@ -80,11 +80,11 @@ void console_draw(int force_redraw)
     twoColors col = user_color(conf.osd_color);
 
     long t = get_tick_count();
-    if (t <= console_last_modified + (conf.console_timeout*1000))               // Redraw if changed
+    if ((force_redraw && camera_info.state.state_kbd_script_run) || (t <= console_last_modified + (conf.console_timeout*1000))) // Redraw if changed
     {
-        if ((console_displayed == 0) || force_redraw)
+        if ((console_num_lines > 0) && ((console_displayed == 0) || force_redraw))
         {
-            int y = (console_y + console_max_lines - 1) * FONT_HEIGHT;
+            int y = camera_screen.height - console_y * FONT_HEIGHT;
             int x = console_x * FONT_WIDTH + camera_screen.disp_left;
 
             int c, i;
@@ -94,9 +94,9 @@ void console_draw(int force_redraw)
                 strncpy(buf,console_buf[i],console_line_length);
                 buf[console_line_length] = 0;
                 draw_string_justified(x, y - c * FONT_HEIGHT, buf, col, 0, console_line_length * FONT_WIDTH, TEXT_LEFT|TEXT_FILL);
-
-                console_displayed = 1;
             }
+
+            console_displayed = 1;
         }
     }
     else if (console_displayed && !camera_info.state.state_kbd_script_run)      // Erase if drawn and script not running
@@ -169,10 +169,10 @@ void console_set_layout(int x1, int y1, int x2, int y2) //untere linke Ecke(x1,y
         console_num_lines = console_max_lines;
         
     console_x = x1;
-    console_y = MAX_CONSOLE_LINES - y2;
+    console_y = y1 + 2;
 
     if (console_autoredraw)
-        console_redraw();
+        console_redraw(0);
 }
 
 void console_set_autoredraw(int val)
@@ -180,9 +180,10 @@ void console_set_autoredraw(int val)
 	console_autoredraw = val;
 }
 
-void console_redraw()
+void console_redraw(int skip_restore)
 {
-    gui_set_need_restore();
+    if (!skip_restore)
+        gui_set_need_restore();
     console_displayed = 0;
     console_last_modified = get_tick_count();
 }

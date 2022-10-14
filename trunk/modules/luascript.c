@@ -357,6 +357,22 @@ int lua_run_restore()
     return 0;
 }
 
+static int scr_refresh_flag = 0;
+
+// run the "refresh_display" function in the script
+int lua_refresh_display()
+{
+    scr_refresh_flag = 1;
+    return 0;
+}
+
+static int luaCB_screen_needs_refresh( lua_State* L)
+{
+    lua_pushboolean(L,scr_refresh_flag);
+    scr_refresh_flag = 0;
+    return 1;
+}
+
 // get key ID of key name at arg, throw error if invalid
 static int lua_get_key_arg( lua_State * L, int narg )
 {
@@ -509,7 +525,7 @@ static int luaCB_set_console_autoredraw( lua_State* L )
 
 static int luaCB_console_redraw( __attribute__ ((unused))lua_State* L )
 {
-  console_redraw();
+  console_redraw(luaL_optnumber( L, 1, 0 ));
   return 0;
 }
 
@@ -3032,6 +3048,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(tv96_to_usec)
     FUNC(seconds_to_tv96)
 
+    FUNC(screen_needs_refresh)
+
     {NULL, NULL},
 };
 
@@ -3152,6 +3170,7 @@ libscriptapi_sym _liblua =
     lua_set_as_ret,
     lua_run_restore,
     script_shoot_hook_run,
+    lua_refresh_display,
 };
 
 ModuleInfo _module_info =

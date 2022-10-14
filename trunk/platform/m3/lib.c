@@ -2,24 +2,18 @@
 #include "lolevel.h"
 #include "live_view.h"
 
-void vid_bitmap_refresh() {
-    // extern int full_screen_refresh;
-    // extern void _ScreenUnlock();
-    // extern void _ScreenLock();
-    // extern void _displaybusyonscreen();
-    // extern void _undisplaybusyonscreen();
+extern int active_bitmap_buffer;
+extern char* bitmap_buffer[];
 
-    
-    // clears perfectly but blinks and is asynchronous
-    // _displaybusyonscreen();
-    // _undisplaybusyonscreen();
-    
-    // https://chdk.setepontos.com/index.php?topic=12788.msg133958#msg133958
+extern int displaytype;
+#define evf_out     (displaytype == 11)
+#define hdmi_out ((displaytype == 6) || (displaytype == 7))
+
+void vid_bitmap_refresh() {
     extern void _transfer_src_overlay(int);
-// works in most cases but can cause "ghosting" in auto mode when canon UI constantly updates
-//  _transfer_src_overlay(active_bitmap_buffer);
-    _transfer_src_overlay(0);
-    _transfer_src_overlay(1);
+    int n = active_bitmap_buffer;
+    _transfer_src_overlay(n);
+    _transfer_src_overlay(n^1);
 }
 
 void shutdown() {
@@ -110,6 +104,16 @@ void *vid_get_viewport_fb_d()    {
 extern void* viewport_buffers[];
 extern void *current_viewport_buffer;
 
+int vid_get_aspect_ratio(){
+	if (hdmi_out) {
+		return LV_ASPECT_16_9;
+	} else if (evf_out) {
+		return LV_ASPECT_4_3;
+	} else {
+		return LV_ASPECT_3_2;
+	}
+}
+
 void *vid_get_viewport_live_fb()
 {
 // current_viewport_buffer doesn't seem to be most recent
@@ -127,7 +131,14 @@ int vid_get_viewport_width() {
     extern int _GetVRAMHPixelsSize();
     if (camera_info.state.mode_play)
     {
-        return 720;
+	if (hdmi_out) {
+		return 1920;
+	} else if (evf_out) {
+		return 1024;
+	} else {
+		return 736;
+	}
+
     }
 // TODO: currently using actual width rather than half width used on pre d6
 // pixel format is uyvy (16bpp)
@@ -138,7 +149,13 @@ long vid_get_viewport_height() {
     extern int _GetVRAMVPixelsSize();
     if (camera_info.state.mode_play)
     {
-        return 480;
+	if (hdmi_out) {
+		return 1080;
+	} else if (evf_out) {
+		return 768;
+	} else {
+		return 480;
+	};
     }
 	return _GetVRAMVPixelsSize();
 }
@@ -148,8 +165,12 @@ int vid_get_viewport_yoffset() {
     return 0;
 }
 
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1, 4 = 4:5
-static long vp_xo[5] = { 40, 0, 0, 120, 168 };				// should all be even values for edge overlay
+static long vp_xo[3][5] = {
+// 0=4:3, 1=16:9, 2=3:2, 3=1:1, 4=4:5
+    {  0,     0,     0,   128,     0 }, // EVF 4:3
+    {240,     0,   150,   420,     0 }, // HDMI 16:9
+    { 40,     0,     0,   120,     0 }, // LCD 3x2
+};
 
 int vid_get_viewport_display_xoffset() {
     if (camera_info.state.mode_play)
@@ -159,13 +180,26 @@ int vid_get_viewport_display_xoffset() {
     // video, ignore still res propcase
     if(camera_info.state.mode_video || is_video_recording()) {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
-            return 40;// 4:3 video
+			if (hdmi_out) { // 4:3 video,
+				return 240;
+			} else if (evf_out) {
+				return 0;
+			} else {
+				return 40;
+			};			
         } else {
             return 0; // 16:9 video, no x offset
         }
     }
-    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    return vp_xo[vid_get_aspect_ratio()][shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
+
+static long vp_yo[3][5] = {
+// 0=4:3, 1=16:9, 2=3:2, 3=1:1, 4=4:5
+    {  0,     96,    42,     0,     0 }, // EVF 4:3
+    {  0,      0,     0,     0,     0 }, // HDMI 16:9
+    {  0,     36,     0,     0,     0 }, // LCD 3:2
+};
 
 int vid_get_viewport_display_yoffset() {
     if (camera_info.state.mode_play)
@@ -177,18 +211,17 @@ int vid_get_viewport_display_yoffset() {
         if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) {
             return 0; // 4:3 video, no Y offset
         } else {
-            return 36; // 16:9 video
+			if (hdmi_out) { // 16:9 video,
+				return 0;
+			} else if (evf_out) {
+				return 96;
+			} else {
+				return 36;
+			};            
         }
     }
-    if (shooting_get_prop(PROPCASE_ASPECT_RATIO) == 1)
-    {
-        return 36;
-    }
-    return 0;
+    return vp_yo[vid_get_aspect_ratio()][shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 }
-
-extern int active_bitmap_buffer;
-extern char* bitmap_buffer[];
 
 int vid_get_viewport_type() {
 //    if (camera_info.state.mode_play)
@@ -202,16 +235,41 @@ void *vid_get_bitmap_fb() {
     return bitmap_buffer[0];
 }
 
+
 // Functions for PTP Live View system
 int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() ; }
 int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() ; }
-int vid_get_viewport_buffer_width_proper()		{ return camera_screen.buffer_width ; } //(*(int*)(0x00053CBC) );
-int vid_get_viewport_fullscreen_width()			{ return camera_screen.width; }
-int vid_get_viewport_byte_width() 				{ return (camera_screen.buffer_width * 2); }
 
-int vid_get_viewport_fullscreen_height()        { return 480; }
-int vid_get_aspect_ratio()                      { return LV_ASPECT_3_2; }
+int vid_get_viewport_buffer_width_proper(){
+	if (hdmi_out) {
+		return 1920;
+	} else if (evf_out) {
+		return 1024;
+	} else {
+		return 736;
+	}
+}
 
+int vid_get_viewport_fullscreen_width(){
+	if (hdmi_out) {
+		return 1920;
+	} else if (evf_out) {
+		return 1024;
+	} else {
+		return 720;
+	}
+}
+int vid_get_viewport_byte_width() 		{ return (vid_get_viewport_buffer_width_proper() * 2); }
+
+int vid_get_viewport_fullscreen_height(){
+	if (hdmi_out) {
+		return 1080;
+	} else if (evf_out) {
+		return 768;
+	} else {
+		return 480;
+	}
+}
 
 
 // the opacity buffer defines opacity for the bitmap overlay's pixels
@@ -231,64 +289,178 @@ void *vid_get_bitmap_active_palette() {
     return (void*)0x8000; // just to return something valid, no palette needed on this cam
 }
 
-#ifdef CAM_SUPPORT_BITMAP_RES_CHANGE
-/*
- * needed because bitmap buffer resolutions change when an external display is used
- * an extra screen erase doesn't seem to be needed
- */
-void update_screen_dimensions() {
-    // see sub_FC177FCA in 101a, sub_FC1780F2 in 120f for the values
-    extern int displaytype;
-    static int old_displaytype = -1;
 
-    if (old_displaytype == displaytype) {
-        return;
+// Ximr layer
+typedef struct {
+    unsigned char   unk1[7];
+    unsigned char   scale;
+    unsigned int    unk2;
+    unsigned short  color_type;
+    unsigned short  visibility;
+    unsigned short  unk3;
+    unsigned short  src_y;
+    unsigned short  src_x;
+    unsigned short  src_h;
+    unsigned short  src_w;
+    unsigned short  dst_y;
+    unsigned short  dst_x;
+    unsigned short  enabled;
+    unsigned int    marv_sig;
+    unsigned int    bitmap;
+    unsigned int    opacity;
+    unsigned int    color;
+    unsigned int    width;
+    unsigned int    height;
+    unsigned int    unk4;
+} ximr_layer;
+
+// Ximr context
+typedef struct {
+    unsigned short  unk1;
+    unsigned short  width1;
+    unsigned short  height1;
+    unsigned short  unk2[17];
+    unsigned int    output_marv_sig;
+    unsigned int    output_buf;
+    unsigned int    output_opacitybuf;
+    unsigned int    output_color;
+    int             buffer_width;
+    int             buffer_height;
+    unsigned int    unk3[2];
+    ximr_layer      layers[8];
+    unsigned int    unk4[24];
+    unsigned char   denomx;
+    unsigned char   numerx;
+    unsigned char   denomy;
+    unsigned char   numery;
+    unsigned int    unk5;
+    short           width;
+    short           height;
+    unsigned int    unk6[27];
+} ximr_context;
+
+int display_needs_refresh = 0;
+
+#define FW_YUV_LAYER_SIZE   (960*270*2)
+extern unsigned int fw_yuv_layer_buf;
+
+// Max size required
+#define CB_W    480
+#define CB_H    270
+
+unsigned char* chdk_rgba = NULL;
+int chdk_rgba_init = 0;
+int bm_w = CB_W;
+int bm_h = CB_H;
+
+void vid_bitmap_erase()
+{
+    extern void _bzero(unsigned char *s, int n);
+    _bzero(chdk_rgba, CB_W * bm_h * 4);
+}
+
+int last_displaytype;
+
+/*
+ * Called when Canon is updating UI, via dry_memcpy patch.
+ * Sets flag for CHDK to update it's UI.
+ * Also needed because bitmap buffer resolution changes when using HDMI
+ * LCD = 720 x 480
+ * HDMI = 960 x 540
+ * TODO: This does not reset the OSD positions of things on screen
+ *       If user has customised OSD layout how should this be handled?
+ */
+void update_ui(ximr_context* ximr)
+{
+    // Init RGBA buffer
+    if (chdk_rgba_init == 0)
+    {
+        chdk_rgba = (unsigned char*)(fw_yuv_layer_buf + FW_YUV_LAYER_SIZE);
+        chdk_rgba_init = 1;
+        vid_bitmap_erase();
+        // Force update
+        last_displaytype = -1;
     }
-    old_displaytype = displaytype;
-    
-    switch(displaytype) {
-        case 0:
-        case 3:
-        case 4:
-        case 5:
-            // ?
-            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 640;
-            camera_screen.height = camera_screen.buffer_height = 480;
-            camera_screen.size = camera_screen.buffer_size = 640*480;
-            break;
-        case 1:
-        case 2:
-        case 8:
-        case 9:
-            // tv-out (not implemented in hw)
-            camera_screen.physical_width = camera_screen.width = 720;
-            camera_screen.buffer_width = 736;
-            camera_screen.height = camera_screen.buffer_height = 480;
-            camera_screen.size = 720*480;
-            camera_screen.buffer_size = 736*480;
-            break;
-        case 6:
-        case 7:
-            // hdmi
-            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 960;
-            camera_screen.height = camera_screen.buffer_height = 540;
-            camera_screen.size = camera_screen.buffer_size = 960*540;
-            break;
-        case 10:
-            // lcd
-            camera_screen.physical_width = camera_screen.width = 720;
-            camera_screen.buffer_width = 736;
-            camera_screen.height = camera_screen.buffer_height = 480;
-            camera_screen.size = 720*480;
-            camera_screen.buffer_size = 736*480;
-            break;
-        case 11:
-            // evf
-            camera_screen.width = camera_screen.physical_width = camera_screen.buffer_width = 1024;
-            camera_screen.height = camera_screen.buffer_height = 768;
-            camera_screen.size = camera_screen.buffer_size = 1024*768;
-            break;
+
+    // Make sure we are updating the correct layer - skip redundant updates for HDMI out
+    if (ximr->output_buf != fw_yuv_layer_buf)
+    {
+        // Update screen dimensions
+        if (last_displaytype != displaytype)
+        {
+            last_displaytype = displaytype;
+
+            if (hdmi_out) {
+                bm_w = 480;
+                bm_h = 270;
+            } else if (evf_out) {
+                bm_w = 360;
+                bm_h = 270;
+            } else {
+                bm_w = 360;
+                bm_h = 240;
+            }
+
+            camera_screen.width = bm_w;
+            camera_screen.height = bm_h;
+            camera_screen.buffer_width = CB_W;
+            camera_screen.buffer_height = bm_h;
+
+            // Reset OSD offset and width
+            camera_screen.disp_right = camera_screen.width - 1;
+            camera_screen.disp_width = camera_screen.width;
+
+            // Update other values
+            camera_screen.physical_width = camera_screen.width;
+            camera_screen.size = camera_screen.width * camera_screen.height;
+            camera_screen.buffer_size = camera_screen.buffer_width * camera_screen.buffer_height;
+
+            // Values for chdkptp live view
+            camera_screen.yuvbm_width = ximr->width;
+            camera_screen.yuvbm_height = ximr->height;
+            camera_screen.yuvbm_buffer_width = ximr->buffer_width;
+            camera_screen.yuvbm_buffer_size = camera_screen.yuvbm_buffer_width * camera_screen.yuvbm_height;
+
+            // Clear buffer if size changed
+            extern void gui_set_need_redraw();
+            gui_set_need_redraw();
+            vid_bitmap_erase();
+
+            // Tell CHDK UI that display needs update
+            display_needs_refresh = 1;
+        }
+
+        if (ximr->layers[0].bitmap == fw_yuv_layer_buf) {
+            // HDMI out sets width to 1024 - reset to 960 so our RGBA buffer is not overwritten
+            ximr->layers[0].src_h = 270;
+            ximr->layers[0].height = 270;
+            ximr->layers[0].scale = 4;      // x2 scaling vertically for the canon yuv layer
+        }
+
+        if (chdk_rgba != 0)
+        {
+            // Copy canon layer
+            memcpy(&ximr->layers[3], &ximr->layers[1], sizeof(ximr_layer));
+
+            // Remove offset
+            ximr->layers[3].scale = 6;      // x2 scaling in both directions
+            ximr->layers[3].src_w = bm_w;
+            ximr->layers[3].src_h = bm_h;
+            ximr->layers[3].dst_x = 0;
+            ximr->layers[3].dst_y = 0;
+
+            // Set our buffer
+            ximr->layers[3].bitmap = (unsigned int)chdk_rgba;
+            ximr->layers[3].width = CB_W;
+            ximr->layers[3].height = bm_h;
+
+            // Fix for video recording - https://chdk.setepontos.com/index.php?topic=12788.msg146378#msg146378
+            ximr->unk2[0] = 0x500;
+        }
+    }
+    else
+    {
+        ximr->height = ximr->buffer_height = 270;
+        ximr->denomy = 0x6c;
     }
 }
-#endif
-

@@ -1738,7 +1738,7 @@ static void set_console_autoredraw(void)
 static void console_redraw_statement(void)
 {
   accept(TOKENIZER_CONSOLE_REDRAW);
-  console_redraw();
+  console_redraw(0);
     accept_cr();
 }
 

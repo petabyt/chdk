@@ -308,8 +308,14 @@ static void do_callback(const CMenuItem *mi)
 // Update an 'int' value, direction = 1 for increment, -1 for decrement
 static void update_int_value(const CMenuItem *mi, int direction)
 {
+    int inc = int_incr * direction;
+    if (mi->type & MENUITEM_F_EVEN)
+    {
+        *(mi->value) &= 0xFFFFFFFE;
+        inc = ((int_incr + 1) & 0xFFFFFFFE) * direction;
+    }
     // do update
-    *(mi->value) += int_incr * direction;
+    *(mi->value) += inc;
 
     // Limit new value to defined bounds
     if ((mi->type & MENUITEM_F_UNSIGNED) || (mi->type & MENUITEM_SD_INT))

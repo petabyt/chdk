@@ -218,9 +218,24 @@ rebuild-stubs_auto: platformcheck
 	$(MAKE) -C $(camfw) stubs_auto.S ;\
 
 run-code-gen: platformcheck
-	echo code_gen $(PLATFORM) $(PLATFORMSUB)
-	$(MAKE) -C tools code_gen$(EXE)
-	$(MAKE) -C $(camfw) run-code-gen
+	if [ -s "$(TARGET_PRIMARY)" ] ; then \
+		if [ "$(THUMB_FW)" = "1" ] ; then \
+			if [ "$(OPT_CAPSTONE_TOOLS)" = "1" ] ; then \
+				echo code_gen2 $(PLATFORM) $(PLATFORMSUB) ;\
+				$(MAKE) -C tools capdis$(EXE) ;\
+				$(MAKE) -C tools code_gen2$(EXE) ;\
+				$(MAKE) -C $(camfw) run-code-gen ;\
+			else \
+				echo "OPT_CAPSTONE_TOOLS not set, skipping code-gen $(PLATFORM)-$(PLATFORMSUB)"; \
+			fi ;\
+		else \
+			echo code_gen $(PLATFORM) $(PLATFORMSUB) ;\
+			$(MAKE) -C tools code_gen$(EXE) ;\
+			$(MAKE) -C $(camfw) run-code-gen ;\
+		fi ;\
+	else \
+		echo "!!! missing primary for $(PLATFORM)-$(PLATFORMSUB)"; \
+	fi
 
 # firmware_crc_data.h is built for actual source port, not copied subs
 rebuild-firmware-crc: platformcheck
@@ -247,6 +262,8 @@ allmodules:
 	$(MAKE) -C modules clean all THUMB_FW=
 	$(MAKE) -C modules clean all THUMB_FW=1
 	$(MAKE) -C modules clean all THUMB_FW=1 ARMV7A=1
+	$(MAKE) -C modules clean all THUMB_FW=1 CAM_DRAW_YUV=1
+	$(MAKE) -C modules clean all THUMB_FW=1 ARMV7A=1 CAM_DRAW_YUV=1
 	$(MAKE) -C CHDK clean all
 
 # define targets to batch build all cameras & firmware versions
@@ -317,6 +334,8 @@ batch-clean:
 	$(MAKE) -C modules clean THUMB_FW=
 	$(MAKE) -C modules clean THUMB_FW=1
 	$(MAKE) -C modules clean THUMB_FW=1 ARMV7A=1
+	$(MAKE) -C modules clean THUMB_FW=1 CAM_DRAW_YUV=1
+	$(MAKE) -C modules clean THUMB_FW=1 ARMV7A=1 CAM_DRAW_YUV=1
 	$(MAKE) -C CHDK clean
 	SKIP_MODULES=1 SKIP_CHDK=1 SKIP_TOOLS=1 sh tools/auto_build.sh $(MAKE) clean $(CAMERA_LIST) -noskip
 

@@ -162,6 +162,7 @@ void __attribute__((naked,noinline)) boot() {
 "    it      lo\n"
 "    strlo   r2, [r3], #4\n"
 "    blo     loc_fc020070\n"
+"    blx     patch_mzrm_sendmsg\n"
 "    b.w     sub_fc05c938_my\n" // ->
         "patch_CreateTask:\n"
         "ldr.w   pc, [pc,#0]\n"             // Do jump to absolute address CreateTask_my
@@ -169,6 +170,52 @@ void __attribute__((naked,noinline)) boot() {
 
 );
 }
+
+/*************************************************************/
+/*
+    Custom function called in mzrm_sendmsg via logging function pointer (normally disabled)
+    Checks if called from function that is updating the Canon UI.
+    Updates CHDK bitmap settings and sets flag to update CHDK UI.
+*/
+void __attribute__((naked,noinline))
+debug_logging_my(char* fmt, ...)
+{
+    (void)fmt;  // unused parameter
+    asm volatile (
+            //LR = Return address
+            "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
+            "    cmp     r0, lr\n"
+            "    beq     chk_msg_type\n"
+            "exit_debug_logging_my:\n"
+            "    bx      lr\n"
+
+            "chk_msg_type:\n"
+            // mzrm_sendmsg 'msg' value (2nd parameter, saved in r11)
+            "    ldr     r1, [r11]\n"                   // message type
+            "    cmp     r1, 0x25\n"                    // message type XimrExe
+            "    beq     do_ui_update\n"
+            "    cmp     r1, 0x26\n"                    // message type XimrExeGain
+            "    bne     exit_debug_logging_my\n"
+            "do_ui_update:\n"
+            "    ldr     r0, [r11,0x0c]\n"              // address of Ximr context in 'msg'
+            "    b       update_ui\n"
+    );
+}
+
+/*
+    Install and enable custom logging function for mzrm_sendmsg.
+*/
+void
+patch_mzrm_sendmsg ()
+{
+    extern int debug_logging_flag;
+    extern void (*debug_logging_ptr)(char* fmt, ...);
+
+    // Each bit in debug_logging_flag enables logging in different areas of the firmware code - only set the bit required for mzrm logging.
+    debug_logging_flag = 0x200;
+    debug_logging_ptr = debug_logging_my;
+}
+
 
 /*************************************************************/
 void __attribute__((naked,noinline)) CreateTask_low_my() {

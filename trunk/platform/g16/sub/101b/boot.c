@@ -172,6 +172,9 @@ void __attribute__((naked,noinline)) boot() {
 "    it      lo\n"
 "    strlo   r2, [r3], #4\n"
 "    blo     loc_fc020056\n"
+
+"    blx     patch_mzrm_sendmsg\n"
+
 "    b.w     sub_fc05e00c_my\n"   // --->>
 
 "patch_CreateTask:\n"
@@ -179,6 +182,51 @@ void __attribute__((naked,noinline)) boot() {
 "    .long   CreateTask_my + 1\n"       // has to be a thumb address
 );
 }
+
+/*************************************************************/
+/*
+    Custom function called in mzrm_sendmsg via logging function pointer (normally disabled)
+    Checks if called from function that is updating the Canon UI.
+    Updates CHDK bitmap settings and sets flag to update CHDK UI.
+*/
+void __attribute__((naked,noinline))
+debug_logging_my(char* fmt, ...)
+{
+    (void)fmt;  // unused parameter
+    asm volatile (
+            //LR = Return address
+            "    ldr     r0, =mzrm_sendmsg_ret_adr\n"   // Is return address in mzrm_sendmsg function?
+            "    cmp     r0, lr\n"
+            "    beq     chk_msg_type\n"
+            "exit_debug_logging_my:\n"
+            "    bx      lr\n"
+
+            "chk_msg_type:\n"
+            // mzrm_sendmsg 'msg' value (2nd parameter, saved in r11)
+            "    ldr     r1, [r11]\n"                   // message type
+            "    cmp     r1, 0x1d\n"                    // message type XimrExe
+            "    bne     exit_debug_logging_my\n"
+            "do_ui_update:\n"
+            "    ldr     r0, [r11,0x0c]\n"              // address of Ximr context in 'msg'
+            "    b       update_ui\n"
+    );
+}
+
+/*
+    Install and enable custom logging function for mzrm_sendmsg.
+*/
+void
+patch_mzrm_sendmsg ()
+{
+    extern int debug_logging_flag;
+    extern void (*debug_logging_ptr)(char* fmt, ...);
+
+    // Each bit in debug_logging_flag enables logging in different areas of the firmware code - only set the bit required for mzrm logging.
+    debug_logging_flag = 0x200;
+    debug_logging_ptr = debug_logging_my;
+}
+
+/*************************************************************/
 
 void __attribute__((naked,noinline)) CreateTask_my() {
     asm volatile (
@@ -727,4 +775,166 @@ void __attribute__((naked,noinline)) sub_fc07147a_my() {
     );
 }
 
+/*************************************************************/
+// Custom version of transfer_src_overlay to bypass Canon ASSERT
 
+void __attribute__((naked,noinline)) transfer_src_overlay_my() {
+    asm volatile(
+"    push.w  {r4, r5, r6, r7, r8, lr}\n"
+"    sub     sp, #0x38\n"
+"    mov     r8, r0\n"
+"    movs    r1, #0\n"
+"    add     r0, sp, #8\n"
+"    mov     r2, r1\n"
+"    mov     r3, r1\n"
+"    mov     r4, r1\n"
+"    stm     r0!, {r1, r2, r3, r4}\n"
+"    mov     r0, r1\n"
+"    bl      sub_fc15a060\n"
+"    str     r0, [sp, #0x30]\n"
+"    movs    r0, #1\n"
+"    bl      sub_fc15a060\n"
+"    str     r0, [sp, #0x34]\n"
+"    bl      sub_fc17230e\n"
+"    movs    r4, #0\n"
+"    add     r7, sp, #0x30\n"
+"    mov     r6, r4\n"
+"    add     r5, sp, #0x18\n"
+"loc_fc15a0c2:\n"
+"    ldr.w   r0, [r7, r4, lsl #2]\n"
+"    lsls    r1, r0, #0x1f\n"
+"    bne     loc_fc15a0ce\n"
+"    ldr     r1, [r0, #0x2c]\n"
+"    cbnz    r1, loc_fc15a0d4\n"
+"loc_fc15a0ce:\n"
+"    str.w   r6, [r5, r4, lsl #2]\n"
+"    b       loc_fc15a102\n"
+"loc_fc15a0d4:\n"
+"    add     r1, sp, #0x20\n"
+"    add.w   r1, r1, r4, lsl #3\n"
+"    str.w   r1, [r5, r4, lsl #2]\n"
+"    ldr     r0, [r0]\n"
+"    str     r0, [r1]\n"
+"    ldr.w   r0, [r7, r4, lsl #2]\n"
+"    ldr     r0, [r0, #0x30]\n"
+"    cmp     r0, #1\n"
+"    bne     loc_fc15a0fc\n"
+"    bl      sub_fc30b938\n"
+"    cbnz    r0, loc_fc15a0fc\n"
+"    ldr.w   r1, [r5, r4, lsl #2]\n"
+"    movs    r0, #1\n"
+"    str     r0, [r1, #4]\n"
+"    b       loc_fc15a102\n"
+"loc_fc15a0fc:\n"
+"    ldr.w   r0, [r5, r4, lsl #2]\n"
+"    str     r6, [r0, #4]\n"
+"loc_fc15a102:\n"
+"    adds    r4, r4, #1\n"
+"    cmp     r4, #2\n"
+"    blt     loc_fc15a0c2\n"
+"    ldr     r0, [sp, #0x18]\n"
+"    cbnz    r0, loc_fc15a118\n"
+"    movs    r0, #0\n"
+"    movw    r2, #0x6f2\n"
+"    ldr     r1, =0xfc15a2d4\n" //  *"VramTransferManager.c"
+"    blx     sub_fc2a16b0\n"
+"loc_fc15a118:\n"
+"    ldr     r0, =0x0000c94c\n"
+"    add.w   r1, r0, #0x38\n"
+"    ldr     r3, [r0, #8]\n"
+"    movs    r0, #0\n"
+"    ldr.w   r2, [r1, r8, lsl #2]\n"
+"    strd    r2, r3, [sp]\n"
+"    ldrd    r1, r2, [sp, #0x18]\n"
+"    add     r3, sp, #8\n"
+"    bl      sub_fc1b4c20_my\n"     // + override
+"    add     sp, #0x38\n"
+"    pop.w   {r4, r5, r6, r7, r8, pc}\n"
+    );
+}
+
+void __attribute__((naked,noinline)) sub_fc1b4c20_my() {
+    asm volatile(
+"    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, lr}\n"
+"    sub     sp, #0x94\n"
+"    ldr     r0, [sp, #0x98]\n"
+"    ldr     r1, [r0, #4]\n"
+"    ldr     r0, [sp, #0x9c]\n"
+"    ldr     r0, [r0, #4]\n"
+"    orrs.w  r2, r1, r0\n"
+"    bne     loc_fc1b4c38\n"
+"    movs    r4, #2\n"
+"    b       loc_fc1b4c50\n"
+"loc_fc1b4c38:\n"
+"    cmp     r1, #1\n"
+"    bne     loc_fc1b4c4e\n"
+"    cbnz    r0, loc_fc1b4c42\n"
+"    movs    r4, #3\n"
+"    b       loc_fc1b4c50\n"
+"loc_fc1b4c42:\n"
+"    cmp     r0, #1\n"
+"    bne     loc_fc1b4c4a\n"
+"    movs    r4, #4\n"
+"    b       loc_fc1b4c50\n"
+"loc_fc1b4c4a:\n"
+"    movs    r4, #1\n"
+"    b       loc_fc1b4c50\n"
+"loc_fc1b4c4e:\n"
+"    movs    r4, #0\n"
+"loc_fc1b4c50:\n"
+"    bl      sub_fc146272\n"
+"    bl      sub_fc14693a\n"
+"    movw    r3, #0x21c\n"
+"    movw    r2, #0x3c0\n"
+"    ldr     r1, =0x41815800\n"
+"    strd    r2, r3, [sp]\n"
+"    ldr     r3, =0x01000102\n"
+"    ldr     r2, =0x41991300\n"
+"    str     r0, [sp, #0x90]\n"
+"    add     r0, sp, #0x3c\n"
+"    bl      sub_fc336e52\n"
+"    cmp     r4, #1\n"
+"    beq     loc_fc1b4c7e\n"
+"    cmp     r4, #3\n"
+"    beq     loc_fc1b4c7e\n"
+"    cmp     r4, #4\n"
+"    bne     sub_fc1b4d7a\n"    // --> FW
+"loc_fc1b4c7e:\n"
+"    ldr     r0, [sp, #0x90]\n"
+"    cmp     r0, #0x10\n"
+"    bhs     loc_fc1b4d14\n"
+"    tbb     [pc, r0]\n" // (jumptable r0 16 elements)
+"branchtable_fc1b4c88:\n"
+"    .byte((loc_fc1b4d14 - branchtable_fc1b4c88) / 2)\n" // (case 0)
+"    .byte((loc_fc1b4c98 - branchtable_fc1b4c88) / 2)\n" // (case 1)
+"    .byte((loc_fc1b4c98 - branchtable_fc1b4c88) / 2)\n" // (case 2)
+"    .byte((loc_fc1b4d1e - branchtable_fc1b4c88) / 2)\n" // (case 3)
+"    .byte((loc_fc1b4d14 - branchtable_fc1b4c88) / 2)\n" // (case 4)
+"    .byte((loc_fc1b4d1e - branchtable_fc1b4c88) / 2)\n" // (case 5)
+"    .byte((loc_fc1b4cc4 - branchtable_fc1b4c88) / 2)\n" // (case 6)
+"    .byte((loc_fc1b4cc4 - branchtable_fc1b4c88) / 2)\n" // (case 7)
+"    .byte((loc_fc1b4c98 - branchtable_fc1b4c88) / 2)\n" // (case 8)
+"    .byte((loc_fc1b4c98 - branchtable_fc1b4c88) / 2)\n" // (case 9)
+"    .byte((loc_fc1b4d14 - branchtable_fc1b4c88) / 2)\n" // (case 10)
+"    .byte((loc_fc1b4d14 - branchtable_fc1b4c88) / 2)\n" // (case 11)
+"    .byte((loc_fc1b4d14 - branchtable_fc1b4c88) / 2)\n" // (case 12)
+"    .byte((loc_fc1b4d14 - branchtable_fc1b4c88) / 2)\n" // (case 13)
+"    .byte((loc_fc1b4cc4 - branchtable_fc1b4c88) / 2)\n" // (case 14)
+"    .byte((loc_fc1b4cc4 - branchtable_fc1b4c88) / 2)\n" // (case 15)
+".align 1\n"
+"loc_fc1b4c98:\n"
+"    b       sub_fc1b4c98\n"    // --> FW
+"loc_fc1b4cc4:\n"
+"    b       sub_fc1b4cc4\n"    // --> FW
+"loc_fc1b4d14:\n"
+// Remove Canon ASSERT and just return
+// "    movs    r2, #0xda\n"
+// "    movs    r0, #0\n"
+// "    ldr     r1, =0xfc1b4ed0\n" //  *"PhysicalVram.c"
+// "    blx     sub_fc2a16b0\n"
+"    add     sp, #0xa4\n"
+"    pop.w   { r4, r5, r6, r7, r8, r9, r10, r11, pc }\n" //  return
+"loc_fc1b4d1e:\n"
+"    b       sub_fc1b4d1e\n"    // --> FW
+    );
+}

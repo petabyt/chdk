@@ -195,6 +195,7 @@ static ConfInfo osd_conf_info[] = {
     CONF_INFOP( 34, conf.temp_pos,                              CONF_OSD_POS,   286,16),
     CONF_INFOP( 35, conf.ev_video_pos,                          CONF_OSD_POS,   18,80),
     CONF_INFOP( 36, conf.usb_info_pos,                          CONF_OSD_POS,   95,0),
+    CONF_INFOP( 37, conf.raw_ev_histo_pos,                      CONF_OSD_POS,   10,130),
 
     // Keep these together
     CONF_INFOC( 50, conf.histo_color,                           CONF_DEF_VALUE, IDX_COLOR_GREY_DK,IDX_COLOR_WHITE,1,1),
@@ -535,6 +536,17 @@ static ConfInfo conf_info[] = {
 
     CONF_INFO(252, conf.check_firmware_crc,                     CONF_DEF_VALUE, i:1),
 
+    CONF_INFO(260, conf.raw_ev_histo_enable,                    CONF_DEF_VALUE, i:0),
+    CONF_INFO(261, conf.raw_ev_histo_under_threshold,           CONF_DEF_VALUE, i:1),
+    CONF_INFO(262, conf.raw_ev_histo_over_threshold,            CONF_DEF_VALUE, i:1),
+    CONF_INFO(263, conf.raw_ev_histo_width,                     CONF_DEF_VALUE, i:80),
+    CONF_INFO(264, conf.raw_ev_histo_height,                    CONF_DEF_VALUE, i:80),
+    CONF_INFO(265, conf.raw_ev_histo_xstep,                     CONF_DEF_VALUE, i:16),
+    CONF_INFO(266, conf.raw_ev_histo_ystep,                     CONF_DEF_VALUE, i:16),
+    CONF_INFO(267, conf.raw_ev_histo_save_log,                  CONF_DEF_VALUE, i:0),
+    CONF_INFO(268, conf.raw_ev_histo_ettr_pct,                  CONF_DEF_VALUE, i:1),  // .1% (Decimal * 10)
+    CONF_INFO(269, conf.raw_ev_histo_save_for_image,            CONF_DEF_VALUE, i:0),
+
     CONF_INFO(999, conf.script_allow_lua_native_calls,          CONF_DEF_VALUE, i:0),
 
     {0}
@@ -580,6 +592,9 @@ void conf_info_func(unsigned short id)
         break;
     case 221: 
         conf_update_prevent_shutdown(); 
+        break;
+    case 260:
+        librawevhisto->load(conf.raw_ev_histo_enable);
         break;
     }
 }

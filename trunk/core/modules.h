@@ -73,4 +73,8 @@
 //--------------------------
 #include "conf_migrate.h"
 
+// MODULE "RAW EV Histogram"
+//--------------------------
+#include "raw_ev_histo.h"
+
 #endif
