@@ -579,8 +579,6 @@ static int gui_osd_zebra_init(int show)
 }
 
 //-------------------------------------------------------------------
-// neither OSD nor histogram can be drawn over zebra
-// draw_set_draw_proc() is not respected by the current D6 drawing code anyway
 static void gui_osd_draw_zebra_osd() {
     switch (conf.zebra_draw_osd) {
         case ZEBRA_DRAW_NONE:
