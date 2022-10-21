@@ -2,9 +2,19 @@ Detailed change history is available from subversion https://www.assembla.com/co
 
 =1.7=
 Unstable development branch. Significant changes should be recorded below.
+Development planning thread https://chdk.setepontos.com/index.php?topic=14633.0
+
+Significant changes in 1.7
+* New XIMR based drawing system for CHDK UI in Digic 6 & 7, resolves flickering issues ([https://chdk.setepontos.com/index.php?topic=12788.msg146269#msg146269 development thread])
+* Functionality for Lua scripts to detect if screen has been erased and needs redrawing
+* RAW EV Histogram ([https://chdk.setepontos.com/index.php?topic=14544.msg148257#msg148257 development thread])
+
+New script functions in 1.7:
+
+ screen_needs_refresh
 
 =1.6=
-Current stable, released Oct 12, 2020 as 1.6.1
+Current stable branch, released Oct 12, 2020 as 1.6.1
 
 Development planning thread https://chdk.setepontos.com/index.php?topic=14150.0
 
