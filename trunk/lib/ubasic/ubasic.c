@@ -2596,9 +2596,12 @@ statement(void)
       on_off_statement(token, TurnOnDisplay, TurnOffDisplay);
       break;
   case TOKENIZER_SET_DRAW_TITLE_LINE:
+      {
       accept(token);
-      camera_info.state.osd_title_line=expr()?1:0;
+      int n = expr();
+      camera_info.state.osd_title_line = (n == 2) ? n : n ? 1 : 0;
       accept_cr();
+      }
       break;
       
       // >> mx3 . motion detector

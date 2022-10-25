@@ -209,6 +209,9 @@ typedef struct
         int     state_shooting_progress;    // Holds current state when still image being processed
         int     state_kbd_script_run;       // Script execution state
         int     osd_title_line;             // Display state of CHDK OSD title line
+                                            //  0 - don't display Script name or <ALT> text
+                                            //  1 - display Script name and <ALT> text (including script exit key name)
+                                            //  2 - don't display Script name, display <ALT> text (including script exit key name)
 
         int     gui_mode;                   // Current GUI mode (from gui_mode->mode)
         int     gui_mode_none;              // Current GUI mode == GUI_MODE_NONE

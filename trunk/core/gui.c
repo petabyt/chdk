@@ -2722,8 +2722,6 @@ static void gui_draw_alt_helper()
 
 void gui_chdk_draw(int force_redraw)
 {
-    static int clear_for_title = 1;
-
 #ifdef CAM_DISP_ALT_TEXT
     gui_draw_alt_helper();
 #else
@@ -2737,18 +2735,13 @@ void gui_chdk_draw(int force_redraw)
         script_get_alt_text(buf);
         w = draw_string_justified(camera_screen.disp_left, camera_screen.height-FONT_HEIGHT,
                                   buf, MAKE_COLOR(COLOR_RED, COLOR_WHITE), 0, w, TEXT_CENTER) - camera_screen.disp_left;
-#endif     
+#endif
 
-        if (camera_info.state.mode_rec || camera_info.state.mode_play)
+        if ((camera_info.state.mode_rec || camera_info.state.mode_play) && (camera_info.state.osd_title_line & 1))
         {
             // Draw script title (up to <ALT> text, if shown)
             draw_string_clipped(camera_screen.disp_left, camera_screen.height-FONT_HEIGHT, script_title, user_color(conf.menu_color), w);
         }
-        clear_for_title = 1;   
-    }
-    else if (clear_for_title)
-    {
-        clear_for_title = 0;
     }
 
     if (conf.raw_ev_histo_enable & 1)

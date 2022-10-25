@@ -1941,14 +1941,17 @@ static int luaCB_set_lcd_display( lua_State* L )
   return 0;
 }
 
-// Enable/disable CHDK <ALT> & scriptname OSD items (input argument 1/0)
+// Enable/disable CHDK <ALT> & scriptname OSD items (input argument 0, 1 or 2)
 static int luaCB_set_draw_title_line( lua_State* L )
 {
-  camera_info.state.osd_title_line= on_off_value_from_lua_arg(L,1);
+  unsigned n = on_off_value_from_lua_arg(L,1);
+  if (camera_info.state.osd_title_line != n)
+    gui_set_need_restore();
+  camera_info.state.osd_title_line = n;
   return 0;
 }
 
-// get CHDK <ALT> & scriptname OSD display state (input argument 1/0)
+// get CHDK <ALT> & scriptname OSD display state
 static int luaCB_get_draw_title_line( lua_State* L )
 {
    lua_pushboolean( L, camera_info.state.osd_title_line  );
