@@ -1945,7 +1945,7 @@ static int luaCB_set_lcd_display( lua_State* L )
 static int luaCB_set_draw_title_line( lua_State* L )
 {
   unsigned n = on_off_value_from_lua_arg(L,1);
-  if (camera_info.state.osd_title_line != n)
+  if (camera_info.state.osd_title_line != (int)n)
     gui_set_need_restore();
   camera_info.state.osd_title_line = n;
   return 0;
