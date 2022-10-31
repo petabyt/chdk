@@ -36,10 +36,6 @@
 #endif
 
 //-------------------------------------------------------------------
-// forward declarations
-extern void schedule_memdump();
-
-//-------------------------------------------------------------------
 
 // for memory info, duplicated from lowlevel
 extern const char _start,_end;
@@ -54,8 +50,6 @@ extern const char _start,_end;
 //-------------------------------------------------------------------
 
 int script_run_on_alt_flag ;
-
-int gui_user_menu_flag;
 
 static char buf[256];
 
@@ -185,7 +179,7 @@ static CMenuItem remote_submenu_items[] = {
     MENU_ITEM   (0x5f,LANG_MENU_REMOTE_INPUT_CHANNEL,       MENUITEM_ENUM,                gui_remote_input_types_enum, 0),
 #endif
     MENU_ITEM   (0x5f,LANG_MENU_REMOTE_DEVICE,              MENUITEM_ENUM,                gui_USB_switch_types_enum, 0),
-    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_LOGIC,  	            MENUITEM_ENUM,                gui_USB_control_modes_enum, 0),
+    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_LOGIC,               MENUITEM_ENUM,                gui_USB_control_modes_enum, 0),
     MENU_ITEM   (0x0, LANG_MENU_REMOTE_OPTIONS,             MENUITEM_SEPARATOR,           0, 0 ), 
     MENU_ITEM   (0x5c,LANG_MENU_SYNCH_ENABLE,               MENUITEM_BOOL,                &conf.synch_enable, 0),
  #ifndef CAM_REMOTE_USES_PRECISION_SYNC
@@ -203,13 +197,13 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, remote_submenu
 static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/2", "1/4", "1/6", "1/8", "1/15", "1/30", "1/60", "1/125", "1/250", "1/500", "1/1000", "1/2000" };
 
 static const char* gui_autoiso2_shutter_modes[] = { "Off", "1", "1/2","1/4", "1/6", "1/8", "1/12", "1/15", "1/20", "1/25", "1/30",
-                 	                                "1/40", "1/50", "1/60", "1/80", "1/100", "1/125", "1/160", "1/250", "1/500", "1/1000", "1/2000" };
+                                                    "1/40", "1/50", "1/60", "1/80", "1/100", "1/125", "1/160", "1/250", "1/500", "1/1000", "1/2000" };
 
 static const char* gui_overexp_ev_modes[] = { "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
 
 static CMenuItem autoiso_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_AUTOISO_ENABLED,            MENUITEM_BOOL,                                      &conf.autoiso_enable,           0 ),
-    MENU_ENUM2	(0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER,        &conf.autoiso_shutter_enum,                         gui_autoiso_shutter_modes ),
+    MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER,        &conf.autoiso_shutter_enum,                         gui_autoiso_shutter_modes ),
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_USER_FACTOR,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_user_factor,      MENU_MINMAX(1, 8) ),
 
 #if CAM_HAS_IS
@@ -217,18 +211,18 @@ static CMenuItem autoiso_submenu_items[] = {
 #endif
 
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MIN_ISO,            MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_min_iso,          MENU_MINMAX(10, 200) ),
-    MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto,     MENU_MINMAX(10, 3200) ),
+    MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_AUTO,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_auto,     MENU_MINMAX(10, 3200) ),
 
 #if CAM_HAS_HI_ISO_AUTO_MODE
     MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO_HI,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso_max_iso_hi,       MENU_MINMAX(200, 3200) ),
 #endif
 
     MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_MIN_SHUTTER2,       &conf.autoiso2_shutter_enum,                        gui_autoiso2_shutter_modes ), 
-    MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_MAX_ISO2,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_max_iso_auto,	MENU_MINMAX(100, 3200) ),
+    MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_MAX_ISO2,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_max_iso_auto,    MENU_MINMAX(100, 3200) ),
 
-    MENU_ENUM2	(0x5f,LANG_MENU_AUTOISO_OVEREXP_EV,        &conf.overexp_ev_enum, gui_overexp_ev_modes ),
-    MENU_ITEM	(0x57,LANG_MENU_ZEBRA_OVER,                MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_over,    		MENU_MINMAX(0, 32) ),
-    MENU_ITEM	(0x5f,LANG_MENU_AUTOISO_OVEREXP_THRES,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.overexp_threshold, 	MENU_MINMAX(1, 20) ),
+    MENU_ENUM2  (0x5f,LANG_MENU_AUTOISO_OVEREXP_EV,        &conf.overexp_ev_enum, gui_overexp_ev_modes ),
+    MENU_ITEM   (0x57,LANG_MENU_ZEBRA_OVER,                MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.autoiso2_over,         MENU_MINMAX(0, 32) ),
+    MENU_ITEM   (0x5f,LANG_MENU_AUTOISO_OVEREXP_THRES,     MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.overexp_threshold,     MENU_MINMAX(1, 20) ),
 
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,    0,                                                              0 ),
     {0}
@@ -300,55 +294,55 @@ void do_expire_splash(int x,int y) {
 
 static void gui_compare_props(int arg)
 {
-	#define NUM_PROPS 512
-	// never freed, but not allocated unless prop compare is used once
-	static int *props = NULL;
+    #define NUM_PROPS 512
+    // never freed, but not allocated unless prop compare is used once
+    static int *props = NULL;
     static int prev_arg = 0;
-	char buf[64];
-	int i;
-	int p;
-	int c;
+    char buf[64];
+    int i;
+    int p;
+    int c;
 
-	if( props && (arg==prev_arg) )
-	{ // we have previous data (of same kind) set! do a comparison
-		c = 0;
-		for( i = 0; i < NUM_PROPS; ++i )
-		{
-			p = (arg==0)?shooting_get_prop(i):get_uiprop_value(i);
-			if( props[i] != p )
-			{
-				++c;
-				sprintf(buf,"%4d is %8d was %8d",i,p,props[i]);
-				draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
-			}
-			props[i] = p;
-			if( c == 12 )
-			{
-				++c;
-				sprintf(buf,"%s","Waiting 15 Seconds");
-				draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
-				msleep(15000);
-				c = 0;
-			}
-		}
-		++c;
-		sprintf(buf,"%s","Press <ALT> to leave");
-		draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
-	}
-	else
-	{
-	// no previous data (of same kind) was set so we save the data initially
+    if( props && (arg==prev_arg) )
+    { // we have previous data (of same kind) set! do a comparison
+        c = 0;
+        for( i = 0; i < NUM_PROPS; ++i )
+        {
+            p = (arg==0)?shooting_get_prop(i):get_uiprop_value(i);
+            if( props[i] != p )
+            {
+                ++c;
+                sprintf(buf,"%4d is %8d was %8d",i,p,props[i]);
+                draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+            }
+            props[i] = p;
+            if( c == 12 )
+            {
+                ++c;
+                sprintf(buf,"%s","Waiting 15 Seconds");
+                draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+                msleep(15000);
+                c = 0;
+            }
+        }
+        ++c;
+        sprintf(buf,"%s","Press <ALT> to leave");
+        draw_string(16,FONT_HEIGHT*c,buf,MAKE_COLOR(COLOR_BLACK,COLOR_YELLOW));
+    }
+    else
+    {
+    // no previous data (of same kind) was set so we save the data initially
         if (!props) {
             // allocate this only once
             props = (int *)malloc(NUM_PROPS*sizeof(int));
         }
-		if(props) {
-			for( i = 0; i < NUM_PROPS; ++i )
-			{
-				props[i] = (arg==0)?shooting_get_prop(i):get_uiprop_value(i);
-			}
-		}
-	}
+        if(props) {
+            for( i = 0; i < NUM_PROPS; ++i )
+            {
+                props[i] = (arg==0)?shooting_get_prop(i):get_uiprop_value(i);
+            }
+        }
+    }
     prev_arg = arg;
 }
 
@@ -394,7 +388,7 @@ static const char* gui_debug_display_modes[] =              { "None", "Props", "
 
 static const char* gui_firmware_crc_modes[] =              { "Never", "Next", "Always"};
 
-extern volatile int memdmp_delay; // from core/main.c
+static int memdmp_delay = 0; // delay in seconds
 
 static void gui_menu_edit_hexa_value(int val) {
     if (val == 1) {
@@ -546,57 +540,57 @@ static void cb_gps_menu_reset()
     if( conf.gps_on_off == 0 ) {  
         for( i=0 ; gps_submenu_items[i].value != (int*)gpx_start_stop; i++);
         gps_submenu_items[i].text = LANG_MENU_GPS_TRACK_START;
-	for( i=0 ; gps_submenu_items[i].value != (int*)navigate_to_home; i++);
-	gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
+        for( i=0 ; gps_submenu_items[i].value != (int*)navigate_to_home; i++);
+        gps_submenu_items[i].text = LANG_MENU_GPS_NAVI_HOME;
         for( i=0 ; gps_submenu_items[i].value != (int*)show_compass; i++ );
         gps_submenu_items[i].text = LANG_MENU_GPS_COMPASS_SHOW;
     }
 }
 
 static CMenuItem gps_logging_items[] = {
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_TRACK_TIME,				MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_track_time, 		MENU_MINMAX(1, 60) ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_TRACK_SYMBOL,			MENUITEM_BOOL,  									&conf.gps_track_symbol,		0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_REC_PLAY_SET_1,			MENUITEM_BOOL,          							&conf.gps_rec_play_set_1,	0 ),
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_REC_PLAY_TIME_1,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_rec_play_time_1,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_PLAY_DARK_SET_1,		MENUITEM_BOOL,          							&conf.gps_play_dark_set_1,	0 ),
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_PLAY_DARK_TIME_1,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_play_dark_time_1,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        				0,							0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_TRACK_TIME,             MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_track_time,       MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_TRACK_SYMBOL,           MENUITEM_BOOL,                                      &conf.gps_track_symbol,     0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_REC_PLAY_SET_1,         MENUITEM_BOOL,                                      &conf.gps_rec_play_set_1,   0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_REC_PLAY_TIME_1,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_rec_play_time_1,  MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_PLAY_DARK_SET_1,        MENUITEM_BOOL,                                      &conf.gps_play_dark_set_1,  0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_PLAY_DARK_TIME_1,       MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_play_dark_time_1, MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                                        0,                          0 ),
     {0}
 };
 
 static CMenu gps_logging_submenu = {0x86,LANG_MENU_GPS_LOGGING, gps_logging_items };
 
 static CMenuItem gps_tagging_items[] = {
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_WAYPOINT_SAVE,          MENUITEM_BOOL,          		                    &conf.gps_waypoint_save,	0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM   (0x5f,LANG_MENU_GPS_WAIT_FOR_SIGNAL,		MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_wait_for_signal,	MENU_MINMAX(1, 599) ),
-    MENU_ITEM   (0x5f,LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME,	MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_wait_for_signal_time,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_REC_PLAY_SET,			MENUITEM_BOOL,          							&conf.gps_rec_play_set,		0 ),
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_REC_PLAY_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_rec_play_time,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_PLAY_DARK_SET,			MENUITEM_BOOL,          							&conf.gps_play_dark_set,	0 ),
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_PLAY_DARK_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_play_dark_time,	MENU_MINMAX(1, 60) ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_COUNTDOWN,          	MENUITEM_BOOL,          							&conf.gps_countdown	,		0 ),
-//    MENU_ITEM	(0x5c,LANG_MENU_GPS_COUNTDOWN_BLINK,      	MENUITEM_BOOL,          							&conf.gps_countdown_blink,	0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        				0,							0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_WAYPOINT_SAVE,          MENUITEM_BOOL,                                      &conf.gps_waypoint_save,    0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_WAIT_FOR_SIGNAL,        MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_wait_for_signal,  MENU_MINMAX(1, 599) ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_WAIT_FOR_SIGNAL_TIME,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_wait_for_signal_time, MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_REC_PLAY_SET,           MENUITEM_BOOL,                                      &conf.gps_rec_play_set,     0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_REC_PLAY_TIME,          MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_rec_play_time,    MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_PLAY_DARK_SET,          MENUITEM_BOOL,                                      &conf.gps_play_dark_set,    0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_PLAY_DARK_TIME,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_play_dark_time,   MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_COUNTDOWN,              MENUITEM_BOOL,                                      &conf.gps_countdown ,       0 ),
+//     MENU_ITEM   (0x5c,LANG_MENU_GPS_COUNTDOWN_BLINK,        MENUITEM_BOOL,                                      &conf.gps_countdown_blink,  0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                                        0,                          0 ),
     {0}
 };
 
 static CMenu gps_tagging_submenu = {0x86,LANG_MENU_GPS_TAGGING, gps_tagging_items };
 
 static CMenuItem gps_navigation_items[] = {
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_COMPASS_SMOOTH,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_compass_smooth,	MENU_MINMAX(1, 40) ),
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_COMPASS_TIME,			MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_compass_time, 	MENU_MINMAX(1, 60) ),
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_NAVI_TIME,				MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_navi_time,		MENU_MINMAX(1, 60) ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_MARK_HOME,              MENUITEM_PROC,          		(int*)mark_home,					0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        				0,							0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_COMPASS_SMOOTH,         MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_compass_smooth,   MENU_MINMAX(1, 40) ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_COMPASS_TIME,           MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_compass_time,     MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_NAVI_TIME,              MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_navi_time,        MENU_MINMAX(1, 60) ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_GPS_MARK_HOME,              MENUITEM_PROC,                                      (int*)mark_home,            0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                                        0,                          0 ),
     {0}
 };
 
@@ -605,37 +599,37 @@ static CMenu gps_navigation_submenu = {0x86,LANG_MENU_GPS_NAVIGATION, gps_naviga
 static const char* gui_gps_sat_fix[] =                  { "immer", "2D", "3D", "2D/3D" };
 
 static CMenuItem gps_values_items[] = {
-    MENU_ITEM	(0x5f,LANG_MENU_GPS_BATT,					MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX,	&conf.gps_batt,				MENU_MINMAX(0, 99) ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_BATT_WARNING,			MENUITEM_BOOL,  									&conf.gps_batt_warn,		0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_BEEP_WARNING,			MENUITEM_BOOL,  									&conf.gps_beep_warn,		0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ENUM2  (0x5f,LANG_MENU_GPS_2D_3D_FIX,				&conf.gps_2D_3D_fix,   								gui_gps_sat_fix ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_SYMBOL_SHOW,			MENUITEM_BOOL,  									&conf.gps_show_symbol,		0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,									0,							0 ),
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_TEST_TIMEZONE,			MENUITEM_BOOL,  									&conf.gps_test_timezone,	0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_MARK_TIMEZONE,          MENUITEM_PROC,          		                    (int*)mark_timezone,		0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				                    0,							0 ),
-    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                        				0,							0 ),
+    MENU_ITEM   (0x5f,LANG_MENU_GPS_BATT,                   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.gps_batt,             MENU_MINMAX(0, 99) ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_BATT_WARNING,           MENUITEM_BOOL,                                      &conf.gps_batt_warn,        0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_BEEP_WARNING,           MENUITEM_BOOL,                                      &conf.gps_beep_warn,        0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ENUM2  (0x5f,LANG_MENU_GPS_2D_3D_FIX,              &conf.gps_2D_3D_fix,                                gui_gps_sat_fix ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_SYMBOL_SHOW,            MENUITEM_BOOL,                                      &conf.gps_show_symbol,      0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_TEST_TIMEZONE,          MENUITEM_BOOL,                                      &conf.gps_test_timezone,    0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_GPS_MARK_TIMEZONE,          MENUITEM_PROC,                                      (int*)mark_timezone,        0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,                                 0,                          0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                                        0,                          0 ),
     {0}
 };
 
 static CMenu gps_values_submenu = {0x86,LANG_MENU_GPS_VALUES, gps_values_items };
 
 static CMenuItem gps_submenu_items[] = {
-    MENU_ITEM	(0x5c,LANG_MENU_GPS_ON_OFF,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK,  				&conf.gps_on_off,  (int)cb_gps_menu_reset  ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				0,									0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_COMPASS_SHOW,           MENUITEM_PROC,  				(int*)show_compass,					0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_SHOW,              MENUITEM_PROC,          		(int*)navigate_to_image,			0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_NAVI_HOME,              MENUITEM_PROC,          		(int*)navigate_to_home,				0 ),
-    MENU_ITEM	(0x2a,LANG_MENU_GPS_TRACK_START,            MENUITEM_PROC,          		(int*)gpx_start_stop,				0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				0,									0 ),
-    MENU_ITEM   (0x28,LANG_MENU_GPS_VALUES,               	MENUITEM_SUBMENU,               &gps_values_submenu,            	0 ),
-    MENU_ITEM   (0x28,LANG_MENU_GPS_LOGGING,               	MENUITEM_SUBMENU,               &gps_logging_submenu,            	0 ),
-    MENU_ITEM   (0x28,LANG_MENU_GPS_TAGGING,               	MENUITEM_SUBMENU,               &gps_tagging_submenu,            	0 ),
-    MENU_ITEM   (0x28,LANG_MENU_GPS_NAVIGATION,            	MENUITEM_SUBMENU,               &gps_navigation_submenu,            0 ),
-    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,				0,									0 ),
-    MENU_ITEM	(0x51,LANG_MENU_BACK,                       MENUITEM_UP, 					0,                                  0 ),
+    MENU_ITEM   (0x5c,LANG_MENU_GPS_ON_OFF,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK,              &conf.gps_on_off,  (int)cb_gps_menu_reset  ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,             0,                                  0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_GPS_COMPASS_SHOW,           MENUITEM_PROC,                  (int*)show_compass,                 0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_GPS_NAVI_SHOW,              MENUITEM_PROC,                  (int*)navigate_to_image,            0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_GPS_NAVI_HOME,              MENUITEM_PROC,                  (int*)navigate_to_home,             0 ),
+    MENU_ITEM   (0x2a,LANG_MENU_GPS_TRACK_START,            MENUITEM_PROC,                  (int*)gpx_start_stop,               0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,             0,                                  0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_VALUES,                 MENUITEM_SUBMENU,               &gps_values_submenu,                0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_LOGGING,                MENUITEM_SUBMENU,               &gps_logging_submenu,               0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_TAGGING,                MENUITEM_SUBMENU,               &gps_tagging_submenu,               0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS_NAVIGATION,             MENUITEM_SUBMENU,               &gps_navigation_submenu,            0 ),
+    MENU_ITEM   (0x0 ,(int)"",                              MENUITEM_SEPARATOR,             0,                                  0 ),
+    MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP,                    0,                                  0 ),
     {0}
 };
 
@@ -649,7 +643,7 @@ static void gui_draw_read_selected(const char *fn)
 {
     if (fn)
     {
-		libtxtread->read_file(fn);
+        libtxtread->read_file(fn);
     }
 }
 
@@ -1167,7 +1161,7 @@ static CMenu clock_submenu = {0x34,LANG_MENU_OSD_CLOCK_PARAMS_TITLE, clock_subme
 const char* gui_video_bitrate_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char *modes[]={ "0.25x", "0.5x","0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.5x", "3x"};
-	gui_enum_value_change(&conf.video_bitrate,change,sizeof(modes)/sizeof(modes[0]));
+    gui_enum_value_change(&conf.video_bitrate,change,sizeof(modes)/sizeof(modes[0]));
 
     if (change)
         shooting_video_bitrate_change(conf.video_bitrate);
@@ -1289,28 +1283,17 @@ static const char* tv_override[]={
     "1/32000", "1/40000", "1/50000", "1/64000","1/80000", "1/100k"
 };
 
-const char* gui_tv_override_value_enum(int change,__attribute__ ((unused))int arg)
+const char* tv_override_value_string()
 {
-    gui_enum_value_change(&conf.tv_override_value,change,sizeof(tv_override)/sizeof(tv_override[0]));
     return tv_override[conf.tv_override_value]; 
 }
 
-static const char* gui_tv_enum_type_enum(int change, __attribute__ ((unused))int arg)
-{
+static const char* gui_tv_enum_type[] = {
+    "Ev Step", "ShrtExp"
 #ifdef CAM_EXT_TV_RANGE
-    static const char* modes[ ]= { "Ev Step", "ShrtExp", "LongExp" };
-#else
-    static const char* modes[ ]= { "Ev Step", "ShrtExp" };
+    , "LongExp"
 #endif
-
-    gui_enum_value_change(&conf.tv_enum_type,change,sizeof(modes)/sizeof(modes[0]));
-    if (change)
-    {
-        void set_tv_override_menu(CMenu *menu);
-        set_tv_override_menu(get_curr_menu());
-    }
-    return modes[conf.tv_enum_type]; 
-}
+};
 
 #if CAM_HAS_IRIS_DIAPHRAGM
 const char* gui_av_override_enum(int change, __attribute__ ((unused))int arg)
@@ -1351,7 +1334,7 @@ const char* gui_subj_dist_override_value_enum(int change, __attribute__ ((unused
 const char* gui_subj_dist_override_koef_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "Off", "On", "Inf" };
-	const char *rv = gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
+    const char *rv = gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
     return rv;
 }
 
@@ -1362,19 +1345,19 @@ static const char* gui_conf_curve_enum(int change, __attribute__ ((unused))int a
 
     gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
 
-	if (change)
+    if (change)
         libcurves->curve_init_mode();
     return modes[conf.curve_enable];
 }
 
 static void gui_load_curve_selected(const char *fn)
 {
-	if (fn) {
-		// TODO we could sanity check here, but curve_set_type should fail gracefullish
-		strcpy(conf.curve_file,fn);
-		if (conf.curve_enable == 1)
+    if (fn) {
+        // TODO we could sanity check here, but curve_set_type should fail gracefullish
+        strcpy(conf.curve_file,fn);
+        if (conf.curve_enable == 1)
             libcurves->curve_init_mode();
-	}
+    }
 }
 
 static void gui_load_curve(__attribute__ ((unused))int arg)
@@ -1459,18 +1442,18 @@ static const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine"
 static const char* gui_hotshoe_override_modes[] = { (char*)LANG_MENU_HOTSHOE_OVERRIDE_OFF, (char*)LANG_MENU_HOTSHOE_EMPTY, (char*)LANG_MENU_HOTSHOE_USED };
 #endif
 
-const char* gui_flash_power_modes_enum(int change, __attribute__ ((unused))int arg)
+static const char* gui_flash_power_modes[] = { "Min", "Med", "Max" };
+
+const char* flash_power_mode_string()
 {
-    static const char* modes[] = { "Min", "Med", "Max" };
-	const char *rv = gui_change_simple_enum(&conf.flash_video_override_power,change,modes,sizeof(modes)/sizeof(modes[0]));
-    return rv;
+    return gui_flash_power_modes[conf.flash_video_override_power];
 }
 
-const char* gui_flash_exp_comp_modes_enum(int change, __attribute__ ((unused))int arg)
+static const char* gui_flash_exp_comp_modes[] = { "-3", "-2.6", "-2.3", "-2", "-1.6", "-1.3", "-1", "-2/3", "-1/3", "0", "+1/3", "+2/3", "+1", "+1.3", "+1.6", "+2", "+2.3", "+2.6", "+3" };
+
+const char* flash_exp_comp_modes_string()
 {
-    static const char* modes[] = { "-3", "-2.6", "-2.3", "-2", "-1.6", "-1.3", "-1", "-2/3", "-1/3", "0", "+1/3", "+2/3", "+1", "+1.3", "+1.6", "+2", "+2.3", "+2.6", "+3" };
-	const char *rv = gui_change_simple_enum(&conf.flash_exp_comp,change,modes,sizeof(modes)/sizeof(modes[0]));
-    return rv;
+    return gui_flash_exp_comp_modes[conf.flash_exp_comp];
 }
 
 static void cb_change_flash_power()
@@ -1484,7 +1467,7 @@ static void cb_change_flash_exp_comp()
 }
 
 static CMenuItem tv_override_evstep[2] = {
-    MENU_ITEM   (0, LANG_MENU_OVERRIDE_TV_VALUE,  MENUITEM_ENUM,            gui_tv_override_value_enum,         0 ),
+    MENU_ENUM2  (0, LANG_MENU_OVERRIDE_TV_VALUE,  &conf.tv_override_value,  tv_override ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.tv_override_enabled,          0 ),
 };
 
@@ -1511,12 +1494,12 @@ static CMenuItem fast_ev_switch[2] = {
 };
 
 static CMenuItem manual_flash[2] = {
-    MENU_ITEM   (0, 0,  MENUITEM_ENUM,                                      gui_flash_power_modes_enum,         0 ),
+    MENU_ENUM2  (0, 0,  &conf.flash_video_override_power,                   gui_flash_power_modes ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,                &conf.flash_manual_override,        (int)cb_change_flash_power ),
 };
 
 static CMenuItem flash_exp_comp[2] = {
-    MENU_ITEM   (0, 0,  MENUITEM_ENUM,                                      gui_flash_exp_comp_modes_enum,      0 ),
+    MENU_ENUM2  (0, 0,  &conf.flash_exp_comp,                               gui_flash_exp_comp_modes ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL|MENUITEM_ARG_CALLBACK,                &conf.flash_enable_exp_comp,        (int)cb_change_flash_exp_comp ),
 };
 
@@ -1537,7 +1520,7 @@ static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On
 static CMenuItem operation_submenu_items[] = {
     MENU_ENUM2  (0x5f,LANG_MENU_OVERRIDE_DISABLE,           &conf.override_disable, gui_override_disable_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_OVERRIDE_DISABLE_ALL,       MENUITEM_BOOL,          &conf.override_disable_all,         0 ),
-    MENU_ITEM   (0x59,LANG_MENU_TV_ENUM_TYPE,               MENUITEM_ENUM,          gui_tv_enum_type_enum,              0 ),
+    MENU_ENUM2  (0x59,LANG_MENU_TV_ENUM_TYPE,               &conf.tv_enum_type,     gui_tv_enum_type ),
     MENU_ITEM   (0x61,LANG_MENU_OVERRIDE_TV_VALUE,          MENUITEM_STATE_VAL_PAIR,&tv_override_evstep,                0 ),
 #if CAM_HAS_IRIS_DIAPHRAGM
     MENU_ITEM   (0x62,LANG_MENU_OVERRIDE_AV_VALUE,          MENUITEM_STATE_VAL_PAIR,&av_override_items,                 0 ),
@@ -1575,10 +1558,9 @@ static CMenuItem operation_submenu_items[] = {
 
 static CMenu operation_submenu = {0x21,LANG_MENU_OPERATION_PARAM_TITLE, operation_submenu_items };
 
-void set_tv_override_menu(CMenu *menu)
+void set_tv_override_menu(CMenuItem *mi)
 {
-    CMenuItem *mi = find_menu_item(menu,LANG_MENU_OVERRIDE_TV_VALUE);
-    if (mi)
+    if (mi->text == LANG_MENU_OVERRIDE_TV_VALUE)
     {
         switch (conf.tv_enum_type)
         {
@@ -1619,6 +1601,7 @@ static void gui_menuproc_edge_load(__attribute__ ((unused))int arg)
 }
 
 static const char* gui_edge_pano_modes[] =                  { "Off", "Right", "Down", "Left", "Up", "Free" };
+
 static CMenuItem edge_overlay_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_EDGE_OVERLAY_ENABLE,        MENUITEM_BOOL,          &conf.edge_overlay_enable,  0 ),
     MENU_ITEM   (0x5c,LANG_MENU_EDGE_FILTER,                MENUITEM_BOOL,          &conf.edge_overlay_filter,  0 ),
@@ -1780,12 +1763,12 @@ static CMenuItem osd_submenu_items[] = {
     MENU_ENUM2(0x5f,LANG_MENU_OSD_SHOW_TEMP,                                &conf.show_temp, gui_temp_mode_modes ),
     MENU_ITEM(0x59,LANG_MENU_OSD_TEMP_FAHRENHEIT,   MENUITEM_BOOL,          &conf.temperature_unit, 0 ),
     MENU_ENUM2(0x71,LANG_MENU_USB_SHOW_INFO,                                &conf.usb_info_enable, gui_show_usb_info_modes ),
-    MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,  	    	MENUITEM_SUBMENU,       &values_submenu, 0 ),
+    MENU_ITEM(0x22,LANG_MENU_OSD_VALUES,            MENUITEM_SUBMENU,       &values_submenu, 0 ),
     MENU_ITEM(0x31,LANG_MENU_OSD_DOF_CALC,          MENUITEM_SUBMENU,       &dof_submenu, 0 ),
     MENU_ITEM(0x24,LANG_MENU_OSD_RAW_STATE_PARAMS,  MENUITEM_SUBMENU,       &raw_state_submenu, 0 ),
     MENU_ITEM(0x32,LANG_MENU_OSD_BATT_PARAMS,       MENUITEM_SUBMENU,       &battery_submenu, 0 ),
     MENU_ITEM(0x33,LANG_MENU_OSD_SPACE_PARAMS,      MENUITEM_SUBMENU,       &space_submenu, 0 ),
-    MENU_ITEM(0x34,LANG_MENU_OSD_CLOCK_PARAMS,	 	MENUITEM_SUBMENU,       &clock_submenu, 0 ),
+    MENU_ITEM(0x34,LANG_MENU_OSD_CLOCK_PARAMS,      MENUITEM_SUBMENU,       &clock_submenu, 0 ),
     MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_IN_REVIEW,    MENUITEM_BOOL,          &conf.show_osd_in_review, 0 ),
     MENU_ITEM(0x59,LANG_MENU_OSD_SHOW_HIDDENFILES,  MENUITEM_BOOL,          &conf.show_hiddenfiles, 0 ),
 #ifdef  CAM_TOUCHSCREEN_UI
@@ -1847,9 +1830,9 @@ static CMenu raw_ev_histo_submenu = {0x25,LANG_MENU_RAW_EV_HISTO_TITLE, raw_ev_h
 
 //-------------------------------------------------------------------
 
-static const char* gui_histo_show_modes[] =                 { "Don't", "Always", "Rec", "Shoot" };
-static const char* gui_histo_view_modes[]={ "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
-static const char* gui_histo_transform_modes[]={ "Linear", "Log" };
+static const char* gui_histo_show_modes[] = { "Don't", "Always", "Rec", "Shoot" };
+static const char* gui_histo_view_modes[] = { "RGB", "Y", "RGB Y",  "R G B", "RGB all", "Y all", "Blend", "Blend Y"};
+static const char* gui_histo_transform_modes[] = { "Linear", "Log" };
 
 static CMenuItem histo_submenu_items[] = {
     MENU_ENUM2(0x5f,LANG_MENU_HISTO_SHOW,             &conf.show_histo,     gui_histo_show_modes ),
@@ -1922,14 +1905,7 @@ static const char* gui_dng_version(int change, __attribute__ ((unused))int arg)
     return modes[conf.dng_version];
 }
 
-static const char* gui_dng_crop_size(int change, __attribute__ ((unused))int arg)
-{
-    static const char* modes[]={ "JPEG", "Active", "Full" };
-
-    gui_enum_value_change(&conf.dng_crop_size,change,sizeof(modes)/sizeof(modes[0]));
-
-    return modes[conf.dng_crop_size];
-}
+static const char* gui_dng_crop_size_modes[] = { "JPEG", "Active", "Full" };
 
 static void gui_menuproc_badpixel_create(__attribute__ ((unused))int arg)
 {
@@ -1954,7 +1930,7 @@ extern void cb_change_dng_usb_ext();
 
 static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_RAW_SAVE,                   MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.save_raw, (int)cb_change_dng ),
-    MENU_ITEM   (0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,	MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
+    MENU_ITEM   (0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS,  MENUITEM_SUBMENU,   &raw_exceptions_submenu, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_FIRST_ONLY,             MENUITEM_BOOL,      &conf.raw_save_first_only, 0 ),
     MENU_ENUM2a (0x5f,LANG_MENU_RAW_SAVE_IN_DIR,            &conf.raw_in_dir,   img_folders, NUM_IMG_FOLDER_NAMES ),
     MENU_ENUM2a (0x5f,LANG_MENU_RAW_PREFIX,                 &conf.raw_prefix,   img_prefixes, NUM_IMG_PREFIXES ),
@@ -1973,7 +1949,7 @@ static CMenuItem raw_submenu_items[] = {
     MENU_ITEM   (0x5c,LANG_MENU_DNG_FORMAT,                 MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_raw , (int)cb_change_dng ),
     MENU_ITEM   (0x5c,LANG_MENU_RAW_DNG_EXT,                MENUITEM_BOOL,      &conf.raw_dng_ext, 0 ),
     MENU_ITEM   (0x5f,LANG_MENU_DNG_VERSION,                MENUITEM_ENUM,      gui_dng_version, 0),
-    MENU_ITEM   (0x5f,LANG_MENU_DNG_CROP_SIZE,              MENUITEM_ENUM,      gui_dng_crop_size, 0),
+    MENU_ENUM2  (0x5f,LANG_MENU_DNG_CROP_SIZE,              &conf.dng_crop_size,gui_dng_crop_size_modes),
     MENU_ITEM   (0x2a,LANG_MENU_BADPIXEL_CREATE,            MENUITEM_PROC,      gui_menuproc_badpixel_create, 0 ),
 #if defined (DNG_EXT_FROM)
     MENU_ITEM   (0x71,LANG_MENU_DNG_VIA_USB,                MENUITEM_BOOL | MENUITEM_ARG_CALLBACK, &conf.dng_usb_ext , (int)cb_change_dng_usb_ext ),
@@ -2002,7 +1978,7 @@ static const char* gui_zebra_mode_modes[] = { "Blink 1", "Blink 2", "Blink 3", "
 #ifndef CAM_DRAW_YUV
 static const char* gui_zebra_draw_osd_modes[] = { "Nothing", "Histo", "OSD" };
 #endif
-static const char* gui_zebra_draw_modes[] =                 { "Don't", "Shoot", "Rec", "Always" };
+static const char* gui_zebra_draw_modes[] = { "Don't", "Shoot", "Rec", "Always" };
 
 static CMenuItem zebra_submenu_items[] = {
     MENU_ENUM2(0x5f,LANG_MENU_ZEBRA_DRAW,             &conf.zebra_draw, gui_zebra_draw_modes ),
@@ -2071,7 +2047,7 @@ static void gui_draw_symbol_rbf_selected(const char *fn)
 {
     if (fn) {
         strcpy(conf.menu_symbol_rbf_file, fn);
-        if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;		//AKA
+        if(!rbf_load_symbol(conf.menu_symbol_rbf_file)) conf.menu_symbol_enable=0;      //AKA
         gui_menu_init(NULL);
     }
 }
@@ -2099,7 +2075,7 @@ static CMenuItem menu_font_submenu_items[] = {
     MENU_ITEM(0x64,LANG_MENU_VIS_SYMBOL,              MENUITEM_BOOL,      &conf.menu_symbol_enable, 0 ),
     MENU_ITEM(0x35,LANG_MENU_VIS_MENU_SYMBOL_FONT,    MENUITEM_PROC,      gui_draw_load_symbol_rbf, 0 ),
     MENU_ENUM2(0x5f,LANG_MENU_VIS_CHARMAP,            &conf.tbox_char_map, gui_text_box_charmap ),
-    MENU_ITEM(0x80,LANG_MENU_RESET_FILES,             MENUITEM_PROC, 	  gui_menuproc_reset_files, 0 ),
+    MENU_ITEM(0x80,LANG_MENU_RESET_FILES,             MENUITEM_PROC,      gui_menuproc_reset_files, 0 ),
     MENU_ITEM(0x51,LANG_MENU_BACK,                    MENUITEM_UP, 0, 0 ),
     {0}
 };
@@ -2108,22 +2084,14 @@ static CMenu menu_font_submenu = {0x28,LANG_MENU_FONT_SETTINGS, menu_font_submen
 
 //-------------------------------------------------------------------
 
-static const char* gui_user_menu_show_enum(int change, __attribute__ ((unused))int arg)
-{
-    static const char* modes[]={ "Off", "On", "On Direct" };
-
-    void set_usermenu_state();
-    set_usermenu_state();
-
-    return gui_change_simple_enum(&conf.user_menu_enable,change,modes,sizeof(modes)/sizeof(modes[0]));
-}
+static const char* gui_user_menu_show_modes[]={ "Off", "On", "On Direct" };
 
 static CMenuItem menu_settings_submenu_items[] = {
-    MENU_ITEM(0x5f,LANG_MENU_USER_MENU_ENABLE,		MENUITEM_ENUM,          gui_user_menu_show_enum, 0 ),
+    MENU_ENUM2(0x5f,LANG_MENU_USER_MENU_ENABLE,     &conf.user_menu_enable, gui_user_menu_show_modes ),
     MENU_ITEM(0x5c,LANG_MENU_USER_MENU_AS_ROOT,     MENUITEM_BOOL,          &conf.user_menu_as_root, 0 ),
     MENU_ITEM(0x72,LANG_MENU_USER_MENU_EDIT,        MENUITEM_PROC,          module_run, "useredit.flt" ),
-    MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,	        &conf.menu_center, 0 ),
-    MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,	        &conf.menu_select_first_entry, 0 ),
+    MENU_ITEM(0x81,LANG_MENU_VIS_MENU_CENTER,       MENUITEM_BOOL,          &conf.menu_center, 0 ),
+    MENU_ITEM(0x81,LANG_MENU_SELECT_FIRST_ENTRY,    MENUITEM_BOOL,          &conf.menu_select_first_entry, 0 ),
     MENU_ITEM(0x5c,LANG_MENU_SHOW_ALT_HELP,         MENUITEM_BOOL,          &conf.show_alt_helper, 0 ),
     MENU_ITEM(0x58,LANG_MENU_SHOW_ALT_HELP_DELAY,   MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.show_alt_helper_delay, MENU_MINMAX(0, 10) ),
     MENU_ITEM(0x28,LANG_MENU_FONT_SETTINGS,         MENUITEM_SUBMENU,       &menu_font_submenu, 0 ),
@@ -2193,25 +2161,11 @@ static const char* gui_extra_button_enum(int change, __attribute__ ((unused))int
 }
 #endif //CAM_OPTIONAL_EXTRA_BUTTON
 
-static const char* gui_raw_toggle_enum(int change, __attribute__ ((unused))int arg)
-{
-    static const char* raw_toggle[]={ "Off", "On", "On+OSD" };
+static const char* gui_raw_toggle_modes[] = { "Off", "On", "On+OSD" };
 
-    gui_enum_value_change(&conf.enable_raw_shortcut,change,sizeof(raw_toggle)/sizeof(raw_toggle[0]));
-
-    return raw_toggle[conf.enable_raw_shortcut];
-}
-
-static const char* gui_alt_power_enum(int change, __attribute__ ((unused))int arg)
-{
 // Script option is retained even if scripting is disabled, otherwise conf values will change
 // Equivalent to ALT
-    static const char* modes[]={ "Never", "Alt", "Script", "Always" };
-
-    gui_enum_value_change(&conf.alt_prevent_shutdown,change,sizeof(modes)/sizeof(modes[0]));
-        
-    return modes[conf.alt_prevent_shutdown];
-}
+static const char* gui_alt_power_modes[]= { "Never", "Alt", "Script", "Always" };
 
 static void gui_menuproc_reset_selected(unsigned int btn)
 {
@@ -2233,13 +2187,13 @@ static CMenuItem chdk_settings_menu_items[] = {
     MENU_ITEM   (0x28,LANG_MENU_MENU_SETTINGS,              MENUITEM_SUBMENU,   &menu_settings_submenu, 0 ),
     MENU_ITEM   (0x2f,LANG_MENU_OSD_GRID_PARAMS,            MENUITEM_SUBMENU,   &grid_submenu, 0 ),
 #ifdef CAM_HAS_GPS
-    MENU_ITEM	(0x28,LANG_MENU_GPS,                        MENUITEM_SUBMENU,	&gps_submenu,		0 ),
+    MENU_ITEM   (0x28,LANG_MENU_GPS,                        MENUITEM_SUBMENU,   &gps_submenu,       0 ),
 #endif
 #if CAM_REMOTE
     MENU_ITEM   (0x86,LANG_MENU_REMOTE_PARAM,               MENUITEM_SUBMENU,   &remote_submenu, 0 ),
 #endif
     MENU_ITEM   (0x5c,LANG_MENU_MISC_ENABLE_SHORTCUTS,      MENUITEM_BOOL,      &conf.enable_shortcuts, 0 ),
-    MENU_ITEM   (0x5c,LANG_MENU_MISC_ENABLE_RAW_SHORTCUT,   MENUITEM_ENUM,      gui_raw_toggle_enum, 0 ),
+    MENU_ENUM2  (0x5c,LANG_MENU_MISC_ENABLE_RAW_SHORTCUT,   &conf.enable_raw_shortcut, gui_raw_toggle_modes ),
     MENU_ITEM   (0x5c,LANG_MENU_MISC_SHOW_SPLASH,           MENUITEM_BOOL,      &conf.splash_show, 0 ),
     MENU_ITEM   (0x5c,LANG_MENU_MISC_START_SOUND,           MENUITEM_BOOL,      &conf.start_sound, 0 ),
 #if CAM_USE_ZOOM_FOR_MF
@@ -2254,7 +2208,7 @@ static CMenuItem chdk_settings_menu_items[] = {
 #if defined(CAM_ZOOM_ASSIST_BUTTON_CONTROL)
     MENU_ITEM   (0x5c,LANG_MENU_MISC_ZOOM_ASSIST,           MENUITEM_BOOL,      &conf.zoom_assist_button_disable, 0 ),
 #endif
-    MENU_ITEM   (0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,       MENUITEM_ENUM,      gui_alt_power_enum, 0 ),
+    MENU_ENUM2  (0x5d,LANG_MENU_MISC_DISABLE_LCD_OFF,       &conf.alt_prevent_shutdown, gui_alt_power_modes ),
     MENU_ITEM   (0x2b,LANG_MENU_MAIN_RESET_OPTIONS,         MENUITEM_PROC,      gui_menuproc_reset, 0 ),
     MENU_ITEM   (0x51,LANG_MENU_BACK,                       MENUITEM_UP, 0, 0 ),
     {0}
@@ -2276,29 +2230,11 @@ static CMenuItem root_menu_items[] = {
     MENU_ITEM   (0x27,LANG_MENU_MAIN_SCRIPT_PARAM,          MENUITEM_SUBMENU,   &script_submenu,    0 ),
     MENU_ITEM   (0x22,LANG_MENU_CHDK_SETTINGS,              MENUITEM_SUBMENU,   &chdk_settings_menu, 0 ),
     MENU_ITEM   (0x29,LANG_MENU_MAIN_MISC,                  MENUITEM_SUBMENU,   &misc_submenu,      0 ),
-    MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,                  MENUITEM_SUBMENU,   &user_submenu, 0 ),
+    MENU_ITEM   (0x2e,LANG_MENU_USER_MENU,                  MENUITEM_SUBMENU,   &user_submenu, 0 ),             // Must be last item so it can be disabled
     {0}
 };
 
 CMenu root_menu = {0x20,LANG_MENU_MAIN_TITLE, root_menu_items };
-
-// Set visibility of User Menu in root menu based on user menu state
-// Note this hack requires the User Menu entry to be the last one in the root_menu_items array above. 
-void set_usermenu_state()
-{
-    int i; 
-    for (i=0; root_menu_items[i].symbol != 0; i++) 
-    { 
-        if (root_menu_items[i].value == (int*)&user_submenu) 
-        { 
-            if (conf.user_menu_enable) 
-                root_menu_items[i].text = LANG_MENU_USER_MENU;  // Enable user menu option in root menu 
-            else 
-                root_menu_items[i].text = 0;                    // Disable user menu option in root menu 
-            return; 
-        } 
-    } 
-}
 
 //-------------------------------------------------------------------
 
@@ -2471,7 +2407,7 @@ static void gui_handle_splash(int force_redraw)
 // Dummy for startup to avoid null gui_mode pointer
 static gui_handler startupGuiHandler = { GUI_MODE_STARTUP, 0, 0, 0, 0, GUI_MODE_FLAG_NODRAWRESTORE | GUI_MODE_FLAG_NORESTORE_ON_SWITCH };
 
-static gui_handler *gui_mode = &startupGuiHandler;	// current gui mode. pointer to gui_handler structure
+static gui_handler *gui_mode = &startupGuiHandler;  // current gui mode. pointer to gui_handler structure
 
 static int gui_osd_need_restore = 0;    // Set when screen needs to be erase and redrawn
 static int gui_mode_need_redraw = 0;    // Set if current mode needs to redraw itself
@@ -2519,17 +2455,15 @@ gui_handler* gui_set_mode(gui_handler *mode)
     camera_info.state.gui_mode = mode->mode;
     camera_info.state.gui_mode_none = (camera_info.state.gui_mode == GUI_MODE_NONE);
     camera_info.state.gui_mode_alt = (camera_info.state.gui_mode == GUI_MODE_ALT);
-	
-	if ( gui_mode == mode )
-		return gui_mode;
+
+    if ( gui_mode == mode )
+        return gui_mode;
 
 #ifdef CAM_TOUCHSCREEN_UI
     if (((gui_mode->mode == GUI_MODE_NONE) != (mode->mode == GUI_MODE_NONE)) || // Change from GUI_MODE_NONE to any other or vice-versa
         ((gui_mode->mode >  GUI_MODE_MENU) != (mode->mode >  GUI_MODE_MENU)))   // Switch in & out of menu mode
         redraw_buttons = 1;
 #endif
-
-    set_usermenu_state();
 
     gui_handler *old_mode = gui_mode;
     gui_mode = mode;
@@ -2769,7 +2703,10 @@ static void gui_debug_shortcut(void)
     lastcall=t;
     switch(conf.debug_shortcut_action) {
             case 1:
-                schedule_memdump();
+                {
+                extern void schedule_memdump(int memdmp_delay);
+                schedule_memdump(memdmp_delay);
+                }
                 break;
             case 2:
                 gui_update_debug_page();
@@ -2996,15 +2933,6 @@ int gui_chdk_kbd_process()
 }
 
 //-------------------------------------------------------------------
-extern int no_modules_flag;
-void gui_draw_no_module_warning()
-{
-    if ( no_modules_flag == 1 ) {
-        draw_string(FONT_WIDTH, FONT_HEIGHT, lang_str(LANG_ERROR_MISSING_MODULES), user_color(conf.osd_color_warn));
-    }
-}
-
-//-------------------------------------------------------------------
 // Handler for Menu button press in CHDK Alt mode (not in Menu mode)
 // Enter main menu or user menu based on configuration
 void gui_chdk_kbd_process_menu_btn()
@@ -3065,7 +2993,7 @@ void gui_redraw()
     if (gui_mode_need_redraw)
     {
         gui_mode_need_redraw = 0;
-	    flag_gui_enforce_redraw = 1;
+        flag_gui_enforce_redraw = 1;
     }
 
 #ifdef OPT_EXPIRE_TEST
@@ -3073,9 +3001,6 @@ void gui_redraw()
 #endif
 
     gui_handle_splash(flag_gui_enforce_redraw);
-
-    // visible warning if modules missing
-    gui_draw_no_module_warning();
 
 // DEBUG: uncomment if you want debug values always on top
 //gui_draw_debug_vals_osd();
@@ -3146,6 +3071,7 @@ void gui_activate_alt_mode()
         // If user menu set to start automatically when <ALT> mode entered 
         // then enter user menu mode, unless a script was paused by exiting 
         // <ALT> mode when the script was running.
+        extern int gui_user_menu_flag;
         gui_user_menu_flag = 0;
         if ((conf.user_menu_enable == 2) && !camera_info.state.state_kbd_script_run) {
             gui_menu_init(&user_submenu);

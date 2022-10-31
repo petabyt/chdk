@@ -50,21 +50,21 @@ typedef struct
     // Gui_Mode enum value
     int mode;
 
-	// Called to redraw screen. Argument is non-zero to force redraw
+    // Called to redraw screen. Argument is non-zero to force redraw
     void (*redraw)(int);
 
-	// Main button handler for mode
+    // Main button handler for mode
     // Return:
     //          0 = normal button handling
     //          1 = force buttons pressed to be blocked from Camera firmware
     int (*kbd_process)(void);
 
-	// Menu button handler for mode
+    // Menu button handler for mode
     void (*kbd_process_menu_btn)(void);
 
     int (*touch_handler)(int x, int y);
 
-	int flags;
+    int flags;
 } gui_handler;
 
 extern int script_run_on_alt_flag ;
@@ -85,10 +85,11 @@ extern void gui_reset_alt_helper();
 extern void gui_enum_value_change(int *value, int change, unsigned num_items);
 extern const char* gui_subj_dist_override_value_enum(int change, int arg);
 extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
-extern const char* gui_tv_override_value_enum(int change, int arg);
 extern const char* gui_hhmss_enum(int change, int arg);
-extern const char* gui_flash_power_modes_enum(int change, int arg);
-extern const char* gui_flash_exp_comp_modes_enum(int change, int arg);
+
+extern const char* tv_override_value_string();
+extern const char* flash_power_mode_string();
+extern const char* flash_exp_comp_modes_string();
 
 //------------------------------------------------------------------- 
 

@@ -7,6 +7,8 @@
 #include "raw.h"
 #include "console.h"
 #include "shooting.h"
+#include "lang.h"
+#include "gui_lang.h"
 
 #include "edgeoverlay.h"
 #include "module_load.h"
@@ -25,19 +27,16 @@ static char osd_buf[50];
 
 volatile int chdk_started_flag=0;
 
-int no_modules_flag;
-
-static volatile int spytask_can_start;
+static volatile int spytask_can_start = 0;
 
 static unsigned int memdmptick = 0;
-volatile int memdmp_delay = 0; // delay in seconds
 
-void schedule_memdump()
+void schedule_memdump(int memdmp_delay)
 {
     memdmptick = get_tick_count() + memdmp_delay * 1000;
 }
 
-void dump_memory()
+static void dump_memory()
 {
     int fd;
     static int cnt=1;
@@ -132,8 +131,6 @@ void core_spytask()
     // Init camera_info bits that can't be done statically
     camera_info_init();
 
-    spytask_can_start=0;
-
 #if !defined(CAM_DRYOS)
 // create semaphore to protect Canon memory malloc/free/memPartInfo
 // on VxWorks, spytask should start before any other CHDK tasks
@@ -191,7 +188,7 @@ void core_spytask()
     for (i = 0; i < (int)(sizeof(chdk_dirs) / sizeof(char*)); i++)
         mkdir_if_not_exist(chdk_dirs[i]);
 
-    no_modules_flag = stat("A/CHDK/MODULES/FSELECT.FLT",0) ? 1 : 0 ;
+    int no_modules_flag = stat("A/CHDK/MODULES/FSELECT.FLT",0) ? 1 : 0 ;
 
     // Calculate the value of get_tick_count() when the clock ticks over to the next second
     // Used to calculate the SubSecondTime value when saving DNG files.
@@ -318,6 +315,10 @@ void core_spytask()
         {
             if (((cnt++) & 3) == 0) {
                 gui_redraw();
+                if ( no_modules_flag == 1 ) {
+                    // visible warning if modules missing - always drawn on top
+                    draw_string(FONT_WIDTH, FONT_HEIGHT, lang_str(LANG_ERROR_MISSING_MODULES), user_color(conf.osd_color_warn));
+                }
 #ifdef CAM_DRAW_RGBA
                 extern int display_needs_canon_refresh;
                 if (!draw_is_suspended()) {
@@ -353,7 +354,7 @@ void core_spytask()
         i = 0;
 
 #ifdef DEBUG_PRINT_TO_LCD
-        sprintf(osd_buf, "%d", cnt );	// modify cnt to what you want to display
+        sprintf(osd_buf, "%d", cnt );   // modify cnt to what you want to display
         draw_txt_string(1, i++, osd_buf, user_color(conf.osd_color));
 #endif
 #if defined(OPT_FILEIO_STATS)

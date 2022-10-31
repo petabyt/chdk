@@ -64,7 +64,7 @@ static void sprintf_dist(char *buf, int dist) {
 
 static void sprintf_canon_values(char *buf, short dist) 
 {
-    short v=((dist<0)?-dist:dist);	
+    short v=((dist<0)?-dist:dist);
     sprintf(buf, "%s%d.%02d", ((dist<0)?"-":""), v/96, v%96);
 }
 
@@ -112,18 +112,18 @@ void gui_osd_draw_dof(int is_osd_edit)
         j = strlen(osd_buf);
         draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:col, conf.dof_scale);
         i = i+j;
-	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", col, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, i*FONT_WIDTH, 0, "/", col, conf.dof_scale);
         sprintf_dist(osd_buf, camera_info.dof_values.far_limit);
-	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:col, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, 0, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:col, conf.dof_scale);
         i = 8;
-	    draw_osd_string(conf.dof_pos, 0, FONT_HEIGHT, "DOF/HYP:", col, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, 0, FONT_HEIGHT, "DOF/HYP:", col, conf.dof_scale);
         sprintf_dist(osd_buf, camera_info.dof_values.depth_of_field);
         j = strlen(osd_buf);
-	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:col, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.distance_valid)?valid_col:col, conf.dof_scale);
         i = i+j;
-	    draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, "/", col, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, i*FONT_WIDTH, FONT_HEIGHT, "/", col, conf.dof_scale);
         sprintf_dist(osd_buf, camera_info.dof_values.hyperfocal_distance);
-	    draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.hyperfocal_valid)?valid_col:col, conf.dof_scale);
+        draw_osd_string(conf.dof_pos, (++i)*FONT_WIDTH, FONT_HEIGHT, osd_buf, (f_ex && camera_info.dof_values.hyperfocal_valid)?valid_col:col, conf.dof_scale);
     }
 }
 
@@ -269,13 +269,13 @@ void gui_osd_draw_state(int is_osd_edit)
         {
             if(camera_info.state.is_shutter_half_press) 
             { 
-                t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);	
+                t=(int)(shooting_get_shutter_speed_from_tv96(shooting_get_tv96())*100000);
                 gui_print_osd_state_string_float("TV:%d.%05d", 100000, t);
             }
             else 
             {
                 if (conf.tv_enum_type==TV_OVERRIDE_EV_STEP)
-                    gui_print_osd_state_string_chr("TV:",gui_tv_override_value_enum(0,0)); 
+                    gui_print_osd_state_string_chr("TV:",tv_override_value_string()); 
                 else if (conf.tv_enum_type==TV_OVERRIDE_SHORT_EXP)
                     gui_print_osd_state_string_float("TV:%d.%05d", 100000, conf.tv_override_short_exp);
                 else
@@ -326,8 +326,8 @@ void gui_osd_draw_state(int is_osd_edit)
         }
 #endif
         if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
-        if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:M ", gui_flash_power_modes_enum(0,0));
-        if (conf.flash_enable_exp_comp) gui_print_osd_state_string_chr("Flash:A ", gui_flash_exp_comp_modes_enum(0,0));
+        if (conf.flash_manual_override) gui_print_osd_state_string_chr("Flash:M ", flash_power_mode_string());
+        if (conf.flash_enable_exp_comp) gui_print_osd_state_string_chr("Flash:A ", flash_exp_comp_modes_string());
         // edgeoverlay state
         if (conf.edge_overlay_enable || is_osd_edit) {
             if (camera_info.state.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
@@ -423,10 +423,10 @@ static void gui_osd_draw_values(int is_osd_edit, int is_zebra)
                 if (conf.values_show_real_iso)      gui_print_osd_misc_string_int("I-R:", expo.iso);
                 if (conf.values_show_market_iso)    gui_print_osd_misc_string_int("I-M:", expo.iso_market);
             }
-            if (conf.values_show_bv_measured)           gui_print_osd_misc_string_canon_values("Bvm:", expo.bv96_measured	);
-            if (conf.values_show_bv_seted)              gui_print_osd_misc_string_canon_values("Bvs:", expo.bv96_seted	);
+            if (conf.values_show_bv_measured)           gui_print_osd_misc_string_canon_values("Bvm:", expo.bv96_measured );
+            if (conf.values_show_bv_seted)              gui_print_osd_misc_string_canon_values("Bvs:", expo.bv96_seted );
             if (conf.values_show_ev_measured)           gui_print_osd_misc_string_canon_values("Evm:", expo.ev96_measured);
-            if (conf.values_show_ev_seted)              gui_print_osd_misc_string_canon_values("Evs:", expo.ev96_seted	);
+            if (conf.values_show_ev_seted)              gui_print_osd_misc_string_canon_values("Evs:", expo.ev96_seted );
             if (conf.values_show_overexposure)          gui_print_osd_misc_string_canon_values("dE :", expo.dev96);
             if (conf.values_show_canon_overexposure)    gui_print_osd_misc_string_canon_values("dEc:", expo.dev96_canon);
             if (conf.values_show_luminance)             gui_print_osd_misc_string_float("B  :%d.%02d", 100, expo.b);
@@ -617,7 +617,7 @@ static void gui_osd_draw_movie_time_left()
                     if( (int)conf.ext_video_time == 1 )
                     {
                         draw_txt_string(0, 13, lang_str(LANG_WARN_VIDEO_EXT_TIME), user_color(conf.osd_color_warn));
-                    }		
+                    }
 #endif
                 }
 
@@ -839,8 +839,8 @@ static int kbd_use_up_down_left_right_as_fast_switch()
             return 1;
         }
 
-    	// reyalp - HACK for cams that can do video in any mode
-	    // note that this means this will probably run whenever you press right
+        // reyalp - HACK for cams that can do video in any mode
+        // note that this means this will probably run whenever you press right
         // BUG this doesn't know whether recording was stopped or paused.
         if (kbd_is_key_pressed(KEY_RIGHT) && (get_movie_status() == VIDEO_RECORD_STOPPED))
         {
@@ -950,9 +950,9 @@ static int gui_std_kbd_process()
         {
             get_property_case(PROPCASE_DIGITAL_ZOOM_POSITION, &x, sizeof(x));
 #if defined(CAM_USE_OPTICAL_MAX_ZOOM_STATUS)
-	        if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
+            if (x==0) zoom_status=ZOOM_OPTICAL_MAX; //ERR99: No zoom back from digital to optical zoom possible if set to medium
 #else
-	        if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;
+            if (x==0) zoom_status=ZOOM_OPTICAL_MEDIUM;
 #endif
         }
     }
@@ -1010,7 +1010,7 @@ int osd_visible()
 #if defined(PARAM_DISPLAY_MODE1) && defined(PARAM_DISPLAY_MODE2)
                 short disp_key_mode ;
                 if (recreview_hold == 0)
-                {	
+                {
                     if (shooting_get_display_mode() == 0) return 1;
                 }
                 else
@@ -1366,7 +1366,7 @@ static void gui_default_draw(int force_redraw)
         if (libzebra->gui_osd_draw_zebra((conf.zebra_draw >= 1 && camera_info.state.is_shutter_half_press && camera_info.state.mode_photo)
             || (conf.zebra_draw == 2 && camera_info.state.mode_rec)
             || (conf.zebra_draw == 3)))
-		    return; // if zebra drawn, we're done
+            return; // if zebra drawn, we're done
 
     if ((conf.raw_ev_histo_enable & 2) && camera_info.state.mode_play && (canon_menu_active==(int)&canon_menu_active-4))
     {

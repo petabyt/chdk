@@ -93,9 +93,7 @@ extern void gui_activate_sub_menu(CMenu *sub_menu);
 extern gui_handler menuGuiHandler;
 
 //-------------------------------------------------------------------
-extern  CMenu   root_menu;									// defined in gui.c
-
-extern CMenuItem* find_menu_item(CMenu *curr_menu, int itemid );
+extern  CMenu   root_menu;      // defined in gui.c
 
 //-------------------------------------------------------------------
 #endif

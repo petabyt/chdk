@@ -16,6 +16,35 @@
 #define USER_MENU_IS_MODULE     -2
 
 //-------------------------------------------------------------------
+
+static CMenuItem* find_menu_item(CMenu *cmenu, int itemid )
+{
+    if (itemid)
+    {
+        int i;
+
+        for (i = 0; cmenu->menu[i].text; i += 1)
+        {
+            if ( lang_strhash31(cmenu->menu[i].text) == (unsigned)itemid)
+            {
+                return (CMenuItem*) &(cmenu->menu[i]);
+            }
+            if ((cmenu->menu[i].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
+            {
+                if (cmenu->menu[i].text != LANG_MENU_USER_MENU)
+                {
+                    CMenuItem* rv = find_menu_item((CMenu*)(cmenu->menu[i].value), itemid);
+                    if (rv)
+                        return rv;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+//-------------------------------------------------------------------
 static int user_menu_saved_size()
 {
     // User menu saved as:
@@ -105,12 +134,12 @@ void init_user_menu(int num_items)
 //-------------------------------------------------------------------
 static void rinit()
 {
-	// Erase screen if switching from user menu to main menu
-	// in case the user menu is larger than the main menu
-	// otherwise it leaves remnants of the user menu above and below
-	// the main menu.
+    // Erase screen if switching from user menu to main menu
+    // in case the user menu is larger than the main menu
+    // otherwise it leaves remnants of the user menu above and below
+    // the main menu.
     gui_set_need_restore();
-	gui_menu_init(&root_menu);
+    gui_menu_init(&root_menu);
 }
 
 //-------------------------------------------------------------------
@@ -122,7 +151,7 @@ static void rinit()
 */
 
 static CMenuItem user_submenu_items[USER_MENU_ITEMS + 2] = {
-	MENU_ITEM(0x20,LANG_MENU_MAIN_TITLE,     MENUITEM_PROC,  rinit, 0 )
+    MENU_ITEM(0x20,LANG_MENU_MAIN_TITLE,     MENUITEM_PROC,  rinit, 0 )
 };
 
 CMenu user_submenu = {0x2e,LANG_MENU_USER_MENU, user_submenu_items };
@@ -164,11 +193,11 @@ void gui_load_user_menu_script(const char *fn)
 void user_menu_save() {
     int x;
     for (x=0; x<USER_MENU_ITEMS; x++) {
-		/*
-		 * First entry in user_submenu_items is reserved for the "Main Menu"
- 		 * conf.user_menu_vars only tracks/saves the real user entries.
- 		 */
-	
+        /*
+         * First entry in user_submenu_items is reserved for the "Main Menu"
+         * conf.user_menu_vars only tracks/saves the real user entries.
+         */
+
         if ( user_submenu_items[x+1].text )
         {
             if ( user_submenu_items[x+1].value == (int *)gui_load_user_menu_script )
@@ -243,7 +272,7 @@ void user_menu_restore()
             }
             else                                        // otherwise clear the menu entry
             {
-                user_submenu_items[y].text = 0;            
+                user_submenu_items[y].text = 0;
                 break ;                                 // and exit - all done !
             }
         }

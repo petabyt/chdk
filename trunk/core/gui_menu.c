@@ -39,31 +39,15 @@ static int          int_incr = 1;
 static confColor    *item_color;
 static int          item_color_type;    // MENUITEM_COLOR_FG / MENUITEM_COLOR_BG
 
+// Set if ALT entered and user menu set to load automatically
+int gui_user_menu_flag;
+
 //-------------------------------------------------------------------
-CMenuItem* find_menu_item(CMenu *curr_menu, int itemid )
+
+// Check for end of menu
+static int is_menu_end(int i)
 {
-    int gui_menu_curr_item;
-    CMenuItem* rv=0;
-
-    if ( itemid==0 )
-        return 0;
-
-    gui_menu_curr_item = 0;
-    while(curr_menu->menu[gui_menu_curr_item].text) {
-        if ( lang_strhash31(curr_menu->menu[gui_menu_curr_item].text) == (unsigned)itemid){
-            return (CMenuItem*) &(curr_menu->menu[gui_menu_curr_item]);
-        }
-        if ((curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) == MENUITEM_SUBMENU)
-        {
-            if (curr_menu->menu[gui_menu_curr_item].text != LANG_MENU_USER_MENU) {
-                rv = find_menu_item((CMenu*)(curr_menu->menu[gui_menu_curr_item].value), itemid);
-                if ( rv )
-                    return rv;
-            }
-        }
-        gui_menu_curr_item++;
-    }
-    return 0;
+    return (curr_menu->menu[i].text == 0) || ((curr_menu->menu[i].text == LANG_MENU_USER_MENU) && !conf.user_menu_enable);
 }
 
 //-------------------------------------------------------------------
@@ -211,16 +195,14 @@ CMenu* get_curr_menu()
 //-------------------------------------------------------------------
 void gui_menu_init(CMenu *menu_ptr) {
 
+    gui_user_menu_flag = 0;
+
     if (menu_ptr) {
         if (conf.menu_select_first_entry)
             gui_menu_set_curr_menu(menu_ptr, 0, 0);
         else 
             gui_menu_set_curr_menu(menu_ptr, 0, -1);
         gui_menu_stack_ptr = 0;
-
-        // Set active Tv override menu entry if present
-        extern void set_tv_override_menu(CMenu *menu);
-        set_tv_override_menu(curr_menu);
     }
 
     len_bool = rbf_str_width("\x95");
@@ -240,7 +222,7 @@ static int gui_menu_rows()
 {
     int n;
     // Count the number of rows in current menu
-    for(n = 0; curr_menu->menu[n].text; n++);
+    for(n = 0; !is_menu_end(n); n++);
     return n;
 }
 
@@ -445,10 +427,6 @@ void gui_activate_sub_menu(CMenu *sub_menu)
         gui_menu_stack_ptr = 0;
     }
 
-    // Set active Tv override menu entry if present
-    extern void set_tv_override_menu(CMenu *menu);
-    set_tv_override_menu(curr_menu);
-
     // Force full redraw
     gui_menu_erase_and_redraw();
 }
@@ -523,6 +501,56 @@ static void gui_menu_updown(int increment)
         if (gui_menu_redraw == 0) gui_menu_redraw=1;
     }
 }
+ 
+// Handle left/right presses
+static void gui_menu_leftright(int direction)
+{
+    if (gui_menu_curr_item >= 0) {
+        switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
+            case MENUITEM_INT:
+                update_int_value(&curr_menu->menu[gui_menu_curr_item],direction);
+                break;
+            case MENUITEM_BOOL:
+                update_bool_value(&curr_menu->menu[gui_menu_curr_item]);
+                break;
+            case MENUITEM_ENUM:
+            case MENUITEM_ENUM2:
+                update_enum_value(&curr_menu->menu[gui_menu_curr_item],direction);
+                break;
+            case MENUITEM_SUBMENU_PROC:
+                if (direction == 1)
+                    select_proc();
+                break;
+            case MENUITEM_SUBMENU:
+                if (direction == 1)
+                    select_sub_menu();
+                break;
+            case MENUITEM_UP:
+                if (direction == -1)
+                    gui_menu_back();
+                break;
+            case MENUITEM_STATE_VAL_PAIR:
+                {
+                    CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
+                    if (*(c[1].value) == 0)
+                        update_bool_value(&c[1]);
+                    switch (c[0].type & MENUITEM_MASK)
+                    {
+                        case MENUITEM_INT:
+                            update_int_value(&c[0],direction);
+                            break;
+                        case MENUITEM_ENUM:
+                        case MENUITEM_ENUM2:
+                            update_enum_value(&c[0],direction);
+                            break;
+                    }
+                }
+                break;
+        }
+    } else if (direction == -1) {
+        gui_menu_back();
+    }
+}
 
 static int gui_menu_touch_handler(int tx, int ty)
 {
@@ -566,82 +594,11 @@ int gui_menu_kbd_process() {
             break;
         case FRONTDIAL_LEFT:
         case KEY_LEFT:
-            if (gui_menu_curr_item >= 0) {
-                switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK) {
-                    case MENUITEM_INT:
-                        update_int_value(&curr_menu->menu[gui_menu_curr_item],-1);
-                        break;
-                    case MENUITEM_BOOL:
-                        update_bool_value(&curr_menu->menu[gui_menu_curr_item]);
-                        break;
-                    case MENUITEM_ENUM:
-                    case MENUITEM_ENUM2:
-                        update_enum_value(&curr_menu->menu[gui_menu_curr_item],-1);
-                        break;
-                    case MENUITEM_UP:
-                        gui_menu_back();
-                        break;
-                    case MENUITEM_STATE_VAL_PAIR:
-                        {
-                            CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
-                            if (*(c[1].value) == 0)
-                                update_bool_value(&c[1]);
-                            switch (c[0].type & MENUITEM_MASK)
-                            {
-                                case MENUITEM_INT:
-                                    update_int_value(&c[0],-1);
-                                    break;
-                                case MENUITEM_ENUM:
-                                case MENUITEM_ENUM2:
-                                    update_enum_value(&c[0],-1);
-                                    break;
-                            }
-                        }
-                        break;
-                }
-            } else {
-                gui_menu_back();
-            }
+            gui_menu_leftright(-1);
             break;
         case FRONTDIAL_RIGHT:
         case KEY_RIGHT:
-            if (gui_menu_curr_item >= 0) {
-                switch (curr_menu->menu[gui_menu_curr_item].type & MENUITEM_MASK){
-                    case MENUITEM_INT:
-                        update_int_value(&curr_menu->menu[gui_menu_curr_item],1);
-                        break;
-                    case MENUITEM_BOOL:
-                        update_bool_value(&curr_menu->menu[gui_menu_curr_item]);
-                        break;
-                    case MENUITEM_ENUM:
-                    case MENUITEM_ENUM2:
-                        update_enum_value(&curr_menu->menu[gui_menu_curr_item],1);
-                        break;
-                    case MENUITEM_SUBMENU_PROC:
-                        select_proc();
-                        break;
-                    case MENUITEM_SUBMENU:
-                        select_sub_menu();
-                        break;
-                    case MENUITEM_STATE_VAL_PAIR:
-                        {
-                            CMenuItem *c = (CMenuItem*)(curr_menu->menu[gui_menu_curr_item].value);
-                            if (*(c[1].value) == 0)
-                                update_bool_value(&c[1]);
-                            switch (c[0].type & MENUITEM_MASK)
-                            {
-                                case MENUITEM_INT:
-                                    update_int_value(&c[0],1);
-                                    break;
-                                case MENUITEM_ENUM:
-                                case MENUITEM_ENUM2:
-                                    update_enum_value(&c[0],1);
-                                    break;
-                            }
-                        }
-                        break;
-                }
-            }
+            gui_menu_leftright(1);
             break;
         case KEY_SET:
             if (gui_menu_curr_item >= 0) {
@@ -973,8 +930,8 @@ void gui_menu_draw(int enforce_redraw)
     int i, j;
     const char *ch = "";
 
-	if ( enforce_redraw )
-		gui_menu_redraw = 2;
+    if ( enforce_redraw )
+        gui_menu_redraw = 2;
 
     if (gui_menu_redraw)
     {
@@ -983,8 +940,12 @@ void gui_menu_draw(int enforce_redraw)
 
         gui_menu_redraw=0;
 
-        for (imenu=gui_menu_top_item, i=0, yy=y; curr_menu->menu[imenu].text && i<num_lines; ++imenu, ++i, yy+=rbf_font_height())
+        for (imenu=gui_menu_top_item, i=0, yy=y; !is_menu_end(imenu) && i<num_lines; ++imenu, ++i, yy+=rbf_font_height())
         {
+            // Fix up TV override menu item
+            extern void set_tv_override_menu(CMenuItem *mi);
+            set_tv_override_menu((CMenuItem*)&curr_menu->menu[imenu]);
+
             cl = user_color((gui_menu_curr_item==imenu) ? conf.menu_cursor_color : conf.menu_color);
             /*
             * When cursor is over a symbol, force symbol background color to be the menu cursor color but
@@ -1114,14 +1075,11 @@ void gui_menu_draw(int enforce_redraw)
 // Menu button handler for Menu mode
 void gui_menu_kbd_process_menu_btn()
 {
-    extern int gui_user_menu_flag;
-
     conf_save();
 
     if ( gui_user_menu_flag )
     {
         gui_set_mode(&menuGuiHandler);
-        gui_user_menu_flag = 0;
         gui_menu_init(&root_menu);
     }
     else
