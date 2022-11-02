@@ -64,24 +64,18 @@ common code for "enum" menu items that just take a list of string values and don
 would be better to have another menu item type that does this by default
 save memory by eliminating dupe code
 */
-void gui_enum_value_change(int *value, int change, unsigned num_items) {
-    *value+=change;
-    if (*value<0)
-        *value = num_items-1;
-    else if (*value>=(int)num_items)
-        *value = 0;
+void gui_enum_value_change(int *value, int change, int num_items) {
+    int v = *value + change;
+    if (v < 0)
+        v = num_items-1;
+    else if (v >= num_items)
+        v = 0;
+    *value = v;
 }
 
-static const char* gui_change_simple_enum(int* value, int change, const char** items, unsigned num_items) {
+static const char* gui_change_simple_enum(int* value, int change, const char** items, int num_items) {
     gui_enum_value_change(value, change, num_items);
     return (const char*)lang_str((int)items[*value]);
-}
-
-const char* gui_change_enum2(const CMenuItem *menu_item, int change)
-{
-    const char** items = (const char**)menu_item->arg;
-    gui_enum_value_change(menu_item->value, change, menu_item->opt_len);
-    return (const char*)lang_str((int)items[*menu_item->value]);
 }
 
 //-------------------------------------------------------------------
@@ -757,7 +751,7 @@ static CMenuItem* create_module_menu(int mtype, char symbol)
                         strcpy(nm, modName);
                         submenu[mcnt].text = (int)nm;
                     }
-                    submenu[mcnt].value = (int*)module_run;
+                    submenu[mcnt].menu_function = (menu_proc)module_run;
                     nm = malloc(strlen(de->d_name)+1);
                     strcpy(nm, de->d_name);
                     submenu[mcnt].arg = (int)nm;
@@ -1334,8 +1328,7 @@ const char* gui_subj_dist_override_value_enum(int change, __attribute__ ((unused
 const char* gui_subj_dist_override_koef_enum(int change, __attribute__ ((unused))int arg)
 {
     static const char* modes[] = { "Off", "On", "Inf" };
-    const char *rv = gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
-    return rv;
+    return gui_change_simple_enum(&conf.subj_dist_override_koef,change,modes,sizeof(modes)/sizeof(modes[0]));
 }
 
 #if defined(OPT_CURVES)
@@ -1347,6 +1340,7 @@ static const char* gui_conf_curve_enum(int change, __attribute__ ((unused))int a
 
     if (change)
         libcurves->curve_init_mode();
+
     return modes[conf.curve_enable];
 }
 
@@ -1565,16 +1559,16 @@ void set_tv_override_menu(CMenuItem *mi)
         switch (conf.tv_enum_type)
         {
         case 0:     // Ev Step
-            mi->value = (int*)(&tv_override_evstep);
+            mi->state_val_items = tv_override_evstep;
             mi->arg = 1;
             break;
         case 1:     // Short exposure
-            mi->value = (int*)(&tv_override_short_exp);
+            mi->state_val_items = tv_override_short_exp;
             mi->arg = 100;
             break;
 #ifdef CAM_EXT_TV_RANGE
         case 2:     // Long exposure
-            mi->value = (int*)(&tv_override_long_exp);
+            mi->state_val_items = tv_override_long_exp;
             mi->arg = 1;
             break;
 #endif

@@ -49,29 +49,50 @@
 #define MENU_MAX_SIGNED(arg)    ((short)((arg>>16) & 0xFFFF))
 
 //-------------------------------------------------------------------
-typedef struct {
+// Callback function typedefs
+typedef void (*change_callback)();
+typedef void (*menu_proc)(int);
+typedef const char* (*change_proc)(int,int);
+
+// Forward declarations
+struct _CMenu;
+typedef struct _CMenu CMenu;
+struct _CMenuItem;
+typedef struct _CMenuItem CMenuItem;
+
+typedef struct _CMenuItem {
     char                symbol;     // menuitem icon symbol
     char                opt_len;    // ENUM2 num of elements 
     short               type;       // MENUITEM_MASKS
     int                 text;       // Text
-    int                 *value;     // pointer to binded variable
+    union {
+        int             *value;     // pointer to binded variable
                                     //   exceptions: _PROC = pointer to processing func
                                     //               _ENUM = pointer to processing func
-    int                 arg;        // additional argument
+        CMenu*          sub_menu;   // Sub menu pointer
+        CMenuItem*      state_val_items;    // State/Val pair menu items
+        confColor*      conf_colors;        // Two colors store in 'conf' struct
+        menu_proc       menu_function;      // Function to call for handling menu item;
+        change_proc     change_function;    // Function to call for updating 'arg' value
+    };
+    union {
+        int             arg;        // additional argument
                                     //     by default type is controled by _ARG_MASK and by _F_MINMAX
-                                    //     for ENUM2 - pointer to string list
+        int*            estr;       // for ENUM2 - pointer to string list
+        change_callback onchange_callback;  // Callback function
+    };
 } CMenuItem;
 
-typedef struct {
+typedef struct _CMenu {
     char                symbol;
     int                 title;
     const CMenuItem     *menu;
 } CMenu;
 
 // Menu item constructor macros
-#define MENU_ITEM(sym, txt, typ, val, arg)  { (char)sym, 0, (short)typ, (int)txt, (int*)val, (int)arg }
-#define MENU_ENUM2(sym, txt, val, arg)      { (char)sym, sizeof(arg)/sizeof(arg[0]), MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
-#define MENU_ENUM2a(sym, txt, val, arg, num){ (char)sym, (char)num, MENUITEM_ENUM2, (int)txt, (int*)val, (int)arg }
+#define MENU_ITEM(sym, txt, typ, val, arg)  { (char)sym, 0, (short)typ, (int)txt, {(int*)val}, {(int)arg} }
+#define MENU_ENUM2(sym, txt, val, arg)      { (char)sym, sizeof(arg)/sizeof(arg[0]), MENUITEM_ENUM2, (int)txt, {(int*)val}, {(int)arg} }
+#define MENU_ENUM2a(sym, txt, val, arg, num){ (char)sym, (char)num, MENUITEM_ENUM2, (int)txt, {(int*)val}, {(int)arg} }
 
 //-------------------------------------------------------------------
 extern void gui_menu_init(CMenu *menu_ptr);

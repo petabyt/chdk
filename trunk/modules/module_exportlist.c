@@ -155,7 +155,6 @@
             gui_default_kbd_process_menu_btn
             get_batt_perc
             gui_mbox_init
-            gui_enum_value_change
             gui_set_need_restore
             gui_load_user_menu_script
 
