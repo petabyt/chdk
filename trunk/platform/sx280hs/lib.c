@@ -371,7 +371,7 @@ int last_displaytype;
  * TVout, HDMI 480 = 720 x 480
  */
 //int ximr1;
-void update_ui(ximr_context* ximr, int msgid)
+void update_ui(ximr_context* ximr, __attribute__ ((unused))int msgid)
 {
     // Init RGBA buffer
     if (chdk_rgba_init == 0)
