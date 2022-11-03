@@ -10,13 +10,15 @@
 char gps_fakename[32] = "img_1234" ;
 tGPS gps_dummy_data ;
 
-int  gps_key_trap = 0 ;
 char *camera_jpeg_current_filename() { return (void*)gps_fakename; }
 char *camera_jpeg_current_gps() { return (void*)&gps_dummy_data; }
 
 static int gps_first_pass = 0 ;
 static int x_velocity = 4000 ;
 static int y_velocity = 2000 ;
+
+// Define to prevent compile error when testing simulated GPS
+void __attribute__((weak)) _GPS_UpdateData() {}
 
 void GPS_FakeData()
 {
@@ -114,6 +116,3 @@ void GPS_FakeData()
     
     return ;
 } ;
-
-
-

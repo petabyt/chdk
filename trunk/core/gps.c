@@ -24,9 +24,13 @@
 #include "gui_lang.h"
 #include "gui_mbox.h"
 
-// for testing on cameras without a GPS chip - add #define CAM_HAS_GPS 1 to their platform_camera.h file for the test
-//#define SIMULATED_GPS 1    
-#undef  SIMULATED_GPS 
+// For testing on cameras without a GPS chip - uncomment the next line
+//    #define SIMULATED_GPS   1
+// for testing on cameras without a GPS chip - add the following lines (uncommented) to the relevant platform_camera.h file
+/*
+    #define CAM_HAS_GPS     1
+    #define PROPCASE_GPS    0       // Add this if the cameras propset does not include it
+*/
 
 // gps task control
 
@@ -1756,6 +1760,5 @@ int init_gps_navigate_to_photo(int stop_request){                  // called fro
     }   
     return(0) ;
 }
-
 
 /****  eof  ****/

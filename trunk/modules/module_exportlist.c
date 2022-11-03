@@ -162,7 +162,6 @@
             gui_osd_draw_clock
 
             gui_activate_sub_menu
-            gui_menu_back
             get_curr_menu
 
             vid_get_bitmap_fb

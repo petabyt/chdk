@@ -36,8 +36,6 @@ static int          x, y;
 static int          w, wplus, num_lines;
 static int          len_bool, len_int, len_enum, len_space, len_br, cl_rect;
 static int          int_incr = 1;
-static confColor    *item_color;
-static int          item_color_type;    // MENUITEM_COLOR_FG / MENUITEM_COLOR_BG
 
 // Set if ALT entered and user menu set to load automatically
 int gui_user_menu_flag;
@@ -241,16 +239,14 @@ void gui_menu_cancel_redraw()
 //-------------------------------------------------------------------
 // Function passed to gui_palette_init
 // This is called when a new color is selected to update the menu / config value
-static void gui_menu_color_selected(chdkColor clr)
+static void gui_menu_color_selected_fg(chdkColor clr)
 {
-    if (item_color_type == MENUITEM_COLOR_FG)
-    {
-        item_color->fg = clr;
-    }
-    else
-    {
-        item_color->bg = clr;
-    }
+    curr_menu->menu[gui_menu_curr_item].conf_colors->fg = clr;
+    gui_menu_erase_and_redraw();
+}
+static void gui_menu_color_selected_bg(chdkColor clr)
+{
+    curr_menu->menu[gui_menu_curr_item].conf_colors->bg = clr;
     gui_menu_erase_and_redraw();
 }
 
@@ -567,7 +563,7 @@ static int gui_menu_touch_handler(int tx, int ty)
 
 //-------------------------------------------------------------------
 // Process button presses when in GUI_MODE_MENU mode
-int gui_menu_kbd_process() {
+static int gui_menu_kbd_process() {
 
     switch (kbd_get_autoclicked_key() | get_jogdial_direction())
     {
@@ -617,15 +613,11 @@ int gui_menu_kbd_process() {
                         gui_menu_back();
                         break;
                     case MENUITEM_COLOR_FG:
-                        item_color = curr_menu->menu[gui_menu_curr_item].conf_colors;
-                        item_color_type = MENUITEM_COLOR_FG;
-                        libpalette->show_palette(PALETTE_MODE_SELECT, item_color->fg, gui_menu_color_selected);
+                        libpalette->show_palette(PALETTE_MODE_SELECT, curr_menu->menu[gui_menu_curr_item].conf_colors->fg, gui_menu_color_selected_fg);
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_COLOR_BG:
-                        item_color = curr_menu->menu[gui_menu_curr_item].conf_colors;
-                        item_color_type = MENUITEM_COLOR_BG;
-                        libpalette->show_palette(PALETTE_MODE_SELECT, item_color->bg, gui_menu_color_selected);
+                        libpalette->show_palette(PALETTE_MODE_SELECT, curr_menu->menu[gui_menu_curr_item].conf_colors->bg, gui_menu_color_selected_bg);
                         gui_menu_redraw=2;
                         break;
                     case MENUITEM_ENUM:
@@ -681,7 +673,7 @@ int gui_menu_kbd_process() {
 
 //-------------------------------------------------------------------
 // Draw menu scroll bar if needed, and title bar
-void gui_menu_draw_initial()
+static void gui_menu_draw_initial()
 { 
     count = gui_menu_rows();
 
@@ -925,7 +917,17 @@ static void menu_text(color c)
     cl = save;
 }
 
-void gui_menu_draw(int enforce_redraw)
+static void menu_seperator_line(int x, int w)
+{
+    int h = rbf_font_height()/2;
+    draw_rectangle(x, yy, x+w-1, yy+h-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
+    draw_hline(x, yy+h, 6, BG_COLOR(cl));
+    draw_hline(x+6, yy+h, w-12, FG_COLOR(cl));
+    draw_hline(x+w-6, yy+h, 6, BG_COLOR(cl));
+    draw_rectangle(x, yy+h+1, x+w-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
+}
+
+static void gui_menu_draw(int enforce_redraw)
 {
     int i, j;
     const char *ch = "";
@@ -994,40 +996,29 @@ void gui_menu_draw(int enforce_redraw)
                 break;
             case MENUITEM_SEPARATOR:
                 if (lang_str(curr_menu->menu[imenu].text)[0])
-                    sprintf(tbuf," %s ",lang_str(curr_menu->menu[imenu].text));
-                else
-                    tbuf[0] = 0;
-
-                j = rbf_str_width(tbuf);
-                xx += ((w - j) >> 1);
-
-                if (xx > x)
                 {
-                    draw_rectangle(x, yy, xx-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
-                    draw_hline(x, yy+rbf_font_height()/2, 6, BG_COLOR(cl));
-                    draw_hline(x+6, yy+rbf_font_height()/2, xx-x-6, FG_COLOR(cl));
-                    draw_rectangle(x, yy+rbf_font_height()/2+1, xx-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
+                    char* s = lang_str(curr_menu->menu[imenu].text);
+                    j = (w - rbf_str_width(s)) >> 1;
+                    if (j < 0) j = 0;
+
+                    rbf_draw_clipped_string(x+j, yy, s, cl, 0, w);
+
+                    if (j)
+                    {
+                        menu_seperator_line(x, j);
+                        menu_seperator_line(x+w-j, j);
+                    }
                 }
                 else
                 {
-                    xx = x;
-                }
-
-                if (j) xx += rbf_draw_clipped_string(xx, yy, tbuf, cl, 0, w);
-
-                if (xx < x+w)
-                {
-                    draw_rectangle(xx, yy, x+w-1, yy+rbf_font_height()/2-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
-                    draw_hline(xx, yy+rbf_font_height()/2, x+w-6-xx, FG_COLOR(cl));
-                    draw_hline(x+w-6, yy+rbf_font_height()/2, 6, BG_COLOR(cl));
-                    draw_rectangle(xx, yy+rbf_font_height()/2+1, x+w-1, yy+rbf_font_height()-1, MAKE_COLOR(BG_COLOR(cl), BG_COLOR(cl)), RECT_BORDER0|DRAW_FILLED);
+                    menu_seperator_line(x, w);
                 }
                 break;
             case MENUITEM_COLOR_FG:
-                gui_menu_draw_color(FG_COLOR(user_color(*curr_menu->menu[imenu].conf_colors)));
+                gui_menu_draw_color(chdkColorToCanonColor(curr_menu->menu[imenu].conf_colors->fg));
                 break;
             case MENUITEM_COLOR_BG:
-                gui_menu_draw_color(BG_COLOR(user_color(*curr_menu->menu[imenu].conf_colors)));
+                gui_menu_draw_color(chdkColorToCanonColor(curr_menu->menu[imenu].conf_colors->bg));
                 break;
             case MENUITEM_ENUM:
                 if (curr_menu->menu[imenu].change_function)
@@ -1060,7 +1051,7 @@ void gui_menu_draw(int enforce_redraw)
 
 //-------------------------------------------------------------------
 // Menu button handler for Menu mode
-void gui_menu_kbd_process_menu_btn()
+static void gui_menu_kbd_process_menu_btn()
 {
     conf_save();
 
