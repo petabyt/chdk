@@ -496,7 +496,7 @@ static int factor(void)
     break;  
    case TOKENIZER_GET_SD_OVER_MODES:
     accept(TOKENIZER_GET_SD_OVER_MODES);
-    r = sd_over_modes() ;
+    r = camera_info.sd_override_modes;
     break;
   case TOKENIZER_GET_ISO_MARKET:
     accept(TOKENIZER_GET_ISO_MARKET);

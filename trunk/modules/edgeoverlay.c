@@ -100,7 +100,8 @@ static void reset_edge_overlay()
     slice = 0;
 
     // Clean up state saved in core CHDK
-    module_save_edge(edgebuf, fsm_state);
+    camera_info.edge.edge_buf = edgebuf;
+    camera_info.edge.edge_state = fsm_state;
 }
 
 static int is_buffer_ready()
@@ -791,7 +792,7 @@ void edge_overlay()
     {
     case EDGE_LIVE:
     {
-        camera_info.state.edge_state_draw=0;
+        camera_info.edge.state_draw=0;
         // In this state we assume no edge overlay in memory,
         // but we are ready to create one if the user presses wishes so.
 
@@ -828,7 +829,7 @@ void edge_overlay()
     }
     case EDGE_FROZEN:
     {
-        camera_info.state.edge_state_draw=1;
+        camera_info.edge.state_draw=1;
         // We have a stored edge overlay in memory and we display
         // it on screen in 'frozen' mode.
 
@@ -898,7 +899,8 @@ ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
 //---------------------------------------------------------
 int _module_loader( __attribute__ ((unused))unsigned int* chdk_export_list )
 {
-    fsm_state = module_restore_edge((void**)&edgebuf);
+    fsm_state = camera_info.edge.edge_state;
+    edgebuf = camera_info.edge.edge_buf;
     return 0;
 }
 
@@ -910,7 +912,8 @@ int _module_loader( __attribute__ ((unused))unsigned int* chdk_export_list )
 int _module_unloader()
 {
     // Save state info
-    module_save_edge(edgebuf, fsm_state);
+    camera_info.edge.edge_buf = edgebuf;
+    camera_info.edge.edge_state = fsm_state;
 
     // Module can be unloaded when menu exits
     // Free filter buffer

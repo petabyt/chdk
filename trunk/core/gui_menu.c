@@ -805,22 +805,22 @@ static int factor_disp_len()
     return l;
 }
 
-static char tbuf[64];
+extern char osd_buf[64];
 
 // Convert an int value to a display string, adjust position of '-' for negative values to
 // not clash with int_incr 'cursor' position
 static void get_int_disp_string(int value, int dlen)
 {
-    sprintf(tbuf, (dlen == 6) ? "%7d" : "%5d", value);
+    sprintf(osd_buf, (dlen == 6) ? "%7d" : "%5d", value);
     if (value < 0)
     {
         int spos, cpos;
-        for (spos=0; spos<5; spos++) if (tbuf[spos] == '-') break;
+        for (spos=0; spos<5; spos++) if (osd_buf[spos] == '-') break;
         cpos = dlen - factor_disp_len();
         if ((cpos > 0) && (cpos <= spos))
         {
-            tbuf[spos] = ' ';
-            tbuf[cpos-1] = '-';
+            osd_buf[spos] = ' ';
+            osd_buf[cpos-1] = '-';
         }
     }
 }
@@ -856,7 +856,7 @@ static void gui_menu_draw_state_value(CMenuItem *c)
     case MENUITEM_INT:
         get_int_disp_string(*(c[0].value), (c[0].type & MENUITEM_SD_INT)?6:4);
         gui_set_int_cursor((c[0].type & MENUITEM_SD_INT)?6:4);
-        ch = tbuf;
+        ch = osd_buf;
         break;
     case MENUITEM_ENUM:
         if (c[0].change_function)
@@ -973,16 +973,16 @@ static void gui_menu_draw(int enforce_redraw)
                 break;
             case MENUITEM_INT:
                 get_int_disp_string(*(curr_menu->menu[imenu].value), (curr_menu->menu[imenu].type & MENUITEM_SD_INT)?6:4);
-                gui_menu_draw_value(tbuf, (curr_menu->menu[imenu].type & MENUITEM_SD_INT)?len_enum:len_int);
+                gui_menu_draw_value(osd_buf, (curr_menu->menu[imenu].type & MENUITEM_SD_INT)?len_enum:len_int);
                 break;
             case MENUITEM_SUBMENU_PROC:
             case MENUITEM_SUBMENU:
-                sprintf(tbuf, "%s%s", lang_str(curr_menu->menu[imenu].text),(conf.menu_symbol_enable)?"":" ->");
-                gui_menu_draw_text(tbuf,2);
+                sprintf(osd_buf, "%s%s", lang_str(curr_menu->menu[imenu].text),(conf.menu_symbol_enable)?"":" ->");
+                gui_menu_draw_text(osd_buf,2);
                 break;
             case MENUITEM_UP:
-                sprintf(tbuf, "%s%s", (conf.menu_symbol_enable)?"":"<- ", lang_str(curr_menu->menu[imenu].text));
-                gui_menu_draw_text(tbuf,1);
+                sprintf(osd_buf, "%s%s", (conf.menu_symbol_enable)?"":"<- ", lang_str(curr_menu->menu[imenu].text));
+                gui_menu_draw_text(osd_buf,1);
                 break;
             case MENUITEM_ERROR:
                 menu_text(COLOR_RED);

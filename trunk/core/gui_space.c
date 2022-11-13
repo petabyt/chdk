@@ -5,10 +5,6 @@
 #include "gui_space.h"
 //-------------------------------------------------------------------
 
-static char osd_buf[32];
-
-//-------------------------------------------------------------------
-
 unsigned long get_space_perc() {
     // accuracy reduced to support cards up to 2TB
     return (GetFreeCardSpaceKb()>>6)*100/(GetTotalCardSpaceKb()>>6);
@@ -134,35 +130,36 @@ static void gui_space_draw_icon()
 //-------------------------------------------------------------------
 static void gui_space_draw_value(int force)
 {
+    char buf[32];
     int offset = 0;
 
     space_color();
 
     if ((conf.show_partition_nr) && (get_part_count() > 1))
     {
-        sprintf(osd_buf, "%1d:\0", get_active_partition());
+        sprintf(buf, "%1d:\0", get_active_partition());
         offset = 2;
     }
 
     if (is_partition_changed())
     {
-        sprintf(osd_buf+offset, "???\0");
+        sprintf(buf+offset, "???\0");
     }
     else
     {
         if (conf.space_perc_show || force)
         {
-            sprintf(osd_buf+offset, "%3d%%\0", perc);
+            sprintf(buf+offset, "%3d%%\0", perc);
         }
         else if (conf.space_mb_show)
         {
             unsigned int freemb = GetFreeCardSpaceKb()/1024;
-            if (freemb < 10000) sprintf(osd_buf+offset, "%4dM\0",freemb);
-            else sprintf(osd_buf+offset, "%4dG\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
+            if (freemb < 10000) sprintf(buf+offset, "%4dM\0",freemb);
+            else sprintf(buf+offset, "%4dG\0",freemb/1024);   // if 10 GiB or more free, print in GiB instead of MiB
         }
     }
 
-    draw_osd_string(conf.space_txt_pos, 0, 0, osd_buf, cl, conf.space_txt_scale);
+    draw_osd_string(conf.space_txt_pos, 0, 0, buf, cl, conf.space_txt_scale);
 }
 
 //-------------------------------------------------------------------

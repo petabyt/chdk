@@ -50,10 +50,9 @@ extern void (*draw_pixel_proc)(unsigned int offset, color cl);
 #define IW  32
 #define IH  20
 
-static color ibuf[IW*IH];
 static int mw, mh;
 
-static void idraw_hline(coord x, coord y, int len, color cl)
+static void idraw_hline(color* ibuf, coord x, coord y, int len, color cl)
 {
     if ((y < 0) || (x >= IW) || (y >= IH)) return;
     if (x < 0) { len += x; x = 0; }
@@ -65,7 +64,7 @@ static void idraw_hline(coord x, coord y, int len, color cl)
         ibuf[x] = cl;
 }
 
-static void idraw_vline(coord x, coord y, int len, color cl)
+static void idraw_vline(color* ibuf, coord x, coord y, int len, color cl)
 {
     if ((x < 0) || (x >= IW) || (y >= IH)) return;
     if (y < 0) { len += y; y = 0; }
@@ -79,7 +78,7 @@ static void idraw_vline(coord x, coord y, int len, color cl)
 
 // Generic rectangle
 // 'flags' defines type - filled, round corners, shadow and border thickness
-static void idraw_rectangle(coord x1, coord y1, coord x2, coord y2, twoColors cl, int flags)
+static void idraw_rectangle(color* ibuf, coord x1, coord y1, coord x2, coord y2, twoColors cl, int flags)
 {
     // Normalise values
     if (x1 > x2)
@@ -100,10 +99,10 @@ static void idraw_rectangle(coord x1, coord y1, coord x2, coord y2, twoColors cl
     for (i=0; i<thickness; i++)
     {
         // Clipping done in draw_hline and draw_vline
-        idraw_vline(x1, y1 + round * 2, y2 - y1 - round * 4 + 1, FG_COLOR(cl));
-        idraw_vline(x2, y1 + round * 2, y2 - y1 - round * 4 + 1, FG_COLOR(cl));
-        idraw_hline(x1 + 1 + round, y1, x2 - x1 - round * 2 - 1, FG_COLOR(cl));
-        idraw_hline(x1 + 1 + round, y2, x2 - x1 - round * 2 - 1, FG_COLOR(cl));
+        idraw_vline(ibuf, x1, y1 + round * 2, y2 - y1 - round * 4 + 1, FG_COLOR(cl));
+        idraw_vline(ibuf, x2, y1 + round * 2, y2 - y1 - round * 4 + 1, FG_COLOR(cl));
+        idraw_hline(ibuf, x1 + 1 + round, y1, x2 - x1 - round * 2 - 1, FG_COLOR(cl));
+        idraw_hline(ibuf, x1 + 1 + round, y2, x2 - x1 - round * 2 - 1, FG_COLOR(cl));
 
         x1++; x2--;
         y1++; y2--;
@@ -122,11 +121,11 @@ static void idraw_rectangle(coord x1, coord y1, coord x2, coord y2, twoColors cl
 
         coord y;
         for (y = y1; y <= y2; ++y)
-            idraw_hline(x1, y, x2 - x1 + 1, BG_COLOR(cl));
+            idraw_hline(ibuf, x1, y, x2 - x1 + 1, BG_COLOR(cl));
     }
 }
 
-static void idraw_line(coord x1, coord y1, coord x2, coord y2, color cl)
+static void idraw_line(color* ibuf, coord x1, coord y1, coord x2, coord y2, color cl)
 {
     unsigned char steep = abs(y2 - y1) > abs(x2 - x1);
     if (steep)
@@ -170,6 +169,8 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
 {
     if ((x >= camera_screen.width) || (y >= camera_screen.height)) return;
 
+    color ibuf[IW*IH];
+
     memset(ibuf, 0, IW*IH);
     mw = 0; mh = 0;
 
@@ -191,25 +192,25 @@ void draw_icon_cmds(coord x, coord y, icon_cmd *cmds)
             done = 1;
             break;
         case IA_HLINE:
-            idraw_hline(x1, y1, x2, cb);
+            idraw_hline(ibuf, x1, y1, x2, cb);
             break;
         case IA_VLINE:
-            idraw_vline(x1, y1, y2, cb);
+            idraw_vline(ibuf, x1, y1, y2, cb);
             break;
         case IA_LINE:
-            idraw_line(x1, y1, x2, y2, cb);
+            idraw_line(ibuf, x1, y1, x2, y2, cb);
             break;
         case IA_RECT:
-            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness);
+            idraw_rectangle(ibuf, x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness);
             break;
         case IA_FILLED_RECT:
-            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
+            idraw_rectangle(ibuf, x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED);
             break;
         case IA_ROUND_RECT:
-            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
+            idraw_rectangle(ibuf, x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|RECT_ROUND_CORNERS);
             break;
         case IA_FILLED_ROUND_RECT:
-            idraw_rectangle(x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
+            idraw_rectangle(ibuf, x1, y1, x2, y2, MAKE_COLOR(cb,cf), thickness|DRAW_FILLED|RECT_ROUND_CORNERS);
             break;
         }
         cmds++;

@@ -29,7 +29,7 @@ void __attribute__((naked,noinline)) capt_seq_hook_raw_here()
     // The value can be adjusted as needed for different cameras.
 
     if ((conf.save_raw && is_raw_enabled()) // Only delay if RAW enabled (prevents slowdown in HQ burst mode)
-        || (remotecap_get_target()) //... or if remote shooting is active
+        || (camera_info.remotecap.file_target) //... or if remote shooting is active
     )
     {
         int fc = get_file_counter();

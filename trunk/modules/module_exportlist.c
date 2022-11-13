@@ -11,9 +11,6 @@
 
             module_get_adr
             module_exit_alt
-            module_restore_edge
-            module_save_edge
-            module_set_script_lang
             module_run
             module_preload
             &chdk_colors
@@ -427,14 +424,11 @@
             SetHPTimerAfterNow
             CancelHPTimer
 
-            remotecap_get_target_support
             remotecap_set_target
             remotecap_using_dng_module
             remotecap_set_timeout
-            remotecap_get_target
 
             set_focus_bypass
-            sd_over_modes
 
             &firmware_crc_desc
             live_view_get_data

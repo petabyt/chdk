@@ -1,5 +1,6 @@
 #include "platform.h"
 #include "module_def.h"
+#include "ptp.h"
 
 //==========================================================
 // Data Structure to store camera specific information
@@ -236,9 +237,30 @@ _cam_info camera_info =
 #else
     0,
 #endif
+#ifdef CAM_SD_OVER_IN_AF 
+    1+
+#endif
+#ifdef CAM_SD_OVER_IN_AFL
+    2+ 
+#endif
+#ifdef CAM_SD_OVER_IN_MF
+    4+
+#endif
+    0,      // sd_override_modes
     { 0 },  // state
     { 0 },  // perf
     { 0 },  // dof_values
+    { 0 },  // edge
+    {       // remotecap
+#ifdef CAM_HAS_FILEWRITETASK_HOOK
+        PTP_CHDK_CAPTURE_JPG |
+#ifdef CAM_HAS_CANON_RAW
+        PTP_CHDK_CAPTURE_CRAW |
+#endif
+#endif
+        (PTP_CHDK_CAPTURE_RAW | PTP_CHDK_CAPTURE_DNGHDR),   // target_support
+        0,      // file_target
+    },
 #if defined(OPT_FILEIO_STATS)
     { 0 },  // fileio_stats
 #endif

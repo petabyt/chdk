@@ -145,14 +145,6 @@ librawop_sym* librawop = &default_librawop;
 
 /************* DYNAMIC LIBRARY EDGE OVERLAY ******/
 
-// Storage and interface for edge overlay 'image' buffer.
-// This is so the previous overlay can survive if the module gets unloaded
-static void* saved_edgebuf = 0;
-static int saved_edgestate = 0;
-
-int module_restore_edge(void **buf) { *buf = saved_edgebuf; return saved_edgestate; }
-void module_save_edge(void* buf, int state)      { saved_edgebuf = buf; saved_edgestate = state; }
-
 #define MODULE_NAME_EDGEOVR "edgeovr.flt"
 
 // Forward reference

@@ -21,7 +21,7 @@
 
 //==========================================================
 
-static char osd_buf[50];
+extern char osd_buf[64];
 
 //==========================================================
 
@@ -184,6 +184,7 @@ void core_spytask()
         "A/CHDK/DATA",
         "A/CHDK/LOGS",
         "A/CHDK/EDGE",
+        "A/DCIM",
     };
     for (i = 0; i < (int)(sizeof(chdk_dirs) / sizeof(char*)); i++)
         mkdir_if_not_exist(chdk_dirs[i]);

@@ -22,7 +22,7 @@ extern const char* gui_video_bitrate_enum(int change, int arg);
 extern const char* gui_video_min_bitrate_enum(int change, int arg);
 
 //-------------------------------------------------------------------
-static char osd_buf[64];
+char osd_buf[64];
 
 typedef struct {
     short av96;
@@ -330,8 +330,8 @@ void gui_osd_draw_state(int is_osd_edit)
         if (conf.flash_enable_exp_comp) gui_print_osd_state_string_chr("Flash:A ", flash_exp_comp_modes_string());
         // edgeoverlay state
         if (conf.edge_overlay_enable || is_osd_edit) {
-            if (camera_info.state.edge_state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
-            else if (camera_info.state.edge_state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+            if (camera_info.edge.state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
+            else if (camera_info.edge.state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
         }
 #ifdef CAM_QUALITY_OVERRIDE
         // displaying the overriding picture quality if active

@@ -491,11 +491,8 @@ static void script_scan()
 // PARAMETERS:  mode - what exact kind of cfg file name required
 // RESULT:  pointer to buffer with full path to config file
 //-------------------------------------------------------------------
-static char* make_param_filename(enum FilenameMakeModeEnum mode)
+void make_param_filename(char *tgt_buf, enum FilenameMakeModeEnum mode)
 {
-    // output buffer
-    static char tgt_buf[100];
-    
     // find name of script
     const char* name = get_script_filename();
     
@@ -523,8 +520,6 @@ static char* make_param_filename(enum FilenameMakeModeEnum mode)
             sprintf(s,".%d", conf.script_param_set);
             break;
     }
-
-    return tgt_buf;
 }
 
 //-------------------------------------------------------------------
@@ -532,10 +527,12 @@ static char* make_param_filename(enum FilenameMakeModeEnum mode)
 //-------------------------------------------------------------------
 static void get_last_paramset_num()
 {
+    char nm[100];
+
     // skip if no script available
     if (conf.script_file[0] == 0) return;
 
-    char *nm = make_param_filename(MAKE_PARAMSETNUM_FILENAME);
+    make_param_filename(nm, MAKE_PARAMSETNUM_FILENAME);
     if ( !load_int_value_file( nm, &conf.script_param_set ) )
     {
         conf.script_param_set = 0;
@@ -557,6 +554,8 @@ static void get_last_paramset_num()
 //-------------------------------------------------------------------
 static int load_params_values()
 {
+    char nm[100];
+
     // skip if no script loaded
     if (conf.script_file[0] == 0) return 0;
     // skip if 'default' parameters requested
@@ -565,12 +564,12 @@ static int load_params_values()
     if ((conf.script_param_set < 0) || (conf.script_param_set > 10))
         conf.script_param_set = 0;
 
-    char *nm = make_param_filename(MAKE_PARAM_FILENAME_V2);
+    make_param_filename(nm, MAKE_PARAM_FILENAME_V2);
 
     char* buf = load_file(nm, 0, 1);
     if (buf == 0)
     {
-        nm = make_param_filename(MAKE_PARAM_FILENAME);
+        make_param_filename(nm, MAKE_PARAM_FILENAME);
         buf = load_file(nm, 0, 1);
         if (buf == 0)
             return 0;
@@ -641,8 +640,8 @@ static void do_save_param_file()
 {
     char buf[100];
 
-    char *fn = make_param_filename(MAKE_PARAM_FILENAME_V2);
-    int fd = open(fn, O_WRONLY|O_CREAT|O_TRUNC, 0777);
+    make_param_filename(buf, MAKE_PARAM_FILENAME_V2);
+    int fd = open(buf, O_WRONLY|O_CREAT|O_TRUNC, 0777);
 
     if (fd >= 0)
     {
@@ -676,12 +675,14 @@ static void do_save_param_file()
 //-------------------------------------------------------------------
 void save_params_values( int enforce )
 {
+    char nm[100];
+
     if (conf.script_param_save && (conf.script_param_set != DEFAULT_PARAM_SET))
     {
         // Write paramsetnum file
         if (conf.script_param_set != last_script_param_set)
         {
-            char *nm = make_param_filename(MAKE_PARAMSETNUM_FILENAME);
+            make_param_filename(nm, MAKE_PARAMSETNUM_FILENAME);
             save_int_value_file( nm, conf.script_param_set );
             last_script_param_set = conf.script_param_set;
         }

@@ -41,7 +41,7 @@ typedef struct
 //      _cam_info   --> CAM_INFO_VERSION
 #define CAM_SCREEN_VERSION      {2,0}       // Version for camera_screen
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
-#define CAM_INFO_VERSION        {3,0}       // Version for camera_info
+#define CAM_INFO_VERSION        {4,0}       // Version for camera_info
 
 typedef struct
 {
@@ -142,32 +142,34 @@ typedef struct
     // Canon PARAMS indexes
     struct
     {
-        int camera_name;
-        int owner_name;
-        int artist_name;
-        int copyright;
+        short camera_name;
+        short owner_name;
+        short artist_name;
+        short copyright;
     } params;
+
     // Canon PROPCASE indexes
     struct
     {
-        int propset;
-        int gps;
-        int orientation_sensor;
-        int tv;
-        int av;
-        int min_av;
-        int ev_correction_1;
-        int ev_correction_2;
-        int flash_mode;
-        int flash_fire;
-        int metering_mode;
-        int wb_adj;
-        int aspect_ratio;
-        int shooting;
-        int resolution;
-        int quality;
-        int af_lock;
+        short propset;
+        short gps;
+        short orientation_sensor;
+        short tv;
+        short av;
+        short min_av;
+        short ev_correction_1;
+        short ev_correction_2;
+        short flash_mode;
+        short flash_fire;
+        short metering_mode;
+        short wb_adj;
+        short aspect_ratio;
+        short shooting;
+        short resolution;
+        short quality;
+        short af_lock;
     } props;
+
     int rombaseaddr, maxramaddr, memisosize;
     int cam_uncached_bit, exmem;
     int text_start, data_start, bss_start, bss_end;     // Link values (used for debug)
@@ -181,23 +183,24 @@ typedef struct
     char* build_date;
     char* build_time;
     char* os;
-    int cam_ev_in_video;            // Can CHDK can change exposure in video mode?
-    int cam_has_nd_filter;
-    int cam_has_iris_diaphragm;
-    int cam_has_video_button, cam_has_zoom_lever;
-    int cam_has_manual_focus;
-    int cam_has_multipart;
-    int cam_remote_sync_status_led;
-    int cam_key_press_delay, cam_key_release_delay;
-    int cam_af_led;
-    int circle_of_confusion;
-    int cam_digic; // digic number from makefile. Number x10, so digic 2 = 20,  digic IV = 40, digic IV+ = 41.
-    int cam_canon_raw; // cam has native raw support
+    short cam_ev_in_video;            // Can CHDK can change exposure in video mode?
+    short cam_has_nd_filter;
+    short cam_has_iris_diaphragm;
+    short cam_has_video_button, cam_has_zoom_lever;
+    short cam_has_manual_focus;
+    short cam_has_multipart;
+    int   cam_remote_sync_status_led;
+    short cam_key_press_delay, cam_key_release_delay;
+    short cam_af_led;
+    short circle_of_confusion;
+    short cam_digic; // digic number from makefile. Number x10, so digic 2 = 20,  digic IV = 40, digic IV+ = 41.
+    short cam_canon_raw; // cam has native raw support
+    short sd_override_modes;  // Available SD override modes for camera
+
     // Miscellaneous variables to record state information
     // Used to control communication between various tasks and modules
     struct
     {
-        int     edge_state_draw;            // Current state of overlay (Live/Frozen/Pano)
         int     is_shutter_half_press;      // State of Shutter Half Press button
         int     auto_started;               // Set to 1 if script auto-started
         int     user_menu_has_changed;      // not saved to config file, used to tell code that file needs to be saved
@@ -242,18 +245,33 @@ typedef struct
     // Depth of Field, Hyperfocal distance, etc
     DOF_TYPE dof_values;
 
+    // Storage and interface for edge overlay 'image' buffer.
+    // This is so the previous overlay can survive if the module gets unloaded
+    struct
+    {
+        short   state_draw;         // Current state of overlay (Live/Frozen/Pano)
+        short   edge_state;
+        void*   edge_buf;
+    } edge;
+
+    struct
+    {
+        short   target_support;     // Remote capture supported modes
+        short   file_target;        // Currently selected remotecap target(s)
+    } remotecap;
+
 #if defined(OPT_FILEIO_STATS)
     // Optional stats from file IO functions (open, close, read, write, etc)
     struct
     {
-        int     fileio_semaphore_errors;
-        int     max_semaphore_timeout;
-        int     close_badfile_count;
-        int     write_badfile_count;
-        int     open_count;
-        int     close_count;
-        int     open_fail_count;
-        int     close_fail_count;
+        short   fileio_semaphore_errors;
+        short   max_semaphore_timeout;
+        short   close_badfile_count;
+        short   write_badfile_count;
+        short   open_count;
+        short   close_count;
+        short   open_fail_count;
+        short   close_fail_count;
     } fileio_stats;
 #endif
 } _cam_info;

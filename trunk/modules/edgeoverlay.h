@@ -19,7 +19,5 @@ typedef struct
 } libedgeovr_sym;
 
 extern libedgeovr_sym* libedgeovr;
-extern int module_restore_edge(void **buf);
-extern void module_save_edge(void* buf, int state);
 
 #endif

@@ -451,7 +451,7 @@ static int luaCB_set_mf(lua_State* L)
 
 static int luaCB_get_sd_over_modes( lua_State* L )
 {
-    lua_pushnumber(L,sd_over_modes());
+    lua_pushnumber(L,camera_info.sd_override_modes);
     return 1;
 }
 
@@ -2656,7 +2656,7 @@ bitmask=get_usb_capture_support()
 */
 static int luaCB_get_usb_capture_support( lua_State* L )
 {
-    lua_pushnumber(L,remotecap_get_target_support());
+    lua_pushnumber(L,camera_info.remotecap.target_support);
     return 1;
 }
 
@@ -2683,7 +2683,7 @@ selected = bitmask passed to init, or 0 if capture not configured or timed out/c
 */
 static int luaCB_get_usb_capture_target( lua_State* L )
 {
-    lua_pushnumber(L,remotecap_get_target());
+    lua_pushnumber(L,camera_info.remotecap.file_target);
     return 1;
 }
 

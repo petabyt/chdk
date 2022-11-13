@@ -158,7 +158,7 @@ long get_target_file_num() {
 
 void get_target_dir_name(char *out)
 {
-    static char buf[32];
+    char buf[32];
     extern void _GetImageFolder(char*,int,int,int);
     _GetImageFolder(buf,get_file_next_counter(),CAM_DATE_FOLDER_NAMING,time(NULL));
     strncpy(out,buf,15);

@@ -699,17 +699,13 @@ static libsimple_sym default_librun[MAX_SIMPLE_MODULE] =
 };
 static libsimple_sym* librun[MAX_SIMPLE_MODULE] = { &default_librun[0], &default_librun[1], &default_librun[2], &default_librun[3] };
 
-// Name of loaded module in each slot
-// Each buffer needs to be long enough to hold full path to module (when called from file browser)
-static char h_name[MAX_SIMPLE_MODULE][64];
-
 // Handlers for simple modules - link to above implementation
 static module_handler_t h_run[MAX_SIMPLE_MODULE] =
 {
-    { (base_interface_t**)&librun[0], &default_librun[0].base, ANY_VERSION, h_name[0] },
-    { (base_interface_t**)&librun[1], &default_librun[1].base, ANY_VERSION, h_name[1] },
-    { (base_interface_t**)&librun[2], &default_librun[2].base, ANY_VERSION, h_name[2] },
-    { (base_interface_t**)&librun[3], &default_librun[3].base, ANY_VERSION, h_name[3] }
+    { (base_interface_t**)&librun[0], &default_librun[0].base, ANY_VERSION, 0 },
+    { (base_interface_t**)&librun[1], &default_librun[1].base, ANY_VERSION, 0 },
+    { (base_interface_t**)&librun[2], &default_librun[2].base, ANY_VERSION, 0 },
+    { (base_interface_t**)&librun[3], &default_librun[3].base, ANY_VERSION, 0 }
 };
 
 // Display error message if attempting to run a module with no 'run' method, or no space left for module
@@ -772,6 +768,8 @@ int module_run(char* name)
         // Look for empty slot
         if (*h_run[i].lib == h_run[i].default_lib)
         {
+            if (h_run[i].name == 0)
+                h_run[i].name = malloc(64);
             // Found space - run module
             strcpy(h_run[i].name, name);
             return (*h_run[i].lib)->run();

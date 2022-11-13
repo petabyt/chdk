@@ -14,8 +14,6 @@ static int available_image_data=0; // type of data available
 
 static int pending_image_data=0; // data types requested but not yet transferred in current shot
 
-static int remote_file_target=0; // requested data types
-
 static int target_file_num; // file number captured in raw hook
 
 static ptp_data_chunk raw_chunk;
@@ -35,22 +33,6 @@ static int fwt_session_wait; // should the current invocation of the filewrite h
 #endif //CAM_FILEWRITETASK_MULTIPASS
 #endif //CAM_HAS_FILEWRITETASK_HOOK
 
-
-int remotecap_get_target_support(void) {
-    int ret = (PTP_CHDK_CAPTURE_RAW | PTP_CHDK_CAPTURE_DNGHDR);
-#ifdef CAM_HAS_FILEWRITETASK_HOOK
-    ret |= PTP_CHDK_CAPTURE_JPG;
-#ifdef CAM_HAS_CANON_RAW
-    ret |= PTP_CHDK_CAPTURE_CRAW;
-#endif
-#endif
-    return ret;
-}
-
-int remotecap_get_target(void) {
-    return remote_file_target;
-}
-
 /*
 set hook timeout in ms
 */
@@ -64,7 +46,7 @@ void remotecap_set_timeout(int timeout)
 }
 
 void remotecap_is_ready(int *available_type,int *file_num) {
-    if ( remotecap_get_target() ) {
+    if ( camera_info.remotecap.file_target ) {
         *available_type = available_image_data;
         if(available_image_data) {
             *file_num = target_file_num;
@@ -86,7 +68,7 @@ static void remotecap_set_available_data_type(int type)
 
 // free hooks, reset target and available
 static void remotecap_reset(void) {
-    remote_file_target=0;
+    camera_info.remotecap.file_target=0;
     remotecap_set_available_data_type(0);
     pending_image_data=0;
     // TODO do we need remotecap_fwt_chunks_done() ?
@@ -97,7 +79,7 @@ int remotecap_set_target( int type, int lstart, int lcount )
 {
     // fail if invalid / unsupported type requested,
     // or current mode cannot support requested types
-    if ((type & ~remotecap_get_target_support())
+    if ((type & ~camera_info.remotecap.target_support)
         || !camera_info.state.mode_rec
         || ((type & PTP_CHDK_CAPTURE_RAW) && !is_raw_possible())
 #ifdef CAM_HAS_CANON_RAW
@@ -126,7 +108,7 @@ int remotecap_set_target( int type, int lstart, int lcount )
     if(lcount == 0) {
         lcount = CAM_RAW_ROWS - lstart;
     }
-    remote_file_target=type;
+    camera_info.remotecap.file_target=type;
     startline=lstart;
     linecount=lcount;
     return 1;
@@ -138,7 +120,7 @@ not optimal since it could lead to loading/unloading every shot
 could make logic more sophisticated later
 */
 int remotecap_using_dng_module(void) {
-    return (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) != 0;
+    return (camera_info.remotecap.file_target & PTP_CHDK_CAPTURE_DNGHDR) != 0;
 }
 
 /*
@@ -184,7 +166,7 @@ timeout value, but it ensures that we don't block indefinitely.
     if(wait == 0) {
         remotecap_reset();
     }
-    pending_image_data = remote_file_target;
+    pending_image_data = camera_info.remotecap.file_target;
     target_file_num = next_file_num;
 // TODO technically this could probably wait until after the raw stuff is done,
 // provided the actual chunks are transmitted
@@ -202,7 +184,7 @@ timeout value, but it ensures that we don't block indefinitely.
     fwt_expect_file_count = 1;
 #endif
 #endif //CAM_HAS_FILEWRITETASK_HOOK
-    if (remote_file_target & PTP_CHDK_CAPTURE_DNGHDR) {
+    if (camera_info.remotecap.file_target & PTP_CHDK_CAPTURE_DNGHDR) {
         started();
         libdng->create_dng_header_for_ptp(&dng_hdr_chunk);
 
@@ -214,7 +196,7 @@ timeout value, but it ensures that we don't block indefinitely.
         finished();
     }
 
-    if(!(remote_file_target & PTP_CHDK_CAPTURE_RAW)) {
+    if(!(camera_info.remotecap.file_target & PTP_CHDK_CAPTURE_RAW)) {
         return;
     }
 
@@ -248,7 +230,7 @@ void remotecap_fwt_file_complete(void) {
 called from filewrite hook to notify code new file data is available
 */
 static void remotecap_fwt_file_available(void) {
-    if(!(remote_file_target & fwt_current_type)) {
+    if(!(camera_info.remotecap.file_target & fwt_current_type)) {
         return;
     }
 #ifdef CAM_FILEWRITETASK_MULTIPASS
@@ -294,7 +276,7 @@ int remotecap_get_data_chunk( int fmt, char **addr, unsigned int *size, int *pos
     int status = REMOTECAP_CHUNK_STATUS_LAST; // default = no more chunks
     *pos = -1; // default = sequential
 
-    switch (fmt & remotecap_get_target() & available_image_data)
+    switch (fmt & camera_info.remotecap.file_target & available_image_data)
     {
         case PTP_CHDK_CAPTURE_RAW: //raw
             *addr=(char*)raw_chunk.address;

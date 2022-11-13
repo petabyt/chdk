@@ -6,9 +6,6 @@
 #include "gui_batt.h"
 //-------------------------------------------------------------------
 
-static char osd_buf[32];
-
-//-------------------------------------------------------------------
 static long get_batt_average() {
     #define VOLTS_N         100
     static unsigned short   volts[VOLTS_N] = {0};
@@ -68,21 +65,24 @@ static void gui_batt_draw_icon ()
 
 //-------------------------------------------------------------------
 static void gui_batt_draw_charge(){
+    char buf[16];
+
     int perc = get_batt_perc();
     twoColors cl = user_color((perc<=20) ? conf.osd_color_warn : conf.osd_color);
-    sprintf(osd_buf, "%3d%%", perc);
-    osd_buf[5]=0;
-    draw_osd_string(conf.batt_txt_pos, 0, 0, osd_buf, cl, conf.batt_txt_scale);
+    sprintf(buf, "%3d%%", perc);
+    buf[5]=0;
+    draw_osd_string(conf.batt_txt_pos, 0, 0, buf, cl, conf.batt_txt_scale);
 }
 
 //-------------------------------------------------------------------
 static void gui_batt_draw_volts() {
     unsigned long v;
+    char buf[16];
 
     v = get_batt_average();
-    sprintf(osd_buf, "%ld.%03ld", v/1000, v%1000);
-    osd_buf[5]=0;
-    draw_osd_string(conf.batt_txt_pos, 0, 0, osd_buf, user_color(conf.osd_color), conf.batt_txt_scale);
+    sprintf(buf, "%ld.%03ld", v/1000, v%1000);
+    buf[5]=0;
+    draw_osd_string(conf.batt_txt_pos, 0, 0, buf, user_color(conf.osd_color), conf.batt_txt_scale);
 }
 
 //-------------------------------------------------------------------

@@ -21,7 +21,5 @@ void UnlockAF(void);
 int DoMFLock(void);
 int UnlockMF(void);
 
-int sd_over_modes(void);
-
 #endif
 
