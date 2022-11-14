@@ -907,7 +907,7 @@ static void gui_update_script_submenu()
     {
         script_submenu_items[i].symbol = 0x0;
         script_submenu_items[i].text = (int)p->desc;
-        script_submenu_items[i].type = p->range_type;
+        script_submenu_items[i].type = p->range_type ? p->range_type : MENUITEM_INT|MENUITEM_SCRIPT_PARAM;
         script_submenu_items[i].value = &p->val;
         script_submenu_items[i].arg = p->range;
 
