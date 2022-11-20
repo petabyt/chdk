@@ -170,7 +170,7 @@ void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize
 }
 
 // Draw CHDK OSD string at user defined position and scale
-void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale)
+void draw_osd_string(OSD_pos pos, int xo, int yo, const char *s, twoColors c, OSD_scale scale)
 {
     if ((scale.x == 0) || (scale.y == 0) || ((scale.x == 1) && (scale.y == 1)))
         draw_string(pos.x+xo, pos.y+yo, s, c);

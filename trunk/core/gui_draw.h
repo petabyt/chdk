@@ -128,7 +128,7 @@ extern int  draw_string(coord x, coord y, const char *s, twoColors cl);
 extern int  draw_string_justified(coord x, coord y, const char *s, twoColors cl, int xo, int max_width, int justification);
 extern int  draw_text_justified(coord x, coord y, const char *s, twoColors cl, int max_chars, int max_lines, int justification);
 extern void draw_string_scaled(coord x, coord y, const char *s, twoColors cl, int xsize, int ysize);
-extern void draw_osd_string(OSD_pos pos, int xo, int yo, char *s, twoColors c, OSD_scale scale);
+extern void draw_osd_string(OSD_pos pos, int xo, int yo, const char *s, twoColors c, OSD_scale scale);
 extern void draw_button(int x, int y, int w, int str_id, int active);
 
 extern void draw_txt_string(coord col, coord row, const char *str, twoColors cl);

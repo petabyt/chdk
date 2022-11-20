@@ -1840,6 +1840,11 @@ static CMenu raw_exceptions_submenu = {0x59,LANG_MENU_OSD_RAW_EXCEPTIONS_PARAMS_
 
 //-------------------------------------------------------------------
 
+const char* gui_raw_type_string()
+{
+    return conf.save_raw ? (conf.dng_raw ? "DNG" : "RAW") : "Off";
+}
+
 static void cb_change_dng()
 {
     int old=conf.dng_version;
@@ -2573,14 +2578,14 @@ static void gui_draw_alt_helper()
 #endif
     }
     else
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), col);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE, gui_raw_type_string(), col);
 #else
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
         y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], col);
     else
 #endif
-        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE,(conf.save_raw?(conf.dng_raw?"DNG":"RAW"):"Off"), col);
+        y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_RAW_SAVE, gui_raw_type_string(), col);
 #endif
 
     y = shortcut_text(x, y, 0 ,LANG_HELP_HALF_PRESS, 0, hdr_col);

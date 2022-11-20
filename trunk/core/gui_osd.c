@@ -211,23 +211,22 @@ void gui_osd_draw_raw_info(int is_osd_edit)
         )
        )
     {
-        static int b;
+        static int b;   // controls blinking color for warning
+        strcpy(osd_buf, gui_raw_type_string());
         if (is_raw_enabled() || is_osd_edit)
         { 
             int raw_count = GetRawCount();
             twoColors col = user_color(((raw_count > conf.remaining_raw_treshold) || (b <= 6)) ? conf.osd_color : conf.osd_color_warn);
             if (conf.show_remaining_raw || is_osd_edit) 
             {
-                sprintf(osd_buf, "%s:%3d", (conf.dng_raw)?"DNG":"RAW", raw_count);
-                draw_osd_string(conf.mode_raw_pos, 0, 0, osd_buf, col, conf.mode_raw_scale);
+                sprintf(osd_buf+strlen(osd_buf), ":%3d", raw_count);
             }
-            else
-                draw_osd_string(conf.mode_raw_pos, 0, 0, (conf.dng_raw)?"DNG":"RAW", col, conf.mode_raw_scale);
+            draw_osd_string(conf.mode_raw_pos, 0, 0, osd_buf, col, conf.mode_raw_scale);
             if (++b > 12) b = 0;
-        }   
+        }
         else if (conf.raw_exceptions_warn)
         {
-            gui_print_osd_state_string_chr((conf.dng_raw)?"DNG Disabled":"RAW Disabled",""); 
+            gui_print_osd_state_string_chr(osd_buf," Disabled"); 
         }
     }
 }
@@ -613,7 +612,7 @@ void gui_osd_draw_ev(int is_osd_edit)
         if (ev/96 || (ev==0))
             sprintf(osd_buf, "EV:  %d %s", abs(ev/96), s[abs(ev/16%6)]);
         else
-            sprintf(osd_buf, "EV:  %s   ", s[abs(ev/16%6)]);
+            sprintf(osd_buf, "EV:  %s  ", s[abs(ev/16%6)]);
 
         if (ev>0)
             osd_buf[4]='+';
@@ -655,37 +654,56 @@ void gui_osd_draw_temp(int is_osd_edit)
 #if CAM_EV_IN_VIDEO
 void gui_osd_draw_ev_video(int is_osd_edit)
 {
+    static int is_drawn = 0;
+
     if (!is_video_recording() && !is_osd_edit) return;
 
     int visible = get_ev_video_avail() || is_osd_edit;
 
     int x0=conf.ev_video_pos.x, y0=conf.ev_video_pos.y;
-    int i, deltax;
 
     twoColors col = user_color(conf.osd_color);
 
-    draw_rectangle(x0,y0,x0+70,y0+24, visible? MAKE_COLOR(BG_COLOR(col),BG_COLOR(col)): COLOR_TRANSPARENT, RECT_BORDER1|DRAW_FILLED);
+    if (visible || is_drawn)
+    {
+        draw_rectangle(x0,y0,x0+70,y0+24, visible? MAKE_COLOR(BG_COLOR(col),BG_COLOR(col)): COLOR_TRANSPARENT, RECT_BORDER1|DRAW_FILLED);
+        is_drawn = 0;   // prevent erasing once already erased
+    }
+    
+    if (visible)
+    {
+        is_drawn = 1;
 
-    if (!visible) { return; }
+        int i;
+        for (i = 0; i < 9; i += 1)
+        {
+            draw_vline(x0+2+i*8,   y0+12-(i&1 ? 5 : 10), i&1 ? 6 : 11, col);
+            draw_vline(x0+2+i*8+1, y0+12-(i&1 ? 5 : 10), i&1 ? 6 : 11, col);
+        }
 
-    for (i=0;i<9;i++) draw_line(x0+2+i*8,   y0+12, x0+2+i*8,   y0+12-(i&1 ? 5 : 10), col);
-    for (i=0;i<9;i++) draw_line(x0+2+i*8+1, y0+12, x0+2+i*8+1, y0+12-(i&1 ? 5 : 10), col);
+        x0 += (8 * get_ev_video() + 32);
 
-    deltax=8*get_ev_video();
-
-    x0+=deltax;
-
-    draw_line(x0+34,y0+16,x0+34,y0+22,col);
-    draw_line(x0+35,y0+16,x0+35,y0+22,col);
-
-    draw_line(x0+32,y0+19,x0+32,y0+22,col);
-    draw_line(x0+33,y0+18,x0+33,y0+22,col);
-    draw_line(x0+36,y0+18,x0+36,y0+22,col);
-    draw_line(x0+37,y0+19,x0+37,y0+22,col);
+        static int llen[] = { 4, 5, 7, 7, 5, 4};
+    
+        for (i = 0; i < 6; i += 1)
+        {
+            draw_vline(x0+i,y0+23-llen[i],llen[i],col);
+        }
+    }
 }
 #endif
 
 //------------------------------------------------------------------- 
+static void set_fast_ev(int direction)
+{
+    int ev = shooting_get_ev_correction1() + ((conf.fast_ev_step + 1) * 16 * direction);
+
+    shooting_set_prop(PROPCASE_EV_CORRECTION_1, ev);
+    shooting_set_prop(PROPCASE_EV_CORRECTION_2, ev);
+
+    EnterToCompensationEVF();
+}
+
 // Process up/down/left/right/jogdial shortcuts when control options enabled
 static int kbd_use_up_down_left_right_as_fast_switch()
 {
@@ -713,21 +731,15 @@ static int kbd_use_up_down_left_right_as_fast_switch()
 #if !CAM_HAS_JOGDIAL
         if (kbd_is_key_pressed(KEY_UP))
         {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
-            EnterToCompensationEVF();
+            set_fast_ev(1);
             key_pressed = KEY_UP;
-                    
             return 1;
         } 
 
         if (kbd_is_key_pressed(KEY_DOWN))
         {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
-            EnterToCompensationEVF();
+            set_fast_ev(-1);
             key_pressed = KEY_DOWN;
-
             return 1;
         }
 #else
@@ -735,19 +747,15 @@ static int kbd_use_up_down_left_right_as_fast_switch()
 
         if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_RIGHT))
         {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()+(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()+(conf.fast_ev_step+1)*16);
-            EnterToCompensationEVF();
+            set_fast_ev(1);
         }
 
         if (camera_info.state.is_shutter_half_press && (jogdial==JOGDIAL_LEFT))
         {
-            shooting_set_prop(PROPCASE_EV_CORRECTION_1,shooting_get_ev_correction1()-(conf.fast_ev_step+1)*16);
-            shooting_set_prop(PROPCASE_EV_CORRECTION_2,shooting_get_ev_correction2()-(conf.fast_ev_step+1)*16);
-            EnterToCompensationEVF();
+            set_fast_ev(-1);
         }
 #endif
-    } 
+    }
 
     // Adjust video quality/bitrate if 'Video Quality Control?' option is set
 #ifndef CAM_MOVIEREC_NEWSTYLE

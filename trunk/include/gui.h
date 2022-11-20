@@ -86,6 +86,7 @@ extern void gui_enum_value_change(int *value, int change, int num_items);
 extern const char* gui_subj_dist_override_value_enum(int change, int arg);
 extern const char* gui_subj_dist_override_koef_enum(int change, int arg);
 extern const char* gui_hhmss_enum(int change, int arg);
+extern const char* gui_raw_type_string();
 
 extern const char* tv_override_value_string();
 extern const char* flash_power_mode_string();
