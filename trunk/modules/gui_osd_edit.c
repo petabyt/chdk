@@ -32,7 +32,7 @@ static OSD_elem osd[]={
     {LANG_OSD_LAYOUT_EDITOR_RAW,        &conf.mode_raw_pos,     {7*FONT_WIDTH, FONT_HEIGHT},    &conf.mode_raw_scale    },
     {LANG_OSD_LAYOUT_EDITOR_BAT_ICON,   &conf.batt_icon_pos,    {SCX(28), SCY(12)},             &conf.batt_icon_scale   },
     {LANG_OSD_LAYOUT_EDITOR_BAT_TEXT,   &conf.batt_txt_pos,     {5*FONT_WIDTH, FONT_HEIGHT},    &conf.batt_txt_scale    },
-    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_icon_pos,   {23, 15},                       &conf.space_icon_scale  },
+    {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_icon_pos,   {32, 15},                       &conf.space_icon_scale  },
     {LANG_OSD_LAYOUT_EDITOR_SPACE_TEXT, &conf.space_txt_pos,    {5*FONT_WIDTH, FONT_HEIGHT},    &conf.space_txt_scale   },
     {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_ver_pos,    {3, 50},                        &conf.space_ver_scale   },
     {LANG_OSD_LAYOUT_EDITOR_SPACE_ICON, &conf.space_hor_pos,    {50, 3},                        &conf.space_hor_scale   },

@@ -106,8 +106,8 @@ static const char* gui_change_simple_enum(int* value, int change, const char** i
 
 //-------------------------------------------------------------------
 
-static const char* gui_bracket_values_modes[] = { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev" };
-static const char* gui_bracket_type_modes[] =   { "+/-", "-", "+", "-/+" };
+const char* gui_bracket_values_modes[] = { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev" };
+const char* gui_bracket_type_modes[] =   { "+/-", "-", "+", "-/+" };
 
 static CMenuItem sd_bracket[2] = {
     MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.subj_dist_bracket_value,  MENU_MINMAX(0, 30000) ),
@@ -1302,7 +1302,7 @@ const char* gui_subj_dist_override_koef_enum(int change, __attribute__ ((unused)
 
 #if defined(OPT_CURVES)
 
-static const char* gui_conf_curve_enum(int change, __attribute__ ((unused))int arg) {
+const char* gui_conf_curve_enum(int change, __attribute__ ((unused))int arg) {
     static const char* modes[]={ "None", "Custom", "+1EV", "+2EV", "Auto DR" };
 
     gui_enum_value_change(&conf.curve_enable,change,sizeof(modes)/sizeof(modes[0]));
@@ -1398,7 +1398,7 @@ static const char* gui_nd_filter_state_modes[] =            { "Off", "In", "Out"
 #endif
 static const char* gui_fast_ev_step_modes[] =               { "1/6 Ev","1/3 Ev","1/2 Ev", "2/3 Ev","5/6 Ev","1 Ev","1 1/6Ev","1 1/3Ev","1 1/2Ev", "1 2/3Ev","1 5/6Ev","2 Ev","2 1/6Ev","2 1/3Ev","2 1/2Ev", "2 2/3Ev","2 5/6Ev","3 Ev","3 1/6Ev","3 1/3Ev","3 1/2Ev", "3 2/3Ev","3 5/6Ev","4 Ev"};
 #if CAM_QUALITY_OVERRIDE
-static const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine", "Normal", "Off" };
+const char* gui_fast_image_quality_modes[] =         { "Sup.Fine", "Fine", "Normal", "Off" };
 #endif
 
 #ifdef CAM_HOTSHOE_OVERRIDE

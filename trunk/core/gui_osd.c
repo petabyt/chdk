@@ -234,23 +234,10 @@ void gui_osd_draw_raw_info(int is_osd_edit)
 
 //-------------------------------------------------------------------
 
-static const char * shooting_get_bracket_type()
-{
-    static const char * expo_type[] = { "+/-", "-", "+", "-/+" };
-    return expo_type[conf.bracket_type];
-}
-
-static const char * expo_shift[] = { "Off", "1/3Ev","2/3Ev", "1Ev", "1 1/3Ev", "1 2/3Ev", "2Ev", "2 1/3Ev", "2 2/3Ev", "3Ev", "3 1/3Ev", "3 2/3Ev", "4Ev"};
-
-static const char * shooting_get_tv_bracket_value()
-{
-    return expo_shift[conf.tv_bracket_value];
-}
-
-static const char * shooting_get_av_bracket_value()
-{
-    return expo_shift[conf.av_bracket_value];
-}
+// From gui.c
+extern const char* gui_bracket_values_modes[];
+extern const char* gui_bracket_type_modes[];
+extern const char* gui_fast_image_quality_modes[];
 
 void gui_osd_draw_state(int is_osd_edit)
 {
@@ -293,25 +280,18 @@ void gui_osd_draw_state(int is_osd_edit)
         {
             gui_print_osd_state_string_chr("SD:",gui_subj_dist_override_value_enum(0,0));
             if (camera_info.state.gui_mode_alt)
-            {
-                if (conf.subj_dist_override_koef == SD_OVERRIDE_ON)
-                {
-                    gui_print_osd_state_string_chr("Adj:",menu_increment_factor_string());
-                }
-                else
-                    gui_print_osd_state_string_chr("Adj:",gui_subj_dist_override_koef_enum(0,0));
-            }
+                gui_print_osd_state_string_chr("Adj:",(conf.subj_dist_override_koef == SD_OVERRIDE_ON) ? menu_increment_factor_string() : gui_subj_dist_override_koef_enum(0,0));
         }
         if (is_iso_override_enabled || is_osd_edit)
             gui_print_osd_state_string_int("ISO:", shooting_iso_real_to_market(shooting_get_iso_override_value())); // get_iso_override returns "real" units, clamped within camera limits
         if (is_osd_edit || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_BEST_IMAGE))
         {
           if (is_tv_bracketing_enabled || is_av_bracketing_enabled || is_iso_bracketing_enabled || is_sd_bracketing_enabled)
-            gui_print_osd_state_string_chr("BRACKET:", shooting_get_bracket_type());
+            gui_print_osd_state_string_chr("BRACKET:", gui_bracket_type_modes[conf.bracket_type]);
           if (is_tv_bracketing_enabled)
-            gui_print_osd_state_string_chr("TV:", shooting_get_tv_bracket_value());
+            gui_print_osd_state_string_chr("TV:", gui_bracket_values_modes[conf.tv_bracket_value]);
           else if (is_av_bracketing_enabled)
-            gui_print_osd_state_string_chr("AV:", shooting_get_av_bracket_value());
+            gui_print_osd_state_string_chr("AV:", gui_bracket_values_modes[conf.av_bracket_value]);
           else if (is_iso_bracketing_enabled)
             gui_print_osd_state_string_int("ISO:", conf.iso_bracket_value);
           else if (is_sd_bracketing_enabled)
@@ -319,10 +299,8 @@ void gui_osd_draw_state(int is_osd_edit)
         }
 #ifdef OPT_CURVES
         if (conf.curve_enable || is_osd_edit) {
-            if (conf.curve_enable==1) gui_print_osd_state_string_chr("CURVES:", "CSTM");
-            else if (conf.curve_enable==4) gui_print_osd_state_string_chr("CURVES:", "AUTO");
-            else if (conf.curve_enable==3) gui_print_osd_state_string_chr("CURVES:", "+2EV");
-            else if (conf.curve_enable==2) gui_print_osd_state_string_chr("CURVES:", "+1EV");
+            extern const char* gui_conf_curve_enum(int change, int arg);
+            gui_print_osd_state_string_chr("CURVE:", gui_conf_curve_enum(0,0));
         }
 #endif
         if (conf.override_disable == 1) gui_print_osd_state_string_chr("NO ", "OVERRIDES");
@@ -330,15 +308,12 @@ void gui_osd_draw_state(int is_osd_edit)
         if (conf.flash_enable_exp_comp) gui_print_osd_state_string_chr("Flash:A ", flash_exp_comp_modes_string());
         // edgeoverlay state
         if (conf.edge_overlay_enable || is_osd_edit) {
-            if (camera_info.edge.state_draw==0) gui_print_osd_state_string_chr("EDGE:", "LIVE");
-            else if (camera_info.edge.state_draw==1) gui_print_osd_state_string_chr("EDGE:", ((conf.edge_overlay_pano==0)?"FROZEN":"PANO"));
+            gui_print_osd_state_string_chr("EDGE:", (camera_info.edge.state_draw == 0) ? "LIVE" : ((conf.edge_overlay_pano == 0) ? "FROZEN" : "PANO"));
         }
 #ifdef CAM_QUALITY_OVERRIDE
         // displaying the overriding picture quality if active
-        if (!(conf.fast_image_quality==3) || is_osd_edit) {
-            if (conf.fast_image_quality==0) gui_print_osd_state_string_chr("QUALI:", "super");
-            else if (conf.fast_image_quality==1) gui_print_osd_state_string_chr("QUALI:", "fine");
-            else if (conf.fast_image_quality==2) gui_print_osd_state_string_chr("QUALI:", "normal");
+        if ((conf.fast_image_quality!=3) || is_osd_edit) {
+            gui_print_osd_state_string_chr("QUALI:", gui_fast_image_quality_modes[conf.fast_image_quality]);
         }
 #endif
 
