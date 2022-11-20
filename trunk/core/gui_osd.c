@@ -128,14 +128,14 @@ void gui_osd_draw_dof(int is_osd_edit)
 }
 
 //-------------------------------------------------------------------
-static short n, m; //string number
+static short state_y, misc_y; //string row position
 
 static void gui_print_osd_state_string()
 {
     sprintf(osd_buf+strlen(osd_buf), "%12s", "");
     osd_buf[12]=0;  // limit length to 12 max
-    draw_osd_string(conf.mode_state_pos, 0, n, osd_buf, user_color(conf.osd_color_override), conf.mode_state_scale);
-    n+=FONT_HEIGHT;
+    draw_osd_string(conf.mode_state_pos, 0, state_y, osd_buf, user_color(conf.osd_color_override), conf.mode_state_scale);
+    state_y += FONT_HEIGHT;
 }
 
 static void gui_print_osd_state_string_int(const char * title, int value)
@@ -160,8 +160,8 @@ static void gui_print_osd_misc_string()
 {
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9]=0;  // limit length to 9 max
-    draw_osd_string(conf.values_pos, 0, m, osd_buf, user_color(conf.osd_color), conf.values_scale);
-    m+=FONT_HEIGHT;
+    draw_osd_string(conf.values_pos, 0, misc_y, osd_buf, user_color(conf.osd_color), conf.values_scale);
+    misc_y += FONT_HEIGHT;
 }
 
 static void gui_print_osd_misc_string_int(const char * title, int value)
@@ -189,16 +189,16 @@ static void gui_print_osd_dof_string_dist(const char * title, int value, short u
   twoColors col = user_color(conf.osd_color);
   twoColors valid_col = MAKE_COLOR(BG_COLOR(col), COLOR_GREEN);
   if (i<8) {
-    draw_osd_string(conf.values_pos, 0, m, osd_buf, col, conf.values_scale);
+    draw_osd_string(conf.values_pos, 0, misc_y, osd_buf, col, conf.values_scale);
     sprintf_dist(osd_buf, value);
     sprintf(osd_buf+strlen(osd_buf), "%9s", "");
     osd_buf[9-i]=0;
-    draw_osd_string(conf.values_pos, i*FONT_WIDTH, m, osd_buf, use_good_color?valid_col:col, conf.values_scale);
+    draw_osd_string(conf.values_pos, i*FONT_WIDTH, misc_y, osd_buf, use_good_color?valid_col:col, conf.values_scale);
   } else {
     osd_buf[9]=0;
-    draw_osd_string(conf.values_pos, 0, m, osd_buf, col,conf.values_scale);
+    draw_osd_string(conf.values_pos, 0, misc_y, osd_buf, col,conf.values_scale);
   }
-  m+=FONT_HEIGHT;
+  misc_y += FONT_HEIGHT;
 }
 
 //-------------------------------------------------------------------
@@ -240,7 +240,7 @@ extern const char* gui_fast_image_quality_modes[];
 
 void gui_osd_draw_state(int is_osd_edit)
 {
-    n=0;
+    state_y = 0;
 
     if ((conf.show_state && camera_info.state.mode_rec_or_review) || is_osd_edit)
     {
@@ -283,7 +283,7 @@ void gui_osd_draw_state(int is_osd_edit)
         }
         if (is_iso_override_enabled || is_osd_edit)
             gui_print_osd_state_string_int("ISO:", shooting_iso_real_to_market(shooting_get_iso_override_value())); // get_iso_override returns "real" units, clamped within camera limits
-        if (is_osd_edit || (shooting_get_drive_mode() && m!=MODE_STITCH && m!=MODE_BEST_IMAGE))
+        if (is_osd_edit || (shooting_get_drive_mode() && camera_info.state.mode_shooting!=MODE_STITCH && camera_info.state.mode_shooting!=MODE_BEST_IMAGE))
         {
           if (is_tv_bracketing_enabled || is_av_bracketing_enabled || is_iso_bracketing_enabled || is_sd_bracketing_enabled)
             gui_print_osd_state_string_chr("BRACKET:", gui_bracket_type_modes[conf.bracket_type]);
@@ -344,7 +344,7 @@ static void gui_osd_draw_values(int is_osd_edit, int is_zebra)
             conf.values_show_overexposure || conf.values_show_canon_overexposure || conf.values_show_luminance)
             gui_osd_calc_expo_param();
 
-        m = 0;
+        misc_y = 0;
 
         short f_ex = (conf.show_dof==DOF_SHOW_IN_MISC_EX);
 
