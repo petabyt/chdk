@@ -559,4 +559,4 @@ __stdcall void EFLens_Send_low(int unk, void *efcom_buf);
 #else
 __stdcall void EFLens_Send_low(int unk1, int unk2, void *efcom_buf);
 #endif
-
+#endif // FW_FUNCTIONS_H
