@@ -429,6 +429,7 @@ __stdcall int DeleteEventFlag(int flag);
 __stdcall int CheckAllEventFlag(int flag, int mask, int *res);
 __stdcall int WaitForAllEventFlag(int flag, int what, int timeout);
 __stdcall int RegisterInterruptHandler(const char *name, int int_num, int (*int_handler)(),int unk);
+__stdcall int UnregisterInterruptHandler(int int_num);
 __stdcall int CreateMessageQueue(const char *name/*?*/, int unk/*size? Flags?*/);
 __stdcall int CreateMessageQueueStrictly(const char *name/*?*/, int unk/*size? Flags?*/);
 __stdcall int TryReceiveMessageQueue(int msgq, int *dst);
