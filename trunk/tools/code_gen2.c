@@ -696,8 +696,14 @@ void parse_LEADING()
 void disassemble1(op* p)
 {
     char c[256];
+// popen on msys wants backslash (probably because it's invoking cmd), even though windows usually accepts forward
+#ifdef WIN32 
+#define DS "\\"
+#else
+#define DS "/"
+#endif
     
-    sprintf(c, "../../../../tools/capdis -d-addr -f=chdk -s=0x%08x -c=%d%s -stubs %s 0x%0x", p->func_start, p->func_len, p->do_jump_fw ? " -jfw" : "", options.fw_name, options.ROM_start);
+    sprintf(c, ".."DS".."DS".."DS".."DS"tools"DS"capdis -d-addr -f=chdk -s=0x%08x -c=%d%s -stubs %s 0x%0x", p->func_start, p->func_len, p->do_jump_fw ? " -jfw" : "", options.fw_name, options.ROM_start);
 //     printf("%s\n",c);
     
     char buf[1024];
@@ -767,7 +773,8 @@ void disassemble(op* p)
         length = func_len - func_pos + p->fw_func_end_offset;
 
 // fprintf(outfile,"//%08x %d %d %d %d\n", start, length, cur_line, nxt_line, func_len);
-    for (t_value i = 0; i < length && cur_line < nxt_line;) {
+    t_value i;
+    for (i = 0; i < length && cur_line < nxt_line;) {
         if (dis_func[cur_line].is_inst == 1) {
 //             fprintf(outfile, "/*%08x*/%s\n", dis_func[cur_line].addr, dis_func[cur_line].inst);
             fprintf(outfile, "%s%s\n", options.leading, dis_func[cur_line].inst);
