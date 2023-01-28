@@ -1,10 +1,7 @@
 ************************************
-IXUS175/ELPH180 Notes 
+IXUS175/ELPH180 Notes
 ************************************
 CHDK is a hack, use at your own risk!
-
-This is an ALPHA port. Some CHDK features are not implemented and
-many have not been fully tested.
 
 Porting thread https://chdk.setepontos.com/index.php?topic=13063.0
 
@@ -42,10 +39,10 @@ Script zoom control
 zebra - Thresholds must be ~1-2
 Firmware update boot
 raw/DNG - In P and AUTO, some special scene modes may be broken
-jpeg quality override - Note this camera does not allow setting quality in 
+jpeg quality override - Note this camera does not allow setting quality in
  Canon UI. Default appears to be "fine"
 script LED control - 0 = green power LED, 1 = AF lamp
-SD override - Works in AF, MF and AFL
+SD override - Works in AF, MF and AFL, but see bugs below for issues with MF
 vidtest.lua
 PTP remote shoot - Works in cont mode, does not crash when switchinbg to play
 chdkptp camtests
@@ -56,6 +53,8 @@ ND override
 KNOWN BUGS
 **********
 * Crashes on half shoot if AF Point Zoom is enabled with AV out in rec.
+* If MF is enabled with script set_mf, and then disabled or the camera powered
+  off without doing a shutter half press, the camera will crash
 
 NOT IMPLEMENTED
 ***************
