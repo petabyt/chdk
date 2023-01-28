@@ -1,3 +1,15 @@
+************************************
+G5 X Notes
+************************************
+
+Porting thread:
+https://chdk.setepontos.com/index.php?topic=12672.0
+
+General camera and CHDK port information
+****************************************
+Default alt button is the CONNECT button on the side of the camera below the HDMI
+and USB ports. PLAY, DISPLAY and VIDEO may also be used.
+
 Issues:
 
 - Movie features are not supported. Movie_status is wrong.
