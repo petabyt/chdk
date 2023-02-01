@@ -560,4 +560,13 @@ __stdcall void EFLens_Send_low(int unk, void *efcom_buf);
 #else
 __stdcall void EFLens_Send_low(int unk1, int unk2, void *efcom_buf);
 #endif
+
+// RTC / date related functions
+__stdcall void SetValidSystemCalender(int firmware_time, int max_time, int min_time);
+__stdcall void GetValidSystemCalender(int *firmware_time, int *max_time, int *min_time);
+__stdcall void GetTimeFromRTC(int *time);
+__stdcall int GetTimeFromRTC_FW(void);
+__stdcall int IsInvalidTime(int time);
+__stdcall void PauseTimeOfSystem(void);
+__stdcall void ResumeTimeOfSystem(void);
 #endif // FW_FUNCTIONS_H
