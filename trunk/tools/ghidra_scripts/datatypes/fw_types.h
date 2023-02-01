@@ -260,4 +260,25 @@ typedef struct {
 } ximr_context;
 #endif // dry > 52
 #endif // defined(CAM_DRYOS_REL)
+
+// structure for SIO peripheral communication, used by TCM code at 0x120 on digic < 6
+// register names mostly from qemu-eos
+// SIO channels are associated with interrupts and blocks of registers
+// for digic 4, registers are often 0xc0820XNN where X is channel, NN is register
+// see A1100 100c ffc2d0b8, ffc2d1f8
+typedef struct {
+    int channel; // SIO channel.
+    int sem; // semaphore
+    unsigned int setup1_default; // default value for setup1 register
+    unsigned int *setup1_mmio; // MMIO of setup1 register, usually 0xc08***0c
+    unsigned int unk1;
+    unsigned int *setup3_mmio; // usually 0xc08***14, may be 0
+    unsigned int *tx_val_mmio; // transmit value register, from cam to peripheral, usually 0xc08***18
+    unsigned int *unk2_mmio; // probably an optional MMIO
+    unsigned int *rx_val_mmio; // receive value register, from peripheral to cam, usually 0xc08***1c
+    unsigned int *unk3_mmio; // probably an optional MMIO
+    unsigned int *tx_ctrl_mmio; // set to 1 to transmit, polled for 0 to complete
+    unsigned int *unk4_mmio; // usually 0xc08***00
+} sio_com_t;
+
 #endif // FW_TYPES_H
