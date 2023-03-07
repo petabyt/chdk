@@ -3,12 +3,9 @@ G7 X notes
 ************************************
 CHDK is a hack, use at your own risk!
 
-This is an ALPHA port. It has some known bugs, and many features and
-combinations of Canon settings have not been tested thoroughly.
-
-Additionally, Digic 6 has significant differences from previously 
-supported models, which means some features are not fully implemented
-and the risk of unforeseen side effects is higher than ports for
+While this port is relatively mature, Digic 6 has significant differences
+from previously supported models, which means some features are not fully
+implemented and the risk of unforeseen side effects is higher than ports for
 previous Digic versions.
 
 The VER.REQ/VERS.REQ method does not work to obtain the Canon firmware
@@ -42,6 +39,12 @@ direct access to the movie_status variable do not work
 HDMI hotplug, analog AV detect, and battery temperature A/D are supported
 as alternate remote inputs.
 
+G7 X can boot CHDK from cards formatted FAT32 or FAT16, but not exFAT. Cards
+larger than 32 GB generally default to exFAT and must either be re-formatted
+FAT32 or partitioned with a FAT16 boot partition to enable CHDK autoboot.
+Using an exFAT partition for images is reported to give better performance
+with large cards.
+
 TESTED
 ******
 llibtst.lua
@@ -59,17 +62,15 @@ hooktest.lua
 isobase.lua
 USB remote - plug test / remote hook only
 CHDK raw / DNG - In most still modes that take a single exposure, see Known Bugs below
-PTP remote shoot with JPEG / CHDK DNG
- - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
- - If Canon raw + jpeg is enabled, the jpeg will be written to the card
+PTP remote shoot with JPEG, CHDK DNG and Canon raw (with chdkptp r964 or later)
  - Fails in modes that take multiple exposures: Canon firmware bracketing,
    HDR, Creative shot etc
 Motion detection - Note version of mdfb2013.lua up to 1.1a is not compatible
 PTP live view - Requires client with live view proto 2.2 support
  (chdkptp r712 or later)
-Zebra, histogram and Edge overlay - with limitations, see Other Issues below.
 Dark frame control
  - If set to auto Canon firmware uses DFS for tv 5-30 sec, depending on ISO and temperature
+Multipartition boot with FAT16 + exFAT
 
 NOT IMPLEMENTED
 ***************
@@ -81,12 +82,7 @@ script hard shutdown (shut_down(1))
 
 OTHER ISSUES
 ************
-display updating is ugly
-- CHDK UI is erased / flashes every time Canon UI updates, including
-  focus boxes, low battery icon etc.
-- Edge overlay does not erase properly when shown live
-- Zebra "Draw Over Zebra" and Restore options are non-functional
-- Some games don't draw correctly
+Zebra thresholds need to be adjusted to around 26 for zebra to display
 
 PROPCASE_RESOLUTION values differ from previous models
 - 0=L (20MP) 2=M1 (12MP) 3=M2 (4MP) 5=S (720x480) (sizes at 3:2 aspect)
@@ -105,10 +101,13 @@ KNOWN BUGS
  - orientation sensor value alternates between 0 and 90
  Because of these issues, an FI2 file is not included in the autobuild
 - When using remote shoot, DCIM directories will be created even if no files are saved
-
+- On multi-partition cards, the CHDK "Make Card Bootable" option does not make the make
+  the FAT16 boot partition bootable
 
 THANKS
 ******
 * srsa_4c for the sx280hs port, and doing all the hard work to support digic 6.
 * 62ndidiot and Ant for solving many generic digic 6 display issues
+* kitor, srsa_4c, Philmoz and Ant for developing the ximr display code, which
+  solves many display issues which affected earlier digic 6 ports
 * The anonymous donor who provided the camera.

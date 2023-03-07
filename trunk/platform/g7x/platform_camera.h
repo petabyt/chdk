@@ -146,7 +146,7 @@
     #define CAM_BITMAP_HEIGHT                   240 // Actual height of bitmap screen in rows
     #define CAM_SCREEN_WIDTH                    360 // Width of bitmap screen in CHDK co-ordinates (360 or 480)
     #define CAM_SCREEN_HEIGHT                   240 // Height of bitmap screen in CHDK co-ordinates (always 240 on all cameras so far)
-    
+
 
     #undef  EDGE_HMARGIN
     #define EDGE_HMARGIN                        10
@@ -168,7 +168,7 @@
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                     0x202       // Levent ID for USB control. Changed in DryOS R49, R50 so needs to be overridable.
 
-//    #define CAM_HAS_MOVIE_DIGEST_MODE           1 
+//    #define CAM_HAS_MOVIE_DIGEST_MODE           1
 
 // TODO - haven't checked default values, these seem to work
     #define CAM_NEED_SET_ZOOM_DELAY             300
@@ -189,7 +189,7 @@
 //    #define CAM_SD_OVER_IN_AF                   1
     #define CAM_SD_OVER_IN_AFL                  1
     #define CAM_SD_OVER_IN_MF                   1
- 
+
     // "real" to "market" conversion definitions
     #define SV96_MARKET_OFFSET                  0   // market and real appear to be identical on this cam
     #define ISO_MARKET_TO_REAL_MULT         1
@@ -207,5 +207,7 @@
     #define CAM_CLEAN_OVERLAY                   1
 
     #define CAM_HAS_WIFI                        1   // Camera has wifi support
+
+    #define CAM_MULTIPART                       1 // support multipart to allow fat16 + exfat for better performance on larger cards
 
 //--------------------------------------------------
