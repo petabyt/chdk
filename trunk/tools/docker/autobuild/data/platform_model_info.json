@@ -1,0 +1,1152 @@
+{
+ "a1000": {
+  "desc": "A1000 IS",
+  "mid": 38273024,
+  "pid": 12686,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a1100": {
+  "desc": "A1100 IS",
+  "mid": 40042496,
+  "pid": 12739,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a1200": {
+  "desc": "A1200",
+  "mid": 50724864,
+  "pid": 12843,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a1300": {
+  "desc": "A1300",
+  "mid": 51773440,
+  "pid": 12862,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a1400": {
+  "desc": "A1400",
+  "mid": 54853632,
+  "pid": 12900,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2000": {
+  "desc": "A2000 IS",
+  "mid": 38862848,
+  "pid": 12689,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2100": {
+  "desc": "A2100 IS",
+  "mid": 39321600,
+  "pid": 12734,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2200": {
+  "desc": "A2200",
+  "mid": 50659328,
+  "pid": 12842,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2300": {
+  "desc": "A2300",
+  "mid": 52953088,
+  "pid": 12874,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2400": {
+  "desc": "A2400 IS",
+  "mid": 52887552,
+  "pid": 12873,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2500": {
+  "desc": "A2500",
+  "mid": 55640064,
+  "pid": 12913,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a2600": {
+  "desc": "A2600",
+  "mid": 54722560,
+  "pid": 12898,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a3000": {
+  "desc": "A3000 IS",
+  "mid": 42139648,
+  "pid": 12786,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a3100": {
+  "desc": "A3100",
+  "mid": 42074112,
+  "pid": 12785,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a3200": {
+  "desc": "A3200 IS",
+  "mid": 43581440,
+  "pid": 12836,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a3300": {
+  "desc": "A3300 IS",
+  "mid": 43515904,
+  "pid": 12835,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a3400": {
+  "desc": "A3400 IS",
+  "mid": 52822016,
+  "pid": 12872,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a4000": {
+  "desc": "A4000 IS",
+  "mid": 52494336,
+  "pid": 12867,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a410": {
+  "desc": "A410",
+  "mid": 24444928,
+  "pid": 12537,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a420": {
+  "desc": "A420",
+  "mid": 25690112,
+  "pid": 12559,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a430": {
+  "desc": "A430",
+  "mid": 24379392,
+  "pid": 12536,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a450": {
+  "desc": "A450",
+  "mid": 35192832,
+  "pid": 12629,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a460": {
+  "desc": "A460",
+  "mid": 34603008,
+  "pid": 12617,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a470": {
+  "desc": "A470",
+  "mid": 37879808,
+  "pid": 12666,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a480": {
+  "desc": "A480",
+  "mid": 39387136,
+  "pid": 12735,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a490": {
+  "desc": "A490",
+  "mid": 42008576,
+  "pid": 12784,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a495": {
+  "desc": "A495",
+  "mid": 41943040,
+  "pid": 12783,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a530": {
+  "desc": "A530",
+  "mid": 26804224,
+  "pid": 12582,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a540": {
+  "desc": "A540",
+  "mid": 26607616,
+  "pid": 12571,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a550": {
+  "desc": "A550",
+  "mid": 35127296,
+  "pid": 12624,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a560": {
+  "desc": "A560",
+  "mid": 34865152,
+  "pid": 12621,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a570": {
+  "desc": "A570 IS",
+  "mid": 34799616,
+  "pid": 12620,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a580": {
+  "desc": "A580",
+  "mid": 37289984,
+  "pid": 12663,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a590": {
+  "desc": "A590 IS",
+  "mid": 37224448,
+  "pid": 12662,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a610": {
+  "desc": "A610",
+  "mid": 24707072,
+  "pid": 12541,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a620": {
+  "desc": "A620",
+  "mid": 24641536,
+  "pid": 12540,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a630": {
+  "desc": "A630",
+  "mid": 33816576,
+  "pid": 12602,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a640": {
+  "desc": "A640",
+  "mid": 33751040,
+  "pid": 12601,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a650": {
+  "desc": "A650 IS",
+  "mid": 35913728,
+  "pid": 12635,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a700": {
+  "desc": "A700",
+  "mid": 26345472,
+  "pid": 12567,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a710": {
+  "desc": "A710 IS",
+  "mid": 33685504,
+  "pid": 12600,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a720": {
+  "desc": "A720 IS",
+  "mid": 36044800,
+  "pid": 12637,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a800": {
+  "desc": "A800",
+  "mid": 50397185,
+  "pid": 12838,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "a810": {
+  "desc": "A810",
+  "mid": 51838976,
+  "pid": 12863,
+  "serie": "PowerShot",
+  "name": "A"
+ },
+ "d10": {
+  "desc": "D10",
+  "mid": 39190528,
+  "pid": 12732,
+  "serie": "PowerShot",
+  "name": "D"
+ },
+ "d20": {
+  "desc": "D20",
+  "mid": 52428800,
+  "pid": 12866,
+  "serie": "PowerShot",
+  "name": "D"
+ },
+ "d30": {
+  "desc": "D30",
+  "mid": 56950784,
+  "pid": 12932,
+  "serie": "PowerShot",
+  "name": "D"
+ },
+ "g10": {
+  "desc": "G10",
+  "mid": 38338560,
+  "pid": 12687,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g11": {
+  "desc": "G11",
+  "mid": 40894464,
+  "pid": 12767,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g12": {
+  "desc": "G12",
+  "mid": 43122688,
+  "pid": 12815,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g15": {
+  "desc": "G15",
+  "mid": 53673984,
+  "pid": 12888,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g16": {
+  "desc": "G16",
+  "mid": 55836672,
+  "pid": 12916,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g1x": {
+  "desc": "G1 X",
+  "mid": 50855936,
+  "pid": 12851,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g5x": {
+  "desc": "G5 X",
+  "mid": 60096512,
+  "pid": 12979,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g7": {
+  "desc": "G7",
+  "mid": 26738688,
+  "pid": 12581,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g7x": {
+  "desc": "G7 X",
+  "mid": 58195968,
+  "pid": 12957,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g7x2": {
+  "desc": "G7 X Mark II",
+  "mid": 60227584,
+  "pid": 12988,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "g9": {
+  "desc": "G9",
+  "mid": 35848192,
+  "pid": 12634,
+  "serie": "PowerShot",
+  "name": "G"
+ },
+ "ixus1000_sd4500": {
+  "desc": "IXUS 1000 HS",
+  "mid": 42532864,
+  "pid": 12792,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD4500 IS, IXY 50S"
+ },
+ "ixus100_sd780": {
+  "desc": "IXUS 100 IS",
+  "mid": 39976960,
+  "pid": 12738,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD780 IS, IXY 210 IS"
+ },
+ "ixus105_sd1300": {
+  "desc": "IXUS 105",
+  "mid": 42270720,
+  "pid": 12788,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD1300 IS, IXY 200F"
+ },
+ "ixus110_sd960": {
+  "desc": "IXUS 110 IS",
+  "mid": 39256064,
+  "pid": 12733,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD960 IS, IXY 510 IS"
+ },
+ "ixus115_elph100hs": {
+  "desc": "IXUS 115 HS",
+  "mid": 50462720,
+  "pid": 12839,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 100 HS, IXY 210F"
+ },
+ "ixus120_sd940": {
+  "desc": "IXUS 120 IS",
+  "mid": 41353216,
+  "pid": 12774,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD940 IS, IXY 220 IS"
+ },
+ "ixus125_elph110hs": {
+  "desc": "IXUS 125 HS",
+  "mid": 51970048,
+  "pid": 12865,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 110 HS, IXY 220F"
+ },
+ "ixus130_sd1400": {
+  "desc": "IXUS 130",
+  "mid": 42205184,
+  "pid": 12787,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD1400 IS, IXY 400F"
+ },
+ "ixus132_elph115": {
+  "desc": "IXUS 132",
+  "mid": 54984704,
+  "pid": 12925,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 115 IS, IXY 90F"
+ },
+ "ixus135_elph120": {
+  "desc": "IXUS 135",
+  "mid": 54984704,
+  "pid": 12902,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 120 IS, IXY 100F"
+ },
+ "ixus140_elph130": {
+  "desc": "IXUS 140",
+  "mid": 54919168,
+  "pid": 12901,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 130 IS, IXY 110F"
+ },
+ "ixus145_elph135": {
+  "desc": "IXUS 145",
+  "mid": 57212928,
+  "pid": 12936,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 135, IXY 120"
+ },
+ "ixus150_elph140": {
+  "desc": "IXUS 150",
+  "mid": 57147392,
+  "pid": 12935,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 140 IS, IXY 130"
+ },
+ "ixus155_elph150": {
+  "desc": "IXUS 155",
+  "mid": 57737216,
+  "pid": 12938,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 150 IS, IXY 140"
+ },
+ "ixus160_elph160": {
+  "desc": "IXUS 160",
+  "mid": 59179008,
+  "pid": 12970,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 160"
+ },
+ "ixus175_elph180": {
+  "desc": "IXUS 175",
+  "mid": 67371009,
+  "pid": 12993,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 180, IXY 180"
+ },
+ "ixus185_elph185": {
+  "desc": "IXUS 185",
+  "mid": 68485120,
+  "pid": 13012,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 185, IXY 200"
+ },
+ "ixus200_sd980": {
+  "desc": "IXUS 200 IS",
+  "mid": 41287680,
+  "pid": 12773,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD980 IS, IXY 930 IS"
+ },
+ "ixus220_elph300hs": {
+  "desc": "IXUS 220 HS",
+  "mid": 50593792,
+  "pid": 12841,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 300 HS, IXY 410F"
+ },
+ "ixus230_elph310hs": {
+  "desc": "IXUS 230 HS",
+  "mid": 51511296,
+  "pid": 12855,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 310 HS, IXY 600F"
+ },
+ "ixus240_elph320hs": {
+  "desc": "IXUS 240 HS",
+  "mid": 51904512,
+  "pid": 12864,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 320 HS, IXY 420F"
+ },
+ "ixus255_elph330hs": {
+  "desc": "IXUS 255 HS",
+  "mid": 55115776,
+  "pid": 12904,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 330 HS, IXY 610F"
+ },
+ "ixus275_elph350hs": {
+  "desc": "IXUS 275 HS",
+  "mid": 59244544,
+  "pid": 12971,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 350 HS, IXY 640"
+ },
+ "ixus300_sd4000": {
+  "desc": "IXUS 300 HS",
+  "mid": 42467328,
+  "pid": 12791,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD4000 IS, IXY 30S"
+ },
+ "ixus30_sd200": {
+  "desc": "IXUS 30",
+  "mid": 22347776,
+  "pid": 12480,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD200, IXY 40"
+ },
+ "ixus310_elph500hs": {
+  "desc": "IXUS 310 HS",
+  "mid": 50331648,
+  "pid": 12837,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 500 HS, IXY 31S"
+ },
+ "ixus40_sd300": {
+  "desc": "IXUS 40",
+  "mid": 22282240,
+  "pid": 12479,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD300, IXY 50"
+ },
+ "ixus50_sd400": {
+  "desc": "IXUS 50",
+  "mid": 25624576,
+  "pid": 12558,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD400, IXY 55"
+ },
+ "ixus55_sd450": {
+  "desc": "IXUS 55",
+  "mid": 25231360,
+  "pid": 12543,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD450, IXY 60"
+ },
+ "ixus60_sd600": {
+  "desc": "IXUS 60",
+  "mid": 26673152,
+  "pid": 12572,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD600, IXY 70"
+ },
+ "ixus65_sd630": {
+  "desc": "IXUS 65",
+  "mid": 25165824,
+  "pid": 12542,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD630, IXY 80"
+ },
+ "ixus700_sd500": {
+  "desc": "IXUS 700",
+  "mid": 23461888,
+  "pid": 12530,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD500, IXY 600"
+ },
+ "ixus70_sd1000": {
+  "desc": "IXUS 70",
+  "mid": 34996224,
+  "pid": 12623,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD1000, IXY 10"
+ },
+ "ixus750_sd550": {
+  "desc": "IXUS 750",
+  "mid": 26214400,
+  "pid": 12566,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD550, IXY 700"
+ },
+ "ixus75_sd750": {
+  "desc": "IXUS 75",
+  "mid": 34930688,
+  "pid": 12622,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD750, IXY 90"
+ },
+ "ixus800_sd700": {
+  "desc": "IXUS 800 IS",
+  "mid": 26476544,
+  "pid": 12569,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD700 IS, IXY 800 IS"
+ },
+ "ixus80_sd1100": {
+  "desc": "IXUS 80 IS",
+  "mid": 37945344,
+  "pid": 12676,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD1100 IS, IXY 20 IS"
+ },
+ "ixus850_sd800": {
+  "desc": "IXUS 850 IS",
+  "mid": 33554432,
+  "pid": 12598,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD800 IS, IXY 900 IS"
+ },
+ "ixus85_sd770": {
+  "desc": "IXUS 85 IS",
+  "mid": 37158912,
+  "pid": 12661,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD770 IS, IXY 25 IS"
+ },
+ "ixus860_sd870": {
+  "desc": "IXUS 860 IS",
+  "mid": 36765696,
+  "pid": 12640,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD870 IS, IXY 910 IS"
+ },
+ "ixus870_sd880": {
+  "desc": "IXUS 870 IS",
+  "mid": 39059456,
+  "pid": 12694,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD880 IS, IXY 920 IS"
+ },
+ "ixus900_sd900": {
+  "desc": "IXUS 900 Ti",
+  "mid": 25755648,
+  "pid": 12565,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD900, IXY 1000"
+ },
+ "ixus90_sd790": {
+  "desc": "IXUS 90 IS",
+  "mid": 37093376,
+  "pid": 12660,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD790 IS, IXY 95 IS"
+ },
+ "ixus950_sd850": {
+  "desc": "IXUS 950 IS",
+  "mid": 34734080,
+  "pid": 12619,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD850 IS, IXY 810 IS"
+ },
+ "ixus95_sd1200": {
+  "desc": "IXUS 95 IS",
+  "mid": 40108032,
+  "pid": 12740,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD1200 IS, IXY 110 IS"
+ },
+ "ixus960_sd950": {
+  "desc": "IXUS 960 IS",
+  "mid": 36700160,
+  "pid": 12639,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD950 IS, IXY 2000 IS"
+ },
+ "ixus970_sd890": {
+  "desc": "IXUS 970 IS",
+  "mid": 36831232,
+  "pid": 12659,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD890 IS, IXY 820 IS"
+ },
+ "ixus980_sd990": {
+  "desc": "IXUS 980 IS",
+  "mid": 38993920,
+  "pid": 12691,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD990 IS, IXY 3000 IS"
+ },
+ "ixus990_sd970": {
+  "desc": "IXUS 990 IS",
+  "mid": 39911424,
+  "pid": 12737,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD970 IS, IXY 830 IS"
+ },
+ "ixusizoom_sd30": {
+  "desc": "IXUS i Zoom",
+  "mid": 24117248,
+  "pid": 12532,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD30, IXY L3"
+ },
+ "ixusw_sd430": {
+  "desc": "IXUS Wireless",
+  "mid": 23396352,
+  "pid": 12529,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "SD430, IXY Wireless"
+ },
+ "m10": {
+  "desc": "M10",
+  "mid": 58982400,
+  "pid": 12960,
+  "serie": "EOS",
+  "name": "M"
+ },
+ "m3": {
+  "desc": "M3",
+  "mid": 57933824,
+  "pid": 12953,
+  "serie": "EOS",
+  "name": "M"
+ },
+ "n": {
+  "desc": "N",
+  "mid": 54001664,
+  "pid": 12894,
+  "serie": "PowerShot",
+  "name": "N"
+ },
+ "n_facebook": {
+  "desc": "N (facebook)",
+  "mid": 54001664,
+  "pid": 12939,
+  "serie": "PowerShot",
+  "name": "N"
+ },
+ "s100": {
+  "desc": "S100",
+  "mid": 51445760,
+  "pid": 12854,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s110": {
+  "desc": "S110",
+  "mid": 53870592,
+  "pid": 12891,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s2is": {
+  "desc": "S2 IS",
+  "mid": 23330816,
+  "pid": 12528,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s3is": {
+  "desc": "S3 IS",
+  "mid": 26542080,
+  "pid": 12570,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s5is": {
+  "desc": "S5 IS",
+  "mid": 34144256,
+  "pid": 12616,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s80": {
+  "desc": "S80",
+  "mid": 24510464,
+  "pid": 12538,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s90": {
+  "desc": "S90",
+  "mid": 41025536,
+  "pid": 12769,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "s95": {
+  "desc": "S95",
+  "mid": 43319296,
+  "pid": 12818,
+  "serie": "PowerShot",
+  "name": "S"
+ },
+ "sx100is": {
+  "desc": "SX100 IS",
+  "mid": 36241408,
+  "pid": 12638,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx10": {
+  "desc": "SX10 IS",
+  "mid": 38207488,
+  "pid": 12685,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx110is": {
+  "desc": "SX110 IS",
+  "mid": 38928384,
+  "pid": 12690,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx1": {
+  "desc": "SX1 IS",
+  "mid": 38141952,
+  "pid": 12693,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx120is": {
+  "desc": "SX120 IS",
+  "mid": 40960000,
+  "pid": 12768,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx130is": {
+  "desc": "SX130 IS",
+  "mid": 43253760,
+  "pid": 12817,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx150is": {
+  "desc": "SX150 IS",
+  "mid": 50921472,
+  "pid": 12852,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx160is": {
+  "desc": "SX160 IS",
+  "mid": 53805056,
+  "pid": 12890,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx170is": {
+  "desc": "SX170 IS",
+  "mid": 55967744,
+  "pid": 12918,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx200is": {
+  "desc": "SX200 IS",
+  "mid": 39845888,
+  "pid": 12736,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx20": {
+  "desc": "SX20 IS",
+  "mid": 41222144,
+  "pid": 12772,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx210is": {
+  "desc": "SX210 IS",
+  "mid": 42401792,
+  "pid": 12790,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx220hs": {
+  "desc": "SX220 HS",
+  "mid": 50790400,
+  "pid": 12844,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx230hs": {
+  "desc": "SX230 HS",
+  "mid": 50528256,
+  "pid": 12840,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx240hs": {
+  "desc": "SX240 HS",
+  "mid": 52625408,
+  "pid": 12869,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx260hs": {
+  "desc": "SX260 HS",
+  "mid": 52559872,
+  "pid": 12868,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx270hs": {
+  "desc": "SX270 HS",
+  "mid": 54591488,
+  "pid": 12896,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx275hs": {
+  "desc": "SX275 HS",
+  "mid": 54788096,
+  "pid": 12899,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx280hs": {
+  "desc": "SX280 HS",
+  "mid": 54525952,
+  "pid": 12895,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx30": {
+  "desc": "SX30 IS",
+  "mid": 43188224,
+  "pid": 12816,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx400is": {
+  "desc": "SX400 IS",
+  "mid": 58130432,
+  "pid": 12956,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx40hs": {
+  "desc": "SX40 HS",
+  "mid": 51576832,
+  "pid": 12856,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx410is": {
+  "desc": "SX410 IS",
+  "mid": 59834368,
+  "pid": 12973,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx420is": {
+  "desc": "SX420 IS",
+  "mid": 67239936,
+  "pid": 12991,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx500is": {
+  "desc": "SX500 IS",
+  "mid": 53936128,
+  "pid": 12892,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx50hs": {
+  "desc": "SX50 HS",
+  "mid": 53739520,
+  "pid": 12889,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx510hs": {
+  "desc": "SX510 HS",
+  "mid": 56098816,
+  "pid": 12919,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx520hs": {
+  "desc": "SX520 HS",
+  "mid": 58064896,
+  "pid": 12955,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx530hs": {
+  "desc": "SX530 HS",
+  "mid": 58720256,
+  "pid": 12959,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx60hs": {
+  "desc": "SX60 HS",
+  "mid": 57999360,
+  "pid": 12954,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx610hs": {
+  "desc": "SX610 HS",
+  "mid": 58916864,
+  "pid": 12967,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx620hs": {
+  "desc": "SX620 HS",
+  "mid": 67502080,
+  "pid": 12995,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx700hs": {
+  "desc": "SX700 HS",
+  "mid": 57016320,
+  "pid": 12933,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx710hs": {
+  "desc": "SX710 HS",
+  "mid": 58851328,
+  "pid": 12966,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx730hs": {
+  "desc": "SX730 HS",
+  "mid": 68616192,
+  "pid": 13014,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "tx1": {
+  "desc": "TX1",
+  "mid": 25296896,
+  "pid": 12544,
+  "serie": "PowerShot",
+  "name": "TX"
+ }
+}

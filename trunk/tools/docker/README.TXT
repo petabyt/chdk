@@ -3,6 +3,10 @@ The chdkbuild directory contains a Dockerfile for a CHDK build environment in a
 Docker (https://www.docker.com/) container. This can be used on Windows, Linux
 and Mac.
 
+The autobuild directory contains a Dockerfile intended to support automated,
+scheduled builds build running in an environment such as AWS. See
+autobuild/README.TXT for documentation
+
 If you don't already use docker, installing and configuring it just to build
 CHDK may not be the best choice. Other options are described on
 https://chdk.fandom.com/wiki/For_Developers
