@@ -8,10 +8,14 @@ Significant changes in 1.7
 * New XIMR based drawing system for CHDK UI in Digic 6 & 7, resolves flickering issues ([https://chdk.setepontos.com/index.php?topic=12788.msg146269#msg146269 development thread])
 * Functionality for Lua scripts to detect if screen has been erased and needs redrawing
 * RAW EV Histogram ([https://chdk.setepontos.com/index.php?topic=14544.msg148257#msg148257 development thread])
+* Lua functions to get focal length from zoom position ([https://chdk.setepontos.com/index.php?topic=14733.msg149503#msg149503 discussion])
+* Lua module zoomutil.lua providding functions set zoom by focal length and convert between FL and EFL
 
 New script functions in 1.7:
 
  screen_needs_refresh
+ get_focal_length
+ get_eff_focal_length
 
 =1.6=
 Current stable branch, released Oct 12, 2020 as 1.6.1

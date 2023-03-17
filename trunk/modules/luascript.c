@@ -861,6 +861,43 @@ static int luaCB_get_zoom( lua_State* L )
   return 1;
 }
 
+// helper for get_focal_length and get_eff_focal_length
+static int get_zoom_pos_arg( lua_State *L )
+{
+  int pos = luaL_optnumber(L,1,shooting_get_zoom());
+  // get_focal_length is implemented per platform, so range check here to be safe
+  if(pos < 0) {
+      pos = 0;
+  } else if(pos >= zoom_points) {
+      pos = zoom_points - 1;
+  }
+  return pos;
+}
+
+/*
+fl = get_focal_length([zoom_pos])
+return the focal lenth of the specified zoom position, expressed as mm*1000
+if no position is specified, the current position is used
+out of range positions are clamped to the nearest valid value
+*/
+static int luaCB_get_focal_length( lua_State* L )
+{
+  lua_pushnumber( L, get_focal_length(get_zoom_pos_arg(L) ) );
+  return 1;
+}
+
+/*
+efl = get_eff_focal_length([zoom_pos])
+return the 35 mm equivalent focal lenth of the specified zoom position, expressed as mm*1000
+if no position is specified, the current position is used
+out of range positions are clamped to the nearest valid value
+*/
+static int luaCB_get_eff_focal_length( lua_State* L )
+{
+  lua_pushnumber( L, get_effective_focal_length(get_zoom_pos_arg(L) ) );
+  return 1;
+}
+
 static int luaCB_get_parameter_data( lua_State* L )
 {
   unsigned size;
@@ -2859,6 +2896,8 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_user_tv96)
     FUNC(get_vbatt)
     FUNC(get_zoom)
+    FUNC(get_focal_length)
+    FUNC(get_eff_focal_length)
     FUNC(get_exp_count)
     FUNC(get_image_dir)
     FUNC(get_flash_params_count)
