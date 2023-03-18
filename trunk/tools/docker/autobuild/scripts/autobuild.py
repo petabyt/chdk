@@ -126,7 +126,8 @@ class AutoBuilder:
                 'meta':'${build}/meta', # build meta file output
             },
             'pub':{
-                'type':'aws',     # publish method, used to select pub_* section below
+                'type':'aws',     # publish method, used to select pub_* section below and the
+                                  # autobuild_pub_<type>.py module implementing the publish method
                 'dir':'/builds',  # path prefix for published files root
                 'bin_dir':'bin',  # subdirectory for zip files
                 'meta_dir':'meta',# subdirectory for meta files (includes log for now)
