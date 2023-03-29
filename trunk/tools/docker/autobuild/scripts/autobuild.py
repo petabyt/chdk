@@ -41,7 +41,10 @@ class AutoBuilder:
     # program version
     VERSION = "1.0.0"
     # versions for meta files. Minor version updates will be backward compatible
-    json_info_ver = '1.0'
+    # 1.1
+    #  added zip file size to file info
+    #  added family level aka value to label ixus/sd/elph/ixy
+    json_info_ver = '1.1'
     json_status_ver = '1.0'
 
     # default meta files
@@ -505,6 +508,13 @@ OPT_FI2=1
             h.update(data)
             self.zip_hashes[fn] = h.hexdigest()
 
+    def init_zip_sizes(self):
+        """make dict mapping names in all_zips to file sizes"""
+        self.zip_sizes={}
+        bin_dir = os.path.join(self.cfg['dir']['src'],'bin')
+        for fn in self.all_zips:
+            self.zip_sizes[fn] = os.path.getsize(os.path.join(bin_dir,fn))
+
     def init_platform_model_info_map(self):
         with open(os.path.join(self.cfg['dir']['data'],'platform_model_info.json')) as f:
             self.platform_model_info_map = json.load(f)
@@ -520,6 +530,9 @@ OPT_FI2=1
 
     def get_zip_sha256(self,zipname):
         return self.zip_hashes[zipname]
+
+    def get_zip_size(self,zipname):
+        return self.zip_sizes[zipname]
 
     def get_zip_name_info(self,fn):
         m = re.match(r'([^-]+)-(\d{3}[^-])-(\d+)\.(\d+)\.(\d+)-(\d+)(-full)?(?:_([^.]+))?.zip$', fn)
@@ -624,6 +637,9 @@ OPT_FI2=1
                     'platforms':{},
                 }
 
+                if fi['family'] == 'IXUS':
+                    families[fi['family']]['aka'] = 'SD, ELPH, IXY'
+
             fam = families[fi['family']]
             if fi['platform'] not in fam['platforms']:
                 fam['platforms'][fi['platform']] = {
@@ -638,11 +654,13 @@ OPT_FI2=1
                     'status':fi['status'],
                     'full':{
                         'file':fi['file'],
-                        'sha256':self.get_zip_sha256(fi['file'])
+                        'sha256':self.get_zip_sha256(fi['file']),
+                        'size':self.get_zip_size(fi['file']),
                     },
                     'small':{
                         'file':self.zip_full_to_small_name(fi['file']),
-                        'sha256':self.get_zip_sha256(self.zip_full_to_small_name(fi['file']))
+                        'sha256':self.get_zip_sha256(self.zip_full_to_small_name(fi['file'])),
+                        'size':self.get_zip_size(self.zip_full_to_small_name(fi['file'])),
                     },
                 }
 
@@ -667,8 +685,12 @@ OPT_FI2=1
             fam = {
                 'id':fam_id,
                 'line':fam_info['line'],
-                'models':[],
             }
+            if 'aka' in fam_info:
+                fam['aka'] = fam_info['aka']
+
+            fam['models']=[]
+
             for plat_id, plat_info in fam_info['platforms'].items():
                 plat = {
                     'id':plat_id,
@@ -923,6 +945,7 @@ OPT_FI2=1
         os.makedirs(self.cfg['dir']['meta'],exist_ok=True)
         self.init_zip_lists()
         self.init_zip_hashes()
+        self.init_zip_sizes()
 
         self.write_meta_file('files_small.txt','\n'.join(self.small_zips) + '\n')
         self.write_meta_file('files_full.txt','\n'.join(self.full_zips) + '\n')
