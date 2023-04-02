@@ -32,10 +32,11 @@ import os
 
 # absolute path to scripts, based on path of this script
 script_dir = os.path.dirname(os.path.abspath(__file__))
+script_path = os.path.join(script_dir,'autobuild.py')
 # script options, passed to each sub script
 run_args = sys.argv[1:]
 
-cmd_base = [os.path.join(script_dir,'autobuild.py'), '--step']
+cmd_base = [script_path, '--step']
 def run_cmd(cmd):
     """
     run a sub script, returning exit status
@@ -61,6 +62,8 @@ def run():
     have_lock = False
     # run build steps, attempting to clean up if any failed
     try:
+        # print the version to make it easy to identify what container is running
+        subprocess.check_call([script_path,'-V'])
         # check for lock file indicating build is running, throw if present
         # will also throw if config is invalid
         check_cmd('init_lock')

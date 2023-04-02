@@ -276,13 +276,13 @@ dependencies are common, standard python libraries.
 
 Typical run_autobuild.py example:
 
- SRC=$HOME/chdk/trunk/tools/docker/autobuild \
+ ( SRC=$HOME/chdk/trunk/tools/docker/autobuild ; \
  $SRC/scripts/run_autobuild.py \
  dir.root=$HOME/test \
  dir.cfg=$SRC/cfg \
  dir.data=$SRC/data \
  ctl.fetch=0 ctl.checkrev=0 ctl.configsrc=0 ctl.build=0 build.setuser=0 ctl.meta=1 \
- ctl.metaextra=1 ctl.jsonpretty=1 ctl.publish=1 pub_aws.pretend=1 ctl.clean=0 ctl.verbose=2
+ ctl.metaextra=1 ctl.jsonpretty=1 ctl.publish=1 pub_aws.pretend=1 ctl.clean=0 ctl.verbose=2 )
 
 The options are similar to the container example, except dir options are used
 to specify directory locations, rather than docker mounts. Additionally,
@@ -290,9 +290,9 @@ build.setuser=0 is used since the command isn't run as root.
 
 Example of invoking autobuild.py directly:
 
- SRC=$HOME/chdk/trunk/tools/docker/autobuild \
+ ( SRC=$HOME/chdk/trunk/tools/docker/autobuild ; \
  $SRC/scripts/autobuild.py --step publish \
- dir.root=$HOME/test dir.cfg=$SRC/autobuild/cfg
+ dir.root=$HOME/test dir.cfg=$SRC/autobuild/cfg )
 
 
 = Output =

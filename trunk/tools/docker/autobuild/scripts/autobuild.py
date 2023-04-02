@@ -39,7 +39,7 @@ class AutoBuilder:
     class providing functions for a CHDK autobuild, handling source download, build and upload
     """
     # program version
-    VERSION = "1.0.0"
+    VERSION = "1.0.1"
     # versions for meta files. Minor version updates will be backward compatible
     # 1.1
     #  added zip file size to file info
@@ -115,7 +115,7 @@ class AutoBuilder:
             'svn':{
                 'use_guest':'1', # use username / password 'guest', as assembla requires for anon access
                 'repo_url':'https://subversion.assembla.com/svn/chdk',
-                'browse_url':'https://app.assembla.com/spaces/chdk/subversion/source', # root for user friendly browse links
+                'browse_url':'https://app.assembla.com/spaces/chdk/subversion', # root for user friendly browse links
                 'log_revs':'5',  # number of log revisions to include in meta, 0 to disable
             },
             'dir':{
@@ -393,7 +393,7 @@ class AutoBuilder:
                     msg = []
 
                 r.append({
-                    'svn': self.get_rev_browse_url(rev),
+                    'svn': self.get_commit_browse_url(rev),
                     'revision': rev,
                     'author': le.find('author').text,
                     'utc': le.find('date').text,
@@ -765,8 +765,21 @@ OPT_FI2=1
         # assembla urls look like
         # https://app.assembla.com/spaces/chdk/subversion/source/6222/branches/release-1_6
         r = posixpath.join(self.cfg['svn']['browse_url'],
+                                'source',
                                 str(rev),
                                 self.branch_cfg['svn_path'])
+        if self.branch_sfx_full:
+            r += self.branch_sfx_full
+
+        return r
+
+    def get_commit_browse_url(self,rev):
+        """return assembla browsable url for commit"""
+        # assembla urls look like
+        # https://app.assembla.com/spaces/chdk/subversion/commits/6230
+        r = posixpath.join(self.cfg['svn']['browse_url'],
+                                'commits',
+                                str(rev))
         if self.branch_sfx_full:
             r += self.branch_sfx_full
 
