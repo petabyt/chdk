@@ -206,7 +206,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x418c1000) // Found @0xfc245bf6
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc37ab05
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc37aabd
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc2783c1
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfcc9a373
+//NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0x010e2bed
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc333197
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc4fa309
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc4504b1
