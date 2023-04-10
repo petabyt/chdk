@@ -235,6 +235,7 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "VbattGet" },
     { "Write" },
     { "WriteSDCard" },
+    { "ReadSDCard", OPTIONAL|UNUSED },
 
     { "_log" },
     { "_log10" },
@@ -543,6 +544,8 @@ sig_entry_t  sig_names[MAX_SIG_ENTRY] =
     { "EFLensCom_FocusSearchNear", OPTIONAL|UNUSED },
     { "EFLensCom_FocusSearchFar", OPTIONAL|UNUSED },
     { "GetEFLensFocusPositionWithLensCom", OPTIONAL|UNUSED },
+
+    { "init_sd_io_funcs", OPTIONAL|UNUSED }, // helper for WriteSDCard
 
     {0,0,0},
 };
@@ -1965,7 +1968,7 @@ int sig_match_take_semaphore_strict(firmware *fw, iter_state_t *is, sig_rule_t *
         }
         fw_disasm_iter(fw);
     }
-    
+
     return rv;
 }
 
@@ -4858,6 +4861,61 @@ int sig_match_live_free_cluster_count(firmware *fw, iter_state_t *is, sig_rule_t
 
 }
 
+int sig_match_init_sd_io_funcs(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    uint32_t call_adr = find_call_near_str(fw, is, rule);
+
+    if (call_adr == 0) {
+        printf("sig_match_init_sd_io_funcs: no match call 1\n");
+        return 0;
+    }
+
+    // initialize to call address
+    disasm_iter_init(fw,is,call_adr);
+    disasm_iter(fw,is);
+    // follow
+    disasm_iter_init(fw,is,get_branch_call_insn_target(fw,is));
+    if(!insn_match_find_nth(fw,is,14,2,match_bl_blximm)) {
+        printf("sig_match_init_sd_io_funcs: no match call 2\n");
+        return 0;
+    }
+    return save_sig_with_j(fw,rule->name,get_branch_call_insn_target(fw,is));
+}
+
+int sig_match_sd_io_func(firmware *fw, iter_state_t *is, sig_rule_t *rule)
+{
+    if(!init_disasm_sig_ref(fw,is,rule)) {
+        return 0;
+    }
+    const insn_match_t write_fn_str_match[]={
+        {MATCH_INS(STR,     2), {MATCH_OP_REG_ANY,  MATCH_OP_MEM(INVALID,INVALID,rule->param)}},
+        {ARM_INS_ENDING}
+    };
+    // search for store to function offset
+    if(!insn_match_find_next(fw,is,46,write_fn_str_match)) {
+        printf("sig_match_sd_io_func: %s no match STR 0x%"PRIx64"\n",rule->name,is->insn->address);
+        return 0;
+    }
+    arm_reg fn_reg = (arm_reg)is->insn->detail->arm.operands[0].reg;
+    // backtrack until we find ldr into reg
+    int i;
+    for(i=1; i<5; i++) {
+        fw_disasm_iter_single(fw,adr_hist_get(&is->ah,i));
+        cs_insn *insn=fw->is->insn;
+        if(insn->id != ARM_INS_LDR || (arm_reg)insn->detail->arm.operands[0].reg != fn_reg) {
+            continue;
+        }
+        if(insn->detail->arm.operands[1].mem.base != ARM_REG_PC) {
+            printf("sig_match_sd_io_func: %s expected LDR PC 0x%"PRIx64"\n",rule->name,is->insn->address);
+            return 0;
+        }
+        // printf("WriteSDCard %x 0x%"PRIx64"\n",LDR_PC2val(fw,insn),insn->address);
+        return save_sig_with_j(fw,rule->name,LDR_PC2val(fw,insn));
+    }
+    printf("sig_match_sd_io_func: no match LDR\n");
+    return 0;
+}
+
 int sig_match_debug_logging_ptr(firmware *fw, iter_state_t *is, sig_rule_t *rule)
 {
     uint32_t call_adr = find_str_arg_call(fw,is,rule);
@@ -5463,7 +5521,7 @@ int sig_match_named_next_func(firmware *fw, iter_state_t *is, sig_rule_t *rule)
         }
         fw_disasm_iter(fw);
     }
-    
+
     return 0;
 }
 
@@ -5948,6 +6006,9 @@ sig_rule_t sig_rules_main[]={
 {sig_match_func_using_str,  "ExitFromCompensationEVF",  "ExpOff",       8 },
 {sig_match_func_using_str,  "ExpCtrlTool_StartContiAE", "StartContiAE", 30 },
 {sig_match_func_using_str,  "ExpCtrlTool_StopContiAE",  "StopContiAE",  28 },
+{sig_match_init_sd_io_funcs,"init_sd_io_funcs",         "\nStartDiskboot\n",   SIG_NEAR_BEFORE(7,2) },
+{sig_match_sd_io_func,   "WriteSDCard",                 "init_sd_io_funcs", 0x54 }, // WriteSDCard is at 0x54 for all known d6/d7 firmware
+{sig_match_sd_io_func,   "ReadSDCard",                  "init_sd_io_funcs", 0x50 },
 
 {NULL},
 };
@@ -6081,7 +6142,7 @@ int process_reg_eventproc_call(firmware *fw, iter_state_t *is, __attribute__ ((u
         if ((is->insn->address - fadr) < 10)
             return 0;
     }
-    
+
     uint32_t regs[4];
     // get r0, r1, backtracking up to 4 instructions
     if((get_call_const_args(fw,is,4,regs)&3)==3) {
