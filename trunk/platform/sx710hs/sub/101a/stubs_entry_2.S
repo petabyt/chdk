@@ -39,7 +39,6 @@ NHSTUB(ExpCtrlTool_StartContiAE,NULL_SUB)
 NHSTUB(ExpCtrlTool_StopContiAE,NULL_SUB)
 NHSTUB(Restart,NULL_SUB)
 NHSTUB(SetParameterData,NULL_SUB)
-NHSTUB(WriteSDCard,NULL_SUB)
 NHSTUB(reboot_fw_update,NULL_SUB)
 
 // from sx280 These don't exist

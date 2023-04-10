@@ -1,5 +1,6 @@
 0x010e12bf,SDCardUHSActive_FW
 0x010e1447,ReadSDCard
+0x010e14f9,WriteSDCard
 0x010e1a37,task_SD1stInit
 0x010e2521,GetRomID
 0x010ee6ec,j_dcache_flush_and_enable

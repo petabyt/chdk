@@ -10,6 +10,7 @@
 0x010e289f,ChangeSDPortVoltage_FW
 0x010e29f3,SDCardUHSActive_FW
 0x010e2b4f,ReadSDCard
+0x010e2c4d,WriteSDCard
 0x010f4383,j_mktime_ext
 0x010f438d,j2_strftime
 0x010f44b0,j_dcache_flush_and_enable
