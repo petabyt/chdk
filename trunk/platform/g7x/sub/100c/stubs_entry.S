@@ -183,6 +183,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41738600) // Found @0xfc0f8022
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc325ad1
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc358319
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3582d1
+//NHSTUB(WriteSDCard                          ,0x010e7c63) //  0        *** != 0x00000000
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc34586d
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc345905
 
@@ -277,7 +278,6 @@ NHSTUB(UnlockMainPower                        ,0xfc1593bb) //  0
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc134e01) //  0
 NHSTUB(Write                                  ,0xfc3580bd) //  0
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0            == 0x00000000
 NHSTUB(_log                                   ,0x01109310) //  0
 NHSTUB(_log10                                 ,0x01109830) //  0
 NHSTUB(_pow                                   ,0x01109998) //  0

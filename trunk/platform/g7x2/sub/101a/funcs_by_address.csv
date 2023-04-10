@@ -692,6 +692,7 @@
 0xe03742b1,PrepareDirectory_x
 0xe0374351,PrepareDirectory_1
 0xe0374355,PrepareDirectory_0
+0xe03747f5,init_sd_io_funcs
 0xe0374bcf,get_fstype
 0xe0374c35,GetDrive_ClusterSize
 0xe0375125,GetDrive_TotalClusters
@@ -1194,6 +1195,8 @@
 0xe051a277,handle_PTP_OC_CANON_CheckEvent
 0xe051b9d9,GetZoomLensCurrentPosition
 0xe051e69f,SDCardUHSActive_FW
+0xe051e8b9,ReadSDCard
+0xe051e967,WriteSDCard
 0xe051fe1d,task_TrnsCtrlTask
 0xe0523989,strftime
 0xe052594d,task_ConsoleSvr

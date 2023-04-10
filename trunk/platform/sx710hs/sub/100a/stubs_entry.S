@@ -180,6 +180,7 @@ DEF(focus_len_table                         ,0xfdf3167c) // Found @0xfdf3167c
 //NHSTUB(RenameFile_Fut                       ,0x00000000) //  0        *** != 0xfc3268b9
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc317491
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc317449
+//NHSTUB(WriteSDCard                          ,0x010e2c4d) //  0        *** != 0x00000000
 //NHSTUB(CancelHPTimer                        ,0x00000000) //  0        *** != 0xfc126b7d
 
 NHSTUB(AllocateUncacheableMemory              ,0xfc12fdf1) //  0
@@ -271,7 +272,6 @@ NHSTUB(UnlockMainPower                        ,0xfc126f5d) //  0
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc0b2dd1) //  0
 NHSTUB(Write                                  ,0xfc317235) //  0
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0            == 0x00000000
 NHSTUB(_log                                   ,0x011031c8) //  0
 NHSTUB(_log10                                 ,0x011036e8) //  0
 NHSTUB(_pow                                   ,0x01103850) //  0

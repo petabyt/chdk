@@ -1070,6 +1070,7 @@
 0xfc34c05f,InactivateAdjLog_FW
 0xfc3a87f1,init_error_handlers
 0xfc05d0c9,init_ex_drivers
+0xfc351cef,init_sd_io_funcs
 0xfc05cb5f,init_task_error
 0xfc09e91d,initComDiscovery_FW
 0xfc3eae77,InitializeAdjustmentFunction_FW
@@ -1744,6 +1745,7 @@
 0xfc3a9269,Read
 0xfc3a9269,Read_FW
 0xfc436cd1,ReadFastDir
+0x010e1447,ReadSDCard
 0xfc31c611,Rec2PB
 0xfc43e43f,ReceiveMechaCircuitData_FW
 0xfc43e457,ReceiveMechaCircuitDataAll_FW

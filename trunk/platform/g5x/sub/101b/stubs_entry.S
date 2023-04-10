@@ -182,6 +182,7 @@ DEF(focus_len_table                         ,0xfdf3169c) // Found @0xfdf3169c
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3b5f07
 //NHSTUB(TurnOffBackLight                     ,0x00000000) //  0        *** != 0xfc15bb35
 //NHSTUB(TurnOnBackLight                      ,0x00000000) //  0        *** != 0xfc15bb31
+//NHSTUB(WriteSDCard                          ,0x010e2c81) //  0        *** != 0x00000000
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc5e535d
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc28b97d
 
@@ -277,7 +278,6 @@ NHSTUB(UnlockMainPower                        ,0xfc39ab85) //  0
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc0c2823) //  0
 NHSTUB(Write                                  ,0xfc3b5bc1) //  0
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0            == 0x00000000
 NHSTUB(_log                                   ,0x010f7518) //  0
 NHSTUB(_log10                                 ,0x010f7a38) //  0
 NHSTUB(_pow                                   ,0x010f7ba0) //  0

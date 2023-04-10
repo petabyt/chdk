@@ -1177,6 +1177,7 @@
 0xfc37aee7,InactivateAdjLog_FW
 0xfc1ee641,init_error_handlers
 0xfc0636dd,init_ex_drivers
+0xfc3796b7,init_sd_io_funcs
 0xfc06316b,init_task_error
 0xfc0bfde9,initComDiscovery_FW
 0xfc189fc9,InitializeAdjustmentFunction_FW
@@ -1957,6 +1958,7 @@
 0xfc5a733b,ReadImgCorrectDefectModeEEPRom_FW
 0xfc5a6aa7,ReadImgEEPRomAllData_FW
 0xfc5a7069,ReadImgEEPRomData_FW
+0x010e2b03,ReadSDCard
 0xfc17b61d,ReadStatusRegEEPRom_FW
 0xfc32a987,Rec2PB
 0xfc44c931,ReceiveMechaCircuitData_FW
@@ -2871,6 +2873,7 @@
 0xfc1022c1,WriteNFCUserArea_FW
 0xfc1c019b,WriteNFCUserAreaWithInitNFCAdj_FW
 0xfc5a987f,WritePWMAdjustment_FW
+0x010e2bed,WriteSDCard
 0xfc17b4eb,WriteStatusRegEEPRom_FW
 0xfc0f8363,WriteToRom_FW
 0xfc1f8be3,WRITEUSERSETTINGDATATOFROM_FW

@@ -9,6 +9,7 @@
 0x010e22a1,GetRomID
 0x010e289f,ChangeSDPortVoltage_FW
 0x010e29f3,SDCardUHSActive_FW
+0x010e2b4f,ReadSDCard
 0x010f4383,j_mktime_ext
 0x010f438d,j2_strftime
 0x010f44b0,j_dcache_flush_and_enable
@@ -1040,6 +1041,7 @@
 0xfc30fae5,GetPropertyCase
 0xfc315857,GetCurrentDriveBaseSvValue
 0xfc3160f3,get_current_exp
+0xfc31644f,init_sd_io_funcs
 0xfc316811,get_fstype
 0xfc316877,GetDrive_ClusterSize
 0xfc316d57,GetDrive_TotalClusters

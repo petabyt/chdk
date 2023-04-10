@@ -559,6 +559,8 @@
 0xfc0e58d3,SaveFactoryIDData_FW
 0xfc0e58df,LoadFactoryIDData_FW
 0xfc0e685d,task_DPOFTask
+0xfc0e84b5,ReadSDCard
+0xfc0e857d,WriteSDCard
 0xfc0e8f07,task_IrisCycleEvent
 0xfc0e972d,task_MechaAlarm
 0xfc0ea035,task_MechaNCTask
@@ -1296,6 +1298,7 @@
 0xfc306bfb,StartCameraLog_FW
 0xfc306c5d,StopCameraLog_FW
 0xfc306c97,LogCameraEvent
+0xfc30717b,init_sd_io_funcs
 0xfc30753d,get_fstype
 0xfc3075a3,GetDrive_ClusterSize
 0xfc307aad,GetDrive_TotalClusters

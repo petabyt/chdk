@@ -880,6 +880,7 @@
 0xfc29e0c5,InactivateAdjLog_FW
 0xfc095999,init_error_handlers
 0xfc04f909,init_ex_drivers
+0xfc2a4217,init_sd_io_funcs
 0xfc04f3b9,init_task_error
 0xfc088a35,initComDiscovery_FW
 0xfc1a8385,InitializeAdjustmentFunction_FW
@@ -1495,6 +1496,7 @@
 0xfc0ba575,Read
 0xfc0ba575,Read_FW
 0xfc1081d1,ReadFastDir
+0xfc19ba4f,ReadSDCard
 0xfc0c09b7,Rec2PB
 0xfc3b825b,ReceiveMechaCircuitDataAll_FW
 0x010c5765,ReceiveMessageQueue
@@ -2224,6 +2226,7 @@
 0xfc3b81d3,WriteMechaLogToFile_FW
 0xfc3b81c9,WriteMechaLogToRom_FW
 0xfc3e3a7d,WritePWMAdjustment_FW
+0xfc19bb17,WriteSDCard
 0xfc0d1ae9,WriteToRom_FW
 0xfc0c5e71,WRITEUSERSETTINGDATATOFROM_FW
 0xfc3d8ee9,zicokick_copy

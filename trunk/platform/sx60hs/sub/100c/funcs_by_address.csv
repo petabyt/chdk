@@ -65,6 +65,8 @@
 0x010e69bf,ReleaseRecursiveLock
 0x010e7341,GetRomID
 0x010e78cd,ChangeSDPortVoltage_FW
+0x010e7b39,ReadSDCard
+0xfcd1d6bb,WriteSDCard,(stubs_entry_2.s)
 0x010f772d,j2_GetSRAndDisableInterrupt
 0x010f7737,j2_SetSR
 0x010f78c5,j_mktime_ext
@@ -1540,6 +1542,7 @@
 0xfc32cd6d,UIFS_GetNumberOfDisplayedImage_FW
 0xfc32f0db,task_StartupImage
 0xfc330097,IsWirelessConnect
+0xfc331be7,init_sd_io_funcs
 0xfc331fa9,get_fstype
 0xfc33200f,GetDrive_ClusterSize
 0xfc3324ef,GetDrive_TotalClusters

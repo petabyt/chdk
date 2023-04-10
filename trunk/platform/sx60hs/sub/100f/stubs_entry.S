@@ -181,7 +181,7 @@ DEF(focus_len_table                         ,0xfdf317ec) // Found @0xfdf317ec
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc332c01
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc332bb9
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc322acf
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfcd1d6b7
+//NHSTUB(WriteSDCard                          ,0x010e7c23) //  0        *** != 0xfcd1d6b7
 //NHSTUB(displaybusyonscreen                  ,0x00000000) //  0        *** != 0xfc319671
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3a1177
 //NHSTUB(undisplaybusyonscreen                ,0x00000000) //  0        *** != 0xfc319709

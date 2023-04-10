@@ -9,6 +9,7 @@
 0x010e179d,task_SD1stInit
 0x010e2285,GetRomID
 0x010e2a09,SDCardUHSActive_FW
+0x010e2bcf,ReadSDCard
 0x010ee231,j_mktime_ext
 0x010ee23b,j2_strftime
 0x010ee3dc,j_dcache_flush_and_enable
@@ -1192,6 +1193,7 @@
 0xfc3b60bb,PrepareDirectory_1
 0xfc3b60bf,PrepareDirectory_0
 0xfc3b6135,task_CtrlSrv
+0xfc3b6a49,init_sd_io_funcs
 0xfc3b6e25,get_fstype
 0xfc3b6e8b,GetDrive_ClusterSize
 0xfc3b736b,GetDrive_TotalClusters

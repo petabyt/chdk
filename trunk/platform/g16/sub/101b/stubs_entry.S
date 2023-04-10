@@ -183,7 +183,6 @@ DEF(focus_len_table                         ,0xfdf2bd38) // Found @0xfdf2bd38
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc309b01
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc309aed
 //NHSTUB(SetParameterData                     ,0x00000000) //  0        *** != 0xfc0ccdf1
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0        *** != 0xfc10e52d
 //NHSTUB(err_init_task                        ,0xfc05e231) //  0        *** != 0xfc523860
 //NHSTUB(realloc                              ,0x00000000) //  0        *** != 0xfc4c5b1d
 //NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xfc3905b1
@@ -281,6 +280,7 @@ NHSTUB(UnlockAF                               ,0xfc254aa1) //  0
 NHSTUB(UnlockMainPower                        ,0xfc158f41) //  0
 NHSTUB(VbattGet                               ,0xfc0e43fb) //  0
 NHSTUB(Write                                  ,0xfc3098d9) //  0
+//NHSTUB(WriteSDCard                          ,0xfc10e52d) //  0            == 0xfc10e52d
 NHSTUB(_log                                   ,0x010dac50) //  0
 NHSTUB(_log10                                 ,0x010db170) //  0
 NHSTUB(_pow                                   ,0x010db2d8) //  0

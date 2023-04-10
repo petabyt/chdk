@@ -897,6 +897,8 @@
 0xfc199dc9,File.Delete_AllImg_FW
 0xfc199e0d,File.Create_FW
 0xfc19a0a5,file_counter_var_init
+0xfc19ba4f,ReadSDCard
+0xfc19bb17,WriteSDCard
 0xfc19ddb7,GetUsableAvRange
 0xfc19e9b9,GetCurrentAvValue
 0xfc19e9b9,GetCurrentAvValue_FW
@@ -1271,6 +1273,7 @@
 0xfc2a2e39,UIFS_GetStillShotableNumber_FW
 0xfc2a2e3d,UIFS_GetMovieRecoadableNumber_FW
 0xfc2a3705,task_StartupImage
+0xfc2a4293,init_sd_io_funcs
 0xfc2a464d,get_fstype
 0xfc2a46b3,GetDrive_ClusterSize
 0xfc2a4be3,GetDrive_TotalClusters

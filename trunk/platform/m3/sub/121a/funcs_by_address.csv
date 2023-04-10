@@ -7,6 +7,8 @@
 0x010e1739,task_SD1stInit
 0x010e2201,GetRomID
 0x010e2859,ChangeSDPortVoltage_FW
+0x010e2b03,ReadSDCard
+0x010e2bed,WriteSDCard
 0x010f3c59,j_mktime_ext
 0x010f3dac,j_dcache_flush_and_enable
 0x011001c4,dry_memcpy_bytes
@@ -1686,6 +1688,7 @@
 0xfc37970f,ui_free_default
 0xfc37976d,ui_malloc
 0xfc379773,ui_free
+0xfc379a57,init_sd_io_funcs
 0xfc379e19,get_fstype
 0xfc379e7f,GetDrive_ClusterSize
 0xfc37a35f,GetDrive_TotalClusters

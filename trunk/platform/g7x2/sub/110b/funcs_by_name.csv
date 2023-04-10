@@ -1018,6 +1018,7 @@
 0xe0373cf9,InactivateAdjLog_FW
 0xe0056651,init_error_handlers
 0xe00208bf,init_ex_drivers
+0xe03747f5,init_sd_io_funcs
 0xe0020419,init_task_error
 0xe0552f39,InitializeAdjustmentFunction_FW
 0xe0552ef9,InitializeAdjustmentSystem_FW
@@ -1652,6 +1653,7 @@
 0xe0451397,Read
 0xe0451397,Read_FW
 0xe03fa8ff,ReadFastDir
+0xe051e8b5,ReadSDCard
 0xe035e00f,Rec2PB
 0xe05674dd,ReceiveMechaCircuitData_FW
 0xe05674f5,ReceiveMechaCircuitDataAll_FW
@@ -2514,6 +2516,7 @@
 0xe055c27f,WriteNFCUserArea_FW
 0xe055aa79,WriteNFCUserAreaWithInitNFCAdj_FW
 0xe0587ff1,WritePWMAdjustment_FW
+0xe051e963,WriteSDCard
 0xe042030f,WriteToRom_FW
 0xe0044d5b,WRITEUSERSETTINGDATATOFROM_FW
 0xe055a549,WriteWLANMACAddressToFROM_FW

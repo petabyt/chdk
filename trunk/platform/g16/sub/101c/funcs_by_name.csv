@@ -876,6 +876,7 @@
 0xfc2df1e1,InactivateAdjLog_FW
 0xfc0999fd,init_error_handlers
 0xfc05e781,init_ex_drivers
+0xfc308a4b,init_sd_io_funcs
 0xfc05e231,init_task_error
 0xfc09dff5,initComDiscovery_FW
 0xfc1d2211,InitializeAdjustmentFunction_FW
@@ -1493,6 +1494,7 @@
 0xfc13d1cd,Read
 0xfc13d1cd,Read_FW
 0xfc1242b5,ReadFastDir
+0xfc10e465,ReadSDCard
 0xfc0e7433,Rec2PB
 0xfc38d52f,ReceiveMechaCircuitDataAll_FW
 0x010c57b5,ReceiveMessageQueue
@@ -2233,6 +2235,7 @@
 0xfc38d48f,WriteMechaLogToFile_FW
 0xfc38d485,WriteMechaLogToRom_FW
 0xfc46ed9d,WritePWMAdjustment_FW
+0xfc10e52d,WriteSDCard
 0xfc0e9c89,WriteToRom_FW
 0xfc0eb4cb,WRITEUSERSETTINGDATATOFROM_FW
 0xfc0b8667,WSS_GetAuthCode_FW

@@ -580,6 +580,8 @@
 0xfc10a7c3,task_dccdCalcTask
 0xfc10bd1d,task_DPOFTask
 0xfc10e055,task_MediaStatusMngr
+0xfc10e465,ReadSDCard
+0xfc10e52d,WriteSDCard
 0xfc10eaa1,task_MechaCPUTransfer
 0xfc110c1d,task_MovieTranscoder
 0xfc111e93,AdditionAgentRAM_FW
@@ -1316,6 +1318,7 @@
 0xfc3084cb,StartCameraLog_FW
 0xfc30852d,StopCameraLog_FW
 0xfc308567,LogCameraEvent
+0xfc308a4b,init_sd_io_funcs
 0xfc308e03,get_fstype
 0xfc308e69,GetDrive_ClusterSize
 0xfc309375,GetDrive_TotalClusters

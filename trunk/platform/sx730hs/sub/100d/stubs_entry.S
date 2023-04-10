@@ -173,6 +173,7 @@ DEF_CONST(fw_yuv_layer_buf                  ,0x41141000) // Found @0xfc073dc0
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0        *** != 0xfc351823
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xfc3517db
 //NHSTUB(SetParameterData                     ,0xfc06af67) //  0        *** != 0x00000000
+//NHSTUB(WriteSDCard                          ,0x010e14f9) //  0        *** != 0x00000000
 //NHSTUB(_pow                                 ,0x00000000) //  0        *** != 0x010f8718
 //NHSTUB(exmem_alloc                          ,0x00000000) //  0        *** != 0xfc3b2e05
 //NHSTUB(exmem_ualloc                         ,0x00000000) //  0        *** != 0xfc3b2d79
@@ -268,7 +269,6 @@ NHSTUB(UnlockMainPower                        ,0xfc0fdd9d) //  0
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xfc0dbce3) //  0
 NHSTUB(Write                                  ,0xfc3519b7) //  0
-//NHSTUB(WriteSDCard                          ,0x00000000) //  0            == 0x00000000
 NHSTUB(_log                                   ,0x010f8090) //  0
 NHSTUB(_log10                                 ,0x010f85b0) //  0
 NHSTUB(_sqrt                                  ,0x010fa798) //  0

@@ -1,4 +1,5 @@
 0x010e12bf,SDCardUHSActive_FW
+0x010e1447,ReadSDCard
 0x010e1a37,task_SD1stInit
 0x010e2521,GetRomID
 0x010ee6ec,j_dcache_flush_and_enable
@@ -1087,6 +1088,7 @@
 0xfc3519f5,j_pvm_malloc
 0xfc3519f9,j_pvm_free
 0xfc3519fd,pvm_get_largest_free_block_size_ptr
+0xfc351cef,init_sd_io_funcs
 0xfc3520cf,get_fstype
 0xfc352135,GetDrive_ClusterSize
 0xfc35260f,GetDrive_TotalClusters
