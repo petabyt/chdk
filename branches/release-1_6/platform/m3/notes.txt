@@ -5,7 +5,7 @@ CHDK is a hack, use at your own risk!
 CHDK support for interchangeable lens cameras is incomplete.
 
 Many features and combinations of Canon settings have not been tested.
-Builds are available for firmware 101A and 120F.
+Builds are available for firmware 101A, 120F and 121A.
 
 Please post bug reports and patches in the porting thread
 https://chdk.setepontos.com/index.php?topic=12542.0
@@ -30,6 +30,12 @@ Notes
 - This camera can switch on itself after a user-initiated delay. This feature can be used from a user-written Lua script.
   For more details and the script, see https://chdk.setepontos.com/index.php?topic=12542.msg137151#msg137151
 
+- M3 can boot CHDK from cards formatted FAT32 or FAT16, but not exFAT. Cards
+larger than 32 GB generally default to exFAT and must either be re-formatted
+FAT32 or partitioned with a FAT16 boot partition to enable CHDK autoboot.
+Using an exFAT partition for images is reported to give better performance
+with large cards.
+
 Issues:
 
 - CHDK overlay drawing is slow
@@ -49,13 +55,12 @@ PTP play/rec switch
 raw and remote hooks (in normal still shooting modes, broken some special modes)
 USB remote - plug test / remote hook only
 CHDK raw / DNG (in P, M, Tv, Av modes. AUTO not well tested, many others broken)
- - Attempting to use CHDK DNG in modes other than P, M, Tv, Av is not recommended 
-PTP remote shoot with JPEG / CHDK DNG
- - If Canon raw is enabled, it will be downloaded instead of jpeg, with jpeg extension.
- - If Canon raw + jpeg is enabled, the jpeg will be written to the card
+ - Attempting to use CHDK DNG in modes other than P, M, Tv, Av is not recommended
+PTP remote shoot with JPEG, CHDK DNG and Canon raw (with chdkptp r964 or later)
  - May fail in special scene modes (not extensively tested)
 Motion detection - preliminary
 PTP live view - preliminary, requires client with live view protocol 2.2 (chdkptp r723 or later)
+Multipartition boot with FAT16 + exFAT
 
 NOT IMPLEMENTED:
 
