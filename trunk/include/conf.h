@@ -3,7 +3,7 @@
 
 // CHDK Config items interface
 
-// Note: used in modules and platform independent code. 
+// Note: used in modules and platform independent code.
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 //==========================================================
@@ -181,7 +181,7 @@ typedef struct
     OSD_pos temp_pos;
     OSD_pos ev_video_pos;
     OSD_pos usb_info_pos;
-    
+
     OSD_scale histo_scale;
     OSD_scale dof_scale;
     OSD_scale batt_icon_scale;
@@ -308,7 +308,7 @@ typedef struct
     int autoiso_min_iso_real;
     int autoiso2_max_iso_auto_real;
     int autoiso2_over;
-    
+
     int overexp_threshold;
     int overexp_ev_enum;    // 0-off, 1=-1/3, ..
 
@@ -384,16 +384,16 @@ typedef struct
     int touchscreen_disable_shortcut_controls;
 
     // Enable USB icon
-    int usb_info_enable; 
+    int usb_info_enable;
 
     // gen 2 USB remote
     int remote_switch_type;
     int remote_control_mode;
 
     int ext_video_time;
-    
+
     int remote_enable_scripts;  // usb remote activates scripts in <ALT> mode
-    
+
     int zoom_assist_button_disable;    // used to disable the zoom assist button on SX30 & SX40 for people who keep accidentaly pressing it
 
     int gps_record;
@@ -433,7 +433,7 @@ typedef struct
     int tbox_char_map;          // Text input box language/char map
     int show_alt_helper;        // Show <ALT> mode help screen
     int show_alt_helper_delay;  // Delay before showing help screen
-    
+
     long extra_button; // extra button for use in ALT mode, 0 when disabled
 
     int module_logging;
@@ -445,9 +445,9 @@ typedef struct
 
     int memdmp_start;           // start address for memory dump
     int memdmp_size;            // amount of memory to dump in bytes (0 for all RAM)
-    
+
     int remote_input_channel;   // remote input channel,  0=USB, 1=A/D
-    
+
     int hotshoe_override;       // flash hot shoe override (0=no override, 1='not occupied', 2='occupied')
 
     int allow_unsafe_io;        // Allow open/close/write to continue if fileio_semaphore times out (instead of returning error)
@@ -550,7 +550,7 @@ extern void conf_setAutosave(int n);
 
 // reyalp: putting these in conf, since the conf values are lookups for them
 // prefixes and extentions available for raw images (index with conf.raw_prefix etc)
-#define NUM_IMG_FOLDER_NAMES 3  // 
+#define NUM_IMG_FOLDER_NAMES 3  //
 #define NUM_IMG_PREFIXES 3  // IMG_ CRW_ SND_ (could add ETC_ SDR_ AUT_ MVI_ MRK_)
 #define NUM_IMG_EXTS 5      // .JPG .CRW .CR2 .THM .WAV (could add .AVI .MRK)
 extern const char* img_folders[NUM_IMG_FOLDER_NAMES];
@@ -580,6 +580,7 @@ typedef struct {
     unsigned int        last_saved;     // Record last value saved to file to determine if file needs updating
 } ConfInfo;
 
+// if new CONF_INFO macros are added, update tools/gen_conf_lua.c
 #define CONF_INFO(id, param, type, def)             { id, sizeof( param ), type, &param, {def}, 0 }
 #define CONF_INFO2(id, param, type, px, py)         { id, sizeof( param ), type, &param, {pos:{px,py}}, 0 }
 #define CONF_INFOP(id, param, type, px, py)         { id, sizeof( param ), type, &param, {pos:{(px)*CAM_SCREEN_WIDTH/360,(py)*CAM_SCREEN_HEIGHT/240}}, 0 }
