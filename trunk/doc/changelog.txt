@@ -16,6 +16,8 @@ New script functions in 1.7:
  screen_needs_refresh
  get_focal_length
  get_eff_focal_length
+ drawings.unpack_cnf_colors
+ drawings.pack_cnf_colors
 
 =1.6=
 Current stable branch, released Oct 12, 2020 as 1.6.1

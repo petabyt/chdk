@@ -21,15 +21,37 @@ draw.colors={
     "grey_trans", "magenta"
 }
 
+draw.colors_map={}
+for i,v in ipairs(draw.colors) do
+	draw.colors_map[v] = i + 255
+end
+
+-- convert an integer from get_config_value of a color option to foreground and background colors
+-- returns foreground, background as color numbers
+draw.unpack_cnf_colors = function(v)
+	return bitand(v,0x1ff),bitand(bitshru(v,16),0x1ff)
+end
+
+-- turn foreground, background color pair into integer suitable for passing to set_config_value
+-- fg and bg may be color numbers or string names
+draw.pack_cnf_colors = function(fg,bg)
+	if type(fg) == 'string' then
+		fg = draw.make_color(fg)
+	end
+	if type(bg) == 'string' then
+		bg = draw.make_color(bg)
+	end
+	return bitor(bitshl(bitand(bg,0x1ff),16),bitand(fg,0x1ff))
+end
+
 draw.make_color = function(c)
     -- return numeric ID for named color, or original value if not matched
-    for i=1,table.getn(draw.colors) do
-        if (c == draw.colors[i]) then
-            return i+255
-            end
-        end
+	if draw.colors_map[c] then
+		return draw.colors_map[c]
+	end
+
     return c
-    end
+	end
 
 local function _set( n, d_type, p1, p2, p3, p4, p5, p6, p7 )
     if d_type=="pixel" then
