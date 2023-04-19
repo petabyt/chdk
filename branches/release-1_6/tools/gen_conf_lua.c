@@ -18,7 +18,7 @@ static int read_line(FILE *f, char *buf)
     {
         if (fread(buf,1,1,f) != 1) { eof = 1; break; }
         if ((*buf == 0x0A) || (*buf == 0x0D)) break;
-        len++; 
+        len++;
         buf++;
     }
     *buf = 0;
@@ -91,6 +91,7 @@ int main(int argc, char **argv)
             int off = 10;
             s = strstr(line, "CONF_INFO(");
             if (s == 0) { off = 11; s = strstr(line, "CONF_INFO2("); }
+            if (s == 0) { off = 11; s = strstr(line, "CONF_INFOC("); }
             if (s == 0) { off = 11; s = strstr(line, "CONF_INFOP("); }
             if (s != 0)
             {
