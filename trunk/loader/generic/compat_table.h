@@ -79,6 +79,7 @@
 { 12919,1,0xc022302c,0xfff40040 }, // sx510hs
 #elif (NEED_ENCODED_DISKBOOT == 12)
 { 12933,4,0xd20b0994,0xfff20040 }, // sx700hs
+{ 12934,3,0xc022d1fc,0xfff40040 }, // sx600hs
 { 12935,3,0xc022d1fc,0xffff0040 }, // ixus150_elph140
 { 12936,3,0xc022d1fc,0xffff0040 }, // ixus145_elph135
 { 12937,3,0xc022d1fc,0xfff40040 }, // ixus265_elph340hs
