@@ -1,7 +1,7 @@
 ************************************
 SX730 HS notes
 ************************************
-This is a lightly tested PREALPHA port. CHDK is a hack, use at your own risk!
+CHDK is a hack, use at your own risk!
 
 Report bugs in the porting thread:
 https://chdk.setepontos.com/index.php?topic=13573.10
@@ -22,10 +22,10 @@ these functions, but it has not been tested extensively. Beware that applying
 USB power with the CHDK USB remote enabled could cause the camera to power on
 and extend the lens.
 
-When connected to a USB host, the camera only charges over USB after the 
+When connected to a USB host, the camera only charges over USB after the
 GetObjectHandles opcode has been received. This opcode would normally be sent by
 standard photo software to list images on the camera. On systems configured
-for use with chdkptp, this opcode will not normally be sent, so the camera 
+for use with chdkptp, this opcode will not normally be sent, so the camera
 will not charge unless it is sent manually, for example using using gphoto to
 list images or !con:ptp_get_object_handles() in chdkptp.
 After GetObjectHandles is received, the camera display will turn off and the
@@ -51,7 +51,7 @@ TESTED
 ******
 - PTP operation, including live view
 - Shutter, aperture and ISO override
-- Focus override. MF or AF lock is required 
+- Focus override. MF or AF lock is required
 - Bracketing in continuous mode
 - llibtst.lua (see known bugs)
 - hooktest.lua (see known bugs)
@@ -73,11 +73,6 @@ NOT IMPLEMENTED
 
 OTHER ISSUES
 ************
-- Display updating is ugly / has usual Digic 6 limitations
-  - Flashes a lot if the Canon firmware is updating the display
-  - Edge overlay does not erase properly when shown live
-  - Zebra "Draw Over Zebra" and Restore options are non-functional
-  - Some games don't draw correctly
 - DNG color matrix is incorrect (copied from sx60hs) but usable
 
 KNOWN BUGS

@@ -9,12 +9,9 @@ This may be changed to Video or WiFi in the options
 
 This camera has only ND filter, no adjustable aperture.
 
-
-
-
-
-
-
-
-
+NOT IMPLEMENTED
+***************
+- Jpeg remote shoot.
+- Video controls (movie_rec task)
+- Script hard shutdown (shut_down(1))
 
