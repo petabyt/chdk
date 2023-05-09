@@ -154,7 +154,7 @@ class AutobuildPubAWS:
                     if re.match(r'[^./]+-\d+\.\d+\.\d+-\d+[^./]*.zip$', sub):
                         # we could exclude the current build number, but we have the upload list so use that
                         if key not in delete_excludes:
-                            self.infomsg(1, f"delete match {key}")
+                            self.infomsg(2, f"delete match {key}")
                             r.append(key)
 
         return r

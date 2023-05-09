@@ -533,6 +533,14 @@
   "name": "IXUS",
   "aka": "ELPH 180, IXY 180"
  },
+ "ixus180_elph190": {
+  "desc": "IXUS 180",
+  "mid": 67305472,
+  "pid": 12992,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 190 IS, IXY 190"
+ },
  "ixus185_elph185": {
   "desc": "IXUS 185",
   "mid": 68485120,
@@ -1104,6 +1112,13 @@
   "desc": "SX60 HS",
   "mid": 57999360,
   "pid": 12954,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
+ "sx600hs": {
+  "desc": "SX600 HS",
+  "mid": 57081856,
+  "pid": 12934,
   "serie": "PowerShot",
   "name": "SX"
  },
