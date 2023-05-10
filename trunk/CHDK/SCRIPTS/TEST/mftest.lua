@@ -144,6 +144,8 @@ end
     version= tonumber(string.sub(bi.build_number,1,1))*100 + tonumber(string.sub(bi.build_number,3,3))*10 + tonumber(string.sub(bi.build_number,5,5))
     if ( tonumber(bi.build_revision) > 0 ) then
         build = tonumber(bi.build_revision)
+    elseif tonumber(bi.build_revision) == 0 then -- builds outside of svn will have build rev = 0 by default
+        build = 9999
     else
         build = tonumber(string.match(bi.build_number,'-(%d+)$'))
     end    
