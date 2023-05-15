@@ -75,6 +75,8 @@
 
     #undef CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO  // unlocked in canon firmware by default
 
+	#define CAM_HAS_FILEWRITETASK_HOOK      1    // FileWriteTask hook is available (local file write can be prevented)
+
     // MakeDirectory_Fut not found, using mkdir
     #define MKDIR_RETURN_ONE_ON_SUCCESS
 

@@ -36,9 +36,7 @@ NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff1d5260) //  3 90%
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff357224 -> ff6bdef8
-// Mode 33332 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_SMART_SHUTTER       33333
-// Current modemap entry not found in firmware - MODE_HIGHSPEED_BURST     32778
+// No problems found with modemap table.
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x00014a18) // Found @0xff02c338
