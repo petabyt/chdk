@@ -335,6 +335,8 @@ g16,100h,,,,,12916,dryos,52,60,0xFC000000,0x8000,0x0fffffff,d4e,,11,1,,0x006ce00
 g16,101a,,,,,12916,dryos,52,60,0xFC000000,0x8000,0x0fffffff,d4e,,11,1,,0x006ce000 ,0x00022000 ,,,,,,6
 g16,101b,,,,,12916,dryos,52,60,0xFC000000,0x8000,0x0fffffff,d4e,,11,1,,0x006ce000 ,0x00022000 ,,,,,,6
 g16,101c,,,,,12916,dryos,52,60,0xFC000000,0x8000,0x0fffffff,d4e,,11,1,,0x006ce000 ,0x00022000 ,,,,,,6
+sx600hs,100d,ALPHA,,,,12934,dryos,54,41,0xff010000,0x1900,0x1FFFFFF,d4f,,12,,,,,,,,,,6
+sx600hs,100f,ALPHA,,,,12934,dryos,54,41,0xff010000,0x1900,0x1FFFFFF,d4f,,12,,,,,,,,,,6
 ixus150_elph140,100c,,,,,12935,dryos,54,41,0xff810000,0x1900,0x07ffffff,d4f,,12,,,,,,,,,,6
 ixus145_elph135,100c,,,,,12936,dryos,54,41,0xFF810000,0x1900,0x07ffffff,d4f,,12,,,,,,,,,,6
 ixus265_elph340hs,100c,ALPHA,,,SKIP,12937,dryos,54,41,0xff010000,0x1900,0x1FFFFFF,d4f,,12,,,,,,,,,,6
@@ -372,7 +374,9 @@ m10,111a,ALPHA,,,,12960,dryos,57,60,0xFC000000,0x8000,0x1fffffff,d4g,W,13,1,,0x0
 sx710hs,100a,,,,,12966,dryos,57,60,0xFC000000,0x8000,0x1fffffff,d4g,,13,1,1,0x006ce000 ,0x00022000 ,,,,,,7
 sx710hs,101a,,,,,12966,dryos,57,60,0xFC000000,0x8000,0x1fffffff,d4g,,13,1,1,0x006ce000 ,0x00022000 ,,,,,,7
 ixus285_elph360hs,100b,ALPHA,,,SKIP,12989,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
+ixus285_elph360hs,100c,ALPHA,,,SKIP,12989,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 sx420is,100a,BETA,,,,12991,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
+ixus180_elph190,100a,ALPHA,,,,12992,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100a,,100c,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100b,,100c,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100c,,,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
