@@ -3,8 +3,8 @@
 
 // Camera info:
 //   Main firmware start: 0xe0020000
-//   DRYOS R58 (DRYOS version 2.3, release #0058+p10) @ 0xe05d8220 ref @ 0xe05c54b4
-//   Firmware Ver GM1.10B   // Found @ 0xe0503c3c, "GM1.10B" @ 0xe0503c49
+//   DRYOS R58 (DRYOS version 2.3, release #0058+p10) @ 0xe05d8398 ref @ 0xe05c562c
+//   Firmware Ver GM1.20A   // Found @ 0xe0503d1c, "GM1.20A" @ 0xe0503d29
 //   VMSA detected, probably digic >= 7
 
 // Values for makefile.inc
@@ -12,25 +12,25 @@
 //   DIGIC = 70
 //   MEMISOSTART = 0x2c460c
 //   MEMBASEADDR = 0x8000
-//   ARAM_HEAP_START = 0x006ce000#  Found @0xe0560ff4
-//   ARAM_HEAP_SIZE = 0x00022000#  Found @0xe0560fcc
+//   ARAM_HEAP_START = 0x006ce000#  Found @0xe0561190
+//   ARAM_HEAP_SIZE = 0x00022000#  Found @0xe0561168
 
 // Detected address ranges:
 // ROM      0xe0000000 - 0xe2000000 (33554432 bytes)
-// RAM data 0x00008000 - 0x0004c610 copied from 0xe0fd37b8 ( 280080 bytes)
-// RAM code 0x01900000 - 0x0190139c copied from 0xe1017dc8 (   5020 bytes)
-// TCM code 0xdffc4900 - 0xdffd0908 copied from 0xe1019164 (  49160 bytes)
+// RAM data 0x00008000 - 0x0004c640 copied from 0xe0fe6ea0 ( 280128 bytes)
+// RAM code 0x01900000 - 0x0190139c copied from 0xe102b4e0 (   5020 bytes)
+// TCM code 0xdffc4900 - 0xdffd0908 copied from 0xe102c87c (  49160 bytes)
 
 // Zico Xtensa blobs:
-// zico_0 0xbff20000 - 0xbff24ab8 copied from 0xe0e79d54 (  19128 bytes)
-// zico_1 0xbff00000 - 0xbff08000 copied from 0xe0e7e814 (  32768 bytes)
-// zico_2 0x80a00000 - 0x80ad4350 copied from 0xe0e8681c ( 869200 bytes)
+// zico_0 0xbff20000 - 0xbff24ab8 copied from 0xe0e8d47c (  19128 bytes)
+// zico_1 0xbff00000 - 0xbff08000 copied from 0xe0e91f3c (  32768 bytes)
+// zico_2 0x80a00000 - 0x80ad4350 copied from 0xe0e99f44 ( 869200 bytes)
 
 // Found DryOS versions:
 // 0xe0018d08 other "DRYOS version 2.3, release #0058+p10"
-// 0xe05d8220 main  "DRYOS version 2.3, release #0058+p10"
-// 0xe0c260f0 other "DRYOS version 2.3, release #0058+p10"
-// 0xe0e870ac other "DRYOS version 2.3, release #0058+p7"
+// 0xe05d8398 main  "DRYOS version 2.3, release #0058+p10"
+// 0xe0c3d018 other "DRYOS version 2.3, release #0058+p10"
+// 0xe0e9a7d4 other "DRYOS version 2.3, release #0058+p7"
 // 0xe123e380 other "DRYOS version 2.3, release #0058+p10"
 
 // Values below go in 'platform_camera.h':
@@ -43,36 +43,36 @@
 //#define CAM_HAS_ND_FILTER 1 // Camera has ND filter
 // Camera has an iris (CAM_HAS_IRIS_DIAPHRAGM default)
 
-// physw_event_table 0xe05df0e4 Found @0xe004e61c
+// physw_event_table 0xe05df25c Found @0xe004e61c
 // Values below go in 'platform_kbd.h':
-//#define SD_READONLY_FLAG    0x00000020 // Found @0xe05df144, levent 0x30a
+//#define SD_READONLY_FLAG    0x00000020 // Found @0xe05df2bc, levent 0x30a
 //#define SD_READONLY_IDX     1
-//#define USB_MASK            0x00400000 // Found @0xe05df1fc, levent 0x302
+//#define USB_MASK            0x00400000 // Found @0xe05df374, levent 0x302
 //#define USB_IDX             2
-//#define BATTCOVER_FLAG      0x00200000 // Found @0xe05df1f4, levent 0x305
+//#define BATTCOVER_FLAG      0x00200000 // Found @0xe05df36c, levent 0x305
 //#define BATTCOVER_IDX       2
 
 // Keymap values for kbd.c. Additional keys may be present, only common values included here.
 // WARNING: Key name / function may vary! Values for unknown DryOS versions should not be trusted!
 //KeyMap keymap[] = {
-//    { 0, KEY_PLAYBACK        ,0x00008000 }, // Found @0xe05df0fc, levent 0x101
-//    { 0, KEY_VIDEO           ,0x00010000 }, // Found @0xe05df104, levent 0x02
-//    { 0, KEY_ZOOM_IN         ,0x00020000 }, // Found @0xe05df10c, levent 0x03
-//    { 0, KEY_ZOOM_OUT        ,0x00040000 }, // Found @0xe05df114, levent 0x04
-//    { 0, KEY_SHOOT_FULL      ,0x00180000 }, // Found @0xe05df11c, levent 0x01
-//    { 0, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xe05df124, levent 0x00
-//    { 0, KEY_SHOOT_FULL_ONLY ,0x00080000 }, // Found @0xe05df11c, levent 0x01
-//    { 0, KEY_POWER           ,0x00200000 }, // Found @0xe05df12c, levent 0x100
-//    { 0, KEY_WIFI            ,0x00400000 }, // Found @0xe05df134, levent 0x103
-//    { 2, KEY_UP              ,0x00000200 }, // Found @0xe05df1a4, levent 0x06
-//    { 2, KEY_DOWN            ,0x00000400 }, // Found @0xe05df1ac, levent 0x07
-//    { 2, KEY_RIGHT           ,0x00000800 }, // Found @0xe05df1b4, levent 0x09
-//    { 2, KEY_LEFT            ,0x00001000 }, // Found @0xe05df1bc, levent 0x08
-//    { 2, KEY_SET             ,0x00002000 }, // Found @0xe05df1c4, levent 0x0a
+//    { 0, KEY_PLAYBACK        ,0x00008000 }, // Found @0xe05df274, levent 0x101
+//    { 0, KEY_VIDEO           ,0x00010000 }, // Found @0xe05df27c, levent 0x02
+//    { 0, KEY_ZOOM_IN         ,0x00020000 }, // Found @0xe05df284, levent 0x03
+//    { 0, KEY_ZOOM_OUT        ,0x00040000 }, // Found @0xe05df28c, levent 0x04
+//    { 0, KEY_SHOOT_FULL      ,0x00180000 }, // Found @0xe05df294, levent 0x01
+//    { 0, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xe05df29c, levent 0x00
+//    { 0, KEY_SHOOT_FULL_ONLY ,0x00080000 }, // Found @0xe05df294, levent 0x01
+//    { 0, KEY_POWER           ,0x00200000 }, // Found @0xe05df2a4, levent 0x100
+//    { 0, KEY_WIFI            ,0x00400000 }, // Found @0xe05df2ac, levent 0x103
+//    { 2, KEY_UP              ,0x00000200 }, // Found @0xe05df31c, levent 0x06
+//    { 2, KEY_DOWN            ,0x00000400 }, // Found @0xe05df324, levent 0x07
+//    { 2, KEY_RIGHT           ,0x00000800 }, // Found @0xe05df32c, levent 0x09
+//    { 2, KEY_LEFT            ,0x00001000 }, // Found @0xe05df334, levent 0x08
+//    { 2, KEY_SET             ,0x00002000 }, // Found @0xe05df33c, levent 0x0a
 //    { 0, 0, 0 }
 //};
 
-// canon_mode_list 0xe089d4c4 Found @0xe0036f2c
+// canon_mode_list 0xe089d63c Found @0xe0036f2c
 // Check modemap values from 'platform/CAMERA/shooting.c':
 // 33297  0x8211 In firmware but not in current modemap
 //  4174  0x104e In firmware but not in current modemap
@@ -134,36 +134,36 @@
 // EXMEM_TIME_LAPSE_MOVIE 34
 
 // Values below can be overridden in 'stubs_min.S':
-DEF(ctypes                            ,0xe05d8380) // Found @0xe00386cc
+DEF(ctypes                            ,0xe05d84f8) // Found @0xe00386cc
 DEF(physw_run                         ,0x00008370) // Found @0xe005b31a
 DEF(physw_sleep_delay                 ,0x00008378) // (0x8370+0x8) Found @0xe005b31e
-DEF(physw_status                      ,0x0004e440) // Found @0xe005b632
-DEF(fileio_semaphore                  ,0x000111c4) // Found @0xe0036d16
-DEF(levent_table                      ,0xe066c2a8) // Found @0xe00f3098
-DEF(FlashParamsTable                  ,0xe089d884) // Found @0xe0036f40
+DEF(physw_status                      ,0x0004e470) // Found @0xe005b632
+DEF(fileio_semaphore                  ,0x000111f0) // Found @0xe0036d16
+DEF(levent_table                      ,0xe066c420) // Found @0xe00f3098
+DEF(FlashParamsTable                  ,0xe089d9fc) // Found @0xe0036f40
 DEF(playrec_mode                      ,0x0000c1d8) // (0xc1d4+0x4) Found @0xe02f082a
 DEF(jpeg_count_str                    ,0x0014dd38) // Found @0xe01a81d8
-DEF(zoom_busy                         ,0x00011664) // (0x11644+0x20) Found @0xe005f92a
-DEF(focus_busy                        ,0x00011400) // (0x113f8+0x8) Found @0xe0372086
+DEF(zoom_busy                         ,0x00011690) // (0x11670+0x20) Found @0xe005f92a
+DEF(focus_busy                        ,0x0001142c) // (0x11424+0x8) Found @0xe0372086
 DEF(imager_active                     ,0x000086f4) // (0x86f0+0x4) Found @0xe045be1e
 DEF(canon_menu_active                 ,0x0000ce08) // (0xce04+0x4) Found @0xe03756e0
-DEF(file_counter_var                  ,0x00011084) // Found @0xe0402394
+DEF(file_counter_var                  ,0x000110b0) // Found @0xe0402394
 DEF(cameracon_state                   ,0x00008b54) // (0x8b44+0x10) Found @0xe035f8b8
-DEF(_nrflag                           ,0x00026278) // (0x26274+0x4) Found @0xe005efac
-DEF(av_override_semaphore             ,0x00036fb0) // Found @0xe0566ffc
+DEF(_nrflag                           ,0x000262a8) // (0x262a4+0x4) Found @0xe005efac
+DEF(av_override_semaphore             ,0x00036fe0) // Found @0xe0567198
 DEF(active_bitmap_buffer              ,0x0000cdc0) // (0xcd74+0x4c) Found @0xe03789c2
 DEF(displaytype                       ,0x000096f8) // (0x969c+0x5c) Found @0xe0439820
 DEF(bitmap_buffer                     ,0x0000cdc4) // (0xcd74+0x50) Found @0xe03789c8
-DEF(palette_control                   ,0x0001257c) // Found @0xe0344a6a
-DEF(palette_buffer_ptr                ,0x00012594) // (0x1257c+0x18) Found @0xe0344a86
-DEF(active_palette_buffer             ,0x0001258c) // (0x1257c+0x10) Found @0xe0344a6e
+DEF(palette_control                   ,0x000125ac) // Found @0xe0344a6a
+DEF(palette_buffer_ptr                ,0x000125c4) // (0x125ac+0x18) Found @0xe0344a86
+DEF(active_palette_buffer             ,0x000125bc) // (0x125ac+0x10) Found @0xe0344a6e
 DEF(live_free_cluster_count           ,0x0015b1a0) // (0x15b168+0x38) Found @0xe00245e2
 DEF_CONST(uiprop_count                      ,0x000000df) // Found @0xe0271bce
-DEF(exmem_alloc_table                 ,0x00058288) // Found @0xe0055d96
-DEF(exmem_types_table                 ,0xe0fd7a68) // Found @0xe0055d9a
-DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xe0fd7a68
-DEF(debug_logging_ptr                 ,0x000254f4) // Found @0xe01d039c
-DEF(debug_logging_flag                ,0x000254fc) // Found @0xe01d0396
+DEF(exmem_alloc_table                 ,0x000582b8) // Found @0xe0055d96
+DEF(exmem_types_table                 ,0xe0feb150) // Found @0xe0055d9a
+DEF_CONST(exmem_type_count                  ,0x00000023) // Found @0xe0feb150
+DEF(debug_logging_ptr                 ,0x00025524) // Found @0xe01d039c
+DEF(debug_logging_flag                ,0x0002552c) // Found @0xe01d0396
 DEF(mzrm_sendmsg_ret_adr              ,0xe030671b)
 DEF_CONST(fw_yuv_layer_buf                  ,0x4196a000) // Found @0xe01b8dda
 // focus_len_table contains zoom focus lengths for use in 'get_focal_length' (main.c).
@@ -177,7 +177,7 @@ DEF(focus_len_table                         ,0xe1f3169c) // Found @0xe1f3169c
 //NHSTUB(ScreenLock                           ,0xe03780e3) //  0        *** != 0x00000000
 //NHSTUB(ScreenUnlock                         ,0xe03781f5) //  0        *** != 0x00000000
 //NHSTUB(SetFileTimeStamp                     ,0x00000000) //  0        *** != 0xe0374179
-//NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xe0526843
+//NHSTUB(reboot_fw_update                     ,0x00000000) //  0        *** != 0xe05269df
 
 NHSTUB(AllocateUncacheableMemory              ,0xe046e571) //  0
 NHSTUB(Close                                  ,0xe0373eb7) //  0
@@ -208,10 +208,10 @@ NHSTUB(GetBatteryTemperature                  ,0xe04011cd) //  0
 NHSTUB(GetCCDTemperature                      ,0xe0401177) //  0
 NHSTUB(GetCurrentAvValue                      ,0xe0062bad) //  0
 NHSTUB(GetCurrentShutterSpeed                 ,0xe00720a9) //  0
-NHSTUB(GetUsableMaxAv                         ,0xe056008d) //  0
-NHSTUB(GetUsableMinAv                         ,0xe056007b) //  0
-NHSTUB(get_nd_value                           ,0xe04fd7ab) //  0
-NHSTUB(get_current_nd_value                   ,0xe04fd785) //  0
+NHSTUB(GetUsableMaxAv                         ,0xe0560229) //  0
+NHSTUB(GetUsableMinAv                         ,0xe0560217) //  0
+NHSTUB(get_nd_value                           ,0xe04fd88b) //  0
+NHSTUB(get_current_nd_value                   ,0xe04fd865) //  0
 NHSTUB(get_current_deltasv                    ,0xe043af3d) //  0
 NHSTUB(GetCurrentDriveBaseSvValue             ,0xe036a599) //  0
 NHSTUB(GetDrive_ClusterSize                   ,0xe0374c35) //  0
@@ -219,42 +219,42 @@ NHSTUB(GetDrive_TotalClusters                 ,0xe0375125) //  0
 NHSTUB(GetFocusLensSubjectDistance            ,0xe0372bf5) //  0
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xe0372eeb) //  0
 NHSTUB(GetKbdState                            ,0xe004e73b) //  0
-NHSTUB(GetMemInfo                             ,0xe0589bad) //  0
+NHSTUB(GetMemInfo                             ,0xe0589d25) //  0
 NHSTUB(GetOpticalTemperature                  ,0xe0401223) //  0
 NHSTUB(GetParameterData                       ,0xe02725cf) //  0
 //NHSTUB(GetPropertyCase                      ,0xe036af69) //  0            Overridden
-NHSTUB(GetSystemTime                          ,0xe0569c53) //  0
+NHSTUB(GetSystemTime                          ,0xe0569def) //  0
 NHSTUB(GetVRAMHPixelsSize                     ,0xe040bdf5) //  0
 NHSTUB(GetVRAMVPixelsSize                     ,0xe040bdfd) //  0
 NHSTUB(GetZoomLensCurrentPoint                ,0xe005fb75) //  0
-NHSTUB(GetZoomLensCurrentPosition             ,0xe051b9d5) //  0
+NHSTUB(GetZoomLensCurrentPosition             ,0xe051bb71) //  0
 NHSTUB(GiveSemaphore                          ,0xdffca149) //  0
-NHSTUB(IsStrobeChargeCompleted                ,0xe053b41f) //  0
-NHSTUB(LEDDrive                               ,0xe0551f91) //  0
+NHSTUB(IsStrobeChargeCompleted                ,0xe053b5bb) //  0
+NHSTUB(LEDDrive                               ,0xe055212d) //  0
 NHSTUB(LocalTime                              ,0xdffca8bb) //  0
 NHSTUB(LockMainPower                          ,0xe04d05f7) //  0
 NHSTUB(MakeDirectory_Fut                      ,0xe037422f) //  0
 NHSTUB(MakeSDCardBootable                     ,0xe03754ef) //  0
-NHSTUB(MoveFocusLensToDistance                ,0xe05921e3) //  0
-NHSTUB(MoveIrisWithAv                         ,0xe0566fe9) //  0
-NHSTUB(MoveZoomLensWithPoint                  ,0xe0567d75) //  0
+NHSTUB(MoveFocusLensToDistance                ,0xe059235b) //  0
+NHSTUB(MoveIrisWithAv                         ,0xe0567185) //  0
+NHSTUB(MoveZoomLensWithPoint                  ,0xe0567f11) //  0
 NHSTUB(Open                                   ,0xe0373e7b) //  0
 NHSTUB(PB2Rec                                 ,0xe035dfcb) //  0
 NHSTUB(PT_MoveDigitalZoomToWide               ,0xe02982c3) //  0
-NHSTUB(PT_MoveOpticalZoomAt                   ,0xe0552e35) //  0
+NHSTUB(PT_MoveOpticalZoomAt                   ,0xe0552fd1) //  0
 NHSTUB(MoveOpticalZoomAt                      ,0xe02980f9) //  0
 NHSTUB(PT_PlaySound                           ,0xe037e475) //  0
 NHSTUB(PostLogicalEventForNotPowerType        ,0xe037a839) //  0
 NHSTUB(PostLogicalEventToUI                   ,0xe037a86d) //  0
-NHSTUB(PutInNdFilter                          ,0xe0592499) //  0
-NHSTUB(PutOutNdFilter                         ,0xe05924bf) //  0
+NHSTUB(PutInNdFilter                          ,0xe0592611) //  0
+NHSTUB(PutOutNdFilter                         ,0xe0592637) //  0
 NHSTUB(Read                                   ,0xe0451397) //  0
 NHSTUB(ReadFastDir                            ,0xe03fa8ff) //  0
 NHSTUB(Rec2PB                                 ,0xe035e00f) //  0
-NHSTUB(SetAE_ShutterSpeed                     ,0xe0583d25) //  0
+NHSTUB(SetAE_ShutterSpeed                     ,0xe0583e9d) //  0
 NHSTUB(SetAutoShutdownTime                    ,0xe04d0647) //  0
 NHSTUB(SetCurrentCaptureModeType              ,0xe037ca81) //  0
-NHSTUB(SetDate                                ,0xe0585275) //  0
+NHSTUB(SetDate                                ,0xe05853ed) //  0
 //NHSTUB(SetFileAttributes                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(SetLogicalEventActive                  ,0xe0371cdf) //  0
 NHSTUB(SetParameterData                       ,0xe02724e3) //  0
@@ -272,7 +272,7 @@ NHSTUB(UnlockMainPower                        ,0xe04d0593) //  0
 //NHSTUB(UnsetZoomForMovie                    ,0x00000000) //  0            == 0x00000000
 NHSTUB(VbattGet                               ,0xe04912e5) //  0
 NHSTUB(Write                                  ,0xe0373e3d) //  0
-NHSTUB(WriteSDCard                            ,0xe051e963) //  0
+NHSTUB(WriteSDCard                            ,0xe051eaff) //  0
 NHSTUB(_log                                   ,0xdffcd8c5) //  0
 NHSTUB(_log10                                 ,0xdffcdc39) //  0
 NHSTUB(_pow                                   ,0xdffcdd31) //  0
@@ -301,15 +301,15 @@ NHSTUB(OpenFastDir                            ,0xe03fa861) //  0
 NHSTUB(closedir                               ,0xe03fa829) //  0
 NHSTUB(get_fstype                             ,0xe0374bcf) //  0
 NHSTUB(qsort                                  ,0xe041ca3f) //  0
-NHSTUB(rand                                   ,0xe052b613) //  0
+NHSTUB(rand                                   ,0xe052b7af) //  0
 NHSTUB(set_control_event                      ,0xe0371a61) //  0
-NHSTUB(srand                                  ,0xe052b60d) //  0
+NHSTUB(srand                                  ,0xe052b7a9) //  0
 NHSTUB(stat                                   ,0xe03740bd) //  0
 NHSTUB(strcat                                 ,0xe0484f7b) //  0
 NHSTUB(strchr                                 ,0xe045197f) //  0
 NHSTUB(strcmp                                 ,0xe037a0c1) //  0
 NHSTUB(strcpy                                 ,0xe037e6a5) //  0
-NHSTUB(strftime                               ,0xe0523985) //  0
+NHSTUB(strftime                               ,0xe0523b21) //  0
 NHSTUB(strlen                                 ,0xe037e6c7) //  0
 NHSTUB(strncmp                                ,0xe0422079) //  0
 NHSTUB(strncpy                                ,0xe0484f57) //  0
@@ -330,7 +330,7 @@ NHSTUB(time                                   ,0xdffca509) //  0
 NHSTUB(vsprintf                               ,0xe0463383) //  0
 //NHSTUB(EngDrvRead                           ,0x00000000) //  0            == 0x00000000
 NHSTUB(PTM_GetCurrentItem                     ,0xe0376d2b) //  0
-NHSTUB(DisableISDriveError                    ,0xe056898f) //  0
+NHSTUB(DisableISDriveError                    ,0xe0568b2b) //  0
 NHSTUB(CancelHPTimer                          ,0xe03f4b5b) //  0
 NHSTUB(SetHPTimerAfterNow                     ,0xe03f4ac1) //  0
 NHSTUB(SetEventFlag                           ,0xdffc9939) //  0
@@ -343,6 +343,6 @@ NHSTUB(PT_MFOff                               ,0xe0299ed9) //  0
 NHSTUB(GetAdChValue                           ,0xe04d970b) //  0
 NHSTUB(EnableHDMIPower                        ,0xe005bd31) //  0
 NHSTUB(DisableHDMIPower                       ,0xe005bd67) //  0
-NHSTUB(SetVideoOutType                        ,0xe058429f) //  0
-NHSTUB(GetVideoOutType                        ,0xe058422b) //  0
+NHSTUB(SetVideoOutType                        ,0xe0584417) //  0
+NHSTUB(GetVideoOutType                        ,0xe05843a3) //  0
 NHSTUB(IsWirelessConnect                      ,0xe036787b) //  0

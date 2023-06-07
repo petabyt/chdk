@@ -12,7 +12,7 @@ NHSTUB(TurnOffBackLight                       ,NULL_SUB)
 NHSTUB(TurnOnBackLight                        ,NULL_SUB)
 //NHSTUB(mkdir                                  ,NULL_SUB)
 //NHSTUB(realloc                                ,NULL_SUB)
-NHSTUB(reboot_fw_update                       ,0xe0526843)  // Does not work !!! Asserts if try to load PS.FI2 file.
+NHSTUB(reboot_fw_update                       ,0xe05269df)  // Does not work !!! Asserts if try to load PS.FI2 file.
 
 NHSTUB(VTMLock                                ,0xe03780bf)  // OK
 NHSTUB(VTMUnlock                              ,0xe03781d7)  // ??? VTMUnlock string not in FW
@@ -32,8 +32,8 @@ NHSTUB(GetPropertyCase_FW                     ,0xe036af69)
 
 //// required because DryOS >=54 functions assert on unitialized event flag, sem etc
 //// see https://chdk.setepontos.com/index.php?topic=12516.0
-NHSTUB(init_focus_eventflag                   ,0xe05923d9)
-NHSTUB(init_nd_eventflag                      ,0xe05924f1)
+NHSTUB(init_focus_eventflag                   ,0xe0592551)
+NHSTUB(init_nd_eventflag                      ,0xe0592669)
 NHSTUB(CreateBinarySemaphoreStrictly          ,0xdffca245)
 
 // Does not exist
@@ -41,5 +41,5 @@ NHSTUB(EngDrvRead                           ,NULL_SUB)             // EngDrvRead
 
 DEF(task_FsIoNotifyTask                     ,0xe00f2b5d)
 
-NHSTUB(get_ptp_buf_size                     ,0xe053364b)
-NHSTUB(get_ptp_file_buf                     ,0xe0556e1f)
+NHSTUB(get_ptp_buf_size                     ,0xe05337e7)
+NHSTUB(get_ptp_file_buf                     ,0xe0556fbb)

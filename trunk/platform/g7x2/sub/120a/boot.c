@@ -259,7 +259,7 @@ asm volatile (
             "    beq     loc_boot\n" // let core0 boot
             "    adr     r0, loc_boot\n"
             "    orr     r0, #1\n"
-            "    bl      sub_e0539e64\n" // park core1 then continue at r0
+            "    bl      sub_e053a000\n" // park core1 then continue at r0
             "loc_boot:\n"
 
             "    ldr     r0, =0xe0020200\n"
@@ -275,9 +275,9 @@ asm volatile (
             "loc_e0020032:\n"
             "    b.w     sub_e00200f8_my\n" // Patched (was loc_e00200f8)
             "loc_e002003c:\n"
-            "    ldr     r0, =0xe0fd37b8\n"
+            "    ldr     r0, =0xe0fe6ea0\n"
             "    ldr     r1, =0x00008000\n"
-            "    ldr     r3, =0x0004c610\n"
+            "    ldr     r3, =0x0004c640\n"
             "loc_e0020042:\n"
             "    cmp     r1, r3\n"
             "    itt     lo\n"
@@ -291,7 +291,7 @@ asm volatile (
             "    it      lo\n"
             "    strlo   r2, [r3], #4\n"
             "    blo     loc_e0020056\n"
-            "    ldr     r0, =0xe1017dc8\n" //  **"zH"
+            "    ldr     r0, =0xe102b4e0\n" //  **"zH"
             "    ldr     r1, =0x01900000\n" //  **"zH"
             "    ldr     r3, =0x0190139c\n"
             "loc_e0020066:\n"
@@ -302,11 +302,11 @@ asm volatile (
             "    blo     loc_e0020066\n"
             "    ldr     r0, =0x01900000\n" //  **"zH"
             "    ldr     r1, =0x0000139c\n"
-            "    bl      sub_e042eb74\n" // dcache_clean_range
+            "    bl      sub_e0425998\n" // dcache_clean_range
             "    ldr     r0, =0x01900000\n" //  **"zH"
             "    ldr     r1, =0x0000139c\n"
-            "    bl      sub_e042ec4c\n" // icache_flush_range
-            "    ldr     r0, =0xe1019164\n"
+            "    bl      sub_e0425a70\n" // icache_flush_range
+            "    ldr     r0, =0xe102c87c\n"
             "    ldr     r1, =0xdffc4900\n"
             "    ldr     r3, =0xdffd0908\n"
             "loc_e002008a:\n"
@@ -338,10 +338,10 @@ asm volatile (
 
             "    ldr     r0, =0xdffc4900\n"
             "    ldr     r1, =0x0000c008\n"
-            "    bl      sub_e042eb74\n" // dcache_clean_range
+            "    bl      sub_e0425998\n" // dcache_clean_range
             "    ldr     r0, =0xdffc4900\n"
             "    ldr     r1, =0x0000c008\n"
-            "    bl      sub_e042ec4c\n" // icache_flush_range
+            "    bl      sub_e0425a70\n" // icache_flush_range
 //            "    ldr     r0, =0xe0020033\n" // -
 //            "    orr     r0, r0, #1\n" // -
 //            "    bx      r0\n" // -
@@ -542,10 +542,10 @@ asm volatile (
             "    ands    r0, r0, #0xf\n"            // +
             "    bne     skip\n"                    // + to be on the safe side, skip this with core1
             "    movs    r0, #1\n"                  // +
-            "    bl      sub_e051e078\n"            // unblock core1 (needs to be done twice)
+            "    bl      sub_e051e214\n"            // unblock core1 (needs to be done twice)
 
             "    movs    r0, #1\n"
-            "    bl      sub_e051e078\n"
+            "    bl      sub_e051e214\n"
             "skip:\n"                               // +
 
             "    bl      sub_e003e3bc\n" // IsNormalCameraMode_FW
@@ -643,23 +643,23 @@ asm volatile (
             "loc_e00206f0:\n"
             "    bl      sub_e0020860\n"
             "    bl      sub_e046e380\n" //  return
-            "    bl      sub_e052fda8\n"
+            "    bl      sub_e052ff44\n"
             // added for SD card UHS detection https://chdk.setepontos.com/index.php?topic=13089.msg132583#msg132583
             "    bl      sub_e04d9986\n" // ref in sub_e04d9c10 before "SDPower.c" string
 //            "    bl      sub_e046e3dc\n" // - diskboot
             "    bl      sub_e005a122\n"
-            "    bl      sub_e0425880\n"
+            "    bl      sub_e0425ac0\n"
             "    bl      sub_e0020924\n"
             "    bl      sub_e00208be\n" // init_ex_drivers
-            "    bl      sub_e052fdde\n"
+            "    bl      sub_e052ff7a\n"
             "    bl      sub_e0056650\n" // init_error_handlers
-            "    bl      sub_e0425886\n"
+            "    bl      sub_e0425ac6\n"
             "    bl      sub_e005b33e_my\n" // -> taskcreate_physw (was sub_e005b33e)
             "    BL      CreateTask_spytask\n"  // +
             "    bl      init_required_fw_features\n"   // +
             "    bl      sub_e0297df6\n"
-            "    bl      sub_e042589c\n"
-            "    bl      sub_e052fd40\n"
+            "    bl      sub_e0425adc\n"
+            "    bl      sub_e052fedc\n"
             "    bl      sub_e04914c0\n"
             "    bl      sub_e005b870\n"
             "    bl      sub_e005a0d2\n"
@@ -745,7 +745,7 @@ asm volatile (
             "    push.w  {r4, r5, r6, r7, r8, lr}\n"
             "    mov     r6, r0\n"
             "    bl      sub_e0374ec0\n"
-            "    ldr     r1, =0x000534f8\n"
+            "    ldr     r1, =0x00053528\n"
             "    mov     r5, r0\n"
             "    add.w   r4, r1, r5, lsl #7\n"
             "    ldrb.w  r0, [r4, #0x6c]\n"
@@ -779,7 +779,7 @@ void __attribute__((naked,noinline)) sub_e0374aa2_my() {
 asm volatile (
             "    push    {r4, r5, r6, lr}\n"
             "    mov     r5, r0\n"
-            "    ldr     r0, =0x000534f8\n"
+            "    ldr     r0, =0x00053528\n"
             "    add.w   r4, r0, r5, lsl #7\n"
             "    ldrb.w  r0, [r4, #0x6c]\n"
             "    lsls    r0, r0, #0x1e\n"
@@ -792,12 +792,12 @@ asm volatile (
 }
 
 /*************************************************************/
-//** sub_e03748a8_my @ 0xE03748A9, length=107 
+//** sub_e03748a8_my @ 0xE03748A9, length=106 
 void __attribute__((naked,noinline)) sub_e03748a8_my() {
 asm volatile (
             "    push.w  {r4, r5, r6, r7, r8, sb, sl, lr}\n"
             "    mov     sb, r0\n"
-            "    ldr     r0, =0x000534f8\n"
+            "    ldr     r0, =0x00053528\n"
             "    movs    r7, #0\n"
             "    mov     r6, r7\n"
             "    mov     r8, r7\n"
@@ -947,7 +947,7 @@ asm volatile (
 void __attribute__((naked,noinline)) kbd_p2_f_my() {
 asm volatile (
             "    push.w  {r4, r5, r6, r7, r8, lr}\n"
-            "    ldr     r6, =0x0004e464\n"
+            "    ldr     r6, =0x0004e494\n"
             "    sub     sp, #0x18\n"
             "    mov     r7, sp\n"
             "    subs    r6, #0xc\n"
@@ -955,7 +955,7 @@ asm volatile (
             "loc_e005b086:\n"
             "    ldrb.w  r0, [sp, #0x10]\n"
             "    mov     r3, sp\n"
-            "    ldr     r1, =0x0004e464\n"
+            "    ldr     r1, =0x0004e494\n"
             "    add     r2, sp, #0xc\n"
             "    subs    r1, #0x18\n"
             "    bl      sub_e004eb64\n"
@@ -978,13 +978,13 @@ asm volatile (
             "    bge     loc_e005b0a2\n"
             "loc_e005b0ba:\n"
             "    add     r1, sp, #0x10\n"
-            "    ldr     r0, =0x0004e464\n"
+            "    ldr     r0, =0x0004e494\n"
             "    subs    r0, #0xc\n"
             "    bl      sub_e004e820\n"
             "    cmp     r0, #0\n"
             "    bne     loc_e005b086\n"
             "    movs    r4, #0\n"
-            "    ldr.w   r8, =0x0004e464\n"
+            "    ldr.w   r8, =0x0004e494\n"
             "loc_e005b0ce:\n"
             "    movs    r5, #0\n"
             "    ldr.w   r0, [r6, r4, lsl #2]\n"
@@ -997,7 +997,7 @@ asm volatile (
             "    lsls    r0, r0, #0x1f\n"
             "    beq     loc_e005b11e\n"
             "    add.w   r0, r5, r4, lsl #5\n"
-            "    ldr     r1, =0x0004e464\n"
+            "    ldr     r1, =0x0004e494\n"
             "    mov     r3, sp\n"
             "    uxtb    r0, r0\n"
             "    subs    r1, #0x18\n"
@@ -1060,7 +1060,7 @@ asm volatile (
             "    beq     no_scroll\n" // +
 
             "    pop.w   {r4, lr}\n"
-            "    b.w     sub_e0517000\n" // jump to FW
+            "    b.w     sub_e051719c\n" // jump to FW
 
             "no_scroll:\n" // +
             "    pop     {r4, pc}\n" // +
@@ -1071,7 +1071,7 @@ asm volatile (
 //** kbd_p1_f_cont_my @ 0xE005B633, length=19 jfw
 void __attribute__((naked,noinline)) kbd_p1_f_cont_my() {
 asm volatile (
-            "    ldr     r6, =0x0004e440\n" //  physw_status
+            "    ldr     r6, =0x0004e470\n" //  physw_status
             "    movs    r1, #2\n"
             "    mov     r5, sp\n"
             "    add.w   r3, r6, #0x24\n"
@@ -1086,7 +1086,7 @@ asm volatile (
             "    subs    r1, r1, #1\n"
             "    bpl     loc_e005b63c\n"
             "    mov     r0, r5\n"
-            "    ldr     r2, =0x0004e440\n" //  physw_status
+            "    ldr     r2, =0x0004e470\n" //  physw_status
             "    adds    r2, #0x18\n"
             "    sub.w   r1, r2, #0xc\n"
             "    bl      sub_e005b13c_my\n" // -> some physical status is re-read here (not into physw_status) (was sub_e005b13c)
@@ -1100,7 +1100,7 @@ void __attribute__((naked,noinline)) sub_e005b13c_my() {
 asm volatile (
             "    push.w  {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}\n"
             "    mov     r5, r0\n"
-            "    ldr     r4, =0x0004e464\n"
+            "    ldr     r4, =0x0004e494\n"
             "    ldr     r0, =physw0_override\n" // +
             "    ldr.w   r0, [r0]\n" // + use CHDK override value
 //            "    mov.w   r0, #-1\n" // -
@@ -1116,9 +1116,9 @@ asm volatile (
             "    movs    r0, #8\n"
             "    ldr     r1, =0xe025d7b4\n" //  *"InitTskStart"
             "    bl      sub_e033c7b2\n"
-            "    ldr.w   fp, =0x000256f0\n"
+            "    ldr.w   fp, =0x00025720\n"
             "    mov.w   sl, #0x1000\n"
-            "    ldr     r4, =0x000256ec\n"
+            "    ldr     r4, =0x0002571c\n"
             "    movs    r2, #0\n"
             "    ldr     r1, =0x0703870f\n"
             "    ldr     r0, [r4]\n"
@@ -1128,12 +1128,12 @@ asm volatile (
             "    movs    r0, #8\n"
             "    ldr     r1, =0xe025d7cc\n" //  *"ER IniTskWait"
             "    bl      sub_e033c812\n"
-            "    ldr     r1, =0x000256d8\n"
+            "    ldr     r1, =0x00025708\n"
             "    movs    r0, #0\n"
             "    str     r0, [r1]\n"
             "    pop.w   {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, pc}\n"
             "loc_e025d55c:\n"
-            "    ldr     r4, =0x000256ec\n"
+            "    ldr     r4, =0x0002571c\n"
             "    mov     r1, sp\n"
             "    ldr     r0, [r4]\n"
             "    bl      sub_dffc9996\n" // GetEventFlagValue
@@ -1165,7 +1165,7 @@ asm volatile (
 //** task_FsIoNotifyTask_my @ 0xE00F2B5D, length=20 
 void __attribute__((naked,noinline)) task_FsIoNotifyTask_my() {
 asm volatile (
-            "    ldr     r4, =0x000111a8\n"
+            "    ldr     r4, =0x000111d4\n"
             "    push    {r3, lr}\n"
             "    ldr     r0, [r4, #8]\n"
             "    cbnz    r0, loc_e00f2b6e\n"
