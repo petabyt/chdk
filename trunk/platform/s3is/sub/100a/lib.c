@@ -44,10 +44,31 @@ void *vid_get_viewport_fb_d()
     return (void*)(*(int*)0x60134);
 }
 
-long vid_get_viewport_height()
-{
-    return 240;
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
+
+int vid_get_viewport_width() {
+    if (camera_info.state.mode_play) {
+        return 360;
+    }
+    return _GetVRAMHPixelsSize()>>1;
 }
+
+long vid_get_viewport_height() {
+    if (camera_info.state.mode_play) {
+        return 240;
+    }
+    return _GetVRAMVPixelsSize();
+}
+
+int vid_get_viewport_height_proper() {
+    return vid_get_viewport_height();
+}
+
+int vid_get_viewport_fullscreen_height() {
+    return vid_get_viewport_height(); // this should be _proper, but they're the same so skip the extra call
+}
+
 char *camera_jpeg_count_str()
 {
     return (char*)0x6BC28;
