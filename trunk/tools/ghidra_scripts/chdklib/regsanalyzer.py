@@ -1,6 +1,6 @@
 # License: GPL
 #
-# Copyright 2020 reyalp (at) gmail.com
+# Copyright 2020-2023 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # with CHDK. If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 from __main__ import *
 
 import ghidra.program.util.SymbolicPropogator as SymbolicPropogator
@@ -38,7 +38,11 @@ class RegsAnalyzer:
             return
         # don't reflow if we already did this function
         if fn != self.last_fn:
-            cpce = ConstantPropagationContextEvaluator(True)
+            # interface changed in 10.3, expects monitor
+            if ghidra.framework.ApplicationVersion(getGhidraVersion()) >= ghidra.framework.ApplicationVersion('10.3'):
+                cpce = ConstantPropagationContextEvaluator(self.monitor,True)
+            else:
+                cpce = ConstantPropagationContextEvaluator(True)
             self.symprop.flowConstants(fn.getEntryPoint(), fn.getBody(), cpce, False, self.monitor)
             self.last_fn = fn
 
