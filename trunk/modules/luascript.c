@@ -91,7 +91,7 @@ static unsigned yield_max_ms;
 static int yield_hook_enabled;
 // maximum time the "restore" function is allowed to run
 // after script is interrupted with shutter
-#define RESTORE_RUN_MAX_MS 1000 
+#define RESTORE_RUN_MAX_MS 1000
 
 static void lua_script_disable_yield_hook(void) {
     yield_hook_enabled = 0;
@@ -366,7 +366,10 @@ int lua_run_restore()
         lua_sethook(L, lua_restore_count_hook, LUA_MASKCOUNT, YIELD_CHECK_COUNT );
         // start time for timeout
         run_start_tick = get_tick_count();
-        if (lua_pcall( L, 0, 0, 0 )) {
+        int r = lua_resume( L, 0 );
+        if (r == LUA_YIELD) {
+            script_console_add_error( (long)"ERROR: cannot yield in restore" );
+        } else if (r != 0) {
             script_console_add_error( (long)lua_tostring( L, -1 ) );
         }
         if (lua_script_is_ptp == 0)
