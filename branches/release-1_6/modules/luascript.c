@@ -89,6 +89,9 @@ static unsigned run_hook_count; // number of calls to the count hook this kbd_ta
 static unsigned yield_max_count;
 static unsigned yield_max_ms;
 static int yield_hook_enabled;
+// maximum time the "restore" function is allowed to run
+// after script is interrupted with shutter
+#define RESTORE_RUN_MAX_MS 1000
 
 static void lua_script_disable_yield_hook(void) {
     yield_hook_enabled = 0;
@@ -341,15 +344,33 @@ int lua_script_run(void)
 
     return SCRIPT_RUN_RUNNING;
 }
+static void lua_restore_count_hook(lua_State *L, __attribute__ ((unused))lua_Debug *ar)
+{
+    if((unsigned)(get_tick_count() - run_start_tick) >= RESTORE_RUN_MAX_MS) {
+        luaL_error( L, "restore timeout" );
+    }
+}
 
 // run the "restore" function at the end of a script
-// Mimic uBasic logic, return 0 to trigger script interrupt immediately
+// returns 0 to trigger script interrupt immediately after executing
+// restore, unlike ubasic, which may return 1 to continue execution in
+// the "interrupted" state
 int lua_run_restore()
 {
-    lua_getglobal(Lt, "restore");
-    if (lua_isfunction(Lt, -1)) {
-        if (lua_pcall( Lt, 0, 0, 0 )) {
-            script_console_add_line( (long)lua_tostring( Lt, -1 ) );
+    // check for if restore is defined
+    // Use global state L here because Lt is yielded. L and Lt share globals
+    lua_getglobal(L, "restore");
+    if (lua_isfunction(L, -1)) {
+        // set hook to ensure "restore" ends within RESTORE_RUN_MAX_MS
+        // because restore does not yield, restore cannot be interrupted with the keyboard
+        lua_sethook(L, lua_restore_count_hook, LUA_MASKCOUNT, YIELD_CHECK_COUNT );
+        // start time for timeout
+        run_start_tick = get_tick_count();
+        int r = lua_resume( L, 0 );
+        if (r == LUA_YIELD) {
+            script_console_add_error( (long)"ERROR: cannot yield in restore" );
+        } else if (r != 0) {
+            script_console_add_error( (long)lua_tostring( L, -1 ) );
         }
         if (lua_script_is_ptp == 0)
             script_console_add_error(LANG_CONSOLE_TEXT_FINISHED);
