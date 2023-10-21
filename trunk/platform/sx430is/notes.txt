@@ -10,17 +10,18 @@ This may be changed to Video or Wifi in the options
 
 This camera has adjustable aperture, no ND filter.
 
+Focus (SD) override works in MF and AF Lock, but not AF
+
 NOTE:
     exp_drv not implemented, < 1024s probably works without
 	video features are not supported
-	
+
 Tested:
 testing scripts: http://chdk.wikia.com/wiki/Testing? PASS
 main overrides (TV,AV,ISO) - OK
 ZEBRA - OK
-PTP extension - OK	
+PTP extension - OK
 RAW/DNG - OK
-
 
 
 
