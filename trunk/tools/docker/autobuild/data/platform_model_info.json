@@ -1073,6 +1073,13 @@
   "serie": "PowerShot",
   "name": "SX"
  },
+ "sx430is": {
+  "desc": "SX430 IS",
+  "mid": 68550656,
+  "pid": 13013,
+  "serie": "PowerShot",
+  "name": "SX"
+ },
  "sx500is": {
   "desc": "SX500 IS",
   "mid": 53936128,
