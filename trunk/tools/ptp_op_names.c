@@ -3,12 +3,13 @@
 #include "ptp_op_names.h"
 
 /*
-from https://github.com/gphoto/libgphoto2/blob/master/camlibs/ptp2/ptp.h and
+from https://github.com/gphoto/libgphoto2/blob/master/camlibs/ptp2/ptp.h
 https://github.com/coon42/magiclantern_simplified/blob/ptpcam_add_more_canon_codes/contrib/ptpcam/ptp.h
-as of 2022/02/13
-sources are identified with either ### Magic Lantern or ### Gphoto
+and https://github.com/lclevy/miniPtp/blob/main/ptp.yml
+as of 2023/12/24
+sources are identified with ### Magic Lantern, ### Gphoto or ### miniPtp
 
-These the defines here are copied to minimize update effort
+Defines here are copied to minimize update effort
 Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto naming
 */
 /* This code is based on gphoto
@@ -122,11 +123,14 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_NotifyProgress 		0x902A
 #define PTP_OC_CANON_NotifyCancelAccepted	0x902B
 /* 902c: no parms, read 3 uint32 in data, no response parms */
-#define PTP_OC_CANON_902C			0x902C
+//#define PTP_OC_CANON_902C			0x902C
 #define PTP_OC_CANON_GetDirectory		0x902D
-#define PTP_OC_CANON_902E			0x902E
-#define PTP_OC_CANON_902F			0x902F	/* used during camera init */
+//#define PTP_OC_CANON_902E			0x902E
 
+// ### miniPtp
+#define PTP_OC_CANON_PingRequest			0x902F	/* used during camera init */
+
+// ### Gphoto
 #define PTP_OC_CANON_SetPairingInfo		0x9030
 #define PTP_OC_CANON_GetPairingInfo		0x9031
 #define PTP_OC_CANON_DeletePairingInfo		0x9032
@@ -142,7 +146,7 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
 // ### Magic Lantern
-#define PTP_OC_CANON_InitiateEventProc0 0x9050
+#define PTP_OC_CANON_InitiateEventProc0 0x9050 // https://chdk.setepontos.com/index.php?topic=4338.msg147738#msg147738
 #define PTP_OC_CANON_TerminateEventProc_051 0x9051
 #define PTP_OC_CANON_ExecuteEventProc 0x9052
 #define PTP_OC_CANON_GetEventProcReturnData 0x9053
@@ -180,6 +184,11 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 
 #define PTP_OC_CANON_SetRemoteShootingMode	0x9086
 
+// ### miniPtp
+#define PTP_OC_CANON_GetDebugLog	0x9087
+#define PTP_OC_CANON_SetModeDialDisable	0x9088
+
+// ### Gphoto
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
 /* 9102: 1 arg (0)
@@ -344,7 +353,23 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditMode	0x915C /* 1 arg */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
 #define PTP_OC_CANON_EOS_RequestSensorCleaning	0x915E /* 1 arg? */
+
+// ### miniPtp
+#define PTP_OC_CANON_EOS_SetTvForHiFreqFlicker		0x915F
+
+// ### Gphoto
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+
+// ### miniPtp
+#define PTP_OC_CANON_EOS_RequestAutoDetectOfHiFreqFlicker		0x9161
+#define PTP_OC_CANON_EOS_CatchSubject		0x9162
+#define PTP_OC_CANON_EOS_RequestAutoDetectOfFlicker		0x9163
+#define PTP_OC_CANON_EOS_SetB2BFuncType		0x9164
+#define PTP_OC_CANON_EOS_GetB2BFuncType		0x9165
+#define PTP_OC_CANON_EOS_SetManipulationToggleImageSide		0x9166
+#define PTP_OC_CANON_EOS_GetRegisteredLenses		0x9167
+
+// ### Gphoto
 #define PTP_OC_CANON_EOS_SetImageRecoveryDataEx	0x916B
 #define PTP_OC_CANON_EOS_GetImageRecoveryListEx	0x916C
 #define PTP_OC_CANON_EOS_CompleteAutoSendImages	0x916D
@@ -363,25 +388,24 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_EOS_NotifyNumberofImported	0x9183 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer	0x9184 /* 4 args: filesizelow, filesizehigh, downloadsizelow, downloadsizehigh */
 
-// ### Magic Lantern
-#define PTP_OC_CANON_EOS_GetObjectUrl 0x91AB
-
-// ### Gphoto
 #define PTP_OC_CANON_EOS_NotifyFinish		0x9185 /* 1 arg: reason */
 #define PTP_OC_CANON_EOS_GetWFTData		0x9186
 #define PTP_OC_CANON_EOS_SetWFTData		0x9187
 #define PTP_OC_CANON_EOS_ChangeWFTSettingNumber	0x9188
 #define PTP_OC_CANON_EOS_GetPictureStylePCFlavorParam	0x9189
 #define PTP_OC_CANON_EOS_SetPictureStylePCFlavorParam	0x918A
-#define PTP_OC_CANON_EOS_GetObjectURL		0x91AB
+#define PTP_OC_CANON_EOS_GetObjectURL		0x91AB // magic lantern differed by case PTP_OC_CANON_EOS_GetObjectUrl
 #define PTP_OC_CANON_EOS_SetCAssistMode		0x91AC
 #define PTP_OC_CANON_EOS_GetCAssistPresetThumb	0x91AD
+
+// ### miniPtp
+#define PTP_OC_CANON_EOS_SendWifiSetting		0x91B1
+
+// ### Gphoto
 #define PTP_OC_CANON_EOS_SetFELock		0x91B9
 #define PTP_OC_CANON_EOS_DeleteWFTSettingNumber	0x91BA
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
-#define PTP_OC_CANON_EOS_SendHostInfo		0x91E4 /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
-#define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8 /* 1 arg: errorcode */
 
 // ### Magic Lantern
 #define PTP_OC_CANON_EOS_ceresOpenFileValue 0x91C0
@@ -407,17 +431,26 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_EOS_NotifyGpsTimeSyncStatus 0x91D8
 #define PTP_OC_CANON_EOS_GetAdapterFirmData 0x91DF
 #define PTP_OC_CANON_EOS_ceresSEndScanningResult 0x91E3
-#define PTP_OC_CANON_EOS_ceresSEndHostInfo 0x91E4
-#define PTP_OC_CANON_EOS_NotifyAdapterStatus 0x91E6
-#define PTP_OC_CANON_EOS_ceresNotifyNetworkError 0x91E8
 
 // ### Gphoto
+// ML calls this PTP_OC_CANON_EOS_ceresSEndHostInfo
+#define PTP_OC_CANON_EOS_SendHostInfo		0x91E4 /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
+
+// ### Magic Lantern
+#define PTP_OC_CANON_EOS_NotifyAdapterStatus 0x91E6
+//
+// ### Gphoto
+// ML calls this PTP_OC_CANON_EOS_ceresNotifyNetworkError
+#define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8 /* 1 arg: errorcode */
 #define PTP_OC_CANON_EOS_AdapterTransferProgress		0x91E9
 
 // ### Magic Lantern
 #define PTP_OC_CANON_EOS_ceresRequestAdapterProperty 0x91EA
 #define PTP_OC_CANON_EOS_ceresSEndWpsPinCode 0x91EC
 #define PTP_OC_CANON_EOS_ceresSEndWizardInfo 0x91ED
+
+// ### miniPtp
+#define PTP_OC_CANON_EOS_ceresSendBtSearchResult 0x91EF
 
 // ### Gphoto
 #define PTP_OC_CANON_EOS_TransferCompleteFTP	0x91F0
@@ -441,6 +474,20 @@ Magic Lantern names for codes > 0x9100 have EOS_ added to align with Gphoto nami
 #define PTP_OC_CANON_EOS_SetAdapterBatteryReport		0x91FD /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
+
+// ### miniPtp
+#define PTP_OC_CANON_RegisterEdgeFocusPosition	0x9200
+#define PTP_OC_CANON_DriveFocusToEdge			0x9201
+#define PTP_OC_CANON_DriveFocus					0x9203
+#define PTP_OC_CANON_GetCurrentFocusPosition	0x9203
+#define PTP_OC_CANON_SetPrivateKeyData			0x9205
+#define PTP_OC_CANON_DeletePrivateKeyData		0x9206
+
+#define PTP_OC_CANON_DV_GetWavInfo				0x9401
+#define PTP_OC_CANON_DV_OverWriteContentsXml	0x9402
+#define PTP_OC_CANON_DV_GetTemplateXml			0x9403 // miniPtp used Get_Template_Xml
+#define PTP_OC_CANON_DV_SetTemplateXml			0x9404
+#define PTP_OC_CANON_DV_GetNewsMetadataVersion	0x9405
 
 /* Some Canon cams also support some MTP opcodes, usually 1-5 */
 /* Microsoft / MTP extension codes */
@@ -548,6 +595,7 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_NotifyProgress),
     PTP_OC(PTP_OC_CANON_NotifyCancelAccepted),
     PTP_OC(PTP_OC_CANON_GetDirectory),
+    PTP_OC(PTP_OC_CANON_PingRequest),
 
     PTP_OC(PTP_OC_CANON_SetPairingInfo),
     PTP_OC(PTP_OC_CANON_GetPairingInfo),
@@ -586,6 +634,9 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_RequestTranscodeCancel),
 
     PTP_OC(PTP_OC_CANON_SetRemoteShootingMode),
+
+    PTP_OC(PTP_OC_CANON_GetDebugLog),
+    PTP_OC(PTP_OC_CANON_SetModeDialDisable),
 
     PTP_OC(PTP_OC_CANON_EOS_GetStorageIDs),
     PTP_OC(PTP_OC_CANON_EOS_GetStorageInfo),
@@ -695,7 +746,19 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_EOS_SetLvPcFlavoreditMode),
     PTP_OC(PTP_OC_CANON_EOS_SetLvPcFlavoreditParam),
     PTP_OC(PTP_OC_CANON_EOS_RequestSensorCleaning),
+
+    PTP_OC(PTP_OC_CANON_EOS_SetTvForHiFreqFlicker),
+
     PTP_OC(PTP_OC_CANON_EOS_AfCancel),
+
+    PTP_OC(PTP_OC_CANON_EOS_RequestAutoDetectOfHiFreqFlicker),
+    PTP_OC(PTP_OC_CANON_EOS_CatchSubject),
+    PTP_OC(PTP_OC_CANON_EOS_RequestAutoDetectOfFlicker),
+    PTP_OC(PTP_OC_CANON_EOS_SetB2BFuncType),
+    PTP_OC(PTP_OC_CANON_EOS_GetB2BFuncType),
+    PTP_OC(PTP_OC_CANON_EOS_SetManipulationToggleImageSide),
+    PTP_OC(PTP_OC_CANON_EOS_GetRegisteredLenses),
+
     PTP_OC(PTP_OC_CANON_EOS_SetImageRecoveryDataEx),
     PTP_OC(PTP_OC_CANON_EOS_GetImageRecoveryListEx),
     PTP_OC(PTP_OC_CANON_EOS_CompleteAutoSendImages),
@@ -714,8 +777,6 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_EOS_NotifyNumberofImported),
     PTP_OC(PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer),
 
-    PTP_OC(PTP_OC_CANON_EOS_GetObjectUrl),
-
     PTP_OC(PTP_OC_CANON_EOS_NotifyFinish),
     PTP_OC(PTP_OC_CANON_EOS_GetWFTData),
     PTP_OC(PTP_OC_CANON_EOS_SetWFTData),
@@ -725,12 +786,13 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_EOS_GetObjectURL),
     PTP_OC(PTP_OC_CANON_EOS_SetCAssistMode),
     PTP_OC(PTP_OC_CANON_EOS_GetCAssistPresetThumb),
+
+    PTP_OC(PTP_OC_CANON_EOS_SendWifiSetting),
+
     PTP_OC(PTP_OC_CANON_EOS_SetFELock),
     PTP_OC(PTP_OC_CANON_EOS_DeleteWFTSettingNumber),
     PTP_OC(PTP_OC_CANON_EOS_SetDefaultCameraSetting),
     PTP_OC(PTP_OC_CANON_EOS_GetAEData),
-    PTP_OC(PTP_OC_CANON_EOS_SendHostInfo),
-    PTP_OC(PTP_OC_CANON_EOS_NotifyNetworkError),
 
     PTP_OC(PTP_OC_CANON_EOS_ceresOpenFileValue),
     PTP_OC(PTP_OC_CANON_EOS_ceresCreateFileValue),
@@ -755,15 +817,19 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_EOS_NotifyGpsTimeSyncStatus),
     PTP_OC(PTP_OC_CANON_EOS_GetAdapterFirmData),
     PTP_OC(PTP_OC_CANON_EOS_ceresSEndScanningResult),
-    PTP_OC(PTP_OC_CANON_EOS_ceresSEndHostInfo),
-    PTP_OC(PTP_OC_CANON_EOS_NotifyAdapterStatus),
-    PTP_OC(PTP_OC_CANON_EOS_ceresNotifyNetworkError),
 
+    PTP_OC(PTP_OC_CANON_EOS_SendHostInfo),
+
+    PTP_OC(PTP_OC_CANON_EOS_NotifyAdapterStatus),
+
+    PTP_OC(PTP_OC_CANON_EOS_NotifyNetworkError),
     PTP_OC(PTP_OC_CANON_EOS_AdapterTransferProgress),
 
     PTP_OC(PTP_OC_CANON_EOS_ceresRequestAdapterProperty),
     PTP_OC(PTP_OC_CANON_EOS_ceresSEndWpsPinCode),
     PTP_OC(PTP_OC_CANON_EOS_ceresSEndWizardInfo),
+
+    PTP_OC(PTP_OC_CANON_EOS_ceresSendBtSearchResult),
 
     PTP_OC(PTP_OC_CANON_EOS_TransferCompleteFTP),
     PTP_OC(PTP_OC_CANON_EOS_CancelTransferFTP),
@@ -781,6 +847,19 @@ ptp_op_name_t ptp_op_names[]={
     PTP_OC(PTP_OC_CANON_EOS_SetAdapterBatteryReport),
     PTP_OC(PTP_OC_CANON_EOS_FAPIMessageTX),
     PTP_OC(PTP_OC_CANON_EOS_FAPIMessageRX),
+
+    PTP_OC(PTP_OC_CANON_RegisterEdgeFocusPosition),
+    PTP_OC(PTP_OC_CANON_DriveFocusToEdge),
+    PTP_OC(PTP_OC_CANON_DriveFocus),
+    PTP_OC(PTP_OC_CANON_GetCurrentFocusPosition),
+    PTP_OC(PTP_OC_CANON_SetPrivateKeyData),
+    PTP_OC(PTP_OC_CANON_DeletePrivateKeyData),
+
+    PTP_OC(PTP_OC_CANON_DV_GetWavInfo),
+    PTP_OC(PTP_OC_CANON_DV_OverWriteContentsXml),
+    PTP_OC(PTP_OC_CANON_DV_GetTemplateXml),
+    PTP_OC(PTP_OC_CANON_DV_SetTemplateXml),
+    PTP_OC(PTP_OC_CANON_DV_GetNewsMetadataVersion),
 
     PTP_OC(PTP_OC_MTP_GetObjectPropsSupported),
     PTP_OC(PTP_OC_MTP_GetObjectPropDesc),
