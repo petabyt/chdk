@@ -816,7 +816,6 @@
 0x006b7bb0,GiveSemaphore_FW
 0xff0b3be8,GUISrv_StartGUISystem
 0xff0b3be8,GUISrv_StartGUISystem_FW
-0xff162ef8,handle_PTP_OC_0x902f
 0xff16b508,handle_PTP_OC_0x9038
 0xff16b5f4,handle_PTP_OC_0x9039
 0xff16b6e8,handle_PTP_OC_0x903a
@@ -877,6 +876,7 @@
 0xff159c54,handle_PTP_OC_CANON_IsEventProcRunning
 0xff16c38c,handle_PTP_OC_CANON_IsNeoKabotanProcMode
 0xff1598c4,handle_PTP_OC_CANON_LoadTransparentMemory
+0xff162ef8,handle_PTP_OC_CANON_PingRequest
 0xff1599f8,handle_PTP_OC_CANON_QuerySizeOfTransparentMemory
 0xff1595cc,handle_PTP_OC_CANON_QuickLoadTransparentMemory
 0xff15974c,handle_PTP_OC_CANON_SaveTransparentMemory
