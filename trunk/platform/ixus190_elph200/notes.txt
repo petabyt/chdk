@@ -1,0 +1,22 @@
+************************************
+ixus190_elph200 Notes
+************************************
+This is an early alpha port, use at your own risk!
+
+Porting thread: https://chdk.setepontos.com/index.php?topic=13146.msg132933#msg132933
+
+To enter CHDK <ALT> mode use the [>] Play button.
+This may be changed to Video or Wifi in the options
+
+
+
+NOTE:
+    exp_drv not implemented, < 1024s probably works without
+	video features are not supported
+
+Tested: https://chdk.setepontos.com/index.php?topic=13146.msg150012#msg150012
+FW-Update & Bootmethods, menues, scripts, histogram, Zebra & edge-detection all fine...
+
+
+
+

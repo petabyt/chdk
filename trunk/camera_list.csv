@@ -168,6 +168,8 @@ ixus175_elph180,100b,,100c,
 ixus175_elph180,100a,,100c,
 ixus180_elph190,100a,ALPHA,,
 ixus185_elph185,100a,,,
+ixus190_elph200,100d,ALPHA,,SKIP_AUTOBUILD
+ixus190_elph200,110a,ALPHA,,SKIP_AUTOBUILD
 ixus200_sd980,100c,,,
 ixus200_sd980,101c,,,
 ixus200_sd980,101d,,,
