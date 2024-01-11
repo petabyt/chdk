@@ -549,6 +549,14 @@
   "name": "IXUS",
   "aka": "ELPH 185, IXY 200"
  },
+ "ixus190_elph200": {
+  "desc": "IXUS 190",
+  "mid": 68419584,
+  "pid": 13011,
+  "serie": "Digital",
+  "name": "IXUS",
+  "aka": "ELPH 200, IXY 210"
+ },
  "ixus200_sd980": {
   "desc": "IXUS 200 IS",
   "mid": 41287680,
