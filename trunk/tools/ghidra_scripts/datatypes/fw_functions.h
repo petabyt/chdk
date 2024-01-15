@@ -91,7 +91,8 @@ __stdcall int SetEventFlag(int flag, int what);
 __stdcall int CheckAnyEventFlag(int flag, int mask, int *res);
 __stdcall int GetEventFlagValue(int flag, int *res);
 
-__stdcall int ReceiveMessageQueue(int msgq, int *dst, int unk1 /* probably timeout */);
+__stdcall int ReceiveMessageQueue(int msgq, int *dst, int timeout);
+__stdcall int ReceiveMessageQueueStrictly(int msgq, int *dst, int timeout, const char *filename, int line);
 
 /* Canon stuff with nonoriginal naming */
 __stdcall int GetParameterData(int id, void *buf, int size);
@@ -412,6 +413,7 @@ __stdcall int GetSemaphoreValue(int sem, int *p);
 __stdcall int ClearEventFlag(int flag, int what);
 __stdcall int TryTakeSemaphore(int sem);
 __stdcall int WaitForAnyEventFlag(int flag, int what, int timeout);
+__stdcall int WaitForAnyEventFlagStrictly(int flag, int what, int timeout, const char *file, int line);
 __stdcall int ExportToEventProcedure_FW(const char *name, int (*func)());
 #ifdef CAM_DRYOS_REL
 // vx cams may identify 2 arg version as RegisterEventProcedure
@@ -428,6 +430,7 @@ __stdcall int CreateTask_low(int (*entry)(),int parm, int unk1, int stack_size, 
 __stdcall int DeleteEventFlag(int flag);
 __stdcall int CheckAllEventFlag(int flag, int mask, int *res);
 __stdcall int WaitForAllEventFlag(int flag, int what, int timeout);
+__stdcall int WaitForAllEventFlagStrictly(int flag, int what, int timeout, const char *file, int line);
 __stdcall int RegisterInterruptHandler(const char *name, int int_num, int (*int_handler)(),int int_param);
 __stdcall int UnregisterInterruptHandler(int int_num);
 __stdcall int CreateMessageQueue(const char *name/*?*/, int unk/*size? Flags?*/);
