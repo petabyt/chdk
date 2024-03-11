@@ -377,6 +377,7 @@ sx710hs,101a,,,,,12966,dryos,57,60,0xFC000000,0x8000,0x1fffffff,d4g,,13,1,1,0x00
 ixus285_elph360hs,100b,ALPHA,,,SKIP,12989,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 ixus285_elph360hs,100c,ALPHA,,,SKIP,12989,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 sx420is,100a,BETA,,,,12991,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
+sx420is,110a,ALPHA,,,,12991,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 ixus180_elph190,100a,ALPHA,,,,12992,dryos,58,41,0xff010000,0x1900,0x1FFFFFF,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100a,,100c,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
 ixus175_elph180,100b,,100c,,,12993,dryos,58,41,0xFF810000,0x1900,0x07ffffff,d4i,W,16,,,,,,,,,,10
