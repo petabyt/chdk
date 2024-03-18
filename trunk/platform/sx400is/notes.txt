@@ -6,7 +6,7 @@ Porting thread: https://chdk.setepontos.com/index.php?topic=12836.msg128013#msg1
 To enter CHDK <ALT> mode use the [>] Play button.
 This may be changed to Video in the options
 
-This is an early alpha port, use at your own risk!
+CHDK is a hack, use at your own risk!
 
 Ported by nafraf
 
