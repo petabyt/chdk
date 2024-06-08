@@ -198,13 +198,23 @@ void gui_menu_init(CMenu *menu_ptr) {
     if (menu_ptr) {
         if (conf.menu_select_first_entry)
             gui_menu_set_curr_menu(menu_ptr, 0, 0);
-        else 
+        else
             gui_menu_set_curr_menu(menu_ptr, 0, -1);
         gui_menu_stack_ptr = 0;
     }
 
+    // find width of widest digit char
+    len_int = 0;
+    for (int i = 0; i < 10; i++) {
+        int tmp = rbf_char_width('0' + i);
+        if (len_int < tmp)
+            len_int = tmp;
+    }
+
+    // width of string with 5 widest digit chars
+    len_int *= 5;
+
     len_bool = rbf_str_width("\x95");
-    len_int = rbf_str_width("99999");
     len_enum = rbf_str_width("WUBfS3a");
     len_space = rbf_char_width(' ');
     len_br = rbf_char_width('[') + rbf_char_width(']');
