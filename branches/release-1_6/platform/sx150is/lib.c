@@ -93,11 +93,11 @@ int get_flash_params_count(void){
 }
 
 void JogDial_CW(void){
- _PostLogicalEventForNotPowerType(0x874, 2);  // RotateJogDialRight
+  _PostLogicalEventToUI(0x872, 1);  // RotateJogDialRight, 2nd parameter = number of clicks
 }
 
 void JogDial_CCW(void){
- _PostLogicalEventForNotPowerType(0x875, 2);  // RotateJogDialLeft
+  _PostLogicalEventToUI(0x873, 1);  // RotateJogDialLeft, 2nd parameter = number of clicks
 }
 
 
