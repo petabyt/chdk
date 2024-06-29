@@ -205,7 +205,8 @@ void gui_menu_init(CMenu *menu_ptr) {
 
     // find width of widest digit char
     len_int = 0;
-    for (int i = 0; i < 10; i++) {
+    int i;
+    for (i = 0; i < 10; i++) {
         int tmp = rbf_char_width('0' + i);
         if (len_int < tmp)
             len_int = tmp;
