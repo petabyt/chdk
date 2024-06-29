@@ -7,6 +7,10 @@
 
 const char * const new_sa = &_end;
 
+///*----------------------------------------------------------------------
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+short *jog_position;
 
 // Forward declarations
 void CreateTask_PhySw();
@@ -461,6 +465,13 @@ void __attribute__((naked,noinline)) JogDial_task_my()
 "	MOV	R0, #0 \n"                           
 "	ADD	R10, SP, #8 \n"                      
 "	ADD	R9, SP, #0xC \n"                     
+
+//------------------  begin added code ---------------
+// Save pointer for kbd.c routine
+"    LDR     R2, =jog_position \n"
+"    STR     R9, [R2] \n"
+//------------------  end added code -----------------
+
 "loc_FF865440:\n"
 "	ADD	R2, SP, #0x14 \n"                    
 "	MOV	R1, #0 \n"                           
