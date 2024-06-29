@@ -98,21 +98,21 @@ void kbd_fetch_data(long *dst)
     _GetKbdState(dst);
 }
 
-
-void jogdial_control(int n) {
-    // this camera did not have jog_position defined
-    /*
-    if (jogdial_stopped && !n) {
-        // If re-enabling jogdial set the task code current & previous positions to the actual
-        // dial positions so that the change won't get processed by the firmware
-        jog_position[0] = jog_position[2] = rear_dial_position;   // Rear dial
-    }
-    */
-    jogdial_stopped = n;
-}
+// Pointer to stack location where jogdial task records previous and current
+// jogdial positions
+extern short* jog_position;
 
 int Get_JogDial(void) {
  return (*(int*)0xC0240104)>>16;
+}
+
+void jogdial_control(int n) {
+    if (jogdial_stopped && !n) {
+        // If re-enabling jogdial set the task code current & previous positions to the actual
+        // dial positions so that the change won't get processed by the firmware
+        jog_position[0] = jog_position[2] = (short)Get_JogDial();   // Rear dial
+    }
+    jogdial_stopped = n;
 }
 
 
