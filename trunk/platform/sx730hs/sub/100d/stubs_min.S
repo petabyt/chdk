@@ -17,6 +17,8 @@ DEF(focus_len_table                ,0xfdf3167c)
 
 DEF(dial_positions,0x000103f0) //  SX730 fc50add6 like sx710 fc08b6f0 (ghidra)
 
+DEF(ptpip_pktdet_ef,0xfd7c) // from task_PtpipPacketDetector fc1628c2
+
 // to hook asserts for debugging
 //DEF(assert_handler,0x000082a0) // from DebugAssert, fc3a8968
 

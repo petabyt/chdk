@@ -52,3 +52,9 @@ NHSTUB(reboot_fw_update,NULL_SUB)
 // from sx280 These don't exist
 NHSTUB(SetZoomActuatorSpeedPercent, NULL_SUB)
 NHSTUB(UnsetZoomForMovie,           NULL_SUB)
+
+// PTPIP multiple recv_data fix
+DEF(task_PtpipController,0xfc162553)
+NHSTUB(ClearEventFlag,0xfc369beb)
+NHSTUB(ptpip_recv_data_cb,0xfc221105) // callback set in ptpip data->recv_data at fc22124e
+NHSTUB(reset_some_ptpip_struct,0xfc220ac9) // FUN_fc21fe8e @ fc21fee4

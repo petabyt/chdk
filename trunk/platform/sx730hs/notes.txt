@@ -79,3 +79,7 @@ KNOWN BUGS
 **********
 - USB remote may shoot multiple shots in continuous mode (this is a general
   CHDK issue)
+- PTP/IP (wifi) transfers from PC to camera larger than about 250K fail due to
+  an apparent bug in the Canon firmware. A workaround is implement for firmware
+  100d and 100e. Post in the porting thread to request this fix for other
+  firmware versions

@@ -2,6 +2,9 @@
 #include "platform.h"
 #include "core.h"
 
+// enable fix for Canon PTPIP data->recv_data not correctly handling multiple calls
+#define PTPIP_RECV_DATA_FIX 1
+
 const char * const new_sa = &_end;
 
 // Forward declarations
@@ -12,6 +15,7 @@ extern void task_RotaryEncoder();
 extern void task_MovieRecord();
 extern void task_ExpDrv();
 extern void task_TricInitTask();
+extern void task_PtpipController();
 
 extern void handle_jogdial();
 
@@ -172,6 +176,155 @@ void __attribute__((naked,noinline)) boot() {
 );
 }
 
+#ifdef PTPIP_RECV_DATA_FIX
+extern int _ClearEventFlag(int ef, int what);
+
+extern void _ptpip_recv_data_cb(int x, int y, int z);
+extern void _reset_some_ptpip_struct(unsigned *x);
+extern int ptpip_pktdet_ef;
+
+int ptpip_recv_data_cb_my(int x, int y, int z, unsigned lr)
+{
+    // return value is ignored in stock firmware
+    _ptpip_recv_data_cb(x,y,z);
+
+    // bail if return address not case in FUN_fc21fe8e when recv_data has recieved max size but more data left
+    if(lr != 0xfc21fee3) {
+        return 0;
+    }
+    // x is PTP data->handle, 0xcc offset from ptpip data->recv_data (fc22117e) at fc221256
+    unsigned *p = *(unsigned **)(x + 0xcc);
+    // shouldn't ever be null but bail if it is
+    if(!p) {
+        return 0;
+    }
+    // other cases which wouldn't hit problem function FUN_fc162848
+    // p[0x29] corresponds to check at fc21feec
+    // p[3] & 1 at fc21fef2
+    if(p[0x29] == 0 || (p[3] & 1)) {
+        return 0;
+    }
+    // block task_PtpipPacketDetector until next recv_data call (set by FUN_fc220608 -> FUN_fc162a6c)
+    _ClearEventFlag(ptpip_pktdet_ef,2);
+    // resets some per-read variables + cb, should get re-initialized on next recv_data call
+    _reset_some_ptpip_struct(&p[0x2a]);
+    // set state var like FUN_fc21fe8e for this case (fc21fefa), check in FUN_fc220608 sets eventflag bit 2 based on this
+    p[1] = 1;
+    return 1; // signal asm hook to skip rest of calling function
+}
+
+// hook to replace FUN_fc221104
+int __attribute__((naked,noinline)) hook_ptpip_recv_data_cb(int x, int y, int z) {
+    asm volatile (
+"mov r3, lr\n" // copy lr to 4th arg for patch check
+"push {lr}\n"
+"bl ptpip_recv_data_cb_my\n" // easier in C code, return value tells wether to modify return address
+"pop {lr}\n"
+"cbnz r0,ptpip_recv_data_fix\n"
+"bx lr\n" // normal return
+"ptpip_recv_data_fix:\n"
+"pop {r4,r5,r6,r7,r8,r9,r10,pc}\n" // bypass rest of calling function if hook returned nz (equivalent to fc21ff0a)
+    );
+}
+
+/*
+modify messages recieved by task_PtpipController to install hook
+message structure is
+command number (0-3)
+callback 1 func
+callback 1 arg
+callback 2 func (optional, only used in cmd 1
+callback 2 arg
+messages are posted using fc162652
+*/
+void ptpip_ctrl_msg_hook(unsigned *msg)
+{
+    // cmd 1 is sent from FUN_fc22067c when reading data
+    if(msg[0] == 1 && msg[1] == 0xfc220609) { // cmd 1 callback function of interest (others are used in other cases)
+        unsigned *p = (unsigned *)(msg[2]); // argument block for func
+        if(p) {
+            // callback set in ptpip data->recv_data at fc22124e, called by FUN_fc21fe8e on completion
+            // of recv_data
+            if(p[1] == 0xfc221105) { 
+                p[1] = ((unsigned)hook_ptpip_recv_data_cb) | 1; // gcc (10) seems to get the thumb bit right, but harmless
+            }
+        }
+    }
+}
+
+void __attribute__((naked,noinline)) task_ptpipcontroller_my() {
+    asm volatile (
+// task_PtpipController 0xfc162553
+"    push    {r4, r5, lr}\n"
+"    ldr     r4, =0x0000fd5c\n"
+"    sub     sp, #0x1c\n"
+"loc_fc162558:\n"
+"    movs    r2, #0\n"
+"    add     r1, sp, #0x18\n"
+"    ldr     r0, [r4, #0xc]\n"
+"    bl      sub_fc3446ae\n" // ReceiveMessageQueue
+"    lsls    r0, r0, #0x1f\n"
+"    bne     loc_fc1625c0\n"
+"    ldr     r1, [sp, #0x18]\n"
+"    movs    r2, #0x14\n"
+"    add     r0, sp, #4\n"
+"    mov     r5, r1\n"
+"    blx     sub_fc301dec\n" // j_dry_memcpy
+"    ldr     r0, [r4, #0x10]\n"
+"    mov     r1, r5\n"
+"    bl      sub_fc41fb26\n"
+"add r0, sp, #4\n" // pointer to message
+"bl ptpip_ctrl_msg_hook\n"
+"    ldr     r0, [sp, #4]\n"
+"    cmp     r0, #3\n"
+"    beq     loc_fc1625c0\n"
+"    cbz     r0, loc_fc162596\n"
+"    cmp     r0, #1\n"
+"    beq     loc_fc16259c\n"
+"    cmp     r0, #2\n"
+"    bne     loc_fc1625b4\n"
+"    ldrd    r1, r0, [sp, #8]\n"
+"    blx     r1\n"
+"    bl      sub_fc162a4c\n"
+"    b       loc_fc162558\n"
+"loc_fc162596:\n"
+"    bl      sub_fc1626ea\n"
+"    b       loc_fc162558\n"
+"loc_fc16259c:\n"
+"    ldrd    r1, r0, [sp, #8]\n"
+"    blx     r1\n"
+"mov r1,r0\n"
+"    lsls    r0, r0, #0x1f\n"
+"    beq     loc_fc162558\n"
+"    ldr     r0, [sp, #0x10]\n"
+"    cmp     r0, #0\n"
+"    beq     loc_fc162558\n"
+"    ldrd    r1, r0, [sp, #0x10]\n"
+"    blx     r1\n"
+"    b       loc_fc162558\n"
+"loc_fc1625b4:\n"
+"    movs    r2, #0xcb\n"
+"    movs    r0, #0\n"
+"    ldr     r1, =0xfc16272c\n" //  *"PTPIPController.c"
+"    bl      _DebugAssert\n"
+"    b       loc_fc162558\n"
+"loc_fc1625c0:\n"
+"    bl      sub_fc162a18\n"
+"    movs    r0, #0\n"
+"    str     r0, [r4, #8]\n"
+"    ldr     r0, [r4, #0x14]\n"
+"    movs    r1, #1\n"
+"    bl      _SetEventFlag\n"
+"    bl      _ExitTask\n"
+"    add     sp, #0x1c\n"
+"    movs    r0, #0\n"
+"    pop     {r4, r5, pc}\n"
+".ltorg\n"
+    );
+}
+#endif // PTPIP_RECV_DATA_FIX
+
+
 /*************************************************************/
 /*
     Custom function called in mzrm_sendmsg via logging function pointer (normally disabled)
@@ -244,6 +397,16 @@ asm volatile (
 "    LDREQ   R0, =exp_drv_task\n"
 "    orreq   r0, #1\n"
 "    BEQ     exitHook\n"
+
+#ifdef PTPIP_RECV_DATA_FIX
+// hook to fix Canon firmware bug which breaks multiple recv_data calls in ptpip
+"    LDR     R1, =task_PtpipController\n"
+"    CMP     R1, R0\n"
+"    itt     eq\n"
+"    LDREQ   R0, =task_ptpipcontroller_my\n"
+"    orreq   r0, #1\n"
+"    BEQ     exitHook\n"
+#endif // PTPIP_RECV_DATA_FIX
 
 // note FileWrite does not exist on sx730
 
