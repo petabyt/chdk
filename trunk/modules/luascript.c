@@ -276,6 +276,8 @@ int lua_script_start( char const* script, int ptp )
     script_shoot_hooks_reset();
     lua_script_is_ptp = ptp;
     if(ptp) {
+        // PTP doesn't set script_version, behavior should be as if latest was specified
+        camera_info.state.script_dial_control = DIAL_SCRIPT_KEYCLICK;
         ptp_saved_alt_state = camera_info.state.gui_mode_alt;
         // put ui in script alt state to allow key presses to be sent to script
         enter_alt(1);
@@ -303,6 +305,12 @@ int lua_script_start_file(char const* filename)
 {
     static char loader[256];
     char *wrapper = "";
+    // before 1.7, dial events are not seen by script or blocked form Canon FW
+    if ((script_version.major < 1) || (script_version.major == 1 && script_version.minor < 7))
+        camera_info.state.script_dial_control = 0;
+    else
+        camera_info.state.script_dial_control = DIAL_SCRIPT_KEYCLICK;
+
     if ((script_version.major == 1) && (script_version.minor == 3))
         wrapper = "require'wrap13' ";
     sprintf(loader, "%slocal s,e=loadfile'%s' collectgarbage() if not s then error(e) end s()", wrapper, filename);

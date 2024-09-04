@@ -207,6 +207,7 @@ long kbd_update_key_state(void)
         physw_status[1] = kbd_new_state[1];
         physw_status[2] = kbd_new_state[2];
 
+        // not in alt mode, jogdial events should be passed to canon fw as normal
 #ifdef CAM_HAS_JOGDIAL
         jogdial_control(0);
 #endif
@@ -220,11 +221,17 @@ long kbd_update_key_state(void)
         physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) | (kbd_mod_state[2] & KEYS_MASK2);
 
 #ifdef CAM_HAS_JOGDIAL
-        if ((jogdial_stopped==0) && !camera_info.state.state_kbd_script_run) {
+        // in alt mode, block canon fw from seeing dials if not in script, or
+        // when set to handle as clicks in script
+        int jogdial_shouldstop = (!camera_info.state.state_kbd_script_run
+            || camera_info.state.script_dial_control == DIAL_SCRIPT_KEYCLICK);
+        // update the jogdial blocking state if changed
+        if (!jogdial_stopped && jogdial_shouldstop) {
             jogdial_control(1);
+            // consume any pending jogdial movement
             get_jogdial_direction();
         }
-        else if (jogdial_stopped && camera_info.state.state_kbd_script_run) {
+        else if (jogdial_stopped && !jogdial_shouldstop) {
             jogdial_control(0);
         }
 #endif

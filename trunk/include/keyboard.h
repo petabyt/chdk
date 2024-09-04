@@ -80,6 +80,9 @@
 #define FRONTDIAL_LEFT      102
 #define FRONTDIAL_RIGHT     103
 
+// constants for camera_info.state.script_dial_control
+#define DIAL_SCRIPT_KEYCLICK 1 // report dial movement as key clicks, block from Canon FW in script
+
 /******************************************************************/
 
 extern void kbd_key_press(long key);

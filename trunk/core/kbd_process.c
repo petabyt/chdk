@@ -119,6 +119,19 @@ long kbd_process()
         camera_info.state.kbd_last_clicked_time = get_tick_count();
     }
 
+#ifdef CAM_HAS_JOGDIAL
+    // dial movement in script if script is running and set to handle clicks
+    if(camera_info.state.state_kbd_script_run && camera_info.state.script_dial_control == DIAL_SCRIPT_KEYCLICK)
+    {
+        long jog_direction = get_jogdial_direction();
+        if (jog_direction)
+        {
+            camera_info.state.kbd_last_clicked      = jog_direction;
+            camera_info.state.kbd_last_clicked_time = get_tick_count();
+        }
+    }
+#endif
+
     // Set Shutter Half Press state for GUI task.
     camera_info.state.is_shutter_half_press = kbd_is_key_pressed(KEY_SHOOT_HALF);
 

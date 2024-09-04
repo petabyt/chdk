@@ -6,6 +6,7 @@
 #include "script_api.h"
 #include "module_def.h"
 #include "gui_lang.h"
+#include "keyboard.h"
 
 /***************** BEGIN OF AUXILARY PART *********************
   ATTENTION: DO NOT REMOVE OR CHANGE SIGNATURES IN THIS SECTION
@@ -32,6 +33,12 @@ static char last_script[100] = "";
 
 static int ubasic_init_file(char const* filename)
 {
+    // before 1.7, dial events are not seen by script or blocked form Canon FW
+    if ((script_version.major < 1) || (script_version.major == 1 && script_version.minor < 7))
+        camera_info.state.script_dial_control = 0;
+    else
+        camera_info.state.script_dial_control = DIAL_SCRIPT_KEYCLICK;
+
     if (strcmp(last_script, filename) != 0)
     {
         strcpy(last_script, filename);

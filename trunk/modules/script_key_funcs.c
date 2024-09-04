@@ -56,7 +56,11 @@ static const struct Keynames {
     { KEY_MODE,             "mode"       },
     { KEY_WIFI,             "wifi"       },
     { KEY_FRAMING_ASSIST,   "framing_assist" },
-	{ KEY_AUTO,             "auto"       },
+    { KEY_AUTO,             "auto"       },
+    { JOGDIAL_LEFT,         "jogdial_left"   },
+    { JOGDIAL_RIGHT,        "jogdial_right"  },
+    { FRONTDIAL_LEFT,       "frontdial_left"   },
+    { FRONTDIAL_RIGHT,      "frontdial_right"  },
     { 0xFF,                 "remote"     },
     { 0xFFFF,               "no_key"     },
 };

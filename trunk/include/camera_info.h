@@ -41,7 +41,7 @@ typedef struct
 //      _cam_info   --> CAM_INFO_VERSION
 #define CAM_SCREEN_VERSION      {2,0}       // Version for camera_screen
 #define CAM_SENSOR_VERSION      {1,0}       // Version for camera_sensor
-#define CAM_INFO_VERSION        {4,0}       // Version for camera_info
+#define CAM_INFO_VERSION        {5,0}       // Version for camera_info
 
 typedef struct
 {
@@ -207,6 +207,7 @@ typedef struct
         int     kbd_last_clicked;           // For scripts
         long    kbd_last_clicked_time;      // For scripts
         long    kbd_last_checked_time;      // For scripts
+        int     script_dial_control;        // For scripts to control dial handling
         long    shutter_open_time;          // For DNG EXIF creation
         long    shutter_open_tick_count;    // For DNG EXIF creation
         int     state_shooting_progress;    // Holds current state when still image being processed
