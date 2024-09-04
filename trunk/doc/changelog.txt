@@ -9,8 +9,9 @@ Significant changes in 1.7
 * Functionality for Lua scripts to detect if screen has been erased and needs redrawing
 * RAW EV Histogram ([https://chdk.setepontos.com/index.php?topic=14544.msg148257#msg148257 development thread])
 * Lua functions to get focal length from zoom position ([https://chdk.setepontos.com/index.php?topic=14733.msg149503#msg149503 discussion])
-* Lua module zoomutil.lua providding functions set zoom by focal length and convert between FL and EFL
-* In script with chdk_version >= 1.7, jog dial and front dial are treated as keys named "jogdial_left", "frontdial_right" etc by wait_click and is_key, and hidden from Canon firmware. ([https://chdk.setepontos.com/index.php?topic=14861])
+* Lua module zoomutil.lua providing functions set zoom by focal length and convert between FL and EFL
+* Fix lua "restore" silently exiting after a few statements, terminate if it runs for more than 1 second. Also backported to 1.6 ([https://chdk.setepontos.com/index.php?topic=14793.0 details])
+* In script with chdk_version >= 1.7, jog dial and front dial are treated as keys named "jogdial_left", "frontdial_right" etc by wait_click and is_key, and hidden from Canon firmware. ([https://chdk.setepontos.com/index.php?topic=14861 discussion])
 
 New script functions in 1.7:
 
