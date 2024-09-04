@@ -13,6 +13,9 @@ Compatibility with 1.5:
 * Modules, language files and Lua libraries are NOT compatible.
   You must update these when you update your build, meaning use the "full" download.
 
+Significant post-release bug fixes:
+* Aug 27, 2023 (build 6256): Fix lua "restore" silently exiting after a few statements, terminate if it runs for more than 1 second. ([https://chdk.setepontos.com/index.php?topic=14793.0 details])
+
 Significant changes in 1.6:
 * Support floating point math in Lua with fmath library
 https://chdk.fandom.com/wiki/Lua/Lua_Reference#Floating_point_mathematical_functions_(fmath_library)
