@@ -59,9 +59,20 @@ void JogDial_CCW(void)
     _PostLogicalEventForNotPowerType(0x873, 1);  // RotateJogDialLeft (in table @ ???)
 }
 
+int vid_get_viewport_yscale() {
+    if (camera_info.state.mode_play) {
+        return 2;
+    }
+    // guessed, fisheye is 240 on most cams that have it
+    if((camera_info.state.mode_shooting == MODE_FISHEYE && !is_video_recording())) {
+        return 1;
+    }
+    return 2;
+}
+
 int vid_get_viewport_width()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
+    if (camera_info.state.mode_play)
     {
         return 360;
     }
@@ -71,13 +82,83 @@ int vid_get_viewport_width()
 
 long vid_get_viewport_height()
 {
-    if ((mode_get() & MODE_MASK) == MODE_PLAY)
-    {
-        return 240;
-    }
     extern int _GetVRAMVPixelsSize();
-    return _GetVRAMVPixelsSize();
+    return _GetVRAMVPixelsSize() >> (vid_get_viewport_yscale() - 1);
+}
 
+// offset stuff below mostly copied from elph130, except stitch and NTSC/PAL logic removed
+// viewport width offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_xo[5] = { 0, 0, 0, 44 };				// should all be even values for edge overlay
+
+int vid_get_viewport_xoffset()
+{
+    return 0;
+}
+
+int vid_get_viewport_display_xoffset()
+{
+    if (camera_info.state.mode_play || is_video_recording())
+    {
+        return 0;
+    }
+    else
+    {
+        return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+// viewport height offset table for each image size
+// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
+static long vp_yo[5] = { 0, 30, 13, 0 };
+
+int vid_get_viewport_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    // no distinct video mode, video uses its own aspect ratio, not still ratio of current mode
+    else if ( camera_info.state.mode_video || is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30; // 16:9 video
+        }
+    }
+    else
+    {
+        return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_yoffset()
+{
+    if (camera_info.state.mode_play)
+    {
+        return 0;
+    }
+    else if ( camera_info.state.mode_video || is_video_recording())
+    {
+        if(shooting_get_prop(PROPCASE_VIDEO_RESOLUTION) == 2) { // 640x480
+            return 0;// 4:3 video, no offset
+        } else {
+            return 30;
+        }
+    }
+    else
+    {
+        return vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
+    }
+}
+
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() * vid_get_viewport_yscale(); }
+int vid_get_viewport_height_proper()            { return vid_get_viewport_height() * vid_get_viewport_yscale(); }
+
+int vid_get_viewport_fullscreen_height()
+{
+    return 240<<(vid_get_viewport_yscale()-1);
 }
 
 // Viewport and Bitmap values that shouldn't change across firmware versions.
@@ -93,8 +174,8 @@ void *vid_get_viewport_fb()
 
 void *vid_get_viewport_live_fb() 
 {
-    if (MODE_IS_VIDEO(mode_get()) || is_video_recording())
-        return viewport_buffers[0];     // Video only seems to use the first viewport buffer.
+    if (camera_info.state.mode_video || is_video_recording())
+        return viewport_buffers[0];     // Video only seems to use the first viewport buffer. TODO verify
 
     // Hopefully return the most recently used viewport buffer so that motion detect, histogram, zebra and edge overly are using current image data
     return viewport_buffers[(active_viewport_buffer-1)&3];
