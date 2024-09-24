@@ -139,12 +139,16 @@ static void process_element(char *ptr, int n, grid_elem_type type) {
     int i, failed;
     long nums[6];
 
-    for (i=0; i<(int)(sizeof(nums)/sizeof(nums[0])) && i<n; ++i) {
-        ptr = skip_whitespace(ptr);
-        nums[i] = get_value(ptr, &failed, i >= 4);
-        if (failed) // error
-            return;
-        ptr = skip_token(ptr);
+    for (i=0; i<(int)(sizeof(nums)/sizeof(nums[0])); ++i) {
+        if(i<n) {
+            ptr = skip_whitespace(ptr);
+            nums[i] = get_value(ptr, &failed, i >= 4);
+            if (failed) // error
+                return;
+            ptr = skip_token(ptr);
+        } else { // ensure unused args have a predictable value
+            nums[i] = 0;
+        }
     }
 
     gline* gptr = new_gline();
@@ -241,6 +245,8 @@ void gui_grid_draw_osd(int force)
                 yo = 0;
             }
             for (ptr = head; ptr; ptr = ptr->next) {
+                // Note: elements expect a twoColors even if only one color arg is accepted
+                // in this case clb will be 0
                 twoColors col = (conf.grid_force_color) ? ucol : MAKE_COLOR(get_script_color(ptr->clb), get_script_color(ptr->clf));
                 int x0 = ptr->x0;
                 int y0 = ptr->y0;
