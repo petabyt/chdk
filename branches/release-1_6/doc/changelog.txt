@@ -15,6 +15,8 @@ Compatibility with 1.5:
 
 Significant post-release bug fixes:
 * Aug 27, 2023 (build 6256): Fix lua "restore" silently exiting after a few statements, terminate if it runs for more than 1 second. ([https://chdk.setepontos.com/index.php?topic=14793.0 details])
+* Sep 23, 2024 (build 6286): Fix unpredictable crash when grids shown. ([https://chdk.setepontos.com/index.php?topic=14634.msg150360#msg150360 bug report])
+
 
 Significant changes in 1.6:
 * Support floating point math in Lua with fmath library
