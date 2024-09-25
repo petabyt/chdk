@@ -553,10 +553,15 @@ void set_palette()
 
 color get_script_color(int cl)
 {
-    if (cl < 256)
+    // > 255, CHDK standard / script color
+    if (cl & ~0xff) {
+        cl &= 0xff;
+        if(cl <= IDX_COLOR_MAX)
+            return chdk_colors[cl];
+        return chdk_colors[0];
+    } else {
         return cl;
-    else
-        return chdk_colors[cl-256];
+    }
 }
 
 // Convert user adjustable color (from conf struct) to Canon colors
