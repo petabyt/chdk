@@ -118,6 +118,6 @@ void *vid_get_bitmap_active_palette()
     extern char* palette_buffer[];
     void* p = palette_buffer[active_palette_buffer];
     // Don't add offset if value is 0
-    if (p) p += 8;
+    if (p) p += 4;
     return p;
 }
