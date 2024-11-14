@@ -105,4 +105,5 @@
 
     #define CAM_IS_VID_REC_WORKS                        1   // is_video_recording() function works
 
+    #define CAM_HAS_FILEWRITETASK_HOOK          1   // file write hook for remote capture etc
 //--------------------------------------------------

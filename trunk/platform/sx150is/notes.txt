@@ -12,4 +12,4 @@ Multiple partitions are NOT supported.
 LEDs:
 set_led 0 is the green status LED, 1 is the AF lamp
 
-USB remote shoot / filewrite is not implemented
+USB remote shoot (filewrite) is supported
