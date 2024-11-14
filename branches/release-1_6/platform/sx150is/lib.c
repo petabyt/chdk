@@ -27,39 +27,15 @@ void debug_led(int state)
 #include "platform.h"
 #include "lolevel.h"
 
-/*
 void vid_bitmap_refresh()
 {
-	 extern int enabled_refresh_physical_screen; // screen lock counter
-	 extern void _ScreenUnlock();
-
-//     _LockAndRefresh();
-	 _ScreenLock();
-	enabled_refresh_physical_screen=1;
-//	full_screen_refresh=3; //found in ScreenUnlock underneath a CameraLog.c call sub_FFA02598	//sx210
-	_ScreenUnlock();
-//	_UnlockAndRefresh();	
-}
-*/
-
-// Testing another refresh method
-void vid_bitmap_refresh()
-{
-	extern int enabled_refresh_physical_screen;
 	extern int full_screen_refresh;
+	extern void _Screenlock();
+	extern void _ScreenUnlock();
 
-	// i've tried refreshphysical screen (screen unlock) and that caused the canon and
-	// function menu to not display at all. This seems to work and is called in a similar
-	// way in other places where original OSD should be refreshed.
-	extern void _LockAndRefresh(); // wrapper function for screen lock
-	extern void _UnlockAndRefresh(); // wrapper function for screen unlock
-
-	_LockAndRefresh();
-
-	enabled_refresh_physical_screen=1;
-	full_screen_refresh |= 3; 
-
-	_UnlockAndRefresh();
+	full_screen_refresh |= 3;
+	_ScreenLock();
+	_ScreenUnlock();
 }
 
 void shutdown()

@@ -1,6 +1,8 @@
 #include "stubs_asm.h"
 
-DEF(enabled_refresh_physical_screen,    0x9458)         // @FFA29FF8
+// was used for probably incorrect _LockAndRefresh/UnlockAndRefresh
+// implmentation of vid_bitmap_refresh
+// DEF(enabled_refresh_physical_screen,    0x9458)         // @FFA29FF8
 DEF(led_table,                          0x2464 + 0x04)  // @FF85EFEC
 DEF(some_flag_for_af_scan,              0x000072F8)     // Found @0xFF98A5FC
 

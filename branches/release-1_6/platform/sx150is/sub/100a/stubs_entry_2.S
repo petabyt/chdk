@@ -8,6 +8,7 @@ NHSTUB(kbd_pwr_on,                      NULL_STUB)
 NHSTUB(SetZoomActuatorSpeedPercent,     NULL_STUB)
 
 // Additional
-NHSTUB(LockAndRefresh,                  0xFF8B32C4)
-NHSTUB(UnlockAndRefresh,                0xFF8B1D9C)
+// used in initial port vid_bitmap_refresh
+//NHSTUB(LockAndRefresh,                  0xFF8B32C4)
+//NHSTUB(UnlockAndRefresh,                0xFF8B1D9C)
 NHSTUB(UpdateMBROnFlash,                0xFF876CB0)
