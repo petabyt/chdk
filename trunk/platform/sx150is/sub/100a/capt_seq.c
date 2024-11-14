@@ -344,74 +344,11 @@ asm volatile (
 
 "loc_FF98C538:\n"
 "    BL      capt_seq_hook_set_nr\n"                 // added
-"    BL      sub_FF98D26C \n"
-"    BL      sub_FF882708 \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF98BD50 \n"
-"    TST     R0, #1 \n"
-"    BNE     loc_FF98C5C8 \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF98C0F4 \n"
-"    BL      sub_FF98CA8C \n"
-"    MOV     R6, #1 \n"
-"    MOV     R0, #2 \n"
-"    BL      sub_FF888D94 \n"
-"    LDRH    R0, [R5] \n"
-"    SUB     R1, R0, #0x8200 \n"
-"    SUBS    R1, R1, #0x2E \n"
-"    MOVNE   R0, R4 \n"
-"    LDMNEFD SP!, {R3-R7,LR} \n"
-"    BNE     sub_FFAE3934_my \n"  // --> Patched. Old value = 0xFFAE3934.
-"    MOV     R2, #2 \n"
-"    MOV     R1, SP \n"
-"    ADD     R0, R2, #0x15C \n"
-"    STR     R6, [SP] \n"
-"    BL      _GetPropertyCase \n"
-"    TST     R0, #1 \n"
-"    MOVNE   R1, #0xC5 \n"
-"    LDRNE   R0, =0xFF98C658 /*'SsCaptureSeq.c'*/ \n"
-"    BLNE    _DebugAssert \n"
-"    LDRH    R0, [SP] \n"
-"    CMP     R0, #1 \n"
-"    MOVHI   R0, #0x1D \n"
-"    STRHI   R6, [R4, #0xD8] \n"
-"    BHI     loc_FF98C5C8 \n"
-"    MOV     R0, #0 \n"
-"    STR     R0, [R4, #0xD8] \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FFAE3934_my \n"  // --> Patched. Old value = 0xFFAE3934.
+"    BL      wait_until_remote_button_is_released\n" // added
+"    LDR     PC, =0xFF98C538 \n"  // Continue in firmware
 
 "loc_FF98C5C8:\n"
 "    LDMFD   SP!, {R3-R7,PC} \n"
-);
-}
-
-/*************************************************************/
-//** sub_FFAE3934_my @ 0xFFAE3934 - 0xFFAE3980, length=20
-void __attribute__((naked,noinline)) sub_FFAE3934_my() {
-asm volatile (
-"    STMFD   SP!, {R3-R7,LR} \n"
-"    MOV     R4, R0 \n"
-"    MOV     R1, R0 \n"
-"    LDR     R0, =0xFF98BE90 \n"
-"    BL      sub_FF8BFAB4 \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF98BDD0 \n"
-"    MOV     R0, R4 \n"
-"    BL      sub_FF98C1A4 \n"
-"    MOV     R7, R0 \n"
-"    LDR     R1, =0xCEA8 \n"
-"    MOV     R2, #4 \n"
-"    MOV     R0, #0x8A \n"
-"    BL      _GetPropertyCase \n"
-"    TST     R0, #1 \n"
-"    LDRNE   R1, =0x22F \n"
-"    LDRNE   R0, =0xFFAE3B08 /*'SsStandardCaptureSeq.c'*/ \n"
-"    BLNE    _DebugAssert \n"
-"    BL      sub_FF884D50 \n"
-"    BL      sub_FF98C3AC \n"
-"    BL      wait_until_remote_button_is_released\n" // added
-"    LDR     PC, =0xFFAE3984 \n"  // Continue in firmware
 );
 }
 
