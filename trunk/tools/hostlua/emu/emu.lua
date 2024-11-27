@@ -12,11 +12,22 @@ Script to run CHDK lua scripts, emulating as much of the camera as required in l
 Should be used with lua from "hostlua" in the CHDK source tree
 --]]
 local usage_string=[[
-usage: lua emu.lua <chdk_script> [-conf=<conf_script>] [-modroot=<cam module root>] [-a=X -b=Y ...]
-    <chdk_script> is the script to be tested
-    <conf_script> is a lua script customizing the test case
-    <cam module root> is directory for emulated require to look for SCRIPTS and LUALIB
-    -a=X etc set the corresponding script parameter to the given value
+usage: lua emu.lua <chdk_script> [options] [menu params]
+ <chdk_script> is the script to be tested
+options:
+ -conf=<conf_script> is a lua script customizing the test case
+ -modroot=<cam module root> sets directory for emulated require to look for
+  SCRIPTS and LUALIB
+ -loadparams=<file> load script settings from CHDK saved settings file, as found
+  in CHDK/DATA/<scriptname>.N
+ -saveparams=<file> save final params after loadparams and command line values
+menu params:
+ Script menu parameters can be overridden using paramname=<value>, where <value>
+ is a number in decimal or hex (with 0x) or true or false.
+ Table and enum values can be set using paramname.value=<string> where <string>
+ is a valid item in the table / enum
+ for backward compatibility, single letter menu options can also be set like -a=X
+ menu params specified on the command line override values from the -loadparams
 ]]
 
 -- global environment seen by chdk_script
@@ -30,6 +41,7 @@ end
 -- load modules after camera env to avoid inadvertently adding globals
 local cms=require'chdkmenuscript'
 local util=require'util'
+local fsutil=require'fsutil'
 -- make warnings go to stdout, npp in hostluaPortable puts stderr after normal output
 cms.warnf=function(format,...)
     util.fprintf(util.util_stdout,"WARNING: " .. format,...)
@@ -77,7 +89,7 @@ camera_state={
     user_av_id      = 1,                -- av id for Av and M mode
     user_tv_id      = 1,                -- tv id for Tv and M mode
     histo_range     = 100,              -- return value of a histogram range
-    autostarted     = 0,                -- 0 = false, 1 = true 
+    autostarted     = 0,                -- 0 = false, 1 = true
     autostart       = 0,                -- autostart status (0 = off, 1 = on, 2 = once)
     alt_mode        = true,             -- alte mode status
     usb_sync        = false,            -- usb sync mode for mulitcam sync
@@ -143,9 +155,10 @@ local chdk_version = {0, 0, 0, 0}
 local script_params={
 }
 
-function parse_script_header(scriptname)
+function parse_script_header(scriptname,menu_override,load_params,save_params)
     local hdr=cms.new_header{
         file=scriptname,
+        cfgfile=load_params,
     }
     if hdr.title then
         script_title = hdr.title
@@ -157,6 +170,12 @@ function parse_script_header(scriptname)
         hdr.chdk_version_req.sub,
         hdr.chdk_version_req.build,
     }, "."))
+
+    -- merge menu overrides, if given
+    hdr:set_values(menu_override)
+    if save_params then
+        fsutil.writefile(save_params,hdr:make_saved_cfg(),{bin=true})
+    end
 
     for i, item in ipairs(hdr.items) do
         if item.paramtype ~= 'subtitle' then
@@ -180,8 +199,10 @@ if not chdk_script_name then
     usage()
 end
 
-parse_script_header(chdk_script_name)
 
+local menu_override={}
+local load_params
+local save_params
 local i=2
 while arg[i] do
     local opt,val=arg[i]:match("-([%w_]+)=(.*)")
@@ -193,20 +214,38 @@ while arg[i] do
         elseif opt == "modroot" then
             print("modroot =",val)
             camera_module_root=val
+        elseif opt == "loadparams" then
+            load_params=val
+            print("load params from:",val)
+        elseif opt == "saveparams" then
+            save_params=val
+            print("save params to:",val)
+        -- for backward compatibility, single letter options are accepted like -a=1
         elseif opt:match("^%l$") then
-            local n=tonumber(val)
-            if n then
-                print("param",opt,"=",val)
-                camera_env[opt]=val
-            else
-                print("expected number for",opt,"not",val)
-            end
+            table.insert(menu_override,{opt,val})
         end
     else
-        print("bad arg",tostring(arg[i]))
+        -- accept name=value for menu options
+        opt, val = arg[i]:match("^(%a[%w_.]*)=(.*)$")
+        if opt then
+            table.insert(menu_override,{opt,val})
+        else
+            print("bad arg",tostring(arg[i]))
+        end
     end
     i=i+1
 end
+-- header funcs use errlib catch to convert error to string
+local status, err = xpcall(function()
+    parse_script_header(chdk_script_name,menu_override,load_params,save_params)
+end,
+function(err)
+    return tostring(err)
+end)
+if not status then
+    error(err,0)
+end
+
 if conf_script then
     dofile(conf_script)
 end
