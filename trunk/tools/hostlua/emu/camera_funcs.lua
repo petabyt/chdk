@@ -1,8 +1,8 @@
 --[[
 ********************************
 Licence: GPL
-(c) 2009-2015 reyalp, rudi, msl
-v 0.4
+(c) 2009-2024 reyalp, rudi, msl
+v 0.5
 ********************************
 Add here virtual camera functions
 for using with emu.lua.
@@ -70,6 +70,9 @@ end
 
 function camera_funcs.set_focus(n)
     camera_state.focus=n
+end
+
+function camera_funcs.set_focus_interlock_bypass(n)
 end
 
 function camera_funcs.set_zoom(n)
@@ -152,6 +155,27 @@ function camera_funcs.get_dofinfo()
     }
 end
 
+local function get_zoom_pos_arg(pos)
+    if not pos then
+        pos = camera_state.zoom
+    end
+    if pos < 0 then
+        pos = 0
+    elseif pos >= #fl then
+        pos = #fl - 1
+    end
+    -- adjust to 1 based array
+    pos = pos + 1
+    return pos
+end
+
+function camera_funcs.get_focal_length(pos)
+    return fl[get_zoom_pos_arg(pos)]
+end
+
+function camera_funcs.get_eff_focal_length(pos)
+    return efl[get_zoom_pos_arg(pos)]
+end
 
 --Exposure Functions
 function camera_funcs.get_av96()
@@ -160,6 +184,24 @@ end
 
 function camera_funcs.get_bv96()
     return camera_state.bv96
+end
+
+-- live view Tv
+function camera_funcs.get_current_av96()
+    return camera_state.av96
+end
+
+-- live view Tv
+function camera_funcs.get_current_tv96()
+    return camera_state.tv96
+end
+
+-- live view ISO https://chdk.setepontos.com/index.php?topic=13508.20
+function camera_funcs.get_current_base_sv96()
+    return 795
+end
+function camera_funcs.get_current_delta_sv96()
+    return 96
 end
 
 function camera_funcs.get_ev()
@@ -178,8 +220,30 @@ function camera_funcs.get_iso_real()
     return camera_funcs.iso_market_to_real(camera_state.iso_market)
 end
 
+function camera_funcs.get_max_av96()
+    return camera_state.max_av96
+end
+
+function camera_funcs.get_min_av96()
+    return camera_state.min_av96
+end
+
 function camera_funcs.get_nd_present()
-    return camera_state.nd
+    return camera_state.nd_present
+end
+
+function camera_funcs.get_nd_value_ev96()
+    if camera_state.nd_present > 0 then
+        return camera_state.nd_ev96
+    end
+    return 0
+end
+
+function camera_funcs.get_nd_current_ev96()
+    if camera_state.nd_present > 0 and camera_state.nd == 1 then
+        return camera_state.nd_ev96
+    end
+    return 0
 end
 
 function camera_funcs.get_sv96()
@@ -248,11 +312,11 @@ function camera_funcs.set_tv96_direct(n)
     camera_state.tv96=n
 end
 
-function camera_funcs.get_user_av_by_id(n)
+function camera_funcs.set_user_av_by_id(n)
     camera_state.user_av_id = n
 end
 
-function camera_funcs.get_user_av_by_id_rel(n)
+function camera_funcs.set_user_av_by_id_rel(n)
     camera_state.user_av_id = camera_state.user_av_id + n
 end
 
@@ -260,11 +324,11 @@ function camera_funcs.set_user_av96(n)
     camera_state.av96 = n
 end
 
-function camera_funcs.get_user_tv_by_id(n)
+function camera_funcs.set_user_tv_by_id(n)
     camera_state.user_tv_id = n
 end
 
-function camera_funcs.get_user_tv_by_id_rel(n)
+function camera_funcs.set_user_tv_by_id_rel(n)
     camera_state.user_tv_id = camera_state.user_tv_id + n
 end
 
@@ -361,12 +425,33 @@ function camera_funcs.seconds_to_tv96(val1, val2)
 end
 
 --Camera Functions
+function camera_funcs.get_canon_image_format()
+    return camera_state.canon_image_format
+end
+
+function camera_funcs.get_canon_raw_support()
+    return camera_state.canon_raw_support
+end
+
+function camera_funcs.get_curve_file()
+    return camera_state.curve_file
+end
+
+function camera_funcs.get_curve_state()
+    return camera_state.curve_state
+end
+
 function camera_funcs.get_drive_mode()
     return camera_state.drive
 end
 
 function camera_funcs.get_flash_mode()
     return camera_state.flash
+end
+
+function camera_funcs.get_imager_active()
+    -- could hook up to display off
+    return camera_state.rec
 end
 
 function camera_funcs.get_meminfo(s)
@@ -389,7 +474,7 @@ function camera_funcs.get_meminfo(s)
     return s == "system" and mem or false
 end
 
-function get_flash_params_count()
+function camera_funcs.get_flash_params_count()
     return 300
 end
 
@@ -401,12 +486,12 @@ function camera_funcs.get_movie_status()
     return camera_state.movie_state
 end
 
-function get_orientation_sensor()
+function camera_funcs.get_orientation_sensor()
     return 0
 end
 
-function get_parameter_data(id)
-    return 0
+function camera_funcs.get_parameter_data(id)
+    return "",0
 end
 
 function camera_funcs.get_mode()
@@ -414,7 +499,36 @@ function camera_funcs.get_mode()
 end
 
 function camera_funcs.get_prop(prop)
-    return camera_state.props[prop]
+    if camera_state.props[prop] then
+        return camera_state.props[prop]
+    end
+    -- CHDK returns an aribtrary value for out of range
+    return 0
+end
+
+function camera_funcs.get_prop_str(prop,n)
+    local s
+    if camera_state.props_str[prop] then
+        s=camera_state.props_str[prop]
+    -- if a string value isn't defined for prop, try numeric
+    elseif camera_state.props[prop] then
+        s = ''
+        local v=camera_state.props[prop]
+        for i=0,3 do
+            local b=camera_funcs.bitand(camera_funcs.bitshru(v,8*i),0xff)
+            s = s .. string.char(b)
+        end
+    end
+    if not s then
+        return false -- CHDK returns false for out of range
+    end
+    -- pad or trim to length
+    if s:len() < n then
+        s = s .. ('\0'):rep(n - s:len())
+    elseif s:len() > n then
+        s = s:sub(1,n)
+    end
+    return s
 end
 
 function camera_funcs.get_propset()
@@ -460,6 +574,10 @@ function camera_funcs.reboot(s)
     if type(s) == "string" then print(">with<", s) end
 end
 
+function camera_funcs.set_canon_image_format(n)
+    camera_state.canon_image_format = n
+end
+
 function camera_funcs.set_capture_mode_canon(n)
     print(">set canon mode<", n)
     return camera_state.rec
@@ -469,6 +587,18 @@ function camera_funcs.set_capture_mode(n)
     print(">set capture mode<", n)
     return camera_state.rec
 end
+
+function camera_funcs.set_clock(year, month, day, hour, minute, second)
+end
+
+function camera_funcs.set_curve_file(f)
+    camera_state.curve_file = f
+end
+
+function camera_funcs.set_curve_state(n)
+    camera_state.curve_state = n
+end
+
 
 function camera_funcs.set_led(n, s)
     if s == 1 then print(">LED", n, "on<") end
@@ -484,6 +614,17 @@ function camera_funcs.set_prop(prop, val)
     camera_state.props[prop]=val
 end
 
+function camera_funcs.set_prop_str(prop,s)
+    camera_state.props_str[prop] = s
+    local n = 0
+    -- update the numeric prop with the first 4 bytes of s
+    for i, b in ipairs{s:byte(1,4)} do
+        n = camera_funcs.bitor(n,camera_funcs.bitshl(b,8*(i-1)))
+    end
+    camera_state.props[prop] = n
+    return true -- chdk func returns false for out of range
+end
+
 function camera_funcs.set_record(n)
     local _n = on_off_value(n)
     if _n == 1 then
@@ -495,7 +636,7 @@ function camera_funcs.set_record(n)
     end
 end
 
-function camera_funcs.shutdown()
+function camera_funcs.shut_down()
     print(">shutdown camera ...<")
 end
 
@@ -594,7 +735,7 @@ function camera_funcs.set_file_attributes(s,n)
     print(">attribute value:<", n)
 end
 
-function camera_funcs.swap_partition(n)
+function camera_funcs.swap_partitions(n)
     print(">Swap to partition #:<", n)
 end
 
@@ -800,6 +941,10 @@ function camera_funcs.textbox( t, m, d, l)
     return res
 end
 
+function camera_funcs.screen_needs_refresh()
+    -- TODO might be better to have it be every N calls or something
+    return false
+end
 
 --RAW
 function camera_funcs.get_raw()
@@ -812,6 +957,11 @@ end
 
 function camera_funcs.get_raw_nr()
     return camera_state.raw_nr
+end
+
+function camera_funcs.get_raw_support()
+    -- TODO could vary depending on shooting mode
+    return true
 end
 
 function camera_funcs.raw_merge_add_file(s)
@@ -865,7 +1015,8 @@ function camera_funcs.get_buildinfo()
             build_date=os.date("%x"),
             build_time=os.date("%X"),
             os=camera_state.camera_os,
-            platformid=camera_state.platformid
+            platformid=camera_state.platformid,
+            digic=40,
     }
 end
 
@@ -1356,10 +1507,10 @@ function camera_funcs.peek(n)
     return 0
 end
 
-function poke(address,value,size)
+function camera_funcs.poke(address,value,size)
     local s=""
     if size ~= nil then s = "size: "..size end
-    print("poke adress: "..adress.." value "..value..s)
+    print("poke adress: "..address.." value "..value..s)
 end
 
 
@@ -1376,13 +1527,49 @@ function camera_funcs.md_get_cell_val(col, row)
     return 0
 end
 
-function camera_funcs.md_af_on_time(d, t)
+function camera_funcs.md_af_led_control(d, t)
 
+end
+
+--PTP
+function camera_funcs.read_usb_msg(timeout)
+    print((">read_usb_msg(%s)<"):format(tostring(timeout or '')))
+    return nil
+end
+
+function camera_funcs.write_usb_msg(msg,timeout)
+    print((">write_usb_msg(%s,%s)<"):format(tostring(msg),tostring(timeout or '')))
+    return true
+end
+
+function camera_funcs.get_usb_capture_support()
+    if camera_state.canon_raw_support then
+        return 0xf
+    end
+    return 7
+end
+
+function camera_funcs.get_usb_capture_target()
+    return camera_state.usb_capture_target
+end
+
+function camera_funcs.init_usb_capture(n)
+    if camera_funcs.bitand(n,camera_funcs.get_usb_capture_support()) == n then
+        camera_state.usb_capture_target = n
+        return true
+    end
+    return false
+end
+
+function camera_funcs.set_usb_capture_timeout(n)
 end
 
 --USB Port Interface
 function camera_funcs.get_usb_power()
     return 0
+end
+
+function camera_funcs.force_analog_av(n)
 end
 
 function camera_funcs.set_remote_timing(n)
@@ -1400,6 +1587,9 @@ function camera_funcs.switch_mode_usb(n)
         camera_state.rec = false
         print(">play mode<")
     end
+end
+
+function camera_funcs.usb_force_active(n)
 end
 
 function camera_funcs.usb_sync_wait(n)

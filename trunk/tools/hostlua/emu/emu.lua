@@ -2,7 +2,7 @@
 ********************************
 Licence: GPL
 (c) 2009-2024 reyalp, rudi, msl, fbonomi
-v 0.4
+v 0.5
 ********************************
 
 http://chdk.setepontos.com/index.php?topic=2929.0
@@ -58,6 +58,10 @@ camera_state={
     raw             = 0,                -- raw status
     raw_count       = 100,              -- raw image counter
     raw_nr          = 0,                -- noise reduction status (0 = Auto 1 = OFF, 2 = ON)
+    canon_raw_support = true,           -- camera with native raw support
+    canon_image_format = 1,             -- Canon format setting 1 = jpeg, 2 = raw, 3 = raw+jpg
+    curve_file      = '',               -- curve file
+    curve_state     = 0 ,               -- curve mode
     mem             = {},               -- peek and poke
     av96            = 320,              -- F3.2
     bv96            = 388,              -- tv96+av96-sv96
@@ -67,6 +71,10 @@ camera_state={
     iso_mode        = 2,                -- number of ISO mode
     ev96            = 0,                -- exposure correction (APEX96)
     nd              = 0,                -- ND filter status
+    nd_present      = 2,                -- ND filter present (0 = no, 1 = ND, 2 = iris + ND)
+    nd_ev96         = 288,              -- ND value, 3 stops is typical
+    min_av96        = 192,              -- Min Av (F2.0)
+    max_av96        = 664,              -- Max Av (F11.0)
     disk_size       = 1024*1024*1024,   -- value in byte
     free_disk_space = 1000000,          -- value in byte
     propset         = 4,                -- propset 1 - 6
@@ -96,6 +104,7 @@ camera_state={
     yield_count     = 25,               -- maximum number of lua VM instructions
     yield_ms        = 10,               -- maximum number of milliseconds
     props           = {},               -- propcase values
+    props_str       = {},               -- abitrary byte propcase values for the prop_str functions, not initialized by default
     title_line      = 1,                -- CHDK line 1 = on, 0 = off
     remote_timing   = 0,                -- value for high precision USB remote timing
     camera_os       = "dryos",          -- camera OS (vxworks or dryos)
@@ -103,7 +112,8 @@ camera_state={
     battmax         = 3000,             -- maximum battery value
     battmin         = 2300,             -- minimum battery value
     screen_width    = 360,              -- LCD screen width (360 or 480 px)
-    screen_height   = 240               -- LCD screen heigth
+    screen_height   = 240,               -- LCD screen heigth
+    usb_capture_target = 0,             -- remotecap target
 }
 
 
@@ -111,7 +121,9 @@ camera_state={
 local buttons={"up", "down", "left", "right", "set", "shoot_half", "shoot_full", "shoot_full_only", "zoom_in", "zoom_out", "menu", "display"}
 
 -- fill propertycases
-for i=0, 400 do
+-- some cams uses 1001 as a proxy for propcase_shooting.
+-- Getting out of range propcases on real cams returns an arbitrary value
+for i=0, 1001 do
     camera_state.props[i]=0
 end
 
