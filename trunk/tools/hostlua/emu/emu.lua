@@ -235,6 +235,8 @@ while arg[i] do
         -- for backward compatibility, single letter options are accepted like -a=1
         elseif opt:match("^%l$") then
             table.insert(menu_override,{opt,val})
+        else
+            error(("bad arg %s"):format(tostring(arg[i])),0)
         end
     else
         -- accept name=value for menu options
@@ -242,7 +244,7 @@ while arg[i] do
         if opt then
             table.insert(menu_override,{opt,val})
         else
-            print("bad arg",tostring(arg[i]))
+            error(("bad arg %s"):format(tostring(arg[i])),0)
         end
     end
     i=i+1
