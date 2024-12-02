@@ -2,7 +2,7 @@
 ********************************
 Licence: GPL
 (c) 2009-2024 reyalp, rudi, msl
-v 0.5
+v 0.5.1
 ********************************
 Add here virtual camera functions
 for using with emu.lua.
@@ -1659,5 +1659,269 @@ function camera_funcs.hook_raw.count()
     return 1000
 end
 
+-- Rawop
+camera_funcs.rawop={}
+
+function camera_funcs.rawop.get_cfa()
+    return camera_state.rawop_cfa
+end
+
+function camera_funcs.rawop.get_cfa_offsets()
+    local cfa=camera_funcs.rawop.get_cfa()
+    local t={ }
+    for y=0,1 do
+        for x=0,1 do
+            local n=camera_funcs.bitand(cfa,0xff)
+            local c=({'r','g1','b'})[n+1]
+            if not c then
+                error(('invalid color index %d in rawop_cfa %x'):format(n,cfa))
+            end
+            if t[c] then
+                if c == 'g1' then
+                    c = 'g2'
+                else
+                    error(('dupe color %s in rawop_cfa %x'):format(c,cfa))
+                end
+            end
+            t[c] = {x=x,y=y}
+            cfa = camera_funcs.bitshru(cfa,8)
+        end
+    end
+    return t
+end
+
+function camera_funcs.rawop.get_bits_per_pixel()
+    return camera_state.rawop_bits_per_pixel
+end
+
+function camera_funcs.rawop.get_raw_neutral()
+    -- empirical value from rawhookops.c
+    local bl=camera_funcs.rawop.get_black_level()
+    return ((camera_funcs.rawop.get_white_level() - bl)*1000)/6669 + bl
+end
+
+function camera_funcs.rawop.get_black_level()
+    -- typical, some cameras vary
+    return camera_funcs.bitshl(1,camera_state.rawop_bits_per_pixel-5) - 1
+end
+
+function camera_funcs.rawop.get_white_level()
+    return camera_funcs.bitshl(1,camera_state.rawop_bits_per_pixel) - 1
+end
+
+function camera_funcs.rawop.get_raw_width()
+    return camera_state.rawop_raw_width
+end
+
+function camera_funcs.rawop.get_raw_height()
+    return camera_state.rawop_raw_height
+end
+
+function camera_funcs.rawop.get_active_left()
+    return camera_state.rawop_active_left
+end
+
+function camera_funcs.rawop.get_active_top()
+    return camera_state.rawop_active_top
+end
+
+function camera_funcs.rawop.get_active_width()
+    return camera_state.rawop_active_width
+end
+
+function camera_funcs.rawop.get_active_height()
+    return camera_state.rawop_active_height
+end
+
+function camera_funcs.rawop.get_jpeg_left()
+    return camera_state.rawop_jpeg_left
+end
+
+function camera_funcs.rawop.get_jpeg_top()
+    return camera_state.rawop_jpeg_top
+end
+
+function camera_funcs.rawop.get_jpeg_width()
+    return camera_state.rawop_jpeg_width
+end
+
+function camera_funcs.rawop.get_jpeg_height()
+    return camera_state.rawop_jpeg_height
+end
+
+-- real pixel access functions error if not in raw hook or raw not available
+function camera_funcs.rawop.get_pixel(x,y)
+    if x < 0 or x >= camera_funcs.rawop.get_raw_width()
+        or y < 0 or y >= camera_funcs.rawop.get_raw_width() then
+        return nil
+    end
+    return camera_funcs.rawop.get_raw_neutral()
+end
+
+function camera_funcs.rawop.set_pixel(x,y,v)
+end
+
+function camera_funcs.rawop.get_pixels_rgbg(x,y)
+    if x < 0 or x >= camera_funcs.rawop.get_raw_width()
+        or y < 0 or y >= camera_funcs.rawop.get_raw_width() then
+        return nil
+    end
+    local v=camera_funcs.rawop.get_raw_neutral()
+    return v,v,v,v
+end
+
+function camera_funcs.rawop.set_pixels_rgbg(x,y,r,g1,b,g2)
+end
+
+function camera_funcs.rawop.fill_rect(x,y,width,height,val,xstep,ystep)
+end
+
+function camera_funcs.rawop.meter(x,y,x_count,y_count,x_step,y_step)
+    -- real function returns nil on various invalid arguments
+    if x_count == 0 or y_count == 0 then
+        return
+    end
+    local x_max = x + x_step * x_count
+    local y_max = y + y_step * y_count
+    if x_max > camera_funcs.rawop.get_raw_width() then
+        return
+    end
+    if y_max > camera_funcs.rawop.get_raw_height() then
+        return
+    end
+
+    if x_count * y_count > camera_funcs.bitshru(0xFFFFFFFF,camera_funcs.rawop.get_bits_per_pixel()) then
+        return
+    end
+
+    return camera_funcs.rawop.get_raw_neutral()
+end
+
+function camera_funcs.rawop.raw_to_ev(rawval,scale)
+    if not scale then
+        scale = 96
+    end
+    local bl = camera_funcs.rawop.get_black_level()
+    if rawval <= bl then
+        rawval = bl + 1
+    end
+    -- assume we have fmath
+    local r=scale*(fmath.new(rawval - bl):log2() - fmath.new(camera_funcs.rawop.get_raw_neutral() - bl):log2())
+    return r:round()
+end
+
+function camera_funcs.rawop.ev_to_raw(ev,scale)
+    if not scale then
+        scale = 96
+    end
+    local bl = camera_funcs.rawop.get_black_level()
+    return (2^(fmath.new(ev)/scale + fmath.new(camera_funcs.rawop.get_raw_neutral() - bl):log2()) + bl):round()
+end
+
+local histo_methods = {}
+local histo_meta = { __index = histo_methods }
+
+function histo_methods:update(top,left,width,height,xstep,ystep,bits)
+    local bpp = camera_funcs.rawop.get_bits_per_pixel()
+    if not bits then
+        bits = bpp
+    elseif bits > bpp or bits < 1 then
+        error('invalid bit depth')
+    end
+    local shift = bpp - bits
+    local entries = camera_funcs.bitshl(1 ,bits)
+
+    if left >= camera_funcs.rawop.get_raw_width()
+        or top >= camera_funcs.rawop.get_raw_height()
+        or xstep == 0 or ystep == 0
+        or width == 0 or height == 0 then
+        error('invalid update area')
+    end
+    local xmax = left+width
+    local ymax = top+height
+    if xmax > camera_funcs.rawop.get_raw_width() then
+        xmax = camera_funcs.rawop.get_raw_width()
+    end
+    if ymax > camera_funcs.rawop.get_raw_height() then
+        ymax = camera_funcs.rawop.get_raw_height()
+    end
+    local total_pixels = ((1+(xmax - left - 1)/xstep))*((1+(ymax - top - 1)/ystep))
+
+    self._params = {
+        top=top,
+        left=left,
+        width=width,
+        height=height,
+        xstep=xstep,
+        ystep=ystep,
+        bits=bits,
+        shift=shift,
+        entries=entries,
+        total_pixels=total_pixels,
+    }
+    -- make a table with full data range so tests could fill as they please and re-use other functions
+    self._data={}
+    for i=0,entries-1 do
+        self._data[i]=0
+    end
+    -- put all at raw neutral
+    self._data[camera_funcs.bitshru(camera_funcs.rawop.get_raw_neutral(),shift)] = total_pixels
+end
+
+function histo_methods:range(min,max,scale)
+    if not self._params then
+        error('no data')
+    end
+    if not scale then
+        scale = 1000
+    elseif type(scale) == 'number' then
+        if scale == 0 then
+            error('invalid format')
+        end
+    elseif type(scale) == 'string' then
+        if scale ~= 'count' then
+            error('invalid format')
+        end
+    else
+        error('invalid format')
+    end
+    if max >= self._params.entries or min > max then
+        error('invalid range')
+    end
+    local count = 0
+    for i=min,max do
+        count = count + self._data[i]
+    end
+    if scale == 'count' then
+        return count
+    end
+    return ((scale*fmath.new(count))/self._params.total_pixels):round()
+end
+
+function histo_methods:total_pixels()
+    if not self._params then
+        error('no data')
+    end
+    return self._params.total_pixels
+end
+
+function histo_methods:bits()
+    if not self._params then
+        error('no data')
+    end
+    return self._params.bits
+end
+
+
+function histo_methods:free()
+    self._params = nil
+    self._data = nil
+end
+
+function camera_funcs.rawop.create_histogram()
+    local h={}
+    setmetatable(h,histo_meta)
+    return h
+end
 
 return camera_funcs

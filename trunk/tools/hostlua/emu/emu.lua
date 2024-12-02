@@ -2,7 +2,7 @@
 ********************************
 Licence: GPL
 (c) 2009-2024 reyalp, rudi, msl, fbonomi
-v 0.5
+v 0.5.1
 ********************************
 
 http://chdk.setepontos.com/index.php?topic=2929.0
@@ -112,8 +112,20 @@ camera_state={
     battmax         = 3000,             -- maximum battery value
     battmin         = 2300,             -- minimum battery value
     screen_width    = 360,              -- LCD screen width (360 or 480 px)
-    screen_height   = 240,               -- LCD screen heigth
+    screen_height   = 240,              -- LCD screen heigth
     usb_capture_target = 0,             -- remotecap target
+    rawop_cfa       = 0x2010100,        -- CFA pattern, as in DNG, RGGB little endian
+    rawop_bits_per_pixel = 12,          -- raw bits per pixel
+    rawop_raw_width = 5248,             --- dimensions from elph180, typical 20MP
+    rawop_raw_height = 3920,
+    rawop_active_left = 8,
+    rawop_active_top = 16,
+    rawop_active_width = 5174,
+    rawop_active_height = 3888,
+    rawop_jpeg_left = 19,
+    rawop_jpeg_top  = 28,
+    rawop_jpeg_width = 5152,
+    rawop_jpeg_height = 3864,
 }
 
 
