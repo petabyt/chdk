@@ -176,9 +176,6 @@ script_title = '<no title>'
 
 local chdk_version = {0, 0, 0, 0}
 
-local script_params={
-}
-
 function parse_script_header(scriptname,menu_override,load_params,save_params)
     local hdr=cms.new_header{
         file=scriptname,
