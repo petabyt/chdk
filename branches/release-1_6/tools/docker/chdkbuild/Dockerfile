@@ -23,7 +23,9 @@ LABEL description="toolchain for building CHDK https://chdk.fandom.com/wiki/CHDK
 # install packages: standard gcc, arm gcc, minimal C development files, zip for batch zip
 # curl only needed at image build time, to fetch capstone.
 # Base install includes other required stuff like sed and awk
-RUN apt-get update && apt-get install --no-install-recommends -y \
+# stretch is eol so need to pull from archive
+RUN echo "deb http://archive.debian.org/debian/ stretch main" > /etc/apt/sources.list \
+ && apt-get update && apt-get install --no-install-recommends -y \
  ca-certificates \
  curl \
  gcc \
