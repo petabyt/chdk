@@ -1,6 +1,6 @@
 #include "stubs_asm.h"
 
-DEF(active_raw_buffer                       ,0x0000babc) // xFound @0xFC154b5c, 0xffffffff when uninited (0xC offset added similar to sx280)  
+DEF(active_raw_buffer                       ,0x0000babc) // xFound @0xFC154b5c, 0xffffffff when uninited (0xC offset added similar to sx280)
 DEF(raw_buffers_canon_raw                   ,0xfc63183c) //near DevelopAddress.c
 DEF(raw_buffers_jpeg                         ,0xfc631bcc) //near DevelopPipeline.c 0xfc631c00
 
@@ -20,7 +20,7 @@ DEF(recreview_hold                          ,0x000091f0) //x found @0xFC31B670 a
 DEF(dial_positions,0x0000fc88)
 
 // not porting the following
-DEF(jog_position,                           0xfc8c) // 
+DEF(jog_position,                           0xfc8c) //
 DEF(jog_hw_pos,                             0xd9854004) // todo found by browsing the 0xd985xxxx range...
 
-DEF(simple_movie_status, 0x13b18) // using rmem from looking at addresses in task-movie-re
+DEF(simple_movie_status, 0x13b20) // based sx60 100f FUN_fc1d4180 equivalent to g7x 100d FUN_fc14a00c, RAM vars before and after same in other subs
