@@ -180,7 +180,7 @@ class PropsetData:
         if bn == 'platform_camera.h':
             self.load_platform_propset(filename)
         else:
-            m = re.match('propset([1-9][0-9]+).h',bn)
+            m = re.match('propset([1-9][0-9]*).h',bn)
             if m:
                 self.propset = int(m.group(1))
                 self.load_propset(filename)
