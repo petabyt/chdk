@@ -111,9 +111,7 @@ char *hook_alt_raw_image_addr()
 }
 */
 
-
-
-
+/* Viewport layer info */
 
 void *vid_get_viewport_fb() {
     return (void*)0x43334300; // same as g7x "first" viewport adr, "VRAM Address  : %p", contains d6 uyvy
@@ -154,114 +152,66 @@ void *vid_get_viewport_live_fb()
     return 0;
 }
 
+/* Track viewport size changes with display type */
+static int vp_full_width = 640;
+static int vp_full_buf_width = 640;
+static int vp_full_height = 480;
+static int lv_aspect = LV_ASPECT_4_3;
+
+extern int _GetVRAMHPixelsSize();
+extern int _GetVRAMVPixelsSize();
 
 int vid_get_viewport_width() {
-/*
-loc_fc134980: ; 4 refs (GetVRAMHPixelsSize)
-fc134980:   487d        ldr r0, [pc, #500]  ; 0xfc134b78: (0002ca18) 
-fc134982:   f8d0 00ac   ldr.w   r0, [r0, #172]  ; 0xac
-fc134986:   4770        bx  lr
-*/
-   if (camera_info.state.mode_play)
-   { 
-       return camera_screen.physical_width; 
-//     return 360; //todo
-   }
-    extern int _GetVRAMHPixelsSize();
+    if (camera_info.state.mode_play) {
+        return vp_full_width;
+    }
+
     return _GetVRAMHPixelsSize();
 }
 
 long vid_get_viewport_height() {
-/*
-loc_fc134988: ; 3 refs (GetVRAMVPixelsSize)
-fc134988:   487b        ldr r0, [pc, #492]  ; 0xfc134b78: (0002ca18) 
-fc13498a:   f8d0 00b0   ldr.w   r0, [r0, #176]  ; 0xb0
-fc13498e:   4770        bx  lr
-*/
-/*
-    int m = mode_get();
-    int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
-
-    if (MODE_IS_VIDEO(m) || is_video_recording())
-        return 480;
-
-    if ((m & MODE_MASK) != MODE_PLAY)
-    {
-        // 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1
-        if (aspect_ratio==1 || aspect_ratio==2)
-            return 480;
+    if (camera_info.state.mode_play) {
+        return vp_full_height;
     }
-    
-    extern int _GetVRAMVPixelsSize();
-    return ((m & MODE_MASK) == MODE_PLAY)?480:_GetVRAMVPixelsSize();
-*/
-       extern int _GetVRAMVPixelsSize();
-// return half height
-    if (camera_info.state.mode_play)
-        return camera_screen.buffer_height;
+
     return _GetVRAMVPixelsSize();
 }
 
-// viewport width offset table for each aspect ratio
-// 0 = 4:3, 1 = 16:9, 2 = 3:2, 3 = 1:1 4 = 4:5
-static long vp_xo[5] = { 0, 0, 0, 80, 128 };// should all be even values for edge overlay
-static long vp_yo[5] = {0, 60, 28, 0, 0};
-
-int vid_get_viewport_yoffset() {
-//     int aspect_ratio=shooting_get_prop(PROPCASE_ASPECT_RATIO);
-
-        return 0;
+int vid_get_viewport_byte_width() {
+    return vp_full_buf_width * 2;
 }
 
-
 int vid_get_viewport_display_xoffset() {
-
     if (camera_info.state.mode_play) {
         return 0;
     }
-    // video, ignore still res propcase
-    if(camera_info.state.mode_video || is_video_recording()) {
-            return 0; //all video modes for now
-    }
-    return vp_xo[shooting_get_prop(PROPCASE_ASPECT_RATIO)];
 
+    // should all be even values for edge overlay
+    return ((vp_full_width - _GetVRAMHPixelsSize()) / 2) & ~1;
 }
 
 int vid_get_viewport_display_yoffset() {
     if (camera_info.state.mode_play) {
         return 0;
     }
-    else {
-        if(camera_info.state.mode_video || is_video_recording()) {
-                return 0; //all video modes
-        }
-    } 
-    return (vp_yo[shooting_get_prop(PROPCASE_ASPECT_RATIO)]);
 
+    return (vp_full_height - _GetVRAMVPixelsSize()) / 2;
 }
 
+/* Functions for PTP Live View system */
+int vid_get_viewport_fullscreen_width()         { return vp_full_width; }
+int vid_get_viewport_fullscreen_height()        { return vp_full_height; }
+int vid_get_viewport_buffer_width_proper()      { return vp_full_buf_width; }
+int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset(); }
+int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset(); }
+int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 
-//extern int active_bitmap_buffer;
-//int active_bitmap_buffer = 0;
-//extern char* bitmap_buffer[];
+/* Bitmap layer info */
 
 void *vid_get_bitmap_fb() {
 //    return (void *)0x41441000; //  from sub_fc0f8804, alt 4153e200
       return bitmap_buffer[0];
 }
-
-// TODO
-// Functions for PTP Live View system
-int vid_get_viewport_display_xoffset_proper()   { return vid_get_viewport_display_xoffset() ; }
-int vid_get_viewport_display_yoffset_proper()   { return vid_get_viewport_display_yoffset() ; }
-int vid_get_viewport_byte_width() {
-// digic 6 uYvY    2 pixels per 4 bytes
-  return (640 * 2);
-}
-int vid_get_viewport_fullscreen_width()         { return camera_screen.width; }
-int vid_get_viewport_fullscreen_height()        { return camera_screen.height; }
-int vid_get_viewport_buffer_width_proper()      { return camera_screen.buffer_width; } // may not be always ok
-int vid_get_viewport_type()                     { return LV_FB_YUV8B; }
 
 void *vid_get_bitmap_active_buffer() {
     return bitmap_buffer[active_bitmap_buffer&1];
@@ -285,6 +235,8 @@ char *camera_jpeg_count_str()
 
 extern int displaytype;
 #define hdmi_out ((displaytype == 6) || (displaytype == 7))
+#define hdmi_low_res (displaytype == 8)
+#define analog_out ((displaytype == 1) || (displaytype == 2))
 
 // Ximr layer
 typedef struct {
@@ -361,7 +313,8 @@ int last_displaytype;
  * Called when Canon is updating UI, via mzrm_sendmsg log patch.
  * Sets flag for CHDK to update it's UI.
  * Also needed because bitmap buffer resolution changes when using HDMI
- * LCD = 720 x 480
+ * LCD = 640 x 480
+ * TV out = 720 x 480
  * HDMI = 960 x 540
  * TODO: This does not reset the OSD positions of things on screen
  *       If user has customised OSD layout how should this be handled?
@@ -388,10 +341,24 @@ void update_ui(ximr_context* ximr)
 
             if (hdmi_out) {
                 bm_w = 480;
-                bm_h = 270;
+                bm_h = 240; // HDMI final output is 540, but canon firmware scales from 480
+                vp_full_width = 1920;
+                vp_full_buf_width = 1920;
+                vp_full_height = 1080;
+                lv_aspect = LV_ASPECT_16_9;
             } else {
+                // LCD, TV out and low res HDMI should all be 4:3-ish
+                lv_aspect = LV_ASPECT_4_3;
                 bm_w = 360;
                 bm_h = 240;
+                if (analog_out || hdmi_low_res) {
+                    vp_full_width = 720;
+                    vp_full_buf_width = 736;
+                } else {
+                    vp_full_width = 640;
+                    vp_full_buf_width = 640;
+                }
+                vp_full_height = 480;
             }
 
             camera_screen.width = bm_w;
@@ -457,8 +424,12 @@ void update_ui(ximr_context* ximr)
     }
     else // rendering to fw_yuv_layer_buf for TV or HDMI out
     {
-        // scale and crop to half height to preserve CHDK buffer
-        ximr->height = ximr->buffer_height = 270;
-        ximr->denomy = 0x6c;
+        // HDMI and analog AV are both compatible with below
+        ximr->height = ximr->buffer_height = 240;
+        // default when rendering to YUV buffer for both analog and HDMI is numer(x,y)=67 denom(x,y)=60
+        // this scales the rednered image down to allow the full image to have 42x28 margins
+        // note numerator/denominator names are probably backwards
+        // (28*2 + 480) * 60 / 67  = 480
+        ximr->denomy = 30;
     }
 }
