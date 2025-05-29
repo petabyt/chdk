@@ -1,6 +1,6 @@
 # License: GPL
 #
-# Copyright 2020-2023 reyalp (at) gmail.com
+# Copyright 2020-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@ from __main__ import *
 import ghidra.program.util.SymbolicPropogator as SymbolicPropogator
 import ghidra.program.util.SymbolicPropogator.Value
 import ghidra.app.plugin.core.analysis.ConstantPropagationContextEvaluator as ConstantPropagationContextEvaluator
+import ghidra.app.decompiler.DecompInterface as DecompInterface
 
 from chdklib.logutil import infomsg, warn
 
@@ -30,12 +31,29 @@ class RegsAnalyzer:
         self.monitor = monitor
         self.symprop = SymbolicPropogator(currentProgram)
         self.last_fn = None
+        # needed for "undefined function" case
+        self.decomp = DecompInterface()
+        self.decomp.openProgram(currentProgram)
 
     # loosely based on code from https://github.com/0xb0bb/pwndra/blob/master/scripts/lib/Syscalls.py
     def getRegs(self,regs,addr):
         fn = self.currentProgram.getListing().getFunctionContaining(addr)
         if not fn:
-            return
+            # if no defined containing func, try to get auto-generated "UndefinedFunction"
+            # https://github.com/NationalSecurityAgency/ghidra/discussions/7896
+            fn = ghidra.util.UndefinedFunction.findFunction(self.currentProgram,addr,self.monitor)
+            if not fn:
+                return
+
+            # probably not the right way to do it, but findFunction returns function with empty body
+            # decompile sets body to match what decompile window shows
+            # TODO should avoid if same entry point already analyzed
+            dr=self.decomp.decompileFunction(fn, 10, self.monitor)
+            # give up if decompile didn't work in 10s
+            if not dr.decompileCompleted():
+                infomsg(0,'decompile failed %s\n'%(fn.getEntryPoint()))
+                return
+
         # don't reflow if we already did this function
         if fn != self.last_fn:
             # interface changed in 10.3, expects monitor
