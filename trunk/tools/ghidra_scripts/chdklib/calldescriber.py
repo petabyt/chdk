@@ -74,15 +74,29 @@ class CallDescriber(object):
         if faddr is None:
             infomsg(0,'%s not found, skipping\n'%(fname))
             return
-        for ref in getReferencesTo(faddr):
-            if not ref.getReferenceType().isCall():
-                continue
-            addr = ref.getFromAddress()
-            desc = self.describe_call(addr,fname)
-            if desc is None:
-                continue
 
-            yield desc
+        fn = getFunctionAt(faddr)
+        if fn is None:
+            infomsg(0,'%s not a function, skipping\n'%(fname))
+            return
+
+        # recursively get all thunks to function
+        addrs = fn.getFunctionThunkAddresses(True)
+        if addrs is None:
+            addrs = [faddr]
+        else:
+            addrs.append(faddr)
+
+        for addr in addrs:
+            for ref in getReferencesTo(addr):
+                if not ref.getReferenceType().isCall():
+                    continue
+                addr = ref.getFromAddress()
+                desc = self.describe_call(addr,fname)
+                if desc is None:
+                    continue
+
+                yield desc
 
     def describe_all_calls(self):
         for fname in self.funcdesc.keys():
