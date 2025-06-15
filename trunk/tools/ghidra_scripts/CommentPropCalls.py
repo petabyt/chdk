@@ -10,7 +10,7 @@
 
 # License: GPL
 #
-# Copyright 2020-2021 reyalp (at) gmail.com
+# Copyright 2020-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@
 
 import os
 import re
+import datetime
 
 from chdklib.logutil import infomsg, warn
 
@@ -36,9 +37,18 @@ from chdklib.calldescriber import PropCallDescriber
 def comment_prop_calls():
     filename = str(askFile("platform_camera.h or propsetN.h","select"))
 
+    t0 = datetime.datetime.now()
+    comment_count = 0
     cd = PropCallDescriber(filename)
+
     for desc in cd.describe_all_calls():
         if desc.args[0].prop_name != '':
+            comment_count += 1
             setEOLComment(desc.addr,'%s,%s,%s'%(desc.args[0].desc,desc.args[1].desc,desc.args[2].desc))
+
+    infomsg(0,'CommentPropCalls found %d commented %d in %0.1f sec\n'%(
+        cd.match_count,
+        comment_count,
+        (datetime.datetime.now()-t0).total_seconds()))
 
 comment_prop_calls()

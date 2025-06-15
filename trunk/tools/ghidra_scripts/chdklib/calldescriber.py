@@ -46,6 +46,7 @@ class CallDescriber(object):
     def __init__(self, funcdesc):
         self.ra = RegsAnalyzer(currentProgram, monitor)
         self.funcdesc = funcdesc
+        self.match_count = 0
 
     def describe_call(self,addr,fname):
         # TODO could pick up func name from Ghidra by getting target of b/bl at addr
@@ -61,6 +62,7 @@ class CallDescriber(object):
             infomsg(0,'%s %s Call not in function?\n'%(addr,fname))
             return
 
+        self.match_count += 1
         results = CallDesc(addr, fname)
         for r in reg_ids:
             results.args.append(self.describe_reg(regs[r],fdesc[r],r,addr))

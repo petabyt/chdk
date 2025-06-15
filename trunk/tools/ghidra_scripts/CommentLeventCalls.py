@@ -9,7 +9,7 @@
 
 # License: GPL
 #
-# Copyright 2021 reyalp (at) gmail.com
+# Copyright 2021-2025 reyalp (at) gmail.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -27,19 +27,29 @@
 
 import os
 import re
+import datetime
 
 from chdklib.logutil import infomsg, warn
 
 from chdklib.calldescriber import LeventCallDescriber
 
 def comment_levent_calls():
+    t0 = datetime.datetime.now()
+    comment_count = 0
     cd = LeventCallDescriber()
+
     for desc in cd.describe_all_calls():
         if desc.args[0].levent_name != '':
+            comment_count += 1
             if len(desc.args) == 2:
                 setEOLComment(desc.addr,'%s,%s'%(desc.args[0].desc,desc.args[1].desc))
             else:
                 setEOLComment(desc.addr,'%s'%(desc.args[0].desc))
+
+    infomsg(0,'CommentLeventCalls found %d commented %d in %0.1f sec\n'%(
+        cd.match_count,
+        comment_count,
+        (datetime.datetime.now()-t0).total_seconds()))
 
 
 comment_levent_calls()
