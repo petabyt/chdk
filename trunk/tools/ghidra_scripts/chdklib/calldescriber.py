@@ -70,7 +70,12 @@ class CallDescriber(object):
         return results
 
     def describe_calls_to(self,fname):
-        faddr = getSymbol(fname,None).getAddress()
+        sym = getSymbol(fname,None)
+        if sym is None:
+            infomsg(0,'symbol %s not found, skipping\n'%(fname))
+            return
+
+        faddr = sym.getAddress()
         if faddr is None:
             infomsg(0,'%s not found, skipping\n'%(fname))
             return
