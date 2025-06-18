@@ -43,5 +43,4 @@ DEF(jog_hw_pos,                             0xd9854004) // todo found by browsin
 //DEF(displaytype,                            0x95dc) //0x95c8 + 0x14, found  @ fc135f2a (GetDisplayType)
 DEF(displaytype,                            0x9284)//  (GetDisplayType)
 DEF(current_fb_d                           ,0xfa9c) // found by searching near fa78
-DEF(simple_movie_status, 0x13b18) // using rmem from looking at addresses in task-movie-re
-
+DEF(simple_movie_status, 0x13b20) // based sx60 100f FUN_fc1d4180 equivalent to g7x 100d FUN_fc14a00c, RAM vars before and after same in other subs

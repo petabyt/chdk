@@ -66,4 +66,4 @@ DEF(jog_hw_pos,                             0xd9854004) // todo found by browsin
 
 //FAKEDEF(enabled_refresh_physical_screen,    1)
 DEF(displaytype,                              0x9284) // 0x923c + 0x48 found @0xfc304708 (42 refs)
-DEF(simple_movie_status, 0x13b18) // using rmem from looking at addresses in task-movie-re
+DEF(simple_movie_status, 0x13b20) // based sx60 100f FUN_fc1d4180 equivalent to g7x 100d FUN_fc14a00c, RAM vars before and after same in other subs
