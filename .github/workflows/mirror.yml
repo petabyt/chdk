@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 3 * * *" # daily at 03:00 UTC
   workflow_dispatch:
+  push:
+    branches:
+      - sync
+    paths:
+      - '.github/workflows/mirror.yml'
 
 jobs:
   mirror:
