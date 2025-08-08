@@ -2,7 +2,7 @@ name: Mirror CHDK SVN to master
 
 on:
   schedule:
-    - cron: "0 3 * * *" # daily at 03:00 UTC
+    - cron: "0 3 * * *"
   workflow_dispatch:
   push:
     branches:
@@ -15,17 +15,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install git-svn
+      - name: Install git-svn and dependencies
         run: |
-          sudo add-apt-repository ppa:git-core/ppa
+          sudo add-apt-repository ppa:git-core/ppa -y
           sudo apt-get update
-          sudo apt-get install -y git-svn
+          sudo apt-get install -y git-svn subversion
 
-      - name: Checkout master branch
+      - name: Initialize empty git repo and add remote
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/petabyt/chdk.git
           git init
-          git remote add origin git@github.com:${{ github.repository }}.git
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/petabyt/chdk.git
           git fetch origin master || true
           git checkout master || git checkout -b master
 
@@ -47,10 +46,7 @@ jobs:
           fi
 
       - name: Rebase from SVN
-        run: |
-          printf "password\n" | git svn rebase
+        run: printf "password\n" | git svn rebase
 
       - name: Push changes to master
         run: git push origin HEAD:master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
