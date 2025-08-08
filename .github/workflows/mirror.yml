@@ -16,7 +16,10 @@ jobs:
 
     steps:
       - name: Install git-svn
-        run: sudo apt-get update && sudo apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages git subversion git-svn
+        run: |
+          sudo add-apt-repository ppa:git-core/ppa
+          sudo apt-get update
+          sudo apt-get install -y git-svn
 
       - name: Checkout master branch
         run: |
