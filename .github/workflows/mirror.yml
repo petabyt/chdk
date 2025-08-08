@@ -41,15 +41,9 @@ jobs:
 
       - name: Initialize SVN if needed
         run: |
-          mkdir -p ~/.subversion
-          cat > ~/.subversion/servers <<EOF
-          [groups]
-          assembla = https://subversion.assembla.com
-          
-          [assembla]
-          username = admin
-          password = password
-          EOF
+          svn info https://subversion.assembla.com/svn/chdk \
+            --username admin --password password \
+            --non-interactive --trust-server-cert
           if [ ! -d .git/svn ]; then
             git svn init --stdlayout --username admin https://subversion.assembla.com/svn/chdk
           fi
