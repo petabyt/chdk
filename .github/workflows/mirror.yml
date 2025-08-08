@@ -42,7 +42,7 @@ jobs:
       - name: Initialize SVN if needed
         run: |
           if [ ! -d .git/svn ]; then
-            git svn init --stdlayout http://subversion.assembla.com/svn/chdk
+            git svn init --stdlayout https://subversion.assembla.com/svn/chdk
           fi
 
       - name: Rebase from SVN
