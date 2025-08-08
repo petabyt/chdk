@@ -41,12 +41,21 @@ jobs:
 
       - name: Initialize SVN if needed
         run: |
+          mkdir -p ~/.subversion
+          cat > ~/.subversion/servers <<EOF
+          [groups]
+          assembla = https://subversion.assembla.com
+          
+          [assembla]
+          username = admin
+          password = password
+          EOF
           if [ ! -d .git/svn ]; then
-            git svn init --stdlayout https://subversion.assembla.com/svn/chdk
+            git svn init --stdlayout --username admin https://subversion.assembla.com/svn/chdk
           fi
 
       - name: Rebase from SVN
-        run: printf "password\n" | git svn rebase
+        run: git svn rebase
 
       - name: Push changes to master
         run: git push origin HEAD:master
