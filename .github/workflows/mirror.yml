@@ -1,0 +1,47 @@
+name: Mirror CHDK SVN to master
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # daily at 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install git-svn
+        run: sudo apt-get update && sudo apt-get install -y subversion git-svn
+
+      - name: Checkout master branch
+        run: |
+          git init
+          git remote add origin git@github.com:${{ github.repository }}.git
+          git fetch origin master || true
+          git checkout master || git checkout -b master
+
+      - name: Cache git-svn metadata
+        uses: actions/cache@v4
+        with:
+          path: .git/svn
+          key: svn-mirror-cache
+
+      - name: Configure git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@users.noreply.github.com"
+
+      - name: Initialize SVN if needed
+        run: |
+          if [ ! -d .git/svn ]; then
+            git svn init --stdlayout http://subversion.assembla.com/svn/chdk
+          fi
+
+      - name: Rebase from SVN
+        run: |
+          printf "password\n" | git svn rebase
+
+      - name: Push changes to master
+        run: git push origin HEAD:master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
