@@ -12,11 +12,11 @@ on:
 
 jobs:
   mirror:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Install git-svn
-        run: sudo apt-get update && sudo apt-get install -y git subversion
+        run: sudo apt-get update && sudo apt-get install -y git subversion git-svn
 
       - name: Checkout master branch
         run: |
