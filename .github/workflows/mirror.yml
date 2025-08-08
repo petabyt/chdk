@@ -45,7 +45,7 @@ jobs:
             --username admin --password password \
             --non-interactive --trust-server-cert
           if [ ! -d .git/svn ]; then
-            git svn init --stdlayout --username admin https://subversion.assembla.com/svn/chdk
+            printf "password\n" | git svn init --stdlayout --username admin https://subversion.assembla.com/svn/chdk
           fi
 
       - name: Rebase from SVN
