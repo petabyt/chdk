@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Install git-svn
-        run: sudo apt-get update && sudo apt-get install -y --ignore-missing git subversion git-svn
+        run: sudo apt-get update && sudo apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages git subversion git-svn
 
       - name: Checkout master branch
         run: |
