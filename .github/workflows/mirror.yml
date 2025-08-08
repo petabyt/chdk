@@ -12,11 +12,11 @@ on:
 
 jobs:
   mirror:
-    runs-on: debian-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Install git-svn
-        run: sudo apt-get update && sudo apt-get install -y subversion git-svn
+        run: sudo apt-get update && sudo apt-get install -y git subversion
 
       - name: Checkout master branch
         run: |
